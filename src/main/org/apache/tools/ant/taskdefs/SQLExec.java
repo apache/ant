@@ -360,16 +360,30 @@ public class SQLExec extends Task {
 
             statement = conn.createStatement();
 
-            // Process all transactions
-            for (Enumeration e = transactions.elements(); 
-                 e.hasMoreElements();) {
-                ((Transaction) e.nextElement()).runTransaction();
-                if (!autocommit) {
-                    log("Commiting transaction", Project.MSG_VERBOSE);
-                    conn.commit();
+            
+            PrintStream out = System.out;
+            try {
+                if (output != null) {
+        	    log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
+                    out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
+                }
+                        
+                // Process all transactions
+                for (Enumeration e = transactions.elements(); 
+                     e.hasMoreElements();) {
+                       
+                    ((Transaction) e.nextElement()).runTransaction(out);
+                    if (!autocommit) {
+                        log("Commiting transaction", Project.MSG_VERBOSE);
+                        conn.commit();
+                    }
                 }
             }
-            
+            finally {
+                if (out != null && out != System.out) {
+                    out.close();
+                }
+            }
         } catch(IOException e){
             if (!autocommit && conn != null && onError.equals("abort")) {
                 try {
@@ -401,7 +415,7 @@ public class SQLExec extends Task {
             " SQL statements executed successfully");
     }
 
-    protected void runStatements(Reader reader) throws SQLException, IOException {
+    protected void runStatements(Reader reader, PrintStream out) throws SQLException, IOException {
         String sql = "";
         String line = "";
  
@@ -422,14 +436,14 @@ public class SQLExec extends Task {
 
                 if (sql.endsWith(";")){
                     log("SQL: " + sql, Project.MSG_VERBOSE);
-                    execSQL(sql.substring(0, sql.length()-1));
+                    execSQL(sql.substring(0, sql.length()-1), out);
                     sql = "";
                 }
             }
  
             // Catch any statements not followed by ;
             if(!sql.equals("")){
-                execSQL(sql);
+                execSQL(sql, out);
             }
         }catch(SQLException e){
             throw e;
@@ -481,7 +495,7 @@ public class SQLExec extends Task {
     /**
      * Exec the sql statement.
      */
-    protected void execSQL(String sql) throws SQLException {
+    protected void execSQL(String sql, PrintStream out) throws SQLException {
         // Check and ignore empty statements
         if ("".equals(sql.trim())) return;
         
@@ -493,7 +507,7 @@ public class SQLExec extends Task {
             }
             
             if (print) {
-                printResults();
+                printResults(out);
             }
             
             SQLWarning warning = conn.getWarnings();
@@ -514,61 +528,47 @@ public class SQLExec extends Task {
     /**
      * print any results in the statement.
      */
-    protected void printResults() throws java.sql.SQLException {
+    protected void printResults(PrintStream out) throws java.sql.SQLException {
         ResultSet rs = null;
-        PrintStream out = System.out;
-        try {
-            if (output != null) {
-		log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
-                out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
-            }
-            do {
-                rs = statement.getResultSet();
-                if (rs != null) {
-        	    log("Processing new result set.", Project.MSG_VERBOSE);
-                    ResultSetMetaData md = rs.getMetaData();
-                    int columnCount = md.getColumnCount();
-                    StringBuffer line = new StringBuffer();
-                    if (showheaders) {
-                        for (int col = 1; col < columnCount; col++) {
-                            line.append(md.getColumnName(col));
+        do {
+            rs = statement.getResultSet();
+            if (rs != null) {
+      	        log("Processing new result set.", Project.MSG_VERBOSE);
+                ResultSetMetaData md = rs.getMetaData();
+                int columnCount = md.getColumnCount();
+                StringBuffer line = new StringBuffer();
+                if (showheaders) {
+                    for (int col = 1; col < columnCount; col++) {
+                         line.append(md.getColumnName(col));
+                         line.append(",");
+                    }
+                    line.append(md.getColumnName(columnCount));
+                    out.println(line);
+                    line.setLength(0);
+                }
+                while (rs.next()) {
+                    boolean first = true;
+                    for (int col = 1; col <= columnCount; col++) {
+                        String columnValue = rs.getString(col);
+                        if (columnValue != null) {
+                            columnValue = columnValue.trim();
+                        }
+                         
+                        if (first) {
+                            first = false;
+                        }
+                        else {
                             line.append(",");
                         }
-                        line.append(md.getColumnName(columnCount));
-                        out.println(line);
-                        line.setLength(0);
+                        line.append(columnValue);
                     }
-                    while (rs.next()) {
-                        boolean first = true;
-                        for (int col = 1; col <= columnCount; col++) {
-                            String columnValue = rs.getString(col);
-                            if (columnValue != null) {
-                                columnValue = columnValue.trim();
-                            }
-                             
-                            if (first) {
-                                first = false;
-                            }
-                            else {
-                                line.append(",");
-                            }
-                            line.append(columnValue);
-                        }
-                        out.println(line);
-                        line.setLength(0);
-                    }
+                    out.println(line);
+                    line.setLength(0);
                 }
             }
-            while (statement.getMoreResults());
         }
-        catch (IOException ioe) {
-            throw new BuildException("Error writing " + output.getAbsolutePath(), ioe, location);
-        }
-        finally {
-            if (out != null && out != System.out) {
-                out.close();
-            }
-        }
+        while (statement.getMoreResults());
+        out.println();
     }
 
     /**
@@ -599,16 +599,16 @@ public class SQLExec extends Task {
             this.tSqlCommand += sql;
         }
 
-        private void runTransaction() throws IOException, SQLException {
+        private void runTransaction(PrintStream out) throws IOException, SQLException {
             if (tSqlCommand.length() != 0) {
                 log("Executing commands", Project.MSG_INFO);
-                runStatements(new StringReader(tSqlCommand));
+                runStatements(new StringReader(tSqlCommand), out);
             }
       
             if (tSrcFile != null) {
                 log("Executing file: " + tSrcFile.getAbsolutePath(), 
                     Project.MSG_INFO);
-                runStatements(new FileReader(tSrcFile));
+                runStatements(new FileReader(tSrcFile), out);
             }
         }
     }
