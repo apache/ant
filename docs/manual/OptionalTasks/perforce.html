@@ -325,6 +325,11 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
     <td valign="top">Label Description</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">lock</td>
+    <td valign="top">Lock the label once created.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 
 
 </table>
@@ -333,6 +338,7 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 &lt;p4label
 	name=&quot;NightlyBuild:${DSTAMP}:${TSTAMP}&quot; 
 	desc=&quot;Auto Nightly Build&quot;
+	lock=&quot;locked&quot;
 /&gt;
 </pre>
 <hr>
