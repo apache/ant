@@ -241,6 +241,18 @@
     </condition>
 
     <available property="base64.present" classname="sun.misc.BASE64Encoder" />
+
+    <property name="build.tests.resolved" location="${build.tests}" />
+    <condition property="tests.are.on.system.classpath">
+      <or>
+        <!-- relative paths in CLASSPATH -->
+        <contains string="${java.class.path}"
+                  substring="${build.tests}" />
+        <!-- absolute paths in CLASSPATH -->
+        <contains string="${java.class.path}"
+                  substring="${build.tests.resolved}" />
+      </or>
+    </condition>
   </target>
 
   <!--
@@ -1000,6 +1012,9 @@
           <!-- uses the context classloader -->
           <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
                    unless="jdk1.2+"/>
+          <!-- fails if testcases can be loaded from the system classloader -->
+          <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
+                   if="tests.are.on.system.classpath"/>
 
           <exclude name="${optional.package}/perforce/*.java"
                    unless="jakarta.oro.present" />
