@@ -667,6 +667,7 @@ public class Javac extends MatchingTask {
     /**
      * Do the compile with the specified arguments.
      * @param args - arguments to pass to process on command line
+     * @param firstFileName - index of the first source file in args
      */
     private int executeJikesCompile(String[] args, int firstFileName) {
         String[] commandArray = null;
@@ -686,7 +687,7 @@ public class Javac extends MatchingTask {
                 try {
                     tmpFile = new File("jikes"+(new Random(System.currentTimeMillis())).nextLong());
                     out = new PrintWriter(new FileWriter(tmpFile));
-                    for (int i = 0; i < args.length; i++) {
+                    for (int i = firstFileName; i < args.length; i++) {
                         out.println(args[i]);
                     }
                     out.flush();
