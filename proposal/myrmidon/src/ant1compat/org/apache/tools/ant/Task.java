@@ -42,29 +42,56 @@ public class Task extends OriginalAnt1Task
         this.setTaskType( context.getName() );
         this.setTaskName( context.getName() );
 
-        Project project = (Project)context.getProperty( "ant1.project" );
+        // Create/recontextualise the Ant1 Project.
+        Ant1CompatProject project =
+            (Ant1CompatProject)context.getProperty( "ant1.project" );
         if( project == null )
         {
             project = createProject();
             m_context.setProperty( "ant1.project", project );
         }
+        else
+        {
+            project.recontextulize( context );
+        }
+
         this.setProject( project );
     }
 
-    private Project createProject()
+    /**
+     * Create and initialise an Ant1CompatProject
+     */
+    private Ant1CompatProject createProject()
         throws TaskException
     {
-        Project project = new Ant1CompatProject( m_context );
+        Ant1CompatProject project = new Ant1CompatProject( m_context );
         project.init();
         return project;
     }
 
+    /**
+     * Uses the task Configuration to perform Ant1-style configuration
+     * on the Ant1 task.
+     * @param configuration The TaskModel for this Ant1 Task.
+     * @throws ConfigurationException if the Configuration supplied is not valid
+     */
     public void configure( Configuration configuration ) throws ConfigurationException
     {
         configure( this, configuration );
         this.init();
     }
 
+    /**
+     * Uses reflection to configure any Object, with the help of the Ant1
+     * IntrospectionHelper. using . This aims to mimic (to some extent) the
+     * Ant1-style configuration rules implemented by ProjectHelperImpl.
+     * @param target
+     *          The object to be configured.
+     * @param configuration
+     *          The data to configure the object with.
+     * @throws ConfigurationException
+     *          If the Configuration is not valid for the configured object
+     */
     protected void configure( Object target, Configuration configuration ) throws ConfigurationException
     {
         IntrospectionHelper helper = IntrospectionHelper.getHelper( target.getClass() );
@@ -118,6 +145,12 @@ public class Task extends OriginalAnt1Task
 
     }
 
+    /**
+     * Returns the name of a Task/Datatype as referred to by Ant1 code, without
+     * the "ant1." prefix.
+     * @param fullName The full name as known by Myrmidon.
+     * @return the name without the Ant1 prefix.
+     */
     protected String getAnt1Name( String fullName )
     {
         return fullName.substring( Ant1CompatProject.ANT1_TASK_PREFIX.length() );

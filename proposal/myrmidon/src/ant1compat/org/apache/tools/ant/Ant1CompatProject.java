@@ -17,12 +17,14 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.property.ClassicPropertyResolver;
+import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
-import org.apache.myrmidon.interfaces.property.PropertyResolver;
-import org.apache.myrmidon.components.property.ClassicPropertyResolver;
 
 /**
  * Ant1 Project proxy for Myrmidon. Provides hooks between Myrmidon TaskContext
@@ -38,13 +40,18 @@ public class Ant1CompatProject extends Project
 {
     public static final String ANT1_TASK_PREFIX = "ant1.";
 
-    private static final PropertyResolver c_ant1PropertyResolver =
-        new ClassicPropertyResolver();
+    private final PropertyResolver m_ant1PropertyResolver;
+    private final Converter m_converter;
 
     private Set m_userProperties = new HashSet();
     private TaskContext m_context;
 
+    /**
+     * Create an Ant1 project.
+     * @param context The context for the first Ant1 Task loaded.
+     */
     public Ant1CompatProject( TaskContext context )
+        throws TaskException
     {
         super();
         m_context = context;
@@ -55,6 +62,18 @@ public class Ant1CompatProject extends Project
         {
             setName( projectName );
         }
+
+        m_ant1PropertyResolver = new ClassicPropertyResolver();
+        m_converter = (Converter)context.getService( Converter.class );
+    }
+
+    /**
+     * Update the TaskContext for the current task.
+     * @param context The TaskContext for the currently executing Task.
+     */
+    void recontextulize( TaskContext context )
+    {
+        m_context = context;
     }
 
     /**
@@ -357,14 +376,24 @@ public class Ant1CompatProject extends Project
     {
         Object value = m_context.getProperty( name );
 
-        // In Ant1, all properties are strings.
-        if( value instanceof String )
+        if( value == null )
+        {
+            return null;
+        }
+        else if( value instanceof String )
         {
             return (String)value;
         }
         else
         {
-            return null;
+            try
+            {
+                return (String)m_converter.convert( String.class, value, m_context );
+            }
+            catch( ConverterException e )
+            {
+                throw new BuildException( e );
+            }
         }
     }
 
@@ -403,8 +432,6 @@ public class Ant1CompatProject extends Project
         while( propNames.hasNext() )
         {
             String name = (String)propNames.next();
-
-            // Use getProperty() to only return Strings.
             String value = getProperty( name );
             if( value != null )
             {
@@ -453,7 +480,7 @@ public class Ant1CompatProject extends Project
     {
         try
         {
-            return (String)c_ant1PropertyResolver.resolveProperties( value,
+            return (String)m_ant1PropertyResolver.resolveProperties( value,
                                                                      m_context );
         }
         catch( TaskException e )
