@@ -61,6 +61,11 @@ enhancements of existing tasks.
 * make PATH handling consistent. Every task that has a PATH attribute
   must also accept references to PATHs.
 
+* Task to extract classes from a JAR file that a given class depends
+  on.
+
+  Based on <depend> of IBM's JAX for example.
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
