@@ -531,6 +531,7 @@ public class Translate extends MatchingTask {
      * newer than the destination file.
      */
     private void translate() throws BuildException {
+        int filesProcessed = 0;
         for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
@@ -646,6 +647,7 @@ public class Translate extends MatchingTask {
                         if (out != null) {
                             out.close();
                         }
+                        ++filesProcessed;
                     } else {
                         log("Skipping " + srcFiles[j]
                             + " as destination file is up to date",
@@ -656,5 +658,6 @@ public class Translate extends MatchingTask {
                 }
             }
         }
+        log("Translation performed on " + filesProcessed + " file(s).", Project.MSG_DEBUG);
     }
 }

@@ -11,6 +11,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Translate task logs a debug message specifying the number of files
+  that it processed.  Bugzilla Report 13938.
 
 Changes from Ant 1.5.4 to Ant 1.6Beta1
 ======================================
