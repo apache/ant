@@ -100,7 +100,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
     static AntHandler projectHandler=new ProjectHandler();
 
     /**
-     * helper for path -> URI and URI -> path conversions.
+     * helper for path -&gt; URI and URI -&gt; path conversions.
      */
     private static FileUtils fu = FileUtils.newFileUtils();
 

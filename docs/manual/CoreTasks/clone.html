@@ -38,10 +38,10 @@ unpredictable results depending on the internals of the cloned class.</b>
 <p>
 Given a fileset <i>foo</i>:
 <pre>  &lt;clone id="foo.txt" cloneref=&quot;foo&quot;&gt;
-    &lt;filename name="**/*.txt" />
+    &lt;filename name="**/*.txt"/&gt;
   &lt;/clone&gt;
   &lt;clone id="foo.nontxt" cloneref=&quot;foo&quot;&gt;
-    &lt;filename name="**/*.txt" negate="true" />
+    &lt;filename name="**/*.txt" negate="true"/&gt;
   &lt;/clone&gt;
 </pre>
 Creates filesets <i>foo.txt</i> and <i>foo.nontxt</i>, which could be

@@ -1,7 +1,7 @@
 <html>
 <head>
   <link rel="stylesheet" type="text/css" href="stylesheets/style.css"/>
-<title>Tutorial: Tasks using Properties, Filesets & Paths</title>
+<title>Tutorial: Tasks using Properties, Filesets &amp; Paths</title>
   <meta name="author" content="Jan Mat&egrave;rne">
   <style type="text/css">
   <!--
@@ -11,7 +11,7 @@
   </style>
 </head>
 <body>
-<h1>Tutorial: Tasks using Properties, Filesets & Paths</h1>
+<h1>Tutorial: Tasks using Properties, Filesets &amp; Paths</h1>
 
 <p>After reading the tutorial about <a href="tutorial-writing-tasks.html">writing
 tasks [1]</a> this tutorial explains how to get and set properties and how to use
@@ -280,7 +280,7 @@ can implement our task, so that these test cases will pass.</p>
             for(int i=0; i&lt;includedFiles.length; i++) {
                 String filename = includedFiles[i].replace('\\','/');           // 4
                 filename = filename.substring(filename.lastIndexOf("/")+1);
-                if (foundLocation==null && file.equals(filename)) {
+                if (foundLocation==null &amp;&amp; file.equals(filename)) {
                     File base  = ds.getBasedir();                               // 5
                     File found = new File(base, includedFiles[i]);
                     foundLocation = found.getAbsolutePath();
@@ -392,7 +392,7 @@ and creating-absolute-paths stuff for us. So the execute method is just:</p>
             for(int i=0; i&lt;includedFiles.length; i++) {
                 String filename = includedFiles[i].replace('\\','/');
                 filename = filename.substring(filename.lastIndexOf("/")+1);
-                if (foundLocation==null && file.equals(filename)) {
+                if (foundLocation==null &amp;&amp; file.equals(filename)) {
                     <b>foundLocation = includedFiles[i];</b>                        // 3
                 }
             }
@@ -502,7 +502,7 @@ for reuse later (<b>*3</b>).
             for(int i=0; i&lt;includedFiles.length; i++) {
                 String filename = includedFiles[i].replace('\\','/');
                 filename = filename.substring(filename.lastIndexOf("/")+1);
-                if (file.equals(filename) && <b>!foundFiles.contains(includedFiles[i]</b>)) {   // 1
+                if (file.equals(filename) &amp;&amp; <b>!foundFiles.contains(includedFiles[i]</b>)) {   // 1
                     foundFiles.add(includedFiles[i]);
                 }
             }

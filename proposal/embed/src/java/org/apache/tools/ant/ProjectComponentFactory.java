@@ -83,7 +83,7 @@ import org.apache.tools.ant.util.FileUtils;
  * component is created - and may provide runtime wrapping for components
  * not implementing the Task/DataType interfaces.
  * It works in close relation with TaskAdapter and RuntimeConfigurable
- * to handle delayed evaluation of tasks or custom attribute->task mapping.
+ * to handle delayed evaluation of tasks or custom attribute-&gt;task mapping.
  * If it returns a wrapper for Task, the wrapper is required to extend
  * TaskAdapter.
  *

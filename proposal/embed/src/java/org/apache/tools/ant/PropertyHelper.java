@@ -70,7 +70,7 @@ import org.xml.sax.helpers.AttributesImpl;
  to support generic Objects ( the property remains imutable - you can't change
  the associated object ). This will also allow JSP-EL style setting using the
  Object if an attribute contains only the property ( name="${property}" could
- avoid Object->String->Object conversion )
+ avoid Object-&gt;String-&gt;Object conversion )
  - Currently we "chain" only for get and set property ( probably most users
  will only need that - if they need more they can replace the top helper ).
  Need to discuss this and find if we need more.
