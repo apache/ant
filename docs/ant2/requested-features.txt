@@ -185,6 +185,10 @@ decide between several possible options.
 
 * Logo for Ant.
 
+* detach Ant from System.err/.in/.out.
+
+  Beware of problems with spawned processes.
+
 V. Things we probably don't agree on. 
 ======================================================================
 
