@@ -59,6 +59,7 @@ import org.apache.tools.ant.input.PropertyFileInputHandler;
 
 /**
  * @author Ulrich Schmidt <usch@usch.net>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class InputTest extends BuildFileTest {
 
@@ -67,8 +68,9 @@ public class InputTest extends BuildFileTest {
     }
 
     public void setUp() {
-        System.getProperties().put(PropertyFileInputHandler.FILE_NAME_KEY,
-                                   "src/etc/testcases/taskdefs/input.properties");
+        System.getProperties()
+            .put(PropertyFileInputHandler.FILE_NAME_KEY,
+                 "src/etc/testcases/taskdefs/input.properties");
         configureProject("src/etc/testcases/taskdefs/input.xml");
         getProject().setInputHandler(new PropertyFileInputHandler());
     }
@@ -82,13 +84,10 @@ public class InputTest extends BuildFileTest {
     }
 
     public void test3() {
-        try {
-            executeTarget("test3");
-            fail("Input for \"All data is going to be deleted from DB continue?\" should be invalid");
-        } catch (org.apache.tools.ant.BuildException e) {
-            assertEquals("Found invalid input test for All data is going to be deleted from DB continue?", 
-                         e.getMessage());
-        }
+        expectSpecificBuildException("test3", "invalid input",
+                                     "Found invalid input test for All data is"
+                                     + " going to be deleted from DB"
+                                     + " continue?");
     }
 
     public void test5() {

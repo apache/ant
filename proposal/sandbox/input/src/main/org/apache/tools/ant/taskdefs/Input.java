@@ -54,7 +54,6 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import  java.util.StringTokenizer;
 import  java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
@@ -62,11 +61,15 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.input.InputRequest;
 import org.apache.tools.ant.input.MultipleChoiceInputRequest;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * Ant task to read input line from console.
  *
  * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @since Ant 1.5
  */
 public class Input extends Task {
     private String validargs = null;
@@ -124,11 +127,7 @@ public class Input extends Task {
     public void execute () throws BuildException {
         InputRequest request = null;
         if (validargs != null) {
-            Vector accept = new Vector();
-            StringTokenizer stok = new StringTokenizer(validargs, ",", false);
-            while (stok.hasMoreTokens()) {
-                accept.addElement(stok.nextToken());
-            }
+            Vector accept = StringUtils.split(validargs, ',');
             request = new MultipleChoiceInputRequest(message, accept);
         } else {
             request = new InputRequest(message);
@@ -138,7 +137,7 @@ public class Input extends Task {
 
         if (addproperty != null) {
             if (project.getProperty(addproperty) == null) {
-                project.setProperty(addproperty, request.getInput());
+                project.setNewProperty(addproperty, request.getInput());
             } else {
                 log("Override ignored for " + addproperty,
                     Project.MSG_VERBOSE);
