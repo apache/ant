@@ -84,15 +84,17 @@
 </tbody></table>
 
 <h3>Examples</h3>
-<pre>  &lt;apt srcdir="${src}"
-         destdir="${build}"
-         classpath="xyz.jar"
-         debug="on"
-         compile="true"
-         factory="com.mycom.MyAnnotationProcessorFactory"
-         factorypathref="my.factorypath.id"
-         preprocessdir="${preprocess.dir}"&gt;
-    &lt;/apt&gt;</pre>
+<blockquote><pre>
+&lt;apt srcdir="${src}"
+     destdir="${build}"
+     classpath="xyz.jar"
+     debug="on"
+     compile="true"
+     factory="com.mycom.MyAnnotationProcessorFactory"
+     factorypathref="my.factorypath.id"
+     preprocessdir="${preprocess.dir}"&gt;
+&lt;/apt&gt;
+</pre></blockquote>
 <p>compiles all <code>.java</code> files under the <code>${src}</code>
 directory, and stores
 the <code>.class</code> files in the <code>${build}</code> directory.
@@ -121,26 +123,27 @@ The inherited "compiler" attribute is ignored, as it is forced to use the Apt co
    <code>&lt;javac&gt;</code> task to compile first your original source code, and then the
    generated source code:</p>
 
-<pre>  &lt;apt srcdir="${src}"
-         destdir="${build}"
-         classpath="xyz.jar"
-         debug="true"
-         compile="false"
-         factory="com.mycom.MyAnnotationProcessorFactory"
-         factorypathref="my.factorypath.id"
-         preprocessdir="${preprocess.dir}"&gt;
-    &lt;/apt&gt;
+<blockquote><pre>
+&lt;apt srcdir="${src}"
+     destdir="${build}"
+     classpath="xyz.jar"
+     debug="true"
+     compile="false"
+     factory="com.mycom.MyAnnotationProcessorFactory"
+     factorypathref="my.factorypath.id"
+     preprocessdir="${preprocess.dir}"&gt;
+&lt;/apt&gt;
 
-    &lt;javac srcdir="${src}"
-         destdir="${build}"
-         classpath="xyz.jar"
-         debug="on"/&gt;
+&lt;javac srcdir="${src}"
+       destdir="${build}"
+       classpath="xyz.jar"
+       debug="on"/&gt;
 
-    &lt;javac srcdir="${preprocess.dir}"
-         destdir="${build}"
-         classpath="xyz.jar"
-         debug="true"/&gt;
-</pre>
+&lt;javac srcdir="${preprocess.dir}"
+       destdir="${build}"
+       classpath="xyz.jar"
+       debug="true"/&gt;
+</pre></blockquote>
 
 This may involve more build file coding, but the speedup gained from switching
 to jikes may justify the effort.

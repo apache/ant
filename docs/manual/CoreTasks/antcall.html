@@ -147,24 +147,24 @@ targets so specified, in the order specified.</p>
 <p><em>since Ant 1.6.3</em>.</p>
 
 <h3>Examples</h3>
-<pre>
-  &lt;target name=&quot;default&quot;&gt;
-    &lt;antcall target=&quot;doSomethingElse&quot;&gt;
-      &lt;param name=&quot;param1&quot; value=&quot;value&quot;/&gt;
-    &lt;/antcall&gt;
-  &lt;/target&gt;
+<blockquote><pre>
+&lt;target name=&quot;default&quot;&gt;
+  &lt;antcall target=&quot;doSomethingElse&quot;&gt;
+    &lt;param name=&quot;param1&quot; value=&quot;value&quot;/&gt;
+  &lt;/antcall&gt;
+&lt;/target&gt;
 
-  &lt;target name=&quot;doSomethingElse&quot;&gt;
-    &lt;echo message=&quot;param1=${param1}&quot;/&gt;
-  &lt;/target&gt;
-</pre>
+&lt;target name=&quot;doSomethingElse&quot;&gt;
+  &lt;echo message=&quot;param1=${param1}&quot;/&gt;
+&lt;/target&gt;
+</pre></blockquote>
 <p>Will run the target 'doSomethingElse' and echo 'param1=value'.</p>
 
-<pre>
-  &lt;antcall ... &gt;
-    &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot;/&gt;
-  &lt;/antcall&gt;
-</pre>
+<blockquote><pre>
+&lt;antcall ... &gt;
+  &lt;reference refid=&quot;path1&quot; torefid=&quot;path2&quot;/&gt;
+&lt;/antcall&gt;
+</pre></blockquote>
 
 <p>will copy the parent's definition of <code>path1</code> into the
 new project using the id <code>path2</code>.</p>
