@@ -97,7 +97,10 @@ public class Ant extends Task {
     /** the basedir where is executed the build file */
     private File dir = null;
 
-    /** the build.xml file (can be absolute) in this case dir will be ignored */
+    /** 
+     * the build.xml file (can be absolute) in this case dir will be
+     * ignored 
+     */
     private String antFile = null;
 
     /** the target to call if any */
@@ -142,13 +145,27 @@ public class Ant extends Task {
        inheritRefs = value;
     }
 
+    /**
+     * Creates a Project instance for the project to call.
+     */
     public void init() {
         newProject = new Project();
         newProject.setJavaVersionProperty();
         newProject.addTaskDefinition("property",
-                             (Class)project.getTaskDefinitions().get("property"));
+                                     (Class) project.getTaskDefinitions()
+                                             .get("property"));
     }
 
+    /**
+     * Called in execute or createProperty of newProject is null.
+     *
+     * <p>This can happen if the same instance of this task is run
+     * twice as newProject is set to null at the end of execute (to
+     * save memory and help the GC).</p>
+     *
+     * <p>Sets all properties that have been defined as nested
+     * property elements.</p>
+     */
     private void reinit() {
         init();
         final int count = properties.size();
@@ -169,6 +186,13 @@ public class Ant extends Task {
         }
     }
 
+    /**
+     * Attaches the build listeners of the current project to the new
+     * project, configures a possible logfile, transfers task and
+     * data-type definitions, transfers properties (either all or just
+     * the ones specified as user properties to the current project,
+     * depending on inheritall).
+     */
     private void initializeProject() {
         Vector listeners = project.getBuildListeners();
         final int count = listeners.size();
@@ -245,6 +269,11 @@ public class Ant extends Task {
         }
     }
 
+    /**
+     * Pass output sent to System.out to the new project.
+     *
+     * @since Ant 1.5
+     */
     protected void handleOutput(String line) {
         if (newProject != null) {
             newProject.demuxOutput(line, false);
@@ -253,6 +282,11 @@ public class Ant extends Task {
         }
     }
 
+    /**
+     * Pass output sent to System.err to the new project.
+     *
+     * @since Ant 1.5
+     */
     protected void handleErrorOutput(String line) {
         if (newProject != null) {
             newProject.demuxOutput(line, true);
@@ -265,6 +299,9 @@ public class Ant extends Task {
      * Do the execution.
      */
     public void execute() throws BuildException {
+        File savedDir = dir;
+        String savedAntFile = antFile;
+        String savedTarget = target;
         try {
             if (newProject == null) {
                 reinit();
@@ -291,7 +328,6 @@ public class Ant extends Task {
 
             File file = FileUtils.newFileUtils().resolveFile(dir, antFile);
             antFile = file.getAbsolutePath();
-
 
             log("calling target "+(target!=null?target:"[default]")
                     + " in build file "+  antFile.toString(),
@@ -325,6 +361,9 @@ public class Ant extends Task {
                     //ignore
                 }
             }
+            dir = savedDir;
+            antFile = savedAntFile;
+            target = savedTarget;
         }
     }
 
@@ -344,7 +383,7 @@ public class Ant extends Task {
     /**
      * Add the references explicitly defined as nested elements to the
      * new project.  Also copy over all references that don't override
-     * existing references in the new project if inheritall has been
+     * existing references in the new project if inheritrefs has been
      * requested.
      */
     private void addReferences() throws BuildException {
@@ -356,7 +395,8 @@ public class Ant extends Task {
                 Reference ref = (Reference)e.nextElement();
                 String refid = ref.getRefId();
                 if (refid == null) {
-                    throw new BuildException("the refid attribute is required for reference elements");
+                    throw new BuildException("the refid attribute is required"
+                                             + " for reference elements");
                 }
                 if (!thisReferences.containsKey(refid)) {
                     log("Parent project doesn't contain any reference '"
@@ -422,8 +462,8 @@ public class Ant extends Task {
                 // ignore this if the class being referenced does not have
                 // a set project method.
             } catch(Exception e2) {
-                String msg = "Error setting new project instance for reference with id "
-                    + oldKey;
+                String msg = "Error setting new project instance for "
+                    + "reference with id " + oldKey;
                 throw new BuildException(msg, e2, location);
             }
         }
@@ -431,7 +471,7 @@ public class Ant extends Task {
     }
 
     /**
-     * ...
+     * Set the dir attribute.
      */
     public void setDir(File d) {
         this.dir = d;
@@ -457,6 +497,11 @@ public class Ant extends Task {
         this.target = s;
     }
 
+    /**
+     * Set the name of a log file.  This will be resolved relative to
+     * the dir attribute if specified, relative to the current
+     * project's basedir otherwise.
+     */
     public void setOutput(String s) {
         this.output = s;
     }
