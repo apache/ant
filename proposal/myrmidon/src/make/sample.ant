@@ -40,7 +40,7 @@ Legal:
   <target name="typedef-test">
     <typedef name="log2"
              type="task"
-             classname="org.apache.myrmidon.libs.core.Log"
+             classname="org.apache.antlib.core.Log"
              lib="../../dist/lib/core.atl" />
 
     <log2 message="Luke to Echo base. Can you hear me?"/>
@@ -97,6 +97,23 @@ Legal:
 
     <log blee:some-param="blah" message="Blee namespace test successful!"/>
 
+  </target>
+
+  <target name="fail-test1">
+    <fail message="Build is failing"/>
+  </target>
+
+  <target name="fail-test2">
+    <fail message="Build is failing if prop X is set" if="x"/>
+  </target>
+
+  <target name="fail-test3">
+    <fail message="Build is failing unless prop X is set" unless="x"/>
+  </target>
+
+  <target name="fail-test4">
+    <fail>Some multiline fail
+    message.</fail>
   </target>
 
   <target name="ant1-tasklib-test">
