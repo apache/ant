@@ -1,26 +1,8 @@
 
-//  Microsoft (R) .NET Framework IL Disassembler.  Version 1.0.3705.0
-//  Copyright (C) Microsoft Corporation 1998-2001. All rights reserved.
-
-
-// Image base: 0x03180000
-//
-// ============== CLASS STRUCTURE DECLARATION ==================
-//
 .class public auto ansi beforefieldinit Example2
        extends [mscorlib]System.Object
 {
 } // end of class Example2
-
-
-// =============================================================
-
-
-// =============== GLOBAL FIELDS AND METHODS ===================
-
-
-// =============================================================
-
 
 // =============== CLASS MEMBERS DECLARATION ===================
 //   note that class flags, 'extends' and 'implements' clauses
@@ -46,7 +28,4 @@
 } // end of class Example2
 
 
-// =============================================================
 
-//*********** DISASSEMBLY COMPLETE ***********************
-// WARNING: Created Win32 resource file example2.res
