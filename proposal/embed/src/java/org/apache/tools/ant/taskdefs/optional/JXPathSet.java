@@ -67,6 +67,7 @@ import org.apache.commons.jxpath.*;
  *  Set a JXPath property
  *  
  *
+ * @deprecated A generic <property> should be used.
  * @author Costin Manolache
  */
 public class JXPathSet extends Task {

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.*;
 import java.io.*;
 import java.util.*;
@@ -69,49 +70,56 @@ import org.apache.velocity.Template;
  *
  * @author Costin Manolache
  */
-public class VelocityProperties extends Task implements PropertyInterceptor {
-    VelocityEngine engine;
-    VelocityContext context;
+public class VelocityProperties extends Task {
     public static final String PREFIX="vm:";
-    
+    VelocityPropertyHelper helper=new VelocityPropertyHelper();
+
     public VelocityProperties() {
     }
 
-    public boolean setProperty( Object c, String ns, String name, Object v ) {
-        return false;
-    }
-    
-    public Object getProperty( Object p, String ns, String name ) {
-        if( ! name.startsWith(PREFIX) )
-            return null;
-        try {
-            name=name.substring( PREFIX.length() );
-            StringWriter sw=new StringWriter();
-            
-            engine.evaluate( context, sw, "antVM", name );
-            
-            System.out.println("VM: getProperty " + ns + " " + name + "=" + sw.toString());
-            return sw.toString();
-        } catch( Exception ex ) {
-            ex.printStackTrace();
-            return null;
+    static class VelocityPropertyHelper extends PropertyHelper {
+        VelocityEngine engine;
+        VelocityContext context;
+
+        public Object getPropertyHook( String ns, String name, boolean user ) {
+            if( ! name.startsWith(PREFIX) ) {
+                // pass on to next
+                return super.getPropertyHook(ns, name, user);
+            }
+            try {
+                name=name.substring( PREFIX.length() );
+                StringWriter sw=new StringWriter();
+
+                engine.evaluate( context, sw, "antVM", name );
+
+                System.out.println("VM: getProperty " + ns + " " + name + "=" + sw.toString());
+                return sw.toString();
+            } catch( Exception ex ) {
+                ex.printStackTrace();
+                return null;
+            }
         }
     }
 
     public VelocityEngine getVelocityEngine() {
-        return engine;
+        return helper.engine;
     }
     
     public void execute() {
         try {
-            PropertyHelper2 phelper=PropertyHelper2.getPropertyHelper( project );
-            phelper.addPropertyInterceptor( this );
-
-            engine=new VelocityEngine();
-            engine.init();
+            // Prepare the engine
+            helper.engine=new VelocityEngine();
+            helper.engine.init();
             
-            context=new VelocityContext();
-            context.put( "ant", project );
+            helper.context=new VelocityContext();
+            helper.context.put( "ant", project );
+
+            // Register it
+            PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
+            helper.setNext( phelper.getNext() );
+            helper.setProject( project );
+            phelper.setNext( helper );
+
         } catch( Exception ex ) {
             ex.printStackTrace();
         }

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.types.*;
 import java.io.*;
 import java.util.*;
@@ -67,43 +68,47 @@ import org.apache.commons.jexl.*;
  *
  * @author Costin Manolache
  */
-public class JexlProperties extends Task implements PropertyInterceptor {
-    JexlContext jc;
+public class JexlProperties extends Task {
     public static String PREFIX="jexl:";
-    
+    JexlPropertyHelper helper=new JexlPropertyHelper();
+
     public JexlProperties() {
     }
-    
-    public boolean setProperty( Object ctx, String ns, String name, Object value ) {
-        return false;
-    }
 
-    public Object getProperty( Object p, String ns, String name ) {
-        if( ! name.startsWith(PREFIX) )
-            return null;
-        try {
-            name=name.substring( PREFIX.length() );
-            Expression e = ExpressionFactory.createExpression(name);
-            Object o = e.evaluate(jc);
+    static class JexlPropertyHelper extends PropertyHelper {
+        JexlContext jc;
 
-            return o;
-        } catch( Exception ex ) {
-            ex.printStackTrace();
-            return null;
+        public Object getPropertyHook( String ns, String name, boolean user ) {
+            if( ! name.startsWith(PREFIX) ) {
+                return super.getPropertyHook(ns, name, user);
+            }
+            try {
+                name=name.substring( PREFIX.length() );
+                Expression e = ExpressionFactory.createExpression(name);
+                Object o = e.evaluate(jc);
+
+                return o;
+            } catch( Exception ex ) {
+                ex.printStackTrace();
+                return null;
+            }
         }
     }
     
-    
     public void execute() {
-        PropertyHelper2 phelper=PropertyHelper2.getPropertyHelper( project );
-        phelper.addPropertyInterceptor( this );
-
         /*
          *  First make a jexlContext and put stuff in it
          */
-        jc = JexlHelper.createContext();
+        helper.jc = JexlHelper.createContext();
+        helper.jc.getVars().put("ant", project);
 
-        jc.getVars().put("ant", project);
+        // register it
+        PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
+        helper.setNext( phelper.getNext() );
+        helper.setProject( project );
+        phelper.setNext( helper );
+
+
 
     }    
 }

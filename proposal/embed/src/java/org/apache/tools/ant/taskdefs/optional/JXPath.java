@@ -66,7 +66,7 @@ import org.apache.commons.jxpath.*;
 // Experimental: need to add code to select the 'root', etc.
 
 /**
- *  Enable JXPath dynamic properties
+ *  Enable JXPath dynamic properties.
  *
  * @author Costin Manolache
  * @author Nicola Ken Barozzi
@@ -74,35 +74,24 @@ import org.apache.commons.jxpath.*;
 public class JXPath extends Task {
 
     public static String PREFIX="jxpath:";
-    JXPathContext jxpathCtx;
+    JXPathPropertyHelper helper=new JXPathPropertyHelper();
 
     public JXPath() {
     }
 
     public JXPathContext getJXPathContext() {
-        return jxpathCtx;
-    }
-
-    // testing
-    String foo;
-    public void setFoo( String s ) {
-        System.out.println("Set foo " + s );
-        foo=s;
-    }
-
-    public String getFoo() {
-        return foo;
+        return helper.jxpathCtx;
     }
 
     public void execute() {
         JXPathIntrospector.registerDynamicClass(Hashtable.class, JXPathHashtableHandler.class);
-        jxpathCtx=JXPathContext.newContext( project );
-        jxpathCtx.setVariables(new AntVariables());
+        helper.jxpathCtx=JXPathContext.newContext( project );
+        helper.jxpathCtx.setVariables(new AntVariables());
 
         PropertyHelper phelper=PropertyHelper.getPropertyHelper( project );
-        JXPathPropertyHelper hook=new JXPathPropertyHelper(jxpathCtx);
-        hook.setNext( phelper.getNext() );
-        phelper.setNext( hook );
+        helper.setProject( project );
+        helper.setNext( phelper.getNext() );
+        phelper.setNext( helper );
 
         project.addReference( "jxpathTask", this );
 
@@ -112,15 +101,13 @@ public class JXPath extends Task {
     static class JXPathPropertyHelper extends PropertyHelper {
         JXPathContext jxpathCtx;
 
-        public JXPathPropertyHelper( JXPathContext jxCtx ) {
-            this.jxpathCtx=jxCtx;
-        }
-
-        public boolean setProperty( String ns, String name, Object v, boolean inh,
-                                    boolean user, boolean isNew)
+        public boolean setPropertyHook( String ns, String name, Object v, boolean inh,
+                                        boolean user, boolean isNew)
         {
-            if( ! name.startsWith(PREFIX) )
-                return false;
+            if( ! name.startsWith(PREFIX) ) {
+                // pass to next
+                return super.setPropertyHook(ns, name, v, inh, user, isNew);
+            }
             name=name.substring( PREFIX.length() );
 
             jxpathCtx.setValue( name, v );
@@ -128,10 +115,12 @@ public class JXPath extends Task {
         }
 
         public Object getPropertyHook( String ns, String name , boolean user) {
-            if( ! name.startsWith(PREFIX) )
-                return null;
-            name=name.substring( PREFIX.length() );
+            if( ! name.startsWith(PREFIX) ) {
+                // pass to next
+                return super.getPropertyHook(ns, name, user);
+            }
 
+            name=name.substring( PREFIX.length() );
 
             //Object o=jxpathCtx.getValue( name );
             //System.out.println("JXPath: getProperty " + ns + " " + name + "=" + o + o.getClass());
@@ -148,14 +137,11 @@ public class JXPath extends Task {
 
             while (iter.hasNext()) {
                 Object o = iter.next();
-                //System.out.println("JXPath: getProperty " + ns + " " + name + "=" + o + o.getClass());
                 result += ", "+o;
             }
 
             return result;
         }
-
-
     }
 
 
