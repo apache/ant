@@ -524,7 +524,9 @@ public class Project extends ModelElement {
                      = fullProjectName == null ? localDependencyName
                      : fullProjectName + REF_DELIMITER + localDependencyName;
                 flattenDependency(flattenedList, fullDependencyName);
-                flattenedList.add(fullDependencyName);
+                if (!flattenedList.contains(fullDependencyName)) {
+                    flattenedList.add(fullDependencyName);
+                }
             }
         } catch (ModelException e) {
             throw new ConfigException(e);

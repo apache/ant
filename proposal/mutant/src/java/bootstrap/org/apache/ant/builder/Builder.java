@@ -124,6 +124,8 @@ public class Builder {
         files.add(new File(PACKAGE_ROOT, "DirectoryScanner.java"));
         files.add(new File(PACKAGE_ROOT, "FileScanner.java"));
         files.add(new File(PACKAGE_ROOT, "PathTokenizer.java"));
+        files.add(new File(PACKAGE_ROOT, "TaskAdapter.java"));
+        files.add(new File(PACKAGE_ROOT, "MatchingTask.java"));
         files.add(new File(PACKAGE_ROOT, "util/FileUtils.java"));
         files.add(new File(PACKAGE_ROOT, "defaultManifest.mf"));
         files.add(new File(TASKDEFS_ROOT, "defaults.properties"));

@@ -222,8 +222,11 @@ public class ExecutionManager implements DemuxOutputReceiver {
      * @param isErr true if this content is from the thread's error stream.
      */
     public void threadOutput(String line, boolean isErr) {
-        eventSupport.threadOutput(line, isErr);
+        if (mainFrame == null) {
+            eventSupport.threadOutput(line, isErr);
+        } else {
+            mainFrame.threadOutput(line, isErr);
+        }
     }
-
 }
 

@@ -133,10 +133,10 @@ public abstract class Task extends ProjectComponent
 
 
     /**
-     * XXX Adds a feature to the NestedTask attribute of the Task object
+     * Add a nested task to this Ant1 task. 
      *
-     * @param task XXX The feature to be added to the NestedTask attribute
-     * @exception ExecutionException XXX Description of Exception
+     * @param task The task to be added
+     * @exception ExecutionException if the task cannot be added.
      */
     public void addNestedTask(org.apache.ant.common.antlib.Task task)
          throws ExecutionException {
