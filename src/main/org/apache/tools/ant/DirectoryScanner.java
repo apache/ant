@@ -849,7 +849,7 @@ public class DirectoryScanner
                         String path = FILE_UTILS.removeLeadingPath(canonBase,
                                                                   canonFile);
                         if (!path.equals(currentelement) || ON_VMS) {
-                            myfile = findFile(basedir, currentelement);
+                            myfile = findFile(basedir, currentelement, true);
                             if (myfile != null) {
                                 currentelement =
                                     FILE_UTILS.removeLeadingPath(basedir,
@@ -861,7 +861,7 @@ public class DirectoryScanner
                     }
                 }
                 if ((myfile == null || !myfile.exists()) && !isCaseSensitive()) {
-                    File f = findFileCaseInsensitive(basedir, currentelement);
+                    File f = findFile(basedir, currentelement, false);
                     if (f.exists()) {
                         // adapt currentelement to the case we've
                         // actually found
@@ -1448,75 +1448,18 @@ public class DirectoryScanner
     }
 
     /**
-     * From <code>base</code> traverse the filesystem in a case
-     * insensitive manner in order to find a file that matches the
-     * given name.
-     *
-     * @param base base File (dir).
-     * @param path file path.
-     * @return File object that points to the file in question.  if it
-     * hasn't been found it will simply be <code>new File(base,
-     * path)</code>.
-     *
-     * @since Ant 1.6
-     */
-    private File findFileCaseInsensitive(File base, String path) {
-        File f = findFileCaseInsensitive(base,
-                                         SelectorUtils.tokenizePath(path));
-        return  f == null ? new File(base, path) : f;
-    }
-
-    /**
-     * From <code>base</code> traverse the filesystem in a case
-     * insensitive manner in order to find a file that matches the
-     * given stack of names.
-     *
-     * @param base base File (dir).
-     * @param pathElements Vector of path elements (dirs...file).
-     * @return File object that points to the file in question or null.
-     *
-     * @since Ant 1.6
-     */
-    private File findFileCaseInsensitive(File base, Vector pathElements) {
-        if (pathElements.size() == 0) {
-            return base;
-        }
-        if (!base.isDirectory()) {
-            return null;
-        }
-        String[] files = list(base);
-        if (files == null) {
-            throw new BuildException("IO error scanning directory "
-                                     + base.getAbsolutePath());
-        }
-        String current = (String) pathElements.remove(0);
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].equals(current)) {
-                return findFileCaseInsensitive(
-                    new File(base, files[i]), pathElements);
-            }
-        }
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].equalsIgnoreCase(current)) {
-                return findFileCaseInsensitive(
-                    new File(base, files[i]), pathElements);
-            }
-        }
-        return null;
-    }
-
-    /**
      * From <code>base</code> traverse the filesystem in order to find
      * a file that matches the given name.
      *
      * @param base base File (dir).
      * @param path file path.
+     * @param cs whether to scan case-sensitively.
      * @return File object that points to the file in question or null.
      *
-     * @since Ant 1.6
+     * @since Ant 1.7
      */
-    private File findFile(File base, String path) {
-        return findFile(base, SelectorUtils.tokenizePath(path));
+    private File findFile(File base, String path, boolean cs) {
+        return findFile(base, SelectorUtils.tokenizePath(path), cs);
     }
 
     /**
@@ -1525,11 +1468,12 @@ public class DirectoryScanner
      *
      * @param base base File (dir).
      * @param pathElements Vector of path elements (dirs...file).
+     * @param cs whether to scan case-sensitively.
      * @return File object that points to the file in question or null.
      *
-     * @since Ant 1.6
+     * @since Ant 1.7
      */
-    private File findFile(File base, Vector pathElements) {
+    private File findFile(File base, Vector pathElements, boolean cs) {
         if (pathElements.size() == 0) {
             return base;
         }
@@ -1542,10 +1486,16 @@ public class DirectoryScanner
                                      + base.getAbsolutePath());
         }
         String current = (String) pathElements.remove(0);
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].equals(current)) {
-                base = new File(base, files[i]);
-                return findFile(base, pathElements);
+
+        //always scan first NOT ignoring case; if cs, do a 2nd scan ignoring case:
+        boolean[] ignoreCase = cs ? new boolean[] {false}
+                                  : new boolean[] {false, true};
+        for (int i = 0; i < ignoreCase.length; i++) {
+            for (int j = 0; j < files.length; j++) {
+                if (ignoreCase[i] ? files[j].equalsIgnoreCase(current)
+                                  : files[j].equals(current)) {
+                    return findFile(new File(base, files[j]), pathElements, cs);
+                }
             }
         }
         return null;
