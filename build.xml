@@ -699,7 +699,6 @@
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}">
         <exclude name="**/images/**"/>
-        <exclude name="artwork/**"/>
       </fileset>
       <filterset refid="ant.filters"/>
     </copy>
@@ -707,7 +706,6 @@
     <copy todir="${dist.docs}" filtering="false">
       <fileset dir="${docs.dir}">
         <include name="**/images/**"/>
-        <include name="artwork/**"/>
       </fileset>
     </copy>
 
