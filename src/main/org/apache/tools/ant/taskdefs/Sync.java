@@ -324,21 +324,6 @@ public class Sync extends Task {
     }
 
     /**
-     * Sets the character encoding
-     */
-    public void setEncoding(String encoding) {
-        _copy.setEncoding(encoding);
-    }
-
-    /**
-     * Sets the character encoding for output files.
-     */
-    public void setOutputEncoding(String encoding) {
-        _copy.setOutputEncoding(encoding);
-    }
-
-
-    /**
      * Subclass Copy in order to access it's file/dir maps.
      */
     public static class MyCopy
