@@ -20,9 +20,7 @@ package org.apache.tools.ant.util.regexp;
  * Regular expression utilities class which handles flag operations.
  *
  */
-public final class RegexpUtil {
-    private RegexpUtil() {
-    }
+public class RegexpUtil {
 
     /**
      * Check the options has a particular flag set.
