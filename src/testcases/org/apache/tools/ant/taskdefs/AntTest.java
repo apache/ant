@@ -222,7 +222,7 @@ public class AntTest extends BuildFileTest {
             getProject().resolveFile("test1.log"),
             getProject().resolveFile("test2.log"),
             getProject().resolveFile("ant/test3.log"),
-            getProject().resolveFile("ant/test3.log")
+            getProject().resolveFile("ant/test4.log")
         };
         for (int i=0; i<logFiles.length; i++) {
             assertTrue(logFiles[i].getName()+" doesn\'t exist",
