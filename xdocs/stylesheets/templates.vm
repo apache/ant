@@ -162,7 +162,7 @@
       #set ($name = $tab.getAttributeValue("name"))
       #set ($link = $tab.getAttributeValue("href"))
       #if ( ($currentIndex && $currentIndex.trim().equals( $index )) || ((!$currentIndex) && $velocityCount == 1) )
-                    <td width="8"><img alt="" height="5" width="8" src="images/spacer.gif"></td><td valign="bottom">
+                    <td width="8"><img alt="" height="5" width="8" src="$relativePath/images/spacer.gif"></td><td valign="bottom">
                       <table summary="selected tab" style="height: 1.5em" border="0" cellpadding="0" cellspacing="0">
                         <tr>
                         <td valign="top" width="5" bgcolor="$blue2"><img height="5" width="5" alt="" src="$relativePath/images/tabSel-left.gif"></td><td valign="middle" bgcolor="$blue2"><font color="$lightfg" size="2" face="Arial, Helvetica, Sans-serif"><b>$name</b></font></td><td valign="top" width="5" bgcolor="$blue2"><img height="5" width="5" alt="" src="$relativePath/images/tabSel-right.gif"></td>
@@ -180,7 +180,7 @@
       #end
     #end
   #else
-                    <td width="8"><img alt="" height="5" width="8" src="images/spacer.gif"></td><td valign="bottom">
+                    <td width="8"><img alt="" height="5" width="8" src="$relativePath/images/spacer.gif"></td><td valign="bottom">
                       <table summary="selected tab" style="height: 1.5em" border="0" cellpadding="0" cellspacing="0">
                         <tr>
                         <td valign="top" width="5" bgcolor="$blue2"><img height="5" width="5" alt="" src="$relativePath/images/tabSel-left.gif"></td><td valign="middle" bgcolor="$blue2"><font color="$lightfg" size="2" face="Arial, Helvetica, Sans-serif"><b>Home</b></font></td><td valign="top" width="5" bgcolor="$blue2"><img height="5" width="5" alt="" src="$relativePath/images/tabSel-right.gif"></td>
