@@ -170,6 +170,11 @@ Other changes:
 
 * A binary option has been added to <concat>. Bugzilla Report 26312.
 
+* Added DynamicConfiguratorNS, an namespace aware version of
+  DynamicConfigurator. Bugzilla Report 28436.
+
+* Add implicit nested element to <macrodef>. Bugzilla Report 25633.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
