@@ -19,6 +19,9 @@ Fixed bugs:
 
 * <property environment=... /> now works on OS/400.
 
+* <manifest> wouldn't update an existing manifest if only an attribute
+  of an existing section changed.
+
 Other changes:
 --------------
 

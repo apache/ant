@@ -626,6 +626,24 @@ public class Manifest {
         }
 
         /**
+         * Clone this section
+         *
+         * @since Ant 1.5.2
+         */
+        public Object clone() {
+            Section cloned = new Section();
+            cloned.setName(name);
+            Enumeration e = getAttributeKeys();
+            while (e.hasMoreElements()) {
+                String key = (String) e.nextElement();
+                Attribute attribute = getAttribute(key);
+                cloned.storeAttribute(new Attribute(attribute.getName(), 
+                                                    attribute.getValue()));
+            }
+            return cloned;
+        }
+
+        /**
          * Store an attribute and update the index.
          *
          * @param attribute the attribute to be stored
@@ -841,7 +859,7 @@ public class Manifest {
          throws ManifestException {
         if (other != null) {
              if (overwriteMain) {
-                 mainSection = other.mainSection;
+                 mainSection = (Section) other.mainSection.clone();
              } else {
                  mainSection.merge(other.mainSection);
              }
@@ -858,7 +876,7 @@ public class Manifest {
                     = (Section) other.sections.get(sectionName);
                  if (ourSection == null) {
                      if (otherSection != null) {
-                         addConfiguredSection(otherSection);
+                         addConfiguredSection((Section) otherSection.clone());
                      }
                  } else {
                      ourSection.merge(otherSection);

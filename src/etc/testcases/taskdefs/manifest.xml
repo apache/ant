@@ -188,6 +188,18 @@
     <manifest file="mftest.mf" mode="update">
       <attribute name="Foo" value="Bar" />
     </manifest>
+
+    <copy file="manifests/test2.mf" toFile="mftest2.mf" />
+    <manifest file="mftest2.mf" mode="update">
+      <section name="Test">
+        <attribute name="Foo" value="Bar" />
+      </section>
+    </manifest>
+    <manifest file="mftest2.mf" mode="update">
+      <section name="Test">
+        <attribute name="Foo" value="Baz" />
+      </section>
+    </manifest>
   </target>
 
   <target name="clean">
