@@ -14,6 +14,7 @@ import java.util.Iterator;
 import java.util.Map;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -380,11 +381,19 @@ public class DefaultWorkspace
         final Condition condition = target.getCondition();
         if( null != condition )
         {
-            if( false == condition.evaluate( frame.getContext() ) )
+            try
             {
-                getLogger().debug( "Skipping target " + name +
-                                   " as it does not satisfy condition" );
-                return;
+                if( false == condition.evaluate( frame.getContext() ) )
+                {
+                    getLogger().debug( "Skipping target " + name +
+                                       " as it does not satisfy condition" );
+                    return;
+                }
+            }
+            catch( final ContextException ce )
+            {
+                throw new TaskException( "Error evaluating Condition for target " + 
+                                         name, ce );
             }
         }
 
