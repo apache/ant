@@ -54,7 +54,7 @@
 
 #macro (faq $faq)
   #set ($id = $faq.getAttributeValue("id"))
-  <a name="$id">
+  <a name="$id">&nbsp;</a>
   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="$subbannerbg">
       <font color="$subbannerfg" face="arial,helvetica,sanserif">
@@ -79,7 +79,6 @@
       </blockquote>
     </td></tr>
   </table>
-  </a>
 #end
 
 #macro (faqs)

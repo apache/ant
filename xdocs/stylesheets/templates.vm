@@ -48,9 +48,13 @@
 #macro ( th $value)
   #if ($value.getAttributeValue("colspan"))
     #set ($colspan = $value.getAttributeValue("colspan"))
+  #else
+    #set ($colspan = 1)
   #end
   #if ($value.getAttributeValue("rowspan"))
     #set ($rowspan = $value.getAttributeValue("rowspan"))
+  #else
+    #set ($rowspan = 1)
   #end
   <td bgcolor="$tablethbg" colspan="$!colspan" rowspan="$!rowspan" 
       valign="top" align="left">
@@ -165,9 +169,9 @@
       #if ($root.getChild("properties").getChild("base"))
         #set ($url = $root.getChild("properties").getChild("base").getAttributeValue("href"))
         #if ($url)
-          <base href="$url"/>
+          <base href="$url">
         #else
-          <base href="$project.getAttributeValue("href")$relativePath"/>
+          <base href="$project.getAttributeValue("href")$relativePath">
         #end
       #end 
 
