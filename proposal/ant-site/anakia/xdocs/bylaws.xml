@@ -9,7 +9,7 @@
   <section name="Apache Ant Project Bylaws">
     <p>
       This document defines the bylaws under which the Apache Ant project 
-      operates. It defines the the roles and responsibilities of the 
+      operates. It defines the roles and responsibilities of the 
       project, who may vote, how voting works, how conflicts are resolved, 
       etc.
     </p>
@@ -44,7 +44,7 @@
     <p>
       Apache projects define a set of roles with associated rights and 
       responsibilities. These roles govern what tasks an individual may perform 
-      within the project. The roles are defined in the the following sections
+      within the project. The roles are defined in the following sections
     </p>
 
     <ul>
@@ -65,7 +65,7 @@
 
       <p>
         Users contribute to the Apache projects by providing feedback to 
-        developers in the the form of bug reports and feature suggestions. As 
+        developers in the form of bug reports and feature suggestions. As 
         well, users participate in the Apache community by helping other users 
         on mailing lists and user support forums.
       </p>
@@ -95,7 +95,7 @@
         consensus of the active PMC members. A Committer is considered emeritus 
         by their own declaration or by not contributing in any form to the 
         project for over six months. An emeritus committer may request 
-        reinstatement of commit access fromt he PMC. Such reinstatement is
+        reinstatement of commit access from the PMC. Such reinstatement is
         subject to lazy consensus of active PMC members. 
       </p>
       
@@ -112,7 +112,7 @@
       </p>
 
       <p>
-        A committer who makes a sustained contibution to the project may be 
+        A committer who makes a sustained contribution to the project may be 
         invited to become a member of the PMC. The form of contribution is 
         not limited to code. It can also include code review, helping out 
         users on the mailing lists, documentation, etc.
@@ -124,7 +124,7 @@
         <a href="mission.html">resolution</a> of the board of the Apache 
         Software Foundation on 18<sup>th</sup> November 2002. The PMC is 
         responsible to the board and the ASF for the management and oversight 
-        of the Apache Ant codebase. The responsibilites of the PMC include
+        of the Apache Ant codebase. The responsibilities of the PMC include
       </p>
 
       <ul>
@@ -224,7 +224,7 @@
             This is a negative vote. On issues where consensus is required, 
             this vote counts as a <strong>veto</strong>. All vetoes must 
             contain an explanation of why the veto is appropriate. Vetoes with 
-            no explanation are void. IT may also be appropriate for a -1 vote
+            no explanation are void. It may also be appropriate for a -1 vote
             to include an alternative course of action.
           </td>
         </tr>
@@ -283,7 +283,7 @@
           <td>
             An action with lazy approval is implicitly allowed unless a -1 vote
             is received, at which time, depending on the type of action, either
-            Lazy Majority or Lazy consensus approval must be obtained.
+            lazy majority or lazy consensus approval must be obtained.
           </td>
         </tr>
 
@@ -294,7 +294,7 @@
             members to pass. Such actions typically affect the foundation 
             of the project (e.g. adopting a new codebase to replace an existing 
             product). The higher threshold is designed to ensure such changes 
-            are stronly supported. To pass this vote requires at least 2/3 of 
+            are strongly supported. To pass this vote requires at least 2/3 of 
             binding vote holders to vote +1
           </td>
         </tr>
@@ -305,7 +305,7 @@
       <p>
         A valid, binding veto cannot be overruled. If a veto is cast, it must be
         accompanied by a valid reason explaining the reasons for the veto. The 
-        validity of a veto, if challeneged, can be confirmed by anyone who has 
+        validity of a veto, if challenged, can be confirmed by anyone who has 
         a binding vote. This does not necessarily  signify agreement with the
         veto - merely that the veto is valid. 
       </p>
@@ -313,14 +313,14 @@
       <p>
         If you disagree with a valid veto, you must lobby the person casting 
         the veto to withdraw their veto. If a veto is not withdrawn, the action 
-        that has been vetoed bust be reversed in a timely manner.
+        that has been vetoed must be reversed in a timely manner.
       </p>
     </subsection>
     
     <subsection name="Actions">
       <p>
         This section describes the various actions which are undertaken within
-        the project, the correspnding approval required for that action and
+        the project, the corresponding approval required for that action and
         those who have binding votes over the action.
       </p>
       
@@ -339,7 +339,7 @@
             content, etc.
           </td>
           <td>
-            Lazy Approval and then Lazy consensus. 
+            Lazy approval and then lazy consensus. 
           </td>
           <td>
             Active committers.
@@ -352,7 +352,7 @@
             nominates a Release Manager.
           </td>
           <td>
-            Lazy Majority
+            Lazy majority
           </td>
           <td>
             Active committers
@@ -363,7 +363,7 @@
           <td>
             When a release of one of the project's products is ready, a vote is
             required to accept the release as an official release of the
-            Project.
+            project.
           </td>
           <td>
             Lazy Majority
@@ -373,18 +373,18 @@
           </td>
         </tr>
         <tr>
-          <td><strong>Adoption of new codebase</strong></td>
+          <td><strong>Adoption of New Codebase</strong></td>
           <td>
             When the codebase for an existing, released product is to be 
             replaced with an alternative codebase.  Alternative codebases 
-            may be developed in the project's source code reposity according 
+            may be developed in the project's source code repository according 
             to the 
             <a href="http://incubator.apache.org/rules-for-revolutionaries.html">
             Rules for Revolutionaries</a>. If such a vote fails to gain approval, 
             the existing code base will continue.
           </td>
           <td>
-            2/3 Majority
+            2/3 majority
           </td>
           <td>
             Active committers
@@ -430,7 +430,7 @@
           </td>
         </tr>
         <tr>
-          <td><strong>PMC member Removal</strong></td>
+          <td><strong>PMC Member Removal</strong></td>
           <td>
             <p>When removal of a PMC member is sought.</p>
             <p><b>Note: </b> Such actions will also be referred to the 
