@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -142,10 +142,9 @@ public final class StripLineComments
             }
         } else {
             line = readLine();
-            if (line == null) {
-                ch = -1;
-            } else {
-                int commentsSize = comments.size();
+            final int commentsSize = comments.size();
+
+            while (line != null) {
                 for (int i = 0; i < commentsSize; i++) {
                     String comment = (String) comments.elementAt(i);
                     if (line.startsWith(comment)) {
@@ -153,6 +152,16 @@ public final class StripLineComments
                         break;
                     }
                 }
+
+                if (line == null) {
+                    // line started with comment
+                    line = readLine();
+                } else {
+                    break;
+                }
+            }
+
+            if (line != null) {
                 return read();
             }
         }

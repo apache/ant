@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,7 +88,7 @@ public final class LineContainsRegExp
     /** Vector that holds the expressions that input lines must contain. */
     private Vector regexps = new Vector();
 
-    /** 
+    /**
      * Remaining line to be read from this filter, or <code>null</code> if
      * the next call to <code>read()</code> should read the original stream
      * to find the next matching line.
@@ -97,7 +97,7 @@ public final class LineContainsRegExp
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public LineContainsRegExp() {
@@ -121,9 +121,9 @@ public final class LineContainsRegExp
      * 
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -142,10 +142,9 @@ public final class LineContainsRegExp
             }
         } else {
             line = readLine();
-            if (line == null) {
-                ch = -1;
-            } else {
-                final int regexpsSize = regexps.size();
+            final int regexpsSize = regexps.size();
+
+            while (line != null) {
                 for (int i = 0; i < regexpsSize; i++) {
                     RegularExpression regexp = (RegularExpression)
                                                         regexps.elementAt(i);
@@ -157,6 +156,15 @@ public final class LineContainsRegExp
                     }
                 }
 
+                if (line == null) {
+                    // line didn't match
+                    line = readLine();
+                } else {
+                    break;
+                }
+            }
+
+            if (line != null) {
                 return read();
             }
         }
