@@ -54,12 +54,14 @@
 
 package org.apache.tools.ant;
 
+import java.io.Serializable;
+
 /**
  * Stores the location of a piece of text within a file (file name,
  * line number and column number). Note that the column number is
  * currently ignored.
  */
-public class Location {
+public class Location implements Serializable {
     
     /** Name of the file. */
     private String fileName;
