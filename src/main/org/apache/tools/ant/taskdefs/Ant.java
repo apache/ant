@@ -487,7 +487,7 @@ public class Ant extends Task {
     }
 
     /**
-     * The directory to use as a basedir for the new Ant project.
+     * The directory to use as a base directory for the new Ant project.
      * Defaults to the current project's basedir, unless inheritall
      * has been set to false, in which case it doesn't have a default
      * value. This will override the basedir setting of the called project.

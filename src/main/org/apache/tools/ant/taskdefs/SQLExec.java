@@ -92,7 +92,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
 /**
- * <p>Executes a series of SQL statements via JDBC to a database. Statements can 
+ * Executes a series of SQL statements to a database using JDBC.
+ *
+ * <p>Statements can
  * either be read in from a text file using the <i>src</i> attribute or from 
  * between the enclosing SQL tags.</p>
  * 
@@ -213,7 +215,7 @@ public class SQLExec extends JDBCTask {
 
         
     /**
-     * Set the name of the sql file to be run.
+     * Set the name of the SQL file to be run.
      * Required unless statements are enclosed in the build file
      */
     public void setSrc(File srcFile) {
@@ -266,7 +268,7 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * Set the Delimiter type for this sql task; default "normal" 
+     * Set the delimiter type: "normal" or "row" (default "normal").
      *
      * <p>The delimiter type takes two values - normal and row. Normal
      * means that any occurence of the delimiter terminate the SQL
@@ -295,7 +297,7 @@ public class SQLExec extends JDBCTask {
 
     /**
      * Set the output file; 
-     * optional, defaults to the ant log 
+     * optional, defaults to the Ant log.
      */
     public void setOutput(File output) {
         this.output = output;
