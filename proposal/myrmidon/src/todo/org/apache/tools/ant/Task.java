@@ -13,24 +13,6 @@ public abstract class Task
     extends ProjectComponent
     implements org.apache.myrmidon.api.Task
 {
-    private String description;
-
-    /**
-     * Sets a description of the current action. It will be usefull in
-     * commenting what we are doing.
-     *
-     * @param desc The new Description value
-     */
-    public void setDescription( String desc )
-    {
-        description = desc;
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
     /**
      * Perform this task
      */
