@@ -312,17 +312,13 @@ public class UnknownElement extends Task {
         Class parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
 
+
         if (children != null) {
             Iterator it = children.iterator();
             for (int i = 0; it.hasNext(); i++) {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
                 UnknownElement child = (UnknownElement) it.next();
-
-                // backwards compatibility - element names of nested
-                // elements have been all lower-case in Ant, except for
-                // TaskContainers
-                if (!handleChild(ih, parent, child,
-                                 child.getTag().toLowerCase(Locale.US),
+                if (!handleChild(ih, parent, child, 
                                  childWrapper)) {
                     if (!(parent instanceof TaskContainer)) {
                         ih.throwNotSupported(getProject(), parent,
@@ -475,17 +471,24 @@ public class UnknownElement extends Task {
      */
     private boolean handleChild(IntrospectionHelper ih,
                                 Object parent, UnknownElement child,
-                                String childTag,
                                 RuntimeConfigurable childWrapper) {
-        if (ih.supportsNestedElement(childTag)) {
-            Object realChild
-                = ih.createElement(getProject(), parent, childTag);
+        // backwards compatibility - element names of nested
+        // elements have been all lower-case in Ant, except for
+        // TaskContainers
+        String childName = child.getTag().toLowerCase(Locale.US);
+        if (ih.supportsNestedElement(childName)) {
+            IntrospectionHelper.Creator creator =
+                ih.getElementCreator(getProject(), parent, childName);
+            creator.setPolyType(childWrapper.getPolyType());
+            Object realChild=creator.create();
+            childWrapper.setCreator(creator);
             childWrapper.setProxy(realChild);
             if (realChild instanceof Task) {
                 Task childTask = (Task) realChild;
                 childTask.setRuntimeConfigurableWrapper(childWrapper);
-                childTask.setTaskName(childTag);
-                childTask.setTaskType(childTag);
+                childTask.setTaskName(childName);
+                childTask.setTaskType(childName);
+                childTask.setLocation(child.getLocation());
             }
             child.handleChildren(realChild, childWrapper);
             return true;

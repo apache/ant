@@ -77,6 +77,9 @@ import org.xml.sax.helpers.AttributeListImpl;
  */
 public class RuntimeConfigurable implements Serializable {
 
+    /** Polymorphic attribute (May be XML NS attribute later) */
+    private static final String ANT_TYPE = "ant-type";
+    
     /** Name of the element to configure. */
     private String elementTag = null;
 
@@ -88,7 +91,10 @@ public class RuntimeConfigurable implements Serializable {
      */
     private transient Object wrappedObject = null;
 
-    /**
+    /** the creator used to make the wrapped object */
+    private transient IntrospectionHelper.Creator creator;
+
+    /** 
      * @deprecated
      * XML attributes for the element.
      */
@@ -112,6 +118,9 @@ public class RuntimeConfigurable implements Serializable {
     /** Indicates if the wrapped object has been configured */
     private boolean proxyConfigured = false;
 
+    /** the polymorphic type */
+    private String polyType = null;
+    
     /**
      * Sole constructor creating a wrapper for the specified object.
      *
@@ -140,6 +149,16 @@ public class RuntimeConfigurable implements Serializable {
     }
 
     /**
+     * Sets the creator of the element to be configured
+     * used to store the element in the parent;
+     *
+     * @param creator the creator object
+     */
+    void setCreator(IntrospectionHelper.Creator creator) {
+        this.creator = creator;
+    }
+    
+    /**
      * Get the object for which this RuntimeConfigurable holds the configuration
      * information
      *
@@ -147,6 +166,13 @@ public class RuntimeConfigurable implements Serializable {
      */
     public Object getProxy() {
         return wrappedObject;
+    }
+
+    /**
+     * get the polymorphic type for this element
+     */
+    public String getPolyType() {
+        return polyType;
     }
 
     /**
@@ -170,12 +196,16 @@ public class RuntimeConfigurable implements Serializable {
      * @param value the attribute's value.
      */
     public void setAttribute(String name, String value) {
-        if (attributeNames == null) {
-            attributeNames = new ArrayList();
-            attributeMap = new HashMap();
+        if (name.equalsIgnoreCase(ANT_TYPE)) {
+            this.polyType = value;
+        } else {
+            if (attributeNames == null) {
+                attributeNames = new ArrayList();
+                attributeMap = new HashMap();
+            }
+            attributeNames.add(name);
+            attributeMap.put(name, value);
         }
-        attributeNames.add(name);
-        attributeMap.put(name, value);
     }
 
     /** Return the attribute map.
@@ -389,6 +419,12 @@ public class RuntimeConfigurable implements Serializable {
                 childTask.setRuntimeConfigurableWrapper(child);
             }
 
+ 
+            if ((child.creator != null) && configureChildren) {
+                child.maybeConfigure(p);
+                child.creator.store();
+                continue;
+            }
             /*
              * backwards compatibility - element names of nested
              * elements have been all lower-case in Ant, except for
