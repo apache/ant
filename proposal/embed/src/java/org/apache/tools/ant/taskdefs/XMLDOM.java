@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.types;
+package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
