@@ -163,7 +163,7 @@ public class Chmod extends ExecuteOn
             Execute execute = prepareExec();
             try
             {
-                execute.setCommandline( cmdl.getCommandline() );
+                execute.setCommandline( getCommand().getCommandline() );
                 runExecute( execute );
             }
             catch( IOException e )

@@ -153,7 +153,6 @@ public class Cab extends MatchingTask
                 File outFile = null;
 
                 // die if cabarc fails
-                exec.setFailonerror( true );
                 exec.setDir( baseDir );
 
                 if( !doVerbose )

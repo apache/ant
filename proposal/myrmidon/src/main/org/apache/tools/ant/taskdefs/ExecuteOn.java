@@ -140,7 +140,7 @@ public class ExecuteOn extends ExecTask
         {
             throw new TaskException( getName() + " doesn\'t support multiple srcfile elements." );
         }
-        srcFilePos = cmdl.createMarker();
+        srcFilePos = getCommand().createMarker();
         return srcFilePos;
     }
 
@@ -157,7 +157,7 @@ public class ExecuteOn extends ExecTask
         {
             throw new TaskException( getName() + " doesn\'t support multiple targetfile elements." );
         }
-        targetFilePos = cmdl.createMarker();
+        targetFilePos = getCommand().createMarker();
         srcIsFirst = ( srcFilePos != null );
         return targetFilePos;
     }
@@ -205,7 +205,7 @@ public class ExecuteOn extends ExecTask
         String[] targetFiles = new String[ targets.size() ];
         targetFiles = (String[])targets.toArray( targetFiles );
 
-        String[] orig = cmdl.getCommandline();
+        String[] orig = getCommand().getCommandline();
         String[] result = new String[ orig.length + srcFiles.length + targetFiles.length ];
 
         int srcIndex = orig.length;

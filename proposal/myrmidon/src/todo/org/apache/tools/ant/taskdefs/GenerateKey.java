@@ -238,7 +238,6 @@ public class GenerateKey
             cmd.createArg().setValue( "" + validity );
         }
 
-        cmd.setFailonerror( true );
         cmd.execute();
     }
 
