@@ -474,6 +474,14 @@ public class Project {
         return(bs.toString());
     }
 
+    // returns the boolean equivalent of a string, which is considered true
+    // if either "on", "true", or "yes" is found, case insensitiveness.
+    public static boolean toBoolean(String s) {
+        return (s.equalsIgnoreCase("on") || 
+                s.equalsIgnoreCase("true") || 
+                s.equalsIgnoreCase("yes"));
+    }
+    
     // Given a string defining a target name, and a Hashtable
     // containing the "name to Target" mapping, pick out the
     // Target and execute it.
