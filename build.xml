@@ -246,10 +246,13 @@
 
     <javac srcdir="${src.tests.dir}"
            destdir="${build.tests}"
-           classpath="${lib.dir}/${name}.jar:${classpath}"
            debug="on"
            deprecation="off"
            optimize="on" >
+      <classpath>
+        <pathelement location="${lib.dir}/${name}.jar" />
+        <pathelement path="${classpath}" />
+      </classpath>
       <include name="**/*.java"/>
       <exclude name="**/AllJUnitTests.java" unless="junit.present" />
       <exclude name="**/EnumeratedAttributeTest.java" unless="junit.present" />

@@ -87,7 +87,7 @@ public class Rmic extends MatchingTask {
     private String classname;
     private String sourceBase;
     private String stubVersion;
-    private String compileClasspath;
+    private Path compileClasspath;
     private boolean verify = false;
     private boolean filtering = false;
 
@@ -123,8 +123,22 @@ public class Rmic extends MatchingTask {
     /**
      * Set the classpath to be used for this compilation.
      */
-    public void setClasspath(String classpath) {
-        compileClasspath = project.translatePath(classpath);
+    public void setClasspath(Path classpath) {
+        if (compileClasspath == null) {
+            compileClasspath = classpath;
+        } else {
+            compileClasspath.append(classpath);
+        }
+    }
+
+    /**
+     * Maybe creates a nesetd classpath element.
+     */
+    public Path createClasspath() {
+        if (compileClasspath == null) {
+            compileClasspath = new Path();
+        }
+        return compileClasspath;
     }
 
     /**
@@ -352,11 +366,9 @@ public class Rmic extends MatchingTask {
     // we need a way to not use the current classpath.
 
     private String getCompileClasspath(File baseFile) {
-        StringBuffer classpath = new StringBuffer();
-
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
-        classpath.append(baseFile.getAbsolutePath());
+        Path classpath = new Path(baseFile.getAbsolutePath());
 
         // add our classpath to the mix
 
@@ -365,14 +377,13 @@ public class Rmic extends MatchingTask {
         }
 
         // add the system classpath
+        addExistingToClasspath(classpath, Path.systemClasspath);
 
-        addExistingToClasspath(classpath,System.getProperty("java.class.path"));
         // in jdk 1.2, the system classes are not on the visible classpath.
-
         if (Project.getJavaVersion().startsWith("1.2")) {
             String bootcp = System.getProperty("sun.boot.class.path");
             if (bootcp != null) {
-                addExistingToClasspath(classpath, bootcp);
+                addExistingToClasspath(classpath, new Path(bootcp));
             }
         }
         return classpath.toString();
@@ -389,21 +400,18 @@ public class Rmic extends MatchingTask {
      * @param source - source classpath
      * to get file objects.
      */
-    private void addExistingToClasspath(StringBuffer target,String source) {
-       StringTokenizer tok = new StringTokenizer(source,
-                             System.getProperty("path.separator"), false);
-       while (tok.hasMoreTokens()) {
-           File f = project.resolveFile(tok.nextToken());
+    private void addExistingToClasspath(Path target, Path source) {
+        String[] list = source.list();
+        for (int i=0; i<list.length; i++) {
+            File f = project.resolveFile(list[i]);
 
-           if (f.exists()) {
-               target.append(File.pathSeparator);
-               target.append(f.getAbsolutePath());
+            if (f.exists()) {
+                target.setLocation(f.getAbsolutePath());
            } else {
                log("Dropping from classpath: "+
                    f.getAbsolutePath(), Project.MSG_VERBOSE);
            }
-       }
-
+        }
     }
 }
 

@@ -111,7 +111,7 @@ public class Javadoc extends Exec {
 
     public class DocletInfo {
         private String name;
-        private String path;
+        private Path path;
         
         private Vector params = new Vector();
         
@@ -123,15 +123,26 @@ public class Javadoc extends Exec {
             return name;
         }
         
-        public void setPath(String path) {
-            this.path = Project.translatePath(path);
+        public void setPath(Path path) {
+            if (this.path == null) {
+                this.path = path;
+            } else {
+                this.path.append(path);
+            }
         }
 
-        public String getPath() {
+        public Path getPath() {
             return path;
         }
         
-        public Object createParam() {
+        public Path createPath() {
+            if (path == null) {
+                path = new Path();
+            }
+            return path;
+        }
+
+        public DocletParam createParam() {
             DocletParam param = new DocletParam();
             params.addElement(param);
             
@@ -144,7 +155,7 @@ public class Javadoc extends Exec {
     }
 
     private String maxmemory = null;
-    private String sourcePath = null;
+    private Path sourcePath = null;
     private String additionalParam = null;
     private File destDir = null;
     private File overviewFile = null;
@@ -158,8 +169,8 @@ public class Javadoc extends Exec {
     private boolean version = true;
     private DocletInfo doclet = null;
     private boolean old = false;
-    private String classpath = null;
-    private String bootclasspath = null;
+    private Path classpath = null;
+    private Path bootclasspath = null;
     private String extdirs = null;
     private boolean verbose = false;
     private String locale = null;
@@ -199,8 +210,18 @@ public class Javadoc extends Exec {
         additionalParam = src;
     }
     
-    public void setSourcepath(String src) {
-        sourcePath = project.translatePath(src);
+    public void setSourcepath(Path src) {
+        if (sourcePath == null) {
+            sourcePath = src;
+        } else {
+            sourcePath.append(src);
+        }
+    }
+    public Path createSourcepath() {
+        if (sourcePath == null) {
+            sourcePath = new Path();
+        }
+        return sourcePath;
     }
     public void setDestdir(String src) {
         destDir = project.resolveFile(src);
@@ -233,7 +254,7 @@ public class Javadoc extends Exec {
         doclet.setName(src);
     }
     
-    public void setDocletPath(String src) {
+    public void setDocletPath(Path src) {
         if (doclet == null) {
             doclet = new DocletInfo();
         }
@@ -248,11 +269,31 @@ public class Javadoc extends Exec {
     public void setOld(String src) {
         old = Project.toBoolean(src);
     }
-    public void setClasspath(String src) {
-        classpath = project.translatePath(src);
+    public void setClasspath(Path src) {
+        if (classpath == null) {
+            classpath = src;
+        } else {
+            classpath.append(src);
+        }
     }
-    public void setBootclasspath(String src) {
-        bootclasspath = project.translatePath(src);
+    public Path createClasspath() {
+        if (classpath == null) {
+            classpath = new Path();
+        }
+        return classpath;
+    }
+    public void setBootclasspath(Path src) {
+        if (bootclasspath == null) {
+            bootclasspath = src;
+        } else {
+            bootclasspath.append(src);
+        }
+    }
+    public Path createBootclasspath() {
+        if (bootclasspath == null) {
+            bootclasspath = new Path();
+        }
+        return bootclasspath;
     }
     public void setExtdirs(String src) {
         extdirs = src;
@@ -420,7 +461,7 @@ public class Javadoc extends Exec {
 
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
-            classpath = System.getProperty("java.class.path");
+            classpath = Path.systemClasspath;
 
 
         if(maxmemory != null){
@@ -434,15 +475,15 @@ public class Javadoc extends Exec {
 
         if ( (!javadoc1) || (sourcePath == null) ) {
             argList.addElement("-classpath");
-            argList.addElement(classpath);
+            argList.addElement(classpath.toString());
             if (sourcePath != null) {
                 argList.addElement("-sourcepath");
-                argList.addElement(sourcePath);
+                argList.addElement(sourcePath.toString());
             }
         } else {
             argList.addElement("-classpath");
-            argList.addElement(sourcePath +
-                System.getProperty("path.separator") + classpath);
+            argList.addElement(sourcePath.toString() +
+                System.getProperty("path.separator") + classpath.toString());
         }
 
         if (destDir != null) {
@@ -510,7 +551,7 @@ public class Javadoc extends Exec {
                     argList.addElement(doclet.getName());
                     if (doclet.getPath() != null) {
                         argList.addElement("-docletpath");
-                        argList.addElement(doclet.getPath());
+                        argList.addElement(doclet.getPath().toString());
                     }
                     for (Enumeration e = doclet.getParams(); e.hasMoreElements();) {
                         DocletParam param = (DocletParam)e.nextElement();
@@ -527,7 +568,7 @@ public class Javadoc extends Exec {
             } 
             if (bootclasspath != null) {
                 argList.addElement("-bootclasspath");
-                argList.addElement(bootclasspath);
+                argList.addElement(bootclasspath.toString());
             }
             if (extdirs != null) {
                 argList.addElement("-extdirs");
@@ -712,15 +753,15 @@ public class Javadoc extends Exec {
      * with the packages found in that path subdirs matching one of the given
      * patterns.
      */
-    private void evaluatePackages(String sourcePath, Vector packages, Vector argList) {
+    private void evaluatePackages(Path sourcePath, Vector packages, Vector argList) {
         log("Parsing source files for packages", Project.MSG_INFO);
-        log("Source path = " + sourcePath, Project.MSG_VERBOSE);
+        log("Source path = " + sourcePath.toString(), Project.MSG_VERBOSE);
         log("Packages = " + packages, Project.MSG_VERBOSE);
 
         Vector addedPackages = new Vector();
-        PathTokenizer tokenizer = new PathTokenizer(sourcePath);
-        while (tokenizer.hasMoreTokens()) {
-            File source = new File(project.translatePath(tokenizer.nextToken()));
+        String[] list = sourcePath.list();
+        for (int j=0; j<list.length; j++) {
+            File source = project.resolveFile(list[j]);
             
             Hashtable map = mapClasses(source);
 

@@ -91,6 +91,9 @@ public class Path {
 
     private Vector definition;
 
+    public static Path systemClasspath = 
+        new Path(System.getProperty("java.class.path"));
+
     public Path(String path) {
         this();
         setPath(path);

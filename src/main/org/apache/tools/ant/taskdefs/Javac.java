@@ -109,14 +109,14 @@ public class Javac extends MatchingTask {
     private Vector srcPathElements = new Vector();
     private Vector srcDirs= new Vector();
     private File destDir;
-    private String compileClasspath;
+    private Path compileClasspath;
     private boolean debug = false;
     private boolean optimize = false;
     private boolean deprecation = false;
     private boolean filtering = false;
     private String target;
-    private String bootclasspath;
-    private String extdirs;
+    private Path bootclasspath;
+    private Path extdirs;
 
     protected Vector compileList = new Vector();
     protected Hashtable filecopyList = new Hashtable();
@@ -187,24 +187,66 @@ public class Javac extends MatchingTask {
     /**
      * Set the classpath to be used for this compilation.
      */
-    public void setClasspath(String classpath) {
-        compileClasspath = project.translatePath(classpath);
+    public void setClasspath(Path classpath) {
+        if (compileClasspath == null) {
+            compileClasspath = classpath;
+        } else {
+            compileClasspath.append(classpath);
+        }
+    }
+
+    /**
+     * Maybe creates a nested classpath element.
+     */
+    public Path createClasspath() {
+        if (compileClasspath == null) {
+            compileClasspath = new Path();
+        }
+        return compileClasspath;
     }
 
     /**
      * Sets the bootclasspath that will be used to compile the classes
      * against.
      */
-    public void setBootclasspath(String bootclasspath) {
-        this.bootclasspath = project.translatePath(bootclasspath);
+    public void setBootclasspath(Path bootclasspath) {
+        if (this.bootclasspath == null) {
+            this.bootclasspath = bootclasspath;
+        } else {
+            this.bootclasspath.append(bootclasspath);
+        }
+    }
+
+    /**
+     * Maybe creates a nested classpath element.
+     */
+    public Path createBootclasspath() {
+        if (bootclasspath == null) {
+            bootclasspath = new Path();
+        }
+        return bootclasspath;
     }
 
     /**
      * Sets the extension directories that will be used during the
      * compilation.
      */
-    public void setExtdirs(String extdirs) {
-        this.extdirs = project.translatePath(extdirs);
+    public void setExtdirs(Path extdirs) {
+        if (this.extdirs == null) {
+            this.extdirs = extdirs;
+        } else {
+            this.extdirs.append(extdirs);
+        }
+    }
+
+    /**
+     * Maybe creates a nested classpath element.
+     */
+    public Path createExtdirs() {
+        if (extdirs == null) {
+            extdirs = new Path();
+        }
+        return extdirs;
     }
 
     /**
@@ -387,14 +429,14 @@ public class Javac extends MatchingTask {
      * <code>classes.zip</code> be added to the classpath.  
      */
     private String getCompileClasspath(boolean addRuntime) {
-        StringBuffer classpath = new StringBuffer();
+        Path classpath = new Path();
 
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
 
         //classpath.append(sourceDir.getAbsolutePath());
         //classpath.append(File.pathSeparator);
-        classpath.append(destDir.getAbsolutePath());
+        classpath.setLocation(destDir.getAbsolutePath());
 
         // add our classpath to the mix
 
@@ -404,26 +446,27 @@ public class Javac extends MatchingTask {
 
         // add the system classpath
 
-        addExistingToClasspath(classpath,System.getProperty("java.class.path"));
+        addExistingToClasspath(classpath, Path.systemClasspath);
         if (addRuntime) {
             if (Project.getJavaVersion() == Project.JAVA_1_1) {
                 addExistingToClasspath(classpath,
-                                       System.getProperty("java.home")
-                                       + File.separator + "lib"
-                                       + File.separator + "classes.zip");
+                                       new Path(System.getProperty("java.home")
+                                                + File.separator + "lib"
+                                                + File.separator 
+                                                + "classes.zip"));
             } else {
                 // JDK > 1.1 seems to set java.home to the JRE directory.
                 addExistingToClasspath(classpath,
-                                       System.getProperty("java.home")
-                                       + File.separator + "lib"
-                                       + File.separator + "rt.jar");
+                                       new Path(System.getProperty("java.home")
+                                                + File.separator + "lib"
+                                                + File.separator + "rt.jar"));
                 // Just keep the old version as well and let addExistingToPath
                 // sort it out.
                 addExistingToClasspath(classpath,
-                                       System.getProperty("java.home")
-                                       + File.separator +"jre"
-                                       + File.separator + "lib"
-                                       + File.separator + "rt.jar");
+                                       new Path(System.getProperty("java.home")
+                                                + File.separator +"jre"
+                                                + File.separator + "lib"
+                                                + File.separator + "rt.jar"));
             }
         }
             
@@ -442,21 +485,18 @@ public class Javac extends MatchingTask {
      * @param source - source classpath
      * to get file objects.
      */
-    private void addExistingToClasspath(StringBuffer target,String source) {
-       StringTokenizer tok = new StringTokenizer(source,
-                             System.getProperty("path.separator"), false);
-       while (tok.hasMoreTokens()) {
-           File f = project.resolveFile(tok.nextToken());
+    private void addExistingToClasspath(Path target, Path source) {
+        String[] list = source.list();
+        for (int i=0; i<list.length; i++) {
+            File f = project.resolveFile(list[i]);
 
-           if (f.exists()) {
-               target.append(File.pathSeparator);
-               target.append(f.getAbsolutePath());
+            if (f.exists()) {
+                target.setLocation(f.getAbsolutePath());
            } else {
                log("Dropping from classpath: "+
                    f.getAbsolutePath(), Project.MSG_VERBOSE);
            }
-       }
-
+        }
     }
 
     /**
@@ -496,10 +536,10 @@ public class Javac extends MatchingTask {
         argList.addElement("-classpath");
         // Just add "sourcepath" to classpath ( for JDK1.1 )
         if (Project.getJavaVersion().startsWith("1.1")) {
-            argList.addElement(classpath + File.pathSeparator +
+            argList.addElement(classpath.toString() + File.pathSeparator +
                                getSourcePath());
         } else {
-            argList.addElement(classpath);
+            argList.addElement(classpath.toString());
             argList.addElement("-sourcepath");
             argList.addElement(getSourcePath());
             if (target != null) {
@@ -515,11 +555,11 @@ public class Javac extends MatchingTask {
         }
         if (bootclasspath != null) {
             argList.addElement("-bootclasspath");
-            argList.addElement(bootclasspath);
+            argList.addElement(bootclasspath.toString());
         }
         if (extdirs != null) {
             argList.addElement("-extdirs");
-            argList.addElement(extdirs);
+            argList.addElement(extdirs.toString());
         }
 
         log("Compilation args: " + argList.toString(),
@@ -582,7 +622,7 @@ public class Javac extends MatchingTask {
         argList.addElement("-d");
         argList.addElement(destDir.getAbsolutePath());
         argList.addElement("-classpath");
-        argList.addElement(classpath);
+        argList.addElement(classpath.toString());
         argList.addElement("-sourcepath");
         argList.addElement(getSourcePath());
         if (target != null) {
@@ -597,11 +637,11 @@ public class Javac extends MatchingTask {
         }
         if (bootclasspath != null) {
             argList.addElement("-bootclasspath");
-            argList.addElement(bootclasspath);
+            argList.addElement(bootclasspath.toString());
         }
         if (extdirs != null) {
             argList.addElement("-extdirs");
-            argList.addElement(extdirs);
+            argList.addElement(extdirs.toString());
         }
 
         log("Compilation args: " + argList.toString(),
@@ -669,8 +709,7 @@ public class Javac extends MatchingTask {
     private void doJikesCompile() throws BuildException {
         log("Using jikes compiler", Project.MSG_VERBOSE);
 
-        StringBuffer classpath = new StringBuffer();
-        classpath.append(getCompileClasspath(true));
+        Path classpath = new Path(getCompileClasspath(true));
 
         // Jikes doesn't support an extension dir (-extdir)
         // so we'll emulate it for compatibility and convenience.
@@ -678,8 +717,7 @@ public class Javac extends MatchingTask {
 
         // Jikes has no option for source-path so we
         // will add it to classpath.
-        classpath.append(File.pathSeparator);
-        classpath.append(getSourcePath());
+        classpath.setPath(getSourcePath());
 
         Vector argList = new Vector();
 
@@ -797,23 +835,20 @@ public class Javac extends MatchingTask {
      * so that you don't have to specify them all one by one.
      * @param classpath - stringbuffer to append jar files to
      */
-    private void addExtdirsToClasspath(StringBuffer classpath) {
+    private void addExtdirsToClasspath(Path classpath) {
        // FIXME
        // Should we scan files recursively? How does
        // javac handle this?
 
        if (extdirs != null) {
-           StringTokenizer tok = new StringTokenizer(extdirs,
-                                                     File.pathSeparator,
-                                                     false);
-           while (tok.hasMoreTokens()) {
-               File dir = project.resolveFile(tok.nextToken());
+           String[] list = extdirs.list();
+           for (int j=0; j<list.length; j++) {
+               File dir = project.resolveFile(list[j]);
                String[] files = dir.list(new JarFilenameFilter());
                for (int i=0 ; i < files.length ; i++) {
                    File f = new File(dir,files[i]);
                    if (f.exists() && f.isFile()) {
-                       classpath.append(File.pathSeparator);
-                       classpath.append(f.getAbsolutePath());
+                       classpath.setLocation(f.getAbsolutePath());
                    }
                }
            }
