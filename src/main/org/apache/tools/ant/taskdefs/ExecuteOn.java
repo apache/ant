@@ -186,7 +186,7 @@ public class ExecuteOn extends ExecTask {
     /**
      * Whether to ignore nonexistent files from filelists.
      *
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     public void setIgnoremissing(boolean b) {
         ignoreMissing = b;
