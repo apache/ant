@@ -155,7 +155,10 @@ public class Javah
         {
             m_bootclasspath = new Path();
         }
-        return m_bootclasspath.createPath();
+        Path path1 = m_bootclasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public ClassArgument createClass()
@@ -172,7 +175,10 @@ public class Javah
         {
             m_classpath = new Path();
         }
-        return m_classpath.createPath();
+        Path path1 = m_classpath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

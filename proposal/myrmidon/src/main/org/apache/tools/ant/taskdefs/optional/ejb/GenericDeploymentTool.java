@@ -200,7 +200,10 @@ public class GenericDeploymentTool
         {
             classpath = new Path();
         }
-        return classpath.createPath();
+        Path path1 = classpath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public void processDescriptor( String descriptorFileName, SAXParser saxParser )

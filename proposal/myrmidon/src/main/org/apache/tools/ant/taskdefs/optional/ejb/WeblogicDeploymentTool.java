@@ -298,7 +298,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
         {
             wlClasspath = new Path();
         }
-        return wlClasspath.createPath();
+        Path path1 = wlClasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

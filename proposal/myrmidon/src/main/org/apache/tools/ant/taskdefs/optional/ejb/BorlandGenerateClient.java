@@ -92,7 +92,10 @@ public class BorlandGenerateClient extends Task
         {
             this.classpath = new Path();
         }
-        return this.classpath.createPath();
+        Path path1 = this.classpath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

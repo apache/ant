@@ -117,7 +117,10 @@ public class Java
     public Path createClasspath()
         throws TaskException
     {
-        return m_cmdl.createClasspath().createPath();
+        Path path1 = m_cmdl.createClasspath();
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

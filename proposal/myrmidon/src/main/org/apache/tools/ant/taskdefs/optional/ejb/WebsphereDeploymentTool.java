@@ -378,7 +378,10 @@ public class WebsphereDeploymentTool
         {
             wasClasspath = new Path();
         }
-        return wasClasspath.createPath();
+        Path path1 = wasClasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

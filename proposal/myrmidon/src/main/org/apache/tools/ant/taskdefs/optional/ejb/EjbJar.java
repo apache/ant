@@ -256,7 +256,10 @@ public class EjbJar extends MatchingTask
         {
             config.classpath = new Path();
         }
-        return config.classpath.createPath();
+        Path path1 = config.classpath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

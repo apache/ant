@@ -187,7 +187,10 @@ public class Coverage
      */
     public Path createClasspath()
     {
-        return cmdlJava.createClasspath().createPath();
+        Path path1 = cmdlJava.createClasspath();
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public Filters createFilters()

@@ -471,7 +471,10 @@ public class Rmic extends MatchingTask
         {
             compileClasspath = new Path();
         }
-        return compileClasspath.createPath();
+        Path path1 = compileClasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**
@@ -486,7 +489,10 @@ public class Rmic extends MatchingTask
         {
             extdirs = new Path();
         }
-        return extdirs.createPath();
+        Path path1 = extdirs;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public void execute()

@@ -122,7 +122,10 @@ public class WLStop extends Task
         {
             classpath = new Path();
         }
-        return classpath.createPath();
+        Path path1 = classpath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

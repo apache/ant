@@ -174,7 +174,10 @@ public class Depend extends MatchingTask
         {
             dependClasspath = new Path();
         }
-        return dependClasspath.createPath();
+        Path path1 = dependClasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

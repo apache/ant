@@ -471,7 +471,10 @@ public class Javadoc
         {
             m_bootclasspath = new Path();
         }
-        return m_bootclasspath.createPath();
+        Path path1 = m_bootclasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public Path createClasspath()
@@ -481,7 +484,10 @@ public class Javadoc
         {
             m_classpath = new Path();
         }
-        return m_classpath.createPath();
+        Path path1 = m_classpath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public DocletInfo createDoclet()
@@ -511,7 +517,10 @@ public class Javadoc
         {
             m_sourcePath = new Path();
         }
-        return m_sourcePath.createPath();
+        Path path1 = m_sourcePath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public void execute()

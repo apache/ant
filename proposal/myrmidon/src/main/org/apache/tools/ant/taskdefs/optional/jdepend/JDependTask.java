@@ -131,7 +131,10 @@ public class JDependTask
         {
             m_compileClasspath = new Path();
         }
-        return m_compileClasspath.createPath();
+        Path path1 = m_compileClasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**
@@ -156,7 +159,10 @@ public class JDependTask
         {
             m_sourcesPath = new Path();
         }
-        return m_sourcesPath.createPath();
+        Path path1 = m_sourcesPath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public void execute()

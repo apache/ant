@@ -642,7 +642,10 @@ public class Javac extends MatchingTask
         {
             bootclasspath = new Path();
         }
-        return bootclasspath.createPath();
+        Path path1 = bootclasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**
@@ -657,7 +660,10 @@ public class Javac extends MatchingTask
         {
             compileClasspath = new Path();
         }
-        return compileClasspath.createPath();
+        Path path1 = compileClasspath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**
@@ -685,7 +691,10 @@ public class Javac extends MatchingTask
         {
             extdirs = new Path();
         }
-        return extdirs.createPath();
+        Path path1 = extdirs;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**
@@ -700,7 +709,10 @@ public class Javac extends MatchingTask
         {
             src = new Path();
         }
-        return src.createPath();
+        Path path1 = src;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

@@ -348,7 +348,10 @@ public class JUnitTask extends Task
      */
     public Path createClasspath()
     {
-        return commandline.createClasspath().createPath();
+        Path path1 = commandline.createClasspath();
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     /**

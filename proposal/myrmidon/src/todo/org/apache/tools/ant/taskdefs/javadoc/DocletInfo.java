@@ -65,6 +65,9 @@ public class DocletInfo
         {
             m_path = new Path();
         }
-        return m_path.createPath();
+        Path path1 = m_path;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 }

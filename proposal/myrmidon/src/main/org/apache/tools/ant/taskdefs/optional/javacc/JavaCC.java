@@ -18,6 +18,7 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PathElement;
 import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
@@ -228,7 +229,9 @@ public class JavaCC extends Task
             throw new TaskException( "Javacchome not set." );
         }
         final Path classpath = cmdl.createClasspath();
-        classpath.createPathElement().setPath( javaccHome.getAbsolutePath() +
+        final PathElement pathElement = new PathElement();
+        classpath.addPathElement( pathElement );
+        pathElement.setPath( javaccHome.getAbsolutePath() +
                                                "/JavaCC.zip" );
         classpath.addJavaRuntime();
 

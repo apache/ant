@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
-import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.FileUtils;
@@ -54,7 +55,7 @@ public class Path
 {
     public final static Path systemClasspath = createSystemClasspath();
 
-    private ArrayList elements;
+    private ArrayList m_elements;
 
     private static Path createSystemClasspath()
     {
@@ -76,111 +77,25 @@ public class Path
         throws TaskException
     {
         this();
-        createPathElement().setPath( path );
+        final PathElement pathElement = new PathElement();
+        addPathElement( pathElement );
+        pathElement.setPath( path );
     }
 
     public Path()
     {
-        elements = new ArrayList();
-    }
-
-    /**
-     * Returns its argument with all file separator characters replaced so that
-     * they match the local OS conventions.
-     */
-    protected static String translateFile( final String source )
-    {
-        if( source == null )
-            return "";
-
-        final StringBuffer result = new StringBuffer( source );
-        for( int i = 0; i < result.length(); i++ )
-        {
-            translateFileSep( result, i );
-        }
-
-        return result.toString();
-    }
-
-    /**
-     * Splits a PATH (with : or ; as separators) into its parts.
-     */
-    protected String[] translatePath( final File baseDirectory, String source )
-    {
-        final ArrayList result = new ArrayList();
-        if( source == null )
-            return new String[ 0 ];
-
-        final String[] elements = FileUtils.parsePath( source );
-        StringBuffer element = new StringBuffer();
-        for( int i = 0; i < elements.length; i++ )
-        {
-            element.setLength( 0 );
-            final String pathElement = elements[ i ];
-            try
-            {
-                element.append( resolveFile( baseDirectory, pathElement ) );
-            }
-            catch( TaskException e )
-            {
-                final String message =
-                    "Dropping path element " + pathElement + " as it is not valid relative to the project";
-                getLogger().debug( message );
-            }
-
-            for( int j = 0; j < element.length(); j++ )
-            {
-                translateFileSep( element, j );
-            }
-            result.add( element.toString() );
-        }
-
-        return (String[])result.toArray( new String[ result.size() ] );
-    }
-
-    /**
-     * Translates all occurrences of / or \ to correct separator of the current
-     * platform and returns whether it had to do any replacements.
-     *
-     * @param buffer Description of Parameter
-     * @param pos Description of Parameter
-     * @return Description of the Returned Value
-     */
-    private static boolean translateFileSep( StringBuffer buffer, int pos )
-    {
-        if( buffer.charAt( pos ) == '/' || buffer.charAt( pos ) == '\\' )
-        {
-            buffer.setCharAt( pos, File.separatorChar );
-            return true;
-        }
-        return false;
+        m_elements = new ArrayList();
     }
 
     /**
      * Adds a String to the ArrayList if it isn't already included.
      */
-    private static void addUnlessPresent( final ArrayList list, final String entry )
+    private void addUnlessPresent( final ArrayList list, final String entry )
     {
         if( !list.contains( entry ) )
         {
             list.add( entry );
         }
-    }
-
-    /**
-     * Resolve a filename with Project's help - if we know one that is. <p>
-     *
-     * Assume the filename is absolute if project is null.</p>
-     */
-    private static String resolveFile( final File baseDirectory, final String relativeName )
-        throws TaskException
-    {
-        if( null != baseDirectory )
-        {
-            final File file = FileUtil.resolveFile( baseDirectory, relativeName );
-            return file.getAbsolutePath();
-        }
-        return relativeName;
     }
 
     /**
@@ -191,7 +106,9 @@ public class Path
      */
     public void setLocation( final File location )
     {
-        createPathElement().setLocation( location );
+        final PathElement pathElement = new PathElement();
+        addPathElement( pathElement );
+        pathElement.setLocation( location );
     }
 
     /**
@@ -201,7 +118,9 @@ public class Path
      */
     public void setPath( String path )
     {
-        createPathElement().setPath( path );
+        final PathElement pathElement = new PathElement();
+        addPathElement( pathElement );
+        pathElement.setPath( path );
     }
 
     /**
@@ -267,7 +186,7 @@ public class Path
      */
     public void addFileset( final FileSet fileSet )
     {
-        elements.add( fileSet );
+        m_elements.add( fileSet );
     }
 
     /**
@@ -334,9 +253,9 @@ public class Path
         for( int i = 0; i < list.length; i++ )
         {
             final String file = list[ i ];
-            if( elements.contains( file ) )
+            if( m_elements.contains( file ) )
             {
-                elements.add( file );
+                m_elements.add( file );
             }
         }
     }
@@ -414,21 +333,17 @@ public class Path
      * @return Description of the Returned Value
      * @exception TaskException Description of Exception
      */
-    public Path createPath()
+    public void addPath( final Path path )
     {
-        final Path other = new Path();
-        elements.add( other );
-        return other;
+        m_elements.add( path );
     }
 
     /**
      * Creates the nested <code>&lt;pathelement&gt;</code> element.
      */
-    public PathElement createPathElement()
+    public void addPathElement( final PathElement pathElement )
     {
-        final PathElement pathElement = new PathElement();
-        elements.add( pathElement );
-        return pathElement;
+        m_elements.add( pathElement );
     }
 
     /**
@@ -437,10 +352,10 @@ public class Path
     public String[] list()
         throws TaskException
     {
-        ArrayList result = new ArrayList( 2 * elements.size() );
-        for( int i = 0; i < elements.size(); i++ )
+        ArrayList result = new ArrayList( 2 * m_elements.size() );
+        for( int i = 0; i < m_elements.size(); i++ )
         {
-            Object o = elements.get( i );
+            Object o = m_elements.get( i );
             if( o instanceof String )
             {
                 // obtained via append
@@ -448,7 +363,9 @@ public class Path
             }
             else if( o instanceof PathElement )
             {
-                String[] parts = ( (PathElement)o ).getParts();
+                final File baseDirectory = getBaseDirectory();
+                final PathElement element = (PathElement)o;
+                final String[] parts = element.getParts( baseDirectory, getLogger() );
                 if( parts == null )
                 {
                     throw new NullPointerException( "You must either set location or path on <pathelement>" );
@@ -477,7 +394,7 @@ public class Path
                 {
                     File f = new File( dir, s[ j ] );
                     String absolutePath = f.getAbsolutePath();
-                    addUnlessPresent( result, translateFile( absolutePath ) );
+                    addUnlessPresent( result, FileUtils.translateFile( absolutePath ) );
                 }
             }
         }
@@ -552,26 +469,4 @@ public class Path
         }
     }
 
-    /**
-     * Helper class, holds the nested <code>&lt;pathelement&gt;</code> values.
-     */
-    public class PathElement
-    {
-        private String[] m_parts;
-
-        public void setLocation( File loc )
-        {
-            m_parts = new String[]{translateFile( loc.getAbsolutePath() )};
-        }
-
-        public void setPath( String path )
-        {
-            m_parts = translatePath( getProject().getBaseDir(), path );
-        }
-
-        public String[] getParts()
-        {
-            return m_parts;
-        }
-    }
 }

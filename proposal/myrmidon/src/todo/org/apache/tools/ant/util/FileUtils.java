@@ -15,9 +15,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Stack;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
+import org.apache.avalon.excalibur.io.FileUtil;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FilterSetCollection;
 
@@ -376,6 +378,96 @@ public class FileUtils
 
         final String[] args = new String[ v.size() ];
         return (String[])v.toArray( args );
+    }
+
+    /**
+     * Returns its argument with all file separator characters replaced so that
+     * they match the local OS conventions.
+     */
+    public static String translateFile( final String source )
+    {
+        if( source == null )
+            return "";
+
+        final StringBuffer result = new StringBuffer( source );
+        for( int i = 0; i < result.length(); i++ )
+        {
+            translateFileSep( result, i );
+        }
+
+        return result.toString();
+    }
+
+    /**
+     * Translates all occurrences of / or \ to correct separator of the current
+     * platform and returns whether it had to do any replacements.
+     *
+     * @param buffer Description of Parameter
+     * @param pos Description of Parameter
+     * @return Description of the Returned Value
+     */
+    public static boolean translateFileSep( StringBuffer buffer, int pos )
+    {
+        if( buffer.charAt( pos ) == '/' || buffer.charAt( pos ) == '\\' )
+        {
+            buffer.setCharAt( pos, File.separatorChar );
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Splits a PATH (with : or ; as separators) into its parts.
+     */
+    public static String[] translatePath( final File baseDirectory,
+                                          String source,
+                                          final Logger logger )
+    {
+        final ArrayList result = new ArrayList();
+        if( source == null )
+            return new String[ 0 ];
+
+        final String[] elements = parsePath( source );
+        StringBuffer element = new StringBuffer();
+        for( int i = 0; i < elements.length; i++ )
+        {
+            element.setLength( 0 );
+            final String pathElement = elements[ i ];
+            try
+            {
+                element.append( resolveFile( baseDirectory, pathElement ) );
+            }
+            catch( TaskException e )
+            {
+                final String message =
+                    "Dropping path element " + pathElement + " as it is not valid relative to the project";
+                logger.debug( message );
+            }
+
+            for( int j = 0; j < element.length(); j++ )
+            {
+                translateFileSep( element, j );
+            }
+            result.add( element.toString() );
+        }
+
+        return (String[])result.toArray( new String[ result.size() ] );
+    }
+
+    /**
+     * Resolve a filename with Project's help - if we know one that is. <p>
+     *
+     * Assume the filename is absolute if project is null.</p>
+     */
+    public static String resolveFile( final File baseDirectory, final String relativeName )
+        throws TaskException
+    {
+        if( null != baseDirectory )
+        {
+            final File file = FileUtil.resolveFile( baseDirectory, relativeName );
+            return file.getAbsolutePath();
+        }
+        return relativeName;
     }
 }
 

@@ -203,7 +203,10 @@ public class CovReport extends Task
         {
             coveragePath = new Path();
         }
-        return coveragePath.createPath();
+        Path path1 = coveragePath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public Reference createReference()
@@ -221,7 +224,10 @@ public class CovReport extends Task
         {
             sourcePath = new Path();
         }
-        return sourcePath.createPath();
+        Path path1 = sourcePath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public void execute()
@@ -289,7 +295,10 @@ public class CovReport extends Task
         if( sourcePath == null )
         {
             sourcePath = new Path();
-            sourcePath.createPath().setLocation( getBaseDirectory() );
+            Path path1 = sourcePath;
+            final Path path = new Path();
+            path1.addPath( path );
+            path.setLocation( getBaseDirectory() );
         }
         v.add( "-sourcepath=" + sourcePath );
 
@@ -362,7 +371,10 @@ public class CovReport extends Task
             {
                 classPath = new Path();
             }
-            return classPath.createPath();
+            Path path1 = classPath;
+            final Path path = new Path();
+            path1.addPath( path );
+            return path;
         }
 
         public ReportFilters createFilters()

@@ -92,7 +92,10 @@ public class Available
         {
             m_classpath = new Path();
         }
-        return m_classpath.createPath();
+        Path path1 = m_classpath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public Path createFilepath()
@@ -102,7 +105,10 @@ public class Available
         {
             m_filepath = new Path();
         }
-        return m_filepath.createPath();
+        Path path1 = m_filepath;
+        final Path path = new Path();
+        path1.addPath( path );
+        return path;
     }
 
     public boolean eval()
