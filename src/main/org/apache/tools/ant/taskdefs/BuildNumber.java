@@ -98,7 +98,7 @@ public class BuildNumber
                 try {
                     output.close();
                 } catch (final IOException ioe) {
-                    getProject().log("error closing output stream " + ioe, Project.MSG_ERR);
+                    log("error closing output stream " + ioe, Project.MSG_ERR);
                 }
             }
             myFile = savedFile;
@@ -157,7 +157,7 @@ public class BuildNumber
                 try {
                     input.close();
                 } catch (final IOException ioe) {
-                    getProject().log("error closing input stream " + ioe, Project.MSG_ERR);
+                    log("error closing input stream " + ioe, Project.MSG_ERR);
                 }
             }
         }
