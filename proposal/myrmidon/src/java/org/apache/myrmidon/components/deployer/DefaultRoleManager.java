@@ -7,23 +7,26 @@
  */
 package org.apache.myrmidon.components.deployer;
 
+import java.net.URL;
+import java.util.Enumeration;
 import java.util.HashMap;
-import org.apache.myrmidon.api.DataType;
-import org.apache.myrmidon.api.Task;
 import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.xml.sax.InputSource;
 
 /**
- * Interface to manage roles and mapping to shorthand names.
+ * Interface to manage roles and mapping to names.
  *
- * @author <a href="mailto:bloritsch@apache.org">Berin Loritsch</a>
- * @author <a href="mailto:ricardo@apache,org">Ricardo Rocha</a>
- * @author <a href="mailto:giacomo@apache,org">Giacomo Pati</a>
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @version CVS $Revision$ $Date$
  */
 public class DefaultRoleManager
     implements RoleManager, Initializable
 {
+    private final static String ROLE_DESCRIPTOR = "META-INF/ant-roles.xml";
+
     /** Parent <code>RoleManager</code> for nested resolution */
     private final RoleManager  m_parent;
 
@@ -52,14 +55,42 @@ public class DefaultRoleManager
         m_parent = parent;
     }
 
+    /**
+     * initialize the RoleManager.
+     * This involves reading all Role descriptors in common classloader.
+     *
+     * @exception Exception if an error occurs
+     */
     public void initialize()
         throws Exception
     {
-        ///UGLY HACK!!!!!!!!!!!!!!!!!!!!!!!
-        addNameRoleMapping( "task", Task.ROLE );
-        addNameRoleMapping( "data-type", DataType.ROLE );
+        final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
 
-        //getClass().getClassLoader().getResources( "META-INF/ant-types.xml" );
+        final Enumeration enum = getClass().getClassLoader().getResources( ROLE_DESCRIPTOR );
+        while( enum.hasMoreElements() )
+        {
+            final URL url = (URL)enum.nextElement();
+            final Configuration descriptor = builder.build( new InputSource( url.toString() ) );
+            handleDescriptor( descriptor );
+        }
+    }
+
+    /**
+     * Configure RoleManager based on contents of single descriptor.
+     *
+     * @param descriptor the descriptor
+     * @exception ConfigurationException if an error occurs
+     */
+    private void handleDescriptor( final Configuration descriptor )
+        throws ConfigurationException
+    {
+        final Configuration[] types = descriptor.getChildren( "role" );
+        for( int i = 0; i < types.length; i++ )
+        {
+            final String name = types[ i ].getAttribute( "shorthand" );
+            final String role = types[ i ].getAttribute( "name" );
+            addNameRoleMapping( name, role );
+        }
     }
 
     /**
@@ -109,11 +140,17 @@ public class DefaultRoleManager
         throws IllegalArgumentException
     {
         final String oldRole = (String)m_names.get( name );
-
         if( null != oldRole && oldRole.equals( role ) )
         {
             throw new IllegalArgumentException( "Name already mapped to another role (" +
                                                 oldRole + ")" );
+        }
+
+        final String oldName = (String)m_roles.get( role );
+        if( null != oldName && oldName.equals( name ) )
+        {
+            throw new IllegalArgumentException( "Role already mapped to another name (" +
+                                                oldName + ")" );
         }
 
         m_names.put( name, role );
