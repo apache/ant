@@ -5,7 +5,7 @@
 
 <h1>.NET tasks</h1>
 <h2>Introduction</h2>
- 
+
 
 Ant support for .NET goes back to before .NET was released, and
 continues to be expanded based on user demand. Users writing nothing but
@@ -25,7 +25,7 @@ mean more than just Java and .NET: the C++ tasks in the ant-contrib
 project on sourceforge can be used with Ant to do native C++ and .NET
 cross development if that is your need. Finally, Ant support for .NET
 lets one automate .NET development under an automated build process,
-such as AntHill or Cruise Control. 
+such as AntHill or Cruise Control.
 
 <p>
 
@@ -35,11 +35,11 @@ includes the time for support calls to change. But as a consequence,
 developers working on .NET support have more freedom to play around with
 the code. It also means that the fairly unusual set of tasks supported
 by ant enable a few interesting operations that can not be performed any
-other way: 
+other way:
 <ol>
 
 <li>Integrating with a Java based SOAP Service -generating C# code from
-the server's WSDL and running it against the server. 
+the server's WSDL and running it against the server.
 </li>
 <li>Building and deploying a C#-based Web Service, then using the Apache
 Axis tasks to create JUnit tests to call the endpoints.
@@ -50,19 +50,15 @@ disassembler and the reassembler.
 </li>
 
 </ol>
-Needless to say, possible does not mean easy. 
+Needless to say, possible does not mean easy.
 <A href="http://www.manning.com/hatcher/chap15.pdf">Chapter 15</A> of
 Java Development with Ant covers the first of these, using the Ant1.5
 version of the tasks. Going the other way -generating Java client
-code and JUnit testcases is covered in 
+code and JUnit testcases is covered in
 <A href="http://www.iseran.com/Steve/papers/interop/">The Wondrous curse
 of Interop</A>. The final trick, IDL and Typelib abuse, is not
-documented as we do not want to encourage such an ugly practise. It,
+documented as we do not want to encourage such an ugly practice. It,
 can, however, be done if absolutely necessary. 
-
-
-
-
 
 <h3>Task List</h3>
 
@@ -70,37 +66,37 @@ can, however, be done if absolutely necessary.
 <tr>
   <td><a href="csc.html">Csc</a></td>
   <td>Compiles C# code</td>
-</tr>  
+</tr>
 
 <tr>
   <td><a href="vbc.html">vbc</a></td>
   <td>Compiles VB.Net code</td>
-</tr>  
+</tr>
 
 <tr>
   <td><a href="jsharpc.html">jsharpc</a></td>
   <td>Compiles J# files</td>
-</tr>  
+</tr>
 
 <tr>
   <td><a href="ildasm.html">ildasm</a></td>
   <td>Disassembles .NET executables and libraries</td>
-</tr>  
+</tr>
 
 <tr>
   <td><a href="ilasm.html">ilasm</a></td>
   <td>Assembles .il files</td>
-</tr>  
+</tr>
 
 <tr>
   <td><a href="wsdltodotnet.html">WsdlToDotnet</a></td>
   <td>Generates .NET code (C# or VB) from a WSDL file</td>
-</tr>  
+</tr>
 
 <tr>
   <td><a href="ImportTypelib.html">ImportTypelib .html</a></td>
   <td>Imports a COM type library into .NET</td>
-</tr>  
+</tr>
 
 </table>
 
@@ -225,82 +221,19 @@ implicit fileset is disabled</li>
 
 The compile tasks: vbc, jsharpc, and csc, all contain lots of common code
 in a shared base class: if you can use one you should be able to use
-another. 
+another.
 
 <h4>Ant 1.5</h4>
-This revision goes along with NET 1.0 (SP1) 
+This revision goes along with NET 1.0 (SP1)
 <ol>
 <li>CSC: added filealign</li>
 <li>CSC: added reference to office.dll</li>
 <li>CSC: dependency checking! only if destFile is set!
 <li>WsdlToDotnet written
 </ol>
-
-<h4>Version 0.4</h4>
-This is the beta-2 revision of the tasks. 
-<ol>
-<li>ILASM: pulled the owner attribute, added keyfile for giving binaries a strong name
-(MD5 hash of the checksum)</li>
-<li>CSC: added win32res , noConfig, utf8output, fullpaths</li>
-<li>CSC: </li>
-</ol>
- 
-<h4>Version 0.3</h4>
-
-The changes here reflect Beta-1 of the dotnet SDK and experience of use in 
-more complex projects. This build does not work with the older SDK, 
-primarily because the automatic reference feature references libraries
-only found in the new SDK version.  
-<p>
-External changes</p>
-<ul>
-<li>Recursive inclusion of .cs and .il files</li>
-
-<li>Documentation enhanced, includes examples and details of all parameters</li>
-
-<li>The csc task automatically includes the common dotnet assemblies, so
-there is no need to remember to refer to 'System.dll', 'System.Web.Services',
- etc. This feature can be disabled by setting the 'includeDefaultReferences' 
- flag to false. </li>
-
- <li> References can also be referred to using the ReferenceFiles parameter, which
-is an ant path specification. The old 'references' string is still retained.</li>
-<li> An 'extraoptions' attribute enables the build file to include any CSC options
-which are not explicitly supported in the CSC task. </li>
-</ul>
-
-Internal changes
-<ul>
-<li>Some minor refactoring (move common code a method)</li>
-<li>Application of Jedits JavaStyle task resulted in a major reshaping of
-the codebase and the insertion of a blank line every second line. Significant
-effort was required to revert some (but not all) changes.</li>
-<li>Removed throws clause from methods which can't throw exception<hr>
-<h2> Change Log </h2>
-
-<h4>Ant1.6</h4>
-This revision goes along with NET 1.1, though there is no reason why
-it should not work on other versions.
-<p>
-
-<ol>
-<li>vbc task</li>
-<li>jsharpc task</li>
-<li>mono support</li>
-<li>ilasm</li>
-<li>tlbimport</li>
-<li>Reference filesets in the compiler tasks</li>
-<li>definitions in the compiler tasks</li>
-<li>multiple source filesets in the compiler tasks. If these are used, the
-implicit fileset is disabled</li>
-</ol>
-
-The compile tasks: vbc, jsharpc, and csc, all contain lots of common code
-in a shared base class: if you can use one you should be able to use
-another. 
 
 <h4>Version 0.5</h4>
-This revision goes along with NET 1.0 (SP1) 
+This revision goes along with NET 1.0 (SP1)
 <ol>
 <li>CSC: added filealign</li>
 <li>CSC: added reference to office.dll</li>
@@ -309,20 +242,20 @@ This revision goes along with NET 1.0 (SP1)
 </ol>
 
 <h4>Version 0.4</h4>
-This is the beta-2 revision of the tasks. 
+This is the beta-2 revision of the tasks.
 <ol>
 <li>ILASM: pulled the owner attribute, added keyfile for giving binaries a strong name
 (MD5 hash of the checksum)</li>
 <li>CSC: added win32res , noConfig, utf8output, fullpaths</li>
 <li>CSC: </li>
 </ol>
- 
+
 <h4>Version 0.3</h4>
 
-The changes here reflect Beta-1 of the dotnet SDK and experience of use in 
-more complex projects. This build does not work with the older SDK, 
+The changes here reflect Beta-1 of the dotnet SDK and experience of use in
+more complex projects. This build does not work with the older SDK,
 primarily because the automatic reference feature references libraries
-only found in the new SDK version.  
+only found in the new SDK version.
 <p>
 External changes</p>
 <ul>
@@ -332,7 +265,7 @@ External changes</p>
 
 <li>The csc task automatically includes the common dotnet assemblies, so
 there is no need to remember to refer to 'System.dll', 'System.Web.Services',
- etc. This feature can be disabled by setting the 'includeDefaultReferences' 
+ etc. This feature can be disabled by setting the 'includeDefaultReferences'
  flag to false. </li>
 
  <li> References can also be referred to using the ReferenceFiles parameter, which
@@ -347,37 +280,21 @@ Internal changes
 <li>Application of Jedits JavaStyle task resulted in a major reshaping of
 the codebase and the insertion of a blank line every second line. Significant
 effort was required to revert some (but not all) changes.</li>
-<li>Removed throws clause from methods which can't throw exceptions </li>
+<li>Removed throws clause from methods which can't throw exception
 </ul>
 
-The test harness has been expanded to include unicode source file  
+The test harness has been expanded to include unicode source file
 (the build works but the rest of the system has 'issues' with high unicode
 package and method names)
 
 <h4>Version 0.2</h4>
-First public edition, added to the ant cvs tree. Tested on the PDC build of 
-the dotnet SDK only, and still immature. The command execution code was 
+First public edition, added to the ant cvs tree. Tested on the PDC build of
+the dotnet SDK only, and still immature. The command execution code was
 refactored out into a 'NetCommand' class for re-use. The Ilasm task was added
 at this time.
 
 <h4>Version 0.1</h4>
-Initial proof of concept; very rudimentary support for CSC only. 
-s </li>
-</ul>
-
-The test harness has been expanded to include unicode source file  
-(the build works but the rest of the system has 'issues' with high unicode
-package and method names)
-
-<h4>Version 0.2</h4>
-First public edition, added to the ant cvs tree. Tested on the PDC build of 
-the dotnet SDK only, and still immature. The command execution code was 
-refactored out into a 'NetCommand' class for re-use. The Ilasm task was added
-at this time.
-
-<h4>Version 0.1</h4>
-Initial proof of concept; very rudimentary support for CSC only. 
-
+Initial proof of concept; very rudimentary support for CSC only.
 
 <p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
