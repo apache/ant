@@ -72,6 +72,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 
 /**
  * Generate a dependency file for a given set of classes
@@ -357,21 +358,18 @@ public class Depend extends MatchingTask {
 
             if (dependencyList == null) {
                 // not cached - so need to read directly from the class file
-                FileInputStream inFileStream = null;
-                try {
-                    inFileStream = new FileInputStream(info.absoluteFile);
-                    ClassFile classFile = new ClassFile();
-                    classFile.read(inFileStream);
-
-                    dependencyList = classFile.getClassRefs();
-                    if (dependencyList != null) {
-                        cacheDirty = true;
-                        dependencyMap.put(info.className, dependencyList);
-                    }
-                } finally {
-                    if (inFileStream != null) {
-                        inFileStream.close();
-                    }
+                DependencyAnalyzer analyzer = new AntAnalyzer();
+                analyzer.addRootClass(info.className);
+                analyzer.addClassPath(destPath);
+                analyzer.setClosure(false);
+                dependencyList = new Vector();
+                Enumeration depEnum = analyzer.getClassDependencies();
+                while (depEnum.hasMoreElements()) {
+                    dependencyList.addElement(depEnum.nextElement());
+                }
+                if (dependencyList != null) {
+                    cacheDirty = true;
+                    dependencyMap.put(info.className, dependencyList);
                 }
             }
 
