@@ -51,6 +51,7 @@ public class ExecuteJavaTest extends TestCase {
         ej.setTimeout(new Long(TIME_OUT));
         project = new Project();
         project.setBasedir(".");
+        project.setProperty("ant.home", System.getProperty("ant.home"));
         cp = new Path(project, getTestClassPath());
         ej.setClasspath(cp);
     }
