@@ -958,6 +958,8 @@
     </fixcrlf>
     <fixcrlf srcdir="${src.dist.dir}">
       <include name="**/*.java"/>
+      <exclude name="src/etc/testcases/taskdefs/fixcrlf/expected/Junk?.java"/>
+      <exclude name="src/etc/testcases/taskdefs/fixcrlf/input/Junk?.java"/>
     </fixcrlf>
 
     <chmod perm="ugo+x" dir="${src.dist.dir}" type="dir"
