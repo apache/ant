@@ -31,7 +31,7 @@
   <tr>
     <td valign="top">topDir</td>
     <td valign="top">
-      this is the directory which will have the expected
+      This is the directory which will have the expected
       subdirectories, SPECS, SOURCES, BUILD, SRPMS.  If this isn't specified,
       the baseDir value is used
     </td>
@@ -45,12 +45,12 @@ directory.</td>
   </tr>
   <tr>
     <td valign="top">removeSpec</td>
-    <td valign="top">this will remove the spec file from SPECS</td>
+    <td valign="top">This will remove the spec file from SPECS</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">removeSource</td>
-    <td valign="top"> Flag (optional, default=false) 
+    <td valign="top">Flag (optional, default=false) 
         to remove the sources after the build.
         See the the <tt>--rmsource</tt>  option of rpmbuild.</td>
     <td align="center" valign="top">No</td>
@@ -66,12 +66,23 @@ directory.</td>
   </tr>
   <tr>
     <td valign="top">command</td>
-    <td valign="top">very similar idea to the cvs task.  the default is "-bb"</td>
+    <td valign="top">Very similar idea to the cvs task.  the default is "-bb"</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">quiet</td>
+    <td valign="top">Suppress output. Defaults to false.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">output/error</td>
-    <td valign="top">where standard output and error go</td>
+    <td valign="top">Where standard output and error go</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">failOnError</td>
+    <td valign="top">Stop the buildprocess if the RPM build command exits with 
+       a non-zero retuncode. Defaults to false</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>

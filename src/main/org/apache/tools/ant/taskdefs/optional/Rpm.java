@@ -95,10 +95,10 @@ public class Rpm extends Task {
     private boolean failOnError = false;
 
     /**
-     * Show output of RPM build command on console. This does not affect
+     * Don't show output of RPM build command on console. This does not affect
      * the printing of output and error messages to files.
      */
-    private boolean showoutput = true;
+    private boolean quiet = false;
 
     /**
      * Execute the task
@@ -135,7 +135,7 @@ public class Rpm extends Task {
         OutputStream outputstream = null;
         OutputStream errorstream = null;
         if (error == null && output == null) {
-            if (showoutput) {
+            if (!quiet) {
                 streamhandler = new LogStreamHandler(this, Project.MSG_INFO,
                                                      Project.MSG_WARN);
             } else {
@@ -151,7 +151,7 @@ public class Rpm extends Task {
                 } catch (IOException e) {
                     throw new BuildException(e, getLocation());
                 }
-            } else if (showoutput) {
+            } else if (!quiet) {
                 outputstream = new LogOutputStream(this, Project.MSG_INFO);
             } else {
                 outputstream = new LogOutputStream(this, Project.MSG_DEBUG);
@@ -164,7 +164,7 @@ public class Rpm extends Task {
                 }  catch (IOException e) {
                     throw new BuildException(e, getLocation());
                 }
-            } else if (showoutput) {
+            } else if (!quiet) {
                 errorstream = new LogOutputStream(this, Project.MSG_WARN);
             } else {
                 errorstream = new LogOutputStream(this, Project.MSG_DEBUG);
@@ -273,10 +273,10 @@ public class Rpm extends Task {
     }
 
     /**
-     * If true, stop the build process when the rpmbuild command exits with
-     * an error status.
-     * @param value <tt>true</tt> if it should halt, otherwise
-     * <tt>false</tt>
+     * If <code>true</code>, stop the build process when the rpmbuild command 
+     * exits with an error status. 
+     * @param value <code>true</code> if it should halt, otherwise
+     * <code>false</code>. The default is <code>false</code>.
      *
      * @since Ant 1.6.3
      */
@@ -285,14 +285,14 @@ public class Rpm extends Task {
     }
 
     /**
-     * If false, no output from the RPM build command will be logged. 
-     * @param value <tt>true</tt> if output should be logged, otherwise
-     * <tt>false</tt>
+     * If true, output from the RPM build command will only be logged to DEBUG. 
+     * @param value <code>false</code> if output should be logged, otherwise
+     * <code>true</code>. The default is <code>false</code>.
      *
      * @since Ant 1.6.3
      */
-    public void setShowoutput(boolean value) {
-        showoutput = value;
+    public void setQuiet(boolean value) {
+        quiet = value;
     }
 
     /**
@@ -330,7 +330,7 @@ public class Rpm extends Task {
     }
 
     /**
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     protected Execute getExecute(Commandline toExecute,
                                  ExecuteStreamHandler streamhandler) {
