@@ -31,12 +31,17 @@ Fixed bugs:
 * Ant now fails with a more useful message if a new process will be
   forked in a directory and that directory doesn't exist.
 
+* junitreport was failing for long string litterals
+  Bugzilla Report 19301.
+
 Other changes:
 --------------
 
 * Shipped XML parser is now Xerces-J 2.6.1
 
 * upgrade to xml-apis.jar from Xerces-J 2.6.1.
+
+* License is now Apache Software License 2.0
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
