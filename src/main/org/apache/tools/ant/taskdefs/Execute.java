@@ -63,7 +63,7 @@ public class Execute {
     private boolean spawn = false;
 
 
-    /** Controls whether the VM is used to launch commands, where possible */
+    /** Controls whether the VM is used to launch commands, where possible. */
     private boolean useVMLauncher = true;
 
     private static String antWorkingDirectory = System.getProperty("user.dir");
@@ -74,8 +74,8 @@ public class Execute {
     /** Used to destroy processes when the VM exits. */
     private static ProcessDestroyer processDestroyer = new ProcessDestroyer();
 
-    /**
-     * Builds a command launcher for the OS and JVM we are running under
+    /*
+     * Builds a command launcher for the OS and JVM we are running under.
      */
     static {
         // Try using a JDK 1.3 launcher
@@ -86,7 +86,6 @@ public class Execute {
         } catch (NoSuchMethodException exc) {
             // Ignore and keep trying
         }
-
         if (Os.isFamily("mac") && !Os.isFamily("unix")) {
             // Mac
             shellLauncher = new MacCommandLauncher(new CommandLauncher());
@@ -94,16 +93,8 @@ public class Execute {
             // OS/2
             shellLauncher = new OS2CommandLauncher(new CommandLauncher());
         } else if (Os.isFamily("windows")) {
-            // Windows.  Need to determine which JDK we're running in
 
-            CommandLauncher baseLauncher;
-            if (System.getProperty("java.version").startsWith("1.1")) {
-                // JDK 1.1
-                baseLauncher = new Java11CommandLauncher();
-            } else {
-                // JDK 1.2
-                baseLauncher = new CommandLauncher();
-            }
+            CommandLauncher baseLauncher = new CommandLauncher();
 
             if (!Os.isFamily("win9x")) {
                 // Windows XP/2000/NT
@@ -114,15 +105,8 @@ public class Execute {
                     = new ScriptCommandLauncher("bin/antRun.bat", baseLauncher);
             }
         } else if (Os.isFamily("netware")) {
-            // NetWare.  Need to determine which JDK we're running in
-            CommandLauncher baseLauncher;
-            if (System.getProperty("java.version").startsWith("1.1")) {
-                // JDK 1.1
-                baseLauncher = new Java11CommandLauncher();
-            } else {
-                // JDK 1.2
-                baseLauncher = new CommandLauncher();
-            }
+
+            CommandLauncher baseLauncher = new CommandLauncher();
 
             shellLauncher
                 = new PerlScriptCommandLauncher("bin/antRun.pl", baseLauncher);
@@ -141,12 +125,13 @@ public class Execute {
     }
 
     /**
-     * set whether or not you want the process to be spawned
-     * default is not spawned
+     * Set whether or not you want the process to be spawned.
+     * Default is not spawned.
      *
-     * @param spawn if true you do not want ant to wait for the end of the process
+     * @param spawn if true you do not want Ant
+     *              to wait for the end of the process.
      *
-     * @since ant 1.6
+     * @since Ant 1.6
      */
     public void setSpawn(boolean spawn) {
         this.spawn = spawn;
@@ -155,14 +140,13 @@ public class Execute {
     /**
      * Find the list of environment variables for this process.
      *
-     * @return a vector containing the environment variables
-     * the vector elements are strings formatted like variable = value
+     * @return a vector containing the environment variables.
+     * The vector elements are strings formatted like variable = value.
      */
     public static synchronized Vector getProcEnvironment() {
         if (procEnvironment != null) {
             return procEnvironment;
         }
-
         procEnvironment = new Vector();
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -174,7 +158,6 @@ public class Execute {
             if (retval != 0) {
                 // Just try to use what we got
             }
-
             BufferedReader in =
                 new BufferedReader(new StringReader(toString(out)));
 
@@ -182,7 +165,6 @@ public class Execute {
                 procEnvironment = addVMSLogicals(procEnvironment, in);
                 return procEnvironment;
             }
-
             String var = null;
             String line, lineSep = System.getProperty("line.separator");
             while ((line = in.readLine()) != null) {
@@ -257,9 +239,9 @@ public class Execute {
      * OS/390, at least not the way we use it in the execution
      * context.
      *
-     * @param bos the output stream that one wants to read
+     * @param bos the output stream that one wants to read.
      * @return the output stream as a string, read with
-     * special encodings in the case of z/os and os/400
+     * special encodings in the case of z/os and os/400.
      *
      * @since Ant 1.5
      */
@@ -287,7 +269,6 @@ public class Execute {
     public Execute() {
         this(new PumpStreamHandler(), null);
     }
-
 
     /**
      * Creates a new execute object.
@@ -319,6 +300,8 @@ public class Execute {
     }
 
     /**
+     * Set the stream handler to use.
+     * @param streamHandler ExecuteStreamHandler.
      * @since Ant 1.6
      */
     public void setStreamHandler(ExecuteStreamHandler streamHandler) {
@@ -328,17 +311,16 @@ public class Execute {
     /**
      * Returns the commandline used to create a subprocess.
      *
-     * @return the commandline used to create a subprocess
+     * @return the commandline used to create a subprocess.
      */
     public String[] getCommandline() {
         return cmdl;
     }
 
-
     /**
      * Sets the commandline of the subprocess to launch.
      *
-     * @param commandline the commandline of the subprocess to launch
+     * @param commandline the commandline of the subprocess to launch.
      */
     public void setCommandline(String[] commandline) {
         cmdl = commandline;
@@ -356,21 +338,18 @@ public class Execute {
     /**
      * Returns the environment used to create a subprocess.
      *
-     * @return the environment used to create a subprocess
+     * @return the environment used to create a subprocess.
      */
     public String[] getEnvironment() {
-        if (env == null || newEnvironment) {
-            return env;
-        }
-        return patchEnvironment();
+        return (env == null || newEnvironment)
+            ? env : patchEnvironment();
     }
-
 
     /**
      * Sets the environment variables for the subprocess to launch.
      *
      * @param env array of Strings, each element of which has
-     * an environment variable settings in format <em>key=value</em>
+     * an environment variable settings in format <em>key=value</em>.
      */
     public void setEnvironment(String[] env) {
         this.env = env;
@@ -387,14 +366,14 @@ public class Execute {
      * @param wd the working directory of the process.
      */
     public void setWorkingDirectory(File wd) {
-        if (wd == null || wd.getAbsolutePath().equals(antWorkingDirectory)) {
-            workingDirectory = null;
-        } else {
-            workingDirectory = wd;
-        }
+        workingDirectory =
+            (wd == null || wd.getAbsolutePath().equals(antWorkingDirectory))
+            ? null : wd;
     }
 
     /**
+     * Return the working directory.
+     * @return the directory as a File.
      * @since Ant 1.7
      */
     public File getWorkingDirectory() {
@@ -408,7 +387,7 @@ public class Execute {
      * @param project the current project.
      *
      * @throws BuildException not clear when it is going to throw an exception, but
-     * it is the method's signature
+     * it is the method's signature.
      */
     public void setAntRun(Project project) throws BuildException {
         this.project = project;
@@ -418,7 +397,7 @@ public class Execute {
      * Launch this execution through the VM, where possible, rather than through
      * the OS's shell. In some cases and operating systems using the shell will
      * allow the shell to perform additional processing such as associating an
-     * executable with a script, etc
+     * executable with a script, etc.
      *
      * @param useVMLauncher true if exec should launch through the VM,
      *                   false if the shell should be used to launch the
@@ -432,36 +411,32 @@ public class Execute {
      * Creates a process that runs a command.
      *
      * @param project the Project, only used for logging purposes, may be null.
-     * @param command the command to run
-     * @param env the environment for the command
-     * @param dir the working directory for the command
+     * @param command the command to run.
+     * @param env the environment for the command.
+     * @param dir the working directory for the command.
      * @param useVM use the built-in exec command for JDK 1.3 if available.
-     * @return the process started
-     * @throws IOException forwarded from the particular launcher used
+     * @return the process started.
+     * @throws IOException forwarded from the particular launcher used.
      *
      * @since Ant 1.5
      */
     public static Process launch(Project project, String[] command,
                                  String[] env, File dir, boolean useVM)
         throws IOException {
-        CommandLauncher launcher
-            = vmLauncher != null ? vmLauncher : shellLauncher;
-        if (!useVM) {
-            launcher = shellLauncher;
-        }
-
         if (dir != null && !dir.exists()) {
             throw new BuildException(dir + " doesn't exist.");
         }
+        CommandLauncher launcher
+            = ((useVM && vmLauncher != null) ? vmLauncher : shellLauncher);
         return launcher.exec(project, command, env, dir);
     }
 
     /**
      * Runs a process defined by the command line and returns its exit status.
      *
-     * @return the exit status of the subprocess or <code>INVALID</code>
+     * @return the exit status of the subprocess or <code>INVALID</code>.
      * @exception java.io.IOException The exception is thrown, if launching
-     *            of the subprocess failed
+     *            of the subprocess failed.
      */
     public int execute() throws IOException {
         if (workingDirectory != null && !workingDirectory.exists()) {
@@ -470,7 +445,6 @@ public class Execute {
         final Process process = launch(project, getCommandline(),
                                        getEnvironment(), workingDirectory,
                                        useVMLauncher);
-
         try {
             streamHandler.setProcessInputStream(process.getOutputStream());
             streamHandler.setProcessOutputStream(process.getInputStream());
@@ -510,11 +484,11 @@ public class Execute {
 
     /**
      * Starts a process defined by the command line.
-     * Ant will not wait for this process, nor log its output
+     * Ant will not wait for this process, nor log its output.
      *
      * @throws java.io.IOException The exception is thrown, if launching
-     *            of the subprocess failed
-     * @since ant 1.6
+     *            of the subprocess failed.
+     * @since Ant 1.6
      */
     public void spawn() throws IOException {
         if (workingDirectory != null && !workingDirectory.exists()) {
@@ -531,7 +505,6 @@ public class Execute {
                     Project.MSG_VERBOSE);
             }
         }
-
         OutputStream dummyOut = new OutputStream() {
             public void write(int b) throws IOException {
             }
@@ -547,9 +520,9 @@ public class Execute {
     }
 
     /**
-     * wait for a given process
+     * Wait for a given process.
      *
-     * @param process the process one wants to wait for
+     * @param process the process one wants to wait for.
      */
     protected void waitFor(Process process) {
         try {
@@ -561,9 +534,9 @@ public class Execute {
     }
 
     /**
-     * set the exit value
+     * Set the exit value.
      *
-     * @param value exit value of the process
+     * @param value exit value of the process.
      */
     protected void setExitValue(int value) {
         exitValue = value;
@@ -572,7 +545,7 @@ public class Execute {
     /**
      * Query the exit value of the process.
      * @return the exit value or Execute.INVALID if no exit value has
-     * been received
+     * been received.
      */
     public int getExitValue() {
         return exitValue;
@@ -590,22 +563,19 @@ public class Execute {
      * signals a failure on OpenVMS.  So if you execute a new Java VM
      * on OpenVMS, you cannot trust this method.</p>
      *
-     * @param exitValue the exit value (return code) to be checked
-     * @return <code>true</code> if <code>exitValue</code> signals a failure
+     * @param exitValue the exit value (return code) to be checked.
+     * @return <code>true</code> if <code>exitValue</code> signals a failure.
      */
     public static boolean isFailure(int exitValue) {
-        if (Os.isFamily("openvms")) {
-            // even exit value signals failure
-            return (exitValue % 2) == 0;
-        } else {
-            // non zero exit value signals failure
-            return exitValue != 0;
-        }
+        //on openvms even exit value signals failure;
+        // for other platforms nonzero exit value signals failure
+        return Os.isFamily("openvms")
+            ? (exitValue % 2 == 0) : (exitValue != 0);
     }
 
     /**
-     * test for an untimely death of the process
-     * @return true if a watchdog had to kill the process
+     * Test for an untimely death of the process.
+     * @return true if a watchdog had to kill the process.
      * @since Ant 1.5
      */
     public boolean killedProcess() {
@@ -614,7 +584,7 @@ public class Execute {
 
     /**
      * Patch the current environment with the new values from the user.
-     * @return the patched environment
+     * @return the patched environment.
      */
     private String[] patchEnvironment() {
         // On OpenVMS Runtime#exec() doesn't support the environment array,
@@ -623,12 +593,10 @@ public class Execute {
         if (Os.isFamily("openvms")) {
             return env;
         }
-
         Vector osEnv = (Vector) getProcEnvironment().clone();
         for (int i = 0; i < env.length; i++) {
-            int pos = env[i].indexOf('=');
             // Get key including "="
-            String key = env[i].substring(0, pos + 1);
+            String key = env[i].substring(0, env[i].indexOf('=') + 1);
             int size = osEnv.size();
             for (int j = 0; j < size; j++) {
                 if (((String) osEnv.elementAt(j)).startsWith(key)) {
@@ -638,9 +606,7 @@ public class Execute {
             }
             osEnv.addElement(env[i]);
         }
-        String[] result = new String[osEnv.size()];
-        osEnv.copyInto(result);
-        return result;
+        return (String[]) (osEnv.toArray(new String[osEnv.size()]));
     }
 
     /**
@@ -650,16 +616,15 @@ public class Execute {
      * @param task      The task that the command is part of.  Used for logging
      * @param cmdline   The command to execute.
      *
-     * @throws BuildException if the command does not return 0.
+     * @throws BuildException if the command does not exit successfully.
      */
     public static void runCommand(Task task, String[] cmdline)
         throws BuildException {
         try {
             task.log(Commandline.describeCommand(cmdline),
                      Project.MSG_VERBOSE);
-            Execute exe = new Execute(new LogStreamHandler(task,
-                                                           Project.MSG_INFO,
-                                                           Project.MSG_ERR));
+            Execute exe = new Execute(
+                new LogStreamHandler(task, Project.MSG_INFO, Project.MSG_ERR));
             exe.setAntRun(task.getProject());
             exe.setCommandline(cmdline);
             int retval = exe.execute();
@@ -726,7 +691,6 @@ public class Execute {
         if (logName != null) {
             logicals.put(logName, logValue);
         }
-
         for (Iterator i = logicals.keySet().iterator(); i.hasNext();) {
             String logical = (String) i.next();
             environment.add(logical + "=" + logicals.get(logical));
@@ -743,11 +707,12 @@ public class Execute {
         /**
          * Launches the given command in a new process.
          *
-         * @param project       The project that the command is part of
-         * @param cmd           The command to execute
+         * @param project       The project that the command is part of.
+         * @param cmd           The command to execute.
          * @param env           The environment for the new process.  If null,
          *                      the environment of the current process is used.
-         * @throws IOException  if attempting to run a command in a specific directory
+         * @return the created Process.
+         * @throws IOException  if attempting to run a command in a specific directory.
          */
         public Process exec(Project project, String[] cmd, String[] env)
              throws IOException {
@@ -762,13 +727,14 @@ public class Execute {
          * Launches the given command in a new process, in the given working
          * directory.
          *
-         * @param project       The project that the command is part of
-         * @param cmd           The command to execute
+         * @param project       The project that the command is part of.
+         * @param cmd           The command to execute.
          * @param env           The environment for the new process.  If null,
          *                      the environment of the current process is used.
          * @param workingDir    The directory to start the command in.  If null,
-         *                      the current directory is used
-         * @throws IOException  if trying to change directory
+         *                      the current directory is used.
+         * @return the created Process.
+         * @throws IOException  if trying to change directory.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -781,40 +747,12 @@ public class Execute {
     }
 
     /**
-     * A command launcher for JDK/JRE 1.1 under Windows.  Fixes quoting problems
-     * in Runtime.exec().  Can only launch commands in the current working
-     * directory
-     */
-    private static class Java11CommandLauncher extends CommandLauncher {
-        /**
-         * Launches the given command in a new process.  Needs to quote
-         * arguments
-         * @param project the ant project
-         * @param cmd the command line to execute as an array of strings
-         * @param env the environment to set as an array of strings
-         * @throws IOException probably forwarded from Runtime#exec
-         */
-        public Process exec(Project project, String[] cmd, String[] env)
-             throws IOException {
-            // Need to quote arguments with spaces, and to escape
-            // quote characters
-            String[] newcmd = new String[cmd.length];
-            for (int i = 0; i < cmd.length; i++) {
-                newcmd[i] = Commandline.quoteArgument(cmd[i]);
-            }
-            if (project != null) {
-                project.log("Execute:Java11CommandLauncher: "
-                    + Commandline.describeCommand(newcmd), Project.MSG_DEBUG);
-            }
-            return Runtime.getRuntime().exec(newcmd, env);
-        }
-    }
-
-    /**
      * A command launcher for JDK/JRE 1.3 (and higher).  Uses the built-in
-     * Runtime.exec() command
+     * Runtime.exec() command.
      */
     private static class Java13CommandLauncher extends CommandLauncher {
+        private Method myExecWithCWD;
+
         public Java13CommandLauncher() throws NoSuchMethodException {
             // Locate method Runtime.exec(String[] cmdarray,
             //                            String[] envp, File dir)
@@ -824,12 +762,13 @@ public class Execute {
 
         /**
          * Launches the given command in a new process, in the given working
-         * directory
-         * @param project the ant project
-         * @param cmd the command line to execute as an array of strings
-         * @param env the environment to set as an array of strings
-         * @param workingDir the working directory where the command should run
-         * @throws IOException probably forwarded from Runtime#exec
+         * directory.
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @param workingDir the working directory where the command should run.
+         * @return the created Process.
+         * @throws IOException probably forwarded from Runtime#exec.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -838,9 +777,8 @@ public class Execute {
                     project.log("Execute:Java13CommandLauncher: "
                         + Commandline.describeCommand(cmd), Project.MSG_DEBUG);
                 }
-                Object[] arguments = {cmd, env, workingDir};
                 return (Process) myExecWithCWD.invoke(Runtime.getRuntime(),
-                                                     arguments);
+                   /* the arguments: */ new Object[] {cmd, env, workingDir});
             } catch (InvocationTargetException exc) {
                 Throwable realexc = exc.getTargetException();
                 if (realexc instanceof ThreadDeath) {
@@ -856,34 +794,33 @@ public class Execute {
                 throw new BuildException("Unable to execute command", exc);
             }
         }
-
-        private Method myExecWithCWD;
     }
 
     /**
      * A command launcher that proxies another command launcher.
      *
-     * Sub-classes override exec(args, env, workdir)
+     * Sub-classes override exec(args, env, workdir).
      */
     private static class CommandLauncherProxy extends CommandLauncher {
+        private CommandLauncher myLauncher;
+
         CommandLauncherProxy(CommandLauncher launcher) {
             myLauncher = launcher;
         }
 
         /**
          * Launches the given command in a new process.  Delegates this
-         * method to the proxied launcher
-         * @param project the ant project
-         * @param cmd the command line to execute as an array of strings
-         * @param env the environment to set as an array of strings
-         * @throws IOException forwarded from the exec method of the command launcher
+         * method to the proxied launcher.
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @return the created Process.
+         * @throws IOException forwarded from the exec method of the command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env)
             throws IOException {
             return myLauncher.exec(project, cmd, env);
         }
-
-        private CommandLauncher myLauncher;
     }
 
     /**
@@ -902,11 +839,12 @@ public class Execute {
         /**
          * Launches the given command in a new process, in the given working
          * directory.
-         * @param project the ant project
-         * @param cmd the command line to execute as an array of strings
-         * @param env the environment to set as an array of strings
-         * @param workingDir working directory where the command should run
-         * @throws IOException forwarded from the exec method of the command launcher
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @param workingDir working directory where the command should run.
+         * @return the created Process.
+         * @throws IOException forwarded from the exec method of the command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -918,7 +856,6 @@ public class Execute {
                     return exec(project, cmd, env);
                 }
             }
-
             // Use cmd.exe to change to the specified drive and
             // directory before running the command
             final int preCmdLength = 7;
@@ -950,11 +887,12 @@ public class Execute {
         /**
          * Launches the given command in a new process, in the given working
          * directory.
-         * @param project the ant project
-         * @param cmd the command line to execute as an array of strings
-         * @param env the environment to set as an array of strings
-         * @param workingDir working directory where the command should run
-         * @throws IOException forwarded from the exec method of the command launcher
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @param workingDir working directory where the command should run.
+         * @return the created Process.
+         * @throws IOException forwarded from the exec method of the command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -966,7 +904,6 @@ public class Execute {
                     return exec(project, cmd, env);
                 }
             }
-
             // Use cmd.exe to change to the specified directory before running
             // the command
             final int preCmdLength = 6;
@@ -994,19 +931,19 @@ public class Execute {
 
         /**
          * Launches the given command in a new process, in the given working
-         * directory
-         * @param project the ant project
-         * @param cmd the command line to execute as an array of strings
-         * @param env the environment to set as an array of strings
-         * @param workingDir working directory where the command should run
-         * @throws IOException forwarded from the exec method of the command launcher
+         * directory.
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @param workingDir working directory where the command should run.
+         * @return the created Process.
+         * @throws IOException forwarded from the exec method of the command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
             if (workingDir == null) {
                 return exec(project, cmd, env);
             }
-
             System.getProperties().put("user.dir", workingDir.getAbsolutePath());
             try {
                 return exec(project, cmd, env);
@@ -1028,7 +965,13 @@ public class Execute {
 
         /**
          * Launches the given command in a new process, in the given working
-         * directory
+         * directory.
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @param workingDir working directory where the command should run.
+         * @return the created Process.
+         * @throws IOException forwarded from the exec method of the command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -1039,7 +982,6 @@ public class Execute {
                 throw new IOException("Cannot locate antRun script: "
                     + "No project provided");
             }
-
             // Locate the auxiliary script
             String antHome = project.getProperty("ant.home");
             if (antHome == null) {
@@ -1053,7 +995,6 @@ public class Execute {
             if (workingDir == null && project != null) {
                 commandDir = project.getBaseDir();
             }
-
             String[] newcmd = new String[cmd.length + 2];
             newcmd[0] = antRun;
             newcmd[1] = commandDir.getAbsolutePath();
@@ -1071,6 +1012,8 @@ public class Execute {
      */
     private static class PerlScriptCommandLauncher
         extends CommandLauncherProxy {
+        private String myScript;
+
         PerlScriptCommandLauncher(String script, CommandLauncher launcher) {
             super(launcher);
             myScript = script;
@@ -1078,7 +1021,13 @@ public class Execute {
 
         /**
          * Launches the given command in a new process, in the given working
-         * directory
+         * directory.
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @param workingDir working directory where the command should run.
+         * @return the created Process.
+         * @throws IOException forwarded from the exec method of the command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
@@ -1089,7 +1038,6 @@ public class Execute {
                 throw new IOException("Cannot locate antRun script: "
                     + "No project provided");
             }
-
             // Locate the auxiliary script
             String antHome = project.getProperty("ant.home");
             if (antHome == null) {
@@ -1103,7 +1051,6 @@ public class Execute {
             if (workingDir == null && project != null) {
                 commandDir = project.getBaseDir();
             }
-
             String[] newcmd = new String[cmd.length + 3];
             newcmd[0] = "perl";
             newcmd[1] = antRun;
@@ -1112,8 +1059,6 @@ public class Execute {
 
             return exec(project, newcmd, env);
         }
-
-        private String myScript;
     }
 
     /**
@@ -1129,11 +1074,19 @@ public class Execute {
 
         /**
          * Launches the given command in a new process.
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @return the created Process.
+         * @throws IOException forwarded from the exec method of the command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env)
             throws IOException {
-            String[] vmsCmd = {createCommandFile(cmd, env).getPath()};
-            return super.exec(project, vmsCmd, env);
+            File cmdFile = createCommandFile(cmd, env);
+            Process p
+                = super.exec(project, new String[] {cmdFile.getPath()}, env);
+            deleteAfter(cmdFile, p);
+            return p;
         }
 
         /**
@@ -1141,21 +1094,33 @@ public class Execute {
          * directory.  Note that under Java 1.3.1, 1.4.0 and 1.4.1 on VMS this
          * method only works if <code>workingDir</code> is null or the logical
          * JAVA$FORK_SUPPORT_CHDIR needs to be set to TRUE.
+         * @param project the Ant project.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @param workingDir working directory where the command should run.
+         * @return the created Process.
+         * @throws IOException forwarded from the exec method of the command launcher.
          */
         public Process exec(Project project, String[] cmd, String[] env,
                             File workingDir) throws IOException {
-            String[] vmsCmd = {createCommandFile(cmd, env).getPath()};
-            return super.exec(project, vmsCmd, env, workingDir);
+            File cmdFile = createCommandFile(cmd, env);
+            Process p = super.exec(project, new String[] {cmdFile.getPath()},
+                                   env, workingDir);
+            deleteAfter(cmdFile, p);
+            return p;
         }
 
         /*
          * Writes the command into a temporary DCL script and returns the
          * corresponding File object.  The script will be deleted on exit.
+         * @param cmd the command line to execute as an array of strings.
+         * @param env the environment to set as an array of strings.
+         * @return the command File.
+         * @throws IOException if errors are encountered creating the file.
          */
         private File createCommandFile(String[] cmd, String[] env)
             throws IOException {
             File script = FILE_UTILS.createTempFile("ANT", ".COM", null);
-            //TODO: bind the longevity of the file to the exe
             script.deleteOnExit();
             PrintWriter out = null;
             try {
@@ -1175,7 +1140,6 @@ public class Execute {
                         }
                     }
                 }
-
                 out.print("$ " + cmd[0]);
                 for (int i = 1; i < cmd.length; i++) {
                     out.println(" -");
@@ -1189,5 +1153,18 @@ public class Execute {
             return script;
         }
 
+        private void deleteAfter(final File f, final Process p) {
+            new Thread() {
+                public void run() {
+                    try {
+                        p.waitFor();
+                    }
+                    catch (InterruptedException e) {
+                        //ignore
+                    }
+                    FILE_UTILS.delete(f);
+                }
+            }.start();
+        }
     }
 }
