@@ -96,7 +96,7 @@ public class Copy extends Task {
     private FileUtils fileUtils;
     
     public Copy() {
-        fileUtils = FileUtils.getFileUtils();
+        fileUtils = FileUtils.newFileUtils();
     }
 
     protected FileUtils getFileUtils() {return fileUtils;}

@@ -81,7 +81,7 @@ public class FileUtils {
     /**
      * Factory method.
      */
-    public static FileUtils getFileUtils() {
+    public static FileUtils newFileUtils() {
         return new FileUtils();
     }
 

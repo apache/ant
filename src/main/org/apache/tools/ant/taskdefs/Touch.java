@@ -92,7 +92,7 @@ public class Touch extends Task {
     private FileUtils fileUtils;
 
     public Touch() {
-        fileUtils = FileUtils.getFileUtils();
+        fileUtils = FileUtils.newFileUtils();
     }
 
     /**

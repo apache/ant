@@ -144,7 +144,7 @@ public class Project {
     private FileUtils fileUtils;
 
     public Project() {
-        fileUtils = FileUtils.getFileUtils();
+        fileUtils = FileUtils.newFileUtils();
     }
 
     /**
