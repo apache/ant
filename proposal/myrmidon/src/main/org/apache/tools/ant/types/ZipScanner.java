@@ -26,7 +26,7 @@ public class ZipScanner
     /**
      * The zip file which should be scanned.
      */
-    private File m_srcFile;
+    private File m_src;
 
     /**
      * Sets the srcFile for scanning. This is the jar or zip file that is
@@ -34,9 +34,9 @@ public class ZipScanner
      *
      * @param srcFile the (non-null) zip file name for scanning
      */
-    public void setSrc( File srcFile )
+    public void setSrc( final File srcFile )
     {
-        this.m_srcFile = srcFile;
+        m_src = srcFile;
     }
 
     /**
@@ -58,8 +58,8 @@ public class ZipScanner
      */
     public String[] getIncludedFiles()
     {
-        String[] result = new String[ 1 ];
-        result[ 0 ] = m_srcFile.getAbsolutePath();
+        final String[] result = new String[ 1 ];
+        result[ 0 ] = m_src.getAbsolutePath();
         return result;
     }
 
