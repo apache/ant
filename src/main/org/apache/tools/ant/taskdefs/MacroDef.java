@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Locale;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.BuildException;
@@ -82,6 +83,7 @@ public class MacroDef extends AntlibDefinition  {
     private List       attributes = new ArrayList();
     private Map        elements   = new HashMap();
     private String     textName   = null;
+    private Text       text       = null;
 
     /**
      * Name of the definition
@@ -92,22 +94,39 @@ public class MacroDef extends AntlibDefinition  {
     }
 
     /**
-     * Name of the text attribute.
-     * @param textName the name of the attribute to use for the
-     *                 text content of the macro.
+     * Add the text element.
+     * @param text the nested text element to add
      * @since ant 1.6.1
      */
-    public void setTextName(String textName) {
-        this.textName = textName;
+    public void addConfiguredText(Text text) {
+        if (this.text != null) {
+            throw new BuildException(
+                "Only one nested text element allowed");
+        }
+        if (text.getName() == null) {
+            throw new BuildException(
+                "the text nested element needed a \"name\" attribute");
+        }
+        // Check if used by attributes
+        for (Iterator i = attributes.iterator(); i.hasNext();) {
+            Attribute attribute = (Attribute) i.next();
+            if (text.getName().equals(attribute.getName())) {
+                throw new BuildException(
+                    "the name \"" + text.getName()
+                    + "\" is already used as an attribute");
+            }
+        }
+        this.text = text;
+        this.textName = text.getName();
     }
 
     /**
-     * @return the name of the text content attribute
+     * @return the nested text element
      * @since ant 1.6.1
      */
 
-    public String getTextName() {
-        return textName;
+    public Text getText() {
+        return text;
     }
 
     /**
@@ -245,7 +264,7 @@ public class MacroDef extends AntlibDefinition  {
         if (attribute.getName().equals(textName)) {
             throw new BuildException(
                 "the attribute name \"" + attribute.getName()
-                + "\" has already been used by the textname attribute");
+                + "\" has already been used by the text element");
         }
         for (int i = 0; i < attributes.size(); ++i) {
             if (((Attribute) attributes.get(i)).getName().equals(
@@ -404,6 +423,122 @@ public class MacroDef extends AntlibDefinition  {
     }
 
     /**
+     * A nested text element for the MacroDef task.
+     * @since ant 1.6.1
+     */
+    public static class Text {
+        private String  name;
+        private boolean optional;
+        private boolean trim;
+        private String  description;
+
+        /**
+         * The name of the attribute.
+         *
+         * @param name the name of the attribute
+         */
+        public void setName(String name) {
+            if (!isValidName(name)) {
+                throw new BuildException(
+                    "Illegal name [" + name + "] for attribute");
+            }
+            this.name = name.toLowerCase(Locale.US);
+        }
+
+        /**
+         * @return the name of the attribute
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * The optional attribute of the text element.
+         *
+         * @param optional if true this is optional
+         */
+        public void setOptional(boolean optional) {
+            this.optional = optional;
+        }
+
+        /**
+         * @return true if the text is optional
+         */
+        public boolean getOptional() {
+            return optional;
+        }
+
+        /**
+         * The trim attribute of the text element.
+         *
+         * @param trim if true this String.trim() is called on
+         *             the contents of the text element.
+         */
+        public void setTrim(boolean trim) {
+            this.trim = trim;
+        }
+
+        /**
+         * @return true if the text is trim
+         */
+        public boolean getTrim() {
+            return trim;
+        }
+
+        /**
+         * @param desc Description of the text.
+         */
+        public void setDescription(String desc) {
+            description = desc;
+        }
+
+        /**
+         * @return the description of the text, or <code>null</code> if
+         *         no description is available.
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
+         * equality method
+         *
+         * @param obj an <code>Object</code> value
+         * @return a <code>boolean</code> value
+         */
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj.getClass() != getClass()) {
+                return false;
+            }
+            Text other = (Text) obj;
+            if (name == null) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
+                return false;
+            }
+            if (optional != other.optional) {
+                return false;
+            }
+            if (trim != other.trim) {
+                return false;
+            }
+            return true;
+        }
+
+        /**
+         * @return a hash code value for this object.
+         */
+        public int hashCode() {
+            return objectHashCode(name);
+        }
+    }
+
+    /**
      * A nested element for the MacroDef task.
      *
      */
@@ -519,12 +654,12 @@ public class MacroDef extends AntlibDefinition  {
         if (!name.equals(other.name)) {
             return false;
         }
-        if (textName == null) {
-            if (other.textName != null) {
+        if (text == null) {
+            if (other.text != null) {
                 return false;
             }
         } else {
-            if (!textName.equals(other.textName)) {
+            if (!text.equals(other.text)) {
                 return false;
             }
         }

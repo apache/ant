@@ -44,16 +44,6 @@
         </td>
         <td valign="top" align="center">No</td>
       </tr>
-      <tr>
-        <td valign="top">textname</td>
-        <td valign="top">
-          The textname attribute value becomes a macrodef
-          attribute that
-          gets set to the value of the text contents of the macro.
-          <em>since ant 1.6.1</em>
-        </td>
-        <td valign="top" align="center">No</td>
-      </tr>
     </table>
       <h3>Parameters specified as nested elements</h3>
     <h4>attribute</h4>
@@ -144,6 +134,54 @@
         <td valign="top" align="center">No</td>
       </tr>
     </table>
+    <h4>text</h4>
+    <p>
+      This is used to specify the treatment of text contents of the macrodef.
+      If this element is not present, then any nested text in the macro
+      will be an error. If the text element is present, then the name
+      becomes an attribute that gets set to the nested text of the macro.
+      <em>Since ant 1.6.1.</em>
+    </p>
+    <p>
+      The case of the text name is ignored.
+    </p>
+    <h3>Parameters</h3>
+    <table border="1" cellpadding="2" cellspacing="0">
+      <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+      </tr>
+      <tr>
+        <td valign="top">name</td>
+        <td valign="top">The name of the text attribute</td>
+        <td valign="top" align="center">Yes</td>
+      </tr>
+      <tr>
+        <td valign="top">optional</td>
+        <td valign="top">
+          If true nested text in the macro is optional, default is "false".
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">trim</td>
+        <td valign="top">
+          If true, the nested text is trimmed of white space,
+          default is "false".
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
+        <td valign="top">description</td>
+        <td valign="top">
+          This contains a description
+          informing the user what the nested text of the macro is expected
+          to be.
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+    </table>
     
     <h3>Examples</h3>
     <p>
@@ -212,11 +250,12 @@
 </pre>
     </blockquote>
     <p>
-      The following shows the use of the <code>textname</code> attribute.
+      The following shows the use of the <code>text</code> element.
     </p>
     <blockquote>
 <pre class="code">
-&lt;macrodef name="echotest" textname="text"&gt;
+&lt;macrodef name="echotest"&gt;
+   &lt;text name="text"/text&gt;
    &lt;sequential&gt;
       &lt;echo&gt;@{text}&lt;/echo&gt;
    &lt;/sequential&gt;

@@ -102,8 +102,9 @@
     </ignore>
   </target>
 
-  <target name="textname">
-    <macrodef name="echotest" textname="text">
+  <target name="textelement">
+    <macrodef name="echotest">
+      <text name="text" optional="yes"/>
       <sequential>
         <echo>@{text}</echo>
       </sequential>
@@ -113,8 +114,31 @@
     </echotest>
   </target>
 
+  <target name="text.trim">
+    <macrodef name="echotest">
+      <text name="text" trim="yes"/>
+      <sequential>
+        <echo>[@{text}]</echo>
+      </sequential>
+    </macrodef>
+    <echotest>
+      Hello world
+    </echotest>
+  </target>
+
   <target name="duplicatetextname">
-    <macrodef name="echotest" textname="text">
+    <macrodef name="echotest">
+      <attribute name="text"/>
+      <text name="text"/>
+      <sequential>
+        <echo>@{text}</echo>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="duplicatetextname2">
+    <macrodef name="echotest">
+      <text name="text"/>
       <attribute name="text"/>
       <sequential>
         <echo>@{text}</echo>

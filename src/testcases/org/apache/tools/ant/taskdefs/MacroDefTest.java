@@ -116,15 +116,25 @@ public class MacroDefTest extends BuildFileTest {
             "nested elementnested element");
     }
 
-    public void testTextName() {
+    public void testTextElement() {
         expectLogContaining(
-            "textname", "Hello world");
+            "textelement", "Hello world");
+    }
+
+    public void testTextTrim() {
+        expectLogContaining(
+            "text.trim", "[Hello world]");
     }
 
     public void testDuplicateTextName() {
         expectBuildException(
             "duplicatetextname",
-            "the attribute text has already been specified");
+            "the name \"text\" is already used as an attribute");
+    }
+    public void testDuplicateTextName2() {
+        expectBuildException(
+            "duplicatetextname2",
+            "the attribute name \"text\" has already been used by the text element");
     }
 }
 
