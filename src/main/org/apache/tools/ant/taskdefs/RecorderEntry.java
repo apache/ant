@@ -97,15 +97,15 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         log("< BUILD FINISHED", Project.MSG_DEBUG);
 
         if (record && out != null) {
-        Throwable error = event.getException();
+            Throwable error = event.getException();
 
-        if (error == null) {
-            out.println(StringUtils.LINE_SEP + "BUILD SUCCESSFUL");
-        } else {
-            out.println(StringUtils.LINE_SEP + "BUILD FAILED"
-                 + StringUtils.LINE_SEP);
-            error.printStackTrace(out);
-        }
+            if (error == null) {
+                out.println(StringUtils.LINE_SEP + "BUILD SUCCESSFUL");
+            } else {
+                out.println(StringUtils.LINE_SEP + "BUILD FAILED"
+                            + StringUtils.LINE_SEP);
+                error.printStackTrace(out);
+            }
         }
         cleanup();
     }

@@ -201,13 +201,13 @@ public class Recorder extends Task {
 
         if (o == null) {
             // create a recorder entry
-                entry = new RecorderEntry(name);
+            entry = new RecorderEntry(name);
 
-                if (append == null) {
-                    entry.openFile(false);
-                } else {
-                    entry.openFile(append.booleanValue());
-                }
+            if (append == null) {
+                entry.openFile(false);
+            } else {
+                entry.openFile(append.booleanValue());
+            }
             entry.setProject(proj);
             recorderEntries.put(name, entry);
         } else {
