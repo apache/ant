@@ -57,9 +57,9 @@ classpath.</p>
 <pre>
   &lt;condition property=&quot;isMacOsButNotMacOsX&quot;&gt;
     &lt;and&gt;
-      &lt;os family=&quot;mac&quot; />
+      &lt;os family=&quot;mac&quot; /&gt;
       &lt;not&gt;
-        &lt;os family=&quot;unix&quot; />
+        &lt;os family=&quot;unix&quot; /&gt;
       &lt;/not&gt;
     &lt;/and&gt;
   &lt;/condition&gt;
@@ -70,14 +70,14 @@ in the Unix family as well.</p>
 
 <pre>
   &lt;condition property=&quot;isSunOSonSparc&quot;&gt;
-    &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot; />
+    &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot; /&gt;
   &lt;/condition&gt;
 </pre>
 <p>sets the property <code>isSunOSonSparc</code> if the current
 operating system is SunOS and if it is running on a sparc architecture.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software
+<p align="center">Copyright &copy; 2001-2002 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>

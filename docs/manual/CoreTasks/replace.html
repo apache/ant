@@ -116,7 +116,7 @@ them.</p>
 &lt;replace dir=&quot;${src}&quot; value=&quot;wombat&quot;&gt;
   &lt;include name=&quot;**/*.html&quot;/&gt;
   &lt;replacetoken&gt;&lt;![CDATA[multi line
-token]]>&lt;/replacetoken&gt;
+token]]&gt;&lt;/replacetoken&gt;
 &lt;/replace&gt;
 </pre></blockquote>
 <p>replaces occurrences of the string &quot;multi
@@ -126,9 +126,9 @@ the platform specific line separator.</p>
 <blockquote><pre>
 &lt;replace file=&quot;${src}/index.html&quot;&gt;
   &lt;replacetoken&gt;&lt;![CDATA[two line
-token]]>&lt;/replacetoken&gt;
+token]]&gt;&lt;/replacetoken&gt;
   &lt;replacevalue&gt;&lt;![CDATA[two line
-token]]>&lt;/replacevalue&gt;
+token]]&gt;&lt;/replacevalue&gt;
 &lt;/replace&gt;
 </pre></blockquote>
 <h4>replacefilter</h4>

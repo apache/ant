@@ -13,7 +13,7 @@ say you wanted to copy just those lines that contained the
 string blee from the first 10 lines of a file 'foo'
 to a file 'bar' - you would do something like<P>
 <code>
-cat foo|head -n10|grep blee > bar
+cat foo|head -n10|grep blee &gt; bar
 </code><P>
 Ant was not flexible enough.  There was no way for the
 &lt;copy&gt; task to do something similar.  If you wanted
