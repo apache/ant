@@ -269,10 +269,8 @@ public class UnknownElement extends Task {
             UnknownElement child = (UnknownElement) children.elementAt(i);
             Object realChild = null;
 
-            if (parent instanceof TaskContainer) {
-                //ProjectComponentHelper helper=ProjectComponentHelper.getProjectComponentHelper();
-                //realChild = helper.createProjectComponent( child, getProject(), null,
-                   //                                           child.getTag());
+            if (!ih.supportsNestedElement(child.getTag()) 
+                && parent instanceof TaskContainer) {
                 realChild = makeTask(child, childWrapper, false);
 
                 if (realChild == null) {
@@ -296,7 +294,8 @@ public class UnknownElement extends Task {
             }
 
             childWrapper.setProxy(realChild);
-            if (parent instanceof TaskContainer) {
+            if (parent instanceof TaskContainer 
+                && realChild instanceof Task) {
                 ((Task) realChild).setRuntimeConfigurableWrapper(childWrapper);
             }
 

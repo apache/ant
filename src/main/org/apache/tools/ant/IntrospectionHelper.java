@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -563,6 +563,18 @@ public class IntrospectionHelper implements BuildListener {
         }
     }
 
+    /**
+     * Indicate if this element supports a nested element of the 
+     * given name.
+     *
+     * @param elementName the name of the nested element being checked
+     *
+     * @return true if the given nested element is supported
+     */
+    public boolean supportsNestedElement(String elementName) {
+        return nestedCreators.containsKey(elementName);
+    }
+    
     /**
      * Stores a named nested element using a storage method determined
      * by the initial introspection. If no appropriate storage method
