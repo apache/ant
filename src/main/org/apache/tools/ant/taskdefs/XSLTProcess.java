@@ -262,7 +262,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 for (int j = 0; j < dirs.length; ++j) {
                     list = new File(baseDir, dirs[j]).list();
                     for (int i = 0; i < list.length; ++i) {
-                        process(baseDir, list[i], destDir, stylesheet);
+                        process(baseDir, dirs[j] + File.separator + list[i],
+                                destDir, stylesheet);
                     }
                 }
             }

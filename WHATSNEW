@@ -273,6 +273,9 @@ Fixed bugs:
 * TarInputStream#read() wasn't implemented correctly.  Bugzilla Report
   34097.
 
+* <xslt> failed to process file-hierarchies of more than one level if
+  scanincludeddirectories was true.  Bugzilla Report 24866.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
