@@ -166,6 +166,16 @@ public class BuildException extends RuntimeException {
     }
 
     /**
+     * Returns the nested exception, if any.
+     *
+     * @return the nested exception, or <code>null</code> if no
+     *         exception is associated with this one
+     */
+    public Throwable getCause() {
+        return getException();
+    }
+
+    /**
      * Returns the location of the error and the error message.
      *
      * @return the location of the error and the error message
