@@ -581,7 +581,7 @@ public class ZipOutputStream extends FilterOutputStream {
         written += 2;
 
         // last mod. time and date
-        writeOut(toDosTime(ze.getTime()));
+        writeOut(toDosTime(new Date(ze.getTime())));
         written += 4;
 
         // CRC
@@ -669,7 +669,7 @@ public class ZipOutputStream extends FilterOutputStream {
         written += 2;
 
         // last mod. time and date
-        writeOut(toDosTime(ze.getTime()));
+        writeOut(toDosTime(new Date(ze.getTime())));
         written += 4;
 
         // CRC
@@ -770,7 +770,7 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.1
      */
     protected static ZipLong toDosTime(Date time) {
-        return new ZipLong(toDosTime(time.getTime()));
+        return new ZipLong(toDosTime(time));
     }
 
     /**
@@ -780,9 +780,9 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.26
      */
-    protected static byte[] toDosTime(long time) {
+    protected static byte[] toDosTime(Date time) {
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(time);
+        cal.setTime(time);
         int year = cal.get(Calendar.YEAR);
         if (year < 1980) {
             return DOS_TIME_MIN.getBytes();
