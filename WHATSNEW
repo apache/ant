@@ -75,6 +75,9 @@ Other changes:
 * added support for branch logging via the tag attribute in <cvschangelog>
   Bugzilla Report 13510.
 
+* added support the groovy language in the script and scriptdef tasks.
+
+
 Changes from Ant 1.6.B3 to Ant 1.6.0
 ====================================
 
