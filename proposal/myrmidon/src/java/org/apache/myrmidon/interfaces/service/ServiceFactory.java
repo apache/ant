@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.services;
+package org.apache.myrmidon.interfaces.service;
 
 /**
  * A ServiceFactory is used to create a service for use in the
@@ -17,6 +17,8 @@ package org.apache.myrmidon.services;
  */
 public interface ServiceFactory
 {
+    String ROLE = ServiceFactory.class.getName();
+
     /**
      * Create a service that coresponds to this factory.
      * This method is usually called after the factory has been

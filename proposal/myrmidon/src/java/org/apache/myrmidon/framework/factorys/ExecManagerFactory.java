@@ -12,8 +12,8 @@ import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.impl.DefaultExecManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.myrmidon.services.ServiceException;
-import org.apache.myrmidon.services.ServiceFactory;
+import org.apache.myrmidon.interfaces.service.ServiceException;
+import org.apache.myrmidon.interfaces.service.ServiceFactory;
 
 /**
  * A Factory responsible for creating the ExecManager service.

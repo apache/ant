@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.services;
+package org.apache.myrmidon.interfaces.service;
 
 import org.apache.avalon.framework.CascadingException;
 

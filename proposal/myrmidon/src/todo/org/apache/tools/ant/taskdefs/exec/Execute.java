@@ -17,7 +17,7 @@ import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.factorys.ExecManagerFactory;
-import org.apache.myrmidon.services.ServiceException;
+import org.apache.myrmidon.interfaces.service.ServiceException;
 
 /**
  * Runs an external program.

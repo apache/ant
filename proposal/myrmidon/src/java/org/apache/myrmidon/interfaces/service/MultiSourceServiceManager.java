@@ -1,0 +1,79 @@
+/*
+ * Copyright (C) The Apache Software Foundation. All rights reserved.
+ *
+ * This software is published under the terms of the Apache Software License
+ * version 1.1, a copy of which has been included  with this distribution in
+ * the LICENSE.txt file.
+ */
+package org.apache.myrmidon.interfaces.service;
+
+import java.util.ArrayList;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
+
+/**
+ * A service manager that aggregates services from several
+ * {@link ServiceManager} objects.
+ *
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
+ */
+public class MultiSourceServiceManager
+    implements ServiceManager
+{
+    private final static Resources REZ
+        = ResourceManager.getPackageResources( MultiSourceServiceManager.class );
+
+    /** The source service managers, in order. */
+    private final ArrayList m_sources = new ArrayList();
+
+    /**
+     * Adds a service manager to the end of the source list.
+     */
+    public void add( final ServiceManager mgr )
+    {
+        m_sources.add( mgr );
+    }
+
+    /**
+     * Determines if this service manager contains a particular service.
+     *
+     * @param serviceType The service interface.
+     */
+    public boolean hasService( Class serviceType )
+    {
+        for( int i = 0; i < m_sources.size(); i++ )
+        {
+            final ServiceManager serviceManager = (ServiceManager)m_sources.get( i );
+            if( serviceManager.hasService( serviceType ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Locates a service instance.
+     *
+     * @param serviceType The service interface.
+     * @return The service instance.  The returned object is guaranteed to
+     *         implement the service interface.
+     * @throws ServiceException If the service does not exist.
+     */
+    public Object getService( Class serviceType )
+        throws ServiceException
+    {
+        for( int i = 0; i < m_sources.size(); i++ )
+        {
+            final ServiceManager serviceManager = (ServiceManager)m_sources.get( i );
+            if( serviceManager.hasService( serviceType ) )
+            {
+                return serviceManager.getService( serviceType );
+            }
+        }
+
+        final String message = REZ.getString( "unknown-service.error", serviceType.getName() );
+        throw new ServiceException( message );
+    }
+}
