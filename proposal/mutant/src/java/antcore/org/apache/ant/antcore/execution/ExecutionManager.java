@@ -155,8 +155,10 @@ public class ExecutionManager {
      * @param targets a list of target names to be executed.
      * @param commandProperties the properties defined by the front end to
      *      control the build
+     * @exception AntException if there is a problem in the build
      */
-    public void runBuild(Project project, List targets, Map commandProperties) {
+    public void runBuild(Project project, List targets, Map commandProperties)
+         throws AntException {
         Throwable buildFailureCause = null;
         try {
             // start by validating the project we have been given.
@@ -178,6 +180,7 @@ public class ExecutionManager {
             throw e;
         } catch (AntException e) {
             buildFailureCause = e;
+            throw e;
         } finally {
             eventSupport.fireBuildFinished(project, buildFailureCause);
         }

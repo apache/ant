@@ -221,6 +221,10 @@ public class Frame {
     protected void setDataValue(String name, Object value, boolean mutable)
          throws ExecutionException {
         Frame frame = getContainingFrame(name);
+        if (frame == null) {
+            throw new ExecutionException("There is no project corresponding " 
+                + "to the name \"" + name + "\"");
+        }
         if (frame == this) {
             if (dataValues.containsKey(name) && !mutable) {
                 log("Ignoring oveeride for data value " + name,
@@ -399,6 +403,10 @@ public class Frame {
      */
     protected Object getDataValue(String name) throws ExecutionException {
         Frame frame = getContainingFrame(name);
+        if (frame == null) {
+            throw new ExecutionException("There is no project corresponding " 
+                + "to the name \"" + name + "\"");
+        }
         if (frame == this) {
             return dataValues.get(name);
         } else {
@@ -417,6 +425,10 @@ public class Frame {
      */
     protected boolean isDataValueSet(String name) throws ExecutionException {
         Frame frame = getContainingFrame(name);
+        if (frame == null) {
+            throw new ExecutionException("There is no project corresponding " 
+                + "to the name \"" + name + "\"");
+        }
         if (frame == this) {
             return dataValues.containsKey(name);
         } else {
@@ -864,9 +876,6 @@ public class Frame {
     private void createNestedElement(AntLibFactory factory, Setter setter,
                                      Object element, BuildElement model)
          throws ExecutionException {
-        log("The use of create methods is deprecated - class: "
-             + element.getClass().getName(), MessageLevel.MSG_INFO);
-
         String nestedElementName = model.getType();
         try {
             Object nestedElement

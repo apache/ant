@@ -72,9 +72,7 @@ import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.model.Project;
-import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ConfigException;
-import org.apache.ant.common.util.Location;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.init.InitConfig;
 import org.apache.ant.init.InitUtils;
@@ -297,27 +295,8 @@ public class Commandline {
             addBuildListeners(executionManager);
             executionManager.init();
             executionManager.runBuild(project, targets, definedProperties);
+            System.exit(0);
         } catch (Throwable t) {
-            if (t instanceof AntException) {
-                AntException e = (AntException)t;
-                Location location = e.getLocation();
-                Throwable cause = e.getCause();
-                if (location != null && location != Location.UNKNOWN_LOCATION) {
-                    System.out.print(location);
-                }
-                System.out.println(e.getMessage());
-
-                if (messageOutputLevel >= MessageLevel.MSG_VERBOSE) {
-                    t.printStackTrace();
-                }
-
-                if (cause != null) {
-                    System.out.println("Root cause: " + cause.toString());
-                }
-            } else {
-                t.printStackTrace(System.err);
-            }
-
             System.exit(1);
         }
     }

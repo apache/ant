@@ -55,8 +55,8 @@ package org.apache.tools.ant;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.Converter;
 import org.apache.ant.common.antlib.StandardLibFactory;
-import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.service.EventService;
+import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.init.LoaderUtils;
 
 /**
@@ -85,7 +85,7 @@ public class Ant1Factory extends StandardLibFactory {
         if (project != null) {
             return;
         }
-        
+
         this.context = context;
         // set the system classpath. In Ant2, the system classpath will not
         // in general, have any useful information. For Ant1 compatability
@@ -94,8 +94,8 @@ public class Ant1Factory extends StandardLibFactory {
 
         project = new Project(this);
         project.init(context);
-        
-        EventService eventService = 
+
+        EventService eventService =
             (EventService)context.getCoreService(EventService.class);
         eventService.addBuildListener(project);
     }
@@ -105,12 +105,13 @@ public class Ant1Factory extends StandardLibFactory {
      * Create an instance of the requested type class
      *
      * @param typeClass the class from which an instance is required
+     * @param localName the name of the type within its library
      * @return an instance of the requested class
      * @exception ExecutionException the instance could not be created.
      * @exception InstantiationException if the type cannot be instantiated
      * @exception IllegalAccessException if the type cannot be accessed
      */
-    public Object createTypeInstance(Class typeClass)
+    public Object createTypeInstance(Class typeClass, String localName)
          throws InstantiationException, IllegalAccessException,
         ExecutionException {
         try {
@@ -145,11 +146,12 @@ public class Ant1Factory extends StandardLibFactory {
      * Create an instance of the requested task class
      *
      * @param taskClass the class from which an instance is required
+     * @param localName the name of the task within its library
      * @return an instance of the requested class
      * @exception InstantiationException if the task cannot be instantiated
      * @exception IllegalAccessException if the task cannot be accessed
      */
-    public Object createTaskInstance(Class taskClass)
+    public Object createTaskInstance(Class taskClass, String localName)
          throws InstantiationException, IllegalAccessException {
         Object instance = taskClass.newInstance();
         if (instance instanceof ProjectComponent) {
