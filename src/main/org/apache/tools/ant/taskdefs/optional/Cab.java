@@ -145,6 +145,9 @@ public class Cab extends MatchingTask {
     /**
      * Creates a list file.  This temporary file contains a list of all files
      * to be included in the cab, one file per line.
+     *
+     * <p>This method expects to only be called on Windows and thus
+     * quotes the file names.</p>
      */
     protected File createListFile(Vector files)
         throws IOException {
@@ -153,8 +156,9 @@ public class Cab extends MatchingTask {
 
         PrintWriter writer = new PrintWriter(new FileOutputStream(listFile));
 
-        for (int i = 0; i < files.size(); i++) {
-            writer.println(files.elementAt(i).toString());
+        int size = files.size();
+        for (int i = 0; i < size; i++) {
+            writer.println('\"' + files.elementAt(i).toString() + '\"');
         }
         writer.close();
 
