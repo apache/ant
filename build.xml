@@ -628,6 +628,10 @@
                unless="jdk1.4+" />
       <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/*.java"
       				 unless="jakarta.oro.present" />
+      <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" 
+               unless="xslp.present"/>
+      <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
+               unless="xalan.present"/>
     </javac>
   </target>
 

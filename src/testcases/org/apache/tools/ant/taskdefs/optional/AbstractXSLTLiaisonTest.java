@@ -114,7 +114,7 @@ public abstract class AbstractXSLTLiaisonTest extends TestCase {
             Document doc = parseXML(out);
             assertEquals("root",doc.getDocumentElement().getNodeName());
             assertEquals("message",doc.getDocumentElement().getFirstChild().getNodeName());
-            assertEquals("È‡ËÔ˘",doc.getDocumentElement().getFirstChild().getFirstChild().getNodeValue());
+            assertEquals("\u00E9\u00E0\u00E8\u00EF\u00F9",doc.getDocumentElement().getFirstChild().getFirstChild().getNodeValue());
         } finally {
             out.delete();
         }
