@@ -261,13 +261,15 @@
 
       <subsection name="Ant Pretty Build">
 
-        <p>Ant Pretty Build is a tool to show and run Ant buildfiles
-        directly from within a browser window.  It consists of a
-        single XSL file that will generate, on the fly, from
-        buildfile, a pretty interface showing project name,
-        description, properties and targets, etc. allowing to run the
-        whole project, or run selected targets in a specific
-        order.</p>
+        <p>Ant Pretty Build is a tool to easily show and run Ant
+        buildfiles directly from within a browser window.  It consists
+        of a single XSL file that will generate, on the fly, in the
+        browser, from the .xml buildfile, a pretty interface showing
+        project name, description, properties and targets, etc. sorted
+        or unsorted, allowing to modify/add properties, run the whole
+        project, or run selected set of targets in a specific order,
+        with the ability to modify logger/logfile, mode and add more
+        libs or command line arguments.</p>
 
         <table class="externals">
           <tr>
@@ -280,11 +282,11 @@
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:antprettybuild@free.fr">Charbel BITAR</a></td>
+            <td><a href="http://antprettybuild.free.fr/">Charbel BITAR (Project&apos;s Contact Page)</a></td>
           </tr>
           <tr>
             <th>License:</th>
-            <td>GNU General Public License (GPL)</td>
+            <td>Apache Software License 2.0</td>
           </tr>
         </table>
       </subsection>
