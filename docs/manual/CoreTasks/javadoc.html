@@ -433,6 +433,14 @@ means any VM of at least version 1.2.</p>
     <td align="center" valign="top">1.4+</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">includenosourcepackages</td>
+    <td valign="top">If set to true, packages that don't contain Java
+      source but a package.html will get documented as well.
+      <em>since Ant 1.6.3</em>.</td>
+    <td align="center" valign="top">all</td>
+    <td align="center" valign="top">No (default is <code>false</code>)</td>
+  </tr>
 </table>
 
 <h4><a name="groupattribute">Format of the group attribute</a></h4>
@@ -465,8 +473,9 @@ the nested <code>&lt;packageset&gt;</code> elements.</p>
 
 <p>A <a href="../CoreTypes/fileset.html">FileSet</a>.  All matched
 files will be passed to javadoc as source files.  Ant will
-automatically add the include pattern <code>**/*.java</code> to these
-filesets.</p>
+automatically add the include pattern <code>**/*.java</code> (and
+<code>**/package.html</code> if inncludenosourcepackages is true) to
+these filesets.</p>
 
 <p>Nested filesets can be used to document sources that are in the
 default package or if you want to exclude certain files from

@@ -433,6 +433,7 @@ public class Javadoc extends Task {
     private boolean linksource = false;
     private boolean breakiterator = false;
     private String noqualifier;
+    private boolean includeNoSourcePackages = false;
 
     private Vector fileSets = new Vector();
     private Vector packageSets = new Vector();
@@ -1572,6 +1573,15 @@ public class Javadoc extends Task {
         this.noqualifier = noqualifier;
     }
 
+    /**
+     * If set to true, Ant will also accept packages that only hold
+     * package.html files but no Java sources.
+     * @since Ant 1.6.3
+     */
+    public void setIncludeNoSourcePackages(boolean b) {
+        this.includeNoSourcePackages = b;
+    }
+
     public void execute() throws BuildException {
         if ("javadoc2".equals(getTaskType())) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
@@ -1722,7 +1732,7 @@ public class Javadoc extends Task {
                             getProject().resolveFile(la.getHref());
                         if (hrefAsFile.exists()) {
                             try {
-                                link = FILE_UTILS.getFileURL(hrefAsFile)
+                                link = fileUtils.getFileURL(hrefAsFile)
                                     .toExternalForm();
                             } catch (MalformedURLException ex) {
                                 // should be impossible
@@ -2010,6 +2020,9 @@ public class Javadoc extends Task {
             if (!fs.hasPatterns() && !fs.hasSelectors()) {
                 fs = (FileSet) fs.clone();
                 fs.createInclude().setName("**/*.java");
+                if (includeNoSourcePackages) {
+                    fs.createInclude().setName("**/package.html");
+                }
             }
             File baseDir = fs.getDir(getProject());
             DirectoryScanner ds = fs.getDirectoryScanner(getProject());
@@ -2082,10 +2095,9 @@ public class Javadoc extends Task {
                 File pd = new File(baseDir, dirs[i]);
                 String[] files = pd.list(new FilenameFilter () {
                         public boolean accept(File dir1, String name) {
-                            if (name.endsWith(".java")) {
-                                return true;
-                            }
-                            return false;        // ignore dirs
+                            return name.endsWith(".java")
+                                || (includeNoSourcePackages 
+                                    && name.equals("package.html"));
                         }
                     });
 

@@ -306,6 +306,10 @@ Changes that could break older environments:
   This was confusing so the definitions are now treated as similar.
   Bugzilla Report 31215.
 
+* <javadoc> has a new attribute "includenosourcepackages" that can be
+  used to document packages that don't hold source files but a
+  package.html file.  Bugzilla Report 25339.
+
 Fixed bugs:
 -----------
 
