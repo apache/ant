@@ -67,6 +67,8 @@ public class DefaultLogger implements BuildLogger {
     private PrintStream out;
     private int msgOutputLevel;
     private long startTime = System.currentTimeMillis();
+	
+    private static String lSep = System.getProperty("line.separator");
 
     private boolean emacsMode = false;
 
@@ -115,10 +117,10 @@ public class DefaultLogger implements BuildLogger {
         Throwable error = event.getException();
 
         if (error == null) {
-            out.println("\nBUILD SUCCESSFUL");
+            out.println(lSep + "BUILD SUCCESSFUL");
         }
         else {
-            out.println("\nBUILD FAILED\n");
+            out.println(lSep + "BUILD FAILED" + lSep);
 
             if (error instanceof BuildException) {
                 out.println(error.toString());
@@ -133,12 +135,12 @@ public class DefaultLogger implements BuildLogger {
             }
         }
 
-        out.println("\nTotal time: " + formatTime(System.currentTimeMillis() - startTime));
+        out.println(lSep + "Total time: " + formatTime(System.currentTimeMillis() - startTime));
     }
 
     public void targetStarted(BuildEvent event) {
         if (msgOutputLevel <= Project.MSG_INFO) {
-            out.println("\n" + event.getTarget().getName() + ":");
+            out.println(lSep + event.getTarget().getName() + ":");
         }
     }
 
