@@ -132,6 +132,7 @@ public class DefaultEmbeddor
 
         setupLogger( projectManager );
 
+
         if( projectManager instanceof Composable )
         {
             final DefaultComponentManager componentManager =
@@ -237,6 +238,7 @@ public class DefaultEmbeddor
                                "org.apache.myrmidon.components.type.DefaultTypeManager" );
         defaults.setParameter( Executor.ROLE,
                                //"org.apache.myrmidon.components.executor.DefaultExecutor" );
+                               //"org.apache.myrmidon.components.executor.PrintingExecutor" );
                                "org.apache.myrmidon.components.executor.AspectAwareExecutor" );
         defaults.setParameter( ProjectManager.ROLE,
                                "org.apache.myrmidon.components.manager.DefaultProjectManager" );

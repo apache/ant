@@ -29,7 +29,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.executor.DefaultExecutionFrame;
 import org.apache.myrmidon.components.executor.ExecutionFrame;
 import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.model.Condition;
+import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
 import org.apache.myrmidon.components.type.TypeManager;

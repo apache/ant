@@ -95,11 +95,17 @@ public class AspectAwareExecutor
 
         getLogger().debug( "Executing" );
         getAspectManager().preExecute();
-        task.execute();
+        doExecute( taskModel, task );
 
         getLogger().debug( "Disposing" );
         getAspectManager().preDestroy();
         doDispose( task, taskModel );
+    }
+
+    protected void doExecute( final Configuration taskModel, final Task task )
+        throws TaskException
+    {
+        task.execute();
     }
 
     //TODO: Extract and clean taskModel here.

@@ -8,7 +8,7 @@
 package org.apache.myrmidon.framework;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.model.Condition;
+import org.apache.myrmidon.framework.Condition;
 
 /**
  * Basic data type for holding patterns.

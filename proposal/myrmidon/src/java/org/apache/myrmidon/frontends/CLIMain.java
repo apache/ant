@@ -37,6 +37,7 @@ import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
+import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.embeddor.Embeddor;
 import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
 import org.apache.myrmidon.components.manager.LogTargetToListenerAdapter;
@@ -67,13 +68,14 @@ public class CLIMain
     private static final int       TASKLIB_DIR_OPT           = 5;
     private static final int       INCREMENTAL_OPT           = 6;
     private static final int       HOME_DIR_OPT              = 7;
+    private static final int       DRY_RUN_OPT               = 8;
 
     //incompatable options for info options
     private static final int[]     INFO_OPT_INCOMPAT         = new int[]
     {
         HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT,
         LOG_LEVEL_OPT, VERSION_OPT, LISTENER_OPT,
-        DEFINE_OPT //TASKLIB_DIR_OPT, HOME_DIR_OPT
+        DEFINE_OPT, DRY_RUN_OPT //TASKLIB_DIR_OPT, HOME_DIR_OPT
     };
 
     //incompatable options for other logging options
@@ -95,6 +97,9 @@ public class CLIMain
 
     ///List of user supplied parameters for builder
     private Parameters           m_builderParameters = new Parameters();
+
+    ///Determine whether tasks are actually executed
+    private boolean              m_dryRun      = false;
 
     /**
      * Main entry point called to run standard Myrmidon.
@@ -132,7 +137,7 @@ public class CLIMain
     private CLOptionDescriptor[] createCLOptions()
     {
         //TODO: localise
-        final CLOptionDescriptor[] options = new CLOptionDescriptor[ 12 ];
+        final CLOptionDescriptor[] options = new CLOptionDescriptor[ 13 ];
 
         options[0] =
             new CLOptionDescriptor( "help",
@@ -210,6 +215,11 @@ public class CLIMain
                                     BUILDER_PARAM_OPT,
                                     "Define a builder parameter (ie -Bfoo=var)" );
 
+        options[12] =
+            new CLOptionDescriptor( "dry-run",
+                                    CLOptionDescriptor.ARGUMENT_DISALLOWED,
+                                    DRY_RUN_OPT,
+                                    "Do not execute tasks - just print them out" );
 
         return options;
     }
@@ -258,6 +268,8 @@ public class CLIMain
             case BUILDER_PARAM_OPT:
                 m_builderParameters.setParameter( option.getArgument( 0 ), option.getArgument( 1 ) );
                 break;
+
+            case DRY_RUN_OPT: m_dryRun = true; break;
 
             case 0: m_targets.add( option.getArgument() ); break;
             }
@@ -317,6 +329,12 @@ public class CLIMain
         //getLogger().info( "Ant Bin Directory: " + m_binDir );
         //getLogger().debug( "Ant Lib Directory: " + m_libDir );
         //getLogger().debug( "Ant Task Lib Directory: " + m_taskLibDir );
+
+        if( m_dryRun )
+        {
+            m_parameters.setParameter( Executor.ROLE, 
+                                       "org.apache.myrmidon.components.executor.PrintingExecutor" );
+        }
 
         final Embeddor embeddor = new DefaultEmbeddor();
         setupLogger( embeddor );
