@@ -42,7 +42,7 @@ public class Condition
     }
 
     public boolean evaluate( final Context context )
-        throws TaskException
+        throws ContextException
     {
         boolean result = false;
 
@@ -66,7 +66,7 @@ public class Condition
         }
         catch( final PropertyException pe )
         {
-            throw new TaskException( "Error resolving " + m_condition, pe );
+            throw new ContextException( "Error resolving " + m_condition, pe );
         }
 
         if( !m_isIfCondition )
