@@ -603,6 +603,20 @@ public class Path extends DataType implements Cloneable {
      * Add the Java Runtime classes to this Path instance.
      */
     public void addJavaRuntime() {
+        if ("Kaffe".equals(System.getProperty("java.vm.name"))) {
+            // newer versions of Kaffe (1.1.1+) won't have this,
+            // but this will be sorted by FileSet anyway.
+            File kaffeShare = new File(System.getProperty("java.home")
+                                       + File.separator + "share"
+                                       + File.separator + "kaffe");
+            if (kaffeShare.isDirectory()) {
+                FileSet kaffeJarFiles = new FileSet();
+                kaffeJarFiles.setDir(kaffeShare);
+                kaffeJarFiles.setIncludes("*.jar");
+                addFileset(kaffeJarFiles);
+            }
+        }
+
         if (System.getProperty("java.vendor").toLowerCase(Locale.US).indexOf("microsoft") >= 0) {
             // Pull in *.zip from packages directory
             FileSet msZipFiles = new FileSet();
@@ -610,14 +624,6 @@ public class Path extends DataType implements Cloneable {
                 + File.separator + "Packages"));
             msZipFiles.setIncludes("*.ZIP");
             addFileset(msZipFiles);
-        } else if ("Kaffe".equals(System.getProperty("java.vm.name"))) {
-            FileSet kaffeJarFiles = new FileSet();
-            kaffeJarFiles.setDir(new File(System.getProperty("java.home")
-                                          + File.separator + "share"
-                                          + File.separator + "kaffe"));
-
-            kaffeJarFiles.setIncludes("*.jar");
-            addFileset(kaffeJarFiles);
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             addExisting(new Path(null,
                                  System.getProperty("java.home")
