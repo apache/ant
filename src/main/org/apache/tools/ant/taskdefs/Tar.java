@@ -54,45 +54,37 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
-
 import java.io.*;
-import java.util.Enumeration;
-import java.util.StringTokenizer;
-import java.util.Vector;
-import java.util.zip.*;
+import org.apache.tools.ant.*;
+import org.apache.tools.tar.*;
 
 /**
- * Create a ZIP archive.
+ * Creates a TAR archive.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
+ * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
 
-public class Zip extends MatchingTask {
+public class Tar extends MatchingTask {
 
-    private File zipFile;
-    private File baseDir;
-    protected String archiveType = "zip";
+    File tarFile;
+    File baseDir;
     
     /**
-     * This is the name/location of where to 
-     * create the .zip file.
+     * This is the name/location of where to create the tar file.
      */
-    public void setZipfile(String zipFilename) {
-        zipFile = project.resolveFile(zipFilename);
+    public void setTarfile(String tarFilename) {
+        tarFile = project.resolveFile(tarFilename);
     }
     
     /**
-     * This is the base directory to look in for 
-     * things to zip.
+     * This is the base directory to look in for things to tar.
      */
     public void setBasedir(String baseDirname) {
         baseDir = project.resolveFile(baseDirname);
     }
 
     public void execute() throws BuildException {
-        project.log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
+        project.log("Building tar: "+ tarFile.getAbsolutePath());
 
         if (baseDir == null) {
             throw new BuildException("basedir attribute must be set!");
@@ -104,62 +96,44 @@ public class Zip extends MatchingTask {
         DirectoryScanner ds = super.getDirectoryScanner(baseDir);
 
         String[] files = ds.getIncludedFiles();
-        String[] dirs  = ds.getIncludedDirectories();
 
         try {
-            ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
-            initZipOutputStream(zOut);
-
-            for (int i = 0; i < dirs.length; i++) {
-                File f = new File(baseDir,dirs[i]);
-                String name = dirs[i].replace(File.separatorChar,'/')+"/";
-                zipDir(f, zOut, name);
-            }
+            TarOutputStream tOut = new TarOutputStream(new FileOutputStream(tarFile));
+            tOut.setDebug(true);
 
             for (int i = 0; i < files.length; i++) {
                 File f = new File(baseDir,files[i]);
                 String name = files[i].replace(File.separatorChar,'/');
-                zipFile(f, zOut, name);
+                tarFile(f, tOut, name);
             }
 
             // close up
-            zOut.close();
+            tOut.close();
         } catch (IOException ioe) {
-            String msg = "Problem creating " + archiveType + " " + ioe.getMessage();
+            String msg = "Problem creating TAR: " + ioe.getMessage();
             throw new BuildException(msg);
         }
     }
 
-    protected void initZipOutputStream(ZipOutputStream zOut)
-        throws IOException, BuildException
-    {
-        zOut.setMethod(ZipOutputStream.DEFLATED);
-    }
-
-    protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
+    protected void tarFile(File file, TarOutputStream tOut, String vPath)
         throws IOException
     {
-    }
+        FileInputStream fIn = new FileInputStream(file);
 
-    protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath)
-        throws IOException
-    {
-        ZipEntry ze = new ZipEntry(vPath);
-        zOut.putNextEntry(ze);
+        TarEntry te = new TarEntry(vPath);
+        te.setSize(file.length());
+        te.setModTime(file.lastModified() / 1000);
+        tOut.putNextEntry(te);
 
         byte[] buffer = new byte[8 * 1024];
         int count = 0;
         do {
-            zOut.write(buffer, 0, count);
-            count = in.read(buffer, 0, buffer.length);
+            tOut.write(buffer, 0, count);
+            count = fIn.read(buffer, 0, buffer.length);
         } while (count != -1);
-    }
-
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath)
-        throws IOException
-    {
-        FileInputStream fIn = new FileInputStream(file);
-        zipFile(fIn, zOut, vPath);
+        
+        tOut.closeEntry();        
+        
         fIn.close();
     }
 }

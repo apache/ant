@@ -7,6 +7,7 @@
 <project name="Ant" default="main" basedir=".">
 
   <target name="init">
+    <property name="Name" value="Ant"/>
     <property name="name" value="ant"/>
     <property name="version" value="1.0-rc1"/>
 
@@ -22,7 +23,7 @@
     <property name="dist.dir" value="../dist/ant"/>
    
     <property name="classpath" value="lib/xml.jar"/>
-    <property name="packages" value="org.apache.tools.ant.*"/>
+    <property name="packages" value="org.apache.tools.*"/>
     <property name="manifest" value="src/etc/manifest"/>
   
     <property name="build.compiler" value="classic"/>
@@ -79,9 +80,8 @@
              destdir="${build.javadocs}"
              author="true"
              version="true"
-             use="true"
-             windowtitle="${name} API"
-             doctitle="${name}"
+             windowtitle="${Name} API"
+             doctitle="${Name}"
              bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved."
     />
   </target>
@@ -111,10 +111,23 @@
      <copyfile src="README" dest="${dist.dir}/README"/>
      <copyfile src="TODO" dest="${dist.dir}/TODO"/>
      <copyfile src="LICENSE" dest="${dist.dir}/LICENSE"/>
-
-     <jar jarfile="${name}.jar" basedir="${dist.dir}" includes="**"/>     
   </target>
 
+  <!-- =================================================================== -->
+  <!-- Packages the distribution with ZIP                                  -->
+  <!-- =================================================================== -->
+  <target name="dist-zip" depends="dist">
+    <zip zipfile="${Name}-${version}.zip" basedir="${dist.dir}" includes="**"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Packages the distribution with TAR-GZIP                             -->
+  <!-- =================================================================== -->
+  <target name="dist-tgz" depends="dist">
+    <tar tarfile="${Name}-${version}.tar" basedir="${dist.dir}" includes="**"/>
+    <gzip zipfile="${Name}-${version}.tar.gz" src="${Name}-${version}.tar"/>
+  </target>
+  
   <!-- =================================================================== -->
   <!-- Cleans up generated stuff                                           -->
   <!-- =================================================================== -->

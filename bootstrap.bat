@@ -2,7 +2,7 @@
 echo BOOTSTRAPPING ANT DISTRIBUTION
 
 set C=%CLASSPATH%;lib/xml.jar
-set SRCDIR=src\main\org\apache\tools\ant
+set SRCDIR=src\main\org\apache\tools
 set TMPDIR=tmp
 
 if "%OS%" == "Windows_NT" goto nt
@@ -18,14 +18,18 @@ mkdir %TMPDIR%
 
 echo ** COMPILING ANT CLASSES
 
-rem Compile the classes into the temp directory
-javac -classpath "%C%" -d %TMPDIR% %SRCDIR%\*.java
-
 rem Reset classpath to include base ant class files
 set C=%TMPDIR%;%C%
 
 rem Compile sub classes into the temp directory
-javac -classpath "%C%" -d %TMPDIR% %SRCDIR%\taskdefs\*.java
+javac -classpath "%C%" -d %TMPDIR% %SRCDIR%\tar\*.java
+
+rem Compile the classes into the temp directory
+javac -classpath "%C%" -d %TMPDIR% %SRCDIR%\ant\*.java
+
+rem Compile sub classes into the temp directory
+javac -classpath "%C%" -d %TMPDIR% %SRCDIR%\ant\taskdefs\*.java
+
 
 echo ** COPYING REQUIRED FILES
 
