@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.*;
 import java.io.*;
@@ -71,7 +72,7 @@ import java.util.Vector;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
-public class UpToDate extends MatchingTask {
+public class UpToDate extends MatchingTask implements Condition {
 
     private String _property;
     private String _value;
@@ -137,11 +138,9 @@ public class UpToDate extends MatchingTask {
     }
 
     /**
-     * Sets property to true if target files have a more recent timestamp than
-     * each of the corresponding source files.
+     * Evaluate all target and source files, see if the targets are up-to-date.
      */
-    public void execute() throws BuildException {
-
+    public boolean eval() {
         if (sourceFileSets.size() == 0) {
           throw new BuildException("At least one <srcfiles> element must be set");
         }
@@ -151,7 +150,7 @@ public class UpToDate extends MatchingTask {
         }
 
         // if not there then it can't be up to date
-        if (_targetFile != null && !_targetFile.exists()) return; 
+        if (_targetFile != null && !_targetFile.exists()) return false; 
 
         Enumeration enum = sourceFileSets.elements();
         boolean upToDate = true;
@@ -161,7 +160,16 @@ public class UpToDate extends MatchingTask {
             upToDate = upToDate && scanDir(fs.getDir(project), 
                                            ds.getIncludedFiles());
         }
+        return upToDate;
+    }
 
+
+    /**
+     * Sets property to true if target files have a more recent timestamp than
+     * each of the corresponding source files.
+     */
+    public void execute() throws BuildException {
+        boolean upToDate = eval();
         if (upToDate) {
             this.project.setProperty(_property, this.getValue());
             if (mapperElement == null) {

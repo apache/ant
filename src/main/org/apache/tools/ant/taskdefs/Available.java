@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.*;
 import java.util.*;
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.*;
 
 /**
@@ -65,7 +66,7 @@ import org.apache.tools.ant.types.*;
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
 
-public class Available extends Task {
+public class Available extends Task implements Condition {
 
     private String property;
     private String classname;
@@ -133,7 +134,13 @@ public class Available extends Task {
         if (property == null) {
             throw new BuildException("property attribute is required", location);
         }
+
+        if (eval()) {
+            this.project.setProperty(property, value);
+        }
+    }
         
+    public boolean  eval() throws BuildException {
         if (classname == null && file == null && resource == null) {
             throw new BuildException("At least one of (classname|file|resource) is required", location);
         }
@@ -145,28 +152,30 @@ public class Available extends Task {
         }
 
         if (classpath != null) {
+            classpath.setProject(project);
             this.loader = new AntClassLoader(project, classpath);
         }
 
         if ((classname != null) && !checkClass(classname)) {
             log("Unable to load class " + classname + " to set property " + property, Project.MSG_VERBOSE);
-            return;
+            return false;
         }
         
         if ((file != null) && !checkFile()) {
             log("Unable to find " + file + " to set property " + property, Project.MSG_VERBOSE);
-            return;
+            return false;
         }
         
         if ((resource != null) && !checkResource(resource)) {
             log("Unable to load resource " + resource + " to set property " + property, Project.MSG_VERBOSE);
-            return;
+            return false;
         }
 
-        this.project.setProperty(property, value);
         if (loader != null) {
             loader.cleanup();
         }
+
+        return true;
     }
 
     private boolean checkFile() {

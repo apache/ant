@@ -237,7 +237,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
     /**
      * Create a classloader for the given project using the classpath given.
      *
-     * @param project the project to ehich this classloader is to belong.
+     * @param project the project to which this classloader is to belong.
      * @param classpath the classpath to use to load the classes.  This
      *                is combined with the system classpath in a manner
      *                determined by the value of ${build.sysclasspath}

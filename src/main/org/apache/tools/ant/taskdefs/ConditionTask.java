@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -52,66 +52,59 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.taskdefs;
 
-import java.lang.reflect.*;
-import java.util.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
 /**
- *  Use introspection to "adapt" an arbitrary Bean ( not extending Task, but with similar
- *  patterns).
+ * &lt;condition&gt; task as a generalization of &lt;available&gt; and
+ * &lt;uptodate&gt;
  *
- * @author costin@dnt.ro
+ * <p>This task supports boolean logic as well as pluggable conditions
+ * to decide, whether a property should be set.</p>
+ *
+ * <p>This task does not extend Task to take advantage of
+ * ConditionBase.</p>
+ *
+ * @author <a href="mailto:stefan.bodewig@epost.de>Stefan Bodewig</a>
+ * @version $Revision$
  */
-public class TaskAdapter extends Task {
+public class ConditionTask extends ConditionBase {
 
-    Object proxy;
-    
+    private String property;
+    private String value = "true";
+
     /**
-     * Do the execution.
+     * The name of the property to set. Required.
+     *
+     * @since 1.1
+     */
+    public void setProperty(String p) {property = p;}
+
+    /**
+     * The value for the property to set. Defaults to "true".
+     *
+     * @since 1.1
+     */
+    public void setValue(String v) {value = v;}
+
+    /**
+     * See whether our nested condition holds and set the property.
+     *
+     * @since 1.1
      */
     public void execute() throws BuildException {
-        Method setProjectM = null;
-        try {
-            Class c = proxy.getClass();
-            setProjectM = 
-                c.getMethod( "setProject", new Class[] {Project.class});
-            if(setProjectM != null) {
-                setProjectM.invoke(proxy, new Object[] {project});
-            }
-        } catch( Exception ex ) {
-            log("Error setting project in " + proxy.getClass(), 
-                Project.MSG_ERR);
-            throw new BuildException( ex );
+        if (countConditions() > 1) {
+            throw new BuildException("You must not nest more than one condition into <condition>");
         }
-
-
-        Method executeM=null;
-        try {
-            Class c=proxy.getClass();
-            executeM=c.getMethod( "execute", new Class[0] );
-            if( executeM == null ) {
-                log("No execute in " + proxy.getClass(), Project.MSG_ERR);
-                throw new BuildException("No execute in " + proxy.getClass());
-            }
-            executeM.invoke(proxy, null);
-            return; 
-        } catch( Exception ex ) {
-            log("Error in " + proxy.getClass(), Project.MSG_ERR);
-            throw new BuildException( ex );
+        if (countConditions() < 1) {
+            throw new BuildException("You must nest a condition into <condition>");
         }
-
+        Condition c = (Condition) getConditions().nextElement();
+        if (c.eval()) {
+            getProject().setProperty(property, value);
+        }
     }
-    
-    /**
-     * Set the target object class
-     */
-    public void setProxy(Object o) {
-        this.proxy = o;
-    }
-
-    public Object getProxy() {
-        return this.proxy ;
-    }
-
 }

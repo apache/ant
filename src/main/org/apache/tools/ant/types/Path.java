@@ -138,6 +138,11 @@ public class Path extends DataType implements Cloneable {
         elements = new Vector();
     }
 
+    public void setProject(Project p) {
+        this.project = p;
+    }
+    public Project getProject() {return project;}
+
     /**
      * Adds a element definition to the path.
      * @param location the location of the element to add (must not be
@@ -285,7 +290,11 @@ public class Path extends DataType implements Cloneable {
                     addUnlessPresent(result, parts[j]);
                 }
             } else if (o instanceof Path) {
-                String[] parts = ((Path) o).list();
+                Path p = (Path) o;
+                if (p.getProject() == null) {
+                    p.setProject(project);
+                }
+                String[] parts = p.list();
                 for (int j=0; j<parts.length; j++) {
                     addUnlessPresent(result, parts[j]);
                 }
