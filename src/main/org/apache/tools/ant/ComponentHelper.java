@@ -770,29 +770,30 @@ public class ComponentHelper  {
     }
 
     /**
-     * Handler called to do decent diagnosis on instantiation failure
-     * @param componentName
+     * Handler called to do decent diagnosis on instantiation failure.
+     * @param componentName component name.
+     * @param type component type.
      * @return a string containing as much diagnostics info as possible.
      */
-    public String diagnoseCreationFailure(String componentName,String type) {
-        StringWriter errorText=new StringWriter();
-        PrintWriter out=new PrintWriter(errorText);
-        out.println("Problem: failed to create "+ type +" "+componentName);
+    public String diagnoseCreationFailure(String componentName, String type) {
+        StringWriter errorText = new StringWriter();
+        PrintWriter out = new PrintWriter(errorText);
+        out.println("Problem: failed to create " + type + " " + componentName);
         //class of problem
-        boolean lowlevel=false;
-        boolean jars=false;
-        boolean definitions=false;
+        boolean lowlevel = false;
+        boolean jars = false;
+        boolean definitions = false;
         boolean antTask;
         //look up the name
         AntTypeDefinition def = getDefinition(componentName);
-        if(def==null) {
+        if (def == null) {
             //not a known type
             out.println("Cause: The name is undefined.");
             out.println("Action: Check the spelling.");
             out.println("Action: Check that any custom tasks/types have been declared");
             out.println("Action: Check that any <presetdef>/<macrodefs> declarations have taken place");
-            definitions=true;
-        } else{
+            definitions = true;
+        } else {
             //we are defined, so it is an instantiation problem
             final String classname = def.getClassName();
             antTask = classname.startsWith("org.apache.tools.ant.");
@@ -805,7 +806,7 @@ public class ComponentHelper  {
                     Launcher.ANT_PRIVATELIB);
 
             //start with instantiating the class.
-            Class clazz= null;
+            Class clazz = null;
             try {
                 clazz = def.innerGetTypeClass();
             } catch (ClassNotFoundException e) {
@@ -838,12 +839,12 @@ public class ComponentHelper  {
                 out.println("        in " + libDir );
             }
             //here we successfully loaded the class or failed.
-            if(clazz!=null) {
+            if (clazz != null) {
                 //success: proceed with more steps
                 try {
-                    def.innerCreateAndSet(clazz,project);
+                    def.innerCreateAndSet(clazz, project);
                     //hey, there is nothing wrong with us
-                    out.println("The component could not be instantiated.");
+                    out.println("The component could be instantiated.");
                 } catch (NoSuchMethodException e) {
                     lowlevel = true;
                     out.println("Cause: The class " + classname
