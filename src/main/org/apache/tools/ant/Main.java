@@ -486,7 +486,7 @@ public class Main {
                     (BuildListener) Class.forName(className).newInstance();
                 project.addBuildListener(listener);
             }
-            catch(Exception exc) {
+            catch(Throwable exc) {
                 throw new BuildException("Unable to instantiate listener " + className, exc);
             }
         }

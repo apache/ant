@@ -150,6 +150,9 @@
     <available property="jaf.present"
                classname="javax.activation.DataHandler"
                classpathref="classpath"/>
+    <available property="log4j.present"
+               classname="org.apache.log4j.Category"
+               classpathref="classpath"/>
                
   </target>
 
@@ -197,6 +200,10 @@
                unless="jakarta.oro.present" />
       <exclude name="${ant.package}/util/regexp/Jdk14RegexpMatcher.java" 
                unless="jdk1.4+" />
+      <exclude name="${ant.package}/AntSecurityManager.java"
+               unless="jdk1.2+" />
+      <exclude name="${ant.package}/listener/Log4jListener.java"
+               unless="log4j.present" />
 
       <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
       <exclude name="${optional.package}/Script.java" unless="bsf.present" />
