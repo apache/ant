@@ -178,8 +178,7 @@ public class PatternSet {
     /**
      * Sets the name of the file containing the includes patterns.
      *
-     * @param includesfile A string containing the filename to fetch
-     * the include patterns from.  
+     * @param incl The file to fetch the include patterns from.  
      */
      public void setIncludesfile(File incl) throws BuildException {
          if (!incl.exists()) {
@@ -191,10 +190,9 @@ public class PatternSet {
      }
 
     /**
-     * Sets the name of the file containing the includes patterns.
+     * Sets the name of the file containing the excludes patterns.
      *
-     * @param excludesfile A string containing the filename to fetch
-     * the include patterns from.  
+     * @param excl The file to fetch the exclude patterns from.  
      */
      public void setExcludesfile(File excl) throws BuildException {
          if (!excl.exists()) {
