@@ -612,7 +612,7 @@
       <manifest>
         <section name="${optional.package}">
           <attribute name="Extension-name"
-                     value="org.apache.tools.ant.taskdesfs.optional" />
+                     value="org.apache.tools.ant.taskdefs.optional" />
           <attribute name="Specification-Title"
                      value="Apache Ant Optional Tasks" />
           <attribute name="Specification-Version"
