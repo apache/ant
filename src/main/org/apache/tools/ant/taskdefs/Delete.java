@@ -49,7 +49,7 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
  * using the include/exclude syntax.  The deltree task would delete a
  * directory tree.  This task combines the functionality of these two
  * originally distinct tasks.
- * <p>Currently Delete extends MatchingTask.  This is intend <i>only</i>
+ * <p>Currently Delete extends MatchingTask.  This is intended <i>only</i>
  * to provide backwards compatibility for a release.  The future position
  * is to use nested filesets exclusively.</p>
  *
