@@ -66,7 +66,8 @@ import java.io.File;
  * by generating a binary assembly (.dll) that contains all the binding
  * metadata. Uses date timestamps to minimise rebuilds.
  * @since Ant 1.6
- * Author steve loughran
+ * @uthor steve loughran
+ * @ant.task    name="ImportTypelib" category="dotnet"
  */
 public class ImportTypelib extends Task {
 

@@ -67,7 +67,7 @@ import org.apache.tools.ant.BuildException;
  * for vjc command options in glory detail.
  * @author Steve Loughran
  * @since ant1.6
- * @ant.task    name="jsharp" category="dotnet"
+ * @ant.task    name="jsharpc" category="dotnet"
  */
 public class JSharp extends DotnetCompile {
 
