@@ -340,7 +340,7 @@ public class CovReport extends Task {
 
         public Path createClasspath() {
             if (classPath == null) {
-                classPath = new Path(CovReport.this.project);
+                classPath = new Path(CovReport.this.getProject());
             }
             return classPath.createPath();
         }
