@@ -84,6 +84,7 @@ public class Available extends Task implements Condition {
     private Path classpath;
     private AntClassLoader loader;
     private String value = "true";
+    private boolean isTask = false;
 
     public void setClasspath(Path classpath) {
         createClasspath().append(classpath);
@@ -155,6 +156,7 @@ public class Available extends Task implements Condition {
             throw new BuildException("property attribute is required", location);
         }
 
+        isTask = true;
         if (eval()) {
             String lSep = System.getProperty("line.separator");
             if (null != project.getProperty(property)) {
@@ -165,6 +167,7 @@ public class Available extends Task implements Condition {
             }
             this.project.setProperty(property, value);
         }
+        isTask = false;
     }
 
     public boolean eval() throws BuildException {
@@ -183,27 +186,38 @@ public class Available extends Task implements Condition {
             this.loader = new AntClassLoader(project, classpath);
         }
 
+        String appendix = "";
+        if (isTask) {
+            appendix = " to set property " + property;
+        } else {
+            setTaskName("available");
+        }
+
         if ((classname != null) && !checkClass(classname)) {
-            log("Unable to load class " + classname + " to set property " + property, Project.MSG_VERBOSE);
+            log("Unable to load class " + classname + appendix, Project.MSG_VERBOSE);
             return false;
         }
 
         if ((file != null) && !checkFile()) {
             if (type != null) {
-                log("Unable to find " + type + " " + file + " to set property " + property, Project.MSG_VERBOSE);
+                log("Unable to find " + type + " " + file + appendix, Project.MSG_VERBOSE);
             } else {
-                log("Unable to find " + file + " to set property " + property, Project.MSG_VERBOSE);
+                log("Unable to find " + file + appendix, Project.MSG_VERBOSE);
             }
             return false;
         }
 
         if ((resource != null) && !checkResource(resource)) {
-            log("Unable to load resource " + resource + " to set property " + property, Project.MSG_VERBOSE);
+            log("Unable to load resource " + resource + appendix, Project.MSG_VERBOSE);
             return false;
         }
 
         if (loader != null) {
             loader.cleanup();
+        }
+
+        if (!isTask) {
+            setTaskName(null);
         }
 
         return true;
