@@ -57,15 +57,17 @@ It follows the weblogic naming convention of putting classes in<br>
 Example<br>
 </h3>
 <p>
-&lt;target name="jspcompile" depends="compile"&gt;<br>
-&lt;wljspc src="c:\\weblogic\\myserver\\public_html" dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp" &gt;<br>
-&lt;classpath&gt;<br>
-&lt;pathelement location="${weblogic.classpath}" /&gt;<br>
-&lt;pathelement path="${compile.dest}" /&gt;<br>
-&lt;/classpath&gt;<br>
-<br>
-&lt;/wljspc&gt;<br>
+<pre>
+&lt;target name="jspcompile" depends="compile"&gt;
+  &lt;wljspc src="c:\\weblogic\\myserver\\public_html" dest="c:\\weblogic\\myserver\\serverclasses" package="myapp.jsp"&gt
+    &lt;classpath&gt;
+      &lt;pathelement location="${weblogic.classpath}"/&gt;
+      &lt;pathelement path="${compile.dest}"/&gt;
+    &lt;/classpath&gt;
+  &lt;/wljspc&gt;
 &lt;/target&gt;
+</pre>
+
 </p>
 
 <h3>Limitations</h3>
@@ -80,4 +82,3 @@ many files at one go, it is called multiple times with one jsp file each.</li>
 Reserved.</p>
 </body>
 </html>
-

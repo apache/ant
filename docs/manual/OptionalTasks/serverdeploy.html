@@ -288,10 +288,11 @@ task.
 
 <pre>
     &lt;serverdeploy action=&quot;deploy&quot; source=&quot;${lib.dir}/ejb_myApp.jar&quot;&gt;
-        &lt;jonas server=&quot;MyJOnAS&quot; jonasroot="${jonas.root}" &gt;
+        &lt;jonas server=&quot;MyJOnAS&quot; jonasroot="${jonas.root}"&gt;
+
            &lt;classpath&gt;
-               &lt;pathelement path=&quot;${jonas.root}/lib/RMI_jonas.jar&quot; /&gt;
-               &lt;pathelement path=&quot;${jonas.root}/config/&quot; /&gt;
+               &lt;pathelement path=&quot;${jonas.root}/lib/RMI_jonas.jar&quot;/&gt;
+               &lt;pathelement path=&quot;${jonas.root}/config/&quot;/&gt;
            &lt;/classpath&gt;
         &lt;/jonas&gt;
     &lt;/serverdeploy&gt;
@@ -301,8 +302,8 @@ task.
 JOnAS server and a WebLogic server:</p>
 
 <pre>
-    &lt;serverdeploy action=&quot;list&quot; /&gt
-        &lt;jonas jonasroot=&quot;${jonas.root}&quot; orb=&quot;JEREMIE&quot; /&gt;
+    &lt;serverdeploy action=&quot;list&quot;/&gt
+        &lt;jonas jonasroot=&quot;${jonas.root}&quot; orb=&quot;JEREMIE&quot;/&gt;
         &lt;weblogic application=&quot;myapp&quot
             server=&quot;t3://myserver:7001&quot;
             classpath=&quot;${weblogic.home}/lib/weblogic.jar&quot;

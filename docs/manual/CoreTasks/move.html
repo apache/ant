@@ -103,8 +103,8 @@ followed by &lt;filterset&gt; elements.
 </pre>
 <p><b>Move a set of files to a new directory</b></p>
 <pre>
-  &lt;move todir=&quot;some/new/dir&quot; &gt;
-    &lt;fileset dir=&quot;my/src/dir&quot; &gt;
+  &lt;move todir=&quot;some/new/dir&quot;&gt;
+    &lt;fileset dir=&quot;my/src/dir&quot;&gt;
       &lt;include name=&quot;**/*.jar&quot;/&gt;
       &lt;exclude name=&quot;**/ant.jar&quot;/&gt;
     &lt;/fileset&gt;
@@ -113,8 +113,8 @@ followed by &lt;filterset&gt; elements.
 <p><b>Append <code>&quot;.bak&quot;</code> to the names of all files
 in a directory.</b></p>
 <pre>
-  &lt;move todir=&quot;my/src/dir&quot; &gt;
-    &lt;fileset dir=&quot;my/src/dir&quot; &gt;
+  &lt;move todir=&quot;my/src/dir&quot;&gt;
+    &lt;fileset dir=&quot;my/src/dir&quot;&gt;
       &lt;exclude name=&quot;**/*.bak&quot;/&gt;
     &lt;/fileset&gt;
     &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;

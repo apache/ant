@@ -84,7 +84,7 @@ platforms.</p>
 
 <h4>Examples</h4>
 <blockquote><pre>
-&lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot; &gt;
+&lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot;&gt;
   &lt;include name=&quot;**/*.java&quot;/&gt;
   &lt;exclude name=&quot;**/*Test*&quot;/&gt;
 &lt;/fileset&gt;
@@ -93,8 +93,8 @@ platforms.</p>
 source files and don't have the text <code>Test</code> in their
 name.</p>
 <blockquote><pre>
-&lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot; &gt;
-  &lt;patternset id=&quot;non.test.sources&quot; &gt;
+&lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot;&gt;
+  &lt;patternset id=&quot;non.test.sources&quot;&gt;
     &lt;include name=&quot;**/*.java&quot;/&gt;
     &lt;exclude name=&quot;**/*Test*&quot;/&gt;
   &lt;/patternset&gt;

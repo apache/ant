@@ -81,14 +81,14 @@ then be used to create a jar.
 </p>
 
 <blockquote><pre>
-&lt;jar destfile=&quot;minimal.jar&quot; &gt;
+&lt;jar destfile=&quot;minimal.jar&quot;&gt;
   &lt;fileset refid=&quot;reqdClasses&quot;/&gt;
 &lt;/jar&gt;
 </pre></blockquote>
 
 <blockquote><pre>
 &lt;classfileset id=&quot;reqdClasses&quot; dir=&quot;${classes.dir}&quot;&gt;
-  &lt;rootfileset dir=&quot;${classes.dir}&quot; includes=&quot;org/apache/tools/ant/Project*.class&quot; /&gt;
+  &lt;rootfileset dir=&quot;${classes.dir}&quot; includes=&quot;org/apache/tools/ant/Project*.class&quot;/&gt;
 &lt;/classfileset&gt;
 </pre></blockquote>
 

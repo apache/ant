@@ -205,7 +205,7 @@ into.  The file structure from the FTP site is preserved on the local machine.</
        server=&quot;ftp.apache.org&quot;
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot;&gt;
-    &lt;fileset dir=&quot;htdocs/manual&quot; &gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;&gt;
       &lt;include name=&quot;**/*.html&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/ftp&gt;
@@ -224,7 +224,7 @@ fact, the dir attribute of the fileset is ignored completely.
   &lt;ftp action=&quot;del&quot;
        server=&quot;ftp.apache.org&quot;
        userid=&quot;anonymous&quot;
-       password=&quot;me@myorg.com&quot; &gt;
+       password=&quot;me@myorg.com&quot;&gt;
     &lt;fileset&gt;
       &lt;include name=&quot;**/*.tmp&quot;/&gt;
     &lt;/fileset&gt;
@@ -239,7 +239,7 @@ If you don't have permission to delete a file, a BuildException is thrown.</p>
        server=&quot;ftp.apache.org&quot;
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot; 
-       listing=&quot;data/ftp.listing&quot; &gt;
+       listing=&quot;data/ftp.listing&quot;&gt;
     &lt;fileset&gt;
       &lt;include name=&quot;**&quot;/&gt;
     &lt;/fileset&gt;
@@ -257,7 +257,7 @@ remotedir attribute.</p>
        server=&quot;ftp.apache.org&quot;
        userid=&quot;anonymous&quot;
        password=&quot;me@myorg.com&quot; 
-       remotedir=&quot;some/remote/dir&quot; /&gt;
+       remotedir=&quot;some/remote/dir&quot;/&gt;
 </pre>
 <p>This creates the directory <code>some/remote/dir</code> beneath the default root
 directory.  As with all other actions, the directory separator character must be correct

@@ -140,21 +140,21 @@ followed by &lt;filterset&gt; elements.
 </pre>
 <p><b>Copy a set of files to a directory</b></p>
 <pre>
-  &lt;copy todir=&quot;../dest/dir&quot; &gt;
-    &lt;fileset dir=&quot;src_dir&quot; &gt;
+  &lt;copy todir=&quot;../dest/dir&quot;&gt;
+    &lt;fileset dir=&quot;src_dir&quot;&gt;
       &lt;exclude name=&quot;**/*.java&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/copy&gt;
 
-  &lt;copy todir=&quot;../dest/dir&quot; &gt;
+  &lt;copy todir=&quot;../dest/dir&quot;&gt;
     &lt;fileset dir=&quot;src_dir&quot; excludes=&quot;**/*.java&quot;/&gt;
   &lt;/copy&gt;
 </pre>
 <p><b>Copy a set of files to a directory, appending
 <code>.bak</code> to the file name on the fly</b></p>
 <pre>
-  &lt;copy todir=&quot;../backup/dir&quot; &gt;
-    &lt;fileset dir=&quot;src_dir&quot; /&gt;
+  &lt;copy todir=&quot;../backup/dir&quot;&gt;
+    &lt;fileset dir=&quot;src_dir&quot;/&gt;
     &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
   &lt;/copy&gt;
 </pre>
@@ -163,10 +163,10 @@ followed by &lt;filterset&gt; elements.
 <p><b>Copy a set of files to a directory, replacing @TITLE@ with Foo Bar
 in all files.</b></p>
 <pre>
-  &lt;copy todir=&quot;../backup/dir&quot; &gt;
-    &lt;fileset dir=&quot;src_dir&quot; /&gt;
+  &lt;copy todir=&quot;../backup/dir&quot;&gt;
+    &lt;fileset dir=&quot;src_dir&quot;/&gt;
     &lt;filterset&gt;
-      &lt;filter token=&quot;TITLE&quot; value=&quot;Foo Bar&quot; /&gt;
+      &lt;filter token=&quot;TITLE&quot; value=&quot;Foo Bar&quot;/&gt;
     &lt;/filterset&gt;
   &lt;/copy&gt;
 </pre>

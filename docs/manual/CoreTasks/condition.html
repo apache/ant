@@ -45,8 +45,8 @@ complete list see <a href="conditions.html">here</a>.</p>
 <pre>
   &lt;condition property=&quot;javamail.complete&quot;&gt;
     &lt;and&gt;
-      &lt;available classname=&quot;javax.activation.DataHandler&quot; /&gt;
-      &lt;available classname=&quot;javax.mail.Transport&quot; /&gt;
+      &lt;available classname=&quot;javax.activation.DataHandler&quot;/&gt;
+      &lt;available classname=&quot;javax.mail.Transport&quot;/&gt;
     &lt;/and&gt;
   &lt;/condition&gt;
 </pre>
@@ -57,9 +57,11 @@ classpath.</p>
 <pre>
   &lt;condition property=&quot;isMacOsButNotMacOsX&quot;&gt;
     &lt;and&gt;
-      &lt;os family=&quot;mac&quot; /&gt;
+      &lt;os family=&quot;mac&quot;/&gt;
+
       &lt;not&gt;
-        &lt;os family=&quot;unix&quot; /&gt;
+        &lt;os family=&quot;unix&quot;/&gt;
+
       &lt;/not&gt;
     &lt;/and&gt;
   &lt;/condition&gt;
@@ -70,7 +72,8 @@ in the Unix family as well.</p>
 
 <pre>
   &lt;condition property=&quot;isSunOSonSparc&quot;&gt;
-    &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot; /&gt;
+    &lt;os name=&quot;SunOS&quot; arch=&quot;sparc&quot;/&gt;
+
   &lt;/condition&gt;
 </pre>
 <p>sets the property <code>isSunOSonSparc</code> if the current
@@ -82,4 +85,3 @@ Foundation. All rights Reserved.</p>
 
 </body>
 </html>
-
