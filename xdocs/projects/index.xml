@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <index value="1"/>
+    <author email="christoph.wilhelms@t-online.de">Christoph Wilhelms</author>
+    <title>Welcome</title>
+  </properties>
+
+<body>
+
+  <section name="Welcome to the Ant Projects Area">
+    <h3>This is where the Ant sub-projects live!</h3>
+
+    <p>Now, that Ant has become an Apache Top-Level Project it is time to make space on this
+    Web-Page for Ant sub-projects. In the first step <a href="antidote/index.html">Antidote</a>,
+    the Ant GUI, is included, but some others may follow!
+    </p>
+    <p>To make shure you do not miss anything: Stay tuned and visit this page from time to time :)!
+    </p>
+  </section>
+
+</body>
+</document>
+

@@ -5,7 +5,7 @@
     <logo href="images/ant_logo_large.gif">Apache Ant</logo>
 
     <body>
-<!--       <menusection name="Home" index="0"         href="/index.html"> -->
+       <menusection name="Home" index="0"         href="/index.html">
             <menu name="Apache Ant">
                 <item name="Welcome"               href="/index.html"/>
                 <item name="License"               href="/license.html"/>
@@ -45,7 +45,7 @@
                 <item name="Project Guidelines"    href="/guidelines.html"/>
                 <item name="Legal"                 href="/legal.html"/>
             </menu>
-<!--        </menusection>
+        </menusection>
 
         <menusection name="Projects" index="1"     href="/projects/index.html">
             <menu name="Projects">
@@ -56,6 +56,6 @@
                 <item name="Design Overview"       href="/projects/antidote/design.html"/>
                 <item name="Module HOW-TO"         href="/projects/antidote/module.html"/>
             </menu>
-        </menusection>-->
+        </menusection>
     </body>
 </project>

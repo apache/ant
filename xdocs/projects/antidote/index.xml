@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <index value="1"/>
+    <author email="christoph.wilhelms@t-online.de">Christoph Wilhelms</author>
+    <title>About Antidote</title>
+  </properties>
+
+<body>
+
+  <section name="About">
+    <h3>ANTidote is the GUI for Ant...</h3>
+
+    <p>... in fact it is the Ant GUI by the Apache Ant project itself, because,
+      as you might know, there are several other grafical user interfaces covering Ant.
+      Most of them are integrated in IDEs such as <a href="http://ant.netbeans.org">NetBeans</a>
+      or <a href="http://www.eclipse.org">Eclipse</a>. To be honest Antidote
+      has started a long time ago (spring 2000) and was designed to become integratible into
+      IDEs by it's original Author Simeon H. K. Fitch, who did the most work on Antidote.
+      Unfortunately the Antidote community never came really "to speed" and so the IDE-guys
+      where faster with their integrations.
+    </p>
+    <p>With these other Ant GUIs Antidote became less important and it seemed there was not much
+      interest in such a tool...
+    </p>
+    <p>Anyways: The "sleeping beauty" Antidote has been awaken and is now being developed to
+      a full featured, stand alone, JFC/Swing-based Ant GUI to grafically create, edit and run
+      build-files to be quite useful for the developer who do not use an IDE at all. So one of
+      the goals of Antidote development is to make it small, fast and really neat :)!
+    </p>
+  </section>
+
+  <section name="Get a glimps">
+    <p>
+      <img src="images/screenshot.jpg" width="648" height="595" alt="Screenshot"/>
+    </p>
+    <p>This is a screenshot of how Antidote looks today. Still there is, of course, a lot to do
+      and you are welcome to contribute! It shows Antidote using a custom look and feel called
+      "Metouia" which you can find <a href="http://mlf.sourceforge.net">here</a> if you want to try it!
+    </p>
+  </section>
+
+  <section name="Get Involved">
+    <p>Antidote is discussed on the main Ant mailing lists you can find here:
+    </p>
+<ul>
+<li><a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">Get Involved</a></li>
+<li><a href="mail.html">Join Mailing Lists</a></li>
+<li><a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Search the Dev Mailing List</a>
+</li>
+<li><a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Search the User Mailing List</a>
+</li>
+</ul>
+
+
+
+  </section>
+
+</body>
+</document>
+
