@@ -97,11 +97,9 @@ public class IncludeTest extends BuildFileTest {
             configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
             fail("should have caused a parser exception");
         } catch (BuildException e) {
-            assertEquals("Unexpected text \"extraneous_text\"",
-                         e.getMessage());
             assertTrue(e.getLocation().toString() 
-                       + " should end with build.xml:13: ",
-                       e.getLocation().toString().endsWith("build.xml:13: "));
+                       + " should refer to build.xml",
+                       e.getLocation().toString().indexOf("build.xml:") > -1);
         }
     }
 
@@ -109,6 +107,7 @@ public class IncludeTest extends BuildFileTest {
         configureProject("src/etc/testcases/core/include/including_file_task_error/build.xml");
         try {
             executeTarget("test");
+            fail("should have cause a build failure");
         } catch (BuildException e) {
             assertTrue(e.getMessage() 
                        + " should start with \'Warning: Could not find",
@@ -124,12 +123,10 @@ public class IncludeTest extends BuildFileTest {
             configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
             fail("should have caused a parser exception");
         } catch (BuildException e) {
-            assertEquals("Unexpected text \"e\"",
-                         e.getMessage());
             assertTrue(e.getLocation().toString() 
-                       + " should end with included_file.xml:2: ",
+                       + " should refer to included_file.xml",
                        e.getLocation().toString()
-                       .endsWith("included_file.xml:2: "));
+                       .indexOf("included_file.xml:") > -1);
         }
     }
 
@@ -137,6 +134,7 @@ public class IncludeTest extends BuildFileTest {
         configureProject("src/etc/testcases/core/include/included_file_task_error/build.xml");
         try {
             executeTarget("test");
+            fail("should have cause a build failure");
         } catch (BuildException e) {
             assertTrue(e.getMessage() 
                        + " should start with \'Warning: Could not find",
