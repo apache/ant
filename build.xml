@@ -1589,9 +1589,6 @@
           -->
           <exclude name="${ant.package}/taskdefs/AbstractCvsTaskTest.java"
                    unless="have.cvs"/>
-
-          <!-- push to the end as long as it is failing -->
-          <exclude name="${ant.package}/taskdefs/ImportTest.java"/>
         </fileset>
       </batchtest>
     </junit>
