@@ -21,6 +21,7 @@ import org.apache.aut.nativelib.impl.launchers.DefaultCommandLauncher;
 import org.apache.aut.nativelib.impl.launchers.MacCommandLauncher;
 import org.apache.aut.nativelib.impl.launchers.ScriptCommandLauncher;
 import org.apache.aut.nativelib.impl.launchers.WinNTCommandLauncher;
+import org.apache.aut.nativelib.impl.launchers.CommandLauncher;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.io.IOUtil;
 

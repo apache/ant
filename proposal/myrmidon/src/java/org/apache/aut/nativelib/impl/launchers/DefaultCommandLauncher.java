@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.aut.nativelib.impl.CommandLauncher;
 
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecMetaData;

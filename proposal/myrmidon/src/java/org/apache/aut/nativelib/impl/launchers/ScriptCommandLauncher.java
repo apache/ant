@@ -8,7 +8,6 @@
 package org.apache.aut.nativelib.impl.launchers;
 
 import java.io.IOException;
-import org.apache.aut.nativelib.impl.CommandLauncher;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecMetaData;
 
