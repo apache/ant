@@ -138,4 +138,14 @@ Legal:
 
   </target>
 
+  <target name="loadenvironment-test">
+    <load-environment prefix="env"/>
+    <log message="env.TMP=${env.TMP}"/>
+  </target>
+
+  <target name="loadproperties-test">
+    <load-properties prefix="myPrefix" file="template-simple.properties"/>
+    <log message="myPrefix.foo=${myPrefix.foo}"/>
+  </target>
+
 </project>
