@@ -72,7 +72,7 @@ public class Library implements EnabledLibraryElement {
     private String destinationName;
 
     /**
-     * file mapped to this one
+     * this is a file reference which is created during binding
      */
     private File libraryFile;
 
@@ -190,11 +190,11 @@ public class Library implements EnabledLibraryElement {
     }
 
     /**
-     * set the library file.
-     * @param libraryFile
+     * set the library file. Hidden from Ant users.
+     * @param file
      */
-    public void setLibraryFile(File libraryFile) {
-        this.libraryFile = libraryFile;
+    public void _setLibraryFile(File file) {
+        this.libraryFile = file;
     }
 
     /**
@@ -222,7 +222,6 @@ public class Library implements EnabledLibraryElement {
             //adopt the name of the project if no archive is specced
             archive=project;
         }
-        faultIfEmpty(archive, ERROR_NO_ARCHIVE);
         faultIfEmpty(version, ERROR_NO_VERSION);
         if(suffix==null) {
             suffix="";
