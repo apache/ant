@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<project name="XDoclet" default="gen">
+<project name="XDoclet" default="default">
 
   <property name="log4j.jar" location="../../lib/optional/log4j.jar"/>
   <property name="xdoclet.jar" location="lib/xdoclet.jar"/>
@@ -76,9 +76,11 @@
     </document> -->
 
   </target>
-  
+
   <target name="docs" depends="gen">
     <ant dir="dvsl"/>
   </target>
+
+  <target name="default" depends="gen"/>
 </project>
 
