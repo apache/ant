@@ -110,7 +110,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
     protected static final String BAS_DD = "ejb-inprise.xml";    
 
     /** Java2iiop executable **/
-    protected static final String JAVA2IIOP = "java2iiop.exe";
+    protected static final String JAVA2IIOP = "java2iiop";
 
     /** Verify class */
     protected static final String VERIFY = "com.inprise.ejb.util.Verify";
@@ -218,7 +218,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         File borlandDD = new File(getConfig().descriptorDir,BAS_DD);
         if (borlandDD.exists()) {
             log("Borland specific file found "+ borlandDD,  Project.MSG_VERBOSE);
-            ejbFiles.put(META_DIR + BAS_DD, borlandDD);
+            ejbFiles.put(META_DIR + BAS_DD, ddPrefix + borlandDD);
         }
         else {
             log("Unable to locate borland deployment descriptor. It was expected to be in " + 
