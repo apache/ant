@@ -144,8 +144,8 @@ public class ExecuteOn extends ExecTask {
      */
     public Commandline.Marker createSrcfile() {
         if (srcFilePos != null) {
-            throw new BuildException(taskType + " doesn\'t support multiple srcfile elements.",
-                                     location);
+            throw new BuildException(taskType + " doesn\'t support multiple "
+                                     + "srcfile elements.", location);
         }
         srcFilePos = cmdl.createMarker();
         return srcFilePos;
@@ -157,8 +157,8 @@ public class ExecuteOn extends ExecTask {
      */
     public Commandline.Marker createTargetfile() {
         if (targetFilePos != null) {
-            throw new BuildException(taskType + " doesn\'t support multiple targetfile elements.",
-                                     location);
+            throw new BuildException(taskType + " doesn\'t support multiple "
+                                     + "targetfile elements.", location);
         }
         targetFilePos = cmdl.createMarker();
         srcIsFirst = (srcFilePos != null);
@@ -193,7 +193,7 @@ public class ExecuteOn extends ExecTask {
             if (mapperElement == null) {
                 throw new BuildException("no mapper specified", location);
             }
-            if (mapperElement == null) {
+            if (destDir == null) {
                 throw new BuildException("no dest attribute specified", 
                                          location);
             }

@@ -59,6 +59,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.util.StringUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -81,8 +82,6 @@ import java.io.FileNotFoundException;
  */
 public class ExecTask extends Task {
 
-    private static String lSep = System.getProperty("line.separator");
-
     private String os;
     private File out;
     private File dir;
@@ -98,14 +97,30 @@ public class ExecTask extends Task {
     private boolean failIfExecFails=true;
     private boolean append = false;
 
-    /** Controls whether the VM (1.3 and above) is used to execute the command */
+    /** 
+     * Controls whether the VM (1.3 and above) is used to execute the
+     * command 
+     */
     private boolean vmLauncher = true;
 
     /**
      * Timeout in milliseconds after which the process will be killed.
+     *
+     * @since Ant 1.5
      */
     public void setTimeout(Long value) {
         timeout = value;
+    }
+
+    /**
+     * Timeout in milliseconds after which the process will be killed.
+     */
+    public void setTimeout(Integer value) {
+        if (value == null) {
+            timeout = null;
+        } else {
+            setTimeout(new Long(value.intValue()));
+        }
     }
 
     /**
@@ -123,7 +138,8 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Only execute the process if <code>os.name</code> is included in this string.
+     * Only execute the process if <code>os.name</code> is included in
+     * this string.
      */
     public void setOs(String os) {
         this.os = os;
@@ -185,7 +201,8 @@ public class ExecTask extends Task {
     /**
      * fill a property in with a result. 
      * when no property is defined: failure to execute
-     * @since 1.5
+     *
+     * @since Ant 1.5
      */
     public void setResultProperty(String resultProperty) {
         this.resultProperty=resultProperty;
@@ -222,9 +239,14 @@ public class ExecTask extends Task {
      * Do the work.
      */
     public void execute() throws BuildException {
+        File savedDir = dir; // possibly altered in prepareExec
         checkConfiguration();
         if (isValidOs()) {
-            runExec(prepareExec());
+            try {
+                runExec(prepareExec());
+            } finally {
+                dir = savedDir;
+            }
         }
     }
 
@@ -272,13 +294,13 @@ public class ExecTask extends Task {
     protected Execute prepareExec() throws BuildException {
         // default directory to the project's base directory
         if (dir == null) {
-          dir = project.getBaseDir();
+            dir = project.getBaseDir();
         }
         // show the command
         log(cmdl.toString(), Project.MSG_VERBOSE);
 
         Execute exe = new Execute(createHandler(), createWatchdog());
-        exe.setAntRun(project);
+        exe.setAntRun(getProject());
         exe.setWorkingDirectory(dir);
         exe.setVMLauncher(vmLauncher);
         String[] environment = env.getVariables();
@@ -294,7 +316,8 @@ public class ExecTask extends Task {
     }
 
     /**
-     * A Utility method for this classes and subclasses to run an Execute instance (an external command).
+     * A Utility method for this classes and subclasses to run an
+     * Execute instance (an external command).
      */
     protected final void runExecute(Execute exe) throws IOException {
         int err = -1; // assume the worst
@@ -307,7 +330,8 @@ public class ExecTask extends Task {
         maybeSetResultPropertyValue(err);
         if (err != 0) {
             if (failOnError) {
-                throw new BuildException(taskType + " returned: "+err, location);
+                throw new BuildException(taskType + " returned: "+err, 
+                                         location);
             } else {
                 log("Result: " + err, Project.MSG_ERR);
             }
@@ -319,7 +343,7 @@ public class ExecTask extends Task {
             StringBuffer val = new StringBuffer();
             while ((line = in.readLine()) != null) {
                 if (val.length() != 0) {
-                    val.append(lSep);
+                    val.append(StringUtils.LINE_SEP);
                 }
                 val.append(line);
             }
@@ -328,7 +352,8 @@ public class ExecTask extends Task {
     }
 
     /**
-     * Run the command using the given Execute instance. This may be overidden by subclasses
+     * Run the command using the given Execute instance. This may be
+     * overidden by subclasses
      */
     protected void runExec(Execute exe) throws BuildException {
         exe.setCommandline(cmdl.getCommandline());
@@ -336,7 +361,8 @@ public class ExecTask extends Task {
             runExecute(exe);
         } catch (IOException e) {
             if (failIfExecFails) {
-                throw new BuildException("Execute failed: "+e.toString(),e, location);
+                throw new BuildException("Execute failed: "+e.toString(), e, 
+                                         location);
             } else {
                 log("Execute failed: "+e.toString(), Project.MSG_ERR);
             }
@@ -356,9 +382,11 @@ public class ExecTask extends Task {
                 log("Output redirected to " + out, Project.MSG_VERBOSE);
                 return new PumpStreamHandler(fos);
             } catch (FileNotFoundException fne) {
-                throw new BuildException("Cannot write to "+out, fne, location);
+                throw new BuildException("Cannot write to "+out, fne, 
+                                         location);
             } catch (IOException ioe) {
-                throw new BuildException("Cannot write to "+out, ioe, location);
+                throw new BuildException("Cannot write to "+out, ioe, 
+                                         location);
             }
         } else if (outputprop != null) {
             baos = new ByteArrayOutputStream();
@@ -375,7 +403,7 @@ public class ExecTask extends Task {
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
         if (timeout == null) {
-          return null;
+            return null;
         }
         return new ExecuteWatchdog(timeout.longValue());
     }
@@ -386,10 +414,10 @@ public class ExecTask extends Task {
     protected void logFlush() {
         try {
             if (fos != null) {
-              fos.close();
+                fos.close();
             }
             if (baos != null) {
-              baos.close();
+                baos.close();
             }
         } catch (IOException io) {}
     }
