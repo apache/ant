@@ -285,7 +285,7 @@ public class Project {
     }
 
     public void setName(String name) {
-        setUserProperty("project.name",  name);
+        setUserProperty("ant.project.name",  name);
         this.name = name;
     }
 
