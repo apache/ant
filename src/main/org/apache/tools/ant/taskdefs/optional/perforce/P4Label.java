@@ -66,10 +66,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 
-/** P4Label - create a Perforce Label.
+/** 
  *
- *  P4Label inserts a label into perforce reflecting the
- *  current client contents.
+ *  Create a new Perforce label and set contents to reflect current 
+ *  client file revisions.
  *
  *  Label name defaults to AntLabel if none set.
  *
@@ -86,18 +86,30 @@ public class P4Label extends P4Base {
     protected String desc;
     protected String lock;
 
+    /**
+     * The name of the label; optional, default "AntLabel"
+     */
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     *Label Description; optional
+     */
     public void setDesc(String desc) {
         this.desc = desc;
     }
 
+    /**
+     * when set to "locked", Perforce will lock the label once created; optional. 
+     */
     public void setLock(String lock) {
         this.lock = lock;
     }
 
+    /**
+     *  do the work
+     */
     public void execute() throws BuildException {
         log("P4Label exec:", Project.MSG_INFO);
 

@@ -61,15 +61,18 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 
-/** P4Reopen - move files to a new changelist
+/* 
+ * Move (or reopen in Perforce speak) checkout files between changelists.
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- * @ant.task ignore="true"
  */
 public class P4Reopen extends P4Base {
 
     private String toChange = "";
 
+    /**
+     * The changelist to move files to; required.
+     */
     public void setToChange(String toChange) throws BuildException {
         if (toChange == null && !toChange.equals("")) {
             throw new BuildException("P4Reopen: tochange cannot be null or empty");

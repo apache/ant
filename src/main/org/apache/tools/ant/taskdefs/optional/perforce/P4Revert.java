@@ -61,16 +61,19 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 
-/** P4Revert - revert open files or files in a changelist
+/* 
+ * Revert open files or files in a changelist
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
- * @ant.task ignore="true"
  */
 public class P4Revert extends P4Base {
 
     private String revertChange = null;
     private boolean onlyUnchanged = false;
 
+    /**
+     * The changelist to revert; optional.
+     */
     public void setChange(String revertChange) throws BuildException {
         if (revertChange == null && !revertChange.equals("")) {
             throw new BuildException("P4Revert: change cannot be null or empty");
@@ -80,6 +83,9 @@ public class P4Revert extends P4Base {
 
     }
 
+    /**
+     * flag to revert only unchanged files (p4 revert -a); optional, default false.
+     */
     public void setRevertOnlyUnchanged(boolean onlyUnchanged) {
         this.onlyUnchanged = onlyUnchanged;
     }

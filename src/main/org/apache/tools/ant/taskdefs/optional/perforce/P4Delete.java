@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,14 +55,14 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.tools.ant.BuildException;
 
-/** P4Delete - checkout file(s) for delete.
+/** P4Delete - checkout file(s) for deletion.
  *
  * Example Usage:<br>
  * &lt;p4delete change="${p4.change}" view="//depot/project/foo.txt" /&gt;<br>
  *
  * Simple re-write of P4Edit changing 'edit' to 'delete'.<br>
  *
- * ToDo: What to do if file is already open in one of our changelists perhaps
+ * @todo: What to do if file is already open in one of our changelists perhaps
  * (See also {@link P4Edit P4Edit})?<br>
  *
  * @author <A HREF="mailto:mike@tmorph.com">Mike Roberts</A>, <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
@@ -72,6 +72,10 @@ public class P4Delete extends P4Base {
 
     public String change = null;
 
+    /**
+     * An existing changelist number for the deletion; optional
+     * but strongly recommended.
+     */    
     public void setChange(String change) {
         this.change = change;
     }

@@ -84,6 +84,9 @@ public class P4Sync extends P4Base {
     String label;
     private String syncCmd = "";
 
+    /**
+     * Label to sync client to; optional.
+     */
     public void setLabel(String label) throws BuildException {
         if (label == null && !label.equals("")) {
             throw new BuildException("P4Sync: Labels cannot be Null or Empty");
@@ -94,6 +97,9 @@ public class P4Sync extends P4Base {
     }
 
 
+    /**
+     * force a refresh of files, if this attribute is set; false by default.
+     */
     public void setForce(String force) throws BuildException {
         if (force == null && !label.equals("")) {
             throw new BuildException("P4Sync: If you want to force, set force to non-null string!");

@@ -65,7 +65,7 @@ import org.apache.tools.ant.Project;
 /** P4Submit - submit a numbered changelist to Perforce.
  *
  * <B>Note:</B> P4Submit cannot (yet) submit the default changelist.
- * This shouldn't be a problem with the ANT API as the usual flow is
+ * This shouldn't be a problem with the ANT task as the usual flow is
  * P4Change to create a new numbered change followed by P4Edit then P4Submit.
  *
  * Example Usage:-<br>
@@ -79,6 +79,9 @@ public class P4Submit extends P4Base {
     //ToDo: If dealing with default cl need to parse out <enter description here>
     public String change;
 
+    /**
+     * The changelist number to submit; required.
+     */
     public void setChange(String change) {
         this.change = change;
     }
