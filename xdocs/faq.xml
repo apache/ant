@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <document>
 
-  <properties>
+  <properties>1.
     <author email="bodewig@apache.org">Stefan Bodewig</author>
     <title>Frequently Asked Questions</title>
   </properties>
@@ -80,6 +80,16 @@
           <tr>
             <td>1.3</td>
             <td>3 March 2001</td>
+          </tr>
+
+          <tr>
+            <td>1.4</td>
+            <td>3 September 2001</td>
+          </tr>
+
+          <tr>
+            <td>1.4.1</td>
+            <td>11 October 2001</td>
           </tr>
         </table>
       </answer>
