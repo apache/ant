@@ -120,6 +120,9 @@ public final class Diagnostics {
      */
     public static File[] listLibraries() {
         String home = System.getProperty("ant.home");
+        if (home == null) {
+            return null;
+        }
         File libDir = new File(home, "lib");
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
@@ -128,6 +131,9 @@ public final class Diagnostics {
         };
         // listFiles is JDK 1.2+ method...
         String[] filenames = libDir.list(filter);
+        if (filenames == null) {
+            return null;
+        }
         File[] files = new File[filenames.length];
         for (int i = 0; i < filenames.length; i++){
             files[i] = new File(libDir, filenames[i]);
@@ -235,7 +241,12 @@ public final class Diagnostics {
      * @param out the stream to print the content to
      */
     private static void doReportLibraries(PrintStream out){
+        out.println("ant.home: " + System.getProperty("ant.home"));
         File[] libs = listLibraries();
+        if (libs == null) {
+            out.println("Unable to list libraries.");
+            return;
+        }
         for (int i = 0; i < libs.length; i++){
             out.println(libs[i].getName()
                     + " (" + libs[i].length() + " bytes)");
