@@ -115,6 +115,10 @@ public class Zip extends MatchingTask {
     protected Hashtable addedDirs = new Hashtable();
     private Vector addedFiles = new Vector();
 
+    protected boolean doubleFilePass = false;
+    protected boolean skipWriting = false;
+
+
     /**
      * true when we are adding new files into the Zip file, as opposed
      * to adding back the unchanged files
@@ -272,6 +276,20 @@ public class Zip extends MatchingTask {
      * validate and build
      */
     public void execute() throws BuildException {
+
+        if (doubleFilePass) {
+            skipWriting = true;
+            executeMain();
+            skipWriting = false;
+            executeMain();
+        }
+        else {
+            executeMain();
+        }
+    }
+
+    public void executeMain() throws BuildException {
+
         if (baseDir == null && filesets.size() == 0
             && groupfilesets.size() == 0 && "zip".equals(archiveType)) {
             throw new BuildException("basedir attribute must be set, "
@@ -690,21 +708,23 @@ public class Zip extends MatchingTask {
         log("adding directory " + vPath, Project.MSG_VERBOSE);
         addedDirs.put(vPath, vPath);
 
-        ZipEntry ze = new ZipEntry (vPath);
-        if (dir != null && dir.exists()) {
-            ze.setTime(dir.lastModified());
-        } else {
-            ze.setTime(System.currentTimeMillis());
+        if (! skipWriting) {
+            ZipEntry ze = new ZipEntry (vPath);
+            if (dir != null && dir.exists()) {
+                ze.setTime(dir.lastModified());
+            } else {
+                ze.setTime(System.currentTimeMillis());
+            }
+            ze.setSize (0);
+            ze.setMethod (ZipEntry.STORED);
+            // This is faintly ridiculous:
+            ze.setCrc (EMPTY_CRC);
+
+            // this is 040775 | MS-DOS directory flag in reverse byte order
+            ze.setExternalAttributes(0x41FD0010L);
+
+            zOut.putNextEntry (ze);
         }
-        ze.setSize (0);
-        ze.setMethod (ZipEntry.STORED);
-        // This is faintly ridiculous:
-        ze.setCrc (EMPTY_CRC);
-
-        // this is 040775 | MS-DOS directory flag in reverse byte order
-        ze.setExternalAttributes(0x41FD0010L);
-
-        zOut.putNextEntry (ze);
     }
 
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
@@ -730,61 +750,63 @@ public class Zip extends MatchingTask {
 
         entries.put(vPath, vPath);
 
-        ZipEntry ze = new ZipEntry(vPath);
-        ze.setTime(lastModified);
+        if (! skipWriting) {
+            ZipEntry ze = new ZipEntry(vPath);
+            ze.setTime(lastModified);
 
-        /*
-         * XXX ZipOutputStream.putEntry expects the ZipEntry to know its
-         * size and the CRC sum before you start writing the data when using
-         * STORED mode.
-         *
-         * This forces us to process the data twice.
-         *
-         * I couldn't find any documentation on this, just found out by try
-         * and error.
-         */
-        if (!doCompress) {
-            long size = 0;
-            CRC32 cal = new CRC32();
-            if (!in.markSupported()) {
-                // Store data into a byte[]
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            /*
+            * XXX ZipOutputStream.putEntry expects the ZipEntry to know its
+            * size and the CRC sum before you start writing the data when using
+            * STORED mode.
+            *
+            * This forces us to process the data twice.
+            *
+            * I couldn't find any documentation on this, just found out by try
+            * and error.
+            */
+            if (!doCompress) {
+                long size = 0;
+                CRC32 cal = new CRC32();
+                if (!in.markSupported()) {
+                    // Store data into a byte[]
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-                byte[] buffer = new byte[8 * 1024];
-                int count = 0;
-                do {
-                    size += count;
-                    cal.update(buffer, 0, count);
-                    bos.write(buffer, 0, count);
-                    count = in.read(buffer, 0, buffer.length);
-                } while (count != -1);
-                in = new ByteArrayInputStream(bos.toByteArray());
+                    byte[] buffer = new byte[8 * 1024];
+                    int count = 0;
+                    do {
+                        size += count;
+                        cal.update(buffer, 0, count);
+                        bos.write(buffer, 0, count);
+                        count = in.read(buffer, 0, buffer.length);
+                    } while (count != -1);
+                    in = new ByteArrayInputStream(bos.toByteArray());
 
-            } else {
-                in.mark(Integer.MAX_VALUE);
-                byte[] buffer = new byte[8 * 1024];
-                int count = 0;
-                do {
-                    size += count;
-                    cal.update(buffer, 0, count);
-                    count = in.read(buffer, 0, buffer.length);
-                } while (count != -1);
-                in.reset();
+                } else {
+                    in.mark(Integer.MAX_VALUE);
+                    byte[] buffer = new byte[8 * 1024];
+                    int count = 0;
+                    do {
+                        size += count;
+                        cal.update(buffer, 0, count);
+                        count = in.read(buffer, 0, buffer.length);
+                    } while (count != -1);
+                    in.reset();
+                }
+                ze.setSize(size);
+                ze.setCrc(cal.getValue());
             }
-            ze.setSize(size);
-            ze.setCrc(cal.getValue());
+
+            zOut.putNextEntry(ze);
+
+            byte[] buffer = new byte[8 * 1024];
+            int count = 0;
+            do {
+                if (count != 0) {
+                    zOut.write(buffer, 0, count);
+                }
+                count = in.read(buffer, 0, buffer.length);
+            } while (count != -1);
         }
-
-        zOut.putNextEntry(ze);
-
-        byte[] buffer = new byte[8 * 1024];
-        int count = 0;
-        do {
-            if (count != 0) {
-                zOut.write(buffer, 0, count);
-            }
-            count = in.read(buffer, 0, buffer.length);
-        } while (count != -1);
         addedFiles.addElement(vPath);
     }
 

@@ -103,11 +103,6 @@ public class Jar extends Zip {
     private FilesetManifestConfig filesetManifestConfig;
 
     /**
-     *  Whether to create manifest file on finalizeOutputStream?
-     */
-    private boolean manifestOnFinalize = true;
-
-    /**
      * whether to merge the main section of fileset manifests;
      * value is true if filesetmanifest is 'merge'
      */
@@ -243,12 +238,16 @@ public class Jar extends Zip {
      *
      * @param config setting for found manifest behavior.
      */
-    /*
     public void setFilesetmanifest(FilesetManifestConfig config) {
         filesetManifestConfig = config;
         mergeManifestsMain = "merge".equals(config.getValue());
+
+        if (filesetManifestConfig != null
+            && ! filesetManifestConfig.getValue().equals("skip")) {
+
+            doubleFilePass = true;
+        }
     }
-    */
 
     /**
      * Adds a zipfileset to include in the META-INF directory.
@@ -263,16 +262,15 @@ public class Jar extends Zip {
 
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
-        if (filesetManifestConfig == null
-            || filesetManifestConfig.getValue().equals("skip")) {
-            manifestOnFinalize = false;
+
+        if (! skipWriting) {
             Manifest jarManifest = createManifest();
             writeManifest(zOut, jarManifest);
         }
     }
 
     private Manifest createManifest()
-        throws IOException, BuildException {
+        throws BuildException {
         try {
             Manifest finalManifest = Manifest.getDefaultManifest();
 
@@ -332,10 +330,6 @@ public class Jar extends Zip {
 
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
             throws IOException, BuildException {
-        if (manifestOnFinalize) {
-            Manifest jarManifest = createManifest();
-            writeManifest(zOut, jarManifest);
-        }
 
         if (index) {
             createIndexList(zOut);
@@ -402,7 +396,9 @@ public class Jar extends Zip {
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
         throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
-            filesetManifest(file, null);
+           if (! doubleFilePass || (doubleFilePass && skipWriting)) {
+               filesetManifest(file, null);
+           }
         } else {
             super.zipFile(file, zOut, vPath);
         }
@@ -415,7 +411,9 @@ public class Jar extends Zip {
                            long lastModified, File file)
         throws IOException {
         if ("META-INF/MANIFEST.MF".equalsIgnoreCase(vPath))  {
-            filesetManifest(file, is);
+           if (! doubleFilePass || (doubleFilePass && skipWriting)) {
+               filesetManifest(file, is);
+           }
         } else {
             super.zipFile(is, zOut, vPath, lastModified, null);
         }
@@ -539,9 +537,13 @@ public class Jar extends Zip {
     protected void cleanUp() {
         super.cleanUp();
 
-        manifest = null;
-        configuredManifest = savedConfiguredManifest;
-        filesetManifest = null;
+        // we want to save this info if we are going to make another pass
+        if (! doubleFilePass || (doubleFilePass && ! skipWriting))
+        {
+            manifest = null;
+            configuredManifest = savedConfiguredManifest;
+            filesetManifest = null;
+        }
     }
 
     /**

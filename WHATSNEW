@@ -61,6 +61,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* The filesetmanifest attribute of <jar> has been reenabled.
+
 * The start and end tokens for <translate> may now be longer than a 
   single character.
 
