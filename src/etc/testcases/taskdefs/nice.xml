@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<project name="nice" basedir=".">
+
+<description>
+Test nicing. To make the test more complex we may be running in a nice mode
+to start with, and we want to restore that value at the end. So every test
+that succeeds must restore the saved value.
+</description>
+  <target name="noop">
+    <nice/>
+  </target>
+  
+  <target name="current">
+    <nice currentPriority="nice.now"/>
+    <fail unless="nice.now"/>
+  </target>
+
+  <target name="faster">
+    <nice newPriority="8" currentPriority="nice.old"/>
+    <nice currentPriority="nice.now"/>
+    <condition property="test.succeeded">
+      <equals arg1="${nice.now}" arg2="8" /> 
+    </condition>
+    <nice newPriority="${nice.old}"/>
+    <fail unless="test.succeeded"/>
+  </target>
+  
+  <target name="slower">
+    <nice newPriority="3" currentPriority="nice.old"/>
+    <nice currentPriority="nice.now"/>
+    <condition property="test.succeeded">
+      <equals arg1="${nice.now}" arg2="3" /> 
+    </condition>
+    <nice newPriority="${nice.old}"/>
+    <fail unless="test.succeeded"/>
+  </target>
+  
+  <target name="too_slow">
+    <nice currentPriority="nice.old"/>
+    <nice newPriority="0"/>
+    <nice newPriority="${nice.old}"/>
+  </target>
+
+  <target name="too_fast">
+    <nice currentPriority="nice.old"/>
+    <nice newPriority="20"/>
+    <nice newPriority="${nice.old}"/>
+  </target>
+  
+</project>
