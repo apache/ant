@@ -145,36 +145,43 @@ public class DependencyMetricsTest
      */
     public void testAutDecoupled()
     {
-        final JDepend jDepend = getJDepend();
-        final Collection packageSet = jDepend.getPackages();
-
-        final Iterator packages = packageSet.iterator();
-        while( packages.hasNext() )
+        final String packageName = "org.apache.aut";
+        final String[] badEfferents = new String[]
         {
-            final JavaPackage javaPackage = (JavaPackage)packages.next();
-            final String name = javaPackage.getName();
-            if( !name.startsWith( "org.apache.aut" ) )
-            {
-                continue;
-            }
-
-            final Collection efferentSet = javaPackage.getEfferents();
-            final Iterator efferents = efferentSet.iterator();
-            while( efferents.hasNext() )
-            {
-                final JavaPackage efferent = (JavaPackage)efferents.next();
-                final String efferentName = efferent.getName();
-                if( efferentName.startsWith( "org.apache.myrmidon" ) ||
-                    efferentName.startsWith( "org.apache.antlib" ) ||
-                    efferentName.startsWith( "org.apache.tools.ant" ) )
-                {
-                    fail( "The package " + name + " depends on classes " +
-                          "contained in " + efferentName );
-                }
-            }
-        }
+            "org.apache.myrmidon", "org.apache.antlib", "org.apache.tools.ant"
+        };
+        doTestDecoupled( packageName, badEfferents );
     }
 
+    /**
+     * Make sure that myrmidon package does not have any
+     * unwanted dependencies.
+     */
+    public void testMyrmidonDecoupled()
+    {
+        final String packageName = "org.apache.myrmidon";
+        final String[] badEfferents = new String[]
+        {
+            "org.apache.antlib", "org.apache.tools.ant"
+        };
+        doTestDecoupled( packageName, badEfferents );
+    }
+
+    /**
+     * Make sure that antlib package does not have any
+     * unwanted dependencies.
+     */
+/*
+    public void testAntlibDecoupled()
+    {
+        final String packageName = "org.apache.antlib";
+        final String[] badEfferents = new String[]
+        {
+            "org.apache.tools.ant"
+        };
+        doTestDecoupled( packageName, badEfferents );
+    }
+*/
     /**
      * Make sure there are no circular dependencies between packages because
      * circular dependencies are evil!!!
@@ -211,5 +218,44 @@ public class DependencyMetricsTest
         }
 
         return names;
+    }
+
+    /**
+     * Make sure that the specified package does not depend on any
+     * of the specified package hierarchies.
+     */
+    private void doTestDecoupled( final String packageName,
+                                  final String[] invalidEfferents )
+    {
+        final JDepend jDepend = getJDepend();
+        final Collection packageSet = jDepend.getPackages();
+
+        final Iterator packages = packageSet.iterator();
+        while( packages.hasNext() )
+        {
+            final JavaPackage javaPackage = (JavaPackage)packages.next();
+            final String name = javaPackage.getName();
+            if( !name.startsWith( packageName ) )
+            {
+                continue;
+            }
+
+            final Collection efferentSet = javaPackage.getEfferents();
+            final Iterator efferents = efferentSet.iterator();
+            while( efferents.hasNext() )
+            {
+                final JavaPackage efferent = (JavaPackage)efferents.next();
+                final String efferentName = efferent.getName();
+                for( int i = 0; i < invalidEfferents.length; i++ )
+                {
+                    final String other = invalidEfferents[ i ];
+                    if( efferentName.startsWith( other ) )
+                    {
+                        fail( "The package " + name + " has an unwanted dependency " +
+                              "on classes contained in " + efferentName );
+                    }
+                }
+            }
+        }
     }
 }
