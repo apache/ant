@@ -199,7 +199,7 @@
 
   <faqsection title="How do I ...">
     <faq id="adding-external-tasks">
-      <question>How do I add an external task that I've written to the
+      <question>How do I add an external task that I&apos;ve written to the
       page &quot;External Tools and Task&quot;?</question>
       <answer>
 
@@ -215,7 +215,7 @@
           <li>a URL: entry linking to the main page of the tool/task</li>
           <li>a Contact: entry containing the email address or the URL
           of a webpage for the person or list to contact for issues
-          related to the tool/task.  <strong>Note that we'll add a
+          related to the tool/task.  <strong>Note that we&apos;ll add a
           link on the page, so any email address added there is not
           obfuscated and can (and probably will) be abused by robots
           harvesting websites for addresses to spam.</strong></li>
@@ -513,7 +513,7 @@ shell-prompt> m4 foo.m4 > foo
         declaration</a>.</p>  
 
         <p>By default the parser assumes you are using the UTF-8
-        encoding instead of your platform's default.  For most Western
+        encoding instead of your platform&apos;s default.  For most Western
         European countries you should set the encoding to
         <code>ISO-8859-1</code>.  To do so, make the very first line
         of you build file read like</p>
@@ -521,6 +521,23 @@ shell-prompt> m4 foo.m4 > foo
         <source><![CDATA[
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 ]]></source>
+      </answer>
+    </faq>
+
+    <faq if="use-zip-instead-of-jar">
+      <question>How do I use <code>jar</code>&apos;s <code>M</code> switch?
+      I don&apos;t want a MANIFEST.</question>
+
+      <answer>
+        <p>A JAR archive is a ZIP file, so if you don&apos;t want a
+        MANIFEST you can simply use <code>&lt;zip&gt;</code>.</p>
+
+        <p>If your filenames contain national characters you should
+        know that Sun&apos;s <code>jar</code> utility like Ant&apos;s
+        <code>&lt;jar&gt;</code> uses UFT8 to encode their names while
+        <code>&lt;zip&gt;</code> uses your platforms default encoding.
+        Use the encoding attribute of <code>&lt;zip&gt;</code> if
+        necessary.</p>
       </answer>
     </faq>
   </faqsection>
@@ -662,12 +679,12 @@ shell-prompt> m4 foo.m4 > foo
       <answer>
 
         <p>When <code>ant</code> loads properties from an external
-        file it dosn't touch the value of properties, trailing blanks
+        file it dosn&apos;t touch the value of properties, trailing blanks
         will not be trimmed for example.</p>
 
         <p>If the value represents a file path, like a jar needed to
         compile, the task which requires the value, javac for example
-        would fail to compile since it can't find the file due to
+        would fail to compile since it can&apos;t find the file due to
         trailing spaces.</p>
       </answer>
     </faq>
@@ -678,7 +695,7 @@ shell-prompt> m4 foo.m4 > foo
         <code>meta-inf</code> directory.</question>
 
       <answer>
-        <p>No it doesn't.</p>
+        <p>No it doesn&apos;t.</p>
 
         <p>You may have seen these lower-case directory names in
         WinZIP, but WinZIP is trying to be helpful (and fails).  If
