@@ -244,6 +244,8 @@ Other changes:
   
 * New <ejbdeploy> "optional" task.
 
+* <patternset> now supports nested patternsets.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

@@ -164,6 +164,27 @@ public class PatternSet extends DataType {
         super.setRefid(r);
     }
 
+    public void addConfiguredPatternset(PatternSet p) {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+
+        String[] nestedIncludes = p.getIncludePatterns(getProject());
+        String[] nestedExcludes = p.getExcludePatterns(getProject());
+
+        if (nestedIncludes != null) {
+            for (int i=0; i < nestedIncludes.length; i++) {
+                createInclude().setName(nestedIncludes[i]);
+            }
+        }
+
+        if (nestedExcludes != null) {
+            for (int i=0; i < nestedExcludes.length; i++) {
+                createExclude().setName(nestedExcludes[i]);
+            }
+        }
+    }
+
     /**
      * add a name entry on the include list
      */

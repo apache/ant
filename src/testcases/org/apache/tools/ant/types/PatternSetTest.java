@@ -222,4 +222,20 @@ public class PatternSetTest extends TestCase {
                      1, i.length);
         assertEquals("exclude", i[0]);
     }
+    
+    public void testNestedPatternset() {
+        PatternSet p = new PatternSet();
+        p.setIncludes("**/*.java");
+
+        PatternSet nested = new PatternSet();
+        nested.setExcludes("**/*.class");
+
+        p.addConfiguredPatternset(nested);
+
+        String[] excludes = p.getExcludePatterns(project);
+        String[] includes = p.getIncludePatterns(project);
+
+        assertEquals("Includes","**/*.java", includes[0]);
+        assertEquals("Excludes","**/*.class", excludes[0]);
+    }
 }
