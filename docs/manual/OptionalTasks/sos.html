@@ -6,7 +6,7 @@
   <title>SOS Tasks</title>
 
 </head>
-  <body>
+<body>
 
 <div align="center">
 <h1>SourceOffSite Tasks User Manual</h1>
@@ -109,7 +109,7 @@ have been tested with Linux, Solaris &amp; Windows2000.</p>
         </tr>
         <tr>
            <td>projectpath</td>
-           <td>SourceSafe project path without the "$"</td>
+           <td>SourceSafe project path - eg. $/SourceRoot/Project1</td>
            <td>Yes</td>
         </tr>
         <tr>
@@ -174,20 +174,21 @@ have been tested with Linux, Solaris &amp; Windows2000.</p>
 <h3>Example</h3>
 
 <pre>
-&lt;sosget verbose="true"
-        recursive="true"
-        username="build"
-        password="build"
-        localpath="tmp"
-        projectpath="/SourceRoot/project1"
-        sosserverpath="192.168.10.6:8888"
-        vssserverpath="d:\vss\srcsafe.ini"/&gt;
+&lt;sosget verbose=&quot;true&quot;
+        recursive=&quot;true&quot;
+        username=&quot;build&quot;
+        password=&quot;build&quot;
+        localpath=&quot;tmp&quot;
+        projectpath=&quot;$/SourceRoot/project1&quot;
+        sosserverpath=&quot;192.168.10.6:8888&quot;
+        vssserverpath=&quot;d:\vss\srcsafe.ini&quot;/&gt;
 </pre>
 <small>Connects to a SourceOffsite server on 192.168.10.6:8888 with
 build,build as the username &amp; password. The SourceSafe  database resides
 on the same box as the SOS server  &amp; the VSS database  is at
-"d:\vss\srcsafe.ini" Does a recursive GetProject on $/SourceRoot/project1,
-using tmp as the working directory. </small><br>
+&quot;d:\vss\srcsafe.ini&quot; Does a recursive GetProject on
+$/SourceRoot/project1, using tmp as the working
+directory. </small><br>
 <br>
 
 <hr width="100%" size="2">
@@ -198,7 +199,7 @@ using tmp as the working directory. </small><br>
 <h3>Parameters</h3>
 
 <table border="1">
-    <tr>
+    <tbody><tr>
       <th>Attribute</th>
       <th>Values</th>
       <th>Required</th>
@@ -221,7 +222,7 @@ using tmp as the working directory. </small><br>
     </tr>
     <tr>
        <td>projectpath</td>
-       <td>SourceSafe project path without the "$"</td>
+       <td>SourceSafe project path - eg. $/SourceRoot/Project1</td>
        <td>Yes</td>
     </tr>
     <tr>
@@ -254,19 +255,19 @@ using tmp as the working directory. </small><br>
 
 <h3>Example</h3>
 <pre>
-&lt;soslabel username="build"
-          password="build"
-          label="test label"
-          projectpath="/SourceRoot/project1
-          sosserverpath="192.168.10.6:8888"
-          vssserverpath="d:\vss\srcsafe.ini"/&gt;
+&lt;soslabel username=&quot;build&quot;
+          password=&quot;build&quot;
+          label=&quot;test label&quot;
+          projectpath=&quot;$/SourceRoot/project1&quot;
+          sosserverpath=&quot;192.168.10.6:8888&quot;
+          vssserverpath=&quot;d:\vss\srcsafe.ini&quot;/&gt;
 </pre>
 
 <small>Connects to a SourceOffsite server on 192.168.10.6:8888 with
 build,build as the username &amp; password. The SourceSafe database resides
 on the same box as  the  SOS server  &amp; the VSS database is at
-"d:\vss\srcsafe.ini". Labels the $/SourceRoot/project1 project with
-"test label".</small><br>
+&quot;d:\vss\srcsafe.ini&quot;. Labels the $/SourceRoot/project1
+project with &quot;test label&quot;.</small><br>
 <br>
 
 <hr width="100%" size="2"><br>
@@ -301,7 +302,7 @@ on the same box as  the  SOS server  &amp; the VSS database is at
     </tr>
     <tr>
        <td>projectpath</td>
-       <td>SourceSafe project path without the "$"</td>
+       <td>SourceSafe project path - eg. $/SourceRoot/Project1</td>
        <td>Yes</td>
     </tr>
     <tr>
@@ -349,7 +350,7 @@ on the same box as  the  SOS server  &amp; the VSS database is at
        <td>true or false - Status messages are displayed</td>
        <td>No</td>
     </tr>
-    <td>comment</td>
+    <tr><td>comment</td>
        <td>A comment to be applied to all files being checked in</td>
        <td>No</td>
     </tr>
@@ -358,21 +359,22 @@ on the same box as  the  SOS server  &amp; the VSS database is at
 
 <h3>Example</h3>
 <pre>
-&lt;soscheckin username="build"
-            password="build"
-            file="foobar.txt"
-            verbose="true"
-            comment="comment abc"
-            projectpath="/SourceRoot/project1"
-            sosserverpath="server1:8888"
-            vssserverpath="\\server2\vss\srcsafe.ini"/&gt;
+&lt;soscheckin username=&quot;build&quot;
+            password=&quot;build&quot;
+            file=&quot;foobar.txt&quot;
+            verbose=&quot;true&quot;
+            comment=&quot;comment abc&quot;
+            projectpath=&quot;$/SourceRoot/project1&quot;
+            sosserverpath=&quot;server1:8888&quot;
+            vssserverpath=&quot;\\server2\vss\srcsafe.ini&quot;/&gt;
 </pre>
 
 <small>Connects to a SourceOffsite server on server1:8888 with build,build as
 the username &amp; password. The SourceSafe database resides on a different
-box (server2) &amp; the VSS database is on a share called "vss". Checks-in
-only the "foobar.txt" file adding a comment of "comment abc". Extra status
-messages will be displayed on screen.</small><br>
+box (server2) &amp; the VSS database is on a share called
+&quot;vss&quot;. Checks-in only the &quot;foobar.txt&quot; file adding
+a comment of &quot;comment abc&quot;. Extra status messages will be
+displayed on screen.</small><br>
 <br>
 
 <hr width="100%" size="2">
@@ -408,7 +410,7 @@ messages will be displayed on screen.</small><br>
     </tr>
     <tr>
        <td>projectpath</td>
-       <td>SourceSafe project path without the "$"</td>
+       <td>SourceSafe project path - eg. $/SourceRoot/Project1</td>
        <td>Yes</td>
     </tr>
     <tr>
@@ -462,20 +464,21 @@ messages will be displayed on screen.</small><br>
 
 <h3>Example</h3>
 <pre>
-&lt;soscheckout soscmd="/usr/local/bin"
-             verbose="true"
-             username="build"
-             password="build"
-             projectpath="/SourceRoot/project1"
-             sosserverpath="192.168.10.6:8888"
-             vssserverpath="\\server2\vss\srcsafe.ini"/&gt;
+&lt;soscheckout soscmd=&quot;/usr/local/bin&quot;
+             verbose=&quot;true&quot;
+             username=&quot;build&quot;
+             password=&quot;build&quot;
+             projectpath=&quot;$/SourceRoot/project1&quot;
+             sosserverpath=&quot;192.168.10.6:8888&quot;
+             vssserverpath=&quot;\\server2\vss\srcsafe.ini&quot;/&gt;
 </pre>
 
 <small>Connects to a SourceOffsite server on server1:8888 with build,build as
 the username &amp; password. The SourceSafe database resides on a different
-box (server2) &amp; the VSS database is on a share called "vss". Checks-out
-"project1", Only the "project1" directory will be locked as the recursive
-option was not set. Extra status messages will be displayed on screen. The
+box (server2) &amp; the VSS database is on a share called
+&quot;vss&quot;. Checks-out &quot;project1&quot;, Only the
+&quot;project1&quot; directory will be locked as the recursive option
+was not set. Extra status messages will be displayed on screen. The
 soscmd(.exe) file to be used resides in /usr/local/bin.</small><br>
 <br>
 <hr>

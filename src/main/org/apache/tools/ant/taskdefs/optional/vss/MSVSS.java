@@ -143,10 +143,17 @@ public abstract class MSVSS extends Task {
      * @param vssPath
      */
     public final void setVsspath(String vssPath) {
+        String projectPath;
         if (vssPath.startsWith("vss://")) {
-            m_vssPath = PROJECT_PREFIX + vssPath.substring(5);
+            projectPath = vssPath.substring(5);
         } else {
-            m_vssPath = PROJECT_PREFIX + vssPath;
+            projectPath = vssPath;
+        }
+
+        if (projectPath.charAt(0) == '$') {
+            m_vssPath = projectPath;
+        } else {
+            m_vssPath = PROJECT_PREFIX + projectPath;
         }
     }
 

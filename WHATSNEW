@@ -78,6 +78,9 @@ Other changes:
 
 * new rmdir action for <ftp> that removes directories from a fileset.
 
+* The SOS and VSS tasks will no longer unconditionally prepend a $ to
+  vsspath or projectpath.
+
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
 

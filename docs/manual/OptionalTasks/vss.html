@@ -93,8 +93,7 @@ label only one will be used in the order version, date, label.</p>
   <tr>
      <td>vsspath</td>
      <td>SourceSafe path which specifies the project/file(s) you wish to
-         perform the action on. You should not specify the leading dollar-sign -
-         it is prepended by Ant automatically.</td>
+         perform the action on.</td>
      <td>Yes</td>
   </tr>
   <tr>
@@ -164,7 +163,7 @@ label only one will be used in the order version, date, label.</p>
         recursive=&quot;true&quot;
         label=&quot;Release1&quot;
         login=&quot;me,mypassword&quot;
-        vsspath=&quot;/source/aProject&quot;
+        vsspath=&quot;$/source/aProject&quot;
         writable=&quot;true&quot;/&gt;
 </pre>
 </blockquote>
@@ -191,8 +190,7 @@ project.</p>
   <tr>
      <td>vsspath</td>
      <td>SourceSafe path which specifies the project/file(s) you wish to
-         perform the action on. You should not specify the leading dollar-sign -
-         it is prepended by Ant automatically.</td>
+         perform the action on.</td>
      <td>Yes</td>
   </tr>
   <tr>
@@ -240,7 +238,7 @@ project.</p>
 <h3>Examples</h3>
 <blockquote>
 <pre>
-&lt;vsslabel vsspath=&quot;/source/aProject&quot;
+&lt;vsslabel vsspath=&quot;$/source/aProject&quot;
           login=&quot;me,mypassword&quot;
           label=&quot;Release1&quot;/&gt;
 </pre>
@@ -251,7 +249,7 @@ the label <i>Release1</i> using the username <i>me</i> and the password
 </p>
 <blockquote>
 <pre>
-&lt;vsslabel vsspath=&quot;/source/aProject/myfile.txt&quot;
+&lt;vsslabel vsspath=&quot;$/source/aProject/myfile.txt&quot;
           version=&quot;4&quot;
           label=&quot;1.03.004&quot;/&gt;
 </pre>
@@ -277,8 +275,7 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
   <tr>
      <td>vsspath</td>
      <td>SourceSafe path which specifies the project/file(s) you wish to
-         perform the action on. You should not specify the leading dollar-sign -
-         it is prepended by Ant automatically.</td>
+         perform the action on.</td>
      <td>Yes</td>
   </tr>
   <tr>
@@ -368,7 +365,7 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
 <h3>Examples</h3>
 <blockquote>
   <pre>
-&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot;
+&lt;vsshistory vsspath=&quot;$/myProject&quot; recursive=&quot;true&quot;
             fromLabel=&quot;Release1&quot;
             toLabel=&quot;Release2&quot;/&gt;
 </pre>
@@ -377,7 +374,7 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
 
 <blockquote>
   <pre>
-&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot;
+&lt;vsshistory vsspath=&quot;$/myProject&quot; recursive=&quot;true&quot;
             fromDate=&quot;01.01.2001&quot;
             toDate=&quot;31.03.2001&quot;/&gt;
 </pre>
@@ -390,7 +387,7 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
   &lt;format property=&quot;to.tstamp&quot; pattern=&quot;M-d-yy;h:mma&quot; /&gt;
 &lt;/tstamp&gt;
 
-&lt;vsshistory vsspath=&quot;/myProject&quot; recursive=&quot;true&quot;
+&lt;vsshistory vsspath=&quot;$/myProject&quot; recursive=&quot;true&quot;
             numDays=&quot;-14&quot;
             dateFormat=&quot;M-d-yy;h:mma&quot;
             toDate=&quot;${to.tstamp}&quot;/&gt;
@@ -414,8 +411,7 @@ Task to perform CHECKIN commands to Microsoft Visual SourceSafe.
   <tr>
      <td>vsspath</td>
      <td>SourceSafe path which specifies the project/file(s) you wish to
-         perform the action on. You should not specify the leading dollar-sign -
-         it is prepended by Ant automatically.</td>
+         perform the action on.</td>
      <td>Yes</td>
   </tr>
   <tr>
@@ -467,12 +463,12 @@ Task to perform CHECKIN commands to Microsoft Visual SourceSafe.
 <h3>Examples</h3>
 <blockquote>
 <pre>
-&lt;vsscheckin vsspath=&quot;/test/test*&quot;
+&lt;vsscheckin vsspath=&quot;$/test/test*&quot;
             localpath=&quot;D:\build\&quot;
             comment=&quot;Modified by automatic build&quot;/&gt;
 </pre>
 </blockquote>
-<p>Checks in the file(s) named <i>test*</i> in the project <i>test</i> using
+<p>Checks in the file(s) named <i>test*</i> in the project <i>$/test</i> using
 the local directory <i>D:\build</i>.</p>
 <hr>
 
@@ -493,8 +489,7 @@ label only one will be used in the order version, date, label.</p>
   <tr>
      <td>vsspath</td>
      <td>SourceSafe path which specifies the project/file(s) you wish to
-         perform the action on. You should not specify the leading dollar-sign -
-         it is prepended by Ant automatically.</td>
+         perform the action on.</td>
      <td>Yes</td>
   </tr>
   <tr>
@@ -549,13 +544,13 @@ label only one will be used in the order version, date, label.</p>
 <h3>Examples</h3>
 <blockquote>
 <pre>
-&lt;vsscheckout vsspath=&quot;/test&quot;
+&lt;vsscheckout vsspath=&quot;$/test&quot;
              localpath=&quot;D:\build&quot;
              recursive=&quot;true&quot;
              login=&quot;me,mypass&quot;/&gt;
 </pre>
 </blockquote>
-<p>Does a recursive checkout of the project test to the directory D:\build.
+<p>Does a recursive checkout of the project <i>$/test</i> to the directory D:\build.
 </p>
 <hr>
 
@@ -644,8 +639,7 @@ directory (see vsscp).</p>
   <tr>
      <td>vsspath</td>
      <td>SourceSafe path which specifies the project you wish to
-         make the current project. You should not specify the leading dollar-sign -
-         it is prepended by Ant automatically.</td>
+         make the current project.</td>
      <td>Yes</td>
   </tr>
   <tr>
@@ -672,7 +666,7 @@ directory (see vsscp).</p>
 <h3>Examples</h3>
 <blockquote>
 <pre>
-&lt;vsscp vsspath=&quot;/Projects/ant&quot;/&gt;
+&lt;vsscp vsspath=&quot;$/Projects/ant&quot;/&gt;
 </pre>
 </blockquote>
 <p>Sets the current VSS project to <i>$/Projects/ant</i>.</p>
@@ -730,7 +724,7 @@ directory (see vsscp).</p>
 <h3>Examples</h3>
 <blockquote>
 <pre>
-&lt;vsscreate vsspath=&quot;/existingProject/newProject&quot;/&gt;
+&lt;vsscreate vsspath=&quot;$/existingProject/newProject&quot;/&gt;
 </pre>
 </blockquote>
 <p>Creates the VSS-Project <i>$/existingProject/newProject</i>.</p>

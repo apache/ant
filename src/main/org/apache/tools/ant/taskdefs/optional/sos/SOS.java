@@ -175,7 +175,11 @@ public abstract class SOS extends Task {
      * @param  projectpath  The new projectPath value
      */
     public final void setProjectPath(String projectpath) {
-        projectPath = SOSCmd.PROJECT_PREFIX + projectpath;
+        if (projectpath.startsWith(SOSCmd.PROJECT_PREFIX)) {
+            projectPath = projectpath;
+        } else {
+            projectPath = SOSCmd.PROJECT_PREFIX + projectpath;
+        }
     }
 
 

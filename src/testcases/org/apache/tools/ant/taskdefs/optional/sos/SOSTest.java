@@ -53,32 +53,29 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sos;
 
-import junit.framework.TestCase;
-import junit.framework.AssertionFailedError;
-import org.apache.tools.ant.Project;
+import java.io.File;
+
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.taskdefs.optional.sos.*;
-import java.io.File;
 
 /**
- * Basic testcase to ensure that command line generation is ok
- * @author <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
+ *  Testcase to ensure that command line generation and required attributes are
+ *  correct.
+ *
+ * @author    <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
  */
-public class SOSTest extends TestCase {
+public class SOSTest extends BuildFileTest {
 
-    private SOSGet sosGet;
-    private SOSCheckin sosCheckin;
-    private SOSCheckout sosCheckout;
-    private SOSLabel sosLabel;
     private Project project;
     private Commandline commandline;
-    private FileUtils fileUtils;
 
     private static final String VSS_SERVER_PATH = "\\\\server\\vss\\srcsafe.ini";
     private static final String VSS_PROJECT_PATH = "/SourceRoot/Project";
+    private static final String DS_VSS_PROJECT_PATH = "$/SourceRoot/Project";
     private static final String SOS_SERVER_PATH = "192.168.0.1:8888";
     private static final String SOS_USERNAME = "ant";
     private static final String SOS_PASSWORD = "rocks";
@@ -89,41 +86,50 @@ public class SOSTest extends TestCase {
     private static final String SOS_HOME = "/home/user/.sos";
     private static final String VERSION = "007";
 
+    /**
+     *  Constructor for the SOSTest object
+     *
+     * @param  s  Test name
+     */
     public SOSTest(String s) {
         super(s);
     }
 
-    protected void setUp() throws Exception {
-        sosGet = new SOSGet();
-        sosCheckin = new SOSCheckin();
-        sosCheckout = new SOSCheckout();
-        sosLabel = new SOSLabel();
+    /**
+     *  The JUnit setup method
+     *
+     * @throws  Exception
+     */
+    protected void setUp()
+        throws Exception {
         project = new Project();
         project.setBasedir(".");
-        fileUtils = FileUtils.newFileUtils();
     }
 
-    protected void tearDown() throws Exception {
+    /**
+     *  The teardown method for JUnit
+     *
+     * @throws  Exception
+     */
+    protected void tearDown()
+        throws Exception {
         File file = new File(project.getBaseDir(), LOCAL_PATH);
         if (file.exists()) {
             file.delete();
         }
-	}
+    }
 
-    /**
-     * Test SOSGetFile flags & commandline generation
-     */
+    /**  Test SOSGetFile flags & commandline generation  */
     public void testGetFileFlags() {
-        String[] sTestCmdLine = { "soscmd", "-command", "GetFile", "-file",
-            SRC_FILE, "-revision", "007", "-server", SOS_SERVER_PATH, "-name",
-            SOS_USERNAME, "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH,
-            "-project", "$"+VSS_PROJECT_PATH, "-verbose", "-nocompress",
-            "-nocache", "-workdir", project.getBaseDir().getAbsolutePath()
-			+ File.separator + LOCAL_PATH };
-
-        Path path = new Path(project, LOCAL_PATH);
+        String[] sTestCmdLine = {"soscmd", "-command", "GetFile", "-file",
+                SRC_FILE, "-revision", "007", "-server", SOS_SERVER_PATH, "-name",
+                SOS_USERNAME, "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH,
+                "-project", DS_VSS_PROJECT_PATH, "-verbose", "-nocompress",
+                "-nocache", "-workdir", project.getBaseDir().getAbsolutePath()
+                 + File.separator + LOCAL_PATH};
 
         // Set up a SOSGet task
+        SOSGet sosGet = new SOSGet();
         sosGet.setProject(project);
         sosGet.setVssServerPath(VSS_SERVER_PATH);
         sosGet.setSosServerPath(SOS_SERVER_PATH);
@@ -132,46 +138,31 @@ public class SOSTest extends TestCase {
         sosGet.setUsername(SOS_USERNAME);
         sosGet.setPassword(SOS_PASSWORD);
         sosGet.setVersion(VERSION);
-        sosGet.setLocalPath(path);
+        sosGet.setLocalPath(new Path(project, LOCAL_PATH));
         sosGet.setNoCache(true);
         sosGet.setNoCompress(true);
         sosGet.setVerbose(true);
         sosGet.setRecursive(true);
 
         commandline = sosGet.buildCmdLine();
-        String[] sGeneratedCmdLine = commandline.getCommandline();
-        int i = 0;
-        while (i < sTestCmdLine.length) {
-            try {
-                assertEquals("GetFile arg # " + String.valueOf(i),
-                                sTestCmdLine[i],
-                                sGeneratedCmdLine[i]);
-                i++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-               fail("GetFile missing arg");
-            }
 
-        }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("GetFile extra args");
-        }
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
     }
 
-    /**
-     * Test SOSGetProject flags & commandline generation
-     */
+    /**  Test SOSGetProject flags & commandline generation  */
     public void testGetProjectFlags() {
-        String[] sTestCmdLine = { "soscmd", "-command", "GetProject", "-recursive",
-            "-label", SRC_LABEL, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
-            "-password", "", "-database", VSS_SERVER_PATH , "-project",
-            "$"+VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
-            project.getBaseDir().getAbsolutePath() };
+        String[] sTestCmdLine = {"soscmd", "-command", "GetProject", "-recursive",
+                "-label", SRC_LABEL, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", "", "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
+                project.getBaseDir().getAbsolutePath()};
+
         // Set up a SOSGet task
+        SOSGet sosGet = new SOSGet();
         sosGet.setProject(project);
         sosGet.setVssServerPath(VSS_SERVER_PATH);
         sosGet.setSosServerPath(SOS_SERVER_PATH);
-        sosGet.setProjectPath(VSS_PROJECT_PATH);
+        sosGet.setProjectPath(DS_VSS_PROJECT_PATH);
         sosGet.setLabel(SRC_LABEL);
         sosGet.setUsername(SOS_USERNAME);
         sosGet.setSosHome(SOS_HOME);
@@ -181,105 +172,30 @@ public class SOSTest extends TestCase {
         sosGet.setRecursive(true);
 
         commandline = sosGet.buildCmdLine();
-        String[] sGeneratedCmdLine = commandline.getCommandline();
 
-        int i = 0;
-        while (i < sTestCmdLine.length) {
-            try {
-                assertEquals("GetProject arg # " + String.valueOf(i),
-                                sTestCmdLine[i],
-                                sGeneratedCmdLine[i]);
-                i++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("GetProject missing arg");
-            }
-
-        }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("GetProject extra args");
-        }
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
     }
 
-    /**
-     * Test SOSGet required attributes 1 by 1
-     */
+    /**  Tests SOSGet required attributes.  */
     public void testGetExceptions() {
-        boolean buildEx = false;
-
-        // Set up a SOSGet task
-        sosGet.setProject(project);
-        // No options set - SosServerPath should fail
-        try {
-            commandline = sosGet.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("sosserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("GetException SosServerPath", buildEx);
-        buildEx = false;
-
-        // Set SosServerPath - Username should fail
-        sosGet.setSosServerPath(SOS_SERVER_PATH);
-        try {
-            commandline = sosGet.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("username attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("GetException Username", buildEx);
-        buildEx = false;
-
-        // Set Username - VssServerPath should fail
-        sosGet.setUsername(SOS_USERNAME);
-        try {
-            commandline = sosGet.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("vssserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("GetException VssServerPath", buildEx);
-        buildEx = false;
-
-        // Set VssServerPath - ProjectPath should fail
-        sosGet.setVssServerPath(VSS_SERVER_PATH);
-        try {
-            commandline = sosGet.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("projectpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("GetException ProjectPath", buildEx);
-
-        // Set ProjectPath - All required options set
-        sosGet.setProjectPath(VSS_PROJECT_PATH);
-        try {
-            commandline = sosGet.buildCmdLine();
-            buildEx = true;
-        } catch (BuildException be) {
-            buildEx = false;
-        }
-        assertTrue("GetException All required options set", buildEx);
+        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        expectSpecificBuildException("sosget.1", "some cause", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("sosget.2", "some cause", "username attribute must be set!");
+        expectSpecificBuildException("sosget.3", "some cause", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("sosget.4", "some cause", "projectpath attribute must be set!");
     }
 
-    /**
-     * Test CheckInFile option flags
-     */
+    /**  Test CheckInFile option flags  */
     public void testCheckinFileFlags() {
-        String[] sTestCmdLine = { "soscmd", "-command", "CheckInFile", "-file",
-            SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
-            "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
-            "$"+VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
-            "-workdir", project.getBaseDir().getAbsolutePath() + File.separator
-			+ LOCAL_PATH, "-log", SRC_COMMENT };
-
-        Path path = new Path(project, LOCAL_PATH);
+        String[] sTestCmdLine = {"soscmd", "-command", "CheckInFile", "-file",
+                SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
+                "-workdir", project.getBaseDir().getAbsolutePath() + File.separator
+                 + LOCAL_PATH, "-log", SRC_COMMENT};
 
         // Set up a SOSCheckin task
+        SOSCheckin sosCheckin = new SOSCheckin();
         sosCheckin.setProject(project);
         sosCheckin.setVssServerPath(VSS_SERVER_PATH);
         sosCheckin.setSosServerPath(SOS_SERVER_PATH);
@@ -288,48 +204,31 @@ public class SOSTest extends TestCase {
         sosCheckin.setComment(SRC_COMMENT);
         sosCheckin.setUsername(SOS_USERNAME);
         sosCheckin.setPassword(SOS_PASSWORD);
-        sosCheckin.setLocalPath(path);
+        sosCheckin.setLocalPath(new Path(project, LOCAL_PATH));
         sosCheckin.setNoCache(true);
         sosCheckin.setNoCompress(true);
         sosCheckin.setVerbose(true);
         sosCheckin.setRecursive(true);
 
         commandline = sosCheckin.buildCmdLine();
-        String[] sGeneratedCmdLine = commandline.getCommandline();
 
-        int i = 0;
-        while (i < sTestCmdLine.length) {
-            try {
-                assertEquals("CheckInFile arg # " + String.valueOf(i),
-                                sTestCmdLine[i],
-                                sGeneratedCmdLine[i]);
-                i++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("CheckInFile missing arg");
-            }
-
-        }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("CheckInFile extra args");
-        }
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
     }
 
-    /**
-     * Test CheckInProject option flags
-     */
+    /**  Test CheckInProject option flags  */
     public void testCheckinProjectFlags() {
-        String[] sTestCmdLine = { "soscmd", "-command", "CheckInProject",
-            "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
-            "-password", "", "-database", VSS_SERVER_PATH , "-project",
-            "$"+VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
-            project.getBaseDir().getAbsolutePath(), "-log", SRC_COMMENT,  };
+        String[] sTestCmdLine = {"soscmd", "-command", "CheckInProject",
+                "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", "", "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
+                project.getBaseDir().getAbsolutePath(), "-log", SRC_COMMENT,};
 
         // Set up a SOSCheckin task
+        SOSCheckin sosCheckin = new SOSCheckin();
         sosCheckin.setProject(project);
         sosCheckin.setVssServerPath(VSS_SERVER_PATH);
         sosCheckin.setSosServerPath(SOS_SERVER_PATH);
-        sosCheckin.setProjectPath(VSS_PROJECT_PATH);
+        sosCheckin.setProjectPath(DS_VSS_PROJECT_PATH);
         sosCheckin.setComment(SRC_COMMENT);
         sosCheckin.setUsername(SOS_USERNAME);
         sosCheckin.setSosHome(SOS_HOME);
@@ -339,150 +238,58 @@ public class SOSTest extends TestCase {
         sosCheckin.setRecursive(true);
 
         commandline = sosCheckin.buildCmdLine();
-        String[] sGeneratedCmdLine = commandline.getCommandline();
 
-        int i = 0;
-        while (i < sTestCmdLine.length) {
-            try {
-                assertEquals("CheckInProject arg # " + String.valueOf(i),
-                                sTestCmdLine[i],
-                                sGeneratedCmdLine[i]);
-                i++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("CheckInProject missing arg");
-            }
-
-        }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("CheckInProject extra args");
-        }
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
     }
 
-    /**
-     * Test SOSCheckIn required attributes 1 by 1
-     */
+    /**  Test SOSCheckIn required attributes.  */
     public void testCheckinExceptions() {
-        boolean buildEx = false;
-
-        // Set up a sosCheckin task
-        sosCheckin.setProject(project);
-        // No options set - SosServerPath should fail
-        try {
-            commandline = sosCheckin.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("sosserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckinException SosServerPath", buildEx);
-        buildEx = false;
-
-        // Set SosServerPath - Username should fail
-        sosCheckin.setSosServerPath(SOS_SERVER_PATH);
-        try {
-            commandline = sosCheckin.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("username attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckinException Username", buildEx);
-        buildEx = false;
-
-        // Set Username - VssServerPath should fail
-        sosCheckin.setUsername(SOS_USERNAME);
-        try {
-            commandline = sosCheckin.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("vssserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckinException VssServerPath", buildEx);
-        buildEx = false;
-
-        // Set VssServerPath - ProjectPath should fail
-        sosCheckin.setVssServerPath(VSS_SERVER_PATH);
-        try {
-            commandline = sosCheckin.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("projectpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckinException ProjectPath", buildEx);
-
-        // Set ProjectPath - All required options set
-        sosCheckin.setProjectPath(VSS_PROJECT_PATH);
-        try {
-            commandline = sosCheckin.buildCmdLine();
-            buildEx = true;
-        } catch (BuildException be) {
-            buildEx = false;
-        }
-        assertTrue("CheckinException All required options set", buildEx);
+        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        expectSpecificBuildException("soscheckin.1", "some cause", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckin.2", "some cause", "username attribute must be set!");
+        expectSpecificBuildException("soscheckin.3", "some cause", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckin.4", "some cause", "projectpath attribute must be set!");
     }
 
-    /**
-     * Test CheckOutFile option flags
-     */
+    /**  Test CheckOutFile option flags  */
     public void testCheckoutFileFlags() {
-        String[] sTestCmdLine = { "soscmd", "-command", "CheckOutFile", "-file",
-            SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
-            "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
-            "$"+VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
-            "-workdir", project.getBaseDir().getAbsolutePath()
-			+ File.separator + LOCAL_PATH };
-
-        Path path = new Path(project, LOCAL_PATH);
+        String[] sTestCmdLine = {"soscmd", "-command", "CheckOutFile", "-file",
+                SRC_FILE, "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", SOS_PASSWORD, "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "-verbose", "-nocompress", "-nocache",
+                "-workdir", project.getBaseDir().getAbsolutePath()
+                 + File.separator + LOCAL_PATH};
 
         // Set up a SOSCheckout task
+        SOSCheckout sosCheckout = new SOSCheckout();
         sosCheckout.setProject(project);
         sosCheckout.setVssServerPath(VSS_SERVER_PATH);
         sosCheckout.setSosServerPath(SOS_SERVER_PATH);
-        sosCheckout.setProjectPath(VSS_PROJECT_PATH);
+        sosCheckout.setProjectPath(DS_VSS_PROJECT_PATH);
         sosCheckout.setFile(SRC_FILE);
         sosCheckout.setUsername(SOS_USERNAME);
         sosCheckout.setPassword(SOS_PASSWORD);
-        sosCheckout.setLocalPath(path);
+        sosCheckout.setLocalPath(new Path(project, LOCAL_PATH));
         sosCheckout.setNoCache(true);
         sosCheckout.setNoCompress(true);
         sosCheckout.setVerbose(true);
         sosCheckout.setRecursive(true);
 
         commandline = sosCheckout.buildCmdLine();
-        String[] sGeneratedCmdLine = commandline.getCommandline();
 
-        int i = 0;
-        while (i < sTestCmdLine.length) {
-            try {
-                assertEquals("CheckOutFile arg # " + String.valueOf(i),
-                                sTestCmdLine[i],
-                                sGeneratedCmdLine[i]);
-                i++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("CheckOutFile missing arg");
-            }
-
-        }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("CheckOutFile extra args");
-        }
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
     }
 
-    /**
-     * Test CheckOutProject option flags
-     */
+    /**  Test CheckOutProject option flags  */
     public void testCheckoutProjectFlags() {
-        String[] sTestCmdLine = { "soscmd", "-command", "CheckOutProject",
-            "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
-            "-password", "", "-database", VSS_SERVER_PATH , "-project",
-            "$"+VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
-            project.getBaseDir().getAbsolutePath() };
+        String[] sTestCmdLine = {"soscmd", "-command", "CheckOutProject",
+                "-recursive", "-server", SOS_SERVER_PATH, "-name", SOS_USERNAME,
+                "-password", "", "-database", VSS_SERVER_PATH, "-project",
+                DS_VSS_PROJECT_PATH, "", "", "-soshome", SOS_HOME, "-workdir",
+                project.getBaseDir().getAbsolutePath()};
 
         // Set up a sosCheckout task
+        SOSCheckout sosCheckout = new SOSCheckout();
         sosCheckout.setProject(project);
         sosCheckout.setVssServerPath(VSS_SERVER_PATH);
         sosCheckout.setSosServerPath(SOS_SERVER_PATH);
@@ -495,104 +302,31 @@ public class SOSTest extends TestCase {
         sosCheckout.setRecursive(true);
 
         commandline = sosCheckout.buildCmdLine();
-        String[] sGeneratedCmdLine = commandline.getCommandline();
 
-        int i = 0;
-        while (i < sTestCmdLine.length) {
-            try {
-                assertEquals("CheckOutProject arg # " + String.valueOf(i),
-                                sTestCmdLine[i],
-                                sGeneratedCmdLine[i]);
-                i++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("CheckOutProject missing arg");
-            }
-
-        }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("CheckOutProject extra args");
-        }
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
     }
 
-    /**
-     * Test SOSCheckout required attributes 1 by 1
-     */
+    /**  Test SOSCheckout required attributes.  */
     public void testCheckoutExceptions() {
-        boolean buildEx = false;
-
-        // Set up a sosCheckout task
-        sosCheckout.setProject(project);
-        // No options set - SosServerPath should fail
-        try {
-            commandline = sosCheckout.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("sosserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckoutException SosServerPath", buildEx);
-        buildEx = false;
-
-        // Set SosServerPath - Username should fail
-        sosCheckout.setSosServerPath(SOS_SERVER_PATH);
-        try {
-            commandline = sosCheckout.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("username attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckoutException Username", buildEx);
-        buildEx = false;
-
-        // Set Username - VssServerPath should fail
-        sosCheckout.setUsername(SOS_USERNAME);
-        try {
-            commandline = sosCheckout.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("vssserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckoutException VssServerPath", buildEx);
-        buildEx = false;
-
-        // Set VssServerPath - ProjectPath should fail
-        sosCheckout.setVssServerPath(VSS_SERVER_PATH);
-        try {
-            commandline = sosCheckout.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("projectpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("CheckoutException ProjectPath", buildEx);
-
-        // Set ProjectPath - All required options set
-        sosCheckout.setProjectPath(VSS_PROJECT_PATH);
-        try {
-            commandline = sosCheckout.buildCmdLine();
-            buildEx = true;
-        } catch (BuildException be) {
-            buildEx = false;
-        }
-        assertTrue("CheckoutException All required options set", buildEx);
+        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        expectSpecificBuildException("soscheckout.1", "some cause", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckout.2", "some cause", "username attribute must be set!");
+        expectSpecificBuildException("soscheckout.3", "some cause", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soscheckout.4", "some cause", "projectpath attribute must be set!");
     }
 
-    /**
-     * Test Label option flags
-     */
+    /**  Test Label option flags  */
     public void testLabelFlags() {
-        String[] sTestCmdLine = { "soscmd", "-command", "AddLabel", "-server",
-            SOS_SERVER_PATH, "-name", SOS_USERNAME, "-password", "", "-database",
-            VSS_SERVER_PATH , "-project", "$"+VSS_PROJECT_PATH, "-label",
-            SRC_LABEL, "-verbose", "-log", SRC_COMMENT };
+        String[] sTestCmdLine = {"soscmd", "-command", "AddLabel", "-server",
+                SOS_SERVER_PATH, "-name", SOS_USERNAME, "-password", "", "-database",
+                VSS_SERVER_PATH, "-project", DS_VSS_PROJECT_PATH, "-label",
+                SRC_LABEL, "-verbose", "-log", SRC_COMMENT};
 
         // Set up a sosCheckout task
+        SOSLabel sosLabel = new SOSLabel();
         sosLabel.setVssServerPath(VSS_SERVER_PATH);
         sosLabel.setSosServerPath(SOS_SERVER_PATH);
-        sosLabel.setProjectPath(VSS_PROJECT_PATH);
+        sosLabel.setProjectPath(DS_VSS_PROJECT_PATH);
         sosLabel.setUsername(SOS_USERNAME);
         sosLabel.setSosHome(SOS_HOME);
         sosLabel.setComment(SRC_COMMENT);
@@ -602,100 +336,41 @@ public class SOSTest extends TestCase {
         sosLabel.setVerbose(true);
 
         commandline = sosLabel.buildCmdLine();
-        String[] sGeneratedCmdLine = commandline.getCommandline();
 
-        int i = 0;
-        while (i < sTestCmdLine.length) {
-            try {
-                assertEquals("AddLabel arg # " + String.valueOf(i),
-                                sTestCmdLine[i],
-                                sGeneratedCmdLine[i]);
-                i++;
-            } catch (ArrayIndexOutOfBoundsException aioob) {
-                fail("AddLabel missing arg");
-            }
+        checkCommandLines(sTestCmdLine, commandline.getCommandline());
+    }
 
-        }
-        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
-            // We have extra elements
-            fail("AddLabel extra args");
-        }
+    /**  Test SOSLabel required attributes.  */
+    public void testLabelExceptions() {
+        configureProject("src/etc/testcases/taskdefs/optional/sos/sos.xml");
+        expectSpecificBuildException("soslabel.1", "some cause", "sosserverpath attribute must be set!");
+        expectSpecificBuildException("soslabel.2", "some cause", "username attribute must be set!");
+        expectSpecificBuildException("soslabel.3", "some cause", "vssserverpath attribute must be set!");
+        expectSpecificBuildException("soslabel.4", "some cause", "projectpath attribute must be set!");
+        expectSpecificBuildException("soslabel.5", "some cause", "label attribute must be set!");
     }
 
     /**
-     * Test SOSLabel required attributes 1 by 1
+     *  Iterate through the generated command line comparing it to reference
+     *  one.
+     *
+     * @param  sTestCmdLine       The reference command line;
+     * @param  sGeneratedCmdLine  The generated command line;
      */
-    public void testLabelExceptions() {
-        boolean buildEx = false;
-
-        // Set up a sosLabel task
-        sosLabel.setProject(project);
-        // No options set - SosServerPath should fail
-        try {
-            commandline = sosLabel.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("sosserverpath attribute must be set!") == 0) {
-                buildEx = true;
+    private void checkCommandLines(String[] sTestCmdLine, String[] sGeneratedCmdLine) {
+        int length = sTestCmdLine.length;
+        for (int i = 0; i < length; i++) {
+            try {
+                assertEquals("arg # " + String.valueOf(i),
+                        sTestCmdLine[i],
+                        sGeneratedCmdLine[i]);
+            } catch (ArrayIndexOutOfBoundsException aioob) {
+                fail("missing arg " + sTestCmdLine[i]);
             }
         }
-        assertTrue("LabelException SosServerPath", buildEx);
-        buildEx = false;
-
-        // Set SosServerPath - Username should fail
-        sosLabel.setSosServerPath(SOS_SERVER_PATH);
-        try {
-            commandline = sosLabel.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("username attribute must be set!") == 0) {
-                buildEx = true;
-            }
+        if (sGeneratedCmdLine.length > sTestCmdLine.length) {
+            // We have extra elements
+            fail("extra args");
         }
-        assertTrue("LabelException Username", buildEx);
-        buildEx = false;
-
-        // Set Username - VssServerPath should fail
-        sosLabel.setUsername(SOS_USERNAME);
-        try {
-            commandline = sosLabel.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("vssserverpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("LabelException VssServerPath", buildEx);
-        buildEx = false;
-
-        // Set VssServerPath - ProjectPath should fail
-        sosLabel.setVssServerPath(VSS_SERVER_PATH);
-        try {
-            commandline = sosLabel.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("projectpath attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("LabelException ProjectPath", buildEx);
-
-        // Set ProjectPath - Label should fail
-        sosLabel.setProjectPath(VSS_PROJECT_PATH);
-        try {
-            commandline = sosLabel.buildCmdLine();
-        } catch (BuildException be) {
-            if (be.getMessage().compareTo("label attribute must be set!") == 0) {
-                buildEx = true;
-            }
-        }
-        assertTrue("LabelException Label", buildEx);
-
-        // Set Label - All required options set
-        sosLabel.setLabel(SRC_LABEL);
-        try {
-            commandline = sosLabel.buildCmdLine();
-            buildEx = true;
-        } catch (BuildException be) {
-            buildEx = false;
-        }
-        assertTrue("LabelException All required options set", buildEx);
     }
-
 }
