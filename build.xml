@@ -76,7 +76,7 @@
     <property name="dist.bin" value="${dist.dir}/bin"/>
     <property name="dist.lib" value="${dist.dir}/lib"/>
     <property name="dist.docs" value="${dist.dir}/docs"/>
-    <property name="dist.javadocs" value="${dist.dir}/docs/api"/>
+    <property name="dist.javadocs" value="${dist.dir}/docs/manual/api"/>
 
     <property name="src.dist.dir" value="dist-src"/>
     <property name="src.dist.src" value="${src.dist.dir}/src"/>
@@ -333,7 +333,7 @@
       <fileset dir="${docs.dir}"/>
     </copy>
 
-    <copy todir="${dist.javadocs}">
+    <copy todir="${dist.javadocs}" overwrite="true">
       <fileset dir="${build.javadocs}"/>
     </copy>
 
@@ -560,7 +560,7 @@
           description="--> creates the API documentation">
     <mkdir dir="${build.javadocs}"/>
     <javadoc packagenames="org.apache.*"
-             useexternalfile="yes"
+             useexternalfile="no"
              sourcepath="${java.dir}"
              destdir="${build.javadocs}"
              author="true"
