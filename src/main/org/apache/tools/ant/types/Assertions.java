@@ -65,7 +65,7 @@ import java.util.Iterator;
  * @since Ant 1.6
  * @author steve loughran
  */
-public class Assertions extends DataType {
+public class Assertions extends DataType implements Cloneable {
 
     /**
      * enable/disable sys assertions; null means undefined
@@ -221,7 +221,7 @@ public class Assertions extends DataType {
      * @return a cli
      * @throws CloneNotSupportedException
      */
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         Assertions that = (Assertions) super.clone();
         that.assertionList = (ArrayList) assertionList.clone();
         return that;
