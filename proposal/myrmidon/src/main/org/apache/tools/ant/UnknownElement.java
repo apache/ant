@@ -103,25 +103,6 @@ public class UnknownElement extends Task
     public void maybeConfigure()
         throws TaskException
     {
-        realThing = makeObject( this, wrapper );
-
-        wrapper.setProxy( realThing );
-        if( realThing instanceof Task )
-        {
-            ( (Task)realThing ).setRuntimeConfigurableWrapper( wrapper );
-        }
-
-        handleChildren( realThing, wrapper );
-
-        wrapper.maybeConfigure( project );
-        if( realThing instanceof Task )
-        {
-            target.replaceChild( this, realThing );
-        }
-        else
-        {
-            target.replaceChild( this, wrapper );
-        }
     }
 
     protected BuildException getNotFoundException( String what,
@@ -182,10 +163,6 @@ public class UnknownElement extends Task
             }
 
             childWrapper.setProxy( realChild );
-            if( parent instanceof TaskContainer )
-            {
-                ( (Task)realChild ).setRuntimeConfigurableWrapper( childWrapper );
-            }
 
             child.handleChildren( realChild, childWrapper );
 

@@ -125,8 +125,6 @@ public class RuntimeConfigurable
             if( child.wrappedObject instanceof Task )
             {
                 Task childTask = (Task)child.wrappedObject;
-                childTask.setRuntimeConfigurableWrapper( child );
-                childTask.maybeConfigure();
             }
             else
             {

@@ -16,7 +16,6 @@ public abstract class Task
     protected Target target;
     protected String description;
     protected String taskType;
-    protected RuntimeConfigurable wrapper;
 
     /**
      * Sets a description of the current action. It will be usefull in
@@ -53,21 +52,6 @@ public abstract class Task
     {
         return target;
     }
-
-    /**
-     * Returns the wrapper class for runtime configuration.
-     *
-     * @return The RuntimeConfigurableWrapper value
-     */
-    public RuntimeConfigurable getRuntimeConfigurableWrapper()
-    {
-        if( wrapper == null )
-        {
-            wrapper = new RuntimeConfigurable( this, getName() );
-        }
-        return wrapper;
-    }
-
     /**
      * Perform this task
      */
@@ -146,15 +130,6 @@ public abstract class Task
     public void maybeConfigure()
         throws TaskException
     {
-        if( wrapper != null )
-        {
-            wrapper.maybeConfigure( project );
-        }
-    }
-
-    protected void setRuntimeConfigurableWrapper( RuntimeConfigurable wrapper )
-    {
-        this.wrapper = wrapper;
     }
 
     protected void handleErrorOutput( String line )

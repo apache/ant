@@ -116,11 +116,6 @@ public class Property extends Task
         return file;
     }
 
-    public String getName()
-    {
-        return name;
-    }
-
     public Reference getRefid()
     {
         return ref;
