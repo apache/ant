@@ -161,11 +161,26 @@
       </classpath>
       <formatter type="plain"     usefile="false"/>
       <assertions enablesystemassertions="true">
-        <enable package="..." />
+        <enable class="${test.classname}" />
       </assertions> 
       <test name="${test.classname}"/>
     </junit>
   </target>
     
+  <!-- This is here to show that setting it as a property works
+  so there is some defect in pass-on of assertions that
+  is causing the problem -->
+  <target name="test-junit-manual-setup" depends="setup">
+    <junit fork="true" 
+      haltonerror="true" haltonfailure="true"
+      >
+      <classpath>
+        <path refid="assert.classpath"/>
+      </classpath>
+      <formatter type="plain"     usefile="false"/>
+      <test name="${test.classname}"/>
+      <jvmarg value="-ea:AssertionTest"/>
+    </junit>
+  </target>  
   
 </project>
