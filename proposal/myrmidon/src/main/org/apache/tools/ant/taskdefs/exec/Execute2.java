@@ -17,8 +17,6 @@ import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.factorys.ExecManagerFactory;
-import org.apache.myrmidon.services.ServiceException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -37,8 +35,9 @@ public class Execute2
     private long m_timeout;
     private ExecManager m_execManager;
 
-    public Execute2( ExecManager execManager )
+    public Execute2( final ExecManager execManager )
     {
+        m_execManager = execManager;
     }
 
     public void setTimeout( final long timeout )
@@ -107,24 +106,17 @@ public class Execute2
 
         try
         {
-            final ExecManagerFactory factory = new ExecManagerFactory();
-            final ExecManager manager = (ExecManager)factory.createService();
-
             final String[] command = m_command.getCommandline();
 
             final ExecMetaData metaData =
                 new ExecMetaData( command, m_environment,
                                   m_workingDirectory, m_newEnvironment );
 
-            return manager.execute( metaData, m_handler, m_timeout );
+            return m_execManager.execute( metaData, m_handler, m_timeout );
         }
         catch( final ExecException ee )
         {
             throw new TaskException( ee.getMessage(), ee );
-        }
-        catch( final ServiceException se )
-        {
-            throw new TaskException( se.getMessage(), se );
         }
     }
 }
