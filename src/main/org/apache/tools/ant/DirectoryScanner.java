@@ -1433,6 +1433,7 @@ public class DirectoryScanner
      * Return a cached result of list performed on file, if
      * available.  Invokes the method and caches the result otherwise.
      *
+     * @param file File (dir) to list.
      * @since Ant 1.6
      */
     private String[] list(File file) {
@@ -1451,6 +1452,8 @@ public class DirectoryScanner
      * insensitive manner in order to find a file that matches the
      * given name.
      *
+     * @param base base File (dir).
+     * @param path file path.
      * @return File object that points to the file in question.  if it
      * hasn't been found it will simply be <code>new File(base,
      * path)</code>.
@@ -1468,6 +1471,8 @@ public class DirectoryScanner
      * insensitive manner in order to find a file that matches the
      * given stack of names.
      *
+     * @param base base File (dir).
+     * @param pathElements Vector of path elements (dirs...file).
      * @return File object that points to the file in question or null.
      *
      * @since Ant 1.6
@@ -1504,6 +1509,8 @@ public class DirectoryScanner
      * From <code>base</code> traverse the filesystem in order to find
      * a file that matches the given name.
      *
+     * @param base base File (dir).
+     * @param path file path.
      * @return File object that points to the file in question or null.
      *
      * @since Ant 1.6
@@ -1516,6 +1523,8 @@ public class DirectoryScanner
      * From <code>base</code> traverse the filesystem in order to find
      * a file that matches the given stack of names.
      *
+     * @param base base File (dir).
+     * @param pathElements Vector of path elements (dirs...file).
      * @return File object that points to the file in question or null.
      *
      * @since Ant 1.6
@@ -1545,6 +1554,8 @@ public class DirectoryScanner
     /**
      * Do we have to traverse a symlink when trying to reach path from
      * basedir?
+     * @param base base File (dir).
+     * @param path file path.
      * @since Ant 1.6
      */
     private boolean isSymlink(File base, String path) {
@@ -1554,6 +1565,8 @@ public class DirectoryScanner
     /**
      * Do we have to traverse a symlink when trying to reach path from
      * basedir?
+     * @param base base File (dir).
+     * @param pathElements Vector of path elements (dirs...file).
      * @since Ant 1.6
      */
     private boolean isSymlink(File base, Vector pathElements) {
@@ -1617,6 +1630,8 @@ public class DirectoryScanner
      * Add all patterns that are not real patterns (do not contain
      * wildcards) to the set and returns the real patterns.
      *
+     * @param set Set to populate.
+     * @param patterns String[] of patterns.
      * @since Ant 1.7
      */
     private String[] fillNonPatternSet(Set set, String[] patterns) {
