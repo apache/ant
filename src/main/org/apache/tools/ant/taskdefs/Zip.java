@@ -807,15 +807,17 @@ public class Zip extends MatchingTask {
                     myMapper = gm;
                 }
             }
-            newerResources[i] = 
-                ResourceUtils.selectOutOfDateSources(this,
-                                                     initialResources[i],
-                                                     myMapper,
-                                                     getZipScanner());
+
+            Resource[] resources = initialResources[i];
             if (doFilesonly) {
-                newerResources[i] = selectFileResources(newerResources[i]);
+                resources = selectFileResources(resources);
             }
             
+            newerResources[i] = 
+                ResourceUtils.selectOutOfDateSources(this,
+                                                     resources,
+                                                     myMapper,
+                                                     getZipScanner());
             needsUpdate = needsUpdate || (newerResources[i].length > 0);
 
             if (needsUpdate && !doUpdate) {
