@@ -28,7 +28,6 @@ import java.util.Properties;
 import java.util.Vector;
 import org.apache.tools.ant.input.DefaultInputHandler;
 import org.apache.tools.ant.input.InputHandler;
-import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.launch.AntMain;
 
 
