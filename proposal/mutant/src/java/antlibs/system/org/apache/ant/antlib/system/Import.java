@@ -51,24 +51,85 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.util;
+package org.apache.ant.antlib.system;
+
+import org.apache.ant.common.antlib.AbstractTask;
+import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.service.ComponentService;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
- * The levels at which a log message may be sent.
+ * Task to import a component or components from a library
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 16 January 2002
+ * @created 27 January 2002
  */
-public class MessageLevel {
-    /** Error message level */
-    public final static int MSG_ERR = 0;
-    /** Warnign message level */
-    public final static int MSG_WARN = 1;
-    /** Informational message level */
-    public final static int MSG_INFO = 2;
-    /** Verbose message level */
-    public final static int MSG_VERBOSE = 3;
-    /** Debug Message level */
-    public final static int MSG_DEBUG = 4;
+public class Import extends AbstractTask {
+    /** The Ant LIbrary Id from which the component must be imported */
+    private String libraryId = null;
+    /** The name of the component to be imported */
+    private String name = null;
+
+    /** The alias that is to be used for the name */
+    private String alias = null;
+
+    /**
+     * Sets the libraryId of the Import
+     *
+     * @param libraryId the new libraryId value
+     */
+    public void setLibraryId(String libraryId) {
+        this.libraryId = libraryId;
+    }
+
+    /**
+     * Sets the name of the Import
+     *
+     * @param name  the new name value
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Sets the alias of the Import
+     *
+     * @param alias  the new alias value
+     */
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+
+    /**
+     * Validate this task is properly configured
+     *
+     * @exception ExecutionException if the task is not configured correctly
+     */
+    public void validateComponent() throws ExecutionException {
+        if (libraryId == null) {
+            throw new ExecutionException("You must specify a library identifier"
+                 + " with the \"libraryid\" attribute");
+        }
+        if (alias != null && name == null) {
+            throw new ExecutionException("You may only specify an alias"
+                 + " when you specify the component name");
+        }
+    }
+
+    /**
+     * Do the work and import the component or components
+     *
+     * @exception ExecutionException if the components cannot be imported
+     */
+    public void execute() throws ExecutionException {
+        AntContext context = getContext();
+        ComponentService componentService = (ComponentService)
+            context.getCoreService(ComponentService.class);
+        if (name == null) {
+            componentService.importLibrary(libraryId);
+        } else {
+            componentService.importComponent(libraryId, name, alias);
+        }
+    }
 }
 

@@ -75,7 +75,7 @@ import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.Location;
-import org.apache.ant.common.util.MessageLevel;
+import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.init.InitConfig;
 import org.apache.ant.init.InitUtils;
 
@@ -234,7 +234,8 @@ public class Commandline {
      * Get an option value
      *
      * @param args the full list of command line arguments
-     * @param position the position in the args array where the value shoudl be
+     * @param position the position in the args array where the value shoudl
+     *      be
      * @param argType the option type
      * @return the value of the option
      * @exception ConfigException if the option cannot be read
@@ -262,6 +263,7 @@ public class Commandline {
         this.initConfig = initConfig;
         try {
             parseArguments(args);
+            determineBuildFile();
 
             AntConfig config = new AntConfig();
             AntConfig userConfig = getAntConfig(initConfig.getUserConfigArea());
@@ -293,6 +295,7 @@ public class Commandline {
             ExecutionManager executionManager
                  = new ExecutionManager(initConfig, config);
             addBuildListeners(executionManager);
+            executionManager.init();
             executionManager.runBuild(project, targets, definedProperties);
         } catch (Throwable t) {
             if (t instanceof AntException) {
@@ -332,6 +335,79 @@ public class Commandline {
         return project;
     }
 
+    /**
+     * Handle build file argument
+     *
+     * @param url the build file's URL
+     * @exception ConfigException if the build file location is not valid
+     */
+    private void argBuildFile(String url) throws ConfigException {
+        try {
+            if (url.indexOf(":") == -1) {
+                // We convert any hash characters to their URL escape.
+                buildFileURL = InitUtils.getFileURL(new File(url));
+            } else {
+                buildFileURL = new URL(url);
+            }
+        } catch (MalformedURLException e) {
+            throw new ConfigException("Build file is not valid", e);
+        }
+    }
+
+    /**
+     * Handle the log file option
+     *
+     * @param arg the value of the log file option
+     * @exception ConfigException if the log file is not writeable
+     */
+    private void argLogFile(String arg) throws ConfigException {
+        try {
+            File logFile = new File(arg);
+            out = new PrintStream(new FileOutputStream(logFile));
+            err = out;
+        } catch (IOException ioe) {
+            throw new ConfigException("Cannot write on the specified log " +
+                "file. Make sure the path exists and " +
+                "you have write permissions.", ioe);
+        }
+    }
+
+    /**
+     * Handle the logger attribute
+     *
+     * @param arg the logger classname
+     * @exception ConfigException if a logger has already been defined
+     */
+    private void argLogger(String arg) throws ConfigException {
+        if (loggerClassname != null) {
+            throw new ConfigException("Only one logger class may be " +
+                "specified.");
+        }
+        loggerClassname = arg;
+    }
+
+
+    /**
+     * Determine the build file to use
+     *
+     * @exception ConfigException if the build file cannot be found
+     */
+    private void determineBuildFile() throws ConfigException {
+        if (buildFileURL == null) {
+            File defaultBuildFile = new File(DEFAULT_BUILD_FILENAME);
+            if (!defaultBuildFile.exists()) {
+                File ant1BuildFile = new File(DEFAULT_ANT1_FILENAME);
+                if (ant1BuildFile.exists()) {
+                    defaultBuildFile = ant1BuildFile;
+                }
+            }
+            try {
+                buildFileURL = InitUtils.getFileURL(defaultBuildFile);
+            } catch (MalformedURLException e) {
+                throw new ConfigException("Build file is not valid", e);
+            }
+        }
+    }
 
     /**
      * Parse the command line arguments.
@@ -349,30 +425,9 @@ public class Commandline {
 
             if (arg.equals("-buildfile") || arg.equals("-file")
                  || arg.equals("-f")) {
-                try {
-                    String url = getOption(args, i++, arg);
-                    if (url.indexOf(":") == -1) {
-                        // We convert any hash characters to their URL escape.
-                        buildFileURL = InitUtils.getFileURL(new File(url));
-                    } else {
-                        buildFileURL = new URL(url);
-                    }
-                } catch (MalformedURLException e) {
-                    System.err.println("Buildfile is not valid: " +
-                        e.getMessage());
-                    throw new ConfigException("Build file is not valid", e);
-                }
+                argBuildFile(getOption(args, i++, arg));
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
-                try {
-                    File logFile = new File(getOption(args, i++, arg));
-                    out = new PrintStream(new FileOutputStream(logFile));
-                    err = out;
-                } catch (IOException ioe) {
-                    System.err.println("Cannot write on the specified log " +
-                        "file. Make sure the path exists and " +
-                        "you have write permissions.");
-                    return;
-                }
+                argLogFile(getOption(args, i++, arg));
             } else if (arg.equals("-quiet") || arg.equals("-q")) {
                 messageOutputLevel = MessageLevel.MSG_WARN;
             } else if (arg.equals("-verbose") || arg.equals("-v")) {
@@ -386,12 +441,7 @@ public class Commandline {
             } else if (arg.equals("-listener")) {
                 listeners.add(getOption(args, i++, arg));
             } else if (arg.equals("-logger")) {
-                if (loggerClassname != null) {
-                    System.err.println("Only one logger class may be " +
-                        "specified.");
-                    return;
-                }
-                loggerClassname = getOption(args, i++, arg);
+                argLogger(getOption(args, i++, arg));
             } else if (arg.startsWith("-D")) {
                 String name = arg.substring(2, arg.length());
                 String value = null;
@@ -413,21 +463,6 @@ public class Commandline {
             }
         }
 
-        if (buildFileURL == null) {
-            File defaultBuildFile = new File(DEFAULT_BUILD_FILENAME);
-            if (!defaultBuildFile.exists()) {
-                File ant1BuildFile = new File(DEFAULT_ANT1_FILENAME);
-                if (ant1BuildFile.exists()) {
-                    defaultBuildFile = ant1BuildFile;
-                }
-            }
-            try {
-                buildFileURL = InitUtils.getFileURL(defaultBuildFile);
-            } catch (MalformedURLException e) {
-                System.err.println("Buildfile is not valid: " + e.getMessage());
-                throw new ConfigException("Build file is not valid", e);
-            }
-        }
     }
 
     /**

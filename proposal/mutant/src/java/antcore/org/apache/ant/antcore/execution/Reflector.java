@@ -69,7 +69,7 @@ import org.apache.ant.common.util.ExecutionException;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 19 January 2002
  */
-public class Reflector {
+public class Reflector implements Setter {
 
     /**
      * AttributeSetter classes are created at introspection time for each

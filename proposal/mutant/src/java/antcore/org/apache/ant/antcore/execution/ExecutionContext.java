@@ -137,9 +137,12 @@ public class ExecutionContext implements AntContext {
      * @param level the priority level of the message
      */
     public void log(String message, int level) {
-        ModelElement source = modelElement;
-        if (modelElement == null) {
+        Object source = modelElement;
+        if (source == null) {
             source = frame.getProject();
+            if (source == null) {
+                source = frame;
+            }
         }
         eventSupport.fireMessageLogged(source, message, level);
     }

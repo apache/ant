@@ -63,30 +63,31 @@ import org.apache.ant.antcore.antlib.AntLibrary;
 import org.apache.ant.antcore.antlib.ComponentLibrary;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.common.antlib.AntLibFactory;
+import org.apache.ant.common.antlib.DeferredTask;
 import org.apache.ant.common.antlib.ExecutionComponent;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.antlib.TaskContainer;
 import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.model.Target;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
-import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.EventService;
+import org.apache.ant.common.service.ExecService;
+import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
-import org.apache.ant.common.util.MessageLevel;
 import org.apache.ant.init.InitConfig;
-import org.apache.ant.common.service.ExecService;
 
 /**
- * An Frame maintains the state of a project during an execution.
- * The Frame contains the data values set by Ant tasks as they are
- * executed, including task definitions, property values, etc.
+ * An Frame maintains the state of a project during an execution. The Frame
+ * contains the data values set by Ant tasks as they are executed, including
+ * task definitions, property values, etc.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 14 January 2002
@@ -105,7 +106,7 @@ public class Frame {
     private Map referencedFrames = new HashMap();
 
     /** Reflector objects used to configure Tasks from the Task models. */
-    private Map reflectors = new HashMap();
+    private Map setters = new HashMap();
 
     /**
      * The context of this execution. This contains all data object's
@@ -165,7 +166,7 @@ public class Frame {
      *      imported
      */
     protected Frame(Map standardLibs, InitConfig initConfig,
-                             AntConfig config) throws ExecutionException {
+                    AntConfig config) throws ExecutionException {
         this.standardLibs = standardLibs;
         this.config = config;
         this.initConfig = initConfig;
@@ -202,7 +203,6 @@ public class Frame {
                  = project.getReferencedProject(referenceName);
             Frame referencedFrame = createFrame(referencedProject);
             referencedFrames.put(referenceName, referencedFrame);
-
         }
 
         configureServices();
@@ -359,8 +359,8 @@ public class Frame {
      * Get a referenced frame by its reference name
      *
      * @param referenceName the name under which the frame was imported.
-     * @return the Frame asscociated with the given reference name
-     *      or null if there is no such project.
+     * @return the Frame asscociated with the given reference name or null
+     *      if there is no such project.
      */
     protected Frame getReferencedFrame(String referenceName) {
         return (Frame)referencedFrames.get(referenceName);
@@ -672,20 +672,26 @@ public class Frame {
 
 
     /**
-     * Gets the reflector for the given class
+     * Gets the setter for the given class
      *
      * @param c the class for which the reflector is desired
      * @return the reflector
      */
-    private Reflector getReflector(Class c) {
-        if (reflectors.containsKey(c)) {
-            return (Reflector)reflectors.get(c);
+    private Setter getSetter(Class c) {
+        if (setters.containsKey(c)) {
+            return (Setter)setters.get(c);
         }
-        ClassIntrospector introspector
-             = new ClassIntrospector(c, componentManager.getConverters());
-        Reflector reflector = introspector.getReflector();
-        reflectors.put(c, reflector);
-        return reflector;
+        Setter setter = null;
+        if (DeferredTask.class.isAssignableFrom(c)) {
+            setter = new DeferredSetter();
+        } else {
+            ClassIntrospector introspector
+                 = new ClassIntrospector(c, componentManager.getConverters());
+            setter = introspector.getReflector();
+        }
+
+        setters.put(c, setter);
+        return setter;
     }
 
 
@@ -759,15 +765,15 @@ public class Frame {
     private void configureServices() {
         // create services and make them available in our services map
         fileService = new CoreFileService(this);
-        componentManager
-             = new ComponentManager(this, config.isRemoteLibAllowed());
+        componentManager = new ComponentManager(this,
+            config.isRemoteLibAllowed(), config.getLibraryPathsMap());
         dataService = new CoreDataService(this,
             config.isUnsetPropertiesAllowed());
 
         services.put(FileService.class, fileService);
         services.put(ComponentService.class, componentManager);
         services.put(DataService.class, dataService);
-        services.put(EventService.class,  new CoreEventService(this));
+        services.put(EventService.class, new CoreEventService(this));
         services.put(ExecService.class, new CoreExecService(this));
     }
 
@@ -784,27 +790,27 @@ public class Frame {
                                   BuildElement model)
          throws ExecutionException {
 
-        Reflector reflector = getReflector(element.getClass());
+        Setter setter = getSetter(element.getClass());
 
         // start by setting the attributes of this element
         for (Iterator i = model.getAttributeNames(); i.hasNext(); ) {
             String attributeName = (String)i.next();
             String attributeValue = model.getAttributeValue(attributeName);
-            if (!reflector.supportsAttribute(attributeName)) {
+            if (!setter.supportsAttribute(attributeName)) {
                 throw new ExecutionException(model.getType()
                      + " does not support the \"" + attributeName
                      + "\" attribute", model.getLocation());
             }
-            reflector.setAttribute(element, attributeName,
+            setter.setAttribute(element, attributeName,
                 dataService.replacePropertyRefs(attributeValue));
         }
         String modelText = model.getText().trim();
         if (modelText.length() != 0) {
-            if (!reflector.supportsText()) {
+            if (!setter.supportsText()) {
                 throw new ExecutionException(model.getType()
                      + " does not support content", model.getLocation());
             }
-            reflector.addText(element,
+            setter.addText(element,
                 dataService.replacePropertyRefs(modelText));
         }
 
@@ -817,7 +823,7 @@ public class Frame {
             if (element instanceof TaskContainer
                  && info != null
                  && info.getDefinitionType() == AntLibrary.TASKDEF
-                 && !reflector.supportsNestedElement(nestedElementName)) {
+                 && !setter.supportsNestedElement(nestedElementName)) {
                 // it is a nested task
                 TaskContext nestedContext
                      = configureTask(nestedElementModel);
@@ -826,11 +832,11 @@ public class Frame {
                 // method of executing tasks
                 container.addTask(nestedContext.getTask());
             } else {
-                if (reflector.supportsNestedAdder(nestedElementName)) {
-                    addNestedElement(factory, reflector, element,
+                if (setter.supportsNestedAdder(nestedElementName)) {
+                    addNestedElement(factory, setter, element,
                         nestedElementModel);
-                } else if (reflector.supportsNestedCreator(nestedElementName)) {
-                    createNestedElement(factory, reflector, element,
+                } else if (setter.supportsNestedCreator(nestedElementName)) {
+                    createNestedElement(factory, setter, element,
                         nestedElementModel);
                 } else {
                     throw new ExecutionException(model.getType()
@@ -846,7 +852,7 @@ public class Frame {
     /**
      * Create a nested element for the given object according to the model.
      *
-     * @param reflector the reflector instance of the container object
+     * @param setter the Setter instance of the container object
      * @param element the container object for which a nested element is
      *      required.
      * @param model the build model for the nestd element
@@ -855,7 +861,7 @@ public class Frame {
      * @exception ExecutionException if the nested element cannot be
      *      created.
      */
-    private void createNestedElement(AntLibFactory factory, Reflector reflector,
+    private void createNestedElement(AntLibFactory factory, Setter setter,
                                      Object element, BuildElement model)
          throws ExecutionException {
         log("The use of create methods is deprecated - class: "
@@ -864,7 +870,7 @@ public class Frame {
         String nestedElementName = model.getType();
         try {
             Object nestedElement
-                 = reflector.createElement(element, nestedElementName);
+                 = setter.createElement(element, nestedElementName);
             factory.registerCreatedElement(nestedElement);
             if (nestedElement instanceof ExecutionComponent) {
                 ExecutionComponent component
@@ -891,7 +897,7 @@ public class Frame {
     /**
      * Create and add a nested element
      *
-     * @param reflector The reflector instance for the container element
+     * @param setter The Setter instance for the container element
      * @param element the container element in which the nested element will
      *      be created
      * @param model the model of the nested element
@@ -899,12 +905,12 @@ public class Frame {
      *      which the attribute is to be added.
      * @exception ExecutionException if the nested element cannot be created
      */
-    private void addNestedElement(AntLibFactory factory, Reflector reflector,
+    private void addNestedElement(AntLibFactory factory, Setter setter,
                                   Object element, BuildElement model)
          throws ExecutionException {
 
         String nestedElementName = model.getType();
-        Class nestedType = reflector.getType(nestedElementName);
+        Class nestedType = setter.getType(nestedElementName);
 
         // is there a polymorph indicator - look in Ant aspects
         String typeName = model.getAspectValue(ANT_ASPECT, "type");
@@ -947,7 +953,7 @@ public class Frame {
                     model.getLocation());
             }
 
-            typeInstance = createTypeInstance(nestedType, factory, model);
+            typeInstance = createTypeInstance(nestedType, factory, model, null);
         }
 
         // is the typeInstance compatible with the type expected
@@ -965,7 +971,7 @@ public class Frame {
                     model.getLocation());
             }
         }
-        reflector.addElement(element, nestedElementName, typeInstance);
+        setter.addElement(element, nestedElementName, typeInstance);
     }
 
 
@@ -989,8 +995,9 @@ public class Frame {
         }
 
         String className = taskDefInfo.getClassName();
-        ComponentLibrary componentLibrary 
-            = taskDefInfo.getComponentLibrary();
+        ComponentLibrary componentLibrary
+             = taskDefInfo.getComponentLibrary();
+        String localName = taskDefInfo.getLocalName();
 
         try {
             ClassLoader taskClassLoader = componentLibrary.getClassLoader();
@@ -998,7 +1005,8 @@ public class Frame {
                  = Class.forName(className, true, taskClassLoader);
             AntLibFactory libFactory
                  = componentManager.getLibFactory(componentLibrary);
-            Object element = libFactory.createTaskInstance(elementClass);
+            Object element
+                 = libFactory.createTaskInstance(elementClass, localName);
 
             Task task = null;
             if (element instanceof Task) {
@@ -1062,8 +1070,9 @@ public class Frame {
         }
 
         String className = typeDefInfo.getClassName();
-        ComponentLibrary componentLibrary 
-            = typeDefInfo.getComponentLibrary();
+        ComponentLibrary componentLibrary
+             = typeDefInfo.getComponentLibrary();
+        String localName = typeDefInfo.getLocalName();
 
         try {
             ClassLoader typeClassLoader = componentLibrary.getClassLoader();
@@ -1074,7 +1083,7 @@ public class Frame {
             AntLibFactory libFactory
                  = componentManager.getLibFactory(componentLibrary);
             Object typeInstance
-                 = createTypeInstance(typeClass, libFactory, model);
+                 = createTypeInstance(typeClass, libFactory, model, localName);
             setContextLoader(currentLoader);
 
             return typeInstance;
@@ -1095,15 +1104,17 @@ public class Frame {
      * @param model the model describing the required configuration of the
      *      instance
      * @param libFactory the factory object of the typeClass's Ant library
+     * @param localName the name of the type within its Ant library
      * @return an instance of the given class appropriately configured
      * @exception ExecutionException if there is a problem creating the type
      *      instance
      */
     private Object createTypeInstance(Class typeClass, AntLibFactory libFactory,
-                                      BuildElement model)
+                                      BuildElement model, String localName)
          throws ExecutionException {
         try {
-            Object typeInstance = libFactory.createTypeInstance(typeClass);
+            Object typeInstance
+                 = libFactory.createTypeInstance(typeClass, localName);
 
             if (typeInstance instanceof ExecutionComponent) {
                 ExecutionComponent component = (ExecutionComponent)typeInstance;

@@ -149,11 +149,12 @@ public class AntLibManager {
      * @param librarySpecs the loaded specifications of the Ant libraries
      * @param initConfig the Ant initialization configuration
      * @param libraries the collection of libraries already configured
+     * @param libPathsMap a map of lists of library patsh fro each library
      * @exception ExecutionException if a library cannot be configured from
      *      the given specification
      */
     public void configLibraries(InitConfig initConfig, Map librarySpecs,
-                                Map libraries)
+                                Map libraries, Map libPathsMap)
          throws ExecutionException {
 
         // check if any already defined
@@ -174,7 +175,7 @@ public class AntLibManager {
             String libraryId = (String)i.next();
             if (!libraries.containsKey(libraryId)) {
                 configLibrary(initConfig, librarySpecs, libraryId,
-                    configuring, libraries);
+                    configuring, libraries, libPathsMap);
             }
         }
     }
@@ -189,7 +190,7 @@ public class AntLibManager {
      * @exception MalformedURLException if the library's location cannot be
      *      formed
      */
-    public void loadLib(Map librarySpecs, String libLocationString)
+    public void loadLibs(Map librarySpecs, String libLocationString)
          throws ExecutionException, MalformedURLException {
 
         File libLocation = new File(libLocationString);
@@ -213,6 +214,24 @@ public class AntLibManager {
     }
 
     /**
+     * add a library path to the given library
+     *
+     * @param antLibrary the library to which the path is to be added
+     * @param path the path to be added
+     * @exception ExecutionException if remote paths are not allowed by
+     *      configuration
+     */
+    public void addLibPath(AntLibrary antLibrary, URL path)
+         throws ExecutionException {
+        if (!path.getProtocol().equals("file")
+             && !remoteAllowed) {
+            throw new ExecutionException("Remote libpaths are not"
+                 + " allowed: " + path);
+        }
+        antLibrary.addLibraryURL(path);
+    }
+
+    /**
      * Configure a library from a specification and the Ant init config.
      *
      * @param initConfig Ant's init config passed in from the front end.
@@ -223,12 +242,13 @@ public class AntLibManager {
      *      dependencies.
      * @param libraries the collection of libraries which have already been
      *      configured
+     * @param libPathsMap a map of lists of library patsh fro each library
      * @exception ExecutionException if the library cannot be configured.
      */
     private void configLibrary(InitConfig initConfig, Map librarySpecs,
                                String libraryId,
                                CircularDependencyChecker configuring,
-                               Map libraries)
+                               Map libraries, Map libPathsMap)
          throws ExecutionException {
 
         try {
@@ -245,7 +265,7 @@ public class AntLibManager {
                              + libraryId + " depends");
                     }
                     configLibrary(initConfig, librarySpecs, extendsId,
-                        configuring, libraries);
+                        configuring, libraries, libPathsMap);
                 }
             }
 
@@ -265,8 +285,8 @@ public class AntLibManager {
                 urlsList.add(initConfig.getToolsJarURL());
             }
 
-            URL[] parserURLs = initConfig.getParserURLs();
             if (librarySpec.usesAntXML()) {
+                URL[] parserURLs = initConfig.getParserURLs();
                 for (int i = 0; i < parserURLs.length; ++i) {
                     urlsList.add(parserURLs[i]);
                 }
@@ -282,11 +302,21 @@ public class AntLibManager {
             }
             antLibrary.setParentLoader(initConfig.getCommonLoader());
             libraries.put(libraryId, antLibrary);
+
+            List libPaths = (List)libPathsMap.get(libraryId);
+            if (libPaths != null) {
+                for (Iterator j = libPaths.iterator(); j.hasNext(); ) {
+                    URL pathURL = (URL)j.next();
+                    addLibPath(antLibrary, pathURL);
+                }
+            }
+
             configuring.leaveNode(libraryId);
         } catch (CircularDependencyException e) {
             throw new ExecutionException(e);
         }
     }
+
 
     /**
      * Read an Ant library definition from a URL

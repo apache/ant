@@ -69,9 +69,6 @@ import org.apache.ant.common.util.ExecutionException;
  * @created 14 January 2002
  */
 public class AntLibrary implements ComponentLibrary {
-    /** A counter for generating unique ids */
-    private static int implicitLibCount = 0;
-
     /**
      * This is the globally unique name of this library. It uses the same
      * conventions as the Java package space - i.e. reverse order DNS names

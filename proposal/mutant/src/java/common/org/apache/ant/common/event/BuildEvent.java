@@ -122,9 +122,10 @@ public class BuildEvent extends EventObject {
      * @param message the message associated with this event
      * @param priority the message priority
      */
-    public BuildEvent(ModelElement source, String message,
+    public BuildEvent(Object source, String message,
                       int priority) {
-        this(source, MESSAGE);
+        super(source);
+        this.eventType = MESSAGE;
         this.message = message;
         this.messagePriority = priority;
     }
@@ -175,7 +176,12 @@ public class BuildEvent extends EventObject {
      * @return the model element this event is associated with
      */
     public ModelElement getModelElement() {
-        return (ModelElement)getSource();
+        Object source = getSource();
+        if (source instanceof ModelElement) {
+            return (ModelElement)getSource();
+        }
+        
+        return null;
     }
 }
 

@@ -68,7 +68,7 @@ import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.util.MessageLevel;
+import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.util.PropertyUtils;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
@@ -197,6 +197,14 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      */
     public static String getJavaVersion() {
         return javaVersion;
+    }
+
+    /**
+     * get the target hashtable
+     * @return hashtable, the contents of which can be cast to Target
+     */
+    public Hashtable getTargets() {
+        return new Hashtable(); // XXX can't get targets
     }
 
     /**

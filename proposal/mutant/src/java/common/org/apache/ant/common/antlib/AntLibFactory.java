@@ -68,12 +68,14 @@ public interface AntLibFactory {
      * Create an instance of the given type class
      *
      * @param typeClass the class for which an instance is required
+     * @param localName the name within the library under which the type is
+     *      defined
      * @return an instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
      * @exception ExecutionException if there is a problem creating the type
      */
-    Object createTypeInstance(Class typeClass)
+    Object createTypeInstance(Class typeClass, String localName)
          throws InstantiationException, IllegalAccessException,
         ExecutionException;
 
@@ -89,12 +91,14 @@ public interface AntLibFactory {
      * Create an instance of the given task class
      *
      * @param taskClass the class for which an instance is required
+     * @param localName the name within the library under which the task is
+     *      defined
      * @return an instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
      * @exception ExecutionException if there is a problem creating the task
      */
-    Object createTaskInstance(Class taskClass)
+    Object createTaskInstance(Class taskClass, String localName)
          throws InstantiationException, IllegalAccessException,
         ExecutionException;
 

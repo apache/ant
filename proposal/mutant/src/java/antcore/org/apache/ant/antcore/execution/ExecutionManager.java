@@ -59,7 +59,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import org.apache.ant.antcore.antlib.AntLibManager;
-import org.apache.ant.antcore.antlib.AntLibrary;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.model.Project;
@@ -70,8 +69,8 @@ import org.apache.ant.init.InitConfig;
 /**
  * The ExecutionManager is used to manage the execution of a build. The
  * Execution manager is responsible for loading the Ant task libraries,
- * creating Frames for each project that is part of the build and
- * then executing the tasks within those Execution Frames.
+ * creating Frames for each project that is part of the build and then
+ * executing the tasks within those Execution Frames.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 12 January 2002
@@ -112,7 +111,15 @@ public class ExecutionManager {
          throws ExecutionException {
         this.config = config;
         this.initConfig = initConfig;
+    }
 
+    /**
+     * Initialise the execution manager
+     *
+     * @exception ExecutionException if the standard ant libraries cannot be
+     *      loaded
+     */
+    public void init() throws ExecutionException {
         Map librarySpecs = new HashMap(10);
         try {
             // start by loading the task libraries
@@ -123,20 +130,19 @@ public class ExecutionManager {
                  = new AntLibManager(config.isRemoteLibAllowed());
 
             libManager.addAntLibraries(librarySpecs, standardLibsURL);
-            libManager.configLibraries(initConfig, librarySpecs, antLibraries);
+            libManager.configLibraries(initConfig, librarySpecs, antLibraries,
+                config.getLibraryPathsMap());
 
             librarySpecs.clear();
             // add any additional libraries.
-                for (Iterator i = config.getLibraryLocations(); i.hasNext(); ) {
-                    // try file first
-                    String libLocation = (String)i.next();
-                    libManager.loadLib(librarySpecs, libLocation);
-                }
-            libManager.configLibraries(initConfig, librarySpecs, antLibraries);
+            for (Iterator i = config.getLibraryLocations(); i.hasNext(); ) {
+                // try file first
+                String libLocation = (String)i.next();
+                libManager.loadLibs(librarySpecs, libLocation);
+            }
+            libManager.configLibraries(initConfig, librarySpecs, antLibraries,
+                config.getLibraryPathsMap());
 
-            addConfigLibPaths();
-
-            mainFrame = new Frame(antLibraries, initConfig, config);
         } catch (MalformedURLException e) {
             throw new ExecutionException("Unable to load Ant libraries", e);
         }
@@ -155,6 +161,12 @@ public class ExecutionManager {
         try {
             // start by validating the project we have been given.
             project.validate();
+
+            mainFrame = new Frame(antLibraries, initConfig, config);
+            for (Iterator j = eventSupport.getListeners(); j.hasNext(); ) {
+                BuildListener listener = (BuildListener)j.next();
+                mainFrame.addBuildListener(listener);
+            }
 
             mainFrame.setProject(project);
             mainFrame.setInitialProperties(commandProperties);
@@ -178,7 +190,9 @@ public class ExecutionManager {
      */
     public void addBuildListener(BuildListener listener) {
         eventSupport.addBuildListener(listener);
-        mainFrame.addBuildListener(listener);
+        if (mainFrame != null) {
+            mainFrame.addBuildListener(listener);
+        }
     }
 
     /**
@@ -188,35 +202,10 @@ public class ExecutionManager {
      */
     public void removeBuildListener(BuildListener listener) {
         eventSupport.removeBuildListener(listener);
-        mainFrame.removeBuildListener(listener);
-    }
-
-    /**
-     * Add the library paths from the AntConfig instance to the Ant
-     * Libraries.
-     *
-     * @exception ExecutionException if remote libraries are not allowed.
-     */
-    private void addConfigLibPaths()
-         throws ExecutionException {
-        // now add any additional library Paths specified by the config
-        for (Iterator i = config.getLibraryIds(); i.hasNext(); ) {
-            String libraryId = (String)i.next();
-            if (antLibraries.containsKey(libraryId)) {
-                AntLibrary antLib
-                     = (AntLibrary)antLibraries.get(libraryId);
-                List pathList = config.getLibraryPathList(libraryId);
-                for (Iterator j = pathList.iterator(); j.hasNext(); ) {
-                    URL pathElementURL = (URL)j.next();
-                    if (!pathElementURL.getProtocol().equals("file")
-                         && !config.isRemoteLibAllowed()) {
-                        throw new ExecutionException("Remote libpaths are not"
-                             + " allowed: " + pathElementURL);
-                    }
-                    antLib.addLibraryURL(pathElementURL);
-                }
-            }
+        if (mainFrame != null) {
+            mainFrame.removeBuildListener(listener);
         }
     }
+
 }
 

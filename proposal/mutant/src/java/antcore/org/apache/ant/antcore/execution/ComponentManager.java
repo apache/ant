@@ -53,9 +53,14 @@
  */
 package org.apache.ant.antcore.execution;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.ant.antcore.antlib.AntLibDefinition;
 import org.apache.ant.antcore.antlib.AntLibManager;
 import org.apache.ant.antcore.antlib.AntLibrary;
@@ -64,6 +69,7 @@ import org.apache.ant.antcore.antlib.DynamicLibrary;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.antlib.Converter;
 import org.apache.ant.common.antlib.StandardLibFactory;
+import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.util.ExecutionException;
 
@@ -83,6 +89,9 @@ public class ComponentManager implements ComponentService {
      * Tasks to handle special type conversions.
      */
     private Map converters = new HashMap();
+
+    /** This is the set of libraries whose converters have been loaded */
+    private Set loadedConverters = new HashSet();
 
     /** The factory objects for each library, indexed by the library Id */
     private Map libFactories = new HashMap();
@@ -106,17 +115,26 @@ public class ComponentManager implements ComponentService {
     private Map definitions = new HashMap();
 
     /**
+     * This map stores a list of additional paths for each library indexed
+     * by the libraryId
+     */
+    private Map libPathsMap;
+
+    /**
      * Constructor
      *
      * @param frame the frame containing this context
      * @param allowRemoteLibs true if remote libraries can be loaded though
      *      this service.
+     * @param configLibPaths the additional library paths specified in the
+     *      configuration
      */
-    protected ComponentManager(Frame frame,
-                               boolean allowRemoteLibs) {
+    protected ComponentManager(Frame frame, boolean allowRemoteLibs,
+                               Map configLibPaths) {
         this.frame = frame;
         libManager = new AntLibManager(allowRemoteLibs);
         dynamicLibraries = new HashMap();
+        libPathsMap = new HashMap(configLibPaths);
     }
 
     /**
@@ -132,9 +150,9 @@ public class ComponentManager implements ComponentService {
          throws ExecutionException {
         try {
             Map librarySpecs = new HashMap();
-            libManager.loadLib(librarySpecs, libLocation);
+            libManager.loadLibs(librarySpecs, libLocation);
             libManager.configLibraries(frame.getInitConfig(), librarySpecs,
-                antLibraries);
+                antLibraries, libPathsMap);
 
             if (importAll) {
                 Iterator i = librarySpecs.keySet().iterator();
@@ -181,6 +199,72 @@ public class ComponentManager implements ComponentService {
          throws ExecutionException {
         defineComponent(factory, loader, ComponentLibrary.TYPEDEF,
             typeName, className);
+    }
+
+    /**
+     * Add a library path for the given library
+     *
+     * @param libraryId the unique id of the library for which an additional
+     *      path is being defined
+     * @param libPath the library path (usually a jar)
+     * @exception ExecutionException if the path cannot be specified
+     */
+    public void addLibPath(String libraryId, URL libPath)
+         throws ExecutionException {
+        List libPaths = (List)libPathsMap.get(libraryId);
+        if (libPaths == null) {
+            libPaths = new ArrayList();
+            libPathsMap.put(libraryId, libPaths);
+        }
+        libPaths.add(libPath);
+
+        // If this library already exists give it the new path now
+        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
+        if (library != null) {
+            libManager.addLibPath(library, libPath);
+        }
+    }
+
+    /**
+     * Import a complete library into the current execution frame
+     *
+     * @param libraryId The id of the library to be imported
+     * @exception ExecutionException if the library cannot be imported
+     */
+    public void importLibrary(String libraryId) throws ExecutionException {
+        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
+        if (library == null) {
+            throw new ExecutionException("Unable to import library " + libraryId
+                 + " as it has not been loaded");
+        }
+        for (Iterator i = library.getDefinitionNames(); i.hasNext(); ) {
+            String defName = (String)i.next();
+            importLibraryDef(library, defName, null);
+        }
+        addLibraryConverters(library);
+    }
+
+    /**
+     * Import a single component from a library, optionally aliasing it to a
+     * new name
+     *
+     * @param libraryId the unique id of the library from which the
+     *      component is being imported
+     * @param defName the name of the component within its library
+     * @param alias the name under which this component will be used in the
+     *      build scripts. If this is null, the components default name is
+     *      used.
+     * @exception ExecutionException if the component cannot be imported
+     */
+    public void importComponent(String libraryId, String defName,
+                                String alias) throws ExecutionException {
+        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
+        if (library == null) {
+            throw new ExecutionException("Unable to import component from "
+                 + "library \"" + libraryId + "\" as it has not been loaded");
+        }
+        importLibraryDef(library, defName, alias);
+        addLibraryConverters(library);
     }
 
     /**
@@ -253,25 +337,6 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
-     * Import a complete library into this frame
-     *
-     * @param libraryId The id of the library to be imported
-     * @exception ExecutionException if the library cannot be imported
-     */
-    protected void importLibrary(String libraryId) throws ExecutionException {
-        AntLibrary library = (AntLibrary)antLibraries.get(libraryId);
-        if (library == null) {
-            throw new ExecutionException("Unable to import library " + libraryId
-                 + " as it has not been loaded");
-        }
-        for (Iterator i = library.getDefinitionNames(); i.hasNext(); ) {
-            String defName = (String)i.next();
-            importLibraryDef(library, defName, null);
-        }
-        addLibraryConverters(library);
-    }
-
-    /**
      * Import a single component from the given library
      *
      * @param library the library which provides the component
@@ -287,6 +352,9 @@ public class ComponentManager implements ComponentService {
         }
 
         AntLibDefinition libDef = library.getDefinition(defName);
+        frame.log("Adding component <" + defName + "> as <" + label
+             + "> from library \"" + library.getLibraryId() + "\", class: "
+             + libDef.getClassName(), MessageLevel.MSG_DEBUG);
         definitions.put(label, new ImportInfo(library, libDef));
     }
 
@@ -313,6 +381,7 @@ public class ComponentManager implements ComponentService {
         importLibraryDef(dynamicLibrary, componentName, null);
     }
 
+
     /**
      * Add the converters from the given library to those managed by this
      * frame.
@@ -323,7 +392,8 @@ public class ComponentManager implements ComponentService {
      */
     private void addLibraryConverters(AntLibrary library)
          throws ExecutionException {
-        if (!library.hasConverters()) {
+        if (!library.hasConverters()
+             || loadedConverters.contains(library.getLibraryId())) {
             return;
         }
 
@@ -351,6 +421,7 @@ public class ComponentManager implements ComponentService {
                     converters.put(converterTypes[j], converter);
                 }
             }
+            loadedConverters.add(library.getLibraryId());
         } catch (ClassNotFoundException e) {
             throw new ExecutionException("In Ant library \""
                  + library.getLibraryId() + "\" converter class "

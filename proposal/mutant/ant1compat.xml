@@ -59,7 +59,7 @@
     <include name="org/apache/tools/ant/AntClassLoader.java"/>
     <include name="org/apache/tools/ant/BuildEvent.java"/>
     <include name="org/apache/tools/ant/BuildListener.java"/>
-    <patternset refid="deprecated"/>
+    <!-- <patternset refid="deprecated"/> -->
     <patternset refid="toohard"/>
     <patternset refid="converted"/>
   </fileset>

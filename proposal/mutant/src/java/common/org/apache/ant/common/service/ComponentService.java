@@ -52,6 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.service;
+import java.net.URL;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.util.ExecutionException;
 
@@ -83,10 +84,22 @@ public interface ComponentService {
          throws ExecutionException;
 
     /**
+     * Add a library path to the given library. The library path is used in
+     * the construction of the library's classloader
+     *
+     * @param libraryId the library's unique identifier
+     * @param libPath the path to be added to the list of paths used by the
+     *      library.
+     * @exception ExecutionException if the path cannot be used.
+     */
+    void addLibPath(String libraryId, URL libPath) throws ExecutionException;
+
+    /**
      * Experimental - define a new type
      *
      * @param typeName the name by which this type will be referred
-     * @param factory the library factory object to create the type instances
+     * @param factory the library factory object to create the type
+     *      instances
      * @param loader the class loader to use to create the particular types
      * @param className the name of the class implementing the type
      * @exception ExecutionException if the type cannot be defined
@@ -99,7 +112,8 @@ public interface ComponentService {
      * Experimental - define a new task
      *
      * @param taskName the name by which this task will be referred
-     * @param factory the library factory object to create the task instances
+     * @param factory the library factory object to create the task
+     *      instances
      * @param loader the class loader to use to create the particular tasks
      * @param className the name of the class implementing the task
      * @exception ExecutionException if the task cannot be defined
@@ -108,5 +122,28 @@ public interface ComponentService {
                  String taskName, String className)
          throws ExecutionException;
 
+
+    /**
+     * Import a single component from a library, optionally aliasing it to a
+     * new name
+     *
+     * @param libraryId the unique id of the library from which the
+     *      component is being imported
+     * @param defName the name of the component within its library
+     * @param alias the name under which this component will be used in the
+     *      build scripts. If this is null, the components default name is
+     *      used.
+     * @exception ExecutionException if the component cannot be imported
+     */
+    void importComponent(String libraryId, String defName,
+                         String alias) throws ExecutionException;
+
+    /**
+     * Import a complete library into the current execution frame
+     *
+     * @param libraryId The id of the library to be imported
+     * @exception ExecutionException if the library cannot be imported
+     */
+    void importLibrary(String libraryId) throws ExecutionException;
 }
 

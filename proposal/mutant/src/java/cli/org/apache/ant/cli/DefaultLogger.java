@@ -59,7 +59,7 @@ import org.apache.ant.common.model.Target;
 import org.apache.ant.common.event.BuildEvent;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
-import org.apache.ant.common.util.MessageLevel;
+import org.apache.ant.common.event.MessageLevel;
 
 /**
  *  Writes build event to a PrintStream. Currently, it only writes which
@@ -235,20 +235,22 @@ public class DefaultLogger implements BuildLogger {
              = event.getPriority() == MessageLevel.MSG_ERR ? err : out;
 
         // Filter out messages based on priority
-        if (event.getPriority() <= messageOutputLevel 
-            && event.getModelElement() instanceof BuildElement) {
-            // Print out the name of the task if we're in one
-            BuildElement buildElement
-                 = (BuildElement)event.getModelElement();
-            String name = buildElement.getType();
+        if (event.getPriority() <= messageOutputLevel) {
+            
+            if (event.getModelElement() instanceof BuildElement) {
+                // Print out the name of the task if we're in one
+                BuildElement buildElement
+                     = (BuildElement)event.getModelElement();
+                String name = buildElement.getType();
 
-            if (!emacsMode) {
-                String msg = "[" + name + "] ";
-                int indentSize = LEFT_COLUMN_SIZE - msg.length();
-                for (int i = 0; i < indentSize; i++) {
-                    logTo.print(" ");
+                if (!emacsMode) {
+                    String msg = "[" + name + "] ";
+                    int indentSize = LEFT_COLUMN_SIZE - msg.length();
+                    for (int i = 0; i < indentSize; i++) {
+                        logTo.print(" ");
+                    }
+                    logTo.print(msg);
                 }
-                logTo.print(msg);
             }
 
             // Print the message

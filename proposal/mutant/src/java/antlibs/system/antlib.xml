@@ -1,9 +1,9 @@
 <antlib libid="ant.system" 
         home="http://jakarta.apache.org/ant">
 
-  <taskdef name="import" classname="org.apache.ant.antlib.system.Import"/>
   <taskdef name="libpath" classname="org.apache.ant.antlib.system.LibPath"/>
   <taskdef name="loadlib" classname="org.apache.ant.antlib.system.LoadLib"/>
+  <taskdef name="import" classname="org.apache.ant.antlib.system.Import"/>
 
   <taskdef name="ant" classname="org.apache.ant.antlib.system.Ant"/>
   <taskdef name="antcall" classname="org.apache.ant.antlib.system.AntCall"/>

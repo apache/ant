@@ -128,6 +128,18 @@ public class LoadLib extends AbstractTask {
         this.importAll = importAll;
     }
 
+    /**
+     * Validate this task is configured correctly
+     *
+     * @exception ExecutionException if the task is not configured correctly
+     */
+    public void validateComponent() throws ExecutionException {
+        if (url == null) {
+            throw new ExecutionException("A location from which to load "
+                 + "libraries must be provided");
+        }
+    }
+
 
     /**
      * Load the library or libraries and optiinally import their components
@@ -136,10 +148,6 @@ public class LoadLib extends AbstractTask {
      *      loaded.
      */
     public void execute() throws ExecutionException {
-        if (url == null) {
-            throw new ExecutionException("A location from which to load "
-                 + "libraries must be provided");
-        }
         AntContext context = getContext();
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);

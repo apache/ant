@@ -51,22 +51,24 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antlib.system;
-
-import org.apache.ant.common.antlib.AbstractTask;
+package org.apache.ant.common.event;
 
 /**
- * Task to add an additional classpath search path to the given library
+ * The levels at which a log message may be sent.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 27 January 2002
+ * @created 16 January 2002
  */
-public class LibPath extends AbstractTask {
-    /** The id of the library for which this additional path is being set */
-    private String libraryId;
-    
-    /** Add the libpath to the set of paths associated with the library */
-    public void execute() {
-    }
+public class MessageLevel {
+    /** Error message level */
+    public final static int MSG_ERR = 0;
+    /** Warnign message level */
+    public final static int MSG_WARN = 1;
+    /** Informational message level */
+    public final static int MSG_INFO = 2;
+    /** Verbose message level */
+    public final static int MSG_VERBOSE = 3;
+    /** Debug Message level */
+    public final static int MSG_DEBUG = 4;
 }
 

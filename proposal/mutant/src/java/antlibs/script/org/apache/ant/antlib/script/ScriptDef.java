@@ -51,24 +51,78 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antlib.system;
+package org.apache.ant.antlib.script;
 
 import org.apache.ant.common.antlib.AbstractTask;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
- * Task to import a component or components from a library
+ * Define a task using a script
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 27 January 2002
+ * @created 11 February 2002
  */
-public class Import extends AbstractTask {
-    /** The Ant LIbrary Id from which the component must be imported */
-    private String antlibId = null;
-    /** The name of the component to be imported */
-    private String componentName = null;
+public class ScriptDef extends AbstractTask {
+    /** The script factor to use */
+    private ScriptFactory factory;
 
-    /** Do thw work and import the components */
-    public void execute() {
+    /** the name by which this script will be activated */
+    private String name;
+
+    /** the scripting language used by the script */
+    private String language;
+
+    /** the script itself */
+    private String script = "";
+
+    /**
+     * set the name under which this script will be activated in a build
+     * file
+     *
+     * @param name the name of the script
+     */
+    public void setName(String name) {
+        this.name = name;
     }
+
+    /**
+     * Set the scripting language used by this script
+     *
+     * @param language the scripting language used by this script.
+     */
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    /**
+     * Define the script. The script itself is stored in the factory where
+     * it is retried by the ScriptBase instance
+     *
+     * @exception ExecutionException if the script cannot be defined
+     */
+    public void execute() throws ExecutionException {
+        // tell the factory about this script, under this name.
+        factory.defineScript(name, language, script);
+    }
+
+    /**
+     * Defines the script.
+     *
+     * @param text Sets the value for the script variable.
+     */
+    public void addText(String text) {
+        this.script += text;
+    }
+
+    /**
+     * Set the script factory that will be used to store the script for
+     * later execution
+     *
+     * @param factory the script factory used to store script information.
+     */
+    protected void setFactory(ScriptFactory factory) {
+        this.factory = factory;
+    }
+
 }
 

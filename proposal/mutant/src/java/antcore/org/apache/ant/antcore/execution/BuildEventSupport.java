@@ -191,13 +191,13 @@ public class BuildEventSupport {
     /**
      * Send a message event
      *
-     * @param element the build element with which the event is associated
+     * @param source the build element with which the event is associated
      * @param message the message to be sent
      * @param priority the priority of the message
      */
-    public void fireMessageLogged(ModelElement element,
+    public void fireMessageLogged(Object source,
                                   String message, int priority) {
-        BuildEvent event = new BuildEvent(element, message, priority);
+        BuildEvent event = new BuildEvent(source, message, priority);
         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
             BuildListener listener = (BuildListener)i.next();
             listener.messageLogged(event);

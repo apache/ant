@@ -97,7 +97,8 @@ public class DynamicLibrary implements ComponentLibrary {
     public DynamicLibrary(AntLibFactory factory, ClassLoader loader) {
         int dynamicId = 0;
         synchronized (DynamicLibrary.class) {
-            dynamicId = dynamicIdCounter++;
+            dynamicId = dynamicIdCounter;
+            dynamicIdCounter++;
         }
         this.libraryId = DYNAMIC_LIB_PREFIX + dynamicId;
         this.loader = loader;

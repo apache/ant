@@ -142,6 +142,18 @@ public class AntConfig {
         return libraryPathList;
     }
 
+
+    /**
+     * Get the map of library paths. This map contains a collection of List
+     * instances, indexed by the libraryIds. Each list is a set of
+     * additional classpath entries for the given library
+     *
+     * @return the library paths map
+     */
+    public Map getLibraryPathsMap() {
+        return libPaths;
+    }
+
     /**
      * Gets the libraryIds of the AntConfig
      *

@@ -62,16 +62,21 @@ import org.apache.ant.common.util.ExecutionException;
  * @see AntLibFactory
  */
 public class StandardLibFactory implements AntLibFactory {
+    /** The context the factory can use to interact with the core */
+    private AntContext context;
+
     /**
      * Create an instance of the given task class
      *
      * @param taskClass the class for which an instance is required
+     * @param localName the name within the library under which the task is
+     *      defined
      * @return an instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
      * @exception ExecutionException if there is a problem creating the task
      */
-    public Object createTaskInstance(Class taskClass)
+    public Object createTaskInstance(Class taskClass, String localName)
          throws InstantiationException, IllegalAccessException,
         ExecutionException {
         return taskClass.newInstance();
@@ -81,12 +86,14 @@ public class StandardLibFactory implements AntLibFactory {
      * Create an instance of the given type class
      *
      * @param typeClass the class for which an instance is required
+     * @param localName the name within the library under which the type is
+     *      defined, if any.
      * @return an instance of the required class
      * @exception InstantiationException if the class cannot be instantiated
      * @exception IllegalAccessException if the instance cannot be accessed
      * @exception ExecutionException if there is a problem creating the type
      */
-    public Object createTypeInstance(Class typeClass)
+    public Object createTypeInstance(Class typeClass, String localName)
          throws InstantiationException, IllegalAccessException,
         ExecutionException {
         return typeClass.newInstance();
@@ -99,7 +106,7 @@ public class StandardLibFactory implements AntLibFactory {
      * @exception ExecutionException if the factory cannot be initialized
      */
     public void init(AntContext context) throws ExecutionException {
-        // do nothing
+        this.context = context;
     }
 
     /**
@@ -130,6 +137,15 @@ public class StandardLibFactory implements AntLibFactory {
     public void registerCreatedElement(Object createdElement)
          throws ExecutionException {
         // do nothing
+    }
+
+    /**
+     * Gets the context of the factory
+     *
+     * @return the context object
+     */
+    protected AntContext getContext() {
+        return context;
     }
 
 }

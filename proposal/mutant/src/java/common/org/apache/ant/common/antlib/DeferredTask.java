@@ -51,70 +51,38 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.execution;
-
-import org.apache.ant.antcore.antlib.AntLibDefinition;
-import org.apache.ant.antcore.antlib.ComponentLibrary;
+package org.apache.ant.common.antlib;
 
 /**
- * This class is used to maintain information about imports
+ * A deferred task is one where the task task responsibility for configuring
+ * itself at execution time. The attributes and nested elements are stored
+ * by the task for later use
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 16 January 2002
+ * @created 11 February 2002
  */
-public class ImportInfo {
-    /** the component library from which the import is made */
-    private ComponentLibrary library;
-    /** the library definition information */
-    private AntLibDefinition libDefinition;
+public interface DeferredTask extends Task {
+    /**
+     * Sets the attribute of the DeferredTask
+     *
+     * @param name the attribute name
+     * @param attributeValue the new attribute value
+     */
+    void setAttribute(String name, String attributeValue);
 
     /**
-     * ImportInfo records what has been imported from an Ant Library
+     * Add a nested element
      *
-     * @param library The library from which the import was made
-     * @param libDefinition the library definition information
+     * @param nestedElementName the name of the nested element
+     * @param value the object which is the nested element
      */
-    public ImportInfo(ComponentLibrary library,
-                      AntLibDefinition libDefinition) {
-        this.library = library;
-        this.libDefinition = libDefinition;
-    }
+    void addElement(String nestedElementName, Object value);
 
     /**
-     * Get the classname that has been imported
+     * Add any text content
      *
-     * @return the classname that was imported.
+     * @param text the value of the content
      */
-    public String getClassName() {
-        return libDefinition.getClassName();
-    }
-
-    /**
-     * Get the library from which the import was made
-     *
-     * @return the library from which the import was made
-     */
-    public ComponentLibrary getComponentLibrary() {
-        return library;
-    }
-
-    /**
-     * Get the type of the definition that was imported
-     *
-     * @return the type of definition
-     */
-    public int getDefinitionType() {
-        return libDefinition.getDefinitionType();
-    }
-
-    /**
-     * Get the name of the component within its library.
-     *
-     * @return the name of the component within its library
-     */
-    public String getLocalName() {
-        return libDefinition.getDefinitionName();
-    }
-
+    void addText(String text);
 }
 
