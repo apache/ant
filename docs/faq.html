@@ -283,10 +283,15 @@
         <code>web-inf</code> or JAR files with a lower-case
         <code>meta-inf</code> directory.
       </a></li>
-                <li><a href="#NoClassDefFoundError">
+                <li><a href="#InstantiationException">
   I installed Ant 1.6.x and now get
         <code>Exception in thread "main" java.lang.NoClassDefFoundError:
- org/apache/tools/ant/launch/Launcher</code>
+        </code>
+      
+      </a></li>
+                <li><a href="#NoClassDefFoundError">
+  I installed Ant 1.6.x and now get
+        <code>java.lang.InstantiationException: org.apache.tools.ant.Main</code>
       
       </a></li>
             </ul>
@@ -1110,10 +1115,25 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
         section, check the "Allow all upper case files names" box.  The META-INF and
         WEB-INF will look correct.</p>
                     <p class="faq">
-      <a name="NoClassDefFoundError"></a>
+      <a name="InstantiationException"></a>
       I installed Ant 1.6.x and now get
         <code>Exception in thread "main" java.lang.NoClassDefFoundError:
- org/apache/tools/ant/launch/Launcher</code>
+        </code>
+      
+    </p>
+                  <p>
+          The cause of this is that there is an old version of ant somewhere in the
+          class path or configuration.
+        </p>
+                        <p>
+          A version of this problem happens with jars that are in the classpath
+          that include an embedded copy of ant classes.
+          An example of this is some copies of weblogic.jar.
+        </p>
+                    <p class="faq">
+      <a name="NoClassDefFoundError"></a>
+      I installed Ant 1.6.x and now get
+        <code>java.lang.InstantiationException: org.apache.tools.ant.Main</code>
       
     </p>
                   <p>

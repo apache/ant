@@ -793,10 +793,27 @@ shell-prompt> m4 foo.m4 > foo
       </answer>
     </faq>
 
-    <faq id="NoClassDefFoundError">
+    <faq id="InstantiationException">
       <question>I installed Ant 1.6.x and now get
         <code>Exception in thread "main" java.lang.NoClassDefFoundError:
- org/apache/tools/ant/launch/Launcher</code>
+        </code>
+      </question>
+      <answer>
+        <p>
+          The cause of this is that there is an old version of ant somewhere in the
+          class path or configuration.
+        </p>
+        <p>
+          A version of this problem happens with jars that are in the classpath
+          that include an embedded copy of ant classes.
+          An example of this is some copies of weblogic.jar.
+        </p>
+      </answer>
+    </faq>
+
+    <faq id="NoClassDefFoundError">
+      <question>I installed Ant 1.6.x and now get
+        <code>java.lang.InstantiationException: org.apache.tools.ant.Main</code>
       </question>
       <answer>
         <p>
