@@ -86,8 +86,24 @@ public class Permissions {
     private java.security.Permissions granted = null;
     private SecurityManager origSm = null;
     private boolean active = false;
-    
-    /** 
+    private boolean delegateToOldSM = false;
+
+    /**
+     * default constructor
+     */
+    public Permissions() {
+    }
+    /**
+     * create a new set of permissions
+     * @param delegateToOldSM  if <code>true</code> the old security manager
+     * will be used if the permission has not been explicitly granted or revoked
+     * in this instance
+     * if false, it behaves like the default constructor
+     */
+    public Permissions(boolean delegateToOldSM) {
+        this.delegateToOldSM = delegateToOldSM;
+    }
+    /**
      * Adds a permission to be granted.
      * @param perm The Permissions.Permission to be granted. 
      */
@@ -194,19 +210,42 @@ public class Permissions {
          * The central point in checking permissions.
          * Overridden from java.lang.SecurityManager
          * 
-         * @parem perm The permission requested. 
+         * @param perm The permission requested.
          */
         public void checkPermission(java.security.Permission perm) {
             if (active) {
-                if (!granted.implies(perm)) {
-                    throw new SecurityException("Permission " + perm +" was not granted.");
-                }
-                for (Iterator i = revokedPermissions.listIterator(); i.hasNext();) {
-                    if (((Permissions.Permission)i.next()).matches(perm)) {
-                        throw new SecurityException("Permission " + perm +" was revoked.");
+                if (delegateToOldSM && !perm.getName().equals("exitVM")) {
+                    boolean permOK = false;
+                    if (granted.implies(perm)) {
+                        permOK = true;
                     }
+                    checkRevoked(perm);
+                    /*
+                     if the permission was not explicitly granted or revoked
+                     the original security manager will do its work
+                    */
+                    if (!permOK && origSm != null) {
+                        origSm.checkPermission(perm);
+                    }
+                }  else {
+                    if (!granted.implies(perm)) {
+                        throw new SecurityException("Permission " + perm + " was not granted.");
+                    }
+                    checkRevoked(perm);
                 }
             }
+        }
+        /**
+         * throws an exception if this permission is revoked
+         * @param perm the permission being checked
+         */
+        private void checkRevoked(java.security.Permission perm) {
+            for (Iterator i = revokedPermissions.listIterator(); i.hasNext();) {
+                if (((Permissions.Permission)i.next()).matches(perm)) {
+                    throw new SecurityException("Permission " + perm + " was revoked.");
+                }
+            }
+
         }
     }
 
@@ -279,7 +318,7 @@ public class Permissions {
             
             if (name != null) {
                 if (name.endsWith("*")) {
-                    if (!perm.getName().startsWith(name.substring(0,name.length()-1))) {
+                    if (!perm.getName().startsWith(name.substring(0, name.length() - 1))) {
                         return false;
                     }
                 } else {
@@ -304,7 +343,7 @@ public class Permissions {
   
         /** 
          * Parses the actions into a set of separate strings.
-         * @param action The actions to be parsed.
+         * @param actions The actions to be parsed.
          */
         private Set parseActions(String actions) {
             Set result = new HashSet();
@@ -317,9 +356,12 @@ public class Permissions {
             }
             return result;
         }
-        
+        /**
+         * get a string description of the permissions
+         * @return  string description of the permissions
+         */
         public String toString() {
-            return ("Permission: " + className + " (\""+name+"\", \""+actions+"\")");
+            return ("Permission: " + className + " (\"" + name + "\", \"" + actions + "\")");
         }
     }   
 }
