@@ -90,15 +90,10 @@
    <echo> dotnetapps.found=${dotnetapps.found}</echo>
 
    <condition property="mono.executable" value="mono">
-      <and>
-        <not>
-          <os family="mac"/>
-        </not>
         <or>
           <available file="mono"     filepath="${env.PATH}" />
           <available file="mono.exe" filepath="${env.PATH}" />
         </or>
-      </and>
    </condition>
    <property name="mono.executable" value="mint"/>
 
