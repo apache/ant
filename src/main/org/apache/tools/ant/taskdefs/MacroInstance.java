@@ -146,7 +146,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         }
     }
 
-    private String macroSubsAnt(String s, Map macroMapping) {
+    private String macroSubs(String s, Map macroMapping) {
         StringBuffer ret = new StringBuffer();
         StringBuffer macroName = new StringBuffer();
         boolean inMacro = false;
@@ -177,59 +177,6 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         }
 
         return ret.toString();
-    }
-
-    private String macroSubsXPath(String s, Map macroMapping) {
-        StringBuffer ret = new StringBuffer();
-        StringBuffer macroName = new StringBuffer();
-        boolean inMacro = false;
-        for (int i = 0; i < s.length(); ++i) {
-            char c = s.charAt(i);
-            if (!inMacro) {
-                if (c == '@') {
-                    inMacro = true;
-                } else {
-                    ret.append(c);
-                }
-            } else {
-                if (MacroDef.isValidNameCharacter(c)) {
-                    macroName.append(c);
-                } else {
-                    inMacro = false;
-                    String name = macroName.toString();
-                    String value = (String) macroMapping.get(name);
-                    if (value == null) {
-                        ret.append("@" + name);
-                    } else {
-                        ret.append(value);
-                    }
-                    if (c == '@') {
-                        inMacro = true;
-                    } else {
-                        ret.append(c);
-                    }
-                    macroName = new StringBuffer();
-                }
-            }
-        }
-        if (inMacro) {
-            String name = macroName.toString();
-            String value = (String) macroMapping.get(name);
-            if (value == null) {
-                ret.append("@" + name);
-            } else {
-                ret.append(value);
-            }
-        }
-        return ret.toString();
-    }
-
-    private String macroSubs(String s, Map macroMapping) {
-        if (macroDef.getAttributeStyle() == MacroDef.AttributeStyle.ANT) {
-            return macroSubsAnt(s, macroMapping);
-        } else {
-            return macroSubsXPath(s, macroMapping);
-        }
     }
 
     private UnknownElement copy(UnknownElement ue) {

@@ -45,14 +45,4 @@
     </nested>
   </target>
 
-  <target name="xpathstyle">
-    <macrodef name="testing" attributestyle="xpath">
-      <attribute name="abc"/>
-      <sequential>
-        <echo>attribute is @abc@abc</echo>
-      </sequential>
-    </macrodef>
-
-    <testing abc="this is a test"/>
-  </target>
 </project>
