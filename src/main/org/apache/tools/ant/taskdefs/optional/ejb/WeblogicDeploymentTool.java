@@ -579,8 +579,8 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                                     //File other then class changed   rebuild
                                     log("Non class file " + genericEntry.getName() + " has changed",Project.MSG_VERBOSE);
                                     rebuild = true;
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
