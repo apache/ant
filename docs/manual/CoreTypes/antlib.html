@@ -17,10 +17,11 @@
     <h3>Description</h3>
     <p>
       An antlib file is an xml file with a root element of "antlib".
-      Antlib is actually a <a href="sequential.html">Sequential</a> task with
-      special treatment for tasks that are ant definition tasks - like
+      Antlib's elements are ant definition tasks - like
       <a href="../CoreTasks/typedef.html">Typedef</a>
-      and <a href="../CoreTasks/taskdef.html">Taskdef</a>.
+      and <a href="../CoreTasks/taskdef.html">Taskdef</a>,
+      or any ant task that implements
+      <code>org.apache.tools.ant.taskdefs.AntlibInterface</code>.
     </p>
     <p>
       A group of tasks and types may be defined together in an antlib
@@ -149,11 +150,6 @@
       </pre>
     </blockquote>
     <h3>Other examples and comments</h3>
-    <p>
-      Althought the primary use of antlibs are ant definitions, one
-      may use any task or type in an antlib. This should
-      be treated with caution.
-    </p>
     <p>
       Antlibs may make use of other antlibs.
     </p>
