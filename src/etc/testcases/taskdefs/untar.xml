@@ -16,4 +16,8 @@
     <untar src="expected/asf-logo.gif.tar" dest="." />
   </target>
 
+  <target name="srcDirTest">
+    <untar src="." dest="." />
+  </target>
+
 </project>

@@ -35,24 +35,13 @@ to perform unarchival upon.
   <tr>
     <td valign="top">dest</td>
     <td valign="top">directory where to store the expanded files.</td>
-    <td align="center" valign="top">Yes, if outfile is not specified.</td>
+    <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
     <td valign="top">overwrite</td>
     <td valign="top">Overwrite files, even if they are newer than the
       corresponding entries in the archive (true or false, default is
       true).</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-  <tr>
-    <td valign="top">outfile</td>
-    <td valign="top">List the contents of the archive into this file.</td>
-    <td align="center" valign="top">Yes, if dest is not specified.</td>
-  </tr>
-  <tr>
-    <td valign="top">verbose</td>
-    <td valign="top">Include file details when listing contents of
-    the archive into outfile? Defaults to <I>false</I>.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -70,9 +59,7 @@ to perform unarchival upon.
 <blockquote>
 <p><pre>
 &lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot;
-       dest=&quot;${tools.home}&quot;
-       outfile=&quot;${outfile}&quot;
-       vebose=&quot;on&quot;&gt;
+       dest=&quot;${tools.home}&quot;&gt;
     &lt;patternset&gt;
         &lt;include name=&quot;**/*.java&quot;/&gt;
         &lt;exclude name=&quot;**/Test*.java&quot;/&gt;
@@ -82,9 +69,7 @@ to perform unarchival upon.
 </blockquote>
 <blockquote>
 <p><pre>
-&lt;unzip dest=&quot;${tools.home}&quot;
-       outfile=&quot;${outfile}&quot;
-       vebose=&quot;on&quot;&gt;
+&lt;unzip dest=&quot;${tools.home}&quot;&gt;
     &lt;patternset&gt;
         &lt;include name=&quot;**/*.java&quot;/&gt;
         &lt;exclude name=&quot;**/Test*.java&quot;/&gt;

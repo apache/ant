@@ -12,6 +12,10 @@ Changes that could break older environments:
 
 * <gzip> will throw an exception if your src attribute points to a directory.
 
+* Unjar, Unzip and Unwar will throw an exception if the Src attribute
+  represents a directory.  Support for nested filesets is provided
+  instead.
+
 Fixed bugs:
 -----------
 
@@ -41,10 +45,9 @@ Fixed bugs:
 
 Other changes:
 --------------
-* Attributes outfile and verbose added to Unjar, Untar, Unwar and Unzip.
-  These tasks now support patternsets to select files from an archive
-  for extraction.  Filesets may be used to select archived files for
-  unarchival.
+* Unjar, Untar, Unwar and Unzip now support patternsets to 
+  select files from an archive for extraction.  Filesets may be 
+  used to select archived files for unarchival.
 
 * Javac task allows debug levels to be spcified.  Debug levels
   will have an effect only when the modern compiler is used.

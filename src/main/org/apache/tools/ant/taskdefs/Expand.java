@@ -60,15 +60,12 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
 import org.apache.tools.ant.util.FileUtils;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Date;
 import java.util.Vector;
 import java.util.zip.ZipInputStream;
@@ -82,16 +79,11 @@ import java.util.zip.ZipEntry;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class Expand extends MatchingTask {
-    protected File dest;
-    protected File source; // req
-    protected File outFile;
-    protected boolean overwrite = true;
-    protected boolean verbose;
-    protected PrintWriter pw = null;
-    protected BufferedWriter bw = null;
-    protected FileWriter fw = null;
-    protected Vector patternsets = new Vector();
-    protected Vector filesets = new Vector();
+    private File dest; //req
+    private File source; // req
+    private boolean overwrite = true;
+    private Vector patternsets = new Vector();
+    private Vector filesets = new Vector();
 
     /**
      * Do the work.
@@ -107,58 +99,22 @@ public class Expand extends MatchingTask {
             throw new BuildException("src attribute and/or filesets must be specified");
         }
 
-        if (dest == null && outFile == null) {
+        if (dest == null) {
             throw new BuildException(
-                "Dest and/or the OutFile attribute " +
-                "must be specified");
+                "Dest attribute must be specified");
         }
 
-        if (dest != null && dest.exists() && !dest.isDirectory()) {
+        if (dest.exists() && !dest.isDirectory()) {
             throw new BuildException("Dest must be a directory.", location);
-        }
-
-        if (verbose && outFile == null) {
-            throw new BuildException(
-                "Verbose can be set only when OutFile is " +
-                "specified");
         }
 
         FileUtils fileUtils = FileUtils.newFileUtils();
 
-        try {
-            if (outFile != null) {
-                if (outFile.isDirectory()) {
-                    throw new BuildException("Outfile " + outFile
-                        + " must not be a directory.");
-                }
-                if (!outFile.exists()) {
-                    File parent = new File(outFile.getParent());
-                    if (!parent.exists()) {
-                        if (!parent.mkdirs()) {
-                            throw new BuildException("Unable to create "
-                                + outFile);
-                        }
-                    }
-                }
-                fw = new FileWriter(outFile);
-                bw = new BufferedWriter(fw);
-                pw = new PrintWriter(bw, true);
-            }
-        } catch (IOException ioe) {
-            throw new BuildException(ioe.getMessage(), location);
-        }
         if (source != null) {
             if (source.isDirectory()) {
-                // get all the files in the descriptor directory
-                DirectoryScanner ds = super.getDirectoryScanner(source);
-
-                String[] files = ds.getIncludedFiles();
-                for (int i = 0; i < files.length; ++i) {
-                    File file = new File(source, files[i]);
-                    expandFile(fileUtils, file, dest);
-                }
-            }
-            else {
+                throw new BuildException("Src must not be a directory." +
+                    " Use nested filesets instead.", location);
+            } else {
                 expandFile(fileUtils, source, dest);
             }
         }
@@ -175,21 +131,6 @@ public class Expand extends MatchingTask {
                 }
             }
         }
-        if (pw != null) {
-            pw.close();
-        }
-        if (bw != null) {
-            try {
-                bw.close();
-            } catch (IOException ioe1) {}
-        }
-        if (fw != null) {
-            try {
-                fw.close();
-            } catch (IOException ioe1) {
-                //Oh, well!  We did our best
-            }
-        }
     }
 
     /*
@@ -204,15 +145,12 @@ public class Expand extends MatchingTask {
 
             while ((ze = zis.getNextEntry()) != null) {
                 extractFile(fileUtils, srcF, dir, zis,
-                            ze.getName(), ze.getSize(),
+                            ze.getName(),
                             new Date(ze.getTime()),
                             ze.isDirectory());
             }
 
-            if (dest != null) {
-                log("expand complete", Project.MSG_VERBOSE );
-            }
-
+            log("expand complete", Project.MSG_VERBOSE );
         } catch (IOException ioe) {
             throw new BuildException("Error while expanding " + srcF.getPath(), ioe);
         } finally {
@@ -227,20 +165,8 @@ public class Expand extends MatchingTask {
 
     protected void extractFile(FileUtils fileUtils, File srcF, File dir,
                                InputStream compressedInputStream,
-                               String entryName, long entrySize,
+                               String entryName,
                                Date entryDate, boolean isDirectory)
-                               throws IOException {
-        extractFile(fileUtils, srcF, dir, compressedInputStream,
-                    entryName, entrySize, entryDate, isDirectory,
-                    null, null);
-
-    }
-
-    protected void extractFile(FileUtils fileUtils, File srcF, File dir,
-                               InputStream compressedInputStream,
-                               String entryName, long entrySize,
-                               Date entryDate, boolean isDirectory,
-                               String modeStr, String userGroup)
                                throws IOException {
 
         if (patternsets != null && patternsets.size() > 0) {
@@ -275,81 +201,50 @@ public class Expand extends MatchingTask {
             }
         }
 
-        if (dest != null) {
-            log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
-        }
-
-        if (outFile != null) {
-            if (verbose) {
-                StringBuffer sb = new StringBuffer();
-                if (modeStr != null) {
-                    sb.append(modeStr);
-                    sb.append(' ');
-                }
-                if (userGroup != null) {
-                    sb.append(userGroup);
-                    sb.append(' ');
-                }
-                String s = Long.toString(entrySize);
-                int len = s.length();
-                for(int i = 6 - len; i > 0; i--) {
-                    sb.append(' ');
-                }
-                sb.append(s)
-                  .append(' ')
-                  .append(entryDate.toString());
-                sb.append(' ')
-                  .append(entryName);
-                pw.println(sb);
-            } else {
-                pw.println(entryName);
+        log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
+        File f = fileUtils.resolveFile(dir, entryName);
+        try {
+            if (!overwrite && f.exists()
+                && f.lastModified() >= entryDate.getTime()) {
+                log("Skipping " + f + " as it is up-to-date",
+                    Project.MSG_DEBUG);
+                return;
             }
-        }
-        if (dest != null) {
-            File f = fileUtils.resolveFile(dir, entryName);
-            try {
-                if (!overwrite && f.exists()
-                    && f.lastModified() >= entryDate.getTime()) {
-                    log("Skipping " + f + " as it is up-to-date",
-                        Project.MSG_DEBUG);
-                    return;
-                }
 
-                log("expanding " + entryName + " to "+ f,
-                    Project.MSG_VERBOSE);
-                // create intermediary directories - sometimes zip don't add them
-                File dirF= fileUtils.getParentFile(f);
-                dirF.mkdirs();
+            log("expanding " + entryName + " to "+ f,
+                Project.MSG_VERBOSE);
+            // create intermediary directories - sometimes zip don't add them
+            File dirF= fileUtils.getParentFile(f);
+            dirF.mkdirs();
 
-                if (isDirectory) {
-                    f.mkdirs();
-                } else {
-                    byte[] buffer = new byte[1024];
-                    int length = 0;
-                    FileOutputStream fos = null;
-                    try {
-                        fos = new FileOutputStream(f);
-                        
-                        while ((length =
-                                compressedInputStream.read(buffer)) >= 0) {
-                            fos.write(buffer, 0, length);
-                        }
-                        
-                        fos.close();
-                        fos = null;
-                    } finally {
-                        if (fos != null) {
-                            try {
-                                fos.close();
-                            } catch (IOException e) {}
-                        }
+            if (isDirectory) {
+                f.mkdirs();
+            } else {
+                byte[] buffer = new byte[1024];
+                int length = 0;
+                FileOutputStream fos = null;
+                try {
+                    fos = new FileOutputStream(f);
+
+                    while ((length =
+                            compressedInputStream.read(buffer)) >= 0) {
+                        fos.write(buffer, 0, length);
+                    }
+
+                    fos.close();
+                    fos = null;
+                } finally {
+                    if (fos != null) {
+                        try {
+                            fos.close();
+                        } catch (IOException e) {}
                     }
                 }
-                    
-                fileUtils.setFileLastModified(f, entryDate.getTime());
-            } catch( FileNotFoundException ex ) {
-                log("Unable to expand to file " + f.getPath(), Project.MSG_WARN);
             }
+
+            fileUtils.setFileLastModified(f, entryDate.getTime());
+        } catch( FileNotFoundException ex ) {
+            log("Unable to expand to file " + f.getPath(), Project.MSG_WARN);
         }
 
     }
@@ -379,23 +274,6 @@ public class Expand extends MatchingTask {
      */
     public void setOverwrite(boolean b) {
         overwrite = b;
-    }
-
-    /**
-     * Set the output file to be used to store the list of the
-     * archive's contents.
-     *
-     * @param outFile the output file to be used.
-     */
-    public void setOutfile(File outFile) {
-        this.outFile = outFile;
-    }
-
-    /**
-     * Set the verbose mode for the contents-list file.
-     */
-    public void setVerbose(boolean verbose) {
-        this.verbose = verbose;
     }
 
     /**

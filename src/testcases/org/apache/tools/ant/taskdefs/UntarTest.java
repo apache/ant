@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.taskdefs;
- 
+
 import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
@@ -61,13 +61,13 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class UntarTest extends BuildFileTest { 
-    
-    public UntarTest(String name) { 
+public class UntarTest extends BuildFileTest {
+
+    public UntarTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/untar.xml");
     }
 
@@ -81,12 +81,16 @@ public class UntarTest extends BuildFileTest {
         assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
-    
+
     public void testTestTarTask() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testTarTask");
         assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
-    
+
+    public void testSrcDirTest() throws java.io.IOException {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        expectBuildException("srcDirTest", "Src cannot be a directory.");
+    }
 }
