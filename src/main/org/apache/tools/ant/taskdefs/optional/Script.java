@@ -97,6 +97,8 @@ public class Script extends Task {
             addBeans(project.getTargets());
             addBeans(project.getReferences());
 
+            beans.put("project", getProject());
+
             BSFManager manager = new BSFManager ();
 
             for (Enumeration e = beans.keys() ; e.hasMoreElements() ;) {
