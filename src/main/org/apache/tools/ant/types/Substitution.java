@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,10 +38,15 @@ public class Substitution extends DataType {
 
     private String expression;
 
+    /** Constructor for Substitution. */
     public Substitution() {
         this.expression = null;
     }
 
+    /**
+     * Set the pattern string for this regular expression substitution.
+     * @param expression the regular expression to use
+     */
     public void setExpression(String expression) {
         this.expression = expression;
     }
@@ -49,6 +54,9 @@ public class Substitution extends DataType {
     /***
      * Gets the pattern string for this RegularExpression in the
      * given project.
+     * @param p the project to look for the regular expression if this object is
+     *          a reference
+     * @return the pattern string
      */
     public String getExpression(Project p) {
         if (isReference()) {
@@ -60,7 +68,9 @@ public class Substitution extends DataType {
 
     /***
      * Get the RegularExpression this reference refers to in
-     * the given project.  Check for circular references too
+     * the given project.  Check for circular references too.
+     * @param p the project to look for the regular expression reference
+     * @return the resolved reference
      */
     public Substitution getRef(Project p) {
         if (!isChecked()) {

@@ -72,7 +72,7 @@ public class ZipScanner extends DirectoryScanner {
 
     /**
      * Sets encoding of file names.
-     *
+     * @param encoding the encoding format
      * @since Ant 1.6
      */
     public void setEncoding(String encoding) {
@@ -166,7 +166,7 @@ public class ZipScanner extends DirectoryScanner {
 
     /**
      * @param name path name of the file sought in the archive
-     *
+     * @return the resource
      * @since Ant 1.5.2
      */
     public Resource getResource(String name) {

@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -86,6 +86,7 @@ public class Permissions {
      * subject to these Permissions. Note that setting the SecurityManager too early may
      * prevent your part from starting, as for instance changing classloaders may be prohibited.
      * The classloader for the new situation is supposed to be present.
+     * @throws BuildException on error
      */
     public void setSecurityManager() throws BuildException {
         origSm = System.getSecurityManager();
@@ -110,7 +111,8 @@ public class Permissions {
             if (p.getClassName() == null) {
                 throw new BuildException("Granted permission " + p + " does not contain a class.");
             } else {
-                java.security.Permission perm =  new UnresolvedPermission(p.getClassName(), p.getName(), p.getActions(), null);
+                java.security.Permission perm =
+                    new UnresolvedPermission(p.getClassName(), p.getName(), p.getActions(), null);
                 granted.add(perm);
             }
         }
@@ -153,7 +155,8 @@ public class Permissions {
     private class MySM extends SecurityManager {
 
         /**
-         * Exit is treated in a special way in order to be able to return the exit code towards tasks.
+         * Exit is treated in a special way in order to be able to return the exit code
+         * towards tasks.
          * An ExitException is thrown instead of a simple SecurityException to indicate the exit
          * code.
          * Overridden from java.lang.SecurityManager

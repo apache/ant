@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -62,14 +62,23 @@ public class ZipFileSet extends FileSet {
     private boolean fileModeHasBeenSet = false;
     private boolean dirModeHasBeenSet  = false;
 
+    /** Constructor for ZipFileSet */
     public ZipFileSet() {
         super();
     }
 
+    /**
+     * Constructor using a fileset arguement.
+     * @param fileset the fileset to use
+     */
     protected ZipFileSet(FileSet fileset) {
         super(fileset);
     }
 
+    /**
+     * Constructor using a zipfileset arguement.
+     * @param fileset the zipfileset to use
+     */
     protected ZipFileSet(ZipFileSet fileset) {
         super(fileset);
         srcFile = fileset.srcFile;
@@ -85,6 +94,8 @@ public class ZipFileSet extends FileSet {
     /**
      * Set the directory for the fileset.  Prevents both "dir" and "src"
      * from being specified.
+     * @param dir the directory for the fileset
+     * @throws BuildException on error
      */
     public void setDir(File dir) throws BuildException {
         if (isReference()) {
@@ -118,6 +129,8 @@ public class ZipFileSet extends FileSet {
      * Get the zip file from which entries will be extracted.
      * References are not followed, since it is not possible
      * to have a reference to a ZipFileSet, only to a FileSet.
+     * @param p the project to use
+     * @return the source file
      */
     public File getSrc(Project p) {
         if (isReference()) {
@@ -141,6 +154,8 @@ public class ZipFileSet extends FileSet {
 
     /**
      * Return the prefix prepended to entries in the zip file.
+     * @param p the project to use
+     * @return the prefix
      */
     public String getPrefix(Project p) {
         if (isReference()) {
@@ -164,6 +179,8 @@ public class ZipFileSet extends FileSet {
 
     /**
      * Return the full pathname of the single entry in this fileset.
+     * @param p the project to use
+     * @return the full path
      */
     public String getFullpath(Project p) {
         if (isReference()) {
@@ -176,6 +193,8 @@ public class ZipFileSet extends FileSet {
      * Return the DirectoryScanner associated with this FileSet.
      * If the ZipFileSet defines a source Zip file, then a ZipScanner
      * is returned instead.
+     * @param p the project to use
+     * @return a directory scanner
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
         if (isReference()) {
@@ -197,7 +216,7 @@ public class ZipFileSet extends FileSet {
      * A 3 digit octal string, specify the user, group and
      * other modes in the standard Unix fashion;
      * optional, default=0644
-     *
+     * @param octalString a <code>String</code> value
      * @since Ant 1.5.2
      */
     public void setFileMode(String octalString) {
@@ -207,6 +226,9 @@ public class ZipFileSet extends FileSet {
     }
 
     /**
+     * Get the mode of the zip fileset
+     * @param p the project to use
+     * @return the mode
      * @since Ant 1.5.2
      */
     public int getFileMode(Project p) {
@@ -218,7 +240,7 @@ public class ZipFileSet extends FileSet {
 
     /**
      * Whether the user has specified the mode explicitly.
-     *
+     * @return true if it has been set
      * @since Ant 1.6
      */
     public boolean hasFileModeBeenSet() {
@@ -232,6 +254,7 @@ public class ZipFileSet extends FileSet {
      * A 3 digit octal string, specify the user, group and
      * other modes in the standard Unix fashion;
      * optional, default=0755
+     * @param octalString a <code>String</code> value
      *
      * @since Ant 1.5.2
      */
@@ -242,6 +265,9 @@ public class ZipFileSet extends FileSet {
     }
 
     /**
+     * Get the dir mode of the zip fileset
+     * @param p the project to use
+     * @return the mode
      * @since Ant 1.5.2
      */
     public int getDirMode(Project p) {
@@ -254,6 +280,7 @@ public class ZipFileSet extends FileSet {
     /**
      * Whether the user has specified the mode explicitly.
      *
+     * @return true if it has been set
      * @since Ant 1.6
      */
     public boolean hasDirModeBeenSet() {
@@ -266,6 +293,8 @@ public class ZipFileSet extends FileSet {
     /**
      * A ZipFileset accepts another ZipFileSet or a FileSet as reference
      * FileSets are often used by the war task for the lib attribute
+     * @param p the project to use
+     * @return the abstract fileset instance
      */
     protected AbstractFileSet getRef(Project p) {
         if (!isChecked()) {
@@ -293,6 +322,7 @@ public class ZipFileSet extends FileSet {
     /**
      * Return a ZipFileSet that has the same properties
      * as this one.
+     * @return the cloned zipFileSet
      * @since Ant 1.6
      */
     public Object clone() {

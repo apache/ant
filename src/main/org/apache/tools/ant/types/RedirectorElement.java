@@ -20,11 +20,8 @@ import java.io.File;
 import java.util.Vector;
 import java.util.ArrayList;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Redirector;
-import org.apache.tools.ant.types.DataType;
 
 /**
  * Element representation of a <CODE>Redirector</CODE>.
@@ -163,6 +160,8 @@ public class RedirectorElement extends DataType {
      *
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>
+     * @param r the reference to use
+     * @throws BuildException on error
      */
     public void setRefid(Reference r) throws BuildException {
         if (usingInput
