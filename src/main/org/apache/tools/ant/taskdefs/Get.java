@@ -189,8 +189,6 @@ public class Get extends Task {
             //newer. Some protocols (FTP) dont include dates, of
             //course.
 
-            FileOutputStream fos = new FileOutputStream(dest);
-
             InputStream is = null;
             for (int i = 0; i < 3 ; i++) {
                 try {
@@ -209,20 +207,26 @@ public class Get extends Task {
                                           location);
             }
 
-            byte[] buffer = new byte[100 * 1024];
-            int length;
-
-            while ((length = is.read(buffer)) >= 0) {
-                fos.write(buffer, 0, length);
-                if (verbose) {
-                    System.out.print(".");
+            FileOutputStream fos = new FileOutputStream(dest);
+            try {
+                byte[] buffer = new byte[100 * 1024];
+                int length;
+                
+                while ((length = is.read(buffer)) >= 0) {
+                    fos.write(buffer, 0, length);
+                    if (verbose) {
+                        System.out.print(".");
+                    }
                 }
+                if (verbose) {
+                    System.out.println();
+                }
+            } finally {
+                if (fos != null) {
+                    fos.close();
+                }
+                is.close();
             }
-            if (verbose) {
-                System.out.println();
-            }
-            fos.close();
-            is.close();
 
             //if (and only if) the use file time option is set, then
             //the saved file now has its timestamp set to that of the
