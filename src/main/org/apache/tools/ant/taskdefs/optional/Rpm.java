@@ -27,6 +27,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
@@ -161,25 +162,18 @@ public class Rpm extends Task {
 
         exe.setCommandline(toExecute.getCommandline());
         try {
-            exe.execute();
             log("Building the RPM based on the " + specFile + " file");
+            int returncode = exe.execute();
+            if (returncode != 0) {
+                throw new BuildException("'" +
+                        toExecute.getExecutable() +
+                        "' failed with exit code "+returncode);
+            }
         } catch (IOException e) {
             throw new BuildException(e, getLocation());
         } finally {
-            if (output != null) {
-                try {
-                    outputstream.close();
-                } catch (IOException e) {
-                    // ignore any secondary error
-                }
-            }
-            if (error != null) {
-                try {
-                    errorstream.close();
-                } catch (IOException e) {
-                    // ignore any secondary error
-                }
-            }
+            FileUtils.close(outputstream);
+            FileUtils.close(errorstream);
         }
     }
 
