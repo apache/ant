@@ -86,10 +86,7 @@ public class Translate
      * Create new destination file? Defaults to false.
      */
     private boolean forceOverwrite;
-    /**
-     * Generated locale based on user attributes
-     */
-    private Locale locale;
+
     /**
      * Source file encoding scheme
      */
@@ -564,7 +561,6 @@ public class Translate
                         String line;
                         while( ( line = in.readLine() ) != null )
                         {
-                            StringBuffer newline = new StringBuffer( line );
                             int startIndex = -1;
                             int endIndex = -1;
                             outer :
