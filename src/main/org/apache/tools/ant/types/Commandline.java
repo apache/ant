@@ -82,7 +82,7 @@ import java.util.StringTokenizer;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
-public class Commandline {
+public class Commandline implements Clonable {
 
     private Vector arguments = new Vector();
     private String executable = null;
@@ -333,6 +333,13 @@ public class Commandline {
 
     public int size() {
         return getCommandline().length;
+    }
+
+    public Object clone() {
+        Commandline c = new Commandline();
+        c.setExecutable(executable);
+        c.addArguments(getArguments());
+        return c;
     }
 
 }

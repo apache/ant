@@ -60,7 +60,7 @@ import org.apache.tools.ant.Project;
  *
  * @author thomas.haas@softwired-inc.com
  */
-public class CommandlineJava {
+public class CommandlineJava implements Cloneable {
 
     private Commandline vmCommand = new Commandline();
     private Commandline javaCommand = new Commandline();
@@ -150,5 +150,14 @@ public class CommandlineJava {
 
     public Path getClasspath() {
         return classpath;
+    }
+
+    public Object clone() {
+        CommandlineJava c = new CommandlineJava();
+        c.vmCommand = (Commandline) vmCommand.clone();
+        c.javaCommand = (Commandline) javaCommand.clone();
+        c.classpath = (Path) classpath.clone();
+        c.vmVersion = vmVersion;
+        return c;
     }
 }

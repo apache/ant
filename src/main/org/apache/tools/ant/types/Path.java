@@ -93,7 +93,7 @@ import java.text.StringCharacterIterator;
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
 
-public class Path {
+public class Path implements Cloneable {
 
     private Vector elements;
     private Project project;
@@ -307,6 +307,12 @@ public class Path {
      */
     public int size() {
         return list().length;
+    }
+
+    public Object clone() {
+        Path p = new Path(project);
+        p.append(this);
+        return p;
     }
 
     private static String resolveFile(Project project, String relativeName) {
