@@ -47,4 +47,8 @@ public class LoadPropertiesTest extends BuildFileTest {
         String url = project.getProperty("server1.http.url");
         assertEquals("http://localhost:80", url);
     }
+
+    public void testPropertiesFromResource() {
+        executeTarget("testPropertiesFromResource");
+    }
 }

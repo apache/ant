@@ -30,6 +30,29 @@ http.@SERVER@ = ${server}
       value="http://${server1.http.server}:${server1.http.port}"/>
   </target>
 
+  <target name="testPropertiesFromResource" depends="init">
+    <echo file="properties.tmp">
+#tpfr.a=a
+tpfr.a=A
+tpfr.b=b\
+       e
+tpfr.c=@C@
+    </echo>
+    <loadproperties resource="properties.tmp" classpath="${basedir}">
+      <filterchain>
+        <replacetokens>
+          <token key="C" value="sea"/>
+        </replacetokens>
+      </filterchain>
+    </loadproperties>
+    <condition property="testPropertiesFromResource.ok">
+        <equals arg1="Abesea" arg2="${tpfr.a}${tpfr.b}${tpfr.c}" />
+    </condition>
+    <fail unless="testPropertiesFromResource.ok">
+$${tpfr.a}$${tpfr.b}$${tpfr.c}=&quot;${tpfr.a}${tpfr.b}${tpfr.c}&quot;
+    </fail>
+  </target>
+
   <target name="cleanup">
     <delete file="properties.tmp"/>
   </target>

@@ -19,6 +19,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -26,9 +27,12 @@ import java.io.Reader;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.FilterChain;
 
 /**
@@ -45,23 +49,41 @@ public final class LoadProperties extends Task {
     private File srcFile = null;
 
     /**
+     * Resource
+     */
+    private String resource = null;
+
+    /**
+     * Classpath
+     */
+    private Path classpath = null;
+
+    /**
      * Holds filterchains
      */
     private final Vector filterChains = new Vector();
 
     /**
-     * Encoding to use for filenames, defaults to the platform's default
-     * encoding.
+     * Encoding to use for input; defaults to the platform's default encoding.
      */
     private String encoding = null;
 
     /**
-     * Sets the file to load.
+     * Set the file to load.
      *
      * @param srcFile The new SrcFile value
      */
     public final void setSrcFile(final File srcFile) {
         this.srcFile = srcFile;
+    }
+
+    /**
+     * Set the resource name of a property file to load.
+     *
+     * @param resource resource on classpath
+     */
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
     /**
@@ -75,41 +97,96 @@ public final class LoadProperties extends Task {
      *
      * @param encoding The new Encoding value
      */
-
     public final void setEncoding(final String encoding) {
         this.encoding = encoding;
     }
 
     /**
-     * read in a source file's contents and load them up as Ant properties
+     * Set the classpath to use when looking up a resource.
+     * @param classpath to add to any existing classpath
+     */
+    public void setClasspath(Path classpath) {
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+
+    /**
+     * Add a classpath to use when looking up a resource.
+     */
+    public Path createClasspath() {
+        if (this.classpath == null) {
+            this.classpath = new Path(getProject());
+        }
+        return this.classpath.createPath();
+    }
+
+    /**
+     * Set the classpath to use when looking up a resource,
+     * given as reference to a &lt;path&gt; defined elsewhere
+     */
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
+    }
+
+    /**
+     * get the classpath used by this <CODE>LoadProperties</CODE>.
+     */
+    public Path getClasspath() {
+        return classpath;
+    }
+
+    /**
+     * load Ant properties from the source file or resource
      *
      * @exception BuildException if something goes wrong with the build
      */
     public final void execute() throws BuildException {
         //validation
-        if (srcFile == null) {
-            throw new BuildException("Source file not defined.");
+        if (srcFile == null && resource == null) {
+            throw new BuildException(
+                "One of \"srcfile\" or \"resource\" is required.");
         }
 
-        if (!srcFile.exists()) {
-            throw new BuildException("Source file does not exist.");
-        }
-
-        if (!srcFile.isFile()) {
-            throw new BuildException("Source file is not a file.");
-        }
-
-        FileInputStream fis = null;
         BufferedInputStream bis = null;
+
+        if (srcFile != null ) {
+            if (!srcFile.exists()) {
+                throw new BuildException("Source file does not exist.");
+            }
+
+            if (!srcFile.isFile()) {
+                throw new BuildException("Source file is not a file.");
+            }
+
+            try {
+                bis = new BufferedInputStream(new FileInputStream(srcFile));
+            } catch (IOException eyeOhEx) {
+                throw new BuildException(eyeOhEx);
+            }
+        } else {
+            ClassLoader cL = (classpath != null)
+                ? getProject().createClassLoader(classpath)
+                : LoadProperties.class.getClassLoader();
+
+            InputStream is = (cL == null)
+                ? ClassLoader.getSystemResourceAsStream(resource)
+                : cL.getResourceAsStream(resource);
+
+            if (is != null) {
+                bis = new BufferedInputStream(is);
+            } else { // do it like Property
+                log("Unable to find resource " + resource, Project.MSG_WARN);
+                return;
+            }
+        }
+
         Reader instream = null;
         ByteArrayInputStream tis = null;
 
         try {
-            final long len = srcFile.length();
-
-            //open up the file
-            fis = new FileInputStream(srcFile);
-            bis = new BufferedInputStream(fis);
             if (encoding == null) {
                 instream = new InputStreamReader(bis);
             } else {
@@ -150,8 +227,8 @@ public final class LoadProperties extends Task {
             throw be;
         } finally {
             try {
-                if (fis != null) {
-                    fis.close();
+                if (bis != null) {
+                    bis.close();
                 }
             } catch (IOException ioex) {
                 //ignore
