@@ -7,12 +7,10 @@
  */
 package org.apache.tools.ant.taskdefs.compilers;
 
-import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -34,14 +32,13 @@ public class Javac12 extends DefaultCompilerAdapter
         getLogger().debug( "Using classic compiler" );
         Commandline cmd = setupJavacCommand( true );
 
-        OutputStream logstr = new LogOutputStream( getLogger(), true );
         try
         {
             // Create an instance of the compiler, redirecting output to
             // the project log
             Class c = Class.forName( "sun.tools.javac.Main" );
             Constructor cons = c.getConstructor( new Class[]{OutputStream.class, String.class} );
-            Object compiler = cons.newInstance( new Object[]{logstr, "javac"} );
+            Object compiler = cons.newInstance( new Object[]{System.out, "javac"} );
 
             // Call the compile() method
             Method compile = c.getMethod( "compile", new Class[]{String[].class} );
@@ -63,18 +60,6 @@ public class Javac12 extends DefaultCompilerAdapter
             else
             {
                 throw new TaskException( "Error starting classic compiler: ", ex );
-            }
-        }
-        finally
-        {
-            try
-            {
-                logstr.close();
-            }
-            catch( IOException e )
-            {
-                // plain impossible
-                throw new TaskException( "Error", e );
             }
         }
     }

@@ -12,7 +12,6 @@ import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -31,13 +30,12 @@ public class SunRmic extends DefaultRmicAdapter
 
         // Create an instance of the rmic, redirecting output to
         // the project log
-        final LogOutputStream logstr = new LogOutputStream( getLogger(), true );
         try
         {
             Class c = Class.forName( "sun.rmi.rmic.Main" );
             Constructor cons = c.getConstructor( new Class[]
             {OutputStream.class, String.class} );
-            Object rmic = cons.newInstance( new Object[]{logstr, "rmic"} );
+            Object rmic = cons.newInstance( new Object[]{System.out, "rmic"} );
 
             Method doRmic = c.getMethod( "compile",
                                          new Class[]{String[].class} );

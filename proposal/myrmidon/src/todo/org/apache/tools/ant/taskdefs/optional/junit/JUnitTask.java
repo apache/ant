@@ -10,7 +10,6 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -20,11 +19,10 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.Task;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -400,16 +398,6 @@ public class JUnitTask extends Task
     }
 
     /**
-     * Get the default output for a formatter.
-     *
-     * @return The DefaultOutput value
-     */
-    protected OutputStream getDefaultOutput()
-    {
-        return new LogOutputStream( getLogger(), false );
-    }
-
-    /**
      * Merge all individual tests from the batchtest with all individual tests
      * and return an enumeration over all <tt>JUnitTest</tt> .
      *
@@ -713,7 +701,7 @@ public class JUnitTask extends Task
                 SummaryJUnitResultFormatter f =
                     new SummaryJUnitResultFormatter();
                 f.setWithOutAndErr( "withoutanderr".equalsIgnoreCase( summaryValue ) );
-                f.setOutput( getDefaultOutput() );
+                f.setOutput( System.out );
                 runner.addFormatter( f );
             }
 
@@ -728,7 +716,7 @@ public class JUnitTask extends Task
                 }
                 else
                 {
-                    fe.setOutput( getDefaultOutput() );
+                    fe.setOutput( System.out );
                 }
                 runner.addFormatter( fe.createFormatter() );
             }
