@@ -169,7 +169,6 @@
   </selector>
   <selector id="needs.sun.b64">
     <or>
-      <filename name="${ant.package}/taskdefs/Get*"/>
       <filename name="${optional.package}/splash/SplashTask*"/>
     </or>
   </selector>

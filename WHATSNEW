@@ -85,6 +85,9 @@ Fixed bugs:
   elements in Ant and the refid attribute didn't point to an existing
   project reference.
 
+* The <get> task can now be compiled (and Ant thus bootstrapped) using
+  Kaffee.
+
 Other changes:
 --------------
 * The filesetmanifest attribute of <jar> has been reenabled.

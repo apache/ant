@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -146,10 +146,11 @@ public class Get extends Task {
                 String encoding;
                 // check to see if sun's Base64 encoder is available.
                 try {
-                    sun.misc.BASE64Encoder encoder =
-                        (sun.misc.BASE64Encoder)
-                        Class.forName("sun.misc.BASE64Encoder").newInstance();
-                    encoding = encoder.encode (up.getBytes());
+                    Object encoder =
+                            Class.forName("sun.misc.BASE64Encoder").newInstance();
+                    encoding = (String) 
+                            encoder.getClass().getMethod("encode", new Class[] {byte[].class})
+                            .invoke(encoder, new Object[] {up.getBytes()});
 
                 } catch (Exception ex) { // sun's base64 encoder isn't available
                     Base64Converter encoder = new Base64Converter();
