@@ -13,6 +13,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Set;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.aut.manifest.Attribute;
+import org.apache.aut.manifest.ManifestException;
 
 /**
  * Class to manage Manifest information

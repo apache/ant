@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs.manifest;
+package org.apache.aut.manifest;
 
 import java.io.PrintWriter;
 import java.io.IOException;
@@ -14,9 +14,9 @@ import java.util.jar.Attributes;
 /**
  * Class to hold manifest attributes
  *
+ * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 public class Attribute

@@ -16,6 +16,8 @@ import java.io.UnsupportedEncodingException;
 import java.io.BufferedReader;
 import java.util.jar.Attributes;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.aut.manifest.Attribute;
+import org.apache.aut.manifest.ManifestException;
 
 /**
  * Utility methods for manifest stuff.

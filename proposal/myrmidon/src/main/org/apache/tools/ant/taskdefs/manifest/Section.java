@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import org.apache.aut.manifest.Attribute;
+import org.apache.aut.manifest.ManifestException;
 
 /**
  * Class to represent an individual section in the Manifest. A section

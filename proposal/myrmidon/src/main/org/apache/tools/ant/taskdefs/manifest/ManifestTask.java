@@ -17,6 +17,8 @@ import java.util.Iterator;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.aut.manifest.Attribute;
+import org.apache.aut.manifest.ManifestException;
 
 /**
  * Class to manage Manifest information
