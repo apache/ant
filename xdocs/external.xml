@@ -499,6 +499,33 @@
 
       </subsection>
 
+      <subsection name="Jacson">
+        
+	<p>Jacson is a configurable and plugable tool (much like Ant
+	itself) to create filters for text (line based) files without
+	programming.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Jacson has been used and tested with 1.5.1, should
+            work with 1.4+</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://jacson.sourceforge.net">http://jacson.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jacson-user@lists.sourceforge.de">jacson-user@lists.sourceforge.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Library or Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Jalopy">
         
         <p>An Ant Plug-in for the Java Source Code Formatter
