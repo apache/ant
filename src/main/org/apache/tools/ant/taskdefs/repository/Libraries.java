@@ -325,7 +325,7 @@ public final class Libraries extends Task {
      * set the timestamp flag. Not for export into XML
      * @param useTimestamp
      */
-    public void _setUseTimestamp(boolean useTimestamp) {
+    public void setUseTimestamp(boolean useTimestamp) {
         this.useTimestamp = useTimestamp;
     }
 
@@ -501,7 +501,7 @@ public final class Libraries extends Task {
                         //record the fact in the library
                         log("success; marking as fetched",
                                 Project.MSG_DEBUG);
-                        library._setFetched(fetched);
+                        library.assignFetched(fetched);
                     } catch (IOException e) {
                         log(ERROR_LIBRARY_FETCH_FAILED + library);
                         log(e.getMessage());
@@ -540,7 +540,7 @@ public final class Libraries extends Task {
         Iterator it = libraryIterator();
         while (it.hasNext()) {
             Library library = (Library) it.next();
-            library._setToFetch(fetch);
+            library.assignToFetch(fetch);
         }
     }
 
@@ -553,7 +553,7 @@ public final class Libraries extends Task {
         Iterator it = libraryIterator();
         while (it.hasNext()) {
             Library library = (Library) it.next();
-            library._setToFetch(!library.exists());
+            library.assignToFetch(!library.exists());
         }
     }
 

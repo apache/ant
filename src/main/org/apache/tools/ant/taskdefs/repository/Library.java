@@ -193,7 +193,7 @@ public class Library implements EnabledLibraryElement {
      * set the library file. Hidden from Ant users.
      * @param file
      */
-    public void _setLibraryFile(File file) {
+    public void assignLibraryFile(File file) {
         this.libraryFile = file;
     }
 
@@ -330,10 +330,10 @@ public class Library implements EnabledLibraryElement {
     /**
      * prefixed to avoid ant picking up on it, this sets
      * the fetch/no-fetch flag.
-     * @param toFetch
+     * @param toFetchFlag
      */
-    public void _setToFetch(boolean toFetch) {
-        this.toFetch = toFetch;
+    public void assignToFetch(boolean toFetchFlag) {
+        this.toFetch = toFetchFlag;
     }
 
     /**
@@ -355,10 +355,10 @@ public class Library implements EnabledLibraryElement {
     /**
      * another not-for-end-users attribute; a flag set to true if the
      * library has been fetched.
-     * @param fetched
+     * @param fetchflag
      */
-    public void _setFetched(boolean fetched) {
-        this.fetched = fetched;
+    public void assignFetched(boolean fetchflag) {
+        this.fetched = fetchflag;
     }
 
     /**

@@ -38,7 +38,7 @@ public class TimestampPolicy extends BaseLibraryPolicy {
      */
     public boolean beforeConnect(Libraries owner, ListIterator libraries) {
         owner.markAllLibrariesForFetch(true);
-        owner._setUseTimestamp(true);
+        owner.setUseTimestamp(true);
         return true;
     }
 

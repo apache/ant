@@ -58,6 +58,13 @@
     <td valign="top" align="center">No -default false</td>
   </tr>
   <tr>
+    <td valign="top">usetimestamp</td>
+    <td valign="top">flag to indicate that timestamps should
+    be compared when probing for updates.
+    </td>
+    <td valign="top" align="center">No -default false</td>
+  </tr>
+  <tr>
     <td valign="top">pathID</td>
     <td valign="top">Name of a path to create containing all
     libraries in this declaration.
@@ -261,7 +268,8 @@ the build will halt.</P>
 <h4>timestamp</h4>
 
 <P>This policy tells Ant to check the repository to see if the files have changed
-using timestamp checks. Any files which are up to date will not be downloaded again. </P>
+using timestamp checks. Any files which are up to date will not be downloaded again.
+It is equivalent to setting the <code>useTimestamp</code> flag. </P>
 
 <p>Example:</p>
 <pre>
