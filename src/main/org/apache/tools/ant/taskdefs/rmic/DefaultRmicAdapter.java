@@ -75,11 +75,13 @@ import java.util.Vector;
  * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @author <a href="tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
+ * @since Ant 1.4
  */
 public abstract class DefaultRmicAdapter implements RmicAdapter {
 
     private Rmic attributes;
     private FileNameMapper mapper;
+    private final static Random rand = new Random();
 
     public DefaultRmicAdapter() {
     }
@@ -106,8 +108,20 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     }        
 
     /**
-     * This implementation maps *.class to *getStubClassSuffix().class and - if
-     * stubversion is not 1.2 - to *getSkelClassSuffix().class.
+     * This implementation returns a mapper that may return up to two
+     * file names.
+     *
+     * <ul>
+     *   <li>for JRMP it will return *_getStubClassSuffix (and
+     *   *_getSkelClassSuffix if JDK 1.1 is used)</li>
+     *
+     *   <li>for IDL it will return a random name, causing <rmic> to
+     *     always recompile.</li>
+     *
+     *   <li>for IIOP it will return _*_getStubClassSuffix for
+     *   interfaces and _*_getStubClassSuffix for non-interfaces (and
+     *   determine the interface and create _*_Stub from that).</li>
+     * </ul>
      */
     public FileNameMapper getMapper() {
         return mapper;
@@ -124,23 +138,24 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
      * Builds the compilation classpath.
      */
     protected Path getCompileClasspath() {
+        Path classpath = new Path(attributes.getProject());
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
-        Path classpath = new Path(attributes.getProject());
         classpath.setLocation(attributes.getBase());
 
         // Combine the build classpath with the system classpath, in an 
-        // order determined by the value of build.classpath
-
+        // order determined by the value of build.sysclasspath
         if (attributes.getClasspath() == null) {
             if ( attributes.getIncludeantruntime() ) {
                 classpath.addExisting(Path.systemClasspath);
             }
         } else {
             if ( attributes.getIncludeantruntime() ) {
-                classpath.addExisting(attributes.getClasspath().concatSystemClasspath("last"));
+                classpath.addExisting(attributes.getClasspath()
+                                      .concatSystemClasspath("last"));
             } else {
-                classpath.addExisting(attributes.getClasspath().concatSystemClasspath("ignore"));
+                classpath.addExisting(attributes.getClasspath()
+                                      .concatSystemClasspath("ignore"));
             }
         }
 
@@ -198,9 +213,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                 cmd.createArgument().setValue("-v1.1");
             } else if ("1.2".equals(stubVersion)) {
                 cmd.createArgument().setValue("-v1.2");
-                   } else {
+            } else {
                 cmd.createArgument().setValue("-vcompat");
-                   }
+            }
         }
 
         if (null != attributes.getSourceBase()) {
@@ -260,21 +275,19 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         attributes.log(niceSourceList.toString(), Project.MSG_VERBOSE);
     }
 
-    private final static Random rand = new Random();
-
     /**
      * Mapper that may return up to two file names.
      *
      * <ul>
-     *   <li>for JRMP it will return *_Stub (and *_Skel if JDK 1.1 is
-     *     used)</li>
+     *   <li>for JRMP it will return *_getStubClassSuffix (and
+     *   *_getSkelClassSuffix if JDK 1.1 is used)</li>
      *
      *   <li>for IDL it will return a random name, causing <rmic> to
      *     always recompile.</li>
      *
-     *   <li>for IIOP it will return _*_Stub for interfaces and _*_Tie
-     *     for non-interfaces (and determine the interface and create
-     *     _*_Stub from that).</p>
+     *   <li>for IIOP it will return _*_getStubClassSuffix for
+     *   interfaces and _*_getStubClassSuffix for non-interfaces (and
+     *   determine the interface and create _*_Stub from that).</li>
      * </ul>
      */
     private class RmicFileNameMapper implements FileNameMapper {

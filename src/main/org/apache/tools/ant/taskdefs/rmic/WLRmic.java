@@ -66,6 +66,7 @@ import java.lang.reflect.Method;
  * The implementation of the rmic for WebLogic
  *
  * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
+ * @since Ant 1.4
  */
 public class WLRmic extends DefaultRmicAdapter {
 
@@ -90,15 +91,16 @@ public class WLRmic extends DefaultRmicAdapter {
             doRmic.invoke(null, new Object[] {cmd.getArguments()  });
             return true;
         } catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use WebLogic rmic, as it is not available"+
-                                     " A common solution is to set the environment variable"+
-                                     " CLASSPATH.", getRmic().getLocation() );
-        }
-        catch (Exception ex) {
+            throw new BuildException("Cannot use WebLogic rmic, as it is not "
+                                     + "available.  A common solution is to "
+                                     + "set the environment variable "
+                                     + "CLASSPATH.", getRmic().getLocation() );
+        } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting WebLogic rmic: ", ex, getRmic().getLocation());
+                throw new BuildException("Error starting WebLogic rmic: ", ex,
+                                         getRmic().getLocation());
             }
         } finally {
             if (loader != null) {

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,10 +63,11 @@ import org.apache.tools.ant.Task;
  *
  * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ * @since 1.4
  */
 public class RmicAdapterFactory {
 
-    /** This is a singlton -- can't create instances!! */
+    /** This is a singleton -- can't create instances!! */
     private RmicAdapterFactory() {
     }
 
@@ -74,7 +75,7 @@ public class RmicAdapterFactory {
      * Based on the parameter passed in, this method creates the necessary
      * factory desired.
      *
-     * The current mapping for rmic names are as follows:
+     * <p>The current mapping for rmic names are as follows:</p>
      * <ul><li>sun = SUN's rmic
      * <li>kaffe = Kaffe's rmic
      * <li><i>a fully quallified classname</i> = the name of a rmic
@@ -103,7 +104,8 @@ public class RmicAdapterFactory {
                     Class.forName("kaffe.tools.compiler.Compiler");
                     rmicType = "kaffe";
                 } catch (ClassNotFoundException cnfk) {
-                    throw new BuildException("Couldn\'t guess rmic implementation");
+                    throw new BuildException("Couldn\'t guess rmic "
+                                             + "implementation");
                 }
             }
         }

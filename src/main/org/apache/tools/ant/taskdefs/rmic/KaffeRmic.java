@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,6 @@ import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.types.Commandline;
 
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
@@ -67,6 +66,7 @@ import java.lang.reflect.Method;
  * The implementation of the rmic for Kaffe
  *
  * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
+ * @since Ant 1.4
  */
 public class KaffeRmic extends DefaultRmicAdapter {
 
@@ -84,15 +84,17 @@ public class KaffeRmic extends DefaultRmicAdapter {
 
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use Kaffe rmic, as it is not available"+
-                                     " A common solution is to set the environment variable"+
-                                     " JAVA_HOME or CLASSPATH.", getRmic().getLocation() );
-        }
-        catch (Exception ex) {
+            throw new BuildException("Cannot use Kaffe rmic, as it is not "
+                                     + "available.  A common solution is to "
+                                     + "set the environment variable "
+                                     + "JAVA_HOME or CLASSPATH.", 
+                                     getRmic().getLocation() );
+        } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting Kaffe rmic: ", ex, getRmic().getLocation());
+                throw new BuildException("Error starting Kaffe rmic: ", 
+                                         ex, getRmic().getLocation());
             }
         }
     }

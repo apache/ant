@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,6 +68,7 @@ import java.lang.reflect.Method;
  * The implementation of the rmic for SUN's JDK.
  *
  * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
+ * @since Ant 1.4
  */
 public class SunRmic extends DefaultRmicAdapter {
 
@@ -77,7 +78,8 @@ public class SunRmic extends DefaultRmicAdapter {
 
         // Create an instance of the rmic, redirecting output to
         // the project log
-        LogOutputStream logstr = new LogOutputStream(getRmic(), Project.MSG_WARN);
+        LogOutputStream logstr = new LogOutputStream(getRmic(), 
+                                                     Project.MSG_WARN);
 
         try {
             Class c = Class.forName("sun.rmi.rmic.Main");
@@ -87,19 +89,22 @@ public class SunRmic extends DefaultRmicAdapter {
 
             Method doRmic = c.getMethod("compile", 
                                         new Class [] { String[].class });
-            Boolean ok = (Boolean)doRmic.invoke(rmic, 
-                                                (new Object[] {cmd.getArguments()} ));
+            Boolean ok = 
+                (Boolean)doRmic.invoke(rmic, 
+                                       (new Object[] {cmd.getArguments()} ));
             return ok.booleanValue();
         } catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use SUN rmic, as it is not available"+
-                                     " A common solution is to set the environment variable"+
-                                     " JAVA_HOME or CLASSPATH.", getRmic().getLocation() );
-        }
-        catch (Exception ex) {
+            throw new BuildException("Cannot use SUN rmic, as it is not "
+                                     + "available.  A common solution is to "
+                                     + "set the environment variable "
+                                     + "JAVA_HOME or CLASSPATH.",
+                                     getRmic().getLocation() );
+        } catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting SUN rmic: ", ex, getRmic().getLocation());
+                throw new BuildException("Error starting SUN rmic: ", 
+                                         ex, getRmic().getLocation());
             }
         } finally {
             try {

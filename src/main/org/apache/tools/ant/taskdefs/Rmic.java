@@ -60,9 +60,11 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
+import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileNameMapper;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 
 import java.io.File;
@@ -99,6 +101,8 @@ import java.util.Vector;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @author Takashi Okamoto tokamoto@rd.nttdata.co.jp
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="java"
  */
 
@@ -127,6 +131,8 @@ public class Rmic extends MatchingTask {
     private Vector compileList = new Vector();
 
     private ClassLoader loader = null;
+
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /** Sets the base directory to output generated class. */
     public void setBase(File base) {
@@ -370,7 +376,7 @@ public class Rmic extends MatchingTask {
         }
 
         String compiler = project.getProperty("build.rmic");
-        RmicAdapter adapter = RmicAdapterFactory.getRmic(compiler, this );
+        RmicAdapter adapter = RmicAdapterFactory.getRmic(compiler, this);
             
         // now we need to populate the compiler adapter
         adapter.setRmic( this );
@@ -378,56 +384,64 @@ public class Rmic extends MatchingTask {
         Path classpath = adapter.getClasspath();
         loader = new AntClassLoader(project, classpath);
 
-        // scan base dirs to build up compile lists only if a
-        // specific classname is not given
-        if (classname == null) {
-            DirectoryScanner ds = this.getDirectoryScanner(baseDir);
-            String[] files = ds.getIncludedFiles();
-            scanDir(baseDir, files, adapter.getMapper());
-        } else {
-            // otherwise perform a timestamp comparison - at least
-            scanDir(baseDir, 
-                    new String[] {classname.replace('.', File.separatorChar) + ".class"},
-                    adapter.getMapper());
-        }
-        
-        int fileCount = compileList.size();
-        if (fileCount > 0) {
-            log("RMI Compiling " + fileCount +
-                " class"+ (fileCount > 1 ? "es" : "")+" to " + baseDir, 
-                Project.MSG_INFO);
-
-            // finally, lets execute the compiler!!
-            if (!adapter.execute()) {
-                throw new BuildException(FAIL_MSG, location);
-            }
-        }
-
-        /* 
-         * Move the generated source file to the base directory.  If
-         * base directory and sourcebase are the same, the generated
-         * sources are already in place.
-         */
-        if (null != sourceBase && !baseDir.equals(sourceBase)) {
-            if (idl) {
-                log("Cannot determine sourcefiles in idl mode, ", 
-                    Project.MSG_WARN);
-                log("sourcebase attribute will be ignored.", Project.MSG_WARN);
+        try {
+            // scan base dirs to build up compile lists only if a
+            // specific classname is not given
+            if (classname == null) {
+                DirectoryScanner ds = this.getDirectoryScanner(baseDir);
+                String[] files = ds.getIncludedFiles();
+                scanDir(baseDir, files, adapter.getMapper());
             } else {
-                for (int j = 0; j < fileCount; j++) {
-                    moveGeneratedFile(baseDir, sourceBase,
-                                      (String) compileList.elementAt(j),
-                                      adapter);
+                // otherwise perform a timestamp comparison - at least
+                scanDir(baseDir, 
+                        new String[] {classname.replace('.', 
+                                                        File.separatorChar)
+                                          + ".class"},
+                        adapter.getMapper());
+            }
+            
+            int fileCount = compileList.size();
+            if (fileCount > 0) {
+                log("RMI Compiling " + fileCount +
+                    " class"+ (fileCount > 1 ? "es" : "")+" to " + baseDir, 
+                    Project.MSG_INFO);
+                
+                // finally, lets execute the compiler!!
+                if (!adapter.execute()) {
+                    throw new BuildException(FAIL_MSG, location);
                 }
             }
+            
+            /* 
+             * Move the generated source file to the base directory.  If
+             * base directory and sourcebase are the same, the generated
+             * sources are already in place.
+             */
+            if (null != sourceBase && !baseDir.equals(sourceBase) 
+                && fileCount > 0) {
+                if (idl) {
+                    log("Cannot determine sourcefiles in idl mode, ", 
+                        Project.MSG_WARN);
+                    log("sourcebase attribute will be ignored.", 
+                        Project.MSG_WARN);
+                } else {
+                    for (int j = 0; j < fileCount; j++) {
+                        moveGeneratedFile(baseDir, sourceBase,
+                                          (String) compileList.elementAt(j),
+                                          adapter);
+                    }
+                }
+            }
+        } finally {
+            compileList.removeAllElements();
         }
-        compileList.removeAllElements();
     }
 
     /**
      * Move the generated source file(s) to the base directory
      *
-     * @exception org.apache.tools.ant.BuildException When error copying/removing files.
+     * @exception org.apache.tools.ant.BuildException When error
+     * copying/removing files.
      */
     private void moveGeneratedFile (File baseDir, File sourceBaseFile,
                                     String classname,
@@ -458,7 +472,13 @@ public class Rmic extends MatchingTask {
 
             File newFile = new File(sourceBaseFile, sourceFileName);
             try {
-                project.copyFile(oldFile, newFile, filtering);
+                if (filtering) {
+                    fileUtils.copyFile(oldFile, newFile, 
+                        new FilterSetCollection(getProject()
+                                                .getGlobalFilterSet()));
+                } else {
+                    fileUtils.copyFile(oldFile, newFile);
+                }
                 oldFile.delete();
             } catch (IOException ioe) {
                 String msg = "Failed to copy " + oldFile + " to " +
