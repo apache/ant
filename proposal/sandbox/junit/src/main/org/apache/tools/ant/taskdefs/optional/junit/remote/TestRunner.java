@@ -372,7 +372,11 @@ public class TestRunner implements TestListener {
     }
 
     protected void fireEvent(TestRunEvent evt){
-        messenger.writeEvent(evt);
+        try {
+            messenger.writeEvent(evt);
+        } catch (IOException e){
+            log(e);
+        }
     }
 
 // -------- JUnit TestListener implementation
