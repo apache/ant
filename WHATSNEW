@@ -5,11 +5,13 @@ Changes that could break older buildfiles:
 
 * copying of support files in <javac> has been removed.
 
+* the command line switches _not_ starting with - have been removed.
+
 Other changes:
 --------------
 
-* New tasks (sql, junit, javacc) all pending documentation, some of
-them pending review.
+* New tasks: sql, junit, javacc, execon. All pending documentation,
+most of them pending review.
 
 * <java> uses ClassLoader of its own in no-fork mode if a classpath is
 specified.
@@ -25,6 +27,9 @@ use, pending documentation.
 
 * You can specify environment variables to the exec task - pending
 documentation.
+
+* Get can check wether a remote file is actually newer than a local
+copy before it starts a download (HTTP only).
 
 Fixed bugs:
 -----------

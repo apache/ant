@@ -119,17 +119,17 @@ public class Main {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
 
-            if (arg.equals("-help") || arg.equals("help")) {
+            if (arg.equals("-help")) {
                 printUsage();
                 return;
             } else if (arg.equals("-version")) {
                 printVersion();
                 return;
-            } else if (arg.equals("-quiet") || arg.equals("-q") || arg.equals("q")) {
+            } else if (arg.equals("-quiet") || arg.equals("-q")) {
                 msgOutputLevel = Project.MSG_WARN;
-            } else if (arg.equals("-verbose") || arg.equals("-v") || arg.equals("v")) {
+            } else if (arg.equals("-verbose") || arg.equals("-v")) {
                 msgOutputLevel = Project.MSG_VERBOSE;
-            } else if (arg.equals("-logfile") || arg.equals("-l") || arg.equals("l")) {
+            } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
                     File logFile = new File(args[i+1]);
                     i++;
@@ -147,7 +147,7 @@ public class Main {
                     System.out.println(msg);
                     return;
                 }
-            } else if (arg.equals("-buildfile") || arg.equals("-file") || arg.equals("-f") || arg.equals("f")) {
+            } else if (arg.equals("-buildfile") || arg.equals("-file") || arg.equals("-f")) {
                 try {
                     buildFile = new File(args[i+1]);
                     i++;
