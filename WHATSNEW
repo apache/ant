@@ -1,4 +1,29 @@
-Changes from Ant 1.6.0 to current cvs version
+Changes from Ant 1.6.1 to current CVS version
+=============================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+Fixed bugs:
+-----------
+
+* Translate task does not remove tokens when a key is not found.
+  It logs a verbose message.  Bugzilla Report 13936.
+
+* <whichresource> failed to load classes correctly.
+
+Other changes:
+--------------
+
+* Enable to choose the regexp implementation without system property.
+  Bugzilla Report 15390.
+
+* <nice> task lets you set the priority of the current thread; non-forking
+  <java> code will inherit this priority in their main thread.
+
+* <touch> has filelist support.
+
+Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 
 Changes that could break older environments:
@@ -13,17 +38,12 @@ Fixed bugs:
   overflow. It now uses Xalan extensions to call a Java class directly.
   Bugzilla Report 19301
   
-* Translate task does not remove tokens when a key is not found.
-  It logs a verbose message.  Bugzilla Report 13936.
-
 * Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
   Bugzilla Report 23154.
 
 * Fix handling of default ant namespace for nested elements.
 
 * Fix jboss element of ejb task (introduced in ant 1.6.0).
-
-* <whichresource> failed to load classes correctly.
 
 * Ant could fail to start with a NullPointerException if
   ANT_HOME/lib/ant-launcher.jar was part of the system CLASSPATH.
@@ -50,14 +70,6 @@ Other changes:
 
 * Translate task logs a debug message specifying the number of files
   that it processed.  Bugzilla Report 13938.
-
-* Enable to choose the regexp implementation without system property.
-  Bugzilla Report 15390.
-
-* <nice> task lets you set the priority of the current thread; non-forking
-  <java> code will inherit this priority in their main thread.
-
-* <touch> has filelist support.
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
