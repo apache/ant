@@ -11,8 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.ant.convert.Converter;
-import org.apache.ant.convert.ConverterException;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.component.ComponentException;
@@ -25,6 +23,9 @@ import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
+import org.apache.myrmidon.components.converter.MasterConverter;
+import org.apache.myrmidon.converter.Converter;
+import org.apache.myrmidon.converter.ConverterException;
 
 /**
  * Class used to configure tasks.
@@ -55,12 +56,12 @@ public class DefaultConfigurer
     };
 
     ///Converter to use for converting between values
-    private Converter            m_converter;
+    private MasterConverter        m_converter;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_converter = (Converter)componentManager.lookup( "org.apache.ant.convert.Converter" );
+        m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
     }
 
     /**

@@ -8,9 +8,11 @@
 package org.apache.ant.modules.basic;
 
 import java.io.File;
-import org.apache.ant.convert.AbstractConverter;
 import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.converter.AbstractConverter;
+import org.apache.myrmidon.converter.ConverterException;
 
 /**
  * String to file converter
@@ -26,10 +28,17 @@ public class StringToFileConverter
     }
 
     public Object convert( final Object original, final Context context )
-        throws Exception
+        throws ConverterException
     {
-        final TaskContext taskContext = (TaskContext)context;
-        return taskContext.resolveFile( (String)original );
+        try
+        {
+            final TaskContext taskContext = (TaskContext)context;
+            return taskContext.resolveFile( (String)original );
+        }
+        catch( final TaskException te )
+        {
+            throw new ConverterException( "Error resolving file during conversion", te );
+        }
     }
 }
 

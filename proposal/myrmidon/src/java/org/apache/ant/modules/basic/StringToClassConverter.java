@@ -7,7 +7,8 @@
  */
 package org.apache.ant.modules.basic;
 
-import org.apache.ant.convert.AbstractConverter;
+import org.apache.myrmidon.converter.AbstractConverter;
+import org.apache.myrmidon.converter.ConverterException;
 import org.apache.avalon.framework.context.Context;
 
 /**
@@ -24,9 +25,14 @@ public class StringToClassConverter
     }
 
     public Object convert( final Object original, final Context context )
-        throws Exception
+        throws ConverterException
     {
-        return Class.forName( (String)original );
+        //TODO: Should we use ContextClassLoader here???
+        try { return Class.forName( (String)original ); }
+        catch( final Exception e )
+        {
+            throw new ConverterException( "Error converting to class type", e );
+        }
     }
 }
 

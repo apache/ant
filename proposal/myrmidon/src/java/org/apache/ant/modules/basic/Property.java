@@ -7,10 +7,6 @@
  */
 package org.apache.ant.modules.basic;
 
-import java.util.Iterator;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.ant.convert.Converter;
-import org.apache.ant.tasklet.DataType;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentSelector;
@@ -20,8 +16,11 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Resolvable;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.DataType;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.configurer.Configurer;
+import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.type.TypeManager;
 
 /**
@@ -33,22 +32,21 @@ public class Property
     extends AbstractTask
     implements Configurable, Composable
 {
-    protected String              m_name;
-    protected Object              m_value;
-    protected boolean             m_localScope     = true;
-    protected ComponentSelector   m_selector;
-    protected Converter           m_converter;
-    protected Configurer          m_configurer;
+    private String              m_name;
+    private Object              m_value;
+    private boolean             m_localScope     = true;
+    private ComponentSelector   m_selector;
+    private MasterConverter     m_converter;
+    private Configurer          m_configurer;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
         m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_selector = 
-            (ComponentSelector)typeManager.lookup( "org.apache.ant.tasklet.DataTypeSelector" );
+        m_selector = (ComponentSelector)typeManager.lookup( DataType.ROLE + "Selector" );
 
-        m_converter = (Converter)componentManager.lookup( "org.apache.ant.convert.Converter" );
+        m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
     }
 
     public void configure( final Configuration configuration )
@@ -61,7 +59,7 @@ public class Property
             final String name = attributes[ i ];
             final String value = configuration.getAttribute( name );
 
-            
+
             Object object = null;
 
             try { object = getContext().resolveValue( value ); }

@@ -10,48 +10,50 @@ package org.apache.ant.modules.core;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.ant.convert.engine.ConverterEngine;
-import org.apache.ant.convert.engine.DefaultConverterInfo;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.components.deployer.TskDeployer;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.camelot.DefaultLocator;
 import org.apache.avalon.framework.camelot.DeploymentException;
-import org.apache.avalon.framework.camelot.RegistryException;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.components.converter.ConverterInfo;
+import org.apache.myrmidon.components.converter.ConverterRegistry;
+import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.type.DefaultComponentFactory;
+import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.converter.Converter;
 
 /**
  * Method to register a single converter.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class RegisterConverter 
+public class RegisterConverter
     extends AbstractTask
     implements Composable
 {
-    protected String              m_sourceType;
-    protected String              m_destinationType;
-    protected String              m_lib;
-    protected String              m_classname;
-    protected TskDeployer         m_tskDeployer;
-    protected ConverterEngine     m_converterEngine;
+    private String              m_sourceType;
+    private String              m_destinationType;
+    private String              m_lib;
+    private String              m_classname;
+    private TskDeployer         m_tskDeployer;
+    private ConverterRegistry   m_converterRegistry;
+    private TypeManager         m_typeManager;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
         m_tskDeployer = (TskDeployer)componentManager.lookup( TskDeployer.ROLE );
 
-        m_converterEngine = (ConverterEngine)componentManager.
-            lookup( "org.apache.ant.convert.engine.ConverterEngine" );
+        m_converterRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
+        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
 
     public void setLib( final String lib )
     {
         m_lib = lib;
     }
-    
+
     public void setClassname( final String classname )
     {
         m_classname = classname;
@@ -61,12 +63,12 @@ public class RegisterConverter
     {
         m_sourceType = sourceType;
     }
-    
+
     public void setDestinationType( final String destinationType )
     {
         m_destinationType = destinationType;
     }
-    
+
     public void execute()
         throws TaskException
     {
@@ -74,11 +76,11 @@ public class RegisterConverter
         {
             throw new TaskException( "Must specify classname parameter" );
         }
-        
+
         final URL url = getURL( m_lib );
 
         boolean isFullyDefined = true;
-        
+
         if( null == m_sourceType && null == m_destinationType )
         {
             isFullyDefined = false;
@@ -86,7 +88,7 @@ public class RegisterConverter
         else if( null == m_sourceType || null == m_destinationType )
         {
             throw new TaskException( "Must specify the source-type and destination-type " +
-                                    "parameters when supplying a name" );
+                                     "parameters when supplying a name" );
         }
 
         if( !isFullyDefined && null == url )
@@ -96,35 +98,34 @@ public class RegisterConverter
 
         if( !isFullyDefined )
         {
-            try 
-            { 
-                m_tskDeployer.deployConverter( m_classname, url.toString(), url ); 
+            try
+            {
+                m_tskDeployer.deployConverter( m_classname, url.toString(), url );
             }
             catch( final DeploymentException de )
             {
-                throw new TaskException( "Failed deploying " + m_classname + 
-                                        " from " + url, de );
+                throw new TaskException( "Failed deploying " + m_classname +
+                                         " from " + url, de );
             }
         }
         else
         {
-            final DefaultConverterInfo info = 
-                new DefaultConverterInfo( m_sourceType, m_destinationType );
-            final DefaultLocator locator = new DefaultLocator( m_classname, url );
+            final ConverterInfo info = new ConverterInfo( m_sourceType, m_destinationType );
+            m_converterRegistry.registerConverterInfo( m_classname, info );
 
-            try
+            final DefaultComponentFactory factory =
+                new DefaultComponentFactory( new URL[] { url } );
+
+            factory.addNameClassMapping( m_classname, m_classname );
+            try { m_typeManager.registerType( Converter.ROLE, m_classname, factory ); }
+            catch( final Exception e )
             {
-                m_converterEngine.getInfoRegistry().register( m_classname, info ); 
-                m_converterEngine.getRegistry().register( m_classname, locator ); 
-            }
-            catch( final RegistryException re )
-            {
-                throw new TaskException( "Error registering resource", re );
+                throw new TaskException( "Failed to register converter " + m_classname, e );
             }
         }
     }
-    
-    protected URL getURL( final String libName )
+
+    private URL getURL( final String libName )
         throws TaskException
     {
         if( null != libName )

@@ -7,7 +7,8 @@
  */
 package org.apache.ant.modules.basic;
 
-import org.apache.ant.convert.AbstractConverter;
+import org.apache.myrmidon.converter.AbstractConverter;
+import org.apache.myrmidon.converter.ConverterException;
 import org.apache.avalon.framework.context.Context;
 
 /**
@@ -24,9 +25,13 @@ public class StringToFloatConverter
     }
 
     public Object convert( final Object original, final Context context )
-        throws Exception
+        throws ConverterException
     {
-        return new Float( (String)original );
+        try { return new Float( (String)original ); }
+        catch( final NumberFormatException nfe )
+        {
+            throw new ConverterException( "Error formatting object", nfe );
+        }
     }
 }
 

@@ -5,8 +5,9 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.convert;
+package org.apache.myrmidon.converter;
 
+import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 
 /**
@@ -15,10 +16,13 @@ import org.apache.avalon.framework.context.Context;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Converter
+    extends Component
 {
+    String ROLE = "org.apache.myrmidon.converter.Converter";
+
     /**
      * Convert original to destination type.
-     * Destination is passed so that one converter can potentiall 
+     * Destination is passed so that one converter can potentiall
      * convert to multiple different types.
      *
      * @param destination the destinaiton type
@@ -28,5 +32,5 @@ public interface Converter
      * @exception Exception if an error occurs
      */
     Object convert( Class destination, Object original, Context context )
-        throws ConverterException, Exception;
+        throws ConverterException;
 }

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.convert;
+package org.apache.myrmidon.converter;
 
 import org.apache.avalon.framework.context.Context;
 
@@ -17,8 +17,8 @@ import org.apache.avalon.framework.context.Context;
 public abstract class AbstractConverter
     implements Converter
 {
-    protected final Class         m_source;
-    protected final Class         m_destination;
+    private final Class         m_source;
+    private final Class         m_destination;
 
     /**
      * Constructor for a converter between types source and destination
@@ -42,7 +42,7 @@ public abstract class AbstractConverter
      * @exception Exception if an error occurs
      */
     public Object convert( final Class destination, final Object original, Context context )
-        throws Exception
+        throws ConverterException
     {
         if( m_destination != destination )
         {
@@ -52,10 +52,10 @@ public abstract class AbstractConverter
 
         if( !m_source.isInstance( original ) )
         {
-            throw new IllegalArgumentException( "Object '" + original + "' is not an " + 
+            throw new IllegalArgumentException( "Object '" + original + "' is not an " +
                                                 "instance of " + m_source.getName() );
         }
-            
+
         return convert( original, context );
     }
 
@@ -68,6 +68,6 @@ public abstract class AbstractConverter
      * @exception Exception if an error occurs
      */
     protected abstract Object convert( Object original, Context context )
-        throws Exception;
+        throws ConverterException;
 }
 

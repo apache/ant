@@ -7,7 +7,7 @@
  */
 package org.apache.ant.modules.basic;
 
-import org.apache.ant.tasklet.DataType;
+import org.apache.myrmidon.api.DataType;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.model.Condition;
 

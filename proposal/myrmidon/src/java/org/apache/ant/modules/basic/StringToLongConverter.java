@@ -7,8 +7,9 @@
  */
 package org.apache.ant.modules.basic;
 
-import org.apache.ant.convert.AbstractConverter;
 import org.apache.avalon.framework.context.Context;
+import org.apache.myrmidon.converter.AbstractConverter;
+import org.apache.myrmidon.converter.ConverterException;
 
 /**
  * String to long converter
@@ -24,9 +25,13 @@ public class StringToLongConverter
     }
 
     public Object convert( final Object original, final Context context )
-        throws Exception
+        throws ConverterException
     {
-        return new Long( (String)original );
+        try { return new Long( (String)original ); }
+        catch( final NumberFormatException nfe )
+        {
+            throw new ConverterException( "Error formatting object", nfe );
+        }
     }
 }
 

@@ -7,9 +7,11 @@
  */
 package org.apache.ant.modules.basic;
 
+import java.net.MalformedURLException;
 import java.net.URL;
-import org.apache.ant.convert.AbstractConverter;
 import org.apache.avalon.framework.context.Context;
+import org.apache.myrmidon.converter.AbstractConverter;
+import org.apache.myrmidon.converter.ConverterException;
 
 /**
  * String to url converter
@@ -25,9 +27,14 @@ public class StringToURLConverter
     }
 
     public Object convert( final Object original, final Context context )
-        throws Exception
+        throws ConverterException
     {
-        return new URL( (String)original );
+        try { return new URL( (String)original ); }
+        catch( final MalformedURLException mue )
+        {
+            throw new ConverterException( "Error formatting object", mue );
+        }
+
     }
 }
 

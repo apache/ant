@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.components.executor;
 
-import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
@@ -50,7 +49,6 @@ public class DefaultExecutor
     {
         //cache CM so it can be used while executing tasks
         m_componentManager = componentManager;
-        //m_factory = (Factory)componentManager.lookup( "org.apache.avalon.framework.camelot.Factory" );
 
         m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
 

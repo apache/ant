@@ -7,7 +7,7 @@
  */
 package org.apache.myrmidon.framework;
 
-import org.apache.ant.tasklet.DataType;
+import org.apache.myrmidon.api.DataType;
 
 /**
  * Interface for ItemSet.

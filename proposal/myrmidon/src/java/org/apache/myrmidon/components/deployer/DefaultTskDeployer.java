@@ -15,12 +15,8 @@ import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import org.apache.ant.convert.engine.ConverterEngine;
-import org.apache.ant.convert.engine.ConverterRegistry;
-import org.apache.ant.convert.engine.DefaultConverterInfo;
 import org.apache.avalon.framework.camelot.AbstractDeployer;
 import org.apache.avalon.framework.camelot.DefaultLocator;
-import org.apache.avalon.framework.camelot.DefaultRegistry;
 import org.apache.avalon.framework.camelot.DeployerUtil;
 import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.camelot.Loader;
@@ -35,10 +31,13 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.Task;
+import org.apache.myrmidon.components.converter.ConverterInfo;
+import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.components.type.ComponentFactory;
 import org.apache.myrmidon.components.type.DefaultComponentFactory;
+import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.converter.Converter;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -51,9 +50,6 @@ public class DefaultTskDeployer
 {
     private final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
 
-    //private Registry              m_dataTypeRegistry;
-    //private Registry              m_taskRegistry;
-    private Registry              m_converterRegistry;
     private ConverterRegistry     m_converterInfoRegistry;
     private TypeManager           m_typeManager;
 
@@ -75,20 +71,7 @@ public class DefaultTskDeployer
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        //UGLY HACK alert !!!
-        //final Executor executor = (Executor)componentManager.lookup( Executor.ROLE );
-        //m_taskRegistry = executor.getRegistry();
-
-        final ConverterEngine converterEngine = (ConverterEngine)componentManager.
-            lookup( "org.apache.ant.convert.engine.ConverterEngine" );
-
-        m_converterInfoRegistry = converterEngine.getInfoRegistry();
-        m_converterRegistry = converterEngine.getRegistry();
-
-        //final DataTypeEngine dataTypeEngine = (DataTypeEngine)componentManager.
-        //lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
-        //m_dataTypeRegistry = dataTypeEngine.getRegistry();
-
+        m_converterInfoRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
 
@@ -128,7 +111,7 @@ public class DefaultTskDeployer
     {
         final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
 
-        final DefaultComponentFactory factory = 
+        final DefaultComponentFactory factory =
             new DefaultComponentFactory( new URL[] { url } );
 
         try
@@ -142,7 +125,7 @@ public class DefaultTskDeployer
             final Configuration[] converters = taskdefs.getChildren( "converter" );
             for( int i = 0; i < converters.length; i++ )
             {
-                handleConverter( converters[ i ], url );
+                handleConverter( converters[ i ], url, factory );
             }
 
             final Configuration[] datatypes = taskdefs.getChildren( "datatype" );
@@ -154,6 +137,10 @@ public class DefaultTskDeployer
         catch( final ConfigurationException ce )
         {
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
+        }
+        catch( final Exception e )
+        {
+            throw new DeploymentException( "Failed to deploy " + location, e );
         }
     }
 
@@ -171,7 +158,9 @@ public class DefaultTskDeployer
             {
                 if( converters[ i ].getAttribute( "classname" ).equals( name ) )
                 {
-                    handleConverter( converters[ i ], url );
+                    final DefaultComponentFactory factory =
+                        new DefaultComponentFactory( new URL[] { url } );
+                    handleConverter( converters[ i ], url, factory );
                     break;
                 }
             }
@@ -179,6 +168,10 @@ public class DefaultTskDeployer
         catch( final ConfigurationException ce )
         {
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
+        }
+        catch( final Exception e )
+        {
+            throw new DeploymentException( "Failed to deploy " + name, e );
         }
     }
 
@@ -197,7 +190,7 @@ public class DefaultTskDeployer
             {
                 if( datatypes[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    final DefaultComponentFactory factory = 
+                    final DefaultComponentFactory factory =
                         new DefaultComponentFactory( new URL[] { url } );
                     handleDataType( datatypes[ i ], url, factory );
                     break;
@@ -207,6 +200,10 @@ public class DefaultTskDeployer
         catch( final ConfigurationException ce )
         {
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
+        }
+        catch( final Exception e )
+        {
+            throw new DeploymentException( "Failed to deploy " + name, e );
         }
     }
 
@@ -224,7 +221,7 @@ public class DefaultTskDeployer
             {
                 if( tasks[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    final DefaultComponentFactory factory = 
+                    final DefaultComponentFactory factory =
                         new DefaultComponentFactory( new URL[] { url } );
                     handleTask( tasks[ i ], url, factory );
                     break;
@@ -235,90 +232,56 @@ public class DefaultTskDeployer
         {
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
         }
+        catch( final Exception e )
+        {
+            throw new DeploymentException( "Failed to deploy " + name, e );
+        }
     }
 
-    private void handleConverter( final Configuration converter, final URL url )
-        throws DeploymentException, ConfigurationException
+    private void handleConverter( final Configuration converter,
+                                  final URL url,
+                                  final DefaultComponentFactory factory )
+        throws Exception
     {
         final String name = converter.getAttribute( "classname" );
         final String source = converter.getAttribute( "source" );
         final String destination = converter.getAttribute( "destination" );
 
-        final DefaultConverterInfo info = new DefaultConverterInfo( source, destination );
+        final ConverterInfo info = new ConverterInfo( source, destination );
+        m_converterInfoRegistry.registerConverterInfo( name, info );
 
-        try { m_converterInfoRegistry.register( name, info ); }
-        catch( final RegistryException re )
-        {
-            throw new DeploymentException( "Error registering converter info " +
-                                           name + " due to " + re,
-                                           re );
-        }
-
-        final DefaultLocator locator = new DefaultLocator( name, url );
-
-        try { m_converterRegistry.register( name, locator ); }
-        catch( final RegistryException re )
-        {
-            throw new DeploymentException( "Error registering converter locator " +
-                                           name + " due to " + re,
-                                           re );
-        }
+        factory.addNameClassMapping( name, name );
+        m_typeManager.registerType( Converter.ROLE, name, factory );
 
         getLogger().debug( "Registered converter " + name + " that converts from " +
                            source + " to " + destination );
     }
 
-    private void handleTask( final Configuration task, 
-                             final URL url, 
+    private void handleTask( final Configuration task,
+                             final URL url,
                              final DefaultComponentFactory factory )
-        throws DeploymentException, ConfigurationException
+        throws Exception
     {
         final String name = task.getAttribute( "name" );
         final String className = task.getAttribute( "classname" );
-        /*
-        final DefaultLocator info = new DefaultLocator( className, url );
 
-        try { m_taskRegistry.register( name, info ); }
-        catch( final RegistryException re )
-        {
-            throw new DeploymentException( "Error registering " + name + " due to " + re,
-                                           re );
-        }
-        */
         factory.addNameClassMapping( name, className );
-        
-        try { m_typeManager.registerType( Task.ROLE, name, factory ); }
-        catch( final Exception e )
-        {
-            throw new DeploymentException( "Error registering " + name + " due to " + e, e );
-        }
-        
+
+        m_typeManager.registerType( Task.ROLE, name, factory );
+
         getLogger().debug( "Registered task " + name + " as " + className );
     }
 
-    private void handleDataType( final Configuration datatype, 
-                                 final URL url, 
+    private void handleDataType( final Configuration datatype,
+                                 final URL url,
                                  final DefaultComponentFactory factory )
-        throws DeploymentException, ConfigurationException
+        throws Exception
     {
         final String name = datatype.getAttribute( "name" );
         final String className = datatype.getAttribute( "classname" );
-/*
-        final DefaultLocator info = new DefaultLocator( className, url );
 
-        try { m_dataTypeRegistry.register( name, info ); }
-        catch( final RegistryException re )
-        {
-            throw new DeploymentException( "Error registering " + name + " due to " + re,
-                                           re );
-        }
-*/
         factory.addNameClassMapping( name, className );
-        try { m_typeManager.registerType( "org.apache.ant.tasklet.DataType", name, factory ); }
-        catch( final Exception e )
-        {
-            throw new DeploymentException( "Error registering " + name + " due to " + e, e );
-        }
+        m_typeManager.registerType( "org.apache.ant.tasklet.DataType", name, factory );
 
         getLogger().debug( "Registered datatype " + name + " as " + className );
     }

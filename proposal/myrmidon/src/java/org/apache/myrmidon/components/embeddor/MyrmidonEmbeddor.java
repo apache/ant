@@ -8,7 +8,8 @@
 package org.apache.myrmidon.components.embeddor;
 
 import java.io.File;
-import org.apache.ant.convert.engine.ConverterEngine;
+import org.apache.myrmidon.components.converter.MasterConverter;
+import org.apache.myrmidon.components.converter.ConverterRegistry;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.camelot.CamelotUtil;
@@ -24,10 +25,10 @@ import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
-import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.components.type.TypeManager;
-import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.type.TypeManager;
 
 /**
  * Default implementation of Embeddor.
@@ -44,13 +45,12 @@ public class MyrmidonEmbeddor
     private TskDeployer              m_deployer;
 
     private TypeManager              m_typeManager;
-    private ConverterEngine          m_converterEngine;
+    private MasterConverter          m_converter;
+    private ConverterRegistry        m_converterRegistry;
 
     private Executor                 m_executor;
     private Configurer               m_configurer;
-    
 
-    private Factory                  m_factory;
 
     private DefaultComponentManager  m_componentManager;
     private Parameters               m_parameters;
@@ -106,7 +106,6 @@ public class MyrmidonEmbeddor
         m_defaults = createDefaultParameters();
 
         //create all the components
-        m_factory = new DefaultFactory();
         createComponents();
 
         //setup the component manager
@@ -136,13 +135,13 @@ public class MyrmidonEmbeddor
     public void dispose()
         throws Exception
     {
-        m_converterEngine = null;
+        m_converterRegistry = null;
+        m_converter = null;
         m_executor = null;
         m_projectManager = null;
         m_builder = null;
         m_deployer = null;
         m_configurer = null;
-        m_factory = null;
         m_componentManager = null;
         m_parameters = null;
         m_defaults = null;
@@ -167,9 +166,10 @@ public class MyrmidonEmbeddor
         defaults.setParameter( "myrmidon.lib.path", "lib" );
 
         //create all the default properties for components
-        defaults.setParameter( "org.apache.ant.convert.engine.ConverterEngine",
-                               "org.apache.ant.convert.engine.DefaultConverterEngine" );
-
+        defaults.setParameter( MasterConverter.ROLE,
+                               "org.apache.myrmidon.components.converter.DefaultMasterConverter" );
+        defaults.setParameter( ConverterRegistry.ROLE,
+                               "org.apache.myrmidon.components.converter.DefaultConverterRegistry" );
         defaults.setParameter( TypeManager.ROLE,
                                "org.apache.myrmidon.components.type.DefaultTypeManager" );
         defaults.setParameter( Executor.ROLE,
@@ -195,10 +195,7 @@ public class MyrmidonEmbeddor
     {
         final DefaultComponentManager componentManager = new DefaultComponentManager();
 
-        componentManager.put( "org.apache.ant.convert.engine.ConverterEngine",
-                              m_converterEngine );
-        componentManager.put( "org.apache.ant.convert.Converter", m_converterEngine );
-        componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
+        componentManager.put( MasterConverter.ROLE, m_converter );
 
         //Following components required when Myrmidon is used as build tool
         componentManager.put( ProjectManager.ROLE, m_projectManager );
@@ -209,6 +206,7 @@ public class MyrmidonEmbeddor
 
         //Following components used when want to types (ie tasks/mappers etc)
         componentManager.put( TypeManager.ROLE, m_typeManager );
+        componentManager.put( ConverterRegistry.ROLE, m_converterRegistry );
 
         //Following components required when allowing Container tasks
         componentManager.put( Configurer.ROLE, m_configurer );
@@ -227,8 +225,11 @@ public class MyrmidonEmbeddor
     {
         String component = null;
 
-        component = getParameter( "org.apache.ant.convert.engine.ConverterEngine" );
-        m_converterEngine = (ConverterEngine)createComponent( component, ConverterEngine.class );
+        component = getParameter( ConverterRegistry.ROLE );
+        m_converterRegistry = (ConverterRegistry)createComponent( component, ConverterRegistry.class );
+
+        component = getParameter( "org.apache.myrmidon.components.converter.MasterConverter" );
+        m_converter = (MasterConverter)createComponent( component, MasterConverter.class );
 
         component = getParameter( Configurer.ROLE );
         m_configurer = (Configurer)createComponent( component, Configurer.class );
@@ -257,8 +258,8 @@ public class MyrmidonEmbeddor
     private void setupComponents()
         throws Exception
     {
-        setupComponent( m_factory );
-        setupComponent( m_converterEngine );
+        setupComponent( m_converterRegistry );
+        setupComponent( m_converter );
         setupComponent( m_executor );
         setupComponent( m_projectManager );
         setupComponent( m_builder );
@@ -417,7 +418,7 @@ public class MyrmidonEmbeddor
         }
         catch( final ClassNotFoundException cnfe )
         {
-            throw new Exception( "Could not find the class for " + clazz + 
+            throw new Exception( "Could not find the class for " + clazz +
                                  " (" + component + ")" );
         }
     }

@@ -5,13 +5,13 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.convert;
+package org.apache.myrmidon.converter;
 
 import org.apache.avalon.framework.CascadingException;
 
 /**
  * ConverterException thrown when a problem occurs during convertion etc.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class ConverterException
@@ -20,7 +20,7 @@ public class ConverterException
     /**
      * Basic constructor with a message
      *
-     * @param message the message 
+     * @param message the message
      */
     public ConverterException( final String message )
     {
@@ -30,7 +30,7 @@ public class ConverterException
     /**
      * Constructor that builds cascade so that other exception information can be retained.
      *
-     * @param message the message 
+     * @param message the message
      * @param throwable the throwable
      */
     public ConverterException( final String message, final Throwable throwable )
