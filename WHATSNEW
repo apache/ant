@@ -10,10 +10,6 @@ Changes that could break older environments:
   rmic to use a new compiler a lot easier but may break custom
   versions of this task that rely on the old implementation.
 
-* <touch> can now work on <fileset>s
-
-* <uptodate> now supports a value attribute
-
 Other changes:
 --------------
 
@@ -26,6 +22,12 @@ Other changes:
 * <tar> will now add empty directories as well
 
 * you can now specify a description for <p4change>
+
+* <touch> can now work on <fileset>s
+
+* <uptodate> now supports a value attribute
+
+* <fail> supports nested text
 
 Fixed bugs:
 -----------

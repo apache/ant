@@ -10,6 +10,8 @@
 <h2><a name="fail">Fail</a></h2>
 <h3>Description</h3>
 <p>Exits the current build (just throwing a BuildException), optionally printing additional information.</p>
+<p>The message of the Exception can be set via the message attribute
+or character data nested into the element.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -40,6 +42,9 @@ BUILD FAILED
 
 build.xml:4: Something wrong here.
 </pre>
+
+<pre>  &lt;fail&gt;Something wrong here.&lt;/fail&gt;</pre>
+<p>will give the same result as above.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
