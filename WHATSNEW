@@ -42,6 +42,8 @@ Fixed bugs:
   from the system classloader.  The packages are determined by the
   version of the JVM running Ant.
 
+* Ant didn't find the runtime libraries on IBM's JDK 1.4 for Linux.
+
 Other changes:
 --------------
 
