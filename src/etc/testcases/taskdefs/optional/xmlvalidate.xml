@@ -49,6 +49,19 @@
       </xmlcatalog>
     </xmlvalidate>
   </target>
+ 
+  <target name="xmlcatalogpath">
+    <xmlvalidate warn="false">
+      <fileset dir="xml" includes="**/about.xml"/>
+      <xmlcatalog classpath="xml">
+        <catalogpath>
+          <pathelement location="xml/catalog"/>
+        </catalogpath>
+        <dtd publicID="-//stevo//DTD doc 1.0//EN"
+          location="doc.dtd"/>
+      </xmlcatalog>
+    </xmlvalidate>
+  </target>
 
   <target name="testSchemaGood">
     <xmlvalidate warn="false" lenient="no" >

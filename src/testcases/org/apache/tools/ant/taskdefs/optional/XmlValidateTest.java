@@ -133,6 +133,17 @@ public class XmlValidateTest extends BuildFileTest {
     }
 
     /**
+     * Test nested catalogpath.
+     * It should be ignored if resolver.jar is not
+     * present, but will be used if it is.  either
+     * way, test should work b/c we have a nested
+     * dtd with the same entity
+     */
+    public void testXmlCatalogPath() {
+      executeTarget("xmlcatalogpath");
+    }
+
+    /**
      * Test nested xmlcatalog definitions
      */
     public void testXmlCatalogNested() {

@@ -63,8 +63,8 @@ task uses XMLCatalogs for both entity and URI resolution.</p>
 <p>XMLCatalogs are specified as either a reference to another
 XMLCatalog, defined previously in a build file, or as a list of
 <code>dtd</code> or <code>entity</code> locations.  In addition,
-external catalog files may be specified in <code>catalogfiles</code>
-filesets, but they will be ignored unless the resolver library from
+external catalog files may be specified in a nested <code>catalogpath</code> ,
+but they will be ignored unless the resolver library from
 xml-commons is available in the system classpath.  <b>Due to backwards
 incompatible changes in the resolver code after the release of
 resolver 1.0, Ant will not support resolver.jar in version 1.0 - we
@@ -84,9 +84,10 @@ href="http://oasis-open.org/committees/entity/background/9401.html">
 plain text format</a> or <a
 href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
 XML format</a>.  If the xml-commons resolver library is not found in the
-classpath, external catalog files, specified in <code>catalogfiles</code>
-filesets, will be ignored and a warning will be logged.  In this case, however,
-processing of inline entries will proceed normally.</p>
+classpath, external catalog files, specified in <code>catalogpath</code> (or
+the deprecated <code>catalogfiles</code>) , will be ignored and a warning
+will be logged.  In this case, however, processing of inline entries will
+proceed normally.</p>
 <p>Currently, only <code>&lt;dtd&gt;</code> and
 <code>&lt;entity&gt;</code> elements may be specified inline; these
 roughly correspond to OASIS catalog entry types <code>PUBLIC</code> and
@@ -207,21 +208,25 @@ basedir.
 <p>The classpath to use for <a href="#ResolverAlgorithm">entity
 resolution</a>.  The nested <code>&lt;classpath&gt;</code> is a
 <a href="../using.html#path">path</a>-like structure.</p>
-<h4>catalogfiles</h4>
+<h4>catalogpath</h4>
 <p>
-The nested <code>catalogfiles</code> element specifies a <a
-href="../CoreTypes/fileset.html">FileSet</a>.  All files included in
-this fileset are assumed to be OASIS catalog files, in either
+The nested <code>catalogpath</code> element is a <a
+href="using.html#path">path</a>-like structure listing catalog files to
+search.  All files in this path are assumed to be OASIS catalog files, in
+either
 <a href="http://oasis-open.org/committees/entity/background/9401.html">
 plain text format</a> or <a
 href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
-XML format</a>.  Multiple <code>catalogfiles</code> filesets may be
-specified.  Of course, if you use wildcards in your fileset, you will
-want to use some sort of naming convention to ensure that you don't
-accidentally match non-catalog files.  If the resolver library from
-xml-commons is not available in the classpath, all
-<code>catalogfiles</code> will be ignored and a warning will be
-logged.
+XML format</a>. Entries specifying nonexistent files will be ignored. If the
+resolver library from xml-commons is not available in the classpath, all
+<code>catalogpaths</code> will be ignored and a warning will be logged.
+</p>
+<h4>catalogfiles (deprecated)</h4>
+<p>
+The nested <code>catalogfiles</code> element specifies a <a
+href="../CoreTypes/fileset.html">FileSet</a>.  This is equivalent to
+specifying a <code>&lt;fileset&gt;</code> inside a <code>catalogpath</code>,
+and is retained for backwards-compatibility.
 </p>
 <h3>Examples</h3>
 <p>Set up an XMLCatalog with a single dtd referenced locally in a user's 
@@ -260,13 +265,17 @@ formats:</p>
         &lt;entity 
             publicId=&quot;LargeLogo&quot;
             location=&quot;com/arielpartners/images/ariel-logo-large.gif&quot;/&gt;
-    &lt;xmlcatalog refid="commonDTDs"/&gt;
-        &lt;catalogfiles 
-            dir=&quot;/anetwork/drive&quot;
-            includes=&quot;**/catalog&quot;/&gt;
-        &lt;catalogfiles 
-            dir=&quot;/my/catalogs&quot;
-            includes=&quot;**/catalog.xml&quot;/&gt;
+        &lt;xmlcatalog refid="commonDTDs"/&gt;
+            &lt;catalogpath&gt;
+                &lt;pathelement location="/etc/sgml/catalog"/&gt;
+                &lt;fileset 
+                    dir=&quot;/anetwork/drive&quot;
+                    includes=&quot;**/catalog&quot;/&gt;
+                &lt;fileset 
+                    dir=&quot;/my/catalogs&quot;
+                    includes=&quot;**/catalog.xml&quot;/&gt;
+            &lt;/catalogpath&gt;
+        &lt;/xmlcatalog&gt;
     &lt;/xmlcatalog&gt;
 </pre></blockquote>
 <p>To reference the above XMLCatalog in an <code>xslt</code> task:<p>
