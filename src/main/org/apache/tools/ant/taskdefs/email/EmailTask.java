@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.FileSet;
  * A task to send SMTP email. This is a refactoring of the SendMail and MimeMail
  * tasks such that both are within a single task.
  *
- * @author Magesh Umasankar
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  * @author glenn_twiggs@bmc.com
  * @author steve_l@iseran.com steve loughran
  * @author ehatcher@apache.org Erik Hatcher
@@ -438,7 +438,7 @@ public class EmailTask
             // a valid message is required
             if( message == null )
             {
-                throw new BuildException( "A message is required" );
+                message = new Message();
             }
 
             // an address to send from is required
