@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -179,6 +179,8 @@ public class DependSet extends MatchingTask {
         // Grab all the target files specified via filesets
         //
         Vector  allTargets         = new Vector();
+        long oldestTargetTime = 0;
+        File oldestTarget = null;
         Enumeration enumTargetSets = targetFileSets.elements();
         while (enumTargetSets.hasMoreElements()) {
                  
@@ -194,6 +196,12 @@ public class DependSet extends MatchingTask {
               if (dest.lastModified() > now) {
                  log("Warning: "+targetFiles[i]+" modified in the future.", 
                      Project.MSG_WARN);
+              }
+
+              if (oldestTarget == null ||
+                  dest.lastModified() < oldestTargetTime) {
+                  oldestTargetTime = dest.lastModified();
+                  oldestTarget = dest;
               }
            }
         }
@@ -223,41 +231,19 @@ public class DependSet extends MatchingTask {
                  log("Warning: "+targetFiles[i]+" modified in the future.", 
                      Project.MSG_WARN);
               }
-           }
-        }
-
-        //
-        // Check targets vs source files specified via filesets
-        //
-        if (upToDate) {
-           Enumeration enumSourceSets = sourceFileSets.elements();
-           while (upToDate && enumSourceSets.hasMoreElements()) {
-          
-              FileSet sourceFS          = (FileSet) enumSourceSets.nextElement();
-              DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(project);
-              String[] sourceFiles      = sourceDS.getIncludedFiles();
-
-              for (int i=0; upToDate && i < sourceFiles.length; i++) {
-                 File src = new File(sourceFS.getDir(project), sourceFiles[i]);
-
-                 if (src.lastModified() > now) {
-                    log("Warning: "+sourceFiles[i]+" modified in the future.", 
-                        Project.MSG_WARN);
-                 }
-
-                 Enumeration enumTargets = allTargets.elements();
-                 while (upToDate && enumTargets.hasMoreElements()) {
-                 
-                    File dest = (File)enumTargets.nextElement();
-                    if (src.lastModified() > dest.lastModified()) {
-                       log(dest.getPath() + " is out of date with respect to " +
-                                sourceFiles[i], Project.MSG_VERBOSE);
-                       upToDate = false;
-
-                    }
-                 }
+              if (oldestTarget == null ||
+                  dest.lastModified() < oldestTargetTime) {
+                  oldestTargetTime = dest.lastModified();
+                  oldestTarget = dest;
               }
            }
+        }
+        if (oldestTarget != null) {
+            log(oldestTarget + " is oldest target file", Project.MSG_VERBOSE);
+        } else { 
+            // no target files, then we cannot remove any target files and
+            // skip the following tests right away
+            upToDate = false;
         }
 
         //
@@ -285,19 +271,40 @@ public class DependSet extends MatchingTask {
                     break;
                  }
 
-                 Enumeration enumTargets = allTargets.elements();
-                 while (upToDate && enumTargets.hasMoreElements()) {
-                 
-                    File dest = (File)enumTargets.nextElement();
-                    
-                    if (src.lastModified() > dest.lastModified()) {
-                       log(dest.getPath() + " is out of date with respect to " +
-                                sourceFiles[i], Project.MSG_VERBOSE);
-                       upToDate = false;
-
-                    }
+                 if (src.lastModified() > oldestTargetTime) {
+                    upToDate = false;
+                    log(oldestTarget + " is out of date with respect to " +
+                        sourceFiles[i], Project.MSG_VERBOSE);
                  }
               } while (upToDate && (++i < sourceFiles.length) );
+           }
+        }
+
+        //
+        // Check targets vs source files specified via filesets
+        //
+        if (upToDate) {
+           Enumeration enumSourceSets = sourceFileSets.elements();
+           while (upToDate && enumSourceSets.hasMoreElements()) {
+          
+              FileSet sourceFS          = (FileSet) enumSourceSets.nextElement();
+              DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(project);
+              String[] sourceFiles      = sourceDS.getIncludedFiles();
+
+              for (int i=0; upToDate && i < sourceFiles.length; i++) {
+                 File src = new File(sourceFS.getDir(project), sourceFiles[i]);
+
+                 if (src.lastModified() > now) {
+                    log("Warning: "+sourceFiles[i]+" modified in the future.", 
+                        Project.MSG_WARN);
+                 }
+
+                 if (src.lastModified() > oldestTargetTime) {
+                    upToDate = false;
+                    log(oldestTarget + " is out of date with respect to " +
+                        sourceFiles[i], Project.MSG_VERBOSE);
+                 }
+              }
            }
         }
 
