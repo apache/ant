@@ -61,7 +61,7 @@ Note: This document was created in the context of releasing Ant 1.5.
 
     Before you do that, ensure that the key you use is inside the KEYS
     file in Ant's CVS repository - and that you perform a cvs update on
-    the KEYS file in /www/jakarta.apache.org/builds/jakarta-ant/release/
+    the KEYS file in /www/www.apache.org/dist/ant/
     
     Also make sure you have sent the key that you use to a public 
     keyserver.
@@ -140,7 +140,7 @@ Note: This document was created in the context of releasing Ant 1.5.
     announce@jakarta.apache.org, announce@xml.apache.org,
     announce@apache.org, ant-dev and ant-user.
 
-    Announce release at freshmeat.net 
+    Announce release at freshmeat.net
     (Stefan Bodewig is the owner of Ant's project entry - bug him ;-).
 
     Announce release in the usenet groups comp.lang.java.softwaretools
