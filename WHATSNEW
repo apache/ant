@@ -161,6 +161,10 @@ Fixed bugs:
   of FileUtils#createTempFile instead of the destination dir of fixcrlf.
   Bugzilla Report 20870.
 
+* <ejbjar> implementation for Borland.
+  Prevent the task from being blocked by error messages coming from java2iiop.
+  Bugzilla Report 19385.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.

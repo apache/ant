@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -136,6 +136,9 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
     /** Instance variable that determines whether the debug mode is on */
     private boolean java2iiopdebug = false;
 
+    /** store additional param for java2iiop command used to build EJB Stubs */
+    private String java2iioparams = null;
+
     /** Instance variable that determines whetger the client jar file is generated */
     private boolean generateclient = false;
 
@@ -211,6 +214,16 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
     public void setVersion(int version) {
         this.version = version;
     }
+
+    /**
+     * If filled, the params are added to the java2iiop command.
+     * (ex: -no_warn_missing_define)
+     * @param params additional params for java2iiop
+     */
+    public void setJava2iiopParams(String params) {
+        this.java2iioparams = params;
+    }
+
 
     protected DescriptorHandler getBorlandDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
@@ -405,7 +418,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         //debug ?
         if (java2iiopdebug) {
             commandline.createArgument().setValue("-VBJdebug");
-        } // end of if ()
+        } 
         //set the classpath
         commandline.createArgument().setValue("-VBJclasspath");
         commandline.createArgument().setPath(getCombinedClasspath());
@@ -413,6 +426,13 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         commandline.createArgument().setValue("-list_files");
         //no TIE classes
         commandline.createArgument().setValue("-no_tie");
+        
+        if ( java2iioparams != null) {
+            log("additional  "+java2iioparams +" to java2iiop " ,0);
+            commandline.createArgument().setValue(java2iioparams);            
+        }
+        
+
         //root dir
         commandline.createArgument().setValue("-root_dir");
         commandline.createArgument().setValue(getConfig().srcDir.getAbsolutePath());
@@ -421,7 +441,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         //add the home class
         while (ithomes.hasNext()) {
             commandline.createArgument().setValue(ithomes.next().toString());
-        } // end of while ()
+        } 
 
         try {
             log("Calling java2iiop", Project.MSG_VERBOSE);
@@ -456,8 +476,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
                 String home = toClass(clazz);
                 homes.add(home);
                 log(" Home " + home, Project.MSG_VERBOSE);
-            } // end of if ()
-        } // end of while ()
+            } 
+        } 
 
         buildBorlandStubs(homes.iterator());
 
@@ -513,15 +533,12 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             String javafile;
             while ((javafile = reader.readLine()) != null) {
-                log("buffer:" + javafile, Project.MSG_DEBUG);
                 if (javafile.endsWith(".java")) {
                     String classfile = toClassFile(javafile);
                     String key = classfile.substring(getConfig().srcDir.getAbsolutePath().length() + 1);
-                    log(" generated : " + classfile, Project.MSG_DEBUG);
-                    log(" key       : " + key, Project.MSG_DEBUG);
                     _genfiles.put(key, new File(classfile));
-                } // end of if ()
-            } // end of while ()
+                } 
+            } 
             reader.close();
         } catch (Exception e) {
             String msg = "Exception while parsing  java2iiop output. Details: " + e.toString();
@@ -533,8 +550,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String s = reader.readLine();
         if (s != null) {
-            log("[java2iiop] " + s, Project.MSG_DEBUG);
-        } // end of if ()
+            log("[java2iiop] " + s, Project.MSG_ERR);
+        } 
     }
 }
 
