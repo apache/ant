@@ -332,6 +332,7 @@
     <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
     <available property="jdk1.4+" classname="java.lang.CharSequence" />
+    <available property="kaffe" classname="kaffe.util.NotImplemented" />
     <available property="bsf.present"
                classname="com.ibm.bsf.BSFManager"
                classpathref="classpath" />
@@ -495,7 +496,12 @@
 
     <condition property="swing.present">
       <or>
-        <isset property="jdk1.2+" />
+        <and>
+          <isset property="jdk1.2+" />
+          <not>
+            <isset property="kaffe" />
+          </not>
+        </and>
         <available classname="javax.swing.ImageIcon"
                    classpathref="classpath"/>
       </or>
