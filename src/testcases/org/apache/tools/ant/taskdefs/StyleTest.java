@@ -114,57 +114,9 @@ public class StyleTest extends BuildFileTest {
     }
 
     public void testNewerStylesheet() throws Exception {
-        File xmlFile = new File("testNewerStylesheet.xml");
-        File xslFile = new File("testNewerStylesheet.xsl");
-        File outFile = new File("testNewerStylesheet.out");
-
-        // create the first version of xml and xsl
-        String xml = "<data/>";
-        StringBuffer xslHeader = new StringBuffer();
-        StringBuffer xslFooter = new StringBuffer();
-        xslHeader.append("<?xml version=\"1.0\"?>");
-        xslHeader.append("<xsl:stylesheet");
-        xslHeader.append("  version=\"1.0\"");
-        xslHeader.append("  xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">");
-        xslHeader.append("<xsl:template match=\"/\">");
-        xslFooter.append("</xsl:template>");
-        xslFooter.append("</xsl:stylesheet>");
-
-        FileWriter xmlWriter = new FileWriter(xmlFile);
-        xmlWriter.write(xml);
-        xmlWriter.close();
-
-        FileWriter xslWriter = new FileWriter(xslFile);
-        xslWriter.write(xslHeader.toString());
-        xslWriter.write("old-string");
-        xslWriter.write(xslFooter.toString());
-        xslWriter.close();
-
-        // make the first transformation
-        XSLTProcess xslt = new XSLTProcess();
-        xslt.setProject(getProject());
-        System.out.println("Project : " + getProject());
-        xslt.setBasedir(getProject().getBaseDir());
-        xslt.setStyle(xslFile.toString());
-        xslt.setOut(outFile);
-        xslt.setIn(xmlFile);
-        xslt.execute();
-
-        // modify the xsl
-        xslWriter = new FileWriter(xslFile);
-        xslWriter.write(xslHeader.toString());
-        xslWriter.write("new-string");
-        xslWriter.write(xslFooter.toString());
-        xslWriter.close();
-        xslt.perform();
-
-        // make the second transformation
-
-
-        // test for 2nd transformation
-        xmlFile.delete();
-        xslFile.delete();
-        outFile.delete();
+        expectFileContains("testNewerStylesheet",
+                           "out/out.xml",
+                           "new-value");
     }
 
 

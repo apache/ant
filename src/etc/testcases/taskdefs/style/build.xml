@@ -42,4 +42,17 @@
       </style>
   </target>
 
+  <target name="testNewerStylesheet">
+      <antcall target="copyXsl"><param name="xsl.value" value="old-value"/></antcall>
+      <style in="data.xml" out="${out.dir}/out.xml" style="tmp.xsl"/>
+      <antcall target="copyXsl"><param name="xsl.value" value="new-value"/></antcall>
+      <style in="data.xml" out="${out.dir}/out.xml" style="tmp.xsl"/>
+      <delete file="tmp.xsl"/>
+  </target>
+  <target name="copyXsl" if="xsl.value">
+      <copy file="testNewerStylesheet.xsl" tofile="tmp.xsl" overwrite="true">
+          <filterchain><expandproperties/></filterchain>
+      </copy>
+  </target>
+
 </project>
