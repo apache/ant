@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <index value="2"/>
+    <author email="antoine@apache.org">Antoine Levy-Lambert</author>
+    <title>Antlib Namespaces</title>
+  </properties>
+
+<body>
+
+<section name="J.Pietschmann 03.05.2003 17:25">
+<p>
+Nicola Ken Barozzi wrote:
+&lt; This seems interesting, and brings up what XML namespaces can be used for.
+</p><p>
+XML namespaces are indented to disambiguate short local element
+and attribute names. Any sematic associated to XML namespaces
+beside this has to be weighted carefully.
+</p><p>
+
+Lets take an example. There are two projects, Foo and Bar,
+each providing a task, lets call them &lt;foo&gt; and &lt;bar&gt;
+respectively. Both tasks take a &lt;part&gt; child, by coincidence.
+Of course, because the projects act uncoordinated, the &lt;part&gt;
+child element has a different semantic. In order to make this
+clearer, let's say the Foo &lt;part&gt; takes an optional &lt;mumble&gt;
+child while the Bar &lt;part&gt; takes three mandatory &lt;xonx&gt;
+children.
+</p><p>
+Someone finds both the &lt;foo&gt; and the &lt;bar&gt; task exciting and
+wants to use both in an Ant build file. No problem so far:
+because ot the way Ant elements get their child elements and
+create associated Java objects, this should work.
+Now said someone got a super-duper schema directed XML editor
+and wants to use it for editing the build.xml file. He asks
+all projects for a schema (DTD, XSD, RNG, whatever) for this
+purpose and merges them in order to get a schema for his build
+file. At this point the two &lt;part&gt; elements are likely to clash
+(at least for DTDs, where element names are global). While
+it is possible to merge the content models so that &lt;part&gt; now
+takes either an optional &lt;mumble&gt; or three &lt;xonx&gt; children, this
+would allow the user to put &lt;xonx&gt; children into the &lt;part&gt; of
+the &lt;foo&gt; task. This is only a minor inconvenience for most
+people, but an unthinkable horror for true purists.
+</p><p>
+Introduce namespaces: the Foo projects names its namespace
+"http://www.fooproject.org/anttask" while the Bar project uses
+"URI:bar" or whatever. For the XML parser it is only really
+important that two different strings are used. You see, the
+longer the strings the less tha chance they will clash, and
+they probably won't clash if they start with the URLs of the
+project's homepages (the intent behind the recommendation to
+use URLs, because it's the closest thing to a global registry
+you can get short of actually creating a global registry).
+Anyway, because the expanded names of the &lt;part&gt; elements are
+now "{http://www.fooproject.org/anttask}part" and "{URI:bar}part"
+respectively they obviously no longer clash.
+BTW you can write this as
+</p>
+<source><![CDATA[
+  <target name="foo">
+    <foo xmlns="http://www.fooproject.org/anttask">
+      <part>
+        <mumble>
+      </part>
+    </foo>
+    <bar xmlns="URI:bar">
+      <part><xonx/><xonx/><xonx/></part>
+    </bar>
+  <target>
+]]></source>
+<p>
+or as
+</p>
+<source><![CDATA[
+  <target name="foo"
+     xmlns:foo="http://www.fooproject.org/anttask"
+     xmlns:bar="URI:bar">
+    <foo:foo>
+      <foo:part>
+        <foo:mumble>
+      </foo:part>
+    </foo:foo>
+    <bar:bar>
+      <bar:part><bar:xonx/><bar:xonx/><bar:xonx/></bar:part>
+    </bar:bar>
+  <target>
+]]></source>
+<p>
+take your pick (if you think the "foo" and "bar" prefixes are too
+long, use "a" and "b" instead, it doesn't matter).
+</p><p>
+So far, the namespace names should only be different for different
+projects, so why is it dangerous to associate some semantic with it,
+like letting them point to a jar file? The problem is again that
+general purpose XML tools, like the above mentioned super-duper XML
+editor may associate their own semantics with the namespace, like
+how to auto-format certain elements. This information will be stored
+in some config files, and it requires that the namespace name is
+the same until the semantics of the elements in it have changed
+enough that it warrants assigning a new namespace name.
+</p><p>
+
+Summary:
+</p>
+<ol>
+<li>
+XML namespaces are there to facilitate aggregation of XML adhering
+  to schemas (content models) of different, uncoordinated origin.
+</li><li>
+XML Namespaces should be used in a way that no end user action
+  can result in two namespace names becoming unintentionally the
+  same.
+</li><li>
+XML Namespace names should preferably be assigned by the people
+  or project which specifies the semantics of the XML elemnets and
+  attributes therein.
+</li><li>
+XML Namespace names should be kept unchanged until a change of
+  the semantic of the elements warrants a change.
+</li><li>
+Good tools should not monopolize XML namespace syntax for its
+  own semantics.
+</li>
+</ol>
+<p>
+The schema directed editor should provide an example hoe tools
+can take advantage of XML namespaces: use them as a key into a
+DB/config to get it's own associated semantic.
+In particular for Ant/Antlib I can imagine that each library
+provides a factory object associated to the XML namespace for
+the library.
+</p><p>
+The FOP parser uses such a two stage lookup: first the namespace
+is used to get a factory object from a hash table, then the factory
+is used with the local XML element name to create a Java object
+which is inserted into the FO tree. The hash table with the factories
+is initialized at startup, the associations between namespace name
+and factory class name is read from a Services file. Want to add
+a FOP extension? Get the default Services file, add a line with
+your namespace-to-factoryclassname mapping put it into the jar with
+all the classes and drop the jar as first into the classpath. If the
+user wants to use multiple extensions, well, edit the main Services
+instead, dead easy.
+</p><p>
+HTH
+J.Pietschmann
+</p>
+</section>
+</body>
+</document>

@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<document>
+	<properties>
+		<index value="2"/>
+		<author email="antoine@apache.org">Antoine Levy-Lambert</author>
+		<title>Roles</title>
+	</properties>
+	<body>
+		<section name="What is a role">
+					<p>
+I am quoting here Jose Alberto Fernandez 26.04.2003 22:05:
+Roles allow defining families of objects (members of a role) that can be
+used by tasks or inner elements developed separately. 
+The developer of the object accepting a particular role as a subelement
+has no knowledge of the implementation of the object but much more
+importantly it has no knowledge of the XML element tag used to refer
+to this subelement in the XML file.
+</p>
+			<p>
+
+In the antlib proposal, there are two preset roles :
+<ul>
+					<li>task</li>
+					<li>datatype</li>
+				</ul>
+Examples of other roles are :
+<ul>
+					<li>mapper</li>
+					<li>filter</li>
+				</ul>
+			</p>
+					<p>
+What does it all mean? It means we can now write a task, well typed, which 
+can be accept different XML subelements depending on the declarations of 
+other objects present on the build. The vendor specific elements of
+&lt;ejbjar&gt;, &lt;jspc&gt; and others are typical examples of where this capability
+can be very useful. Other parts of core could benefit of course.
+</p>
+				<br/>
+<subsection name="What do they do that is no possible in ANT">
+<p>
+They allow IntrospectionHelper to connect an XML subelement eventhough
+introspection cannot find a create or add/Configured method for it.
+It is a well typed methanism, the parent object will only be passed objects
+that it knows how to deal with. And the parent object does not need to have 
+any knowledge of what currently available members are on the role.
+</p>
+</subsection>
+</section>
+<section name="roles versus DynamicConfigurator">
+					<p>
+The closest thing in ANT today is DynamicConfigurator but its purpose
+is on the other way around. Given an elementTag with no matching method
+it is up to the parent object to try to make sense of it.
+If we were to use this mechanism to accomplish what roles try to do, 
+it would require the parent object implementor to be aware of where
+to find the correct definition (remember it is a 3rd party implementation)
+and perform the creation. It will be also its responsibility to
+resolve type conflicts, name collisions, etc. This are all things
+that should be done by IntrospectionHelper directly.
+</p>
+					<p>
+
+Also notice that Roles do not supersede DynamicConfigurator. On one hand roles
+let external implementations to be considered as possible subelements
+of a parent object, on the other hand, DynamicConfigurator allows a node
+to decide given its current state what is the meaning of a particular element.
+This cannot be done by roles in the general case, and that is good.
+</p>		</section>
+<section name="Implementation of roles in the proposal">
+<p>this section quotes Jose Alberto Fernandez</p>
+					<p>
+Here I may deviate from the exact code and add thoughts about where
+do I think it should go. 
+</p>
+					<subsection name="Usage of Roles">
+						<p>
+The principle is very simple:
+</p>
+						<br/>
+						<ol>
+							<li>
+A role is defined by an interface. This interface is the parameter
+   for a new special family of addConfigured(&lt;interface&gt;) methods.
+</li>
+							<li>
+								<p>
+When IntrospectionHelper fails to find a create/add method for the 
+   element, it will look at all the roles used in the addConfigured 
+   methods and on each of those roles will try to find an object declared 
+   with that element-tag name. If one and only one match is found then
+   the instantiation is successful and the new object will be configured;
+   otherwise it is an error and parsing stops.
+</p>
+								<br/>
+							</li>
+							<li>
+								<p>
+ The configured object may or may not implement the Role interface,
+   if it does not, an Adaptor object may be instantiated as a proxy 
+   for the object. Which adaptor is used depends on how the implementation
+   was declared.
+</p>
+								<br/>
+							</li>
+							<li>
+								<p>
+The resulting object is passed as an argument to the addConfigured() method.
+</p>
+								<br/>
+							</li>
+						</ol>
+					</subsection>
+					<subsection name="Declaration of roles">
+						<p>
+A role definition associates a name with an (Interface,Adaptor) pair.
+The only reason for associating a name with the role is to ease notation when
+declaring members of a role.
+</p>
+						<br/>
+						<p>
+Notice that the same interface or the same Adaptor may appear in multiple
+declarations. This only means that depending on the name used the adaptor
+of choice will be different.
+</p>
+						<br/>
+						<p>
+There can only be one pair associated with each name.
+</p>
+						<br/>
+					</subsection>
+					<subsection name="Declaration of implementations (members)">
+						<br/>
+						<p>
+A class is declared as belonging to a role by specifying the name to be used
+when appearing in that role. The same class may belong to multiple roles
+and may specify the same or different names on each one.
+<br/>
+						</p>
+						<p>
+The name used for the role during the declaration only determines which
+Adaptor will be available, if required. 
+<br/>
+						</p>
+						<p>
+
+Within a role-interface there can only be one object associated
+with each name.
+<br/>
+						</p>
+					</subsection>
+					<subsection name="Scoping rules">
+						<br/>
+						<p>
+This is probably the more dificult aspect since given the way
+&lt;ant&gt; and &lt;antcall&gt; work it means possible redeclarations on every
+level of recursion. Whether declarations should just supercede
+one another or be smarter is something to look into.
+<br/>
+						</p>
+					</subsection>
+					<subsection name="Syntax">
+						<br/>
+						<p>
+I have left out the issues of how the syntax looks like on purpose.
+<br/>
+						</p>
+						<p>
+Syntax is just that and I am sure we can reach agreement somehow.
+It is also clear that we should provide tasks to define roles
+and declare members of roles direclty on the build.
+<br/>
+						</p>
+					</subsection>
+		</section>
+		<section name="Making ant aware of tag/role/class associations">
+			<p>
+The antlib proposal says :
+Let's declare explicitly that a tag can be used in a particular role and is implemented by a specific class.
+The declaration happens inside antlibs in the file META-INF/antlib.xml
+</p>
+Example :
+<source><![CDATA[
+  <filter name="escapeunicode" class="org.apache.tools.ant.filters.EscapeUnicode"/>
+]]></source>
+			<p>
+CM says :
+A normal typedef is enough to make ant aware of the existence of the class org.apache.tools.ant.filters.EscapeUnicode.
+Due to the fact that EscapeUnicode implements ChainableReader, the association between EscapeUnicode and the filter role does not need to be stated explicitly.
+</p>
+		</section>
+		<section name="Method names in parent classes supporting roles">
+			<p>
+There is a discussion about how methods to add nested elements of a specific roles in a parent class should be called, and what their signature should be like.
+</p>
+			<p>
+CM :
+<source>
+addTYPE(TYPE) 
+</source>
+for instance <source>addChainableReader(ChainableReader a)</source>
+			</p>
+			<p>
+PR:
+to add an element before its own attributes and nested elements are configured.
+<source>
+void add(TYPE)
+</source>
+to add an already configured element
+<source>
+void addConfigured(TYPE)
+</source>
+			</p>
+			<p>
+in the ant code of 1.6 :
+<source>public Object createDynamicElement(String name)</source>
+			</p>
+		</section>
+		<section name="Cardinality problems">
+			<subsection name="One tag, several implementations">
+				<p>
+The &lt;weblogic&gt; element in &lt;ejbjar&gt;, &lt;jspc&gt;, &lt;serverdeploy&gt;, has different meanings.
+</p>
+<p>
+This is an argument to introduce roles in ant, and to associate an XML tag with a role and an implementation class.
+</p>
+			</subsection>
+			<subsection name="Parent classes accepting one interface in different functions">
+				<p>
+As an example, the dependset task accepts nested filesets for two different functions :
+<ul>
+						<li>source</li>
+						<li>target</li>
+					</ul>
+				</p>	
+				<p>Stefan Bodewig/Costin Manolache suggest :</p>
+				<source><![CDATA[
+ <dependset>
+   <zipfileset ant:type="srcfileset">
+ </dependset>
+]]></source>
+			</subsection>
+		<subsection name="adapters">
+			<p>
+The antlib proposal mentions adapter classes, which would be connected to roles.
+Costin Manolache says that adapter classes should be tied to components, not roles.
+The reason : two different components implementing the same interface (AKA role) can require different adapters.
+</p>
+		</subsection>
+		</section>
+<section name="role proposal">
+<p>
+slightly modified version of something writte by Jose Alberto Fernandez
+</p>
+<source><![CDATA[
+<role name="roleName" className="...." [adapter="...."] />
+<!-- I have added the possibility to declare a specific adapter per component to take into account what Costin said -->
+<component name="elementName" role="roleName" className="....."  [adapter="...."] />
+
+]]></source>
+</section>
+	</body>
+</document>

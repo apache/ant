@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<document>
+
+  <properties>
+    <index value="2"/>
+    <author email="antoine@apache.org">Antoine Levy-Lambert</author>
+    <title>Antlib Class Loaders</title>
+  </properties>
+
+<body>
+
+  <section name="Jose Alberto Fernandez">
+<p>
+ Let me first say that this feature appeared by the need to be able to say,
+ </p>
+<source><![CDATA[
+<antlib name="A" classpathref="XYZ"/>
+<antlib name="B" classpathref="XYZ"/>
+]]></source>
+<p>
+ And being able to make sure that B and A use the same classLoader
+ and therefore they can use each other components.
+</p>
+<p>
+
+ My solution at the time was this idea of a named classloader that
+ you could define using a classpath, and then tell your antlibs use
+ this or that classloader, if you use the same classloader visibility
+ is guaranteed.
+</p>
+  </section>
+  <section name="Stefan Bodewig 23.04.2003 17:11">
+...
+
+<p>
+
+I understand that usecase (using the same class loader for 2 different antlibs) 
+and think it's important.  See Steve
+Loughran's comment on the .NET tasks wanting to have access to the
+datatypes defined in the cpptasks project for example.
+</p><p>
+
+Take a look at what Costin had done to &lt;taskdef&gt; and &lt;typedef&gt; with
+the loaderref attribute.  This has now (i.e. CVS HEAD) been
+generalized in ClasspathUtils, the infrastructure for named
+classloaders is there - at least the foundation for it.
+</p><p>
+
+Stefan
+</p>
+
+  </section>
+  <section name="Costin Manolache 29.04.2003 18:52">
+<p>
+The main issue is how to enforce ordering to deal with dependencies
+between the antlibs.
+</p><p>
+Or simply do not deal with dependencies, ie antlibs must not (yet)
+depend on on the other, except for the core ones.
+</p><p>
+Using an unified class loader ( at least as default ) - like jboss is doing,
+or like JMX loading policy  - has a lot of benefits.  It also has some cases
+that are not well covered - so we'll probably need to deal with both
+"unified loader" and "loader hierarchy" cases.
+</p>
+</section>
+</body>
+</document>
