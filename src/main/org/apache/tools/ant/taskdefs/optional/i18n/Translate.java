@@ -520,7 +520,7 @@ public class Translate extends MatchingTask {
                         FileOutputStream fos = new FileOutputStream(dest);
                         BufferedWriter out
                             = new BufferedWriter(new OutputStreamWriter(fos, destEncoding));
-                        FileInputStream fis = new FileInputStream(srcFiles[j]);
+                        FileInputStream fis = new FileInputStream(src);
                         BufferedReader in
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
