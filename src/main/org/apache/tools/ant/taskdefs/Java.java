@@ -72,7 +72,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- * This task acts as a loader for java applications but allows to use
+ * Launcher for Java applications. Allows use of
  * the same JVM for the called application thus resulting in much
  * faster operation.
  *
@@ -231,6 +231,7 @@ public class Java extends Task {
     /**
      * Deprecated: use nested arg instead.
      * Set the command line arguments for the class.
+     * @ant.attribute ignore="true"
      */
     public void setArgs(String s) {
         log("The args attribute is deprecated. " +

@@ -184,6 +184,11 @@ public class Ejbc extends MatchingTask {
         generatedFilesDirectory = new File(dirName);
     }
 
+    /**
+     * If true, ejbc will keep the
+     * intermediate Java files used to build the class files.
+     * This can be useful when debugging.
+     */
     public void setKeepgenerated(String newKeepgenerated) {
         keepgenerated = Boolean.valueOf(newKeepgenerated.trim()).booleanValue();
 

@@ -90,7 +90,7 @@ public class JarLibDisplayTask
     private final Vector m_filesets = new Vector();
 
     /**
-     * The jar library to display information for.
+     * The JAR library to display information for.
      *
      * @param file The jar library to display information for.
      */

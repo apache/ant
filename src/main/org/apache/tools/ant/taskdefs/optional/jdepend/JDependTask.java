@@ -74,7 +74,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
- * Ant task to run JDepend tests.
+ * Runs JDepend tests.
  *
  * <p>JDepend is a tool to generate design quality metrics for each Java package.
  * It has been initially created by Mike Clark. JDepend can be found at <a
@@ -116,6 +116,11 @@ public class JDependTask extends Task {
     }
 */
 
+    /**
+     * The output file name.
+     *
+     * @param outputFile
+     */
     public void setOutputFile(File outputFile) {
         _outputFile = outputFile;
     }
@@ -136,7 +141,8 @@ public class JDependTask extends Task {
     }
 
     /**
-     * Tells whether a JVM should be forked for the task. Default: false.
+     * If true, forks into a new JVM. Default: false.
+     *
      * @param   value   <tt>true</tt> if a JVM should be forked, otherwise <tt>false<tt>
      */
     public void setFork(boolean value) {
@@ -148,7 +154,9 @@ public class JDependTask extends Task {
     }
 
     /**
-     * Set a new VM to execute the task. Default is <tt>java</tt>. Ignored if no JVM is forked.
+     * The command used to invoke a forked Java Virtual Machine.
+     *
+     * Default is <tt>java</tt>. Ignored if no JVM is forked.
      * @param   value   the new VM to use instead of <tt>java</tt>
      * @see #setFork(boolean)
      */
@@ -158,7 +166,7 @@ public class JDependTask extends Task {
     }
 
     /**
-     * Maybe creates a nested classpath element.
+     * Adds a path to source code to analyze.
      */
     public Path createSourcespath() {
         if (_sourcesPath == null) {
@@ -202,7 +210,7 @@ public class JDependTask extends Task {
     }
 
     /**
-     * Maybe creates a nested classpath element.
+     * Adds a path to the classpath.
      */
     public Path createClasspath() {
         if (_compileClasspath == null) {
@@ -221,13 +229,18 @@ public class JDependTask extends Task {
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Adds a reference to a classpath defined elsewhere.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
 
+    /**
+     * The format to write the output in, "xml" or "text".
+     *
+     * @param ea
+     */
     public void setFormat(FormatAttribute ea) {
         format = ea.getValue();
     }

@@ -75,7 +75,8 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Convenient task to run Sitraka JProbe Coverage from Ant.
+ * Runs Sitraka JProbe Coverage.
+ *
  * Options are pretty numerous, you'd better check the manual for a full
  * descriptions of options. (not that simple since they differ from the online
  * help, from the usage command line and from the examples...)
@@ -131,7 +132,9 @@ public class Coverage extends Task {
 
     //--------- setters used via reflection --
 
-    /** set the coverage home directory where are libraries, jars and jplauncher */
+    /**
+     * The directory where JProbe is installed.
+     */
     public void setHome(File value) {
         home = value;
     }
@@ -141,10 +144,16 @@ public class Coverage extends Task {
         seedName = value;
     }
 
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setInputfile(File value) {
         inputFile = value;
     }
 
+    /**
+     * Path to the java executable.
+     */
     public void setJavaexe(File value) {
         javaExe = value;
     }
@@ -155,25 +164,43 @@ public class Coverage extends Task {
         }
     }
 
-    /** jdk117, jdk118 or java2, can be null, default to java2 */
+    /**
+     * Indicates which virtual machine to run: "jdk117", "jdk118" or "java2".
+     * Can be null, default to "java2". */
     public void setVm(Javavm value) {
         vm = value.getValue();
     }
 
-    /** default to false unless file is htm or html */
+    /**
+     * If true, run an applet.
+     */
     public void setApplet(boolean value) {
         applet = value;
     }
 
-    /** always, error, never */
+    /**
+     * Toggles display of the console prompt: always, error, never
+     */
     public void setExitprompt(String value) {
         exitPrompt = value;
     }
 
+    /**
+     * Defines class/method filters based on pattern matching.
+     * The syntax is filters is similar to a fileset.
+     */
     public Filters createFilters() {
         return filters;
     }
 
+    /**
+     * Defines events to use for interacting with the
+     * collection of data performed during coverage.
+     *
+     * For example you may run a whole application but only decide
+     * to collect data once it reaches a certain method and once it
+     * exits another one.
+     */
     public Triggers createTriggers() {
         if (triggers == null) {
             triggers = new Triggers();
@@ -181,6 +208,10 @@ public class Coverage extends Task {
         return triggers;
     }
 
+    /**
+     * Define a host and port to connect to if you want to do
+     * remote viewing.
+     */
     public Socket createSocket() {
         if (socket == null) {
             socket = new Socket();
@@ -194,7 +225,10 @@ public class Coverage extends Task {
         }
     }
 
-    /** none, coverage, all. Can be null, default to none */
+    /**
+     * Type of snapshot to send at program termination: none, coverage, all.
+     * Can be null, default to none
+     */
     public void setFinalsnapshot(String value) {
         finalSnapshot = value;
     }
@@ -205,50 +239,77 @@ public class Coverage extends Task {
         }
     }
 
-    /** all, coverage, none */
+    /**
+     * "all", "coverage",  or "none".
+     */
     public void setRecordfromstart(Recordfromstart value) {
         recordFromStart = value.getValue();
     }
 
+    /**
+     * Set warning level (0-3, where 0 is the least amount of warnings).
+     */
     public void setWarnlevel(Integer value) {
         warnLevel = value.intValue();
     }
 
+    /**
+     * The path to the directory where snapshot files are stored.
+     * Choose a directory that is reachable by both the remote
+     * and local computers, and enter the same path on the command-line
+     * and in the viewer.
+     */
     public void setSnapshotdir(File value) {
         snapshotDir = value;
     }
 
+    /**
+     * The physical path to the working directory for the VM.
+     */
     public void setWorkingdir(File value) {
         workingDir = value;
     }
 
+    /**
+     * If true, track native methods.
+     */
     public void setTracknatives(boolean value) {
         trackNatives = value;
     }
 
     //
 
-    /** the jvm arguments */
+    /**
+     * Adds a JVM argument.
+     */
     public Commandline.Argument createJvmarg() {
         return cmdlJava.createVmArgument();
     }
 
-    /** the command arguments */
+    /**
+     * Adds a command argument.
+     */
     public Commandline.Argument createArg() {
         return cmdlJava.createArgument();
     }
 
-    /** classpath to run the files */
+    /**
+     * classpath to run the files.
+     */
     public Path createClasspath() {
         return cmdlJava.createClasspath(project).createPath();
     }
 
-    /** classname to run as standalone or runner for filesets */
+    /**
+     * classname to run as standalone or runner for filesets.
+     */
     public void setClassname(String value) {
         cmdlJava.setClassname(value);
     }
 
-    /** the classnames to execute */
+    /**
+     * the classnames to execute.
+     */
     public void addFileset(FileSet fs) {
         filesets.addElement(fs);
     }

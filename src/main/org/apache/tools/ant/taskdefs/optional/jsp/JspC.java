@@ -71,7 +71,9 @@ import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapterFa
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
-/** Ant task to run the jsp compiler.
+/**
+ * Runs a JSP compiler.
+ *
  * <p> This task takes the given jsp files and compiles them into java
  * files. It is then up to the user to compile the java files into classes.
  *
@@ -164,7 +166,7 @@ public class JspC extends MatchingTask {
         = "Compile failed, messages should have been provided.";
     /* ------------------------------------------------------------ */
     /**
-     * Set the source dirs to find the source JSP files.
+     * Path for source JSP files.
      */
     public void setSrcdir(Path srcDir) {
         if (src == null) {
@@ -188,12 +190,14 @@ public class JspC extends MatchingTask {
         return destDir;
     }
     /* ------------------------------------------------------------ */
+
     /**
-     * Set the name of the package the compiled jsp files should be in
+     * Set the name of the package the compiled jsp files should be in.
      */
     public void setPackage(String pkg){
         this.packageName = pkg;
     }
+
     public String getPackage(){
         return packageName;
     }
@@ -226,7 +230,9 @@ public class JspC extends MatchingTask {
     public String getIeplugin() {
         return iepluginid;
     }
-    /** Set the ieplugin id */
+    /**
+     * Java Plugin CLASSID for Internet Explorer
+     */
     public void setIeplugin(String iepluginid_) {
         iepluginid = iepluginid_;
     }
@@ -234,16 +240,18 @@ public class JspC extends MatchingTask {
     public boolean isMapped() {
         return mapped;
     }
-    /** set the mapped flag */
+    /**
+     * If true, generate separate write() calls for each HTML line
+     * in the JSP.
+     */
     public void setMapped(boolean mapped_) {
         mapped = mapped_;
     }
         
     /**
-     * The -uribase option. The uri context of relative URI 
-     * references in the JSP pages. If it does not 
-     * exist then it is derived from the location of the file
-     * relative to the declared or derived value of -uriroot. 
+     * The URI context of relative URI references in the JSP pages.
+     * If it does not exist then it is derived from the location
+     * of the file relative to the declared or derived value of uriroot.
      *
      * @param  uribase  The new Uribase value
      */
@@ -256,9 +264,8 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     *  The -uriroot option.
-     * <p>The root directory that uri files should be resolved
-     *  against, (Default is the directory jspc is invoked from)
+     *  The root directory that uri files should be resolved
+     *  against. (Default is the directory jspc is invoked from)
      *
      * @param  uriroot  The new Uribase value
      */
@@ -272,7 +279,9 @@ public class JspC extends MatchingTask {
         
         
     /* ------------------------------------------------------------ */
-    /** Set the classpath to be used for this compilation */
+    /**
+     * Set the classpath to be used for this compilation.
+     */
     public void setClasspath(Path cp) {
         if (classpath == null) {
             classpath = cp;
@@ -280,14 +289,20 @@ public class JspC extends MatchingTask {
             classpath.append(cp);
         }
     }
-    /** Maybe creates a nested classpath element. */
+
+    /**
+     * Adds a path to the classpath.
+     */
     public Path createClasspath() {
         if (classpath == null) {
             classpath = new Path(project);
         }
         return classpath.createPath();
     }
-    /** Adds a reference to a CLASSPATH defined elsewhere */
+
+    /**
+     * Adds a reference to a classpath defined elsewhere
+     */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
@@ -296,7 +311,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     *  -webxml &lt;file&gt; Creates a complete web.xml when using the -webapp option.
+     *  Filename for web.xml.
      *
      * @param  webxml  The new Webxml value
      */
@@ -309,8 +324,8 @@ public class JspC extends MatchingTask {
     }
  
     /**
-     *  name output file for the fraction of web.xml that lists
-     *  servlets
+     *  output filename for the fraction of web.xml that lists
+     *  servlets.
      * @param  webinc  The new Webinc value
      */
     public void setWebinc(File webinc) {
@@ -322,9 +337,9 @@ public class JspC extends MatchingTask {
     }
     
     /**
-     * Web apps parameter. Only one is allowed.
+     * Adds a single webapp.
      *
-     * @param  fs  add a web app fileset
+     * @param  webappParam  add a web app parameter
      */
     public void addWebApp(WebAppParameter webappParam) 
         throws BuildException {
@@ -341,7 +356,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     * Sets the compiler to use. Optional: default=jasper
+     * Class name of a JSP compiler adapter.
      */
     public void setCompiler(String compiler) {
         this.compilerName = compiler;

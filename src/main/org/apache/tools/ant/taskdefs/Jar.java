@@ -137,9 +137,7 @@ public class Jar extends Zip {
     }
 
     /**
-     * Not supported.
-     *
-     * @param we
+     * @ant.attribute ignore="true"
      */
     public void setWhenempty(WhenEmpty we) {
         log("JARs are never empty, they contain at least a manifest file",

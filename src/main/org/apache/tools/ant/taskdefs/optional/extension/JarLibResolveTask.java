@@ -64,12 +64,12 @@ import org.apache.tools.ant.taskdefs.optional.extension.resolvers.URLResolver;
 import org.apache.tools.ant.taskdefs.optional.extension.resolvers.AntResolver;
 
 /**
- * Try to locate a jar to satisfy an extension and place
+ * Tries to locate a JAR to satisfy an extension and place
  * location of jar into property.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:jeff@socialchange.net.au">Jeff Turner</a>
- * @ant.task name="jarlib-resolver"
+ * @ant.task name="jarlib-resolve"
  */
 public class JarLibResolveTask
     extends Task
@@ -117,26 +117,44 @@ public class JarLibResolveTask
         m_property = property;
     }
 
+    /**
+     * If true, libraries returned by nested resolvers should be
+     * checked to see if they supply extension.
+     */
     public void setCheckExtension( final boolean checkExtension )
     {
         m_checkExtension = checkExtension;
     }
 
+    /**
+     * If true, failure to locate library should fail build.
+     */
     public void setFailOnError( final boolean failOnError )
     {
         m_failOnError = failOnError;
     }
 
+    /**
+     * Adds location resolver to look for a library in a location
+     * relative to project directory.
+     */
     public void addConfiguredLocation( final LocationResolver location )
     {
         m_resolvers.add( location );
     }
 
+    /**
+     * Adds a URL resolveer to download a library from a URL
+     * to a local file.
+     */
     public void addConfiguredUrl( final URLResolver url )
     {
         m_resolvers.add( url );
     }
 
+    /**
+     * Adds Ant resolver to run an Ant build file to generate a library.
+     */
     public void addConfiguredAnt( final AntResolver ant )
     {
         m_resolvers.add( ant );

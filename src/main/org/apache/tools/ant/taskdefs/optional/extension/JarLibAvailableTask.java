@@ -91,7 +91,7 @@ public class JarLibAvailableTask
     private ExtensionAdapter m_extension;
 
     /**
-     * The name of property to set if extensions is available.
+     * The name of property to set if extensions are available.
      *
      * @param property The name of property to set if extensions is available.
      */
@@ -101,7 +101,7 @@ public class JarLibAvailableTask
     }
 
     /**
-     * The jar library to check.
+     * The JAR library to check.
      *
      * @param file The jar library to check.
      */
