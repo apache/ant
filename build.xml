@@ -514,7 +514,7 @@
         <exclude name="${dist.name}/lib/optional.jar"/>
       </tarfileset> 
     </tar>
-    <gzip tofile="${dist.base}/${dist.name}-bin.tar.gz" 
+    <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
           src="${dist.base}/${dist.name}-bin.tar"/>
     <delete file="${dist.base}/${dist.name}-bin.tar"/>
     <copy file="${dist.name}/lib/optional.jar" tofile="${dist.base}/${dist.name}-optional.jar"/>
@@ -539,7 +539,7 @@
         <exclude name="${dist.name}/build.sh"/>
       </tarfileset>
     </tar> 
-    <gzip tofile="${dist.base}/${dist.name}-src.tar.gz" 
+    <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
           src="${dist.base}/${dist.name}-src.tar"/>
     <delete file="${dist.base}/${dist.name}-src.tar"/>
     <delete dir="${dist.name}" />
