@@ -132,6 +132,11 @@ Other changes:
 
 * Ant generated jar files should now be detected as jar files by
   Solaris.  Bugzilla Report 32649.
+
+* Added two tutorials
+  - beginner: introduction into Ant
+  - task developers: using path, fileset etc
+
   
 Fixed bugs:
 -----------
