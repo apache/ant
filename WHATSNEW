@@ -21,6 +21,10 @@ Fixed bugs:
 
 * <property>'s classpathref attribute was broken.
 
+* <arg line="''" /> would result in no command line argument, will now
+  be a single empty argument.  Use <arg value="''"/> if you need the
+  quotes literally.
+
 Other changes:
 --------------
 

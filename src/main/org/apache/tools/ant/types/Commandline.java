@@ -356,12 +356,14 @@ public class Commandline implements Cloneable {
         StringTokenizer tok = new StringTokenizer(to_process, "\"\' ", true);
         Vector v = new Vector();
         StringBuffer current = new StringBuffer();
+        boolean lastTokenHasBeenQuoted = false;
 
         while (tok.hasMoreTokens()) {
             String nextTok = tok.nextToken();
             switch (state) {
             case inQuote:
                 if ("\'".equals(nextTok)) {
+                    lastTokenHasBeenQuoted = true;
                     state = normal;
                 } else {
                     current.append(nextTok);
@@ -369,6 +371,7 @@ public class Commandline implements Cloneable {
                 break;
             case inDoubleQuote:
                 if ("\"".equals(nextTok)) {
+                    lastTokenHasBeenQuoted = true;
                     state = normal;
                 } else {
                     current.append(nextTok);
@@ -380,18 +383,19 @@ public class Commandline implements Cloneable {
                 } else if ("\"".equals(nextTok)) {
                     state = inDoubleQuote;
                 } else if (" ".equals(nextTok)) {
-                    if (current.length() != 0) {
+                    if (lastTokenHasBeenQuoted || current.length() != 0) {
                         v.addElement(current.toString());
                         current.setLength(0);
                     }
                 } else {
                     current.append(nextTok);
                 }
+                lastTokenHasBeenQuoted = false;
                 break;
             }
         }
 
-        if (current.length() != 0) {
+        if (lastTokenHasBeenQuoted || current.length() != 0) {
             v.addElement(current.toString());
         }
 
