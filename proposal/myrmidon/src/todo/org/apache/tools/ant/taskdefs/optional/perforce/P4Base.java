@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.optional.perforce;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.types.Commandline;
@@ -103,15 +104,15 @@ public abstract class P4Base
         //Get default P4 settings from environment - Mark would have done something cool with
         //introspection here.....:-)
         Object tmpprop;
-        if( ( tmpprop = getProperty( "p4.port" ) ) != null )
+        if( ( tmpprop = getContext().getProperty( "p4.port" ) ) != null )
         {
             setPort( tmpprop.toString() );
         }
-        if( ( tmpprop = getProperty( "p4.client" ) ) != null )
+        if( ( tmpprop = getContext().getProperty( "p4.client" ) ) != null )
         {
             setClient( tmpprop.toString() );
         }
-        if( ( tmpprop = getProperty( "p4.user" ) ) != null )
+        if( ( tmpprop = getContext().getProperty( "p4.user" ) ) != null )
         {
             setUser( tmpprop.toString() );
         }

@@ -19,6 +19,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -184,7 +185,7 @@ public class XMLResultAggregator
         }
         if( toDir == null )
         {
-            toDir = resolveFile( DEFAULT_DIR );
+            toDir = getContext().resolveFile( DEFAULT_DIR );
         }
         return new File( toDir, toFile );
     }
@@ -211,7 +212,7 @@ public class XMLResultAggregator
                 if( pathname.endsWith( ".xml" ) )
                 {
                     File file = new File( scanner.getBasedir(), pathname );
-                    file = resolveFile( file.getPath() );
+                    file = getContext().resolveFile( file.getPath() );
                     v.add( file );
                 }
             }

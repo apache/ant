@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapterFactory;
@@ -355,7 +356,8 @@ public class JspC extends MatchingTask
         int filecount = 0;
         for( int i = 0; i < list.length; i++ )
         {
-            File srcDir = (File)resolveFile( list[ i ] );
+            final String filename = list[ i ];
+            File srcDir = (File)getContext().resolveFile( filename );
             if( !srcDir.exists() )
             {
                 throw new TaskException( "srcdir \"" + srcDir.getPath() +
@@ -371,7 +373,7 @@ public class JspC extends MatchingTask
 
         // compile the source files
 
-        Object compiler = getProperty( "jsp.compiler" );
+        Object compiler = getContext().getProperty( "jsp.compiler" );
         if( compiler == null )
         {
             compiler = "jasper";

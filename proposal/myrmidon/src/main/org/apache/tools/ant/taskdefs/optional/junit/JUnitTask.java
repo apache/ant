@@ -21,6 +21,7 @@ import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
@@ -430,8 +431,8 @@ public class JUnitTask extends Task
         {
             String filename = test.getOutfile() + fe.getExtension();
             File destFile = new File( test.getTodir(), filename );
-            String absFilename = destFile.getAbsolutePath();
-            return resolveFile( absFilename );
+            final String absFilename = destFile.getAbsolutePath();
+            return getContext().resolveFile( absFilename );
         }
         return null;
     }

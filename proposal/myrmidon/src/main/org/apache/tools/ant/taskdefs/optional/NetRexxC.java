@@ -20,6 +20,7 @@ import netrexx.lang.Rexx;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 
@@ -585,11 +586,11 @@ public class NetRexxC extends MatchingTask
     private void addExistingToClasspath( StringBuffer target, String source )
         throws TaskException
     {
-        StringTokenizer tok = new StringTokenizer( source,
+        final StringTokenizer tok = new StringTokenizer( source,
                                                    System.getProperty( "path.separator" ), false );
         while( tok.hasMoreTokens() )
         {
-            File f = resolveFile( tok.nextToken() );
+            File f = getContext().resolveFile( tok.nextToken() );
 
             if( f.exists() )
             {

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
@@ -158,8 +159,8 @@ public class CovMerge extends Task
             for( int j = 0; j < f.length; j++ )
             {
                 String pathname = f[ j ];
-                File file = new File( ds.getBasedir(), pathname );
-                file = resolveFile( file.getPath() );
+                final File file = new File( ds.getBasedir(), pathname );
+                file = getContext().resolveFile( file.getPath() );
                 v.add( file );
             }
         }
@@ -215,7 +216,7 @@ public class CovMerge extends Task
                 pw.println( snapshots[ i ].getAbsolutePath() );
             }
             // last file is the output snapshot
-            pw.println( resolveFile( tofile.getPath() ) );
+            pw.println( getContext().resolveFile( tofile.getPath() ) );
             pw.flush();
         }
         catch( IOException e )

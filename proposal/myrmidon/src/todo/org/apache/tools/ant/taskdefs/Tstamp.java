@@ -211,7 +211,7 @@ public class Tstamp
             field = unit.getCalendarField();
         }
 
-        public void execute( Date date )
+        public void execute( final Date date )
             throws TaskException
         {
             if( propertyName == null )
@@ -237,18 +237,20 @@ public class Tstamp
             {
                 sdf = new SimpleDateFormat( pattern, new Locale( language, country, variant ) );
             }
+
+            Date time = date;
             if( offset != 0 )
             {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime( date );
+                final Calendar calendar = Calendar.getInstance();
+                calendar.setTime( time );
                 calendar.add( field, offset );
-                date = calendar.getTime();
+                time = calendar.getTime();
             }
             if( timeZone != null )
             {
                 sdf.setTimeZone( timeZone );
             }
-            getContext().setProperty( propertyName, sdf.format( date ) );
+            getContext().setProperty( propertyName, sdf.format( time ) );
         }
     }
 }

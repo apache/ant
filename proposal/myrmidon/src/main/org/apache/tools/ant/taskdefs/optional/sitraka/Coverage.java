@@ -15,6 +15,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Argument;
@@ -291,7 +292,7 @@ public class Coverage
         }
         if( m_javaExe != null )
         {
-            params.add( "-jp_java_exe=" + resolveFile( m_javaExe.getPath() ) );
+            params.add( "-jp_java_exe=" + getContext().resolveFile( m_javaExe.getPath() ) );
         }
         params.add( "-jp_working_dir=" + m_workingDir.getPath() );
         params.add( "-jp_snapshot_dir=" + m_snapshotDir.getPath() );
@@ -366,7 +367,7 @@ public class Coverage
         {
             m_snapshotDir = new File( "." );
         }
-        m_snapshotDir = resolveFile( m_snapshotDir.getPath() );
+        m_snapshotDir = getContext().resolveFile( m_snapshotDir.getPath() );
         if( !m_snapshotDir.isDirectory() || !m_snapshotDir.exists() )
         {
             throw new TaskException( "Snapshot directory does not exists :" + m_snapshotDir );
@@ -375,7 +376,7 @@ public class Coverage
         {
             m_workingDir = new File( "." );
         }
-        m_workingDir = resolveFile( m_workingDir.getPath() );
+        m_workingDir = getContext().resolveFile( m_workingDir.getPath() );
 
         // check for info, do your best to select the java executable.
         // JProbe 3.0 fails if there is no javaexe option. So

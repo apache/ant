@@ -23,6 +23,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
@@ -808,7 +809,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
             {
                 // try to use the compiler specified by build.compiler. Right now we are just going
                 // to allow Jikes
-                String buildCompiler = getTask().getProperty( "build.compiler" ).toString();
+                String buildCompiler = getTask().getContext().getProperty( "build.compiler" ).toString();
                 if( buildCompiler != null && buildCompiler.equals( "jikes" ) )
                 {
                     javaTask.createArg().setValue( "-compiler" );

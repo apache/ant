@@ -15,6 +15,7 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
 import org.apache.myrmidon.listeners.LogEvent;
 import org.apache.tools.ant.taskdefs.Java;
@@ -716,7 +717,7 @@ public class IContract extends MatchingTask
             Path baseClasspath = createClasspath();
 
             // Might need to add the core classes if we're not using Sun's Javac (like Jikes)
-            String compiler = getProperty( "build.compiler" ).toString();
+            String compiler = getContext().getProperty( "build.compiler" ).toString();
             ClasspathHelper classpathHelper = new ClasspathHelper( compiler );
             classpathHelper.modify( baseClasspath );
 

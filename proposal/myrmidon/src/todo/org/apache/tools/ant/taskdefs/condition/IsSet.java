@@ -8,6 +8,7 @@
 package org.apache.tools.ant.taskdefs.condition;
 
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
@@ -33,7 +34,7 @@ public class IsSet extends ProjectComponent implements Condition
             throw new TaskException( "No property specified for isset condition" );
         }
 
-        return getProperty( property ) != null;
+        return getContext().getProperty( property ) != null;
     }
 
 }

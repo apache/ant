@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -399,7 +400,10 @@ public class FTP
         OutputStream outstream = null;
         try
         {
-            final File file = FileUtil.resolveFile( resolveFile( dir ), filename );
+            final String filename1 = dir;
+            File result;
+            result = getContext().resolveFile( filename1 );
+            final File file = FileUtil.resolveFile( result, filename );
 
             if( m_newerOnly && isUpToDate( ftp, file, remoteResolveFile( filename ) ) )
             {
@@ -697,13 +701,13 @@ public class FTP
      * @exception IOException Description of Exception
      * @exception TaskException Description of Exception
      */
-    protected void sendFile( FTPClient ftp, String dir, String filename )
+    protected void sendFile( FTPClient ftp, final String dir, final String filename )
         throws IOException, TaskException
     {
         InputStream instream = null;
         try
         {
-            File file = resolveFile( new File( dir, filename ).getPath() );
+            File file = getContext().resolveFile( new File( dir, filename ).getPath() );
 
             if( m_newerOnly && isUpToDate( ftp, file, remoteResolveFile( filename ) ) )
             {

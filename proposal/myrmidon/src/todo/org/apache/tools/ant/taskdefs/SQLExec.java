@@ -33,6 +33,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -734,7 +735,8 @@ public class SQLExec
             while( ( line = in.readLine() ) != null )
             {
                 line = line.trim();
-                line = "" + resolveValue( line );
+                final String value = line;
+                line = "" + getContext().resolveValue( value );
                 if( line.startsWith( "//" ) )
                 {
                     continue;

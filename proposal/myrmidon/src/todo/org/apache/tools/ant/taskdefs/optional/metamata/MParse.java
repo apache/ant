@@ -16,6 +16,7 @@ import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
@@ -309,7 +310,7 @@ public class MParse
         {
             throw new TaskException( "'metamatahome' must point to Metamata home directory." );
         }
-        m_metahome = resolveFile( m_metahome.getPath() );
+        m_metahome = getContext().resolveFile( m_metahome.getPath() );
 
         // check that the needed jar exists.
         File[] jars = getMetamataLibs();
@@ -326,7 +327,7 @@ public class MParse
         {
             throw new TaskException( "Invalid target: " + m_target );
         }
-        m_target = resolveFile( m_target.getPath() );
+        m_target = getContext().resolveFile( m_target.getPath() );
     }
 
     /**

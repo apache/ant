@@ -19,6 +19,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -967,7 +968,7 @@ public class WebsphereDeploymentTool
 
                 EnvironmentVariable var = new EnvironmentVariable();
                 var.setKey( "websphere.lib.dir" );
-                final String webshpereHome = getTask().getProperty( "websphere.home" ).toString();
+                final String webshpereHome = getTask().getContext().getProperty( "websphere.home" ).toString();
                 var.setValue( webshpereHome + "/lib" );
                 javaTask.addSysproperty( var );
 

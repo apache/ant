@@ -19,6 +19,7 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.Task;
@@ -260,14 +261,14 @@ public class Javadoc
         {
             throw new TaskException( linkOfflineError );
         }
-        StringTokenizer tok = new StringTokenizer( src, " ", false );
+        final StringTokenizer tok = new StringTokenizer( src, " ", false );
         le.setHref( tok.nextToken() );
 
         if( !tok.hasMoreTokens() )
         {
             throw new TaskException( linkOfflineError );
         }
-        le.setPackagelistLoc( resolveFile( tok.nextToken() ) );
+        le.setPackagelistLoc( getContext().resolveFile( tok.nextToken() ) );
     }
 
     public void setLocale( String src )
@@ -370,9 +371,9 @@ public class Javadoc
         StringTokenizer tok = new StringTokenizer( src, "," );
         while( tok.hasMoreTokens() )
         {
-            String f = tok.nextToken();
+            final String f = tok.nextToken();
             SourceFile sf = new SourceFile();
-            sf.setFile( resolveFile( f ) );
+            sf.setFile( getContext().resolveFile( f ) );
             addSource( sf );
         }
     }
@@ -978,7 +979,8 @@ public class Javadoc
 
             for( int j = 0; j < list.length; j++ )
             {
-                final File source = resolveFile( list[ j ] );
+                final String filename = list[ j ];
+                final File source = getContext().resolveFile( filename );
                 fs.setDir( source );
 
                 final DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );

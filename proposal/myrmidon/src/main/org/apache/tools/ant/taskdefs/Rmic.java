@@ -15,6 +15,7 @@ import java.rmi.Remote;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapter;
 import org.apache.tools.ant.taskdefs.rmic.RmicAdapterFactory;
 import org.apache.tools.ant.types.DirectoryScanner;
@@ -479,7 +480,7 @@ public class Rmic extends MatchingTask
             getLogger().info( "Verify has been turned on." );
         }
 
-        String compiler = getProperty( "build.rmic" ).toString();
+        String compiler = getContext().getProperty( "build.rmic" ).toString();
         RmicAdapter adapter = RmicAdapterFactory.getRmic( compiler, this );
 
         // now we need to populate the compiler adapter

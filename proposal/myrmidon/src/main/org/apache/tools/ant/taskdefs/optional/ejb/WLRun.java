@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
@@ -309,7 +310,7 @@ public class WLRun extends Task
         if( !propertiesFile.exists() )
         {
             // OK, properties file may be absolute
-            propertiesFile = resolveFile( weblogicPropertiesFile );
+            propertiesFile = getContext().resolveFile( weblogicPropertiesFile );
             if( !propertiesFile.exists() )
             {
                 throw new TaskException( "Properties file " + weblogicPropertiesFile +
@@ -415,7 +416,8 @@ public class WLRun extends Task
         // absolute path.  Use the project to resolve it.
         if( this.securityPolicy != null && !securityPolicyFile.exists() )
         {
-            securityPolicyFile = resolveFile( securityPolicy );
+            final String filename = securityPolicy;
+            securityPolicyFile = getContext().resolveFile( filename );
         }
         // If we still can't find it, complain
         if( !securityPolicyFile.exists() )

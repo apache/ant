@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.JavaVersion;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
@@ -629,7 +630,7 @@ public class Javac extends MatchingTask
     public boolean isForkedJavac()
     {
         return !"false".equals( fork ) ||
-            "extJavac".equals( getProperty( "build.compiler" ) );
+            "extJavac".equals( getContext().getProperty( "build.compiler" ) );
     }
 
     /**
@@ -675,7 +676,8 @@ public class Javac extends MatchingTask
         resetFileLists();
         for( int i = 0; i < list.length; i++ )
         {
-            File srcDir = (File)resolveFile( list[ i ] );
+            final String filename = list[ i ];
+            File srcDir = (File)getContext().resolveFile( filename );
             if( !srcDir.exists() )
             {
                 throw new TaskException( "srcdir \"" + srcDir.getPath() + "\" does not exist!" );
@@ -794,7 +796,7 @@ public class Javac extends MatchingTask
 
     private String determineCompiler()
     {
-        Object compiler = getProperty( "build.compiler" );
+        Object compiler = getContext().getProperty( "build.compiler" );
 
         if( !"false".equals( fork ) )
         {

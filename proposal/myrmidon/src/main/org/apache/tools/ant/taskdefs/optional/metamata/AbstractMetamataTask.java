@@ -249,7 +249,7 @@ public abstract class AbstractMetamataTask
         {
             throw new TaskException( "'metamatahome' must point to Metamata home directory." );
         }
-        m_metamataHome = resolveFile( m_metamataHome.getPath() );
+        m_metamataHome = getContext().resolveFile( m_metamataHome.getPath() );
         File jar = getMetamataJar( m_metamataHome );
         if( !jar.exists() )
         {

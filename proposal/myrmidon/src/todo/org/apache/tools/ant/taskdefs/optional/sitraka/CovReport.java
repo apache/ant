@@ -19,6 +19,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
@@ -290,8 +291,8 @@ public class CovReport extends Task
         {
             v.add( "-filters=" + filters );
         }
-        v.add( "-output=" + resolveFile( tofile.getPath() ) );
-        v.add( "-snapshot=" + resolveFile( snapshot.getPath() ) );
+        v.add( "-output=" + getContext().resolveFile( tofile.getPath() ) );
+        v.add( "-snapshot=" + getContext().resolveFile( snapshot.getPath() ) );
         // as a default -sourcepath use . in JProbe, so use project .
         if( sourcePath == null )
         {

@@ -11,6 +11,7 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.Path;
@@ -193,7 +194,7 @@ public class Available
     {
         if( m_filepath == null )
         {
-            return checkFile( resolveFile( m_file ), m_file );
+            return checkFile( getContext().resolveFile( m_file ), m_file );
         }
         else
         {

@@ -113,7 +113,7 @@ public class LoadProperties
     {
         try
         {
-            final Object objectValue = resolveValue( value.toString() );
+            final Object objectValue = getContext().resolveValue( value.toString() );
             final String name1 = m_prefix + name;
             getContext().setProperty( name1, objectValue );
         }

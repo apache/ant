@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -144,7 +145,7 @@ public class MSVSSCHECKIN extends MSVSS
         else
         {
             // make sure m_LocalDir exists, create it if it doesn't
-            File dir = resolveFile( m_LocalPath );
+            File dir = getContext().resolveFile( m_LocalPath );
             if( !dir.exists() )
             {
                 boolean done = dir.mkdirs();
