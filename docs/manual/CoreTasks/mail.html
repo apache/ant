@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>Apache Ant User Manual</title>
+<title>Mail</title>
 </head>
 
 <body>
@@ -33,19 +33,26 @@ body may be specified. To send binary attachments the optional
   <tr>
     <td valign="top">message</td>
     <td valign="top">Message to send in the body of the email.</td>
-    <td align="center" valign="middle" rowspan="2">Yes</td>
+    <td align="center" valign="middle" rowspan="2">One of the two</td>
   </tr>
   <tr>
     <td valign="top">files</td>
     <td valign="top">Filename(s) of text to send in the body of the email. 
-	Multiple files are comma-separated.</td>
+    Multiple files are comma-separated.</td>
   </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">flag to indicate whether to halt the build on 
+    any error.</td>
+    <td align="center" valign="top">No, default is <I>true</I></td>
+  </tr>  
   <tr>
     <td valign="top">includefilenames</td>
     <td valign="top">Include filename(s) before file contents.
     Valid only when the files attribute is specified.</td>
     <td align="center" valign="top">No, default is <I>false</I></td>
   </tr>
+  
   <tr>
     <td valign="top">mailhost</td>
     <td valign="top">Host name of the mail server.</td>
