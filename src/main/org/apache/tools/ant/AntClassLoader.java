@@ -71,6 +71,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Used to load classes within ant with a different claspath from
@@ -318,6 +319,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
             this.parent = parent;
         }
         this.parentFirst = parentFirst;
+        //TODO: turn on
+        //addJavaLibraries();        
         addSystemPackageRoot("java");
         addSystemPackageRoot("javax");
     }
@@ -1175,4 +1178,18 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      */
     public void messageLogged(BuildEvent event) {
     }
+    
+    /**
+     * add any libraries that come with different java versions
+     * here
+     */
+    private void addJavaLibraries() {
+        Vector packages=JavaEnvUtils.getJrePackages();
+        Enumeration e=packages.elements();
+        while(e.hasMoreElements()) {
+            String packageName=(String)e.nextElement();
+            addSystemPackageRoot(packageName);
+        }
+    }
+    
 }
