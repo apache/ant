@@ -66,6 +66,8 @@ import java.util.zip.*;
 public class Expand extends MatchingTask {
     private File dest; // req
     private File source; // req
+
+    private boolean overwrite = true;
     
     /**
      * Do the work.
@@ -104,8 +106,6 @@ public class Expand extends MatchingTask {
         else {
             expandFile(touch, source, dest);
         }
-        
-
     }
 
     private void expandFile(Touch touch, File srcF, File dir) {
@@ -119,7 +119,15 @@ public class Expand extends MatchingTask {
             while ((ze = zis.getNextEntry()) != null) {
                 File f = new File(dir, project.translatePath(ze.getName()));
                 try {
-                    log("expand-file " + ze.getName() , Project.MSG_VERBOSE );
+                    if (!overwrite && f.exists() 
+                        && f.lastModified() >= ze.getTime()) {
+                        log("Skipping " + f + " as it is up-to-date",
+                            Project.MSG_DEBUG);
+                        continue;
+                    }
+                    
+                    log("expanding " + ze.getName() + " to "+ f, 
+                        Project.MSG_VERBOSE);
                     // create intermediary directories - sometimes zip don't add them
                     File dirF=new File(f.getParent());
                     dirF.mkdirs();
@@ -179,4 +187,13 @@ public class Expand extends MatchingTask {
     public void setSrc(File s) {
         this.source = s;
     }
+
+    /**
+     * Should we overwrite files in dest, even if they are newer than
+     * the corresponding entries in the archive?
+     */
+    public void setOverwrite(boolean b) {
+        overwrite = b;
+    }
+
 }

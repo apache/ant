@@ -69,6 +69,8 @@ public class Untar extends Task {
     private File dest; // req
     private File source; // req
 
+    private boolean overwrite = true;
+    
     /**
      * Do the work.
      *
@@ -105,8 +107,15 @@ public class Untar extends Task {
             while ((te = tis.getNextEntry()) != null) {
                 try {
                     File f = new File(dir, project.translatePath(te.getName()));
-                    log("expand-file " + te.getName(), Project.MSG_VERBOSE );
-                    // create intermediary directories - sometimes tar don't add them
+                    if (!overwrite && f.exists() 
+                        && f.lastModified() >= te.getModTime().getTime()) {
+                        log("Skipping " + f + " as it is up-to-date",
+                            Project.MSG_DEBUG);
+                        continue;
+                    }
+                    
+                    log("expanding " + te.getName() + " to "+ f, 
+                        Project.MSG_VERBOSE);
                     File dirF=new File(f.getParent());
                     dirF.mkdirs();
 
@@ -166,4 +175,13 @@ public class Untar extends Task {
     public void setSrc(File s) {
         this.source = s;
     }
+
+    /**
+     * Should we overwrite files in dest, even if they are newer than
+     * the corresponding entries in the archive?
+     */
+    public void setOverwrite(boolean b) {
+        overwrite = b;
+    }
+
 }

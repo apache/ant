@@ -127,6 +127,10 @@ Other changes:
 * <taskdef> can now define several tasks at once, reading the 
   name/classname pairs from a property file or resource.
 
+* <unzip/unjar/unwar> and <untar> now have an overwrite attribute that
+  defaults to true.  If set to false, files that are newer than the
+  files in the archive will not be replaced.
+
 Fixed bugs:
 -----------
 
