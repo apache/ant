@@ -377,18 +377,24 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      */
     protected String getLabel() {
         if (m_Label != null && m_Label.length() > 0) {
-            if (m_Label.length() > 31) {
-                String label = m_Label.substring(0, 30);
-                log("Label is longer than 31 characters, truncated to: " + label, Project.MSG_WARN);
-                return FLAG_LABEL + label;
-            } else {
-                return FLAG_LABEL + m_Label;
-            }
+                return FLAG_LABEL + getShortLabel();
         } else {
             return "";
         }
     }
-
+    /**
+     * return at most the 30 first chars of the label, logging a warning message about the truncation
+     * @return at most the 30 first chars of the label
+     */
+    private String getShortLabel() {
+        if (m_Label !=  null && m_Label.length() > 31) {
+            String label = m_Label.substring(0, 30);
+            log("Label is longer than 31 characters, truncated to: " + label, Project.MSG_WARN);
+            return label;
+        } else {
+            return m_Label;
+        }
+    }
     /**
      *  Gets the style string. "-Lbuild1"
      *
@@ -410,9 +416,9 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
         } else if (m_Date != null) {
             return FLAG_VERSION_DATE + m_Date;
         } else {
-            // Use getLabel() so labels longer then 30 char are truncated
+            // Use getShortLabel() so labels longer then 30 char are truncated
             // and the user is warned
-            String label = getLabel();
+            String label = getShortLabel();
             if (!label.equals("") && label != null) {
                 return FLAG_VERSION_LABEL + label;
             }
