@@ -191,6 +191,12 @@ public class Copy extends Task {
 
         // do all the copy operations now...
         doFileOperations();
+
+        // clean up destDir again - so this instance can be used a second
+        // time without throwing an exception
+        if (destFile != null) {
+            destDir = null;
+        }
     }
 
 //************************************************************************
