@@ -96,6 +96,8 @@ public class Java extends Task {
     private String resultProperty;
     /**
      * Do the execution.
+     * @throws BuildException if failOnError is set to true and the application
+     * returns a non 0 result code
      */
     public void execute() throws BuildException {
         File savedDir = dir;
@@ -121,6 +123,8 @@ public class Java extends Task {
      *
      * @return the return code from the execute java class if it was
      * executed in a separate VM (fork = "yes").
+     *
+     * @throws BuildException if required parameters are missing
      */
     public int executeJava() throws BuildException {
         String classname = cmdl.getClassname();
@@ -198,6 +202,8 @@ public class Java extends Task {
 
     /**
      * Adds a path to the classpath.
+     *
+     * @return created classpath
      */
     public Path createClasspath() {
         return cmdl.createClasspath(getProject()).createPath();
@@ -206,6 +212,8 @@ public class Java extends Task {
     /**
      * Adds a path to the bootclasspath.
      * @since Ant 1.6
+     *
+     * @return created bootclasspath
      */
     public Path createBootclasspath() {
         return cmdl.createBootclasspath(getProject()).createPath();
@@ -213,6 +221,8 @@ public class Java extends Task {
 
     /**
      * Classpath to use, by reference.
+     *
+     * @param r a reference to an existing classpath
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -220,6 +230,10 @@ public class Java extends Task {
 
     /**
      * The location of the JAR file to execute.
+     *
+     * @param jarfile the jarfile that one wants to execute
+     *
+     * @throws BuildException if there is also a main class specified
      */
     public void setJar(File jarfile) throws BuildException {
         if (cmdl.getClassname() != null) {
@@ -231,6 +245,10 @@ public class Java extends Task {
 
     /**
      * Sets the Java class to execute.
+     *
+     * @param s the name of the main class
+     *
+     * @throws BuildException if the jar attribute has been set
      */
     public void setClassname(String s) throws BuildException {
         if (cmdl.getJar() != null) {
@@ -243,6 +261,9 @@ public class Java extends Task {
     /**
      * Deprecated: use nested arg instead.
      * Set the command line arguments for the class.
+     *
+     * @param s arguments
+     *
      * @ant.attribute ignore="true"
      */
     public void setArgs(String s) {
@@ -253,6 +274,8 @@ public class Java extends Task {
 
     /**
      * Adds a command-line argument.
+     *
+     * @return created argument
      */
     public Commandline.Argument createArg() {
         return cmdl.createArgument();
@@ -261,6 +284,8 @@ public class Java extends Task {
     /**
      * The name of a property in which the return code of the
      * command should be stored. Only of interest if failonerror=false.
+     *
+     * @param resultProperty name of property
      *
      * @since Ant 1.6
      */
@@ -271,6 +296,8 @@ public class Java extends Task {
     /**
      * helper method to set result property to the
      * passed in value if appropriate
+     *
+     * @param result the exit code
      */
     protected void maybeSetResultPropertyValue(int result) {
         String res = Integer.toString(result);
@@ -281,6 +308,8 @@ public class Java extends Task {
 
     /**
      * If true, execute in a new VM.
+     *
+     * @param s do you want to run Java in a new VM.
      */
     public void setFork(boolean s) {
         this.fork = s;
@@ -288,6 +317,8 @@ public class Java extends Task {
 
     /**
      * Set the command line arguments for the JVM.
+     *
+     * @param s jvmargs
      */
     public void setJvmargs(String s) {
         log("The jvmargs attribute is deprecated. "
@@ -297,6 +328,8 @@ public class Java extends Task {
 
     /**
      * Adds a JVM argument.
+     *
+     * @return JVM argument created
      */
     public Commandline.Argument createJvmarg() {
         return cmdl.createVmArgument();
@@ -304,6 +337,8 @@ public class Java extends Task {
 
     /**
      * Set the command used to start the VM (only if not forking).
+     *
+     * @param s command to start the VM
      */
     public void setJvm(String s) {
         cmdl.setVm(s);
@@ -311,6 +346,8 @@ public class Java extends Task {
 
     /**
      * Adds a system property.
+     *
+     * @param sysp system property
      */
     public void addSysproperty(Environment.Variable sysp) {
         cmdl.addSysproperty(sysp);
@@ -318,6 +355,8 @@ public class Java extends Task {
 
     /**
      * Adds a set of properties as system properties.
+     *
+     * @param sysp set of properties to add
      *
      * @since Ant 1.6
      */
@@ -328,6 +367,9 @@ public class Java extends Task {
     /**
      * If true, then fail if the command exits with a
      * returncode other than 0
+     *
+     * @param fail if true fail the build when the command exits with a non
+     * zero returncode
      */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
@@ -335,6 +377,9 @@ public class Java extends Task {
 
     /**
      * The working directory of the process
+     *
+     * @param d working directory
+     *
      */
     public void setDir(File d) {
         this.dir = d;
@@ -342,6 +387,8 @@ public class Java extends Task {
 
     /**
      * File the output of the process is redirected to.
+     *
+     * @param out name of the output file
      */
     public void setOutput(File out) {
         redirector.setOutput(out);
@@ -349,6 +396,8 @@ public class Java extends Task {
 
     /**
      * Set the input to use for the task
+     *
+     * @param input name of the input file
      */
     public void setInput(File input) {
         redirector.setInput(input);
@@ -367,6 +416,9 @@ public class Java extends Task {
      * Controls whether error output of exec is logged. This is only useful
      * when output is being redirected and error output is desired in the
      * Ant log
+     *
+     * @param logError get in the ant log the messages coming from stderr
+     * in the case that fork = true
      */
     public void setLogError(boolean logError) {
         redirector.setLogError(logError);
@@ -374,6 +426,8 @@ public class Java extends Task {
 
     /**
      * File the error stream of the process is redirected to.
+     *
+     * @param error file getting the error stream
      *
      * @since ant 1.6
      */
@@ -384,6 +438,9 @@ public class Java extends Task {
     /**
      * Property name whose value should be set to the output of
      * the process.
+     *
+     * @param outputProp property name
+     *
      */
     public void setOutputproperty(String outputProp) {
         redirector.setOutputProperty(outputProp);
@@ -393,6 +450,8 @@ public class Java extends Task {
      * Property name whose value should be set to the error of
      * the process.
      *
+     * @param errorProperty property name
+     *
      * @since ant 1.6
      */
     public void setErrorProperty(String errorProperty) {
@@ -401,6 +460,8 @@ public class Java extends Task {
 
     /**
      * Corresponds to -mx or -Xmx depending on VM version.
+     *
+     * @param max max memory parameter
      */
     public void setMaxmemory(String max) {
         cmdl.setMaxmemory(max);
@@ -419,6 +480,8 @@ public class Java extends Task {
      *
      * <p>Will be ignored if we are not forking a new VM.
      *
+     * @param var new environment variable
+     *
      * @since Ant 1.5
      */
     public void addEnv(Environment.Variable var) {
@@ -430,6 +493,8 @@ public class Java extends Task {
      *
      * <p>Will be ignored if we are not forking a new VM.
      *
+     * @param newenv if true, use a completely new environment.
+     *
      * @since Ant 1.5
      */
     public void setNewenvironment(boolean newenv) {
@@ -438,6 +503,8 @@ public class Java extends Task {
 
     /**
      * If true, append output to existing file.
+     *
+     * @param append if true, append output to existing file
      *
      * @since Ant 1.5
      */
@@ -448,6 +515,8 @@ public class Java extends Task {
     /**
      * Timeout in milliseconds after which the process will be killed.
      *
+     * @param value time out in milliseconds
+     *
      * @since Ant 1.5
      */
     public void setTimeout(Long value) {
@@ -456,6 +525,8 @@ public class Java extends Task {
 
     /**
      * Pass output sent to System.out to specified output file.
+     *
+     * @param output a string of output on its way to the handlers
      *
      * @since Ant 1.5
      */
@@ -467,6 +538,18 @@ public class Java extends Task {
         }
     }
 
+    /**
+     * Handle an input request by this task
+     *
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read
+     *
+     * @return the number of bytes read
+     *
+     * @exception IOException if the data cannot be read
+     * @since Ant 1.6
+     */
     public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (redirector.getInputStream() != null) {
@@ -478,6 +561,8 @@ public class Java extends Task {
 
     /**
      * Pass output sent to System.out to specified output file.
+     *
+     * @param output string of output on its way to its handlers
      *
      * @since Ant 1.5.2
      */
@@ -492,6 +577,8 @@ public class Java extends Task {
     /**
      * Pass output sent to System.err to specified output file.
      *
+     * @param output string of stderr
+     *
      * @since Ant 1.5
      */
     protected void handleErrorOutput(String output) {
@@ -504,6 +591,8 @@ public class Java extends Task {
 
     /**
      * Pass output sent to System.err to specified output file.
+     *
+     * @param output string of stderr
      *
      * @since Ant 1.5.2
      */
@@ -579,6 +668,10 @@ public class Java extends Task {
     /**
      * Executes the given classname with the given arguments as it
      * was a command line application.
+     *
+     * @param classname the name of the class to run
+     * @param args  arguments for the class
+     * @throws BuildException in case of IO Exception in the execution
      */
     protected void run(String classname, Vector args) throws BuildException {
         CommandlineJava cmdj = new CommandlineJava();
@@ -598,6 +691,10 @@ public class Java extends Task {
 
     /**
      * Create the Watchdog to kill a runaway process.
+     *
+     * @return new watchdog
+     *
+     * @throws BuildException under unknown circumnstances
      *
      * @since Ant 1.5
      */
