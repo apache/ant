@@ -737,7 +737,7 @@ public class ProjectHelper {
      */
      public static String replaceProperties(Project project, String value)
             throws BuildException {
-         return replaceProperties(project,value,project.getProperties());
+         return project.replaceProperties(value);
      }
 
     /**

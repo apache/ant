@@ -381,7 +381,7 @@ public class Project {
      */
     public String replaceProperties(String value)
         throws BuildException { 
-        return ProjectHelper.replaceProperties(this, value);
+        return ProjectHelper.replaceProperties(this, value, properties);
     }
 
     /**

@@ -56,7 +56,6 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ProjectHelper;
 
 
 import java.io.*;
@@ -205,7 +204,7 @@ public class LoadFile extends Task {
                 text=stripLineBreaks(text);
             }
             if(evaluateProperties) {
-                text=ProjectHelper.replaceProperties(project,text);
+                text = project.replaceProperties(text);
             }
             project.setNewProperty(property, text);
             log("loaded "+buffer.length+" characters",Project.MSG_VERBOSE);
