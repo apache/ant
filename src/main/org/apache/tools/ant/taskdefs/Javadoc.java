@@ -906,7 +906,7 @@ public class Javadoc extends Task {
     	if (foundJavaFile) {
     		String newPkg = vpath.substring(1).replace(File.separatorChar, '.');
     		if (!pkgs.contains(newPkg)) {
-    			pkgs.add(newPkg);
+    			pkgs.addElement(newPkg);
     		}
     	}
     	
