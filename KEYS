@@ -268,3 +268,33 @@ o+d57fYsNa8xAJ4mLfonZbd64+YY9rfvhIh3Vsl3AACeLPPKtma2K6XCfhTBEDnj
 hzSr4vo=
 =lBfF
 -----END PGP PUBLIC KEY BLOCK-----
+pub  1024D/265B4C63 2003-08-18 Antoine Levy-Lambert (Apache Ant Committer) <antoine@antbuild.com>
+sig 3       265B4C63 2003-08-18   Antoine Levy-Lambert (Apache Ant Committer) <antoine@antbuild.com>
+sub  1024g/A3060393 2003-08-18
+sig         265B4C63 2003-08-18   Antoine Levy-Lambert (Apache Ant Committer) <antoine@antbuild.com>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.2.2 (MingW32)
+
+mQGiBD9AzmcRBACMqgb7IFvC/nLxw7mUAgHENeZXY3JOQJ8wVBevIbbMEeFvzHE2
+diFydqUXocPexduYr0ahkf033WvWdAiNqDLfVW/HFOsc1TpjbHkqPUHtJ62Ya5tg
+nH4UGN9BYZfMbfVDOSz41lYwmfK5HYgpZN/sBQBSKf2qgoFB+LxYaae8YwCgrWlu
+fYhf7fkKbbdSf3BGS67ggNkD/0VvkXkw1SEnPaqrkKGkPKomCTb2auGxcYYI3/rP
+1m+SGRf0gE1NtocmIEitiR6WvfKUjoMAXSCp5KdnUXmO9rwzkM002KCA7K5CY+e/
+2bLDuiQ3rNiD4mFfG6M+UnmZ+GMFba1p9Cp4PqLNLsCHz67t7hEsscTZQ8mZ9xKM
++GCsA/9P+XFM7JDn9MLhYab9qo1CkceBkthUP6jWGjuAZ00elmBCkpkzNv5aIzss
+xih2GpaU/tmcMjw8FGp0dTwzqdpmbZBLjunRnuBTir4m4l5G9rwl4JbfK1PVqk4a
+VKkh9W7/yqBcEfNcsfJO9cqaQ+PzcnCoDiD9UHEBYzUhrCKwhLRCQW50b2luZSBM
+ZXZ5LUxhbWJlcnQgKEFwYWNoZSBBbnQgQ29tbWl0dGVyKSA8YW50b2luZUBhbnRi
+dWlsZC5jb20+iFsEExECABsFAj9AzmcGCwkIBwMCAxUCAwMWAgECHgECF4AACgkQ
+hhTWqyZbTGMnOgCeJV2gI+1CIxMR7dcIhXjPkiusreIAn2SGOsPS0o89l0EIVuc9
+J2F03aB+uQENBD9AzmkQBACNpBfqi2PweozCtxoXPqzKdRDKqCw7TOrDR6lbP3z/
+ov/1SN5Vc0XqNzBSGqwBcmGWtneABkX7n4uzJrC5wvX/TZ/DkMvypPyeNVMu+/ZM
+lzdbx06OUDKr6Fy/NtaI7cN1rw+Igyv22Q8ilhhgs/5Rdj84EtJkWQjVRml6wXSA
+ZwADBwP/TqyhOC4sA5YrePYGH8i46h0SU9dXjfEFJijC8vXZ+BNQHQVK3fjEXedZ
+L8Zvvp1bsMu7Muz9SMnqygM1unp2NGxLRd/9315pQh0VStYKn0xq13ybOKr0Gsyx
+5yyl3Nzlu/1qAR0es/zN4jV7/IQi3R2GOvezcpHXmkbsYiZAhu2IRgQYEQIABgUC
+P0DOaQAKCRCGFNarJltMYxcsAKCSJJUABlXYnLBjb+WtmAzu0JjZNACdFJ4KIATJ
+DK/5ajFq5+irOpodoHc=
+=MILw
+-----END PGP PUBLIC KEY BLOCK-----
