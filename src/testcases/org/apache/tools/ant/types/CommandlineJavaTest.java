@@ -17,13 +17,9 @@
 
 package org.apache.tools.ant.types;
 
+import junit.framework.TestCase;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JavaEnvUtils;
-
-import junit.framework.TestCase;
-import junit.framework.AssertionFailedError;
-
-import java.io.File;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.CommandlineJava
@@ -55,7 +51,7 @@ public class CommandlineJavaTest extends TestCase {
         }
     }
 
-    public void testGetCommandline() {
+    public void testGetCommandline() throws Exception {
         CommandlineJava c = new CommandlineJava();
         c.createArgument().setValue("org.apache.tools.ant.CommandlineJavaTest");
         c.setClassname("junit.textui.TestRunner");
@@ -143,7 +139,7 @@ public class CommandlineJavaTest extends TestCase {
         assertNull(System.getProperty("key2"));
     }
 
-    public void testAssertions() {
+    public void testAssertions() throws Exception {
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
             || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
             return;

@@ -17,16 +17,16 @@
 
 package org.apache.tools.ant.types;
 
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.Vector;
-import java.util.List;
-import java.util.LinkedList;
-import java.util.ListIterator;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JavaEnvUtils;
+
+import java.util.Enumeration;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Properties;
+import java.util.Vector;
 
 /**
  * A representation of a Java command line that is
@@ -74,7 +74,7 @@ public class CommandlineJava implements Cloneable {
      * Specialized Environment class for System properties
      */
     public static class SysProperties extends Environment implements Cloneable {
-        Properties sys = null;
+        private Properties sys = null;
         private Vector propertySets = new Vector();
 
         /**
@@ -170,7 +170,7 @@ public class CommandlineJava implements Cloneable {
          *  deep clone
          * @return a cloned instance of SysProperties
          */
-        public Object clone() {
+        public Object clone() throws CloneNotSupportedException {
             try {
                 SysProperties c = (SysProperties) super.clone();
                 c.variables = (Vector) variables.clone();
@@ -566,8 +566,10 @@ public class CommandlineJava implements Cloneable {
     /**
      * clone the object; clone of all fields in the class
      * @return a CommandlineJava object
+     * @throws BuildException if anything went wrong.
+     * @throws CloneNotSupportedException never
      */
-    public Object clone() {
+    public Object clone() throws CloneNotSupportedException {
         try {
             CommandlineJava c = (CommandlineJava) super.clone();
             c.vmCommand = (Commandline) vmCommand.clone();
