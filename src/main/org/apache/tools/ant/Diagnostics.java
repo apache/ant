@@ -27,7 +27,6 @@ import java.io.FilenameFilter;
 import java.io.PrintStream;
 import java.io.InputStream;
 import java.io.IOException;
-import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.util.Enumeration;
 import java.util.Properties;
@@ -48,6 +47,7 @@ public final class Diagnostics {
 
     /** utility class */
     private Diagnostics() {
+        // hidden constructor
     }
 
     /**
