@@ -106,6 +106,7 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
      * Create a nested element
      *
      * @param name the nested element name
+     * @return the element to be configured
      */
     public Object createDynamicElement(String name)  {
         List nestedElementList = (List) nestedElementMap.get(name);
