@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import junit.framework.TestCase;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfo;
 
@@ -81,7 +82,14 @@ public class ClassFileTest extends TestCase {
         assertEquals(3, methods.length);
         assertHasMethod("void <init>()", 2, methods);
         assertHasMethod("void testTwoLines()", 2, methods);
-        assertHasMethod("void testOneLine()", 3, methods);
+        assertHasMethod("void testOneLine()", 
+                        // in JDK 1.4 we get four lines
+                        3 + 
+                        (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
+                         || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
+                         || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)
+                         ? 0 : 1),
+                        methods);
     }
 
     protected void assertHasMethod(String methodsig, int line, MethodInfo[] methods) {
