@@ -13,19 +13,6 @@ public abstract class Task
     extends ProjectComponent
     implements org.apache.myrmidon.api.Task
 {
-    /**
-     * Called by the project to let the task do it's work. This method may be
-     * called more than once, if the task is invoked more than once. For
-     * example, if target1 and target2 both depend on target3, then running "ant
-     * target1 target2" will run all tasks in target3 twice.
-     *
-     * @throws TaskException if someting goes wrong with the build
-     */
-    public void execute()
-        throws TaskException
-    {
-    }
-
     protected void handleErrorOutput( String line )
     {
         log( line, Project.MSG_ERR );
