@@ -68,7 +68,16 @@
 
 #macro ( subsection $subsection)
       <p>
-        <a name="$escape.getText($subsection.getAttributeValue("name"))"><h4>$subsection.getAttributeValue("name")</h4></a>
+      <a name="$escape.getText($subsection.getAttributeValue("name"))">
+      <table border="0" cellspacing="0" cellpadding="2" width="100%">
+        <tr><td bgcolor="$blue2">
+          <font color="$lightfg" face="arial,helvetica,sanserif">
+            <strong>$subsection.getAttributeValue("name")</strong>
+            </strong>
+          </font>
+        </td></tr>
+      </table>
+      </a>
 
       #foreach ( $items in $subsection.getChildren() )
         #if ($items.getName().equals("img"))
