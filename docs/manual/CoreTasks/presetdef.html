@@ -18,6 +18,11 @@
     <p>
       <em>since Ant 1.6</em>
     </p>
+    <p>
+      The resolution of properties in any of the attributes or
+      nested text takes place with the definition is used and <em>not</em>
+      when the preset definition is defined.
+    </p>
     <h3>Parameters</h3>
     <table border="1" cellpadding="2" cellspacing="0">
       <tr>
@@ -101,6 +106,41 @@
 &lt;/project&gt;
 </pre>
     </blockquote>
+    <p>
+      The following is an example of evaluation of properties when the
+      definition is used:
+    </p>
+     <blockquote>
+<pre class="code">
+&lt;target name="defineandcall"&gt;
+   &lt;presetdef name="showmessage"&gt;
+      &lt;echo&gt;message is '${message}'&lt;/echo&gt;
+   &lt;/presetdef&gt;
+   &lt;showmessage/&gt;
+   &lt;property name="message" value="Message 1"/&gt;
+   &lt;showmessage/&gt;
+   &lt;antcall target="called"&gt;
+      &lt;param name="message" value="Message 2"/&gt;
+   &lt;/antcall&gt;
+&lt;/target&gt;
+&lt;target name="called"&gt;
+   &lt;showmessage/&gt;
+&lt;/target&gt;
+</pre>
+     </blockquote>
+     <p>
+        The command ant defineandcall results in the output:
+     </p>
+     <blockquote>
+<pre class="code">
+defineandcall:
+[showmessage] message is '${message}'
+[showmessage] message is 'Message 1'
+
+called:
+[showmessage] message is 'Message 2'
+</pre>
+     </blockquote>
     <hr></hr>
     <p align="center">Copyright &copy; 2003 Apache Software
       Foundation. All rights Reserved.</p>
