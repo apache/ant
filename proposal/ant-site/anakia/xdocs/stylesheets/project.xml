@@ -38,7 +38,7 @@
         <item name="Enhancement Requests"  href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;bug_severity=Enhancement"/>
     </menu>
 
-    <menu name="Project Managment">
+    <menu name="Project Management">
         <item name="Contributors"          href="/contributors.html"/>
         <item name="Mission"               href="/mission.html"/>
         <item name="Guidelines Notes"      href="/guidelines.html"/>
