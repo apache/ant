@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.gui.acs;
 import org.apache.tools.ant.gui.command.NewElementCmd;
+import org.apache.tools.ant.gui.util.Collections;
 import org.w3c.dom.*;
 import java.beans.*;
 import java.util.*;
@@ -181,12 +182,21 @@ implements ACSInfoProvider {
         }
         
         ACSDocumentType.DtdElement e =
-            docType.findElement(name);
+            docType.findElement(ACSDocumentType.CORE_ELEMENT, name);
+        if (e == null) {
+            e = docType.findElement(ACSDocumentType.OPTIONAL_ELEMENT, name);
+        }
 
         if (e != null) {
             // Use the content model (all the possible
             // sub-elements) to create the menu.
             String[] temp = e.getContentModel();
+            
+            // Sort the items
+            List list = Collections.fill(null, temp);
+            java.util.Collections.sort(list);
+            list.toArray(temp);
+            
             int size = (temp.length > 5) ? 5 : temp.length;
 
             // The project doesn't need a delete menu
@@ -222,15 +232,17 @@ implements ACSInfoProvider {
     }
     
     /**
-     * Retuns a string array which contains this elements
-     * possible children.  It is created from the DTD's
-     * content model.
+     * Returns a string array which contains this elements
+     * possible children.
+     * 
+     * @param childType ACSDocumentType.CORE_ELEMENT or
+     * ACSDocumentType.OPTIONAL_ELEMENT
      */
-    public String[] getPossibleChildren() {
+    public String[] getPossibleChildren(int childType) {
         String name = getTagName();
+        
         ACSDocumentType.DtdElement e =
-            docType.findElement(name);
-            
+            docType.findElement(childType, name);
         if (e != null) {
             return e.getContentModel();
         }
@@ -266,7 +278,13 @@ implements ACSInfoProvider {
         }
 
         String name = getNodeName();
-        _dtdElement = docType.findElement(name);
+        
+        _dtdElement = docType.findElement(ACSDocumentType.CORE_ELEMENT, name);
+        if (_dtdElement == null) {
+            _dtdElement = docType.findElement(
+                ACSDocumentType.OPTIONAL_ELEMENT, name);
+        }
+        
         return _dtdElement;
     }
 }

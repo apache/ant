@@ -72,16 +72,32 @@ import com.sun.xml.parser.Resolver;
  * @author Nick Davis<a href="mailto:nick_home_account@yahoo.com">nick_home_account@yahoo.com</a>
  */
 public class ACSDocumentType extends java.lang.Object {
+    /** ID for core elements */
+    public final static int CORE_ELEMENT = 0;
+    /** ID for optional elements */
+    public final static int OPTIONAL_ELEMENT = 1;
     /** True if the DTD has been loaded */
     private boolean isInit = false;
+    /** Hold the core DTD elements */
+    private HashMap coreElementMap = new HashMap();
+    /** Hold the optional DTD elements */
+    private HashMap optionalElementMap = new HashMap();
     /** Hold the DTD elements */
-    private HashMap elementMap = new HashMap();
-    /** XML document used to load the DTD */
-    final static String XMLDOC = 
+    private HashMap elementMap;
+    /** First part of the XML document used to load the DTD */
+    private final static String XMLDOC_1 = 
         "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-        "<!DOCTYPE project SYSTEM \"file:/project.dtd\">" +
-        "<project name=\"sample-project\">" + 
+        "<!DOCTYPE project SYSTEM \"file:/";
+    /** Second part of the XML document used to load the DTD */
+    private final static String XMLDOC_2 = 
+        "\"><project name=\"sample-project\">" + 
         "</project>";
+    /** DTD which holds the core tasks */
+    private final static String DTD_1 = "project.dtd";
+    /** DTD which holds the optional tasks */
+    private final static String DTD_2 = "project-ext.dtd";
+    /** DTD which holds the shared elements */
+    private final static String DTD_SHARE = "share.dtd";
 
     /**
      * Standard ctor.
@@ -114,12 +130,20 @@ public class ACSDocumentType extends java.lang.Object {
             DtdHandler dtdh = new DtdHandler();
             p.setDTDHandler(dtdh);
 
-            // Create the default xml file
-            InputSource xmldoc = new InputSource(
-                new ByteArrayInputStream(XMLDOC.getBytes()));
+            String coreDoc = XMLDOC_1 + DTD_1 + XMLDOC_2;
+            String optionalDoc = XMLDOC_1 + DTD_2 + XMLDOC_2;
             
-            // Parse the document
-            p.parse(xmldoc);
+            // Parse the core task DTD
+            elementMap = coreElementMap;
+            InputSource xmldocCore = new InputSource(
+                new ByteArrayInputStream(coreDoc.getBytes()));
+            p.parse(xmldocCore);
+            
+            // Parse the core task DTD
+            elementMap = optionalElementMap;
+            InputSource xmldocOptional = new InputSource(
+                new ByteArrayInputStream(optionalDoc.getBytes()));
+            p.parse(xmldocOptional);
             
             isInit = true;
         } catch (Exception e) {
@@ -130,10 +154,14 @@ public class ACSDocumentType extends java.lang.Object {
     /**
      * Returns the dtd element.
      *
+     * @param elementType CORE_ELEMENT or OPTIONAL_ELEMENT
      * @param name the element name
      */
-    public DtdElement findElement(String name) {
-        return (DtdElement) elementMap.get(name);
+    public DtdElement findElement(int elementType, String name) {
+        if (elementType == OPTIONAL_ELEMENT) {
+            return (DtdElement) optionalElementMap.get(name);
+        }
+        return (DtdElement) coreElementMap.get(name);
     }
     
     /**
@@ -247,7 +275,7 @@ public class ACSDocumentType extends java.lang.Object {
             Iterator i = values().iterator();
             while(i.hasNext()) {
                 DtdAttribute a = (DtdAttribute)i.next();
-                if (a.isRequired()) {
+                if (!a.isRequired()) {
                     list.add(a.getName());
                 }
             }
@@ -264,7 +292,7 @@ public class ACSDocumentType extends java.lang.Object {
             Iterator i = values().iterator();
             while(i.hasNext()) {
                 DtdAttribute a = (DtdAttribute)i.next();
-                if (!a.isRequired()) {
+                if (a.isRequired()) {
                     list.add(a.getName());
                 }
             }
@@ -438,22 +466,30 @@ public class ACSDocumentType extends java.lang.Object {
             String systemId)
             throws SAXException, IOException {
                 
-            final String PROJECT = "project.dtd";
-            final String PROJECTEXT = "project-ext.dtd";
             InputStream result = null;
             
             // Is it the project.dtd?
-            if (systemId.indexOf(PROJECT) != -1) {
+            if (systemId.indexOf(DTD_1) != -1) {
                 try {
                     // Look for it as a resource
-                    result = getClass().getResourceAsStream(PROJECT);
+                    result = getClass().getResourceAsStream(DTD_1);
                 } catch (Exception e) {}
             }
             // Is it the project-ext.dtd?
-            if (systemId.indexOf(PROJECTEXT) != -1) {
+            if (systemId.indexOf(DTD_2) != -1) {
                 try {
                     // Look for it as a resource
-                    result = getClass().getResourceAsStream(PROJECTEXT);
+                    result = getClass().getResourceAsStream(DTD_2);
+                } catch (Exception e) {}
+            }
+            if (result != null) {
+                return new InputSource(result);
+            }
+            // Is it the share.dtd?
+            if (systemId.indexOf(DTD_SHARE) != -1) {
+                try {
+                    // Look for it as a resource
+                    result = getClass().getResourceAsStream(DTD_SHARE);
                 } catch (Exception e) {}
             }
             if (result != null) {

@@ -1,34 +1,255 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
-
 <!--
- Copyright (c) 2000 Michel CASABIANCA.  All Rights Reserved.
+ The Apache Software License, Version 1.1
 
- Permission to use, copy, modify, and distribute this software and its
- documentation for any purpose and without fee or royalty is hereby
- granted, provided that both the above copyright notice and this
- permission notice appear in all copies of the software and
- documentation or portions thereof, including modifications, that you
- make.
+ Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ reserved.
 
- THIS SOFTWARE IS PROVIDED "AS IS," AND COPYRIGHT HOLDERS MAKE NO
- REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED. BY WAY OF EXAMPLE,
- BUT NOT LIMITATION, COPYRIGHT HOLDERS MAKE NO REPRESENTATIONS OR
- WARRANTIES OF MERCHANTABILITY OR FITNESS FOR ANY PARTICULAR PURPOSE OR
- THAT THE USE OF THE SOFTWARE OR DOCUMENTATION WILL NOT INFRINGE ANY
- THIRD PARTY PATENTS, COPYRIGHTS, TRADEMARKS OR OTHER RIGHTS.
- COPYRIGHT HOLDERS WILL BEAR NO LIABILITY FOR ANY USE OF THIS SOFTWARE
- OR DOCUMENTATION.
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the
+    distribution.
+
+ 3. The end-user documentation included with the redistribution, if
+    any, must include the following acknowlegement:
+       "This product includes software developed by the
+        Apache Software Foundation (http://www.apache.org/)."
+    Alternately, this acknowlegement may appear in the software itself,
+    if and wherever such third-party acknowlegements normally appear.
+
+ 4. The names "The Jakarta Project", "Ant", and "Apache Software
+    Foundation" must not be used to endorse or promote products derived
+    from this software without prior written permission. For written
+    permission, please contact apache@apache.org.
+
+ 5. Products derived from this software may not be called "Apache"
+    nor may "Apache" appear in their names without prior written
+    permission of the Apache Group.
+
+ THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+ ====================================================================
+
+ This software consists of voluntary contributions made by many
+ individuals on behalf of the Apache Software Foundation.  For more
+ information on the Apache Software Foundation, please see
+ <http://www.apache.org/>.
 -->
+<!-- @author Michel CASABIANCA -->
+<!-- @version $Revision$ -->
+<!ENTITY % share-file SYSTEM "file:/share.dtd">
+%share-file;
+<!ELEMENT target (p4sync | p4label | p4have | p4submit | p4edit | p4change | junit | ddcreator | ejbc | wlrun | wlstop | ejbjar | weblogic | TOPLink | PropertyFile)*>
 
-<!-- project ext DTD for Ant -->
-<!-- 2000-04-03 -->
+<!-- *********** PERFORCE ************** -->
 
-<!ENTITY % ext "| xt">
+<!ELEMENT p4sync EMPTY>
+<!ATTLIST p4sync
+	view CDATA #IMPLIED
+	label CDATA #IMPLIED
+	force CDATA #IMPLIED
+>
+<!ELEMENT p4change EMPTY>
+<!ELEMENT p4edit EMPTY>
+<!ATTLIST p4edit
+	view CDATA #REQUIRED
+	change CDATA #IMPLIED
+>
+<!ELEMENT p4submit EMPTY>
+<!ATTLIST p4submit
+	change CDATA #REQUIRED
+>
+<!ELEMENT p4have EMPTY>
+<!ELEMENT p4label EMPTY>
+<!ATTLIST p4label
+	name CDATA #REQUIRED
+	view CDATA #IMPLIED
+	desc CDATA #IMPLIED
+>
 
-<!ELEMENT xt EMPTY>
-<!ATTLIST xt
-          xml CDATA #REQUIRED
-          xsl CDATA #REQUIRED
-          out CDATA #REQUIRED>
+<!-- *********** JUNIT ************** -->
 
+<!ELEMENT junit (jvmarg | batchtest | test | formatter | sysproperty)*>
+<!ATTLIST junit
+	printsummary CDATA #IMPLIED
+	fork CDATA #IMPLIED
+	haltonerror CDATA #IMPLIED
+	haltonfailure CDATA #IMPLIED
+	timeout CDATA #IMPLIED
+	maxmemory CDATA #IMPLIED
+	jvm CDATA #IMPLIED
+	dir CDATA #IMPLIED
+>
+<!ELEMENT jvmarg EMPTY>
+<!ATTLIST jvmarg
+	value CDATA #REQUIRED
+>
+<!ELEMENT sysproperty EMPTY>
+<!ATTLIST sysproperty
+	key CDATA #REQUIRED
+	value CDATA #REQUIRED
+>
+<!ELEMENT formatter EMPTY>
+<!ATTLIST formatter
+	type CDATA #IMPLIED
+	classname CDATA #IMPLIED
+	extension CDATA #REQUIRED
+	usefile CDATA #IMPLIED
+>
+<!ELEMENT test EMPTY>
+<!ATTLIST test
+	name CDATA #REQUIRED
+	fork CDATA #IMPLIED
+	haltonerror CDATA #IMPLIED
+	haltonfailure CDATA #IMPLIED
+	todir CDATA #IMPLIED
+	outfile CDATA #IMPLIED
+	if CDATA #IMPLIED
+	unless CDATA #IMPLIED
+>
+<!ELEMENT batchtest EMPTY>
+<!ATTLIST batchtest
+	fork CDATA #IMPLIED
+	haltonerror CDATA #IMPLIED
+	haltonfailure CDATA #IMPLIED
+	todir CDATA #IMPLIED
+	if CDATA #IMPLIED
+	unless CDATA #IMPLIED
+>
 
+<!-- *********** EJB ************** -->
+
+<!ELEMENT ddcreator (include | exclude)*>
+<!ATTLIST ddcreator
+	descriptors CDATA #REQUIRED
+	dest CDATA #REQUIRED
+	classpath CDATA #IMPLIED
+>
+<!ELEMENT ejbc (include | exclude)*>
+<!ATTLIST ejbc
+	descriptors CDATA #REQUIRED
+	manifest CDATA #REQUIRED
+	dest CDATA #REQUIRED
+	src CDATA #REQUIRED
+	classpath CDATA #IMPLIED
+>
+<!ELEMENT wlrun (classpath | wlclasspath)*>
+<!ATTLIST wlrun
+	beahome CDATA #REQUIRED
+	home CDATA #REQUIRED
+	Domain CDATA #REQUIRED
+	classpath CDATA #IMPLIED
+	wlclasspath CDATA #IMPLIED
+	properties CDATA #IMPLIED
+	name CDATA #IMPLIED
+	policy CDATA #IMPLIED
+	username CDATA #IMPLIED
+	password CDATA #IMPLIED
+	pkPassword CDATA #IMPLIED
+	jvmargs CDATA #IMPLIED
+	args CDATA #IMPLIED
+>
+<!ELEMENT wlstop (classpath)*>
+<!ATTLIST wlstop
+	beahome CDATA #REQUIRED
+	classpath CDATA #REQUIRED
+	user CDATA #REQUIRED
+	password CDATA #REQUIRED
+	url CDATA #IMPLIED
+	delay CDATA #IMPLIED
+>
+<!ELEMENT ejbjar (classpath | dtd | support)*>
+<!ATTLIST ejbjar
+	descriptordir CDATA #IMPLIED
+	srcdir CDATA #REQUIRED
+	destdir CDATA #REQUIRED
+	basejarname CDATA #IMPLIED
+	basenameterminator CDATA #IMPLIED
+	genericjarsuffix CDATA #IMPLIED
+	classpath CDATA #IMPLIED
+	latdestdir CDATA #IMPLIED
+>
+<!ELEMENT dtd EMPTY>
+<!ATTLIST dtd
+	publicId CDATA #REQUIRED
+	location CDATA #REQUIRED
+>
+<!ELEMENT support (include | exclude)*>
+<!ATTLIST support
+	dir CDATA #IMPLIED
+>
+<!ELEMENT weblogic (classpath | dtd | support)*>
+<!ATTLIST weblogic
+	destdir CDATA #IMPLIED
+	genericjarsuffix CDATA #IMPLIED
+	suffix CDATA #IMPLIED
+	wlclasspath CDATA #IMPLIED
+	keepgeneric CDATA #IMPLIED
+	compiler CDATA #IMPLIED
+	rebuild CDATA #IMPLIED
+	keepgenerated CDATA #IMPLIED
+	args CDATA #IMPLIED
+	weblogicdtd CDATA #IMPLIED
+	wldtd CDATA #IMPLIED
+	ejbdtd CDATA #IMPLIED
+	newCMP CDATA #IMPLIED
+	oldCMP CDATA #IMPLIED
+>
+<!ELEMENT TOPLink (classpath | dtd | support)*>
+<!ATTLIST TOPLink
+	destdir CDATA #IMPLIED
+	genericjarsuffix CDATA #IMPLIED
+	suffix CDATA #IMPLIED
+	wlclasspath CDATA #IMPLIED
+	keepgeneric CDATA #IMPLIED
+	compiler CDATA #IMPLIED
+	rebuild CDATA #IMPLIED
+	keepgenerated CDATA #IMPLIED
+	args CDATA #IMPLIED
+	weblogicdtd CDATA #IMPLIED
+	wldtd CDATA #IMPLIED
+	ejbdtd CDATA #IMPLIED
+	newCMP CDATA #IMPLIED
+	oldCMP CDATA #IMPLIED
+	toplinkdescriptor CDATA #IMPLIED
+	toplinkdtd CDATA #IMPLIED
+>
+<!ELEMENT wlclasspath (pathelement | path | fileset)*>
+<!ATTLIST wlclasspath
+	id CDATA #IMPLIED
+	refid CDATA #IMPLIED
+>
+
+<!-- *********** PERFORCE ************** -->
+
+<!ELEMENT PropertyFile (entry)*>
+<!ATTLIST PropertyFile
+	file CDATA #REQUIRED
+	comment CDATA #IMPLIED
+>
+<!ELEMENT entry EMPTY>
+<!ATTLIST entry
+	key CDATA #REQUIRED
+	value CDATA #REQUIRED
+	type CDATA #IMPLIED
+	operation CDATA #IMPLIED
+	default CDATA #IMPLIED
+	pattern CDATA #IMPLIED
+>

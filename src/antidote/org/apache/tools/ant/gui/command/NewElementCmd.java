@@ -124,7 +124,9 @@ public class NewElementCmd extends AbstractCommand {
             ACSDtdDefinedElement dtde = (ACSDtdDefinedElement) e;
             NewElementDlg dlg = new NewElementDlg(
                 getContext().getParentFrame(), true);
-            dlg.setList(dtde.getPossibleChildren());
+            dlg.setLists(
+                dtde.getPossibleChildren(ACSDocumentType.CORE_ELEMENT),
+                dtde.getPossibleChildren(ACSDocumentType.OPTIONAL_ELEMENT) );
             dlg.pack();
             WindowUtils.centerWindow(dlg);
             dlg.setTitle("Select the new element type");

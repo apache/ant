@@ -54,6 +54,9 @@
 
 package org.apache.tools.ant.gui.command;
 import javax.swing.*;
+import java.util.List;
+import java.util.ArrayList;
+import org.apache.tools.ant.gui.util.Collections;
 
 /**
  * A Dialog which asks for a new xml element's type.
@@ -67,6 +70,7 @@ public class NewElementDlg extends javax.swing.JDialog {
     private javax.swing.JPanel _buttonPanel;
     private javax.swing.JButton _buttonOK;
     private javax.swing.JButton _buttonCancel;
+    private javax.swing.JCheckBox _optionalButton;
     private javax.swing.JPanel _selectPanel;
     private javax.swing.JPanel _panelData;
     private javax.swing.JLabel _label;
@@ -77,11 +81,17 @@ public class NewElementDlg extends javax.swing.JDialog {
     private boolean _cancel = true;
     /** holds the element type */
     private String _elementName;
+    /** list of core tasks */
+    private List _coreElements;
+    /** list of optional tasks */
+    private List _optionalElements;
+    /** list of tasks to display */
+    private List _elements;
 
     /**
      * Creates new form NewElementDlg
      */
-    public NewElementDlg(java.awt.Frame parent,boolean modal) {
+    public NewElementDlg(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         enableButtons();
@@ -90,12 +100,54 @@ public class NewElementDlg extends javax.swing.JDialog {
     /**
      * Fills the listbox with the input list.
      */
-    public void setList(String[] list) {
-        if (list == null || list.length == 0) {
+    public void setLists(String[] coreElements, String[] optionalElements) {
+
+        // Are there any items to display?
+        if ( (coreElements == null || coreElements.length == 0) &&
+             (optionalElements == null || optionalElements.length == 0 ) ) {
+
+            // Hide the list
             _listScrollPane.setVisible(false);
+            _optionalButton.setVisible(false);
         } else {
-            _elementList.setListData(list);
+            
+            // Are there any core elements?
+            if (coreElements == null) {
+                _coreElements = new ArrayList();
+                
+                // Display the optional elements
+                _optionalButton.setSelected(true);
+                _optionalButton.setVisible(false);
+            } else {
+                // Create a sorted list of the core elements
+                List temp = Collections.fill(null, coreElements);
+                java.util.Collections.sort(temp);
+                _coreElements = temp;
+            }
+            
+            // Are there any optional elements?
+            if (optionalElements == null) {
+                _optionalElements = new ArrayList();
+                
+                // Display the core elements
+                _optionalButton.setSelected(false);
+                _optionalButton.setVisible(false);
+            } else {
+                // Create a sorted list of the optional elements
+                List temp = Collections.fill(null, optionalElements);
+                java.util.Collections.sort(temp);
+                _optionalElements = temp;
+            }
+            
+            // Are the lists the same?
+            if (_optionalElements.containsAll(_coreElements) &&
+                _coreElements.containsAll(_optionalElements) ) {
+                    
+                // Hide the button
+                _optionalButton.setVisible(false);
+            }
         }
+        enableButtons();
     }
     
     /**
@@ -116,10 +168,25 @@ public class NewElementDlg extends javax.swing.JDialog {
      * Enable or disable buttons
      */
     private void enableButtons() {
+        
+        // Enable the OK button?
         if (isInputValid()) {
             _buttonOK.setEnabled(true);
         } else {
             _buttonOK.setEnabled(false);
+        }
+
+        // Display the core or optional elements?
+        Object oldList = _elements;
+        if (_optionalButton.isSelected()) {
+            _elements = _optionalElements;
+        } else {
+            _elements = _coreElements;
+        }
+
+        // Did the list change?
+        if (oldList != _elements) {
+            _elementList.setListData(_elements.toArray());
         }
     }
     
@@ -159,6 +226,8 @@ public class NewElementDlg extends javax.swing.JDialog {
 	    return true;
 	else if (c == '>')
 	    return false;
+	else if (c >= '0' && c <= '9')
+	    return true;
 	else if (c == '.' || c == '-' || c == '_' || c == ':')
 	    return true;
 	else
@@ -193,6 +262,8 @@ public class NewElementDlg extends javax.swing.JDialog {
         _elementText = new javax.swing.JTextField();
         _listScrollPane = new javax.swing.JScrollPane();
         _elementList = new javax.swing.JList();
+        _optionalButton = new javax.swing.JCheckBox(
+            "show optional elements", false);
         getContentPane().setLayout(new java.awt.BorderLayout(10, 10));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -272,7 +343,16 @@ public class NewElementDlg extends javax.swing.JDialog {
         }
         );
         _listScrollPane.setViewportView(_elementList);
-        
+       
+        _optionalButton.setMargin(new java.awt.Insets(2, 2, 2, 2));
+        _optionalButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                enableButtons();
+            }
+        }
+        );
+
+        _selectPanel.add(_optionalButton, java.awt.BorderLayout.NORTH);
         _selectPanel.add(_listScrollPane, java.awt.BorderLayout.CENTER);
         getContentPane().add(_selectPanel, java.awt.BorderLayout.CENTER);
         pack();
