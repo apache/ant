@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+
+<!--
+==============================================================================
+
+ Sample build file
+
+Authors:
+ Peter Donald <donaldp@apache.org>
+
+Legal:
+  Copyright (c) 2000 The Apache Software Foundation. All Rights Reserved.
+
+==============================================================================
+-->
+
+<project name="MySample" default="main" basedir=".">
+
+  <property name="year" value="2000"/>
+
+  <target name="main" depends="property-test" />
+
+  <!--
+       ===================================================================
+                                  Help on usage
+       ===================================================================
+  -->
+  <target name="option-test">
+
+    <prim-test
+        integer="1"
+        integer2="2"
+        short="3"
+        short2="4"
+        long="5"
+        long2="6"
+        byte="7"
+        byte2="8"
+        string="aString"
+        float="1.0"
+        float2="2.0"
+        double="3.0"
+        double2="4.0"
+     />
+
+    <sub-elements-test>
+      <create-beep message="Evaluation of ant.install.dir=${ant.install.dir}" />
+      <add-beep message="Evaluation of ant.install.lib=${ant.install.lib}" />
+    </sub-elements-test>
+
+    <conf-test message="Test of configuration=${ant.install.lib}" />
+    
+    <content-test>123</content-test>
+    
+  </target>
+
+  <target name="property-test">
+    <property name="blah" value="fred" />
+    <property name="${blah}" value="barney" />
+
+    <echo message="Doing the funky Echo with ${blah} ${fred} Year=${year}!"/>
+  </target>
+
+  <target name="property-test2">
+    <echo message="This should fail ...."/>
+    <echo message="${blah}"/>
+  </target>
+
+</project>
