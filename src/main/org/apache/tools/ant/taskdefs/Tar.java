@@ -236,8 +236,10 @@ public class Tar extends MatchingTask {
                            TarFileSet tarFileSet)
         throws IOException
     {
-        FileInputStream fIn = new FileInputStream(file);
-
+        FileInputStream fIn = null;
+        if (file.isDirectory() && vPath.length() != 0 
+                && vPath.charAt(vPath.length() - 1) != '/')
+            vPath = vPath + "/";
         try {
             if (vPath.length() >= TarConstants.NAMELEN) {
                 if (longFileMode.equalsIgnoreCase(OMIT)) {
@@ -259,26 +261,31 @@ public class Tar extends MatchingTask {
             }
 
             TarEntry te = new TarEntry(vPath);
-            te.setSize(file.length());
             te.setModTime(file.lastModified());
             if (!file.isDirectory()) {
+                te.setSize(file.length());
                 te.setMode(tarFileSet.getMode());
-            }
+            } 
             te.setUserName(tarFileSet.getUserName());
             te.setGroupName(tarFileSet.getGroup());
             
             tOut.putNextEntry(te);
             
-            byte[] buffer = new byte[8 * 1024];
-            int count = 0;
-            do {
-                tOut.write(buffer, 0, count);
-                count = fIn.read(buffer, 0, buffer.length);
-            } while (count != -1);
+            if (!file.isDirectory()) {
+                fIn = new FileInputStream(file);
+
+                byte[] buffer = new byte[8 * 1024];
+                int count = 0;
+                do {
+                    tOut.write(buffer, 0, count);
+                    count = fIn.read(buffer, 0, buffer.length);
+                } while (count != -1);
+            }
             
             tOut.closeEntry();        
         } finally {
-            fIn.close();
+            if (fIn != null)
+                fIn.close();
         }
     }
 
@@ -306,10 +313,20 @@ public class Tar extends MatchingTask {
             super();
         }
         
+        /**
+         *  Get a list of files and directories specified in the fileset.
+         *  @return a list of file and directory names, relative to
+         *    the baseDir for the project.
+         */
         public String[] getFiles(Project p) {
             if (files == null) {
                 DirectoryScanner ds = getDirectoryScanner(p);
-                files = ds.getIncludedFiles();
+                String[] directories = ds.getIncludedDirectories();
+                String[] filesPerSe = ds.getIncludedFiles();
+                files = new String [directories.length + filesPerSe.length];
+                System.arraycopy(directories, 0, files, 0, directories.length);
+                System.arraycopy(filesPerSe, 0, files, directories.length,
+                        filesPerSe.length);
             }
             
             return files;

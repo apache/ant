@@ -83,6 +83,16 @@ public class TarTest extends TaskdefsTest {
         expectBuildException("test4", "tar cannot include itself");
     }
 
+    public void test5() {
+        executeTarget("test5");
+        java.io.File f 
+            = new java.io.File("src/etc/testcases/taskdefs/test5.tar");
+
+        if (!f.exists()) {
+            fail("Tarring a directory failed");
+        }
+    }
+
     public void tearDown() {
         executeTarget("cleanup");
     }

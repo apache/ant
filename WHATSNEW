@@ -19,6 +19,8 @@ Other changes:
 
 * new magic property build.rmic to chose the rmic implementation
 
+* <tar> will now add empty directories as well
+
 Fixed bugs:
 -----------
 
