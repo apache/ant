@@ -60,7 +60,7 @@ Other changes:
   Bugzilla Report 16539.
 
 * Added -nouserlib option to allow running ant without automatically loading
-  up ${user.dir}/.lib/ant. This is useful when compiling ant, and antlibs.
+  up ${user.home}/.lib/ant. This is useful when compiling ant, and antlibs.
   Modified the build.sh and build.bat to use the option.
 
 * Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
@@ -90,6 +90,14 @@ Other changes:
 * Add else attribute to the condition task, which specifies an
   optional alternate value to set the property to if the nested
   condition evaluates to false. Bugzilla report 33074.
+  
+* Added <scriptcondition> condition, for inline scripted conditions
+
+* Added <xor> condition for exclusive-or combining of nested conditions.
+
+* Added <scriptselector> selector for scripted file selection
+
+* ant -diagnostics lists contents of ${user.home}/.ant/lib
 
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================

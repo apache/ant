@@ -38,11 +38,22 @@ public class Launcher {
     /** The Ant Library Directory property */
     public static final String ANTLIBDIR_PROPERTY = "ant.library.dir";
 
+    public static final String ANT_PRIVATEDIR = ".ant";
+
+    /**
+     * The location of a per-user library directory
+     */
+    public static final String ANT_PRIVATELIB = "lib";
+
     /** The location of a per-user library directory */
-    public static final String USER_LIBDIR = ".ant/lib";
+    public static final String USER_LIBDIR = ANT_PRIVATEDIR+"/"+ ANT_PRIVATELIB;
 
     /** The startup class that is to be run */
     public static final String MAIN_CLASS = "org.apache.tools.ant.Main";
+    /**
+     * system property with user home directory
+     */
+    public static final String USER_HOMEDIR = "user.home";
 
     /**
      *  Entry point for starting command line Ant
@@ -191,7 +202,8 @@ public class Launcher {
         URL[] systemJars = Locator.getLocationURLs(antLibDir);
 
         File userLibDir
-            = new File(System.getProperty("user.home"), USER_LIBDIR);
+            = new File(System.getProperty(USER_HOMEDIR),
+                    ANT_PRIVATEDIR + File.separatorChar + ANT_PRIVATELIB);
 
         URL[] userJars = noUserLib ? new URL[0] : Locator.getLocationURLs(userLibDir);
 

@@ -17,6 +17,7 @@
 package org.apache.tools.ant;
 
 import org.apache.tools.ant.util.LoaderUtils;
+import org.apache.tools.ant.launch.Launcher;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -95,20 +96,23 @@ public final class Diagnostics {
             return null;
         }
         File libDir = new File(home, "lib");
+        return listJarFiles(libDir);
+
+    }
+
+    /**
+     * get a list of all JAR files in a directory
+     * @param libDir directory
+     * @return array of files (or null for no such directory)
+     */
+    private static File[] listJarFiles(File libDir) {
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 return name.endsWith(".jar");
             }
         };
-        // listFiles is JDK 1.2+ method...
-        String[] filenames = libDir.list(filter);
-        if (filenames == null) {
-            return null;
-        }
-        File[] files = new File[filenames.length];
-        for (int i = 0; i < filenames.length; i++) {
-            files[i] = new File(libDir, filenames[i]);
-        }
+
+        File[] files  = libDir.listFiles(filter);
         return files;
     }
 
@@ -128,21 +132,8 @@ public final class Diagnostics {
      * '?.?' for JDK 1.0 or 1.1.
      */
     private static String getImplementationVersion(Class clazz) {
-        try {
-          // Package pkg = clazz.getPackage();
-          Method method = Class.class.getMethod("getPackage", new Class[0]);
-          Object pkg = method.invoke(clazz, (Object[]) null);
-          if (pkg != null) {
-              // pkg.getImplementationVersion();
-              method = pkg.getClass().getMethod("getImplementationVersion", new Class[0]);
-              Object version = method.invoke(pkg, (Object[]) null);
-              return (String) version;
-          }
-        } catch (Exception e) {
-          // JDK < 1.2 should land here because the methods above don't exist.
-          return "?.?";
-        }
-        return null;
+        Package pkg = clazz.getPackage();
+        return pkg.getImplementationVersion();
     }
 
     /**
@@ -213,7 +204,7 @@ public final class Diagnostics {
         out.println(Main.getAntVersion());
         out.println();
         out.println("-------------------------------------------");
-        out.println(" Implementation Version (JDK1.2+ only)");
+        out.println(" Implementation Version ");
         out.println("-------------------------------------------");
         out.println("core tasks     : " + getImplementationVersion(Main.class));
 
@@ -231,7 +222,13 @@ public final class Diagnostics {
         out.println("-------------------------------------------");
         out.println(" ANT_HOME/lib jar listing");
         out.println("-------------------------------------------");
-        doReportLibraries(out);
+        doReportAntHomeLibraries(out);
+
+        out.println();
+        out.println("-------------------------------------------");
+        out.println(" USER_HOME/.ant/lib jar listing");
+        out.println("-------------------------------------------");
+        doReportUserHomeLibraries(out);
 
         out.println();
         out.println("-------------------------------------------");
@@ -278,11 +275,34 @@ public final class Diagnostics {
      * Report the content of ANT_HOME/lib directory
      * @param out the stream to print the content to
      */
-    private static void doReportLibraries(PrintStream out) {
+    private static void doReportAntHomeLibraries(PrintStream out) {
         out.println("ant.home: " + System.getProperty("ant.home"));
         File[] libs = listLibraries();
+        printLibraries(libs, out);
+    }
+
+    /**
+     * Report the content of ~/.ant/lib directory
+     *
+     * @param out the stream to print the content to
+     */
+    private static void doReportUserHomeLibraries(PrintStream out) {
+        String home = System.getProperty(Launcher.USER_HOMEDIR);
+        out.println("user.home: " + home);
+        File libDir = new File(home,
+                Launcher.ANT_PRIVATEDIR+File.separator+Launcher.ANT_PRIVATELIB);
+        File[] libs=listJarFiles(libDir);
+        printLibraries(libs, out);
+    }
+
+    /**
+     * list the libraries
+     * @param libs array of libraries (can be null)
+     * @param out output stream
+     */
+    private static void printLibraries(File[] libs, PrintStream out) {
         if (libs == null) {
-            out.println("Unable to list libraries.");
+            out.println("No such directory.");
             return;
         }
         for (int i = 0; i < libs.length; i++) {

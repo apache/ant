@@ -16,8 +16,8 @@
   and installs them in a location that is accessible the next time Ant runs.
   
   You can choose three locations, by going -Ddest=LOCATION on the command line
-  -Ddest=user     user lib dir  ${user.home}/.ant/lib  --Default--
-  -Ddest=system   ant lib dir   ${ant.home}/lib
+  -Ddest=user     user lib dir  ${user.home}/.ant/lib  
+  -Ddest=system   ant lib dir   ${ant.home}/lib --Default--
   -Ddest=optional optional dir  ${ant.home}/lib/optional  (for Ant developers)
   
   You may also need to set proxy settings. This can be done on the command line,
@@ -60,7 +60,10 @@
   <target name="pick-dest">
     <condition property="dest.dir" 
       value="${lib.dir}">
-      <equals arg1="${dest}" arg2="system" />
+      <or>
+        <equals arg1="${dest}" arg2="system" />
+        <not><isset property="dest"/></not>
+      </or>
     </condition>
     <condition property="dest.dir" 
       value="${optional.dir}">
@@ -68,10 +71,7 @@
     </condition>
     <condition property="dest.dir" 
       value="${userlib.dir}">
-      <or>
-        <equals arg1="${dest}" arg2="user" />
-        <not><isset property="dest"/></not>
-      </or>
+      <equals arg1="${dest}" arg2="user" />
     </condition>
     <fail>
       Unknown destination : ${dest}
@@ -183,10 +183,16 @@
     description="load bsf libraries"
     depends="init">
     <f project="bsf" />
-  </target>  
+  </target>
+
+  <target name="debugging" 
+    description="internal ant debugging"
+    depends="init">
+    <f project="which" />
+  </target>
   
   <target name="all"
     description="load all the libraries"
-    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf" />
+    depends="logging,junit,xml,networking,regexp,antlr,bcel,jdepend,bsf,debugging" />
   
 </project>
