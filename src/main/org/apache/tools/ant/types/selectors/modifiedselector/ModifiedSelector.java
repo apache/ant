@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -866,7 +866,7 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
 
     /**
      * Signals that a target is starting.
-     * @param event recieved BuildEvent
+     * @param event received BuildEvent
     */
     public void targetStarted(BuildEvent event) {
         // no-op
@@ -896,36 +896,78 @@ public class ModifiedSelector extends BaseExtendSelector implements BuildListene
     // Name-Classname mapping is done in the configure() method.
 
 
+    /**
+     * Get the cache type to use.
+     * @return the enumerated cache type
+     */
     public Cache getCache() { return cache; }
+
+    /**
+     * Set the cache type to use.
+     * @param name an enumerated cache type.
+     */
     public void setCache(CacheName name) {
         cacheName = name;
     }
+
+    /**
+     * The enumerated type for cache.
+     * The values are "propertyfile".
+     */
     public static class CacheName extends EnumeratedAttribute {
+        /** @see EnumeratedAttribute#getValues() */
         public String[] getValues() {
             return new String[] {"propertyfile" };
         }
     }
 
-
+    /**
+     * Get the algorithm type to use.
+     * @return the enumerated algorithm type
+     */
     public Algorithm getAlgorithm() { return algorithm; }
+
+    /**
+     * Set the algorithm type to use.
+     * @param name an enumerated algorithm type.
+     */
     public void setAlgorithm(AlgorithmName name) {
         algoName = name;
     }
+
+    /**
+     * The enumerated type for algorithm.
+     * The values are "hashValue", "digest" and "checksum".
+     */
     public static class AlgorithmName extends EnumeratedAttribute {
+        /** @see EnumeratedAttribute#getValues() */
         public String[] getValues() {
             return new String[] {"hashvalue", "digest", "checksum" };
         }
     }
 
-
+    /**
+     * Get the comparator type to use.
+     * @return the enumerated comparator type
+     */
     public Comparator getComparator() { return comparator; }
+
+    /**
+     * Set the comparator type to use.
+     * @param name an enumerated comparator type.
+     */
     public void setComparator(ComparatorName name) {
         compName = name;
     }
+
+    /**
+     * The enumerated type for algorithm.
+     * The values are "equal" and "rule".
+     */
     public static class ComparatorName extends EnumeratedAttribute {
+        /** @see EnumeratedAttribute#getValues() */
         public String[] getValues() {
             return new String[] {"equal", "rule" };
         }
     }
-//class-ModifiedSelector
 }
