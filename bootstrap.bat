@@ -25,13 +25,13 @@ if not "%OS%" == "Windows_NT" if exist build\classes deltree/y build\classes
 
 SET LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;lib\optional\junit.jar
 
-if exist %JAVA_HOME%\lib\tools.jar call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
-if exist %JAVA_HOME%\lib\classes.zip call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
+if exist "%JAVA_HOME%\lib\tools.jar" call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
+if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
 
 set TOOLS=src\main\org\apache\tools
 set CLASSDIR=classes
 
-SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;"%CLASSPATH%"
+SET CLASSPATH=%LOCALCLASSPATH%;%CLASSDIR%;src\main;%CLASSPATH%
 
 echo JAVA_HOME=%JAVA_HOME%
 echo JAVA=%JAVA%
@@ -48,7 +48,7 @@ if not exist build\classes mkdir build\classes
 echo.
 echo ... Compiling Ant Classes
 
-%JAVAC% -d %CLASSDIR% %TOOLS%\tar\*.java %TOOLS%\zip\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java
+"%JAVAC%" -d %CLASSDIR% %TOOLS%\tar\*.java %TOOLS%\zip\*.java %TOOLS%\ant\*.java %TOOLS%\ant\types\*.java %TOOLS%\ant\taskdefs\*.java %TOOLS%\ant\util\*.java %TOOLS%\ant\util\regexp\RegexpMatcher.java %TOOLS%\ant\util\regexp\RegexpMatcherFactory.java
 
 echo.
 echo ... Copying Required Files
@@ -61,7 +61,7 @@ echo ... Building Ant Distribution
 
 xcopy /s/q %CLASSDIR% build\classes
 
-%JAVA% %ANT_OPTS% org.apache.tools.ant.Main -emacs bootstrap
+"%JAVA%" %ANT_OPTS% org.apache.tools.ant.Main -emacs bootstrap
 
 echo.
 echo ... Cleaning Up Build Directories
