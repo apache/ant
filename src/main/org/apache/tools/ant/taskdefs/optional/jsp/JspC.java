@@ -228,7 +228,12 @@ public class JspC extends MatchingTask {
     public void setIeplugin(String iepluginid_) {
         iepluginid = iepluginid_;
     }
-    /* ------------------------------------------------------------ */
+
+    /**
+     * If true, generate separate write() calls for each HTML line
+     * in the JSP.
+     * @return mapping status
+     */
     public boolean isMapped() {
         return mapped;
     }
@@ -270,7 +275,6 @@ public class JspC extends MatchingTask {
     }
 
 
-    /* ------------------------------------------------------------ */
     /**
      * Set the classpath to be used for this compilation.
      */
@@ -302,7 +306,6 @@ public class JspC extends MatchingTask {
         return classpath;
     }
 
-    /* ------------------------------------------------------------ */
     /**
      * Set the classpath to be used to find this compiler adapter
      */
@@ -340,6 +343,10 @@ public class JspC extends MatchingTask {
         this.webxml = webxml;
     }
 
+    /**
+     * Filename for web.xml.
+     * @return
+     */
     public File getWebxml() {
         return this.webxml;
     }
@@ -396,17 +403,6 @@ public class JspC extends MatchingTask {
      */
     public void execute()
         throws BuildException {
-        // first off, make sure that we've got a srcdir
-        if (src == null) {
-            throw new BuildException("srcdir attribute must be set!",
-                                     getLocation());
-        }
-        String [] list = src.list();
-        if (list.length == 0) {
-            throw new BuildException("srcdir attribute must be set!",
-                                     getLocation());
-        }
-
         if (destDir != null && !destDir.isDirectory()) {
             throw new
                 BuildException("destination directory \"" + destDir +
@@ -420,6 +416,24 @@ public class JspC extends MatchingTask {
         JspCompilerAdapter compiler =
             JspCompilerAdapterFactory.getCompiler(compilerName, this,
                new AntClassLoader(getProject(), compilerClasspath));
+
+        //if we are a webapp, hand off to the compiler, which had better handle it
+        if(webApp!=null) {
+            doCompilation(compiler);
+            return;
+        }
+            
+        // make sure that we've got a srcdir 
+        if (src == null) {
+            throw new BuildException("srcdir attribute must be set!",
+                                     location);
+        } 
+        String [] list = src.list();
+        if (list.length == 0) {
+            throw new BuildException("srcdir attribute must be set!",
+                                     location);
+        }
+
 
         // if the compiler does its own dependency stuff, we just call it right now
         if (compiler.implementsOwnDependencyChecking()) {
@@ -501,7 +515,6 @@ public class JspC extends MatchingTask {
         }
     }
 
-    /* ------------------------------------------------------------ */
     /**
      * Clear the list of files to be compiled and copied..
      */
@@ -509,7 +522,6 @@ public class JspC extends MatchingTask {
         compileList.removeAllElements();
     }
 
-    /* ------------------------------------------------------------ */
     /**
      * Scans the directory looking for source files to be compiled.
      * The results are returned in the class variable compileList
@@ -522,6 +534,9 @@ public class JspC extends MatchingTask {
             String filename = files[i];
             File srcFile = new File(srcDir, filename);
             File javaFile = mapToJavaFile(mangler, srcFile, srcDir, dest);
+            if(javaFile==null) {
+                continue;
+            }
 
             if (srcFile.lastModified() > now) {
                 log("Warning: file modified in the future: " + filename,
@@ -628,9 +643,9 @@ public class JspC extends MatchingTask {
             return directory;
         }
 
-    /**
-     * set directory; alternate syntax
-     */
+        /**
+         * set directory; alternate syntax
+         */
         public void setBaseDir(File directory) {
             this.directory = directory;
         }
