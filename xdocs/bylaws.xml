@@ -198,7 +198,7 @@
     <subsection name="Voting">
       <p>
         Decisions regarding the project are made by votes on the primary project
-        development mailing list (ant-dev@jakarta.apache.org). Where necessary,
+        development mailing list (dev@ant.apache.org). Where necessary,
         PMC voting may take place on the private Ant PMC mailing list.
         Votes are clearly indicated by subject line starting with [VOTE] or
         [PMC-VOTE]. Votes may contain multiple items for approval and these
