@@ -62,8 +62,11 @@ import java.io.*;
  *  any messages that get logged.
  */
 public class DefaultLogger implements BuildListener {
+    private static int LEFT_COLUMN_SIZE = 12;
+
     private PrintStream out;
     private int msgOutputLevel;
+    private long startTime;
 
     /**
      *  Constructs a new logger which will write to the specified
@@ -75,16 +78,47 @@ public class DefaultLogger implements BuildListener {
         this.msgOutputLevel = msgOutputLevel;
     }
 
-    public void buildStarted(BuildEvent event) {}
-    public void buildFinished(BuildEvent event) {}
+    public void buildStarted(BuildEvent event) {
+        startTime = System.currentTimeMillis();
+    }
+
+    /**
+     *  Prints whether the build succeeded or failed, and
+     *  any errors the occured during the build.
+     */
+    public void buildFinished(BuildEvent event) {
+        Throwable error = event.getException();
+
+        if (error == null) {
+            out.println("\nBUILD SUCCESSFUL");
+        }
+        else {
+            out.println("\nBUILD FAILED\n");
+
+            if (error instanceof BuildException) {
+                out.println(error.toString());
+
+                Throwable nested = ((BuildException)error).getException();
+                if (nested != null) {
+                    nested.printStackTrace(out);
+                }
+            }
+            else {
+                error.printStackTrace(out);
+            }
+        }
+
+        out.println("\nTotal time: " + formatTime(System.currentTimeMillis() - startTime));
+    }
 
     public void targetStarted(BuildEvent event) {
         if (msgOutputLevel <= Project.MSG_INFO) {
-            out.println("Executing Target: " + event.getTarget().getName());
+            out.println("\n" + event.getTarget().getName() + ":");
         }
     }
 
-    public void targetFinished(BuildEvent event) {}
+    public void targetFinished(BuildEvent event) {
+    }
 
     public void taskStarted(BuildEvent event) {}
     public void taskFinished(BuildEvent event) {}
@@ -101,11 +135,31 @@ public class DefaultLogger implements BuildListener {
                 if (pos != -1) {
                     name = name.substring(pos + 1);
                 }
-                out.print("[" + name + "] ");
+
+                String msg = "[" + name + "] ";
+                for (int i = 0; i < (LEFT_COLUMN_SIZE - msg.length()); i++) {
+                    out.print(" ");
+                }
+                out.print(msg);
             }
 
             // Print the message
             out.println(event.getMessage());
         }
     }
+
+    private static String formatTime(long millis) {
+        long seconds = millis / 1000;
+        long minutes = seconds / 60;
+
+
+        if (minutes > 0) {
+            return Long.toString(minutes) + " minutes " + Long.toString(seconds%60) + " seconds";
+        }
+        else {
+            return Long.toString(seconds) + " seconds";
+        }
+
+    }
+
 }

@@ -261,7 +261,7 @@ public class Project {
         this.baseDir = baseDir;
 	setProperty( "basedir", baseDir.getAbsolutePath());
         String msg = "Project base dir set to: " + baseDir;
-        log(msg, MSG_INFO);
+        log(msg, MSG_VERBOSE);
     }
 
     public File getBaseDir() {
@@ -407,17 +407,8 @@ public class Project {
     public void executeTargets(Vector targetNames) throws BuildException {
         Throwable error = null;
 
-        try {
-            for (int i = 0; i < targetNames.size(); i++) {
-                executeTarget((String)targetNames.elementAt(i));
-            }
-        }
-        catch(RuntimeException exc) {
-            error = exc;
-            throw exc;
-        }
-        finally {
-            fireBuildFinished(error);
+        for (int i = 0; i < targetNames.size(); i++) {
+            executeTarget((String)targetNames.elementAt(i));
         }
     }
 

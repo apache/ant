@@ -103,7 +103,13 @@ public class Main {
      * @param args Command line args.
      */
     public static void main(String[] args) {
-        new Main(args).runBuild();
+        try {
+            new Main(args).runBuild();
+            System.exit(0);
+        }
+        catch(Throwable exc) {
+            System.exit(1);
+        }
     }
 
     protected Main(String[] args) throws BuildException {
@@ -194,7 +200,7 @@ public class Main {
                 // if it's no other arg, it may be the target
                 targets.addElement(arg);
             }
-            
+
         }
 
         // make sure buildfile exists
@@ -224,10 +230,9 @@ public class Main {
         if (!readyToRun) {
             return;
         }
-        
+
         // track when we started
 
-        long startTime = System.currentTimeMillis();
         if (msgOutputLevel >= Project.MSG_INFO) {
             System.out.println("Buildfile: " + buildFile);
         }
@@ -235,21 +240,24 @@ public class Main {
         Project project = new Project();
         addBuildListeners(project);
         project.fireBuildStarted();
-        project.init();
 
-        // set user-define properties
-        Enumeration e = definedProps.keys();
-        while (e.hasMoreElements()) {
-            String arg = (String)e.nextElement();
-            String value = (String)definedProps.get(arg);
-            project.setUserProperty(arg, value);
-        }
+        Throwable error = null;
 
-        project.setUserProperty( "ant.file" , buildFile.getAbsolutePath() );
-
-        // first use the ProjectHelper to create the project object
-        // from the given build file.
         try {
+            project.init();
+
+            // set user-define properties
+            Enumeration e = definedProps.keys();
+            while (e.hasMoreElements()) {
+                String arg = (String)e.nextElement();
+                String value = (String)definedProps.get(arg);
+                project.setUserProperty(arg, value);
+            }
+
+            project.setUserProperty( "ant.file" , buildFile.getAbsolutePath() );
+
+            // first use the ProjectHelper to create the project object
+            // from the given build file.
             try {
                 Class.forName("javax.xml.parsers.SAXParserFactory");
                 ProjectHelper.configureProject(project, buildFile);
@@ -260,40 +268,25 @@ public class Main {
             } catch (NullPointerException npe) {
                 throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", npe);
             }
-        } catch (BuildException be) {
-            System.out.println("\nBUILD CONFIG ERROR\n");
-            System.out.println(be.getMessage());
-            if (be.getException() == null) {
-                System.out.println(be.toString());
-            } else {
-                be.getException().printStackTrace();
-	    }
-	    throw be;
-        }
 
-        // make sure that we have a target to execute
-        if (targets.size() == 0) {
-            targets.addElement(project.getDefaultTarget());
-        }
-
-        // actually do some work
-        try {
-            project.executeTargets(targets);
-        } catch (BuildException be) {
-            String msg = "\nBUILD FATAL ERROR\n\n";
-            System.out.println(msg + be.toString());
-            if (msgOutputLevel > Project.MSG_INFO) {
-                be.printStackTrace();
+            // make sure that we have a target to execute
+            if (targets.size() == 0) {
+                targets.addElement(project.getDefaultTarget());
             }
-            throw be;
-        }
 
-        // track our stop time and let the user know how long things took.
-        long finishTime = System.currentTimeMillis();
-        long elapsedTime = finishTime - startTime;
-        if (msgOutputLevel >= Project.MSG_INFO) {
-            System.out.println("Completed in " + (elapsedTime/1000)
-                               + " seconds");
+            // actually do some work
+            project.executeTargets(targets);
+        }
+        catch(RuntimeException exc) {
+            error = exc;
+            throw exc;
+        }
+        catch(Error err) {
+            error = err;
+            throw err;
+        }
+        finally {
+            project.fireBuildFinished(error);
         }
     }
 
@@ -344,11 +337,11 @@ public class Main {
     private static void printVersion() {
         try {
             Properties props = new Properties();
-            InputStream in = 
+            InputStream in =
                 Main.class.getResourceAsStream("/org/apache/tools/ant/version.txt");
             props.load(in);
             in.close();
-            
+
             String lSep = System.getProperty("line.separator");
             StringBuffer msg = new StringBuffer();
             msg.append("Ant version ");

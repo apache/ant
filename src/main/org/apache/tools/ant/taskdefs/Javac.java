@@ -92,7 +92,7 @@ public class Javac extends MatchingTask {
      * Integer returned by the "Modern" jdk1.3 compiler to indicate success.
      */
     private static final int
-	MODERN_COMPILER_SUCCESS = 0;
+        MODERN_COMPILER_SUCCESS = 0;
 
     private File srcDir;
     private File destDir;
@@ -237,10 +237,10 @@ public class Javac extends MatchingTask {
         // copy the support files
 
         if (filecopyList.size() > 0) {
-            project.log("The implicit copying of support files by javac has been deprecated. " + 
+            project.log("The implicit copying of support files by javac has been deprecated. " +
                         "Use the copydir task to copy support files explicitly.",
                         Project.MSG_WARN);
-                
+
             project.log("Copying " + filecopyList.size() +
                         " support files to " + destDir.getAbsolutePath());
             Enumeration enum = filecopyList.keys();
@@ -427,17 +427,10 @@ public class Javac extends MatchingTask {
         // provide the compiler a different message sink - namely our own
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        sun.tools.javac.Main compiler = new sun.tools.javac.Main(out, "javac");
+        sun.tools.javac.Main compiler =
+                new sun.tools.javac.Main(new TaskOutputStream(project, Project.MSG_WARN), "javac");
 
-        if (compiler.compile(args)) {
-            String output = out.toString().trim();
-            if (output.length() > 0) {
-                project.log(output, Project.MSG_WARN);
-            }
-        }
-        else {
-            project.log(out.toString().trim(), Project.MSG_ERR);
-
+        if (!compiler.compile(args)) {
             throw new BuildException("Compile failed");
         }
     }
@@ -505,28 +498,27 @@ public class Javac extends MatchingTask {
 
         project.log(niceSourceList.toString(), project.MSG_VERBOSE);
 
-	    // This won't build under JDK1.2.2 because the new compiler
-	    // doesn't exist there.
+        // This won't build under JDK1.2.2 because the new compiler
+        // doesn't exist there.
         //com.sun.tools.javac.Main compiler = new com.sun.tools.javac.Main();
         //if (compiler.compile(args) != 0) {
 
-	    // Use reflection to be able to build on all JDKs >= 1.1:
-	    try {
-	        Class c = Class.forName ("com.sun.tools.javac.Main");
-	        Object compiler = c.newInstance ();
-	        Method compile = c.getMethod ("compile",
-	            new Class [] {(new String [] {}).getClass ()});
-	        int result = ((Integer) compile.invoke
-			      (compiler, new Object [] {args})) .intValue ();
-	        if (result != MODERN_COMPILER_SUCCESS) {
-		        String msg =
-		            "Compile failed, messages should have been provided.";
-		        throw new BuildException(msg);
-	        }
-	    } catch (Exception ex) {
-	        throw new BuildException (ex);
+        // Use reflection to be able to build on all JDKs >= 1.1:
+        try {
+            Class c = Class.forName ("com.sun.tools.javac.Main");
+            Object compiler = c.newInstance ();
+            Method compile = c.getMethod ("compile",
+                new Class [] {(new String [] {}).getClass ()});
+            int result = ((Integer) compile.invoke
+                          (compiler, new Object [] {args})) .intValue ();
+            if (result != MODERN_COMPILER_SUCCESS) {
+                String msg = 
+                    "Compile failed, messages should have been provided.";
+                throw new BuildException(msg);
+            }
+        } catch (Exception ex) {
+                throw new BuildException (ex);
         }
-
     }
 
     /**
