@@ -8,10 +8,10 @@
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.util.Iterator;
-import java.util.Hashtable;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;

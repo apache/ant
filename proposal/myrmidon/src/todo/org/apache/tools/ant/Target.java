@@ -7,9 +7,9 @@
  */
 package org.apache.tools.ant;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
-import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 
 /**

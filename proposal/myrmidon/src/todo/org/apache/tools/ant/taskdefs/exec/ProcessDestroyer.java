@@ -8,8 +8,8 @@
 package org.apache.tools.ant.taskdefs.exec;
 
 import java.lang.reflect.Method;
-import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Destroys all registered <code>Process</code>es when the VM exits.
