@@ -111,6 +111,14 @@ public class Location implements Serializable {
     }
 
     /**
+     * @return the column number
+     * @since Ant 1.7
+     */
+    public int getColumnNumber() {
+        return columnNumber;
+    }
+    
+    /**
      * Returns the file name, line number, a colon and a trailing space.
      * An error message can be appended easily. For unknown locations, an
      * empty string is returned.
