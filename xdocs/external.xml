@@ -443,6 +443,44 @@
         </table>
       </subsection>
 
+      <subsection name="jMetra">
+
+        <p>jMetra is a tool for collecting code metrics across a
+        project lifecycle and compiling the results into
+        JavaDoc-styled documentation to analyze project metrics over
+        time.  jMetra is best utilized by integrating it with your
+        project's scheduled build process.</p>
+
+        <p>It works from the command line or using several provided
+        Ant tasks.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.jmetra.com/">http://www.jmetra.com/</a
+                >
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>
+              <a href="mailto:tnewton@hypercisioninc.com">R Todd Newton
+              </a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Commercial, free licenses for open source projects and
+            evaluations.</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="PMD">
 
         <p>PMD checks Java source code for unused variables,
