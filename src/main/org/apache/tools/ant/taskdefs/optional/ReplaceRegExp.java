@@ -417,6 +417,9 @@ public class ReplaceRegExp extends Task {
                 pw.flush();
             } else {
                 String buf = fileUtils.readFully(br);
+                if (buf == null) {
+                    buf = "";
+                }
 
                 String res = doReplace(regex, subs, buf, options);
 
