@@ -203,6 +203,33 @@
         </table>
       </subsection>
 
+      <subsection name="Javamake">
+
+        <p>A task to compile Java sources and manage class file
+        dependencies. Functionality is equivalent to that of standard
+        Javac and Depend tasks combined, with improved dependency
+        checking.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.experimentalstuff.com/Technologies/JavaMake/index.html">http://www.experimentalstuff.com/Technologies/JavaMake/index.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:Mikhail.Dmitriev@eng.sun.com">Mikhail Dmitriev</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD-like License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="J2ME Ant Tasks">
 
         <p>There are two different sets of tasks to help build <a
