@@ -463,6 +463,13 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     }
 
     /**
+     * @deprecated use org.apache.tools.ant.types.Path#addExtdirs instead
+     */
+    protected void addExtdirsToClasspath(Path classpath) {
+        classpath.addExtdirs(extdirs);
+    }
+
+    /**
      * Adds the command line arguments specifc to the current implementation.
      */
     protected void addCurrentCompilerArgs(Commandline cmd) {
