@@ -9,6 +9,14 @@
 
 <h1>
 Ant Pvcs Task User Manual</h1>
+
+<p><b>Note:</b>
+Before using this task, the user running ant must have access to the
+commands of PVCS (get and pcli) and must have access to the
+repository. Note that the way to specify the repository is platform
+dependent so use property to specify location of repository.
+</p>
+
 by
 <br><!-- Names are in alphabetical order, on last name -->
 <ul>
@@ -33,10 +41,6 @@ Table of Contents</h2>
 The pvcs task allows the user of ant to extract the latest edition
 of the source code from a PVCS repository. PVCS is a version control system
 developed by <a href="http://www.merant.com/products/pvcs">Merant</a>.
-<br>
-Before using this tag, the user running ant must have access to the commands
-of PVCS (get and pcli) and must have access to the repository. Note that the way to specify
-the repository is platform dependent so use property to specify location of repository.
 <br>
 This version has been tested agains PVCS version 6.5 and 6.6 under Windows and Solaris.
 
@@ -248,7 +252,7 @@ repository from two projects using nested &lt;pvcsproject&gt; elements.
   Total time: 22 seconds</pre>
 
 <hr WIDTH="100%">
-<p align="center">Copyright &copy; 2001-2002 Apache Software
+<p align="center">Copyright &copy; 2001-2003 Apache Software
 Foundation. All rights Reserved.</p>
 <p>PVCS is a registered trademark of MERANT.</p>
 </body>
