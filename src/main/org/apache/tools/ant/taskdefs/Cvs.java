@@ -53,11 +53,12 @@
  */
 
 package org.apache.tools.ant.taskdefs;
+
 /**
  * original 1.20
  *
- *  NOTE: This implementation has been moved to AbstractCvsTask with the addition of
- *           some accessors for extensibility.
+ *  NOTE: This implementation has been moved to AbstractCvsTask with
+ *  the addition of some accessors for extensibility.
  *
  *
  * @author costin@dnt.ro
@@ -65,14 +66,13 @@ package org.apache.tools.ant.taskdefs;
  * @author Wolfgang Werner <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
  * @author Kevin Ross <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
  *
+ * @since Ant 1.1
+ * 
  * @ant.task category="scm"
  */
 public class Cvs extends AbstractCvsTask {
 
-    public Cvs(){
-
+    public Cvs() {
         setTaskName("cvs");
     }
 }
-
-

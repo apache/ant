@@ -71,18 +71,24 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * original Cvs.java 1.20
  *
- *  NOTE: This implementation has been moved here from Cvs.java with the addition of
- *          some accessors for extensibility.  Another task can extend this with
- *          some customized output processing.
+ *  NOTE: This implementation has been moved here from Cvs.java with
+ *  the addition of some accessors for extensibility.  Another task
+ *  can extend this with some customized output processing.
  *
  * @author costin@dnt.ro
  * @author stefano@apache.org
  * @author Wolfgang Werner <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
  * @author Kevin Ross <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
+ *
+ * @since Ant 1.5
  */
 public abstract class AbstractCvsTask extends Task {
-    /** Default compression level to use, if compression is enabled via setCompression( true ). */
+    /** 
+     * Default compression level to use, if compression is enabled via
+     * setCompression( true ). 
+     */
     public static final int DEFAULT_COMPRESSION_LEVEL = 3;
+
     private Commandline cmd = new Commandline();
 
     /** list of Commandline children */
@@ -175,7 +181,6 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     public void setExecuteStreamHandler(ExecuteStreamHandler executeStreamHandler){
-
         this.executeStreamHandler = executeStreamHandler;
     }
 
@@ -183,7 +188,8 @@ public abstract class AbstractCvsTask extends Task {
 
         if(this.executeStreamHandler == null){
 
-            setExecuteStreamHandler(new PumpStreamHandler(getOutputStream(), getErrorStream()));
+            setExecuteStreamHandler(new PumpStreamHandler(getOutputStream(), 
+                                                          getErrorStream()));
         }
 
         return this.executeStreamHandler;
@@ -201,13 +207,15 @@ public abstract class AbstractCvsTask extends Task {
 
             if (output != null) {
                 try {
-                    setOutputStream(new PrintStream(new BufferedOutputStream(new FileOutputStream(output.getPath(), append))));
-                }
-                catch (IOException e) {
+                    setOutputStream(new PrintStream(
+                                        new BufferedOutputStream(
+                                            new FileOutputStream(output
+                                                                 .getPath(), 
+                                                                 append))));
+                } catch (IOException e) {
                     throw new BuildException(e, location);
                 }
-            }
-            else {
+            } else {
                 setOutputStream(new LogOutputStream(this, Project.MSG_INFO));
             }
         }
@@ -227,13 +235,14 @@ public abstract class AbstractCvsTask extends Task {
             if (error != null) {
 
                 try {
-                    setErrorStream(new PrintStream(new BufferedOutputStream(new FileOutputStream(error.getPath(), append))));
-                }
-                catch (IOException e) {
+                    setErrorStream(new PrintStream(
+                                       new BufferedOutputStream(
+                                           new FileOutputStream(error.getPath(),
+                                                                append))));
+                } catch (IOException e) {
                     throw new BuildException(e, location);
                 }
-            }
-            else {
+            } else {
                 setErrorStream(new LogOutputStream(this, Project.MSG_WARN));
             }
         }
@@ -246,8 +255,9 @@ public abstract class AbstractCvsTask extends Task {
      * @throws BuildException
      */
     protected void runCommand( Commandline toExecute ) throws BuildException {
-        // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
-        // execution so that we don't rely on having native CVS stuff around (SM)
+        // XXX: we should use JCVS (www.ice.com/JCVS) instead of
+        // command line execution so that we don't rely on having
+        // native CVS stuff around (SM)
 
         // We can't do it ourselves as jCVS is GPLed, a third party task
         // outside of jakarta repositories would be possible though (SB).
@@ -262,9 +272,11 @@ public abstract class AbstractCvsTask extends Task {
         }
 
         /**
-         * Need a better cross platform integration with <cvspass>, so use the same filename.
+         * Need a better cross platform integration with <cvspass>, so
+         * use the same filename.
          */
-        /* But currently we cannot because 'cvs log' is not working with a pass file.
+        /* But currently we cannot because 'cvs log' is not working
+         * with a pass file.
         if(passFile == null){
 
             File defaultPassFile = new File(System.getProperty("user.home") + File.separatorChar + ".cvspass");
@@ -279,7 +291,8 @@ public abstract class AbstractCvsTask extends Task {
             var.setKey("CVS_PASSFILE");
             var.setValue(String.valueOf(passFile));
             env.addVariable(var);
-            log("Using cvs passfile: " + String.valueOf(passFile), Project.MSG_INFO);
+            log("Using cvs passfile: " + String.valueOf(passFile), 
+                Project.MSG_INFO);
         }
 
         if (cvsRsh!=null) {
@@ -288,7 +301,6 @@ public abstract class AbstractCvsTask extends Task {
             var.setValue(String.valueOf(cvsRsh));
             env.addVariable(var);
         }
-
 
         //
         // Just call the getExecuteStreamHandler() and let it handle
@@ -368,6 +380,7 @@ public abstract class AbstractCvsTask extends Task {
 
     public void execute() throws BuildException {
 
+        String savedCommand = getCommand();
 
         if( this.getCommand() == null
             && vecCommandlines.size() == 0 ) {
@@ -376,13 +389,22 @@ public abstract class AbstractCvsTask extends Task {
         }
 
         String c = this.getCommand();
+        Commandline cloned = null;
         if( c != null ) {
-            this.cmd.createArgument(true).setLine(c);
-            this.addConfiguredCommandline( this.cmd, true );
+            cloned = (Commandline) cmd.clone();
+            cloned.createArgument(true).setLine(c);
+            this.addConfiguredCommandline(cloned, true);
         }
 
-        for( int i = 0; i < vecCommandlines.size(); i++ ) {
-            this.runCommand( (Commandline)vecCommandlines.elementAt( i ) );
+        try {
+            for( int i = 0; i < vecCommandlines.size(); i++ ) {
+                this.runCommand( (Commandline)vecCommandlines.elementAt( i ) );
+            }
+        } finally {
+            if (cloned != null) {
+                removeCommandline(cloned);
+            }
+            setCommand(savedCommand);
         }
     }
 
@@ -567,6 +589,10 @@ public abstract class AbstractCvsTask extends Task {
         }
     }
 
+    protected void removeCommandline(Commandline c) {
+        vecCommandlines.removeElement( c );
+    }
+
     public void addConfiguredCommandline( Commandline c ) {
         this.addConfiguredCommandline( c, false );
     }
@@ -575,7 +601,8 @@ public abstract class AbstractCvsTask extends Task {
     * Configures and adds the given Commandline.
     * @param insertAtStart If true, c is
     */
-    public void addConfiguredCommandline( Commandline c, boolean insertAtStart ) {
+    public void addConfiguredCommandline( Commandline c, 
+                                          boolean insertAtStart ) {
         if( c == null ) { return; }
         this.configureCommandline( c );
         if( insertAtStart ) {
@@ -590,7 +617,7 @@ public abstract class AbstractCvsTask extends Task {
     * If set to a value 1-9 it adds -zN to the cvs command line, else
     * it disables compression.
     */
-    public void setCompression( int level ) {
+    public void setCompressionLevel( int level ) {
         this.compression = level;
     }
 
@@ -599,7 +626,7 @@ public abstract class AbstractCvsTask extends Task {
      * level, AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL.
      */
     public void setCompression( boolean usecomp ) {
-        this.setCompression( usecomp ? 
+        setCompressionLevel( usecomp ? 
                              AbstractCvsTask.DEFAULT_COMPRESSION_LEVEL : 0 );
     }
 

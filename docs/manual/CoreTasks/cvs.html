@@ -27,8 +27,16 @@ preferred over the <i>checkout</i> command, because of speed.</p>
   </tr>
   <tr>
     <td valign="top">commpression</td>
-    <td valign="top"><code>true</code>, <code>false</code>, or the number 1-9 (corresponding to possible values for CVS&apos; <code>-z#</code> argument). Any other value is treated as false</td>
-    <td align="center" valign="top">No. Defaults to no compression. if passed <code>true</code>, level 3 compression is assumed.</td>
+    <td valign="top"><code>true</code> or <code>false</code> - if set
+    to true, this is the same as copmressionlevel=&quot;3&quot;</td>
+    <td align="center" valign="top">No. Defaults to false.</td>
+  </tr>
+  <tr>
+    <td valign="top">commpressionlevel</td>
+    <td valign="top">A number between 1 and 9 (corresponding to
+    possible values for CVS&apos; <code>-z#</code> argument). Any
+    other value is treated as compression=&qupt;false&quot;</td>
+    <td align="center" valign="top">No. Defaults to no compression.</td>
   </tr>
 
   <tr>
