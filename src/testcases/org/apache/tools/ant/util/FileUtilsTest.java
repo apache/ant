@@ -79,7 +79,7 @@ public class FileUtilsTest extends TestCase {
 
     public void setUp() {
         fu = FileUtils.newFileUtils();
-        // Windows adds the drive letter in uppercase, unless you run Cygnus
+        // Windows adds the drive letter in uppercase, unless you run Cygwin
         root = new File(File.separator).getAbsolutePath().toUpperCase();
     }
 
@@ -408,9 +408,9 @@ public class FileUtilsTest extends TestCase {
                                                  new File("c:\\foo\\bar")));
         assertEquals("bar", fu.removeLeadingPath(new File("c:\\foo\\"),
                                                  new File("c:\\foo\\bar")));
-        assertEquals(fu.normalize("/bar").getAbsolutePath(),
+        assertEqualsIgnoreDriveCase(fu.normalize("/bar").getAbsolutePath(),
                      fu.removeLeadingPath(new File("/foo"), new File("/bar")));
-        assertEquals(fu.normalize("/foobar").getAbsolutePath(),
+        assertEqualsIgnoreDriveCase(fu.normalize("/foobar").getAbsolutePath(),
                      fu.removeLeadingPath(new File("/foo"), new File("/foobar")));
         // bugzilla report 19979
         assertEquals("", fu.removeLeadingPath(new File("/foo/bar"),
@@ -436,7 +436,13 @@ public class FileUtilsTest extends TestCase {
             dosRoot = "";
         }
         if (Os.isFamily("dos")) {
-            assertEquals("file:///C:/foo", fu.toURI("c:\\foo"));
+            assertEquals("file:///"+ dosRoot + "foo", fu.toURI("c:\\foo"));
+        }
+        if (Os.isFamily("dos")) {
+            // this amounts to : are we under cygwin ?
+            if (Character.isLowerCase(System.getProperty("user.dir").charAt(0))) {
+                dosRoot = "c:/";
+            }
         }
         assertEquals("file:///" + dosRoot + "foo", fu.toURI("/foo"));
         assertEquals("file:./foo",  fu.toURI("./foo"));
@@ -453,13 +459,13 @@ public class FileUtilsTest extends TestCase {
      */
     public void testFromURI() {
         if (Os.isFamily("dos")) {
-            assertEquals("C:\\foo", fu.fromURI("file:///c:/foo"));
+            assertEqualsIgnoreDriveCase("C:\\foo", fu.fromURI("file:///c:/foo"));
         }
-        assertEquals(localize("/foo"), fu.fromURI("file:///foo"));
+        assertEqualsIgnoreDriveCase(localize("/foo"), fu.fromURI("file:///foo"));
         assertEquals("." + File.separator + "foo",
                      fu.fromURI("file:./foo"));
-        assertEquals(localize("/foo bar"), fu.fromURI("file:///foo%20bar"));
-        assertEquals(localize("/foo#bar"), fu.fromURI("file:///foo%23bar"));
+        assertEqualsIgnoreDriveCase(localize("/foo bar"), fu.fromURI("file:///foo%20bar"));
+        assertEqualsIgnoreDriveCase(localize("/foo#bar"), fu.fromURI("file:///foo%23bar"));
     }
 
     /**
@@ -468,5 +474,22 @@ public class FileUtilsTest extends TestCase {
     private String localize(String path) {
         path = root + path.substring(1);
         return path.replace('\\', File.separatorChar).replace('/', File.separatorChar);
+    }
+    /**
+     * convenience method
+     * normalize brings the drive in uppercase
+     * the drive letter is in lower case under cygwin
+     * calling this method allows tests where normalize is called to pass under cygwin
+     */
+    private void assertEqualsIgnoreDriveCase(String s1, String s2) {
+        if (Os.isFamily("dos") && s1.length()>=1 && s2.length()>=1) {
+            StringBuffer sb1= new StringBuffer(s1);
+            StringBuffer sb2= new StringBuffer(s2);
+            sb1.setCharAt(0,Character.toUpperCase(s1.charAt(0)));
+            sb2.setCharAt(0,Character.toUpperCase(s2.charAt(0)));
+            assertEquals(sb1.toString(),sb2.toString());
+        }   else {
+            assertEquals(s1,s2);
+        }
     }
 }
