@@ -9,6 +9,7 @@ jakarta-regexp-1.1.jar - required by some mappers, available at http://jakarta.a
 ???oro.jar???  - required for some mappers, available at http://jakarta.apache.org/oro/
 ???antlr.jar???- required for antlr task, available at www.antlr.org
 bsf.jar        - required for script task, available at http://oss.software.ibm.com/developerworks/opensource/bsf/
+netrexx.jar    - required for netrexx task, available at http://www2.hursley.ibm.com/netrexx
 rhino.jar      - required for script task if you want to use javascript, available at www.mozilla.org
 jpython.jar    - required for script task if you want to use python, available at www.jpython.org
 
