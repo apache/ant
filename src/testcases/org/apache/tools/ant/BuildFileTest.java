@@ -254,10 +254,10 @@ public abstract class BuildFileTest extends TestCase {
             sysOut.flush();
             sysErr.flush();
             outBuffer = new StringBuffer();
-            PrintStream out = new PrintStream(new AntOutputStream());
+            PrintStream out = new PrintStream(new AntOutputStream(outBuffer));
             System.setOut(out);
             errBuffer = new StringBuffer();
-            PrintStream err = new PrintStream(new AntOutputStream());
+            PrintStream err = new PrintStream(new AntOutputStream(errBuffer));
             System.setErr(err);
             logBuffer = new StringBuffer();
             fullLogBuffer = new StringBuffer();
@@ -408,9 +408,15 @@ public abstract class BuildFileTest extends TestCase {
     /**
      * an output stream which saves stuff to our buffer.
      */
-    private class AntOutputStream extends java.io.OutputStream {
-        public void write(int b) {
-            outBuffer.append((char)b);
+    private static class AntOutputStream extends java.io.OutputStream {
+        private StringBuffer buffer;
+        
+        public AntOutputStream( StringBuffer buffer ) {
+            this.buffer = buffer;
+        }
+        
+        public void write(int b) { 
+            buffer.append((char)b);
         }
     }
 
