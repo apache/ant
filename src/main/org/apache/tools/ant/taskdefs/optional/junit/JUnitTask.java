@@ -77,6 +77,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.LoaderUtils;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestResult;
@@ -965,27 +966,27 @@ public class JUnitTask extends Task {
      * @since Ant 1.4
      */
     protected void addClasspathEntry(String resource) {
-        URL url = getClass().getResource(resource);
-        if (url != null) {
-            String u = url.toString();
-            if (u.startsWith("jar:file:")) {
-                int pling = u.indexOf("!");
-                String jarName = u.substring(9, pling);
-                log("Found " + jarName, Project.MSG_DEBUG);
-                antRuntimeClasses.createPath()
-                    .setLocation(new File((new File(jarName))
-                                          .getAbsolutePath()));
-            } else if (u.startsWith("file:")) {
-                int tail = u.indexOf(resource);
-                String dirName = u.substring(5, tail);
-                log("Found " + dirName, Project.MSG_DEBUG);
-                antRuntimeClasses.createPath()
-                    .setLocation(new File((new File(dirName))
-                                          .getAbsolutePath()));
-            } else {
-                log("Don\'t know how to handle resource URL " + u,
-                    Project.MSG_DEBUG);
-            }
+        /* 
+         * pre Ant 1.6 this method used to call getClass().getResource
+         * while Ant 1.6 will call ClassLoader.getResource().
+         *
+         * The difference is that Class.getResource expects a leading
+         * slash for "absolute" resources and will strip it before
+         * delegating to ClassLoader.getResource - so we now have to
+         * emulate Class's behavior.
+         */
+        if (resource.startsWith("/")) {
+            resource = resource.substring(1);
+        } else {
+            resource = "org/apache/tools/ant/taskdefs/optional/junit/"
+                + resource;
+        }
+        
+        File f = LoaderUtils.getResourceSource(getClass().getClassLoader(),
+                                               resource);
+        if (f != null) {
+            log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
+            antRuntimeClasses.createPath().setLocation(f);
         } else {
             log("Couldn\'t find " + resource, Project.MSG_DEBUG);
         }

@@ -68,6 +68,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.util.LoaderUtils;
 
 /**
  *  Invokes the ANTLR Translator generator on a grammar file.
@@ -239,25 +240,27 @@ public class ANTLR extends Task {
      * getResource doesn't contain the name of the archive.</p>
      */
     protected void addClasspathEntry(String resource) {
-        URL url = getClass().getResource(resource);
-        if (url != null) {
-            String u = url.toString();
-            if (u.startsWith("jar:file:")) {
-                int pling = u.indexOf("!");
-                String jarName = u.substring(9, pling);
-                log("Implicitly adding " + jarName + " to classpath",
-                        Project.MSG_DEBUG);
-                createClasspath().setLocation(new File((new File(jarName)).getAbsolutePath()));
-            } else if (u.startsWith("file:")) {
-                int tail = u.indexOf(resource);
-                String dirName = u.substring(5, tail);
-                log("Implicitly adding " + dirName + " to classpath",
-                        Project.MSG_DEBUG);
-                createClasspath().setLocation(new File((new File(dirName)).getAbsolutePath()));
-            } else {
-                log("Don\'t know how to handle resource URL " + u,
-                        Project.MSG_DEBUG);
-            }
+        /* 
+         * pre Ant 1.6 this method used to call getClass().getResource
+         * while Ant 1.6 will call ClassLoader.getResource().
+         *
+         * The difference is that Class.getResource expects a leading
+         * slash for "absolute" resources and will strip it before
+         * delegating to ClassLoader.getResource - so we now have to
+         * emulate Class's behavior.
+         */
+        if (resource.startsWith("/")) {
+            resource = resource.substring(1);
+        } else {
+            resource = "org/apache/tools/ant/taskdefs/optional/"
+                + resource;
+        }
+        
+        File f = LoaderUtils.getResourceSource(getClass().getClassLoader(),
+                                               resource);
+        if (f != null) {
+            log("Found " + f.getAbsolutePath(), Project.MSG_DEBUG);
+            createClasspath().setLocation(f);
         } else {
             log("Couldn\'t find " + resource, Project.MSG_DEBUG);
         }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,8 +53,10 @@
  */
 package org.apache.tools.ant.util;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URL;
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -144,5 +146,68 @@ public class LoaderUtils {
         return getContextClassLoader != null &&
             setContextClassLoader != null;
     }
+
+    /**
+     * Find the directory or jar file the class has been loaded from.
+     *
+     * @return null if we cannot determine the location.
+     *
+     * @since Ant 1.6
+     */
+    public static File getClassSource(Class c) {
+        String classFile = c.getName().replace('.', '/') + ".class";
+        return getResourceSource(c.getClassLoader(), classFile);
+    }
+
+    /**
+     * Find the directory or a give resource has been loaded from.
+     *
+     * @return null if we cannot determine the location.
+     *
+     * @since Ant 1.6
+     */
+    public static File getResourceSource(ClassLoader c, String resource) {
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        if (c == null) {
+            c = LoaderUtils.class.getClassLoader();
+        }
+        
+        URL url = c.getResource(resource);
+        if (url != null) {
+            String u = url.toString();
+            if (u.startsWith("jar:file:")) {
+                int pling = u.indexOf("!");
+                String jarName = u.substring(4, pling);
+                return new File(fileUtils.fromURI(jarName));
+            } else if (u.startsWith("file:")) {
+                int tail = u.indexOf(resource);
+                String dirName = u.substring(0, tail);
+                return new File(fileUtils.fromURI(dirName));
+            }
+        }
+        return null;
+    }
+
+    // if we want to drop JDK 1.1, here is code that does something similar
+    // - stolen from Diagnostics, stolen from Axis, stolen from somewhere else
+    //
+    //  try {
+    //      java.net.URL url = clazz.getProtectionDomain().getCodeSource().getLocation();
+    //      String location = url.toString();
+    //      if (location.startsWith("jar")) {
+    //          url = ((java.net.JarURLConnection) url.openConnection()).getJarFileURL();
+    //          location = url.toString();
+    //      }
+    //  
+    //      if (location.startsWith("file")) {
+    //          java.io.File file = new java.io.File(url.getFile());
+    //          return file.getAbsolutePath();
+    //      } else {
+    //          return url.toString();
+    //      }
+    //  } catch (Throwable t) {
+    //  }
+    //  return null;
+
 }
 

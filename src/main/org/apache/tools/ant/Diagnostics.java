@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.util.LoaderUtils;
 
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.parsers.SAXParser;
@@ -230,23 +231,8 @@ public final class Diagnostics {
      */
 
     private static String getClassLocation( Class clazz) {
-        try {
-            java.net.URL url = clazz.getProtectionDomain().getCodeSource().getLocation();
-            String location = url.toString();
-            if (location.startsWith("jar")) {
-                url = ((java.net.JarURLConnection) url.openConnection()).getJarFileURL();
-                location = url.toString();
-            }
-
-            if (location.startsWith("file")) {
-                java.io.File file = new java.io.File(url.getFile());
-                return file.getAbsolutePath();
-            } else {
-                return url.toString();
-            }
-        } catch (Throwable t) {
-        }
-        return null;
+        File f = LoaderUtils.getClassSource(clazz);
+        return f == null ? null : f.getAbsolutePath();
     }
 
 
