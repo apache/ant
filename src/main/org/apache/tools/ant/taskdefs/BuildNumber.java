@@ -72,6 +72,7 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
+ * @since Ant 1.5
  * @ant.task name="buildnumber"
  */
 public class BuildNumber
@@ -111,6 +112,7 @@ public class BuildNumber
     public void execute()
         throws BuildException
     {
+        File savedFile = m_file; // may be altered in validate
         validate();
 
         final Properties properties = loadProperties();
@@ -145,11 +147,12 @@ public class BuildNumber
                 {
                 }
             }
+            m_file = savedFile;
         }
 
         //Finally set the property
-        getProject().setProperty( DEFAULT_PROPERTY_NAME,
-                                  String.valueOf( buildNumber ) );
+        getProject().setNewProperty( DEFAULT_PROPERTY_NAME,
+                                     String.valueOf( buildNumber ) );
     }
 
     /**
