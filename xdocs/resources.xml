@@ -36,6 +36,20 @@
           </tr>
         </table>
       </subsection>
+
+      <subsection name="FAQ about Borland Application Server tasks">
+        <p>Benoit Moussaud, the original author if the Borland
+        Application Server specific <a
+        href="manual/OptionalTasks/ejb.html#ejbtasks">EJB tasks</a> has put
+        together a FAQ for this specific subtask.</p>
+
+        <table class="externals">
+          <tr>
+            <th>FAQ:</th>
+            <td><a href="http://www.moussaud.org/ejbjar.html">http://www.moussaud.org/ejbjar.html</a></td>
+          </tr>
+        </table>
+      </subsection>
     </section>
 
     <section name="Books">
