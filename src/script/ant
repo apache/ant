@@ -22,7 +22,7 @@ if $cygwin ; then
     CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
-if [ "$ANT_HOME" = "" ] ; then
+if [ -z "$ANT_HOME" ] ; then
   # try to find ANT
   if [ -d /opt/ant ] ; then 
     ANT_HOME=/opt/ant
@@ -50,16 +50,29 @@ if [ "$ANT_HOME" = "" ] ; then
 
 fi
 
-if [ "$JAVA_HOME" != "" ] ; then
-  if [ "$JAVACMD" = "" ] ; then 
-    JAVACMD=$JAVA_HOME/bin/java
-  fi
-else
-  if [ "$JAVACMD" = "" ] ; then 
+if [ -z "$JAVACMD" ] ; then 
+  if [ -n "$JAVA_HOME"  ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then 
+      # IBM's JDK on AIX uses strange locations for the executables
+      JAVACMD=$JAVA_HOME/jre/sh/java
+    else
+      JAVACMD=$JAVA_HOME/bin/java
+    fi
+  else
     JAVACMD=java
   fi
 fi
  
+if [ ! -x "$JAVACMD" ] ; then
+  echo "Error: JAVA_HOME is not defined correctly."
+  echo "  We cannot execute $JAVACMD"
+  exit
+fi
+
+if [ -n "$CLASSPATH" ] ; then
+  LOCALCLASSPATH=$CLASSPATH
+fi
+
 # add in the dependency .jar files
 DIRLIBS=${ANT_HOME}/lib/*.jar
 for i in ${DIRLIBS}
@@ -67,32 +80,32 @@ do
     # if the directory is empty, then it will return the input string
     # this is stupid, so case for it
     if [ "$i" != "${DIRLIBS}" ] ; then
+      if [ -z "$LOCALCLASSPATH" ] ; then
+        LOCALCLASSPATH=$i
+      else
         LOCALCLASSPATH=$LOCALCLASSPATH:"$i"
+      fi
     fi
 done
 
-if [ "$CLASSPATH" != "" ] ; then
-  LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
-fi
-
-if [ "$JAVA_HOME" != "" ] ; then
-  if test -f $JAVA_HOME/lib/tools.jar ; then
+if [ -n "$JAVA_HOME" ] ; then
+  if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
     LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/tools.jar
   fi
 
-  if test -f $JAVA_HOME/lib/classes.zip ; then
+  if [ -f "$JAVA_HOME/lib/classes.zip" ] ; then
     LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
   fi
 
   # OSX hack to make Ant work with jikes
   if $darwin ; then
-  OSXHACK="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes"
-  if [ -d ${OSXHACK} ] ; then
-    for i in ${OSXHACK}/*.jar
-    do
-      JIKESPATH=$JIKESPATH:$i
-    done
-  fi
+    OSXHACK="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes"
+    if [ -d ${OSXHACK} ] ; then
+      for i in ${OSXHACK}/*.jar
+      do
+        JIKESPATH=$JIKESPATH:$i
+      done
+    fi
   fi
 
 else
@@ -103,8 +116,8 @@ else
 fi
 
 # supply JIKESPATH to Ant as jikes.class.path
-if [ "$JIKESPATH" != "" ] ; then
-  if [ "$ANT_OPTS" != "" ] ; then
+if [ -n "$JIKESPATH" ] ; then
+  if [ -n "$ANT_OPTS" ] ; then
     ANT_OPTS="$ANT_OPTS -Djikes.class.path=$JIKESPATH"
   else
     ANT_OPTS=-Djikes.class.path=$JIKESPATH

@@ -2,8 +2,8 @@
 
 # You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
-if [ "$JAVA_HOME" != "" ] ; then
-  if [ -f $JAVA_HOME/lib/tools.jar ] ; then
+if [ -n "$JAVA_HOME" ] ; then
+  if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
   fi
  
@@ -17,9 +17,35 @@ else
   echo "  to the installation directory of java."
 fi
 
-if [ ! -x "$JAVA_HOME/bin/java" ] ; then
+# IBM's JDK on AIX uses strange locations for the executables:
+# JAVA_HOME/jre/sh for java and rmid
+# JAVA_HOME/sh for javac and rmic
+if [ -z "$JAVAC" ] ; then
+  if [ -n "$JAVA_HOME"  ] ; then
+    if [ -x "$JAVA_HOME/sh/javac" ] ; then 
+      JAVAC=${JAVA_HOME}/sh/javac;
+    else
+      JAVAC=${JAVA_HOME}/bin/javac;
+    fi
+  else
+    JAVAC=javac
+  fi
+fi
+if [ -z "$JAVACMD" ] ; then 
+  if [ -n "$JAVA_HOME"  ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then 
+      JAVACMD=$JAVA_HOME/jre/sh/java
+    else
+      JAVACMD=$JAVA_HOME/bin/java
+    fi
+  else
+    JAVACMD=java
+  fi
+fi
+ 
+if [ ! -x "$JAVACMD" ] ; then
   echo "Error: JAVA_HOME is not defined correctly."
-  echo "  We cannot execute JAVA_HOME/bin/java"
+  echo "  We cannot execute $JAVACMD"
   exit
 fi
 
@@ -30,10 +56,6 @@ fi
 
 ANT_HOME=.
 export ANT_HOME
-
-if [ -z "$JAVAC" ] ; then
-  JAVAC=${JAVA_HOME}/bin/javac;
-fi
 
 echo ... Bootstrapping Ant Distribution
 
@@ -91,7 +113,7 @@ echo ... Building Ant Distribution
 
 cp -r ${CLASSDIR} build
 
-${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main -emacs bootstrap
+${JAVACMD} -classpath ${CLASSPATH} org.apache.tools.ant.Main -emacs bootstrap
 
 echo ... Cleaning Up Build Directories
 
