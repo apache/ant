@@ -50,7 +50,8 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
     /**
      * Sets up the initial command line.
      *
-     * <p>only the -encoding argument gets handled here.</p>
+     * <p>only the -encoding argument and nested arg elements get
+     * handled here.</p>
      *
      * @param cmd Command line to add to
      * @param args provides the user-setting and access to Ant's
@@ -62,6 +63,7 @@ public abstract class DefaultNative2Ascii implements Native2AsciiAdapter {
             cmd.createArgument().setValue("-encoding");
             cmd.createArgument().setValue(args.getEncoding());
         }
+        cmd.addArguments(args.getCurrentArgs());
     }
 
     /**

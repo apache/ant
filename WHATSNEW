@@ -198,6 +198,8 @@ Other changes:
 
 * Added length task to get strings' and files' lengths.
 
+* <natice2ascii> now also supports Kaffe's version.
+
 Fixed bugs:
 -----------
 

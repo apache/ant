@@ -29,6 +29,8 @@ import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.SourceFileScanner;
+import org.apache.tools.ant.util.facade.FacadeTaskHelper;
+import org.apache.tools.ant.util.facade.ImplementationSpecificArgument;
 
 /**
  * Converts files from native encodings to ASCII.
@@ -44,6 +46,11 @@ public class Native2Ascii extends MatchingTask {
     private String extension = null;  // Extension of output files if different
 
     private Mapper mapper;
+    private FacadeTaskHelper facade = null;
+
+    public Native2Ascii() {
+        facade = new FacadeTaskHelper(Native2AsciiAdapterFactory.getDefault());
+    }
 
     /**
      * Flag the conversion to run in the reverse sense,
@@ -115,6 +122,19 @@ public class Native2Ascii extends MatchingTask {
     }
 
     /**
+     * Choose the implementation for this particular task.
+     * @param compiler the name of the compiler
+     * @since Ant 1.6.3
+     */
+    public void setImplementation(String impl) {
+        if ("default".equals(impl)) {
+            facade.setImplementation(Native2AsciiAdapterFactory.getDefault());
+        } else {
+            facade.setImplementation(impl);
+        }        
+    }
+
+    /**
      * Defines the FileNameMapper to use (nested mapper element).
      *
      * @return the mapper to use for file name translations.
@@ -139,6 +159,18 @@ public class Native2Ascii extends MatchingTask {
         createMapper().add(fileNameMapper);
     }
 
+    /**
+     * Adds an implementation specific command-line argument.
+     * @return a ImplementationSpecificArgument to be configured
+     *
+     * @since Ant 1.6.3
+     */
+    public ImplementationSpecificArgument createArg() {
+        ImplementationSpecificArgument arg =
+            new ImplementationSpecificArgument();
+        facade.addImplementationArgument(arg);
+        return arg;
+    }
 
     /**
      * Execute the task
@@ -230,10 +262,21 @@ public class Native2Ascii extends MatchingTask {
 
         log("converting " + srcName, Project.MSG_VERBOSE);
         Native2AsciiAdapter ad = 
-            Native2AsciiAdapterFactory.getAdapter(null, this);
+            Native2AsciiAdapterFactory.getAdapter(facade.getImplementation(),
+                                                  this);
         if (!ad.convert(this, srcFile, destFile)) {
             throw new BuildException("conversion failed");
         }
+    }
+
+    /**
+     * Returns the (implementation specific) settings given as nested
+     * arg elements.
+     *
+     * @since Ant 1.6.3
+     */
+    public String[] getCurrentArgs() {
+        return facade.getArgs();
     }
 
     private class ExtMapper implements FileNameMapper {
