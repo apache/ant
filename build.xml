@@ -1516,8 +1516,9 @@
           <exclude name="org/example/**"/>
           <exclude name="${ant.package}/taskdefs/TaskdefTest*Task.java"/>
 
-          <!-- interactive test -->
+          <!-- interactive tests -->
           <exclude name="${ant.package}/taskdefs/TestProcess.java"/>
+          <exclude name="${optional.package}/splash/SplashScreenTest.java"/>
 
           <!-- only run these tests if their required libraries are
                installed -->

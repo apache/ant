@@ -120,6 +120,8 @@ Fixed bugs:
   execution dir relative executable. The resolveExecutable must be used to 
   pick up such executables.
 
+* splash screen would disppear when build was finished.
+
 Other changes:
 --------------
 * The filesetmanifest attribute of <jar> has been reenabled.
