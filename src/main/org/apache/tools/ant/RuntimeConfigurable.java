@@ -249,7 +249,7 @@ public class RuntimeConfigurable {
      *            to invalid attributes or children, or text being added to
      *            an element which doesn't accept it.
      */
-    public void maybeConfigure(Project p, boolean configureChildren) 
+    public void maybeConfigure(Project p, boolean configureChildren)
         throws BuildException
     {
         String id = null;
@@ -293,7 +293,11 @@ public class RuntimeConfigurable {
                 } else {
                     child.maybeConfigure(p);
                 }
-                ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject,
+                Object container = wrappedObject;
+                if (container instanceof TaskAdapter) {
+                    container = ((TaskAdapter) container).getProxy();
+                }
+                ProjectHelper.storeChild(p, container, child.wrappedObject,
                         child.getElementTag()
                         .toLowerCase(Locale.US));
             }
