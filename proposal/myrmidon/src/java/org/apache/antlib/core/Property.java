@@ -28,6 +28,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * TODO: Determine final format of property task.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @version $Revision$ $Date$
  * @ant:task name="property"
  */
 public class Property
