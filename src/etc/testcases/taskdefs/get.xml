@@ -24,6 +24,50 @@
 
   <target name="test6">
     <get src="http://www.apache.org/" dest="get.tmp"/>
+
+    <fileset id="t6" file="get.tmp" />
+    <pathconvert property="t6" refid="t6" setonempty="false" />
+
+    <fail message="get failed">
+      <condition>
+        <not>
+          <isset property="t6" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testUseTimestamp">
+    <property name="pat" value="yyyyMMddHHmm" />
+
+    <tstamp>
+      <format property="dt" pattern="${pat}" offset="-90" unit="second" />
+    </tstamp>
+
+    <touch file="get.tmp" datetime="${dt}" pattern="${pat}" />
+
+    <get src="http://www.apache.org/" dest="get.tmp"
+         usetimestamp="true" verbose="true" />
+
+    <fileset id="ts" file="get.tmp">
+      <date when="equal" datetime="${dt}" pattern="${pat}" />
+    </fileset>
+
+    <pathconvert property="ts" refid="ts" setonempty="false" />
+
+    <fail message="get w/ timestamp should have failed.">
+      <condition>
+        <not>
+          <isset property="ts" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="cleanup">
+    <delete>
+      <fileset dir="${basedir}" includes="get.tmp" />
+    </delete>
   </target>
 
 </project>
