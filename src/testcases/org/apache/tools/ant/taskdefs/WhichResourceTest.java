@@ -77,4 +77,9 @@ public class WhichResourceTest extends BuildFileTest {
         executeTarget("testResourcename");
         assertNotNull(getProject().getProperty("defaults"));
     }
+
+    public void testResourcenameWithLeadingSlash() {
+        executeTarget("testResourcenameWithLeadingSlash");
+        assertNotNull(getProject().getProperty("defaults"));
+    }
 }

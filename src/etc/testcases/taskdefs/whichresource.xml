@@ -12,4 +12,9 @@
     <whichresource resource="org/apache/tools/ant/taskdefs/defaults.properties"
       property="defaults"/>
   </target>
+
+  <target name="testResourcenameWithLeadingSlash">
+    <whichresource resource="/org/apache/tools/ant/taskdefs/defaults.properties"
+      property="defaults"/>
+  </target>
 </project>
