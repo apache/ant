@@ -142,20 +142,21 @@ public final class LineContains
                 line = line.substring(1);
             }
         } else {
-            String goodLine = null;
             line = readLine();
-            while((line != null) && (goodLine == null)) {
-                goodLine = line;
-                int containsSize = contains.size();
+            if (line == null) {
+                ch = -1;
+            } else {
+                final int containsSize = contains.size();
                 for (int i = 0; i < containsSize; i++) {
                     String containsStr = (String) contains.elementAt(i);
                     if (line.indexOf(containsStr) == -1) {
-                        goodLine = null;
+                        line = null;
                         break;
                     }
                 }
+
                 return read();
-            };
+            }
         }
 
         return ch;
