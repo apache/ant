@@ -153,6 +153,11 @@ public class Main implements AntMain {
     private static boolean isLogFileUsed = false;
 
     /**
+     * optional thread priority
+     */
+    private Integer threadPriority=null;
+
+    /**
      * Prints the message of the Throwable if it (the message) is not
      * <code>null</code>.
      *
@@ -434,6 +439,23 @@ public class Main implements AntMain {
                 }
             } else if (arg.equals("-k") || arg.equals("-keep-going")) {
                 keepGoingMode = true;
+            } else if (arg.equals("-nice")) {
+                try {
+                    threadPriority=Integer.decode(args[i + 1]);
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    throw new BuildException(
+                            "You must supply a niceness value (1-10)"+
+                            " after the -nice option");
+                } catch (NumberFormatException e) {
+                    throw new BuildException("Unrecognized niceness value: " +
+                            args[i + 1]);
+                }
+                i++;
+                if(threadPriority.intValue()<Thread.MIN_PRIORITY ||
+                        threadPriority.intValue()>Thread.MAX_PRIORITY) {
+                    throw new BuildException(
+                            "Niceness value is out of the range 1-10");
+                }
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
                 String msg = "Unknown argument: " + arg;
@@ -632,9 +654,23 @@ public class Main implements AntMain {
                 System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
                 System.setErr(new PrintStream(new DemuxOutputStream(project, true)));
 
+
                 if (!projectHelp) {
                     project.fireBuildStarted();
                 }
+
+                // set the thread priorities
+                if (threadPriority != null) {
+                    try {
+                        project.log("Setting Ant's thread priority to "
+                                + threadPriority,Project.MSG_VERBOSE);
+                        Thread.currentThread().setPriority(threadPriority.intValue());
+                    } catch (SecurityException swallowed) {
+                        //we cannot set the priority here.
+                        project.log("A security manager refused to set the -nice value");
+                    }
+                }
+
                 project.init();
                 project.setUserProperty("ant.version", getAntVersion());
 
@@ -826,6 +862,8 @@ public class Main implements AntMain {
         msg.append("  -inputhandler <class>  the class which will handle input requests" + lSep);
         msg.append("  -find <file>           (s)earch for buildfile towards the root of" + lSep);
         msg.append("    -s  <file>           the filesystem and use it" + lSep);
+        msg.append("  -nice  number          A niceness value for the main thread:" + lSep +
+                   "                         1 (lowest) to 10 (highest); 5 is the default" + lSep);
         System.out.println(msg.toString());
     }
 
