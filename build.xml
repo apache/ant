@@ -1487,6 +1487,8 @@
       </or>
     </condition>
 
+    <property name="includetests" value="**/*Test*" />
+
     <junit printsummary="${junit.summary}" haltonfailure="${test.haltonfailure}"
       filtertrace="${junit.filtertrace}"
       fork="${junit.fork}" forkmode="${junit.forkmode}"
@@ -1506,8 +1508,7 @@
       <formatter type="brief" usefile="false"/>
 
       <batchtest>
-        <fileset dir="${tests.dir}">
-          <include name="**/*Test*"/>
+        <fileset dir="${tests.dir}" includes="${includetests}">
 
           <!-- abstract classes, not testcases -->
           <exclude name="${taskdefs.package}/TaskdefsTest.java"/>
