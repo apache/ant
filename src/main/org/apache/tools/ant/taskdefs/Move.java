@@ -84,12 +84,11 @@ import java.util.Vector;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @version $Revision$
  *
+ * @since Ant 1.2
+ *
  * @ant.task category="filesystem"
  */
 public class Move extends Copy {
-
-    private Vector filterSets = null;
-    private Vector filterChains = null;
 
     public Move() {
         super();
@@ -101,9 +100,6 @@ public class Move extends Copy {
 //************************************************************************
 
     protected void doFileOperations() {
-        filterSets = getFilterSets();
-        filterChains = getFilterChains();
-
         //Attempt complete directory renames, if any, first.
         if (completeDirMap.size() > 0) {
             Enumeration e = completeDirMap.keys();
@@ -155,23 +151,32 @@ public class Move extends Copy {
 
                     if (!moved) {
                         try {
-                            log("Moving " + fromFile + " to " + toFile, verbosity);
+                            log("Moving " + fromFile + " to " + toFile, 
+                                verbosity);
 
-                            FilterSetCollection executionFilters = new FilterSetCollection();
+                            FilterSetCollection executionFilters = 
+                                new FilterSetCollection();
                             if (filtering) {
-                                executionFilters.addFilterSet(project.getGlobalFilterSet());
+                                executionFilters
+                                    .addFilterSet(project.getGlobalFilterSet());
                             }
-                            for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
-                                executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
+                            for (Enumeration filterEnum = 
+                                     getFilterSets().elements(); 
+                                 filterEnum.hasMoreElements();) {
+                                executionFilters
+                                    .addFilterSet((FilterSet)filterEnum
+                                                  .nextElement());
                             }
-                            getFileUtils().copyFile(f, d, executionFilters, filterChains,
+                            getFileUtils().copyFile(f, d, executionFilters, 
+                                                    getFilterChains(), 
                                                     forceOverwrite,
                                                     getPreserveLastModified(),
                                                     getEncoding(), project);
 
                             f = new File(fromFile);
                             if (!f.delete()) {
-                                throw new BuildException("Unable to delete file "
+                                throw new BuildException("Unable to delete "
+                                                         + "file "
                                                          + f.getAbsolutePath());
                             }
                         } catch (IOException ioe) {
@@ -192,7 +197,8 @@ public class Move extends Copy {
                 File d = new File((String)e.nextElement());
                 if (!d.exists()) {
                     if (!d.mkdirs()) {
-                        log("Unable to create directory " + d.getAbsolutePath(), Project.MSG_ERR);
+                        log("Unable to create directory " 
+                            + d.getAbsolutePath(), Project.MSG_ERR);
                     } else {
                         count++;
                     }
@@ -200,7 +206,8 @@ public class Move extends Copy {
             }
 
             if (count > 0) {
-                log("Moved " + count + " empty directories to " + destDir.getAbsolutePath());
+                log("Moved " + count + " empty directories to " 
+                    + destDir.getAbsolutePath());
             }
         }
 
@@ -224,7 +231,7 @@ public class Move extends Copy {
     protected boolean okToDelete(File d) {
         String[] list = d.list();
         if (list == null) {
-          return false;
+            return false;
         }     // maybe io error?
 
         for (int i = 0; i < list.length; i++) {
@@ -232,7 +239,7 @@ public class Move extends Copy {
             File f = new File(d, s);
             if (f.isDirectory()) {
                 if (!okToDelete(f)) {
-                  return false;
+                    return false;
                 }
             } else {
                 return false;   // found a file
@@ -248,7 +255,7 @@ public class Move extends Copy {
     protected void deleteDir(File d) {
         String[] list = d.list();
         if (list == null) {
-          return;
+            return;
         }      // on an io error list() can return null
 
         for (int i = 0; i < list.length; i++) {
@@ -257,13 +264,16 @@ public class Move extends Copy {
             if (f.isDirectory()) {
                 deleteDir(f);
             } else {
-                throw new BuildException("UNEXPECTED ERROR - The file " + f.getAbsolutePath() + " should not exist!");
+                throw new BuildException("UNEXPECTED ERROR - The file " 
+                                         + f.getAbsolutePath() 
+                                         + " should not exist!");
             }
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!d.delete()) {
-           throw new BuildException("Unable to delete directory " + d.getAbsolutePath());
-       }
+            throw new BuildException("Unable to delete directory " 
+                                     + d.getAbsolutePath());
+        }
     }
 
     /**
@@ -281,8 +291,8 @@ public class Move extends Copy {
         throws IOException, BuildException {
 
         boolean renamed = true;
-        if ((filterSets != null && filterSets.size() > 0) ||
-            (filterChains != null && filterChains.size() > 0)) {
+        if ((getFilterSets() != null && getFilterSets().size() > 0) ||
+            (getFilterChains() != null && getFilterChains().size() > 0)) {
             renamed = false;
         } else {
             if (!filtering) {
@@ -298,8 +308,8 @@ public class Move extends Copy {
 
                 if (destFile.exists()) {
                     if (!destFile.delete()) {
-                        throw new BuildException("Unable to remove existing file "
-                                                 + destFile);
+                        throw new BuildException("Unable to remove existing "
+                                                 + "file " + destFile);
                     }
                 }
                 renamed = sourceFile.renameTo(destFile);

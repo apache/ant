@@ -92,6 +92,8 @@ import java.util.Enumeration;
  *
  * @version $Revision$
  *
+ * @since Ant 1.2
+ *
  * @ant.task category="filesystem"
  */
 public class Copy extends Task {
@@ -300,61 +302,78 @@ public class Copy extends Task {
      * Performs the copy operation.
      */
     public void execute() throws BuildException {
+        File savedFile = file; // may be altered in validateAttributes
+        File savedDestFile = destFile;
+        File savedDestDir = destDir;
+        FileSet savedFileSet = null;
+        if (file == null && destFile != null && filesets.size() == 1) {
+            // will be removed in validateAttributes
+            savedFileSet = (FileSet) filesets.elementAt(0);
+        }
+        
         // make sure we don't have an illegal set of options
         validateAttributes();
 
-        // deal with the single file
-        if (file != null) {
-            if (file.exists()) {
-                if (destFile == null) {
-                    destFile = new File(destDir, file.getName());
-                }
+        try {
+            
+            // deal with the single file
+            if (file != null) {
+                if (file.exists()) {
+                    if (destFile == null) {
+                        destFile = new File(destDir, file.getName());
+                    }
 
-                if (forceOverwrite ||
-                    (file.lastModified() > destFile.lastModified())) {
-                    fileCopyMap.put(file.getAbsolutePath(), destFile.getAbsolutePath());
+                    if (forceOverwrite ||
+                        (file.lastModified() > destFile.lastModified())) {
+                        fileCopyMap.put(file.getAbsolutePath(), 
+                                        destFile.getAbsolutePath());
+                    } else {
+                        log(file + " omitted as " + destFile 
+                            + " is up to date.", Project.MSG_VERBOSE);
+                    }
                 } else {
-                    log(file + " omitted as " + destFile + " is up to date.",
-                        Project.MSG_VERBOSE);
-                }
-            } else {
-                String message = "Warning: Could not find file "
-                                 + file.getAbsolutePath() + " to copy.";
-                if(!failonerror) {
-                    log(message);
-                } else {
-                    throw new BuildException(message);
+                    String message = "Warning: Could not find file "
+                        + file.getAbsolutePath() + " to copy.";
+                    if(!failonerror) {
+                        log(message);
+                    } else {
+                        throw new BuildException(message);
+                    }
                 }
             }
-        }
 
-        // deal with the filesets
-        for (int i=0; i<filesets.size(); i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            File fromDir = fs.getDir(project);
-
-            String[] srcFiles = ds.getIncludedFiles();
-            String[] srcDirs = ds.getIncludedDirectories();
-            boolean isEverythingIncluded = ds.isEverythingIncluded();
-            if (isEverythingIncluded
-                && !flatten && mapperElement == null) {
-                completeDirMap.put(fromDir, destDir);
+            // deal with the filesets
+            for (int i=0; i<filesets.size(); i++) {
+                FileSet fs = (FileSet) filesets.elementAt(i);
+                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                File fromDir = fs.getDir(project);
+                
+                String[] srcFiles = ds.getIncludedFiles();
+                String[] srcDirs = ds.getIncludedDirectories();
+                boolean isEverythingIncluded = ds.isEverythingIncluded();
+                if (isEverythingIncluded
+                    && !flatten && mapperElement == null) {
+                    completeDirMap.put(fromDir, destDir);
+                }
+                scan(fromDir, destDir, srcFiles, srcDirs);
             }
-            scan(fromDir, destDir, srcFiles, srcDirs);
-        }
+            
+            // do all the copy operations now...
+            doFileOperations();
+        } finally {
+            // clean up again, so this instance can be used a second
+            // time
+            file = savedFile;
+            destFile = savedDestFile;
+            destDir = savedDestDir;
+            if (savedFileSet != null) {
+                filesets.insertElementAt(savedFileSet, 0);
+            }
 
-        // do all the copy operations now...
-        doFileOperations();
-
-        // clean up destDir again - so this instance can be used a second
-        // time without throwing an exception
-        if (destFile != null) {
-            destDir = null;
+            fileCopyMap.clear();
+            dirCopyMap.clear();
+            completeDirMap.clear();
         }
-        fileCopyMap.clear();
-        dirCopyMap.clear();
-        completeDirMap.clear();
     }
 
 //************************************************************************
@@ -368,11 +387,13 @@ public class Copy extends Task {
      */
     protected void validateAttributes() throws BuildException {
         if (file == null && filesets.size() == 0) {
-            throw new BuildException("Specify at least one source - a file or a fileset.");
+            throw new BuildException("Specify at least one source "
+                                     + "- a file or a fileset.");
         }
 
         if (destFile != null && destDir != null) {
-            throw new BuildException("Only one of tofile and todir may be set.");
+            throw new BuildException("Only one of tofile and todir "
+                                     + "may be set.");
         }
 
         if (destFile == null && destDir == null) {
@@ -392,23 +413,26 @@ public class Copy extends Task {
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] srcFiles = ds.getIncludedFiles();
 
-                if (srcFiles.length > 0) {
+                if (srcFiles.length == 0) {
+                    throw new BuildException(
+                        "Cannot perform operation from directory to file.");
+                } else if (srcFiles.length == 1) {
                     if (file == null) {
                         file = new File(ds.getBasedir(), srcFiles[0]);
                         filesets.removeElementAt(0);
                     } else {
-                        throw new BuildException(
-                            "Cannot concatenate multiple files into a single file.");
+                        throw new BuildException("Cannot concatenate multiple "
+                                                 + "files into a single file.");
                     }
                 } else {
-                    throw new BuildException(
-                        "Cannot perform operation from directory to file.");
+                    throw new BuildException("Cannot concatenate multiple "
+                                             + "files into a single file.");
                 }
             }
         }
 
         if (destFile != null) {
-            destDir = new File(destFile.getParent());   // be 1.1 friendly
+            destDir = fileUtils.getParentFile(destFile);
         }
 
     }
@@ -417,7 +441,8 @@ public class Copy extends Task {
      * Compares source files to destination files to see if they should be
      * copied.
      */
-    protected void scan(File fromDir, File toDir, String[] files, String[] dirs) {
+    protected void scan(File fromDir, File toDir, String[] files, 
+                        String[] dirs) {
         FileNameMapper mapper = null;
         if (mapperElement != null) {
             mapper = mapperElement.getImplementation();
@@ -482,16 +507,21 @@ public class Copy extends Task {
                 try {
                     log("Copying " + fromFile + " to " + toFile, verbosity);
 
-                    FilterSetCollection executionFilters = new FilterSetCollection();
+                    FilterSetCollection executionFilters = 
+                        new FilterSetCollection();
                     if (filtering) {
-                        executionFilters.addFilterSet(project.getGlobalFilterSet());
+                        executionFilters
+                            .addFilterSet(project.getGlobalFilterSet());
                     }
-                    for (Enumeration filterEnum = filterSets.elements(); filterEnum.hasMoreElements();) {
-                        executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
+                    for (Enumeration filterEnum = filterSets.elements(); 
+                         filterEnum.hasMoreElements();) {
+                        executionFilters
+                            .addFilterSet((FilterSet)filterEnum.nextElement());
                     }
-                    fileUtils.copyFile(fromFile, toFile, executionFilters, filterChains,
-                                       forceOverwrite, preserveLastModified,
-                                       encoding, project);
+                    fileUtils.copyFile(fromFile, toFile, executionFilters, 
+                                       filterChains, forceOverwrite, 
+                                       preserveLastModified, encoding, 
+                                       project);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
@@ -507,7 +537,8 @@ public class Copy extends Task {
                 File d = new File((String)e.nextElement());
                 if (!d.exists()) {
                     if (!d.mkdirs()) {
-                        log("Unable to create directory " + d.getAbsolutePath(), Project.MSG_ERR);
+                        log("Unable to create directory " 
+                            + d.getAbsolutePath(), Project.MSG_ERR);
                     } else {
                         count++;
                     }
