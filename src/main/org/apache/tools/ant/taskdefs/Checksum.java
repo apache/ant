@@ -193,7 +193,7 @@ public class Checksum extends MatchingTask implements Condition {
     public void execute() throws BuildException {
         boolean value = validateAndExecute();
         if (verifyProperty != null) {
-            project.setProperty(verifyProperty,
+            project.setNewProperty(verifyProperty,
                                 new Boolean(value).toString());
         }
     }

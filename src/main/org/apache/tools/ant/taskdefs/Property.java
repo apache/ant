@@ -160,6 +160,9 @@ public class Property extends Task {
         createClasspath().setRefid(r);
     }
 
+    /**
+    * @deprecated
+    */
     public void setUserProperty(boolean userProperty) {
         this.userProperty = userProperty;
     }
@@ -284,17 +287,14 @@ public class Property extends Task {
 
     protected void addProperty(String n, String v) {
         if( userProperty ) {
+            log("DEPRECATED - Setting user properties through the Property task has been deprecated.");
             if (project.getUserProperty(n) == null) {
                 project.setUserProperty(n, v);
             } else {
                 log("Override ignored for " + n, Project.MSG_VERBOSE);
             } 
         } else {
-            if (project.getProperty(n) == null) {
-                project.setProperty(n, v);
-            } else {
-                log("Override ignored for " + n, Project.MSG_VERBOSE);
-            }
+            project.setNewProperty(n, v);
         }
     }
 

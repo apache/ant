@@ -80,19 +80,27 @@ import java.text.SimpleDateFormat;
 public class Tstamp extends Task {
 
     private Vector customFormats = new Vector();
+    private String prefix = "";
+    
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
+        if (!this.prefix.endsWith(".")) {
+            this.prefix += ".";
+        }
+    }
 
     public void execute() throws BuildException {
         try {
             Date d = new Date();
 
             SimpleDateFormat dstamp = new SimpleDateFormat ("yyyyMMdd");
-            project.setProperty("DSTAMP", dstamp.format(d));
+            project.setNewProperty(prefix + "DSTAMP", dstamp.format(d));
 
             SimpleDateFormat tstamp = new SimpleDateFormat ("HHmm");
-            project.setProperty("TSTAMP", tstamp.format(d));
+            project.setNewProperty(prefix + "TSTAMP", tstamp.format(d));
 
             SimpleDateFormat today  = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
-            project.setProperty("TODAY", today.format(d));
+            project.setNewProperty(prefix + "TODAY", today.format(d));
 
             Enumeration i = customFormats.elements();
             while(i.hasMoreElements()) {
@@ -107,7 +115,7 @@ public class Tstamp extends Task {
 
     public CustomFormat createFormat()
     {
-        CustomFormat cts = new CustomFormat();
+        CustomFormat cts = new CustomFormat(prefix);
         customFormats.addElement(cts);
         return cts;
     }
@@ -122,14 +130,16 @@ public class Tstamp extends Task {
         private String variant;
         private int offset = 0;
         private int field = Calendar.DATE;
+        private String prefix="";
         
-        public CustomFormat()
+        public CustomFormat(String prefix)
         {
+            this.prefix = prefix;
         }
         
         public void setProperty(String propertyName)
         {
-            this.propertyName = propertyName;
+            this.propertyName = prefix + propertyName;
         }
         
         public void setPattern(String pattern)
@@ -227,7 +237,7 @@ public class Tstamp extends Task {
             if (timeZone != null){
                 sdf.setTimeZone(timeZone);
             }
-            project.setProperty(propertyName, sdf.format(date));
+            project.setNewProperty(propertyName, sdf.format(date));
         }
     }
 }

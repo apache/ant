@@ -104,7 +104,7 @@ public class ConditionTask extends ConditionBase {
         }
         Condition c = (Condition) getConditions().nextElement();
         if (c.eval()) {
-            getProject().setProperty(property, value);
+            getProject().setNewProperty(property, value);
         }
     }
 }

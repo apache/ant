@@ -196,7 +196,7 @@ public class ExecTask extends Task {
         String res=Integer.toString(result);
         if(resultProperty!=null
            && project.getProperty(resultProperty) == null) {
-                project.setProperty(resultProperty,res);
+                project.setNewProperty(resultProperty,res);
         }
     }
     
@@ -306,7 +306,7 @@ public class ExecTask extends Task {
                 }
                 val.append(line);
             }
-            project.setProperty(outputprop, val.toString());
+            project.setNewProperty(outputprop, val.toString());
         }
     }
 
