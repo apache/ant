@@ -70,7 +70,7 @@ public class DefaultMasterConverter
      * @param original the original object
      * @param context the context in which to convert
      * @return the converted object
-     * @exception Exception if an error occurs
+     * @exception ConverterException if an error occurs
      */
     public Object convert( final Class destination,
                            final Object original,
