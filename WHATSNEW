@@ -16,8 +16,6 @@ Fixed bugs:
 * Fix spurious infinite loop detection for filters (introduced in ant 1.6.0).
   Bugzilla Report 23154.
 
-* Fix handling of default ant namespace for nested elements.
-
 * presetdef'ed types did not work with the ant-type attribute
 
 * fixed case handling of macrodef attributes and elements. Bugzilla
