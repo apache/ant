@@ -17,9 +17,8 @@ specifying files that may or may not exist.  Multiple files are
 specified as a list of files, relative to the specified directory,
 with no support for wildcard expansion (filenames with wildcards will be
 included in the list unchanged).
-FileLists can appear inside tasks that support this feature or at the
-same level as <code>&lt;target&gt;</code> (i.e., as children of
-<code>&lt;project&gt;</code>).
+FileLists can appear inside tasks that support this feature or as stand-alone
+types.
 </p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -34,11 +33,30 @@ same level as <code>&lt;target&gt;</code> (i.e., as children of
   </tr>
   <tr>
     <td valign="top">files</td>
-    <td valign="top">The list of file names.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top">The list of file names. This is a list of
+    file name separated by whitespace, or by commas.</td>
+    <td valign="top" align="center">
+      Yes, unless there is a nested file element</td>
   </tr>
 </table>
-
+  <h4>Nested Element: file</h4>
+  <p>
+    This represents a file name. The nested element allows filenames containing
+    white space and commas.
+  </p>
+  <p><em>Since ant 1.7</em></p>
+  <table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+      <td valign="top"><b>Attribute</b></td>
+      <td valign="top"><b>Description</b></td>
+      <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+      <td valign="top">name</td>
+      <td valign="top">The name of the file.</td>
+      <td valign="top" align="center">Yes</td>
+    </tr>
+</table>  
 <h4>Examples</h4>
 <blockquote><pre>
 &lt;filelist 
@@ -64,6 +82,17 @@ actually exist.
 
 <blockquote><pre>
 &lt;filelist refid=&quot;docfiles&quot;/&gt; 
+</pre></blockquote>
+
+<p>Same files as the example above.</p>
+
+<blockquote><pre>
+&lt;filelist 
+    id=&quot;docfiles&quot; 
+    dir=&quot;${doc.src}&quot;&gt;
+    &lt;file name="foo.xml"/&gt;
+    &lt;file name="bar.xml"/&gt;
+&lt;/filelist&gt;
 </pre></blockquote>
 
 <p>Same files as the example above.</p>

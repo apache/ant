@@ -159,4 +159,39 @@ public class FileList extends DataType {
         }
     }
 
+    /**
+     * Inner class corresponding to the &lt;file&gt; nested element.
+     */
+    public static class FileName {
+        private String name;
+
+        /**
+         * The name attribute of the file element.
+         *
+         * @param name the name of a file to add to the file list.
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         * @return the name of the file for this element.
+         */
+        public String getName() {
+            return name;
+        }
+    }
+
+    /**
+     * Add a nested &lt;file&gt; nested element.
+     *
+     * @param name a configured file element with a name.
+     */
+    public void addConfiguredFile(FileName name) {
+        if (name.getName() == null) {
+            throw new BuildException(
+                "No name specified in nested file element");
+        }
+        filenames.addElement(name.getName());
+    }
 }
