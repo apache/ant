@@ -21,6 +21,8 @@ import org.apache.xalan.xslt.XSLTInputSource;
 import org.apache.xalan.xslt.XSLTProcessor;
 import org.apache.xalan.xslt.XSLTProcessorFactory;
 import org.apache.xalan.xslt.XSLTResultTarget;
+import org.apache.tools.ant.BuildException;
+import org.xml.sax.SAXException;
 
 /**
  * Xalan 1 executor. It will need a lot of things in the classpath:
@@ -33,8 +35,14 @@ public class Xalan1Executor extends XalanExecutor {
 
     private static final String xsltP = "org.apache.xalan.xslt.XSLTProcessor";
 
-    private XSLTProcessor processor = XSLTProcessorFactory.getProcessor();
-
+    XSLTProcessor processor = null;
+    public Xalan1Executor() {
+        try {
+            processor = XSLTProcessorFactory.getProcessor();
+        } catch (SAXException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+        }
+    }
     protected String getImplementation() {
         return processor.getClass().getName();
     }
