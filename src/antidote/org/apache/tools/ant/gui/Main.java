@@ -72,15 +72,6 @@ public class Main {
     public static void main(String[] args) {
         XMLHelper.init();
 
-        String vmVersion = System.getProperty("java.vm.vendor");
-        if(vmVersion.indexOf("Blackdown") > 0 &&
-           vmVersion.indexOf("RC") > 0) {
-            System.err.println(
-                "Warning: Antidote will not work with VM version " +
-                "Blackdown-1.3.0-RC1.");
-            System.err.println("Your version: " + vmVersion);
-        }
-
         try {
             JFrame f = new JFrame("Antidote");
             AppContext context = new AppContext(f);

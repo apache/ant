@@ -63,9 +63,8 @@ import java.beans.*;
  * @author Simeon Fitch 
  */
 class ACSBeanDescriptor extends BeanDescriptor {
-    
     public ACSBeanDescriptor(BaseBeanInfo type) {
-        super(type.getType());
+        super(type.getType(), type.getCustomizerType());
         setDisplayName(
             type.getResources().getString(type.getClass(), "beanName"));
         setShortDescription(

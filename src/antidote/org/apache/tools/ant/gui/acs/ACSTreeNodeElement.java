@@ -55,6 +55,7 @@ package org.apache.tools.ant.gui.acs;
 
 
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import com.sun.xml.tree.ElementNode;
 import javax.swing.tree.TreeNode;
 import java.util.*;
@@ -80,9 +81,20 @@ public abstract class ACSTreeNodeElement extends ACSElement
         if(_treeNodeCache == null) {
             _treeNodeCache = new ArrayList();
             
-            for(int i = 0; i < getLength(); i++) {
-                if(item(i) instanceof TreeNode) {
-                    _treeNodeCache.add(item(i));
+            // XXX this crazy casting is to get around an
+            // inconsistency between jikes and javac whereby
+            // the call without this cast when compiled with
+            // jikes causes an IllegalAccessException
+            // because the implementation of getLength() and
+            // item() are actually in a package only class
+            // in the Sun implementation classes.
+            int len = ((NodeList)this).getLength();
+
+            for(int i = 0; i < len; i++) {
+                Object n = ((NodeList)this).item(i);
+
+                if(n instanceof TreeNode) {
+                    _treeNodeCache.add(n);
                 }
             }
         }

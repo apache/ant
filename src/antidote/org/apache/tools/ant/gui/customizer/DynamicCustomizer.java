@@ -69,7 +69,7 @@ import java.awt.Component;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class DynamicCustomizer extends JPanel {
+public class DynamicCustomizer extends JPanel implements Customizer {
 	static {
 		PropertyEditorManager.registerEditor(
 			String.class, StringPropertyEditor.class);
@@ -102,6 +102,9 @@ public class DynamicCustomizer extends JPanel {
 	private EditorChangeListener _eListener = new EditorChangeListener();
     /** Read-only flag. */
     private boolean _readOnly = false;
+    /** List of property change listeners interested when the bean
+     *  being edited has been changed. */
+    private List _changeListeners = new LinkedList();
 
 
 	/** 
@@ -259,6 +262,47 @@ public class DynamicCustomizer extends JPanel {
         return retval;
     }
 
+	/** 
+	 * Add the given listener. Will receive a change event for 
+     * changes to the bean being edited.
+	 * 
+	 * @param l Listner to add.
+	 */
+    public void addPropertyChangeListener(PropertyChangeListener l) {
+        _changeListeners.add(l);
+    }
+
+
+	/** 
+	 * Remove the given property change listener.
+	 * 
+	 * @param l Listener to remove.
+	 */
+    public void removePropertyChangeListener(PropertyChangeListener l) {
+        _changeListeners.remove(l);
+    }
+
+	/** 
+	 * Fire a property change event to each listener.
+	 * 
+	 * @param bean Bean being edited. 
+	 * @param propName Name of the property.
+	 * @param oldValue Old value.
+	 * @param newValue New value.
+	 */
+    protected void firePropertyChange(Object bean, String propName, 
+                                      Object oldValue, Object newValue) {
+
+        PropertyChangeEvent e = new PropertyChangeEvent(
+            bean, propName, oldValue, newValue);
+
+        Iterator it = _changeListeners.iterator();
+        while(it.hasNext()) {
+            PropertyChangeListener l = (PropertyChangeListener) it.next();
+            l.propertyChange(e);
+        }
+    }
+
     /** Class for receiving change events from the PropertyEditor objects. */
     private class EditorChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent e) {
@@ -271,8 +315,8 @@ public class DynamicCustomizer extends JPanel {
                     Object[] params = { editor.getValue() };
                     writer.invoke(_value, params);
                     setObject(_value);
-                    //firePropertyChange(
-                    //prop.getName(), null, editor.getValue());
+                    firePropertyChange(
+                        _value, prop.getName(), null, editor.getValue());
                 }
                 catch(IllegalAccessException ex) {
                     ex.printStackTrace();

@@ -1,5 +1,15 @@
 2000-11-16  Simeon H.K. Fitch  <simeon@fitch.net>
 
+	* org/apache/tools/ant/gui/acs/ACSTreeNodeElement.java: Fixed
+	nasty java.lang.IllegalAccessException bug that I thought was
+	related to Java 1.3 Blackdown RC1, but wasn't. It was related to
+	using Jikes, which interprests method resolution differently than
+	javac, resulting in a call trying to access a private method
+	implementation of a public interface.
+
+	* org/apache/tools/ant/gui/ResourceManager.java: Added convenience
+	method for getting resource images for a given class.
+
 	* org/apache/tools/ant/gui/AntAction.java: Added toggle property.
 
 	* org/apache/tools/ant/gui/ActionManager.java: Added ability to

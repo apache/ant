@@ -134,6 +134,13 @@ abstract class BaseBeanInfo extends SimpleBeanInfo {
 	 */
     public abstract Class getType();
 
+	/** 
+	 * Get the type of the customizer to use. 
+	 * 
+	 * @return Customizer to use.
+	 */
+    public abstract Class getCustomizerType();
+
     /**
      * Gets the beans <code>PropertyDescriptor</code>s.
      * 

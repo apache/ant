@@ -58,9 +58,11 @@ import org.apache.tools.ant.gui.acs.*;
 import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
 import java.util.*;
+import java.beans.*;
 import java.io.StringReader;
 import java.io.IOException;
 import java.awt.BorderLayout;
+import java.awt.Component;
 
 /**
  * Stub for a property editor.
@@ -70,8 +72,8 @@ import java.awt.BorderLayout;
  */
 class PropertyEditor extends AntEditor {
 
-    /** The property sheet. */
-    private DynamicCustomizer _customizer = null;
+    /** The editor for current bean.*/
+    private Customizer _customizer = null;
     /** Container for the customizer. */
     private JPanel _container = null;
 
@@ -95,14 +97,22 @@ class PropertyEditor extends AntEditor {
 	 */
     private void updateDisplay(ACSElement[] items) {
         if(_customizer != null) {
-            _container.remove(_customizer);
+            _container.remove((Component)_customizer);
             _customizer = null;
         }
 
         if(items != null && items.length == 1) {
-            _customizer = new DynamicCustomizer(items[0].getClass());
-            _customizer.setObject(items[0]);
-            _container.add(BorderLayout.CENTER, _customizer);
+            try {
+                BeanInfo info = Introspector.getBeanInfo(items[0].getClass());
+                _customizer = (Customizer) info.getBeanDescriptor().
+                    getCustomizerClass().newInstance();
+                _customizer.setObject(items[0]);
+                _container.add(BorderLayout.CENTER, (Component) _customizer);
+            }
+            catch(Exception ex) {
+                // XXX log me.
+                ex.printStackTrace();
+            }
         }
 
         validate();

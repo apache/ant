@@ -52,6 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.acs;
+import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
 
 import java.beans.*;
 
@@ -76,6 +77,15 @@ public class ACSTargetElementBeanInfo extends BaseBeanInfo {
 	 */
     public Class getType() {
         return ACSTargetElement.class;
+    }
+
+	/** 
+	 * Get the customizer type.
+	 * 
+	 * @return Customizer type.
+	 */
+    public Class getCustomizerType() {
+        return Customizer.class;
     }
 
 	/** 
@@ -127,4 +137,11 @@ public class ACSTargetElementBeanInfo extends BaseBeanInfo {
         return retval;
     }
 
+
+    /** Customizer for this bean info. */
+    public static class Customizer extends DynamicCustomizer {
+        public Customizer() {
+            super(ACSTargetElement.class);
+        }
+    }
 }
