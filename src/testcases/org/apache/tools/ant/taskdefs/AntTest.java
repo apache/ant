@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -293,6 +293,13 @@ public class AntTest extends BuildFileTest {
     public void testOverrideWinsNoInheritAll() {
         expectLogContaining("test-property-override-no-inheritall-start",
                             "The value of test is 4");
+    }
+
+    public void testPropertySet() {
+        executeTarget("test-propertyset");
+        assertTrue(getLog().indexOf("test1 is ${test1}") > -1);
+        assertTrue(getLog().indexOf("test2 is ${test2}") > -1);
+        assertTrue(getLog().indexOf("test1.x is 1") > -1);
     }
 
     private class BasedirChecker implements BuildListener {

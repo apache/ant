@@ -167,6 +167,18 @@ public class CallTarget extends Task {
     }
 
     /**
+     * Set of properties to pass to the new project.
+     *
+     * @since Ant 1.6
+     */
+    public void addPropertyset(org.apache.tools.ant.types.PropertySet ps) {
+        if (callee == null) {
+            init();
+        }
+        callee.addPropertyset(ps);
+    }
+
+    /**
      * Target to execute, required.
      */
     public void setTarget(String target) {

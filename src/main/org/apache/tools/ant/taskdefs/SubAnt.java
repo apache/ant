@@ -68,6 +68,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.DirSet;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
+import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
 
 import org.apache.tools.ant.taskdefs.Ant;
@@ -97,6 +98,7 @@ public class SubAnt
 
     private Vector properties = new Vector();
     private Vector references = new Vector();
+    private Vector propertySets = new Vector();
 
     /**
      * Runs the various sub-builds.
@@ -239,6 +241,14 @@ public class SubAnt
     }
 
     /**
+     * Corresponds to <code>&lt;ant&gt;</code>'s
+     * nested <code>&lt;propertyset&gt;</code> element.
+     */
+    public void addPropertyset(PropertySet ps) {
+        propertySets.addElement(ps);
+    }
+
+    /**
      * Adds a directory set to the implicit build path.
      * <p>
      * <em>Note that the directories will be added to the build path
@@ -343,6 +353,10 @@ public class SubAnt
         ant.setInheritAll(inheritAll);
         for (Enumeration i = properties.elements(); i.hasMoreElements();) {
             copyProperty(ant.createProperty(), (Property) i.nextElement());
+        }
+        
+        for (Enumeration i = propertySets.elements(); i.hasMoreElements();) {
+            ant.addPropertyset((PropertySet) i.nextElement());
         }
         
         ant.setInheritRefs(inheritRefs);

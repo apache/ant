@@ -69,6 +69,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -128,6 +129,9 @@ public class Ant extends Task {
 
     /** The stream to which output is to be written. */
     private PrintStream out = null;
+
+    /** the sets of properties to pass to the new project */
+    private Vector propertySets = new Vector();
 
     /**
      * If true, pass all properties to the new Ant project.
@@ -264,23 +268,13 @@ public class Ant extends Task {
 
         } else {
             // set all properties from calling project
+            addAlmostAll(getProject().getProperties());
+        }
 
-            Hashtable props = getProject().getProperties();
-            e = props.keys();
-            while (e.hasMoreElements()) {
-                String arg = e.nextElement().toString();
-                if ("basedir".equals(arg) || "ant.file".equals(arg)) {
-                    // basedir and ant.file get special treatment in execute()
-                    continue;
-                }
-
-                String value = props.get(arg).toString();
-                // don't re-set user properties, avoid the warning message
-                if (newProject.getProperty(arg) == null){
-                    // no user property
-                    newProject.setNewProperty(arg, value);
-                }
-            }
+        e = propertySets.elements();
+        while (e.hasMoreElements()) {
+            PropertySet ps = (PropertySet) e.nextElement();
+            addAlmostAll(ps.getProperties());
         }
     }
 
@@ -551,6 +545,31 @@ public class Ant extends Task {
     }
 
     /**
+     * Copies all properties from the given table to the new project -
+     * ommiting those that have already been set in the new project as
+     * well as properties named basedir or ant.file.
+     *
+     * @since Ant 1.6
+     */
+    private void addAlmostAll(Hashtable props) {
+        Enumeration e = props.keys();
+        while (e.hasMoreElements()) {
+            String key = e.nextElement().toString();
+            if ("basedir".equals(key) || "ant.file".equals(key)) {
+                // basedir and ant.file get special treatment in execute()
+                continue;
+            }
+
+            String value = props.get(key).toString();
+            // don't re-set user properties, avoid the warning message
+            if (newProject.getProperty(key) == null){
+                // no user property
+                newProject.setNewProperty(key, value);
+            }
+        }
+    }
+
+    /**
      * The directory to use as a base directory for the new Ant project.
      * Defaults to the current project's basedir, unless inheritall
      * has been set to false, in which case it doesn't have a default
@@ -615,6 +634,15 @@ public class Ant extends Task {
      */
     public void addReference(Reference r) {
         references.addElement(r);
+    }
+
+    /**
+     * Set of properties to pass to the new project.
+     *
+     * @since Ant 1.6
+     */
+    public void addPropertyset(PropertySet ps) {
+        propertySets.addElement(ps);
     }
 
     /**

@@ -143,4 +143,23 @@
     <property name="test" value="5" />
     <echo message="The value of test is ${test}" />
   </target>
+
+  <target name="test-propertyset">
+    <property name="test1" value="1"/>
+    <property name="test2" value="2"/>
+    <propertyset id="set">
+      <propertyref name="test1"/>
+      <mapper type="glob" from="*" to="*.x"/>
+    </propertyset>
+    <ant antfile="ant.xml" target="echo-for-propertyset-test" 
+         inheritall="false">
+      <propertyset refid="set"/>
+    </ant>
+  </target>
+
+  <target name="echo-for-propertyset-test">
+    <echo>test1 is ${test1}</echo>
+    <echo>test2 is ${test2}</echo>
+    <echo>test1.x is ${test1.x}</echo>
+  </target>
 </project>
