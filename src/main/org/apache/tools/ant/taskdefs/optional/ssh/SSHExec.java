@@ -145,6 +145,7 @@ public class SSHExec extends SSHBase {
             final ChannelExec channel = (ChannelExec) session.openChannel("exec");
             channel.setCommand(command);
             channel.setOutputStream(tee);
+            channel.setExtOutputStream(tee);
             channel.connect();
 
             // wait for it to finish
