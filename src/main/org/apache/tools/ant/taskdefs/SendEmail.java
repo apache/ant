@@ -65,6 +65,7 @@ import java.util.Enumeration;
 import org.apache.tools.mail.MailMessage;
 
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 
 /**
@@ -126,6 +127,11 @@ public class SendEmail extends Task {
     private String subject;
     private Vector files = new Vector();
     private boolean includefilenames;
+    /**
+     * failure flag
+     */
+    private boolean failOnError = true;
+    
   
     /** Creates new SendEmail */
     public SendEmail() {
@@ -201,11 +207,22 @@ public class SendEmail extends Task {
      * Sets Includefilenames attribute
      *
      * @param includefilenames Set to true if file names are to be included.
+     * @since 1.5
      */
     public void setIncludefilenames(boolean includefilenames) {
         this.includefilenames = includefilenames;
     }
 
+    /**
+     * Sets the FailOnError attribute of the MimeMail object
+     *
+     * @param failOnError The new FailOnError value
+     * @since 1.5
+     */
+    public void setFailOnError(boolean failOnError) {
+        this.failOnError = failOnError;
+    }
+    
     /**
      * Executes this build task.
      *
@@ -267,7 +284,9 @@ public class SendEmail extends Task {
                             }
                         } finally {
                             if (in != null) {
-                                in.close();
+                                try {
+                                    in.close();
+                                } catch (IOException ioe) {}
                             }
                         }
 
@@ -286,7 +305,13 @@ public class SendEmail extends Task {
             log("Sending email");
             mailMessage.sendAndClose();
         } catch (IOException ioe) {
-            throw new BuildException("IO error sending mail", ioe);
+            String err="IO error sending mail "+ioe.toString();
+            if(failOnError) {
+                throw new BuildException(err,ioe,location);
+            }
+            else {
+                log(err,Project.MSG_ERR);
+            }
         }
     }
 
