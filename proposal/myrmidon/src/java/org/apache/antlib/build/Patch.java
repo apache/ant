@@ -9,11 +9,11 @@ package org.apache.antlib.build;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Task as a layer on top of patch. Patch applies a diff file to an original.

@@ -8,9 +8,8 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import org.apache.tools.ant.util.FileUtils;
-
 import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Helper class, holds <code>&lt;&gt;</code> values.
@@ -31,11 +30,11 @@ class PathElement
     }
 
     protected String[] getParts( final File baseDirectory )
-            throws TaskException
+        throws TaskException
     {
-        if ( m_location != null )
+        if( m_location != null )
         {
-            return new String[] { m_location };
+            return new String[]{m_location};
         }
         return FileUtils.translatePath( baseDirectory, m_path );
     }

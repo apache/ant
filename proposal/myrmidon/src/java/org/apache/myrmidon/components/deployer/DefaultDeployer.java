@@ -149,7 +149,7 @@ public class DefaultDeployer
             checkFile( canonFile );
             final File[] extensions = getOptionalPackagesFor( canonFile );
             final URL[] urls = buildClasspath( canonFile, extensions );
-            classLoader  = new URLClassLoader( urls, Thread.currentThread().getContextClassLoader() );
+            classLoader = new URLClassLoader( urls, Thread.currentThread().getContextClassLoader() );
             m_fileDeployers.put( canonFile, classLoader );
         }
         return classLoader;

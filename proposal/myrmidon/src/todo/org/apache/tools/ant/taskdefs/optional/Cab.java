@@ -14,13 +14,13 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.aut.nativelib.Os;
 import org.apache.aut.nativelib.ExecManager;
+import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 
@@ -198,7 +198,8 @@ public class Cab
         {
             String file = files.get( i ).toString();
             if( new File( m_baseDir, file ).lastModified() >
-                m_cabFile.lastModified() ) {
+                m_cabFile.lastModified() )
+            {
                 upToDate = false;
             }
         }

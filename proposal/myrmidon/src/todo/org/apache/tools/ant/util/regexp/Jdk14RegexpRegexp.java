@@ -91,7 +91,8 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
     protected int getSubsOptions( int options )
     {
         int subsOptions = REPLACE_FIRST;
-        if( RegexpUtil.hasFlag( options, REPLACE_ALL ) ) {
+        if( RegexpUtil.hasFlag( options, REPLACE_ALL ) )
+        {
             subsOptions = REPLACE_ALL;
         }
         return subsOptions;

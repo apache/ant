@@ -89,7 +89,8 @@ public class P4Add extends P4Base
     public void setChangelist( int changelist )
         throws TaskException
     {
-        if( changelist <= 0 ) {
+        if( changelist <= 0 )
+        {
             throw new TaskException( "P4Add: Changelist# should be a positive number" );
         }
 
@@ -99,7 +100,8 @@ public class P4Add extends P4Base
     public void setCommandlength( int len )
         throws TaskException
     {
-        if( len <= 0 ) {
+        if( len <= 0 )
+        {
             throw new TaskException( "P4Add: Commandlength should be a positive number" );
         }
         this.m_cmdLength = len;

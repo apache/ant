@@ -18,8 +18,8 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.io.Reader;
 import java.io.StringReader;
-import java.net.URLClassLoader;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
@@ -33,8 +33,8 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
@@ -469,7 +469,8 @@ public class SQLExec
                 throw new SQLException( "No suitable Driver for " + url );
             }
 
-            if( !isValidRdbms( conn ) ) {
+            if( !isValidRdbms( conn ) )
+            {
                 return;
             }
 
@@ -565,7 +566,8 @@ public class SQLExec
      */
     protected boolean isValidRdbms( Connection conn )
     {
-        if( rdbms == null && version == null ) {
+        if( rdbms == null && version == null )
+        {
             return true;
         }
 
@@ -620,7 +622,8 @@ public class SQLExec
         throws SQLException
     {
         // Check and ignore empty statements
-        if( "".equals( sql.trim() ) ) {
+        if( "".equals( sql.trim() ) )
+        {
             return;
         }
 
@@ -651,7 +654,8 @@ public class SQLExec
         catch( SQLException e )
         {
             getLogger().error( "Failed to execute: " + sql );
-            if( !onError.equals( "continue" ) ) {
+            if( !onError.equals( "continue" ) )
+            {
                 throw e;
             }
             getLogger().error( e.toString() );
@@ -731,10 +735,12 @@ public class SQLExec
             {
                 line = line.trim();
                 line = "" + resolveValue( line );
-                if( line.startsWith( "//" ) ) {
+                if( line.startsWith( "//" ) )
+                {
                     continue;
                 }
-                if( line.startsWith( "--" ) ) {
+                if( line.startsWith( "--" ) )
+                {
                     continue;
                 }
                 StringTokenizer st = new StringTokenizer( line );
@@ -753,7 +759,8 @@ public class SQLExec
                 // SQL defines "--" as a comment to EOL
                 // and in Oracle it may contain a hint
                 // so we cannot just remove it, instead we must end it
-                if( line.indexOf( "--" ) >= 0 ) {
+                if( line.indexOf( "--" ) >= 0 )
+                {
                     sql += "\n";
                 }
 

@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLClassLoader;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
@@ -943,7 +943,8 @@ public class WebsphereDeploymentTool
                     " " + tempdir +
                     " " + destJar.getPath() +
                     " " + getOptions();
-                if( getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0 ) {
+                if( getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0 )
+                {
                     args += " -cp " + getCombinedClasspath();
                 }
 

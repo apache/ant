@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import org.apache.aut.nativelib.ExecOutputHandler;
 
-
 /**
  * Logs each line written to this stream to the specified
  * <code>ExecOutputHandler</code>. Tries to be smart about

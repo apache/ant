@@ -9,8 +9,8 @@ package org.apache.tools.ant.taskdefs.archive;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.zip.ZipOutputStream;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Creates a WAR archive.
@@ -41,7 +41,7 @@ public class War
             throw new TaskException( message );
         }
 
-        addFileAs(descr, "WEB-INF/web.xml" );
+        addFileAs( descr, "WEB-INF/web.xml" );
     }
 
     public void addClasses( final ZipFileSet fs )

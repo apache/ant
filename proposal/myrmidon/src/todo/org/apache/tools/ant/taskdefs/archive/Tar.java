@@ -17,10 +17,10 @@ import org.apache.aut.tar.TarEntry;
 import org.apache.aut.tar.TarOutputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.types.ScannerUtil;
-import org.apache.tools.ant.util.mappers.MergingMapper;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.util.mappers.MergingMapper;
 
 /**
  * Creates a TAR archive.

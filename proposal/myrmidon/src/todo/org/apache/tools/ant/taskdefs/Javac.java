@@ -10,16 +10,16 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
+import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.JavaVersion;
-import org.apache.aut.nativelib.Os;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
 import org.apache.tools.ant.types.Argument;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.mappers.GlobPatternMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.util.mappers.GlobPatternMapper;
 
 /**
  * Task to compile Java source files. This task can take the following

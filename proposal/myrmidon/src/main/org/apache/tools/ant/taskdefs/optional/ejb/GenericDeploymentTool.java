@@ -12,8 +12,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URLClassLoader;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -26,13 +26,12 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import javax.xml.parsers.SAXParser;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-
-import org.apache.bcel.classfile.JavaClass;
 import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.JavaClass;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
@@ -608,7 +607,8 @@ public class GenericDeploymentTool
         while( i.hasNext() )
         {
             String entryName = (String)i.next();
-            if( entryName.endsWith( ".class" ) ) {
+            if( entryName.endsWith( ".class" ) )
+            {
                 newSet.add( entryName.substring( 0, entryName.length() - ".class".length() ).replace( File.separatorChar, '/' ) );
             }
         }

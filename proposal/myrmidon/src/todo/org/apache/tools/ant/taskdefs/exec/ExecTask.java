@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.Properties;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
@@ -316,10 +315,12 @@ public class ExecTask
     {
         try
         {
-            if( m_ouput != null ) {
+            if( m_ouput != null )
+            {
                 m_ouput.close();
             }
-            if( m_byteArrayOutput != null ) {
+            if( m_byteArrayOutput != null )
+            {
                 m_byteArrayOutput.close();
             }
         }
@@ -350,8 +351,9 @@ public class ExecTask
         throws TaskException
     {
         // default directory to the project's base directory
-        if( m_workingDirectory == null ) {
-          m_workingDirectory = getBaseDirectory();
+        if( m_workingDirectory == null )
+        {
+            m_workingDirectory = getBaseDirectory();
         }
         // show the command
         getLogger().debug( m_command.toString() );

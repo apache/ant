@@ -11,15 +11,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.mappers.Mapper;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
-import org.apache.tools.ant.util.mappers.MergingMapper;
-import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
+import org.apache.tools.ant.util.mappers.Mapper;
+import org.apache.tools.ant.util.mappers.MergingMapper;
 
 /**
  * Will set the given property if the specified target has a timestamp greater
@@ -121,7 +120,8 @@ public class UpToDate extends MatchingTask implements Condition
         }
 
         // if not there then it can't be up to date
-        if( _targetFile != null && !_targetFile.exists() ) {
+        if( _targetFile != null && !_targetFile.exists() )
+        {
             return false;
         }
 

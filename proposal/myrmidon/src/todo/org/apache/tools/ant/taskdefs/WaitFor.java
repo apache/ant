@@ -9,7 +9,6 @@ package org.apache.tools.ant.taskdefs;
 
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 import org.apache.tools.ant.types.EnumeratedAttribute;

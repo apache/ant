@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
@@ -19,7 +20,6 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * This task acts as a loader for java applications but allows to use the same

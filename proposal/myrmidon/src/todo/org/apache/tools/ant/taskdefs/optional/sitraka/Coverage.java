@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
@@ -21,7 +22,6 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Convenient task to run Sitraka JProbe Coverage from Ant. Options are pretty

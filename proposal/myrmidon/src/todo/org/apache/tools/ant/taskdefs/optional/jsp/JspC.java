@@ -11,10 +11,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.CompilerAdapterFactory;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 
 /**
@@ -101,9 +101,12 @@ public class JspC extends MatchingTask
     public void setClasspath( Path cp )
         throws TaskException
     {
-        if( classpath == null ) {
+        if( classpath == null )
+        {
             classpath = cp;
-        } else {
+        }
+        else
+        {
             classpath.append( cp );
         }
     }
@@ -299,7 +302,8 @@ public class JspC extends MatchingTask
     public Path createClasspath()
         throws TaskException
     {
-        if( classpath == null ) {
+        if( classpath == null )
+        {
             classpath = new Path();
         }
         Path path1 = classpath;
@@ -334,9 +338,11 @@ public class JspC extends MatchingTask
 
         // calculate where the files will end up:
         File dest = null;
-        if( packageName == null ) {
+        if( packageName == null )
+        {
             dest = destDir;
-        } else
+        }
+        else
         {
             String path = destDir.getPath() + File.separatorChar +
                 packageName.replace( '.', File.separatorChar );

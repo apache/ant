@@ -10,8 +10,8 @@ package org.apache.aut.vfs.provider;
 import java.util.HashSet;
 import java.util.Iterator;
 import org.apache.aut.vfs.FileSystemException;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A name parser which parses absolute URIs.  See RFC 2396 for details.

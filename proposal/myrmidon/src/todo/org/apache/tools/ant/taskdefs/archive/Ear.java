@@ -9,8 +9,8 @@ package org.apache.tools.ant.taskdefs.archive;
 
 import java.io.File;
 import java.io.IOException;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.zip.ZipOutputStream;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Creates a EAR archive. Based on WAR task

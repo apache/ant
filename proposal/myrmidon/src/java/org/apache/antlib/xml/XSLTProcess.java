@@ -8,8 +8,8 @@
 package org.apache.antlib.xml;
 
 import java.io.File;
-import java.net.URLClassLoader;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
@@ -244,7 +244,8 @@ public class XSLTProcess
         for( int j = 0; j < dirs.length; ++j )
         {
             list = new File( m_baseDir, dirs[ j ] ).list();
-            for( int i = 0; i < list.length; ++i ) {
+            for( int i = 0; i < list.length; ++i )
+            {
                 process( m_baseDir, list[ i ], m_destDir, stylesheet );
             }
         }
@@ -471,7 +472,8 @@ public class XSLTProcess
         catch( Exception ex )
         {
             getLogger().info( "Failed to process " + inFile );
-            if( outFile != null ) {
+            if( outFile != null )
+            {
                 outFile.delete();
             }
             throw new TaskException( "Error", ex );

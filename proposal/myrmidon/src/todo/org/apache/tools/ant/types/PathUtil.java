@@ -7,9 +7,9 @@
  */
 package org.apache.tools.ant.types;
 
-import java.net.URL;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Locale;
 import org.apache.myrmidon.api.TaskException;
 

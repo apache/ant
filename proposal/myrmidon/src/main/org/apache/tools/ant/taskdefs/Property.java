@@ -15,7 +15,6 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
@@ -82,7 +81,8 @@ public class Property
             getContext().setProperty( name, value );
         }
 
-        if( m_resource != null ) {
+        if( m_resource != null )
+        {
             loadResource( m_resource );
         }
     }

@@ -22,15 +22,15 @@ import java.util.zip.CRC32;
 import java.util.zip.ZipInputStream;
 import org.apache.aut.zip.ZipEntry;
 import org.apache.aut.zip.ZipOutputStream;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.util.mappers.MergingMapper;
-import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.avalon.excalibur.io.IOUtil;
 
 /**
  * Create a ZIP archive.

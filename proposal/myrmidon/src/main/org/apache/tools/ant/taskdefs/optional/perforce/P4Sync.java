@@ -91,7 +91,7 @@ public class P4Sync
     public void setForce( final boolean force )
         throws TaskException
     {
-        if( force  )
+        if( force )
         {
             m_p4CmdOpts = "-f";
         }

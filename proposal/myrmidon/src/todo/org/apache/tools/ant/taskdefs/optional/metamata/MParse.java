@@ -13,15 +13,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Random;
+import org.apache.aut.nativelib.ExecManager;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.avalon.excalibur.io.IOUtil;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Simple Metamata MParse task based on the original written by <a

@@ -7,9 +7,9 @@
  */
 package org.apache.aut.vfs.provider.ftp;
 
-import org.apache.aut.vfs.provider.UriParser;
-import org.apache.aut.vfs.provider.ParsedUri;
 import org.apache.aut.vfs.FileSystemException;
+import org.apache.aut.vfs.provider.ParsedUri;
+import org.apache.aut.vfs.provider.UriParser;
 
 /**
  * A parser for FTP URI.
@@ -32,15 +32,15 @@ public class FtpFileNameParser extends UriParser
         String userInfo = uri.getUserInfo();
         if( userInfo != null )
         {
-            int idx = userInfo.indexOf(':');
+            int idx = userInfo.indexOf( ':' );
             if( idx == -1 )
             {
                 uri.setUserName( userInfo );
             }
             else
             {
-                String userName = userInfo.substring(0, idx);
-                String password = userInfo.substring(idx+1);
+                String userName = userInfo.substring( 0, idx );
+                String password = userInfo.substring( idx + 1 );
                 uri.setUserName( userName );
                 uri.setPassword( password );
             }

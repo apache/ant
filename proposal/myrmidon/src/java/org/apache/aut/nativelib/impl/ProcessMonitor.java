@@ -256,8 +256,9 @@ class ProcessMonitor
         try
         {
             final int available = input.available();
-            if( 0 >= available ) {
-              return;
+            if( 0 >= available )
+            {
+                return;
             }
 
             final byte[] data = new byte[ available ];

@@ -17,8 +17,8 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.util.regexp.Regexp;
@@ -96,7 +96,8 @@ public class ReplaceRegExp extends Task
     public void setByLine( String byline )
     {
         Boolean res = Boolean.valueOf( byline );
-        if( res == null ) {
+        if( res == null )
+        {
             res = Boolean.FALSE;
         }
         this.byline = res.booleanValue();
@@ -115,7 +116,8 @@ public class ReplaceRegExp extends Task
     public void setMatch( String match )
         throws TaskException
     {
-        if( regex != null ) {
+        if( regex != null )
+        {
             throw new TaskException( "Only one regular expression is allowed" );
         }
 
@@ -126,7 +128,8 @@ public class ReplaceRegExp extends Task
     public void setReplace( String replace )
         throws TaskException
     {
-        if( subs != null ) {
+        if( subs != null )
+        {
             throw new TaskException( "Only one substitution expression is allowed" );
         }
 
@@ -142,7 +145,8 @@ public class ReplaceRegExp extends Task
     public RegularExpression createRegularExpression()
         throws TaskException
     {
-        if( regex != null ) {
+        if( regex != null )
+        {
             throw new TaskException( "Only one regular expression is allowed." );
         }
 
@@ -153,7 +157,8 @@ public class ReplaceRegExp extends Task
     public Substitution createSubstitution()
         throws TaskException
     {
-        if( subs != null ) {
+        if( subs != null )
+        {
             throw new TaskException( "Only one substitution expression is allowed" );
         }
 
@@ -164,32 +169,39 @@ public class ReplaceRegExp extends Task
     public void execute()
         throws TaskException
     {
-        if( regex == null ) {
+        if( regex == null )
+        {
             throw new TaskException( "No expression to match." );
         }
-        if( subs == null ) {
+        if( subs == null )
+        {
             throw new TaskException( "Nothing to replace expression with." );
         }
 
-        if( file != null && filesets.size() > 0 ) {
+        if( file != null && filesets.size() > 0 )
+        {
             throw new TaskException( "You cannot supply the 'file' attribute and filesets at the same time." );
         }
 
         int options = 0;
 
-        if( flags.indexOf( 'g' ) != -1 ) {
+        if( flags.indexOf( 'g' ) != -1 )
+        {
             options |= Regexp.REPLACE_ALL;
         }
 
-        if( flags.indexOf( 'i' ) != -1 ) {
+        if( flags.indexOf( 'i' ) != -1 )
+        {
             options |= Regexp.MATCH_CASE_INSENSITIVE;
         }
 
-        if( flags.indexOf( 'm' ) != -1 ) {
+        if( flags.indexOf( 'm' ) != -1 )
+        {
             options |= Regexp.MATCH_MULTILINE;
         }
 
-        if( flags.indexOf( 's' ) != -1 ) {
+        if( flags.indexOf( 's' ) != -1 )
+        {
             options |= Regexp.MATCH_SINGLELINE;
         }
 
@@ -305,7 +317,8 @@ public class ReplaceRegExp extends Task
                 while( ( line = lnr.readLine() ) != null )
                 {
                     String res = doReplace( regex, subs, line, options );
-                    if( !res.equals( line ) ) {
+                    if( !res.equals( line ) )
+                    {
                         changes = true;
                     }
 
@@ -328,7 +341,8 @@ public class ReplaceRegExp extends Task
                 String buf = new String( tmpBuf );
 
                 String res = doReplace( regex, subs, buf, options );
-                if( !res.equals( buf ) ) {
+                if( !res.equals( buf ) )
+                {
                     changes = true;
                 }
 
@@ -355,7 +369,8 @@ public class ReplaceRegExp extends Task
         {
             try
             {
-                if( r != null ) {
+                if( r != null )
+                {
                     r.close();
                 }
             }
@@ -366,7 +381,8 @@ public class ReplaceRegExp extends Task
 
             try
             {
-                if( w != null ) {
+                if( w != null )
+                {
                     r.close();
                 }
             }

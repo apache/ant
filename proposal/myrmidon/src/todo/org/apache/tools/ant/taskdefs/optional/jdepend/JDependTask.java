@@ -11,15 +11,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
-
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Ant task to run JDepend tests. <p>
@@ -234,7 +233,8 @@ public class JDependTask
             File f = new File( elements[ i ] );
 
             // not necessary as JDepend would fail, but why loose some time?
-            if( !f.exists() || !f.isDirectory() ) {
+            if( !f.exists() || !f.isDirectory() )
+            {
                 throw new TaskException( "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail." );
             }
             commandline.addArgument( f.getPath() );

@@ -11,8 +11,8 @@ import java.io.File;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.ParsedUri;
 import org.apache.aut.vfs.provider.UriParser;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A name parser.

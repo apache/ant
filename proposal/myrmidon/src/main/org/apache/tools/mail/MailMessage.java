@@ -373,13 +373,16 @@ public class MailMessage
     void disconnect()
         throws IOException
     {
-        if( out != null ) {
+        if( out != null )
+        {
             out.close();
         }
-        if( in != null ) {
+        if( in != null )
+        {
             in.close();
         }
-        if( socket != null ) {
+        if( socket != null )
+        {
             socket.close();
         }
     }

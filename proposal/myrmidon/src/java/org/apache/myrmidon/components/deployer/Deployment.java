@@ -142,7 +142,7 @@ class Deployment
         for( int i = 0; i < m_descriptors.length; i++ )
         {
             Configuration descriptor = m_descriptors[ i ];
-            deployFromDescriptor( descriptor, m_classLoader, m_descriptorUrls[i] );
+            deployFromDescriptor( descriptor, m_classLoader, m_descriptorUrls[ i ] );
         }
     }
 
@@ -338,7 +338,7 @@ class Deployment
     /**
      * Returns the type factory for a role.
      */
-    private DefaultTypeFactory getFactory( final Class roleType)
+    private DefaultTypeFactory getFactory( final Class roleType )
     {
         DefaultTypeFactory factory = (DefaultTypeFactory)m_factories.get( roleType );
 

@@ -13,9 +13,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.LogLevel;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.myrmidon.framework.LogLevel;
 
 /**
  * This task is the manager for RecorderEntry's. It is this class that holds all

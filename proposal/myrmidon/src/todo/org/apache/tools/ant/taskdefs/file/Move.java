@@ -50,7 +50,8 @@ public class Move
         throws TaskException
     {
         String[] list = d.list();
-        if( list == null ) {
+        if( list == null )
+        {
             return;
         }// on an io error list() can return null
 
@@ -225,7 +226,8 @@ public class Move
     protected boolean okToDelete( File d )
     {
         String[] list = d.list();
-        if( list == null ) {
+        if( list == null )
+        {
             return false;
         }// maybe io error?
 
@@ -235,7 +237,8 @@ public class Move
             File f = new File( d, s );
             if( f.isDirectory() )
             {
-                if( !okToDelete( f ) ) {
+                if( !okToDelete( f ) )
+                {
                     return false;
                 }
             }

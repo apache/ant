@@ -8,10 +8,7 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-
-
 import java.util.ArrayList;
-
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.tools.ant.util.FileUtils;
@@ -241,7 +238,8 @@ public class Path
             final String[] list = list();
 
             // empty path return empty string
-            if( list.length == 0 ) {
+            if( list.length == 0 )
+            {
                 return "";
             }
 

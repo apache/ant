@@ -9,8 +9,8 @@ package org.apache.aut.vfs.provider;
 
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A partial file system provider implementation.

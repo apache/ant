@@ -10,8 +10,8 @@ package org.apache.tools.ant.types;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.nativelib.ExecException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Specialized EnvironmentData class for System properties
@@ -55,7 +55,8 @@ public class SysProperties
             throw new TaskException( ee.getMessage(), ee );
         }
 
-        if( props == null ) {
+        if( props == null )
+        {
             return null;
         }
 
@@ -83,7 +84,8 @@ public class SysProperties
     public void restoreSystem()
         throws TaskException
     {
-        if( m_system == null ) {
+        if( m_system == null )
+        {
             throw new TaskException( "Unbalanced nesting of SysProperties" );
         }
 

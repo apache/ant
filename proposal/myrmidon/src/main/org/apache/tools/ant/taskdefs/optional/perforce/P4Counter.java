@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 
 /**
  * P4Counter - Obtain or set the value of a counter. P4Counter can be used to

@@ -7,20 +7,20 @@
  */
 package org.apache.aut.vfs.impl;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.io.File;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileSystemManager;
-import org.apache.aut.vfs.provider.local.LocalFileSystemProvider;
-import org.apache.aut.vfs.provider.FileSystemProvider;
-import org.apache.aut.vfs.provider.UriParser;
-import org.apache.aut.vfs.provider.FileSystemProviderContext;
 import org.apache.aut.vfs.provider.FileSystem;
-import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.aut.vfs.provider.FileSystemProvider;
+import org.apache.aut.vfs.provider.FileSystemProviderContext;
+import org.apache.aut.vfs.provider.UriParser;
+import org.apache.aut.vfs.provider.local.LocalFileSystemProvider;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A default file system manager implementation.

@@ -96,7 +96,8 @@ public class Project
      */
     public String getProperty( String name )
     {
-        if( name == null ) {
+        if( name == null )
+        {
             return null;
         }
         String property = (String)properties.get( name );

@@ -9,10 +9,10 @@ package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.aut.nativelib.ExecManager;
+import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.nativelib.ExecOutputHandler;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 

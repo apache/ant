@@ -10,12 +10,12 @@ package org.apache.antlib.cvslib;
 import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Task to interact with a CVS repository.
@@ -151,8 +151,9 @@ public class Cvs
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
-        if( m_dest == null ) {
-          m_dest = getBaseDirectory();
+        if( m_dest == null )
+        {
+            m_dest = getBaseDirectory();
         }
         exe.setWorkingDirectory( m_dest );
 

@@ -24,8 +24,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
 
@@ -114,7 +114,8 @@ public class MimeMail extends Task
                                        )
         throws MessagingException, TaskException
     {
-        if( ( null == addrList ) || ( addrList.trim().length() <= 0 ) ) {
+        if( ( null == addrList ) || ( addrList.trim().length() <= 0 ) )
+        {
             return;
         }
 
@@ -122,7 +123,8 @@ public class MimeMail extends Task
         {
             InternetAddress[] addrArray = InternetAddress.parse( addrList );
 
-            if( ( null == addrArray ) || ( 0 == addrArray.length ) ) {
+            if( ( null == addrArray ) || ( 0 == addrArray.length ) )
+            {
                 throw new TaskException( "Empty " + addrUserName + " recipients list was specified" );
             }
 

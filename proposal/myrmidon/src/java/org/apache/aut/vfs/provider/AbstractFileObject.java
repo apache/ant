@@ -19,8 +19,8 @@ import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.NameScope;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A partial file object implementation.
@@ -348,7 +348,7 @@ public abstract class AbstractFileObject implements FileObject
         }
 
         // Update cached info
-        updateType(null);
+        updateType( null );
     }
 
     /**
@@ -462,7 +462,7 @@ public abstract class AbstractFileObject implements FileObject
         }
 
         // Update cached info
-        updateType(type);
+        updateType( type );
     }
 
     /**
@@ -604,7 +604,7 @@ public abstract class AbstractFileObject implements FileObject
     /**
      * Update cached info when this file's type changes.
      */
-    private void updateType(FileType type)
+    private void updateType( FileType type )
     {
         // Notify parent that its child list may no longer be valid
         notifyParent();

@@ -18,8 +18,8 @@ import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystem;
 import org.apache.aut.vfs.provider.DefaultFileName;
 import org.apache.aut.vfs.provider.FileSystem;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A read-only file system for Zip/Jar files.

@@ -15,19 +15,19 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
+import org.apache.aut.nativelib.ExecManager;
+import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
-import org.apache.aut.nativelib.Os;
-import org.apache.aut.nativelib.ExecOutputHandler;
-import org.apache.aut.nativelib.ExecManager;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection of
@@ -567,17 +567,19 @@ public class Javadoc
         // Build the classpath to pass to Javadoc
         Path classpath = new Path();
         classpath.addPath( m_sourcePath );
-        if ( m_classpath != null )
+        if( m_classpath != null )
         {
             classpath.addPath( m_classpath );
         }
         cmd.addArgument( "-classpath" );
         cmd.addArgument( classpath.toString() );
 
-        if( m_version && m_doclet == null ) {
+        if( m_version && m_doclet == null )
+        {
             cmd.addArgument( "-version" );
         }
-        if( m_author && m_doclet == null ) {
+        if( m_author && m_doclet == null )
+        {
             cmd.addArgument( "-author" );
         }
 
@@ -938,7 +940,8 @@ public class Javadoc
         ArrayList addedPackages = new ArrayList();
 
         String[] list = sourcePath.list();
-        if( list == null ) {
+        if( list == null )
+        {
             list = new String[ 0 ];
         }
 

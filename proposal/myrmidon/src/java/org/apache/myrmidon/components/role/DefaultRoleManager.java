@@ -99,14 +99,14 @@ public class DefaultRoleManager
         throws IllegalArgumentException
     {
         final String oldRole = (String)m_names.get( name );
-        if( null != oldRole && ! oldRole.equals( role ) )
+        if( null != oldRole && !oldRole.equals( role ) )
         {
             final String message = REZ.getString( "duplicate-name.error", oldRole );
             throw new IllegalArgumentException( message );
         }
 
         final String oldName = (String)m_roles.get( role );
-        if( null != oldName && ! oldName.equals( name ) )
+        if( null != oldName && !oldName.equals( name ) )
         {
             final String message = REZ.getString( "duplicate-role.error", oldName );
             throw new IllegalArgumentException( message );

@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Argument;
+import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Class to precompile JSP's using weblogic's jsp compiler (weblogic.jspc)

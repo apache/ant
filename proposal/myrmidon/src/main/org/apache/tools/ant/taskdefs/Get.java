@@ -239,7 +239,8 @@ public class Get extends Task
             if( is == null )
             {
                 getLogger().info( "Can't get " + source + " to " + dest );
-                if( ignoreErrors ) {
+                if( ignoreErrors )
+                {
                     return;
                 }
                 throw new TaskException( "Can't get " + source + " to " + dest );
@@ -251,11 +252,13 @@ public class Get extends Task
             while( ( length = is.read( buffer ) ) >= 0 )
             {
                 fos.write( buffer, 0, length );
-                if( verbose ) {
+                if( verbose )
+                {
                     System.out.print( "." );
                 }
             }
-            if( verbose ) {
+            if( verbose )
+            {
                 System.out.println();
             }
             fos.close();
@@ -282,7 +285,8 @@ public class Get extends Task
         catch( IOException ioe )
         {
             getLogger().info( "Error getting " + source + " to " + dest );
-            if( ignoreErrors ) {
+            if( ignoreErrors )
+            {
                 return;
             }
             throw new TaskException( "Error", ioe );

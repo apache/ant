@@ -46,7 +46,8 @@ public class Script extends Task
     public void setSrc( String fileName )
     {
         File file = new File( fileName );
-        if( !file.exists() ) {
+        if( !file.exists() )
+        {
             throw new TaskException( "file " + fileName + " not found." );
         }
 
@@ -140,11 +141,13 @@ public class Script extends Task
             boolean isValid = key.length() > 0 &&
                 Character.isJavaIdentifierStart( key.charAt( 0 ) );
 
-            for( int i = 1; isValid && i < key.length(); i++ ) {
+            for( int i = 1; isValid && i < key.length(); i++ )
+            {
                 isValid = Character.isJavaIdentifierPart( key.charAt( i ) );
             }
 
-            if( isValid ) {
+            if( isValid )
+            {
                 beans.put( key, dictionary.get( key ) );
             }
         }

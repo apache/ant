@@ -15,8 +15,8 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.mappers.FileNameMapper;
 
 /**
  * This is the default implementation for the RmicAdapter interface. Currently,
@@ -123,13 +123,18 @@ public abstract class DefaultRmicAdapter
         String stubVersion = attributes.getStubVersion();
         if( null != stubVersion )
         {
-            if( "1.1".equals( stubVersion ) ) {
+            if( "1.1".equals( stubVersion ) )
+            {
                 cmd.addArgument( "-v1.1" );
-            } else if( "1.2".equals( stubVersion ) ) {
+            }
+            else if( "1.2".equals( stubVersion ) )
+            {
                 cmd.addArgument( "-v1.2" );
-                 } else {
+            }
+            else
+            {
                 cmd.addArgument( "-vcompat" );
-                   }
+            }
         }
 
         if( null != attributes.getSourceBase() )
@@ -182,7 +187,7 @@ public abstract class DefaultRmicAdapter
         classpath.addLocation( attributes.getBase() );
 
         // add the classpath
-        if ( attributes.getClasspath() != null )
+        if( attributes.getClasspath() != null )
         {
             classpath.addExisting( attributes.getClasspath() );
         }

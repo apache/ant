@@ -17,7 +17,6 @@ import com.starbase.starteam.View;
 import com.starbase.util.Platform;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.ScannerUtil;
 
 /**

@@ -15,8 +15,8 @@ import org.apache.aut.vfs.FileName;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystem;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * An FTP file system.

@@ -385,7 +385,8 @@ public class FileUtils
      */
     public static String translateFile( final String source )
     {
-        if( source == null ) {
+        if( source == null )
+        {
             return "";
         }
 
@@ -423,7 +424,8 @@ public class FileUtils
         throws TaskException
     {
         final ArrayList result = new ArrayList();
-        if( source == null ) {
+        if( source == null )
+        {
             return new String[ 0 ];
         }
 

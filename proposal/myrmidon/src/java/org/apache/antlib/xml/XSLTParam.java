@@ -7,8 +7,6 @@
  */
 package org.apache.antlib.xml;
 
-
-
 public final class XSLTParam
 {
     private String m_name;

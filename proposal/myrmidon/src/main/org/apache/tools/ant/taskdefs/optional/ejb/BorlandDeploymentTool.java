@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
@@ -24,7 +25,6 @@ import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5 and

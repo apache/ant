@@ -9,12 +9,12 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;// imports
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * This is a helper class to spawn net commands out. In its initial form it

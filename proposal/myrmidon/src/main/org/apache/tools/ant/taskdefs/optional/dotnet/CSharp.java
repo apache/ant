@@ -9,9 +9,9 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.taskdefs.MatchingTask;
 
 // ====================================================================
 
@@ -420,7 +420,8 @@ public class CSharp
         throws TaskException
     {
         //demand create pathlist
-        if( _referenceFiles == null ) {
+        if( _referenceFiles == null )
+        {
             _referenceFiles = new Path();
         }
         _referenceFiles.append( path );
@@ -462,7 +463,8 @@ public class CSharp
         {
             _targetType = targetType;
         }
-        else {
+        else
+        {
             throw new TaskException( "targetType " + targetType + " is not a valid type" );
         }
     }
@@ -650,8 +652,9 @@ public class CSharp
     public void execute()
         throws TaskException
     {
-        if( _srcDir == null ) {
-          _srcDir = getBaseDirectory();
+        if( _srcDir == null )
+        {
+            _srcDir = getBaseDirectory();
         }
 
         NetCommand command = new NetCommand( this, "CSC", csc_exe_name );
@@ -710,9 +713,12 @@ public class CSharp
      */
     protected String getAdditionalModulesParameter()
     {
-        if( notEmpty( _additionalModules ) ) {
+        if( notEmpty( _additionalModules ) )
+        {
             return "/addmodule:" + _additionalModules;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -740,7 +746,8 @@ public class CSharp
             s.append( DEFAULT_REFERENCE_LIST );
             return new String( s );
         }
-        else {
+        else
+        {
             return null;
         }
     }
@@ -752,9 +759,12 @@ public class CSharp
      */
     protected String getDefinitionsParameter()
     {
-        if( notEmpty( _definitions ) ) {
+        if( notEmpty( _definitions ) )
+        {
             return "/define:" + _definitions;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -766,9 +776,12 @@ public class CSharp
      */
     protected String getDocFileParameter()
     {
-        if( _docFile != null ) {
+        if( _docFile != null )
+        {
             return "/doc:" + _docFile.toString();
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -780,9 +793,12 @@ public class CSharp
      */
     protected String getExtraOptionsParameter()
     {
-        if( _extraOptions != null && _extraOptions.length() != 0 ) {
+        if( _extraOptions != null && _extraOptions.length() != 0 )
+        {
             return _extraOptions;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -819,9 +835,12 @@ public class CSharp
      */
     protected String getMainClassParameter()
     {
-        if( _mainClass != null && _mainClass.length() != 0 ) {
+        if( _mainClass != null && _mainClass.length() != 0 )
+        {
             return "/main:" + _mainClass;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -853,7 +872,8 @@ public class CSharp
             File f = _outputFile;
             return "/out:" + f.toString();
         }
-        else {
+        else
+        {
             return null;
         }
     }
@@ -866,7 +886,8 @@ public class CSharp
     protected String getReferenceFilesParameter()
     {
         //bail on no references
-        if( _references == null ) {
+        if( _references == null )
+        {
             return null;
         }
         //iterate through the ref list & generate an entry for each
@@ -875,7 +896,8 @@ public class CSharp
         String refpath = _references.toString();
 
         //bail on no references listed
-        if( refpath.length() == 0 ) {
+        if( refpath.length() == 0 )
+        {
             return null;
         }
 
@@ -892,9 +914,12 @@ public class CSharp
     protected String getReferencesParameter()
     {
         //bail on no references
-        if( notEmpty( _references ) ) {
+        if( notEmpty( _references ) )
+        {
             return "/reference:" + _references;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -906,9 +931,12 @@ public class CSharp
      */
     protected String getTargetTypeParameter()
     {
-        if( notEmpty( _targetType ) ) {
+        if( notEmpty( _targetType ) )
+        {
             return "/target:" + _targetType;
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -945,9 +973,12 @@ public class CSharp
      */
     protected String getWin32IconParameter()
     {
-        if( _win32icon != null ) {
+        if( _win32icon != null )
+        {
             return "/win32icon:" + _win32icon.toString();
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
@@ -959,9 +990,12 @@ public class CSharp
      */
     protected String getWin32ResParameter()
     {
-        if( _win32res != null ) {
+        if( _win32res != null )
+        {
             return "/win32res:" + _win32res.toString();
-        } else {
+        }
+        else
+        {
             return null;
         }
     }

@@ -50,8 +50,9 @@ public class ProjectListenerSupport
             }
         }
 
-        if( -1 == found ) {
-          return;
+        if( -1 == found )
+        {
+            return;
         }
 
         final ProjectListener[] listeners = new ProjectListener[ m_listeners.length - 1 ];

@@ -23,8 +23,9 @@ public class DefaultConverterRegistry
     public String getConverterName( final String source, final String destination )
     {
         final HashMap map = (HashMap)m_mapping.get( source );
-        if( null == map ) {
-          return null;
+        if( null == map )
+        {
+            return null;
         }
         return (String)map.get( destination );
     }

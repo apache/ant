@@ -108,7 +108,6 @@ public class Pattern
         return null;
     }
 
-
     public String toString()
     {
         String result = "Pattern['" + m_name + "',";

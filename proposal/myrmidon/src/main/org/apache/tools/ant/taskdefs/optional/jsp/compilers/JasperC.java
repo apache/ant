@@ -10,8 +10,8 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
-import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Argument;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * The implementation of the jasper compiler. This is a cut-and-paste of the
@@ -37,12 +37,14 @@ public class JasperC
             // the project log
             //FIXME
             Java java = null;//(Java)( getJspc().getProject() ).createTask( "java" );
-            if( getJspc().getClasspath() != null ) {
+            if( getJspc().getClasspath() != null )
+            {
                 java.addClasspath( getJspc().getClasspath() );
             }
             java.setClassname( "org.apache.jasper.JspC" );
             String args[] = cmd.getArguments();
-            for( int i = 0; i < args.length; i++ ) {
+            for( int i = 0; i < args.length; i++ )
+            {
                 java.addArg( new Argument( args[ i ] ) );
             }
             java.execute();

@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 
 /**
  * P4Change - grab a new changelist from Perforce. P4Change creates a new

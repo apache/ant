@@ -13,7 +13,6 @@ import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.PatternUtil;
-import org.apache.myrmidon.framework.PatternSet;
 import org.apache.tools.ant.taskdefs.archive.TarFileSet;
 import org.apache.tools.ant.taskdefs.archive.ZipFileSet;
 import org.apache.tools.ant.taskdefs.archive.ZipScanner;
@@ -600,7 +599,7 @@ public class ScannerUtil
         {
             final ZipScanner scanner = new ZipScanner();
             scanner.setSrc( src );
-            set.setDir( null  );
+            set.setDir( null );
             setupDirectoryScanner( set, scanner, null );
             scanner.init();
             return scanner;

@@ -19,20 +19,19 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Argument;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.SysProperties;
 import org.apache.tools.ant.types.PathUtil;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.aut.nativelib.ExecManager;
+import org.apache.tools.ant.types.SysProperties;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -671,7 +670,8 @@ public class JUnitTask extends Task
         }
         finally
         {
-            if( !propsFile.delete() ) {
+            if( !propsFile.delete() )
+            {
                 throw new TaskException( "Could not delete temporary properties file." );
             }
         }

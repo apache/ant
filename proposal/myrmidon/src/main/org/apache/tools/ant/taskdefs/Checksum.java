@@ -11,9 +11,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -23,7 +23,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -284,7 +283,6 @@ public class Checksum
             fis = new FileInputStream( src );
             final byte[] fileDigest = buildDigest( fis );
             IOUtil.shutdownStream( fis );
-
 
             String checksum = "";
             for( int i = 0; i < fileDigest.length; i++ )

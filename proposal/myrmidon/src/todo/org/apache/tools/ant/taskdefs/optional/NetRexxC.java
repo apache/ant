@@ -20,8 +20,8 @@ import netrexx.lang.Rexx;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.DirectoryScanner;
 
 /**
  * Task to compile NetRexx source files. This task can take the following
@@ -169,7 +169,8 @@ public class NetRexxC extends MatchingTask
     public void setCompile( boolean compile )
     {
         this.compile = compile;
-        if( !this.compile && !this.keep ) {
+        if( !this.compile && !this.keep )
+        {
             this.keep = true;
         }
     }

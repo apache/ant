@@ -9,8 +9,8 @@
  */
 package org.apache.aut.vfs;
 
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * An enumeration that represents a file's type.

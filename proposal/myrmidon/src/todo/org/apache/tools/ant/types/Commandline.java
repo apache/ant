@@ -62,7 +62,8 @@ public class Commandline
      */
     public void setExecutable( final String executable )
     {
-        if( executable == null || executable.length() == 0 ) {
+        if( executable == null || executable.length() == 0 )
+        {
             return;
         }
         m_executable = executable.replace( '/', File.separatorChar )

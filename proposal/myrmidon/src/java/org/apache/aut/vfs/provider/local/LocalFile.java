@@ -17,8 +17,8 @@ import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.provider.AbstractFileObject;
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A file object implementation which uses direct file access.

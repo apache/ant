@@ -8,8 +8,8 @@
 package org.apache.aut.nativelib.impl.launchers;
 
 import java.io.IOException;
-import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.ExecException;
+import org.apache.aut.nativelib.ExecMetaData;
 
 /**
  * This is the interface implemented by objects which are capable of

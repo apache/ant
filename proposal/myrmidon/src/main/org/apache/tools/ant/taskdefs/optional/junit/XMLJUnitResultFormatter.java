@@ -18,7 +18,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-
 import org.apache.myrmidon.api.TaskException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

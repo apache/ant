@@ -138,14 +138,17 @@ public class AspectAwareExecutor
             final ArrayList elementList = (ArrayList)elementMap.remove( names[ i ] );
 
             Parameters parameters = (Parameters)parameterMap.remove( names[ i ] );
-            if( null == parameters ) {
-              parameters = Parameters.EMPTY_PARAMETERS;
+            if( null == parameters )
+            {
+                parameters = Parameters.EMPTY_PARAMETERS;
             }
 
             Configuration[] elements = null;
-            if( null == elementList ) {
+            if( null == elementList )
+            {
                 elements = EMPTY_ELEMENTS;
-            } else
+            }
+            else
             {
                 elements = (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
             }
@@ -171,9 +174,11 @@ public class AspectAwareExecutor
 
                 Configuration[] elements = null;
 
-                if( null == elementList ) {
+                if( null == elementList )
+                {
                     elements = EMPTY_ELEMENTS;
-                } else
+                }
+                else
                 {
                     elements = (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
                 }

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
@@ -21,7 +22,6 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.

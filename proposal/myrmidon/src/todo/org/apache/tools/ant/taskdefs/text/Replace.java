@@ -22,11 +22,11 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Properties;
-import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.DirectoryScanner;
 
 /**
  * Replaces all occurrences of one or more string tokens with given values in
@@ -390,8 +390,8 @@ public class Replace
         }
         finally
         {
-            IOUtil.shutdownReader(reader);
-            IOUtil.shutdownWriter(writer);
+            IOUtil.shutdownReader( reader );
+            IOUtil.shutdownWriter( writer );
             if( temp != null )
             {
                 temp.delete();

@@ -9,10 +9,10 @@ package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Argument;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 
 /**

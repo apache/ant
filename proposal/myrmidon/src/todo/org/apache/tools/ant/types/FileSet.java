@@ -7,11 +7,6 @@
  */
 package org.apache.tools.ant.types;
 
-import java.io.File;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.Pattern;
-import org.apache.myrmidon.framework.PatternSet;
-
 /**
  * Moved out of MatchingTask to make it a standalone object that could be
  * referenced (by scripts for example).

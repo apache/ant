@@ -8,11 +8,11 @@
 package org.apache.antlib.security;
 
 import java.io.IOException;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.aut.nativelib.ExecManager;
 
 /**
  * Generates a key.

@@ -9,12 +9,11 @@ package org.apache.tools.ant.taskdefs.unix;
 
 import java.io.File;
 import java.io.IOException;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.aut.nativelib.ExecManager;
-
 
 /**
  * @author lucas@collab.net
@@ -95,8 +94,9 @@ public class Rpm
         final Execute2 exe = new Execute2( execManager );
         setupLogger( exe );
 
-        if( m_topDir == null ) {
-          m_topDir = getBaseDirectory();
+        if( m_topDir == null )
+        {
+            m_topDir = getBaseDirectory();
         }
         exe.setWorkingDirectory( m_topDir );
 

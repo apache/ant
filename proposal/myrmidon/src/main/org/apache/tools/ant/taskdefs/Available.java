@@ -11,10 +11,8 @@ import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
-
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 
@@ -55,13 +53,13 @@ public class Available
     public void addClasspath( Path classpath )
         throws TaskException
     {
-        if ( m_classpath == null )
+        if( m_classpath == null )
         {
             m_classpath = classpath;
         }
         else
         {
-            m_classpath.addPath(classpath);
+            m_classpath.addPath( classpath );
         }
     }
 

@@ -14,8 +14,8 @@ import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.SysProperties;
 import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.ant.types.SysProperties;
 
 /*
  * @author thomas.haas@softwired-inc.com

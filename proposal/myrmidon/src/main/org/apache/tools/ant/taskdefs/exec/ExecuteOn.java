@@ -13,12 +13,11 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Marker;
-import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.mappers.Mapper;
 
