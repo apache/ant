@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<project name="ant-test" basedir="." default="bar">
+  <subant target="foo">
+    <fileset dir="." includes="toplevelsubant.xml"/>
+  </subant>
+
+  <target name="foo"/>
+  <target name="bar"/>
+</project>
