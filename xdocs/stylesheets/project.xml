@@ -3,47 +3,59 @@
 
     <title>Apache Ant</title>
     <logo href="images/ant_logo_large.gif">Apache Ant</logo>
-    
+
     <body>
-    <menu name="Apache Ant">
-        <item name="Welcome"               href="/index.html"/>
-        <item name="License"               href="/license.html"/>
-        <item name="News"                  href="/antnews.html"/>
-    </menu>
+<!--       <menusection name="Home" index="0"         href="/index.html"> -->
+            <menu name="Apache Ant">
+                <item name="Welcome"               href="/index.html"/>
+                <item name="License"               href="/license.html"/>
+                <item name="News"                  href="/antnews.html"/>
+            </menu>
 
-    <menu name="Documentation">
-        <item name="Manual"
-              href="/manual/index.html"/>
-        <item name="Related Projects"
-              href="/projects.html"/>
-        <item name="External Tools and Tasks"
-              href="/external.html"/>
-        <item name="Resources"
-              href="/resources.html"/>
-        <item name="Frequently Asked Questions"
-              href="/faq.html"/>
-        <item name="Having Problems?"
-              href="/problems.html"/>
-    </menu>
+            <menu name="Documentation">
+                <item name="Manual"
+                      href="/manual/index.html"/>
+                <item name="Related Projects"
+                      href="/projects.html"/>
+                <item name="External Tools and Tasks"
+                      href="/external.html"/>
+                <item name="Resources"
+                      href="/resources.html"/>
+                <item name="Frequently Asked Questions"
+                      href="/faq.html"/>
+                <item name="Having Problems?"
+                      href="/problems.html"/>
+            </menu>
 
-    <menu name="Download">
-        <item name="Binary Distributions" href="http://ant.apache.org/bindownload.cgi"/>
-        <item name="Source Distributions" href="http://ant.apache.org/srcdownload.cgi"/>
-    </menu>
+            <menu name="Download">
+                <item name="Binary Distributions" href="http://ant.apache.org/bindownload.cgi"/>
+                <item name="Source Distributions" href="http://ant.apache.org/srcdownload.cgi"/>
+            </menu>
 
-    <menu name="Get Involved">
-        <item name="Mailing Lists"         href="/mail.html"/>
-        <item name="CVS Repositories"      href="/cvs.html"/>
-        <item name="Bug Database"          href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant"/>
-        <item name="Enhancement Requests"  href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;amp;bug_severity=Enhancement"/>
-    </menu>
+            <menu name="Get Involved">
+                <item name="Mailing Lists"         href="/mail.html"/>
+                <item name="CVS Repositories"      href="/cvs.html"/>
+                <item name="Bug Database"          href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant"/>
+                <item name="Enhancement Requests"  href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;amp;bug_severity=Enhancement"/>
+            </menu>
 
-    <menu name="Project Management">
-        <item name="Contributors"          href="/contributors.html"/>
-        <item name="Apache Ant Mission"    href="/mission.html"/>
-        <item name="Project Guidelines"    href="/guidelines.html"/>
-        <item name="Legal"                 href="/legal.html"/>
-    </menu>
+            <menu name="Project Management">
+                <item name="Contributors"          href="/contributors.html"/>
+                <item name="Apache Ant Mission"    href="/mission.html"/>
+                <item name="Project Guidelines"    href="/guidelines.html"/>
+                <item name="Legal"                 href="/legal.html"/>
+            </menu>
+<!--        </menusection>
 
+        <menusection name="Projects" index="1"     href="/projects/index.html">
+            <menu name="Projects">
+                <item name="Welcome"               href="/projects/index.html"/>
+            </menu>
+            <menu name="Antidote">
+                <item name="About Antidote"        href="/projects/antidote/index.html"/>
+                <item name="Design Overview"       href="/projects/antidote/design.html"/>
+                <item name="Module HOW-TO"         href="/projects/antidote/module.html"/>
+            </menu>
+        </menusection>-->
     </body>
 </project>
