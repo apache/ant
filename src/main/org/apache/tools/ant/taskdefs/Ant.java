@@ -443,16 +443,6 @@ public class Ant extends Task {
             p.setProject(newProject);
             p.execute();
         }
-        // Do local properties second
-        if (inheritAll) {
-            // Only copy them if they have not been set
-            PropertyHelper newHelper =
-                PropertyHelper.getPropertyHelper(newProject);
-            PropertyHelper oldHelper =
-                PropertyHelper.getPropertyHelper(getProject());
-            newHelper.setNotOverrideLocalProperties(
-                oldHelper.getLocalProperties().copy());
-        }
         getProject().copyInheritedProperties(newProject);
     }
 

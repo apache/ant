@@ -44,7 +44,6 @@ public class MacroDef extends AntlibDefinition  {
     private String     name;
     private List       attributes = new ArrayList();
     private Map        elements   = new HashMap();
-    private Map        localProperties = new HashMap();
     private String     textName   = null;
     private Text       text       = null;
     private boolean    hasImplicitElement = false;
@@ -294,58 +293,6 @@ public class MacroDef extends AntlibDefinition  {
         hasImplicitElement = element.isImplicit();
         elements.put(element.getName(), element);
     }
-
-    /**
-     * A localproperty nested element.
-     * @param el a localproperty nested element
-     * @throws BuildException if the name of the element is not set or if a
-     *                        duplicate name is used
-     */
-    public void addConfiguredLocalProperty(LocalPropertyElement el) {
-        if (el.getName() == null) {
-            throw new BuildException(
-                "the 'localproperty' nested element needed a \"name\" attribute");
-        }
-        if (localProperties.get(el.getName()) != null) {
-            throw new BuildException(
-                "the localproperty " + el.getName()
-                + " has already been specified");
-        }
-        localProperties.put(el.getName(), el);
-    }
-
-    /**
-     * Get the map of local properties specified by this macrodef.
-     * @return the localproperties map
-     */
-    public Map getLocalProperties() {
-        return localProperties;
-    }
-
-    /**
-     * A class to represent a local property nested element.
-     */
-    public static class LocalPropertyElement {
-
-        private String name;
-
-        /**
-         * An attribute called "name".
-         * @param name the name value.
-         */
-        public void setName(String name) {
-            this.name =  name;
-        }
-
-        /**
-         * Get the value of the "name" attribute.
-         * @return the name value
-         */
-        public String getName() {
-            return name;
-        }
-    }
-
 
     /**
      * Create a new ant type based on the embedded tasks and types.

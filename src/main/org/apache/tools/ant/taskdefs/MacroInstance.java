@@ -31,7 +31,6 @@ import java.util.Enumeration;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DynamicAttribute;
 import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.PropertyHelper;
 import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
@@ -322,15 +321,6 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
      *
      */
     public void execute() {
-        PropertyHelper propertyHelper =
-            PropertyHelper.getPropertyHelper(getProject());
-        propertyHelper.enterLocalPropertyScope();
-        for (Iterator i = macroDef.getLocalProperties().values().iterator();
-             i.hasNext();) {
-            MacroDef.LocalPropertyElement el = (MacroDef.LocalPropertyElement) i.next();
-            propertyHelper.addLocalProperty(el.getName(), null);
-        }
-
         presentElements = new HashMap();
         getNsElements();
         processTasks();
@@ -395,7 +385,6 @@ public class MacroInstance extends Task implements DynamicAttribute, TaskContain
         } finally {
             presentElements = null;
             localAttributes = null;
-            propertyHelper.exitLocalPropertyScope();
         }
     }
 }
