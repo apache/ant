@@ -49,8 +49,6 @@ public class RegisterTasklib
             throw new TaskException( "Must specify lib parameter" );
         }
 
-        URL url = null;
-
         final File file = getContext().resolveFile( m_lib );
 
         try
