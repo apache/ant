@@ -24,15 +24,10 @@ Dependency rules
 <li>Out of date destination JARs are created/signed</li>
 <li>If a destination file and a source file are the same,
 and <tt>lazy</tt> is true, the JAR is only signed if it does not 
-contain any signature.</li> 
+contain a signature by this alias.</li>
 <li>If a destination file and a source file are the same,
 and <tt>lazy</tt> is false, the JAR is signed.</li> 
 </ul>
-
-<p>
-When checking signatures, the actual signatory itself is not verified. This
-means that "lazy" checks do not work if a JAR is signed by multiple authors.
-</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -131,13 +126,11 @@ block</td>
     <td valign="top">fileset of JAR files to sign. </td>
     <td valign="top" align="center">No</td>
   </tr>
-<!--   
   <tr>
     <td valign="top">mapper</td>
     <td valign="top">A mapper to rename jar files during signing</td>
     <td valign="top" align="center">No, and only one can be supplied</td>
   </tr>
- -->
  </table>
 <h3>Examples</h3>
   <blockquote><pre>

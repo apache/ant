@@ -334,7 +334,6 @@
 
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline"/>
-    <exclude name="**/SignJarTest.java" if="offline"/>
   </patternset>
 
   <patternset id="teststhatfail">

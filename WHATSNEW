@@ -40,6 +40,10 @@ Changes that could break older environments:
   actually crashes the JVM on our (Java1.5) systems, we don't think any
   build files which actually worked will be affected by the change.
 
+* <signjar> used to ignore a nested fileset when a jar was also provided
+  as an attribute, printing a warning message; now it signs files in the
+  fileset.
+
 
 Fixed bugs:
 -----------
@@ -141,6 +145,12 @@ Other changes:
 * <sync> has a new nested element <preserveInTarget> that can be used
   to protect extra-content in the target directory.  Bugzilla Report
   21832.
+  
+* <signjar> now supports:
+  -nested filesets at the same time as the jar attribute
+  -a destDir attribute with the appropriate dependency logic, which
+   can be used with the jar attribute or nested filesets
+  -a mapper to permit filename remapping on signing
 
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================

@@ -59,16 +59,43 @@ public class SignJar extends Task {
     protected String alias;
 
     /**
-     * The name of keystore file.
+     * The url or path of keystore file.
      */
     private String keystore;
 
+    /**
+     * password for the store
+     */
     protected String storepass;
+
+    /**
+     * type of store,-storetype param
+     */
     protected String storetype;
+
+    /**
+     * password for the key in the store
+     */
     protected String keypass;
+
+    /**
+     * name to a signature file
+     */
     protected String sigfile;
+
+    /**
+     * name of a single jar
+     */
     protected File signedjar;
+
+    /**
+     * verbose output
+     */
     protected boolean verbose;
+
+    /**
+     * flag for
+     */
     protected boolean internalsf;
     protected boolean sectionsonly;
     private boolean preserveLastModified;
@@ -98,11 +125,8 @@ public class SignJar extends Task {
     /**
      * mapper for todir work
      */
-    private Mapper mapper;
+    private FileNameMapper mapper;
 
-    /** error string for unit test verification: {@value} */
-    public static final String ERROR_SIGNEDJAR_AND_FILESET =
-            "The signedjar attribute is not supported with filesets";
     /**
      * error string for unit test verification: {@value}
      */
@@ -113,7 +137,7 @@ public class SignJar extends Task {
      */
     public static final String ERROR_TOO_MANY_MAPPERS = "Too many mappers";
     /**
-     * error string for unit test verification: {@value}
+     * error string for unit test verification {@value}
      */
     public static final String ERROR_SIGNEDJAR_AND_FILESETS = "You cannot specify the signed JAR when using filesets";
     /**
@@ -296,14 +320,14 @@ public class SignJar extends Task {
      * @param newMapper
      * @since Ant 1.7
      */
-    public void addMapper(Mapper newMapper) {
+    public void add(FileNameMapper newMapper) {
         if (mapper != null) {
             throw new BuildException(ERROR_TOO_MANY_MAPPERS);
         }
         mapper = newMapper;
     }
 
-    public Mapper getMapper() {
+    public FileNameMapper getMapper() {
         return mapper;
     }
 
@@ -373,7 +397,7 @@ public class SignJar extends Task {
         //set up our mapping policy
         FileNameMapper destMapper;
         if (hasMapper) {
-            destMapper = mapper.getImplementation();
+            destMapper = mapper;
         } else {
             //no mapper? use the identity policy
             destMapper = new IdentityMapper();
@@ -563,7 +587,7 @@ public class SignJar extends Task {
 
     /**
      * test for a file being signed, by looking for a signature in the META-INF
-     * directory
+     * directory with our alias.
      *
      * @param file the file to be checked
      * @return true if the file is signed

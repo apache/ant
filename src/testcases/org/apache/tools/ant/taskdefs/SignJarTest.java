@@ -35,6 +35,7 @@ public class SignJarTest extends BuildFileTest {
     public static final String EXPANDED_MANIFEST
         = "src/etc/testcases/taskdefs/manifests/META-INF/MANIFEST.MF";
 
+
     public SignJarTest(String name) {
         super(name);
     }
@@ -47,6 +48,13 @@ public class SignJarTest extends BuildFileTest {
         executeTarget("clean");
     }
 
+    /**
+     * check for being offline
+     * @return true iff the system property "offline" is "true"
+     */
+    private boolean isOffline() {
+        return Boolean.getBoolean("offline");
+    }
     public void testBasicSigning() {
         executeTarget("basic");
     }
@@ -64,10 +72,78 @@ public class SignJarTest extends BuildFileTest {
     }
 
     public void testURLKeystoreHTTP() {
-        executeTarget("urlKeystoreHTTP");
+        if(!isOffline()) {
+            executeTarget("urlKeystoreHTTP");
+        }
     }
 
     public void testPreserveLastModified() {
         executeTarget("preserveLastModified");
     }
-}
+
+    public void testFileset() {
+        executeTarget("testFileset");
+    }
+
+    public void testFilesetAndJar() {
+        executeTarget("testFilesetAndJar");
+    }
+
+    public void testFilesetAndSignedJar() {
+        expectBuildExceptionContaining("testFilesetAndSignedJar",
+                "incompatible attributes",
+                SignJar.ERROR_SIGNEDJAR_AND_FILESETS);
+    }
+
+    public void testSignedJar() {
+        executeTarget("testSignedJar");
+    }
+
+    public void testDestDir() {
+        executeTarget("testDestDir");
+    }
+
+    public void testDestDirAndSignedJar() {
+        expectBuildExceptionContaining("testFilesetAndSignedJar",
+                "incompatible attributes",
+                SignJar.ERROR_SIGNEDJAR_AND_FILESETS);
+    }
+
+    public void testDestDirFileset() {
+        executeTarget("testDestDirFileset");
+    }
+
+    public void testMapperFileset() {
+        executeTarget("testMapperFileset");
+    }
+
+    public void testMapperNoDest() {
+        expectBuildExceptionContaining("testMapperNoDest",
+                "two mappers",
+                SignJar.ERROR_MAPPER_WITHOUT_DEST);
+    }
+
+    public void testTwoMappers() {
+        expectBuildExceptionContaining("testTwoMappers",
+                "two mappers",
+                SignJar.ERROR_TOO_MANY_MAPPERS);
+    }
+
+    public void testNoAlias() {
+        expectBuildExceptionContaining("testNoAlias",
+                "no alias",
+                SignJar.ERROR_NO_ALIAS);
+    }
+
+    public void testNoFiles() {
+        expectBuildExceptionContaining("testNoFiles",
+                "no files",
+                SignJar.ERROR_NO_SOURCE);
+    }
+
+    public void testNoStorePass() {
+        expectBuildExceptionContaining("testNoStorePass",
+                "no files",
+                SignJar.ERROR_NO_STOREPASS);
+    }
+ }
