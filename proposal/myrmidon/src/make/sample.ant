@@ -21,9 +21,9 @@ Legal:
 
   <property name="year" value="2000"/>
 
-  <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test, prim->main" />
+  <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test, ant1-tasklib-test" />
 
-  <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test" />
+  <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test, ant1-tasklib-test, prim->main" />
 
 <!--    
     <register-tasklib lib="../../dist/lib/core.atl" />
@@ -91,6 +91,16 @@ Legal:
     </facility>
 
     <echo blee:some-param="blah" message="Blee namespace test successful!"/>
+
+  </target>
+
+  <target name="ant1-tasklib-test">
+
+    <ant1-tasklib prefix="a1-" lib="../../dist/lib/ant1-compat.jar"/>
+
+    <a1-echo message="Boo!" />
+    <a1-mkdir dir="../../dist/test"/>
+    <a1-copy file="../../tools/lib/ant.jar" tofile="../../dist/test/ant1-compat.jar" />
 
   </target>
 
