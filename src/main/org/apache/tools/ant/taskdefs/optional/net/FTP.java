@@ -83,7 +83,7 @@ import org.apache.tools.ant.util.FileUtils;
  * <ul>
  *   <li> <strong>send</strong> - send files to a remote server. This is the
  *   default action.</li>
- *   <li> <strong>get</strong> - retrive files from a remote server.</li>
+ *   <li> <strong>get</strong> - retrieve files from a remote server.</li>
  *   <li> <strong>del</strong> - delete files from a remote server.</li>
  *   <li> <strong>list</strong> - create a file listing.</li>
  *   <li> <strong>chmod</strong> - change unix file permissions.</li>
@@ -114,7 +114,8 @@ public class FTP
     protected static final int MK_DIR = 4;
     protected static final int CHMOD = 5;
     protected static final int RM_DIR = 6;
-
+    /** return code of ftp - not implemented in commons-net version 1.0 */
+    private static final int CODE_521 = 521;
     /** Default port for FTP */
     public static final int DEFAULT_FTP_PORT = 21;
 
@@ -172,16 +173,29 @@ public class FTP
         };
 
 
+    /**
+     * internal class allowing to read the contents of a remote file system
+     * using the FTP protocol
+     * used in particular for ftp get operations
+     */
     protected class FTPDirectoryScanner extends DirectoryScanner {
         protected FTPClient ftp = null;
 
 
+        /**
+         * constructor
+         * @param ftp  ftpclient object
+         */
         public FTPDirectoryScanner(FTPClient ftp) {
             super();
             this.ftp = ftp;
         }
 
 
+        /**
+         * scans the remote directory,
+         * storing internally the included files, directories, ...
+         */
         public void scan() {
             if (includes == null) {
                 // No includes supplied, so set it to 'matches all'
@@ -210,6 +224,13 @@ public class FTP
         }
 
 
+        /**
+         * scans a particular directory
+         * @param dir directory to scan
+         * @param vpath  relative path to the base directory of the remote fileset
+         * always ended with a File.separator
+         * @param fast seems to be always true in practice
+         */
         protected void scandir(String dir, String vpath, boolean fast) {
             try {
                 if (!ftp.changeWorkingDirectory(dir)) {
@@ -701,6 +722,8 @@ public class FTP
      * @param ftp the FTP client instance to use to execute FTP actions on
      *        the remote server.
      * @param filename the name of the file whose parents should be created.
+     * @throws IOException under non documented circumstances
+     * @throws BuildException if it is impossible to cd to a remote directory
      *
      */
     protected void createParents(FTPClient ftp, String filename)
@@ -761,7 +784,14 @@ public class FTP
 
     /**
      * Checks to see if the remote file is current as compared with the local
-     * file. Returns true if the remote file is up to date.
+     * file. Returns true if the target file is up to date.
+     * @param ftp ftpclient
+     * @param localFile local file
+     * @param remoteFile remote file
+     * @return true if the target file is up to date
+     * @throws IOException  in unknown circumstances
+     * @throws BuildException if the date of the remote files cannot be found and the action is
+     * GET_FILES
      */
     protected boolean isUpToDate(FTPClient ftp, File localFile,
                                  String remoteFile)
@@ -797,17 +827,23 @@ public class FTP
     }
 
 
-    /** Sends a site command to the ftp server  */
+    /**
+    * Sends a site command to the ftp server
+    * @param ftp ftp client
+    * @param theCMD command to execute
+    * @throws IOException  in unknown circumstances
+    * @throws BuildException in unknown circumstances
+    */
     protected void doSiteCommand(FTPClient ftp, String theCMD)
          throws IOException, BuildException {
         boolean rc;
-        String myReply[] = null;
+        String[] myReply = null;
 
         log("Doing Site Command: " + theCMD, Project.MSG_VERBOSE);
 
         rc = ftp.sendSiteCommand(theCMD);
 
-        if (rc == false) {
+        if (!rc) {
             log("Failed to issue Site Command: " + theCMD, Project.MSG_WARN);
         } else {
 
@@ -830,6 +866,13 @@ public class FTP
      * spec - no attempt is made to change directories. It is anticipated that
      * this may eventually cause problems with some FTP servers, but it
      * simplifies the coding.
+     * @param ftp ftp client
+     * @param dir base directory of the file to be sent (local)
+     * @param filename relative path of the file to be send
+     *        locally relative to dir
+     *        remotely relative to the remotedir attribute
+     * @throws IOException  in unknown circumstances
+     * @throws BuildException in unknown circumstances
      */
     protected void sendFile(FTPClient ftp, String dir, String filename)
          throws IOException, BuildException {
@@ -886,7 +929,14 @@ public class FTP
     }
 
 
-    /** Delete a file from the remote host.  */
+    /**
+     * Delete a file from the remote host.
+     * @param ftp ftp client
+     * @param filename file to delete
+     * @throws IOException  in unknown circumstances
+     * @throws BuildException if skipFailedTransfers is set to false
+     * and the deletion could not be done
+     */
     protected void delFile(FTPClient ftp, String filename)
          throws IOException, BuildException {
         if (verbose) {
@@ -909,7 +959,14 @@ public class FTP
         }
     }
 
-    /** Delete a directory, if empty, from the remote host.  */
+    /**
+     * Delete a directory, if empty, from the remote host.
+     * @param ftp ftp client
+     * @param dirname directory to delete
+     * @throws IOException  in unknown circumstances
+     * @throws BuildException if skipFailedTransfers is set to false
+     * and the deletion could not be done
+     */
     protected void rmDir(FTPClient ftp, String dirname)
          throws IOException, BuildException {
         if (verbose) {
@@ -934,13 +991,20 @@ public class FTP
 
 
     /**
-     * Retrieve a single file to the remote host. <code>filename</code> may
+     * Retrieve a single file from the remote host. <code>filename</code> may
      * contain a relative path specification. <p>
      *
      * The file will then be retreived using the entire relative path spec -
      * no attempt is made to change directories. It is anticipated that this
      * may eventually cause problems with some FTP servers, but it simplifies
      * the coding.</p>
+     * @param ftp the ftp client
+     * @param dir local base directory to which the file should go back
+     * @param filename relative path of the file based upon the ftp remote directory
+     *        and/or the local base directory (dir)
+     * @throws IOException  in unknown circumstances
+     * @throws BuildException if skipFailedTransfers is false
+     * and the file cannot be retrieved.
      */
     protected void getFile(FTPClient ftp, String dir, String filename)
          throws IOException, BuildException {
@@ -1011,6 +1075,11 @@ public class FTP
      * spec - no attempt is made to change directories. It is anticipated that
      * this may eventually cause problems with some FTP servers, but it
      * simplifies the coding.</p>
+     * @param ftp ftp client
+     * @param bw buffered writer
+     * @param filename the directory one wants to list
+     * @throws IOException  in unknown circumstances
+     * @throws BuildException in unknown circumstances
      */
     protected void listFile(FTPClient ftp, BufferedWriter bw, String filename)
          throws IOException, BuildException {
@@ -1033,6 +1102,11 @@ public class FTP
      * @param ftp The FTP client connection
      * @param dir The directory to create (format must be correct for host
      *      type)
+     * @throws IOException  in unknown circumstances
+     * @throws BuildException if ignoreNoncriticalErrors has not been set to true
+     *         and a directory could not be created, for instance because it was
+     *         already existing. Precisely, the codes 521, 550 and 553 will trigger
+     *         a BuildException
      */
     protected void makeRemoteDir(FTPClient ftp, String dir)
          throws IOException, BuildException {
@@ -1055,7 +1129,8 @@ public class FTP
                     //  failed because the directory already exists.
                     int rc = ftp.getReplyCode();
                     if (!(ignoreNoncriticalErrors
-                        && (rc == 550 || rc == 553 || rc == 521))) {
+                        && (rc == FTPReply.CODE_550 || rc == FTPReply.CODE_553
+                        || rc == CODE_521))) {
                         throw new BuildException("could not create directory: "
                             + ftp.getReplyString());
                     }
@@ -1085,7 +1160,7 @@ public class FTP
             throws BuildException {
         int rc = ftp.getReplyCode();
         if (!(ignoreNoncriticalErrors
-             && (rc == 550 || rc == 553 || rc == 521))) {
+             && (rc == FTPReply.CODE_550 || rc == FTPReply.CODE_553 || rc == CODE_521))) {
             throw new BuildException("could not create directory: "
                 + ftp.getReplyString());
         }
