@@ -106,7 +106,20 @@ public class DefaultMasterConverter
                 getLogger().debug( message );
             }
 
-            return converter.convert( destination, original, context );
+            final Object object = converter.convert( destination, original, context );
+            if( destination.isInstance( object ) )
+            {
+                return object;
+            }
+            else
+            {
+                final String message =
+                    REZ.getString( "bad-return-type.error",
+                                   name,
+                                   object,
+                                   destination.getName() );
+                throw new ConverterException( message );
+            }
         }
         catch( final TypeException te )
         {
