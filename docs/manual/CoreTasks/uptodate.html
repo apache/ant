@@ -17,8 +17,8 @@ elements. These are <a href="../CoreTypes/fileset.html">FileSet</a>s,
 whereas multiple target files are specified using a nested
 <a href="../CoreTypes/mapper.html"><code>&lt;mapper&gt;</code></a> element.</p>
 <p>By default, the value of the property is set to <code>true</code> if
-the timestamp of the target file(s) is more recent than the timestamp of
-the corresponding source file(s). You can set the value to something other
+the timestamp of the source file(s) is not more recent than the timestamp of
+the corresponding target file(s). You can set the value to something other
 than the default by specifying the <code>value</code> attribute.</p>
 <p>If a <code>&lt;srcfiles&gt;</code> element is used, without also specifying
 a <code>&lt;mapper&gt;</code> element, the default behavior is to use a
@@ -115,7 +115,7 @@ against a single target file:</p>
             targetfile=&quot;${build}/.flagfile&quot;/&gt;
 </pre>
 <p>sets the property <code>isUpToDate</code> to <code>true</code>
-if <code>/usr/local/bin/testit</code> is newer than
+if <code>/usr/local/bin/testit</code> is not newer than
 <code>${build}/.flagfile</code>.</p>
 </p>
   <p>
@@ -141,7 +141,7 @@ if <code>/usr/local/bin/testit</code> is newer than
   </pre>
 
 <hr>
-<p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation.
+<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation.
 All rights Reserved.</p>
 
 </body>
