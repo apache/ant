@@ -142,7 +142,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private static final String XSLP_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XslpLiaison";
 
-    /** Name of the Xalan liaison class */
+    /** Name of the now-deprecated Xalan liaison class */
     private static final String XALAN_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XalanLiaison";
 
@@ -395,11 +395,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             final Class clazz = loadClass(TRAX_LIAISON_CLASS);
             liaison = (XSLTLiaison) clazz.newInstance();
         } else if (proc.equals("xslp")) {
-            log("DEPRECATED - xslp processor is deprecated. Use trax or "
-                + "xalan instead.");
+            log("DEPRECATED - xslp processor is deprecated. Use trax "
+                + "instead.");
             final Class clazz = loadClass(XSLP_LIAISON_CLASS);
             liaison = (XSLTLiaison) clazz.newInstance();
         } else if (proc.equals("xalan")) {
+            log("DEPRECATED - xalan processor is deprecated. Use trax "
+                + "instead.");
             final Class clazz = loadClass(XALAN_LIAISON_CLASS);
             liaison = (XSLTLiaison) clazz.newInstance();
         } else {
