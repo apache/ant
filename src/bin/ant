@@ -5,7 +5,7 @@ if [ -f $HOME/.antrc ] ; then
 fi
 
 # Cygwin support.
-if [ "$OSTYPE" == "cygwin32" ] || [ "$OSTYPE" = "cygwin" ]; then
+if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ]; then
 
   if [ ! "$ANT_HOME" = "" ]; then
     ANT_HOME=`cygpath --path --unix $ANT_HOME`
@@ -47,12 +47,34 @@ fi
 
 # Allow .antrc to specifiy flags to java cmd
 if [ "$JAVACMD" = "" ] ; then 
-  JAVACMD=java
+  JAVACMD=${JAVA_HOME}/bin/java
 fi
 
-LOCALCLASSPATH=`echo $ANT_HOME/lib/*.jar | tr ' ' ':'`
+# add in the dependency .jar files
+DIRLIBS=${ANT_HOME}/lib/*.jar
+for i in ${DIRLIBS}
+do
+    # if the directory is empty, then it will return the input string
+    # this is stupid, so case for it
+    if [ "$i" != "${DIRLIBS}" ] ; then
+        LOCALCLASSPATH=$LOCALCLASSPATH:"$i"
+    fi
+done
+DIRCORELIBS=${ANT_HOME}/lib/core/*.jar
+for i in ${DIRCORELIBS}
+do
+    # if the directory is empty, then it will return the input string
+    # this is stupid, so case for it
+    if [ "$i" != "${DIRCORELIBS}" ] ; then
+        LOCALCLASSPATH=$LOCALCLASSPATH:"$i"
+    fi
+done
 
 if [ "$CLASSPATH" != "" ] ; then
+  # More Cygwin support
+  if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
+  fi
   LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
 fi
 
@@ -81,9 +103,8 @@ if [ "$JIKESPATH" != "" ] ; then
 fi
 
 # More Cygwin support
-if [ "$OSTYPE" == "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
 fi
 
 $JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} $ANT_OPTS org.apache.tools.ant.Main $@
-
