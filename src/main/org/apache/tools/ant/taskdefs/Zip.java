@@ -824,9 +824,11 @@ public class Zip extends MatchingTask {
         if (! skipWriting) {
             ZipEntry ze = new ZipEntry (vPath);
             if (dir != null && dir.exists()) {
-                ze.setTime(dir.lastModified());
+                // ZIPs store time with a granularity of 2 seconds, round up
+                ze.setTime(dir.lastModified() + 1999);
             } else {
-                ze.setTime(System.currentTimeMillis());
+                // ZIPs store time with a granularity of 2 seconds, round up
+                ze.setTime(System.currentTimeMillis() + 1999);
             }
             ze.setSize (0);
             ze.setMethod (ZipEntry.STORED);
@@ -957,7 +959,8 @@ public class Zip extends MatchingTask {
 
         FileInputStream fIn = new FileInputStream(file);
         try {
-            zipFile(fIn, zOut, vPath, file.lastModified(), null, mode);
+            // ZIPs store time with a granularity of 2 seconds, round up
+            zipFile(fIn, zOut, vPath, file.lastModified() + 1999, null, mode);
         } finally {
             fIn.close();
         }
