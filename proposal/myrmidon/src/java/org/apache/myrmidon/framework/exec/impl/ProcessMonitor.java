@@ -10,6 +10,7 @@ package org.apache.myrmidon.framework.exec.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
@@ -59,7 +60,7 @@ class ProcessMonitor
     /**
      * Stream from which to read standard input.
      */
-    private final InputStream m_input;
+    private InputStream m_input;
 
     /**
      * Stream to write standard output to.
@@ -135,6 +136,10 @@ class ProcessMonitor
                 //swallow it
             }
         }
+
+        IOUtil.shutdownStream( m_input );
+        IOUtil.shutdownStream( m_output );
+        IOUtil.shutdownStream( m_error );
     }
 
     /**
@@ -196,6 +201,9 @@ class ProcessMonitor
             //thread being blocked. Probably need to write to
             //stdin in another thread
             //copy( m_input, m_process.getOutputStream() );
+
+            IOUtil.shutdownStream( m_input );
+            m_input = null;
         }
     }
 
