@@ -267,6 +267,15 @@ public abstract class AbstractFileSet extends DataType
     }
 
     /**
+     * Whether default exclusions should be used or not.
+     * @since Ant 1.6.3
+     */
+    public boolean getDefaultexcludes() {
+        return (isReference())
+            ? getRef(getProject()).getDefaultexcludes() : useDefaultExcludes;
+    }
+
+    /**
      * Sets case sensitivity of the file system.
      *
      * @param isCaseSensitive <code>boolean</code>.

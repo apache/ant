@@ -204,6 +204,9 @@ Fixed bugs:
   connetced to, potentially leading to exceptions in commons-net.
   Bugzilla Report 33618.
 
+* <zip>'s defaultexcludes attribute was ignored when an archive was
+  updated.  Bugzilla Report 33412.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
