@@ -110,6 +110,7 @@
       targetType="exe" 
       executable="mcs"
       includedefaultreferences="false"
+      standardlib="true"
       >
       <reference dir="/usr/lib" includes="*.dll"/>
     </csc>
