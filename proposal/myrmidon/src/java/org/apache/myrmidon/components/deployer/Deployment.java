@@ -11,11 +11,14 @@ import java.io.File;
 import java.net.URL;
 import java.net.MalformedURLException;
 import java.io.IOException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.xml.sax.SAXException;
-import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -61,19 +64,27 @@ public class Deployment
     {
         final String systemID = "jar:" + getURL() + "!/" + TSKDEF_FILE;
 
-        final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
-
         try
         {
-            return builder.build( new InputSource( systemID ) ); 
+            final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+            final SAXParser saxParser = saxParserFactory.newSAXParser();
+            final XMLReader parser = saxParser.getXMLReader();
+            //parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
+
+            final SAXConfigurationHandler handler = new SAXConfigurationHandler();
+            parser.setContentHandler( handler );
+            parser.setErrorHandler( handler );
+
+            parser.parse( systemID );
+            return handler.getConfiguration();
         }
         catch( final SAXException se )
         {
             throw new DeploymentException( "Malformed configuration data", se );
         }
-        catch( final ConfigurationException ce )
+        catch( final ParserConfigurationException pce )
         {
-            throw new DeploymentException( "Error building configuration", ce );
+            throw new DeploymentException( "Error configuring parser", pce );
         }
         catch( final IOException ioe )
         {

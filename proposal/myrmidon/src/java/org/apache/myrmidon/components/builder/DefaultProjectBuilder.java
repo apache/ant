@@ -9,10 +9,12 @@ package org.apache.myrmidon.components.builder;
 
 import java.io.File;
 import java.io.IOException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
@@ -21,8 +23,8 @@ import org.apache.myrmidon.components.model.DefaultProject;
 import org.apache.myrmidon.components.model.DefaultTarget;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * Default implementation to construct project from a build file.
@@ -33,13 +35,6 @@ public class DefaultProjectBuilder
     extends AbstractLoggable
     implements ProjectBuilder
 {
-    protected DefaultConfigurationBuilder  m_builder;
-
-    public DefaultProjectBuilder()
-    {
-        m_builder = new DefaultConfigurationBuilder();
-    }
-
     /**
      * build a project from file.
      *
@@ -51,10 +46,35 @@ public class DefaultProjectBuilder
     public Project build( final File projectFile )
         throws Exception
     {
-        final String location = projectFile.getCanonicalFile().toString();
-        final Configuration configuration = (Configuration)m_builder.buildFromFile( location );
-        return build( projectFile, configuration );
+        final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        final SAXParser saxParser = saxParserFactory.newSAXParser();
+        final XMLReader parser = saxParser.getXMLReader();
+        parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
+        parser.setFeature( "http://xml.org/sax/features/namespaces", false );
+        //parser.setFeature( "http://xml.org/sax/features/validation", false );
+
+        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
+        parser.setContentHandler( handler );
+        parser.setErrorHandler( handler );
+
+        final String location = projectFile.toURL().toString();
+        parser.parse( location );
+
+        return build( projectFile, handler.getConfiguration() );
     }
+/*
+    private final void dump( final Configuration configuration )
+        throws Exception
+    {
+        System.out.println( "Configuration: "+ configuration.getName() + "/" + configuration.getLocation() );
+        final Configuration[] children = configuration.getChildren();
+
+        for( int i = 0; i < children.length; i++ )
+        {
+            dump( children[ i ] );
+        }
+    }
+*/
 
     /**
      * build project from configuration.
@@ -66,7 +86,7 @@ public class DefaultProjectBuilder
      * @exception Exception if an error occurs
      * @exception ConfigurationException if an error occurs
      */
-    protected Project build( final File file, final Configuration configuration )
+    protected final Project build( final File file, final Configuration configuration )
         throws Exception
     {
         if( !configuration.getName().equals("project") )

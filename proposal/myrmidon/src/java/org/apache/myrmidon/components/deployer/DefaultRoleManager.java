@@ -10,11 +10,14 @@ package org.apache.myrmidon.components.deployer;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.xml.sax.InputSource;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * Interface to manage roles and mapping to names.
@@ -64,14 +67,21 @@ public class DefaultRoleManager
     public void initialize()
         throws Exception
     {
-        final DefaultConfigurationBuilder builder = new DefaultConfigurationBuilder();
+        final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        final SAXParser saxParser = saxParserFactory.newSAXParser();
+        final XMLReader parser = saxParser.getXMLReader();
+        //parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
+
+        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
+        parser.setContentHandler( handler );
+        parser.setErrorHandler( handler );
 
         final Enumeration enum = getClass().getClassLoader().getResources( ROLE_DESCRIPTOR );
         while( enum.hasMoreElements() )
         {
             final URL url = (URL)enum.nextElement();
-            final Configuration descriptor = builder.build( new InputSource( url.toString() ) );
-            handleDescriptor( descriptor );
+            parser.parse( url.toString() );
+            handleDescriptor( handler.getConfiguration() );
         }
     }
 
