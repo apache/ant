@@ -11,7 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Properties;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
+import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
 
@@ -27,6 +31,9 @@ import org.apache.myrmidon.framework.exec.ExecMetaData;
 public class DefaultCommandLauncher
     implements CommandLauncher
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultCommandLauncher.class );
+
     private static final Method c_execWithCWD;
 
     static
@@ -64,18 +71,41 @@ public class DefaultCommandLauncher
     {
         if( ExecUtil.isCwd( metaData.getWorkingDirectory() ) )
         {
-            final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+            final String[] env = getEnvironmentSpec( metaData );
             return Runtime.getRuntime().exec( metaData.getCommand(), env );
         }
         else if( null == c_execWithCWD )
         {
-            final String message = "Unable to launch native command in a " +
-                "working directory other than \".\"";
+            final String message = REZ.getString( "default.bad-dir.error" );
             throw new ExecException( message );
         }
         else
         {
             return execJava13( metaData );
+        }
+    }
+
+    private String[] getEnvironmentSpec( final ExecMetaData metaData )
+        throws ExecException, IOException
+    {
+        final Properties environment = metaData.getEnvironment();
+        if( 0 == environment.size() )
+        {
+            return null;
+        }
+        else
+        {
+            if( metaData.isEnvironmentAdditive() )
+            {
+                final Properties newEnvironment = new Properties();
+                newEnvironment.putAll( environment );
+                newEnvironment.putAll( Environment.getNativeEnvironment() );
+                return ExecUtil.toNativeEnvironment( newEnvironment );
+            }
+            else
+            {
+                return ExecUtil.toNativeEnvironment( environment );
+            }
         }
     }
 
@@ -87,7 +117,7 @@ public class DefaultCommandLauncher
     private Process execJava13( final ExecMetaData metaData )
         throws IOException, ExecException
     {
-        final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+        final String[] env = getEnvironmentSpec( metaData );
         final Object[] args =
             {metaData.getCommand(),
              env,
