@@ -116,7 +116,7 @@ public class XmlPropertyTest extends BuildFileTest {
     private void doTest(String msg, boolean keepRoot, boolean collapse,
                         boolean semantic, boolean include, boolean localRoot) {
         Enumeration iter =
-            getFiles(new File("src/etc/testcases/taskdefs/xmlproperty/inputs"));
+            getFiles(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/xmlproperty/inputs"));
         while (iter.hasMoreElements()) {
             File inputFile = (File) iter.nextElement();
             // What's the working directory?  If local, then its the

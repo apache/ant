@@ -47,7 +47,7 @@ public class ReplaceRegExpTest extends BuildFileTest {
         Properties original = new Properties();
         FileInputStream propsFile = null;
         try {
-            propsFile = new FileInputStream(PROJECT_PATH + "/replaceregexp.properties");
+            propsFile = new FileInputStream(new File(System.getProperty("root"), PROJECT_PATH + "/replaceregexp.properties"));
             original.load(propsFile);
         } finally {
             if (propsFile != null) {
@@ -62,7 +62,7 @@ public class ReplaceRegExpTest extends BuildFileTest {
 
         Properties after = new Properties();
         try {
-            propsFile = new FileInputStream(PROJECT_PATH + "/test.properties");
+            propsFile = new FileInputStream(new File(System.getProperty("root"), PROJECT_PATH + "/test.properties"));
             after.load(propsFile);
         } finally {
             if (propsFile != null) {
@@ -77,7 +77,7 @@ public class ReplaceRegExpTest extends BuildFileTest {
     // inspired by bug 22541
     public void testDirectoryDateDoesNotChange() {
         executeTarget("touchDirectory");
-        File myFile = new File(PROJECT_PATH + "/" + getProject().getProperty("tmpregexp"));
+        File myFile = new File(System.getProperty("root"), PROJECT_PATH + "/" + getProject().getProperty("tmpregexp"));
         long timeStampBefore = myFile.lastModified();
         executeTarget("testDirectoryDateDoesNotChange");
         long timeStampAfter = myFile.lastModified();
@@ -88,16 +88,16 @@ public class ReplaceRegExpTest extends BuildFileTest {
         executeTarget("testDontAddNewline1");
         assertTrue("Files match",
                    FileUtils.newFileUtils()
-                   .contentEquals(new File(PROJECT_PATH + "/test.properties"),
-                                  new File(PROJECT_PATH + "/replaceregexp2.result.properties")));
+                   .contentEquals(new File(System.getProperty("root"), PROJECT_PATH + "/test.properties"),
+                                  new File(System.getProperty("root"), PROJECT_PATH + "/replaceregexp2.result.properties")));
     }
 
     public void testDontAddNewline2() throws IOException {
         executeTarget("testDontAddNewline2");
         assertTrue("Files match",
                    FileUtils.newFileUtils()
-                   .contentEquals(new File(PROJECT_PATH + "/test.properties"),
-                                  new File(PROJECT_PATH + "/replaceregexp2.result.properties")));
+                   .contentEquals(new File(System.getProperty("root"), PROJECT_PATH + "/test.properties"),
+                                  new File(System.getProperty("root"), PROJECT_PATH + "/replaceregexp2.result.properties")));
     }
 
 }// ReplaceRegExpTest

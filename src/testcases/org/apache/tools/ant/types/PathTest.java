@@ -45,7 +45,7 @@ public class PathTest extends TestCase {
 
     public void setUp() {
         project = new Project();
-        project.setBasedir(".");
+        project.setBasedir(System.getProperty("root"));
     }
 
     // actually tests constructor as well as setPath
@@ -66,7 +66,7 @@ public class PathTest extends TestCase {
     }
 
     public void testRelativePathUnixStyle() {
-        project.setBasedir("src/etc");
+        project.setBasedir(new File(System.getProperty("root"), "src/etc").getAbsolutePath());
         Path p = new Path(project, "..:testcases");
         String[] l = p.list();
         assertEquals("two items, Unix style", 2, l.length);

@@ -16,6 +16,8 @@
  */
 
 package org.apache.tools.ant.taskdefs;
+
+import java.io.File;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -48,8 +50,8 @@ public class TarTest extends BuildFileTest {
 
     public void test5() {
         executeTarget("test5");
-        java.io.File f
-            = new java.io.File("src/etc/testcases/taskdefs/test5.tar");
+        File f
+            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test5.tar");
 
         if (!f.exists()) {
             fail("Tarring a directory failed");
@@ -62,15 +64,15 @@ public class TarTest extends BuildFileTest {
 
     public void test7() {
         executeTarget("test7");
-        java.io.File f1
-            = new java.io.File("src/etc/testcases/taskdefs/test7-prefix");
+        File f1
+            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test7-prefix");
 
         if (!(f1.exists() && f1.isDirectory())) {
             fail("The prefix attribute is not working properly.");
         }
 
-        java.io.File f2
-            = new java.io.File("src/etc/testcases/taskdefs/test7dir");
+        File f2
+            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test7dir");
 
         if (!(f2.exists() && f2.isDirectory())) {
             fail("The prefix attribute is not working properly.");
@@ -79,8 +81,8 @@ public class TarTest extends BuildFileTest {
 
     public void test8() {
         executeTarget("test8");
-        java.io.File f1
-            = new java.io.File("src/etc/testcases/taskdefs/test8.xml");
+        File f1
+            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test8.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }
@@ -92,8 +94,8 @@ public class TarTest extends BuildFileTest {
 
     public void test10() {
         executeTarget("test10");
-        java.io.File f1
-            = new java.io.File("src/etc/testcases/taskdefs/test10.xml");
+        File f1
+            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test10.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }
@@ -101,8 +103,8 @@ public class TarTest extends BuildFileTest {
 
     public void test11() {
         executeTarget("test11");
-        java.io.File f1
-            = new java.io.File("src/etc/testcases/taskdefs/test11.xml");
+        File f1
+            = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/test11.xml");
         if (! f1.exists()) {
             fail("The fullpath attribute or the preserveLeadingSlashes attribute does not work propertly");
         }

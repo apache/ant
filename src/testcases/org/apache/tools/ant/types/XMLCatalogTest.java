@@ -61,7 +61,7 @@ public class XMLCatalogTest extends TestCase {
 
     public void setUp() {
         project = new Project();
-        project.setBasedir(".");
+        project.setBasedir(System.getProperty("root"));
 
         // This causes XMLCatalog to print out detailed logging
         // messages for debugging
@@ -206,7 +206,7 @@ public class XMLCatalogTest extends TestCase {
         ResourceLocation dtd = new ResourceLocation();
         dtd.setPublicId("-//stevo//DTD doc 1.0//EN");
 
-        String sysid = System.getProperty("user.dir") + File.separator + "src/etc/testcases/taskdefs/optional/xml/doc.dtd";
+        String sysid = System.getProperty("root") + File.separator + "src/etc/testcases/taskdefs/optional/xml/doc.dtd";
         dtd.setLocation(sysid);
         catalog.addDTD(dtd);
         File dtdFile = project.resolveFile(sysid);

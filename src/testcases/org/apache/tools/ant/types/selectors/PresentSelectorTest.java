@@ -108,7 +108,7 @@ public class PresentSelectorTest extends BaseSelectorTest {
             assertEquals("TTTTTTTTTTTT", results);
 
             s = (PresentSelector)getInstance();
-            File subdir = new File("src/etc/testcases/taskdefs/expected");
+            File subdir = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/expected");
             s.setTargetdir(subdir);
             m = s.createMapper();
             m.setType(flatten);

@@ -117,7 +117,7 @@ public class PropertyFileTest extends BuildFileTest {
     public void testDirect() throws Exception {
         PropertyFile pf = new PropertyFile();
         pf.setProject(project);
-        pf.setFile(new File(testPropsFilePath));
+        pf.setFile(new File(System.getProperty("root"), testPropsFilePath));
         PropertyFile.Entry entry = pf.createEntry();
 
         entry.setKey("date");
@@ -139,7 +139,7 @@ public class PropertyFileTest extends BuildFileTest {
 
     private Properties getTestProperties() throws Exception {
         Properties testProps = new Properties();
-        FileInputStream propsFile = new FileInputStream(testPropsFilePath);
+        FileInputStream propsFile = new FileInputStream(new File(System.getProperty("root"), testPropsFilePath));
         testProps.load(propsFile);
         propsFile.close();
         return testProps;
@@ -153,7 +153,7 @@ public class PropertyFileTest extends BuildFileTest {
         testProps.put(EMAIL_KEY, EMAIL);
         testProps.put("existing.prop", "37");
 
-        FileOutputStream fos = new FileOutputStream(testPropsFilePath);
+        FileOutputStream fos = new FileOutputStream(new File(System.getProperty("root"), testPropsFilePath));
         testProps.store(fos, "defaults");
         fos.close();
     }
@@ -169,22 +169,22 @@ public class PropertyFileTest extends BuildFileTest {
         buildProps.put(AGE_KEY, NEW_AGE);
         buildProps.put(DATE_KEY, NEW_DATE);
 
-        FileOutputStream fos = new FileOutputStream(buildPropsFilePath);
+        FileOutputStream fos = new FileOutputStream(new File(System.getProperty("root"), buildPropsFilePath));
         buildProps.store(fos, null);
         fos.close();
     }
 
 
     private void destroyTempFiles() {
-        File tempFile = new File(testPropsFilePath);
+        File tempFile = new File(System.getProperty("root"), testPropsFilePath);
         tempFile.delete();
         tempFile = null;
 
-        tempFile = new File(buildPropsFilePath);
+        tempFile = new File(System.getProperty("root"), buildPropsFilePath);
         tempFile.delete();
         tempFile = null;
 
-        tempFile = new File(valueDoesNotGetOverwrittenPropsFilePath);
+        tempFile = new File(System.getProperty("root"), valueDoesNotGetOverwrittenPropsFilePath);
         tempFile.delete();
         tempFile = null;
     }

@@ -342,7 +342,7 @@ public class ExecTaskTest extends BuildFileTest {
         if (project.getProperty("test.can.run") == null) {
             return;
         }
-        myBuild = new MonitoredBuild(new File(BUILD_FILE), "spawn");
+        myBuild = new MonitoredBuild(new File(System.getProperty("root"), BUILD_FILE), "spawn");
         FileUtils fileutils  = FileUtils.newFileUtils();
         logFile = fileutils.createTempFile("spawn","log", project.getBaseDir());
         // this is guaranteed by FileUtils#createTempFile

@@ -31,6 +31,9 @@ import org.apache.tools.ant.util.FileUtils;
  *
  */
 public class InitializeClassTest extends BuildFileTest {
+    
+    private File f1 = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/forkedout");
+    private File f2 = new File(System.getProperty("root"), "src/etc/testcases/taskdefs/unforkedout");
 
     public InitializeClassTest(String name) {
         super(name);
@@ -43,8 +46,6 @@ public class InitializeClassTest extends BuildFileTest {
     public void testAll() throws IOException {
         executeTarget("forked");
         PrintStream ps = System.out;
-        File f1 = new File("src/etc/testcases/taskdefs/forkedout");
-        File f2 = new File("src/etc/testcases/taskdefs/unforkedout");
         PrintStream newps = new PrintStream(new FileOutputStream(f2));
         System.setOut(newps);
         project.executeTarget("unforked");
@@ -55,8 +56,6 @@ public class InitializeClassTest extends BuildFileTest {
     }
 
     public void tearDown() {
-        File f1 = new File("src/etc/testcases/taskdefs/forkedout");
-        File f2 = new File("src/etc/testcases/taskdefs/unforkedout");
         f1.delete();
         f2.delete();
     }

@@ -37,7 +37,7 @@ public class CommandlineJavaTest extends TestCase {
 
     public void setUp() {
         project = new Project();
-        project.setBasedir(".");
+        project.setBasedir(System.getProperty("root"));
         project.setProperty("build.sysclasspath", "ignore");
         cloneVm = System.getProperty("build.clonevm");
         if (cloneVm != null) {

@@ -227,10 +227,11 @@ public class DirectoryScannerTest extends BuildFileTest {
 
     public void testSetFollowLinks() {
         if (supportsSymlinks) {
+            File linkFile = new File(System.getProperty("root"), "src/main/org/apache/tools/ThisIsALink");
             try {
                 // add conditions and more commands as soon as the need arises
                 String[] command = new String[] {
-                    "ln", "-s", "ant", "src/main/org/apache/tools/ThisIsALink"
+                    "ln", "-s", "ant", linkFile.getAbsolutePath()
                 };
                 try {
                     Runtime.getRuntime().exec(command);
@@ -243,7 +244,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                 } catch (InterruptedException ie) {
                 }
 
-                File dir = new File("src/main/org/apache/tools");
+                File dir = new File(System.getProperty("root"), "src/main/org/apache/tools");
                 DirectoryScanner ds = new DirectoryScanner();
 
                 // followLinks should be true by default, but if this ever
@@ -300,9 +301,8 @@ public class DirectoryScannerTest extends BuildFileTest {
                            !haveTaskdefsPackage);
 
             } finally {
-                File f = new File("src/main/org/apache/tools/ThisIsALink");
-                if (!f.delete()) {
-                    throw new RuntimeException("Failed to delete " + f);
+                if (!linkFile.delete()) {
+                    throw new RuntimeException("Failed to delete " + linkFile);
                 }
             }
         }

@@ -39,9 +39,9 @@ public abstract class BaseSelectorTest extends TestCase {
     protected String basedirname = "src/etc/testcases/types";
     protected String beddirname = basedirname + "/selectortest";
     protected String mirrordirname = basedirname + "/selectortest2";
-    protected File basedir = new File(basedirname);
-    protected File beddir = new File(beddirname);
-    protected File mirrordir = new File(mirrordirname);
+    protected File basedir = new File(System.getProperty("root"), basedirname);
+    protected File beddir = new File(System.getProperty("root"), beddirname);
+    protected File mirrordir = new File(System.getProperty("root"), mirrordirname);
     protected String[] filenames = {".","asf-logo.gif.md5","asf-logo.gif.bz2",
             "asf-logo.gif.gz","copy.filterset.filtered","zip/asf-logo.gif.zip",
             "tar/asf-logo.gif.tar","tar/asf-logo-huge.tar.gz",

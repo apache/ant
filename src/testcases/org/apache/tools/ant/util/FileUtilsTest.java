@@ -322,18 +322,18 @@ public class FileUtilsTest extends TestCase {
      * Test contentEquals
      */
     public void testContentEquals() throws IOException {
-        assertTrue("Non existing files", fu.contentEquals(new File("foo"),
-                                                          new File("bar")));
+        assertTrue("Non existing files", fu.contentEquals(new File(System.getProperty("root"), "foo"),
+                                                          new File(System.getProperty("root"), "bar")));
         assertTrue("One exists, the other one doesn\'t",
-                   !fu.contentEquals(new File("foo"), new File("build.xml")));
+                   !fu.contentEquals(new File(System.getProperty("root"), "foo"), new File(System.getProperty("root"), "build.xml")));
         assertTrue("Don\'t compare directories",
-                   !fu.contentEquals(new File("src"), new File("src")));
+                   !fu.contentEquals(new File(System.getProperty("root"), "src"), new File(System.getProperty("root"), "src")));
         assertTrue("File equals itself",
-                   fu.contentEquals(new File("build.xml"),
-                                    new File("build.xml")));
+                   fu.contentEquals(new File(System.getProperty("root"), "build.xml"),
+                                    new File(System.getProperty("root"), "build.xml")));
         assertTrue("Files are different",
-                   !fu.contentEquals(new File("build.xml"),
-                                     new File("docs.xml")));
+                   !fu.contentEquals(new File(System.getProperty("root"), "build.xml"),
+                                     new File(System.getProperty("root"), "docs.xml")));
     }
 
     /**
@@ -409,9 +409,14 @@ public class FileUtilsTest extends TestCase {
             assertEquals("file:///SYS:/foo", fu.toURI("sys:\\foo"));
         }
         assertEquals("file:///" + dosRoot + "foo", fu.toURI("/foo"));
+        /* May fail if the directory ${user.dir}/foo/ exists
+         * (and anyway is the tested behavior actually desirable?):
         assertEquals("file:./foo",  fu.toURI("./foo"));
+         */
         assertEquals("file:///" + dosRoot + "foo", fu.toURI("\\foo"));
+        /* See above:
         assertEquals("file:./foo",  fu.toURI(".\\foo"));
+         */
         assertEquals("file:///" + dosRoot + "foo%20bar", fu.toURI("/foo bar"));
         assertEquals("file:///" + dosRoot + "foo%20bar", fu.toURI("\\foo bar"));
         assertEquals("file:///" + dosRoot + "foo%23bar", fu.toURI("/foo#bar"));

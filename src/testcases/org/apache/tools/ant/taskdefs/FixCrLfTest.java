@@ -42,68 +42,68 @@ public class FixCrLfTest extends BuildFileTest {
 
     public void test1() throws IOException {
         executeTarget("test1");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk1.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk1.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java"));
     }
 
     public void test2() throws IOException {
         executeTarget("test2");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk2.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk2.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk2.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk2.java"));
     }
 
     public void test3() throws IOException {
         executeTarget("test3");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk3.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk3.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk3.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk3.java"));
     }
 
     public void test4() throws IOException {
         executeTarget("test4");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk4.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk4.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk4.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk4.java"));
     }
 
     public void test5() throws IOException {
         executeTarget("test5");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk5.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk5.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk5.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk5.java"));
     }
 
     public void test6() throws IOException {
         executeTarget("test6");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk6.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk6.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk6.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk6.java"));
     }
 
     public void test7() throws IOException {
         executeTarget("test7");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk7.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk7.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk7.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk7.java"));
     }
 
     public void test8() throws IOException {
         executeTarget("test8");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk8.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk8.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk8.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk8.java"));
     }
 
     public void test9() throws IOException {
         executeTarget("test9");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Junk9.java"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk9.java"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Junk9.java"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk9.java"));
     }
 
     public void testMacLines() throws IOException {
         executeTarget("testMacLines");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/Mac2Unix"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/Mac2Unix"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/Mac2Unix"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Mac2Unix"));
     }
 
     public void testNoOverwrite() throws IOException {
         executeTarget("test1");
         File result =
-            new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java");
+            new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java");
         long modTime = result.lastModified();
 
         /*
@@ -125,7 +125,7 @@ public class FixCrLfTest extends BuildFileTest {
 
         executeTarget("test1");
         result =
-            new File("src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java");
+            new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/Junk1.java");
         assertEquals(modTime, result.lastModified());
     }
 
@@ -135,44 +135,44 @@ public class FixCrLfTest extends BuildFileTest {
             return;
         }
         executeTarget("testEncoding");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/input.lf.utf16"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/input.crlf.utf16"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/input.lf.utf16"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/input.crlf.utf16"));
     }
 
     public void testLongLines() throws IOException {
         executeTarget("testLongLines");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/longlines.lf"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/longlines.crlf"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/longlines.lf"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/longlines.crlf"));
     }
 
     public void testCrCrLfSequenceUnix() throws IOException {
         executeTarget("testCrCrLfSequence-unix");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.unix"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.unix"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
     }
 
     public void testCrCrLfSequenceDos() throws IOException {
         executeTarget("testCrCrLfSequence-dos");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.dos"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.dos"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
     }
 
     public void testCrCrLfSequenceMac() throws IOException {
         executeTarget("testCrCrLfSequence-mac");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.mac"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.mac"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
     }
 
     public void testFixlastDos() throws IOException {
         executeTarget("testFixlastDos");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/fixlast.dos"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/fixlast.dos"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
     }
 
     public void testFixlastFalseMac() throws IOException {
         executeTarget("testFixlastFalseMac");
-        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/fixlastfalse.mac"),
-                           new File("src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
+        assertEqualContent(new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/expected/fixlastfalse.mac"),
+                           new File(System.getProperty("root"), "src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
     }
 
     /**

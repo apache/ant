@@ -1467,6 +1467,7 @@
       <sysproperty key="build.tests.value" value="${build.tests.value}"/>
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
+      <sysproperty key="root" file="${basedir}"/>
 
       <formatter type="brief" usefile="false"/>
 
@@ -1622,6 +1623,7 @@
       <sysproperty key="offline" value="${offline}"/>      
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
+      <sysproperty key="root" file="${basedir}"/>
       <classpath refid="tests-classpath"/>
       <formatter type="plain" usefile="false"/>
       <test name="${testcase}"/>

@@ -214,9 +214,10 @@ public abstract class BuildFileTest extends TestCase {
         fullLogBuffer = new StringBuffer();
         project = new Project();
         project.init();
-        project.setUserProperty( "ant.file" , new File(filename).getAbsolutePath() );
+        File antFile = new File(System.getProperty("root"), filename);
+        project.setUserProperty("ant.file" , antFile.getAbsolutePath());
         project.addBuildListener(new AntTestListener(logLevel));
-        ProjectHelper.configureProject(project, new File(filename));
+        ProjectHelper.configureProject(project, antFile);
     }
 
     /**

@@ -25,7 +25,7 @@ import java.io.File;
 
 public class TouchTest extends BuildFileTest {
 
-    private static String touchfile="src/etc/testcases/taskdefs/touchtest";
+    private static String TOUCH_FILE = "src/etc/testcases/taskdefs/touchtest";
 
     public TouchTest(String name) {
         super(name);
@@ -41,9 +41,9 @@ public class TouchTest extends BuildFileTest {
 
     public long getTargetTime() {
 
-        File file = new File(touchfile);
+        File file = new File(System.getProperty("root"), TOUCH_FILE);
         if(!file.exists()) {
-            throw new BuildException("failed to touch file "+touchfile);
+            throw new BuildException("failed to touch file " + file);
         }
         return file.lastModified();
     }

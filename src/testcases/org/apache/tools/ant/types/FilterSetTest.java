@@ -125,8 +125,8 @@ public class FilterSetTest extends BuildFileTest {
     }
 
     private boolean compareFiles(String name1, String name2) {
-        File file1 = new File(name1);
-        File file2 = new File(name2);
+        File file1 = new File(System.getProperty("root"), name1);
+        File file2 = new File(System.getProperty("root"), name2);
 
         try {
             if (!file1.exists() || !file2.exists()) {

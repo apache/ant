@@ -57,7 +57,7 @@ public class ANTLRTest extends BuildFileTest {
 
     public void test3() {
         executeTarget("test3");
-        File outputDirectory = new File(TASKDEFS_DIR + "antlr.tmp");
+        File outputDirectory = new File(System.getProperty("root"), TASKDEFS_DIR + "antlr.tmp");
         String[] calcFiles = outputDirectory.list(new CalcFileFilter());
         assertEquals(5, calcFiles.length);
     }
@@ -101,7 +101,7 @@ public class ANTLRTest extends BuildFileTest {
      */
     public void test10() {
         executeTarget("test10");
-        File outputDirectory = new File(TASKDEFS_DIR + "antlr.tmp");
+        File outputDirectory = new File(System.getProperty("root"), TASKDEFS_DIR + "antlr.tmp");
         String[] calcFiles = outputDirectory.list(new HTMLFilter());
         assertTrue(calcFiles.length > 0);
     }
