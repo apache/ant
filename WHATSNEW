@@ -78,6 +78,8 @@ Fixed bugs:
 
 * checksum fileext property doc wrong. Bugzilla 30787.
 
+* FTP task, getTimeDiff method was returning wrong value. Bugzilla 30595.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
