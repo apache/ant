@@ -123,6 +123,9 @@ public class Cvs extends Task {
      */
     private File dest;
 
+    /** whether or not to append stdout/stderr to existing files */
+    private boolean append = false;
+
     /**
      * the file to direct standard output from the command.
      */
@@ -201,7 +204,7 @@ public class Cvs extends Task {
         else {
             if (output != null) {
                 try {
-                    outputstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
+                    outputstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(output.getPath(), append)));
                 } catch (IOException e) {
                     throw new BuildException(e, location);
                 }
@@ -211,7 +214,7 @@ public class Cvs extends Task {
             }
             if (error != null) {
                 try {
-                    errorstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(error)));
+                    errorstream = new PrintStream(new BufferedOutputStream(new FileOutputStream(error.getPath(), append)));
                 } catch (IOException e) {
                     throw new BuildException(e, location);
                 }
@@ -322,6 +325,10 @@ public class Cvs extends Task {
 
     public void setError(File error) {
         this.error = error;
+    }
+
+    public void setAppend(boolean value){
+        this.append = value;
     }
 
     public void setFailOnError(boolean failOnError) {
