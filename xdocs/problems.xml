@@ -130,16 +130,16 @@ D:\src\java\Unset.java<br></br>
             been fixed. The next step, therefore, may be to try a nightly build
             of Ant to see if the problem has been fixed. Nightly builds for Ant
             are available from the 
-            <a href="http://www.apache.org/dist/jakarta/jakarta-ant/nightly/">
+            <a href="http://cvs.apache.org/builds/jakarta-ant/nightly/">
             Jakarta web site</a>. While Ant nightly builds are typically quite
             stable and are used by
-            <a href="http://www.apache.org/dist/jakarta/gump/latest/">Gump</a>
+            <a href="http://cvs.apache.org/builds/gump/latest/">Gump</a>
             to build many other Jakarta projects, these builds should
             nonetheless be treated as experimental. Note that nightly builds
             do not build many of the optional tasks the come with Ant.
             A snapshot of these optional tasks is occasionally uploaded to
             the nightly download
-            <a href="http://www.apache.org/dist/jakarta/jakarta-ant/nightly/optional/">
+            <a href="http://cvs.apache.org/builds/jakarta-ant/nightly/optional/">
             area</a>. However, even this snapshot does not contain every
             optional task.
         </p>
