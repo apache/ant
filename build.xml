@@ -1516,6 +1516,8 @@
                    unless="beanshell.present"/>
 
           <!-- fail if testcases can be loaded from the system classloader -->
+          <exclude name="${ant.package}/AntClassLoaderDelegationTest.java"
+                   if="tests.are.on.system.classpath"/>
           <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
                    if="tests.are.on.system.classpath"/>
           <exclude name="${optional.package}/sitraka/XMLReportTest.java"
