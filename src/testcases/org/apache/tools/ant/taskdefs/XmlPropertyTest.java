@@ -90,6 +90,8 @@ public class XmlPropertyTest extends BuildFileTest {
         assertEquals("val", 
                      getProject().getProperty("root-tag.inner-tag(someattr)"));
         assertEquals("false", getProject().getProperty("root-tag.a2.a3.a4"));
+        assertEquals("CDATA failed", 
+            "<test>", getProject().getProperty("root-tag.cdatatag"));
     }
 
     public void testNone () {

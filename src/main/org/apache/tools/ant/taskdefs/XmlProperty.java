@@ -450,14 +450,25 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             }
         }
 
+        String nodeText = null;
         if (node.getNodeType() == Node.TEXT_NODE) {
+            // For the text node, add a property.
+            nodeText = getAttributeValue(node);
+        } else if ((node.getNodeType() == Node.ELEMENT_NODE) 
+            && (node.getChildNodes().getLength() == 1)
+            && (node.getFirstChild().getNodeType() == Node.CDATA_SECTION_NODE)) {
+
+            nodeText = node.getFirstChild().getNodeValue();
+        }
+        
+        if (nodeText != null) {
             // If the containing object was a String, then use it as the ID.
             if (semanticAttributes && id == null 
                 && container instanceof String) {
                 id = (String) container;
+                System.out.println("Setting id = " + id);
             }
-            // For the text node, add a property.
-            String nodeText = getAttributeValue(node);
+
             if (nodeText.trim().length() != 0) {
                 addProperty(prefix, nodeText, id);
             }
