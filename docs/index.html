@@ -1439,7 +1439,7 @@ does not exist.</p>
 <h2><a name="cvs">Cvs</a></h2>
 <h3>Description</h3>
 <p>Handles packages/modules retrieved from a 
-<a href="http://www.cyclic.com/">CVS</a> repository.</p>
+<a href="http://www.cvshome.org/">CVS</a> repository.</p>
 <p>When doing automated builds, the <a href="#get">get task</a> should be
 preferred over the <i>checkout</i> command, because of speed.</p>
 <h3>Parameters</h3>
@@ -1510,6 +1510,11 @@ repository pointed to by the cvsRoot attribute, and stores the files in &quot;${
 <pre>  &lt;cvs dest=&quot;${ws.dir}&quot; command=&quot;update&quot; /&gt;</pre>
 <p>updates the package/module that has previously been checked out into
 &quot;${ws.dir}&quot;.</p>
+<pre>  &lt;cvs command=&quot;-q diff -u -N&quot; output="patch.txt"/&gt;</pre>
+<p>silently (-q) creates a file called patch.txt which contains a unified (-u) diff which includes new files added via &quot;cvs add&quot; (-N) and can be used as input to patch.</p>
+<pre>  &lt;cvs command=&quot;update -A -d&quot;/&gt;</pre>
+<p>Updates from the head of repository ignoring sticky bits (-A) and creating any new directories as necessary (-d).</p>
+<p>Note: the text of the command is passed to cvs &quot;as-is&quot; so any cvs options should appear before the command, and any command options should appear after the command as in the diff example above. See <a href="http://www.cvshome.org/docs/manual/index.html">the cvs manual</a> for details, specifically the <a href="http://www.cvshome.org/docs/manual/cvs_16.html">Guide to CVS commands</a></p>
 <hr>
 <h2><a name="delete">Delete</a></h2>
 <h3>Description</h3>
