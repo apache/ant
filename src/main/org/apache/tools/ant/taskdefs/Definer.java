@@ -98,6 +98,34 @@ public abstract class Definer extends Task {
             Project.MSG_WARN);
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public Path getClasspath() {
+        return classpath;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public String getResource() {
+        return resource;
+    }
+
+    public boolean isReverseLoader() {
+        return reverseLoader;
+    }
+
+    public String getLoaderId() {
+        return loaderId;
+    }
+
+    public String getClasspathId() {
+        return classpathId;
+    }
+
     /**
      * Set the classpath to be used when searching for component being defined
      *
@@ -147,7 +175,7 @@ public abstract class Definer extends Task {
 
 
     public void execute() throws BuildException {
-        AntClassLoader al = createLoader();
+        ClassLoader al = createLoader();
 
         if (file == null && resource == null) {
 
@@ -243,7 +271,7 @@ public abstract class Definer extends Task {
     /**
      * create a classloader for this definition
      */
-    private AntClassLoader createLoader() {
+    private ClassLoader createLoader() {
         // magic property
         if (getProject().getProperty(REUSE_LOADER_REF) != null) {
             // Generate the 'reuse' name automatically from the reference.
@@ -259,9 +287,10 @@ public abstract class Definer extends Task {
         if (loaderId != null) {
             Object reusedLoader = getProject().getReference(loaderId);
             if (reusedLoader != null) {
-                if (reusedLoader instanceof AntClassLoader) {
-                    return (AntClassLoader)reusedLoader;
-                }
+                return (ClassLoader)reusedLoader;
+                //if (reusedLoader instanceof AntClassLoader) {
+                //    return (AntClassLoader)reusedLoader;
+                //}
                 // In future the reference object may be the <loader> type
                 // if( reusedLoader instanceof Loader ) {
                 //      return ((Loader)reusedLoader).getLoader(project);
@@ -269,17 +298,30 @@ public abstract class Definer extends Task {
             }
         }
 
-        AntClassLoader al = null;
+        ClassLoader al = null;
+
+        if( classpath ==null ) {
+            // do we need to create another loader ?
+            al=project.getCoreLoader();
+            if( al != null ) {
+                return al;
+            }
+        }
+
         if (classpath != null) {
+            project.log( "Creating new loader for taskdef using " + classpath +
+                    " reverse=" + reverseLoader, Project.MSG_DEBUG );
             al = new AntClassLoader(getProject(), classpath, !reverseLoader);
         } else {
+            // XXX Probably it would be better to reuse getClass().getClassLoader()
+            // I don't think we need a new ( identical ) loader for each task
             al = new AntClassLoader(getProject(), Path.systemClasspath,
-                                    !reverseLoader);
+                    !reverseLoader);
         }
         // need to load Task via system classloader or the new
         // task we want to define will never be a Task but always
         // be wrapped into a TaskAdapter.
-        al.addSystemPackageRoot("org.apache.tools.ant");
+        ((AntClassLoader)al).addSystemPackageRoot("org.apache.tools.ant");
 
 
         // If the loader is new, record it for future uses by other
