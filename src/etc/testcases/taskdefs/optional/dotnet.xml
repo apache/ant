@@ -4,11 +4,11 @@
   <property environment="env"/>
   <property name="build.dir" location="dotnet/build"/>
   <property name="src.dir" location="dotnet"/>
-  
+
   <property name="out.csc" location="${src.dir}/out.cs"/>
   <property name="out.app" location="${build.dir}/out.exe"/>
-  <property name="out.type" value="exe"/>  
-  
+  <property name="out.type" value="exe"/>
+
   <target name="probe_for_apps" >
    <condition property="ilasm.found">
       <or>
@@ -26,15 +26,24 @@
       </or>
     </condition>
    <echo> csc.found=${csc.found}</echo>
-<!--    <condition property="vbc.found">
+   <!-- visual basic compiler -->
+   <condition property="vbc.found">
       <or>
         <available file="vbc"     filepath="${env.PATH}" />
         <available file="vbc.exe" filepath="${env.PATH}" />
         <available file="vbc.exe" filepath="${env.Path}" />
       </or>
-    </condition> 
+    </condition>
    <echo> vbc.found=${vbc.found}</echo>
-   -->
+   <!-- visual J# compiler -->
+   <condition property="jsharp.found">
+      <or>
+        <available file="vjc"     filepath="${env.PATH}" />
+        <available file="vjc.exe" filepath="${env.PATH}" />
+        <available file="vjc.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> jsharp.found=${jsharp.found}</echo>
 
    <!-- Mono C# compiler -->
    <condition property="mcs.found">
@@ -64,7 +73,7 @@
       </or>
     </condition>
    <echo> ildasm.found=${ildasm.found}</echo>
-   
+
    <condition property="dotnetapps.found">
       <or>
         <and>
@@ -88,31 +97,36 @@
    </condition>
    <property name="mono.executable" value="mint"/>
   </target>
-    
+
   <target name="init" depends="probe_for_apps">
     <mkdir dir="${build.dir}"/>
   </target>
 
   <target name="teardown">
     <delete dir="${build.dir}"/>
-  </target>    
-    
+  </target>
+
   <target name="validate_csc" depends="init">
     <fail unless="c#.found">Needed C# compiler is missing</fail>
-  </target>  
-    
+  </target>
+
   <target name="validate_ilasm" depends="init">
     <fail unless="ilasm.found">Needed ilasm is missing</fail>
-  </target>  
-    
+  </target>
+
+  <target name="validate_jsharp" depends="init">
+    <fail unless="jsharp.found">No vjc on the path</fail>
+  </target>
+
+
   <target name="testCSC" depends="testCSC-Mono,testCSC-MS"/>
 
   <target name="testCSC-MS" depends="validate_csc" if="csc.found">
-    <property name="testCSC.exe" 
+    <property name="testCSC.exe"
       location="${build.dir}/ExampleCsc.exe" />
-    <csc 
+    <csc
       destFile="${testCSC.exe}"
-      targetType="exe" 
+      targetType="exe"
       >
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
@@ -122,25 +136,24 @@
   </target>
 
   <target name="testCSC-Mono" depends="validate_csc" if="mcs.found">
-    <property name="testCSC.exe" 
+    <property name="testCSC.exe"
       location="${build.dir}/ExampleCsc.exe" />
-    <csc 
+    <csc
       destFile="${testCSC.exe}"
-      targetType="exe" 
+      targetType="exe"
       executable="mcs"
       includedefaultreferences="false"
-      standardlib="true"
       >
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
     <exec executable="${mono.executable}" failonerror="true">
       <arg value="${testCSC.exe}"/>
-    </exec> 
+    </exec>
     <delete file="${testCSC.exe}"/>
   </target>
 
-  <target name="testCSCintrinsicFileset" 
+  <target name="testCSCintrinsicFileset"
           depends="testCSCintrinsicFileset-MS,testCSCintrinsicFileset-Mono"/>
 
   <target name="testCSCintrinsicFileset-MS" depends="validate_csc" if="csc.found">
@@ -167,14 +180,13 @@
       srcDir="."
       executable="mcs"
       includedefaultreferences="false"
-      standardlib="true"
       >
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
     <exec executable="${mono.executable}" failonerror="true">
       <arg value="${testCSC.exe}"/>
-    </exec> 
+    </exec>
     <delete file="${testCSC.exe}"/>
   </target>
 
@@ -183,7 +195,7 @@
   <target name="testCSCdll-MS" depends="validate_csc" if="csc.found">
     <property name="testCSC.dll"
       location="${build.dir}/Example2.dll" />
-    <csc 
+    <csc
       destFile="${testCSC.dll}"
       targetType="library"
       executable="csc"
@@ -193,33 +205,32 @@
     <available property="dll.created" file="${testCSC.dll}"/>
     <fail unless="dll.created">No file ${testCSC.dll} created</fail>
   </target>
-  
+
   <target name="testCSCdll-Mono" depends="validate_csc" if="mcs.found">
     <property name="testCSC.dll"
       location="${build.dir}/Example2.dll" />
-    <csc 
+    <csc
       destFile="${testCSC.dll}"
       targetType="library"
       executable="mcs"
       includedefaultreferences="false"
-      standardlib="true"
       >
       <src dir="${src.dir}" includes="example2.cs"/>
     </csc>
     <available property="dll.created" file="${testCSC.dll}"/>
     <fail unless="dll.created">No file ${testCSC.dll} created</fail>
   </target>
-  
+
   <target name="testCscReferences"
     depends="testCscReferences-MS,testCscReferences-Mono"/>
 
   <target name="testCscReferences-MS" depends="validate_csc,testCSCdll-MS"
           if="csc.found">
-    <property name="testCscReferences.exe" 
+    <property name="testCscReferences.exe"
       location="${build.dir}/ExampleCsc2.exe" />
-    <csc 
+    <csc
       destFile="${testCscReferences.exe}"
-      targetType="exe" 
+      targetType="exe"
       >
       <src file="${src.dir}/example.cs"/>
       <reference file="${testCSC.dll}" />
@@ -231,17 +242,16 @@
     <fail unless="refapp.created">No app ${testCscReferences.exe} created</fail>
     <exec executable="${testCscReferences.exe}" failonerror="true" />
   </target>
-  
+
   <target name="testCscReferences-Mono" depends="validate_csc,testCSCdll-Mono"
           if="mcs.found">
-    <property name="testCscReferences.exe" 
+    <property name="testCscReferences.exe"
       location="${build.dir}/ExampleCsc2.exe" />
-    <csc 
+    <csc
       destFile="${testCscReferences.exe}"
-      targetType="exe" 
+      targetType="exe"
       executable="mcs"
       includedefaultreferences="false"
-      standardlib="true"
       >
       <src file="${src.dir}/example.cs"/>
       <reference file="${testCSC.dll}" />
@@ -253,13 +263,13 @@
     <fail unless="refapp.created">No app ${testCscReferences.exe} created</fail>
     <exec executable="${mono.executable}" failonerror="true">
       <arg value="${testCscReferences.exe}"/>
-    </exec> 
+    </exec>
   </target>
 
   <target name="testILASM"  depends="validate_ilasm"  if="ilasm.found">
-    <property name="testILASM.exe" 
+    <property name="testILASM.exe"
       location="${build.dir}/ExampleIlasm.exe" />
-    <ilasm 
+    <ilasm
       destFile="${testILASM.exe}"
       targetType="exe"
       >
@@ -268,29 +278,29 @@
     <available property="ilasm.created" file="${testILASM.exe}"/>
     <fail unless="ilasm.created">No app ${testILASM.exe} created</fail>
     <exec executable="${testILASM.exe}" failonerror="true" />
-  </target>  
+  </target>
 
   <!-- not including this in the test as it creates an exe in the src dir -->
-  
+
   <target name="testIlasmNoDestFile"  depends="validate_ilasm">
-    <ilasm 
-      targetType="exe" 
+    <ilasm
+      targetType="exe"
       >
       <src dir="${src.dir}" includes="**/*.il"/>
     </ilasm>
-  </target>    
-  
+  </target>
+
   <!-- just here to look at fileset refid conversion by hand -->
   <target name="echoFileset">
-    <fileset id="ilasm" dir="${src.dir}" includes="**/*.il" /> 
+    <fileset id="ilasm" dir="${src.dir}" includes="**/*.il" />
     <property name="ilasm.string" refid="ilasm"/>
     <echo>${ilasm.string}</echo>
   </target>
-  
+
   <target name="testILDASM"   depends="testILASM" if="ildasm.found">
-    <property name="testILDASM.il" 
+    <property name="testILDASM.il"
       location="${build.dir}/ExampleIldasm.il" />
-    <ildasm 
+    <ildasm
       srcFile="${testILASM.exe}"
       destFile="${testILDASM.il}"
       metadata="true"
@@ -300,15 +310,25 @@
       />
     <available property="ildasm.created" file="${testILDASM.il}"/>
     <fail unless="ildasm.created">No file ${testILDASM.il} created</fail>
-  </target>  
+  </target>
 
   <!-- this is an error -->
   <target name="testILDASM_empty"   depends="validate_ilasm" >
-    <ildasm/> 
-  </target>  
-  <target name="testILDASM_empty"   depends="validate_ilasm" >
-    <ildasm/> 
-  </target>  
-  
+    <ildasm/>
+  </target>
+
+  <target name="jsharp" depends="init" if="jsharp.found" >
+    <property name="jsharp.exe"
+      location="${build.dir}/jsharp.exe" />
+    <jsharpc
+        destFile="${jsharp.exe}"
+        targetType="exe"
+        >
+      <src dir="dotnet" includes="*.java"/>
+    </jsharpc>
+    <exec executable="${jsharp.exe}" failonerror="true" />
+  </target>
+
+
 </project>
 

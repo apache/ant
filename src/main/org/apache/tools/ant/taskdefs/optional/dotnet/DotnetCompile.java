@@ -160,46 +160,6 @@ public abstract class DotnetCompile
 
     protected String executable;
 
-    protected Boolean standardLib;
-
-    /**
-     *  Fix .NET reference inclusion. .NET is really dumb in how it handles
-     *  inclusion. You have to list every 'assembly' -read DLL that is imported.
-     *  So already you are making a platform assumption -shared libraries have a
-     *  .dll;"+ extension and the poor developer has to know every library which
-     *  is included why the compiler cant find classes on the path or in a
-     *  directory, is a mystery. To reduce the need to be explicit, here is a
-     *  long list of the core libraries used in Beta-1 of .NET omitting the
-     *  blatantly non portable (MS.win32.interop) and the .designer libraries.
-     *  (ripping out Com was tempting) Casing is chosen to match that of the
-     *  file system <i>exactly</i> so may work on a unix box too. there is no
-     *  need to reference mscorlib.dll, because it is always there
-     */
-
-    protected static final String[] DEFAULT_REFERENCE_LIST_DOTNET_10 = {"Accessibility.dll",
-            "cscompmgd.dll",
-            "CustomMarshalers.dll",
-            "Mscorcfg.dll",
-            "System.Configuration.Install.dll",
-            "System.Data.dll",
-            "System.Design.dll",
-            "System.DirectoryServices.dll",
-            "System.EnterpriseServices.dll",
-            "System.dll",
-            "System.Drawing.Design.dll",
-            "System.Drawing.dll",
-            "System.Management.dll",
-            "System.Messaging.dll",
-            "System.Runtime.Remoting.dll",
-            "System.Runtime.Serialization.Formatters.Soap.dll",
-            "System.Security.dll",
-            "System.ServiceProcess.dll",
-            "System.Web.dll",
-            "System.Web.RegularExpressions.dll",
-            "System.Web.Services.dll",
-            "System.Windows.Forms.dll",
-            "System.XML.dll"};
-
     protected static final String REFERENCE_OPTION = "/reference:";
 
     /**
@@ -349,22 +309,6 @@ public abstract class DotnetCompile
 
 
     /**
-     *  get default reference list
-     *
-     *@return    null or a string of references.
-     */
-    protected String getDefaultReferenceParameter() {
-        if (includeDefaultReferences) {
-            StringBuffer s = new StringBuffer("/reference:");
-            s.append(getDefaultReferenceList());
-            return new String(s);
-        } else {
-            return null;
-        }
-    }
-
-
-    /**
      * If true, automatically includes the common assemblies
      * in dotnet, and tells the compiler to link in mscore.dll.
      *
@@ -394,11 +338,7 @@ public abstract class DotnetCompile
      *@return    The Parameter to CSC
      */
     protected String getIncludeDefaultReferencesParameter() {
-        if (standardLib == null) {
-            return "/nostdlib" + (includeDefaultReferences ? "-" : "+");
-        } else {
-            return null;
-        }
+        return "/nostdlib" + (includeDefaultReferences ? "-" : "+");
     }
 
 
@@ -827,29 +767,6 @@ public abstract class DotnetCompile
     }
 
     /**
-     * turn standard lib support on or off.
-     * Setting this in either direction overrides anything set in defaultreferences.
-     * @param standardLib
-     */
-    public void setStandardLib(Boolean standardLib) {
-        this.standardLib = standardLib;
-    }
-
-
-    /**
-     *  get the include default references flag or null for no argument needed
-     *
-     *@return    The Parameter to CSC
-     */
-    protected String getStandardLibParameter() {
-        if (standardLib != null) {
-            return "/nostdlib" + (standardLib.booleanValue() ? "-" : "+");
-        } else {
-            return null;
-        }
-    }
-
-    /**
      *  test for a string containing something useful
      *
      *@param  s  string in
@@ -871,20 +788,6 @@ public abstract class DotnetCompile
         if (getExecutable() == null) {
             throw new BuildException("There is no executable defined for this task");
         }
-    }
-
-    /**
-     * Based on DEFAULT_REFERENCE_LIST and getReferenceDelimiter(),
-     * build the appropriate reference string for the compiler.
-     * @return The properly delimited reference list.
-     */
-    public String getDefaultReferenceList() {
-        StringBuffer referenceList = new StringBuffer();
-        for (int index = 0; index < DEFAULT_REFERENCE_LIST_DOTNET_10.length; index++) {
-            referenceList.append(DEFAULT_REFERENCE_LIST_DOTNET_10[index]);
-            referenceList.append(getReferenceDelimiter());
-        }
-        return referenceList.toString();
     }
 
     /**
@@ -941,8 +844,6 @@ public abstract class DotnetCompile
         command.addArgument("/nologo");
         command.addArgument(getAdditionalModulesParameter());
         command.addArgument(getDebugParameter());
-        command.addArgument(getDefaultReferenceParameter());
-        command.addArgument(getStandardLibParameter());
         command.addArgument(getDefinitionsParameter());
         command.addArgument(getExtraOptionsParameter());
         command.addArgument(getMainClassParameter());

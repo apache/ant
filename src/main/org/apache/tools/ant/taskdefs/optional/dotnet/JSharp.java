@@ -136,7 +136,7 @@ public class JSharp extends DotnetCompile {
      */
     protected void addCompilerSpecificOptions(NetCommand command) {
         if (pureJava) {
-            command.addArgument("/x");
+            command.addArgument("/x:all");
         }
         if (secureScoping) {
             command.addArgument("/securescoping");

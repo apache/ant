@@ -151,6 +151,11 @@ public class DotnetTest extends BuildFileTest {
                 "invalid");
     }
 
-
+    /**
+     * test we can handle jsharp (if found)
+     */
+    public void testJsharp() throws Exception {
+        executeTarget("jsharp");
+    }
 }
 
