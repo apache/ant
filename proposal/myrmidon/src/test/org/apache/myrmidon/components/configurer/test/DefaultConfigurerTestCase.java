@@ -317,12 +317,22 @@ public class DefaultConfigurerTestCase
         m_context.setProperty( "prop-a", "some value" );
 
         // Configure the object
-        configure( test, config );
+        try
+        {
+            configure( test, config );
+        }
+        catch( ConfigurationException e )
+        {
+            //Expected to fail as -ref no longer supported
+            //pattern for attributes
+            return;
+        }
 
+        fail( "-ref pattern on attributes no longer supported" );
         // Check the configured object
-        final ConfigTestReferenceAttribute expected = new ConfigTestReferenceAttribute();
-        expected.setSomeProp( "some value" );
-        assertEquals( expected, test );
+        //final ConfigTestReferenceAttribute expected = new ConfigTestReferenceAttribute();
+        //expected.setSomeProp( "some value" );
+        //assertEquals( expected, test );
     }
 
     /**
@@ -398,12 +408,22 @@ public class DefaultConfigurerTestCase
         final ConfigTestReferenceConversion test = new ConfigTestReferenceConversion();
 
         // Configure
-        configure( test, config );
+        try
+        {
+            configure( test, config );
+        }
+        catch( ConfigurationException e )
+        {
+            //Good should no longer work
+            return;
+        }
+
+        fail( "-ref pattern on attributes no longer supported" );
 
         // Check result
-        final ConfigTestReferenceConversion expected = new ConfigTestReferenceConversion();
-        expected.setPropA( new MyRole1Adaptor( refValue ) );
-        assertEquals( expected, test );
+        //final ConfigTestReferenceConversion expected = new ConfigTestReferenceConversion();
+        //expected.setPropA( new MyRole1Adaptor( refValue ) );
+        //assertEquals( expected, test );
     }
 
     /**
@@ -658,20 +678,31 @@ public class DefaultConfigurerTestCase
         m_context.setProperty( "prop-a", "some indirect value" );
 
         // Configure the object
-        configure( test, config );
+        try
+        {
+            configure( test, config );
+        }
+        catch( ConfigurationException e )
+        {
+            return;
+        }
 
+        fail( "-ref pattern on attributes no longer supported" );
         // Check the configured object
-        final ConfigTestIdResolve expected = new ConfigTestIdResolve();
-        expected.setSomeProp( "some indirect value" );
-        assertEquals( expected, test );
+        //final ConfigTestIdResolve expected = new ConfigTestIdResolve();
+        //expected.setSomeProp( "some indirect value" );
+        //assertEquals( expected, test );
     }
 
     /**
      * Tests an unknown reference.
      */
-    public void testUnknownReference()
+    public void __testUnknownReference()
         throws Exception
     {
+        //Should rework
+        fail( "-ref pattern on attributes no longer supported" );
+
         // Setup test data
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setAttribute( "some-prop-ref", "unknown-prop" );
@@ -698,9 +729,12 @@ public class DefaultConfigurerTestCase
     /**
      * Tests handling of mismatched reference type.
      */
-    public void testMismatchedRefType()
+    public void __testMismatchedRefType()
         throws Exception
     {
+        //FIXME: rework testcase
+        fail( "-ref pattern on attributes no longer supported" );
+
         // Setup test data
         final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
         config.setAttribute( "some-prop-ref", "prop-a" );
