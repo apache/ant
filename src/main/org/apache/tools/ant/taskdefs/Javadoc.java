@@ -242,19 +242,12 @@ public class Javadoc extends Task {
         }
     }
 
-    private void add11ArgIf(boolean b, String arg) {
-        if (javadoc1 && b) {
-            cmd.createArgument().setValue(arg);
-        }
-    }
-
     private void add12ArgIf(boolean b, String arg) {
         if (!javadoc1 && b) {
             cmd.createArgument().setValue(arg);
         }
     }
 
-    private boolean foundJavaFile = false;
     private boolean failOnError = false;
     private Path sourcePath = null;
     private File destDir = null;
@@ -267,7 +260,6 @@ public class Javadoc extends Task {
     private Path classpath = null;
     private Path bootclasspath = null;
     private String group = null;
-    private Vector compileList = new Vector(10);
     private String packageList = null;
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
