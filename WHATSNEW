@@ -19,6 +19,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* <translate> was not ignoring comment lines.
+
 * Expand tasks did not behave as expected with PatternSets.
 
 * <property environment=... /> now works on OS/400.

@@ -410,8 +410,7 @@ public class Translate extends MatchingTask {
             String line = null;
             while ((line = in.readLine()) != null) {
                 //So long as the line isn't empty and isn't a comment...
-                if (line.trim().length() > 1 &&
-                   ('#' != line.charAt(0) || '!' != line.charAt(0))) {
+                if (line.trim().length() > 1 && '#' != line.charAt(0) && '!' != line.charAt(0)) {
                     //Legal Key-Value separators are :, = and white space.
                     int sepIndex = line.indexOf('=');
                     if (-1 == sepIndex) {
