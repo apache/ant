@@ -975,78 +975,7 @@
     </checksum>
   </target>
 
-  <target name="rpm_check">
-    <condition property="rpm.present">
-      <or>
-        <available file="/bin/rpm" />
-        <available file="/usr/local/bin/rpm" />
-        <available file="rpm" filepath="${env.PATH}" />
-      </or>
-    </condition>
-  </target>
-
-  <target name="rpm" description="--> Build the RPM files for ant"
-          depends="prepare, rpm_check"
-          if="rpm.present">
-    <tstamp>
-      <format property="rpmyear" pattern="yyyyMMdd"/>
-      <format property="nightlybuild.dir" pattern="yyyy-MM-dd"/>
-    </tstamp>
-    <property name="rpm.release" value="cvs${rpmyear}"/>
-    <property name="rpm.source" value="nightly/${nightlybuild.dir}/"/>
-
-    <mkdir dir="build/rpm/SPECS"/>
-    <mkdir dir="build/rpm/SOURCES"/>
-    <mkdir dir="build/rpm/BUILD"/>
-    <mkdir dir="build/rpm/RPMS"/>
-    <mkdir dir="build/rpm/SRPMS"/>
-
-    <property name="disttar" location="${dist.base}/bin/${dist.name}-bin.tar.gz"/>
-    <copy file="src/etc/ant.spec" tofile="build/rpm/SPECS/ant.spec">
-      <filterchain refid="ant.filters"/>
-      <filterchain>
-        <replacetokens>
-          <token key="RPM_RELEASE" value="${rpm.release}"/>
-          <token key="RPM_SOURCE" value="${rpm.source}"/>
-          <token key="DIST_TAR" value="${disttar}"/>
-        </replacetokens>
-      </filterchain>
-    </copy>
-    <copy file="src/etc/antsrc.spec" tofile="build/rpm/SPECS/antsrc.spec">
-      <filterchain refid="ant.filters"/>
-      <filterchain>
-        <replacetokens>
-          <token key="RPM_RELEASE" value="${rpm.release}"/>
-          <token key="RPM_SOURCE" value="${rpm.source}"/>
-        </replacetokens>
-      </filterchain>
-    </copy>
-    <rpm topDir="build/rpm"
-         specfile="ant.spec"
-         command="-bb"/>
-
-    <copy file="distribution/src/${dist.name}-src.tar.gz" todir="build/rpm/SOURCES"/>
-    <rpm topDir="build/rpm"
-         specfile="antsrc.spec"
-         command="-bs"/>
-
-    <mkdir dir="${dist.base}/rpms"/>
-    <copy todir="${dist.base}/rpms">
-      <fileset dir="build/rpm/RPMS/noarch"/>
-    </copy>
-    <copy todir="${dist.base}/rpms">
-      <fileset dir="build/rpm/SRPMS"/>
-    </copy>
-    <checksum fileext=".md5">
-      <fileset dir="${dist.base}/rpms/">
-        <include name="**/*" />
-        <exclude name="**/*.asc" />
-        <exclude name="**/*.md5" />
-      </fileset>
-    </checksum>
-  </target>
-
-  <target name="distribution" depends="main_distribution, rpm"
+  <target name="distribution" depends="main_distribution"
           description="--> creates the full Apache Ant distribution">
   </target>
 
