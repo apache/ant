@@ -32,6 +32,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+* Shipped XML parser is now Xerces 2.1.0
+
 * <loadproperties> has a new encoding attribute.
 
 * <echoproperties> can now create XML output.
