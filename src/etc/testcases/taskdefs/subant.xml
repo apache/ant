@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<project name="subant-test" basedir="." default="testgenericantfile">
+    <target name="testnodirs" depends="cleanup">
+        <subant genericantfile="subant/genericsubant.xml">
+            <dirset dir="." includes="subant-test*"/>
+        </subant>
+
+    </target>
+    <target name="testgenericantfile">
+        <subant genericantfile="subant/genericsubant.xml">
+            <dirset dir="subant" includes="subant-test*"/>
+        </subant>
+    </target>
+    <target name="testantfile">
+        <subant antfile="mysubant.xml">
+            <dirset dir="." includes="subant/subant-test*"/>
+        </subant>
+
+    </target>
+    <target name="cleanup">
+        <!-- nothing to do -->
+    </target>
+</project>

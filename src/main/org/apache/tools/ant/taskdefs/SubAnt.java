@@ -80,9 +80,25 @@ import org.apache.tools.ant.taskdefs.Property;
  * <p>
  * Calls a given target for all defined sub-builds. This is an extension
  * of ant for bulk project execution.
- *
+ * <p>
+ * <h2> Use with directories </h2>
+ * <p>
+ * subant can be used with directory sets to execute a build from different directories.
+ * 2 different options are offered
+ * </p>
+ * <ul>
+ * <li>
+ * run the same build file /somepath/otherpath/mybuild.xml
+ * with different base directories use the genericantfile attribute
+ * </li>
+ * <li>if you want to run directory1/build.xml, directory2/build.xml, ....
+ * use the antfile attribute. The base directory does not get set by the subant task in this case,
+ * because you can specify it in each build file.
+ * </li>
+ * </ul>
  * @since Ant1.6
  * @author <a href="mailto:ddevienne@lgc.com">Dominique Devienne</a>
+ * @author <A HREF="mailto:andreas.ames@tenovis.com">Andreas Ames</A>
  * @ant.task name="subant" category="control"
  */
 public class SubAnt
@@ -92,14 +108,16 @@ public class SubAnt
 
     private String target = null;
     private String antfile = "build.xml";
+    private File genericantfile = null;
     private boolean inheritAll = false;
     private boolean inheritRefs = false;
     private boolean failOnError = true;
+    private boolean ignoreMissingBuildFile = false;
+    private String output  = null;
 
     private Vector properties = new Vector();
     private Vector references = new Vector();
     private Vector propertySets = new Vector();
-
     /**
      * Runs the various sub-builds.
      */
@@ -122,11 +140,27 @@ public class SubAnt
         }
 */
         for (int i=0; i<count; ++i) {
+            boolean doit=true;
+            File directory=null;
             File file = new File(filenames[i]);
             if (file.isDirectory()) {
-                file = new File(file, antfile);
+                if (genericantfile != null) {
+                    directory = file;
+                    file = genericantfile;
+                }
+                else {
+                    file = new File(file, antfile);
+                    boolean fileFound=file.exists();
+                    if(ignoreMissingBuildFile && !fileFound) {
+                        log("Build file '" + file + "' not found.", Project.MSG_INFO);
+                        doit=false;
+                    }
+
+                }
             }
-            execute(file);
+            if (doit) {
+                execute(file, directory);
+            }
         }
     }
 
@@ -134,12 +168,13 @@ public class SubAnt
      * Runs the given target on the provided build file.
      *
      * @param  file the build file to execute
+     * @param  directory the directory of the current iteration
      * @throws BuildException is the file cannot be found, read, is
      *         a directory, or the target called failed, but only if
      *         <code>failOnError</code> is <code>true</code>. Otherwise,
      *         a warning log message is simply output.
      */
-    private void execute(File file)
+    private void execute(File file, File directory)
                 throws BuildException {
         if (!file.exists() || file.isDirectory() || !file.canRead()) {
             String msg = "Invalid file: "+file;
@@ -150,7 +185,7 @@ public class SubAnt
             return;
         }
 
-        Ant ant = createAntTask();
+        Ant ant = createAntTask(directory);
         String antfilename = null;
         try {
             antfilename = file.getCanonicalPath();
@@ -172,13 +207,25 @@ public class SubAnt
     }
 
     /**
-     * Sets the default build file name to append to directory
-     * names found in the build path -default "build.xml"
+     * Build file name, to use in conjunction with directories.<br/>
+     * Defaults to "build.xml".<br/>
+     * If <code>genericantfile</code> is set, this attribute is ignored.
      *
      * @param  antfile the short build file name. Defaults to "build.xml".
      */
     public void setAntfile(String antfile) {
         this.antfile = antfile;
+    }
+
+    /**
+     * Build file path, to use in conjunction with directories.<br/>
+     * Use <code>genericantfile</code>, in order to run the same build file with different basedirs.<br/>
+     * If this attribute is set, <code>antfile</code> is ignored.
+     *
+     * @param afile (path of the generic ant file, absolute or relative to project base directory)
+     * */
+    public void setGenericAntfile(File afile) {
+        this.genericantfile=afile;
     }
 
     /**
@@ -191,6 +238,16 @@ public class SubAnt
     }
 
     /**
+     * Sets whether to continue or fail with a build exception if the build
+     * file  is missing, false by default.
+     *
+     * @param  ignoreMissingBuildFile the new value for this boolean flag.
+     */
+    public void setIgnoreMissingBuildFile(boolean ignoreMissingBuildFile) {
+        this.ignoreMissingBuildFile = ignoreMissingBuildFile;
+    }
+
+    /**
      * The target to call on the different sub-builds. Set to "" to execute
      * the default target.
      * <p>
@@ -198,6 +255,16 @@ public class SubAnt
     //     REVISIT: Defaults to the target name that contains this task if not specified.
     public void setTarget(String target) {
         this.target = target;
+    }
+
+    /**
+     * Corresponds to <code>&lt;ant&gt;</code>'s
+     * <code>output</code> attribute.
+     *
+     * @param  s the filename to write the output to.
+     */
+    public void setOutput(String s) {
+        this.output = s;
     }
 
     /**
@@ -288,13 +355,13 @@ public class SubAnt
 
     /**
      * Set the buildpath to be used to find sub-projects.
-     * 
+     *
      * @param  s an Ant Path object containing the buildpath.
      */
     public void setBuildpath(Path s) {
         getBuildpath().append(s);
     }
-    
+
     /**
      * Creates a nested build path, and add it to the implicit build path.
      *
@@ -339,26 +406,37 @@ public class SubAnt
     /**
      * Creates the &lt;ant&gt; task configured to run a specific target.
      *
+     * @param directory : if not null the directory where the build should run
+     *
      * @return the ant task, configured with the explicit properties and
      *         references necessary to run the sub-build.
      */
-    private Ant createAntTask() {
+    private Ant createAntTask(File directory) {
         Ant ant = (Ant) getProject().createTask("ant");
         ant.setOwningTarget(getOwningTarget());
         ant.init();
-        if(target.length()>0) {
+        if(target != null && target.length()>0) {
             ant.setTarget(target);
+        }
+
+
+        if (output != null) {
+            ant.setOutput(output);
+        }
+
+        if (directory != null) {
+            ant.setDir(directory);
         }
 
         ant.setInheritAll(inheritAll);
         for (Enumeration i = properties.elements(); i.hasMoreElements();) {
             copyProperty(ant.createProperty(), (Property) i.nextElement());
         }
-        
+
         for (Enumeration i = propertySets.elements(); i.hasMoreElements();) {
             ant.addPropertyset((PropertySet) i.nextElement());
         }
-        
+
         ant.setInheritRefs(inheritRefs);
         for (Enumeration i = references.elements(); i.hasMoreElements();) {
             ant.addReference((Ant.Reference) i.nextElement());

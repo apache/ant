@@ -54,6 +54,31 @@
         Calls a given target for all defined sub-builds. This is an extension
         of ant for bulk project execution.
         </p>
+    <table border="0" cellspacing="0" cellpadding="2" width="100%">
+      <!-- Subsection heading -->
+      <tr><td bgcolor="#828DA6">
+          <font color="#ffffff" face="arial,helvetica.sanserif">
+                              <a name="Use with directories">
+          <strong>Use with directories</strong></a></font>
+      </td></tr>
+      <!-- Subsection body -->
+      <tr><td>
+        <p>
+                subant can be used with directory sets to execute a build from different directories.
+                2 different options are offered :
+            </p>
+<ul>
+                <li>
+                    to run the same build file <code>/somepath/otherpath/mybuild.xml</code>
+                    with different base directories, use the genericantfile attribute
+                </li>
+                <li>if you want to run <code>directory1/mybuild.xml</code>, <code>directory2/mybuild.xml</code>, <code>....</code>,
+                    use the antfile attribute. The subant task does not set the base directory for you in this case.<br/>                    because you can specify it in each build file.
+                </li>
+            </ul>
+
+      </td></tr>
+    </table>
 
       </blockquote></td></tr>
 
@@ -93,12 +118,12 @@
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">antfile</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets the default build file name to append to directory names found in the build path -default "build.xml"</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Build file name, to use in conjunction with directories.<br/> Defaults to "build.xml".<br/> If <code>genericantfile</code> is set, this attribute is ignored.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
         </td>
-        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="7">
+        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="10">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
         </td>
     </tr>
@@ -141,6 +166,30 @@
     <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">genericantfile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Build file path, to use in conjunction with directories.<br/> Use <code>genericantfile</code>, in order to run the same build file with different basedirs.<br/> If this attribute is set, <code>antfile</code> is ignored.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">ignoremissingbuildfile</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets whether to continue or fail with a build exception if the build file is missing, false by default.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">inheritall</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
@@ -160,6 +209,18 @@
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">boolean</font>
+        </td>
+    </tr>
+    <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">output</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Corresponds to <code>&lt;ant&gt;</code>'s <code>output</code> attribute.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
         </td>
     </tr>
     <!-- Attribute -->
@@ -204,7 +265,7 @@
         Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
 <short-description><![CDATA[Adds a directory set to the implicit build path.]]></short-description>
 <description>
-            <![CDATA[Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular o]]><![CDATA[rder, so if order is significant, one should use a file list instead!</em>]]>
+            <![CDATA[Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
           </description>
 
       </blockquote></td></tr>

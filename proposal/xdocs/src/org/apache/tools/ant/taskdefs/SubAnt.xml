@@ -8,7 +8,22 @@
         Calls a given target for all defined sub-builds. This is an extension
         of ant for bulk project execution.
         </p>
-    </description>
+        <subsection name="Use with directories">
+            <p>
+                subant can be used with directory sets to execute a build from different directories.
+                2 different options are offered :
+            </p>
+            <ul>
+                <li>
+                    to run the same build file <code>/somepath/otherpath/mybuild.xml</code>
+                    with different base directories, use the genericantfile attribute
+                </li>
+                <li>if you want to run <code>directory1/mybuild.xml</code>, <code>directory2/mybuild.xml</code>, <code>....</code>,
+                    use the antfile attribute. The subant task does not set the base directory for you in this case.<br/>                    because you can specify it in each build file.
+                </li>
+            </ul>
+        </subsection>
+     </description>
     <section anchor="examples" name="Example">
         <pre>
         &lt;project name="subant" default="subant1"&gt;
@@ -40,6 +55,16 @@
             this snippet build file will run ant in each subdirectory of the project directory,
             where a file called build.xml can be found.
             All properties whose name starts with &quot;foo&quot; are passed, their names are changed to start with &quot;bar&quot; instead
+        </p>
+        <pre>
+          &lt;subant target="compile" genericantfile="/opt/project/build1.xml"&gt;
+             &lt;dirset dir="." includes="projects*"/&gt;
+          &lt;/subant&gt;
+        </pre>
+        <p>
+            assuming the subdirs of the project dir are called projects1, projects2, projects3
+            this snippet will execute the compile target of /opt/project/build1.xml,
+            setting the basedir to projects1, projects2, projects3
         </p>
     </section>
 </external>
