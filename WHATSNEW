@@ -57,12 +57,21 @@ Fixed bugs:
 
 * build.sysclasspath will now be honored by more tasks.
 
+* The signjar keystore attribute has been reverted to a String allowing
+  it to once again accept URLs. This should not affect current FIle based usage
+  unless you are extending the Signjar task.
+
+
 Other changes:
 --------------
 
 * MailLogger now sets the Date header correctly.
 
 * Shipped XML parser is now Xerces 2.2.1
+
+* signjar now accepts a maxmemory attribute to allow the memory allocated to the
+  jarsigner tool to be specified. The jarsigner from the JDK's JAVA_HOME bin
+  dir is now used rather than the first jarsigner on the path.
 
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
@@ -104,14 +113,14 @@ Fixed bugs:
 
 * CvsTagDiff now supports ampersand modules or modules that have a different
   root directory than their name.
-  
+
 * EjbJar threw NPEs for the Websphere element. The property 'websphere.home'
   was not documented.
 
 * Mail example in the documentation was not correct.
 
-* Checksum was broken in the following scenario: 
-  (using verifyproperty OR in a condition) AND using filesets 
+* Checksum was broken in the following scenario:
+  (using verifyproperty OR in a condition) AND using filesets
   with multiple files.
 
 * The ExpandProperties filter threw NPEs when defined using
@@ -152,7 +161,7 @@ Changes from Ant 1.5beta3 to Ant 1.5
 Changes that could break older environments:
 --------------------------------------------
 
-* The filesetmanifest attribute added to <jar> after the 1.4.1 
+* The filesetmanifest attribute added to <jar> after the 1.4.1
   release has been removed for now.  This change may affect only
   the 1.5Beta/1.6Alpha users.  An attempt will be made to add this
   feature back into Ant 1.6.
