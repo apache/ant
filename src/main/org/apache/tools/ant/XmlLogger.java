@@ -54,26 +54,30 @@
 
 package org.apache.tools.ant;
 
-import java.io.*;
-
-
-import java.util.Hashtable;
-import java.util.Stack;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
+import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
-import org.apache.tools.ant.util.DOMElementWriter;
-import org.apache.tools.ant.util.StringUtils;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.Writer;
+import java.util.Hashtable;
+import java.util.Stack;
 
 /**
  * Generates a file in the current directory with
  * an XML description of what happened during a build.
  * The default filename is "log.xml", but this can be overridden
  * with the property <code>XmlLogger.file</code>.
- * 
- * This implementation assumes in its sanity checking that only one 
+ *
+ * This implementation assumes in its sanity checking that only one
  * thread runs a particular target/task at a time. This is enforced
  * by the way that parallel builds and antcalls are done - and
  * indeed all but the simplest of tasks could run into problems
@@ -89,10 +93,10 @@ public class XmlLogger implements BuildLogger {
     /** DocumentBuilder to use when creating the document to start with. */
     private static final DocumentBuilder builder = getDocumentBuilder();
 
-    /** 
+    /**
      * Returns a default DocumentBuilder instance or throws an
      * ExceptionInInitializerError if it can't be created.
-     * 
+     *
      * @return a default DocumentBuilder instance.
      */
     private static DocumentBuilder getDocumentBuilder() {
@@ -130,8 +134,8 @@ public class XmlLogger implements BuildLogger {
     private Hashtable tasks = new Hashtable();
     /** Mapping for when targets started (Task to TimedElement). */
     private Hashtable targets = new Hashtable();
-    /** 
-     * Mapping of threads to stacks of elements 
+    /**
+     * Mapping of threads to stacks of elements
      * (Thread to Stack of TimedElement).
      */
     private Hashtable threadStacks = new Hashtable();
@@ -142,12 +146,12 @@ public class XmlLogger implements BuildLogger {
 
     /** Utility class representing the time an element started. */
     private static class TimedElement {
-        /** 
-         * Start time in milliseconds 
-         * (as returned by <code>System.currentTimeMillis()</code>). 
+        /**
+         * Start time in milliseconds
+         * (as returned by <code>System.currentTimeMillis()</code>).
          */
         private long startTime;
-        /** Element created at the start time. */ 
+        /** Element created at the start time. */
         private Element element;
     }
 
@@ -160,7 +164,7 @@ public class XmlLogger implements BuildLogger {
     /**
      * Fired when the build starts, this builds the top-level element for the
      * document and remembers the time of the start of the build.
-     * 
+     *
      * @param event Ignored.
      */
     public void buildStarted(BuildEvent event) {
@@ -172,18 +176,18 @@ public class XmlLogger implements BuildLogger {
     /**
      * Fired when the build finishes, this adds the time taken and any
      * error stacktrace to the build element and writes the document to disk.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Will not be <code>null</code>.
      */
     public void buildFinished(BuildEvent event) {
         long totalTime = System.currentTimeMillis() - buildElement.startTime;
-        buildElement.element.setAttribute(TIME_ATTR, 
-            DefaultLogger.formatTime(totalTime));
+        buildElement.element.setAttribute(TIME_ATTR,
+                DefaultLogger.formatTime(totalTime));
 
         if (event.getException() != null) {
-            buildElement.element.setAttribute(ERROR_ATTR, 
-                event.getException().toString());
+            buildElement.element.setAttribute(ERROR_ATTR,
+                    event.getException().toString());
             // print the stacktrace in the build file it is always useful...
             // better have too much info than not enough.
             Throwable t = event.getException();
@@ -197,8 +201,8 @@ public class XmlLogger implements BuildLogger {
         if (outFilename == null) {
             outFilename = "log.xml";
         }
-        String xslUri 
-            = event.getProject().getProperty("ant.XmlLogger.stylesheet.uri");
+        String xslUri
+                = event.getProject().getProperty("ant.XmlLogger.stylesheet.uri");
         if (xslUri == null) {
             xslUri = "log.xsl";
         }
@@ -214,27 +218,28 @@ public class XmlLogger implements BuildLogger {
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
             if (xslUri.length() > 0) {
                 out.write("<?xml-stylesheet type=\"text/xsl\" href=\""
-                    + xslUri + "\"?>\n\n");
+                        + xslUri + "\"?>\n\n");
             }
             (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
             out.flush();
         } catch (IOException exc) {
             throw new BuildException("Unable to write log file", exc);
         } finally {
-            if (out != null){
+            if (out != null) {
                 try {
                     out.close();
-                } catch (IOException e){ }
+                } catch (IOException e) {
+                }
             }
         }
         buildElement = null;
     }
 
-    /** 
+    /**
      * Returns the stack of timed elements for the current thread.
      * @return the stack of timed elements for the current thread
      */
-    private Stack getStack() {    
+    private Stack getStack() {
         Stack threadStack = (Stack) threadStacks.get(Thread.currentThread());
         if (threadStack == null) {
             threadStack = new Stack();
@@ -247,7 +252,7 @@ public class XmlLogger implements BuildLogger {
      * Fired when a target starts building, this pushes a timed element
      * for the target onto the stack of elements for the current thread,
      * rememebering the current time and the name of the target.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Will not be <code>null</code>.
      */
@@ -264,7 +269,7 @@ public class XmlLogger implements BuildLogger {
     /**
      * Fired when a target finishes building, this adds the time taken
      * and any error stacktrace to the appropriate target element in the log.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Will not be <code>null</code>.
      */
@@ -272,19 +277,19 @@ public class XmlLogger implements BuildLogger {
         Target target = event.getTarget();
         TimedElement targetElement = (TimedElement) targets.get(target);
         if (targetElement != null) {
-            long totalTime 
-                = System.currentTimeMillis() - targetElement.startTime;
-            targetElement.element.setAttribute(TIME_ATTR, 
-                DefaultLogger.formatTime(totalTime));
+            long totalTime
+                    = System.currentTimeMillis() - targetElement.startTime;
+            targetElement.element.setAttribute(TIME_ATTR,
+                    DefaultLogger.formatTime(totalTime));
 
             TimedElement parentElement = null;
             Stack threadStack = getStack();
             if (!threadStack.empty()) {
                 TimedElement poppedStack = (TimedElement) threadStack.pop();
                 if (poppedStack != targetElement) {
-                    throw new RuntimeException("Mismatch - popped element = " 
-                        + poppedStack.element + " finished target element = " 
-                        + targetElement.element);
+                    throw new RuntimeException("Mismatch - popped element = "
+                            + poppedStack.element + " finished target element = "
+                            + targetElement.element);
                 }
                 if (!threadStack.empty()) {
                     parentElement = (TimedElement) threadStack.peek();
@@ -302,7 +307,7 @@ public class XmlLogger implements BuildLogger {
      * Fired when a task starts building, this pushes a timed element
      * for the task onto the stack of elements for the current thread,
      * rememebering the current time and the name of the task.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Will not be <code>null</code>.
      */
@@ -311,11 +316,11 @@ public class XmlLogger implements BuildLogger {
         TimedElement taskElement = new TimedElement();
         taskElement.startTime = System.currentTimeMillis();
         taskElement.element = doc.createElement(TASK_TAG);
-        
+
         String name = event.getTask().getTaskName();
         taskElement.element.setAttribute(NAME_ATTR, name);
-        taskElement.element.setAttribute(LOCATION_ATTR, 
-            event.getTask().getLocation().toString());
+        taskElement.element.setAttribute(LOCATION_ATTR,
+                event.getTask().getLocation().toString());
         tasks.put(task, taskElement);
         getStack().push(taskElement);
     }
@@ -323,7 +328,7 @@ public class XmlLogger implements BuildLogger {
     /**
      * Fired when a task finishes building, this adds the time taken
      * and any error stacktrace to the appropriate task element in the log.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Will not be <code>null</code>.
      */
@@ -332,8 +337,8 @@ public class XmlLogger implements BuildLogger {
         TimedElement taskElement = (TimedElement) tasks.get(task);
         if (taskElement != null) {
             long totalTime = System.currentTimeMillis() - taskElement.startTime;
-            taskElement.element.setAttribute(TIME_ATTR, 
-                DefaultLogger.formatTime(totalTime));
+            taskElement.element.setAttribute(TIME_ATTR,
+                    DefaultLogger.formatTime(totalTime));
             Target target = task.getOwningTarget();
             TimedElement targetElement = null;
             if (target != null) {
@@ -348,9 +353,9 @@ public class XmlLogger implements BuildLogger {
             if (!threadStack.empty()) {
                 TimedElement poppedStack = (TimedElement) threadStack.pop();
                 if (poppedStack != taskElement) {
-                    throw new RuntimeException("Mismatch - popped element = " 
-                        + poppedStack.element + " finished task element = " 
-                        + taskElement.element);
+                    throw new RuntimeException("Mismatch - popped element = "
+                            + poppedStack.element + " finished task element = "
+                            + taskElement.element);
                 }
             }
         }
@@ -360,7 +365,7 @@ public class XmlLogger implements BuildLogger {
      * Fired when a message is logged, this adds a message element to the
      * most appropriate parent element (task, target or build) and records
      * the priority and text of the message.
-     * 
+     *
      * @param event An event with any relevant extra information.
      *              Will not be <code>null</code>.
      */
@@ -372,11 +377,19 @@ public class XmlLogger implements BuildLogger {
         Element messageElement = doc.createElement(MESSAGE_TAG);
 
         String name = "debug";
-        switch(event.getPriority()) {
-            case Project.MSG_ERR: name = "error"; break;
-            case Project.MSG_WARN: name = "warn"; break;
-            case Project.MSG_INFO: name = "info"; break;
-            default: name = "debug"; break;
+        switch (event.getPriority()) {
+            case Project.MSG_ERR:
+                name = "error";
+                break;
+            case Project.MSG_WARN:
+                name = "warn";
+                break;
+            case Project.MSG_INFO:
+                name = "info";
+                break;
+            default:
+                name = "debug";
+                break;
         }
         messageElement.setAttribute(PRIORITY_ATTR, name);
 
@@ -386,6 +399,7 @@ public class XmlLogger implements BuildLogger {
         TimedElement parentElement = null;
 
         Task task = event.getTask();
+
         Target target = event.getTarget();
         if (task != null) {
             parentElement = (TimedElement) tasks.get(task);
@@ -395,8 +409,8 @@ public class XmlLogger implements BuildLogger {
         }
 
         if (parentElement == null) {
-            Stack threadStack 
-                = (Stack) threadStacks.get(Thread.currentThread());
+            Stack threadStack
+                    = (Stack) threadStacks.get(Thread.currentThread());
             if (threadStack != null) {
                 if (!threadStack.empty()) {
                     parentElement = (TimedElement) threadStack.peek();
@@ -416,7 +430,7 @@ public class XmlLogger implements BuildLogger {
     public void setMessageOutputLevel(int level) {
         msgOutputLevel = level;
     }
-    
+
     public void setOutputPrintStream(PrintStream output) {
         this.outStream = new PrintStream(output, true);
     }
@@ -424,13 +438,15 @@ public class XmlLogger implements BuildLogger {
     /**
      * Ignore emacs mode, as it has no meaning in XML format
      */
-    public void setEmacsMode(boolean emacsMode) {}
+    public void setEmacsMode(boolean emacsMode) {
+    }
 
     /**
      * Ignore error print stream. All output will be written to
      * either the XML log file or the PrintStream provided to
      * setOutputPrintStream
      */
-    public void setErrorPrintStream(PrintStream err) {}
+    public void setErrorPrintStream(PrintStream err) {
+    }
 
 }
