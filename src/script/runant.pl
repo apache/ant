@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/bin/perl
 #######################################################################
 #
 # runant.pl
@@ -44,9 +44,9 @@ my $debug=0;
 
 my $HOME = $ENV{ANT_HOME};
 if ($HOME eq "")
-	{
+        {
     die "\n\nANT_HOME *MUST* be set!\n\n";
-	}
+        }
 
 my $JAVACMD = $ENV{JAVACMD};
 $JAVACMD = "java" if $JAVACMD eq "";
@@ -56,17 +56,17 @@ $JAVACMD = "java" if $JAVACMD eq "";
 #here I assume ":" 'cept on win32 and dos. Add extra tests here as needed.
 my $s=":";
 if(($^O eq "MSWin32") || ($^O eq "dos"))
-	{
-	$s=";";
-	}
+        {
+        $s=";";
+        }
 
 #build up standard classpath
 my $localpath=$ENV{CLASSPATH};
 if ($localpath eq "")
-	{
-	print "warning: no initial classpath\n" if ($debug);
-	$localpath="";
-	}
+        {
+        print "warning: no initial classpath\n" if ($debug);
+        $localpath="";
+        }
 
 #add jar files. I am sure there is a perl one liner to do this.
 my $jarpattern="$HOME/lib/*.jar";
@@ -74,39 +74,39 @@ my @jarfiles =glob($jarpattern);
 print "jarfiles=@jarfiles\n" if ($debug);
 my $jar;
 foreach $jar (@jarfiles )
-	{
-	$localpath.="$s$jar";
-	}
+        {
+        $localpath.="$s$jar";
+        }
 
 #if Java home is defined, look for tools.jar & classes.zip and add to classpath
 my $JAVA_HOME = $ENV{JAVA_HOME};
 if ($JAVA_HOME ne "")
-	{
-	my $tools="$JAVA_HOME/lib/tools.jar";
-	if (-e "$tools")
-		{
-		$localpath .= "$s$tools";
-		}
-	my $classes="$JAVA_HOME/lib/classes.zip";
-	if (-e $classes)
-		{
-		$localpath .= "$s$classes";
-		}
-	}
+        {
+        my $tools="$JAVA_HOME/lib/tools.jar";
+        if (-e "$tools")
+                {
+                $localpath .= "$s$tools";
+                }
+        my $classes="$JAVA_HOME/lib/classes.zip";
+        if (-e $classes)
+                {
+                $localpath .= "$s$classes";
+                }
+        }
 else
-	{
+        {
     print "\n\nWarning: JAVA_HOME environment variable is not set.\n".
-		"If the build fails because sun.* classes could not be found\n".
-		"you will need to set the JAVA_HOME environment variable\n".
-		"to the installation directory of java\n";
-	}
+                "If the build fails because sun.* classes could not be found\n".
+                "you will need to set the JAVA_HOME environment variable\n".
+                "to the installation directory of java\n";
+        }
 
 #jikes
 my @ANT_OPTS=split $ENV{ANT_OPTS};
 if($ENV{JIKESPATH} ne "")
-	{
-	push @ANT_OPTS, "-Djikes.class.path=$ENV{JIKESPATH}";
-	}
+        {
+        push @ANT_OPTS, "-Djikes.class.path=$ENV{JIKESPATH}";
+        }
 
 #construct arguments to java
 
@@ -117,6 +117,15 @@ push @ARGS, "org.apache.tools.ant.Main";
 push @ARGS, @ARGV;
 
 print "\n $JAVACMD @ARGS\n\n" if ($debug);
-system $JAVACMD, @ARGS;
 
-
+my $returnValue = system $JAVACMD, @ARGS;
+if ($returnValue eq 0)
+        {
+        exit 0;
+        }
+else
+        {
+        # only 0 and 1 are widely recognized as exit values
+        # so change the exit value to 1
+        exit 1;
+        }
