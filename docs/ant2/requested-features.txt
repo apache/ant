@@ -136,6 +136,12 @@ decide between several possible options.
   We need to define rules for this to work - maybe the rules proposed
   for the commons project could give us a start.
 
+* It should be possible to modify details of the actual build (e.g. classpath,
+  used compiler) without the need to change the build specification.
+
+  Do build.compiler and build.sysclasspath cover everything or do we
+  need to add more stuff like this?
+
 V. Things we probably don't agree on. 
 ======================================================================
 
@@ -199,4 +205,8 @@ V. Things we probably don't agree on.
 
 * Add an attribute to <ant> to feed back the environment (properties and
   taskdefs) from the child build to the parent.
+
+* it should be possible to provide general /(template?)/ build
+  specifications, and to declare for a concrete item that it should be
+  built according to such a general specification.
 
