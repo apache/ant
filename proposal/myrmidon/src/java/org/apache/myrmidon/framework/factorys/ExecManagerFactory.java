@@ -24,7 +24,7 @@ import org.apache.myrmidon.services.ServiceFactory;
 public class ExecManagerFactory
     implements ServiceFactory
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( ExecManagerFactory.class );
 
     /**
