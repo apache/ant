@@ -38,6 +38,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Ant works properly with the combination of Java1.4/WindowsXP
+
 * Fixed bug where <java> used to sometimes invoke class constructors twice.
 
 * Fixed bug with 4NT shell support
@@ -50,7 +52,7 @@ Fixed bugs:
 
 * <propertyfile> would not close the original property file.
 
-* <ant> will no longer override a subbuilds basedir with inheritall="true". 
+* <ant> will no longer override a subbuild's basedir with inheritall="true". 
 
 * Fixed problem with the built-in <junit> formatters which assumed
   that only one test could be running at the same time - this is not
@@ -73,6 +75,11 @@ Fixed bugs:
 
 Other changes:
 --------------
+* New task <loadfile> to load a whole file into a property
+
+* New task <echoproperties> to list your current properties to the screen
+  or a file. 
+
 * A new combined email task, which replaces the old <mail> and
   <mimemail> tasks, has been added.  The <mimemail> task, and 
   old SendEmail and MimeMail classes have been deprecated.
@@ -117,7 +124,7 @@ Other changes:
 * Added a new condition <isset> that test for the existence of a
   property to the condition task.
 
-* Added a new conditions <checksum>, <http>, <socket>, <contains>.
+* Added new conditions <checksum>, <http>, <socket>, <contains>, <filesmatch>.
 
 * Ant's testcases require JUnit 3.7 or above as they now use the new
   assertTrue method instead of assert.
