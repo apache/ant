@@ -92,7 +92,9 @@ public class TelnetTask extends Task {
        }
 
        /**  Create the telnet client object */
-       AntTelnetClient telnet = new AntTelnetClient();
+       AntTelnetClient telnet = null;
+       try {
+           telnet = new AntTelnetClient();
        try {
            telnet.connect(server, port);
        } catch (IOException e) {
@@ -110,6 +112,16 @@ public class TelnetTask extends Task {
                ((TelnetRead) task).setDefaultTimeout(defaultTimeout);
            }
            task.execute(telnet);
+       }
+       } finally {
+           if (telnet != null) {
+               try {
+                   telnet.disconnect();
+               } catch (IOException e) {
+                   throw new BuildException("Error disconnecting from " 
+                                            + server);
+               }
+           }
        }
     }
 
