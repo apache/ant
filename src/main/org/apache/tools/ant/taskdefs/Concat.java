@@ -355,8 +355,9 @@ public class Concat extends Task {
                     // Make sure input != output.
                     if (destinationFile != null &&
                         destinationFile.getAbsolutePath().equals(input[i])) {
-                        log(destinationFile.getName() + ": input file is " + 
-                            "output file.", Project.MSG_WARN);
+                        throw new BuildException("Input file \"" 
+                            + destinationFile.getName() 
+                            + "\" is the same as the output file.");
                     }
 
                     is = new FileInputStream(input[i]);
