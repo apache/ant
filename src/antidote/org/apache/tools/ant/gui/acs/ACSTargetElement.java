@@ -80,15 +80,6 @@ public class ACSTargetElement extends ACSNamedElement {
     }
 
 	/** 
-	 * Get the display name.
-	 * 
-	 * @return Display name.
-	 */
-    public String getDisplayName() {
-        return getTagName() + ": " + getName();
-    }
-
-	/** 
 	 * Get the set of dependency names. 
 	 * 
 	 * @return Dependency names.

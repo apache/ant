@@ -122,8 +122,7 @@ public class ACSNamedElement extends ACSTreeNodeElement {
 	 * @return Display name.
 	 */
     public String getDisplayName() {
-        return getTagName() + ": " + getName();
+        return getName();
     }
-
 
 }

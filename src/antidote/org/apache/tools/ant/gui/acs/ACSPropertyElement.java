@@ -85,10 +85,10 @@ public class ACSPropertyElement extends ACSTreeNodeElement {
         String file = getFile();
 
         if(file == null || file.trim().length() == 0) {
-            return "property: " + getName();
+            return getName();
         }
         else {
-            return "property file: " + file;
+            return "file: " + file;
         }
     }
 

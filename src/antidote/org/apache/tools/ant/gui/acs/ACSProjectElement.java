@@ -85,15 +85,6 @@ public class ACSProjectElement extends ACSNamedElement {
     }
 
 	/** 
-	 * Get the display name.
-	 * 
-	 * @return Display name.
-	 */
-    public String getDisplayName() {
-        return getTagName() + ": " + getName();
-    }
-
-	/** 
 	 * Get the name of the default target.
 	 * 
 	 * @return Default target name.
