@@ -551,7 +551,7 @@ public class NetRexxC extends MatchingTask {
         try {
             StringWriter out = new StringWriter(); 
             int rc = COM.ibm.netrexx.process.NetRexxC.main(
-               new Rexx(compileArgs), new PrintWriter(out);
+               new Rexx(compileArgs), new PrintWriter(out));
 
             if (rc > 1) { // 1 is warnings from real NetRexxC
                 project.log(out.toString(), Project.MSG_ERR);
