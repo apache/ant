@@ -42,6 +42,8 @@ Other changes:
 * add description attributes to macrodef attributes and elements.
   Bugzilla Report 24711.
 
+* add textname attribute to macrodef.
+
 Changes from Ant 1.6.B3 to Ant 1.6.0
 ====================================
 
