@@ -1,6 +1,12 @@
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 
+Changes that could break older environments:
+--------------------------------------------
+
+* License is now Apache Software License 2.0
+  see http://www.apache.org/licenses/ for more information
+
 Fixed bugs:
 -----------
 
@@ -41,8 +47,6 @@ Other changes:
 * Shipped XML parser is now Xerces-J 2.6.1
 
 * upgrade to xml-apis.jar from Xerces-J 2.6.1.
-
-* License is now Apache Software License 2.0
 
 * <fixcrlf> has a new attribute - fixlast. Bugzilla Report 23262.
 
