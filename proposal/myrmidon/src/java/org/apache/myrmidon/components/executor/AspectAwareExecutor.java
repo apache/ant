@@ -15,6 +15,8 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationSerializer;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.Task;
@@ -127,6 +129,14 @@ public class AspectAwareExecutor
 
         processAttributes( taskModel, newTaskModel, parameterMap );
         processElements( taskModel, newTaskModel, elementMap );
+        try
+        {
+            newTaskModel.setValue( taskModel.getValue() );
+        }
+        catch( final ConfigurationException cee )
+        {
+            //Will never occur
+        }
 
         dispatchAspectsSettings( parameterMap, elementMap );
         checkForUnusedSettings( parameterMap, elementMap );
