@@ -139,6 +139,10 @@ public class Translate extends MatchingTask {
      * Last Modified Timestamp of destination file being used.
      */
     private long destLastModified;
+    /**
+     * Has at least one file from the bundle been loaded?
+     */
+    private boolean loaded = false;
 
     /**
      * Sets Family name of resource bundle
@@ -241,9 +245,21 @@ public class Translate extends MatchingTask {
                                      location);
         }
 
+        if (startToken.length() != 1) {
+            throw new BuildException(
+                "The starttoken attribute must be a single character.",
+                                         location);
+        }
+
         if (endToken == null) {
             throw new BuildException("The endtoken attribute must be set.",
                                      location);
+        }
+
+        if (endToken.length() != 1) {
+            throw new BuildException(
+                "The endtoken attribute must be a single character.",
+                                         location);
         }
 
         if (bundleLanguage == null) {
@@ -311,7 +327,7 @@ public class Translate extends MatchingTask {
      * once this file is located, it is treated just like a properties file
      * but with bundle encoding also considered while loading.
      */
-    public void loadResourceMaps() throws BuildException {
+    private void loadResourceMaps() throws BuildException {
         Locale locale = new Locale(bundleLanguage,
                                    bundleCountry,
                                    bundleVariant);
@@ -366,7 +382,6 @@ public class Translate extends MatchingTask {
      */
     private void processBundle(String bundleFile, int i,
                                  boolean checkLoaded) throws BuildException {
-        boolean loaded = false;
         bundleFile += ".properties";
         FileInputStream ins = null;
         try {
