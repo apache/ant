@@ -615,6 +615,7 @@ public abstract class AbstractCvsTask extends Task {
     /**
      * tag or branch
      * @return tag or branch
+     * @since ant 1.6.1
      */
     public String getTag() {
         return tag;

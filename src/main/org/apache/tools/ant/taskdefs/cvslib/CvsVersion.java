@@ -74,6 +74,7 @@ import java.util.StringTokenizer;
  *
  * @ant.task category="scm"
  * @author Antoine Levy-Lambert
+ * @since ant 1.6.1
  */
 public class CvsVersion extends AbstractCvsTask {
     static final long VERSION_1_11_2 = 11102;
