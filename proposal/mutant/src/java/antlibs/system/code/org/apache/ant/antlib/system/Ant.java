@@ -84,7 +84,7 @@ public class Ant extends AntBase {
      *
      * @param baseDir the base directory for the build
      */
-    public void setBaseDir(File baseDir) {
+    public void setDir(File baseDir) {
         this.baseDir = baseDir;
     }
 
@@ -108,6 +108,9 @@ public class Ant extends AntBase {
         }
         if (antFile == null) {
             antFile = new File(baseDir, "build.ant");
+            if (!antFile.exists()) {
+                antFile = new File(baseDir, "build.xml");
+            }
         }
 
         ComponentService componentService
