@@ -16,22 +16,10 @@ Other changes:
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
 
-* Nested file mappers and a container mapper implementation have been
-  introduced.  Additionally, the <mapper> element now accepts "defined"
-  nested FileNameMapper implementations directly, allowing a usage
-  comparable to those of <condition>, <filter>, and <selector>.
-
-* New <redirector> type introduced to provide extreme I/O flexibility.
-  Initial support for <exec>, <apply>, and <java> tasks.
-
 * Changed default tempdir for <javac> from user.dir to java.io.tmpdir.
 
 * A new base class DispatchTask has been added to facilitate elegant 
   creation of tasks with multiple actions.
-
-* <apply> has a new ignoremissing attribute (default true for BC)
-  which will allow nonexistent files specified via <filelist>s to
-  be passed to the executable.  Bugzilla Report 29585.
 
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =====================================================
@@ -240,6 +228,18 @@ Other changes:
 
 * <loadproperties> supports loading from a resource.
   Bugzilla Report 28340.
+
+* Nested file mappers and a container mapper implementation have been
+  introduced.  Additionally, the <mapper> element now accepts "defined"
+  nested FileNameMapper implementations directly, allowing a usage
+  comparable to those of <condition>, <filter>, and <selector>.
+
+* New <redirector> type introduced to provide extreme I/O flexibility.
+  Initial support for <exec>, <apply>, and <java> tasks.
+
+* <apply> has a new ignoremissing attribute (default true for BC)
+  which will allow nonexistent files specified via <filelist>s to
+  be passed to the executable.  Bugzilla Report 29585.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
