@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,6 +82,14 @@ public abstract class Pack extends Task {
      */
     public void setZipfile(File zipFile) {
         this.zipFile = zipFile;
+    }
+
+    /**
+     * the required destination file.
+     * @param zipFile
+     */
+    public void setDestfile(File zipFile) {
+        setZipfile(zipFile);
     }
 
     /**

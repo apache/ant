@@ -25,20 +25,24 @@ file is newer.</p>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
+    <td valign="top">destfile</td>
+    <td valign="top">the destination file to create.</td>
+    <td align="center" valign="top" rowspan="2">Exactly one of the two.</td>
+  </tr>
+  <tr>
     <td valign="top">zipfile</td>
-    <td valign="top">the destination file.</td>
-    <td align="center" valign="top">Yes</td>
+    <td valign="top">the <i>deprecated</i> old name of destfile.</td>
   </tr>
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p><code>&lt;gzip src=&quot;test.tar&quot; zipfile=&quot;test.tar.gz&quot;/&gt;</code></p>
+  <p><code>&lt;gzip src=&quot;test.tar&quot; destfile=&quot;test.tar.gz&quot;/&gt;</code></p>
 </blockquote>
 <blockquote>
-  <p><code>&lt;bzip2 src=&quot;test.tar&quot; zipfile=&quot;test.tar.bz2&quot;/&gt;</code></p>
+  <p><code>&lt;bzip2 src=&quot;test.tar&quot; destfile=&quot;test.tar.bz2&quot;/&gt;</code></p>
 </blockquote>
 <hr>
-<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

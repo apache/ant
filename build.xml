@@ -1213,9 +1213,9 @@
         <exclude name="${dist.name}/bin/*.py"/>
       </tarfileset>
     </tar>
-    <gzip zipfile="${dist.base}/bin/${dist.name}-bin.tar.gz"
+    <gzip destfile="${dist.base}/bin/${dist.name}-bin.tar.gz"
           src="${dist.base}/bin/${dist.name}-bin.tar"/>
-    <bzip2 zipfile="${dist.base}/bin/${dist.name}-bin.tar.bz2"
+    <bzip2 destfile="${dist.base}/bin/${dist.name}-bin.tar.bz2"
            src="${dist.base}/bin/${dist.name}-bin.tar"/>
     <delete file="${dist.base}/bin/${dist.name}-bin.tar"/>
     <delete dir="${dist.name}"/>
@@ -1253,9 +1253,9 @@
         <exclude name="${dist.name}/build.sh"/>
       </tarfileset>
     </tar>
-    <gzip zipfile="${dist.base}/src/${dist.name}-src.tar.gz"
+    <gzip destfile="${dist.base}/src/${dist.name}-src.tar.gz"
           src="${dist.base}/src/${dist.name}-src.tar"/>
-    <bzip2 zipfile="${dist.base}/src/${dist.name}-src.tar.bz2"
+    <bzip2 destfile="${dist.base}/src/${dist.name}-src.tar.bz2"
            src="${dist.base}/src/${dist.name}-src.tar"/>
     <delete file="${dist.base}/src/${dist.name}-src.tar"/>
     <delete dir="${dist.name}"/>
