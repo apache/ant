@@ -112,7 +112,7 @@ public class ScriptSelector extends BaseSelector {
         runner.addBean("basedir", basedir);
         runner.addBean("filename", filename);
         runner.addBean("file", file);
-        runner.executeScript("<ANT-Selector>");
+        runner.executeScript("ant_selector");
         return isSelected();
     }
 

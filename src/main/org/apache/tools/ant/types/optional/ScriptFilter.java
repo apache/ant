@@ -92,7 +92,7 @@ public class ScriptFilter extends TokenFilter.ChainableReaderFilter {
     public String filter(String token) {
         init();
         setToken(token);
-        runner.executeScript("<ANT-Filter>");
+        runner.executeScript("ant_filter");
         return getToken();
     }
 
