@@ -67,7 +67,7 @@ public class Move extends Copy
                 throw new TaskException( "UNEXPECTED ERROR - The file " + f.getAbsolutePath() + " should not exist!" );
             }
         }
-        log( "Deleting directory " + d.getAbsolutePath(), getVerbosity() );
+        getLogger().debug( "Deleting directory " + d.getAbsolutePath() );
         if( !d.delete() )
         {
             throw new TaskException( "Unable to delete directory " + d.getAbsolutePath() );
@@ -91,15 +91,15 @@ public class Move extends Copy
                 File toDir = (File)getCompleteDirMap().get( fromDir );
                 try
                 {
-                    log( "Attempting to rename dir: " + fromDir +
-                         " to " + toDir, getVerbosity() );
+                    final String message = "Attempting to rename dir: " + fromDir +
+                                             " to " + toDir;
+                    getLogger().debug( message );
                     renameFile( fromDir, toDir, isFiltering(), isForceOverwrite() );
                 }
-                catch( IOException ioe )
+                catch( final IOException ioe )
                 {
-                    String msg = "Failed to rename dir " + fromDir
-                        + " to " + toDir
-                        + " due to " + ioe.getMessage();
+                    final String msg = "Failed to rename dir " + fromDir +
+                        " to " + toDir + " due to " + ioe.getMessage();
                     throw new TaskException( msg, ioe );
                 }
             }
@@ -117,7 +117,7 @@ public class Move extends Copy
 
                 if( fromFile.equals( toFile ) )
                 {
-                    log( "Skipping self-move of " + fromFile, getVerbosity() );
+                    getLogger().debug( "Skipping self-move of " + fromFile );
                     continue;
                 }
 
@@ -130,15 +130,15 @@ public class Move extends Copy
 
                     try
                     {
-                        log( "Attempting to rename: " + fromFile +
-                             " to " + toFile, getVerbosity() );
+                        final String message =
+                            "Attempting to rename: " + fromFile + " to " + toFile;
+                        getLogger().debug( message );
                         moved = renameFile( f, d, isFiltering(), isForceOverwrite() );
                     }
                     catch( IOException ioe )
                     {
-                        String msg = "Failed to rename " + fromFile
-                            + " to " + toFile
-                            + " due to " + ioe.getMessage();
+                        final String msg = "Failed to rename " + fromFile + " to " +
+                            toFile + " due to " + ioe.getMessage();
                         throw new TaskException( msg, ioe );
                     }
 
@@ -146,18 +146,9 @@ public class Move extends Copy
                     {
                         try
                         {
-                            log( "Moving " + fromFile + " to " + toFile, getVerbosity() );
+                            getLogger().debug( "Moving " + fromFile + " to " + toFile );
 
-                            FilterSetCollection executionFilters = new FilterSetCollection();
-                            if( isFiltering() )
-                            {
-                                executionFilters.addFilterSet( getProject().getGlobalFilterSet() );
-                            }
-                            for( Iterator filterEnum = getFilterSets().iterator(); filterEnum.hasNext(); )
-                            {
-                                executionFilters.addFilterSet( (FilterSet)filterEnum.next() );
-                            }
-
+                            final FilterSetCollection executionFilters = getFilters();
                             if( isForceOverwrite() )
                             {
                                 FileUtil.forceDelete( d );
@@ -223,6 +214,21 @@ public class Move extends Copy
                 }
             }
         }
+    }
+
+    private FilterSetCollection getFilters()
+    {
+        final FilterSetCollection executionFilters = new FilterSetCollection();
+        if( isFiltering() )
+        {
+            executionFilters.addFilterSet( getProject().getGlobalFilterSet() );
+        }
+
+        for( Iterator filterEnum = getFilterSets().iterator(); filterEnum.hasNext(); )
+        {
+            executionFilters.addFilterSet( (FilterSet)filterEnum.next() );
+        }
+        return executionFilters;
     }
 
     /**
