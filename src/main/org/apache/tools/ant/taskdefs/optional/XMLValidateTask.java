@@ -567,7 +567,7 @@ public class XMLValidateTask extends Task {
      * The class to create to set a feature of the parser.
      * @since ant1.6
      */
-    public class Attribute {
+    public static class Attribute {
         /** The name of the attribute to set.
          *
          * Valid attributes <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include.</a>
@@ -617,7 +617,7 @@ public class XMLValidateTask extends Task {
      * XML parser properties</a> for usable properties
      * @since ant 1.6.2
      */
-    public final class Property {
+    public static final class Property {
 
         private String name;
         private String value;

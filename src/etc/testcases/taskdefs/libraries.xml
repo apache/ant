@@ -10,8 +10,10 @@
     
     <property name="commons.logging.project" value="commons-logging"/>
     <property name="version" value="1.0.4"/>
+    <property name="commons.logging.filename"
+      value="${commons.logging.project}-${version}.jar"/>
     <property name="commons.logging"
-      value="${commons.logging.project}/jars/${commons.logging.project}-${version}.jar"/>
+      value="${commons.logging.project}/jars/${commons.logging.filename}"/>
 
     <presetdef name="gl1">
       <libraries destDir="${lib.dir}">
@@ -307,5 +309,12 @@
     </gl1>
   </target>
 
+  <target name="testFlatten" depends="init">
+    <getlib flatten="true">
+      <mavenrepository/>
+      <assertdownloaded count="1"/>
+    </getlib>
+    <assert-downloaded library="${commons.logging.filename}"/>
+  </target>
 </project>
 
