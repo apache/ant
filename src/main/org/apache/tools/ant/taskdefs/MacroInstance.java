@@ -90,7 +90,7 @@ public class MacroInstance extends Task implements DynamicConfigurator {
      *
      * @param macroDef a <code>MacroDef</code> value
      */
-    protected void setMacroDef(MacroDef macroDef) {
+    public void setMacroDef(MacroDef macroDef) {
         this.macroDef = macroDef;
     }
 
