@@ -1,9 +1,17 @@
 #!/bin/sh
 
-# Make sure that the classpath & java_home are in Unix format before we use them
-if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
-  CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
-  JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+# OS specific support.  $var _must_ be set to either true or false.
+cygwin=false;
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+esac
+
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin ; then
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+  [ -n "$CLASSPATH" ] &&
+    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
 # You will need to specify JAVA_HOME if compiling with 1.2 or later.
@@ -12,7 +20,7 @@ if [ -n "$JAVA_HOME" ] ; then
   if [ -f "$JAVA_HOME/lib/tools.jar" ] ; then
     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
   fi
- 
+
   if [ -f "$JAVA_HOME/lib/classes.zip" ] ; then
     CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/classes.zip
   fi
@@ -28,7 +36,7 @@ fi
 # JAVA_HOME/sh for javac and rmic
 if [ -z "$JAVAC" ] ; then
   if [ -n "$JAVA_HOME"  ] ; then
-    if [ -x "$JAVA_HOME/sh/javac" ] ; then 
+    if [ -x "$JAVA_HOME/sh/javac" ] ; then
       JAVAC=${JAVA_HOME}/sh/javac;
     else
       JAVAC=${JAVA_HOME}/bin/javac;
@@ -37,9 +45,9 @@ if [ -z "$JAVAC" ] ; then
     JAVAC=javac
   fi
 fi
-if [ -z "$JAVACMD" ] ; then 
+if [ -z "$JAVACMD" ] ; then
   if [ -n "$JAVA_HOME"  ] ; then
-    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then 
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
       JAVACMD=$JAVA_HOME/jre/sh/java
     else
       JAVACMD=$JAVA_HOME/bin/java
@@ -48,7 +56,7 @@ if [ -z "$JAVACMD" ] ; then
     JAVACMD=java
   fi
 fi
- 
+
 if [ ! -x "$JAVACMD" ] ; then
   echo "Error: JAVA_HOME is not defined correctly."
   echo "  We cannot execute $JAVACMD"
@@ -85,9 +93,9 @@ CLASSDIR=build/classes
 
 CLASSPATH=${CLASSDIR}:src/main:${CLASSPATH}
 
-# convert the unix path to windows
-if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
-   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
+# For Cygwin, switch to Windows format before running java
+if $cygwin; then
+  CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
 fi
 
 export CLASSPATH
