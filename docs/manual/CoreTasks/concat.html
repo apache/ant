@@ -124,6 +124,22 @@
           </td>
           <td valign="top" align="center">No</td>
         </tr>
+        <tr>
+          <td valign="top">binary</td>
+          <td valign="top">
+            <em>since ant 1.6.2</em>
+            If this attribute is set to true, the task concatenates the files
+            in a byte by byte fashion. If this attribute is false, concat will
+            not normally work for binary files due to character encoding
+            issues.
+            If this option is set to true, the destfile attribute must be
+            set, and the task cannot used nested text.
+            Also the attributes encoding, outputencoding, filelastline
+            cannot be used.
+            The default is false.
+          </td>
+          <td valign="top" align="center">No</td>
+        </tr>
 
       </table>
 
@@ -262,6 +278,14 @@
            &lt;contains value="project"/&gt;
          &lt;/linecontains&gt;
       &lt;/filterchain&gt;
+   &lt;/concat&gt;
+        </pre>
+
+      <p><b>Concatenate a number of binary files.</b></p>
+        <pre>
+   &lt;concat destfile="${build.dir}/dist.bin" binary="yes"&gt;
+     &lt;fileset file="${src.dir}/scripts/dist.sh"&gt;
+     &lt;fileset file="${build.dir}/dist.tar.bz2"&gt;
    &lt;/concat&gt;
         </pre>
 

@@ -32,6 +32,7 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -90,6 +91,9 @@ public class Concat extends Task {
     /** Stores the output file encoding. */
     private String outputEncoding = null;
 
+    /** Stores the binary attribute */
+    private boolean binary = false;
+    
     // Child elements.
 
     /**
@@ -233,6 +237,7 @@ public class Concat extends Task {
         textBuffer.append(text);
     }
 
+       
     /**
      * Add a header to the concatenated output
      * @param header the header
@@ -292,12 +297,56 @@ public class Concat extends Task {
     }
 
     /**
+     * set the binary attribute.
+     * if true, concat will concatenate the files
+     * byte for byte. This mode does not allow
+     * any filtering, or other modifications
+     * to the input streams.
+     * The default value is false.
+     * @since ant 1.6.2
+     * @param binary if true, enable binary mode
+     */
+    public void setBinary(boolean binary) {
+        this.binary = binary;
+    }
+
+    /**
      * This method performs the concatenation.
      */
     public void execute() {
 
         // treat empty nested text as no text
         sanitizeText();
+
+        // if binary check if incompatible attributes are used
+        if (binary) {
+            if (destinationFile == null) {
+                throw new BuildException(
+                    "DestFile attribute is required for binary concatenation");
+            }
+
+            if (textBuffer != null) {
+                throw new BuildException(
+                    "Nested text is incompatible with binary concatenation");
+            }
+            if (encoding != null || outputEncoding != null) {
+                throw new BuildException(
+                    "Seting input or output encoding is incompatible with binary"
+                    + " concatenation");
+            }
+            if (filterChains != null) {
+                throw new BuildException(
+                    "Setting filters is incompatible with binary concatenation");
+            }
+            if (fixLastLine) {
+                throw new BuildException(
+                    "Setting fixlastline is incompatible with binary concatenation");
+            }
+            if (header != null || footer != null) {
+                throw new BuildException(
+                    "Nested header or footer is incompatible with binary concatenation");
+            }
+        }
 
         if (destinationFile != null && outputWriter != null) {
             throw new BuildException(
@@ -366,7 +415,11 @@ public class Concat extends Task {
             return;
         }
 
-        cat();
+        if (binary) {
+            binaryCat();
+        } else {
+            cat();
+        }
     }
 
     /**
@@ -400,6 +453,75 @@ public class Concat extends Task {
                                          + "is the same as the output file.");
             }
             sourceFiles.addElement(file);
+        }
+    }
+
+    /** perform the binary concatenation */
+    private void binaryCat() {
+        log("Binary concatenation of " + sourceFiles.size()
+            + " files to " + destinationFile);
+        FileOutputStream out = null;
+        FileInputStream in = null;
+        byte[] buffer = new byte[8 * 1024];
+        try {
+            try {
+                out = new FileOutputStream(destinationFile);
+            } catch (Exception t) {
+                throw new BuildException(
+                    "Unable to open " + destinationFile
+                    + " for writing", t);
+            }
+            for (Iterator i = sourceFiles.iterator(); i.hasNext(); ) {
+                File sourceFile = (File) i.next();
+                try {
+                    in = new FileInputStream(sourceFile);
+                } catch (Exception t) {
+                    throw new BuildException(
+                        "Unable to open input file " + sourceFile,
+                        t);
+                }
+                int count = 0;
+                do {
+                    try {
+                        count = in.read(buffer, 0, buffer.length);
+                    } catch (Exception t) {
+                        throw new BuildException(
+                            "Unable to read from " + sourceFile, t);
+                    }
+                    try {
+                        if (count > 0) {
+                            out.write(buffer, 0, count);
+                        }
+                    } catch (Exception t) {
+                        throw new BuildException(
+                            "Unable to write to " + destinationFile, t);
+                    }
+                } while (count > 0);
+
+                try {
+                    in.close();
+                } catch (Exception t) {
+                    throw new BuildException(
+                        "Unable to close " + sourceFile, t);
+                }
+                in = null;
+            }
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Throwable t) {
+                    // Ignore
+                }
+            }
+            if (out != null) {
+                try {
+                    out.close();
+                } catch (Exception ex) {
+                    throw new BuildException(
+                        "Unable to close " + destinationFile, ex);
+                }
+            }
         }
     }
 
