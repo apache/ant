@@ -1211,6 +1211,38 @@
         </table>
       </subsection>
 
+     <subsection name="JWare/AntXtras Foundation">
+
+        <p>A collection of general Ant extension tasks divided into
+        four main categories:</p>
+
+        <ul>
+          <li>Build-Rules(asserts,prefers,etc.),</li>
+          <li>Feedback(log4j,jlog,etc.),</li>
+          <li>Flowcontrol(templates),</li>
+          <li>and Helpers.</li>
+        </ul>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.antxtras.info/">http://www.antxtras.info/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:contact@jware.info">contact@jware.info</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License (LGPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
      <subsection name="Macker">
 
         <p>A build-time architectural testing tool, designed
