@@ -136,25 +136,6 @@ table.details tr td{
 	background:#eeeee0;
 }
 
-table.properties {
-	border-collapse:collapse;
-	border-left:solid 1 #cccccc; border-top:solid 1 #cccccc;
-	padding:5px;
-}
-
-table.properties th {
-  text-align:left;
-	border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc;
-	background-color:#eeeeee;
-}
-
-table.properties td {
-	font:normal;
-	text-align:left;
-	border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc;
-	background-color:#fffffff;
-}
-
 p {
 	line-height:1.5em;
 	margin-top:0.5em; margin-bottom:1.0em;
@@ -183,6 +164,9 @@ h6 {
 .Failure {
 	font-weight:bold; color:purple;
 }
+.Properties {
+  text-align:right;
+}
 </xsl:template>
 
 
@@ -199,10 +183,38 @@ h6 {
 				<xsl:with-param name="package.name" select="$package.name"/>
 			</xsl:call-template>
       <script language="JavaScript">
-        function toggle (field) {
-          field.style.display = (field.style.display == "block") ? "none" : "block";
+        var TestCases = new Array();
+        var cur;
+        <xsl:apply-templates select="properties"/>
+       </script>
+       <script language="JavaScript"><![CDATA[
+        function displayProperties (name) {
+          var win = window.open('','JUnitSystemProperties','scrollbars=1,resizable=1');
+          var doc = win.document.open();
+          doc.write("<html><head><title>Properties of " + name + "</title>");
+          doc.write("<style>")
+          doc.write("body {font:normal 68% verdana,arial,helvetica;	color:#000000; }");
+          doc.write("table tr td, table tr th { font-size: 68%; }");
+          doc.write("table.properties { border-collapse:collapse; border-left:solid 1 #cccccc; border-top:solid 1 #cccccc; padding:5px; }");
+          doc.write("table.properties th { text-align:left; border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc; background-color:#eeeeee; }");
+          doc.write("table.properties td { font:normal; text-align:left; border-right:solid 1 #cccccc; border-bottom:solid 1 #cccccc; background-color:#fffffff; }");
+          doc.write("h3 { margin-bottom: 0.5em; font: bold 115% verdana,arial,helvetica }");
+          doc.write("</style>");
+          doc.write("</head><body>");
+          doc.write("<h3>Properties of " + name + "</h3>");
+          doc.write("<div align=\"right\"><a href=\"javascript:window.close();\">Close</a></div>");
+          doc.write("<table class='properties'>");
+          doc.write("<tr><th>Name</th><th>Value</th></tr>");
+          for (prop in TestCases[name]) {
+            doc.write("<tr><th>" + prop + "</th><td>" + TestCases[name][prop] + "</td></tr>");
+          }
+          doc.write("</table>");
+          doc.write("</body></html>");
+          doc.close();
+          win.focus();
         }
-      </script>			
+      ]]>  
+      </script>
 		</head>
 		<body>
 			<xsl:call-template name="pageHeader"/>	
@@ -228,34 +240,28 @@ h6 {
 				</xsl:if>
 				<xsl:apply-templates select="./testcase" mode="print.test"/>
 			</table>
-			
 			</p>
-			<xsl:apply-templates select="properties"/>
+      <div class="Properties">
+        <a>
+          <xsl:attribute name="href">javascript:displayProperties('<xsl:value-of select="@package"/>.<xsl:value-of select="@name"/>');</xsl:attribute>
+          Properties &gt;&gt;
+        </a>
+      </div>
 		</body>
 	</html>
 </xsl:template>
 
-<!--
- Simple way to display properties, it is not very nice but it does
- the job. Properties are sorted so that they can be found easily.
- This is based on the original idea by Erik Hatcher (erik@hatcher.net)
- -->
-<xsl:template match="properties">
-  <xsl:variable name="id" select="concat(translate(../@package,'.','_'),'_', ../@name)"/>
-  <i><a href="javascript:toggle({$id});">Show/Hide System Properties &gt;&gt;</a></i>
-  <div id="{$id}" style="display:none">
-	  <table class="properties" border="0" cellpadding="5" cellspacing="2" width="95%">
-	    <xsl:for-each select="property">
-      <xsl:sort select="@name"/>
-		  <tr valign="top">
-			  <th><xsl:value-of select="@name"/></th>
-			  <td><xsl:value-of select="@value"/></td>
-		  </tr>			  
-	    </xsl:for-each>
-	  </table>
-  </div>
-  <p/>
-</xsl:template>
+  <!--
+   Write properties into a JavaScript data structure.
+   This is based on the original idea by Erik Hatcher (erik@hatcher.net)
+   -->
+  <xsl:template match="properties">
+    cur = TestCases['<xsl:value-of select="../@package"/>.<xsl:value-of select="../@name"/>'] = new Array();
+  	<xsl:for-each select="property">
+    <xsl:sort select="@name"/>
+        cur['<xsl:value-of select="@name"/>'] = '<xsl:call-template name="JS-escape"><xsl:with-param name="string" select="@value"/></xsl:call-template>';
+  	</xsl:for-each>
+  </xsl:template>
 
 
 <!-- ======================================================================
@@ -642,6 +648,28 @@ h6 {
 	<!-- the latter is better but might be problematic for non-21" monitors... -->
 	<!--pre><xsl:value-of select="."/></pre-->
 </xsl:template>
+
+<xsl:template name="JS-escape">
+	<xsl:param name="string"/>
+	<xsl:choose><!-- something isn't right here, basically all single quotes need to be replaced with backslash-single-quote
+		<xsl:when test="contains($string,'&apos;')">
+			<xsl:value-of select="substring-before($string,'&apos;')"/>
+			\&apos;
+			<xsl:call-template name="JS-escape">
+				<xsl:with-param name="string" select="substring-after($string,'&apos;')"/>
+			</xsl:call-template>
+		</xsl:when> -->
+		<xsl:when test="contains($string,'\')">
+			<xsl:value-of select="substring-before($string,'\')"/>\\<xsl:call-template name="JS-escape">
+				<xsl:with-param name="string" select="substring-after($string,'\')"/>
+			</xsl:call-template>
+		</xsl:when>
+		<xsl:otherwise>
+			<xsl:value-of select="$string"/>
+		</xsl:otherwise>
+	</xsl:choose>
+</xsl:template>
+
 
 <!--
 	template that will convert a carriage return into a br tag
