@@ -55,9 +55,11 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.*;
+import java.util.*;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.util.*;
 import org.apache.tools.tar.*;
+import org.apache.tools.ant.types.*;
 
 /**
  * Creates a TAR archive.
@@ -75,6 +77,16 @@ public class Tar extends MatchingTask {
     File baseDir;
     
     String longFileMode = null;
+    
+    Vector filesets = new Vector();
+    Vector fileSetFiles = new Vector();
+
+    public TarFileSet createFileSet() {
+        TarFileSet fileset = new TarFileSet();
+        filesets.addElement(fileset);
+        return fileset;
+    }
+    
     
     /**
      * This is the name/location of where to create the tar file.
@@ -107,19 +119,32 @@ public class Tar extends MatchingTask {
                                      location);
         }
 
-        if (baseDir == null) {
-            throw new BuildException("basedir attribute must be set!", 
-                                     location);
+        if (baseDir != null) {
+            if (!baseDir.exists()) {
+                throw new BuildException("basedir does not exist!", location);
+            }
+            
+            // add the main fileset to the list of filesets to process.
+            TarFileSet mainFileSet = new TarFileSet(fileset);
+            mainFileSet.setDir(baseDir);
+            mainFileSet.setDefaultexcludes(useDefaultExcludes);
+            filesets.addElement(mainFileSet);
         }
-        if (!baseDir.exists()) {
-            throw new BuildException("basedir does not exist!", location);
+
+        // check if tr is out of date with respect to each
+        // fileset
+        boolean upToDate = true;
+        for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
+            TarFileSet fs = (TarFileSet)e.nextElement();
+            String[] files = fs.getFiles(project);
+            
+            if (!archiveIsUpToDate(files)) {
+                upToDate = false;
+                break;
+            }
         }
 
-        DirectoryScanner ds = super.getDirectoryScanner(baseDir);
-
-        String[] files = ds.getIncludedFiles();
-
-        if (archiveIsUpToDate(files)) {
+        if (upToDate) {
             log("Nothing to do: "+tarFile.getAbsolutePath()+" is up to date.",
                 Project.MSG_INFO);
             return;
@@ -140,11 +165,15 @@ public class Tar extends MatchingTask {
             else if (longFileMode.equalsIgnoreCase(GNU)) {
                 tOut.setLongFileMode(TarOutputStream.LONGFILE_GNU);
             }
-
-            for (int i = 0; i < files.length; i++) {
-                File f = new File(baseDir,files[i]);
-                String name = files[i].replace(File.separatorChar,'/');
-                tarFile(f, tOut, name);
+        
+            for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
+                TarFileSet fs = (TarFileSet)e.nextElement();
+                String[] files = fs.getFiles(project);
+                for (int i = 0; i < files.length; i++) {
+                    File f = new File(baseDir,files[i]);
+                    String name = files[i].replace(File.separatorChar,'/');
+                    tarFile(f, tOut, name, fs);
+                }
             }
         } catch (IOException ioe) {
             String msg = "Problem creating TAR: " + ioe.getMessage();
@@ -160,7 +189,8 @@ public class Tar extends MatchingTask {
         }
     }
 
-    protected void tarFile(File file, TarOutputStream tOut, String vPath)
+    protected void tarFile(File file, TarOutputStream tOut, String vPath,
+                           TarFileSet tarFileSet)
         throws IOException
     {
         FileInputStream fIn = new FileInputStream(file);
@@ -169,6 +199,12 @@ public class Tar extends MatchingTask {
             TarEntry te = new TarEntry(vPath);
             te.setSize(file.length());
             te.setModTime(file.lastModified());
+            if (!file.isDirectory()) {
+                te.setMode(tarFileSet.getMode());
+            }
+            te.setUserName(tarFileSet.getUserName());
+            te.setGroupName(tarFileSet.getGroup());
+            
             tOut.putNextEntry(te);
             
             byte[] buffer = new byte[8 * 1024];
@@ -189,5 +225,57 @@ public class Tar extends MatchingTask {
         MergingMapper mm = new MergingMapper();
         mm.setTo(tarFile.getAbsolutePath());
         return sfs.restrict(files, baseDir, null, mm).length == 0;
+    }
+
+    static public class TarFileSet extends FileSet {
+        private String[] files = null;
+        
+        private int mode = 0100644;
+        
+        private String userName = "";
+        private String groupName = "";
+        
+           
+        public TarFileSet(FileSet fileset) {
+            super(fileset);
+        }
+        
+        public TarFileSet() {
+            super();
+        }
+        
+        public String[] getFiles(Project p) {
+            if (files == null) {
+                DirectoryScanner ds = getDirectoryScanner(p);
+                files = ds.getIncludedFiles();
+            }
+            
+            return files;
+        }
+        
+        public void setMode(String octalString) {
+            this.mode = 0100000 | Integer.parseInt(octalString, 8);
+        }
+            
+        public int getMode() {
+            return mode;
+        }
+        
+        public void setUserName(String userName) {
+            this.userName = userName;
+        }
+        
+        public String getUserName() {
+            return userName;
+        }
+        
+        public void setGroup(String groupName) {
+            this.groupName = groupName;
+        }
+        
+        public String getGroup() {
+            return groupName;
+        }
+        
     }
 }

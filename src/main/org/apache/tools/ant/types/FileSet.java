@@ -85,6 +85,15 @@ public class FileSet extends DataType {
         super();
     }
 
+    protected FileSet(FileSet fileset) {
+        this.dir = fileset.dir;
+        this.defaultPatterns = fileset.defaultPatterns;
+        this.additionalPatterns = fileset.additionalPatterns;
+        this.useDefaultExcludes = fileset.useDefaultExcludes;
+    }
+    
+    
+
     /**
      * Makes this instance in effect a reference to another PatternSet
      * instance.

@@ -68,10 +68,11 @@
   -->
   <property name="dist.name" value="jakarta-${name}-${version}"/>
   <property name="dist.base" value="distribution"/>
+  <property name="defaultdist.dir" value="dist"/>
 
   <target name="setup-distproperties">
 
-    <property name="dist.dir" value="dist"/>
+    <property name="dist.dir" value="${defaultdist.dir}"/>
     <property name="dist.bin" value="${dist.dir}/bin"/>
     <property name="dist.lib" value="${dist.dir}/lib"/>
     <property name="dist.docs" value="${dist.dir}/docs"/>
@@ -397,10 +398,18 @@
          includes="${dist.name}/**"
          excludes="${dist.name}/lib/optional.jar"/>
     <tar longfile="gnu"
-         tarfile="${dist.base}/${dist.name}-bin.tar" 
-         basedir="${dist.name}/.." 
-         includes="${dist.name}/**"
-         excludes="${dist.name}/lib/optional.jar"/>
+         tarfile="${dist.base}/${dist.name}-bin.tar">
+      <fileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
+        <include name="${dist.name}/bin/ant"/>
+        <include name="${dist.name}/bin/antRun"/>
+      </fileset> 
+      <fileset dir="${dist.name}/.." username="ant" group="ant"> 
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/bin/ant"/>
+        <exclude name="${dist.name}/bin/antRun"/>
+        <exclude name="${dist.name}/lib/optional.jar"/>
+      </fileset> 
+    </tar>
     <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
           src="${dist.base}/${dist.name}-bin.tar"/>
     <delete file="${dist.base}/${dist.name}-bin.tar"/>
@@ -415,9 +424,17 @@
          basedir="${dist.name}/.." 
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
-         tarfile="${dist.base}/${dist.name}-src.tar" 
-         basedir="${dist.name}/.." 
-         includes="${dist.name}/**"/>
+         tarfile="${dist.base}/${dist.name}-src.tar" >
+      <fileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
+        <include name="${dist.name}/bootstrap.sh"/>
+        <include name="${dist.name}/build.sh"/>
+      </fileset> 
+      <fileset dir="${dist.name}/.." username="ant" group="ant"> 
+        <include name="${dist.name}/**"/>
+        <exclude name="${dist.name}/bootstrap.sh"/>
+        <exclude name="${dist.name}/build.sh"/>
+      </fileset>
+    </tar> 
     <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
           src="${dist.base}/${dist.name}-src.tar"/>
     <delete file="${dist.base}/${dist.name}-src.tar"/>
@@ -432,6 +449,7 @@
   <target name="clean">
     <delete dir="${build.dir}" />
     <delete dir="${dist.base}" />
+    <delete dir="${defaultdist.dir}" />
     <delete> 
       <fileset dir="." includes="**/*~" defaultexcludes="no"/>
     </delete>

@@ -305,6 +305,14 @@ public class TarEntry implements TarConstants {
     public void setName(String name) {
         this.name = new StringBuffer(name);
     }   
+
+    /**
+     * Set the mode for this entry
+     */
+    public void setMode(int mode) {
+        this.mode = mode;
+    }
+    
         
     /** 
      * Get this entry's user id.
@@ -580,5 +588,5 @@ public class TarEntry implements TarConstants {
         this.devMajor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
         offset += DEVLEN;
         this.devMinor = (int) TarUtils.parseOctal(header, offset, DEVLEN);
-    }        
+    }
 }       
