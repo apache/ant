@@ -49,8 +49,8 @@ import org.apache.tools.ant.util.FileUtils;
  *    &lt;ant antfile=&quot;build.xml&quot; target=&quot;bar&quot; &gt;
  *      &lt;property name=&quot;property1&quot; value=&quot;aaaaa&quot; /&gt;
  *      &lt;property name=&quot;foo&quot; value=&quot;baz&quot; /&gt;
- *    &lt;/ant&gt;</SPAN>
- *  &lt;/target&gt;</SPAN>
+ *    &lt;/ant&gt;</span>
+ *  &lt;/target&gt;</span>
  *
  *  &lt;target name=&quot;bar&quot; depends=&quot;init&quot;&gt;
  *    &lt;echo message=&quot;prop is ${property1} ${foo}&quot; /&gt;
