@@ -333,6 +333,7 @@
     <exclude unless="run.failing.tests" name="${optional.package}/jdepend/JDependTest.java"/>
     <exclude unless="run.failing.tests" name="${optional.package}/DotnetTest.java"/>
     <exclude unless="run.failing.tests" name="${optional.package}/WsdlToDotnetTest.java"/>
+    <exclude unless="run.failing.tests" name="${ant.package}/taskdefs/CloneTest.java"/>
   </patternset>
 
   <!--
