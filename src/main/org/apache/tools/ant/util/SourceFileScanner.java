@@ -121,7 +121,13 @@ public class SourceFileScanner {
                 continue;
             }
 
-            File src = fileUtils.resolveFile(srcDir, files[i]);
+            File src = null;
+            if (srcDir == null) {
+                src = new File(files[i]);
+            } else {
+                src = fileUtils.resolveFile(srcDir, files[i]);
+            }
+
             if (src.lastModified() > now) {
                 task.log("Warning: "+files[i]+" modified in the future.", 
                          Project.MSG_WARN);
