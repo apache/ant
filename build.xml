@@ -366,5 +366,169 @@
     </junit>
   </target>
 
+  <!-- =================================================================== -->
+  <!-- Targets to build distributions, probaly not that useful for         -->
+  <!-- anybody but the people doing Ant releases.                          -->
+  <!-- =================================================================== -->
+
+  <property name="JAXP_HOME" value="/usr/local/java/lib/jaxp1.0.1" />
+  <property name="ant.srcdist.dir" value="../dist/jakarta-ant-src"/>
+
+  <target name="srcbuild">
+     <mkdir dir="${ant.srcdist.dir}" />
+     <mkdir dir="${ant.srcdist.dir}/lib" />
+
+     <copy todir="${ant.srcdist.dir}">
+       <fileset dir=".">
+         <exclude name="bin/**" />
+         <exclude name="lib/**" />
+       </fileset>
+     </copy>
+
+     <fixcrlf srcdir="${ant.srcdist.dir}" includes="ant,antRun" cr="remove"/>
+     <fixcrlf srcdir="${ant.srcdist.dir}" includes="*.bat" cr="add"/>
+     <chmod perm="+x">
+       <fileset dir="${ant.srcdist.dir}">
+         <patternset refid="chmod.patterns"/>
+       </fileset>
+     </chmod>
+
+     <copy todir="${ant.srcdist.dir}/lib">
+       <fileset dir="${JAXP_HOME}">
+         <include name="**/*.jar" />
+       </fileset>
+     </copy>
+  </target>
+  
+  <target name="src.zip" depends="srcbuild">
+    <zip zipfile="${ant.srcdist.dir}/../jakarta-ant-src.zip" 
+         basedir="${ant.srcdist.dir}" />
+  </target>
+
+  <target name="src.tgz" depends="srcbuild">
+    <property name="src.tar" 
+              value="${ant.srcdist.dir}/../jakarta-ant-src.tar" />
+    <tar tarfile="${src.tar}" basedir="${ant.srcdist.dir}" />
+    <gzip src="${src.tar}" zipfile="${src.tar}.gz" />
+    <delete file="${src.tar}" />
+  </target>
+
+  <target name="srcdist" description="Creates the source distribution"
+          depends="src.zip,src.tgz" />
+
+  <property name="ant.bindist.dir" value="../dist/jakarta-ant-bin"/>
+
+  <target name="binbuild" depends="compile">
+
+    <!-- ugly hack to build a binary distribution without optional tasks -->
+    <delete>
+      <fileset dir="${build.classes}">
+        <include name="**/Script.java" />
+        <include name="**/NetRexxC.java" />
+        <include name="**/XslpLiaison.java" />
+        <include name="**/XalanLiaison.java" />
+        <include name="**/Ejbc*.java" />
+        <include name="**/DDCreator*.java" />
+        <include name="**/WLRun.java" />
+        <include name="**/WLStop.java" />
+        <include name="**/junit/*" />
+        <include name="**/FTP*.java" />
+        <include name="**/AntStarTeam*.java" />
+      </fileset>
+    </delete>
+
+    <mkdir dir="${ant.bindist.dir}"/>
+    <mkdir dir="${ant.bindist.dir}/bin"/>
+    <mkdir dir="${ant.bindist.dir}/lib"/>
+    <mkdir dir="${ant.bindist.dir}/docs/api"/>
+
+    <jar jarfile="${ant.bindist.dir}/lib/${name}.jar"
+         basedir="${build.classes}"
+         includes="org/**"
+         manifest="${manifest}"
+    />
+
+    <copy todir="${ant.bindist.dir}/docs">
+      <fileset dir="${docs.dir}"/>
+    </copy>
+    <javadoc packagenames="${packages}"
+             sourcepath="${basedir}/${src.dir}"
+             destdir="${ant.bindist.dir}/docs/api"
+             author="true"
+             version="true"
+             windowtitle="${Name} API"
+             doctitle="${Name}"
+             bottom="Copyright &#169; 2000 Apache Software Foundation. All Rights Reserved.">
+    </javadoc>
+
+    <copy todir="${ant.bindist.dir}/src">
+      <fileset dir="${src.dir}"/>
+    </copy>
+
+    <copy todir="${ant.bindist.dir}/src">
+      <fileset dir="${src.dir}"/>
+    </copy>
+
+    <copy todir="${ant.bindist.dir}/bin">
+      <fileset dir="src/bin"/>
+    </copy>
+    <fixcrlf srcdir="${ant.bindist.dir}/bin" includes="ant,antRun" cr="remove"/>
+    <fixcrlf srcdir="${ant.bindist.dir}/bin" includes="*.bat" cr="add"/>
+    <chmod perm="+x">
+      <fileset dir="${ant.bindist.dir}/bin">
+        <patternset refid="chmod.patterns"/>
+      </fileset>
+    </chmod>
+
+    <copy file="build.xml" tofile="${ant.bindist.dir}/lib/build.xml"/>
+
+    <copy file="README" tofile="${ant.bindist.dir}/README"/>
+    <copy file="WHATSNEW" tofile="${ant.bindist.dir}/WHATSNEW"/>
+    <copy file="TODO" tofile="${ant.bindist.dir}/TODO"/>
+    <copy file="LICENSE" tofile="${ant.bindist.dir}/LICENSE"/>
+
+    <copy todir="${ant.bindist.dir}/lib">
+      <fileset dir="${JAXP_HOME}">
+        <include name="**/*.jar" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="bin.zip" depends="binbuild">
+    <zip zipfile="${ant.bindist.dir}/../jakarta-ant-bin.zip" 
+         basedir="${ant.bindist.dir}" />
+  </target>
+
+  <target name="bin.tgz" depends="binbuild">
+    <property name="bin.tar" 
+              value="${ant.bindist.dir}/../jakarta-ant-bin.tar" />
+    <tar tarfile="${bin.tar}" basedir="${ant.bindist.dir}" />
+    <gzip src="${bin.tar}" zipfile="${bin.tar}.gz" />
+    <delete file="${bin.tar}" />
+  </target>
+
+  <target name="bindist" description="Creates the binary distribution"
+          depends="bin.zip,bin.tgz" />
+
+  <property name="contributed.tasks" value="../build/ant.contrib" />
+  <property name="optional" value="../dist/optional.jar" />
+
+  <target name="optional.jar" depends="compile"
+          description="Creates a JAR of the optional tasks">
+    <mkdir dir="${contributed.tasks}" />
+    <copy todir="${contributed.tasks}">
+      <fileset dir="${build.classes}">
+        <include name="**/optional/**" />
+      </fileset>
+    </copy>
+    <jar jarfile="${optional}"
+         basedir="${contributed.tasks}"
+         manifest="${manifest}"
+    />
+  </target>
+
+  <target name="release.dist" depends="srcdist,bindist,optional.jar"
+          description="Creates all five files for a release build" />
+
 </project>
 
