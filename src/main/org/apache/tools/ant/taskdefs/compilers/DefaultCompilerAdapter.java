@@ -277,11 +277,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 cmd.createArgument().setValue("-target");
                 cmd.createArgument().setValue(target);
             }
-            if (bootclasspath != null) {
+            if (bootclasspath != null && bootclasspath.size() > 0) {
                 cmd.createArgument().setValue("-bootclasspath");
                 cmd.createArgument().setPath(bootclasspath);
             }
-            if (extdirs != null) {
+            if (extdirs != null && extdirs.size() > 0) {
                 cmd.createArgument().setValue("-extdirs");
                 cmd.createArgument().setPath(extdirs);
             }
