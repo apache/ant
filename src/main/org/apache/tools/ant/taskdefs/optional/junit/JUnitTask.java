@@ -1271,7 +1271,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * @since Ant 1.7
+     * @since Ant 1.6.2
      */
     protected CommandlineJava getCommandline() {
         if (commandline == null) {
