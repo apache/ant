@@ -397,14 +397,14 @@ public class Manifest extends Task {
          * Get a attribute of the section
          *
          * @param attributeName the name of the attribute
-         * @return a Manifest.Attribute instance if the attribute is 
-         *         single-valued, otherwise a Vector of Manifest.Attribute 
+         * @return a Manifest.Attribute instance if the attribute is
+         *         single-valued, otherwise a Vector of Manifest.Attribute
          *         instances.
          */
         public Object getAttribute(String attributeName) {
             return attributes.get(attributeName.toLowerCase());
         }
-        
+
         /**
          * Get the value of the attribute with the name given.
          *
@@ -511,8 +511,8 @@ public class Manifest extends Task {
             for (Enumeration e = attributes.keys(); e.hasMoreElements();) {
                 String attributeName = (String)e.nextElement();
                 Object attributeValue  = attributes.get(attributeName);
-                Object rhsAttributeValue = rhsSection.attributes.get(attributeName);
-                if (!attributeValue.equals(rhsAttributeValue)) {
+                Object rshAttributeValue = rhsSection.attributes.get(attributeName);
+                if (!attributeValue.equals(rshAttributeValue)) {
                     return false;
                 }
             }
@@ -629,22 +629,45 @@ public class Manifest extends Task {
      *         to the Manifest spec.
      */
     public void merge(Manifest other) throws ManifestException {
-        if (other.manifestVersion != null) {
-            manifestVersion = other.manifestVersion;
-        }
-        mainSection.merge(other.mainSection);
-        for (Enumeration e = other.sections.keys(); e.hasMoreElements();) {
-            String sectionName = (String)e.nextElement();
-            Section ourSection = (Section)sections.get(sectionName);
-            Section otherSection = (Section)other.sections.get(sectionName);
-            if (ourSection == null) {
-                sections.put(sectionName, otherSection);
-            }
-            else {
-                ourSection.merge(otherSection);
-            }
-        }
+        merge(other, false);
+    }
 
+    /**
+     * Merge the contents of the given manifest into this manifest
+     *
+     * @param other the Manifest to be merged with this one.
+     * @param overwriteMain whether to overwrite the main section of the current manifest
+     *
+     * @throws ManifestException if there is a problem merging the manfest according
+     *         to the Manifest spec.
+     */
+    public void merge(Manifest other, boolean overwriteMain) throws ManifestException {
+        if (other != null) {
+             if (overwriteMain) {
+                 mainSection = other.mainSection;
+             }
+             else {
+                 mainSection.merge(other.mainSection);
+             }
+
+             if (other.manifestVersion != null) {
+                 manifestVersion = other.manifestVersion;
+             }
+
+             for (Enumeration e = other.sections.keys(); e.hasMoreElements();) {
+                 String sectionName = (String)e.nextElement();
+                 Section ourSection = (Section)sections.get(sectionName);
+                 Section otherSection = (Section)other.sections.get(sectionName);
+                 if (ourSection == null) {
+                     if (otherSection != null) {
+                         sections.put(sectionName.toLowerCase(), otherSection);
+                     }
+                 }
+                 else {
+                     ourSection.merge(otherSection);
+                 }
+             }
+         }
     }
 
     /**
@@ -774,7 +797,7 @@ public class Manifest extends Task {
     public String getManifestVersion() {
         return manifestVersion;
     }
-    
+
     /**
      * Get the main section of the manifest
      *
@@ -788,13 +811,13 @@ public class Manifest extends Task {
      * Get a particular section from the manifest
      *
      * @param name the name of the section desired.
-     * @return the specified section or null if that section 
+     * @return the specified section or null if that section
      * does not exist in the manifest
      */
     public Section getSection(String name) {
         return (Section)sections.get(name);
     }
-    
+
     /**
      * Get the section names in this manifest.
      *
@@ -803,7 +826,7 @@ public class Manifest extends Task {
     public Enumeration getSectionNames() {
         return sections.keys();
     }
-    
+
     /**
      * Create or update the Manifest when used as a task.
      */
@@ -833,7 +856,7 @@ public class Manifest extends Task {
                 }
             }
         }
-        
+
         try {
             toWrite.merge(this);
         } catch (ManifestException m) {

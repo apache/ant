@@ -61,8 +61,6 @@ import java.io.FileInputStream;
 import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
-
-import java.util.Calendar;
 import java.util.Hashtable;
 import java.util.Stack;
 import java.util.Vector;
@@ -96,6 +94,9 @@ public class Zip extends MatchingTask {
 
     protected File zipFile;
     private File baseDir;
+    protected Hashtable entries = new Hashtable();
+    private Vector groupfilesets = new Vector();
+    protected String duplicate = "add";
     private boolean doCompress = true;
     private boolean doUpdate = false;
     private boolean doFilesonly = false;
@@ -111,7 +112,6 @@ public class Zip extends MatchingTask {
     /** true when we are adding new files into the Zip file, as opposed to
         adding back the unchanged files */
     private boolean addingNewFiles;
-
 
     /**
      * Encoding to use for filenames, defaults to the platform's
@@ -152,7 +152,7 @@ public class Zip extends MatchingTask {
        this.zipFile = destFile;
     }
 
-        
+
     /**
      * This is the base directory to look in for
      * things to zip.
@@ -205,6 +205,24 @@ public class Zip extends MatchingTask {
         filesets.addElement(set);
     }
 
+    /**
+     * Adds a group of zip files (a group of nested filesets).
+     */
+    public void addZipGroupFileset(FileSet set) {
+        groupfilesets.addElement(set);
+    }
+
+    /**
+     * Sets behavior for when a duplicate file is about to be added
+     * Possible values are: <code>keep</code> (keep both
+     * of the files); <code>skip</code> (keep the first version
+     * of the file found); <code>overwrite</code> overwrite the file
+     * with the new file
+     * Default for zip tasks is <code>keep</code>
+     */
+    public void setDuplicate(Duplicate df) {
+        duplicate = df.getValue();
+    }
 
     /** Possible behaviors when there are no matching files for the task. */
     public static class WhenEmpty extends EnumeratedAttribute {
@@ -238,7 +256,8 @@ public class Zip extends MatchingTask {
     }
 
     public void execute() throws BuildException {
-        if (baseDir == null && filesets.size() == 0 && "zip".equals(archiveType)) {
+        if (baseDir == null && filesets.size() == 0
+                && groupfilesets.size() == 0 && "zip".equals(archiveType)) {
             throw new BuildException( "basedir attribute must be set, or at least " +
                                       "one fileset must be given!" );
         }
@@ -269,6 +288,23 @@ public class Zip extends MatchingTask {
             catch (SecurityException e)
             {
                 throw new BuildException("Not allowed to rename old file to temporary file");
+            }
+        }
+
+        // Add the files found in groupfileset to fileset
+        for (int i=0; i<groupfilesets.size(); i++) {
+
+            log("Processing groupfileset ", Project.MSG_VERBOSE);
+            FileSet fs = (FileSet) groupfilesets.elementAt(i);
+            FileScanner scanner = fs.getDirectoryScanner(project);
+            String[] files = scanner.getIncludedFiles();
+            File basedir = scanner.getBasedir();
+            for (int j=0; j<files.length; j++) {
+
+                log("Adding file " + files[j] + " to fileset", Project.MSG_VERBOSE);
+                ZipFileSet zf = new ZipFileSet();
+                zf.setSrc(new File(basedir, files[j]));
+                filesets.add(zf);
             }
         }
 
@@ -333,7 +369,7 @@ public class Zip extends MatchingTask {
                     addFiles(tmp, zOut);
                 }
                 finalizeZipOutputStream(zOut);
-                
+
                 // If we've been successful on an update, delete the temporary file
                 if (doUpdate) {
                     if (!renamedFile.delete()) {
@@ -360,8 +396,8 @@ public class Zip extends MatchingTask {
                     }
                 }
             }
-        } catch (Throwable t) {
-            String msg = "Problem creating " + archiveType + ": " + t.getMessage();
+        } catch (IOException ioe) {
+            String msg = "Problem creating " + archiveType + ": " + ioe.getMessage();
 
             // delete a bogus ZIP file
             if (!zipFile.delete()) {
@@ -375,7 +411,7 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            throw new BuildException(msg, t, location);
+            throw new BuildException(msg, ioe, location);
         } finally {
             cleanUp();
         }
@@ -446,6 +482,8 @@ public class Zip extends MatchingTask {
                                  ZipOutputStream zOut, String prefix, String fullpath)
         throws IOException
     {
+        log("adding zip entries: " + fullpath, Project.MSG_VERBOSE);
+
         if (prefix.length() > 0 && fullpath.length() > 0) {
             throw new BuildException("Both prefix and fullpath attributes may not be set on the same fileset.");
         }
@@ -465,11 +503,11 @@ public class Zip extends MatchingTask {
                 if (zipScanner.match(vPath)) {
                     if (fullpath.length() > 0) {
                         addParentDirs(null, fullpath, zOut, "");
-                        zipFile(in, zOut, fullpath, entry.getTime());
+                        zipFile(in, zOut, fullpath, entry.getTime(), zipSrc);
                     } else {
                         addParentDirs(null, vPath, zOut, prefix);
                         if (! entry.isDirectory()) {
-                            zipFile(in, zOut, prefix+vPath, entry.getTime());
+                            zipFile(in, zOut, prefix+vPath, entry.getTime(), zipSrc);
                         }
                     }
                 }
@@ -608,6 +646,8 @@ public class Zip extends MatchingTask {
             // no warning if we try, it is harmless in and of itself
             return;
         }
+
+        log("adding directory " + vPath, Project.MSG_VERBOSE);
         addedDirs.put(vPath, vPath);
 
         ZipEntry ze = new ZipEntry (vPath);
@@ -628,9 +668,33 @@ public class Zip extends MatchingTask {
     }
 
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
-                           long lastModified)
+                           long lastModified, File file)
         throws IOException
     {
+        if (entries.contains(vPath)) {
+
+            if (duplicate.equals("preserve"))
+            {
+                log(vPath + " already added, skipping", Project.MSG_INFO);
+                return;
+            }
+            else if (duplicate.equals("fail"))
+            {
+                throw new BuildException("Duplicate file " + vPath + " was found and the duplicate attribute is 'fail'.");
+            }
+            else
+            {
+                // duplicate equal to add, so we continue
+                log("duplicate file " + vPath + " found, adding.", Project.MSG_VERBOSE);
+            }
+        }
+        else
+        {
+            log("adding entry " + vPath, Project.MSG_VERBOSE);
+        }
+
+        entries.put(vPath, vPath);
+
         ZipEntry ze = new ZipEntry(vPath);
         ze.setTime(lastModified);
 
@@ -698,7 +762,7 @@ public class Zip extends MatchingTask {
 
         FileInputStream fIn = new FileInputStream(file);
         try {
-            zipFile(fIn, zOut, vPath, file.lastModified());
+            zipFile(fIn, zOut, vPath, file.lastModified(), null);
         } finally {
             fIn.close();
         }
@@ -787,15 +851,27 @@ public class Zip extends MatchingTask {
      * need to do is to reset some globals.</p>
      */
     protected void cleanUp() {
-        addedDirs = new Hashtable();
-        addedFiles = new Vector();
-        filesets = new Vector();
+        addedDirs.clear();
+        addedFiles.clear();
+        filesets.clear();
         zipFile = null;
         baseDir = null;
+        entries.clear();
+        groupfilesets.clear();
+        duplicate = "add";
+        archiveType = "zip";
         doCompress = true;
+        emptyBehavior = "skip";
         doUpdate = false;
         doFilesonly = false;
         addingNewFiles = false;
         encoding = null;
+    }
+
+    /** Possible behaviors when a duplicate file is added. */
+    public static class Duplicate extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"add", "preserve", "fail"};
+        }
     }
 }

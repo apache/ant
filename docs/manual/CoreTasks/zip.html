@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>AZip Task</title>
+<title>Zip Task</title>
 </head>
 
 <body>
@@ -33,6 +33,9 @@ if <code>basedir</code> is set. You may use any mixture of the implicit file set
 and optional subelements like <code>&lt;include&gt;</code>); explicit nested
 <code>&lt;fileset&gt;</code> elements so long as at least one fileset total is specified. The ZIP file will
 only reflect the relative paths of files <i>within</i> each fileset. The Zip task and its derivatives know a special form of a fileset named zipfileset that has additional attributes (described below). </p>
+<p>The Zip task also supports the merging of multiple zip files into the zip file. 
+This is possible through either the <i>src</i> attribute of any nested filesets 
+or by using the special nested fileset <i>zipgroupfileset</i>.</p>
 <p>The <code>update</code> parameter controls what happens if the
 ZIP file already exists. When set to <code>yes</code>, the ZIP file is
 updated with the files specified. (New files are added; old files are
@@ -122,7 +125,12 @@ Java.</p>
   </tr>
   <tr>
     <td valign="top">whenempty</td>
-    <td valign="top">Behavior when no files match.</td>
+    <td valign="top">behavior when no files match.  Valid values are &quot;fail&quot;, &quot;skip&quot;, and &quot;create&quot;.  Default is &quot;skip&quot;.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">duplicate</td>
+    <td valign="top">behavior when a duplicate file is found.  Valid values are &quot;add&quot;, &quot;preserve&quot;, and &quot;fail&quot;. The default value is &quot;add&quot;.  </td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
@@ -140,6 +148,11 @@ exact location in the archive. (The <i>fullpath</i> attribute can only be set fo
 may be used in place of the <i>dir</i> attribute to specify a zip file whose
 contents will be extracted and included in the archive.  As with directories, include and exclude patterns may be used to specify a subset of the zip file
 for inclusion in the archive.</p>
+<h4>zipgroupfileset</h4>
+<p>A <code>&lt;zipgroupfileset&gt;</code> allows for multiple zip files to be 
+merged into the archive. Each file found in this fileset is added to the archive 
+the same way that <i>zipfileset src</i> files are added.</p>
+
 
 <h3>Examples</h3>
 <pre>  &lt;zip destfile=&quot;${dist}/manual.zip&quot;
@@ -188,6 +201,16 @@ under <code>docs/examples</code>.  The archive might end up containing the files
     docs/ChangeLog.txt
     docs/examples/index.html
 </code></pre>
+<p>
+The code
+<pre>
+  &lt;zip destfile=&quot;${dist}/manual.zip&quot;&gt;
+    &lt;zipfileset dir=&quot;htdocs/manual&quot; prefix=&quot;docs/user-guide&quot;/&gt;
+    &lt;zipgroupfileset dir=&quot;.&quot; includes=&quot;examples*.zip&quot;/&gt;
+  &lt;/zip&gt;</pre>
+</pre>
+<p>
+<p>zips all files in the <code>htdocs/manual</code> directory into the <code>docs/user-guide</code> directory in the archive and includes all the files in any file that maches <code>examples*.zip</code>, such as all files within <code>examples1.zip</code> or <code>examples_for_brian.zip</code>.
 <hr>
 <p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>

@@ -55,54 +55,74 @@
 package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.zip.ZipFile;
+import java.util.Enumeration;
+
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  */
-public class ZipTest extends BuildFileTest { 
-    
-    public ZipTest(String name) { 
+public class ZipTest extends BuildFileTest {
+
+    public ZipTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/zip.xml");
     }
-    
-    public void test1() { 
+
+    public void test1() {
         expectBuildException("test1", "required argument not specified");
     }
 
-    public void test2() { 
+    public void test2() {
         expectBuildException("test2", "required argument not specified");
     }
-    
-    public void test3() { 
+
+    public void test3() {
         expectBuildException("test3", "zip cannot include itself");
     }
 
-    public void test4() { 
+    public void test4() {
         expectBuildException("test4", "zip cannot include itself");
     }
-    
+
     public void tearDown() {
         executeTarget("cleanup");
     }
-    
-    public void test5() { 
+
+    public void test5() {
         executeTarget("test5");
     }
 
 
-    public void test6() { 
+    public void test6() {
         executeTarget("test6");
     }
 
 
-    public void test7() { 
+    public void test7() {
         executeTarget("test7");
     }
 
-    public void test8() { 
+    public void test8() {
         executeTarget("test8");
-    }    
+    }
+
+    public void testZipgroupfileset() throws IOException {
+        executeTarget("testZipgroupfileset");
+
+        ZipFile zipFile = new ZipFile(new File(getProjectDir(), "zipgroupfileset.zip"));
+
+        assert(zipFile.getEntry("ant.xml") != null);
+        assert(zipFile.getEntry("optional/jspc.xml") != null);
+        assert(zipFile.getEntry("zip/zipgroupfileset3.zip") != null);
+
+        assert(zipFile.getEntry("test6.mf") == null);
+        assert(zipFile.getEntry("test7.mf") == null);
+
+        zipFile.close();
+    }
 }

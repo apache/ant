@@ -77,6 +77,13 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Users can control what <zip> and <jar> must do when duplicate files 
+  are found.  A new element <zipgroupfileset> allows for multiple zip 
+  files to be merged into the archive.  In addition, <jar> also has 
+  another new attribute: filesetmanifest.  The existing manifest
+  attribute of <jar> now also accepts the name of a jar added through 
+  a fileset.
+
 * gzip now checks that the zipfile is older than the source file
   before rebuilding the zipfile. 
 
