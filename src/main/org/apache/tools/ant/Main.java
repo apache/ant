@@ -604,7 +604,7 @@ public class Main {
                 }
 
                 // make sure that we have a target to execute
-                if (targets.size() == 0) {
+                if (targets.size() == 0 && project.getDefaultTarget() != null) {
                     targets.addElement(project.getDefaultTarget());
                 }
 

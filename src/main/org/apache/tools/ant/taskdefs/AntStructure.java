@@ -196,13 +196,14 @@ public class AntStructure extends Task {
 
         out.println("");
 
-        out.print("<!ELEMENT project (target | property | taskdef");
-        out.print(" | typedef | ");
+        out.print("<!ELEMENT project (target | ");
+        out.print(TASKS);
+        out.print(" | ");
         out.print(TYPES);
         out.println(")*>");
         out.println("<!ATTLIST project");
         out.println("          name    CDATA #IMPLIED");
-        out.println("          default CDATA #REQUIRED");
+        out.println("          default CDATA #IMPLIED");
         out.println("          basedir CDATA #IMPLIED>");
         out.println("");
     }

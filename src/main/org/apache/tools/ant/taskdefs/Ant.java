@@ -356,19 +356,21 @@ public class Ant extends Task {
                 target = newProject.getDefaultTarget();
             }
 
-            addReferences();
-
-            // Are we trying to call the target in which we are defined?
+            // Are we trying to call the target in which we are defined (or 
+            // the build file if this is a top level task)?
             if (newProject.getBaseDir().equals(project.getBaseDir()) &&
-                newProject.getProperty("ant.file").equals(project.getProperty("ant.file")) &&
-                getOwningTarget() != null &&
-                target.equals(this.getOwningTarget().getName())) {
-
+                newProject.getProperty("ant.file").equals(project.getProperty("ant.file"))
+                && (getOwningTarget() == null ||
+                    getOwningTarget().getName().equals(target))) {
                 throw new BuildException("ant task calling its own parent "
-                    + "target");
+                                         + "target");
             }
 
-            newProject.executeTarget(target);
+            addReferences();
+
+            if (target != null) {
+                newProject.executeTarget(target);
+            }
         } finally {
             // help the gc
             newProject = null;

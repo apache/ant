@@ -30,7 +30,7 @@ to be unique. (For additional information, see the
   <tr>
     <td valign="top">default</td>
     <td valign="top">the default target to use when no target is supplied.</td>
-    <td align="center" valign="top">Yes.</td>
+    <td align="center" valign="top">No.  No target will be run if omitted.</td>
   </tr>
   <tr>
     <td valign="top">basedir</td>
@@ -284,11 +284,11 @@ ant.java.version    the JVM version Ant detected; currently it can hold
 &lt;/project&gt;
 </pre>
 
-Notice that we are declaring properties outside any target. The
-<tt>&lt;property&gt;</tt>,<tt>&lt;typedef&gt;</tt> and <tt>&lt;taskdef&gt;</tt>
-tasks are special in that they can be declared outside any target. When you
-do this they are evaluated before any targets are executed. No other tasks
-can be declared outside targets.
+<p>Notice that we are declaring properties outside any target.  As of
+Ant 1.6 all tasks can be declared outside targets (earlier version
+only allowed <tt>&lt;property&gt;</tt>,<tt>&lt;typedef&gt;</tt> and
+<tt>&lt;taskdef&gt;</tt>).  When you do this they are evaluated before
+any targets are executed.</p>
 
 <p>
 We have given some targets descriptions; this causes the <tt>projecthelp</tt>
