@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -269,8 +269,8 @@ public class ExtensionAdapter
                               specificationVersion,
                               m_specificationVendor,
                               implementationVersion,
-                              m_implementationVendorID,
                               m_implementationVendor,
+                              m_implementationVendorID,
                               m_implementationURL );
     }
 
