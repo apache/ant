@@ -169,6 +169,28 @@ public class ANTLRTest extends BuildFileTest {
     public void test13() {
         executeTarget("test13");
     }
+
+    public void testNoRecompile() {
+        executeTarget("test9");
+        assertEquals(-1, getFullLog().indexOf("Skipped grammar file."));
+        executeTarget("noRecompile");
+        assertTrue(-1 != getFullLog().indexOf("Skipped grammar file."));
+    }
+
+    public void testNormalRecompile() {
+        executeTarget("test9");
+        assertEquals(-1, getFullLog().indexOf("Skipped grammar file."));
+        executeTarget("normalRecompile");
+        assertEquals(-1, getFullLog().indexOf("Skipped grammar file."));
+    }
+
+    // Bugzilla Report 12961
+    public void testSupergrammarChangeRecompile() {
+        executeTarget("test9");
+        assertEquals(-1, getFullLog().indexOf("Skipped grammar file."));
+        executeTarget("supergrammarChangeRecompile");
+        assertEquals(-1, getFullLog().indexOf("Skipped grammar file."));
+    }
 }
 
 class CalcFileFilter implements FilenameFilter {

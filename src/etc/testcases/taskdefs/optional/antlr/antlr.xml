@@ -73,6 +73,25 @@
     <antlr target="antlr.g" outputdirectory="${tmp.dir}" traceLexer="yes" traceParser="yes" traceTreeWalker="yes"/>
   </target>
 
+  <!-- test9 will have been run before that -->
+  <target name="noRecompile">
+    <antlr target="${tmp.dir}/extended.calc.g" glib="${tmp.dir}/antlr.g"/>
+  </target>
+
+  <!-- test9 will have been run before that -->
+  <target name="normalRecompile">
+    <sleep seconds="2"/>
+    <touch file="${tmp.dir}/extended.calc.g"/>
+    <antlr target="${tmp.dir}/extended.calc.g" glib="${tmp.dir}/antlr.g"/>
+  </target>
+
+  <!-- test9 will have been run before that -->
+  <target name="supergrammarChangeRecompile">
+    <sleep seconds="2"/>
+    <touch file="${tmp.dir}/antlr.g"/>
+    <antlr target="${tmp.dir}/extended.calc.g" glib="${tmp.dir}/antlr.g"/>
+  </target>
+
   <target name="cleanup">
     <delete dir="${tmp.dir}" />
     <delete file="../../../../../../CalcParserTokenTypes.txt"/>

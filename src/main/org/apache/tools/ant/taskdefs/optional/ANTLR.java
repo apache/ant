@@ -275,7 +275,11 @@ public class ANTLR extends Task {
     public void execute() throws BuildException {
         validateAttributes();
         //TODO: use ANTLR to parse the grammer file to do this.
-        if (target.lastModified() > getGeneratedFile().lastModified()) {
+        File generatedFile = getGeneratedFile();
+        if (target.lastModified() > generatedFile.lastModified()) {
+            log("Compiling " + target + " as it is newer than " 
+                + generatedFile, Project.MSG_VERBOSE);
+
             populateAttributes();
             commandline.createArgument().setValue(target.toString());
 
@@ -291,7 +295,8 @@ public class ANTLR extends Task {
                 }
             }
         } else {
-            log("Skipped grammar file. Generated file is newer.", Project.MSG_VERBOSE);
+            log("Skipped grammar file. Generated file " + generatedFile 
+                + "is newer.", Project.MSG_VERBOSE);
         }
     }
 
