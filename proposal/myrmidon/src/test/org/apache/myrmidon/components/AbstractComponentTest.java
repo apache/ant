@@ -75,9 +75,6 @@ public abstract class AbstractComponentTest
 
             Object component = createComponent( Converter.ROLE, DefaultMasterConverter.class );
             m_serviceManager.put( Converter.ROLE, component );
-            components.add( component );
-
-            component = createComponent( ConverterRegistry.ROLE, DefaultConverterRegistry.class );
             m_serviceManager.put( ConverterRegistry.ROLE, component );
             components.add( component );
 

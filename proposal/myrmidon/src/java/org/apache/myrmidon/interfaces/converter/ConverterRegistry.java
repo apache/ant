@@ -18,16 +18,6 @@ public interface ConverterRegistry
     String ROLE = ConverterRegistry.class.getName();
 
     /**
-     * Retrieve name of ConverterInfo that describes converter that converts
-     * from source to destination.
-     *
-     * @param source the source classname
-     * @param destination the destination classname
-     * @return the className of converter or null if none available
-     */
-    String getConverterName( String source, String destination );
-
-    /**
      * Register a converter
      *
      * @param className the className of converter

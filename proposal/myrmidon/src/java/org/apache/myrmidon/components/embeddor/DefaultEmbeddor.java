@@ -30,7 +30,6 @@ import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
@@ -44,6 +43,7 @@ import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -253,9 +253,10 @@ public class DefaultEmbeddor
         throws Exception
     {
         // Create the components
-        createComponent( ConverterRegistry.class, PREFIX + "converter.DefaultConverterRegistry" );
         createComponent( ExtensionManager.class, PREFIX + "extensions.DefaultExtensionManager" );
-        createComponent( Converter.class, PREFIX + "converter.DefaultMasterConverter" );
+        final Object converter =
+            createComponent( Converter.class, PREFIX + "converter.DefaultMasterConverter" );
+        m_serviceManager.put( ConverterRegistry.ROLE, converter );
         createComponent( Configurer.class, PREFIX + "configurer.DefaultConfigurer" );
         createComponent( TypeManager.class, PREFIX + "type.DefaultTypeManager" );
         createComponent( RoleManager.class, PREFIX + "role.DefaultRoleManager" );
@@ -276,12 +277,14 @@ public class DefaultEmbeddor
     /**
      * Creates a component.
      */
-    private void createComponent( Class roleType, String defaultImpl )
+    private Object createComponent( final Class roleType,
+                                  final String defaultImpl )
         throws Exception
     {
         final Object component = createService( roleType, defaultImpl );
         m_serviceManager.put( roleType.getName(), component );
         m_components.add( component );
+        return component;
     }
 
     /**

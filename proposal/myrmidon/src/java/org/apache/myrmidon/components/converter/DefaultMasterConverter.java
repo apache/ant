@@ -17,9 +17,9 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 
 /**
  * Converter engine to handle converting between types.
@@ -28,16 +28,21 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @version $Revision$ $Date$
  */
 public class DefaultMasterConverter
-    implements Converter, Serviceable
+    implements Converter, ConverterRegistry, Serviceable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultMasterConverter.class );
 
-    private ConverterRegistry m_registry;
     private TypeManager m_typeManager;
 
     /** Map from converter name to Converter. */
     private Map m_converters = new HashMap();
+
+    /**
+     * This holds the mapping between source/destination
+     * and converter name.
+     */
+    private final HashMap m_mapping = new HashMap();
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -48,8 +53,28 @@ public class DefaultMasterConverter
     public void service( final ServiceManager serviceManager )
         throws ServiceException
     {
-        m_registry = (ConverterRegistry)serviceManager.lookup( ConverterRegistry.ROLE );
         m_typeManager = (TypeManager)serviceManager.lookup( TypeManager.ROLE );
+    }
+
+    /**
+     * Register a converter
+     *
+     * @param className the className of converter
+     * @param source the source classname
+     * @param destination the destination classname
+     */
+    public void registerConverter( final String className,
+                                   final String source,
+                                   final String destination )
+    {
+        HashMap map = (HashMap)m_mapping.get( source );
+        if( null == map )
+        {
+            map = new HashMap();
+            m_mapping.put( source, map );
+        }
+
+        map.put( destination, className );
     }
 
     /**
@@ -76,7 +101,7 @@ public class DefaultMasterConverter
         try
         {
             // Search inheritance hierarchy for converter
-            final String name = getConverterName( originalClass, destination );
+            final String name = findConverter( originalClass, destination );
 
             // Create the converter
             Converter converter = (Converter)m_converters.get( name );
@@ -126,8 +151,8 @@ public class DefaultMasterConverter
      * Determine the name of the converter to use to convert between
      * original and destination classes.
      */
-    private String getConverterName( final Class originalClass,
-                                     final Class destination )
+    private String findConverter( final Class originalClass,
+                                  final Class destination )
         throws ConverterException
     {
         //TODO: Maybe we should search the destination classes hierarchy as well
@@ -157,8 +182,8 @@ public class DefaultMasterConverter
             }
 
             // Check if we can convert from current class to destination
-            final String name = m_registry.getConverterName( clazz.getName(),
-                                                             destination.getName() );
+            final String name = getConverterClassname( clazz.getName(),
+                                                       destination.getName() );
             if( name == null )
             {
                 continue;
@@ -191,5 +216,23 @@ public class DefaultMasterConverter
         // Could not find a converter
         final String message = REZ.getString( "no-converter.error" );
         throw new ConverterException( message );
+    }
+
+    /**
+     * Retrieve name of ConverterInfo that describes converter that converts
+     * from source to destination.
+     *
+     * @param source the source classname
+     * @param destination the destination classname
+     * @return the className of converter or null if none available
+     */
+    private String getConverterClassname( final String source, final String destination )
+    {
+        final HashMap map = (HashMap)m_mapping.get( source );
+        if( null == map )
+        {
+            return null;
+        }
+        return (String)map.get( destination );
     }
 }
