@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -263,7 +263,19 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
     private final static Random rand = new Random();
 
     /**
-     * Mapper that possibly returns two file names, *_Stub and *_Skel.
+     * Mapper that may return up to two file names.
+     *
+     * <ul>
+     *   <li>for JRMP it will return *_Stub (and *_Skel if JDK 1.1 is
+     *     used)</li>
+     *
+     *   <li>for IDL it will return a random name, causing <rmic> to
+     *     always recompile.</li>
+     *
+     *   <li>for IIOP it will return _*_Stub for interfaces and _*_Tie
+     *     for non-interfaces (and determine the interface and create
+     *     _*_Stub from that).</p>
+     * </ul>
      */
     private class RmicFileNameMapper implements FileNameMapper {
 
@@ -288,7 +300,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
                 return null;
             }
 
-            String base = name.substring(0, name.indexOf(".class"));
+            // we know that name.endsWith(".class")
+            String base = name.substring(0, name.length()-6);
+
             String classname = base.replace(File.separatorChar, '.');
             if (attributes.getVerify() &&
                 !attributes.isValidRmiRemote(classname)) {

@@ -440,9 +440,22 @@ public class Rmic extends MatchingTask {
             adapter.getMapper().mapFileName(classFileName);
 
         for (int i=0; i<generatedFiles.length; i++) {
+            if (!generatedFiles[i].endsWith(".class")) {
+                // don't know how to handle that - a IDL file doesn't
+                // have a corresponding Java source for example.
+                continue;
+            }
+            
             String sourceFileName = 
-                classFileName.substring(0, classFileName.length()-6) + ".java";
+                generatedFiles[i].substring(0, classFileName.length()-6) 
+                + ".java";
+
             File oldFile = new File(baseDir, sourceFileName);
+            if (!oldFile.exists()) {
+                // no source file generated, nothing to move
+                continue;
+            }
+
             File newFile = new File(sourceBaseFile, sourceFileName);
             try {
                 project.copyFile(oldFile, newFile, filtering);
