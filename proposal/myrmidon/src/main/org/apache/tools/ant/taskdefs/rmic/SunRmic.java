@@ -60,16 +60,5 @@ public class SunRmic extends DefaultRmicAdapter
                 throw new TaskException( "Error starting SUN rmic: ", ex );
             }
         }
-        finally
-        {
-            try
-            {
-                logstr.close();
-            }
-            catch( IOException e )
-            {
-                throw new TaskException( "Error", e );
-            }
-        }
     }
 }
