@@ -56,9 +56,11 @@ package org.apache.tools.ant.taskdefs.optional.sound;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
 
 import java.io.File;
 import java.util.Random;
+import java.util.Vector;
 
 /**
  * This is an example of an AntTask that makes of use of the AntSoundPlayer.
@@ -142,7 +144,7 @@ public class SoundTask extends Task {
         /**
          * Sets the location of the file to get the audio.
          *
-         * @param source the name a sound-file directory or of the audio file
+         * @param source the name of a sound-file directory or of the audio file
          */
         public void setSource(File source) {
             this.source = source;
@@ -166,13 +168,23 @@ public class SoundTask extends Task {
             if( source.exists() ) {
                 if( source.isDirectory() ) {
                     // get the list of files in the dir
-                    File[] files = source.listFiles() ; 
-                    int numfiles = files.length ;
+                    String[] entries = source.list() ;
+                    Vector files = new Vector() ;
+                    for (int i=0 ; i < entries.length ; i++) {
+                        File f = new File(source, entries[i]) ;
+                        if (f.isFile()) {
+                            files.addElement(f) ;
+                        }
+                    }
+                    if ( files.size() < 1 ) {
+                        throw new BuildException("No files found in directory " + source);
+                    }
+                    int numfiles = files.size() ;
                     // get a random number between 0 and the number of files
                     Random rn = new Random() ;
-                    int i = rn.nextInt(numfiles) ;
+                    int x = rn.nextInt(numfiles) ;
                     // set the source to the file at that location
-                    this.source = files[i] ;
+                    this.source = (File)files.elementAt(x) ;
                 }
             } else {
                 log(source + ": invalid path.", Project.MSG_WARN) ;
