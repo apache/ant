@@ -564,6 +564,27 @@ shell-prompt> cat < foo
       </answer>
     </faq>
     
+    <faq id="encoding">
+      <question>How can I include national characters like German
+        umlauts in my build file?</question>
+
+      <answer>
+        <p>You need to tell the XML parser which character encoding
+        your build file uses, this is done inside the <a
+        href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-prolog-dtd">XML
+        declaration</a>.</p>  
+
+        <p>By default the parser assumes you are using the UTF-8
+        encoding instead of your platform's default.  For most western
+        european contries you should set the encoding to
+        <code>ISO-8859-1</code>.  To do so, make the very first line
+        of you build file read like</p>
+
+        <source><![CDATA[
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+]]></source>
+      </answer>
+    </faq>
   </faqsection>
 
   <faqsection title="Ant and IDEs/Editors">

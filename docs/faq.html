@@ -217,6 +217,10 @@
       isn't giving me any files at all. What's wrong?
       
   </a></li>
+                    <li><a href="#encoding">
+  How can I include national characters like German
+        umlauts in my build file?
+  </a></li>
                 </ul>
       </blockquote>
     </td></tr>
@@ -1240,6 +1244,51 @@ shell-prompt&gt; cat &lt; foo
 	to get them. If you find you need to trim the list that the
   <code>&lt;include&gt;</code> elements
 	produce, then use <code>&lt;exclude&gt;</code> elements.</p>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="encoding">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          How can I include national characters like German
+        umlauts in my build file?
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>You need to tell the XML parser which character encoding
+        your build file uses, this is done inside the <a href="http://www.w3.org/TR/2000/REC-xml-20001006#sec-prolog-dtd">XML
+        declaration</a>.</p>
+                                        <p>By default the parser assumes you are using the UTF-8
+        encoding instead of your platform's default.  For most western
+        european contries you should set the encoding to
+        <code>ISO-8859-1</code>.  To do so, make the very first line
+        of you build file read like</p>
+                                          <div align="left">
+    <table cellspacing="4" cellpadding="0" border="0">
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#ffffff"><pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;ISO-8859-1&quot; ?&gt;
+</pre></td>
+        <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+      <tr>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+        <td bgcolor="#023264" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
+      </tr>
+    </table>
+  </div>
                         </blockquote>
     </td></tr>
   </table>
