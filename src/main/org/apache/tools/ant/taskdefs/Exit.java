@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,8 +62,17 @@ import org.apache.tools.ant.Task;
  * Exits the active build, giving an additional message
  * if available.
  *
- * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>
+ * The <code>if</code> and <code>unless</code> attributes make the
+ * failure conditional -both probe for the named property being defined.
+ * The <code>if</code> tests for the property being defined, the
+ * <code>unless</code> for a property being undefined.
  *
+ * If both attributes are set, then the test fails only if both tests
+ * are true. i.e.
+ * <pre>fail := defined(ifProperty) && !defined(unlessProperty)</pre>
+ *
+ * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>
+ * @author steve loughran
  * @since Ant 1.2
  *
  * @ant.task name="fail" category="control"
@@ -99,15 +108,38 @@ public class Exit extends Task {
     }
 
     /**
-     * Exits the actual build.
+     * evaluate both if and unless conditions, and if
+     * ifCondition is true or unlessCondition is false, throw a
+     * build exception to exit the build.
+     * The errore message is constructed from the text fields, or from
+     * the if and unless parameters (if present).
+     * @throws BuildException
      */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
+            String text=null;
             if (message != null && message.length() > 0) {
-                throw new BuildException(message);
+                text=message;
             } else {
-                throw new BuildException("No message");
+
+                if(getProject().getProperty(ifCondition) != null) {
+                    text="if="+ifCondition;
+                }
+                if (unlessCondition!=null && unlessCondition.length()>0
+                        && getProject().getProperty(unlessCondition) == null) {
+                    if (text == null) {
+                        text = "";
+                    } else {
+                        text+=" and ";
+                    }
+                    text+="unless="+unlessCondition;
+                } else {
+                    if(text==null) {
+                        text = "No message";
+                    }
+                }
             }
+            throw new BuildException(text);
         }
     }
 
@@ -122,14 +154,22 @@ public class Exit extends Task {
         message += getProject().replaceProperties(msg);
     }
 
+    /**
+     * test the if condition
+     * @return true if there is no if condition, or the named property exists
+     */
     private boolean testIfCondition() {
         if (ifCondition == null || "".equals(ifCondition)) {
             return true;
         }
-
         return getProject().getProperty(ifCondition) != null;
     }
 
+    /**
+     * test the unless condition
+     * @return true if there is no unless condition,
+     *  or there is a named property but it doesnt exist
+     */
     private boolean testUnlessCondition() {
         if (unlessCondition == null || "".equals(unlessCondition)) {
             return true;

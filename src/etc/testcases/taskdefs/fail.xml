@@ -22,4 +22,8 @@
     <fail unless="foo" />
   </target>
 
+  <target name="testIfAndUnless">
+    <fail unless="unless" if="if"/>
+  </target>
+
 </project>
