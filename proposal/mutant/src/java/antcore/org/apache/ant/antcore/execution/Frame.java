@@ -868,6 +868,7 @@ public class Frame implements DemuxOutputReceiver {
      */
     protected void executeTask(Task task, AspectValueCollection aspectValues) 
          throws ExecutionException {
+
         List aspects = componentManager.getAspects();
         Map aspectContexts = new HashMap();
         for (Iterator i = aspects.iterator(); i.hasNext();) {
@@ -897,6 +898,7 @@ public class Frame implements DemuxOutputReceiver {
         }
 
         // Now call back the aspects that registered interest
+
         Set activeAspects = aspectContexts.keySet();
         for (Iterator i = activeAspects.iterator(); i.hasNext();) {
             Aspect aspect = (Aspect) i.next();
@@ -932,18 +934,8 @@ public class Frame implements DemuxOutputReceiver {
             BuildElement model = (BuildElement) taskIterator.next();
 
             // what sort of element is this.
-            List aspects = componentManager.getAspects();
             try {
                 Object component = componentManager.createComponent(model);
-                for (Iterator i = aspects.iterator(); i.hasNext();) {
-                    Aspect aspect = (Aspect) i.next();
-                    Object replacement 
-                        = aspect.postCreateComponent(component, model);
-                    if (replacement != null) {
-                        component = replacement;
-                    }
-                }
-
                 if (component instanceof Task) {
                     execService.executeTask((Task) component);
                 } 

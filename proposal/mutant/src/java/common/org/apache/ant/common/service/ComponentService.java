@@ -190,15 +190,17 @@ public interface ComponentService {
         throws ExecutionException;
         
     /**
-     * Configure an object with attribtes from the given map
+     * configure an object with attribtes from the given map
      *
      * @param object the object to be configured.
      * @param attributeValues a map containing named attribute values.
-     *
+     * @param ignoreUnsupported if this is true, attribute names for which no
+     *                          setter method exists are ignored.
      * @exception ExecutionException if the object does not support an
      *            attribute in the map.
      */
-    void configureAttributes(Object object, Map attributeValues)
+    void configureAttributes(Object object, Map attributeValues,
+                             boolean ignoreUnsupported)
          throws ExecutionException;
 }
 

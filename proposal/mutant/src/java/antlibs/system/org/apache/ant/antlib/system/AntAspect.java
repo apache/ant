@@ -91,6 +91,41 @@ public class AntAspect extends AbstractAspect {
             = (ComponentService) context.getCoreService(ComponentService.class);
     }
     
+
+    /**
+     * This join point is activated before a component has been created.
+     * The aspect can return an object to be used rather than the core creating 
+     * the object. 
+     *
+     * @param component the component that has been created. This will be null
+     *                  unless another aspect has created the component
+     * @param model the Build model that applies to the component
+     *
+     * @return a component to use.
+     * @exception ExecutionException if the aspect cannot process the component.
+     */         
+    public Object preCreateComponent(Object component, BuildElement model)
+         throws ExecutionException {
+        String refId = model.getAspectAttributeValue(ANT_ASPECT, "refid");
+        if (refId != null) {
+            if (model.getAttributeNames().hasNext() ||
+                model.getNestedElements().hasNext() ||
+                model.getText().length() != 0) {
+                throw new ExecutionException("Element <" + model.getType()
+                     + "> is defined by reference and hence may not specify "
+                     + "any attributes, nested elements or content",
+                    model.getLocation());
+            }
+            Object referredComponent = dataService.getDataValue(refId);
+            if (referredComponent == null) {
+                throw new ExecutionException("The given ant:refid value '"
+                     + refId + "' is not defined", model.getLocation());
+            }
+            return referredComponent;
+        }             
+        return component;
+    }
+    
     /**
      * This join point is activated after a component has been created and
      * configured. If the aspect wishes, an object can be returned in place
@@ -111,7 +146,7 @@ public class AntAspect extends AbstractAspect {
             dataService.setMutableDataValue(typeId, component);
         }
         
-        return null;
+        return super.postCreateComponent(component, model);
     }
 
     /**
@@ -135,7 +170,8 @@ public class AntAspect extends AbstractAspect {
             return null;
         }
         
-        componentService.configureAttributes(aspectContext, antAspectValues);
+        componentService.configureAttributes(aspectContext, antAspectValues, 
+            true);
         if (aspectContext.isRequired()) {
             return aspectContext;
         }

@@ -440,21 +440,40 @@ public class ComponentManager implements ComponentService {
      * @exception ExecutionException if there is a problem creating or
      *      configuring the component
      */
-    protected Object createComponent(String componentName, BuildElement model)
+    private Object createComponent(String componentName, BuildElement model)
          throws ExecutionException {
 
-        ImportInfo importInfo = getImport(componentName);
-        if (importInfo == null) {
-            throw new ExecutionException("There is no definition of the <"
-                 + componentName + "> component");
+        Object component = null;
+        if (model != null) {             
+            for (Iterator i = aspects.iterator(); i.hasNext();) {
+                Aspect aspect = (Aspect) i.next();
+                component = aspect.preCreateComponent(component, model);
+            }
         }
-        String className = importInfo.getClassName();
-
-        ComponentLibrary componentLibrary
-             = importInfo.getComponentLibrary();
-
-        return createComponentFromDef(componentName, componentLibrary,
-            importInfo.getDefinition(), model);
+        
+        if (component == null) {
+            ImportInfo importInfo = getImport(componentName);
+            if (importInfo == null) {
+                throw new ExecutionException("There is no definition of the <"
+                + componentName + "> component");
+            }
+            String className = importInfo.getClassName();
+            
+            ComponentLibrary componentLibrary
+            = importInfo.getComponentLibrary();
+            
+            component = createComponentFromDef(componentName, componentLibrary,
+                importInfo.getDefinition(), model);
+        }
+        
+        if (model != null) {
+            for (Iterator i = aspects.iterator(); i.hasNext();) {
+                Aspect aspect = (Aspect) i.next();
+                component = aspect.postCreateComponent(component, model);
+            }
+        }
+        
+        return component;
     }
 
     /**
@@ -672,36 +691,12 @@ public class ComponentManager implements ComponentService {
         // is there a polymorph indicator - look in Ant aspects
         String typeName 
             = model.getAspectAttributeValue(Constants.ANT_ASPECT, "type");
-        String refId 
-            = model.getAspectAttributeValue(Constants.ANT_ASPECT, "refid");
-        if (refId != null && typeName != null) {
-            throw new ExecutionException("Only one of " + Constants.ANT_ASPECT
-                 + ":type and " + Constants.ANT_ASPECT
-                 + ":refid may be specified at a time", model.getLocation());
-        }
 
         Object typeInstance = null;
         if (typeName != null) {
             // the build file has specified the actual type of the element.
             // we need to look up that type and use it
             typeInstance = createComponent(typeName, model);
-        } else if (refId != null) {
-            // We have a reference to an existing instance. Need to check if
-            // it is compatible with the type expected by the nested element's
-            // adder method
-            typeInstance = frame.getDataValue(refId);
-            if (model.getAttributeNames().hasNext() ||
-                model.getNestedElements().hasNext() ||
-                model.getText().length() != 0) {
-                throw new ExecutionException("Element <" + nestedElementName
-                     + "> is defined by reference and hence may not specify "
-                     + "any attributes, nested elements or content",
-                    model.getLocation());
-            }
-            if (typeInstance == null) {
-                throw new ExecutionException("The given ant:refid value '"
-                     + refId + "' is not defined", model.getLocation());
-            }
         } else if (nestedType != null) {
             // We need to create an instance of the class expected by the nested
             // element's adder method if that is possible
@@ -723,17 +718,9 @@ public class ComponentManager implements ComponentService {
         // is the typeInstance compatible with the type expected
         // by the element's add method
         if (!nestedType.isInstance(typeInstance)) {
-            if (refId != null) {
-                throw new ExecutionException("The value specified by refId "
-                     + refId + " is not compatible with the <"
-                     + nestedElementName + "> nested element",
-                    model.getLocation());
-            } else if (typeName != null) {
-                throw new ExecutionException("The type "
-                     + typeName + " is not compatible with the <"
-                     + nestedElementName + "> nested element",
-                    model.getLocation());
-            }
+            throw new ExecutionException("The type "
+                + typeName + " is not compatible with the <"
+                + nestedElementName + "> nested element", model.getLocation());
         }
         setter.addElement(element, nestedElementName, typeInstance);
     }
@@ -781,23 +768,28 @@ public class ComponentManager implements ComponentService {
      *
      * @param object the object to be configured.
      * @param attributeValues a map containing named attribute values.
-     *
+     * @param ignoreUnsupported if this is true, attribute names for which no
+     *                          setter method exists are ignored.
      * @exception ExecutionException if the object does not support an
      *            attribute in the map.
      */
-    public void configureAttributes(Object object, Map attributeValues)
+    public void configureAttributes(Object object, Map attributeValues,
+                                    boolean ignoreUnsupported)
          throws ExecutionException {
         Setter setter = getSetter(object.getClass());
         for (Iterator i = attributeValues.keySet().iterator(); i.hasNext();) {
             String attributeName = (String) i.next();
             String attributeValue = (String) attributeValues.get(attributeName);
             if (!setter.supportsAttribute(attributeName)) {
-                throw new ExecutionException(object.getClass().getName()
-                     + " does not support the \"" + attributeName
-                     + "\" attribute");
+                if (!ignoreUnsupported) {
+                    throw new ExecutionException(object.getClass().getName()
+                         + " does not support the \"" + attributeName
+                         + "\" attribute");
+                }
+            } else {
+                setter.setAttribute(object, attributeName,
+                    frame.replacePropertyRefs(attributeValue));
             }
-            setter.setAttribute(object, attributeName,
-                frame.replacePropertyRefs(attributeValue));
         }
     }
 

@@ -88,7 +88,23 @@ public class AbstractAspect implements Aspect {
         return context;
     }
 
-         
+    /**
+     * This join point is activated before a component is to be created.
+     * The aspect can return an object to be used rather than the core creating 
+     * the object. 
+     *
+     * @param component the component that has been created. This will be null
+     *                  unless another aspect has created the component
+     * @param model the Build model that applies to the component
+     *
+     * @return a component to use.
+     * @exception ExecutionException if the aspect cannot process the component.
+     */         
+    public Object preCreateComponent(Object component, BuildElement model)
+         throws ExecutionException {
+        return component;
+    }
+
     /**
      * This join point is activated after a component has been created and
      * configured. If the aspect wishes, an object can be returned in place
@@ -103,7 +119,7 @@ public class AbstractAspect implements Aspect {
      */         
     public Object postCreateComponent(Object component, BuildElement model) 
          throws ExecutionException {
-        return null;
+        return component;
     }
 
     /**
@@ -111,8 +127,8 @@ public class AbstractAspect implements Aspect {
      *
      * @param task the task being executed.
      * @param aspectValues a collection of aspect attribute values for use 
-     *        during the task execution.
-     *
+     *        during the task execution - may be null if no aspect values are
+     *        provided.
      * @return an object which indicates that this aspect wishes to 
      * be notified after execution has been completed, in which case the obkect
      * is returned to provide the aspect its context. If this returns null

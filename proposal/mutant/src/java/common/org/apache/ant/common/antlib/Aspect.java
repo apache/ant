@@ -76,6 +76,21 @@ public interface Aspect {
 
          
     /**
+     * This join point is activated before a component has been created.
+     * The aspect can return an object to be used rather than the core creating 
+     * the object. 
+     *
+     * @param component the component that has been created. This will be null
+     *                  unless another aspect has created the component
+     * @param model the Build model that applies to the component
+     *
+     * @return a component to use.
+     * @exception ExecutionException if the aspect cannot process the component.
+     */         
+    Object preCreateComponent(Object component, BuildElement model)
+        throws ExecutionException;
+
+    /**
      * This join point is activated after a component has been created and
      * configured. If the aspect wishes, an object can be returned in place
      * of the one created by Ant. 
@@ -83,8 +98,7 @@ public interface Aspect {
      * @param component the component that has been created.
      * @param model the Build model used to create the component.
      *
-     * @return a replacement for the component if desired. If null is returned
-     *         the current component is used.
+     * @return a component to use
      * @exception ExecutionException if the aspect cannot process the component.
      */         
     Object postCreateComponent(Object component, BuildElement model)
