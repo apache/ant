@@ -8,7 +8,7 @@
       <pathelement path="${junit.jar}" />
     </path>
 
-    <classloader pathRef="myJars" 
+    <classloader classpathRef="myJars" 
                  reverse="true" >
       
     </classloader>

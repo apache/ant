@@ -112,7 +112,7 @@ public class Classloader extends Task {
     public static final String SYSTEM_LOADER_REF="ant.coreLoader";
 
     private String name=null;
-    private Path path;
+    private Path classpath;
     private boolean reset=false;
     private boolean reverse=false;
     private String parentName=null;
@@ -156,8 +156,28 @@ public class Classloader extends Task {
      *  and is an AntClassLoader ( or any other loader we can extend ),
      *  the path will be added to the loader.
      */
-    public void setPathRef( Reference pathRef ) throws BuildException {
-        path=(Path)pathRef.getReferencedObject(project);
+    public void setClasspathRef( Reference pathRef ) throws BuildException {
+        classpath=(Path)pathRef.getReferencedObject(project);
+    }
+
+    /**
+     * Set the classpath to be used when searching for component being defined
+     *
+     * @param classpath an Ant Path object containing the classpath.
+     */
+    public void setClasspath(Path classpath) {
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+
+    public Path createClasspath() {
+        if (this.classpath == null) {
+            this.classpath = new Path(null);
+        }
+        return this.classpath.createPath();
     }
 
 
@@ -204,7 +224,7 @@ public class Classloader extends Task {
                 }
 
                 acl=new AntClassLoader( (ClassLoader)parent,
-                        project, path, reverse );
+                        project, classpath, reverse );
                 project.addReference( loaderName, acl );
                 if( name==null ) {
                     // This allows the core loader to load optional tasks
@@ -213,8 +233,8 @@ public class Classloader extends Task {
                     project.setCoreLoader(acl);
                 }
             }
-            if( path != null ) {
-                String list[]=path.list();
+            if( classpath != null ) {
+                String list[]=classpath.list();
                 for( int i=0; i<list.length; i++ ) {
                     File f= new File( list[i] );
                     if( f.exists() ) {
