@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>SSH Tasks for Ant 1.5.x</title>
+  </head>
+
+  <body>
+    <h1>SSH Tasks for Ant 1.5.x</h1>
+
+    <p>With Ant 1.6.0 two new tasks have been added that allow users
+      to execute commands via SSH or use scp to transfer files to a
+      remote server securly.</p>
+
+    <p>These new tasks are mostly independent of changes in Ant 1.6,
+      so we decided to make the tasks available to users who can't
+      upgrade Ant easily as a separate library.  We encourage all our
+      users to upgrade to the latest version of Ant.</p>
+
+    <p>This distribution contains the Ant tasks &lt;sshexec&gt; and
+    &lt;scp&gt; compiled against Ant 1.5.4.  They may work with older
+    distributions of Ant as well but haven't been tested with any
+    other version.  These tasks <a
+    href="#librarydependencies">require</a> additional software that
+    is not part of this distribution.</p>
+
+    <h2>Installation</h2>
+
+    <p>The easiest way to use the tasks is to use</p>
+
+    <pre>
+      &lt;taskdef resource="org/apache/tools/ant/taskdefs/optional/ssh/sshtasks.properties"&gt;
+        &lt;classpath&gt;
+          &lt;pathelement location="your/path/to/ant-ssh.jar"/&gt;
+          &lt;pathelement location="your/path/to/jsch.jar"/&gt;
+        &lt;/classpath&gt;
+      &lt;/taskdef&gt;
+    </pre>
+
+    <p>in your build file.  If ant-ssh.jar is on your CLASSPATH or in
+      ANT_HOME/lib you can even simplify this to read</p>
+
+    <pre>
+      &lt;taskdef resource="org/apache/tools/ant/taskdefs/optional/ssh/sshtasks.properties"/&gt;
+    </pre>
+
+    <p><strong>Note</strong> that JSch has to be on your CLASSPATH or
+    ANT_HOME/lib as well, if you use the last approach.</p>
+
+    <h2>Usage</h2>
+
+    <p>The manual pages for the tasks:</p>
+    <ul>
+      <li><a href="scp.html">scp</a></li>
+      <li><a href="sshexec.html">sshexec</a></li>
+    </ul>
+
+    <h2><a name="librarydependencies">Library Dependencies</a></h2>
+
+    <p>The tasks are based on the BSD licensed SSH library <a
+    href="http://www.jcraft.com/jsch/index.html"
+    target="_top">JSch</a> that is not part of this distribution.
+    Please note that JSch requires JCE, which is part of JRE 1.4.0 and
+    later, but you may need to install additional software for JRE
+    1.2.2 or 1.3.x - please consult the JSch documentation for more
+    details.</p>
+
+    <hr>
+    <p align="center">Copyright &copy; 2004 Apache Software Foundation.
+All rights Reserved.</p>
+  </body>
+</html>

@@ -4,7 +4,7 @@
   =======================================================================
    Apache Ant own build file
 
-   Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+   Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
    reserved.
 
   =======================================================================
@@ -303,6 +303,22 @@
   <patternset id="teststhatfail">
   </patternset>
   
+  <patternset id="needs.jsch">
+    <exclude name="${optional.package}/ssh/*.java" unless="jsch.present"/>
+  </patternset>
+  <patternset id="ssh-lib">
+    <exclude name="${optional.package}/ssh/*"/>
+    <exclude name="${ant.package}/util/TeeOutputStream*"/>
+  </patternset>
+  <patternset id="ssh-lib-src">
+    <exclude name="main/${optional.package}/ssh/*"/>
+    <exclude name="main/${ant.package}/util/TeeOutputStream*"/>
+  </patternset>
+  <patternset id="ssh-lib-docs">
+    <exclude name="manual/OptionalTasks/sshexec.html"/>
+    <exclude name="manual/OptionalTasks/scp.html"/>
+  </patternset>
+
   <!--
        ===================================================================
          Set up a patternsets that matches the parts of our JUnit testsuite
@@ -539,6 +555,9 @@
     <available property="beanshell.present"
                classname="bsh.StringUtil"
                classpathref="classpath"/>
+    <available property="jsch.present"
+               classname="com.jcraft.jsch.Session"
+               classpathref="classpath"/>
   </target>
 
 
@@ -612,6 +631,7 @@
       <patternset refid="needs.sun.b64"/>
       <patternset refid="needs.jakarta.bcel"/>
       <patternset refid="needs.swing"/>
+      <patternset refid="needs.jsch"/>
     </javac>
 
     <copy todir="${build.classes}">
@@ -661,6 +681,7 @@
     <jar destfile="${build.lib}/${name}.jar"
          basedir="${build.classes}"
          manifest="${manifest}">
+      <patternset refid="ssh-lib"/>
       <exclude name="${optional.package}/**"/>
       <exclude name="${optional.type.package}/**"/>
       <exclude name="${util.package}/depend/**"/>
@@ -700,6 +721,7 @@
     <jar destfile="${build.lib}/optional.jar"
          basedir="${build.classes}"
          manifest="${manifest}">
+      <patternset refid="ssh-lib"/>
       <include name="${optional.package}/**"/>
       <include name="${optional.type.package}/**"/>
       <include name="${util.package}/depend/**"/>
@@ -911,13 +933,16 @@
     </copy>
 
     <copy todir="${src.dist.src}">
-      <fileset dir="${src.dir}"/>
+      <fileset dir="${src.dir}">
+        <patternset refid="ssh-lib-src"/>
+      </fileset>
     </copy>
 
     <copy todir="${src.dist.docs}">
       <fileset dir="${docs.dir}">
         <exclude name="manual/api/**"/>
         <patternset refid="site.excludes"/>
+        <patternset refid="ssh-lib-docs"/>
       </fileset>
     </copy>
 
@@ -1150,7 +1175,8 @@
              windowtitle="${Name} API"
              doctitle="${Name}">
 
-      <packageset dir="${java.dir}"/>
+      <packageset dir="${java.dir}" 
+        excludes="org/apache/tools/ant/taskdefs/optional/ssh"/>
 
       <tag name="todo" description="To do:" scope="all"/>
       <tag name="ant.task" enabled="false" description="Task:" scope="types"/>
@@ -1448,4 +1474,104 @@
           description="--> creates a minimum distribution in ./dist"
           depends="dist-lite"/>
 
+  <!--
+       ===================================================================
+         Creates the SSH tasks distribution, requires JSch on the CLASSPATH
+       ===================================================================
+  -->
+  <target name="ssh-lib" depends="build" if="jsch.present">
+    <property name="ssh.version" value="1.5-1.0"/>
+    <property name="ssh.dist" 
+      value="${dist.base}/ant-ssh-tasks-${ssh.version}"/>
+    <mkdir dir="${ssh.dist}/tmp"/>
+    <echo file="${ssh.dist}/tmp/sshtasks.properties">
+scp=org.apache.tools.ant.taskdefs.optional.ssh.Scp
+sshexec=org.apache.tools.ant.taskdefs.optional.ssh.SSHExec
+    </echo>
+
+    <patternset id="ssh-lib-includes">
+      <include name="${ant.package}/taskdefs/optional/ssh/*"/>
+      <include name="${ant.package}/util/TeeOutputStream*"/>
+    </patternset>
+
+    <mkdir dir="${ssh.dist}/lib"/>
+    <jar destfile="${ssh.dist}/lib/ant-ssh.jar">
+      <manifest>
+        <section name="${ant.package}/taskdefs/optional/ssh">
+          <attribute name="Extension-name"
+                     value="org.apache.tools.ant.taskdefs.optional.ssh"/>
+          <attribute name="Specification-Title"
+                     value="Apache Ant SSH Tasks"/>
+          <attribute name="Specification-Version"
+                     value="${manifest-version}"/>
+          <attribute name="Specification-Vendor"
+                     value="Apache Software Foundation"/>
+          <attribute name="Implementation-Title"
+                     value="org.apache.tools.ant.taskdefs.optional.ssh"/>
+          <attribute name="Implementation-Version"
+                     value="${manifest-version}"/>
+          <attribute name="Implementation-Vendor"
+                     value="Apache Software Foundation"/>
+        </section>
+      </manifest>
+      <fileset dir="${build.classes}">
+        <patternset refid="ssh-lib-includes"/>
+      </fileset>
+      <zipfileset dir="${ssh.dist}/tmp" 
+        prefix="${ant.package}/taskdefs/optional/ssh"/>
+    </jar>
+    <delete dir="${ssh.dist}/tmp"/>
+
+    <mkdir dir="${ssh.dist}/docs"/>
+    <copy todir="${ssh.dist}/docs" flatten="true">
+      <fileset dir="${docs.dir}">
+        <include name="manual/OptionalTasks/sshexec.html"/>
+        <include name="manual/OptionalTasks/scp.html"/>
+      </fileset>
+    </copy>
+    <copy tofile="${ssh.dist}/docs/index.html"
+        file="${docs.dir}/manual/OptionalTasks/sshlib.html"/>
+
+    <echo file="${ssh.dist}/README">
+This distribution contains the &lt;sshexec&gt; and &lt;scp&gt; tasks
+introduced in Ant 1.6.0 compiled against Ant 1.5.4.
+
+If you use Ant 1.6.0 or later, you don't need this file.
+If you are using Ant 1.5.x, you should consider upgrading Ant.
+
+This distribution has only been tested against Ant 1.5.4 but should
+work with Ant 1.5.2 or higher.
+
+The tasks in this library require additional software.  For details,
+installation instructions and the task documentation see the docs
+subdirectory.
+
+This software is licensed under the terms you may find in the file
+named "LICENSE" in this directory.
+
+                                          The Apache Ant Project
+                                         &lt;http://ant.apache.org/&gt;
+    </echo>
+    <copy todir="${ssh.dist}">
+      <fileset dir=".">
+        <include name="LICENSE"/>
+      </fileset>
+    </copy>
+
+    <mkdir dir="${ssh.dist}/src"/>
+    <copy todir="${ssh.dist}/src">
+      <fileset dir="${java.dir}">
+        <patternset refid="ssh-lib-includes"/>
+      </fileset>
+    </copy>
+    <zip destfile="${ssh.dist}.zip" basedir="${dist.base}"
+	includes="ant-ssh-tasks-${ssh.version}/**"/>
+    <tar destfile="${ssh.dist}.tar.gz" basedir="${dist.base}"
+      compression="gzip" includes="ant-ssh-tasks-${ssh.version}/**"/>
+    <delete dir="${ssh.dist}"/>
+    <checksum fileext=".md5">
+      <fileset dir="${dist.base}"
+        includes="ant-ssh-tasks-${ssh.version}.*"/>
+    </checksum>
+  </target>
 </project>
