@@ -1,8 +1,23 @@
 TODO List:
+    * Add ability to create new "nodes" in the build tree.
+
+    * Add editors for defining file sets, and other "sets".
+
+    * Add ability to view task dependencies more fully.
+
+    * Add better editors for specific tasks.
+
     * Add a Progress Monitor for file loading (especially for slow boxen like
       mine) .
 
     * Implement some for of refid hyperlinking functionality.
+
+    * Write wizzard framework.
+
+    * Implement context sensitive menus for the console window, allowing
+      an error to be selected and invoked in IDE.
+
+    * Write preferences framwork, including persistence support.
 
     * Provide some sort of class path debugging support.
 
@@ -12,21 +27,14 @@ TODO List:
       node value. This will make sure that the node gets displayed correctly in
       the project navigator.
 
-    * Implement a custom tree node renderer with better icons.
-
     * Implement a build progress reporter.
 
-    * Add "syntax" colorization to the console window, with a preferences
-      editor for setting up the styles.
-
-    * Rework EventResponder to remove hard coded command translation.
+    * Add "syntax" colorization to the console window {done}, 
+      with a preferences editor for setting up the styles {not-done}.
 
     * Figure out an approach to gracefully stopping a running build.
 
     * Add error handler for SAX parser to better report loading errors.
-
-    * Create an error dialog that is able to display a stack backtrace if
-      desired.
 
     * Add support to ActionManager to handle toggle actions in tool bar. Also
       need a better way of detecting the selected state of the action button.
