@@ -2,7 +2,7 @@
  *
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -87,10 +87,10 @@ import org.apache.tools.ant.types.Commandline;
  * and supports file names with <i>()</i>. Thanks to Erik Husby for
  * bringing the bug to my attention.
  *
- * <b>27-04-2001</b> <p>UNC paths are now handled properly. 
+ * <b>27-04-2001</b> <p>UNC paths are now handled properly.
  * Fix provided by Don Jeffery. He also added an <i>UpdateOnly</i> flag
- * that, when true, conditions the PVCS get using the -U option to only 
- * update those files that have a modification time (in PVCS) that is newer 
+ * that, when true, conditions the PVCS get using the -U option to only
+ * update those files that have a modification time (in PVCS) that is newer
  * than the existing workfile.
  *
  * @author <a href="mailto:tchristensen@nordija.com">Thomas Christensen</a>
@@ -110,6 +110,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private boolean updateOnly;
     private String filenameFormat;
     private String lineStart;
+    private String userId;
     /**
      * Constant for the thing to execute
      */
@@ -160,7 +161,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
         Project aProj = getProject();
         int result = 0;
 
-        if(repository == null || repository.trim().equals("")) { 
+        if(repository == null || repository.trim().equals("")) {
             throw new BuildException("Required argument repository not specified");
         }
 
@@ -178,6 +179,12 @@ public class Pvcs extends org.apache.tools.ant.Task {
             commandLine.createArgument().setValue("-sp"+getWorkspace());
         }
         commandLine.createArgument().setValue("-pr"+getRepository());
+
+        String uid = getUserId();
+
+        if (uid != null) {
+            commandLine.createArgument().setValue("-id" + uid);
+        }
 
         // default pvcs project is "/"
         if(getPvcsproject() == null && getPvcsprojects().isEmpty()) {
@@ -281,8 +288,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
         String line = in.readLine();
         while(line != null) {
             log("Considering \""+line+"\"", Project.MSG_VERBOSE);
-            if(line.startsWith("\"\\") || 
-               line.startsWith("\"/") || 
+            if(line.startsWith("\"\\") ||
+               line.startsWith("\"/") ||
                line.startsWith(getLineStart()) ) {
                 Object[] objs = mf.parse(line);
                 String f = (String)objs[1];
@@ -301,7 +308,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
                         log(dir.getAbsolutePath() + " exists. Skipping", Project.MSG_VERBOSE);
                     }
                 } else {
-                    log("File separator problem with " + line, 
+                    log("File separator problem with " + line,
                         Project.MSG_WARN);
                 }
             } else {
@@ -401,7 +408,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * Get name of the PVCS bin directory 
+     * Get name of the PVCS bin directory
      * @return String
      */
     public String getPvcsbin() {
@@ -446,7 +453,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * Specifies the name of the promotiongroup argument
-     * @param repo String 
+     * @param repo String
      */
     public void setPromotiongroup(String w) {
         promotiongroup=w;
@@ -462,7 +469,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
 
     /**
      * Specifies the name of the label argument
-     * @param repo String 
+     * @param repo String
      */
     public void setLabel(String l) {
         label=l;
@@ -477,7 +484,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
     }
 
     /**
-     * If set to true the return value from executing the pvcs 
+     * If set to true the return value from executing the pvcs
      * commands are ignored.
      */
     public void setIgnoreReturnCode(boolean b) {
@@ -502,6 +509,14 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     public void setUpdateOnly(boolean l) {
         updateOnly = l;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String u) {
+        userId = u;
     }
 
     /**
