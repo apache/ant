@@ -106,7 +106,8 @@ public class AntStructure extends Task {
                 out = new PrintWriter(new FileWriter(output));
             }
             
-            printHead(out);
+            Enumeration dataTypes = project.getDataTypeDefinitions().keys();
+            printHead(out, dataTypes);
 
             Vector tasks = new Vector();
             Enumeration enum = project.getTaskDefinitions().keys();
@@ -116,6 +117,13 @@ public class AntStructure extends Task {
             }
             printTargetDecl(out, tasks);
 
+            dataTypes = project.getDataTypeDefinitions().keys();
+            while (dataTypes.hasMoreElements()) {
+                String typeName = (String) dataTypes.nextElement();
+                printElementDecl(out, typeName, 
+                                 (Class) project.getDataTypeDefinitions().get(typeName));
+            }
+            
             for (int i=0; i<tasks.size(); i++) {
                 String taskName = (String) tasks.elementAt(i);
                 printElementDecl(out, taskName, 
@@ -134,12 +142,18 @@ public class AntStructure extends Task {
         }
     }
 
-    private void printHead(PrintWriter out) {
+    private void printHead(PrintWriter out, Enumeration enum) {
         out.println("<?xml version=\"1.0\" encoding=\"iso-8859-1\"?>");
         out.println("<!ENTITY % boolean \"(true|false|on|off|yes|no)\">");
         out.println("");
         
-        out.println("<!ELEMENT project (target | property | taskdef)*>");
+        out.print("<!ELEMENT project (target | property | taskdef");
+        while (enum.hasMoreElements()) {
+            String typeName = (String) enum.nextElement();
+            out.print(" | "+typeName);
+        }
+
+        out.println(")*>");
         out.println("<!ATTLIST project");
         out.println("          name    CDATA #REQUIRED");
         out.println("          default CDATA #REQUIRED");

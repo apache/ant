@@ -460,6 +460,11 @@ defined.</p>
 <p>Builds a PATH which holds the value of <code>${classpath}</code>
 followed by all JAR files in the <code>lib</code> directory, followed
 by the <code>classes</code> directory.</p>
+<p>If you want to use the same PATH like structure for several tasks,
+you can define them with a <code>&lt;path&gt;</code> element at the
+same level as <em>target</em>s and reference them via their
+<em>id</em> attribute - see <a href="#references">References</a> for an
+example.</p>
 <h3><a name="arg">Command line arguments</a></h3>
 
 <p>Several tasks take arguments that shall be passed to another
@@ -518,33 +523,49 @@ the same snippet of XML over and over again - using a
 example.</p>
 <p>The following example</p>
 <blockquote><pre>
-&lt;rmic ...&gt;
-  &lt;classpath&gt;
-    &lt;pathelement location=&quot;lib/&quot; /&gt;
-    &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
-    &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
-  &lt;/classpath&gt;
-&lt;/rmic&gt;
-&lt;javac ...&gt;
-  &lt;classpath&gt;
-    &lt;pathelement location=&quot;lib/&quot; /&gt;
-    &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
-    &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
-  &lt;/classpath&gt;
-&lt;/javac&gt;
+&lt;project ... &gt;
+  &lt;target ... &gt;
+    &lt;rmic ...&gt;
+      &lt;classpath&gt;
+        &lt;pathelement location=&quot;lib/&quot; /&gt;
+        &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
+        &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
+      &lt;/classpath&gt;
+    &lt;/rmic&gt;
+  &lt;/target&gt;
+
+  &lt;target ... &gt;
+    &lt;javac ...&gt;
+      &lt;classpath&gt;
+        &lt;pathelement location=&quot;lib/&quot; /&gt;
+        &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
+        &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
+      &lt;/classpath&gt;
+    &lt;/javac&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
 </pre></blockquote>
 <p>could be rewritten as</p>
 <blockquote><pre>
-&lt;rmic ...&gt;
-  &lt;classpath id=&quot;project.class.path&quot;&gt;
+&lt;project ... &gt;
+  &lt;path id=&quot;project.class.path&quot;&gt;
     &lt;pathelement location=&quot;lib/&quot; /&gt;
     &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
     &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
-  &lt;/classpath&gt;
-&lt;/rmic&gt;
-&lt;javac ...&gt;
-  &lt;classpathref refid=&quot;project.class.path&quot; /&gt;
-&lt;/javac&gt;
+  &lt;/path&gt;
+
+  &lt;target ... &gt;
+    &lt;rmic ...&gt;
+      &lt;classpathref refid=&quot;project.class.path&quot; /&gt;
+    &lt;/rmic&gt;
+  &lt;/target&gt;
+
+  &lt;target ... &gt;
+    &lt;javac ...&gt;
+      &lt;classpathref refid=&quot;project.class.path&quot; /&gt;
+    &lt;/javac&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
 </pre></blockquote>
 <p>All tasks that use nested elements for <a
 href="#patternset">PatternSet</a>s, <a href="#fileset">FileSet</a>s or
@@ -666,9 +687,10 @@ If you do not want these default excludes applied, you may disable them with the
 <h3><a name="patternset">PatternSets</a></h3>
 <p>Patterns can be grouped to sets and later be referenced by their id
 attribute. They are defined via a <code>patternset</code> element -
-which can currently only appear nested into a <a
-href="#fileset">FileSet</a> or a directory based task that constitutes
-an implicit FileSet.</p>
+which can appear nested into a <a href="#fileset">FileSet</a> or a
+directory based task that constitutes an implicit FileSet. In addition
+<code>patternset</code>s can be defined at the same level as
+<code>target</code> - i.e. as children of <code>project</code></p>
 <p>Patterns can be specified by nested <code>&lt;include&gt;</code> or
 <code>&lt;exclude&gt;</code> elements or the following attributes.</p>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -713,8 +735,9 @@ can be <a href="#references">referred</a> to via
 <p>FileSets are groups of files. These files can be found in a
 directory tree starting in a base directory and are matched by
 patterns taken from a number of <a
-href="#patternset">PatternSets</a>. Currently FileSets can only appear
-inside task that support this feature.</p>
+href="#patternset">PatternSets</a>. FileSets can appear inside task
+that support this feature or at the same level as <code>target</code>
+- i.e. as children of <code>project</code>.</p>
 <p>PatternSets can be specified as nested
 <code>&lt;patternset&gt;</code> or <code>&lt;patternsetref&gt;</code>
 elements. In addition FileSet holds an implicit PatternSet and

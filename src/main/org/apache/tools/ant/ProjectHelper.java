@@ -250,6 +250,8 @@ public class ProjectHelper {
                 handleProperty(name, attrs);
             } else if (name.equals("target")) {
                 handleTarget(name, attrs);
+            } else if (project.getDataTypeDefinitions().get(name) != null) {
+                handleDataType(name, attrs);
             } else {
                 throw new SAXParseException("Unexpected element \"" + name + "\"", locator);
             }
@@ -265,6 +267,10 @@ public class ProjectHelper {
 
         private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
             new TargetHandler(this).init(tag, attrs);
+        }
+
+        private void handleDataType(String name, AttributeList attrs) throws SAXParseException {
+            new DataTypeHandler(this).init(name, attrs);
         }
     }
 
@@ -388,8 +394,6 @@ public class ProjectHelper {
      * Handler for all nested properties.
      */
     private class NestedElementHandler extends AbstractHandler {
-        private DocumentHandler parentHandler;
-
         private Object target;
         private Object child;
 
@@ -428,6 +432,48 @@ public class ProjectHelper {
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             new NestedElementHandler(this, child).init(name, attrs);
+        }
+    }
+
+    /**
+     * Handler for all data types at global level.
+     */
+    private class DataTypeHandler extends AbstractHandler {
+        private Object element;
+
+        public DataTypeHandler(DocumentHandler parentHandler) {
+            super(parentHandler);
+        }
+
+        public void init(String propType, AttributeList attrs) throws SAXParseException {
+            try {
+                element = project.createDataType(propType);
+                if (element == null) {
+                    throw new BuildException("Unknown data type "+propType);
+                }
+                
+                configure(element, attrs);
+            } catch (BuildException exc) {
+                throw new SAXParseException(exc.getMessage(), locator, exc);
+            }
+        }
+
+        public void characters(char[] buf, int start, int end) throws SAXParseException {
+            String text = new String(buf, start, end).trim();
+            if (text.length() == 0) return;
+
+            IntrospectionHelper ih = 
+                IntrospectionHelper.getHelper(element.getClass());
+
+            try {
+                ih.addText(element, text);
+            } catch (BuildException exc) {
+                throw new SAXParseException(exc.getMessage(), locator, exc);
+            }
+        }
+
+        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+            new NestedElementHandler(this, element).init(name, attrs);
         }
     }
 

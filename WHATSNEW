@@ -46,6 +46,8 @@ specified.
 all files if the stylesheet changes.
 
 * New data types fileset and patternset - expected to get a broader use.
+They as well as PATH like structures can now be defined on a global
+level and later be referenced by their id attribute.
 
 * You can specify environment variables to <exec>.
 

@@ -35,6 +35,15 @@
   <property name="build.compiler.emacs" value="on"/>
 
   <!-- =================================================================== -->
+  <!-- Define a global set of patterns that can be referenced by           -->
+  <!-- its id attribute                                                    -->
+  <!-- =================================================================== -->
+  <patternset id="chmod.patterns">
+    <include name="**/ant" />
+    <include name="**/antRun" />
+  </patternset>
+
+  <!-- =================================================================== -->
   <!-- Check to see what optional dependencies are available               -->
   <!-- =================================================================== -->
   <target name="check_for_optional_packages">
@@ -125,10 +134,7 @@
      <copydir src="${src.bin.dir}" dest="${bin.dir}"/>
      <chmod perm="+x">
        <fileset dir="${bin.dir}">
-         <patternset id="chmod.patterns">
-           <include name="**/ant" />
-           <include name="**/antRun" />
-         </patternset>
+         <patternsetref refid="chmod.patterns"/>
        </fileset>
      </chmod>
      <fixcrlf srcdir="${bin.dir}" includes="ant,antRun" cr="remove"/>
