@@ -12,8 +12,8 @@
 
 <p>Use the links below to download a binary distribution of Ant from
 one of our mirrors.  You <strong>must</strong> 
-<a href="[location]#Verify Releases">verify the integrity</a> of 
-the downloaded files using signatures downloaded from our main
+<a href="[location]#Verify Releases">verify the integrity</a> of the 
+downloaded files using signatures downloaded from our main
 distribution directory.</p>
 
 <p>Ant is distributed as <code>zip</code>, <code>tar.gz</code> and

@@ -17,7 +17,7 @@
         <table>
           <tr>
             <th>FAQ:</th>
-            <td><a href="faq.html">http://jakarta.apache.org/ant/faq.html</a></td>
+            <td><a href="faq.html">http://ant.apache.org/faq.html</a></td>
           </tr>
         </table>
       </subsection>
@@ -96,11 +96,11 @@
         1.4.  This is the original description:</p>
 
         <source>
-  Ant kurz &amp; gut enth�lt eine vollst�ndige Referenz der Built-in Tasks
-  und ihrer jeweiligen Attribute sowie kurze Beispiele f�r ihre Verwendung.
-  Daneben bietet das Buch eine knappe Einf�hrung in die Arbeit mit Ant und
-  eine Erl�uterung der Ant-Basiselemente (Projekte, Properties, Targets und Tasks).
-  Behandelt werden au�erdem grundlegende Konzepte wie Filesets, Patternsets und
+  Ant kurz &amp; gut enth&#xe4;lt eine vollst&#xe4;ndige Referenz der Built-in Tasks
+  und ihrer jeweiligen Attribute sowie kurze Beispiele f&#xfc;r ihre Verwendung.
+  Daneben bietet das Buch eine knappe Einf&#xfc;hrung in die Arbeit mit Ant und
+  eine Erl&#xe4;uterung der Ant-Basiselemente (Projekte, Properties, Targets und Tasks).
+  Behandelt werden au&#xdf;erdem grundlegende Konzepte wie Filesets, Patternsets und
   Pfadstrukturen, das Schreiben eigener Tasks, die Aufruf-Syntax und Optional Tasks. </source>
         <table>
           <tr>
@@ -160,7 +160,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="ant_in_anger.html">http://jakarta.apache.org/ant/ant_in_anger.html</a></td>
+            <td><a href="ant_in_anger.html">http://ant.apache.org/ant_in_anger.html</a></td>
           </tr>
         </table>
       </subsection>
@@ -176,7 +176,7 @@
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="ant_task_guidelines.html">http://jakarta.apache.org/ant/ant_task_guidelines.html</a></td>
+            <td><a href="ant_task_guidelines.html">http://ant.apache.org/ant_task_guidelines.html</a></td>
           </tr>
         </table>
       </subsection>

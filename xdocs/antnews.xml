@@ -5,14 +5,14 @@
     <author email="">Conor MacNeill</author>
     <author email="stefan.bodewig@epost.de">Stefan Bodewig</author>
     <author email="">Magesh Umasankar</author>
-    <title>Ant News</title>
+    <title>News</title>
   </properties>
 
 <body>
   <section name="Ant 1.5.1">
     <h3>October 3, 2002 - Ant 1.5.1 Available !</h3>
     <p>The final version of Ant 1.5.1 is now available for 
-     <a href="http://www.apache.org/dist/ant/">
+     <a href="http://ant.apache.org/bindownload.cgi">
      download</a>. If you have any feedback on this release, feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
@@ -21,8 +21,7 @@
   <section name="Ant 1.5.1Beta1">
     <h3>August 19, 2002 - Ant 1.5.1 Beta1 Available !</h3>
     <p>The first beta version of Ant 1.5.1 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5.1beta1/">
-     download</a>. If you have any feedback on the beta feel free to join the 
+     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -44,8 +43,7 @@
   <section name="Ant 1.5Beta3">
     <h3>June 24, 2002 - Ant 1.5 Beta3 Available!</h3>
     <p>The third beta version of Ant 1.5 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5Beta3/">
-     download</a>. If you have any feedback on the beta feel free to join the 
+     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -53,8 +51,7 @@
   <section name="Ant 1.5Beta2">
     <h3>June 1, 2002 - Ant 1.5 Beta2 Available!</h3>
     <p>The second beta version of Ant 1.5 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5Beta2/">
-     download</a>. If you have any feedback on the beta feel free to join the 
+     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -62,8 +59,7 @@
   <section name="Ant 1.5Beta1">
     <h3>Ant 1.5 Beta1 Available !</h3>
     <p>The first beta version of Ant 1.5 is now available for 
-     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.5Beta1/">
-     download</a>. If you have any feedback on the beta feel free to join the 
+     download. If you have any feedback on the beta feel free to join the 
      discussion on the ant-dev and ant-user mailing lists.
      </p>
   </section>
@@ -176,7 +172,7 @@
       
       <p>
         If you want to shape the future of Ant, join the 
-        <a href="http://jakarta.apache.org/site/mail.html">Ant-Dev mailing list</a> and contribute
+        <a href="mail.html">Ant-Dev mailing list</a> and contribute
         your ideas.
       </p>
   </section>

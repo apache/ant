@@ -5,13 +5,9 @@
     <!-- GENERATED FILE, DO NOT EDIT, EDIT THE XML FILE IN xdocs INSTEAD! -->
     <head>
       <META http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-        <title>Apache Ant - Welcome</title>
+        <title>Apache Ant - License</title>
         <link type="text/css" href="page.css" rel="stylesheet">
-          <meta name="author" content="Conor MacNeill">
-  <meta name="email" content="">
-        <meta name="author" content="Stefan Bodewig">
-  <meta name="email" content="stefan.bodewig@epost.de">
-      </head>
+        </head>
 
     <body text="#000000" bgcolor="#ffffff">
       <table summary="navigation path" width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -91,11 +87,11 @@
       <li><font color="#CFDCED">Apache Ant</font>
       <ul>
             <li>
-              <span class="sel"><font color="#ffcc00">Welcome</font></span>
-              </li>
-            <li>
-                    <a href="./license.html">License</a>
+                    <a href="./index.html">Welcome</a>
                 </li>
+            <li>
+              <span class="sel"><font color="#ffcc00">License</font></span>
+              </li>
             <li>
                     <a href="./antnews.html">News</a>
                 </li>
@@ -196,99 +192,65 @@
       <table class="title">
         <tr>
           <td valign="middle">
-            <h1>Welcome</h1>
+            <h1>License</h1>
           </td>
         </tr>
       </table>
           <br/>
   <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Ant 1.5.1"><strong>Ant 1.5.1</strong></a></font></td></tr>
+    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="The Apache Software License"><strong>The Apache Software License</strong></a></font></td></tr>
   </table>
-                        <h3>Apache Ant 1.5.1 Released!</h3>
-                                <p>Version 1.5.1 of Ant has been released. It is available for
-    download as <a href="http://ant.apache.org/bindownload.cgi">binary</a> or as <a href="http://ant.apache.org/srcdownload.cgi">source</a> distribution.</p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Apache Ant"><strong>Apache Ant</strong></a></font></td></tr>
-  </table>
-                        <p>
-Apache Ant is a Java-based build tool. In theory, it is kind of like
-Make, but without Make's wrinkles.
-</p>
-                                <p>
-Why another build tool when there is already <em>make</em>, <em>gnumake</em>,
-<em>nmake</em>, <em>jam</em>, and
-others? Because all those tools have limitations that Ant's original author
-couldn't live with when developing software across multiple platforms. Make-like
-tools are inherently shell-based -- they evaluate a set of dependencies, then
-execute commands not unlike what you would issue in a shell. This means that you
-can easily extend these tools by using or writing any program for the OS that
-you are working on. However, this also means that you limit yourself to the OS,
-or at least the OS type such as Unix, that you are working on.
-</p>
-                                <p>
-Makefiles are inherently evil as well. Anybody who has worked on them for any
-time has run into the dreaded tab problem. "Is my command not executing
-because I have a space in front of my tab!!!" said the original author of
-Ant way too many times. Tools like Jam took care of this to a great degree, but
-still have yet another format to use and remember.
-</p>
-                                <p>
-Ant is different. Instead of a model where it is extended with shell-based
-commands, Ant is extended using Java classes. Instead of writing shell commands,
-the configuration files are XML-based, calling out a target tree where various
-tasks get executed. Each task is run by an object that implements a particular
-Task interface.
-</p>
-                                <p>
-Granted, this removes some of the expressive power that is inherent by being
-able to construct a shell command such as
-<code>`find . -name foo -exec rm {}`</code>, but it
-gives you the ability to be cross platform -- to work anywhere and everywhere.
-And hey, if you really need to execute a shell command, Ant has an
-<code>&lt;exec&gt;</code> task that
-allows different commands to be executed based on the OS that it is executing
-on.
-</p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Documentation"><strong>Documentation</strong></a></font></td></tr>
-  </table>
-                        <p>
-You can view the documentation for the current release (Apache Ant 1.5.1)
-<a href="manual/index.html">online</a>
-</p>
-                                <p>
-Comprehensive documentation is included in the source and binary distributions. 
-</p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Nightly Builds"><strong>Nightly Builds</strong></a></font></td></tr>
-  </table>
-                        <p>
-    If you wish to use the latest Ant features, you can try downloading a nightly 
-    build from <a href="http://cvs.apache.org/builds/jakarta-ant/nightly/">here</a>
-    </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Towards Ant2"><strong>Towards Ant2</strong></a></font></td></tr>
-  </table>
-                        <p>
-    We are currently hashing out design details for Ant2. Please
-    read the latest <a href="antnews.html">Ant news</a> for more details.
-    </p>
-                      <br/>
-  <table class="nowrap" border="0" cellspacing="0" cellpadding="2" width="100%">
-    <tr><td bgcolor="#294563"><font color="#ffffff"><a name="Get Involved"><strong>Get Involved</strong></a></font></td></tr>
-  </table>
-                        <ul>
-<li><a href="http://jakarta.apache.org/getinvolved/getinvolvedindex.html">Get Involved</a></li>
-<li><a href="mail.html">Join Mailing Lists</a></li>
-<li><a href="http://marc.theaimsgroup.com/?l=ant-dev&amp;r=1&amp;w=2">Search the Dev Mailing List</a>
-</li>
-<li><a href="http://marc.theaimsgroup.com/?l=ant-user&amp;r=1&amp;w=2">Search the User Mailing List</a>
-</li>
-</ul>
+                        <pre class="code">/*
+ * ============================================================================
+ *                   The Apache Software License, Version 1.1
+ * ============================================================================
+ * 
+ *    Copyright (C) 2000-2003 The Apache Software Foundation. All
+ *    rights reserved.
+ * 
+ * Redistribution and use in source and binary forms, with or without modifica-
+ * tion, are permitted provided that the following conditions are met:
+ * 
+ * 1. Redistributions of  source code must  retain the above copyright  notice,
+ *    this list of conditions and the following disclaimer.
+ * 
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ * 
+ * 3. The end-user documentation included with the redistribution, if any, must
+ *    include  the following  acknowledgment:  &quot;This product includes  software
+ *    developed  by the  Apache Software Foundation  (http://www.apache.org/).&quot;
+ *    Alternately, this  acknowledgment may  appear in the software itself,  if
+ *    and wherever such third-party acknowledgments normally appear.
+ * 
+ * 4. The names &quot;Ant&quot; and  &quot;Apache Software Foundation&quot;  must not be used to
+ *    endorse  or promote  products derived  from this  software without  prior
+ *    written permission. For written permission, please contact
+ *    apache@apache.org.
+ * 
+ * 5. Products  derived from this software may not  be called &quot;Apache&quot;, nor may
+ *    &quot;Apache&quot; appear  in their name,  without prior written permission  of the
+ *    Apache Software Foundation.
+ * 
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+ * FITNESS  FOR A PARTICULAR  PURPOSE ARE  DISCLAIMED.  IN NO  EVENT SHALL  THE
+ * APACHE SOFTWARE  FOUNDATION  OR ITS CONTRIBUTORS  BE LIABLE FOR  ANY DIRECT,
+ * INDIRECT, INCIDENTAL, SPECIAL,  EXEMPLARY, OR CONSEQUENTIAL  DAMAGES (INCLU-
+ * DING, BUT NOT LIMITED TO, PROCUREMENT  OF SUBSTITUTE GOODS OR SERVICES; LOSS
+ * OF USE, DATA, OR  PROFITS; OR BUSINESS  INTERRUPTION)  HOWEVER CAUSED AND ON
+ * ANY  THEORY OF LIABILITY,  WHETHER  IN CONTRACT,  STRICT LIABILITY,  OR TORT
+ * (INCLUDING  NEGLIGENCE OR  OTHERWISE) ARISING IN  ANY WAY OUT OF THE  USE OF
+ * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * 
+ * This software  consists of voluntary contributions made  by many individuals
+ * on behalf of the  Apache Software Foundation.  For more  information  on the 
+ * Apache Software Foundation, please see &lt;http://www.apache.org/&gt;.
+ *
+ */
+</pre>
+                                <p>You can download the original license file <a href="./LICENSE" target="_new">here</a></p>
                 
   
                     </div>
