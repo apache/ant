@@ -65,9 +65,11 @@ import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 import org.apache.tools.ant.util.FileUtils;
 
-import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.io.FilterReader;
+import java.io.Reader;
+import java.io.IOException;
 import java.util.Vector;
 
 /**

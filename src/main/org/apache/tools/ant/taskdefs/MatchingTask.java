@@ -62,7 +62,6 @@ import org.apache.tools.ant.types.PatternSet;
 
 import java.io.File;
 import java.util.StringTokenizer;
-import java.util.Vector;
 
 /**
  * This is an abstract task that should be used by all those tasks that 

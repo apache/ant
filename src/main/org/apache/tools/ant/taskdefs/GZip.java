@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.Pack;
 
 import java.io.IOException;
 import java.io.FileOutputStream;

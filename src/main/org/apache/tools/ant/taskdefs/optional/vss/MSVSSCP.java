@@ -56,9 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
-
-import java.io.File;
 
 /**
  * Task to perform CP (Change Project) commands to Microsoft Visual Source Safe.

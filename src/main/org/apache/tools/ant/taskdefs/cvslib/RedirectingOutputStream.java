@@ -55,12 +55,6 @@
 package org.apache.tools.ant.taskdefs.cvslib;
 
 import org.apache.tools.ant.taskdefs.LogOutputStream;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.ByteArrayOutputStream;
 
 /**
  * A dummy stream that just passes stuff to the parser.

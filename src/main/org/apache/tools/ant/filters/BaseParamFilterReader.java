@@ -53,10 +53,7 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.FilterReader;
-import java.io.IOException;
 import java.io.Reader;
-import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;

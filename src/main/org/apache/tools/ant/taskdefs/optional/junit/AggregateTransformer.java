@@ -72,13 +72,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
-
-
-
-
-
 
 /**
  * Transform a JUnit xml report.

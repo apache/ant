@@ -59,7 +59,12 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.BufferedInputStream;
+import java.io.Reader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 import java.util.Vector;
 
 /**

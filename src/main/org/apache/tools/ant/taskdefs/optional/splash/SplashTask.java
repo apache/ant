@@ -54,14 +54,17 @@
 
 package org.apache.tools.ant.taskdefs.optional.splash;
 
+import java.io.InputStream;
+import java.io.DataInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 import javax.swing.ImageIcon;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-
-import java.io.*;
-import java.net.*;
-
+ 
 public class SplashTask extends Task {
 
     private String imgurl = null;

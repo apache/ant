@@ -53,8 +53,6 @@
  */
 package org.apache.tools.ant.types;
 
-import java.util.Vector;
-
 /**
  * Parameterizable objects take genric key value pairs.
  *

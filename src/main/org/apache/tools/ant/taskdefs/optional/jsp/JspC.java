@@ -69,7 +69,6 @@ import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapter;
 import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapterFactory;
 
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Reference;
 
 /** Ant task to run the jsp compiler.

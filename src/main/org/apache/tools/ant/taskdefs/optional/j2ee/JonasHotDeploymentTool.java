@@ -57,9 +57,6 @@ import java.io.File;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool;
-import org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool;
-import org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy;
 import org.apache.tools.ant.types.Path;
 
 /**

@@ -53,13 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.cvslib;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
-import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 import org.apache.tools.ant.BuildException;
 

@@ -53,12 +53,7 @@
  */
 package org.apache.tools.ant.types;
 
-import java.io.FilterReader;
-import java.util.Hashtable;
 import java.util.Vector;
-
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 
 /**
  * An AntFileReader is a wrapper class that encloses the classname

@@ -56,7 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy;
 
 /**
  *  Abstract class to support vendor-specific hot deployment tools.

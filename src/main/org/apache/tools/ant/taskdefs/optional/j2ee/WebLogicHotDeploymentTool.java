@@ -56,9 +56,6 @@ package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy;
-import org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool;
-import org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool;
 
 /**
  *  An Ant wrapper task for the weblogic.deploy tool.  This is used to

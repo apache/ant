@@ -54,13 +54,10 @@
 package org.apache.tools.ant.taskdefs.optional.metamata;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -78,10 +75,6 @@ import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.taskdefs.StreamPumper;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.DateUtils;
-import org.apache.tools.ant.util.StringUtils;
-import org.apache.tools.ant.util.regexp.RegexpMatcher;
-import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
-
 
 /**
  * This is a very bad stream handler for the MAudit task.

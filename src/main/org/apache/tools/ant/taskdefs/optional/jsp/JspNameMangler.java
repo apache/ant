@@ -53,7 +53,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.jsp;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * This is a class derived from the Jasper code 

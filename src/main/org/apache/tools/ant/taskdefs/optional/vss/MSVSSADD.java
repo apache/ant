@@ -58,8 +58,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
-import java.io.File;
-
 /**
  * Task to perform Add commands to Microsoft Visual Source Safe.
  * Based on the VSS Checkin code by Martin Poeschl

@@ -53,13 +53,11 @@
  */
 package org.apache.tools.ant.filters;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.apache.tools.ant.Project;
 
 /**
  * Assemble the constants declared in a Java class in

@@ -59,7 +59,6 @@ import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.Pack;
 import org.apache.tools.bzip2.CBZip2OutputStream;
 
 /**

@@ -54,7 +54,6 @@
 
 package org.apache.tools.ant.types;
 
-import java.io.File;
 import java.util.Properties;
 import java.util.Enumeration;
 import java.util.Vector;

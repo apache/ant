@@ -54,7 +54,6 @@
 package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy;
 
 /**
  *  An interface for vendor-specific "hot" deployment tools.
