@@ -106,8 +106,7 @@ public class Chmod extends ExecuteOn {
      */
     public void setFile(File src) {
         FileSet fs = new FileSet();
-        fs.setDir(new File(src.getParent()));
-        fs.createInclude().setName(src.getName());
+        fs.setFile(src);
         addFileset(fs);
     }
 

@@ -67,6 +67,8 @@ import java.io.File;
  *
  * @author skanga@bigfoot.com
  * @author <a href="mailto:Jerome@jeromelacoste.com">Jerome Lacoste</a>
+ *
+ * @since Ant 1.6
  */
 public class Attrib extends ExecuteOn {
 
@@ -86,15 +88,7 @@ public class Attrib extends ExecuteOn {
 
     public void setFile(File src) {
         FileSet fs = new FileSet();
-        fs.setDir(new File(src.getParent()));
-        fs.createInclude().setName(src.getName());
-        addFileset(fs);
-    }
-
-    public void setDir(File src) {
-        FileSet fs = new FileSet();
-        fs.setDir(new File(src.getParent()));
-        fs.createInclude().setName(src.getName());
+        fs.setFile(src);
         addFileset(fs);
     }
 

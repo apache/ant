@@ -15,7 +15,7 @@ directories. Right now it has effect only under Unix.  The group
 atribute is equivalent to the coresponding argument for the chgrp
 command.</p>
 
-<p><a href="../CoreTypes/fileset.html">FileSet</a> can be specified
+<p><a href="../CoreTypes/fileset.html">FileSet</a>s can be specified
 using nested <code>&lt;fileset&gt;</code> elements.</p>
 
 <h3>Parameters</h3>
@@ -27,13 +27,10 @@ using nested <code>&lt;fileset&gt;</code> elements.</p>
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">the file of which the group must be changed.</td>
-    <td valign="top" valign="middle" rowspan="2">one of the two or
-      nested <code>&lt;fileset&gt;</code> elements.</td>
-  </tr>
-  <tr>
-    <td valign="top">dir</td>
-    <td valign="top">the directory whose group must be changed.</td>
+    <td valign="top">the file or directory of which the group must be
+    changed.</td>
+    <td valign="top" valign="middle">Yes or nested
+    <code>&lt;fileset&gt;</code> elements.</td>
   </tr>
   <tr>
     <td valign="top">group</td>

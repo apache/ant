@@ -65,8 +65,6 @@
 
 package org.apache.tools.ant.taskdefs.optional.unix;
 
-import java.io.File;
-
 import org.apache.tools.ant.BuildException;
 
 /**

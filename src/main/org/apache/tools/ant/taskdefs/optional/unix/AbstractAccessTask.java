@@ -93,15 +93,7 @@ public abstract class AbstractAccessTask
 
     public void setFile(File src) {
         FileSet fs = new FileSet();
-        fs.setDir(new File(src.getParent()));
-        fs.createInclude().setName(src.getName());
-        addFileset(fs);
-    }
-
-    public void setDir(File src) {
-        FileSet fs = new FileSet();
-        fs.setDir(new File(src.getParent()));
-        fs.createInclude().setName(src.getName());
+        fs.setFile(src);
         addFileset(fs);
     }
 
