@@ -27,7 +27,7 @@ public class DefaultTaskletFactory
     extends DefaultConverterFactory
     implements TaskletFactory
 {
-    public Entry create( final Info info )
+    public Object create( final Info info )
         throws FactoryException
     {
         if( !info.getClass().equals( TaskletInfo.class ) )
@@ -36,25 +36,23 @@ public class DefaultTaskletFactory
         }
         else
         {
-            return create( (TaskletInfo)info );
+            return createTasklet( (TaskletInfo)info );
         }
     }
 
-    public TaskletEntry create( final TaskletInfo info )
+    public Tasklet createTasklet( final TaskletInfo info )
         throws FactoryException
     {
         final TaskletLoader loader = (TaskletLoader)getLoader( info.getLocation() );
 
         Object object = null;
         
-        try { object = loader.load( info.getClassname() ); }
+        try { return (Tasklet)loader.load( info.getClassname() ); }
         catch( final Exception e )
         {
             throw new FactoryException( "Failed loading tasklet from " + info.getLocation() +
                                         " due to " + e, e );
         }
-        
-        return new TaskletEntry( info, (Tasklet)object );        
     }
 
     protected ConverterLoader createLoader( final URL location )

@@ -244,9 +244,7 @@ public class DefaultTaskletEngine
             throw new AntException( "Unable to locate task " + name, re );
         }
 
-        TaskletEntry entry = null;
-
-        try { entry = m_taskletFactory.create( info ); }
+        try { return m_taskletFactory.createTasklet( info ); }
         catch( final FactoryException fe )
         {
             throw new AntException( "Unable to create task " + name + 
@@ -254,7 +252,5 @@ public class DefaultTaskletEngine
                                     info.getLocation() + ")",
                                     fe );
         }
-        
-        return entry.getTasklet();
     }
 }

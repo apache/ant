@@ -25,6 +25,6 @@ public interface ConverterFactory
      * @return the entry
      * @exception FactoryException if an error occurs
      */
-    ConverterEntry create( ConverterInfo info ) 
+    Converter createConverter( ConverterInfo info ) 
         throws FactoryException;
 }

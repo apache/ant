@@ -65,8 +65,7 @@ public class DefaultConverterEngine
                                           " conversion" );
         }
 
-        final ConverterEntry entry = m_converterFactory.create( info );
-        final Converter converter = entry.getConverter();
+        final Converter converter = m_converterFactory.createConverter( info );
         return converter.convert( destination, original );
     }
 }

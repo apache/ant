@@ -9,6 +9,7 @@ package org.apache.ant.tasklet.engine;
 
 import org.apache.avalon.camelot.Factory;
 import org.apache.avalon.camelot.FactoryException;
+import org.apache.ant.tasklet.Tasklet;
 
 /**
  * Facility used to load Tasklets.
@@ -18,6 +19,6 @@ import org.apache.avalon.camelot.FactoryException;
 public interface TaskletFactory
     extends Factory
 {
-    TaskletEntry create( TaskletInfo info ) 
+    Tasklet createTasklet( TaskletInfo info ) 
         throws FactoryException;
 }

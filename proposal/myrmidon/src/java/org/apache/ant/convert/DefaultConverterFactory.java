@@ -34,7 +34,7 @@ public class DefaultConverterFactory
      * @return the created entry
      * @exception FactoryException if an error occurs
      */
-    public Entry create( final Info info )
+    public Object create( final Info info )
         throws FactoryException
     {
         if( info.getClass().equals( ConverterInfo.class ) )
@@ -51,27 +51,23 @@ public class DefaultConverterFactory
      * @return the created entry
      * @exception FactoryException if an error occurs
      */
-    public ConverterEntry create( final ConverterInfo info )
+    public Converter createConverter( final ConverterInfo info )
         throws FactoryException
     {
         final ConverterLoader loader = getLoader( info.getLocation() );
         
-        Object object = null;
-        
-        try { object = loader.load( info.getClassname() ); }
+        try { return (Converter)loader.load( info.getClassname() ); }
         catch( final Exception e )
         {
             throw new FactoryException( "Failed loading converter from " + info.getLocation() +
                                         " due to " + e, e );
         }
-        
-        return new ConverterEntry( info, (Converter)object );        
     }
     
     /**
      * Get a loader for a particular location
      *
-     * @param locationthe location 
+     * @param location the location 
      * @return the loader
      */
     protected ConverterLoader getLoader( final URL location )
