@@ -191,7 +191,14 @@ public class ExecTask extends Task {
         Execute exe = new Execute(createHandler(), createWatchdog());
         exe.setAntRun(project);
         exe.setWorkingDirectory(dir);
-        exe.setEnvironment(env.getVariables());
+        String[] environment = env.getVariables();
+        if (environment != null) {
+            for (int i=0; i<environment.length; i++) {
+                log("Setting environment variable: "+environment[i],
+                    Project.MSG_VERBOSE);
+            }
+        }
+        exe.setEnvironment(environment);
         return exe;
     }
 
