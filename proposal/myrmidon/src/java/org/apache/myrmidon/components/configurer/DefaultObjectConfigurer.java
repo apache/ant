@@ -20,7 +20,6 @@ import java.util.Set;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.configuration.Configuration;
 
 /**
  * An object configurer which uses reflection to determine the properties
@@ -191,7 +190,17 @@ class DefaultObjectConfigurer
                 final Class currentType = candidate.getParameterTypes()[ 0 ];
 
                 // Ditch the string version, if any
-                if( currentType != String.class && type == String.class )
+                if( isTypedAdder )
+                {
+                    // Both are string, or both are not string
+                    final String message =
+                        REZ.getString( "multiple-typed-adder-methods-for-element.error",
+                                       m_class.getName(),
+                                       type.getName(),
+                                       currentType.getName() );
+                    throw new ConfigurationException( message );
+                }
+                else if( currentType != String.class && type == String.class )
                 {
                     // New type is string, and current type is not.  Ignore
                     // the new method
@@ -204,16 +213,6 @@ class DefaultObjectConfigurer
                         REZ.getString( "multiple-adder-methods-for-element.error",
                                        m_class.getName(),
                                        propName );
-                    throw new ConfigurationException( message );
-                }
-                else if( isTypedAdder )
-                {
-                    // Both are string, or both are not string
-                    final String message =
-                        REZ.getString( "multiple-typed-adder-methods-for-element.error",
-                                       m_class.getName(),
-                                       type.getName(),
-                                       currentType.getName() );
                     throw new ConfigurationException( message );
                 }
 
