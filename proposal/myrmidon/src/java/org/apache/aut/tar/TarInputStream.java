@@ -32,7 +32,6 @@ public class TarInputStream
     private boolean m_hasHitEOF;
     private byte[] m_oneBuf;
     private byte[] m_readBuf;
-    private boolean m_v7Format;
 
     public TarInputStream( final InputStream input )
     {
@@ -134,7 +133,7 @@ public class TarInputStream
                 headerBuf[ 259 ] == 't' && headerBuf[ 260 ] == 'a' &&
                 headerBuf[ 261 ] == 'r' ) )
             {
-                m_v7Format = true;
+                //Must be v7Format
             }
 
             if( m_debug )
@@ -207,7 +206,7 @@ public class TarInputStream
      * Copies the contents of the current tar archive entry directly into an
      * output stream.
      *
-     * @param out The OutputStream into which to write the entry's data.
+     * @param output The OutputStream into which to write the entry's data.
      * @exception IOException Description of Exception
      */
     public void copyEntryContents( final OutputStream output )
@@ -270,7 +269,7 @@ public class TarInputStream
      * Reads bytes from the current tar archive entry. This method simply calls
      * read( byte[], int, int ).
      *
-     * @param buf The buffer into which to place bytes read.
+     * @param buffer The buffer into which to place bytes read.
      * @return The number of bytes read, or -1 at EOF.
      * @exception IOException Description of Exception
      */
@@ -285,7 +284,7 @@ public class TarInputStream
      * the boundaries of the current entry in the archive and will deal with
      * them as if they were this stream's start and EOF.
      *
-     * @param buf The buffer into which to place bytes read.
+     * @param buffer The buffer into which to place bytes read.
      * @param offset The offset at which to place bytes read.
      * @param count The number of bytes to read.
      * @return The number of bytes read, or -1 at EOF.
