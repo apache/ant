@@ -227,8 +227,6 @@ public class Execute {
             return cmd;
         }
         else if ( Os.isFamily("windows") ) {
-            String osname =
-                System.getProperty("os.name").toLowerCase(Locale.US);
             // Determine if we're running under XP/2000/NT or 98/95
             if ( !Os.isFamily("win9x") ) {
                 // Windows XP/2000/NT
