@@ -12,6 +12,14 @@ $$.
 
 Fixed bugs:
 -----------
+
+* if you ask for the "classic" compiler on Java1.4, you get upgraded to 
+"modern" because there is no classic compiler any more. 
+
+* the <http> condition was viewing 404 'not found' exceptions as success. Now
+it defaults to viewing any response >=400 as an error, and has an errorsBeginAt
+attribute you can use if you want a higher or lower value. 
+
 * <get> throws a build exception on an http authorization error, unless you
 have set ignoreerrors to true.
 
