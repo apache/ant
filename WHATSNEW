@@ -49,6 +49,8 @@ Other changes:
   is the ability to execute VAJ tasks from the command line by
   exploiting the Remote Tool Access feature of VAJ.
 
+* Improved support for Novell NetWare.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 
