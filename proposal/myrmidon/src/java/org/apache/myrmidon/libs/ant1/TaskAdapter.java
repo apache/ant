@@ -64,7 +64,6 @@ public class TaskAdapter
             getProject().init();
 
             getTask().setProject( getProject() );
-            getTask().init();
             getTask().execute();
         }
         catch( final Exception e )

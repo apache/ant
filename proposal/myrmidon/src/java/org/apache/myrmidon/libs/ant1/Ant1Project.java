@@ -14,17 +14,17 @@ import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.*;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 public class Ant1Project
     extends Project
     implements LogEnabled, Contextualizable
 {
-    private Logger   m_logger;
+    private Logger m_logger;
 
     ///Variable to hold context for use by sub-classes
-    private TaskContext            m_context;
+    private TaskContext m_context;
 
     public void enableLogging( final Logger logger )
     {
@@ -62,16 +62,14 @@ public class Ant1Project
 
     public void setProperty( final String name, final String value )
     {
-        try { getContext().setProperty( name, value ); }
+        try
+        {
+            getContext().setProperty( name, value );
+        }
         catch( final Exception e )
         {
             getLogger().warn( "Failed to set property " + name + " to " + value, e );
         }
-    }
-
-    public void setUserProperty( final String name, final String value )
-    {
-        setProperty( name, value );
     }
 
     public String getProperty( final String name )
@@ -103,52 +101,38 @@ public class Ant1Project
 
     public File resolveFile( final String fileName )
     {
-        try { return getContext().resolveFile( fileName ); }
+        try
+        {
+            return getContext().resolveFile( fileName );
+        }
         catch( final Exception e )
         {
             return null;
         }
     }
 
-    protected void fireBuildStarted() {}
-    protected void fireBuildFinished(Throwable exception) {}
-    protected void fireTargetStarted(Target target) {}
-    protected void fireTargetFinished(Target target, Throwable exception) {}
-    protected void fireTaskStarted(Task task) {}
-    protected void fireTaskFinished(Task task, Throwable exception) {}
-
-    private void fireMessageLoggedEvent(BuildEvent event, String message, int priority)
-    {
-        messageLogged( message, priority );
-    }
-
-    protected void fireMessageLogged(Project project, String message, int priority)
-    {
-        messageLogged( message, priority );
-    }
-
-    protected void fireMessageLogged(Target target, String message, int priority)
-    {
-        messageLogged( message, priority );
-    }
-
-    protected void fireMessageLogged(Task task, String message, int priority)
-    {
-        messageLogged( message, priority );
-    }
-
     private void messageLogged( String message, int priority )
     {
         switch( priority )
         {
-        case MSG_ERR: getLogger().error( message ); break;
-        case MSG_WARN: getLogger().warn( message ); break;
-        case MSG_INFO: getLogger().info( message ); break;
-        case MSG_VERBOSE: getLogger().debug( message ); break;
-        case MSG_DEBUG: getLogger().debug( message ); break;
+            case MSG_ERR:
+                getLogger().error( message );
+                break;
+            case MSG_WARN:
+                getLogger().warn( message );
+                break;
+            case MSG_INFO:
+                getLogger().info( message );
+                break;
+            case MSG_VERBOSE:
+                getLogger().debug( message );
+                break;
+            case MSG_DEBUG:
+                getLogger().debug( message );
+                break;
 
-        default:
-            getLogger().debug( message );
+            default:
+                getLogger().debug( message );
         }
     }
 }
