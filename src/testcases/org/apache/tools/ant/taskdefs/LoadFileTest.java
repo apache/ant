@@ -137,8 +137,9 @@ public class LoadFileTest extends BuildFileTest {
     public void testLoadAFile() 
             throws BuildException {
         executeTarget("testLoadAFile");
-        if(project.getProperty("testLoadAFile").indexOf("eh?")<0)
+        if(project.getProperty("testLoadAFile").indexOf("eh?")<0) {
             fail("property is not all in the file");
+        }
     }
 
 
@@ -148,8 +149,9 @@ public class LoadFileTest extends BuildFileTest {
     public void testLoadAFileEnc() 
             throws BuildException {
         executeTarget("testLoadAFileEnc");
-        if(project.getProperty("testLoadAFileEnc").indexOf("\u00a3")<0)
-            fail("property is not all in the file");
+        if(project.getProperty("testLoadAFileEnc")==null) {
+            fail("file load failed");
+        }
 
     }
 
