@@ -100,6 +100,11 @@ public class ImportTask extends Task {
         ProjectHelper helper=
                 (ProjectHelper)project.getReference("ant.projectHelper");
         Vector importStack=helper.getImportStack();
+        if( importStack.size() == 0) {
+            // this happens if ant is used with a project
+            // helper that doesn't set the import.
+            throw new BuildException("import requires support in ProjectHelper");
+        }
         Object currentSource=importStack.elementAt(importStack.size() - 1);
 
 //        ProjectHelper2.AntXmlContext context;
