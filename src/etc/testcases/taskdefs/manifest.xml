@@ -128,6 +128,42 @@
     </unjar>
   </target>
 
+  <target name="testOrder1">
+    <jar file="mftestOrder1.jar">
+      <manifest>
+        <section name="Test1">
+          <attribute name="TestAttr1" value="Test1"/>
+          <attribute name="TestAttr2" value="Test2"/>
+        </section>
+        <section name="Test2">
+          <attribute name="TestAttrx" value="Testx"/>
+        </section>
+      </manifest>
+    </jar>
+    <unjar src="mftestOrder1.jar" dest="manifests">
+      <include name="META-INF/MANIFEST.MF"/>
+    </unjar>
+  </target>
+
+  <target name="testOrder2">
+    <jar file="mftestOrder2.jar">
+      <manifest>
+        <section name="Test2">
+          <attribute name="TestAttrx" value="Testx"/>
+        </section>
+        <section name="Test1">
+          <attribute name="TestAttr2" value="Test2"/>
+          <attribute name="TestAttr1" value="Test1"/>
+        </section>
+      </manifest>
+    </jar>
+    <unjar src="mftestOrder2.jar" dest="manifests">
+      <include name="META-INF/MANIFEST.MF"/>
+    </unjar>
+  </target>
+
+  
+  
   <target name="testReplace">
     <copy file="manifests/test2.mf" toFile="mftest.mf" />
     <manifest file="mftest.mf" />
