@@ -79,6 +79,9 @@ Other changes:
 
 * Added an optional encoding attribute to <fixcrlf>
 
+* <apply> has a new attribute relative that allows users to pass the
+  filenames as relative instead of absolute paths on the command line.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

@@ -78,6 +78,7 @@ import java.io.IOException;
 public class ExecuteOn extends ExecTask {
 
     protected Vector filesets = new Vector();
+    private boolean relative = false;
     private boolean parallel = false;
     protected String type = "file";
     protected Commandline.Marker srcFilePos = null;
@@ -98,6 +99,14 @@ public class ExecuteOn extends ExecTask {
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }
+
+    /**
+     * Should filenames be returned as relative path names?
+     */
+    public void setRelative(boolean relative) {
+        this.relative = relative;
+    }
+
 
     /**
      * Shall the command work on all specified files in parallel?
@@ -348,8 +357,12 @@ public class ExecuteOn extends ExecTask {
 
         // fill in source file names
         for (int i=0; i < srcFiles.length; i++) {
-            result[srcIndex+i] = 
-                (new File(baseDirs[i], srcFiles[i])).getAbsolutePath();
+            if (!relative) {
+                result[srcIndex+i] = 
+                    (new File(baseDirs[i], srcFiles[i])).getAbsolutePath();
+            } else {
+                result[srcIndex+i] = srcFiles[i];
+            }
         }
         return result;
     }
