@@ -131,6 +131,22 @@ public class Location implements Serializable {
     }
 
     /**
+     * @return the filename portion of the location
+     * @since Ant 1.6
+     */
+    public String getFileName() {
+        return fileName;
+    }
+
+    /**
+     * @return the line number
+     * @since Ant 1.6
+     */
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    /**
      * Returns the file name, line number, a colon and a trailing space.
      * An error message can be appended easily. For unknown locations, an
      * empty string is returned.
@@ -156,4 +172,5 @@ public class Location implements Serializable {
 
         return buf.toString();
     }
+
 }
