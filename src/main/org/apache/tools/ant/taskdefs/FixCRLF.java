@@ -179,7 +179,7 @@ public class FixCRLF extends MatchingTask {
      * @param tlength specify the length of tab in spaces, has to be a power of 2
      */
     public void setTablength(int tlength) throws BuildException {
-        if (tlength < 2 || (tlength % 2) != 0) {
+        if (tlength < 2 || (tlength & (tlength-1)) == 0) {
             throw new BuildException("tablength must be a positive power of 2",
                                      location);
         }
