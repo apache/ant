@@ -450,19 +450,24 @@ public class UnknownElement extends Task {
             + " - You have misspelt '" + elementName + "'." + lSep
             + "   Fix: check your spelling." + lSep
             + " - The task needs an external JAR file to execute" + lSep
-            + "   and this is not found at the right place in the classpath." + lSep
+            + "     and this is not found at the right place in the classpath." + lSep
             + "   Fix: check the documentation for dependencies." + lSep
             + "   Fix: declare the task." + lSep
-            + " - The task is an Ant optional task and optional.jar is absent" + lSep
-            + "   Fix: look for optional.jar in ANT_HOME/lib, download if needed" + lSep
-            + " - The task was not built into optional.jar as dependent"  + lSep
-            + "   libraries were not found at build time." + lSep
-            + "   Fix: look in the JAR to verify, then rebuild with the needed" + lSep
-            + "   libraries, or download a release version from apache.org" + lSep
+            + " - The task is an Ant optional task and the JAR file and/or libraries" + lSep
+            + "     implementing the functionality were not found at the time you" + lSep
+            + "     yourself built your installation of Ant from the Ant sources." + lSep
+            + "   Fix: Look in the ANT_HOME/lib for the 'ant-' JAR corresponding to the" + lSep
+            + "     task and make sure it contains more than merely a META-INF/MANIFEST.MF." + lSep
+            + "     If all it contains is the manifest, then rebuild Ant with the needed" + lSep
+            + "     libraries present in ${ant.home}/lib/optional/ , or alternatively," + lSep
+            + "     download a pre-built release version from apache.org" + lSep
             + " - The build file was written for a later version of Ant" + lSep
             + "   Fix: upgrade to at least the latest release version of Ant" + lSep
             + " - The task is not an Ant core or optional task " + lSep
-            + "   and needs to be declared using <taskdef>." + lSep
+            + "     and needs to be declared using <taskdef>." + lSep
+            + " - You are attempting to use a task defined using " + lSep
+            + "    <presetdef> or <macrodef> but have spelt wrong or not " + lSep
+            + "   defined it at the point of use" + lSep
             + lSep
             + "Remember that for JAR files to be visible to Ant tasks implemented" + lSep
             + "in ANT_HOME/lib, the files must be in the same directory or on the" + lSep
