@@ -52,6 +52,12 @@ Other changes:
 
 * <available> will only print deprecration warnings if it is actually
   used to change the value of a property.
+  
+* Added <image> task (requires JAI).
+
+* Filesets now support a 'file' attribute, allowing a single-file
+  fileset to be constructed without having to specify its parent
+  directory separately.
 
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
