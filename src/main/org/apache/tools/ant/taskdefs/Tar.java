@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -266,7 +266,7 @@ public class Tar extends MatchingTask {
                 TarFileSet fs = (TarFileSet) e.nextElement();
                 String[] files = fs.getFiles(getProject());
 
-                if (!archiveIsUpToDate(files)) {
+                if (!archiveIsUpToDate(files, fs.getDir(getProject()))) {
                     upToDate = false;
                 }
 
@@ -429,7 +429,17 @@ public class Tar extends MatchingTask {
         }
     }
 
+    /**
+     * @deprecated use the two-arg version instead.
+     */
     protected boolean archiveIsUpToDate(String[] files) {
+        return archiveIsUpToDate(files, baseDir);
+    }
+
+    /**
+     * @since Ant 1.5.2
+     */
+    protected boolean archiveIsUpToDate(String[] files, File dir) {
         SourceFileScanner sfs = new SourceFileScanner(this);
         MergingMapper mm = new MergingMapper();
         mm.setTo(tarFile.getAbsolutePath());
