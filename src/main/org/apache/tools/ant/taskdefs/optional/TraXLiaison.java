@@ -89,6 +89,7 @@ import javax.xml.transform.sax.SAXSource;
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
+ * @since Ant 1.3
  */
 public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware {
 

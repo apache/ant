@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,7 @@ import java.io.IOException;
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
+ * @since Ant 1.1
  */
 public class XalanLiaison implements XSLTLiaison {
 
@@ -80,7 +81,7 @@ public class XalanLiaison implements XSLTLiaison {
     protected File stylesheet;
 
     public XalanLiaison() throws Exception {
-      processor = XSLTProcessorFactory.getProcessor();
+        processor = XSLTProcessorFactory.getProcessor();
     }
 
     public void setStylesheet(File stylesheet) throws Exception {

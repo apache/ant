@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,14 +64,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
-
-
-
 /**
  * Concrete liaison for XSLP
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
+ * @since Ant 1.1
  */
 public class XslpLiaison implements XSLTLiaison {
 
@@ -79,20 +77,21 @@ public class XslpLiaison implements XSLTLiaison {
     protected XSLStylesheet xslSheet;
 
     public XslpLiaison() {
-      processor = new XSLProcessor();
-      // uh ?! I'm forced to do that otherwise a setProperty crashes with NPE !
-      // I don't understand why the property map is static though...
-      // how can we do multithreading w/ multiple identical parameters ?
-      processor.getProperty("dummy-to-init-properties-map");
+        processor = new XSLProcessor();
+        // uh ?! I'm forced to do that otherwise a setProperty crashes
+        // with NPE !  I don't understand why the property map is static
+        // though...  how can we do multithreading w/ multiple identical
+        // parameters ?
+        processor.getProperty("dummy-to-init-properties-map");
     }
 
     public void setStylesheet(File fileName) throws Exception {
-      XSLReader xslReader = new XSLReader();
-      // a file:/// + getAbsolutePath() does not work here
-      // it is really the pathname
-      xslSheet = xslReader.read( fileName.getAbsolutePath() );
+        XSLReader xslReader = new XSLReader();
+        // a file:/// + getAbsolutePath() does not work here
+        // it is really the pathname
+        xslSheet = xslReader.read( fileName.getAbsolutePath() );
     }
-
+    
     public void transform(File infile, File outfile) throws Exception {
         FileOutputStream fos = new FileOutputStream(outfile);
         // XSLP does not support encoding...we're in hot water.
@@ -101,7 +100,7 @@ public class XslpLiaison implements XSLTLiaison {
     }
 
     public void addParam(String name, String expression){
-      processor.setProperty(name, expression);
+        processor.setProperty(name, expression);
     }
 
     public void setOutputtype(String type) throws Exception {

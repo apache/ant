@@ -71,27 +71,15 @@ import org.xml.sax.EntityResolver;
 /**
  * A Task to process via XSLT a set of XML documents. This is
  * useful for building views of XML based documentation.
- * arguments:
- * <ul>
- * <li>basedir
- * <li>destdir
- * <li>style
- * <li>includes
- * <li>excludes
- * </ul>
- * Of these arguments, the <b>sourcedir</b> and <b>destdir</b> are required.
- * <p>
- * This task will recursively scan the sourcedir and destdir
- * looking for XML documents to process via XSLT. Any other files,
- * such as images, or html files in the source directory will be
- * copied into the destination directory.
  *
  * @version $Revision$ 
  *
  * @author <a href="mailto:kvisco@exoffice.com">Keith Visco</a>
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
- * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @since Ant 1.1
  *
  * @ant.task name="style" category="xml"
  */
@@ -159,13 +147,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Whether to style all files in the included directories as well.
      *
-     * @since 1.35, Ant 1.5
+     * @since Ant 1.5
      */
     private boolean performDirectoryScan = true;
 
     /**
      * Creates a new XSLTProcess Task.
-     **/
+     */
     public XSLTProcess() {
         fileUtils = FileUtils.newFileUtils();
     } //-- XSLTProcess
@@ -174,7 +162,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * Whether to style all files in the included directories as well.
      *
      * @param b true if files in included directories are processed.
-     * @since 1.35, Ant 1.5
+     * @since Ant 1.5
      */
     public void setScanIncludedDirectories(boolean b) {
         performDirectoryScan = b;
@@ -186,6 +174,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception BuildException if there is an execution problem.
      */
     public void execute() throws BuildException {
+        File savedBaseDir = baseDir;
+
         DirectoryScanner scanner;
         String[]         list;
         String[]         dirs;
@@ -194,74 +184,80 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             throw new BuildException("no stylesheet specified", location);
         }
         
-        if (baseDir == null) {
-            baseDir = project.resolveFile(".");
-        }
-        
-        liaison = getLiaison();
-        
-        // check if liaison wants to log errors using us as logger
-        if (liaison instanceof XSLTLoggerAware) {
-            ((XSLTLoggerAware)liaison).setLogger(this);
-        }
-        
-        log("Using " + liaison.getClass().toString(), Project.MSG_VERBOSE);
-        
-        File stylesheet = project.resolveFile(xslFile);
-        if (!stylesheet.exists()) {
-            stylesheet = fileUtils.resolveFile(baseDir, xslFile);
-            /*
-             * shouldn't throw out deprecation warnings before we know,
-             * the wrong version has been used.
-             */
-            if (stylesheet.exists()) {
-                log("DEPRECATED - the style attribute should be relative " 
-                    + "to the project\'s");
-                log("             basedir, not the tasks\'s basedir.");
+        try {
+            if (baseDir == null) {
+                baseDir = project.resolveFile(".");
             }
-        }
         
-        // if we have an in file and out then process them
-        if (inFile != null && outFile != null) {
-            process(inFile, outFile, stylesheet);
-            return;
-        }
-        
-        /*
-         * if we get here, in and out have not been specified, we are
-         * in batch processing mode.
-         */
-        
-        //-- make sure Source directory exists...
-        if (destDir == null ) {
-            String msg = "destdir attributes must be set!";
-            throw new BuildException(msg);
-        }
-        scanner = getDirectoryScanner(baseDir);
-        log("Transforming into " + destDir, Project.MSG_INFO);
-        
-        // Process all the files marked for styling
-        list = scanner.getIncludedFiles();
-        for (int i = 0; i < list.length; ++i) {
-            process( baseDir, list[i], destDir, stylesheet );
-        }
-        if (performDirectoryScan) {
-            // Process all the directories marked for styling
-            dirs = scanner.getIncludedDirectories();
-            for (int j = 0; j < dirs.length; ++j){
-                list = new File(baseDir, dirs[j]).list();
-                for (int i = 0; i < list.length; ++i) {
-                    process( baseDir, list[i], destDir, stylesheet );
+            liaison = getLiaison();
+            
+            // check if liaison wants to log errors using us as logger
+            if (liaison instanceof XSLTLoggerAware) {
+                ((XSLTLoggerAware)liaison).setLogger(this);
+            }
+            
+            log("Using " + liaison.getClass().toString(), Project.MSG_VERBOSE);
+            
+            File stylesheet = project.resolveFile(xslFile);
+            if (!stylesheet.exists()) {
+                stylesheet = fileUtils.resolveFile(baseDir, xslFile);
+                /*
+                 * shouldn't throw out deprecation warnings before we know,
+                 * the wrong version has been used.
+                 */
+                if (stylesheet.exists()) {
+                    log("DEPRECATED - the style attribute should be relative " 
+                        + "to the project\'s");
+                    log("             basedir, not the tasks\'s basedir.");
                 }
             }
+        
+            // if we have an in file and out then process them
+            if (inFile != null && outFile != null) {
+                process(inFile, outFile, stylesheet);
+                return;
+            }
+        
+            /*
+             * if we get here, in and out have not been specified, we are
+             * in batch processing mode.
+             */
+        
+            //-- make sure Source directory exists...
+            if (destDir == null ) {
+                String msg = "destdir attributes must be set!";
+                throw new BuildException(msg);
+            }
+            scanner = getDirectoryScanner(baseDir);
+            log("Transforming into " + destDir, Project.MSG_INFO);
+        
+            // Process all the files marked for styling
+            list = scanner.getIncludedFiles();
+            for (int i = 0; i < list.length; ++i) {
+                process( baseDir, list[i], destDir, stylesheet );
+            }
+            if (performDirectoryScan) {
+                // Process all the directories marked for styling
+                dirs = scanner.getIncludedDirectories();
+                for (int j = 0; j < dirs.length; ++j){
+                    list = new File(baseDir, dirs[j]).list();
+                    for (int i = 0; i < list.length; ++i) {
+                        process( baseDir, list[i], destDir, stylesheet );
+                    }
+                }
+            }
+        } finally {
+            liaison = null;
+            stylesheetLoaded = false;
+            baseDir = savedBaseDir;
         }
     } //-- execute
     
     /**
      * Set whether to check dependencies, or always generate.
      *
-      * @param force true if always generate.
-     **/
+     * @param force true if always generate.
+     */
     public void setForce(boolean force) {
         this.force = force;
     } //-- setForce
@@ -362,18 +358,15 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     private void resolveProcessor(String proc) throws Exception {
         if (proc.equals("trax")) {
-            final Class clazz =
-                loadClass(TRAX_LIAISON_CLASS);
+            final Class clazz = loadClass(TRAX_LIAISON_CLASS);
             liaison = (XSLTLiaison)clazz.newInstance();
         } else if (proc.equals("xslp")) {
             log("DEPRECATED - xslp processor is deprecated. Use trax or "
                 + "xalan instead.");
-            final Class clazz =
-                loadClass(XSLP_LIASON_CLASS);
+            final Class clazz = loadClass(XSLP_LIASON_CLASS);
             liaison = (XSLTLiaison) clazz.newInstance();
         } else if (proc.equals("xalan")) {
-            final Class clazz =
-                loadClass(XALAN_LIASON_CLASS);
+            final Class clazz = loadClass(XALAN_LIASON_CLASS);
             liaison = (XSLTLiaison)clazz.newInstance();
         } else {
             liaison = (XSLTLiaison) loadClass(proc).newInstance();
@@ -519,11 +512,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     private void ensureDirectoryFor(File targetFile) 
          throws BuildException {
-        File directory = new File( targetFile.getParent() );
+        File directory = fileUtils.getParentFile(targetFile);
         if (!directory.exists()) {
             if (!directory.mkdirs()) {
                 throw new BuildException("Unable to create directory: "
-                + directory.getAbsolutePath() );
+                                         + directory.getAbsolutePath() );
             }
         }
     }
