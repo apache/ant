@@ -166,7 +166,8 @@ public class DefaultAspectManager
         final AspectHandler[] aspects = m_aspects;
         for( int i = 0; i < aspects.length; i++ )
         {
-            if( true == aspects[ i ].error( te ) )
+            final boolean isError = aspects[ i ].error( te );
+            if( isError )
             {
                 return true;
             }
