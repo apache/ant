@@ -1340,6 +1340,34 @@
     </section>
 
     <section name="Compiler Implementations">
+
+      <subsection name="Generics (JSR14) Early-Access Compiler Adapter">
+
+        <p>This is an Ant compiler-adapter that allows you to use the
+        normal <code>&lt;javac&gt;</code> task plus Sun's early-access
+        compiler to compile Generics-enabled Java code.  (This is only
+        necessary until JDK1.5 is released.)</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.madbean.com/blog/3/">http://www.madbean.com/blog/3/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>Matt Quail &lt;spud[at]madbean[dot]com&gt;</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Public Domain</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="miniRMI &lt;code&gt;&amp;lt;rmic&amp;gt;&lt;/code&gt; implementation">
 
         <p>miniRMI is a freeware opensource library that serves as a
