@@ -363,14 +363,16 @@ public class ExecTask extends Task {
      * fallback to the straight executable name (i.e. on ther path)
      *
      * @return the executable as a full path if it can be determined.
+     *
+     * @since Ant 1.6
      */
-    private String resolveExecutable() {
+    protected String resolveExecutable(String exec) {
         if (!resolveExecutable) {
-            return executable;
+            return exec;
         }
 
         // try to find the executable
-        File executableFile = getProject().resolveFile(executable);
+        File executableFile = getProject().resolveFile(exec);
         if (executableFile.exists()) {
             return executableFile.getAbsolutePath();
         }
@@ -378,14 +380,14 @@ public class ExecTask extends Task {
         // now try to resolve against the dir if given
         if (dir != null) {
             FileUtils fileUtils = FileUtils.newFileUtils();
-            executableFile = fileUtils.resolveFile(dir, executable);
+            executableFile = fileUtils.resolveFile(dir, exec);
             if (executableFile.exists()) {
                 return executableFile.getAbsolutePath();
             }
         }
 
         // couldn't find it - must be on path
-        return executable;
+        return exec;
     }
 
     /**
@@ -400,7 +402,7 @@ public class ExecTask extends Task {
      */
     public void execute() throws BuildException {
         File savedDir = dir; // possibly altered in prepareExec
-        cmdl.setExecutable(resolveExecutable());
+        cmdl.setExecutable(resolveExecutable(executable));
         checkConfiguration();
         if (isValidOs()) {
             try {
