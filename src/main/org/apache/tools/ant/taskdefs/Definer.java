@@ -234,19 +234,18 @@ public abstract class Definer extends Task {
                 loaderId="ant.loader." + classpathId;
             }
         }
-
+        
         // If a loader has been set ( either by loaderRef or magic property )
         if( loaderId != null ) {
             Object reusedLoader=project.getReference( loaderId );
-                if( reusedLoader != null ) {
-                    if( reusedLoader instanceof AntClassLoader ) {
-                        return (AntClassLoader)reusedLoader;
-                    }
-                    // In future the reference object may be the <loader> type
-                    // if( reusedLoader instanceof Loader ) {
-                    //      return ((Loader)reusedLoader).getLoader(project);
-                    // }
+            if( reusedLoader != null ) {
+                if( reusedLoader instanceof AntClassLoader ) {
+                    return (AntClassLoader)reusedLoader;
                 }
+                // In future the reference object may be the <loader> type
+                // if( reusedLoader instanceof Loader ) {
+                //      return ((Loader)reusedLoader).getLoader(project);
+                // }
             }
         }
        
