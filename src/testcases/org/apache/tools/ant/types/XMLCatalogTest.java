@@ -57,6 +57,7 @@ package org.apache.tools.ant.types;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 
 import junit.framework.TestCase;
 
@@ -80,11 +81,16 @@ public class XMLCatalogTest extends TestCase {
 
     private Project project;
     private XMLCatalog catalog;
+    private FileUtils fileUtils = FileUtils.newFileUtils();
 
     private XMLCatalog newCatalog() {
         XMLCatalog cat = new XMLCatalog();
         cat.setProject(project);
         return cat;
+    }
+
+    private String toURLString(File file) throws MalformedURLException {
+		  return fileUtils.getFileURL(file).toString();
     }
 
     public XMLCatalogTest(String name) {
@@ -240,18 +246,8 @@ public class XMLCatalogTest extends TestCase {
             InputSource result = catalog.resolveEntity("-//stevo//DTD doc 1.0//EN",
                                                        "nap:chemical+brothers");
             assertNotNull(result);
-/*
-The following is failing with this:
-
-Testcase: testSimpleEntry took 0 sec
-        FAILED
-expected:<file:/C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/optional/xm
-l/doc.dtd> but was:<file:C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/op
-tional/xml/doc.dtd>
-
-            assertEquals(dtdFile.toURL().toString(),
+            assertEquals(toURLString(dtdFile),
                          result.getSystemId());
-*/
         } catch (Exception e) {
             fail("resolveEntity() failed!" + e.toString());
         }
@@ -293,18 +289,8 @@ tional/xml/doc.dtd>
                                                         "nap:chemical+brothers");
 
             assertNotNull(result);
-/*
-The following is failing with this:
-
-Testcase: testEntryReference took 0 sec
-        FAILED
-expected:<file:/C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/optional/xm
-l/doc.dtd> but was:<file:C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/op
-tional/xml/doc.dtd>
-
-            assertEquals(dtdFile.toURL().toString(),
+            assertEquals(toURLString(dtdFile),
                          result.getSystemId());
-*/
         } catch (Exception e) {
             fail("resolveEntity() failed!" + e.toString());
         }
@@ -312,18 +298,8 @@ tional/xml/doc.dtd>
         try {
             Source result = catalog.resolve(uri, null);
             assertNotNull(result);
-/*
-The following is failing with:
-
-Testcase: testEntryReference took 0 sec
-        FAILED
-expected:<file:/C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/optional/xm
-l/doc.dtd> but was:<file:C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/op
-tional/xml/doc.dtd>
-
-            assertEquals(xmlFile.toURL().toString(),
+            assertEquals(toURLString(xmlFile),
                          result.getSystemId());
-*/
         } catch (Exception e) {
             fail("resolve() failed!" + e.toString());
         }
@@ -356,17 +332,8 @@ tional/xml/doc.dtd>
             InputSource result = catalog1.resolveEntity(publicId,
                                                         "nap:chemical+brothers");
             assertNotNull(result);
-/*
-The following is failing with:
-Testcase: testNestedCatalog took 0 sec
-        FAILED
-expected:<file:/C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/optional/xm
-l/doc.dtd> but was:<file:C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/op
-tional/xml/doc.dtd>
-
-            assertEquals(dtdFile.toURL().toString(),
+            assertEquals(toURLString(dtdFile),
                          result.getSystemId());
-*/
         } catch (Exception e) {
             fail("resolveEntity() failed!" + e.toString());
         }
@@ -374,17 +341,8 @@ tional/xml/doc.dtd>
         try {
             Source result = catalog.resolve(uri, null);
             assertNotNull(result);
-/*
-The following is failing with:
-Testcase: testNestedCatalog took 0.01 sec
-        FAILED
-expected:<file:/C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/optional/xm
-l/about.xml> but was:<file:C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/
-optional/xml/about.xml>
-
-            assertEquals(xmlFile.toURL().toString(),
+            assertEquals(toURLString(xmlFile),
                          result.getSystemId());
-*/
         } catch (Exception e) {
             fail("resolve() failed!" + e.toString());
         }
@@ -397,7 +355,7 @@ optional/xml/about.xml>
         String uriLoc = "etc/testcases/taskdefs/optional/xml/about.xml";
         String base = null;
         try {
-            base = project.getBaseDir().toURL().toString() + "src/";
+            base = toURLString(project.getBaseDir()) + "src/";
         } catch (MalformedURLException ex) {
             fail (ex.toString());
         }
@@ -411,7 +369,7 @@ optional/xml/about.xml>
         try {
             Source result = catalog.resolve(uri, base);
             assertNotNull(result);
-            assertEquals(xmlFile.toURL().toString(),
+            assertEquals(toURLString(xmlFile),
                          result.getSystemId());
         } catch (Exception e) {
             fail("resolve() failed!" + e.toString());
@@ -449,16 +407,8 @@ optional/xml/about.xml>
             InputSource result = catalog.resolveEntity(publicId,
                                                        "nap:chemical+brothers");
             assertNotNull(result);
-/*
-The following failed with:
-Testcase: testClasspath took 0.01 sec
-        FAILED
-expected:<file:/C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/optional/xm
-l/doc.dtd> but was:<file:C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/op
-tional/xml/doc.dtd>
-            assertEquals(dtdFile.toURL().toString(),
+            assertEquals(toURLString(dtdFile),
                          result.getSystemId());
-*/
         } catch (Exception e) {
             fail("resolveEntity() failed!" + e.toString());
         }
@@ -466,17 +416,8 @@ tional/xml/doc.dtd>
         try {
             Source result = catalog.resolve(uri, null);
             assertNotNull(result);
-/*
-The following failed with:
-Testcase: testClasspath took 0.01 sec
-        FAILED
-expected:<file:/C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/optional/xm
-l/about.xml> but was:<file:C:/ant1.5Beta/jakarta-ant/src/etc/testcases/taskdefs/
-optional/xml/about.xml>
-
-            assertEquals(xmlFile.toURL().toString(),
+            assertEquals(toURLString(xmlFile),
                          result.getSystemId());
-*/
         } catch (Exception e) {
             fail("resolve() failed!" + e.toString());
         }
