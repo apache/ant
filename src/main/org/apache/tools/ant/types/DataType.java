@@ -69,7 +69,7 @@ import java.util.Stack;
  * nested inside elements of the same type (i.e. &lt;patternset&gt;
  * but not &lt;path&gt;).</p>
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 public abstract class DataType {
     /**
