@@ -189,6 +189,10 @@ public class Ant extends Task {
             File file = new File(antFile);
             if (!file.isAbsolute()) {
                 antFile = (new File(dir, antFile)).getAbsolutePath();
+                file = (new File(antFile)) ;
+                if( ! file.isFile() ) {
+                  throw new BuildException("Build file " + file + " not found.");
+                }
             }
 
             p1.setUserProperty( "ant.file" , antFile );
@@ -203,7 +207,7 @@ public class Ant extends Task {
                 p1.getProperty("ant.file").equals(project.getProperty("ant.file")) &&
                 target.equals(this.getOwningTarget().getName())) { 
 
-                throw new BuildException("ant task calling it's own parent target");
+                throw new BuildException("ant task calling its own parent target");
             }
 
             p1.executeTarget(target);
