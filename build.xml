@@ -36,7 +36,9 @@
   
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
-  <property name="regexp.package" value="${ant.package}/util/regexp"/>
+  <property name="optional.type.package" value="${ant.package}/types/optional"/>
+  <property name="util.package" value="${ant.package}/util"/>
+  <property name="regexp.package" value="${util.package}/regexp"/>
 
   <property name="manifest" value="src/etc/manifest"/>
 
@@ -176,6 +178,9 @@
     <available property="xerces.present" 
                classname="org.apache.xerces.parsers.SAXParser" 
                classpathref="classpath" />
+    <available property="bcel.present" 
+               classname="de.fub.bytecode.Constants" 
+               classpathref="classpath" />
                
     <condition property="javamail.complete">
       <and>
@@ -284,6 +289,10 @@
       <exclude name="${optional.package}/metamata/**" unless="jdk1.2+" />
       <exclude name="${optional.package}/ManifestFile.java" 
                unless="jdk1.2+" />
+      <exclude name="${optional.type.package}/depend/*.java" 
+               unless="bcel.present" />
+      <exclude name="${util.package}/depend/*.java" 
+               unless="bcel.present" />
     </javac>
     
     <copy todir="${build.classes}">
