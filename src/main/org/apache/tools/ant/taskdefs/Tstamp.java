@@ -66,6 +66,7 @@ import java.util.Enumeration;
 import java.util.Calendar;
 import java.util.StringTokenizer;
 import java.util.NoSuchElementException;
+import java.util.TimeZone;
 import java.text.SimpleDateFormat;
 
 /**
@@ -77,7 +78,7 @@ import java.text.SimpleDateFormat;
  * @author conor@cognet.com.au
  */
 public class Tstamp extends Task {
-    
+
     private Vector customFormats = new Vector();
 
     public void execute() throws BuildException {
@@ -92,18 +93,18 @@ public class Tstamp extends Task {
 
             SimpleDateFormat today  = new SimpleDateFormat ("MMMM d yyyy", Locale.US);
             project.setProperty("TODAY", today.format(d));
-            
+
             Enumeration i = customFormats.elements();
             while(i.hasMoreElements()) {
                 CustomFormat cts = (CustomFormat)i.nextElement();
                 cts.execute(project,d, location);
             }
-            
+
         } catch (Exception e) {
             throw new BuildException(e);
         }
     }
-    
+
     public CustomFormat createFormat()
     {
         CustomFormat cts = new CustomFormat();
@@ -113,6 +114,7 @@ public class Tstamp extends Task {
     
     public class CustomFormat
     {
+        private TimeZone timeZone;
         private String propertyName;
         private String pattern;
         private String language;
@@ -157,7 +159,11 @@ public class Tstamp extends Task {
                 throw new BuildException( "bad locale format", e, getLocation());
             }
         }
-        
+
+        public void setTimezone(String id){
+            timeZone = TimeZone.getTimeZone(id);
+        }
+
         public void setOffset(int offset) {
             this.offset = offset;
         }
@@ -218,7 +224,9 @@ public class Tstamp extends Task {
                 calendar.add(field, offset);
                 date = calendar.getTime();
             }
-
+            if (timeZone != null){
+                sdf.setTimeZone(timeZone);
+            }
             project.setProperty(propertyName, sdf.format(date));
         }
     }
