@@ -76,6 +76,9 @@ Fixed bugs:
 * The <stripjavacomments> filter sometimes removed parts of string
   constants.  Bugzilla Report 17441.
 
+* <antlr> will now recompile your grammar if the supergrammar has
+  changed.  Bugzilla Report 12691.
+
 Other changes:
 --------------
 * Shipped XML parser is now Xerces 2.4.0

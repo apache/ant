@@ -276,10 +276,18 @@ public class ANTLR extends Task {
         validateAttributes();
         //TODO: use ANTLR to parse the grammer file to do this.
         File generatedFile = getGeneratedFile();
-        if (target.lastModified() > generatedFile.lastModified()) {
-            log("Compiling " + target + " as it is newer than " 
-                + generatedFile, Project.MSG_VERBOSE);
-
+        boolean targetIsOutOfDate = 
+            target.lastModified() > generatedFile.lastModified();
+        boolean superGrammarIsOutOfDate = superGrammar != null &&
+            (new File(superGrammar).lastModified() > generatedFile.lastModified());
+        if (targetIsOutOfDate || superGrammarIsOutOfDate) {
+            if (targetIsOutOfDate) {
+                log("Compiling " + target + " as it is newer than " 
+                    + generatedFile, Project.MSG_VERBOSE);
+            } else if (superGrammarIsOutOfDate) {
+                log("Compiling " + target + " as " + superGrammar
+                    + " is newer than " + generatedFile, Project.MSG_VERBOSE);
+            }
             populateAttributes();
             commandline.createArgument().setValue(target.toString());
 
