@@ -642,6 +642,52 @@ public final class IntrospectionHelper implements BuildListener {
         return nc;
     }
 
+    private NestedCreator getNestedCreator(
+        Project project, String parentUri, Object parent,
+        String elementName) throws BuildException {
+
+        String uri = ProjectHelper.extractUriFromComponentName(elementName);
+        String name = ProjectHelper.extractNameFromComponentName(elementName);
+
+        NestedCreator nc = null;
+        if (uri.equals(parentUri)) { //  || uri.equals("")) {
+            nc = (NestedCreator) nestedCreators.get(
+                name.toLowerCase(Locale.US));
+        }
+        if (nc == null) {
+            nc = createAddTypeCreator(project, parent, elementName);
+        }
+        if (nc == null && parent instanceof DynamicConfigurator) {
+            DynamicConfigurator dc = (DynamicConfigurator) parent;
+            final Object nestedElement = dc.createDynamicElement(elementName);
+            if (nestedElement != null) {
+                nc = new NestedCreator() {
+                    public boolean isPolyMorphic() {
+                        return false;
+                    }
+                    public Class getElementClass() {
+                        return null;
+                    }
+
+                    public Object getRealObject() {
+                        return null;
+                    }
+
+                    public Object create(
+                        Project project, Object parent, Object ignore) {
+                        return nestedElement;
+                    }
+                    public void store(Object parent, Object child) {
+                    }
+                };
+            }
+        }
+        if (nc == null) {
+            throwNotSupported(project, parent, elementName);
+        }
+        return nc;
+    }
+
     /**
      * Creates a named nested element. Depending on the results of the
      * initial introspection, either a method in the given parent instance
@@ -692,6 +738,7 @@ public final class IntrospectionHelper implements BuildListener {
      * for an element of a parent.
      *
      * @param project      Project to which the parent object belongs.
+     * @param parentUri    The namespace uri of the parent object.
      * @param parent       Parent object used to create the creator object to
      *                     create and store and instance of a subelement.
      * @param elementName  Name of the element to create an instance of.
@@ -699,8 +746,9 @@ public final class IntrospectionHelper implements BuildListener {
      */
 
     public Creator getElementCreator(
-        Project project, Object parent, String elementName) {
-        NestedCreator nc = getNestedCreator(project, parent, elementName);
+        Project project, String parentUri, Object parent, String elementName) {
+        NestedCreator nc = getNestedCreator(
+            project, parentUri, parent, elementName);
         return new Creator(project, parent, nc);
     }
 
@@ -714,6 +762,26 @@ public final class IntrospectionHelper implements BuildListener {
      */
     public boolean supportsNestedElement(String elementName) {
         return nestedCreators.containsKey(elementName.toLowerCase(Locale.US))
+            || DynamicConfigurator.class.isAssignableFrom(bean)
+            || addTypeMethods.size() != 0;
+    }
+
+    /**
+     * Indicate if this element supports a nested element of the
+     * given name.
+     *
+     * @param parentUri   the uri of the parent
+     * @param elementName the name of the nested element being checked
+     *
+     * @return true if the given nested element is supported
+     */
+    public boolean supportsNestedElement(String parentUri, String elementName) {
+        String uri = ProjectHelper.extractUriFromComponentName(elementName);
+        String name = ProjectHelper.extractNameFromComponentName(elementName);
+
+        return (
+            nestedCreators.containsKey(name.toLowerCase(Locale.US))
+            && (uri.equals(parentUri))) // || uri.equals("")))
             || DynamicConfigurator.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;
     }

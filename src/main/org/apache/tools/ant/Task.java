@@ -493,7 +493,7 @@ public abstract class Task extends ProjectComponent {
      *
      * @return the type of task
      */
-    protected String getTaskType() {
+    public String getTaskType() {
         return taskType;
     }
 

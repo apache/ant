@@ -336,13 +336,15 @@ public class UnknownElement extends Task {
      *
      * @exception BuildException if the children cannot be configured.
      */
-    protected void handleChildren(Object parent,
-                                  RuntimeConfigurable parentWrapper)
+    protected void handleChildren(
+        Object parent,
+        RuntimeConfigurable parentWrapper)
         throws BuildException {
         if (parent instanceof TypeAdapter) {
             parent = ((TypeAdapter) parent).getProxy();
         }
 
+        String parentUri = getNamespace();
         Class parentClass = parent.getClass();
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
 
@@ -352,8 +354,8 @@ public class UnknownElement extends Task {
             for (int i = 0; it.hasNext(); i++) {
                 RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
                 UnknownElement child = (UnknownElement) it.next();
-                if (!handleChild(ih, parent, child,
-                                 childWrapper)) {
+                if (!handleChild(
+                        parentUri, ih, parent, child, childWrapper)) {
                     if (!(parent instanceof TaskContainer)) {
                         ih.throwNotSupported(getProject(), parent,
                                              child.getTag());
@@ -548,14 +550,16 @@ public class UnknownElement extends Task {
      *
      * @return whether the creation has been successful
      */
-    private boolean handleChild(IntrospectionHelper ih,
-                                Object parent, UnknownElement child,
-                                RuntimeConfigurable childWrapper) {
+    private boolean handleChild(
+        String parentUri,
+        IntrospectionHelper ih,
+        Object parent, UnknownElement child,
+        RuntimeConfigurable childWrapper) {
         String childName = ProjectHelper.genComponentName(
             child.getNamespace(), child.getTag());
-        if (ih.supportsNestedElement(childName)) {
+        if (ih.supportsNestedElement(parentUri, childName)) {
             IntrospectionHelper.Creator creator =
-                ih.getElementCreator(getProject(), parent, childName);
+                ih.getElementCreator(getProject(), parentUri, parent, childName);
             creator.setPolyType(childWrapper.getPolyType());
             Object realChild = creator.create();
             if (realChild instanceof PreSetDef.PreSetDefinition) {
