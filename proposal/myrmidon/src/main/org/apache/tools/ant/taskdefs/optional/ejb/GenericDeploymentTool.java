@@ -460,11 +460,6 @@ public class GenericDeploymentTool implements EJBDeploymentTool
         return baseName;
     }
 
-    protected Location getLocation()
-    {
-        return getTask().getLocation();
-    }
-
     /**
      * Returns the Public ID of the DTD specified in the EJB descriptor. Not
      * every vendor-specific <code>DeploymentTool</code> will need to reference

@@ -305,7 +305,6 @@ public class Get extends Task
             Touch touch = (Touch)project.createTask( "touch" );
             touch.setOwningTarget( target );
             touch.setTaskName( getTaskName() );
-            touch.setLocation( getLocation() );
             touch.setFile( file );
             touch.setMillis( timemillis );
             touch.touch();

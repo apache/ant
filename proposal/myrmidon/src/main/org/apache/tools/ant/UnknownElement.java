@@ -250,7 +250,6 @@ public class UnknownElement extends Task
 
         if( task != null )
         {
-            task.setLocation( getLocation() );
             // UnknownElement always has an associated target
             task.setOwningTarget( target );
             task.init();

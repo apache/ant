@@ -697,7 +697,7 @@ public class Project
             {
                 log( "Trying to override old definition of task " + taskName,
                      MSG_WARN );
-                invalidateCreatedTasks( taskName );
+
             }
         }
 
@@ -1309,31 +1309,6 @@ public class Project
         {
             BuildListener listener = (BuildListener)listeners.elementAt( i );
             listener.messageLogged( event );
-        }
-    }
-
-    /**
-     * Mark tasks as invalid which no longer are of the correct type for a given
-     * taskname.
-     *
-     * @param type Description of Parameter
-     */
-    private void invalidateCreatedTasks( String type )
-    {
-        synchronized( createdTasks )
-        {
-            Vector v = (Vector)createdTasks.get( type );
-            if( v != null )
-            {
-                Enumeration enum = v.elements();
-                while( enum.hasMoreElements() )
-                {
-                    Task t = (Task)enum.nextElement();
-                    t.markInvalid();
-                }
-                v.removeAllElements();
-                createdTasks.remove( type );
-            }
         }
     }
 }

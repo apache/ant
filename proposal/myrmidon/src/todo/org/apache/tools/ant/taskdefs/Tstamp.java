@@ -74,7 +74,7 @@ public class Tstamp extends Task
             while( i.hasMoreElements() )
             {
                 CustomFormat cts = (CustomFormat)i.nextElement();
-                cts.execute( project, d, location );
+                cts.execute( project, d );
             }
 
         }
@@ -207,7 +207,7 @@ public class Tstamp extends Task
             field = unit.getCalendarField();
         }
 
-        public void execute( Project project, Date date, Location location )
+        public void execute( Project project, Date date )
             throws TaskException
         {
             if( propertyName == null )

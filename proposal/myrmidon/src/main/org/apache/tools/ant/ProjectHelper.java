@@ -1018,7 +1018,6 @@ public class ProjectHelper
                 task.setTaskName( tag );
             }
 
-            task.setLocation( new Location( buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber() ) );
             configureId( task, attrs );
 
             // Top level tasks don't have associated targets

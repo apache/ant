@@ -51,7 +51,6 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
     protected Path extdirs;
     protected boolean includeAntRuntime;
     protected boolean includeJavaRuntime;
-    protected Location location;
     protected String memoryInitialSize;
     protected String memoryMaximumSize;
     protected Project project;
@@ -80,7 +79,6 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
         compileList = attributes.getFileList();
         compileClasspath = attributes.getClasspath();
         project = attributes.getProject();
-        location = attributes.getLocation();
         includeAntRuntime = attributes.getIncludeantruntime();
         includeJavaRuntime = attributes.getIncludejavaruntime();
         memoryInitialSize = attributes.getMemoryInitialSize();
