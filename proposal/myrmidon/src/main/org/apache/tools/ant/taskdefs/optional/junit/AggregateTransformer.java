@@ -16,7 +16,6 @@ import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -32,7 +31,6 @@ import org.w3c.dom.Document;
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class AggregateTransformer
-    extends AbstractLogEnabled
 {
     public final static String FRAMES = "frames";
 
