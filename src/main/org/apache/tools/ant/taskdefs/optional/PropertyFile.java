@@ -245,10 +245,10 @@ public class PropertyFile extends Task
     */
     private void writeFile() throws BuildException 
     {
+        BufferedOutputStream bos = null;
         try 
         {
-            BufferedOutputStream bos = new BufferedOutputStream(
-                                         new FileOutputStream(m_propertyfile));
+            bos = new BufferedOutputStream(new FileOutputStream(m_propertyfile));
 
             // Write the message if we have one.
             if (m_comment != null) 
@@ -275,11 +275,17 @@ public class PropertyFile extends Task
                 bos.write(NEWLINE.getBytes());
                 bos.flush();
             }
-            bos.close();
         }
         catch (IOException ioe) 
         {
             throw new BuildException(ioe.toString());
+        }
+        finally {
+            if (bos != null) {
+                try {
+                    bos.close();
+                } catch (IOException ioex) {}
+            }
         }
     }
 
