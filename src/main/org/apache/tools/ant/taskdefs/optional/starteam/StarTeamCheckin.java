@@ -37,6 +37,9 @@ import org.apache.tools.ant.BuildException;
  */
 public class StarTeamCheckin extends TreeBasedTask {
 
+    /**
+     * Constructor for StarTeamCheckin.
+     */
     public StarTeamCheckin() {
         // we want this to have a false default, unlike for Checkin.
         setRecursive(false);

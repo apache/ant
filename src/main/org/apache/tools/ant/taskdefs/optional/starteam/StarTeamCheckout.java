@@ -211,7 +211,7 @@ public class StarTeamCheckout extends TreeBasedTask {
      * @param raw    the unconfigured <code>View</code>
      *
      * @return the snapshot <code>View</code> appropriately configured.
-     * @exception BuildException
+     * @exception BuildException on error
      */
     protected View createSnapshotView(View raw) throws BuildException {
 

@@ -73,7 +73,7 @@ public class P4Resolve extends P4Base {
                 break;
             }
         }
-        if (found == false) {
+        if (!found) {
             throw new BuildException("Unacceptable value for resolve mode");
         }
         this.resolvemode = resolvemode;
