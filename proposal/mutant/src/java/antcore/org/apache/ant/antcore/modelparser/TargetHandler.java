@@ -76,7 +76,7 @@ public class TargetHandler extends ModelElementHandler {
 
     /** The if attribute name */
     public static final String IF_ATTR = "if";
-    
+
     /** The unless attribute name */
     public static final String UNLESS_ATTR = "unless";
 
@@ -105,7 +105,7 @@ public class TargetHandler extends ModelElementHandler {
         target = new Target(getLocation(), getAttribute(NAME_ATTR));
         setModelElement(target);
         target.setDescription(getAttribute(DESC_ATTR));
-        target.addAspectAttributes(getAspectAttributes());
+        addNamespaceAttributes();
 
         String depends = getAttribute(DEPENDS_ATTR);
         if (depends != null) {
@@ -151,9 +151,9 @@ public class TargetHandler extends ModelElementHandler {
     protected void validateAttribute(String attributeName,
                                      String attributeValue)
          throws SAXParseException {
-        if (!attributeName.equals(NAME_ATTR) 
-            && !attributeName.equals(DEPENDS_ATTR) 
-            && !attributeName.equals(DESC_ATTR) 
+        if (!attributeName.equals(NAME_ATTR)
+            && !attributeName.equals(DEPENDS_ATTR)
+            && !attributeName.equals(DESC_ATTR)
             && !attributeName.equals(IF_ATTR)
             && !attributeName.equals(UNLESS_ATTR)) {
             throwInvalidAttribute(attributeName);

@@ -58,7 +58,7 @@ import java.util.Map;
 import org.apache.ant.common.antlib.Task;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.AntException;
-import org.apache.ant.common.model.AspectValueCollection;
+import org.apache.ant.common.model.NamespaceValueCollection;
 import org.apache.ant.common.event.BuildListener;
 
 /**
@@ -101,7 +101,7 @@ public interface ExecService {
      * @return a key to the build allowing it to be executed and managed
      * @exception AntException if the subbuild cannot be setup
      */
-    BuildKey setupBuild(Project model, Map properties, boolean addListeners)
+    Object setupBuild(Project model, Map properties, boolean addListeners)
          throws AntException;
 
 
@@ -114,7 +114,7 @@ public interface ExecService {
      * @return a key to the build allowing it to be executed and managed
      * @exception AntException if the subbuild cannot be setup
      */
-    BuildKey setupBuild(Map properties, boolean addListeners)
+    Object setupBuild(Map properties, boolean addListeners)
          throws AntException;
 
 
@@ -126,7 +126,7 @@ public interface ExecService {
      * @param libraryId the id of the library to be initialized.
      * @exception AntException if the build cannot be run
      */
-    void initializeBuildLibrary(BuildKey key, String libraryId)
+    void initializeBuildLibrary(Object key, String libraryId)
         throws AntException;
 
     /**
@@ -137,30 +137,20 @@ public interface ExecService {
      *
      * @exception AntException if the build cannot be found.
      */
-    public void addBuildListener(BuildKey key, BuildListener listener)
+    void addBuildListener(Object key, BuildListener listener)
         throws AntException;
 
 
     /**
      * Run a build which have been previously setup
      *
-     * @param buildKey the buildKey returned previously when the build was
+     * @param key the key returned previously when the build was
      *      setup
      * @param targets A list of targets to be run
      * @exception AntException if the build cannot be run
      */
-    void runBuild(BuildKey buildKey, List targets)
+    void runBuild(Object key, List targets)
         throws AntException;
-
-
-    /**
-     * Release a subbuild that is no longer in use.
-     *
-     * @param key the BuildKey identifiying the subbuild.
-     *
-     * @exception AntException if the build was not registered.
-     */
-    void releaseBuild(BuildKey key) throws AntException;
 
     /**
      * execute a task. The task should have already been initialised by the
@@ -180,10 +170,10 @@ public interface ExecService {
      * by their nature, aspect values are not part of the task configuration.
      *
      * @param task the task to be executed
-     * @param aspectValues the aspect attribute values.
+     * @param namespaceValues the namespace attribute values.
      * @exception AntException if there is an execution problem
      */
-    void executeTask(Task task, AspectValueCollection aspectValues)
+    void executeTask(Task task, NamespaceValueCollection namespaceValues)
          throws AntException;
 
 

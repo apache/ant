@@ -54,6 +54,8 @@
 package org.apache.ant.antcore.xml;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.HashMap;
 import java.net.URL;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -73,6 +75,9 @@ import org.xml.sax.XMLReader;
  * @created 9 January 2002
  */
 public class ParseContext {
+    /** These are namespace to URIs which need not be declared in the XML */
+    private Map knownNamespaces = new HashMap();
+
     /**
      * Used to check if we are trying to parse a build file within its own
      * context.
@@ -144,6 +149,30 @@ public class ParseContext {
         } catch (CircularDependencyException e) {
             throw new XMLParseException(e);
         }
+    }
+
+    /**
+     * Given an XML qName, this method tries to resolve a name into a URI
+     * using the map of well known namespaces.
+     *
+     * @param qName the XML qName
+     * @return the namespace URI for the given name. If the namespace
+     *   prefix is unknown the prefix is returned.
+     */
+    public String resolveNamespace(String qName) {
+        String namespaceId = qName.substring(0, qName.indexOf(":"));
+        String namespaceURI = (String) knownNamespaces.get(namespaceId);
+        return namespaceURI == null ? namespaceId : namespaceURI;
+    }
+
+    /**
+     * Declare a namespace
+     *
+     * @param prefix the prefix that is used in the XML for the namespace.
+     * @param uri the namespace's unique URI.
+     */
+    public void declareNamespace(String prefix, String uri) {
+        knownNamespaces.put(prefix, uri);
     }
 }
 

@@ -80,6 +80,8 @@ import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.init.LoaderUtils;
+import org.apache.ant.common.util.AttributeCollection;
+import org.apache.ant.common.constants.Namespace;
 
 /**
  * The instance of the ComponentServices made available by the core to the ant
@@ -684,7 +686,7 @@ public class ComponentManager implements ComponentService {
 
         // is there a polymorph indicator - look in Ant aspects
         String typeName
-            = model.getAspectAttributeValue(Constants.ANT_ASPECT, "type");
+            = model.getNamespaceAttributeValue(Namespace.ANT_META_URI, "type");
 
         Object typeInstance = null;
         if (typeName != null) {
@@ -767,13 +769,14 @@ public class ComponentManager implements ComponentService {
      * @exception AntException if the object does not support an
      *            attribute in the map.
      */
-    public void configureAttributes(Object object, Map attributeValues,
+    public void configureAttributes(Object object,
+                                    AttributeCollection attributeValues,
                                     boolean ignoreUnsupported)
          throws AntException {
         Setter setter = getSetter(object.getClass());
-        for (Iterator i = attributeValues.keySet().iterator(); i.hasNext();) {
+        for (Iterator i = attributeValues.getAttributeNames(); i.hasNext();) {
             String attributeName = (String) i.next();
-            String attributeValue = (String) attributeValues.get(attributeName);
+            String attributeValue = attributeValues.getAttribute(attributeName);
             if (!setter.supportsAttribute(attributeName)) {
                 if (!ignoreUnsupported) {
                     throw new ExecutionException(object.getClass().getName()

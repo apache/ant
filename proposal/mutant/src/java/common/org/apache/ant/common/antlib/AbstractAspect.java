@@ -55,7 +55,7 @@ package org.apache.ant.common.antlib;
 
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.model.BuildElement;
-import org.apache.ant.common.model.AspectValueCollection;
+import org.apache.ant.common.model.NamespaceValueCollection;
 
 /**
  * An implementation of the Aspect interface providing default behaviour.
@@ -126,8 +126,8 @@ public class AbstractAspect implements Aspect {
      * This join point is activated just prior to task execution.
      *
      * @param task the task being executed.
-     * @param aspectValues a collection of aspect attribute values for use
-     *        during the task execution - may be null if no aspect values are
+     * @param namespaceValues a collection of namespace attribute values for use
+     *        during the task execution - may be null if no namespace values are
      *        provided.
      * @return an object which indicates that this aspect wishes to
      * be notified after execution has been completed, in which case the obkect
@@ -135,7 +135,8 @@ public class AbstractAspect implements Aspect {
      * the aspect's postExecuteTask method will not be invoked.
      * @exception AntException if the aspect cannot process the task.
      */
-    public Object preExecuteTask(Task task, AspectValueCollection aspectValues)
+    public Object preExecuteTask(Task task,
+                                 NamespaceValueCollection namespaceValues)
          throws AntException {
         return null;
     }

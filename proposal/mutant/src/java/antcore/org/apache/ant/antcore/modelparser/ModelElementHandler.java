@@ -55,6 +55,8 @@ package org.apache.ant.antcore.modelparser;
 import org.apache.ant.antcore.xml.ElementHandler;
 
 import org.apache.ant.common.model.ModelElement;
+import java.util.Iterator;
+import org.apache.ant.common.util.AttributeCollection;
 
 /**
  *  A BuildElementHandler parses the task elements of a build. Task elements
@@ -84,5 +86,18 @@ public abstract class ModelElementHandler extends ElementHandler {
             modelElement.setEndLocation(getLocation());
         }
     }
+
+    /**
+     * Add all attributes which belong to namespaces rather than the default
+     * namespace for the build files.
+     */
+    protected void addNamespaceAttributes() {
+        for (Iterator i = getNamespaces(); i.hasNext();) {
+            String uri = (String) i.next();
+            AttributeCollection namespaceValues = getNamespaceAttributes(uri);
+            modelElement.addNamespaceAttributes(uri, namespaceValues);
+        }
+    }
+
 }
 

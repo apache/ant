@@ -54,7 +54,6 @@
 package org.apache.ant.antlib.system;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.service.MagicProperties;
-import org.apache.ant.common.service.BuildKey;
 
 /**
  * The Ant task - used to execute a different build file
@@ -72,10 +71,10 @@ public class AntCall extends AntBase {
         setProperty(MagicProperties.BASEDIR,
             getExecService().getBaseDir().getAbsolutePath());
 
-        BuildKey key = getExecService().setupBuild(getProperties(), true);
+        Object key = getExecService().setupBuild(getProperties(), true);
         setSubBuildKey(key);
         getExecService().runBuild(key, getTargets());
-        getExecService().releaseBuild(key);
+        setSubBuildKey(null);
     }
 
     /**

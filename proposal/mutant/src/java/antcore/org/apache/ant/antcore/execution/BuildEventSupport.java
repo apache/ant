@@ -77,7 +77,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
      * The listeners attached to the object which contains this support
      * object
      */
-    private List listeners = new ArrayList();
+    private ArrayList listeners = new ArrayList();
 
     /** Records the latest task to be executed on a thread (Thread to Task). */
     private Map threadTasks = new HashMap();
@@ -87,8 +87,8 @@ public class BuildEventSupport implements DemuxOutputReceiver {
      *
      * @return the listeners value
      */
-    public Iterator getListeners() {
-        return listeners.iterator();
+    public List getListeners() {
+        return (List) listeners.clone();
     }
 
     /**
@@ -116,6 +116,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
      */
     public void fireBuildStarted(ModelElement element) {
         BuildEvent event = new BuildEvent(element, BuildEvent.BUILD_STARTED);
+        List listeners = getListeners();
         for (Iterator i = listeners.iterator(); i.hasNext();) {
             BuildListener listener = (BuildListener) i.next();
             listener.buildStarted(event);
@@ -132,6 +133,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
                                   Throwable cause) {
         BuildEvent event = new BuildEvent(element, BuildEvent.BUILD_FINISHED,
             cause);
+        List listeners = getListeners();
         for (Iterator i = listeners.iterator(); i.hasNext();) {
             BuildListener listener = (BuildListener) i.next();
             listener.buildFinished(event);
@@ -145,6 +147,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
      */
     public void fireTargetStarted(ModelElement element) {
         BuildEvent event = new BuildEvent(element, BuildEvent.TARGET_STARTED);
+        List listeners = getListeners();
         for (Iterator i = listeners.iterator(); i.hasNext();) {
             BuildListener listener = (BuildListener) i.next();
             listener.targetStarted(event);
@@ -161,6 +164,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
                                    Throwable cause) {
         BuildEvent event = new BuildEvent(element, BuildEvent.TARGET_FINISHED,
             cause);
+        List listeners = getListeners();
         for (Iterator i = listeners.iterator(); i.hasNext();) {
             BuildListener listener = (BuildListener) i.next();
             listener.targetFinished(event);
@@ -177,6 +181,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
             threadTasks.put(Thread.currentThread(), task);
         }
         BuildEvent event = new BuildEvent(task, BuildEvent.TASK_STARTED);
+        List listeners = getListeners();
         for (Iterator i = listeners.iterator(); i.hasNext();) {
             BuildListener listener = (BuildListener) i.next();
             listener.taskStarted(event);
@@ -198,6 +203,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
         }
         BuildEvent event = new BuildEvent(task, BuildEvent.TASK_FINISHED,
             cause);
+        List listeners = getListeners();
         for (Iterator i = listeners.iterator(); i.hasNext();) {
             BuildListener listener = (BuildListener) i.next();
             listener.taskFinished(event);
@@ -214,6 +220,7 @@ public class BuildEventSupport implements DemuxOutputReceiver {
     public void fireMessageLogged(Object source,
                                   String message, int priority) {
         BuildEvent event = new BuildEvent(source, message, priority);
+        List listeners = getListeners();
         for (Iterator i = listeners.iterator(); i.hasNext();) {
             BuildListener listener = (BuildListener) i.next();
             listener.messageLogged(event);

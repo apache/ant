@@ -53,7 +53,6 @@
  */
 package org.apache.ant.antlib.system;
 
-import java.util.Map;
 import org.apache.ant.common.antlib.AbstractAspect;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.Task;
@@ -62,7 +61,9 @@ import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.model.BuildElement;
-import org.apache.ant.common.model.AspectValueCollection;
+import org.apache.ant.common.model.NamespaceValueCollection;
+import org.apache.ant.common.util.AttributeCollection;
+import org.apache.ant.common.constants.Namespace;
 
 /**
  * The Ant aspect - handles all ant aspects
@@ -70,9 +71,6 @@ import org.apache.ant.common.model.AspectValueCollection;
  * @author Conor MacNeill
  */
 public class AntAspect extends AbstractAspect {
-    /** The Ant aspect used to identify Ant metadata */
-    public static final String ANT_ASPECT = "ant";
-
     /** The core's data service implementation */
     private DataService dataService = null;
 
@@ -107,7 +105,8 @@ public class AntAspect extends AbstractAspect {
      */
     public Object preCreateComponent(Object component, BuildElement model)
          throws AntException {
-        String refId = model.getAspectAttributeValue(ANT_ASPECT, "refid");
+        String refId
+            = model.getNamespaceAttributeValue(Namespace.ANT_META_URI, "refid");
         if (refId != null) {
             if (model.getAttributeNames().hasNext() ||
                 model.getNestedElements().hasNext() ||
@@ -141,7 +140,8 @@ public class AntAspect extends AbstractAspect {
      */
     public Object postCreateComponent(Object component, BuildElement model)
          throws AntException {
-        String typeId = model.getAspectAttributeValue(ANT_ASPECT, "id");
+        String typeId
+            = model.getNamespaceAttributeValue(Namespace.ANT_META_URI, "id");
 
         if (typeId != null) {
             dataService.setMutableDataValue(typeId, component);
@@ -154,7 +154,7 @@ public class AntAspect extends AbstractAspect {
      * This join point is activated just prior to task execution.
      *
      * @param task the task being executed.
-     * @param aspectValues a collection of aspect attribute values for use
+     * @param namespaceValues a collection of namespace attribute values for use
      *        during the task execution.
      *
      * @return an objectwhich indicates that this aspect wishes to
@@ -163,10 +163,12 @@ public class AntAspect extends AbstractAspect {
      * the aspect's postExecuteTask method will not be invoked.
      * @exception AntException if the aspect cannot process the task.
      */
-    public Object preExecuteTask(Task task, AspectValueCollection aspectValues)
+    public Object preExecuteTask(Task task,
+                                 NamespaceValueCollection namespaceValues)
          throws AntException {
         AntAspectContext aspectContext = new AntAspectContext();
-        Map antAspectValues = aspectValues.getAttributes(ANT_ASPECT);
+        AttributeCollection antAspectValues
+            = namespaceValues.getAttributes(Namespace.ANT_META_URI);
         if (antAspectValues == null) {
             return null;
         }

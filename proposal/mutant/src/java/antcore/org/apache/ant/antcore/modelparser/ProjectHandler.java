@@ -77,10 +77,10 @@ public class ProjectHandler extends ModelElementHandler {
 
     /** The name of the element used to define references */
     public static final String REF_ELEMENT = "ant:ref";
-    
+
     /** The name of the element used to define references */
     public static final String INCLUDE_ELEMENT = "ant:include";
-    
+
     /** The name of the element used to define references */
     public static final String TARGET_ELEMENT = "target";
 
@@ -129,11 +129,11 @@ public class ProjectHandler extends ModelElementHandler {
         if (project == null) {
             project = new Project(getElementSource(), getLocation());
             setModelElement(project);
-            
+
             project.setDefaultTarget(getAttribute(DEFAULT_ATTR));
             project.setBase(getAttribute(BASEDIR_ATTR));
             project.setName(getAttribute(NAME_ATTR));
-            project.addAspectAttributes(getAspectAttributes());
+            addNamespaceAttributes();
         }
     }
 

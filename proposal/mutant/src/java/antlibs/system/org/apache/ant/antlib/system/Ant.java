@@ -57,7 +57,6 @@ import java.io.PrintStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.apache.ant.common.model.Project;
-import org.apache.ant.common.service.BuildKey;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.MagicProperties;
@@ -137,7 +136,7 @@ public class Ant extends AntBase {
 
         ExecService execService = getExecService();
         Project model = execService.parseXMLBuildFile(antFile);
-        BuildKey key = execService.setupBuild(model, getProperties(), true);
+        Object key = execService.setupBuild(model, getProperties(), true);
 
         setSubBuildKey(key);
 
@@ -166,7 +165,7 @@ public class Ant extends AntBase {
         }
 
         execService.runBuild(key, getTargets());
-        execService.releaseBuild(key);
+        setSubBuildKey(null);
     }
 }
 

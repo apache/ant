@@ -54,9 +54,9 @@
 package org.apache.ant.common.model;
 
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.ant.common.util.Location;
+import org.apache.ant.common.util.AttributeCollection;
 
 /**
  * A ModelElement is an element of a build model. A location may be
@@ -68,11 +68,12 @@ import org.apache.ant.common.util.Location;
  */
 public abstract class ModelElement {
     /** The aspectValues defined for this element. */
-    private AspectValueCollection aspectValues = new AspectValueCollection();
+    private NamespaceValueCollection namespaceValues
+        = new NamespaceValueCollection();
 
     /** The starting location of this element */
     private Location location = Location.UNKNOWN_LOCATION;
-    
+
     /** The ending location of this element */
     private Location endLocation = Location.UNKNOWN_LOCATION;
 
@@ -105,15 +106,17 @@ public abstract class ModelElement {
     public void setEndLocation(Location endLocation) {
         this.endLocation = endLocation;
     }
-    
+
     /**
-     * Adds aspect related attributes of this element
+     * Adds attributes of a given namespace detected for this element.
      *
-     * @param aspectAttributes a Map of aspect realted attributes that pertain 
-     * to this model element.
+     * @param uri the namespace's URI.
+     * @param attributes the attribute collection of the namespace's attribute
+     *        values.
      */
-    public void addAspectAttributes(Map aspectAttributes) {
-        aspectValues.addAttributes(aspectAttributes);
+    public void addNamespaceAttributes(String uri,
+                                    AttributeCollection attributes) {
+        namespaceValues.addAttributes(uri, attributes);
     }
 
     /**
@@ -144,44 +147,45 @@ public abstract class ModelElement {
     }
 
     /**
-     * Get an iterator on the aspectValues which have been given values on this
+     * Get an iterator on the namespaces which have been given values on this
      * element
      *
-     * @return an iterator of Strings , being the aspectValues which have been
+     * @return an iterator of Strings, being the namespaces which have been
      *      given values on this element.
      */
-    public Iterator getAspectNames() {
-        return aspectValues.getNames();
+    public Iterator getNamespaceURIs() {
+        return namespaceValues.getNames();
     }
 
     /**
-     * Get the set of attribute values related to the given aspect
+     * Get the set of attribute values related to the given namespace
      *
-     * @param aspectName the aspect identifier
-     * @return a map of the attribute values for the given aspect.
+     * @param namespaceURI the namesace URI.
+     * @return a map of the attribute values for the given namespace.
      */
-    public Map getAspectAttributes(String aspectName) {
-        return aspectValues.getAttributes(aspectName);
+    public AttributeCollection getNamespaceAttributes(String namespaceURI) {
+        return namespaceValues.getAttributes(namespaceURI);
     }
 
     /**
-     * Get the value of a single aspect attribute
+     * Get the value of a single namespace attribute
      *
-     * @param aspectName the aspect name
+     * @param namepaceURI the aspect name
      * @param keyName the attribute name
      * @return the aspect value
      */
-    public String getAspectAttributeValue(String aspectName, String keyName) {
-        return aspectValues.getAttributeValue(aspectName, keyName);
+    public String getNamespaceAttributeValue(String namepaceURI,
+                                             String keyName) {
+        return namespaceValues.getAttributeValue(namepaceURI, keyName);
     }
-    
+
     /**
-     * Get the complete collection of aspect attribute values.
+     * Get the complete collection of namespace attribute values.
      *
-     * @return an AspectValueCollection instance.
+     * @return an NamespaceValueCollection instance.
      */
-    public AspectValueCollection getAspectAttributes() {
-        return aspectValues;
+    public NamespaceValueCollection getNamespaceAttributes() {
+        return namespaceValues;
     }
 }
 

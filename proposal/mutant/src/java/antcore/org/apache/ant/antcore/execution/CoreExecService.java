@@ -54,7 +54,6 @@
 package org.apache.ant.antcore.execution;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.ant.antcore.modelparser.XMLProjectParser;
@@ -64,9 +63,8 @@ import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.service.ExecService;
-import org.apache.ant.common.service.BuildKey;
 import org.apache.ant.init.InitUtils;
-import org.apache.ant.common.model.AspectValueCollection;
+import org.apache.ant.common.model.NamespaceValueCollection;
 import org.apache.ant.common.event.BuildListener;
 import org.apache.ant.common.util.AntException;
 
@@ -80,10 +78,6 @@ public class CoreExecService implements ExecService {
 
     /** The Frame this service instance is working for */
     private Frame frame;
-
-    /** A map of subbuild keys to the frame of the subbuild. */
-    private Map subBuilds = new HashMap();
-
 
     /**
      * Constructor
@@ -106,11 +100,11 @@ public class CoreExecService implements ExecService {
         ExecutionContext execContext = getTaskExecutionContext(task);
 
         BuildElement model = execContext.getModel();
-        AspectValueCollection aspectValues = null;
+        NamespaceValueCollection namespaceValues = null;
         if (model != null) {
-            aspectValues = model.getAspectAttributes();
+            namespaceValues = model.getNamespaceAttributes();
         }
-        frame.executeTask(task, aspectValues);
+        frame.executeTask(task, namespaceValues);
     }
 
     /**
@@ -144,7 +138,7 @@ public class CoreExecService implements ExecService {
      * @param aspectValues the aspect attribute values.
      * @exception AntException if there is an execution problem
      */
-    public void executeTask(Task task, AspectValueCollection aspectValues)
+    public void executeTask(Task task, NamespaceValueCollection aspectValues)
          throws AntException {
         ExecutionContext execContext = getTaskExecutionContext(task);
 
@@ -185,24 +179,6 @@ public class CoreExecService implements ExecService {
 
 
     /**
-     * Gets the Frame for a subbuild based on the key
-     *
-     * @param key Description of the Parameter
-     * @return the subbuild's Frame
-     * @exception ExecutionException if the build cannot be found.
-     */
-    private Frame getSubbuildFrame(Object key) throws ExecutionException {
-        Frame subFrame = (Frame) subBuilds.get(key);
-
-        if (subFrame == null) {
-            throw new ExecutionException("Could not find execution frame "
-                 + "for subbuild");
-        }
-        return subFrame;
-    }
-
-
-    /**
      * Handle subbuild output.
      *
      * @param subbuildKey the core's key for managing the subbuild.
@@ -212,7 +188,8 @@ public class CoreExecService implements ExecService {
      */
     public void handleBuildOutput(Object subbuildKey, String line,
                                   boolean isErr) throws ExecutionException {
-        getSubbuildFrame(subbuildKey).threadOutput(line, isErr);
+        Frame subFrame = (Frame) subbuildKey;
+        subFrame.threadOutput(line, isErr);
     }
 
 
@@ -224,9 +201,9 @@ public class CoreExecService implements ExecService {
      * @param libraryId the id of the library to be initialized.
      * @exception AntException if the build cannot be run
      */
-    public void initializeBuildLibrary(BuildKey key, String libraryId)
+    public void initializeBuildLibrary(Object key, String libraryId)
          throws AntException {
-        Frame subFrame = getSubbuildFrame(key);
+        Frame subFrame = (Frame) key;
         subFrame.initializeLibrary(libraryId);
     }
 
@@ -238,9 +215,10 @@ public class CoreExecService implements ExecService {
      *
      * @exception ExecutionException if the build cannot be found.
      */
-    public void addBuildListener(BuildKey key, BuildListener listener)
+    public void addBuildListener(Object key, BuildListener listener)
          throws ExecutionException {
-        getSubbuildFrame(key).addBuildListener(listener);
+        Frame subFrame = (Frame) key;
+        subFrame.addBuildListener(listener);
     }
 
 
@@ -251,20 +229,9 @@ public class CoreExecService implements ExecService {
      * @param key Description of the Parameter
      * @exception AntException if the build cannot be run
      */
-    public void runBuild(BuildKey key, List targets) throws AntException {
-        getSubbuildFrame(key).runBuild(targets);
-    }
-
-
-    /**
-     * Release a subbuild that is no longer in use.
-     *
-     * @param key the BuildKey identifiying the subbuild.
-     *
-     * @exception ExecutionException if the build was not registered.
-     */
-    public void releaseBuild(BuildKey key) throws ExecutionException {
-        subBuilds.remove(key);
+    public void runBuild(Object key, List targets) throws AntException {
+        Frame subFrame = (Frame) key;
+        subFrame.runBuild(targets);
     }
 
 
@@ -316,7 +283,7 @@ public class CoreExecService implements ExecService {
      * @return Description of the Return Value
      * @exception AntException if the subbuild cannot be run
      */
-    public BuildKey setupBuild(Project model, Map properties,
+    public Object setupBuild(Project model, Map properties,
                                boolean addListeners)
          throws AntException {
         Frame newFrame = frame.createFrame(model);
@@ -325,11 +292,7 @@ public class CoreExecService implements ExecService {
         }
         newFrame.initialize(properties);
 
-        // create an anonymous inner class key.
-        BuildKey key = new BuildKey() {};
-
-        subBuilds.put(key, newFrame);
-        return key;
+        return newFrame;
     }
 
 
@@ -342,7 +305,7 @@ public class CoreExecService implements ExecService {
      * @return Description of the Return Value
      * @exception AntException if the subbuild cannot be run
      */
-    public BuildKey setupBuild(Map properties, boolean addListeners)
+    public Object setupBuild(Map properties, boolean addListeners)
          throws AntException {
         return setupBuild(frame.getProject(), properties, addListeners);
     }

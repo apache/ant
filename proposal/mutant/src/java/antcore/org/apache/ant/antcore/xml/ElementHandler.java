@@ -58,6 +58,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.ant.common.util.Location;
+import org.apache.ant.common.util.AttributeCollection;
 import org.xml.sax.Attributes;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.Locator;
@@ -98,10 +99,13 @@ public abstract class ElementHandler extends DefaultHandler {
     private String elementName;
 
     /** The attributes read from this element */
-    private Map elementAttributes;
+    private AttributeCollection elementAttributes;
 
-    /** The aspect attributes read from the element definition */
-    private Map aspectAttributes;
+    /**
+     * This map contains a set of attribute collections for each namespace
+     * encountered.
+     */
+    private Map namespaces;
 
     /** The content of this element */
     private String content;
@@ -116,6 +120,29 @@ public abstract class ElementHandler extends DefaultHandler {
     }
 
     /**
+     * Get an interator over the namespace URIs encountered in the processing
+     * of the element
+     *
+     * @return an iterator over the namespace URIs.
+     */
+    public Iterator getNamespaces() {
+        return namespaces.keySet().iterator();
+    }
+
+    /**
+     * Get the collection of namespace attributes for a given namespace.
+     *
+     * @param uri the URI of the namespace from which the attribute collection
+     * is required.
+     *
+     * @return an attribute collection if any attributes of the requested
+     *  namespace have beebn encountered - otherwise null.
+     */
+    public AttributeCollection getNamespaceAttributes(String uri) {
+        return (AttributeCollection) namespaces.get(uri);
+    }
+
+    /**
      * Gets the attributeValue attribute of the ElementHandler object
      *
      * @param attributeName th name of the attribute
@@ -123,7 +150,7 @@ public abstract class ElementHandler extends DefaultHandler {
      *      snot defined.
      */
     public String getAttribute(String attributeName) {
-        return (String) elementAttributes.get(attributeName);
+        return elementAttributes.getAttribute(attributeName);
     }
 
     /**
@@ -135,23 +162,14 @@ public abstract class ElementHandler extends DefaultHandler {
     protected boolean getBooleanAttribute(String attributeName) {
         return PropertyUtils.toBoolean(getAttribute(attributeName));
     }
-    
+
     /**
      * Get an iterator to this elements attributes
      *
      * @return an iterator over the attribute names
      */
     public Iterator getAttributes() {
-        return elementAttributes.keySet().iterator();
-    }
-
-    /**
-     * Get the aspect attributes of this element.
-     *
-     * @return The aspect attributes.
-     */
-    public Map getAspectAttributes() {
-        return aspectAttributes;
+        return elementAttributes.getAttributeNames();
     }
 
     /**
@@ -313,17 +331,35 @@ public abstract class ElementHandler extends DefaultHandler {
      */
     protected final void processAttributes(Attributes attributes)
          throws SAXParseException {
-        aspectAttributes = new HashMap();
-        elementAttributes = new HashMap();
-        int length = attributes.getLength(); 
+        namespaces = new HashMap();
+        elementAttributes = new AttributeCollection();
+        int length = attributes.getLength();
         for (int i = 0; i < length; ++i) {
-            String attributeName = attributes.getQName(i);
+            String uri = attributes.getURI(i);
+            if (uri != null && uri.trim().length() == 0) {
+                uri = null;
+            }
+            String localName = attributes.getLocalName(i);
+            String qName = attributes.getQName(i);
+            if (uri == null && qName.indexOf(":") != -1) {
+                // try to resolve through known namespaces
+                uri = context.resolveNamespace(qName);
+                localName = qName.substring(qName.indexOf(":") + 1);
+            }
+
             String attributeValue = attributes.getValue(i);
-            if (attributeName.indexOf(":") != -1) {
-                aspectAttributes.put(attributeName, attributeValue);
+            if (uri != null) {
+                AttributeCollection namespaceAttributes
+                    = (AttributeCollection) namespaces.get(uri);
+                if (namespaceAttributes == null) {
+                    namespaceAttributes = new AttributeCollection();
+                    namespaces.put(uri, namespaceAttributes);
+                }
+
+                namespaceAttributes.putAttribute(localName, attributeValue);
             } else {
-                validateAttribute(attributeName, attributeValue);
-                elementAttributes.put(attributeName, attributeValue);
+                validateAttribute(localName, attributeValue);
+                elementAttributes.putAttribute(localName, attributeValue);
             }
         }
     }

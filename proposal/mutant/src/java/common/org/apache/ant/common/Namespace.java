@@ -51,13 +51,27 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.service;
+package org.apache.ant.common.constants;
 
 /**
- * Opaque key used to refer to builds setup in the core. 
+ * Namespace constants
  *
  * @author Conor MacNeill
+ * @created 14 June 2002
  */
-public interface BuildKey {
+public class Namespace {
+    /** The Ant namespace used to identify Ant metadata */
+    public static final String ANT_META_URI
+         = "http://jakarta.apache.org/ant/meta";
+
+    /** The namespace id that is predeclared for the Ant metadata namespace */
+    public static final String ANT_META_PREFIX = "ant";
+
+    /** The XML Schema namespace */
+    public static final String XSI_URI
+         = "http://www.w3.org/2001/XMLSchema-instance";
+
+    /** The namespace id that is predeclared for the Ant metadata namespace */
+    public static final String XSI_PREFIX = "xsi";
 }
 

@@ -53,9 +53,9 @@
  */
 package org.apache.ant.common.service;
 import java.net.URL;
-import java.util.Map;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.util.AntException;
+import org.apache.ant.common.util.AttributeCollection;
 
 
 /**
@@ -197,7 +197,7 @@ public interface ComponentService {
      * @exception AntException if the object does not support an
      *            attribute in the map.
      */
-    void configureAttributes(Object object, Map attributeValues,
+    void configureAttributes(Object object, AttributeCollection attributeValues,
                              boolean ignoreUnsupported)
          throws AntException;
 }

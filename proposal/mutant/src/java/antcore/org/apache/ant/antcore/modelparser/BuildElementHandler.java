@@ -87,13 +87,13 @@ public class BuildElementHandler extends ModelElementHandler {
         buildElement
              = new BuildElement(getLocation(), elementName);
         setModelElement(buildElement);
-        
+
         for (Iterator i = getAttributes(); i.hasNext();) {
             String attributeName = (String) i.next();
             buildElement.addAttribute(attributeName,
                 getAttribute(attributeName));
         }
-        buildElement.addAspectAttributes(getAspectAttributes());
+        addNamespaceAttributes();
     }
 
 
@@ -110,6 +110,7 @@ public class BuildElementHandler extends ModelElementHandler {
     public void startElement(String uri, String localName, String qualifiedName,
                              Attributes attributes)
          throws SAXParseException {
+
         // everything within a task element is also a task element
         BuildElementHandler nestedHandler
              = new BuildElementHandler();

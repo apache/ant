@@ -72,7 +72,7 @@ import org.apache.ant.common.model.BuildElement;
 import org.apache.ant.common.model.ModelException;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.model.Target;
-import org.apache.ant.common.model.AspectValueCollection;
+import org.apache.ant.common.model.NamespaceValueCollection;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.EventService;
@@ -84,7 +84,7 @@ import org.apache.ant.common.util.DemuxOutputReceiver;
 import org.apache.ant.common.util.FileUtils;
 import org.apache.ant.common.util.Location;
 import org.apache.ant.common.util.AntException;
-import org.apache.ant.init.InitConfig;
+import org.apache.ant.init.AntEnvironment;
 import org.apache.ant.init.LoaderUtils;
 
 /**
@@ -129,7 +129,7 @@ public class Frame implements DemuxOutputReceiver {
      * Ant's initialization configuration with information on the location of
      * Ant and its libraries.
      */
-    private InitConfig initConfig;
+    private AntEnvironment antEnv;
 
     /** BuildEvent support used to fire events and manage listeners */
     private BuildEventSupport eventSupport = new BuildEventSupport();
@@ -176,26 +176,26 @@ public class Frame implements DemuxOutputReceiver {
      * Create the main or root Execution Frame.
      *
      * @param config the user config to use for this execution of Ant
-     * @param initConfig Ant's initialisation config
+     * @param antEnv Ant's initialisation config
      */
-    public Frame(InitConfig initConfig, AntConfig config) {
+    public Frame(AntEnvironment antEnv, AntConfig config) {
         this.config = config;
-        this.initConfig = initConfig;
+        this.antEnv = antEnv;
         this.parent = null;
         this.libManager
-            = new AntLibManager(initConfig, config.isRemoteLibAllowed());
+            = new AntLibManager(antEnv, config.isRemoteLibAllowed());
     }
 
     /**
      * Create an Execution Frame.
      *
      * @param config the user config to use for this execution of Ant
-     * @param initConfig Ant's initialisation config
+     * @param antEnv Ant's initialisation config
      * @param parent the frame creating this frame.
      */
-    private Frame(InitConfig initConfig, AntConfig config, Frame parent) {
+    private Frame(AntEnvironment antEnv, AntConfig config, Frame parent) {
         this.config = config;
-        this.initConfig = initConfig;
+        this.antEnv = antEnv;
         this.parent = parent;
         this.libManager = parent.libManager;
     }
@@ -396,7 +396,7 @@ public class Frame implements DemuxOutputReceiver {
      */
     protected void setMagicProperties() throws AntException {
         // ant.home
-        URL antHomeURL = initConfig.getAntHome();
+        URL antHomeURL = antEnv.getAntHome();
         String antHomeString = null;
 
         if (antHomeURL.getProtocol().equals("file")) {
@@ -500,8 +500,8 @@ public class Frame implements DemuxOutputReceiver {
      *
      * @return Ant's initialization configuration
      */
-    protected InitConfig getInitConfig() {
-        return initConfig;
+    protected AntEnvironment getAntEnvironment() {
+        return antEnv;
     }
 
 
@@ -726,7 +726,7 @@ public class Frame implements DemuxOutputReceiver {
     protected Frame createFrame(Project project)
          throws ModelException {
         Frame newFrame
-             = new Frame(initConfig, config, this);
+             = new Frame(antEnv, config, this);
 
         newFrame.setProject(project);
 
@@ -740,7 +740,8 @@ public class Frame implements DemuxOutputReceiver {
      *        will be added.
      */
     protected void addListeners(Frame subFrame) {
-        for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
+        List listeners = eventSupport.getListeners();
+        for (Iterator j = listeners.iterator(); j.hasNext();) {
             BuildListener listener = (BuildListener) j.next();
 
             subFrame.addBuildListener(listener);
@@ -863,6 +864,10 @@ public class Frame implements DemuxOutputReceiver {
         }
         String fullProjectName = getFullProjectName(fullTargetName);
         Frame frame = getContainingFrame(fullTargetName);
+        if (frame == null) {
+            throw new ExecutionException("No project available under the "
+                + "referenced name \"" + fullTargetName, targetRefLocation);
+        }
         String localTargetName = getNameInFrame(fullTargetName);
         Target target = frame.getProject().getTarget(localTargetName);
         if (target == null) {
@@ -930,17 +935,18 @@ public class Frame implements DemuxOutputReceiver {
      * Execute a task with the given aspect values.
      *
      * @param task the task to be executed.
-     * @param aspectValues the collection of aspect attribute values.
+     * @param namespaceValues the collection of namespace attribute values.
      * @exception AntException if the task has a problem.
      */
-    protected void executeTask(Task task, AspectValueCollection aspectValues)
+    protected void executeTask(Task task,
+                               NamespaceValueCollection namespaceValues)
          throws AntException {
 
         List aspects = componentManager.getAspects();
         Map aspectContexts = new HashMap();
         for (Iterator i = aspects.iterator(); i.hasNext();) {
             Aspect aspect = (Aspect) i.next();
-            Object aspectContext = aspect.preExecuteTask(task, aspectValues);
+            Object aspectContext = aspect.preExecuteTask(task, namespaceValues);
             if (aspectContext != null) {
                 aspectContexts.put(aspect, aspectContext);
             }
@@ -1156,14 +1162,14 @@ public class Frame implements DemuxOutputReceiver {
         try {
             // load system ant lib
             URL systemLibs
-                = new URL(initConfig.getLibraryURL(), "syslibs/");
+                = new URL(antEnv.getLibraryURL(), "syslibs/");
             componentManager.loadLib(systemLibs, false);
             importStandardComponents();
 
             executeTasks(config.getGlobalTasks());
 
             // now load other system libraries
-            URL antLibs = new URL(initConfig.getLibraryURL(), "antlibs/");
+            URL antLibs = new URL(antEnv.getLibraryURL(), "antlibs/");
             componentManager.loadLib(antLibs, false);
 
             runBuild(targets);

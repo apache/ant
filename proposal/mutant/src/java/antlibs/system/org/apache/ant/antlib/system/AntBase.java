@@ -56,7 +56,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.apache.ant.common.util.AntException;
-import org.apache.ant.common.service.BuildKey;
 
 /**
  * Common Base class for the Ant and AntCall tasks
@@ -81,7 +80,7 @@ public abstract class AntBase extends SubBuild {
     /**
      * The key to the subbuild with which the Ant task can manage the subbuild
      */
-    private BuildKey subbuildKey;
+    private Object subbuildKey;
 
     /** The name of the target to be evaluated in the sub-build */
     private String targetName;
@@ -181,7 +180,7 @@ public abstract class AntBase extends SubBuild {
      *
      * @param key the key returned by the Ant core for managing the subbuild
      */
-    protected void setSubBuildKey(BuildKey key) {
+    protected void setSubBuildKey(Object key) {
         this.subbuildKey = key;
     }
 

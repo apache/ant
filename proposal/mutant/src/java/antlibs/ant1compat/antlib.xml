@@ -1,18 +1,21 @@
-<antlib libid="ant.ant1compat" 
+<antlib libid="ant.ant1compat"
         home="http://jakarta.apache.org/ant"
         reqxml="true" reqtools="true"
         extends="ant.system">
 
   <factory classname="org.apache.tools.ant.Ant1Factory"/>
-          
-  <converter classname="org.apache.tools.ant.Ant1Converter"/>          
 
-  <!-- typedefs -->  
+  <converter classname="org.apache.tools.ant.Ant1Converter"/>
+
+  <!-- taskdefs -->
+  <taskdef name="WsdlToDotnet" classname="org.apache.tools.ant.taskdefs.optional.dotnet.WsdlToDotnet"/>
   <taskdef name="antlr" classname="org.apache.tools.ant.taskdefs.optional.ANTLR"/>
   <taskdef name="antstructure" classname="org.apache.tools.ant.taskdefs.AntStructure"/>
   <taskdef name="apply" classname="org.apache.tools.ant.taskdefs.Transform"/>
   <taskdef name="available" classname="org.apache.tools.ant.taskdefs.Available"/>
+  <taskdef name="basename" classname="org.apache.tools.ant.taskdefs.Basename"/>
   <taskdef name="blgenclient" classname="org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient"/>
+  <taskdef name="buildnumber" classname="org.apache.tools.ant.taskdefs.BuildNumber"/>
   <taskdef name="bunzip2" classname="org.apache.tools.ant.taskdefs.BUnzip2"/>
   <taskdef name="bzip2" classname="org.apache.tools.ant.taskdefs.BZip2"/>
   <taskdef name="cab" classname="org.apache.tools.ant.taskdefs.optional.Cab"/>
@@ -27,15 +30,19 @@
   <taskdef name="ccupdate" classname="org.apache.tools.ant.taskdefs.optional.clearcase.CCUpdate"/>
   <taskdef name="checksum" classname="org.apache.tools.ant.taskdefs.Checksum"/>
   <taskdef name="chmod" classname="org.apache.tools.ant.taskdefs.Chmod"/>
+  <taskdef name="concat" classname="org.apache.tools.ant.taskdefs.Concat"/>
   <taskdef name="condition" classname="org.apache.tools.ant.taskdefs.ConditionTask"/>
   <taskdef name="copy" classname="org.apache.tools.ant.taskdefs.Copy"/>
   <taskdef name="csc" classname="org.apache.tools.ant.taskdefs.optional.dotnet.CSharp"/>
   <taskdef name="cvs" classname="org.apache.tools.ant.taskdefs.Cvs"/>
+  <taskdef name="cvschangelog" classname="org.apache.tools.ant.taskdefs.cvslib.ChangeLogTask"/>
   <taskdef name="cvspass" classname="org.apache.tools.ant.taskdefs.CVSPass"/>
+  <taskdef name="cvstagdiff" classname="org.apache.tools.ant.taskdefs.cvslib.CvsTagDiff"/>
   <taskdef name="ddcreator" classname="org.apache.tools.ant.taskdefs.optional.ejb.DDCreator"/>
   <taskdef name="delete" classname="org.apache.tools.ant.taskdefs.Delete"/>
   <taskdef name="depend" classname="org.apache.tools.ant.taskdefs.optional.depend.Depend"/>
   <taskdef name="dependset" classname="org.apache.tools.ant.taskdefs.DependSet"/>
+  <taskdef name="dirname" classname="org.apache.tools.ant.taskdefs.Dirname"/>
   <taskdef name="ear" classname="org.apache.tools.ant.taskdefs.Ear"/>
   <taskdef name="echo" classname="org.apache.tools.ant.taskdefs.Echo"/>
   <taskdef name="echoproperties" classname="org.apache.tools.ant.taskdefs.optional.EchoProperties"/>
@@ -56,6 +63,10 @@
   <taskdef name="input" classname="org.apache.tools.ant.taskdefs.Input"/>
   <taskdef name="iplanet-ejbc" classname="org.apache.tools.ant.taskdefs.optional.ejb.IPlanetEjbcTask"/>
   <taskdef name="jar" classname="org.apache.tools.ant.taskdefs.Jar"/>
+  <taskdef name="jarlib-available" classname="org.apache.tools.ant.taskdefs.optional.extension.JarLibAvailableTask"/>
+  <taskdef name="jarlib-display" classname="org.apache.tools.ant.taskdefs.optional.extension.JarLibDisplayTask"/>
+  <taskdef name="jarlib-manifest" classname="org.apache.tools.ant.taskdefs.optional.extension.JarLibManifestTask"/>
+  <taskdef name="jarlib-resolve" classname="org.apache.tools.ant.taskdefs.optional.extension.JarLibResolveTask"/>
   <taskdef name="java" classname="org.apache.tools.ant.taskdefs.Java"/>
   <taskdef name="javac" classname="org.apache.tools.ant.taskdefs.Javac"/>
   <taskdef name="javacc" classname="org.apache.tools.ant.taskdefs.optional.javacc.JavaCC"/>
@@ -65,13 +76,13 @@
   <taskdef name="jjtree" classname="org.apache.tools.ant.taskdefs.optional.javacc.JJTree"/>
   <taskdef name="jlink" classname="org.apache.tools.ant.taskdefs.optional.jlink.JlinkTask"/>
   <taskdef name="jpcoverage" classname="org.apache.tools.ant.taskdefs.optional.sitraka.Coverage"/>
-  <taskdef name="jpcovmerge" classname="org.apache.tools.ant.taskdefs.optional.sitraka.CovMerge"/>
   <taskdef name="jpcovreport" classname="org.apache.tools.ant.taskdefs.optional.sitraka.CovReport"/>
   <taskdef name="jspc" classname="org.apache.tools.ant.taskdefs.optional.jsp.JspC"/>
   <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask"/>
   <taskdef name="junitreport" classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator"/>
   <taskdef name="loadfile" classname="org.apache.tools.ant.taskdefs.LoadFile"/>
-  <taskdef name="mail" classname="org.apache.tools.ant.taskdefs.SendEmail"/>
+  <taskdef name="loadproperties" classname="org.apache.tools.ant.taskdefs.LoadProperties"/>
+  <taskdef name="mail" classname="org.apache.tools.ant.taskdefs.email.EmailTask"/>
   <taskdef name="manifest" classname="org.apache.tools.ant.taskdefs.Manifest"/>
   <taskdef name="maudit" classname="org.apache.tools.ant.taskdefs.optional.metamata.MAudit"/>
   <taskdef name="mimemail" classname="org.apache.tools.ant.taskdefs.optional.net.MimeMail"/>
@@ -101,6 +112,8 @@
   <taskdef name="rmic" classname="org.apache.tools.ant.taskdefs.Rmic"/>
   <taskdef name="rpm" classname="org.apache.tools.ant.taskdefs.optional.Rpm"/>
   <taskdef name="script" classname="org.apache.tools.ant.taskdefs.optional.Script"/>
+  <taskdef name="serverdeploy" classname="org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy"/>
+  <taskdef name="setproxy" classname="org.apache.tools.ant.taskdefs.optional.net.SetProxy"/>
   <taskdef name="signjar" classname="org.apache.tools.ant.taskdefs.SignJar"/>
   <taskdef name="sleep" classname="org.apache.tools.ant.taskdefs.Sleep"/>
   <taskdef name="soscheckin" classname="org.apache.tools.ant.taskdefs.optional.sos.SOSCheckin"/>
@@ -119,6 +132,7 @@
   <taskdef name="tar" classname="org.apache.tools.ant.taskdefs.Tar"/>
   <taskdef name="taskdef" classname="org.apache.tools.ant.taskdefs.Taskdef"/>
   <taskdef name="telnet" classname="org.apache.tools.ant.taskdefs.optional.net.TelnetTask"/>
+  <taskdef name="tempfile" classname="org.apache.tools.ant.taskdefs.TempFile"/>
   <taskdef name="test" classname="org.apache.tools.ant.taskdefs.optional.Test"/>
   <taskdef name="touch" classname="org.apache.tools.ant.taskdefs.Touch"/>
   <taskdef name="translate" classname="org.apache.tools.ant.taskdefs.optional.i18n.Translate"/>
@@ -132,8 +146,11 @@
   <taskdef name="vajexport" classname="org.apache.tools.ant.taskdefs.optional.ide.VAJExport"/>
   <taskdef name="vajimport" classname="org.apache.tools.ant.taskdefs.optional.ide.VAJImport"/>
   <taskdef name="vajload" classname="org.apache.tools.ant.taskdefs.optional.ide.VAJLoadProjects"/>
+  <taskdef name="vssadd" classname="org.apache.tools.ant.taskdefs.optional.vss.MSVSSADD"/>
   <taskdef name="vsscheckin" classname="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCHECKIN"/>
   <taskdef name="vsscheckout" classname="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCHECKOUT"/>
+  <taskdef name="vsscp" classname="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCP"/>
+  <taskdef name="vsscreate" classname="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCREATE"/>
   <taskdef name="vssget" classname="org.apache.tools.ant.taskdefs.optional.vss.MSVSSGET"/>
   <taskdef name="vsshistory" classname="org.apache.tools.ant.taskdefs.optional.vss.MSVSSHISTORY"/>
   <taskdef name="vsslabel" classname="org.apache.tools.ant.taskdefs.optional.vss.MSVSSLABEL"/>
@@ -142,28 +159,36 @@
   <taskdef name="wljspc" classname="org.apache.tools.ant.taskdefs.optional.jsp.WLJspc"/>
   <taskdef name="wlrun" classname="org.apache.tools.ant.taskdefs.optional.ejb.WLRun"/>
   <taskdef name="wlstop" classname="org.apache.tools.ant.taskdefs.optional.ejb.WLStop"/>
+  <taskdef name="wsdltodotnet" classname="org.apache.tools.ant.taskdefs.optional.dotnet.WsdlToDotnet"/>
+  <taskdef name="xmlproperty" classname="org.apache.tools.ant.taskdefs.XmlProperty"/>
   <taskdef name="xmlvalidate" classname="org.apache.tools.ant.taskdefs.optional.XMLValidateTask"/>
+  <taskdef name="xslt" classname="org.apache.tools.ant.taskdefs.XSLTProcess"/>
   <taskdef name="zip" classname="org.apache.tools.ant.taskdefs.Zip"/>
-  
+
   <!-- Deprecated tasks -->
   <taskdef name="copydir" classname="org.apache.tools.ant.taskdefs.Copydir"/>
   <taskdef name="copyfile" classname="org.apache.tools.ant.taskdefs.Copyfile"/>
   <taskdef name="deltree" classname="org.apache.tools.ant.taskdefs.Deltree"/>
   <taskdef name="rename" classname="org.apache.tools.ant.taskdefs.Rename"/>
+  <taskdef name="starteam" classname="org.apache.tools.ant.taskdefs.optional.scm.AntStarTeamCheckOut"/>
 
-  <!-- typedefs -->  
-  <typedef name="path" classname="org.apache.tools.ant.types.Path"/>
-  <typedef name="fileset" classname="org.apache.tools.ant.types.FileSet"/>
+  <!-- typedefs -->
+  <typedef name="classfileset" classname="org.apache.tools.ant.types.optional.depend.ClassfileSet"/>
+  <typedef name="description" classname="org.apache.tools.ant.types.Description"/>
+  <typedef name="dirset" classname="org.apache.tools.ant.types.DirSet"/>
+  <typedef name="extension" classname="org.apache.tools.ant.taskdefs.optional.extension.ExtensionAdapter"/>
+  <typedef name="extensionSet" classname="org.apache.tools.ant.taskdefs.optional.extension.ExtensionSet"/>
   <typedef name="filelist" classname="org.apache.tools.ant.types.FileList"/>
-  <typedef name="patternset" classname="org.apache.tools.ant.types.PatternSet"/>
-  <typedef name="mapper" classname="org.apache.tools.ant.types.Mapper"/>
+  <typedef name="fileset" classname="org.apache.tools.ant.types.FileSet"/>
   <typedef name="filterchain" classname="org.apache.tools.ant.types.FilterChain"/>
   <typedef name="filterreader" classname="org.apache.tools.ant.types.AntFilterReader"/>
   <typedef name="filterset" classname="org.apache.tools.ant.types.FilterSet"/>
-  <typedef name="description" classname="org.apache.tools.ant.types.Description"/>
-  <typedef name="classfileset" classname="org.apache.tools.ant.types.optional.depend.ClassfileSet"/>
-  <typedef name="substitution" classname="org.apache.tools.ant.types.Substitution"/>
+  <typedef name="libfileset" classname="org.apache.tools.ant.taskdefs.optional.extension.LibFileSet"/>
+  <typedef name="mapper" classname="org.apache.tools.ant.types.Mapper"/>
+  <typedef name="path" classname="org.apache.tools.ant.types.Path"/>
+  <typedef name="patternset" classname="org.apache.tools.ant.types.PatternSet"/>
   <typedef name="regexp" classname="org.apache.tools.ant.types.RegularExpression"/>
-  <typedef name="regularexpression" classname="org.apache.tools.ant.types.RegularExpression"/>
+  <typedef name="selector" classname="org.apache.tools.ant.types.selectors.SelectSelector"/>
+  <typedef name="substitution" classname="org.apache.tools.ant.types.Substitution"/>
   <typedef name="xmlcatalog" classname="org.apache.tools.ant.types.XMLCatalog"/>
 </antlib>

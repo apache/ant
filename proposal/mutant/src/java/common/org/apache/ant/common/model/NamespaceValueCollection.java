@@ -55,80 +55,77 @@ package org.apache.ant.common.model;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import org.apache.ant.common.util.AttributeCollection;
 
 /**
- * The AspectValueCollection holds aspect values for a range of aspects.
- * Values can be retrieved for a particular aspect attribute or all attributes
- * of a given aspect.
- * 
+ * The NamespaceValueCollection holds namespace values for a range of
+ * namespaces. Values can be retrieved for a particular namespace attribute
+ * or all attributes of a given namespace.
+ *
  * @author Conor MacNeill
  * @created 11 January 2002
  */
-public class AspectValueCollection {
-    /** The aspects defined for this element. */
-    private Map aspectMaps = new HashMap();
+public class NamespaceValueCollection {
+    /**
+     * The namespaces defined for this collection. Each entry is an attribute
+     * collection keyed by the namespace URI.
+     */
+    private Map namespaces = new HashMap();
 
     /**
-     * Set the aspect attribute values.
+     * Add the attributes of a given namespace to this collection.
      *
-     * The attributes are sorted into their various aspects 
-     *
-     * @param attributes a Map of aspect attributes values. The keys are the
-     *        aspect
+     * @param uri the namespace's URI.
+     * @param attributes the collection of attributes for the given namespace.
      */
-    public void addAttributes(Map attributes) {
-        for (Iterator i = attributes.keySet().iterator(); i.hasNext();) {
+    public void addAttributes(String uri, AttributeCollection attributes) {
+        AttributeCollection currentCollection
+            = (AttributeCollection) namespaces.get(uri);
+        if (currentCollection == null) {
+            currentCollection = new AttributeCollection();
+            namespaces.put(uri, currentCollection);
+        }
+        for (Iterator i = attributes.getAttributeNames(); i.hasNext();) {
             String attributeName = (String) i.next();
-            int separator = attributeName.indexOf(":");
-            if (separator != -1) {
-                String aspectName = attributeName.substring(0, separator);
-                String name = attributeName.substring(separator + 1);
-                if (aspectName.length() != 0 && name.length() != 0) {
-                    Map prefixMap = (Map) aspectMaps.get(aspectName);
-                    if (prefixMap == null) {
-                        prefixMap = new HashMap();
-                        aspectMaps.put(aspectName, prefixMap);
-                    }
-                    prefixMap.put(name, attributes.get(attributeName));
-                }
-            }
+            currentCollection.putAttribute(attributeName,
+                attributes.getAttribute(attributeName));
         }
     }
 
     /**
-     * Get an iterator on the aspects which have been given values on this
-     * element
+     * Get an iterator on the namespaces which have been given values on this
+     * collection
      *
-     * @return an iterator of Strings , being the aspects which have been
+     * @return an iterator of Strings, being the namespaces which have been
      *      given values on this element.
      */
     public Iterator getNames() {
-        return aspectMaps.keySet().iterator();
+        return namespaces.keySet().iterator();
     }
 
     /**
-     * Get the set of attribute values related to the given aspect
+     * Get the set of attribute values related to the given namespace
      *
-     * @param aspectName the aspect name
-     * @return a map of the attribute values for the given aspect.
+     * @param namespaceURI the namespace URI
+     * @return an attribute collection
      */
-    public Map getAttributes(String aspectName) {
-        return (Map) aspectMaps.get(aspectName);
+    public AttributeCollection getAttributes(String namespaceURI) {
+        return (AttributeCollection) namespaces.get(namespaceURI);
     }
 
     /**
-     * Get the value of a single aspect attribute
+     * Get the value of a single namespace attribute
      *
-     * @param aspectName the prefix which identifies the aspectr
+     * @param namespaceURI the namespace URI
      * @param keyName the attribute name
-     * @return the aspect value
+     * @return the namespace attribute value
      */
-    public String getAttributeValue(String aspectName, String keyName) {
-        Map aspectAttributes = getAttributes(aspectName);
-        if (aspectAttributes == null) {
+    public String getAttributeValue(String namespaceURI, String keyName) {
+        AttributeCollection namespaceAttributes = getAttributes(namespaceURI);
+        if (namespaceAttributes == null) {
             return null;
         }
-        return (String) aspectAttributes.get(keyName);
+        return namespaceAttributes.getAttribute(keyName);
     }
 }
 

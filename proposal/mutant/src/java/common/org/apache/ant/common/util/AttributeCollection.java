@@ -51,16 +51,49 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.execution;
+package org.apache.ant.common.util;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import java.util.Map;
 
 /**
- * Core constants
+ * An Attribute collection is a simple collection of named values
  *
  * @author Conor MacNeill
- * @created 20 February 2002
+ * @created 14 June 2002
  */
-public abstract class Constants {
-    /** The prefix for library ids that are automatically imported */
-    public static final String ANT_LIB_PREFIX = "ant.";
+public class AttributeCollection {
+    /** The attribute values */
+    private Map attributes = new HashMap();
+
+    /**
+     * Get the value of an attribute given its name
+     *
+     * @param attributeName the attribute name
+     * @return the attribute value or null if there is no such attribute.
+     */
+    public String getAttribute(String attributeName) {
+        return (String) attributes.get(attributeName);
+    }
+
+    /**
+     * Set the value of an attribute.
+     *
+     * @param attributeName the name of the attribute.
+     * @param attributeValue the value of the attribute.
+     */
+    public void putAttribute(String attributeName, String attributeValue) {
+        attributes.put(attributeName, attributeValue);
+    }
+
+    /**
+     * Get an iterator over the names of all the attributes in the collection.
+     *
+     * @return an iterator of attribute names.
+     */
+    public Iterator getAttributeNames() {
+        return attributes.keySet().iterator();
+    }
 }
 

@@ -78,6 +78,7 @@ public class XMLProjectParser {
          throws XMLParseException {
         try {
             ParseContext context = new ParseContext();
+            context.declareNamespace("ant", "http://jakarta.apache.org/ant");
             ProjectHandler projectHandler = new ProjectHandler();
 
             context.parse(buildSource, "project", projectHandler);

@@ -59,13 +59,13 @@ import java.net.URL;
 import java.net.URLClassLoader;
 
 /**
- * InitConfig is the initialization configuration created to start Ant. This
- * is passed to the front end when Ant is started.
+ * AntEnvironment describes the environment in which Ant is operating.
+ * It provides the locations of a number of key Ant components.
  *
  * @author Conor MacNeill
  * @created 9 January 2002
  */
-public class InitConfig {
+public class AntEnvironment {
 
     /** The default name of the jar containing the XML parser */
     public static final String DEFAULT_PARSER_JAR = "crimson.jar";
@@ -114,12 +114,19 @@ public class InitConfig {
     private File userConfigArea;
 
     /**
-     * Constructor for the Initialization configuration
+     * Create an unconfigured AntEnvironment which will be configured manually
+     * by the user
+     */
+    public AntEnvironment() {
+    }
+
+    /**
+     * Create and automatically configure the Ant Environment
      *
      * @param libraryClass - a class loaded from the Ant library area.
      * @exception InitException if the configuration cannot be initialized
      */
-    public InitConfig(Class libraryClass) throws InitException {
+    public AntEnvironment(Class libraryClass) throws InitException {
         try {
             URL antLibURL = getAntLibURL(libraryClass);
             setLibraryURL(antLibURL);
@@ -195,7 +202,7 @@ public class InitConfig {
     }
 
     /**
-     * Sets the systemLoader of the InitConfig
+     * Sets the systemLoader of the AntEnvironment
      *
      * @param systemLoader the new systemLoader value
      */
@@ -204,7 +211,7 @@ public class InitConfig {
     }
 
     /**
-     * Sets the commonLoader of the InitConfig
+     * Sets the commonLoader of the AntEnvironment
      *
      * @param commonLoader the new commonLoader value
      */
@@ -213,7 +220,7 @@ public class InitConfig {
     }
 
     /**
-     * Sets the coreLoader of the InitConfig
+     * Sets the coreLoader of the AntEnvironment
      *
      * @param coreLoader the new coreLoader value
      */
@@ -222,7 +229,7 @@ public class InitConfig {
     }
 
     /**
-     * Sets the toolsJarURL of the InitConfig
+     * Sets the toolsJarURL of the AntEnvironment
      *
      * @param toolsJarURL the new toolsJarURL value
      */
@@ -231,7 +238,7 @@ public class InitConfig {
     }
 
     /**
-     * Sets the parserURLs of the InitConfig
+     * Sets the parserURLs of the AntEnvironment
      *
      * @param parserURLs the new parserURLs value
      */
@@ -240,7 +247,7 @@ public class InitConfig {
     }
 
     /**
-     * Sets the libraryURL of the InitConfig
+     * Sets the libraryURL of the AntEnvironment
      *
      * @param libraryURL the new libraryURL value
      */
@@ -276,7 +283,7 @@ public class InitConfig {
     }
 
     /**
-     * Gets the systemLoader of the InitConfig
+     * Gets the systemLoader of the AntEnvironment
      *
      * @return the systemLoader value
      */
@@ -285,7 +292,7 @@ public class InitConfig {
     }
 
     /**
-     * Gets the commonLoader of the InitConfig
+     * Gets the commonLoader of the AntEnvironment
      *
      * @return the commonLoader value
      */
@@ -294,7 +301,7 @@ public class InitConfig {
     }
 
     /**
-     * Gets the coreLoader of the InitConfig
+     * Gets the coreLoader of the AntEnvironment
      *
      * @return the coreLoader value
      */
@@ -303,7 +310,7 @@ public class InitConfig {
     }
 
     /**
-     * Gets the toolsJarURL of the InitConfig
+     * Gets the toolsJarURL of the AntEnvironment
      *
      * @return the toolsJarURL value
      */
@@ -312,7 +319,7 @@ public class InitConfig {
     }
 
     /**
-     * Gets the parserURLs of the InitConfig
+     * Gets the parserURLs of the AntEnvironment
      *
      * @return the parserURLs value
      */
@@ -321,7 +328,7 @@ public class InitConfig {
     }
 
     /**
-     * Gets the libraryURL of the InitConfig
+     * Gets the libraryURL of the AntEnvironment
      *
      * @return the libraryURL value
      */
@@ -334,7 +341,7 @@ public class InitConfig {
      *
      * @param libraryClass - a class loaded from the Ant library area.
      * @return the URL for the Ant library directory
-     * @throws MalformedURLException if there is a problem constructing the 
+     * @throws MalformedURLException if there is a problem constructing the
      *      library URL
      */
     private URL getAntLibURL(Class libraryClass) throws MalformedURLException {

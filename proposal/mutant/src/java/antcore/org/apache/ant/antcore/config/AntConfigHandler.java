@@ -78,7 +78,7 @@ public class AntConfigHandler extends ElementHandler {
     public static final String GLOBAL_TASKS_ELEMENT = "global-tasks";
 
     /** The per-frame tasks element */
-    public static final String PERFRAME_TASKS_ELEMENT = "frame-tasks";
+    public static final String PERFRAME_TASKS_ELEMENT = "project-tasks";
 
     /** The list of allowed Attributes */
     public static final String[] ALLOWED_ATTRIBUTES

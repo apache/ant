@@ -68,7 +68,6 @@ import java.util.Vector;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.event.MessageLevel;
-import org.apache.ant.common.service.BuildKey;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.ExecService;
@@ -197,7 +196,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /**
      * The build key used to control the proxied build.
      */
-    private BuildKey proxyBuildKey;
+    private Object proxyBuildKey;
 
     /**
      * The subordinate project if proxying

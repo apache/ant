@@ -75,7 +75,7 @@ import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.DemuxOutputStream;
 import org.apache.ant.common.logger.DefaultLogger;
 import org.apache.ant.common.logger.BuildLogger;
-import org.apache.ant.init.InitConfig;
+import org.apache.ant.init.AntEnvironment;
 import org.apache.ant.init.InitUtils;
 import org.apache.ant.frontend.FrontendUtils;
 import org.apache.ant.frontend.FrontendException;
@@ -88,7 +88,7 @@ import org.apache.ant.frontend.FrontendException;
  */
 public class Commandline {
     /** The initialisation configuration for Ant */
-    private InitConfig initConfig;
+    private AntEnvironment antEnv;
 
     /** Stream that we are using for logging */
     private PrintStream out = System.out;
@@ -133,7 +133,7 @@ public class Commandline {
      * @param args the commandline arguments
      * @param config the initialisation configuration
      */
-    public static void start(String[] args, InitConfig config) {
+    public static void start(String[] args, AntEnvironment config) {
         // create a command line and use it to run ant
         Commandline commandline = new Commandline();
         commandline.process(args, config);
@@ -203,10 +203,10 @@ public class Commandline {
      * Start the command line front end for mutant.
      *
      * @param args the commandline arguments
-     * @param initConfig Ant's initialization configuration
+     * @param antEnv Ant's initialization configuration
      */
-    private void process(String[] args, InitConfig initConfig) {
-        this.initConfig = initConfig;
+    private void process(String[] args, AntEnvironment antEnv) {
+        this.antEnv = antEnv;
         Frame mainFrame = null;
         Project project = null;
         try {
@@ -216,9 +216,9 @@ public class Commandline {
 
             AntConfig config = new AntConfig();
             AntConfig userConfig =
-                FrontendUtils.getAntConfig(initConfig.getUserConfigArea());
+                FrontendUtils.getAntConfig(antEnv.getUserConfigArea());
             AntConfig systemConfig
-                 = FrontendUtils.getAntConfig(initConfig.getSystemConfigArea());
+                 = FrontendUtils.getAntConfig(antEnv.getSystemConfigArea());
 
             if (systemConfig != null) {
                 config.merge(systemConfig);
@@ -243,7 +243,7 @@ public class Commandline {
             project = parseProject();
 
             // create the execution manager to execute the build
-            mainFrame = new Frame(initConfig, config);
+            mainFrame = new Frame(antEnv, config);
             OutputStream demuxOut
                 = new DemuxOutputStream(mainFrame, false);
             OutputStream demuxErr

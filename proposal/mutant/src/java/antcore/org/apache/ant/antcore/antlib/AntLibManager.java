@@ -65,7 +65,7 @@ import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
 import org.apache.ant.common.util.CircularDependencyChecker;
 import org.apache.ant.common.util.CircularDependencyException;
-import org.apache.ant.init.InitConfig;
+import org.apache.ant.init.AntEnvironment;
 import org.apache.ant.init.LoaderUtils;
 
 /**
@@ -90,7 +90,7 @@ public class AntLibManager {
     private boolean remoteAllowed;
 
     /** The Ant initialization config - location of vital components */
-    private InitConfig initConfig;
+    private AntEnvironment antEnv;
 
     /**
      * This map stores a list of additional paths for each library indexed by
@@ -101,13 +101,13 @@ public class AntLibManager {
     /**
      * Constructor for the AntLibManager object
      *
-     * @param initConfig the init config of the system.
+     * @param antEnv the init config of the system.
      * @param remoteAllowed true if remote libraries can be used and
      *      configured
      */
-    public AntLibManager(InitConfig initConfig, boolean remoteAllowed) {
+    public AntLibManager(AntEnvironment antEnv, boolean remoteAllowed) {
         this.remoteAllowed = remoteAllowed;
-        this.initConfig = initConfig;
+        this.antEnv = antEnv;
     }
 
     /**
@@ -335,12 +335,12 @@ public class AntLibManager {
                 urlsList.add(librarySpec.getLibraryURL());
             }
             if (librarySpec.isToolsJarRequired()
-                 && initConfig.getToolsJarURL() != null) {
-                urlsList.add(initConfig.getToolsJarURL());
+                 && antEnv.getToolsJarURL() != null) {
+                urlsList.add(antEnv.getToolsJarURL());
             }
 
             if (librarySpec.usesAntXML()) {
-                URL[] parserURLs = initConfig.getParserURLs();
+                URL[] parserURLs = antEnv.getParserURLs();
                 for (int i = 0; i < parserURLs.length; ++i) {
                     urlsList.add(parserURLs[i]);
                 }
@@ -357,7 +357,7 @@ public class AntLibManager {
 
                 antLibrary.setExtendsLibrary(extendsLibrary);
             }
-            antLibrary.setParentLoader(initConfig.getCommonLoader());
+            antLibrary.setParentLoader(antEnv.getCommonLoader());
             newLibraries.put(libraryId, antLibrary);
 
             if (libPathsMap != null) {
