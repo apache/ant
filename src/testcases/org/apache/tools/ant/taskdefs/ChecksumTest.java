@@ -43,29 +43,21 @@ public class ChecksumTest extends BuildFileTest {
     public void testCreateMd5() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("createMd5");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo.gif.md5"),
-                                           project.resolveFile("../asf-logo.gif.MD5")));
     }
 
     public void testCreateMD5SUMformat() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("createMD5SUMformat");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo.gif.md5sum"),
-                                           project.resolveFile("../asf-logo.gif.MD5SUM")));
     }
     
     public void testCreateSVFformat() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("createSVFformat");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo.gif.svf"),
-                                           project.resolveFile("../asf-logo.gif.SVF")));
     }
     
     public void testCreatePattern() throws IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("createPattern");
-        assertTrue(fileUtils.contentEquals(project.resolveFile("expected/asf-logo.gif.pattern"),
-                                           project.resolveFile("../asf-logo.gif.PATTERN")));
     }
 
     public void testSetProperty() {

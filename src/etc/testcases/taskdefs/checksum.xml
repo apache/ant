@@ -1,6 +1,26 @@
 <?xml version="1.0"?>
 <project default="cleanup" basedir=".">
 
+  <macrodef name="compare">
+    <attribute name="expected" />
+    <attribute name="output" />
+    <sequential>
+      <loadfile property="expected" srcfile="@{expected}">
+        <filterchain><striplinebreaks /></filterchain>
+      </loadfile>
+      <loadfile property="output" srcfile="@{output}">
+        <filterchain><striplinebreaks /></filterchain>
+      </loadfile>
+      <fail message="${output} not = ${expected}">
+        <condition>
+          <not>
+            <equals arg1="${output}" arg2="${expected}" />
+          </not>
+        </condition>
+      </fail>
+    </sequential>
+  </macrodef>
+
   <target name="cleanup">
     <delete file="../asf-logo.gif.MD5" />
     <delete file="../asf-logo.gif.md5" />
@@ -20,22 +40,22 @@
 
   <target name="createMd5">
     <checksum file="../asf-logo.gif" fileext=".MD5" />
-    <fixcrlf eol="lf" srcdir=".." includes="asf-logo.gif.MD5" />
+    <compare expected="expected/asf-logo.gif.md5" output="../asf-logo.gif.MD5" />
   </target>
 
   <target name="createMD5SUMformat">
     <checksum file="../asf-logo.gif" format="MD5SUM" fileext=".MD5SUM" />
-    <fixcrlf eol="lf" srcdir=".." includes="asf-logo.gif.MD5SUM" />
+    <compare expected="expected/asf-logo.gif.md5sum" output="../asf-logo.gif.MD5SUM" />
   </target>
 
   <target name="createSVFformat">
     <checksum file="../asf-logo.gif" format="SVF" fileext=".SVF" />
-    <fixcrlf eol="lf" srcdir=".." includes="asf-logo.gif.SVF" />
+    <compare expected="expected/asf-logo.gif.svf" output="../asf-logo.gif.SVF" />
   </target>
 
   <target name="createPattern">
     <checksum file="../asf-logo.gif" pattern="foo{0}bar" fileext=".PATTERN" />
-    <fixcrlf eol="lf" srcdir=".." includes="asf-logo.gif.PATTERN" />
+    <compare expected="expected/asf-logo.gif.pattern" output="../asf-logo.gif.PATTERN" />
   </target>
 
   <target name="setProperty">
