@@ -33,12 +33,11 @@ public class StringToEnumConverter
         throws ConverterException
     {
         final Object object = getEnum( destination, original );
-
         if( null == object )
         {
             final String[] names = getValidNames( destination );
             final String message =
-                REZ.getString( "invalid.enum.error", object, Arrays.asList( names ) );
+                REZ.getString( "invalid.enum.error", original, Arrays.asList( names ) );
             throw new ConverterException( message );
         }
         else
