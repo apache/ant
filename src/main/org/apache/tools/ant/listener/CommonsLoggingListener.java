@@ -279,8 +279,8 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
         System.setErr(tmpErr);
     }
 
-    PrintStream out;
-    PrintStream err;
+    PrintStream out = System.out;
+    PrintStream err = System.err;
 
     public void setMessageOutputLevel(int level) {
         // Use the logger config
