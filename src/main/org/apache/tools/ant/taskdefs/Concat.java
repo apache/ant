@@ -571,7 +571,7 @@ public class Concat extends Task {
      * sub element points to a file or contains text
      */
     public static class TextElement {
-        private String   value;
+        private String   value = "";
         private boolean  trimLeading = false;
         private boolean  trim = false;
         private boolean  filtering = true;
@@ -642,10 +642,7 @@ public class Concat extends Task {
          * @param value the text to place inline
          */
         public void addText(String value) {
-            if (value.trim().length() == 0) {
-                return;
-            }
-            this.value = value;
+            this.value += value;
         }
 
         /**
