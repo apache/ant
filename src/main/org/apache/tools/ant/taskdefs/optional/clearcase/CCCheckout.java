@@ -155,7 +155,7 @@ public class CCCheckout extends ClearCase {
         checkOptions(commandLine);
 
         result = run(commandLine);
-        if ( result != 0 ) {
+        if (result != 0) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, location);
         }

@@ -129,24 +129,24 @@ public class RenameExtensions extends MatchingTask {
 
         // first off, make sure that we've got a from and to extension
         if (fromExtension == null || toExtension == null || srcDir == null) {
-            throw new BuildException( "srcDir, fromExtension and toExtension " +
-                                      "attributes must be set!" );
+            throw new BuildException("srcDir, fromExtension and toExtension " 
+                + "attributes must be set!");
         }
 
         log("DEPRECATED - The renameext task is deprecated.  Use move instead.",
             Project.MSG_WARN);
         log("Replace this with:", Project.MSG_INFO);
-        log("<move todir=\""+srcDir+"\" overwrite=\""+replace+"\">", 
+        log("<move todir=\"" + srcDir + "\" overwrite=\"" + replace + "\">",
             Project.MSG_INFO);
-        log("  <fileset dir=\""+srcDir+"\" />", Project.MSG_INFO);
+        log("  <fileset dir=\"" + srcDir + "\" />", Project.MSG_INFO);
         log("  <mapper type=\"glob\"", Project.MSG_INFO);
-        log("          from=\"*"+fromExtension+"\"", Project.MSG_INFO);
-        log("          to=\"*"+toExtension+"\" />", Project.MSG_INFO);
+        log("          from=\"*" + fromExtension + "\"", Project.MSG_INFO);
+        log("          to=\"*" + toExtension + "\" />", Project.MSG_INFO);
         log("</move>", Project.MSG_INFO);
         log("using the same patterns on <fileset> as you\'ve used here", 
             Project.MSG_INFO);
 
-        Move move = (Move)project.createTask("move");
+        Move move = (Move) project.createTask("move");
         move.setOwningTarget(target);
         move.setTaskName(getTaskName());
         move.setLocation(getLocation());
@@ -158,8 +158,8 @@ public class RenameExtensions extends MatchingTask {
 
         Mapper me = move.createMapper();
         me.setType(globType);
-        me.setFrom("*"+fromExtension);
-        me.setTo("*"+toExtension);
+        me.setFrom("*" + fromExtension);
+        me.setTo("*" + toExtension);
 
         move.execute();
     }

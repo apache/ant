@@ -175,14 +175,14 @@ public class EjbcHelper {
         try {
             fis = new FileInputStream(descriptorFile);
             ObjectInputStream ois = new ObjectInputStream(fis);
-            DeploymentDescriptor dd = (DeploymentDescriptor)ois.readObject();
+            DeploymentDescriptor dd = (DeploymentDescriptor) ois.readObject();
             fis.close();
             
             String homeInterfacePath = dd.getHomeInterfaceClassName().replace('.', '/') + ".java";
             String remoteInterfacePath = dd.getRemoteInterfaceClassName().replace('.', '/') + ".java";
             String primaryKeyClassPath = null;
             if (dd instanceof EntityDescriptor) {
-                primaryKeyClassPath = ((EntityDescriptor)dd).getPrimaryKeyClassName().replace('.', '/') + ".java";;
+                primaryKeyClassPath = ((EntityDescriptor) dd).getPrimaryKeyClassName().replace('.', '/') + ".java";;
             }
         
             File homeInterfaceSource = new File(sourceDirectory, homeInterfacePath);
@@ -281,7 +281,7 @@ public class EjbcHelper {
         // create a Java task to do the rebuild
 
         
-        String[] args = getCommandLine(false,descriptorFile);
+        String[] args = getCommandLine(false, descriptorFile);
         
         try {
             weblogic.ejbc.main(args);

@@ -109,7 +109,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool
      *  @return true if the "action" attribute is valid, false if not.
      */
     protected boolean isActionValid() {
-        return(getTask().getAction().equals(VALID_ACTIONS[0]));
+        return (getTask().getAction().equals(VALID_ACTIONS[0]));
     }
 
     /**
@@ -118,7 +118,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool
      */
     public void setTask(ServerDeploy task) {
         super.setTask(task);
-        java = (Java)task.getProject().createTask("java");
+        java = (Java) task.getProject().createTask("java");
     }
 
     /**
@@ -143,7 +143,7 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool
     public void validateAttributes() throws BuildException {
         super.validateAttributes();
 
-        if(className == null)
+        if (className == null)
             throw new BuildException("The classname attribute must be set");
     }
 

@@ -179,11 +179,11 @@ public class Touch extends Task {
     protected void touch() throws BuildException {
         if (file != null) {
             if (!file.exists()) {
-                log("Creating "+file, Project.MSG_INFO);
+                log("Creating " + file, Project.MSG_INFO);
                 try {
                     fileUtils.createNewFile(file);
                 } catch (IOException ioe) {
-                    throw new BuildException("Could not create "+file, ioe, 
+                    throw new BuildException("Could not create " + file, ioe, 
                                              location);
                 }
             }
@@ -206,7 +206,7 @@ public class Touch extends Task {
         }
 
         // deal with the filesets
-        for (int i=0; i < filesets.size(); i++) {
+        for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
             File fromDir = fs.getDir(project);
@@ -214,11 +214,11 @@ public class Touch extends Task {
             String[] srcFiles = ds.getIncludedFiles();
             String[] srcDirs = ds.getIncludedDirectories();
 
-            for(int j=0; j < srcFiles.length ; j++) {
+            for (int j = 0; j < srcFiles.length ; j++) {
                 touch(new File(fromDir, srcFiles[j]));
             }
          
-            for(int j=0; j < srcDirs.length ; j++) {
+            for (int j = 0; j < srcDirs.length ; j++) {
                 touch(new File(fromDir, srcDirs[j]));
             }
         }

@@ -197,9 +197,9 @@ public class PropertyFile extends Task
 
     private void executeOperation() throws BuildException
     {
-        for (Enumeration e = entries.elements(); e.hasMoreElements(); )
+        for (Enumeration e = entries.elements(); e.hasMoreElements();)
         {
-            Entry entry = (Entry)e.nextElement();
+            Entry entry = (Entry) e.nextElement();
             entry.executeOn(properties);
         }
     }
@@ -212,7 +212,8 @@ public class PropertyFile extends Task
         {
             if (propertyfile.exists())
             {
-                log("Updating property file: "+propertyfile.getAbsolutePath());
+                log("Updating property file: " 
+                    + propertyfile.getAbsolutePath());
                 FileInputStream fis = null;
                 try {
                     fis = new FileInputStream(propertyfile);
@@ -226,8 +227,8 @@ public class PropertyFile extends Task
             }
             else
             {
-                log("Creating new property file: "+
-                    propertyfile.getAbsolutePath());
+                log("Creating new property file: " 
+                    + propertyfile.getAbsolutePath());
                 FileOutputStream out = null;
                 try {
                     out = new FileOutputStream(propertyfile.getAbsolutePath());
@@ -238,9 +239,7 @@ public class PropertyFile extends Task
                     }
                 }
             }
-        }
-        catch(IOException ioe)
-        {
+        } catch (IOException ioe) {
             throw new BuildException(ioe.toString());
         }
     }
@@ -275,8 +274,7 @@ public class PropertyFile extends Task
                 Properties.class.getMethod("store",
                                            new Class[] {
                                                OutputStream.class,
-                                               String.class}
-                                           );
+                                               String.class});
             m.invoke(properties, new Object[] {bos, comment});
 
         } catch (NoSuchMethodException nsme) {
@@ -287,9 +285,7 @@ public class PropertyFile extends Task
         } catch (IllegalAccessException iae) {
             // impossible
             throw new BuildException(iae, location);
-        }
-        catch (IOException ioe)
-        {
+        } catch (IOException ioe) {
             throw new BuildException(ioe, location);
         }
         finally {
@@ -369,7 +365,7 @@ public class PropertyFile extends Task
             checkParameters();
 
             // type may be null because it wasn't set
-            String oldValue = (String)props.get(key);
+            String oldValue = (String) props.get(key);
             try {
                 if (type == Type.INTEGER_TYPE)
                 {
@@ -385,7 +381,8 @@ public class PropertyFile extends Task
                 }
                 else
                 {
-                    throw new BuildException("Unknown operation type: "+type+"");
+                    throw new BuildException("Unknown operation type: "
+                        + type);
                 }
             } catch (NullPointerException npe) {
                 // Default to string type

@@ -148,8 +148,8 @@ public class Exec extends Task {
             // exec command on system runtime
             Process proc = Runtime.getRuntime().exec(command);
 
-            if( out!=null )  {
-                fos=new PrintWriter( new FileWriter( out ) );
+            if (out != null)  {
+                fos = new PrintWriter(new FileWriter(out));
                 log("Output redirected to " + out, Project.MSG_VERBOSE);
             }
 
@@ -176,7 +176,7 @@ public class Exec extends Task {
             err = proc.exitValue();
             if (err != 0) {
                 if (failOnError) {
-                    throw new BuildException("Exec returned: "+err, location);
+                    throw new BuildException("Exec returned: " + err, location);
                 } else {
                     log("Result: " + err, Project.MSG_ERR);
                 }

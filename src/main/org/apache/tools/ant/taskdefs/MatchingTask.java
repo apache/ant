@@ -152,7 +152,7 @@ public abstract class MatchingTask extends Task {
             while (tok.hasMoreTokens()) {
                 String pattern = tok.nextToken().trim();
                 if (pattern.length() > 0) {
-                    createInclude().setName(pattern+"/**");
+                    createInclude().setName(pattern + "/**");
                 }
             }
         }
@@ -182,7 +182,7 @@ public abstract class MatchingTask extends Task {
             StringTokenizer tok = new StringTokenizer(ignoreString, ", ", 
                                                       false);
             while (tok.hasMoreTokens()) {
-                createExclude().setName("**/"+tok.nextToken().trim()+"/**");
+                createExclude().setName("**/" + tok.nextToken().trim() + "/**");
             }
         }
     }

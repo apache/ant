@@ -563,8 +563,8 @@ public class EjbJar extends MatchingTask {
             deploymentTools.add(genericTool);
         }
 
-        for (Iterator i = deploymentTools.iterator(); i.hasNext(); ) {
-            EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
+        for (Iterator i = deploymentTools.iterator(); i.hasNext();) {
+            EJBDeploymentTool tool = (EJBDeploymentTool) i.next();
             tool.configure(config);
             tool.validateConfigured();
         }
@@ -587,8 +587,8 @@ public class EjbJar extends MatchingTask {
             // descriptor, and hence one bean in our model.
             for (int index = 0; index < files.length; ++index) {
                 // process the deployment descriptor in each tool
-                for (Iterator i = deploymentTools.iterator(); i.hasNext(); ) {
-                    EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
+                for (Iterator i = deploymentTools.iterator(); i.hasNext();) {
+                    EJBDeploymentTool tool = (EJBDeploymentTool) i.next();
                     tool.processDescriptor(files[index], saxParser);
                 }
             }

@@ -224,7 +224,7 @@ public class VAJImport extends VAJTask {
                 "Access to DirectoryScanner.includes or .excludes not allowed");
         }
 
-        getUtil().importFiles( importProject, ds.getBasedir(),
+        getUtil().importFiles(importProject, ds.getBasedir(),
                 includes, excludes,
                 importClasses, importResources, importSources,
                 useDefaultExcludes);

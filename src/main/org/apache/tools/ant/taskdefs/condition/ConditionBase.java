@@ -81,7 +81,9 @@ public abstract class ConditionBase extends ProjectComponent {
      *
      * @since 1.1
      */
-    protected int countConditions() {return conditions.size();}
+    protected int countConditions() {
+        return conditions.size();
+    }
 
     /**
      * Iterate through all conditions.

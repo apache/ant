@@ -99,7 +99,7 @@ public class LogOutputStream extends OutputStream {
      * @param cc data to log (byte).
      */
     public void write(int cc) throws IOException {
-        final byte c = (byte)cc;
+        final byte c = (byte) cc;
         if ((c == '\n') || (c == '\r')) {
             if (!skip) {
               processBuffer();

@@ -66,8 +66,7 @@ import java.util.Properties;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-class ChangeLogParser
-{
+class ChangeLogParser {
     //private static final int GET_ENTRY = 0;
     private static final int GET_FILE = 1;
     private static final int GET_DATE = 2;
@@ -76,7 +75,8 @@ class ChangeLogParser
     private static final int GET_PREVIOUS_REV = 5;
 
     /** input format for dates read in from cvs log */
-    private static final SimpleDateFormat c_inputDate = new SimpleDateFormat( "yyyy/MM/dd hh:mm:ss" );
+    private static final SimpleDateFormat c_inputDate 
+        = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
 
     //The following is data used while processing stdout of CVS command
     private String m_file;
@@ -98,8 +98,7 @@ class ChangeLogParser
      *
      * @param userList the userlist
      */
-    public ChangeLogParser( Properties userList )
-    {
+    public ChangeLogParser(Properties userList) {
         m_userList = userList;
     }
 
@@ -108,8 +107,7 @@ class ChangeLogParser
      *
      * @return a list of rcs entrys as an array
      */
-    CVSEntry[] getEntrySetAsArray()
-    {
+    CVSEntry[] getEntrySetAsArray() {
         final CVSEntry[] array = new CVSEntry[ m_entries.size() ];
         Enumeration enum = m_entries.elements();
         int i = 0;
@@ -123,27 +121,25 @@ class ChangeLogParser
      * Receive notification about the process writing
      * to standard output.
      */
-    public void stdout( final String line )
-    {
-        switch( m_status )
-        {
+    public void stdout(final String line) {
+        switch(m_status) {
             case GET_FILE:
-                processFile( line );
+                processFile(line);
                 break;
             case GET_REVISION:
-                processRevision( line );
+                processRevision(line);
                 break;
 
             case GET_DATE:
-                processDate( line );
+                processDate(line);
                 break;
 
             case GET_COMMENT:
-                processComment( line );
+                processComment(line);
                 break;
 
             case GET_PREVIOUS_REV:
-                processGetPreviousRevision( line );
+                processGetPreviousRevision(line);
                 break;
         }
     }
@@ -153,22 +149,19 @@ class ChangeLogParser
      *
      * @param line the line
      */
-    private void processComment( final String line )
-    {
-        final String lineSeparator = System.getProperty( "line.separator" );
-        if( line.startsWith( "======" ) )
-        {
+    private void processComment(final String line) {
+        final String lineSeparator = System.getProperty("line.separator");
+        if (line.startsWith("======")) {
             //We have ended changelog for that particular file
             //so we can save it
             final int end = m_comment.length() - lineSeparator.length(); //was -1
-            m_comment = m_comment.substring( 0, end );
+            m_comment = m_comment.substring(0, end);
             saveEntry();
             m_status = GET_FILE;
         }
-        else if( line.startsWith( "------" ) )
-        {
+        else if (line.startsWith("------")) {
             final int end = m_comment.length() - lineSeparator.length(); //was -1
-            m_comment = m_comment.substring( 0, end );
+            m_comment = m_comment.substring(0, end);
             m_status = GET_PREVIOUS_REV;
         }
         else
@@ -182,11 +175,9 @@ class ChangeLogParser
      *
      * @param line the line
      */
-    private void processFile( final String line )
-    {
-        if( line.startsWith( "Working file:" ) )
-        {
-            m_file = line.substring( 14, line.length() );
+    private void processFile(final String line) {
+        if (line.startsWith("Working file:")) {
+            m_file = line.substring(14, line.length());
             m_status = GET_REVISION;
         }
     }
@@ -196,15 +187,12 @@ class ChangeLogParser
      *
      * @param line the line
      */
-    private void processRevision( final String line )
-    {
-        if( line.startsWith( "revision" ) )
-        {
-            m_revision = line.substring( 9 );
+    private void processRevision(final String line) {
+        if (line.startsWith("revision")) {
+            m_revision = line.substring(9);
             m_status = GET_DATE;
         }
-        else if( line.startsWith( "======" ) )
-        {
+        else if (line.startsWith("======")) {
             //There was no revisions in this changelog
             //entry so lets move unto next file
             m_status = GET_FILE;
@@ -216,17 +204,14 @@ class ChangeLogParser
      *
      * @param line the line
      */
-    private void processDate( final String line )
-    {
-        if( line.startsWith( "date:" ) )
-        {
-            m_date = line.substring( 6, 25 );
-            String lineData = line.substring( line.indexOf( ";" ) + 1 );
-            m_author = lineData.substring( 10, lineData.indexOf( ";" ) );
+    private void processDate(final String line) {
+        if (line.startsWith("date:")) {
+            m_date = line.substring(6, 25);
+            String lineData = line.substring(line.indexOf(";") + 1);
+            m_author = lineData.substring(10, lineData.indexOf(";"));
 
-            if( m_userList.containsKey( m_author ) )
-            {
-                m_author = m_userList.getProperty( m_author );
+            if (m_userList.containsKey(m_author)) {
+                m_author = m_userList.getProperty(m_author);
             }
 
             m_status = GET_COMMENT;
@@ -242,13 +227,12 @@ class ChangeLogParser
      *
      * @param line the line
      */
-    private void processGetPreviousRevision( final String line )
-    {
-        if( !line.startsWith( "revision" ) )
-        {
-            throw new IllegalStateException( "Unexpected line from CVS: " + line );
+    private void processGetPreviousRevision(final String line) {
+        if (!line.startsWith("revision")) {
+            throw new IllegalStateException("Unexpected line from CVS: " 
+                + line);
         }
-        m_previousRevision = line.substring( 9 );
+        m_previousRevision = line.substring(9);
 
         saveEntry();
 
@@ -259,21 +243,17 @@ class ChangeLogParser
     /**
      * Utility method that saves the current entry.
      */
-    private void saveEntry()
-    {
+    private void saveEntry() {
         final String entryKey = m_date + m_author + m_comment;
         CVSEntry entry;
-        if( !m_entries.containsKey( entryKey ) )
-        {
-            entry = new CVSEntry( parseDate( m_date ), m_author, m_comment );
-            m_entries.put( entryKey, entry );
-        }
-        else
-        {
-            entry = (CVSEntry)m_entries.get( entryKey );
+        if (!m_entries.containsKey(entryKey)) {
+            entry = new CVSEntry(parseDate(m_date), m_author, m_comment);
+            m_entries.put(entryKey, entry);
+        } else {
+            entry = (CVSEntry) m_entries.get(entryKey);
         }
 
-        entry.addFile( m_file, m_revision, m_previousRevision );
+        entry.addFile(m_file, m_revision, m_previousRevision);
     }
 
     /**
@@ -282,14 +262,10 @@ class ChangeLogParser
      * @param date the string holding dat
      * @return the date object or null if unknown date format
      */
-    private Date parseDate( final String date )
-    {
-        try
-        {
-            return c_inputDate.parse( date );
-        }
-        catch( ParseException e )
-        {
+    private Date parseDate(final String date) {
+        try {
+            return c_inputDate.parse(date);
+        } catch (ParseException e) {
             //final String message = REZ.getString( "changelog.bat-date.error", date );
             //getContext().error( message );
             return null;

@@ -306,9 +306,9 @@ public class Javadoc extends Task {
     }
 
     public void setMaxmemory(String max){
-        if(javadoc1){
+        if (javadoc1) {
             cmd.createArgument().setValue("-J-mx" + max);
-        } else{
+        } else {
             cmd.createArgument().setValue("-J-Xmx" + max);
         }
     }
@@ -704,17 +704,17 @@ public class Javadoc extends Task {
      */
     public class TagArgument {
         /** Name of the tag. */
-        private String name=null;
+        private String name = null;
         /** Description of the tag to place in the JavaDocs. */
-        private String description=null;
+        private String description = null;
         /** Whether or not the tag is enabled. */
-        private boolean enabled=true;
+        private boolean enabled = true;
         /** 
          * Scope string of the tag. This will form the middle
          * argument of the -tag parameter when the tag is enabled
          * (with an X prepended for and is parsed from human-readable form.
          */
-        private String scope="a";
+        private String scope = "a";
         
         /** Sole constructor. */
         public TagArgument () {
@@ -727,7 +727,7 @@ public class Javadoc extends Task {
          *             Must not be <code>null</code> or empty.
          */
         public void setName (String name) {
-            this.name=name;
+            this.name = name;
         }
         
         /** 
@@ -738,7 +738,7 @@ public class Javadoc extends Task {
          *                    Must not be <code>null</code> or empty.
          */
         public void setDescription (String description) {
-            this.description=description;
+            this.description = description;
         }
 
         /** 
@@ -758,12 +758,12 @@ public class Javadoc extends Task {
          * specified.
          */
         public void setScope (String verboseScope) throws BuildException {
-            verboseScope=verboseScope.toLowerCase (Locale.US);
+            verboseScope = verboseScope.toLowerCase(Locale.US);
 
-            boolean[] elements=new boolean[SCOPE_ELEMENTS.length];
+            boolean[] elements = new boolean[SCOPE_ELEMENTS.length];
             
-            boolean gotAll=false;
-            boolean gotNotAll=false;
+            boolean gotAll = false;
+            boolean gotNotAll = false;
             
             // Go through the tokens one at a time, updating the
             // elements array and issuing warnings where appropriate.
@@ -775,15 +775,15 @@ public class Javadoc extends Task {
                         getProject().log ("Repeated tag scope element: all", 
                                           Project.MSG_VERBOSE);
                     }
-                    gotAll=true;
+                    gotAll = true;
                 }
                 else {
                     int i;
-                    for (i=0; i < SCOPE_ELEMENTS.length; i++) {
+                    for (i = 0; i < SCOPE_ELEMENTS.length; i++) {
                         if (next.equals (SCOPE_ELEMENTS[i]))
                             break;
                     }
-                    if (i==SCOPE_ELEMENTS.length) {
+                    if (i == SCOPE_ELEMENTS.length) {
                         throw new BuildException ("Unrecognised scope element: "
                                                   + next);
                     } 
@@ -792,8 +792,8 @@ public class Javadoc extends Task {
                             getProject().log ("Repeated tag scope element: "
                                               + next, Project.MSG_VERBOSE);
                         }
-                        elements[i]=true;
-                        gotNotAll=true;
+                        elements[i] = true;
+                        gotNotAll = true;
                     }
                 }
             }
@@ -807,16 +807,16 @@ public class Javadoc extends Task {
                                           + "parameter.");
             }
             if (gotAll) {
-                this.scope="a";
+                this.scope = "a";
             }
             else {
                 StringBuffer buff = new StringBuffer (elements.length);
-                for (int i=0; i < elements.length; i++) {
+                for (int i = 0; i < elements.length; i++) {
                     if (elements[i]) {
                         buff.append (SCOPE_ELEMENTS[i].charAt(0));
                     }
                 }
-                this.scope=buff.toString();
+                this.scope = buff.toString();
             }
         }
         
@@ -826,7 +826,7 @@ public class Javadoc extends Task {
          * @param enabled Whether or not this tag is enabled.
          */
         public void setEnabled (boolean enabled) {
-            this.enabled=enabled;
+            this.enabled = enabled;
         }
         
         /**
@@ -836,15 +836,16 @@ public class Javadoc extends Task {
          *                           is <code>null</code> or empty.
          */
         public String getParameter () throws BuildException {
-            if (name==null || name.equals ("")) {
+            if (name == null || name.equals("")) {
                 throw new BuildException ("No name specified for custom tag.");
             }
-            if (description==null || description.equals ("")){
+            if (description == null || description.equals("")){
                 throw new BuildException 
-                    ("No description specified for custom tag "+name);
+                    ("No description specified for custom tag " + name);
             }
             
-            return name+":"+(enabled ? "" : "X")+scope+":"+description;
+            return name + ":" + (enabled ? "" : "X") 
+                + scope + ":" + description;
         }
     }
 
@@ -890,10 +891,10 @@ public class Javadoc extends Task {
         public String getPackages() {
             StringBuffer p = new StringBuffer();
             for (int i = 0; i < packages.size(); i++) {
-                if ( i > 0 ) {
-                    p.append( ":" );
+                if (i > 0) {
+                    p.append(":");
                 }
-                p.append( packages.elementAt(i).toString() );
+                p.append(packages.elementAt(i).toString());
             }
             return p.toString();
         }
@@ -936,7 +937,7 @@ public class Javadoc extends Task {
 
         log("Generating Javadoc", Project.MSG_INFO);
 
-        Commandline toExecute = (Commandline)cmd.clone();
+        Commandline toExecute = (Commandline) cmd.clone();
         toExecute.setExecutable(JavaEnvUtils.getJdkExecutable("javadoc"));
 
 // ------------------------------------------------ general javadoc arguments
@@ -1011,7 +1012,7 @@ public class Javadoc extends Task {
                     }
                     for (Enumeration e = doclet.getParams(); 
                          e.hasMoreElements();) {
-                        DocletParam param = (DocletParam)e.nextElement();
+                        DocletParam param = (DocletParam) e.nextElement();
                         if (param.getName() == null) {
                             throw new BuildException("Doclet parameters must "
                                                      + "have a name");
@@ -1032,8 +1033,8 @@ public class Javadoc extends Task {
 
             // add the links arguments
             if (links.size() != 0) {
-                for (Enumeration e = links.elements(); e.hasMoreElements(); ) {
-                    LinkArgument la = (LinkArgument)e.nextElement();
+                for (Enumeration e = links.elements(); e.hasMoreElements();) {
+                    LinkArgument la = (LinkArgument) e.nextElement();
 
                     if (la.getHref() == null) {
                         throw new BuildException("Links must provide the URL "
@@ -1100,8 +1101,8 @@ public class Javadoc extends Task {
 
             // add the group arguments
             if (groups.size() != 0) {
-                for (Enumeration e = groups.elements(); e.hasMoreElements(); ) {
-                    GroupArgument ga = (GroupArgument)e.nextElement();
+                for (Enumeration e = groups.elements(); e.hasMoreElements();) {
+                    GroupArgument ga = (GroupArgument) e.nextElement();
                     String title = ga.getTitle();
                     String packages = ga.getPackages();
                     if (title == null || packages == null) {
@@ -1117,7 +1118,7 @@ public class Javadoc extends Task {
             
             // JavaDoc 1.4 parameters
             if (javadoc4) {
-                for (Enumeration e = tags.elements(); e.hasMoreElements(); ) {
+                for (Enumeration e = tags.elements(); e.hasMoreElements();) {
                     Object element = e.nextElement();
                     if (element instanceof TagArgument) {
                         TagArgument ta = (TagArgument) element;
@@ -1244,7 +1245,7 @@ public class Javadoc extends Task {
             exe.setCommandline(toExecute.getCommandline());
             int ret = exe.execute();
             if (ret != 0 && failOnError) {
-                throw new BuildException("Javadoc returned "+ret, location);
+                throw new BuildException("Javadoc returned " + ret, location);
             }
         } catch (IOException e) {
             throw new BuildException("Javadoc failed: " + e, e, location);
@@ -1273,7 +1274,7 @@ public class Javadoc extends Task {
                                   Vector packages, Vector excludePackages) {
         log("Source path = " + sourcePath.toString(), Project.MSG_VERBOSE);
         StringBuffer msg = new StringBuffer("Packages = ");
-        for (int i=0; i<packages.size(); i++) {
+        for (int i = 0; i < packages.size(); i++) {
             if (i > 0) {
                 msg.append(",");
             }
@@ -1283,7 +1284,7 @@ public class Javadoc extends Task {
 
         msg.setLength(0);
         msg.append("Exclude Packages = ");
-        for (int i=0; i<excludePackages.size(); i++) {
+        for (int i = 0; i < excludePackages.size(); i++) {
             if (i > 0) {
                 msg.append(",");
             }
@@ -1303,8 +1304,8 @@ public class Javadoc extends Task {
 
         Enumeration e = packages.elements();
         while (e.hasMoreElements()) {
-            String pkg = (String)e.nextElement();
-            pkg = pkg.replace('.','/');
+            String pkg = (String) e.nextElement();
+            pkg = pkg.replace('.', '/');
             if (pkg.endsWith("*")) {
                 pkg += "*";
             }
@@ -1314,8 +1315,8 @@ public class Javadoc extends Task {
 
         e = excludePackages.elements();
         while (e.hasMoreElements()) {
-            String pkg = (String)e.nextElement();
-            pkg = pkg.replace('.','/');
+            String pkg = (String) e.nextElement();
+            pkg = pkg.replace('.', '/');
             if (pkg.endsWith("*")) {
                 pkg += "*";
             }
@@ -1332,14 +1333,14 @@ public class Javadoc extends Task {
                 packageListWriter = new PrintWriter(new FileWriter(tmpList));
             }
 
-            for (int j=0; j<list.length; j++) {
+            for (int j = 0; j < list.length; j++) {
                 File source = project.resolveFile(list[j]);
                 fs.setDir(source);
 
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] packageDirs = ds.getIncludedDirectories();
 
-                for (int i=0; i<packageDirs.length; i++) {
+                for (int i = 0; i < packageDirs.length; i++) {
                     File pd = new File(source, packageDirs[i]);
                     String[] files = pd.list(new FilenameFilter () {
                             public boolean accept(File dir1, String name) {
@@ -1352,7 +1353,7 @@ public class Javadoc extends Task {
 
                     if (files.length > 0) {
                         String pkgDir = 
-                            packageDirs[i].replace('/','.').replace('\\','.');
+                            packageDirs[i].replace('/', '.').replace('\\', '.');
                         if (!addedPackages.contains(pkgDir)) {
                             if (useExternalFile) {
                                 packageListWriter.println(pkgDir);

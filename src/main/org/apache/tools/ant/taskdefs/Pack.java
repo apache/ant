@@ -107,10 +107,10 @@ public abstract class Pack extends Task {
     public void execute() throws BuildException {
         validate();
 
-        if(zipFile.lastModified() < source.lastModified()){
+        if (zipFile.lastModified() < source.lastModified()) {
             log("Building: " + zipFile.getAbsolutePath());
             pack();
-        }else{
+        } else {
             log("Nothing to do: " + zipFile.getAbsolutePath() +
                 " is up to date.");
         }

@@ -211,12 +211,12 @@ public class EchoProperties extends Task {
         while (enum.hasMoreElements()) {
             String name = (String) enum.nextElement();
                 String value = (String) allProps.get(name);
-            if (prefix == null || name.indexOf(prefix) == 0 ) {
+            if (prefix == null || name.indexOf(prefix) == 0) {
                 props.put(name, value);
             }
         }
         try {
-            jdkSaveProperties( props, os, "Ant properties" );
+            jdkSaveProperties(props, os, "Ant properties");
         } finally {
             os.close();
         }
@@ -237,32 +237,31 @@ public class EchoProperties extends Task {
      *@exception IOException on an I/O error during a write.  Only thrown
      *      for JDK 1.2+.
      */
-    protected void jdkSaveProperties( Properties props, OutputStream os,
-            String header )
-            throws IOException {
+    protected void jdkSaveProperties(Properties props, OutputStream os,
+                                     String header) throws IOException {
         try {
             java.lang.reflect.Method m = props.getClass().getMethod(
-                "store", new Class[] { OutputStream.class, String.class } );
-            m.invoke( props, new Object[] { os, header } );
+                "store", new Class[]{OutputStream.class, String.class});
+            m.invoke(props, new Object[]{os, header});
         } catch (java.lang.reflect.InvocationTargetException ite) {
             Throwable t = ite.getTargetException();
             if (t instanceof IOException) {
-                throw (IOException)t;
+                throw (IOException) t;
             }
             if (t instanceof RuntimeException) {
-                throw (RuntimeException)t;
+                throw (RuntimeException) t;
             }
             
             // not an expected exception.  Resort to JDK 1.0 to execute
             // this method
-            jdk10SaveProperties( props, os, header );
+            jdk10SaveProperties(props, os, header);
         } catch (ThreadDeath td) {
             // don't trap thread death errors.
             throw td;
         } catch (Throwable ex) {
             // this 'store' method is not available, so resort to the JDK 1.0
             // compatible method.
-            jdk10SaveProperties( props, os, header );
+            jdk10SaveProperties(props, os, header);
         }
     }
     
@@ -275,10 +274,10 @@ public class EchoProperties extends Task {
      *@param os record the properties to this output stream
      *@param header prepend this header to the property output
      */
-    protected void jdk10SaveProperties( Properties props, OutputStream os,
-            String header )
+    protected void jdk10SaveProperties(Properties props, OutputStream os,
+            String header)
     {
-        props.save( os, header );
+        props.save(os, header);
     }
 }
 

@@ -172,20 +172,19 @@ public class SignJar extends Task {
             throw new BuildException("jar must be set through jar attribute "
                                      + "or nested filesets");
         }
-        if( null != jar ) {
+        if (null != jar) {
             doOneJar(jar, signedjar);
             return;
         } else {
             //Assume null != filesets
 
             // deal with the filesets
-            for (int i=0; i<filesets.size(); i++) {
+            for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 String[] jarFiles = ds.getIncludedFiles();
-                for(int j=0; j<jarFiles.length; j++) {
-                    doOneJar( new File( fs.getDir(project), jarFiles[j] ), 
-                              null);
+                for (int j = 0; j < jarFiles.length; j++) {
+                    doOneJar(new File(fs.getDir(project), jarFiles[j]), null);
                 }
             }
         }
@@ -206,7 +205,7 @@ public class SignJar extends Task {
             throw new BuildException("storepass attribute must be set");
         }
 
-        if(isUpToDate(jarSource, jarTarget)) {
+        if (isUpToDate(jarSource, jarTarget)) {
           return;
         }
 
@@ -215,7 +214,7 @@ public class SignJar extends Task {
 
         if (null != keystore) {
             cmd.createArg().setValue("-keystore");
-            cmd.createArg().setValue( keystore.toString() );
+            cmd.createArg().setValue(keystore.toString());
         }
 
         if (null != storepass) {
@@ -235,12 +234,12 @@ public class SignJar extends Task {
 
         if (null != sigfile) {
             cmd.createArg().setValue("-sigfile");
-            cmd.createArg().setValue( sigfile.toString() );
+            cmd.createArg().setValue(sigfile.toString());
         }
 
         if (null != jarTarget) {
             cmd.createArg().setValue("-signedjar");
-            cmd.createArg().setValue( jarTarget.toString() );
+            cmd.createArg().setValue(jarTarget.toString());
         }
 
         if (verbose) {
@@ -255,37 +254,37 @@ public class SignJar extends Task {
             cmd.createArg().setValue("-sectionsonly");
         }
 
-        cmd.createArg().setValue( jarSource.toString() );
+        cmd.createArg().setValue(jarSource.toString());
 
         cmd.createArg().setValue(alias);
 
         log("Signing Jar : " + jarSource.getAbsolutePath());
         cmd.setFailonerror(true);
-        cmd.setTaskName( getTaskName() );
+        cmd.setTaskName(getTaskName());
         cmd.execute();
     }
 
     protected boolean isUpToDate(File jarFile, File signedjarFile) {
-        if( null == jarFile ) {
+        if (null == jarFile) {
             return false;
         }
 
-        if( null != signedjarFile ) {
+        if (null != signedjarFile) {
 
-            if(!jarFile.exists()) {
+            if (!jarFile.exists()) {
               return false;
             }
-            if(!signedjarFile.exists()) {
+            if (!signedjarFile.exists()) {
               return false;
             }
-            if(jarFile.equals(signedjarFile)) {
+            if (jarFile.equals(signedjarFile)) {
               return false;
             }
-            if(signedjarFile.lastModified() > jarFile.lastModified()) {
+            if (signedjarFile.lastModified() > jarFile.lastModified()) {
                 return true;
             }
         } else {
-            if( lazy ) {
+            if (lazy) {
                 return isSigned(jarFile);
             }
         }
@@ -297,33 +296,35 @@ public class SignJar extends Task {
         final String SIG_START = "META-INF/";
         final String SIG_END = ".SF";
 
-        if( !file.exists() ) {
+        if (!file.exists()) {
             return false;
         }
         ZipFile jarFile = null;
         try {
             jarFile = new ZipFile(file);
-            if(null == alias) {
+            if (null == alias) {
                 Enumeration entries = jarFile.entries();
-                while(entries.hasMoreElements()) {
-                    String name =  ((ZipEntry)entries.nextElement()).getName();
-                    if(name.startsWith(SIG_START) && name.endsWith(SIG_END)) {
+                while (entries.hasMoreElements()) {
+                    String name = ((ZipEntry) entries.nextElement()).getName();
+                    if (name.startsWith(SIG_START) && name.endsWith(SIG_END)) {
                         return true;
                     }
                 }
                 return false;
             } else {
-                return jarFile.getEntry(SIG_START+alias.toUpperCase()+
+                return jarFile.getEntry(SIG_START + alias.toUpperCase() +
                                         SIG_END) != null;
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             return false;
         } finally {
-            if(jarFile != null) {
-                try {jarFile.close();} catch(IOException e) {}
+            if (jarFile != null) {
+                try {
+                    jarFile.close();
+                } catch (IOException e) {
+                }
             }
         }
     }
-
 }
 

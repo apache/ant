@@ -81,22 +81,22 @@ public abstract class VAJToolsServlet extends HttpServlet {
     class VAJLocalServletUtil extends VAJLocalUtil {
         public void log(String msg, int level) {
             try {
-                if ( msg != null ) {
+                if (msg != null) {
                     msg = msg.replace('\r', ' ');
                     int i = 0;
-                    while ( i < msg.length() ) {
+                    while (i < msg.length()) {
                         int nlPos = msg.indexOf('\n', i);
-                        if ( nlPos == -1 ) {
+                        if (nlPos == -1) {
                             nlPos = msg.length();
                         }
-                        response.getWriter().println( Integer.toString(level)
-                                                      + " " + msg.substring( i, nlPos ));
+                        response.getWriter().println(Integer.toString(level)
+                                                     + " " + msg.substring(i, nlPos));
                         i = nlPos + 1;
                     }
                 }
-            } catch( IOException e ) {
-                throw new BuildException( "logging failed. msg was: "
-                                          + e.getMessage() );
+            } catch (IOException e) {
+                throw new BuildException("logging failed. msg was: "
+                                         + e.getMessage());
             }
         }
     }
@@ -141,22 +141,21 @@ public abstract class VAJToolsServlet extends HttpServlet {
             request = req;
             initRequest();
             executeRequest();
-        } catch( BuildException e ) {
+        } catch (BuildException e) {
             util.log("Error occured: " + e.getMessage(), VAJUtil.MSG_ERR);
-        } catch( Exception e ) {
+        } catch (Exception e) {
             try {
-                if ( ! (e instanceof BuildException) ) {
+                if (!(e instanceof BuildException)) {
                     String trace = StringUtils.getStackTrace(e);
                     util.log("Program error in " + this.getClass().getName()
                              + ":\n" + trace, VAJUtil.MSG_ERR);
                 }
-            } catch( Throwable t ) {
+            } catch (Throwable t) {
                 t.printStackTrace();
             } finally {
-                if ( ! (e instanceof BuildException) )
-                    {
-                        throw new ServletException( e.getMessage() );
-                    }
+                if (!(e instanceof BuildException)) {
+                    throw new ServletException(e.getMessage());
+                }
             }
         }
     }
@@ -166,7 +165,7 @@ public abstract class VAJToolsServlet extends HttpServlet {
      */
     protected void initRequest() throws IOException {
         response.setContentType("text/ascii");
-        if ( util == null ) {
+        if (util == null) {
             util = new VAJLocalServletUtil();
         }
     }

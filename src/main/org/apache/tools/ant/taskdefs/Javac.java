@@ -518,7 +518,7 @@ public class Javac extends MatchingTask {
     /**
      * Include ant's own classpath in this task's classpath?
      */
-    public void setIncludeantruntime( boolean include ) {
+    public void setIncludeantruntime(boolean include) {
         includeAntRuntime = include;
     }
 
@@ -534,7 +534,7 @@ public class Javac extends MatchingTask {
      * Sets whether or not to include the java runtime libraries to this
      * task's classpath.
      */
-    public void setIncludejavaruntime( boolean include ) {
+    public void setIncludejavaruntime(boolean include) {
         includeJavaRuntime = include;
     }
 
@@ -615,12 +615,11 @@ public class Javac extends MatchingTask {
     public String[] getCurrentCompilerArgs() {
         Vector args = new Vector();
         for (Enumeration enum = implementationSpecificArgs.elements();
-             enum.hasMoreElements();
-             ) {
+             enum.hasMoreElements();) {
             ImplementationSpecificArgument arg = 
                 ((ImplementationSpecificArgument) enum.nextElement());
             String[] curr = arg.getParts();
-            for (int i=0; i<curr.length; i++) {
+            for (int i = 0; i < curr.length; i++) {
                 args.addElement(curr[i]);
             }
         }
@@ -639,7 +638,7 @@ public class Javac extends MatchingTask {
         // scan source directories and dest directory to build up
         // compile lists
         String[] list = src.list();
-        for (int i=0; i<list.length; i++) {
+        for (int i = 0; i < list.length; i++) {
             File srcDir = project.resolveFile(list[i]);
             if (!srcDir.exists()) {
                 throw new BuildException("srcdir \"" 
@@ -792,7 +791,7 @@ public class Javac extends MatchingTask {
                 + (destDir != null ? " to " + destDir : ""));
 
             if (listFiles) {
-                for (int i=0 ; i < compileList.length ; i++)
+                for (int i = 0 ; i < compileList.length ; i++)
                 {
                   String filename = compileList[i].getAbsolutePath();
                   log(filename) ;

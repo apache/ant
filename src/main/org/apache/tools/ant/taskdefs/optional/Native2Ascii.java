@@ -189,7 +189,7 @@ public class Native2Ascii extends MatchingTask {
         if (count == 0) {
             return;
         }
-        String message = "Converting "+ count + " file"
+        String message = "Converting " + count + " file"
             + (count != 1 ? "s" : "") + " from ";
         log(message + srcDir + " to " + destDir);
         for (int i = 0; i < files.length; i++){
@@ -237,7 +237,7 @@ public class Native2Ascii extends MatchingTask {
         if (parentName != null){
             File parentFile = new File(parentName);
             
-            if ((! parentFile.exists()) && ( ! parentFile.mkdirs())){
+            if ((!parentFile.exists()) && (!parentFile.mkdirs())){
                 throw new BuildException("cannot create parent directory "
                                          + parentName);
             }
@@ -246,7 +246,7 @@ public class Native2Ascii extends MatchingTask {
         log("converting " + srcName, Project.MSG_VERBOSE);
         sun.tools.native2ascii.Main n2a
             = new sun.tools.native2ascii.Main();
-        if(! n2a.convert(cmd.getArguments())){
+        if (!n2a.convert(cmd.getArguments())){
             throw new BuildException("conversion failed");
         }
     }

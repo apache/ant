@@ -220,7 +220,7 @@ public class Os implements Condition {
                     isFamily = isFamily("windows") &&
                         !(osName.indexOf("nt") >= 0 ||
                           osName.indexOf("2000") >= 0 ||
-                          osName.indexOf("xp") >= 0 );
+                          osName.indexOf("xp") >= 0);
                 } else {
                     throw new BuildException(
                         "Don\'t know how to detect os family \""

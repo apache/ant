@@ -62,9 +62,9 @@ public class InnerClassFilenameFilter implements FilenameFilter {
     InnerClassFilenameFilter(String baseclass){
         int extidx = baseclass.lastIndexOf(".class");
         if (extidx == -1) {
-            extidx = baseclass.length()-1;
+            extidx = baseclass.length() - 1;
         }
-        baseClassName = baseclass.substring(0,extidx);
+        baseClassName = baseclass.substring(0, extidx);
     }
 
     public boolean accept (File Dir, String filename){

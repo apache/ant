@@ -65,7 +65,7 @@ import java.io.DataInputStream;
  * strings from a class file.
  * @author <a href="mailto:beard@netscape.com">Patrick C. Beard</a>.
  */
-class ConstantPool extends Object{
+class ConstantPool {
 
     final static 
         byte UTF8 = 1, UNUSED = 2, INTEGER = 3, FLOAT = 4, LONG = 5, DOUBLE = 6,
@@ -76,84 +76,82 @@ class ConstantPool extends Object{
 
     Object[] values;
 
-    ConstantPool( DataInput data ) throws IOException {
+    ConstantPool(DataInput data) throws IOException {
         super();
 
-        int count = data .readUnsignedShort();
+        int count = data.readUnsignedShort();
         types = new byte [ count ];
         values = new Object [ count ];
         // read in all constant pool entries.
-        for ( int i = 1; i < count; i++ ) {
-            byte type = data .readByte();
+        for (int i = 1; i < count; i++) {
+            byte type = data.readByte();
             types[i] = type;
             switch (type)
             {
             case UTF8 :
-                values[i] = data .readUTF();
+                values[i] = data.readUTF();
                 break;
                                 
             case UNUSED :
                 break;
                                 
             case INTEGER :
-                values[i] = new Integer( data .readInt() );
+                values[i] = new Integer(data.readInt());
                 break;
                                 
             case FLOAT :
-                values[i] = new Float( data .readFloat() );
+                values[i] = new Float(data.readFloat());
                 break;
                                 
             case LONG :
-                values[i] = new Long( data .readLong() );
+                values[i] = new Long(data.readLong());
                 ++i;
                 break;
                                 
             case DOUBLE :
-                values[i] = new Double( data .readDouble() );
+                values[i] = new Double(data.readDouble());
                 ++i;
                 break;
                                 
             case CLASS :
             case STRING :
-                values[i] = new Integer( data .readUnsignedShort() );
+                values[i] = new Integer(data.readUnsignedShort());
                 break;
                                 
             case FIELDREF :
             case METHODREF :
             case INTERFACEMETHODREF :
             case NAMEANDTYPE :
-                values[i] = new Integer( data .readInt() );
+                values[i] = new Integer(data.readInt());
                 break;
             }
         }
     }
-
-
 }
+
 /**
  * Provides a quick and dirty way to determine the true name of a class
  * given just an InputStream. Reads in just enough to perform this
  * minimal task only.
  */
-public class ClassNameReader extends Object{
+public class ClassNameReader extends Object {
 
-    public static 
-        String getClassName( InputStream input ) throws IOException {
-        DataInputStream data = new DataInputStream( input );
+    public static String getClassName(InputStream input) throws IOException {
+        DataInputStream data = new DataInputStream(input);
         // verify this is a valid class file.
-        int cookie = data .readInt();
-        if ( cookie != 0xCAFEBABE ) {
+        int cookie = data.readInt();
+        if (cookie != 0xCAFEBABE) {
             return null;
         }
-        int version = data .readInt();
+        int version = data.readInt();
         // read the constant pool.
-        ConstantPool constants = new ConstantPool( data );
-        Object[] values = constants .values;
+        ConstantPool constants = new ConstantPool(data);
+        Object[] values = constants.values;
         // read access flags and class index.
-        int accessFlags = data .readUnsignedShort();
-        int classIndex = data .readUnsignedShort();
+        int accessFlags = data.readUnsignedShort();
+        int classIndex = data.readUnsignedShort();
         Integer stringIndex = (Integer) values[classIndex];
-        String className = (String) values[stringIndex .intValue()];
+        String className = (String) values[stringIndex.intValue()];
         return className;
     }
 

@@ -166,7 +166,7 @@ public class Translate extends MatchingTask {
     /**
      * Sets locale specific language of resource bundle
      */
-    public void setBundleLanguage(String bundleLanguage ) {
+    public void setBundleLanguage(String bundleLanguage) {
         this.bundleLanguage = bundleLanguage;
     }
 
@@ -424,9 +424,9 @@ public class Translate extends MatchingTask {
             InputStreamReader isr = new InputStreamReader(ins, bundleEncoding);
             in = new BufferedReader(isr);
             String line = null;
-            while((line = in.readLine()) != null) {
+            while ((line = in.readLine()) != null) {
                 //So long as the line isn't empty and isn't a comment...
-                if(line.trim().length() > 1 &&
+                if (line.trim().length() > 1 &&
                    ('#' != line.charAt(0) || '!' != line.charAt(0))) {
                     //Legal Key-Value separators are :, = and white space.
                     int sepIndex = line.indexOf('=');
@@ -463,7 +463,7 @@ public class Translate extends MatchingTask {
                     }
                 }
             }
-            if(in != null) {
+            if (in != null) {
                 in.close();
             }
         } catch (IOException ioe) {
@@ -517,15 +517,13 @@ public class Translate extends MatchingTask {
                         log("Processing " + srcFiles[j],
                             Project.MSG_DEBUG);
                         FileOutputStream fos = new FileOutputStream(dest);
-                        BufferedWriter out = new BufferedWriter(
-                                                                new OutputStreamWriter(fos,
-                                                                                       destEncoding));
+                        BufferedWriter out 
+                            = new BufferedWriter(new OutputStreamWriter(fos, destEncoding));
                         FileInputStream fis = new FileInputStream(srcFiles[j]);
-                        BufferedReader in = new BufferedReader(
-                                                               new InputStreamReader(fis,
-                                                                                     srcEncoding));
+                        BufferedReader in 
+                            = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
-                        while((line = in.readLine()) != null) {
+                        while ((line = in.readLine()) != null) {
                             int startIndex = -1;
                             int endIndex = -1;
 outer:                      while (true) {
@@ -572,10 +570,10 @@ outer:                      while (true) {
                             out.write(line);
                             out.newLine();
                         }
-                        if(in != null) {
+                        if (in != null) {
                             in.close();
                         }
-                        if(out != null) {
+                        if (out != null) {
                             out.close();
                         }
                     } else {

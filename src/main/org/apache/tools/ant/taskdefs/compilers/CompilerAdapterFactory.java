@@ -94,11 +94,11 @@ public class CompilerAdapterFactory {
      */
     public static CompilerAdapter getCompiler(String compilerType, Task task) 
         throws BuildException {
-            boolean isClassicCompilerSupported=true;
+            boolean isClassicCompilerSupported = true;
             //as new versions of java come out, add them to this test
-            if(Project.getJavaVersion()==Project.JAVA_1_4) {
-                 isClassicCompilerSupported=false;
-             }
+            if (Project.getJavaVersion() == Project.JAVA_1_4) {
+                 isClassicCompilerSupported = false;
+            }
 
             if (compilerType.equalsIgnoreCase("jikes")) {
                 return new Jikes();
@@ -109,12 +109,12 @@ public class CompilerAdapterFactory {
             if (compilerType.equalsIgnoreCase("classic") ||
                     compilerType.equalsIgnoreCase("javac1.1") ||
                     compilerType.equalsIgnoreCase("javac1.2")) {
-                if(isClassicCompilerSupported) {
+                if (isClassicCompilerSupported) {
                     return new Javac12();
                 }
                 else {
                     throw new BuildException("This version of java does "
-                                             +"not support the classic compiler");
+                        + "not support the classic compiler");
                 }
 
             }
@@ -124,18 +124,18 @@ public class CompilerAdapterFactory {
                     compilerType.equalsIgnoreCase("javac1.3") ||
                     compilerType.equalsIgnoreCase("javac1.4")) {
                 // does the modern compiler exist?
-                if(doesModernCompilerExist()) {
+                if (doesModernCompilerExist()) {
                     return new Javac13();
                 } else {
-                    if(isClassicCompilerSupported) {
+                    if (isClassicCompilerSupported) {
                         task.log("Modern compiler not found - looking for "
                                 + "classic compiler", Project.MSG_WARN);
                         return new Javac12();
                     }
                     else {
                         throw new BuildException("Unable to find a javac compiler;\n"
-                                                 +"com.sun.tools.javac.Main is not on the classpath.\n"
-                                                 +"Perhaps JAVA_HOME does not point to the JDK");
+                            + "com.sun.tools.javac.Main is not on the classpath.\n"
+                            + "Perhaps JAVA_HOME does not point to the JDK");
                     }
                 }
                 

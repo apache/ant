@@ -255,7 +255,7 @@ public class Property extends Task {
                 log("Unable to find property file: " + file.getAbsolutePath(),
                     Project.MSG_VERBOSE);
             }
-        } catch(IOException ex) {
+        } catch (IOException ex) {
             throw new BuildException(ex, location);
         }
     }
@@ -297,15 +297,15 @@ public class Property extends Task {
         
     }
 
-    protected void loadEnvironment( String prefix ) {
+    protected void loadEnvironment(String prefix) {
         Properties props = new Properties();
         if (!prefix.endsWith(".")) {
             prefix += ".";
         }
         log("Loading Environment " + prefix, Project.MSG_VERBOSE);
         Vector osEnv = Execute.getProcEnvironment();
-        for (Enumeration e = osEnv.elements(); e.hasMoreElements(); ) {
-            String entry = (String)e.nextElement();
+        for (Enumeration e = osEnv.elements(); e.hasMoreElements();) {
+            String entry = (String) e.nextElement();
             int pos = entry.indexOf('=');
             if (pos == -1) {
                 log("Ignoring: " + entry, Project.MSG_WARN);
@@ -335,7 +335,7 @@ public class Property extends Task {
     }
 
     protected void addProperty(String n, String v) {
-        if( userProperty ) {
+        if (userProperty) {
             if (project.getUserProperty(n) == null) {
                 project.setUserProperty(n, v);
             } else {
@@ -348,7 +348,7 @@ public class Property extends Task {
 
     private void resolveAllProperties(Properties props) throws BuildException {
         for (Enumeration e = props.keys(); e.hasMoreElements();) {
-            String name = (String)e.nextElement();
+            String name = (String) e.nextElement();
             String value = props.getProperty(name);
 
             boolean resolved = false;
@@ -364,9 +364,9 @@ public class Property extends Task {
                     Enumeration i = fragments.elements();
                     Enumeration j = propertyRefs.elements();
                     while (i.hasMoreElements()) {
-                        String fragment = (String)i.nextElement();
+                        String fragment = (String) i.nextElement();
                         if (fragment == null) {
-                            String propertyName = (String)j.nextElement();
+                            String propertyName = (String) j.nextElement();
                             if (propertyName.equals(name)) {
                                 throw new BuildException("Property " + name 
                                                          + " was circularly "

@@ -68,112 +68,103 @@ import org.apache.tools.mail.MailMessage;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since Ant 1.5
  */
-class PlainMailer
-    extends Mailer
-{
-    /** 
+class PlainMailer extends Mailer {
+    /**
      * Sends the email using the apache MailMessage class.
+     *
      * @see org.apache.tools.mail.MailMessage
      */
-    public void send()
-    {
-        try
-        {
-            MailMessage mailMessage = new MailMessage( host );
-            mailMessage.setPort( port );
+    public void send() {
+        try {
+            MailMessage mailMessage = new MailMessage(host);
 
-            mailMessage.from( from.toString() );
+            mailMessage.setPort(port);
+
+            mailMessage.from(from.toString());
 
             Enumeration e;
 
             e = toList.elements();
-            while( e.hasMoreElements() )
-            {
-                mailMessage.to( e.nextElement().toString() );
+            while (e.hasMoreElements()) {
+                mailMessage.to(e.nextElement().toString());
             }
 
             e = ccList.elements();
-            while( e.hasMoreElements() )
-            {
-                mailMessage.cc( e.nextElement().toString() );
+            while (e.hasMoreElements()) {
+                mailMessage.cc(e.nextElement().toString());
             }
 
             e = bccList.elements();
-            while( e.hasMoreElements() )
-            {
-                mailMessage.bcc( e.nextElement().toString() );
+            while (e.hasMoreElements()) {
+                mailMessage.bcc(e.nextElement().toString());
             }
 
-            if( subject != null )
-            {
-                mailMessage.setSubject( subject );
+            if (subject != null) {
+                mailMessage.setSubject(subject);
             }
 
-            mailMessage.setHeader( "Content-Type", message.getMimeType() );
+            mailMessage.setHeader("Content-Type", message.getMimeType());
 
             PrintStream out = mailMessage.getPrintStream();
 
-            message.print( out );
+            message.print(out);
 
             e = files.elements();
-            while( e.hasMoreElements() )
-            {
-                File file = (File)e.nextElement();
-                attach( file, out );
+            while (e.hasMoreElements()) {
+                File file = (File) e.nextElement();
+
+                attach(file, out);
             }
 
             mailMessage.sendAndClose();
-        }
-        catch( IOException ioe )
-        {
-            throw new BuildException( "IO error sending mail", ioe );
+        } catch (IOException ioe) {
+            throw new BuildException("IO error sending mail", ioe);
         }
 
     }
 
-    /** 
+
+    /**
      * Attaches a file to this email
+     *
      * @param file The file to attache
      * @param out The message stream to add to
      * @throws IOException if errors occur
      */
-    protected void attach( File file, PrintStream out )
-        throws IOException
-    {
-        if( !file.exists() || !file.canRead() )
-        {
-            throw new BuildException( "File \"" + file.getName()
-                                      + "\" does not exist or is not "
-                                      + "readable." );
+    protected void attach(File file, PrintStream out)
+         throws IOException {
+        if (!file.exists() || !file.canRead()) {
+            throw new BuildException("File \"" + file.getName()
+                 + "\" does not exist or is not "
+                 + "readable.");
         }
 
-        if( includeFileNames )
-        {
+        if (includeFileNames) {
             out.println();
+
             String filename = file.getName();
             int filenamelength = filename.length();
-            out.println( filename );
-            for( int star = 0; star < filenamelength; star++ )
-            {
-                out.print( '=' );
+
+            out.println(filename);
+            for (int star = 0; star < filenamelength; star++) {
+                out.print('=');
             }
             out.println();
         }
 
         int length;
-        byte[] buf = new byte[ 1024 ];
-        FileInputStream finstr = new FileInputStream( file );
-        try
-        {
-            BufferedInputStream in = new BufferedInputStream( finstr, buf.length );
-            while( ( length = in.read( buf ) ) != -1 )
-            {
-                out.write( buf, 0, length );
+        byte[] buf = new byte[1024];
+        FileInputStream finstr = new FileInputStream(file);
+
+        try {
+            BufferedInputStream in = new BufferedInputStream(finstr, buf.length);
+
+            while ((length = in.read(buf)) != -1) {
+                out.write(buf, 0, length);
             }
-        }
-        finally
-        {
+        } finally {
             finstr.close();
         }
     }
 }
+

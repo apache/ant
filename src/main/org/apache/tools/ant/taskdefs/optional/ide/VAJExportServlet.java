@@ -166,7 +166,6 @@ public class VAJExportServlet extends VAJToolsServlet {
                          getBooleanParam(RESOURCES_PARAM, true),
                          getBooleanParam(SOURCES_PARAM, true),
                          getBooleanParam(DEFAULT_EXCLUDES_PARAM, true),
-                         getBooleanParam(OVERWRITE_PARAM, true)
-                         );
+                         getBooleanParam(OVERWRITE_PARAM, true));
     }
 }

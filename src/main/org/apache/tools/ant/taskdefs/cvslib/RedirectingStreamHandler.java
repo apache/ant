@@ -65,40 +65,33 @@ import org.apache.tools.ant.BuildException;
  * @version $Revision$ $Date$
  */
 class RedirectingStreamHandler
-    extends PumpStreamHandler
-{
-    RedirectingStreamHandler( final ChangeLogParser parser )
-    {
-        super( new RedirectingOutputStream( parser ),
-               new ByteArrayOutputStream() );
+     extends PumpStreamHandler {
+    RedirectingStreamHandler(final ChangeLogParser parser) {
+        super(new RedirectingOutputStream(parser),
+            new ByteArrayOutputStream());
     }
 
-    String getErrors()
-    {
-        try
-        {
-            final ByteArrayOutputStream error = (ByteArrayOutputStream)getErr();
-            return error.toString( "ASCII" );
-        }
-        catch( final Exception e )
-        {
+
+    String getErrors() {
+        try {
+            final ByteArrayOutputStream error = (ByteArrayOutputStream) getErr();
+
+            return error.toString("ASCII");
+        } catch (final Exception e) {
             return null;
         }
     }
 
 
-    public void stop() 
-    {
+    public void stop() {
         super.stop();
-        try
-        {
+        try {
             getErr().close();
             getOut().close();
-        } 
-        catch( final IOException e )
-        {
+        } catch (final IOException e) {
             // plain impossible
-            throw new BuildException( e );
+            throw new BuildException(e);
         }
     }
 }
+

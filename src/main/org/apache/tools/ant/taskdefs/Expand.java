@@ -127,7 +127,7 @@ public class Expand extends MatchingTask {
             }
         }
         if (filesets.size() > 0) {
-            for (int j=0; j < filesets.size(); j++) {
+            for (int j = 0; j < filesets.size(); j++) {
                 FileSet fs = (FileSet) filesets.elementAt(j);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 File fromDir = fs.getDir(project);
@@ -158,7 +158,7 @@ public class Expand extends MatchingTask {
                             ze.isDirectory());
             }
 
-            log("expand complete", Project.MSG_VERBOSE );
+            log("expand complete", Project.MSG_VERBOSE);
         } catch (IOException ioe) {
             throw new BuildException("Error while expanding " + srcF.getPath(),
                                      ioe);
@@ -221,10 +221,10 @@ public class Expand extends MatchingTask {
                 return;
             }
 
-            log("expanding " + entryName + " to "+ f,
+            log("expanding " + entryName + " to " + f,
                 Project.MSG_VERBOSE);
             // create intermediary directories - sometimes zip don't add them
-            File dirF= fileUtils.getParentFile(f);
+            File dirF = fileUtils.getParentFile(f);
             dirF.mkdirs();
 
             if (isDirectory) {
@@ -253,7 +253,7 @@ public class Expand extends MatchingTask {
             }
 
             fileUtils.setFileLastModified(f, entryDate.getTime());
-        } catch( FileNotFoundException ex ) {
+        } catch (FileNotFoundException ex) {
             log("Unable to expand to file " + f.getPath(), Project.MSG_WARN);
         }
 
@@ -266,7 +266,7 @@ public class Expand extends MatchingTask {
      * @param d Path to the directory.
      */
     public void setDest(File d) {
-        this.dest=d;
+        this.dest = d;
     }
 
     /**

@@ -122,14 +122,14 @@ public class MethodRefCPInfo extends ConstantPoolEntry {
      */
     public void resolve(ConstantPool constantPool) {
         ClassCPInfo methodClass
-             = (ClassCPInfo)constantPool.getEntry(classIndex);
+             = (ClassCPInfo) constantPool.getEntry(classIndex);
 
         methodClass.resolve(constantPool);
 
         methodClassName = methodClass.getClassName();
 
         NameAndTypeCPInfo nt
-             = (NameAndTypeCPInfo)constantPool.getEntry(nameAndTypeIndex);
+             = (NameAndTypeCPInfo) constantPool.getEntry(nameAndTypeIndex);
 
         nt.resolve(constantPool);
 

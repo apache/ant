@@ -106,14 +106,14 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
      */
     public void resolve(ConstantPool constantPool) {
         ClassCPInfo interfaceMethodClass
-             = (ClassCPInfo)constantPool.getEntry(classIndex);
+             = (ClassCPInfo) constantPool.getEntry(classIndex);
 
         interfaceMethodClass.resolve(constantPool);
 
         interfaceMethodClassName = interfaceMethodClass.getClassName();
 
         NameAndTypeCPInfo nt
-             = (NameAndTypeCPInfo)constantPool.getEntry(nameAndTypeIndex);
+             = (NameAndTypeCPInfo) constantPool.getEntry(nameAndTypeIndex);
 
         nt.resolve(constantPool);
 

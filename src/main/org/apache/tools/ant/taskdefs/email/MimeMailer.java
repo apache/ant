@@ -80,112 +80,101 @@ import org.apache.tools.ant.BuildException;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since Ant 1.5
  */
-class MimeMailer
-    extends Mailer
-{
-    /** Sends the email
-     */
-    public void send()
-    {
-        try
-        {
+class MimeMailer extends Mailer {
+    /** Sends the email  */
+    public void send() {
+        try {
             Properties props = new Properties();
-            props.put( "mail.smtp.host", host );
-            props.put( "mail.smtp.port", String.valueOf( port ) );
+
+            props.put("mail.smtp.host", host);
+            props.put("mail.smtp.port", String.valueOf(port));
 
             // Aside, the JDK is clearly unaware of the scottish
             // 'session', which //involves excessive quantities of
             // alcohol :-)
-            Session sesh = Session.getDefaultInstance( props, null );
+            Session sesh = Session.getDefaultInstance(props, null);
 
             //create the message
-            MimeMessage msg = new MimeMessage( sesh );
+            MimeMessage msg = new MimeMessage(sesh);
             MimeMultipart attachments = new MimeMultipart();
 
             //set the sender
-            if( from.getName() == null )
-            {
-                msg.setFrom( new InternetAddress( from.getAddress() ) );
-            }
-            else
-            {
-                msg.setFrom( new InternetAddress( from.getAddress(), 
-                                                  from.getName() ) );
+            if (from.getName() == null) {
+                msg.setFrom(new InternetAddress(from.getAddress()));
+            } else {
+                msg.setFrom(new InternetAddress(from.getAddress(),
+                    from.getName()));
             }
 
-            msg.setRecipients( Message.RecipientType.TO, 
-                               internetAddresses( toList ) );
-            msg.setRecipients( Message.RecipientType.CC, 
-                               internetAddresses( ccList ) );
-            msg.setRecipients( Message.RecipientType.BCC, 
-                               internetAddresses( bccList ) );
+            msg.setRecipients(Message.RecipientType.TO,
+                internetAddresses(toList));
+            msg.setRecipients(Message.RecipientType.CC,
+                internetAddresses(ccList));
+            msg.setRecipients(Message.RecipientType.BCC,
+                internetAddresses(bccList));
 
-            if( subject != null )
-            {
-                msg.setSubject( subject );
+            if (subject != null) {
+                msg.setSubject(subject);
             }
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            PrintStream out = new PrintStream( baos );
-            message.print( out );
+            PrintStream out = new PrintStream(baos);
+
+            message.print(out);
             out.close();
 
             MimeBodyPart textbody = new MimeBodyPart();
-            textbody.setContent( baos.toString(), message.getMimeType() );
-            attachments.addBodyPart( textbody );
+
+            textbody.setContent(baos.toString(), message.getMimeType());
+            attachments.addBodyPart(textbody);
 
             Enumeration e = files.elements();
-            while( e.hasMoreElements() )
-            {
-                File file = (File)e.nextElement();
+
+            while (e.hasMoreElements()) {
+                File file = (File) e.nextElement();
 
                 MimeBodyPart body;
+
                 body = new MimeBodyPart();
-                if( !file.exists() || !file.canRead() )
-                {
-                    throw new BuildException( "File \"" + file.getAbsolutePath()
-                                              + "\" does not exist or is not "
-                                              + "readable." );
+                if (!file.exists() || !file.canRead()) {
+                    throw new BuildException("File \"" + file.getAbsolutePath()
+                         + "\" does not exist or is not "
+                         + "readable.");
                 }
-                FileDataSource fileData = new FileDataSource( file );
-                DataHandler fileDataHandler = new DataHandler( fileData );
-                body.setDataHandler( fileDataHandler );
-                body.setFileName( file.getName() );
-                attachments.addBodyPart( body );
+                FileDataSource fileData = new FileDataSource(file);
+                DataHandler fileDataHandler = new DataHandler(fileData);
+
+                body.setDataHandler(fileDataHandler);
+                body.setFileName(file.getName());
+                attachments.addBodyPart(body);
             }
 
-            msg.setContent( attachments );
-            Transport.send( msg );
-        }
-        catch( MessagingException e )
-        {
-            throw new BuildException( "Problem while sending mime mail:", e );
-        }
-        catch( IOException e )
-        {
-            throw new BuildException( "Problem while sending mime mail:", e );
+            msg.setContent(attachments);
+            Transport.send(msg);
+        } catch (MessagingException e) {
+            throw new BuildException("Problem while sending mime mail:", e);
+        } catch (IOException e) {
+            throw new BuildException("Problem while sending mime mail:", e);
         }
     }
 
-    private static InternetAddress[] internetAddresses( Vector list )
-        throws AddressException, UnsupportedEncodingException
-    {
-        InternetAddress[] addrs = new InternetAddress[ list.size() ];
-        for( int i = 0; i < list.size(); ++i )
-        {
-            EmailAddress addr = (EmailAddress)list.elementAt( i );
 
-            if( addr.getName() == null )
-            {
-                addrs[ i ] = new InternetAddress( addr.getAddress() );
-            }
-            else
-            {
-                addrs[ i ] = new InternetAddress( addr.getAddress(), 
-                                                  addr.getName() );
+    private static InternetAddress[] internetAddresses(Vector list)
+         throws AddressException, UnsupportedEncodingException {
+        InternetAddress[] addrs = new InternetAddress[list.size()];
+
+        for (int i = 0; i < list.size(); ++i) {
+            EmailAddress addr = (EmailAddress) list.elementAt(i);
+
+            if (addr.getName() == null) {
+                addrs[i] = new InternetAddress(addr.getAddress());
+            } else {
+                addrs[i] = new InternetAddress(addr.getAddress(),
+                    addr.getName());
             }
         }
 
         return addrs;
     }
 }
+

@@ -297,7 +297,7 @@ public class FixCRLF extends MatchingTask {
      * @param tlength specify the length of tab in spaces,
      */
     public void setTablength(int tlength) throws BuildException {
-        if (tlength < 2 || tlength >80) {
+        if (tlength < 2 || tlength > 80) {
             throw new BuildException("tablength must be between 2 and 80",
                                      location);
         }
@@ -366,9 +366,9 @@ public class FixCRLF extends MatchingTask {
         // log options used
         log("options:" +
             " eol=" +
-            (eol==ASIS ? "asis" : eol==CR ? "cr" : eol==LF ? "lf" : "crlf") +
-            " tab=" + (tabs==TABS ? "add" : tabs==ASIS ? "asis" : "remove") +
-            " eof=" + (ctrlz==ADD ? "add" : ctrlz==ASIS ? "asis" : "remove") +
+            (eol == ASIS ? "asis" : eol == CR ? "cr" : eol == LF ? "lf" : "crlf") +
+            " tab=" + (tabs == TABS ? "add" : tabs == ASIS ? "asis" : "remove") +
+            " eof=" + (ctrlz == ADD ? "add" : ctrlz == ASIS ? "asis" : "remove") +
             " tablength=" + tablength +
             " encoding=" + (encoding == null ? "default" : encoding),
             Project.MSG_VERBOSE);
@@ -418,7 +418,7 @@ public class FixCRLF extends MatchingTask {
                 int endComment;
 
                 try {
-                    line = (OneLiner.BufferLine)lines.nextElement();
+                    line = (OneLiner.BufferLine) lines.nextElement();
                 } catch (NoSuchElementException e) {
                     throw new BuildException(e);
                 }
@@ -449,14 +449,13 @@ public class FixCRLF extends MatchingTask {
                             break;
 
                         case IN_MULTI_COMMENT:
-                            if ((endComment =
-                                 lineString.indexOf("*/", line.getNext())
-                                 ) >= 0)
-                                {
-                                    // End of multiLineComment on this line
-                                    endComment += 2;  // Include the end token
-                                    lines.setState(LOOKING);
-                                }
+                            endComment 
+                                = lineString.indexOf("*/", line.getNext());
+                            if (endComment >= 0) {
+                                // End of multiLineComment on this line
+                                endComment += 2;  // Include the end token
+                                lines.setState(LOOKING);
+                            }
                             else {
                                 endComment = linelen;
                             }
@@ -604,7 +603,7 @@ public class FixCRLF extends MatchingTask {
                     lines.close();
                 }
             } catch (IOException io) {
-                log("Error closing "+srcFile, Project.MSG_ERR);
+                log("Error closing " + srcFile, Project.MSG_ERR);
             } // end of catch
 
             if (tmpFile != null) {
@@ -767,14 +766,12 @@ public class FixCRLF extends MatchingTask {
                 nextStop += tablength;
             }
 
-            for ( ; nextStop - placediff <= linestring.length()
-                          ; nextStop += tablength)
-            {
+            for (; nextStop - placediff <= linestring.length()
+                          ; nextStop += tablength) {
                 for (tabCol = nextStop;
                              --tabCol - placediff >= place
                              && linestring.charAt(tabCol - placediff) == ' '
-                             ;)
-                {
+                             ;) {
                     ; // Loop for the side-effects
                 }
                 // tabCol is column index of the last non-space character
@@ -863,7 +860,7 @@ public class FixCRLF extends MatchingTask {
                     reader.mark(2);
                     switch ((ch = reader.read())) {
                     case '\r':
-                        if ((char)(ch = reader.read()) == '\n') {
+                        if ((char) (ch = reader.read()) == '\n') {
                             eolcount += 2;
                             eolStr.append("\r\n");
                         }
@@ -935,7 +932,7 @@ public class FixCRLF extends MatchingTask {
         public Object nextElement()
             throws NoSuchElementException
         {
-            if (! hasMoreElements()) {
+            if (!hasMoreElements()) {
                 throw new NoSuchElementException("OneLiner");
             }
             BufferLine tmpLine =

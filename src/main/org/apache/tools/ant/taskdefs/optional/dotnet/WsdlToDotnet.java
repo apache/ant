@@ -72,42 +72,42 @@ public class WsdlToDotnet extends Task  {
     /**
      * name of output file (required)
      */ 
-    private File destFile=null;
+    private File destFile = null;
     
     /**
      * url to retrieve
      */ 
-    private String url=null;
+    private String url = null;
     
     /**
      * name of source file
      */ 
-    private File srcFile=null;
+    private File srcFile = null;
     
     /**
      * language; defaults to C#
      */ 
-    private String language="CS";
+    private String language = "CS";
     
     /**
      * flag set to true to generate server side skeleton
      */ 
-    private boolean server=false;
+    private boolean server = false;
     
     /**
      * namespace
      */ 
-    private String namespace=null;
+    private String namespace = null;
     
     /**
      *  flag to control action on execution trouble
      */
-    private boolean failOnError=true;
+    private boolean failOnError = true;
 
     /**
      *  any extra command options?
      */
-    protected String extraOptions=null;
+    protected String extraOptions = null;
     
     /**
      *
@@ -155,27 +155,27 @@ public class WsdlToDotnet extends Task  {
      */ 
     protected void validate() 
             throws BuildException {
-        if(destFile==null) {
+        if (destFile == null) {
             throw new BuildException("destination file must be specified");
         }
-        if(destFile.isDirectory() ) {
+        if (destFile.isDirectory()) {
             throw new BuildException(
                 "destination file is a directory");
         }        
-        if(url!=null && srcFile!=null) {
+        if (url != null && srcFile != null) {
             throw new BuildException(
                     "you can not specify both a source file and a URL");
         }
-        if(url==null && srcFile==null) {
+        if (url == null && srcFile == null) {
             throw new BuildException(
                     "you must specify either a source file or a URL");
         }
-        if(srcFile!=null) {
-            if(!srcFile.exists() ) {
+        if (srcFile != null) {
+            if (!srcFile.exists()) {
                 throw new BuildException(
                     "source file does not exist");
             }
-            if(srcFile.isDirectory() ) {
+            if (srcFile.isDirectory()) {
                 throw new BuildException(
                     "source file is a directory");
             }
@@ -197,12 +197,12 @@ public class WsdlToDotnet extends Task  {
         command.setTraceCommandLine(true);
         //fill in args
         command.addArgument("/nologo");
-        command.addArgument("/out:"+destFile);
-        command.addArgument("/language:",language);
-        if(server) {
+        command.addArgument("/out:" + destFile);
+        command.addArgument("/language:", language);
+        if (server) {
             command.addArgument("/server");
         }
-        command.addArgument("/namespace:",namespace);
+        command.addArgument("/namespace:", namespace);
         command.addArgument(extraOptions);
         //because these args arent added when null, we can 
         //set both of these and let either of them 
@@ -210,12 +210,12 @@ public class WsdlToDotnet extends Task  {
         command.addArgument(url);
         
         //rebuild unless the dest file is newer than the source file
-        boolean rebuild=true;
-        if(srcFile.exists() && destFile.exists() && 
-            srcFile.lastModified()<=destFile.lastModified()) {
-            rebuild=false;
+        boolean rebuild = true;
+        if (srcFile.exists() && destFile.exists() && 
+            srcFile.lastModified() <= destFile.lastModified()) {
+            rebuild = false;
         }
-        if(rebuild) {
+        if (rebuild) {
             command.runCommand();
         }
     }

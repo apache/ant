@@ -241,7 +241,7 @@ public class CSharp
     /**
      *  file alignment; 0 means let the compiler decide
      */
-    private int fileAlign=0;
+    private int fileAlign = 0;
 
     /**
      *  Fix C# reference inclusion. C# is really dumb in how it handles
@@ -1033,7 +1033,7 @@ public class CSharp
         includeDefaultReferences = true;
         extraOptions = null;
         fullpaths = true;
-        fileAlign=0;
+        fileAlign = 0;
     }
 
 
@@ -1053,7 +1053,7 @@ public class CSharp
      */ 
     protected void validate() 
             throws BuildException {
-        if(outputFile!=null && outputFile.isDirectory()) {
+        if (outputFile != null && outputFile.isDirectory()) {
             throw new BuildException("destFile cannot be a directory");
         }
     }
@@ -1068,7 +1068,7 @@ public class CSharp
         if (srcDir == null) {
             srcDir = project.resolveFile(".");
         }
-        log("CSC working from source directory "+srcDir,Project.MSG_VERBOSE);
+        log("CSC working from source directory " + srcDir, Project.MSG_VERBOSE);
         validate();
 
         NetCommand command = new NetCommand(this, "CSC", csc_exe_name);
@@ -1100,36 +1100,36 @@ public class CSharp
         command.addArgument(getFileAlignParameter());
 
         long outputTimestamp;
-        if(outputFile!=null && outputFile.exists()) {
+        if (outputFile != null && outputFile.exists()) {
             outputTimestamp = outputFile.lastModified();
         } else {
             outputTimestamp = 0;
         }
-        int filesOutOfDate=0;
+        int filesOutOfDate = 0;
         //get dependencies list.
         DirectoryScanner scanner = super.getDirectoryScanner(srcDir);
         String[] dependencies = scanner.getIncludedFiles();
         log("compiling " + dependencies.length + " file" + ((dependencies.length == 1) ? "" : "s"));
         String baseDir = scanner.getBasedir().toString();
-        File base=scanner.getBasedir();
+        File base = scanner.getBasedir();
         //add to the command
         for (int i = 0; i < dependencies.length; i++) {
-            File targetFile = new File(base,dependencies[i]);
-            log(targetFile.toString(),Project.MSG_VERBOSE);
+            File targetFile = new File(base, dependencies[i]);
+            log(targetFile.toString(), Project.MSG_VERBOSE);
             command.addArgument(targetFile.toString());
-            if(targetFile.lastModified()>outputTimestamp) {
+            if (targetFile.lastModified() > outputTimestamp) {
                 filesOutOfDate++;
-                log("Source file "+targetFile.toString()+" is out of date",
+                log("Source file " + targetFile.toString() + " is out of date",
                         Project.MSG_VERBOSE);
             } else {
-                log("Source file "+targetFile.toString()+" is up to date",
+                log("Source file " + targetFile.toString() + " is up to date",
                         Project.MSG_VERBOSE);
             }
             
         }
 
         //now run the command of exe + settings + files
-        if(filesOutOfDate>0) {
+        if (filesOutOfDate > 0) {
             command.runCommand();
         }
     }

@@ -110,10 +110,10 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     public void stop() {
         try {
             inputThread.join();
-        } catch(InterruptedException e) {}
+        } catch (InterruptedException e) {}
         try {
             errorThread.join();
-        } catch(InterruptedException e) {}
+        } catch (InterruptedException e) {}
         try {
             err.flush();
         } catch (IOException e) {}

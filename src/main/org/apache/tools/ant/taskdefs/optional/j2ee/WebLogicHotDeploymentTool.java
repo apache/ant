@@ -98,7 +98,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
      */
     public void deploy()
     {
-        Java java = (Java)getTask().getProject().createTask("java");
+        Java java = (Java) getTask().getProject().createTask("java");
         java.setFork(true);
         java.setFailonerror(true);
         java.setClasspath(getClasspath());
@@ -123,20 +123,26 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
         String action = getTask().getAction();
 
         // check that the password has been set
-        if((getPassword() == null))
+        if ((getPassword() == null))
             throw new BuildException("The password attribute must be set.");
 
         // check for missing application on deploy & update
-        if((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) && application == null)
-            throw new BuildException("The application attribute must be set if action = " + action);
+        if ((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) 
+            && application == null)
+            throw new BuildException("The application attribute must be set " 
+                + "if action = " + action);
 
         // check for missing source on deploy & update
-        if((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) && getTask().getSource() == null)
-            throw new BuildException("The source attribute must be set if action = " + action);
+        if ((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) 
+            && getTask().getSource() == null)
+            throw new BuildException("The source attribute must be set if " 
+                + "action = " + action);
 
         // check for missing application on delete & undeploy
-        if((action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) && application == null)
-            throw new BuildException("The application attribute must be set if action = " + action);
+        if ((action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) 
+            && application == null)
+            throw new BuildException("The application attribute must be set if " 
+                + "action = " + action);
     }
 
     /**
@@ -148,11 +154,11 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
         String action = getTask().getAction();
         String args = null;
 
-        if(action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
+        if (action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
             args = buildDeployArgs();
-        else if(action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY))
+        else if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY))
             args = buildUndeployArgs();
-        else if(action.equals(ACTION_LIST))
+        else if (action.equals(ACTION_LIST))
             args = buildListArgs();
 
         return args;
@@ -168,8 +174,8 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
 
         String action = getTask().getAction();
 
-        for(int i = 0; i < VALID_ACTIONS.length; i++) {
-            if(action.equals(VALID_ACTIONS[i])) {
+        for (int i = 0; i < VALID_ACTIONS.length; i++) {
+            if (action.equals(VALID_ACTIONS[i])) {
                 valid = true;
                 break;
             }
@@ -213,9 +219,10 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
                 .append(getTask().getSource())
                 .toString();
 
-        if(component != null)
+        if (component != null) {
             args = "-component " + component + " " + args;
-
+        }
+        
         return args;
     }
 

@@ -111,9 +111,9 @@ public class Tstamp extends Task {
             project.setNewProperty(prefix + "TODAY", today.format(d));
 
             Enumeration i = customFormats.elements();
-            while(i.hasMoreElements()) {
-                CustomFormat cts = (CustomFormat)i.nextElement();
-                cts.execute(project,d, location);
+            while (i.hasMoreElements()) {
+                CustomFormat cts = (CustomFormat) i.nextElement();
+                cts.execute(project, d, location);
             }
 
         } catch (Exception e) {
@@ -138,7 +138,7 @@ public class Tstamp extends Task {
         private String variant;
         private int offset = 0;
         private int field = Calendar.DATE;
-        private String prefix="";
+        private String prefix = "";
 
         public CustomFormat(String prefix)
         {
@@ -157,7 +157,7 @@ public class Tstamp extends Task {
 
         public void setLocale(String locale)
         {
-            StringTokenizer st = new StringTokenizer( locale, " \t\n\r\f,");
+            StringTokenizer st = new StringTokenizer(locale, " \t\n\r\f,");
             try {
                 language = st.nextToken();
                 if (st.hasMoreElements()) {
@@ -165,7 +165,7 @@ public class Tstamp extends Task {
                     if (st.hasMoreElements()) {
                         variant = st.nextToken();
                         if (st.hasMoreElements()) {
-                            throw new BuildException( "bad locale format", 
+                            throw new BuildException("bad locale format", 
                                                       getLocation());
                         }
                     }
@@ -175,8 +175,8 @@ public class Tstamp extends Task {
                 }
             }
             catch (NoSuchElementException e) {
-                throw new BuildException( "bad locale format", e, 
-                                          getLocation());
+                throw new BuildException("bad locale format", e, 
+                                         getLocation());
             }
         }
 

@@ -114,7 +114,7 @@ public class ClassFile {
         int thisClassIndex = classStream.readUnsignedShort();
         int superClassIndex = classStream.readUnsignedShort();
         ClassCPInfo classInfo 
-            = (ClassCPInfo)constantPool.getEntry(thisClassIndex);
+            = (ClassCPInfo) constantPool.getEntry(thisClassIndex);
         className  = classInfo.getClassName();
     }
 
@@ -133,7 +133,7 @@ public class ClassFile {
 
             if (entry != null 
                 && entry.getTag() == ConstantPoolEntry.CONSTANT_CLASS) {
-                ClassCPInfo classEntry = (ClassCPInfo)entry;
+                ClassCPInfo classEntry = (ClassCPInfo) entry;
 
                 if (!classEntry.getClassName().equals(className)) {
                     classRefs.addElement(ClassFileUtils.convertSlashName(classEntry.getClassName()));

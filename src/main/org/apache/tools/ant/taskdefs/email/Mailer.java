@@ -63,8 +63,7 @@ import org.apache.tools.ant.Task;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since Ant 1.5
  */
-abstract class Mailer
-{
+abstract class Mailer {
     protected String host = null;
     protected int port = -1;
     protected Message message;
@@ -77,109 +76,123 @@ abstract class Mailer
     protected Task task;
     protected boolean includeFileNames = false;
 
-    /** 
+
+    /**
      * Sets the mail server
+     *
      * @param host
      */
-    public void setHost( String host )
-    {
+    public void setHost(String host) {
         this.host = host;
     }
 
-    /** 
+
+    /**
      * Sets the smtp port
+     *
      * @param port
      */
-    public void setPort( int port )
-    {
+    public void setPort(int port) {
         this.port = port;
     }
 
-    /** 
+
+    /**
      * Sets the message
+     *
      * @param m
      */
-    public void setMessage( Message m )
-    {
+    public void setMessage(Message m) {
         this.message = m;
     }
 
-    /** 
+
+    /**
      * Sets the address to send from
+     *
      * @param from
      */
-    public void setFrom( EmailAddress from )
-    {
+    public void setFrom(EmailAddress from) {
         this.from = from;
     }
 
-    /** 
+
+    /**
      * Set the to addresses
+     *
      * @param list
      */
-    public void setToList( Vector list )
-    {
+    public void setToList(Vector list) {
         this.toList = list;
     }
 
-    /** 
+
+    /**
      * Sets the cc addresses
+     *
      * @param list
      */
-    public void setCcList( Vector list )
-    {
+    public void setCcList(Vector list) {
         this.ccList = list;
     }
 
-    /** 
+
+    /**
      * Sets the bcc addresses
+     *
      * @param list
      */
-    public void setBccList( Vector list )
-    {
+    public void setBccList(Vector list) {
         this.bccList = list;
     }
 
-    /** 
+
+    /**
      * Sets the files to attach
+     *
      * @param files
      */
-    public void setFiles( Vector files )
-    {
+    public void setFiles(Vector files) {
         this.files = files;
     }
 
-    /** 
+
+    /**
      * Sets the subject
+     *
      * @param subject
      */
-    public void setSubject( String subject )
-    {
+    public void setSubject(String subject) {
         this.subject = subject;
     }
 
-    /** 
+
+    /**
      * Sets the owning task
+     *
      * @param task
      */
-    public void setTask( Task task )
-    {
+    public void setTask(Task task) {
         this.task = task;
     }
 
-    /** 
+
+    /**
      * Indicates whether filenames should be listed in the body
+     *
      * @param b
      */
-    public void setIncludeFileNames( boolean b )
-    {
+    public void setIncludeFileNames(boolean b) {
         this.includeFileNames = b;
     }
 
-    /** 
+
+    /**
      * This method should send the email
+     *
      * @throws BuildException
      */
     public abstract void send()
-        throws BuildException;
+         throws BuildException;
 }
+

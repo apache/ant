@@ -119,24 +119,24 @@ public class Get extends Task {
             log("Getting: " + source);
 
             //set the timestamp to the file date.
-            long timestamp=0;
+            long timestamp = 0;
 
-            boolean hasTimestamp=false;
-            if(useTimestamp && dest.exists()) {
-                timestamp=dest.lastModified();
-                if (verbose)  {
-                    Date t=new Date(timestamp);
-                    log("local file date : "+t.toString());
+            boolean hasTimestamp = false;
+            if (useTimestamp && dest.exists()) {
+                timestamp = dest.lastModified();
+                if (verbose) {
+                    Date t = new Date(timestamp);
+                    log("local file date : " + t.toString());
                 }
 
-                hasTimestamp=true;
+                hasTimestamp = true;
             }
 
             //set up the URL connection
-            URLConnection connection=source.openConnection();
+            URLConnection connection = source.openConnection();
             //modify the headers
             //NB: things like user authentication could go in here too.
-            if(useTimestamp && hasTimestamp) {
+            if (useTimestamp && hasTimestamp) {
                 connection.setIfModifiedSince(timestamp);
             }
             // prepare Java 1.1 style credentials
@@ -162,10 +162,11 @@ public class Get extends Task {
             //connect to the remote site (may take some time)
             connection.connect();
             //next test for a 304 result (HTTP only)
-            if(connection instanceof HttpURLConnection)  {
-                HttpURLConnection httpConnection=(HttpURLConnection)connection;
-                if(httpConnection.getResponseCode() 
-                   == HttpURLConnection.HTTP_NOT_MODIFIED)  {
+            if (connection instanceof HttpURLConnection) {
+                HttpURLConnection httpConnection
+                    = (HttpURLConnection) connection;
+                if (httpConnection.getResponseCode() 
+                    == HttpURLConnection.HTTP_NOT_MODIFIED)  {
                     //not modified so no file download. just return
                     //instead and trace out something so the user
                     //doesn't think that the download happened when it
@@ -174,8 +175,8 @@ public class Get extends Task {
                     return;
                 }
                 // test for 401 result (HTTP only)
-                if(httpConnection.getResponseCode()
-                   == HttpURLConnection.HTTP_UNAUTHORIZED)  {
+                if (httpConnection.getResponseCode()
+                    == HttpURLConnection.HTTP_UNAUTHORIZED)  {
                     log("Not authorized - check " + dest + " for details");
                     return;
                 }
@@ -190,21 +191,21 @@ public class Get extends Task {
 
             FileOutputStream fos = new FileOutputStream(dest);
 
-            InputStream is=null;
-            for( int i=0; i< 3 ; i++ ) {
+            InputStream is = null;
+            for (int i = 0; i < 3 ; i++) {
                 try {
                     is = connection.getInputStream();
                     break;
-                } catch( IOException ex ) {
-                    log( "Error opening connection " + ex );
+                } catch (IOException ex) {
+                    log("Error opening connection " + ex);
                 }
             }
-            if( is==null ) {
-                log( "Can't get " + source + " to " + dest);
-                if(ignoreErrors) {
+            if (is == null) {
+                log("Can't get " + source + " to " + dest);
+                if (ignoreErrors) {
                     return;
                 }
-                throw new BuildException( "Can't get " + source + " to " + dest,
+                throw new BuildException("Can't get " + source + " to " + dest,
                                           location);
             }
 
@@ -217,7 +218,7 @@ public class Get extends Task {
                     System.out.print(".");
                 }
             }
-            if(verbose) {
+            if (verbose) {
                 System.out.println();
             }
             fos.close();
@@ -226,23 +227,23 @@ public class Get extends Task {
             //if (and only if) the use file time option is set, then
             //the saved file now has its timestamp set to that of the
             //downloaded file
-            if(useTimestamp)  {
-                long remoteTimestamp=connection.getLastModified();
+            if (useTimestamp)  {
+                long remoteTimestamp = connection.getLastModified();
                 if (verbose)  {
-                    Date t=new Date(remoteTimestamp);
-                    log("last modified = "+t.toString()
-                        +((remoteTimestamp==0) 
+                    Date t = new Date(remoteTimestamp);
+                    log("last modified = " + t.toString()
+                        + ((remoteTimestamp == 0) 
                           ? " - using current time instead"
                           : ""));
                 }
-                if(remoteTimestamp!=0) {
+                if (remoteTimestamp != 0) {
                     FileUtils.newFileUtils()
                         .setFileLastModified(dest, remoteTimestamp);
                 }
             }
         } catch (IOException ioe) {
-            log("Error getting " + source + " to " + dest );
-            if(ignoreErrors) {
+            log("Error getting " + source + " to " + dest);
+            if (ignoreErrors) {
                 return;
             }
             throw new BuildException(ioe, location);
@@ -352,67 +353,67 @@ public class Get extends Task {
             '4', '5', '6', '7', '8', '9', '+', '/' }; // 56 to 63
 
 
-        public String  encode ( String  s )
+        public String  encode(String  s)
         {
-            return encode ( s.getBytes ( ) );
+            return encode (s.getBytes());
         }
 
-        public String  encode ( byte [ ]  octetString )
+        public String  encode(byte[ ] octetString)
         {
             int  bits24;
             int  bits6;
 
             char [ ]  out
-              = new char [ ( ( octetString.length - 1 ) / 3 + 1 ) * 4 ];
+              = new char[((octetString.length - 1) / 3 + 1) * 4];
 
             int outIndex = 0;
-            int i        = 0;
+            int i = 0;
 
-            while ( ( i + 3 ) <= octetString.length ) {
+            while ((i + 3) <= octetString.length) {
                 // store the octets
-                bits24=( octetString [ i++ ] & 0xFF ) << 16;
-                bits24 |=( octetString [ i++ ] & 0xFF ) << 8;
+                bits24 = (octetString[i++] & 0xFF) << 16;
+                bits24 |= (octetString[i++] & 0xFF) << 8;
 
-                bits6=( bits24 & 0x00FC0000 )>> 18;
-                out [ outIndex++ ] = alphabet [ bits6 ];
-                bits6 = ( bits24 & 0x0003F000 ) >> 12;
-                out [ outIndex++ ] = alphabet [ bits6 ];
-                bits6 = ( bits24 & 0x00000FC0 ) >> 6;
-                out [ outIndex++ ] = alphabet [ bits6 ];
-                bits6 = ( bits24 & 0x0000003F );
-                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits6 = (bits24 & 0x00FC0000) >> 18;
+                out[outIndex++] = alphabet[bits6];
+                bits6 = (bits24 & 0x0003F000) >> 12;
+                out[outIndex++] = alphabet[bits6];
+                bits6  = (bits24 & 0x00000FC0) >> 6;
+                out[outIndex++] = alphabet[bits6];
+                bits6 = (bits24 & 0x0000003F);
+                out[outIndex++] = alphabet[bits6];
             }
 
-            if ( octetString.length - i == 2 )
+            if (octetString.length - i == 2)
             {
                 // store the octets
-                bits24  = ( octetString [ i     ] & 0xFF ) << 16;
-                bits24 |=( octetString [ i + 1 ] & 0xFF ) << 8;
-                bits6=( bits24 & 0x00FC0000 )>> 18;
-                out [ outIndex++ ] = alphabet [ bits6 ];
-                bits6 = ( bits24 & 0x0003F000 ) >> 12;
-                out [ outIndex++ ] = alphabet [ bits6 ];
-                bits6 = ( bits24 & 0x00000FC0 ) >> 6;
-                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits24 = (octetString[i] & 0xFF) << 16;
+                bits24 |= (octetString[i + 1] & 0xFF) << 8;
+                bits6 = (bits24 & 0x00FC0000) >> 18;
+                out[outIndex++] = alphabet[bits6];
+                bits6 = (bits24 & 0x0003F000) >> 12;
+                out[outIndex++] = alphabet[bits6];
+                bits6 = (bits24 & 0x00000FC0) >> 6;
+                out[outIndex++] = alphabet[bits6];
 
                 // padding
-                out [ outIndex++ ] = '=';
+                out[outIndex++] = '=';
             }
-            else if ( octetString.length - i == 1 )
+            else if (octetString.length - i == 1)
             {
                 // store the octets
-                bits24 = ( octetString [ i ] & 0xFF ) << 16;
-                bits6=( bits24 & 0x00FC0000 )>> 18;
-                out [ outIndex++ ] = alphabet [ bits6 ];
-                bits6 = ( bits24 & 0x0003F000 ) >> 12;
-                out [ outIndex++ ] = alphabet [ bits6 ];
+                bits24 = (octetString[i] & 0xFF) << 16;
+                bits6 = (bits24 & 0x00FC0000) >> 18;
+                out[outIndex++] = alphabet[bits6];
+                bits6 = (bits24 & 0x0003F000) >> 12;
+                out[outIndex++] = alphabet[ bits6 ];
 
                 // padding
-                out [ outIndex++ ] = '=';
-                out [ outIndex++ ] = '=';
+                out[outIndex++] = '=';
+                out[outIndex++] = '=';
             }
 
-            return new String ( out );
+            return new String(out);
         }
      }
 }

@@ -88,8 +88,8 @@ public class AntAnalyzer extends AbstractAnalyzer {
         Hashtable dependencies = new Hashtable();
         Hashtable containers = new Hashtable();
         Hashtable toAnalyze = new Hashtable();
-        for (Enumeration e = getRootClasses(); e.hasMoreElements(); ) {
-            String classname = (String)e.nextElement();
+        for (Enumeration e = getRootClasses(); e.hasMoreElements();) {
+            String classname = (String) e.nextElement();
             toAnalyze.put(classname, classname);
         }
 
@@ -97,8 +97,8 @@ public class AntAnalyzer extends AbstractAnalyzer {
         int maxCount = isClosureRequired() ? MAX_LOOPS : 2;
         while (toAnalyze.size() != 0 && count++ < maxCount) {
             Hashtable analyzedDeps = new Hashtable();
-            for (Enumeration e = toAnalyze.keys(); e.hasMoreElements(); ) {
-                String classname = (String)e.nextElement();
+            for (Enumeration e = toAnalyze.keys(); e.hasMoreElements();) {
+                String classname = (String) e.nextElement();
                 dependencies.put(classname, classname);
                 try {
                     File container = getClassContainer(classname);
@@ -125,7 +125,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
                         Vector dependencyList = classFile.getClassRefs();
                         Enumeration depEnum = dependencyList.elements();
                         while (depEnum.hasMoreElements()) {
-                            String dependency = (String)depEnum.nextElement();
+                            String dependency = (String) depEnum.nextElement();
                             analyzedDeps.put(dependency, dependency);
                         }
                     } finally {
@@ -146,7 +146,7 @@ public class AntAnalyzer extends AbstractAnalyzer {
             // now recover all the dependencies collected and add to the list.
             Enumeration depsEnum = analyzedDeps.elements();
             while (depsEnum.hasMoreElements()) {
-                String className = (String)depsEnum.nextElement();
+                String className = (String) depsEnum.nextElement();
                 if (!dependencies.containsKey(className)) {
                     toAnalyze.put(className, className);
                 }
@@ -154,13 +154,13 @@ public class AntAnalyzer extends AbstractAnalyzer {
         }
 
         files.removeAllElements();
-        for (Enumeration e = containers.keys(); e.hasMoreElements(); ) {
-            files.addElement((File)e.nextElement());
+        for (Enumeration e = containers.keys(); e.hasMoreElements();) {
+            files.addElement((File) e.nextElement());
         }
 
         classes.removeAllElements();
-        for (Enumeration e = dependencies.keys(); e.hasMoreElements(); ) {
-            classes.addElement((String)e.nextElement());
+        for (Enumeration e = dependencies.keys(); e.hasMoreElements();) {
+            classes.addElement((String) e.nextElement());
         }
     }
 

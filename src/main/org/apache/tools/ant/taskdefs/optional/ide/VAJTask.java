@@ -69,7 +69,7 @@ public class VAJTask extends Task {
      */
     class VAJLocalToolUtil extends VAJLocalUtil {
         public void log(String msg, int level) {
-            VAJTask.this.log( msg, level );
+            VAJTask.this.log(msg, level);
         }
     }
 
@@ -84,11 +84,11 @@ public class VAJTask extends Task {
      * returns the VAJUtil implementation
      */
     protected VAJUtil getUtil() {
-        if ( util == null ) {
-            if ( remoteServer == null ) {
+        if (util == null) {
+            if (remoteServer == null) {
                 util = new VAJLocalToolUtil();
             } else {
-                util = new VAJRemoteUtil( this, remoteServer );
+                util = new VAJRemoteUtil(this, remoteServer);
             }
         }
         return util;

@@ -142,7 +142,7 @@ public class SQLExec extends Task {
     /**
      * Autocommit flag. Default value is false
      */
-    private boolean autocommit=false;
+    private boolean autocommit = false;
     
     /**
      * SQL statement
@@ -426,7 +426,7 @@ public class SQLExec extends Task {
         sqlCommand = sqlCommand.trim();
 
         try {
-            if (srcFile == null && sqlCommand.length()==0 
+            if (srcFile == null && sqlCommand.length() == 0 
                 && filesets.isEmpty()) { 
                 if (transactions.size() == 0) {
                     throw new BuildException("Source file or fileset, "
@@ -466,13 +466,13 @@ public class SQLExec extends Task {
                     // in most cases.
                     synchronized (loaderMap){
                         if (caching){
-                            loader = (AntClassLoader)loaderMap.get(driver);
+                            loader = (AntClassLoader) loaderMap.get(driver);
                         }
                         if (loader == null){
-                            log( "Loading " + driver 
-                                 + " using AntClassLoader with classpath " 
-                                 + classpath,
-                                 Project.MSG_VERBOSE );
+                            log("Loading " + driver 
+                                + " using AntClassLoader with classpath " 
+                                + classpath,
+                                Project.MSG_VERBOSE);
                             loader = new AntClassLoader(project, classpath);
                             if (caching){
                                 loaderMap.put(driver, loader);
@@ -491,22 +491,22 @@ public class SQLExec extends Task {
                     dc = Class.forName(driver);
                 }
                 driverInstance = (Driver) dc.newInstance();
-            }catch(ClassNotFoundException e){
+            } catch (ClassNotFoundException e){
                 throw new BuildException("Class Not Found: JDBC driver " 
                                          + driver + " could not be loaded",
                                          location);
-            }catch(IllegalAccessException e){
+            } catch (IllegalAccessException e){
                 throw new BuildException("Illegal Access: JDBC driver " 
                                          + driver + " could not be loaded", 
                                          location);
-            }catch(InstantiationException e) {
+            } catch (InstantiationException e) {
                 throw new BuildException("Instantiation Exception: JDBC driver "
                                          + driver + " could not be loaded", 
                                          location);
             }
 
             // deal with the filesets
-            for (int i=0; i<filesets.size(); i++) {
+            for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
                 File srcDir = fs.getDir(project);
@@ -514,7 +514,7 @@ public class SQLExec extends Task {
                 String[] srcFiles = ds.getIncludedFiles();
                 
                 // Make a transaction for each file
-                for ( int j=0 ; j<srcFiles.length ; j++ ) {
+                for (int j = 0 ; j < srcFiles.length ; j++) {
                     Transaction t = createTransaction();
                     t.setSrc(new File(srcDir, srcFiles[j]));
                 }
@@ -525,8 +525,8 @@ public class SQLExec extends Task {
             t.setSrc(srcFile);
             t.addText(sqlCommand);
 
-            try{
-                log("connecting to " + url, Project.MSG_VERBOSE );
+            try {
+                log("connecting to " + url, Project.MSG_VERBOSE);
                 Properties info = new Properties();
                 info.put("user", userId);
                 info.put("password", password);
@@ -534,7 +534,7 @@ public class SQLExec extends Task {
                 
                 if (conn == null) {
                     // Driver doesn't understand the URL
-                    throw new SQLException("No suitable Driver for "+url);
+                    throw new SQLException("No suitable Driver for " + url);
                 }
                 
                 if (!isValidRdbms(conn)) {
@@ -574,14 +574,14 @@ public class SQLExec extends Task {
                         out.close();
                     }
                 }
-            } catch(IOException e){
+            } catch (IOException e){
                 if (!autocommit && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
                     } catch (SQLException ex) {}
                 }
                 throw new BuildException(e, location);
-            } catch(SQLException e){
+            } catch (SQLException e){
                 if (!autocommit && conn != null && onError.equals("abort")) {
                     try {
                         conn.rollback();
@@ -616,7 +616,7 @@ public class SQLExec extends Task {
  
         BufferedReader in = new BufferedReader(reader);
  
-        while ((line=in.readLine()) != null){
+        while ((line = in.readLine()) != null){
             line = line.trim();
             line = project.replaceProperties(line);
             if (line.startsWith("//")) {
@@ -656,7 +656,7 @@ public class SQLExec extends Task {
         }
         
         // Catch any statements not followed by ;
-        if(!sql.equals("")){
+        if (!sql.equals("")){
             execSQL(sql, out);
         }
     }
@@ -677,7 +677,8 @@ public class SQLExec extends Task {
                 
                 log("RDBMS = " + theVendor, Project.MSG_VERBOSE);
                 if (theVendor == null || theVendor.indexOf(rdbms) < 0) {
-                    log("Not the required RDBMS: "+rdbms, Project.MSG_VERBOSE);
+                    log("Not the required RDBMS: " + rdbms, 
+                        Project.MSG_VERBOSE);
                     return false;
                 }
             }
@@ -692,7 +693,7 @@ public class SQLExec extends Task {
                     !(theVersion.startsWith(version) || 
                       theVersion.indexOf(" " + version) >= 0)) {
                     log("Not the required version: \""
-                        + version +"\"", Project.MSG_VERBOSE);
+                        + version + "\"", Project.MSG_VERBOSE);
                     return false;
                 }
             }
@@ -718,7 +719,7 @@ public class SQLExec extends Task {
         try {  
             totalSql++;
             if (!statement.execute(sql)) {
-                log(statement.getUpdateCount()+" rows affected", 
+                log(statement.getUpdateCount() + " rows affected", 
                     Project.MSG_VERBOSE);
             }
             else {
@@ -728,9 +729,9 @@ public class SQLExec extends Task {
             }
             
             SQLWarning warning = conn.getWarnings();
-            while(warning!=null){
+            while (warning != null){
                 log(warning + " sql warning", Project.MSG_VERBOSE);
-                warning=warning.getNextWarning();
+                warning = warning.getNextWarning();
             }
             conn.clearWarnings();
             goodSql++;

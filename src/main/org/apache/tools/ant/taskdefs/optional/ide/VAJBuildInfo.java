@@ -107,7 +107,7 @@ class VAJBuildInfo implements Runnable {
          * Can only be constructed as wrapper around a real listener
          * @param listener the real listener
          */
-        public InterruptedChecker( BuildListener listener) {
+        public InterruptedChecker(BuildListener listener) {
             super();
             wrappedListener = listener;
         }
@@ -118,7 +118,7 @@ class VAJBuildInfo implements Runnable {
          * the execution.
          */
         protected void checkInterrupted() {
-            if ( buildThread.isInterrupted() ) {
+            if (buildThread.isInterrupted()) {
                 throw new BuildInterruptedException();
             }
         }
@@ -128,7 +128,7 @@ class VAJBuildInfo implements Runnable {
          *  will still be thrown if an error occured during the build.
          */
         public void buildFinished(BuildEvent event) {
-            wrappedListener.buildFinished( event );
+            wrappedListener.buildFinished(event);
             checkInterrupted();
         }
 
@@ -136,7 +136,7 @@ class VAJBuildInfo implements Runnable {
          *  Fired before any targets are started.
          */
         public void buildStarted(BuildEvent event) {
-            wrappedListener.buildStarted( event );
+            wrappedListener.buildStarted(event);
             checkInterrupted();
         }
 
@@ -144,7 +144,7 @@ class VAJBuildInfo implements Runnable {
          *  Fired whenever a message is logged.
          */
         public void messageLogged(BuildEvent event) {
-            wrappedListener.messageLogged( event );
+            wrappedListener.messageLogged(event);
             checkInterrupted();
         }
 
@@ -153,7 +153,7 @@ class VAJBuildInfo implements Runnable {
          *  still be thrown if an error occured during the build.
          */
         public void targetFinished(BuildEvent event) {
-            wrappedListener.targetFinished( event );
+            wrappedListener.targetFinished(event);
             checkInterrupted();
         }
 
@@ -161,7 +161,7 @@ class VAJBuildInfo implements Runnable {
          *  Fired when a target is started.
          */
         public void targetStarted(BuildEvent event) {
-            wrappedListener.targetStarted( event );
+            wrappedListener.targetStarted(event);
             checkInterrupted();
         }
 
@@ -170,7 +170,7 @@ class VAJBuildInfo implements Runnable {
          *  be throw if an error occured during the build.
          */
         public void taskFinished(BuildEvent event) {
-            wrappedListener.taskFinished( event );
+            wrappedListener.taskFinished(event);
             checkInterrupted();
         }
 
@@ -178,7 +178,7 @@ class VAJBuildInfo implements Runnable {
          *  Fired when a task is started.
          */
         public void taskStarted(BuildEvent event) {
-            wrappedListener.taskStarted( event );
+            wrappedListener.taskStarted(event);
             checkInterrupted();
         }
     }
@@ -230,8 +230,8 @@ class VAJBuildInfo implements Runnable {
     public String asDataString() {
         String result = getOutputMessageLevel() + "|" + getBuildFileName()
             + "|" + getTarget();
-        for ( Enumeration e = getProjectTargets().elements();
-              e.hasMoreElements(); ) {
+        for (Enumeration e = getProjectTargets().elements();
+              e.hasMoreElements();) {
             result = result + "|" + e.nextElement();
         }
 
@@ -244,8 +244,8 @@ class VAJBuildInfo implements Runnable {
      */
     private static int findTargetPosition(Vector names, String name) {
         int res = names.size();
-        for (int i=0; i<names.size() && res == names.size(); i++) {
-            if (name.compareTo((String)names.elementAt(i)) < 0) {
+        for (int i = 0; i < names.size() && res == names.size(); i++) {
+            if (name.compareTo((String) names.elementAt(i)) < 0) {
                 res = i;
             }
         }
@@ -280,7 +280,7 @@ class VAJBuildInfo implements Runnable {
      * @return org.apache.tools.ant.Project
      */
     private Project getProject() {
-        if ( project == null ) {
+        if (project == null) {
             project = new Project();
         }
         return project;
@@ -357,14 +357,14 @@ class VAJBuildInfo implements Runnable {
         VAJBuildInfo result = new VAJBuildInfo();
 
         try {
-            StringTokenizer tok = new StringTokenizer( data, "|" );
-            result.setOutputMessageLevel( tok.nextToken() );
-            result.setBuildFileName( tok.nextToken() );
-            result.setTarget( tok.nextToken() );
-            while( tok.hasMoreTokens() ) {
-                result.projectTargets.addElement( tok.nextToken() );
+            StringTokenizer tok = new StringTokenizer(data, "|");
+            result.setOutputMessageLevel(tok.nextToken());
+            result.setBuildFileName(tok.nextToken());
+            result.setTarget(tok.nextToken());
+            while (tok.hasMoreTokens()) {
+                result.projectTargets.addElement(tok.nextToken());
             }
-        } catch ( Throwable t ) {
+        } catch (Throwable t) {
             // if parsing the info fails, just return
             // an empty VAJBuildInfo
         }
@@ -406,8 +406,8 @@ class VAJBuildInfo implements Runnable {
      * @param outputMessageLevel log level as String.
      */
     private void setOutputMessageLevel(String outputMessageLevel) {
-        int level = Integer.parseInt( outputMessageLevel );
-        setOutputMessageLevel( level );
+        int level = Integer.parseInt(outputMessageLevel);
+        setOutputMessageLevel(level);
     }
 
     /**
@@ -450,9 +450,9 @@ class VAJBuildInfo implements Runnable {
         Enumeration ptargets = project.getTargets().elements();
         while (ptargets.hasMoreElements()) {
             Target currentTarget = (Target) ptargets.nextElement();
-            if ( currentTarget.getDescription() != null ) {
+            if (currentTarget.getDescription() != null) {
                 String targetName = currentTarget.getName();
-                int pos = findTargetPosition( projectTargets, targetName );
+                int pos = findTargetPosition(projectTargets, targetName);
                 projectTargets.insertElementAt(targetName, pos);
             }
         }
@@ -470,11 +470,11 @@ class VAJBuildInfo implements Runnable {
      * Executes the target set by setTarget().
      * @param listener  BuildListener for the output of the build
      */
-    public void executeProject( BuildListener logger ) {
+    public void executeProject(BuildListener logger) {
         Throwable error;
         projectLogger = logger;
         try {
-            buildThread = new Thread( this );
+            buildThread = new Thread(this);
             buildThread.setPriority(Thread.MIN_PRIORITY);
             buildThread.start();
         } catch (RuntimeException exc) {
@@ -492,8 +492,8 @@ class VAJBuildInfo implements Runnable {
      */
     public void run() {
         try {
-            InterruptedChecker ic = new InterruptedChecker( projectLogger );
-            BuildEvent e = new BuildEvent( getProject() );
+            InterruptedChecker ic = new InterruptedChecker(projectLogger);
+            BuildEvent e = new BuildEvent(getProject());
             try {
                 ic.buildStarted(e);
 
@@ -501,17 +501,17 @@ class VAJBuildInfo implements Runnable {
                     initProject();
                 }
 
-                project.addBuildListener( ic );
+                project.addBuildListener(ic);
                 project.executeTarget(target);
 
-                ic.buildFinished( e );
+                ic.buildFinished(e);
             } catch (Throwable t) {
-                e.setException( t );
-                ic.buildFinished( e );
+                e.setException(t);
+                ic.buildFinished(e);
             } finally {
-                project.removeBuildListener( ic );
+                project.removeBuildListener(ic);
             }
-        } catch ( Throwable t2 ) {
+        } catch (Throwable t2) {
             System.out.println("unexpected exception!");
             t2.printStackTrace();
         }

@@ -107,8 +107,8 @@ public class NameAndTypeCPInfo extends ConstantPoolEntry {
      *      and against which this entry is to be resolved.
      */
     public void resolve(ConstantPool constantPool) {
-        name = ((Utf8CPInfo)constantPool.getEntry(nameIndex)).getValue();
-        type = ((Utf8CPInfo)constantPool.getEntry(descriptorIndex)).getValue();
+        name = ((Utf8CPInfo) constantPool.getEntry(nameIndex)).getValue();
+        type = ((Utf8CPInfo) constantPool.getEntry(descriptorIndex)).getValue();
 
         super.resolve(constantPool);
     }

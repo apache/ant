@@ -197,8 +197,8 @@ public class Sleep extends Task {
         throws BuildException {
         try {
             validate();
-            long sleepTime=getSleepTime();
-            log("sleeping for "+sleepTime+" milliseconds",
+            long sleepTime = getSleepTime();
+            log("sleeping for " + sleepTime + " milliseconds",
                 Project.MSG_VERBOSE);
             doSleep(sleepTime);
         }

@@ -78,13 +78,13 @@ public class Script extends Task {
      * Add a list of named objects to the list to be exported to the script
      */
     private void addBeans(Hashtable dictionary) {
-        for (Enumeration e=dictionary.keys(); e.hasMoreElements(); ) {
-            String key = (String)e.nextElement();
+        for (Enumeration e = dictionary.keys(); e.hasMoreElements();) {
+            String key = (String) e.nextElement();
 
-            boolean isValid = key.length()>0 &&
+            boolean isValid = key.length() > 0 &&
                 Character.isJavaIdentifierStart(key.charAt(0));
 
-            for (int i=1; isValid && i<key.length(); i++) {
+            for (int i = 1; isValid && i < key.length(); i++) {
                 isValid = Character.isJavaIdentifierPart(key.charAt(i));
             }
 
@@ -113,7 +113,7 @@ public class Script extends Task {
             BSFManager manager = new BSFManager ();
 
             for (Enumeration e = beans.keys() ; e.hasMoreElements() ;) {
-                String key = (String)e.nextElement();
+                String key = (String) e.nextElement();
                 Object value = beans.get(key);
                 manager.declareBean(key, value, value.getClass());
             }
@@ -154,7 +154,7 @@ public class Script extends Task {
             throw new BuildException("file " + fileName + " not found.");
         }
 
-        int count = (int)file.length();
+        int count = (int) file.length();
         byte data[] = new byte[count];
 
         try {

@@ -120,14 +120,14 @@ public class Move extends Copy {
         }
         if (fileCopyMap.size() > 0) {   // files to move
             log("Moving " + fileCopyMap.size() + " files to " +
-                destDir.getAbsolutePath() );
+                destDir.getAbsolutePath());
 
             Enumeration e = fileCopyMap.keys();
             while (e.hasMoreElements()) {
                 String fromFile = (String) e.nextElement();
                 String toFile = (String) fileCopyMap.get(fromFile);
 
-                if( fromFile.equals( toFile ) ) {
+                if (fromFile.equals(toFile)) {
                     log("Skipping self-move of " + fromFile, verbosity);
                     continue;
                 }
@@ -164,7 +164,7 @@ public class Move extends Copy {
                                      getFilterSets().elements(); 
                                  filterEnum.hasMoreElements();) {
                                 executionFilters
-                                    .addFilterSet((FilterSet)filterEnum
+                                    .addFilterSet((FilterSet) filterEnum
                                                   .nextElement());
                             }
                             getFileUtils().copyFile(f, d, executionFilters, 
@@ -194,7 +194,7 @@ public class Move extends Copy {
             Enumeration e = dirCopyMap.elements();
             int count = 0;
             while (e.hasMoreElements()) {
-                File d = new File((String)e.nextElement());
+                File d = new File((String) e.nextElement());
                 if (!d.exists()) {
                     if (!d.mkdirs()) {
                         log("Unable to create directory " 
@@ -214,7 +214,7 @@ public class Move extends Copy {
         if (filesets.size() > 0) {
             Enumeration e = filesets.elements();
             while (e.hasMoreElements()) {
-                FileSet fs = (FileSet)e.nextElement();
+                FileSet fs = (FileSet) e.nextElement();
                 File dir = fs.getDir(project);
 
                 if (okToDelete(dir)) {

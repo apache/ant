@@ -127,7 +127,7 @@ class ProcessDestroyer
      */
     public void run()
     {
-        synchronized(processes)
+        synchronized (processes)
         {
             Enumeration e = processes.elements();
             while (e.hasMoreElements())

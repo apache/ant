@@ -140,7 +140,7 @@ public class Ear extends Jar {
             if (deploymentDescriptor == null 
                 || !deploymentDescriptor.equals(file) 
                 || descriptorAdded) {
-                log("Warning: selected "+archiveType
+                log("Warning: selected " + archiveType
                     + " files include a META-INF/application.xml which will"
                     + " be ignored (please use appxml attribute to "
                     + archiveType + " task)", Project.MSG_WARN);

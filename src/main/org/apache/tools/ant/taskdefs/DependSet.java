@@ -159,12 +159,12 @@ public class DependSet extends MatchingTask {
 
     public void execute() throws BuildException {
 
-        if ( (sourceFileSets.size() == 0) && (sourceFileLists.size() == 0) ) { 
+        if ((sourceFileSets.size() == 0) && (sourceFileLists.size() == 0)) { 
           throw new BuildException("At least one <srcfileset> or <srcfilelist>"
                                    + " element must be set");
         }
 
-        if ( (targetFileSets.size() == 0) && (targetFileLists.size() == 0) ) {
+        if ((targetFileSets.size() == 0) && (targetFileLists.size() == 0)) {
           throw new BuildException("At least one <targetfileset> or"
                                    + " <targetfilelist> element must be set");
         }
@@ -198,7 +198,7 @@ public class DependSet extends MatchingTask {
               allTargets.addElement(dest);
 
               if (dest.lastModified() > now) {
-                 log("Warning: "+targetFiles[i]+" modified in the future.", 
+                 log("Warning: " + targetFiles[i] + " modified in the future.", 
                      Project.MSG_WARN);
               }
 
@@ -224,7 +224,7 @@ public class DependSet extends MatchingTask {
                     
               File dest = new File(targetFL.getDir(project), targetFiles[i]);
               if (!dest.exists()) {
-                 log(targetFiles[i]+ " does not exist.", Project.MSG_VERBOSE);
+                 log(targetFiles[i] + " does not exist.", Project.MSG_VERBOSE);
                  upToDate = false;
                  continue;
               }
@@ -232,7 +232,7 @@ public class DependSet extends MatchingTask {
                  allTargets.addElement(dest);
               }
               if (dest.lastModified() > now) {
-                 log("Warning: "+targetFiles[i]+" modified in the future.", 
+                 log("Warning: " + targetFiles[i] + " modified in the future.", 
                      Project.MSG_WARN);
               }
 
@@ -261,16 +261,16 @@ public class DependSet extends MatchingTask {
               FileList sourceFL    = (FileList) enumSourceLists.nextElement();
               String[] sourceFiles = sourceFL.getFiles(project);
 
-              for (int i=0; upToDate && i < sourceFiles.length; i++) {
+              for (int i = 0; upToDate && i < sourceFiles.length; i++) {
                  File src = new File(sourceFL.getDir(project), sourceFiles[i]);
 
                  if (src.lastModified() > now) {
-                    log("Warning: "+sourceFiles[i]+" modified in the future.", 
-                        Project.MSG_WARN);
+                    log("Warning: " + sourceFiles[i] 
+                        + " modified in the future.", Project.MSG_WARN);
                  }
 
                  if (!src.exists()) {
-                    log(sourceFiles[i]+ " does not exist.", 
+                    log(sourceFiles[i] + " does not exist.", 
                         Project.MSG_VERBOSE);
                     upToDate = false;
                     break;
@@ -296,12 +296,12 @@ public class DependSet extends MatchingTask {
               DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(project);
               String[] sourceFiles      = sourceDS.getIncludedFiles();
 
-              for (int i=0; upToDate && i < sourceFiles.length; i++) {
+              for (int i = 0; upToDate && i < sourceFiles.length; i++) {
                  File src = new File(sourceFS.getDir(project), sourceFiles[i]);
 
                  if (src.lastModified() > now) {
-                    log("Warning: "+sourceFiles[i]+" modified in the future.", 
-                        Project.MSG_WARN);
+                    log("Warning: " + sourceFiles[i]
+                        + " modified in the future.", Project.MSG_WARN);
                  }
 
                  if (src.lastModified() > oldestTargetTime) {
@@ -315,8 +315,8 @@ public class DependSet extends MatchingTask {
 
         if (!upToDate) {
            log("Deleting all target files. ", Project.MSG_VERBOSE);
-           for (Enumeration e = allTargets.elements(); e.hasMoreElements(); ) {
-              File fileToRemove = (File)e.nextElement();
+           for (Enumeration e = allTargets.elements(); e.hasMoreElements();) {
+              File fileToRemove = (File) e.nextElement();
               log("Deleting file " + fileToRemove.getAbsolutePath(), 
                   Project.MSG_VERBOSE);
               fileToRemove.delete();

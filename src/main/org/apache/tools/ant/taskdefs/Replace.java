@@ -228,7 +228,7 @@ public class Replace extends MatchingTask {
             if (replaceFilterFile != null) {
                 Properties props = getProperties(replaceFilterFile);
                 Enumeration enum = props.keys();
-                while(enum.hasMoreElements()){
+                while (enum.hasMoreElements()){
                     String token =  enum.nextElement().toString();
                     Replacefilter replaceFilter = createReplacefilter();
                     replaceFilter.setToken(token);
@@ -254,8 +254,8 @@ public class Replace extends MatchingTask {
                 DirectoryScanner ds = super.getDirectoryScanner(dir);
                 String[] srcs = ds.getIncludedFiles();
                 
-                for(int i=0; i<srcs.length; i++) {
-                    File file = new File(dir,srcs[i]);
+                for (int i = 0; i < srcs.length; i++) {
+                    File file = new File(dir, srcs[i]);
                     processFile(file);
                 }
             }
@@ -294,7 +294,7 @@ public class Replace extends MatchingTask {
             throw new BuildException(message, location);
         }
         if (token != null && "".equals(token.getText())) {
-            String message ="The token attribute must not be an empty string.";
+            String message = "The token attribute must not be an empty string.";
             throw new BuildException(message, location);
         }
     }
@@ -367,14 +367,14 @@ public class Replace extends MatchingTask {
             //   when multibyte characters exist in the source file
             //   but then again, it might be smaller than needed on
             //   platforms like Windows where length can't be trusted
-            int fileLengthInBytes = (int)(src.length());
+            int fileLengthInBytes = (int) src.length();
             StringBuffer tmpBuf = new StringBuffer(fileLengthInBytes);
             int readChar = 0;
             int totread = 0;
             while (true) {
                 readChar = br.read();
                 if (readChar < 0) { break; }
-                tmpBuf.append((char)readChar);
+                tmpBuf.append((char) readChar);
                 totread++;
             }
 
@@ -406,7 +406,7 @@ public class Replace extends MatchingTask {
 
             boolean changes = !newString.equals(buf);
             if (changes) {
-                bw.write(newString,0,newString.length());
+                bw.write(newString, 0, newString.length());
                 bw.flush();
             }
 
@@ -571,7 +571,7 @@ public class Replace extends MatchingTask {
 
             // search again
             start = found + str1.length();
-            found = str.indexOf(str1,start);
+            found = str.indexOf(str1, start);
             ++replaceCount;
         }
 

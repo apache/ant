@@ -216,7 +216,7 @@ public class JDependTask extends Task {
      * @return  create a new JVM argument so that any argument can be passed to the JVM.
      * @see #setFork(boolean)
      */
-    public Commandline.Argument createJvmarg(CommandlineJava commandline ) {
+    public Commandline.Argument createJvmarg(CommandlineJava commandline) {
         return commandline.createVmArgument();
     }
 
@@ -235,7 +235,7 @@ public class JDependTask extends Task {
 
     public static class FormatAttribute extends EnumeratedAttribute
     {
-        private String [] formats = new String[]{"xml","text"};
+        private String [] formats = new String[]{"xml", "text"};
 
         public String[] getValues()
         {
@@ -257,14 +257,14 @@ public class JDependTask extends Task {
 
         CommandlineJava commandline = new CommandlineJava();
 
-        if("text".equals(format)) {
+        if ("text".equals(format)) {
             commandline.setClassname("jdepend.textui.JDepend");
         } else
-        if("xml".equals(format)) {
+        if ("xml".equals(format)) {
             commandline.setClassname("jdepend.xmlui.JDepend");
         }
 
-        if(_jvm!=null) {
+        if (_jvm != null) {
             commandline.setVm(_jvm);
         }
 
@@ -275,11 +275,11 @@ public class JDependTask extends Task {
         // execute the test and get the return code
         int exitValue = JDependTask.ERRORS;
         boolean wasKilled = false;
-        if (! getFork()) {
+        if (!getFork()) {
             exitValue = executeInVM(commandline);
         } else {
             ExecuteWatchdog watchdog = createWatchdog();
-            exitValue = executeAsForked(commandline,watchdog);
+            exitValue = executeAsForked(commandline, watchdog);
             // null watchdog means no timeout, you'd better not check with null
             if (watchdog != null) {
                 //info will be used in later version do nothing for now
@@ -287,8 +287,8 @@ public class JDependTask extends Task {
             }
         }
 
-        // if there is an error/failure and that it should halt, stop everything otherwise
-        // just log a statement
+        // if there is an error/failure and that it should halt, stop 
+        // everything otherwise just log a statement
         boolean errorOccurred = exitValue == JDependTask.ERRORS;
 
         if (errorOccurred) {
@@ -314,7 +314,7 @@ public class JDependTask extends Task {
     public int executeInVM(CommandlineJava commandline) throws BuildException {
         jdepend.textui.JDepend jdepend;
 
-        if("xml".equals(format)) {
+        if ("xml".equals(format)) {
             jdepend = new jdepend.xmlui.JDepend();
         } else {
             jdepend = new jdepend.textui.JDepend();
@@ -326,7 +326,8 @@ public class JDependTask extends Task {
                 fw = new FileWriter(getOutputFile().getPath());
             }
             catch (IOException e) {
-                String msg = "JDepend Failed when creating the output file: " + e.getMessage();
+                String msg = "JDepend Failed when creating the output file: " 
+                    + e.getMessage();
                 log(msg);
                 throw new BuildException(msg);
             }
@@ -334,13 +335,15 @@ public class JDependTask extends Task {
             log("Output to be stored in " + getOutputFile().getPath());
         }
 
-        PathTokenizer sourcesPath = new PathTokenizer(getSourcespath().toString());
+        PathTokenizer sourcesPath 
+            = new PathTokenizer(getSourcespath().toString());
         while (sourcesPath.hasMoreTokens()) {
             File f = new File(sourcesPath.nextToken());
 
             // not necessary as JDepend would fail, but why loose some time?
-            if (! f.exists() || !f.isDirectory()) {
-                String msg = "\""+ f.getPath() + "\" does not represent a valid directory. JDepend would fail.";
+            if (!f.exists() || !f.isDirectory()) {
+                String msg = "\"" + f.getPath() + "\" does not represent a valid" 
+                    + " directory. JDepend would fail.";
                 log(msg);
                 throw new BuildException(msg);
             }
@@ -348,7 +351,8 @@ public class JDependTask extends Task {
                 jdepend.addDirectory(f.getPath());
             }
             catch (IOException e) {
-                String msg = "JDepend Failed when adding a source directory: " + e.getMessage();
+                String msg = "JDepend Failed when adding a source directory: " 
+                    + e.getMessage();
                 log(msg);
                 throw new BuildException(msg);
             }
@@ -367,7 +371,8 @@ public class JDependTask extends Task {
      * the test could probably hang forever.
      */
     // JL: comment extracted from JUnitTask (and slightly modified)
-    public int executeAsForked(CommandlineJava commandline,ExecuteWatchdog watchdog) throws BuildException {
+    public int executeAsForked(CommandlineJava commandline,
+                               ExecuteWatchdog watchdog) throws BuildException {
         // if not set, auto-create the ClassPath from the project
         createClasspath();
 
@@ -379,20 +384,23 @@ public class JDependTask extends Task {
         }
 
         if (getOutputFile() != null) {
-            // having a space between the file and its path causes commandline to add quotes "
-            // around the argument thus making JDepend not taking it into account. Thus we split it in two
+            // having a space between the file and its path causes commandline 
+            // to add quotes around the argument thus making JDepend not taking 
+            // it into account. Thus we split it in two
             commandline.createArgument().setValue("-file");
             commandline.createArgument().setValue(_outputFile.getPath());
             // we have to find a cleaner way to put this output
         }
 
-        PathTokenizer sourcesPath = new PathTokenizer(getSourcespath().toString());
+        PathTokenizer sourcesPath 
+            = new PathTokenizer(getSourcespath().toString());
         while (sourcesPath.hasMoreTokens()) {
             File f = new File(sourcesPath.nextToken());
 
             // not necessary as JDepend would fail, but why loose some time?
-            if (! f.exists() || !f.isDirectory()) {
-                throw new BuildException("\""+ f.getPath() + "\" does not represent a valid directory. JDepend would fail.");
+            if (!f.exists() || !f.isDirectory()) {
+                throw new BuildException("\"" + f.getPath() + "\" does not " 
+                    + "represent a valid directory. JDepend would fail.");
             }
             commandline.createArgument().setValue(f.getPath());
         }
@@ -407,7 +415,7 @@ public class JDependTask extends Task {
         if (getOutputFile() != null) {
             log("Output to be stored in " + getOutputFile().getPath());
         }
-        log("Executing: "+commandline.toString(), Project.MSG_VERBOSE);
+        log("Executing: " + commandline.toString(), Project.MSG_VERBOSE);
         try {
             return execute.execute();
         } catch (IOException e) {

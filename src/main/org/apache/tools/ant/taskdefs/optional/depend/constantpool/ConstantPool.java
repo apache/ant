@@ -100,7 +100,7 @@ public class ConstantPool {
     public void read(DataInputStream classStream) throws IOException {
         int numEntries = classStream.readUnsignedShort();
 
-        for (int i = 1; i < numEntries; ) {
+        for (int i = 1; i < numEntries;) {
             ConstantPoolEntry nextEntry
                  = ConstantPoolEntry.readEntry(classStream);
 
@@ -139,7 +139,7 @@ public class ConstantPool {
         }
 
         if (entry instanceof Utf8CPInfo) {
-            Utf8CPInfo utf8Info = (Utf8CPInfo)entry;
+            Utf8CPInfo utf8Info = (Utf8CPInfo) entry;
 
             utf8Indexes.put(utf8Info.getValue(), new Integer(index));
         }
@@ -153,8 +153,8 @@ public class ConstantPool {
      * into the actual data for that entry.
      */
     public void resolve() {
-        for (Enumeration i = entries.elements(); i.hasMoreElements(); ) {
-            ConstantPoolEntry poolInfo = (ConstantPoolEntry)i.nextElement();
+        for (Enumeration i = entries.elements(); i.hasMoreElements();) {
+            ConstantPoolEntry poolInfo = (ConstantPoolEntry) i.nextElement();
 
             if (poolInfo != null && !poolInfo.isResolved()) {
                 poolInfo.resolve(this);
@@ -170,7 +170,7 @@ public class ConstantPool {
      * @return the constant pool entry at that index.
      */
     public ConstantPoolEntry getEntry(int index) {
-        return (ConstantPoolEntry)entries.elementAt(index);
+        return (ConstantPoolEntry) entries.elementAt(index);
     }
 
     /**
@@ -182,7 +182,7 @@ public class ConstantPool {
      */
     public int getUTF8Entry(String value) {
         int index = -1;
-        Integer indexInteger = (Integer)utf8Indexes.get(value);
+        Integer indexInteger = (Integer) utf8Indexes.get(value);
 
         if (indexInteger != null) {
             index = indexInteger.intValue();
@@ -206,7 +206,7 @@ public class ConstantPool {
             Object element = entries.elementAt(i);
 
             if (element instanceof ClassCPInfo) {
-                ClassCPInfo classinfo = (ClassCPInfo)element;
+                ClassCPInfo classinfo = (ClassCPInfo) element;
 
                 if (classinfo.getClassName().equals(className)) {
                     index = i;
@@ -232,7 +232,7 @@ public class ConstantPool {
             Object element = entries.elementAt(i);
 
             if (element instanceof ConstantCPInfo) {
-                ConstantCPInfo constantEntry = (ConstantCPInfo)element;
+                ConstantCPInfo constantEntry = (ConstantCPInfo) element;
 
                 if (constantEntry.getValue().equals(constantValue)) {
                     index = i;
@@ -262,7 +262,7 @@ public class ConstantPool {
             Object element = entries.elementAt(i);
 
             if (element instanceof MethodRefCPInfo) {
-                MethodRefCPInfo methodRefEntry = (MethodRefCPInfo)element;
+                MethodRefCPInfo methodRefEntry = (MethodRefCPInfo) element;
 
                 if (methodRefEntry.getMethodClassName().equals(methodClassName)
                      && methodRefEntry.getMethodName().equals(methodName)
@@ -297,7 +297,7 @@ public class ConstantPool {
 
             if (element instanceof InterfaceMethodRefCPInfo) {
                 InterfaceMethodRefCPInfo interfaceMethodRefEntry
-                     = (InterfaceMethodRefCPInfo)element;
+                     = (InterfaceMethodRefCPInfo) element;
 
                 if (interfaceMethodRefEntry.getInterfaceMethodClassName().equals(interfaceMethodClassName)
                      && interfaceMethodRefEntry.getInterfaceMethodName().equals(interfaceMethodName)
@@ -329,7 +329,7 @@ public class ConstantPool {
             Object element = entries.elementAt(i);
 
             if (element instanceof FieldRefCPInfo) {
-                FieldRefCPInfo fieldRefEntry = (FieldRefCPInfo)element;
+                FieldRefCPInfo fieldRefEntry = (FieldRefCPInfo) element;
 
                 if (fieldRefEntry.getFieldClassName().equals(fieldClassName)
                      && fieldRefEntry.getFieldName().equals(fieldName)
@@ -358,7 +358,8 @@ public class ConstantPool {
             Object element = entries.elementAt(i);
 
             if (element instanceof NameAndTypeCPInfo) {
-                NameAndTypeCPInfo nameAndTypeEntry = (NameAndTypeCPInfo)element;
+                NameAndTypeCPInfo nameAndTypeEntry 
+                    = (NameAndTypeCPInfo) element;
 
                 if (nameAndTypeEntry.getName().equals(name)
                      && nameAndTypeEntry.getType().equals(type)) {

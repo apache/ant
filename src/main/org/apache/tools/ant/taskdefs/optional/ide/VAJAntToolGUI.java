@@ -211,23 +211,24 @@ public class VAJAntToolGUI extends Frame {
                 getMessageTextArea().append(lineSeparator + "BUILD SUCCESSFUL");
             }
             else {
-                logException( error );
+                logException(error);
             }
 
-            getMessageTextArea().append(lineSeparator + "Total time: " + DateUtils.formatElapsedTime(System.currentTimeMillis() - startTime));
+            getMessageTextArea().append(lineSeparator + "Total time: " 
+                + DateUtils.formatElapsedTime(System.currentTimeMillis() - startTime));
         }
 
 
         /**
          *  Outputs an exception.
          */
-        public void logException( Throwable error ) {
+        public void logException(Throwable error) {
             getMessageTextArea().append(lineSeparator + "BUILD FAILED" + lineSeparator);
 
             if (error instanceof BuildException) {
                 getMessageTextArea().append(error.toString());
 
-                Throwable nested = ((BuildException)error).getException();
+                Throwable nested = ((BuildException) error).getException();
                 if (nested != null) {
                     nested.printStackTrace(System.err);
                 }
@@ -318,7 +319,7 @@ public class VAJAntToolGUI extends Frame {
                     getFileDialog().setDirectory(getBuildFileTextField().getText().substring(0, getBuildFileTextField().getText().lastIndexOf('\\') + 1));
                     getFileDialog().setFile("*.xml");
                     getFileDialog().show();
-                    if (!getFileDialog().getFile().equals("") ) {
+                    if (!getFileDialog().getFile().equals("")) {
                         getBuildFileTextField().setText(getFileDialog().getDirectory() + getFileDialog().getFile());
                     }
                 }
@@ -525,7 +526,7 @@ public class VAJAntToolGUI extends Frame {
             getBuildInfo().executeProject(logger);
         }
         catch (Throwable exc) {
-            logger.logException( exc );
+            logger.logException(exc);
         }
         return;
     }
@@ -535,7 +536,7 @@ public class VAJAntToolGUI extends Frame {
     private void fillList() {
         getTargetList().removeAll();
         Vector targets = getBuildInfo().getProjectTargets();
-        for (int i = 0;i < targets.size(); i++) {
+        for (int i = 0; i < targets.size(); i++) {
             getTargetList().add(targets.elementAt(i).toString());
         }
         getTargetList().select(iBuildInfo.getProjectTargets().indexOf(iBuildInfo.getTarget()));
@@ -1348,7 +1349,7 @@ public class VAJAntToolGUI extends Frame {
         }
         catch (Throwable exc) {
             // This Exception occurs when you try to write into a versioned project
-            handleException( exc );
+            handleException(exc);
         }
         return;
     }

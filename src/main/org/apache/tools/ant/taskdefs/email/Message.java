@@ -65,113 +65,114 @@ import java.io.PrintStream;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since Ant 1.5
  */
-public class Message
-{
+public class Message {
     private File messageSource = null;
     private StringBuffer buffer = new StringBuffer();
     private String mimeType = "text/plain";
     private boolean specified = false;
 
-    /** 
-     * Creates a new empty message
-     */
-    public Message()
-    {
+
+    /** Creates a new empty message  */
+    public Message() {
     }
 
-    /** 
+
+    /**
      * Creates a new message based on the given string
+     *
      * @param text the message
      */
-    public Message( String text )
-    {
-        addText( text );
+    public Message(String text) {
+        addText(text);
     }
 
-    /** 
+
+    /**
      * Creates a new message using the contents of the given file.
+     *
      * @param file the source of the message
      */
-    public Message( File file )
-    {
+    public Message(File file) {
         messageSource = file;
     }
 
-    /** 
+
+    /**
      * Adds a textual part of the message
+     *
      * @param text some text to add
      */
-    public void addText( String text )
-    {
-        buffer.append( text );
+    public void addText(String text) {
+        buffer.append(text);
     }
 
-    /** 
+
+    /**
      * Sets the source file of the message
+     *
      * @param src the source of the message
      */
-    public void setSrc( File src )
-    {
+    public void setSrc(File src) {
         this.messageSource = src;
     }
 
-    /** 
+
+    /**
      * Sets the content type for the message
+     *
      * @param mimeType a mime type e.g. "text/plain"
      */
-    public void setMimeType( String mimeType )
-    {
+    public void setMimeType(String mimeType) {
         this.mimeType = mimeType;
         specified = true;
     }
 
-    /** 
+
+    /**
      * Returns the content type
+     *
      * @return the mime type
      */
-    public String getMimeType()
-    {
+    public String getMimeType() {
         return mimeType;
     }
 
-    /** 
+
+    /**
      * Prints the message onto an output stream
+     *
      * @param out The print stream to write to
      * @throws IOException if an error occurs
      */
-    public void print( PrintStream out )
-        throws IOException
-    {
-        if( messageSource != null )
-        {
+    public void print(PrintStream out)
+         throws IOException {
+        if (messageSource != null) {
             // Read message from a file
-            FileReader freader = new FileReader( messageSource );
-            try
-            {
-                BufferedReader in = new BufferedReader( freader );
+            FileReader freader = new FileReader(messageSource);
+
+            try {
+                BufferedReader in = new BufferedReader(freader);
                 String line = null;
 
-                while( ( line = in.readLine() ) != null )
-                {
-                    out.println( line );
+                while ((line = in.readLine()) != null) {
+                    out.println(line);
                 }
-            }
-            finally {
+            } finally {
                 freader.close();
             }
-        }
-        else
-        {
-            out.println( buffer );
+        } else {
+            out.println(buffer);
         }
     }
 
-    /** 
+
+    /**
      * Returns true iff the mimeType has been set.
+     *
      * @return false if the default value is in use
      */
-    public boolean isMimeTypeSpecified()
-    {
+    public boolean isMimeTypeSpecified() {
         return specified;
     }
 }
+

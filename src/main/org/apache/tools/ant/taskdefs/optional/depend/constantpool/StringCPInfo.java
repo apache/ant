@@ -101,7 +101,7 @@ public class StringCPInfo extends ConstantCPInfo {
      *      and against which this entry is to be resolved.
      */
     public void resolve(ConstantPool constantPool) {
-        setValue(((Utf8CPInfo)constantPool.getEntry(index)).getValue());
+        setValue(((Utf8CPInfo) constantPool.getEntry(index)).getValue());
         super.resolve(constantPool);
     }
 

@@ -184,7 +184,7 @@ public class IPlanetEjbc {
                 elements.add(st.nextToken());
             }
             classpathElements
-                    = (String[])elements.toArray(new String[elements.size()]);
+                    = (String[]) elements.toArray(new String[elements.size()]);
         }
     }
 
@@ -414,7 +414,7 @@ public class IPlanetEjbc {
             log(ejbs[i].toString());
         }
 
-        for (int i=0; i < ejbs.length; i++) {
+        for (int i = 0; i < ejbs.length; i++) {
             EjbInfo ejb = ejbs[i];
 
             ejb.checkConfiguration(destDirectory);  // Throws EjbcException
@@ -592,7 +592,7 @@ public class IPlanetEjbc {
         arguments.add(ejb.getImplementation().getQualifiedClassName());
 
         /* Convert the List into an Array and return it */
-        return (String[])arguments.toArray(new String[arguments.size()]);
+        return (String[]) arguments.toArray(new String[arguments.size()]);
     }
 
     /**
@@ -689,7 +689,7 @@ public class IPlanetEjbc {
          *         parsing.
          */
         public EjbInfo[] getEjbs() {
-            return (EjbInfo[])ejbs.values().toArray(new EjbInfo[ejbs.size()]);
+            return (EjbInfo[]) ejbs.values().toArray(new EjbInfo[ejbs.size()]);
         }
 
         /**
@@ -751,12 +751,12 @@ public class IPlanetEjbc {
 
                 /* Search the resource Map and (if not found) file Map */
 
-                String location = (String)resourceDtds.get(publicId);
+                String location = (String) resourceDtds.get(publicId);
                 if (location != null) {
                     inputStream
                         = ClassLoader.getSystemResource(location).openStream();
                 } else {
-                    location = (String)fileDtds.get(publicId);
+                    location = (String) fileDtds.get(publicId);
                     if (location != null) {
                         inputStream = new FileInputStream(location);
                     }
@@ -1275,7 +1275,7 @@ public class IPlanetEjbc {
              * Loop through each stub/skeleton class that must be generated, and
              * determine (if all exist) which file has the most recent timestamp
              */
-            for (int i=0; i < classnames.length; i++) {
+            for (int i = 0; i < classnames.length; i++) {
 
                 String pathToClass =
                         classnames[i].replace('.', File.separatorChar) + ".class";

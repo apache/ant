@@ -84,7 +84,7 @@ public class Jikes {
      * @param jop - Parser to send jike's output to
      * @param command - name of jikes executeable
      */
-    protected Jikes(JikesOutputParser jop,String command, Project project) {
+    protected Jikes(JikesOutputParser jop, String command, Project project) {
         super();
 
         System.err.println("As of Ant 1.2 released in October 2000, the Jikes class");
@@ -116,7 +116,7 @@ public class Jikes {
                 && args.length > 250) {
                 PrintWriter out = null;
                 try {
-                    tmpFile = new File("jikes"+(new Random(System.currentTimeMillis())).nextLong());
+                    tmpFile = new File("jikes" + (new Random(System.currentTimeMillis())).nextLong());
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = 0; i < args.length; i++) {
                         out.println(args[i]);
@@ -132,9 +132,9 @@ public class Jikes {
                     }
                 }
             } else {
-                commandArray = new String[args.length+1];
+                commandArray = new String[args.length + 1];
                 commandArray[0] = command;
-                System.arraycopy(args,0,commandArray,1,args.length);
+                System.arraycopy(args, 0, commandArray, 1, args.length);
             }
             
             // We assume, that everything jikes writes goes to

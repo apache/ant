@@ -88,7 +88,7 @@ public class Untar extends Expand {
                 extractFile(fileUtils, srcF, dir, tis,
                             te.getName(), te.getModTime(), te.isDirectory());
             }
-            log("expand complete", Project.MSG_VERBOSE );
+            log("expand complete", Project.MSG_VERBOSE);
 
         } catch (IOException ioe) {
             throw new BuildException("Error while expanding " + srcF.getPath(),

@@ -87,15 +87,15 @@ public class VAJAntTool {
         VAJBuildInfo result = null;
         try {
             Project project =
-                VAJLocalUtil.getWorkspace().loadedProjectNamed( projectName );
-            if ( project.testToolRepositoryData(TOOL_DATA_KEY) ) {
+                VAJLocalUtil.getWorkspace().loadedProjectNamed(projectName);
+            if (project.testToolRepositoryData(TOOL_DATA_KEY)) {
                 ToolData td = project.getToolRepositoryData(TOOL_DATA_KEY);
-                String data = (String)td.getData();
-                result = VAJBuildInfo.parse( data );
+                String data = (String) td.getData();
+                result = VAJBuildInfo.parse(data);
             } else {
                 result = new VAJBuildInfo();
             }
-            result.setVAJProjectName( projectName );
+            result.setVAJProjectName(projectName);
         } catch (Throwable t) {
             throw new BuildException("BuildInfo for Project "
                                      + projectName + " could not be loaded" + t);
@@ -114,17 +114,17 @@ public class VAJAntTool {
     public static void main(java.lang.String[] args) {
         try {
             VAJBuildInfo info;
-            if ( args.length >= 2 && args[1] instanceof String ) {
-                String projectName = (String)args[1];
-                info = loadBuildData( projectName );
+            if (args.length >= 2 && args[1] instanceof String) {
+                String projectName = (String) args[1];
+                info = loadBuildData(projectName);
             }
             else {
                 info = new VAJBuildInfo();
             }
 
-            VAJAntToolGUI mainFrame = new VAJAntToolGUI( info );
+            VAJAntToolGUI mainFrame = new VAJAntToolGUI(info);
             mainFrame.show();
-        } catch ( Throwable t ) {
+        } catch (Throwable t) {
             // if all error handling fails, output at least
             // something on the console
             t.printStackTrace();
@@ -140,9 +140,9 @@ public class VAJAntTool {
     public static void saveBuildData(VAJBuildInfo info) {
         String data = info.asDataString();
         try {
-            ToolData td = new ToolData( TOOL_DATA_KEY, data );
+            ToolData td = new ToolData(TOOL_DATA_KEY, data);
             VAJLocalUtil.getWorkspace().loadedProjectNamed(
-                                                           info.getVAJProjectName() ).setToolRepositoryData( td );
+                                                           info.getVAJProjectName()).setToolRepositoryData(td);
         } catch (Throwable t) {
             throw new BuildException("BuildInfo for Project "
                                      + info.getVAJProjectName() + " could not be saved", t);

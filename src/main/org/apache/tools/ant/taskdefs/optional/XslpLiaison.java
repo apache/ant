@@ -89,13 +89,13 @@ public class XslpLiaison implements XSLTLiaison {
         XSLReader xslReader = new XSLReader();
         // a file:/// + getAbsolutePath() does not work here
         // it is really the pathname
-        xslSheet = xslReader.read( fileName.getAbsolutePath() );
+        xslSheet = xslReader.read(fileName.getAbsolutePath());
     }
     
     public void transform(File infile, File outfile) throws Exception {
         FileOutputStream fos = new FileOutputStream(outfile);
         // XSLP does not support encoding...we're in hot water.
-        OutputStreamWriter out = new OutputStreamWriter(fos,"UTF8");
+        OutputStreamWriter out = new OutputStreamWriter(fos, "UTF8");
         processor.process(infile.getAbsolutePath(), xslSheet, out);
     }
 

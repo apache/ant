@@ -93,7 +93,7 @@ public class StreamPumper implements Runnable {
      * Terminates as soon as the input stream is closed or an error occurs.
      */
     public void run() {
-        synchronized(this) {
+        synchronized (this) {
             // Just in case this object is reused in the future
             finished = false;
         }
@@ -108,9 +108,9 @@ public class StreamPumper implements Runnable {
                     Thread.sleep(SLEEP);
                 } catch (InterruptedException e) {}
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
         } finally {
-            synchronized(this) {
+            synchronized (this) {
                 finished = true;
                 notify();
             }
@@ -132,7 +132,7 @@ public class StreamPumper implements Runnable {
     public synchronized void waitFor()
         throws InterruptedException
     {
-        while(!isFinished()) {
+        while (!isFinished()) {
             wait();
         }
     }

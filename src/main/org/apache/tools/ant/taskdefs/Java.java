@@ -106,7 +106,7 @@ public class Java extends Task {
         try {
             if ((err = executeJava()) != 0) { 
                 if (failOnError) {
-                    throw new BuildException("Java returned: "+err, location);
+                    throw new BuildException("Java returned: " + err, location);
                 } else {
                     log("Java Result: " + err, Project.MSG_ERR);
                 }
@@ -207,7 +207,7 @@ public class Java extends Task {
      * set the jar name...
      */
     public void setJar(File jarfile) throws BuildException {
-        if ( cmdl.getClassname() != null ){
+        if (cmdl.getClassname() != null){
             throw new BuildException("Cannot use 'jar' and 'classname' "
                                      + "attributes in same command.");
         }
@@ -218,7 +218,7 @@ public class Java extends Task {
      * Set the class name.
      */
     public void setClassname(String s) throws BuildException {
-        if ( cmdl.getJar() != null ){
+        if (cmdl.getJar() != null){
             throw new BuildException("Cannot use 'jar' and 'classname' "
                                      + "attributes in same command");
         }
@@ -431,7 +431,7 @@ public class Java extends Task {
                 dir = project.getBaseDir();
             } else if (!dir.exists() || !dir.isDirectory()) {
                 throw new BuildException(dir.getAbsolutePath()
-                                         +" is not a valid directory",
+                                         + " is not a valid directory",
                                          location);
             }
             
@@ -439,8 +439,8 @@ public class Java extends Task {
             
             String[] environment = env.getVariables();
             if (environment != null) {
-                for (int i=0; i<environment.length; i++) {
-                    log("Setting environment variable: "+environment[i],
+                for (int i = 0; i < environment.length; i++) {
+                    log("Setting environment variable: " + environment[i],
                         Project.MSG_VERBOSE);
                 }
             }
@@ -450,8 +450,8 @@ public class Java extends Task {
             exe.setCommandline(command);
             try {
                 int rc = exe.execute();
-                if(exe.killedProcess()) {
-                    log("Timeout: killed the sub-process",Project.MSG_WARN); 
+                if (exe.killedProcess()) {
+                    log("Timeout: killed the sub-process", Project.MSG_WARN); 
                 }
                 return rc;
             } catch (IOException e) {
@@ -473,7 +473,7 @@ public class Java extends Task {
     protected void run(String classname, Vector args) throws BuildException {
         CommandlineJava cmdj = new CommandlineJava();
         cmdj.setClassname(classname);
-        for (int i=0; i<args.size(); i++) {
+        for (int i = 0; i < args.size(); i++) {
             cmdj.createArgument().setValue((String) args.elementAt(i));
         }
         run(cmdj);

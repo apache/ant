@@ -112,7 +112,7 @@ public class ClassCPInfo extends ConstantPoolEntry {
      *      class.
      */
     public void resolve(ConstantPool constantPool) {
-        className = ((Utf8CPInfo)constantPool.getEntry(index)).getValue();
+        className = ((Utf8CPInfo) constantPool.getEntry(index)).getValue();
 
         super.resolve(constantPool);
     }

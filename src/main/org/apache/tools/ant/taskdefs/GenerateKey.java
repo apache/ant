@@ -111,25 +111,25 @@ public class GenerateKey extends Task {
             final StringBuffer sb = new StringBuffer();
             boolean firstPass = true;
 
-            for( int i = 0; i < size; i++ ) {
-                if( !firstPass ) {
+            for (int i = 0; i < size; i++) {
+                if (!firstPass) {
                     sb.append(" ,");
                 }
                 firstPass = false;
 
-                final DnameParam param = (DnameParam)params.elementAt( i );
-                sb.append( encode( param.getName() ) );
-                sb.append( '=' );
-                sb.append( encode( param.getValue() ) );
+                final DnameParam param = (DnameParam) params.elementAt(i);
+                sb.append(encode(param.getName()));
+                sb.append('=');
+                sb.append(encode(param.getValue()));
             }
                         
             return sb.toString();
         }
 
-        public String encode( final String string ) {
+        public String encode(final String string) {
             int end = string.indexOf(',');
 
-            if( -1 == end ) {
+            if (-1 == end) {
               return string;
             }
                 
@@ -137,15 +137,15 @@ public class GenerateKey extends Task {
                 
             int start = 0;
 
-            while( -1 != end )
+            while (-1 != end)
             {
-                sb.append( string.substring( start, end ) );
-                sb.append( "\\," );
+                sb.append(string.substring(start, end));
+                sb.append("\\,");
                 start = end + 1;
-                end = string.indexOf( ',', start );
+                end = string.indexOf(',', start);
             }
 
-            sb.append( string.substring( start ) );
+            sb.append(string.substring(start));
                 
             return sb.toString();                
         }
@@ -173,24 +173,24 @@ public class GenerateKey extends Task {
     protected boolean verbose;
 
     public DistinguishedName createDname() throws BuildException {
-        if( null != expandedDname ) {
-            throw new BuildException( "DName sub-element can only be "
-                                      + "specified once." );
+        if (null != expandedDname) {
+            throw new BuildException("DName sub-element can only be "
+                                     + "specified once.");
         }
-        if( null != dname ) {
-            throw new BuildException( "It is not possible to specify dname " +
-                                      " both " +
-                                      "as attribute and element." );
+        if (null != dname) {
+            throw new BuildException("It is not possible to specify dname " +
+                                     " both " +
+                                     "as attribute and element.");
         }
         expandedDname = new DistinguishedName();
         return expandedDname;
     }
   
     public void setDname(final String dname) {
-        if( null != expandedDname ) {
-            throw new BuildException( "It is not possible to specify dname " +
-                                      " both " +
-                                      "as attribute and element." );
+        if (null != expandedDname) {
+            throw new BuildException("It is not possible to specify dname " +
+                                     " both " +
+                                     "as attribute and element.");
         }
         this.dname = dname;
     }
@@ -224,18 +224,18 @@ public class GenerateKey extends Task {
     } 
 
     public void setKeysize(final String keysize) throws BuildException {
-        try { this.keysize = Integer.parseInt(keysize); }
-        catch(final NumberFormatException nfe) 
-        {
-            throw new BuildException( "KeySize attribute should be a integer" );
+        try { 
+            this.keysize = Integer.parseInt(keysize); 
+        } catch (final NumberFormatException nfe) {
+            throw new BuildException("KeySize attribute should be a integer");
         }
     } 
 
     public void setValidity(final String validity) throws BuildException {
-        try { this.validity = Integer.parseInt(validity); }
-        catch(final NumberFormatException nfe) 
-        {
-            throw new BuildException( "Validity attribute should be a integer" );
+        try { 
+            this.validity = Integer.parseInt(validity); 
+        } catch (final NumberFormatException nfe) {
+            throw new BuildException("Validity attribute should be a integer");
         }
     } 
 
@@ -245,20 +245,20 @@ public class GenerateKey extends Task {
 
     public void execute() throws BuildException {
         if (Project.getJavaVersion().equals(Project.JAVA_1_1)) {
-            throw new BuildException( "The genkey task is only available on JDK"
-                                      + " versions 1.2 or greater" );
+            throw new BuildException("The genkey task is only available on JDK"
+                                     + " versions 1.2 or greater");
         }
 
         if (null == alias) {
-            throw new BuildException( "alias attribute must be set" );
+            throw new BuildException("alias attribute must be set");
         } 
 
         if (null == storepass) {
-            throw new BuildException( "storepass attribute must be set" );
+            throw new BuildException("storepass attribute must be set");
         } 
 
         if (null == dname && null == expandedDname) {
-            throw new BuildException( "dname must be set" );
+            throw new BuildException("dname must be set");
         } 
 
         final StringBuffer sb = new StringBuffer();
@@ -337,13 +337,13 @@ public class GenerateKey extends Task {
             sb.append("\" ");
         } 
 
-        log("Generating Key for " + alias );
+        log("Generating Key for " + alias);
         final ExecTask cmd = (ExecTask) project.createTask("exec");
         cmd.setExecutable("keytool");
-        Commandline.Argument arg=cmd.createArg();
+        Commandline.Argument arg = cmd.createArg();
         arg.setLine(sb.toString());
         cmd.setFailonerror(true);
-        cmd.setTaskName( getTaskName() );
+        cmd.setTaskName(getTaskName());
         cmd.execute();
     } 
 }

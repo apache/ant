@@ -309,7 +309,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         
         try {
             Class analyzerClass = Class.forName(analyzerClassName);
-            dependencyAnalyzer = (DependencyAnalyzer)analyzerClass.newInstance();
+            dependencyAnalyzer 
+                = (DependencyAnalyzer) analyzerClass.newInstance();
             dependencyAnalyzer.addClassPath(new Path(task.getProject(),
                 config.srcDir.getPath()));
             dependencyAnalyzer.addClassPath(config.classpath);
@@ -394,7 +395,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
         // register any DTDs supplied by the user
         for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
-            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation) i.next();
             handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
         }
         return handler;
@@ -456,7 +457,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             // Check to see if we need a build and start doing the work!
             if (needToRebuild(ejbFiles, jarFile)) {
                 // Log that we are going to build...
-                log( "building "
+                log("building "
                               + jarFile.getName()
                               + " with "
                               + String.valueOf(ejbFiles.size())
@@ -565,7 +566,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         // add in support classes if any
         Project project = task.getProject();
         for (Iterator i = config.supportFileSets.iterator(); i.hasNext();) {
-            FileSet supportFileSet = (FileSet)i.next();
+            FileSet supportFileSet = (FileSet) i.next();
             File supportBaseDir = supportFileSet.getDir(project);
             DirectoryScanner supportScanner = supportFileSet.getDirectoryScanner(project);
             supportScanner.scan();
@@ -766,14 +767,14 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                     in = new FileInputStream(manifestFile);
                 } else if (config.manifest != null) {
                     in = new FileInputStream(config.manifest);
-                    if ( in == null ) {
+                    if (in == null) {
                         throw new BuildException("Could not find manifest file: " + config.manifest,
                                                   getLocation());
                     }
                 } else {
                     String defaultManifest = "/org/apache/tools/ant/defaultManifest.mf";
                     in = this.getClass().getResourceAsStream(defaultManifest);
-                    if ( in == null ) {
+                    if (in == null) {
                         throw new BuildException("Could not find default manifest: " + defaultManifest,
                                                   getLocation());
                     }
@@ -794,7 +795,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             jarStream.setMethod(JarOutputStream.DEFLATED);
 
             // Loop through all the class files found and add them to the jar
-            for (Iterator entryIterator = files.keySet().iterator(); entryIterator.hasNext(); ) {
+            for (Iterator entryIterator = files.keySet().iterator(); entryIterator.hasNext();) {
                 String entryName = (String) entryIterator.next();
                 File entryFile = (File) files.get(entryName);
 
@@ -812,7 +813,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
                         //get and clean up innerclass name
                         int entryIndex = entryName.lastIndexOf(entryFile.getName()) - 1;
-                        if ( entryIndex < 0) {
+                        if (entryIndex < 0) {
                             entryName = innerfiles[i];
                         } else {
                             entryName = entryName.substring(0, entryIndex) + File.separatorChar + innerfiles[i];
@@ -859,7 +860,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
 
         Iterator i = checkEntries.keySet().iterator();
         while (i.hasNext()) {
-            String entryName = (String)i.next();
+            String entryName = (String) i.next();
             if (entryName.endsWith(".class")) {
                 String className = entryName.substring(0,
                     entryName.length() - ".class".length());
@@ -873,7 +874,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         Enumeration e = dependencyAnalyzer.getClassDependencies();
 
         while (e.hasMoreElements()) {
-            String classname = (String)e.nextElement();
+            String classname = (String) e.nextElement();
             String location
                 = classname.replace('.', File.separatorChar) + ".class";
             File classFile = new File(config.srcDir, location);

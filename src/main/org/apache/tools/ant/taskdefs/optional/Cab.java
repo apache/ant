@@ -320,12 +320,12 @@ public class Cab extends MatchingTask {
                     outLog.close();
                     errPump.waitFor();
                     errLog.close();
-                } catch(InterruptedException ie) {
+                } catch (InterruptedException ie) {
                     log("Thread interrupted: " + ie);
                 }
 
                 // Informative summary message in case of errors
-                if(result != 0) {
+                if (result != 0) {
                     log("Error executing listcab; error code: " + result);
                 }
             } catch (IOException ex) {

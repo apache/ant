@@ -78,7 +78,7 @@ public class VAJLoad extends VAJTask {
      * Load specified projects.
      */
     public void execute() {
-        getUtil().loadProjects( projectDescriptions );
+        getUtil().loadProjects(projectDescriptions);
     }
 
     /**

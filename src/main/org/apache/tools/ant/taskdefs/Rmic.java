@@ -301,7 +301,7 @@ public class Rmic extends MatchingTask {
     /**
      * Include ant's own classpath in this task's classpath?
      */
-    public void setIncludeantruntime( boolean include ) {
+    public void setIncludeantruntime(boolean include) {
         includeAntRuntime = include;
     }
 
@@ -317,7 +317,7 @@ public class Rmic extends MatchingTask {
      * Sets whether or not to include the java runtime libraries to this
      * task's classpath.
      */
-    public void setIncludejavaruntime( boolean include ) {
+    public void setIncludejavaruntime(boolean include) {
         includeJavaRuntime = include;
     }
 
@@ -379,7 +379,7 @@ public class Rmic extends MatchingTask {
         RmicAdapter adapter = RmicAdapterFactory.getRmic(compiler, this);
             
         // now we need to populate the compiler adapter
-        adapter.setRmic( this );
+        adapter.setRmic(this);
 
         Path classpath = adapter.getClasspath();
         loader = new AntClassLoader(project, classpath);
@@ -403,7 +403,7 @@ public class Rmic extends MatchingTask {
             int fileCount = compileList.size();
             if (fileCount > 0) {
                 log("RMI Compiling " + fileCount +
-                    " class"+ (fileCount > 1 ? "es" : "")+" to " + baseDir, 
+                    " class" + (fileCount > 1 ? "es" : "") + " to " + baseDir, 
                     Project.MSG_INFO);
                 
                 // finally, lets execute the compiler!!
@@ -453,7 +453,7 @@ public class Rmic extends MatchingTask {
         String[] generatedFiles = 
             adapter.getMapper().mapFileName(classFileName);
 
-        for (int i=0; i<generatedFiles.length; i++) {
+        for (int i = 0; i < generatedFiles.length; i++) {
             if (!generatedFiles[i].endsWith(".class")) {
                 // don't know how to handle that - a IDL file doesn't
                 // have a corresponding Java source for example.
@@ -461,7 +461,7 @@ public class Rmic extends MatchingTask {
             }
             
             String sourceFileName = 
-                generatedFiles[i].substring(0, classFileName.length()-6) 
+                generatedFiles[i].substring(0, classFileName.length() - 6)
                 + ".java";
 
             File oldFile = new File(baseDir, sourceFileName);
@@ -570,7 +570,8 @@ public class Rmic extends MatchingTask {
     /**
      * Classloader for the user-specified classpath.
      */
-    public ClassLoader getLoader() {return loader;}
-
+    public ClassLoader getLoader() {
+        return loader;
+    }
 }
 

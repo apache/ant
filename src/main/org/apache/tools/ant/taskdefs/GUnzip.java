@@ -84,7 +84,7 @@ public class GUnzip extends Unpack {
 
     protected void extract() {
         if (source.lastModified() > dest.lastModified()) {
-            log("Expanding "+ source.getAbsolutePath() + " to "
+            log("Expanding " + source.getAbsolutePath() + " to "
                         + dest.getAbsolutePath());
 
             FileOutputStream out = null;

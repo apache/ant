@@ -231,7 +231,7 @@ public class Tar extends MatchingTask {
             // fileset
             boolean upToDate = true;
             for (Enumeration e = filesets.elements(); e.hasMoreElements();) {
-                TarFileSet fs = (TarFileSet)e.nextElement();
+                TarFileSet fs = (TarFileSet) e.nextElement();
                 String[] files = fs.getFiles(project);
 
                 if (!archiveIsUpToDate(files)) {
@@ -248,12 +248,12 @@ public class Tar extends MatchingTask {
             }
 
             if (upToDate) {
-                log("Nothing to do: "+tarFile.getAbsolutePath()
-                    +" is up to date.", Project.MSG_INFO);
+                log("Nothing to do: " + tarFile.getAbsolutePath()
+                    + " is up to date.", Project.MSG_INFO);
                 return;
             }
 
-            log("Building tar: "+ tarFile.getAbsolutePath(), Project.MSG_INFO);
+            log("Building tar: " + tarFile.getAbsolutePath(), Project.MSG_INFO);
 
             TarOutputStream tOut = null;
             try {
@@ -274,7 +274,7 @@ public class Tar extends MatchingTask {
                 longWarningGiven = false;
                 for (Enumeration e = filesets.elements(); 
                      e.hasMoreElements();) {
-                    TarFileSet fs = (TarFileSet)e.nextElement();
+                    TarFileSet fs = (TarFileSet) e.nextElement();
                     String[] files = fs.getFiles(project);
                     if (files.length > 1 && fs.getFullpath().length() > 0) {
                         throw new BuildException("fullpath attribute may only "
@@ -284,7 +284,7 @@ public class Tar extends MatchingTask {
                     }
                     for (int i = 0; i < files.length; i++) {
                         File f = new File(fs.getDir(project), files[i]);
-                        String name = files[i].replace(File.separatorChar,'/');
+                        String name = files[i].replace(File.separatorChar, '/');
                         tarFile(f, tOut, name, fs);
                     }
                 }
@@ -344,10 +344,10 @@ public class Tar extends MatchingTask {
         try {
             if (vPath.length() >= TarConstants.NAMELEN) {
                 if (longFileMode.isOmitMode()) {
-                    log("Omitting: "+ vPath, Project.MSG_INFO);
+                    log("Omitting: " + vPath, Project.MSG_INFO);
                     return;
                 } else if (longFileMode.isWarnMode()) {
-                    log("Entry: "+ vPath + " longer than " +
+                    log("Entry: " + vPath + " longer than " +
                         TarConstants.NAMELEN + " characters.", 
                         Project.MSG_WARN);
                     if (!longWarningGiven) {
@@ -358,7 +358,7 @@ public class Tar extends MatchingTask {
                     }
                 } else if (longFileMode.isFailMode()) {
                     throw new BuildException(
-                        "Entry: "+ vPath + " longer than " +
+                        "Entry: " + vPath + " longer than " +
                         TarConstants.NAMELEN + "characters.", location);
                 }
             }

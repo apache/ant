@@ -166,9 +166,9 @@ public class JJTree extends Task {
         // load command line with optional attributes
         Enumeration iter = optionalAttrs.keys();
         while (iter.hasMoreElements()) {
-            String name  = (String)iter.nextElement();
+            String name  = (String) iter.nextElement();
             Object value = optionalAttrs.get(name);
-            cmdl.createArgument().setValue("-"+name+":"+value.toString());
+            cmdl.createArgument().setValue("-" + name + ":" + value.toString());
         }
 
         if (target == null || !target.isFile()) {
@@ -179,18 +179,20 @@ public class JJTree extends Task {
         if (outputDirectory == null) {
             outputDirectory = new File(target.getParent());
         }        
-        if (!outputDirectory.isDirectory() ) {
-            throw new BuildException("'outputdirectory' " + outputDirectory + " is not a directory.");
+        if (!outputDirectory.isDirectory()) {
+            throw new BuildException("'outputdirectory' " + outputDirectory 
+                + " is not a directory.");
         }
         // convert backslashes to slashes, otherwise jjtree will put this as
         // comments and this seems to confuse javacc
-        cmdl.createArgument().setValue(
-            "-OUTPUT_DIRECTORY:"+outputDirectory.getAbsolutePath().replace('\\', '/'));
+        cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:" 
+            + outputDirectory.getAbsolutePath().replace('\\', '/'));
         
         String targetName = target.getName();
         final File javaFile = new File(outputDirectory,
             targetName.substring(0, targetName.indexOf(".jjt")) + ".jj");
-        if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
+        if (javaFile.exists() 
+             && target.lastModified() < javaFile.lastModified()) {
             project.log("Target is already built - skipping (" + target + ")");
             return;
         }
@@ -198,12 +200,12 @@ public class JJTree extends Task {
 
         final Path classpath = cmdl.createClasspath(project);
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
-        classpath.createPathElement().setPath( javaccJar.getAbsolutePath() );
+        classpath.createPathElement().setPath(javaccJar.getAbsolutePath());
         classpath.addJavaRuntime();
 
         final Commandline.Argument arg = cmdl.createVmArgument();
         arg.setValue("-mx140M");
-        arg.setValue("-Dinstall.root="+javaccHome.getAbsolutePath());
+        arg.setValue("-Dinstall.root=" + javaccHome.getAbsolutePath());
 
         final Execute process =
             new Execute(new LogStreamHandler(this,

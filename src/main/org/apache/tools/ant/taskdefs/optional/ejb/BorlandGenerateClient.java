@@ -144,30 +144,28 @@ public class BorlandGenerateClient extends Task
      * @exception BuildException if someting goes wrong with the build
      */
     public void execute() throws BuildException {
-        if ( ejbjarfile == null ||
-             ejbjarfile.isDirectory()) {
+        if (ejbjarfile == null || ejbjarfile.isDirectory()) {
             throw new BuildException("invalid ejb jar file.");
         } // end of if ()
 
-        if ( clientjarfile == null ||
-             clientjarfile.isDirectory()) {
-            log("invalid or missing client jar file.",Project.MSG_VERBOSE);
+        if (clientjarfile == null || clientjarfile.isDirectory()) {
+            log("invalid or missing client jar file.", Project.MSG_VERBOSE);
             String ejbjarname = ejbjarfile.getAbsolutePath();
             //clientname = ejbjarfile+client.jar
-            String clientname = ejbjarname.substring(0,ejbjarname.lastIndexOf("."));
+            String clientname = ejbjarname.substring(0, ejbjarname.lastIndexOf("."));
             clientname = clientname + "client.jar";
             clientjarfile = new File(clientname);
 
         } // end of if ()
 
-        if ( mode == null ) {
+        if (mode == null) {
             log("mode is null default mode  is java");
             setMode(JAVA_MODE);
         } // end of if ()
 
         log("client jar file is " + clientjarfile);
 
-        if ( mode.equalsIgnoreCase(FORK_MODE)) {
+        if (mode.equalsIgnoreCase(FORK_MODE)) {
             executeFork();
         } // end of if ()
         else {            
@@ -192,7 +190,7 @@ public class BorlandGenerateClient extends Task
 
             execTask.setFork(true);
             execTask.createArg().setValue("generateclient");
-            if ( debug ) {
+            if (debug) {
                 execTask.createArg().setValue("-trace");                
             } // end of if ()
 
@@ -206,7 +204,7 @@ public class BorlandGenerateClient extends Task
             execTask.createArg().setValue("-clientjarfile");
             execTask.createArg().setValue(clientjarfile.getAbsolutePath());
 
-            log("Calling EJBUtilities",Project.MSG_VERBOSE);                       
+            log("Calling EJBUtilities", Project.MSG_VERBOSE);
             execTask.execute();        
 
         }
@@ -228,7 +226,7 @@ public class BorlandGenerateClient extends Task
             execTask.setDir(new File("."));
             execTask.setExecutable("iastool");
             execTask.createArg().setValue("generateclient");
-            if ( debug ){
+            if (debug) {
                 execTask.createArg().setValue("-trace");                
             } // end of if ()
 
@@ -242,12 +240,13 @@ public class BorlandGenerateClient extends Task
             execTask.createArg().setValue("-clientjarfile");
             execTask.createArg().setValue(clientjarfile.getAbsolutePath());
 
-            log("Calling java2iiop",Project.MSG_VERBOSE);                       
+            log("Calling java2iiop", Project.MSG_VERBOSE);
             execTask.execute();        
         }
         catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling generateclient Details: " + e.toString();
+            String msg = "Exception while calling generateclient Details: " 
+                + e.toString();
             throw new BuildException(msg, e);
         }
 

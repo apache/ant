@@ -113,8 +113,8 @@ class VAJWorkspaceScanner extends DirectoryScanner {
         }
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
             newExcludes[i + excludesLength] = DEFAULTEXCLUDES[i].
-                replace( '/', File.separatorChar ).
-                replace( '\\', File.separatorChar );
+                replace('/', File.separatorChar).
+                replace('\\', File.separatorChar);
         }
         excludes = newExcludes;
     }

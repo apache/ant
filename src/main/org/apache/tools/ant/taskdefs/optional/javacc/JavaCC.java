@@ -211,9 +211,9 @@ public class JavaCC extends Task {
         // load command line with optional attributes
         Enumeration iter = optionalAttrs.keys();
         while (iter.hasMoreElements()) {
-            String name  = (String)iter.nextElement();
+            String name  = (String) iter.nextElement();
             Object value = optionalAttrs.get(name);
-            cmdl.createArgument().setValue("-"+name+":"+value.toString());
+            cmdl.createArgument().setValue("-" + name + ":" + value.toString());
         }
 
         // check the target is a file
@@ -228,8 +228,8 @@ public class JavaCC extends Task {
         else if (!outputDirectory.isDirectory()) {
             throw new BuildException("Outputdir not a directory.");
         }
-        cmdl.createArgument().setValue(
-            "-OUTPUT_DIRECTORY:"+outputDirectory.getAbsolutePath());
+        cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:"
+            + outputDirectory.getAbsolutePath());
 
         // determine if the generated java file is up-to-date
         final File javaFile = getOutputJavaFile(outputDirectory, target);
@@ -241,12 +241,12 @@ public class JavaCC extends Task {
 
         final Path classpath = cmdl.createClasspath(project);
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
-        classpath.createPathElement().setPath( javaccJar.getAbsolutePath() );
+        classpath.createPathElement().setPath(javaccJar.getAbsolutePath());
         classpath.addJavaRuntime();
 
         final Commandline.Argument arg = cmdl.createVmArgument();
         arg.setValue("-mx140M");
-        arg.setValue("-Dinstall.root="+javaccHome.getAbsolutePath());
+        arg.setValue("-Dinstall.root=" + javaccHome.getAbsolutePath());
 
         Execute.runCommand(this, cmdl.getCommandline());
     }
@@ -265,12 +265,12 @@ public class JavaCC extends Task {
         }
         // javacc prior to 2.0
         File f = new File(home, "JavaCC.zip");
-        if ( f.exists() ){
+        if (f.exists()){
           return f;
         }
         // javacc install 2.0+
         f = new File(home, "bin/lib/JavaCC.zip");
-        if ( f.exists() ){
+        if (f.exists()){
           return f;
         }
         throw new BuildException("Could not find a path to JavaCC.zip from '" + home + "'.");
@@ -287,8 +287,8 @@ public class JavaCC extends Task {
 
         // Extract file's base-name
         int startBasename = path.lastIndexOf(File.separator);
-        if ( startBasename != -1 ) {
-            path = path.substring(startBasename+1);
+        if (startBasename != -1) {
+            path = path.substring(startBasename + 1);
         }
 
         // Replace the file's extension with '.java'

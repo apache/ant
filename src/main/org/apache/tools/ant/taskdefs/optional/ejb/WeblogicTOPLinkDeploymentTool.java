@@ -128,7 +128,8 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
         if (toplinkDescriptor == null) {
-            throw new BuildException( "The toplinkdescriptor attribute must be specified" );
+            throw new BuildException("The toplinkdescriptor attribute must " 
+                + "be specified");
         }
     }
 }

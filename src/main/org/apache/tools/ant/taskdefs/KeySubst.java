@@ -88,7 +88,7 @@ public class KeySubst extends Task {
     public void execute() throws BuildException {
         log("!! KeySubst is deprecated. Use Filter + Copy instead. !!");
         log("Performing Substitions");
-        if ( source == null || dest == null ) {
+        if (source == null || dest == null) {
             log("Source and destinations must not be null");
             return;            
         }
@@ -103,11 +103,11 @@ public class KeySubst extends Task {
             String newline = null;
             line = br.readLine();
             while (line != null) {
-                if ( line.length() == 0 ) {
+                if (line.length() == 0) {
                     bw.newLine();
                 } else {
-                    newline = KeySubst.replace ( line, replacements );
-                    bw.write ( newline );
+                    newline = KeySubst.replace(line, replacements);
+                    bw.write(newline);
                     bw.newLine();
                 }
                 line = br.readLine();
@@ -173,7 +173,7 @@ public class KeySubst extends Task {
                 
                 String name = itok.nextToken();
                 String value = itok.nextToken();
-                replacements.put ( name, value );
+                replacements.put(name, value);
             }
         }
     }
@@ -181,14 +181,13 @@ public class KeySubst extends Task {
 
     public static void main(String[] args)
     {
-        try{
-        Hashtable hash = new Hashtable();
-        hash.put ( "VERSION", "1.0.3" );
-        hash.put ( "b", "ffff" );
-        System.out.println ( KeySubst.replace ( "$f ${VERSION} f ${b} jj $", 
-                                                hash ) );
-        }catch ( Exception e)
-        {
+        try {
+            Hashtable hash = new Hashtable();
+            hash.put("VERSION", "1.0.3");
+            hash.put("b", "ffff");
+            System.out.println(KeySubst.replace("$f ${VERSION} f ${b} jj $", 
+                                                hash));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -198,23 +197,23 @@ public class KeySubst extends Task {
         
         @return the string with the replacements in it.
     */
-    public static String replace ( String origString, Hashtable keys )
+    public static String replace(String origString, Hashtable keys)
         throws BuildException
     {
-        StringBuffer finalString=new StringBuffer();
-        int index=0;
+        StringBuffer finalString = new StringBuffer();
+        int index = 0;
         int i = 0;
         String key = null;
         while ((index = origString.indexOf("${", i)) > -1) {
             key = origString.substring(index + 2, origString.indexOf("}", 
-                                                                     index+3));
+                                       index + 3));
             finalString.append (origString.substring(i, index));
-            if ( keys.containsKey ( key ) ) {
+            if (keys.containsKey(key)) {
                 finalString.append (keys.get(key));
             } else {
-                finalString.append ( "${" );
-                finalString.append ( key );
-                finalString.append ( "}" );
+                finalString.append ("${");
+                finalString.append (key);
+                finalString.append ("}");
             }
             i = index + 3 + key.length();
         }

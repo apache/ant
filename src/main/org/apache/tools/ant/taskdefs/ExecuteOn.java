@@ -208,14 +208,14 @@ public class ExecuteOn extends ExecTask {
 
             Vector fileNames = new Vector();
             Vector baseDirs = new Vector();
-            for (int i=0; i<filesets.size(); i++) {
+            for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
                 File base = fs.getDir(project);
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
 
                 if (!"dir".equals(type)) {
                     String[] s = getFiles(base, ds);
-                    for (int j=0; j<s.length; j++) {
+                    for (int j = 0; j < s.length; j++) {
                         fileNames.addElement(s[j]);
                         baseDirs.addElement(base);
                     }
@@ -223,7 +223,7 @@ public class ExecuteOn extends ExecTask {
 
                 if (!"file".equals(type)) {
                     String[] s = getDirs(base, ds);;
-                    for (int j=0; j<s.length; j++) {
+                    for (int j = 0; j < s.length; j++) {
                         fileNames.addElement(s[j]);
                         baseDirs.addElement(base);
                     }
@@ -238,7 +238,7 @@ public class ExecuteOn extends ExecTask {
                 if (!parallel) {
                     String[] s = new String[fileNames.size()];
                     fileNames.copyInto(s);
-                    for (int j=0; j<s.length; j++) {
+                    for (int j = 0; j < s.length; j++) {
                         String[] command = getCommandline(s[j], base);
                         log("Executing " + Commandline.toString(command), 
                             Project.MSG_VERBOSE);
@@ -280,10 +280,10 @@ public class ExecuteOn extends ExecTask {
         Vector targets = new Vector();
         if (targetFilePos != null) {
             Hashtable addedFiles = new Hashtable();
-            for (int i=0; i<srcFiles.length; i++) {
+            for (int i = 0; i < srcFiles.length; i++) {
                 String[] subTargets = mapper.mapFileName(srcFiles[i]);
                 if (subTargets != null) {
-                    for (int j=0; j<subTargets.length; j++) {
+                    for (int j = 0; j < subTargets.length; j++) {
                         String name = null;
                         if (!relative) {
                             name =
@@ -303,7 +303,7 @@ public class ExecuteOn extends ExecTask {
         targets.copyInto(targetFiles);
         
         String[] orig = cmdl.getCommandline();
-        String[] result = new String[orig.length+srcFiles.length+targetFiles.length];
+        String[] result = new String[orig.length + srcFiles.length + targetFiles.length];
 
         int srcIndex = orig.length;
         if (srcFilePos != null) {
@@ -366,12 +366,12 @@ public class ExecuteOn extends ExecTask {
         }
 
         // fill in source file names
-        for (int i=0; i < srcFiles.length; i++) {
+        for (int i = 0; i < srcFiles.length; i++) {
             if (!relative) {
-                result[srcIndex+i] = 
+                result[srcIndex + i] = 
                     (new File(baseDirs[i], srcFiles[i])).getAbsolutePath();
             } else {
-                result[srcIndex+i] = srcFiles[i];
+                result[srcIndex + i] = srcFiles[i];
             }
         }
         return result;

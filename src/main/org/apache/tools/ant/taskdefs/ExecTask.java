@@ -96,7 +96,7 @@ public class ExecTask extends Task {
     private ByteArrayOutputStream baos = null;
     private String outputprop;
     private String resultProperty;
-    private boolean failIfExecFails=true;
+    private boolean failIfExecFails = true;
     private boolean append = false;
 
     /** 
@@ -207,7 +207,7 @@ public class ExecTask extends Task {
      * @since Ant 1.5
      */
     public void setResultProperty(String resultProperty) {
-        this.resultProperty=resultProperty;
+        this.resultProperty = resultProperty;
     }
     
     /**
@@ -215,9 +215,9 @@ public class ExecTask extends Task {
      * passed in value if appropriate
      */
     protected void maybeSetResultPropertyValue(int result) {
-        String res=Integer.toString(result);
-        if(resultProperty!=null) {
-            project.setNewProperty(resultProperty,res);
+        String res = Integer.toString(result);
+        if (resultProperty != null) {
+            project.setNewProperty(resultProperty, res);
         }
     }
     
@@ -226,7 +226,7 @@ public class ExecTask extends Task {
      * @since Ant 1.5     
      */
     public void setFailIfExecutionFails(boolean flag) {
-        failIfExecFails=flag;
+        failIfExecFails = flag;
     }
     
     /**
@@ -312,8 +312,8 @@ public class ExecTask extends Task {
         exe.setVMLauncher(vmLauncher);
         String[] environment = env.getVariables();
         if (environment != null) {
-            for (int i=0; i<environment.length; i++) {
-                log("Setting environment variable: "+environment[i],
+            for (int i = 0; i < environment.length; i++) {
+                log("Setting environment variable: " + environment[i],
                     Project.MSG_VERBOSE);
             }
         }
@@ -331,13 +331,13 @@ public class ExecTask extends Task {
 
         err = exe.execute();
         //test for and handle a forced process death
-        if(exe.killedProcess()) {
-            log("Timeout: killed the sub-process",Project.MSG_WARN); 
+        if (exe.killedProcess()) {
+            log("Timeout: killed the sub-process", Project.MSG_WARN); 
         }
         maybeSetResultPropertyValue(err);
         if (err != 0) {
             if (failOnError) {
-                throw new BuildException(taskType + " returned: "+err, 
+                throw new BuildException(taskType + " returned: " + err,
                                          location);
             } else {
                 log("Result: " + err, Project.MSG_ERR);
@@ -368,10 +368,10 @@ public class ExecTask extends Task {
             runExecute(exe);
         } catch (IOException e) {
             if (failIfExecFails) {
-                throw new BuildException("Execute failed: "+e.toString(), e, 
+                throw new BuildException("Execute failed: " + e.toString(), e,
                                          location);
             } else {
-                log("Execute failed: "+e.toString(), Project.MSG_ERR);
+                log("Execute failed: " + e.toString(), Project.MSG_ERR);
             }
         } finally {
             // close the output file if required
@@ -383,16 +383,16 @@ public class ExecTask extends Task {
      * Create the StreamHandler to use with our Execute instance.
      */
     protected ExecuteStreamHandler createHandler() throws BuildException {
-        if(out!=null)  {
+        if (out != null)  {
             try {
                 fos = new FileOutputStream(out.getAbsolutePath(), append);
                 log("Output redirected to " + out, Project.MSG_VERBOSE);
                 return new PumpStreamHandler(fos);
             } catch (FileNotFoundException fne) {
-                throw new BuildException("Cannot write to "+out, fne, 
+                throw new BuildException("Cannot write to " + out, fne, 
                                          location);
             } catch (IOException ioe) {
-                throw new BuildException("Cannot write to "+out, ioe, 
+                throw new BuildException("Cannot write to " + out, ioe, 
                                          location);
             }
         } else if (outputprop != null) {

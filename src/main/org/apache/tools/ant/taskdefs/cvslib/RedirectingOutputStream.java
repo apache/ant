@@ -51,7 +51,6 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.taskdefs.cvslib;
 
 import org.apache.tools.ant.taskdefs.LogOutputStream;
@@ -62,28 +61,29 @@ import org.apache.tools.ant.taskdefs.LogOutputStream;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-class RedirectingOutputStream 
-    extends LogOutputStream
-{
+class RedirectingOutputStream
+     extends LogOutputStream {
     private final ChangeLogParser m_parser;
+
 
     /**
      * Creates a new instance of this class.
      *
+     * @param parser the parser to which output is sent.
      */
-    public RedirectingOutputStream( final ChangeLogParser parser ) 
-    {
-        super( null, 0 );
+    public RedirectingOutputStream(final ChangeLogParser parser) {
+        super(null, 0);
         m_parser = parser;
     }
+
 
     /**
      * Logs a line to the log system of ant.
      *
      * @param line the line to log.
      */
-    protected void processLine( final String line )
-    {
-        m_parser.stdout( line );
+    protected void processLine(final String line) {
+        m_parser.stdout(line);
     }
 }
+

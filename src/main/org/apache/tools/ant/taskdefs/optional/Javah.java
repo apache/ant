@@ -136,7 +136,7 @@ public class Javah extends Task {
 
         public void setName(String name) {
             this.name = name;
-            log("ClassArgument.name="+name);
+            log("ClassArgument.name=" + name);
         }
 
         public String getName() {
@@ -318,7 +318,8 @@ public class Javah extends Task {
             // dynamically. However, javah has a different interface and this
             // makes it harder, so here's a simple alternative.
             //------------------------------------------------------------------
-            com.sun.tools.javah.Main main = new com.sun.tools.javah.Main( cmd.getArguments() );
+            com.sun.tools.javah.Main main 
+                = new com.sun.tools.javah.Main(cmd.getArguments());
             main.run();
         }
         //catch (ClassNotFoundException ex) {
@@ -411,7 +412,7 @@ public class Javah extends Task {
 
         Enumeration enum = classes.elements();
         while (enum.hasMoreElements()) {
-            ClassArgument arg = (ClassArgument)enum.nextElement();
+            ClassArgument arg = (ClassArgument) enum.nextElement();
             String aClass = arg.getName();
             cmd.createArgument().setValue(aClass);
             niceClassList.append("    " + aClass + lSep);

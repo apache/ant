@@ -166,12 +166,13 @@ public final class LoadFile extends Task {
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         Reader instream = null;
-        log("loading "+srcFile+" into property "+property,Project.MSG_VERBOSE);
+        log("loading " + srcFile + " into property " + property,
+            Project.MSG_VERBOSE);
         try {
             final long len = srcFile.length();
-            log("file size = "+len,Project.MSG_DEBUG);
+            log("file size = " + len, Project.MSG_DEBUG);
             //discard most of really big files
-            final int size=(int) len;
+            final int size = (int) len;
             //open up the file
             fis = new FileInputStream(srcFile);
             bis = new BufferedInputStream(fis);
@@ -195,7 +196,7 @@ public final class LoadFile extends Task {
                 project.setNewProperty(property, text);
                 log("loaded " + text.length() + " characters",
                     Project.MSG_VERBOSE);
-                log(property+" := "+text,Project.MSG_DEBUG);
+                log(property + " := " + text, Project.MSG_DEBUG);
             }
 
         } catch (final IOException ioe) {

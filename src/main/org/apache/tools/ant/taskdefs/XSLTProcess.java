@@ -193,7 +193,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             
             // check if liaison wants to log errors using us as logger
             if (liaison instanceof XSLTLoggerAware) {
-                ((XSLTLoggerAware)liaison).setLogger(this);
+                ((XSLTLoggerAware) liaison).setLogger(this);
             }
             
             log("Using " + liaison.getClass().toString(), Project.MSG_VERBOSE);
@@ -224,7 +224,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
              */
         
             //-- make sure Source directory exists...
-            if (destDir == null ) {
+            if (destDir == null) {
                 String msg = "destdir attributes must be set!";
                 throw new BuildException(msg);
             }
@@ -234,7 +234,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             // Process all the files marked for styling
             list = scanner.getIncludedFiles();
             for (int i = 0; i < list.length; ++i) {
-                process( baseDir, list[i], destDir, stylesheet );
+                process(baseDir, list[i], destDir, stylesheet);
             }
             if (performDirectoryScan) {
                 // Process all the directories marked for styling
@@ -242,7 +242,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 for (int j = 0; j < dirs.length; ++j){
                     list = new File(baseDir, dirs[j]).list();
                     for (int i = 0; i < list.length; ++i) {
-                        process( baseDir, list[i], destDir, stylesheet );
+                        process(baseDir, list[i], destDir, stylesheet);
                     }
                 }
             }
@@ -359,7 +359,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private void resolveProcessor(String proc) throws Exception {
         if (proc.equals("trax")) {
             final Class clazz = loadClass(TRAX_LIAISON_CLASS);
-            liaison = (XSLTLiaison)clazz.newInstance();
+            liaison = (XSLTLiaison) clazz.newInstance();
         } else if (proc.equals("xslp")) {
             log("DEPRECATED - xslp processor is deprecated. Use trax or "
                 + "xalan instead.");
@@ -367,7 +367,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             liaison = (XSLTLiaison) clazz.newInstance();
         } else if (proc.equals("xalan")) {
             final Class clazz = loadClass(XALAN_LIASON_CLASS);
-            liaison = (XSLTLiaison)clazz.newInstance();
+            liaison = (XSLTLiaison) clazz.newInstance();
         } else {
             liaison = (XSLTLiaison) loadClass(proc).newInstance();
         }
@@ -448,7 +448,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             if (force ||
                 inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified()) {
-                ensureDirectoryFor( outFile );
+                ensureDirectoryFor(outFile);
                 log("Processing " + inFile + " to " + outFile);
                 
                 configureLiaison(stylesheet);
@@ -489,7 +489,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             if (force ||
                 inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified()) {
-                ensureDirectoryFor( outFile );
+                ensureDirectoryFor(outFile);
                 log("Processing " + inFile + " to " + outFile, 
                     Project.MSG_INFO);
                 configureLiaison(stylesheet);
@@ -516,7 +516,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         if (!directory.exists()) {
             if (!directory.mkdirs()) {
                 throw new BuildException("Unable to create directory: "
-                                         + directory.getAbsolutePath() );
+                                         + directory.getAbsolutePath());
             }
         }
     }
@@ -647,11 +647,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         stylesheetLoaded = true;
         
         try {
-            log( "Loading stylesheet " + stylesheet, Project.MSG_INFO);
-            liaison.setStylesheet( stylesheet );
-            for (Enumeration e = params.elements(); e.hasMoreElements(); ) {
-                Param p = (Param)e.nextElement();
-                liaison.addParam( p.getName(), p.getExpression() );
+            log("Loading stylesheet " + stylesheet, Project.MSG_INFO);
+            liaison.setStylesheet(stylesheet);
+            for (Enumeration e = params.elements(); e.hasMoreElements();) {
+                Param p = (Param) e.nextElement();
+                liaison.addParam(p.getName(), p.getExpression());
             }
             // if liaison is a TraxLiason, use XMLCatalog as the entity
             // resolver

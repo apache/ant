@@ -204,9 +204,9 @@ public class NetCommand {
         }
     }
 
-    public void addArgument(String argument1,String argument2) {
+    public void addArgument(String argument1, String argument2) {
         if (argument2 != null && argument2.length() != 0) {
-            commandLine.createArgument().setValue(argument1+argument2);
+            commandLine.createArgument().setValue(argument1 + argument2);
         }
     }    
 
@@ -215,10 +215,10 @@ public class NetCommand {
      */
     protected void prepareExecutor() {
         // default directory to the project's base directory
-        if(owner==null) {
+        if (owner == null) {
             throw new RuntimeException("no owner"); 
         }
-        if(owner.getProject()==null) {
+        if (owner.getProject() == null) {
             throw new RuntimeException("Owner has no project"); 
         }
         File dir = owner.getProject().getBaseDir();

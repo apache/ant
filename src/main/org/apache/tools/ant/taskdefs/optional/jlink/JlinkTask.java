@@ -91,7 +91,7 @@ public class JlinkTask extends MatchingTask {
     /**
      * The output file for this run of jlink. Usually a jar or zip file.
      */
-    public  void setOutfile( File outfile ) {
+    public  void setOutfile(File outfile) {
         this.outfile = outfile;
     }
 
@@ -100,21 +100,21 @@ public class JlinkTask extends MatchingTask {
      * be merged into the output.
      */
     public  Path createMergefiles() {
-        if ( this .mergefiles == null ) {
-            this .mergefiles = new Path(getProject());
+        if (this.mergefiles == null) {
+            this.mergefiles = new Path(getProject());
         }
-        return this .mergefiles.createPath();
+        return this.mergefiles.createPath();
     }
 
     /**
      * Sets the files to be merged into the output.
      */
-    public  void setMergefiles( Path mergefiles ) {
-        if ( this .mergefiles == null ) {
-            this .mergefiles = mergefiles;
+    public  void setMergefiles(Path mergefiles) {
+        if (this.mergefiles == null) {
+            this.mergefiles = mergefiles;
         }
         else {
-            this .mergefiles .append( mergefiles );
+            this.mergefiles .append(mergefiles);
         }
     }
 
@@ -123,29 +123,29 @@ public class JlinkTask extends MatchingTask {
      * be added to the output.
      */
     public  Path createAddfiles() {
-        if ( this .addfiles == null ) {
-            this .addfiles = new Path(getProject());
+        if (this.addfiles == null) {
+            this.addfiles = new Path(getProject());
         }
-        return this .addfiles .createPath();
+        return this.addfiles.createPath();
     }
 
     /**
      * Sets the files to be added into the output.
      */
-    public  void setAddfiles( Path addfiles ) {
-        if ( this .addfiles == null ) {
-            this .addfiles = addfiles;
+    public  void setAddfiles(Path addfiles) {
+        if (this.addfiles == null) {
+            this.addfiles = addfiles;
         }
         else {
-            this .addfiles .append( addfiles );
+            this.addfiles.append(addfiles);
         }
     }
 
     /**
      * Defines whether or not the output should be compacted.
      */
-    public  void setCompress( boolean compress ) {
-        this .compress = compress;
+    public  void setCompress(boolean compress) {
+        this.compress = compress;
     }
 
     /**
@@ -153,29 +153,31 @@ public class JlinkTask extends MatchingTask {
      */
     public  void execute() throws BuildException {
         //Be sure everything has been set.
-        if ( outfile == null ) {
-            throw new BuildException( "outfile attribute is required! Please set." );
+        if (outfile == null) {
+            throw new BuildException("outfile attribute is required! " 
+                + "Please set.");
         }
         if (!haveAddFiles() && !haveMergeFiles()) {
-            throw new BuildException( "addfiles or mergefiles required! Please set." );
+            throw new BuildException("addfiles or mergefiles required! " 
+                + "Please set.");
         }
-        log( "linking:     " + outfile.getPath() );
-        log( "compression: " + compress, Project.MSG_VERBOSE );
+        log("linking:     " + outfile.getPath());
+        log("compression: " + compress, Project.MSG_VERBOSE);
         jlink linker = new jlink();
-        linker .setOutfile( outfile.getPath() );
-        linker .setCompression( compress );
-        if (haveMergeFiles()){
-            log( "merge files: " + mergefiles .toString(), Project .MSG_VERBOSE );
-            linker .addMergeFiles( mergefiles .list() );
+        linker.setOutfile(outfile.getPath());
+        linker.setCompression(compress);
+        if (haveMergeFiles()) {
+            log("merge files: " + mergefiles.toString(), Project.MSG_VERBOSE );
+            linker.addMergeFiles( mergefiles.list() );
         }
-        if (haveAddFiles()){
-            log( "add files: " + addfiles .toString(), Project .MSG_VERBOSE );
-            linker .addAddFiles( addfiles .list() );
+        if (haveAddFiles()) {
+            log("add files: " + addfiles.toString(), Project .MSG_VERBOSE);
+            linker.addAddFiles(addfiles.list());
         }
         try  {
-            linker .link();
-        } catch( Exception ex ) {
-            throw new BuildException( ex, location );
+            linker.link();
+        } catch(Exception ex) {
+            throw new BuildException(ex, location);
         }
     }
 
@@ -205,7 +207,7 @@ public class JlinkTask extends MatchingTask {
 
     private  boolean compress = false;
 
-    private  String ps = System .getProperty( "path.separator" );
+    private  String ps = System.getProperty("path.separator");
 
 }
 

@@ -145,7 +145,7 @@ public class Delete extends MatchingTask {
      * @param failonerror true or false
      */
      public void setFailOnError(boolean failonerror) {
-         this.failonerror=failonerror;
+         this.failonerror = failonerror;
      }
 
 
@@ -291,9 +291,9 @@ public class Delete extends MatchingTask {
                     log("Deleting: " + file.getAbsolutePath());
 
                     if (!file.delete()) {
-                        String message="Unable to delete file " 
+                        String message = "Unable to delete file " 
                             + file.getAbsolutePath();
-                        if(failonerror) {
+                        if (failonerror) {
                             throw new BuildException(message);
                         } else { 
                             log(message, quiet ? Project.MSG_VERBOSE 
@@ -325,7 +325,7 @@ public class Delete extends MatchingTask {
         }
 
         // delete the files in the filesets
-        for (int i=0; i<filesets.size(); i++) {
+        for (int i = 0; i < filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             try {
                 DirectoryScanner ds = fs.getDirectoryScanner(project);
@@ -379,9 +379,9 @@ public class Delete extends MatchingTask {
             } else {
                 log("Deleting " + f.getAbsolutePath(), verbosity);
                 if (!f.delete()) {
-                    String message="Unable to delete file " 
+                    String message = "Unable to delete file " 
                         + f.getAbsolutePath();
-                    if(failonerror) {
+                    if (failonerror) {
                         throw new BuildException(message);
                     } else {
                         log(message,
@@ -392,9 +392,9 @@ public class Delete extends MatchingTask {
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!d.delete()) {
-            String message="Unable to delete directory " 
+            String message = "Unable to delete directory " 
                 + dir.getAbsolutePath();
-            if(failonerror) {
+            if (failonerror) {
                 throw new BuildException(message);
             } else {
                 log(message,
@@ -414,13 +414,13 @@ public class Delete extends MatchingTask {
         if (files.length > 0) {
             log("Deleting " + files.length + " files from " 
                 + d.getAbsolutePath());
-            for (int j=0; j<files.length; j++) {
+            for (int j = 0; j < files.length; j++) {
                 File f = new File(d, files[j]);
                 log("Deleting " + f.getAbsolutePath(), verbosity);
                 if (!f.delete()) {
-                    String message="Unable to delete file " 
+                    String message = "Unable to delete file " 
                         + f.getAbsolutePath();
-                    if(failonerror) {
+                    if (failonerror) {
                         throw new BuildException(message);
                     } else {
                         log(message,
@@ -432,15 +432,15 @@ public class Delete extends MatchingTask {
 
         if (dirs.length > 0 && includeEmpty) {
             int dirCount = 0;
-            for (int j=dirs.length-1; j>=0; j--) {
+            for (int j = dirs.length - 1; j >= 0; j--) {
                 File dir = new File(d, dirs[j]);
                 String[] dirFiles = dir.list();
                 if (dirFiles == null || dirFiles.length == 0) {
                     log("Deleting " + dir.getAbsolutePath(), verbosity);
                     if (!dir.delete()) {
-                        String message="Unable to delete directory "
+                        String message = "Unable to delete directory "
                                 + dir.getAbsolutePath();
-                        if(failonerror) {
+                        if (failonerror) {
                             throw new BuildException(message);
                         } else {
                             log(message,
@@ -454,7 +454,7 @@ public class Delete extends MatchingTask {
 
             if (dirCount > 0) {
                 log("Deleted " + dirCount + " director" +
-                    (dirCount==1 ? "y" : "ies") +
+                    (dirCount == 1 ? "y" : "ies") +
                     " from " + d.getAbsolutePath());
             }
         }

@@ -63,52 +63,44 @@ import java.util.Date;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-class CVSEntry
-{
+class CVSEntry {
     private Date m_date;
     private final String m_author;
     private final String m_comment;
     private final Vector m_files = new Vector();
 
-    public CVSEntry( Date date, String author, String comment )
-    {
+    public CVSEntry(Date date, String author, String comment) {
         m_date = date;
         m_author = author;
         m_comment = comment;
     }
 
-    public void addFile( String file, String revision )
-    {
-        m_files.addElement( new RCSFile( file, revision ) );
+    public void addFile(String file, String revision) {
+        m_files.addElement(new RCSFile(file, revision));
     }
 
-    public void addFile( String file, String revision, String previousRevision )
-    {
-        m_files.addElement( new RCSFile( file, revision, previousRevision ) );
+    public void addFile(String file, String revision, String previousRevision) {
+        m_files.addElement(new RCSFile(file, revision, previousRevision));
     }
 
-    Date getDate()
-    {
+    Date getDate() {
         return m_date;
     }
 
-    String getAuthor()
-    {
+    String getAuthor() {
         return m_author;
     }
 
-    String getComment()
-    {
+    String getComment() {
         return m_comment;
     }
 
-    Vector getFiles()
-    {
+    Vector getFiles() {
         return m_files;
     }
 
-    public String toString()
-    {
-        return getAuthor() + "\n" + getDate() + "\n" + getFiles() + "\n" + getComment();
+    public String toString() {
+        return getAuthor() + "\n" + getDate() + "\n" + getFiles() + "\n" 
+            + getComment();
     }
 }

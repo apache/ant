@@ -77,7 +77,8 @@ import java.io.InputStreamReader;
 public class JikesOutputParser implements ExecuteStreamHandler {
     protected Task task;
     protected boolean errorFlag = false; // no errors so far
-    protected int errors,warnings;
+    protected int errors;
+    protected int warnings;
     protected boolean error = false;
     protected boolean emacsMode;
     
@@ -182,7 +183,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
 
     private void setError(boolean err) {
         error = err;
-        if(error) {
+        if (error) {
             errorFlag = true;
         }
     }

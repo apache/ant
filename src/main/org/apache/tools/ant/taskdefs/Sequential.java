@@ -90,7 +90,7 @@ public class Sequential extends Task
      */
     public void execute() throws BuildException {
         for (Enumeration e = nestedTasks.elements(); e.hasMoreElements();) {
-            Task nestedTask = (Task)e.nextElement();
+            Task nestedTask = (Task) e.nextElement();
             nestedTask.perform();
         }
     }

@@ -104,9 +104,7 @@ import org.apache.tools.ant.types.FileSet;
  * @since Ant 1.5
  * @ant.task name="changelog"
  */
-public class ChangeLogTask
-    extends Task
-{
+public class ChangeLogTask extends Task {
     /** User list */
     private File m_usersFile;
 
@@ -119,14 +117,10 @@ public class ChangeLogTask
     /** Output file */
     private File m_destfile;
 
-    /**
-     * The earliest date at which to start processing entrys.
-     */
+    /** The earliest date at which to start processing entrys.  */
     private Date m_start;
 
-    /**
-     * The latest date at which to stop processing entrys.
-     */
+    /** The latest date at which to stop processing entrys.  */
     private Date m_stop;
 
     /**
@@ -136,163 +130,185 @@ public class ChangeLogTask
      */
     private final Vector m_filesets = new Vector();
 
+
     /**
      * Set the base dir for cvs.
+     *
+     * @param dir The new dir value
      */
-    public void setDir( final File dir )
-    {
+    public void setDir(final File dir) {
         m_dir = dir;
     }
 
+
     /**
      * Set the output file for the log.
+     *
+     * @param destfile The new destfile value
      */
-    public void setDestfile( final File destfile )
-    {
+    public void setDestfile(final File destfile) {
         m_destfile = destfile;
     }
 
+
     /**
      * Set a lookup list of user names & addresses
+     *
+     * @param usersFile The file containing the users info.
      */
-    public void setUsersfile( final File usersFile )
-    {
+    public void setUsersfile(final File usersFile) {
         m_usersFile = usersFile;
     }
+
 
     /**
      * Add a user to list changelog knows about.
      *
      * @param user the user
      */
-    public void addUser( final CvsUser user )
-    {
-        m_cvsUsers.addElement( user );
+    public void addUser(final CvsUser user) {
+        m_cvsUsers.addElement(user);
     }
+
 
     /**
      * Set the date at which the changelog should start.
      *
      * @param start The date at which the changelog should start.
      */
-    public void setStart( final Date start )
-    {
+    public void setStart(final Date start) {
         m_start = start;
     }
+
 
     /**
      * Set the date at which the changelog should stop.
      *
      * @param stop The date at which the changelog should stop.
      */
-    public void setEnd( final Date stop )
-    {
+    public void setEnd(final Date stop) {
         m_stop = stop;
     }
 
+
     /**
      * Set the numbers of days worth of log entries to process.
+     *
+     * @param days the number of days of log to process.
      */
-    public void setDaysinpast( final int days )
-    {
-        final long time = System.currentTimeMillis() 
-            - (long)days * 24 * 60 * 60 * 1000;
-        setStart( new Date( time ) );
+    public void setDaysinpast(final int days) {
+        final long time = System.currentTimeMillis()
+             - (long) days * 24 * 60 * 60 * 1000;
+
+        setStart(new Date(time));
     }
+
 
     /**
      * Adds a set of files about which cvs logs will be generated.
      *
      * @param fileSet a set of files about which cvs logs will be generated.
      */
-    public void addFileset( final FileSet fileSet )
-    {
-        m_filesets.addElement( fileSet );
+    public void addFileset(final FileSet fileSet) {
+        m_filesets.addElement(fileSet);
     }
+
 
     /**
      * Execute task
+     *
+     * @exception BuildException if something goes wrong executing the 
+     *            cvs command
      */
-    public void execute() throws BuildException
-    {
-        File savedDir = m_dir; // may be altered in validate
+    public void execute() throws BuildException {
+        File savedDir = m_dir;// may be altered in validate
+
         try {
 
             validate();
 
             final Properties userList = new Properties();
-            
-            loadUserlist( userList );
-            
-            for( Enumeration e = m_cvsUsers.elements(); 
-                 e.hasMoreElements(); ) {
-                final CvsUser user = (CvsUser)e.nextElement();
+
+            loadUserlist(userList);
+
+            for (Enumeration e = m_cvsUsers.elements();
+                e.hasMoreElements();) {
+                final CvsUser user = (CvsUser) e.nextElement();
+
                 user.validate();
-                userList.put( user.getUserID(), user.getDisplayname() );
+                userList.put(user.getUserID(), user.getDisplayname());
             }
-            
+
             final Commandline command = new Commandline();
-            command.setExecutable( "cvs" );
-            command.createArgument().setValue( "log" );
 
-            if( null != m_start ) {
+            command.setExecutable("cvs");
+            command.createArgument().setValue("log");
+
+            if (null != m_start) {
                 final SimpleDateFormat outputDate =
-                    new SimpleDateFormat( "yyyy-MM-dd" );
-                
-                // We want something of the form: -d ">=YYYY-MM-dd"
-                final String dateRange = "-d >=" 
-                    + outputDate.format( m_start );
-                command.createArgument().setValue( dateRange );
-            }
+                    new SimpleDateFormat("yyyy-MM-dd");
 
+                // We want something of the form: -d ">=YYYY-MM-dd"
+                final String dateRange = "-d >="
+                     + outputDate.format(m_start);
+
+                command.createArgument().setValue(dateRange);
+            }
 
             // Check if list of files to check has been specified
-            if( !m_filesets.isEmpty() ) {
+            if (!m_filesets.isEmpty()) {
                 final Enumeration e = m_filesets.elements();
-                while( e.hasMoreElements() ) {
-                    final FileSet fileSet = (FileSet)e.nextElement();
-                    final DirectoryScanner scanner = 
-                        fileSet.getDirectoryScanner( project );
+
+                while (e.hasMoreElements()) {
+                    final FileSet fileSet = (FileSet) e.nextElement();
+                    final DirectoryScanner scanner =
+                        fileSet.getDirectoryScanner(project);
                     final String[] files = scanner.getIncludedFiles();
-                    for( int i = 0; i < files.length; i++ ) {
-                        command.createArgument().setValue( files[ i ] );
+
+                    for (int i = 0; i < files.length; i++) {
+                        command.createArgument().setValue(files[i]);
                     }
                 }
             }
 
-            final ChangeLogParser parser = new ChangeLogParser( userList );
+            final ChangeLogParser parser = new ChangeLogParser(userList);
             final RedirectingStreamHandler handler =
-                new RedirectingStreamHandler( parser );
+                new RedirectingStreamHandler(parser);
 
-            log( "ChangeLog command: [" + command.toString() + "]", 
-                 Project.MSG_VERBOSE );
+            log("ChangeLog command: [" + command.toString() + "]",
+                Project.MSG_VERBOSE);
 
-            final Execute exe = new Execute( handler );
-            exe.setWorkingDirectory( m_dir );
-            exe.setCommandline( command.getCommandline() );
-            exe.setAntRun( getProject() );
+            final Execute exe = new Execute(handler);
+
+            exe.setWorkingDirectory(m_dir);
+            exe.setCommandline(command.getCommandline());
+            exe.setAntRun(getProject());
             try {
                 final int resultCode = exe.execute();
-                if( 0 != resultCode ) {
-                    throw new BuildException( "Error running cvs log" );
+
+                if (0 != resultCode) {
+                    throw new BuildException("Error running cvs log");
                 }
-            } catch( final IOException ioe ) {
-                throw new BuildException( ioe.toString() );
+            } catch (final IOException ioe) {
+                throw new BuildException(ioe.toString());
             }
 
             final String errors = handler.getErrors();
-            if( null != errors ) {
-                log( errors, Project.MSG_ERR );
+
+            if (null != errors) {
+                log(errors, Project.MSG_ERR);
             }
 
             final CVSEntry[] entrySet = parser.getEntrySetAsArray();
-            final CVSEntry[] filteredEntrySet = filterEntrySet( entrySet );
-            writeChangeLog( filteredEntrySet );
+            final CVSEntry[] filteredEntrySet = filterEntrySet(entrySet);
+
+            writeChangeLog(filteredEntrySet);
 
         } finally {
             m_dir = savedDir;
         }
     }
+
 
     /**
      * Validate the parameters specified for task.
@@ -300,123 +316,111 @@ public class ChangeLogTask
      * @throws BuildException if fails validation checks
      */
     private void validate()
-        throws BuildException
-    {
-        if( null == m_dir )
-        {
+         throws BuildException {
+        if (null == m_dir) {
             m_dir = getProject().getBaseDir();
         }
-        if( null == m_destfile )
-        {
+        if (null == m_destfile) {
             final String message = "Destfile must be set.";
-            throw new BuildException( message );
+
+            throw new BuildException(message);
         }
-        if( !m_dir.exists() )
-        {
-            final String message = "Cannot find base dir " 
-                + m_dir.getAbsolutePath();
-            throw new BuildException( message );
+        if (!m_dir.exists()) {
+            final String message = "Cannot find base dir "
+                 + m_dir.getAbsolutePath();
+
+            throw new BuildException(message);
         }
-        if( null != m_usersFile && !m_usersFile.exists() )
-        {
-            final String message = "Cannot find user lookup list " 
-                + m_usersFile.getAbsolutePath();
-            throw new BuildException( message );
+        if (null != m_usersFile && !m_usersFile.exists()) {
+            final String message = "Cannot find user lookup list "
+                 + m_usersFile.getAbsolutePath();
+
+            throw new BuildException(message);
         }
     }
 
+
     /**
-     * Load the userli4st from the userList file (if specified) and
-     * add to list of users.
+     * Load the userlist from the userList file (if specified) and add to
+     * list of users.
      *
+     * @param userList the file of users
      * @throws BuildException if file can not be loaded for some reason
      */
-    private void loadUserlist( final Properties userList )
-        throws BuildException
-    {
-        if( null != m_usersFile )
-        {
-            try
-            {
-                userList.load( new FileInputStream( m_usersFile ) );
-            }
-            catch( final IOException ioe )
-            {
-                throw new BuildException( ioe.toString(), ioe );
+    private void loadUserlist(final Properties userList)
+         throws BuildException {
+        if (null != m_usersFile) {
+            try {
+                userList.load(new FileInputStream(m_usersFile));
+            } catch (final IOException ioe) {
+                throw new BuildException(ioe.toString(), ioe);
             }
         }
     }
 
+
     /**
-     * Filter the specified entrys accoridn to an appropriate
-     * rule.
+     * Filter the specified entrys accoridn to an appropriate rule.
      *
      * @param entrySet the entry set to filter
      * @return the filtered entry set
      */
-    private CVSEntry[] filterEntrySet( final CVSEntry[] entrySet )
-    {
+    private CVSEntry[] filterEntrySet(final CVSEntry[] entrySet) {
         final Vector results = new Vector();
-        for( int i = 0; i < entrySet.length; i++ )
-        {
-            final CVSEntry cvsEntry = entrySet[ i ];
+
+        for (int i = 0; i < entrySet.length; i++) {
+            final CVSEntry cvsEntry = entrySet[i];
             final Date date = cvsEntry.getDate();
-            if( null != m_start && m_start.after( date ) )
-            {
+
+            if (null != m_start && m_start.after(date)) {
                 //Skip dates that are too early
                 continue;
             }
-            if( null != m_stop && m_stop.before( date ) )
-            {
+            if (null != m_stop && m_stop.before(date)) {
                 //Skip dates that are too late
                 continue;
             }
-            results.addElement( cvsEntry );
+            results.addElement(cvsEntry);
         }
 
-        final CVSEntry[] resultArray = new CVSEntry[ results.size() ];
-        results.copyInto( resultArray );
+        final CVSEntry[] resultArray = new CVSEntry[results.size()];
+
+        results.copyInto(resultArray);
         return resultArray;
     }
+
 
     /**
      * Print changelog to file specified in task.
      *
-     * @throws BuildException if theres an error writing changelog
+     * @param entrySet the entry set to write.
+     * @throws BuildException if theres an error writing changelog.
      */
-    private void writeChangeLog( final CVSEntry[] entrySet )
-        throws BuildException
-    {
+    private void writeChangeLog(final CVSEntry[] entrySet)
+         throws BuildException {
         FileOutputStream output = null;
-        try
-        {
-            output = new FileOutputStream( m_destfile );
+
+        try {
+            output = new FileOutputStream(m_destfile);
+
             final PrintWriter writer =
-                new PrintWriter( new OutputStreamWriter( output, "UTF-8" ) );
+                new PrintWriter(new OutputStreamWriter(output, "UTF-8"));
 
             final ChangeLogWriter serializer = new ChangeLogWriter();
-            serializer.printChangeLog( writer, entrySet );
-        }
-        catch( final UnsupportedEncodingException uee )
-        {
-            getProject().log( uee.toString(), Project.MSG_ERR );
-        }
-        catch( final IOException ioe )
-        {
-            throw new BuildException( ioe.toString(), ioe );
-        }
-        finally
-        {
-            if( null != output )
-            {
-                try
-                {
+
+            serializer.printChangeLog(writer, entrySet);
+        } catch (final UnsupportedEncodingException uee) {
+            getProject().log(uee.toString(), Project.MSG_ERR);
+        } catch (final IOException ioe) {
+            throw new BuildException(ioe.toString(), ioe);
+        } finally {
+            if (null != output) {
+                try {
                     output.close();
-                }
-                catch( final IOException ioe )
-                {
+                } catch (final IOException ioe) {
                 }
             }
         }
     }
 }
+

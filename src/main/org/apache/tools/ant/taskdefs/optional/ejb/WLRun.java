@@ -195,7 +195,7 @@ public class WLRun extends Task {
         if (securityPolicy == null) {
             securityPolicy = defaultSecurityPolicy;
         }
-        File securityPolicyFile = new File( weblogicSystemHome, securityPolicy );
+        File securityPolicyFile = new File(weblogicSystemHome, securityPolicy);
         // If an explicit securityPolicy file was specified, it maybe an
         // absolute path.  Use the project to resolve it.
         if (this.securityPolicy != null && !securityPolicyFile.exists()) {
@@ -210,22 +210,25 @@ public class WLRun extends Task {
     }
     
     private void executeWLS6() {
-        File securityPolicyFile = findSecurityPolicyFile( DEFAULT_WL60_POLICY_FILE );
+        File securityPolicyFile 
+            = findSecurityPolicyFile(DEFAULT_WL60_POLICY_FILE);
         if (!beaHome.isDirectory()) {
             throw new BuildException("BEA home " + beaHome.getPath() + 
                                      " is not valid");
         }
         
-        File configFile = new File(weblogicSystemHome, "config/" + weblogicDomainName + "/config.xml");
+        File configFile = new File(weblogicSystemHome, "config/" 
+            + weblogicDomainName + "/config.xml");
         if (!configFile.exists()) {
-            throw new BuildException("Server config file " + configFile + " not found.");
+            throw new BuildException("Server config file " + configFile 
+                + " not found.");
         }
         
         if (managementPassword == null) {
             throw new BuildException("You must supply a management password to start the server");
         }
 
-        Java weblogicServer = (Java)project.createTask("java");
+        Java weblogicServer = (Java) project.createTask("java");
         weblogicServer.setTaskName(getTaskName());
         weblogicServer.setFork(true);
         weblogicServer.setDir(weblogicSystemHome);
@@ -260,7 +263,8 @@ public class WLRun extends Task {
      }
     
     private void executeWLS() {
-        File securityPolicyFile = findSecurityPolicyFile( DEFAULT_WL51_POLICY_FILE );
+        File securityPolicyFile 
+            = findSecurityPolicyFile(DEFAULT_WL51_POLICY_FILE);
         File propertiesFile = null;
         
 
@@ -278,7 +282,7 @@ public class WLRun extends Task {
             }                                         
         }
 
-        Java weblogicServer = (Java)project.createTask("java");
+        Java weblogicServer = (Java) project.createTask("java");
         weblogicServer.setTaskName(getTaskName());
         weblogicServer.setFork(true);
         weblogicServer.setClassname(weblogicMainClass);

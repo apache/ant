@@ -132,9 +132,9 @@ public abstract class Unpack extends Task {
         int len = sourceName.length();
         if (defaultExtension != null
             && len > defaultExtension.length()
-            && defaultExtension.equalsIgnoreCase(sourceName.substring(len-defaultExtension.length()))) {
+            && defaultExtension.equalsIgnoreCase(sourceName.substring(len - defaultExtension.length()))) {
             dest = new File(dest, sourceName.substring(0,
-                                                       len-defaultExtension.length()));
+                                                       len - defaultExtension.length()));
         } else {
             dest = new File(dest, sourceName);
         }

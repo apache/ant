@@ -214,7 +214,7 @@ public class Jar extends Zip {
 
     public void setFilesetmanifest(FilesetManifestConfig config) {
         String filesetManifestConfig = config.getValue();
-        mergeManifests = ! "skip".equals(filesetManifestConfig);
+        mergeManifests = !("skip".equals(filesetManifestConfig));
         mergeManifestsMain = "merge".equals(filesetManifestConfig);
     }
 
@@ -239,28 +239,28 @@ public class Jar extends Zip {
                     manifest = getManifest(manifestFile);
                     finalManifest.merge(filesetManifest);
                     finalManifest.merge(configuredManifest);
-                    finalManifest.merge(manifest, ! mergeManifestsMain);
+                    finalManifest.merge(manifest, !mergeManifestsMain);
                 }
                 else if (configuredManifest != null) {
                     // configuredManifest is the final merge
                     finalManifest.merge(filesetManifest);
                     finalManifest.merge(configuredManifest, 
-                                        ! mergeManifestsMain);
+                                        !mergeManifestsMain);
                 }
                 else if (filesetManifest != null) {
                     // filesetManifest is the final (and only) merge
-                    finalManifest.merge(filesetManifest, ! mergeManifestsMain);
+                    finalManifest.merge(filesetManifest, !mergeManifestsMain);
                 }
             } else {
                 // manifest is the final merge
                 finalManifest.merge(filesetManifest);
                 finalManifest.merge(configuredManifest);
-                finalManifest.merge(manifest, ! mergeManifestsMain);
+                finalManifest.merge(manifest, !mergeManifestsMain);
             }
 
             for (Enumeration e = finalManifest.getWarnings(); 
-                 e.hasMoreElements(); ) {
-                log("Manifest warning: " + (String)e.nextElement(), 
+                 e.hasMoreElements();) {
+                log("Manifest warning: " + (String) e.nextElement(), 
                     Project.MSG_WARN);
             }
 
@@ -325,7 +325,7 @@ public class Jar extends Zip {
         // since it will be read into a hashtable by the classloader.
         Enumeration enum = addedDirs.keys();
         while (enum.hasMoreElements()) {
-            String dir = (String)enum.nextElement();
+            String dir = (String) enum.nextElement();
 
             // try to be smart, not to be fooled by a weird directory name
             // @fixme do we need to check for directories starting by ./ ?
@@ -338,7 +338,7 @@ public class Jar extends Zip {
             // looks like nothing from META-INF should be added
             // and the check is not case insensitive.
             // see sun.misc.JarIndex
-            if ( dir.startsWith("META-INF") ){
+            if (dir.startsWith("META-INF")) {
                 continue;
             }
             // name newline

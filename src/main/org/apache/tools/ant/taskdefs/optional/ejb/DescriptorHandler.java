@@ -181,7 +181,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
                 URL urldtd = new URL(location);
                 urlDTDs.put(publicId, urldtd);
             }
-        } catch ( java.net.MalformedURLException   e) {
+        } catch (java.net.MalformedURLException e) {
             //ignored
         }
 
@@ -197,12 +197,12 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             try {
                 owningTask.log("Resolved " + publicId + " to local file " + dtdFile, Project.MSG_VERBOSE);
                 return new InputSource(new FileInputStream(dtdFile));
-            } catch( FileNotFoundException ex ) {
+            } catch (FileNotFoundException ex) {
                 // ignore
             }
         }
 
-        String dtdResourceName = (String)resourceDTDs.get(publicId);
+        String dtdResourceName = (String) resourceDTDs.get(publicId);
         if (dtdResourceName != null) {
             InputStream is = this.getClass().getResourceAsStream(dtdResourceName);
             if (is != null) {
@@ -212,12 +212,12 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         }
 
         URL dtdUrl = (URL) urlDTDs.get(publicId);
-        if ( dtdUrl != null ) {
+        if (dtdUrl != null) {
             try {
                 InputStream is = dtdUrl.openStream();
                 owningTask.log("Resolved " + publicId + " to url " + dtdUrl, Project.MSG_VERBOSE);
                 return new InputSource(is);
-            } catch ( IOException ioe) {
+            } catch (IOException ioe) {
                 //ignore
             }
         }
@@ -283,10 +283,10 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         else if (parseState == STATE_IN_BEANS && name.equals(SESSION_BEAN)) {
             parseState = STATE_IN_SESSION;
         }
-        else if (parseState == STATE_IN_BEANS && name.equals(ENTITY_BEAN )) {
+        else if (parseState == STATE_IN_BEANS && name.equals(ENTITY_BEAN)) {
             parseState = STATE_IN_ENTITY;
         }
-        else if (parseState == STATE_IN_BEANS && name.equals(MESSAGE_BEAN )) {
+        else if (parseState == STATE_IN_BEANS && name.equals(MESSAGE_BEAN)) {
             parseState = STATE_IN_MESSAGE;
         }
     }
@@ -379,7 +379,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
 
     // Get the value of the <ejb-name> tag.  Only the first occurence.
         if (currentElement.equals(EJB_NAME)) {
-            if ( ejbName == null ) {
+            if (ejbName == null) {
                 ejbName = currentText.trim();
             }
         }

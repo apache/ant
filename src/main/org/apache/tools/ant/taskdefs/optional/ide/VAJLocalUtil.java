@@ -133,8 +133,8 @@ abstract class VAJLocalUtil implements VAJUtil{
                                boolean exportResources, boolean exportSources,
                                boolean useDefaultExcludes,    boolean overwrite) {
         if (includePatterns == null || includePatterns.length == 0) {
-            log( "You must specify at least one include attribute. "
-                 + "Not exporting", MSG_ERR);
+            log("You must specify at least one include attribute. "
+                + "Not exporting", MSG_ERR);
         } else {
             try {
                 VAJWorkspaceScanner scanner = new VAJWorkspaceScanner();
@@ -147,8 +147,8 @@ abstract class VAJLocalUtil implements VAJUtil{
 
                 Package[] packages = scanner.getIncludedPackages();
 
-                log( "Exporting " + packages.length + " package(s) to "
-                     + dest, MSG_INFO);
+                log("Exporting " + packages.length + " package(s) to "
+                    + dest, MSG_INFO);
                 for (int i = 0; i < packages.length; i++) {
                     log("    " + packages[i].getName(), MSG_VERBOSE);
                 }
@@ -178,7 +178,7 @@ abstract class VAJLocalUtil implements VAJUtil{
     /**
      * Load specified projects.
      */
-    public void loadProjects( Vector projectDescriptions ) {
+    public void loadProjects(Vector projectDescriptions) {
         Vector expandedDescs = getExpandedDescriptions(projectDescriptions);
 
         // output warnings for projects not found
@@ -189,21 +189,21 @@ abstract class VAJLocalUtil implements VAJUtil{
             }
         }
 
-        log( "Loading " + expandedDescs.size()
-             + " project(s) into workspace", MSG_INFO);
+        log("Loading " + expandedDescs.size()
+            + " project(s) into workspace", MSG_INFO);
 
         for (Enumeration e = expandedDescs.elements();
-             e.hasMoreElements(); ) {
+             e.hasMoreElements();) {
             VAJProjectDescription d = (VAJProjectDescription) e.nextElement();
 
             ProjectEdition pe = findProjectEdition(d.getName(), d.getVersion());
             try {
-                log( "Loading '" + d.getName() + "', Version '" + d.getVersion()
-                     + "', into Workspace", MSG_VERBOSE );
+                log("Loading '" + d.getName() + "', Version '" + d.getVersion()
+                    + "', into Workspace", MSG_VERBOSE);
                 pe.loadIntoWorkspace();
             } catch (IvjException ex) {
-                throw createBuildException( "Project '" + d.getName()
-                                            + "' could not be loaded.", ex );
+                throw createBuildException("Project '" + d.getName()
+                                            + "' could not be loaded.", ex);
             }
         }
     }
@@ -283,8 +283,8 @@ abstract class VAJLocalUtil implements VAJUtil{
                 }
             }
             if (pe == null) {
-                throw new BuildException( "Version " + versionName
-                                          + " of Project " + name + " doesn't exist" );
+                throw new BuildException("Version " + versionName
+                    + " of Project " + name + " doesn't exist");
             }
             return pe;
 
@@ -323,7 +323,7 @@ abstract class VAJLocalUtil implements VAJUtil{
         ds.setBasedir(srcDir);
         ds.setIncludes(includePatterns);
         ds.setExcludes(excludePatterns);
-        if ( useDefaultExcludes ) {
+        if (useDefaultExcludes) {
             ds.addDefaultExcludes();
         }
         ds.scan();
@@ -332,17 +332,17 @@ abstract class VAJLocalUtil implements VAJUtil{
         Vector sources = new Vector();
         Vector resources = new Vector();
 
-        scanForImport( srcDir, ds.getIncludedFiles(), classes, sources, resources);
+        scanForImport(srcDir, ds.getIncludedFiles(), classes, sources, resources);
 
         StringBuffer summaryLog = new StringBuffer("Importing ");
-        addFilesToImport( importSpec, importClasses, classes, "Class", summaryLog );
-        addFilesToImport( importSpec, importSources, sources, "Java", summaryLog );
-        addFilesToImport( importSpec, importResources, resources, "Resource", summaryLog );
+        addFilesToImport(importSpec, importClasses, classes, "Class", summaryLog);
+        addFilesToImport(importSpec, importSources, sources, "Java", summaryLog);
+        addFilesToImport(importSpec, importResources, resources, "Resource", summaryLog);
         importSpec.setResourcePath(srcDir.getAbsolutePath());
 
-        summaryLog.append( " into the project '" );
-        summaryLog.append( importProject );
-        summaryLog.append( "'." );
+        summaryLog.append(" into the project '");
+        summaryLog.append(importProject);
+        summaryLog.append("'.");
 
         log(summaryLog.toString(), MSG_INFO);
 
@@ -352,12 +352,12 @@ abstract class VAJLocalUtil implements VAJUtil{
                 throw new BuildException("Unable to import into Workspace!");
             }
             else {
-                log( importedTypes.length + " types imported", MSG_DEBUG);
-                for( int i = 0; i < importedTypes.length; i++ ) {
-                    log( importedTypes[i].getPackage().getName()
-                         + "." + importedTypes[i].getName()
-                         + " into " + importedTypes[i].getProject().getName(),
-                         MSG_DEBUG);
+                log(importedTypes.length + " types imported", MSG_DEBUG);
+                for (int i = 0; i < importedTypes.length; i++) {
+                    log(importedTypes[i].getPackage().getName()
+                        + "." + importedTypes[i].getName()
+                        + " into " + importedTypes[i].getProject().getName(),
+                        MSG_DEBUG);
                 }
             }
         } catch (IvjException ivje) {
@@ -386,8 +386,8 @@ abstract class VAJLocalUtil implements VAJUtil{
             try {
                 found = getWorkspace().createProject(importProject, true);
             } catch (IvjException e) {
-                throw createBuildException( "Error while creating Project "
-                                            + importProject + ": ", e );
+                throw createBuildException("Error while creating Project "
+                                           + importProject + ": ", e);
             }
         }
 
@@ -440,16 +440,16 @@ abstract class VAJLocalUtil implements VAJUtil{
             try {
                 // here it is assumed that fileType is one of the
                 // following strings: // "Java", "Class", "Resource"
-                String methodName = "set"+fileType+"Files";
+                String methodName = "set" + fileType + "Files";
                 Class[] methodParams = new Class[]{fileArr.getClass()};
                 java.lang.reflect.Method method =
-                    spec.getClass().getDeclaredMethod( methodName, methodParams);
+                    spec.getClass().getDeclaredMethod(methodName, methodParams);
                 method.invoke(spec, new Object[]{fileArr});
-            } catch( Exception e ) {
-                throw new BuildException( e );
+            } catch (Exception e) {
+                throw new BuildException(e);
             }
             if (files.size() > 0) {
-                logFiles(files, fileType );
+                logFiles(files, fileType);
                 summaryLog.append(files.size());
                 summaryLog.append(" " + fileType.toLowerCase() + " file");
                 summaryLog.append(files.size() > 1 ? "s, " : ", ");
@@ -463,9 +463,9 @@ abstract class VAJLocalUtil implements VAJUtil{
      * @param type java.lang.String file type
      */
     private void logFiles(Vector fileNames, String fileType) {
-        log(  fileType + " files found for import:", MSG_VERBOSE);
-        for ( Enumeration e = fileNames.elements(); e.hasMoreElements(); ) {
-            log( "    " + e.nextElement(), MSG_VERBOSE );
+        log(fileType + " files found for import:", MSG_VERBOSE);
+        for (Enumeration e = fileNames.elements(); e.hasMoreElements();) {
+            log("    " + e.nextElement(), MSG_VERBOSE);
         }
     }
 }

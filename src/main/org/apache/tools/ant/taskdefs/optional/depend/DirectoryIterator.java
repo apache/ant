@@ -165,7 +165,7 @@ public class DirectoryIterator implements ClassFileIterator {
         try {
             while (nextElement == null) {
                 if (currentEnum.hasMoreElements()) {
-                    File element = (File)currentEnum.nextElement();
+                    File element = (File) currentEnum.nextElement();
 
                     if (element.isDirectory()) {
 
@@ -198,7 +198,7 @@ public class DirectoryIterator implements ClassFileIterator {
                     if (enumStack.empty()) {
                         break;
                     } else {
-                        currentEnum = (Enumeration)enumStack.pop();
+                        currentEnum = (Enumeration) enumStack.pop();
                     }
                 }
             }

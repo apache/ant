@@ -114,12 +114,12 @@ public class FilesMatch implements Condition {
         }
 
         //#now match the files
-        boolean matches=false;
+        boolean matches = false;
         try {
-            matches=fu.contentEquals(file1, file2);
-        } catch(IOException ioe) {
-            throw new BuildException("when comparing files: "+ioe.getMessage(),
-                                     ioe);
+            matches = fu.contentEquals(file1, file2);
+        } catch (IOException ioe) {
+            throw new BuildException("when comparing files: " 
+                + ioe.getMessage(), ioe);
         }
         return matches;
     }

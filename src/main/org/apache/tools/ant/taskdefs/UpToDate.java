@@ -116,7 +116,7 @@ public class UpToDate extends Task implements Condition {
      * Returns the value, or "true" if a specific value wasn't provided.
      */
     private String getValue() {
-        return ( _value != null ) ? _value : "true";
+        return (_value != null) ? _value : "true";
     } 
 
     /**
