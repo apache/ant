@@ -92,7 +92,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
                     c = argument.charAt(i);
                     int value = Character.digit(c, 10);
                     if (value > -1) {
-                        subst.append("$(").append(value).append(")");
+                        subst.append("$").append(value);
                     } else {
                         subst.append(c);
                     }
