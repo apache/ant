@@ -1048,7 +1048,10 @@
       <tag name="ant.datatype" enabled="false" description="Data type:" scope="types" />
       <group title="Apache Ant Core" packages="org.apache.tools.ant*" />
       <group title="Core Tasks" packages="org.apache.tools.ant.taskdefs*" />
+      <group title="Core Types" packages="org.apache.tools.ant.types*" />
       <group title="Optional Tasks" packages="org.apache.tools.ant.taskdefs.optional*" />
+      <group title="Optional Types" packages="org.apache.tools.ant.types.optional*" />
+      <group title="Ant Utilities" packages="org.apache.tools.ant.util*" />
 
       <bottom>Copyright &#169; 2000-${year} Apache Software Foundation. All Rights Reserved.</bottom>
     </javadoc>
