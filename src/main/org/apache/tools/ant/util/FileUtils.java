@@ -91,6 +91,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
  *
  * @version $Revision$
  */

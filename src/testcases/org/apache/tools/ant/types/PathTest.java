@@ -67,6 +67,7 @@ import java.util.Locale;
  * JUnit 3 testcases for org.apache.tools.ant.types.Path
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
  */
 
 public class PathTest extends TestCase {

@@ -75,6 +75,7 @@ import java.util.Vector;
  * Runs an external program.
  *
  * @author thomas.haas@softwired-inc.com
+ * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
  *
  * @version $Revision$
  */

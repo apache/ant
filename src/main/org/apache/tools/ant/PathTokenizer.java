@@ -67,7 +67,7 @@ import java.io.File;
  * of either '/' or '\'.
  *
  * @author Conor MacNeill (conor@ieee.org)
- *
+ * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
  */ 
 public class PathTokenizer {
     /**
