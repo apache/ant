@@ -149,9 +149,16 @@ public class AntStructure extends Task {
             if (out != null) {
                 out.close();
             }
+            visited.clear();
         }
     }
 
+    /**
+     * Prints the header of the generated output.
+     *
+     * <p>Basically this prints the XML declaration, defines some
+     * entities and the project element.</p>
+     */
     private void printHead(PrintWriter out, Enumeration tasks,
                            Enumeration types) {
         out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
@@ -183,7 +190,8 @@ public class AntStructure extends Task {
 
         out.println("");
 
-        out.print("<!ELEMENT project (target | property | taskdef | ");
+        out.print("<!ELEMENT project (target | property | taskdef");
+        out.print(" | typedef | ");
         out.print(TYPES);
         out.println(")*>");
         out.println("<!ATTLIST project");
@@ -193,6 +201,9 @@ public class AntStructure extends Task {
         out.println("");
     }
 
+    /**
+     * Prints the definition for the target element.
+     */
     private void printTargetDecl(PrintWriter out) {
         out.print("<!ELEMENT target (");
         out.print(TASKS);
@@ -211,6 +222,9 @@ public class AntStructure extends Task {
         out.println("");
     }
 
+    /**
+     * Print the definition for a given element.
+     */
     private void printElementDecl(PrintWriter out, String name, Class element)
         throws BuildException {
 
