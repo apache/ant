@@ -264,6 +264,11 @@ elements to define the files for this task and refer to
 <p>You can use any number of nested <code>&lt;dirset&gt;</code>
 elements to define the directories for this task and refer to
 <code>&lt;dirset&gt;</code>s defined elsewhere.</p>
+<h4>mapper</h4>
+<p>A single <code>&lt;mapper&gt;</code> specifies the target files
+relative to the <CODE>dest</CODE> attribute for dependency checking.
+At least one <code>&lt;fileset&gt;</code> or
+<code>&lt;filelist&gt;</code> is required.</p>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a
@@ -334,4 +339,3 @@ Reserved.</p>
 
 </body>
 </html>
-
