@@ -26,15 +26,23 @@
 </description>
 
 <section anchor="examples" name="Examples">
-<pre>  &lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot;/&gt;</pre>
+    <source><![CDATA[
+    <property name="foo.dist" value="dist"/>
+        ]]></source>
 <p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
-<pre>  &lt;property file=&quot;foo.properties&quot;/&gt;</pre>
+    <source><![CDATA[
+    <property file="foo.properties"/>
+        ]]></source>
 <p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
-<pre>  &lt;property resource=&quot;foo.properties&quot;/&gt;</pre>
+    <source><![CDATA[
+    <property resource="foo.properties"/>
+        ]]></source>
 <p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
 <p>Note that you can reference a global properties file for all of your Ant
 builds using the following:</p>
-<pre>  &lt;property file=&quot;${user.home}/.ant-global.properties&quot;/&gt;</pre>
+    <source><![CDATA[
+    <property file="${user.home}/.ant-global.properties"/>
+        ]]></source>
 <p>since the &quot;user.home&quot; property is defined by the Java virtual machine
 to be your home directory.  Where the &quot;user.home&quot; property resolves to in
 the file system depends on the operating system version and the JVM implementation.
@@ -43,11 +51,11 @@ variants, this will most likely resolve to the user's directory in the &quot;Doc
 and Settings&quot; folder. Older windows variants such as Windows 98/ME are less 
 predictable, as are other operating system/JVM combinations.</p>
 
-<pre>
-  &lt;property environment=&quot;env&quot;/&gt;
-  &lt;echo message=&quot;Number of Processors = ${env.NUMBER_OF_PROCESSORS}&quot;/&gt;
-  &lt;echo message=&quot;ANT_HOME is set to = ${env.ANT_HOME}&quot;/&gt;
-</pre>
+<source><![CDATA[
+  <property environment="env">
+  <echo message="Number of Processors = ${env.NUMBER_OF_PROCESSORS}">
+  <echo message="ANT_HOME is set to = ${env.ANT_HOME}">
+]]></source>
 <p>reads the system environment variables and stores them in properties, prefixed with &quot;env&quot;.
 Note that this only works on <em>select</em> operating systems.
 Two of the values are shown being echoed. 

@@ -104,6 +104,7 @@ import org.apache.tools.ant.types.Reference;
  *
  * @ant.attribute.group name="name" description="One of these, when using the name attribute"
  * @ant.attribute.group name="noname" description="One of these, when not using the name attribute"
+ * @ant.task category="property"
  */
 public class Property extends Task {
 
