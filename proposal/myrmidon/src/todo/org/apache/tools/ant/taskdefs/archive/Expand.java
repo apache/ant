@@ -18,14 +18,15 @@ import java.util.Date;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.FileSet;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.PatternSet;
 import org.apache.myrmidon.framework.PatternUtil;
-import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 
 /**
  * Unzip a file.
@@ -34,23 +35,24 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class Expand extends MatchingTask
-{// req
-    private boolean overwrite = true;
-    private ArrayList patternsets = new ArrayList();
-    private ArrayList filesets = new ArrayList();
-    private File dest;//req
-    private File source;
+public class Expand
+    extends MatchingTask
+{
+    private boolean m_overwrite = true;
+    private ArrayList m_patternsets = new ArrayList();
+    private ArrayList m_filesets = new ArrayList();
+    private File m_dest;//req
+    private File m_src;
 
     /**
      * Set the destination directory. File will be unzipped into the destination
      * directory.
      *
-     * @param d Path to the directory.
+     * @param dest Path to the directory.
      */
-    public void setDest( File d )
+    public void setDest( final File dest )
     {
-        this.dest = d;
+        m_dest = dest;
     }
 
     /**
@@ -59,9 +61,9 @@ public class Expand extends MatchingTask
      *
      * @param b The new Overwrite value
      */
-    public void setOverwrite( boolean b )
+    public void setOverwrite( final boolean overwrite )
     {
-        overwrite = b;
+        m_overwrite = overwrite;
     }
 
     /**
@@ -69,9 +71,9 @@ public class Expand extends MatchingTask
      *
      * @param s Path to zip-file.
      */
-    public void setSrc( File s )
+    public void setSrc( final File src )
     {
-        this.source = s;
+        m_src = src;
     }
 
     /**
@@ -79,9 +81,9 @@ public class Expand extends MatchingTask
      *
      * @param set The feature to be added to the Fileset attribute
      */
-    public void addFileset( FileSet set )
+    public void addFileset( final FileSet set )
     {
-        filesets.add( set );
+        m_filesets.add( set );
     }
 
     /**
@@ -89,9 +91,9 @@ public class Expand extends MatchingTask
      *
      * @param set The feature to be added to the Patternset attribute
      */
-    public void addPatternset( PatternSet set )
+    public void addPatternset( final PatternSet set )
     {
-        patternsets.add( set );
+        m_patternsets.add( set );
     }
 
     /**
@@ -102,115 +104,121 @@ public class Expand extends MatchingTask
     public void execute()
         throws TaskException
     {
-        if( source == null && filesets.size() == 0 )
+        validate();
+
+        if( m_src != null )
         {
-            throw new TaskException( "src attribute and/or filesets must be specified" );
+            expandFile( m_src, m_dest );
         }
 
-        if( dest == null )
+        final int size = m_filesets.size();
+        if( size > 0 )
         {
-            throw new TaskException(
-                "Dest attribute must be specified" );
-        }
-
-        if( dest.exists() && !dest.isDirectory() )
-        {
-            throw new TaskException( "Dest must be a directory." );
-        }
-
-        if( source != null )
-        {
-            if( source.isDirectory() )
+            for( int j = 0; j < size; j++ )
             {
-                throw new TaskException( "Src must not be a directory." +
-                                         " Use nested filesets instead." );
-            }
-            else
-            {
-                expandFile( source, dest );
-            }
-        }
-        if( filesets.size() > 0 )
-        {
-            for( int j = 0; j < filesets.size(); j++ )
-            {
-                FileSet fs = (FileSet)filesets.get( j );
-                DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
-                File fromDir = fs.getDir();
+                final FileSet fileSet = (FileSet)m_filesets.get( j );
+                final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( fileSet );
+                final File fromDir = fileSet.getDir();
 
-                String[] files = ds.getIncludedFiles();
+                final String[] files = scanner.getIncludedFiles();
                 for( int i = 0; i < files.length; ++i )
                 {
-                    File file = new File( fromDir, files[ i ] );
-                    expandFile( file, dest );
+                    final File file = new File( fromDir, files[ i ] );
+                    expandFile( file, m_dest );
                 }
             }
+        }
+    }
+
+    private void validate()
+        throws TaskException
+    {
+        if( m_src == null && m_filesets.size() == 0 )
+        {
+            final String message = "src attribute and/or filesets must be specified";
+            throw new TaskException( message );
+        }
+
+        if( m_dest == null )
+        {
+            final String message = "Dest attribute must be specified";
+            throw new TaskException( message );
+        }
+
+        if( m_dest.exists() && !m_dest.isDirectory() )
+        {
+            final String message = "Dest must be a directory.";
+            throw new TaskException( message );
+        }
+
+        if( m_src != null && m_src.isDirectory() )
+        {
+            final String message = "Src must not be a directory." +
+                " Use nested filesets instead.";
+            throw new TaskException( message );
         }
     }
 
     /*
      * This method is to be overridden by extending unarchival tasks.
      */
-    protected void expandFile( File srcF, File dir )
+    protected void expandFile( final File src, final File dir )
         throws TaskException
     {
         ZipInputStream zis = null;
         try
         {
             // code from WarExpand
-            zis = new ZipInputStream( new FileInputStream( srcF ) );
+            zis = new ZipInputStream( new FileInputStream( src ) );
             ZipEntry ze = null;
 
             while( ( ze = zis.getNextEntry() ) != null )
             {
-                extractFile( srcF, dir, zis,
-                             ze.getName(),
-                             new Date( ze.getTime() ),
-                             ze.isDirectory() );
+                final Date date = new Date( ze.getTime() );
+                extractFile(
+                    dir,
+                    zis,
+                    ze.getName(),
+                    date,
+                    ze.isDirectory() );
             }
-
-            getLogger().debug( "expand complete" );
         }
-        catch( IOException ioe )
+        catch( final IOException ioe )
         {
-            throw new TaskException( "Error while expanding " + srcF.getPath(), ioe );
+            final String message = "Error while expanding " + src.getPath();
+            throw new TaskException( message, ioe );
         }
         finally
         {
-            if( zis != null )
-            {
-                try
-                {
-                    zis.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
+            IOUtil.shutdownStream( zis );
         }
+
+        final String message = "expand complete";
+        getLogger().debug( message );
     }
 
-    protected void extractFile( File srcF, File dir,
-                                InputStream compressedInputStream,
-                                String entryName,
-                                Date entryDate, boolean isDirectory )
+    protected void extractFile( final File dir,
+                                final InputStream input,
+                                final String entryName,
+                                final Date date,
+                                final boolean isDirectory )
         throws IOException, TaskException
     {
 
-        if( patternsets != null && patternsets.size() > 0 )
+        final int size = m_patternsets.size();
+        if( m_patternsets != null && size > 0 )
         {
-            String name = entryName;
             boolean included = false;
-            for( int v = 0; v < patternsets.size(); v++ )
+            for( int i = 0; i < size; i++ )
             {
-                PatternSet p = (PatternSet)patternsets.get( v );
+                PatternSet p = (PatternSet)m_patternsets.get( i );
                 final TaskContext context = getContext();
                 String[] incls = PatternUtil.getIncludePatterns( p, context );
                 if( incls != null )
                 {
-                    for( int w = 0; w < incls.length; w++ )
+                    for( int j = 0; j < incls.length; j++ )
                     {
-                        boolean isIncl = ScannerUtil.match( incls[ w ], name );
+                        boolean isIncl = ScannerUtil.match( incls[ j ], entryName );
                         if( isIncl )
                         {
                             included = true;
@@ -222,9 +230,9 @@ public class Expand extends MatchingTask
                 String[] excls = PatternUtil.getExcludePatterns( p, context1 );
                 if( excls != null )
                 {
-                    for( int w = 0; w < excls.length; w++ )
+                    for( int j = 0; j < excls.length; j++ )
                     {
-                        boolean isExcl = ScannerUtil.match( excls[ w ], name );
+                        boolean isExcl = ScannerUtil.match( excls[ j ], entryName );
                         if( isExcl )
                         {
                             included = false;
@@ -233,6 +241,7 @@ public class Expand extends MatchingTask
                     }
                 }
             }
+
             if( !included )
             {
                 //Do not process this file
@@ -243,8 +252,8 @@ public class Expand extends MatchingTask
         File f = FileUtil.resolveFile( dir, entryName );
         try
         {
-            if( !overwrite && f.exists()
-                && f.lastModified() >= entryDate.getTime() )
+            if( !m_overwrite && f.exists()
+                && f.lastModified() >= date.getTime() )
             {
                 getLogger().debug( "Skipping " + f + " as it is up-to-date" );
                 return;
@@ -261,43 +270,23 @@ public class Expand extends MatchingTask
             }
             else
             {
-                byte[] buffer = new byte[ 1024 ];
-                int length = 0;
                 FileOutputStream fos = null;
                 try
                 {
                     fos = new FileOutputStream( f );
-
-                    while( ( length =
-                        compressedInputStream.read( buffer ) ) >= 0 )
-                    {
-                        fos.write( buffer, 0, length );
-                    }
-
-                    fos.close();
-                    fos = null;
+                    IOUtil.copy( input, fos );
                 }
                 finally
                 {
-                    if( fos != null )
-                    {
-                        try
-                        {
-                            fos.close();
-                        }
-                        catch( IOException e )
-                        {
-                        }
-                    }
+                    IOUtil.shutdownStream( fos );
                 }
             }
 
-            f.setLastModified( entryDate.getTime() );
+            f.setLastModified( date.getTime() );
         }
         catch( FileNotFoundException ex )
         {
             getLogger().warn( "Unable to expand to file " + f.getPath() );
         }
-
     }
 }

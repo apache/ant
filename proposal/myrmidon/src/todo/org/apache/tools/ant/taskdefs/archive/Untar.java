@@ -10,9 +10,10 @@ package org.apache.tools.ant.taskdefs.archive;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.aut.tar.TarEntry;
 import org.apache.aut.tar.TarInputStream;
+import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Untar a file. Heavily based on the Expand task.
@@ -20,45 +21,47 @@ import org.apache.aut.tar.TarInputStream;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class Untar extends Expand
+public class Untar
+    extends Expand
 {
-
-    protected void expandFile( File srcF, File dir )
+    protected void expandFile( final File src, final File dir )
         throws TaskException
     {
-        TarInputStream tis = null;
+        if( getLogger().isInfoEnabled() )
+        {
+            final String message = "Expanding: " + src + " into " + dir;
+            getLogger().info( message );
+        }
+
+        TarInputStream input = null;
+        FileInputStream fileInput = null;
         try
         {
-            getLogger().info( "Expanding: " + srcF + " into " + dir );
+            fileInput = new FileInputStream( src );
+            input = new TarInputStream( fileInput );
 
-            tis = new TarInputStream( new FileInputStream( srcF ) );
-            TarEntry te = null;
-
-            while( ( te = tis.getNextEntry() ) != null )
+            TarEntry entry = null;
+            while( ( entry = input.getNextEntry() ) != null )
             {
-                extractFile( srcF, dir, tis,
-                             te.getName(),
-                             te.getModTime(), te.isDirectory() );
+                extractFile( dir,
+                             input,
+                             entry.getName(),
+                             entry.getModTime(),
+                             entry.isDirectory() );
             }
-            getLogger().debug( "expand complete" );
-
         }
-        catch( IOException ioe )
+        catch( final IOException ioe )
         {
-            throw new TaskException( "Error while expanding " + srcF.getPath(), ioe );
+            final String message = "Error while expanding " + src.getPath();
+            throw new TaskException( message, ioe );
         }
         finally
         {
-            if( tis != null )
-            {
-                try
-                {
-                    tis.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
+            IOUtil.shutdownStream( fileInput );
+            IOUtil.shutdownStream( input );
         }
+
+        final String message = "expand complete";
+        getLogger().debug( message );
     }
 }
