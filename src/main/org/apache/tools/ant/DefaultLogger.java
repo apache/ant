@@ -164,9 +164,9 @@ public class DefaultLogger implements BuildLogger {
 
         String msg = message.toString();
         if (error == null) {
-            out.println(msg);
+            printMessage(msg, out, Project.MSG_VERBOSE);
         } else {
-            err.println(msg);
+            printMessage(msg, err, Project.MSG_ERR);
         }
         log(msg);
     }
@@ -174,7 +174,7 @@ public class DefaultLogger implements BuildLogger {
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel) {
             String msg = StringUtils.LINE_SEP + event.getTarget().getName() + ":";
-            out.println(msg);
+            printMessage(msg, out, event.getPriority());
             log(msg);
         }
     }
@@ -186,8 +186,9 @@ public class DefaultLogger implements BuildLogger {
     public void taskFinished(BuildEvent event) {}
 
     public void messageLogged(BuildEvent event) {
+        int priority = event.getPriority();
         // Filter out messages based on priority
-        if (event.getPriority() <= msgOutputLevel) {
+        if (priority <= msgOutputLevel) {
 
             StringBuffer message = new StringBuffer();
             // Print out the name of the task if we're in one
@@ -205,10 +206,10 @@ public class DefaultLogger implements BuildLogger {
 
             message.append(event.getMessage());
             String msg = message.toString();
-            if (event.getPriority() != Project.MSG_ERR) {
-                out.println(msg);
+            if (priority != Project.MSG_ERR) {
+                printMessage(msg, out, priority);
             } else {
-                err.println(msg);
+                printMessage(msg, err, priority);
             }
             log(msg);
         }
@@ -223,13 +224,19 @@ public class DefaultLogger implements BuildLogger {
             return Long.toString(minutes) + " minute"
                 + (minutes == 1 ? " " : "s ")
                 + Long.toString(seconds%60) + " second"
-                + (seconds%60 > 1 ? "s" : "");
+                + (seconds%60 == 1 ? "" : "s");
         }
         else {
             return Long.toString(seconds) + " second"
-                + (seconds%60 > 1 ? "s" : "");
+                + (seconds%60 == 1 ? "" : "s");
         }
 
+    }
+
+    protected void printMessage(final String message,
+                                final PrintStream stream,
+                                final int priority) {
+        stream.println(message);
     }
 
     /**
@@ -237,5 +244,4 @@ public class DefaultLogger implements BuildLogger {
      * same output that is generated here.
      */
     protected void log(String message) {}
-
 }

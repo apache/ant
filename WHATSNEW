@@ -129,8 +129,10 @@ Other changes:
 * <fail> no supports builds to fail based on conditions via if and
   unless attributes.
 
-* Ant now comes with a BuildLogger implementation that can send emails
-  containing a log of the build process (MailLogger).
+* Ant now comes with two new BuildLogger implementations - one that 
+  can send emails containing a log of the build process (MailLogger);
+  the other that colorizes the output based on message levels using
+  ANSI color code escape sequences (AnsiColorLogger).
 
 * A "package" mapper type has been added to allow package directory
   names replaced with the dotted form.
