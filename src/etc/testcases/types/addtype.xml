@@ -46,28 +46,28 @@
     <typedef loaderref="nested.loader" classpathref="test-classes"
              name = "nested.a"
              classname="${nested.package}AddTypeTest$AImpl"/>
-    <typedef loaderref="nested.loader" classpathref="test-classes"
+    <typedef loaderref="nested.loader"
              name = "nested.b"
              classname="${nested.package}AddTypeTest$BImpl"/>
-    <typedef loaderref="nested.loader" classpathref="test-classes"
+    <typedef loaderref="nested.loader"
              name = "nested.c"
              classname="${nested.package}AddTypeTest$CImpl"/>
-    <typedef loaderref="nested.loader" classpathref="test-classes"
+    <typedef loaderref="nested.loader"
              name = "nested.ab"
              classname="${nested.package}AddTypeTest$ABImpl"/>
-    <taskdef loaderref="nested.loader" classpathref="test-classes"
+    <taskdef loaderref="nested.loader"
              name = "nested.container" 
              classname="${nested.package}AddTypeTest$NestedContainer"/>
-    <taskdef loaderref="nested.loader" classpathref="nested.classes"
+    <taskdef loaderref="nested.loader"
              name = "nested.condition.task" 
              classname="${nested.package}AddTypeTest$MyCondition"/>
-    <typedef loaderref="nested.loader" classpathref="nested.classes"
+    <typedef loaderref="nested.loader"
              name = "nested.condition.type" 
              classname="${nested.package}AddTypeTest$MyCondition"/>
-    <typedef loaderref="nested.loader" classpathref="nested.classes"
+    <typedef loaderref="nested.loader"
              name = "myaddconfigured" 
              classname="${nested.package}AddTypeTest$MyAddConfigured"/>
-    <typedef loaderref="nested.loader" classpathref="nested.classes"
+    <typedef loaderref="nested.loader"
              name = "myvalue" 
              classname="${nested.package}AddTypeTest$MyValue"/>
   </target>
