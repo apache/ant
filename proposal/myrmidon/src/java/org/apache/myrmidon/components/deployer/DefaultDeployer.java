@@ -8,19 +8,28 @@
 package org.apache.myrmidon.components.deployer;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
+import java.util.HashMap;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.myrmidon.api.DataType;
+import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.components.converter.ConverterRegistry;
-import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.type.DefaultTypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.converter.Converter;
-import org.apache.myrmidon.api.DataType;
-import org.apache.myrmidon.api.Task;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -29,8 +38,10 @@ import org.apache.myrmidon.api.Task;
  */
 public class DefaultDeployer
     extends AbstractLoggable
-    implements Composable, Deployer
+    implements Deployer, Initializable, Composable
 {
+    private final static String TYPE_DESCRIPTOR = "META-INF/ant-types.xml";
+
     private ConverterRegistry            m_converterRegistry;
     private TypeManager                  m_typeManager;
     private RoleManager                  m_roleManager;
@@ -49,34 +60,47 @@ public class DefaultDeployer
         m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
     }
 
+    public void initialize()
+        throws Exception
+    {
+        final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        final SAXParser saxParser = saxParserFactory.newSAXParser();
+        final XMLReader parser = saxParser.getXMLReader();
+        //parser.setFeature( "http://xml.org/sax/features/namespace-prefixes", false );
+
+        final SAXConfigurationHandler handler = new SAXConfigurationHandler();
+        parser.setContentHandler( handler );
+        parser.setErrorHandler( handler );
+
+        final ClassLoader classLoader = getClass().getClassLoader();
+        final DefaultTypeFactory factory = new DefaultTypeFactory( classLoader );
+
+        final Enumeration enum = classLoader.getResources( Deployment.DESCRIPTOR_NAME );
+        while( enum.hasMoreElements() )
+        {
+            final URL url = (URL)enum.nextElement();
+            parser.parse( url.toString() );
+            getLogger().debug( "deploying " + url );
+            deployFromDescriptor( handler.getConfiguration(), classLoader, url );
+        }
+    }
+
     public void deploy( final File file )
         throws DeploymentException
     {
         getLogger().info( "Deploying AntLib file (" + file + ")" );
 
+        checkFile( file );
+
+        final Deployment deployment = new Deployment( file );
+        final Configuration descriptor = deployment.getDescriptor();
+        final URL[] urls = new URL[] { deployment.getURL() };
+        final URLClassLoader classLoader = 
+            new URLClassLoader( urls, Thread.currentThread().getContextClassLoader() );
+
         try
         {
-            checkFile( file );
-
-            final Deployment deployment = new Deployment( file );
-            final Configuration descriptor = deployment.getDescriptor();
-            final DefaultTypeFactory factory = new DefaultTypeFactory( deployment.getURL() );
-
-            final Configuration[] children = descriptor.getChildren();
-            for( int i = 0; i < children.length; i++ )
-            {
-                final String name = children[ i ].getName();
-                
-                if( name.equals( "converter" ) )
-                {
-                    handleConverter( children[ i ], factory );
-                }
-                else
-                {
-                    final String role = getRoleForName( name );
-                    handleType( role, children[ i ], factory );
-                }
-            }
+            deployFromDescriptor( descriptor, classLoader, deployment.getURL() );
         }
         catch( final DeploymentException de )
         {
@@ -85,7 +109,7 @@ public class DefaultDeployer
         catch( final Exception e )
         {
             throw new DeploymentException( "Error deploying library", e );
-        }       
+        }
     }
 
     public void deployConverter( final String name, final File file )
@@ -99,7 +123,9 @@ public class DefaultDeployer
 
         try
         {
-            final Configuration[] converters = descriptor.getChildren( "converter" );
+            final Configuration[] converters =
+                descriptor.getChild( "converters" ).getChildren( "converter" );
+
             for( int i = 0; i < converters.length; i++ )
             {
                 if( converters[ i ].getAttribute( "classname" ).equals( name ) )
@@ -128,10 +154,12 @@ public class DefaultDeployer
         final Deployment deployment = new Deployment( file );
         final Configuration descriptor = deployment.getDescriptor();
         final DefaultTypeFactory factory = new DefaultTypeFactory( deployment.getURL() );
-        
+
         try
         {
-            final Configuration[] datatypes = descriptor.getChildren( shorthand );
+            final Configuration[] datatypes =
+                descriptor.getChild( "types" ).getChildren( shorthand );
+
             for( int i = 0; i < datatypes.length; i++ )
             {
                 if( datatypes[ i ].getAttribute( "name" ).equals( name ) )
@@ -151,6 +179,59 @@ public class DefaultDeployer
         }
     }
 
+    private void deployFromDescriptor( final Configuration descriptor,
+                                       final ClassLoader classLoader,
+                                       final URL url )
+        throws DeploymentException, Exception
+    {
+        try
+        {
+            //Have to keep a new factory per role
+            //To avoid name clashes (ie a datatype and task with same name)
+            final HashMap factorys = new HashMap();
+
+            final Configuration[] types = descriptor.getChild( "types" ).getChildren();
+            for( int i = 0; i < types.length; i++ )
+            {
+                final String name = types[ i ].getName();
+                final String role = getRoleForName( name );
+                final DefaultTypeFactory factory = getFactory( role, classLoader, factorys );
+                handleType( role, types[ i ], factory );
+            }
+
+            final DefaultTypeFactory factory = new DefaultTypeFactory( classLoader );
+            final Configuration[] converters = descriptor.getChild( "converters" ).getChildren();
+            for( int i = 0; i < converters.length; i++ )
+            {
+                final String name = converters[ i ].getName();
+                handleConverter( converters[ i ], factory );
+            }
+        }
+        catch( final DeploymentException de )
+        {
+            throw de;
+        }
+        catch( final Exception e )
+        {
+            throw new DeploymentException( "Error deploying library from " + url, e );
+        }
+    }
+
+    private DefaultTypeFactory getFactory( final String role, 
+                                           final ClassLoader classLoader, 
+                                           final HashMap factorys )
+    {
+        DefaultTypeFactory factory = (DefaultTypeFactory)factorys.get( role );
+
+        if( null == factory )
+        {
+            factory = new DefaultTypeFactory( classLoader );
+            factorys.put( role, factory );
+        }
+
+        return factory;
+    }
+
     private String getNameForRole( final String role )
         throws DeploymentException
     {
@@ -160,7 +241,7 @@ public class DefaultDeployer
         {
             throw new DeploymentException( "RoleManager does not know name for role " + role );
         }
-        
+
         return name;
     }
 
@@ -173,7 +254,7 @@ public class DefaultDeployer
         {
             throw new DeploymentException( "RoleManager does not know role for name " + name );
         }
-        
+
         return role;
     }
 
