@@ -9,6 +9,9 @@ Other changes:
 
 * New attribute ignorecontents for <different> selector
 
+* Javadoc fixes for Location, Project, and RuntimeConfigurable
+  Bugzilla 30160.
+
 Fixed bugs:
 -----------
 

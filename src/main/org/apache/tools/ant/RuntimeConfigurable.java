@@ -183,6 +183,7 @@ public class RuntimeConfigurable implements Serializable {
     /** Return the attribute map.
      *
      * @return Attribute name to attribute value map
+     * @since Ant 1.6
      */
     public Hashtable getAttributeMap() {
         if (attributeMap != null) {
@@ -195,7 +196,7 @@ public class RuntimeConfigurable implements Serializable {
     /**
      * Returns the list of attributes for the wrapped element.
      *
-     * @deprecated
+     * @deprecated Deprecated since Ant 1.6 in favor of {@link #getAttributeMap}.
      * @return An AttributeList representing the attributes defined in the
      *         XML for this element. May be <code>null</code>.
      */
@@ -231,7 +232,7 @@ public class RuntimeConfigurable implements Serializable {
     /**
      * Returns an enumeration of all child wrappers.
      * @return an enumeration of the child wrappers.
-     * @since Ant 1.5.1
+     * @since Ant 1.6
      */
     public Enumeration getChildren() {
         if (children != null) {
@@ -282,6 +283,7 @@ public class RuntimeConfigurable implements Serializable {
      * multiple fragments.
      *
      * @return the text content of this element.
+     * @since Ant 1.6
      */
     public StringBuffer getText() {
         if (characters != null) {
