@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -68,60 +68,60 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * Class to manage Manifest information
- * 
+ *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
 public class Manifest {
     /** The standard manifest version header */
     public final static String ATTRIBUTE_MANIFEST_VERSION = "Manifest-Version";
-    
+
     /** The standard Signature Version header */
     public final static String ATTRIBUTE_SIGNATURE_VERSION = "Signature-Version";
-    
+
     /** The Name Attribute is the first in a named section */
     public final static String ATTRIBUTE_NAME = "Name";
-    
-    /** The From Header is disallowed in a Manifest */    
+
+    /** The From Header is disallowed in a Manifest */
     public final static String ATTRIBUTE_FROM = "From";
-    
-    /** The Class-Path Header is special - it can be duplicated */    
+
+    /** The Class-Path Header is special - it can be duplicated */
     public final static String ATTRIBUTE_CLASSPATH = "class-path";
-    
+
     /** Default Manifest version if one is not specified */
     public final static String DEFAULT_MANIFEST_VERSION = "1.0";
-    
+
     /** The max length of a line in a Manifest */
     public final static int MAX_LINE_LENGTH = 70;
-    
+
     /**
      * Class to hold manifest attributes
      */
     public static class Attribute {
         /** The attribute's name */
         private String name = null;
-        
+
         /** The attribute's value */
         private String value = null;
 
-        /** 
+        /**
          * Construct an empty attribute */
         public Attribute() {
         }
-        
+
         /**
          * Construct an attribute by parsing a line from the Manifest
-         * 
+         *
          * @param line the line containing the attribute name and value
          *
-         * @throws ManifestException if the line is not valid 
+         * @throws ManifestException if the line is not valid
          */
         public Attribute(String line) throws ManifestException {
             parse(line);
         }
-        
+
         /**
-         * Construct a manifest by specifying its name and value 
-         * 
+         * Construct a manifest by specifying its name and value
+         *
          * @param name the attribute's name
          * @param value the Attribute's value
          */
@@ -129,18 +129,18 @@ public class Manifest {
             this.name = name;
             this.value = value;
         }
-        
+
         public boolean equals(Object rhs) {
             if (!(rhs instanceof Attribute)) {
                 return false;
             }
-            
+
             Attribute rhsAttribute = (Attribute)rhs;
             return (name != null && rhsAttribute.name != null &&
                     name.toLowerCase().equals(rhsAttribute.name.toLowerCase()) &&
                     value != null && value.equals(rhsAttribute.value));
         }
-                    
+
         /**
          * Parse a line into name and value pairs
          *
@@ -157,17 +157,17 @@ public class Manifest {
             }
             name = line.substring(0, index);
             value = line.substring(index + 2);
-        } 
-        
+        }
+
         /**
          * Set the Attribute's name
-         * 
+         *
          * @param name the attribute's name
          */
         public void setName(String name) {
             this.name = name;
         }
-        
+
         /**
          * Get the Attribute's name
          *
@@ -176,16 +176,16 @@ public class Manifest {
         public String getName() {
             return name;
         }
-        
+
         /**
          * Set the Attribute's value
-         * 
+         *
          * @param value the attribute's value
          */
         public void setValue(String value) {
             this.value = value;
         }
-        
+
         /**
          * Get the Attribute's value
          *
@@ -194,18 +194,18 @@ public class Manifest {
         public String getValue() {
             return value;
         }
-        
+
         /**
          * Add a continuation line from the Manifest file
          *
-         * When lines are too long in a manifest, they are continued on the 
+         * When lines are too long in a manifest, they are continued on the
          * next line by starting with a space. This method adds the continuation
          * data to the attribute value by skipping the first character.
          */
         public void addContinuation(String line) {
             value += line.substring(1);
         }
-        
+
         /**
          * Write the attribute out to a print writer.
          *
@@ -230,32 +230,32 @@ public class Manifest {
                 line = " " + line.substring(breakIndex);
             }
             writer.println(line);
-        }    
+        }
     }
 
-    /** 
-     * Class to represent an individual section in the 
+    /**
+     * Class to represent an individual section in the
      * Manifest. A section consists of a set of attribute values,
      * separated from other sections by a blank line.
      */
     public static class Section {
         private Vector warnings = new Vector();
-        
+
         /** The section's name if any. The main section in a manifest is unnamed.*/
         private String name = null;
-        
+
         /** The section's attributes.*/
         private Hashtable attributes = new Hashtable();
-        
+
         /**
          * Set the Section's name
-         * 
+         *
          * @param name the section's name
          */
         public void setName(String name) {
             this.name = name;
         }
-        
+
         /**
          * Get the Section's name
          *
@@ -264,23 +264,23 @@ public class Manifest {
         public String getName() {
             return name;
         }
-        
+
         /**
-         * Read a section through a reader 
-         * 
+         * Read a section through a reader
+         *
          * @param reader the reader from which the section is read
          *
-         * @return the name of the next section if it has been read as part of this 
+         * @return the name of the next section if it has been read as part of this
          *         section - This only happens if the Manifest is malformed.
-         * 
+         *
          * @throws ManifestException if the section is not valid according to the JAR spec
          * @throws IOException if the section cannot be read from the reader.
          */
         public String read(BufferedReader reader) throws ManifestException, IOException {
             Attribute attribute = null;
-            while (true) { 
+            while (true) {
                 String line = reader.readLine();
-                if (line == null || line.trim().length() == 0) {
+                if (line == null || line.length() == 0) {
                     return null;
                 }
                 if (line.charAt(0) == ' ') {
@@ -308,7 +308,7 @@ public class Manifest {
                 }
             }
         }
-        
+
         /**
          * Merge in another section
          *
@@ -321,10 +321,10 @@ public class Manifest {
                     name != null && !(name.equalsIgnoreCase(section.getName()))) {
                 throw new ManifestException("Unable to merge sections with different names");
             }
-            
+
             for (Enumeration e = section.attributes.keys(); e.hasMoreElements();) {
                 String attributeName = (String)e.nextElement();
-                if (attributeName.equals(ATTRIBUTE_CLASSPATH) && 
+                if (attributeName.equals(ATTRIBUTE_CLASSPATH) &&
                         attributes.containsKey(attributeName)) {
                     // classpath entries are vetors which are merged
                     Vector classpathAttrs = (Vector)section.attributes.get(attributeName);
@@ -333,18 +333,18 @@ public class Manifest {
                         ourClasspathAttrs.addElement(e2.nextElement());
                     }
                 }
-                else {        
+                else {
                     // the merge file always wins
                     attributes.put(attributeName, section.attributes.get(attributeName));
                 }
             }
-            
+
             // add in the warnings
             for (Enumeration e = section.warnings.elements(); e.hasMoreElements();) {
                 warnings.addElement(e.nextElement());
             }
         }
-        
+
         /**
          * Write the section out to a print writer.
          *
@@ -373,7 +373,7 @@ public class Manifest {
             }
             writer.println();
         }
-    
+
         /**
          * Get the value of the attribute with the name given.
          *
@@ -381,7 +381,7 @@ public class Manifest {
          *
          * @return the attribute's value or null if the attribute does not exist
          *         in the section
-         */         
+         */
         public String getAttributeValue(String attributeName) {
             Object attribute = attributes.get(attributeName.toLowerCase());
             if (attribute == null) {
@@ -401,7 +401,7 @@ public class Manifest {
         }
 
         /**
-         * Remove tge given attribute from the section 
+         * Remove tge given attribute from the section
          *
          * @param attributeName the name of the attribute to be removed.
          */
@@ -412,11 +412,11 @@ public class Manifest {
         public void addConfiguredAttribute(Attribute attribute) throws ManifestException {
             String check = addAttributeAndCheck(attribute);
             if (check != null) {
-                throw new BuildException("Specify the section name using the \"name\" attribute of the <section> element rather " + 
+                throw new BuildException("Specify the section name using the \"name\" attribute of the <section> element rather " +
                                          "than using a \"Name\" manifest attribute");
             }
         }
-        
+
         /**
          * Add an attribute to the section
          *
@@ -432,14 +432,14 @@ public class Manifest {
             }
             if (attribute.getName().equalsIgnoreCase(ATTRIBUTE_NAME)) {
                 warnings.addElement("\"" + ATTRIBUTE_NAME + "\" attributes should not occur in the " +
-                                    "main section and must be the first element in all " + 
-                                    "other sections: \"" +attribute.getName() + ": " + attribute.getValue() + "\"");  
+                                    "main section and must be the first element in all " +
+                                    "other sections: \"" +attribute.getName() + ": " + attribute.getValue() + "\"");
                 return attribute.getValue();
             }
-            
+
             if (attribute.getName().toLowerCase().startsWith(ATTRIBUTE_FROM.toLowerCase())) {
                 warnings.addElement("Manifest attributes should not start with \"" +
-                                    ATTRIBUTE_FROM + "\" in \"" +attribute.getName() + ": " + attribute.getValue() + "\"");  
+                                    ATTRIBUTE_FROM + "\" in \"" +attribute.getName() + ": " + attribute.getValue() + "\"");
             }
             else {
                 // classpath attributes go into a vector
@@ -453,7 +453,7 @@ public class Manifest {
                     classpathAttrs.addElement(attribute);
                 }
                 else if (attributes.containsKey(attributeName)) {
-                    throw new ManifestException("The attribute \"" + attribute.getName() + "\" may not " + 
+                    throw new ManifestException("The attribute \"" + attribute.getName() + "\" may not " +
                                                 "occur more than once in the same section");
                 }
                 else {
@@ -466,17 +466,17 @@ public class Manifest {
         public Enumeration getWarnings() {
             return warnings.elements();
         }
-        
+
         public boolean equals(Object rhs) {
             if (!(rhs instanceof Section)) {
                 return false;
             }
-            
+
             Section rhsSection = (Section)rhs;
             if (attributes.size() != rhsSection.attributes.size()) {
                 return false;
             }
-        
+
             for (Enumeration e = attributes.elements(); e.hasMoreElements();) {
                 Attribute attribute  = (Attribute)e.nextElement();
                 Attribute rshAttribute = (Attribute)rhsSection.attributes.get(attribute.getName().toLowerCase());
@@ -484,30 +484,30 @@ public class Manifest {
                     return false;
                 }
             }
-            
+
             return true;
         }
-    }        
+    }
 
 
     /** The version of this manifest */
     private String manifestVersion = DEFAULT_MANIFEST_VERSION;
-    
-    /** The main section of this manifest */ 
+
+    /** The main section of this manifest */
     private Section mainSection = new Section();
-    
+
     /** The named sections of this manifest */
     private Hashtable sections = new Hashtable();
 
     /** Construct an empty manifest */
     public Manifest() {
     }
-    
+
     /**
      * Read a manifest file from the given input stream
      *
-     * @param is the input stream from which the Manifest is read 
-     * 
+     * @param is the input stream from which the Manifest is read
+     *
      * @throws ManifestException if the manifest is not valid according to the JAR spec
      * @throws IOException if the manifest cannot be read from the reader.
      */
@@ -526,12 +526,12 @@ public class Manifest {
             if (line.length() == 0) {
                 continue;
             }
-            
+
             Section section = new Section();
             if (nextSectionName == null) {
                 Attribute sectionName = new Attribute(line);
                 if (!sectionName.getName().equalsIgnoreCase(ATTRIBUTE_NAME)) {
-                    throw new ManifestException("Manifest sections should start with a \"" + ATTRIBUTE_NAME + 
+                    throw new ManifestException("Manifest sections should start with a \"" + ATTRIBUTE_NAME +
                                                 "\" attribute and not \"" + sectionName.getName() + "\"");
                 }
                 nextSectionName = sectionName.getValue();
@@ -543,24 +543,24 @@ public class Manifest {
                 Attribute firstAttribute = new Attribute(line);
                 section.addAttributeAndCheck(firstAttribute);
             }
-                    
+
             section.setName(nextSectionName);
             nextSectionName = section.read(reader);
             addConfiguredSection(section);
         }
     }
-    
+
     public void addConfiguredSection(Section section) throws ManifestException {
         if (section.getName() == null) {
             throw new BuildException("Sections must have a name");
         }
         sections.put(section.getName().toLowerCase(), section);
     }
-    
+
     public void addConfiguredAttribute(Attribute attribute) throws ManifestException {
         mainSection.addConfiguredAttribute(attribute);
     }
-    
+
     /**
      * Merge the contents of the given manifest into this manifest
      *
@@ -583,9 +583,9 @@ public class Manifest {
                 ourSection.merge(otherSection);
             }
         }
-        
+
     }
-    
+
     /**
     * Write the manifest out to a print writer.
     *
@@ -609,13 +609,13 @@ public class Manifest {
                 // shouldn't happen - ignore
             }
         }
-        
+
         for (Enumeration e = sections.elements(); e.hasMoreElements();) {
             Section section = (Section)e.nextElement();
             section.write(writer);
         }
     }
-    
+
     /**
      * Convert the manifest to its string representation
      *
@@ -631,7 +631,7 @@ public class Manifest {
         }
         return sw.toString();
     }
-    
+
     /**
      * Get the warnings for this manifest.
      *
@@ -639,11 +639,11 @@ public class Manifest {
      */
     public Enumeration getWarnings() {
         Vector warnings = new Vector();
-        
+
         for (Enumeration e2 = mainSection.getWarnings(); e2.hasMoreElements();) {
             warnings.addElement(e2.nextElement());
         }
-        
+
         // create a vector and add in the warnings for all the sections
         for (Enumeration e = sections.elements(); e.hasMoreElements();) {
             Section section = (Section)e.nextElement();
@@ -651,15 +651,15 @@ public class Manifest {
                 warnings.addElement(e2.nextElement());
             }
         }
-        
+
         return warnings.elements();
     }
-    
+
     public boolean equals(Object rhs) {
         if (!(rhs instanceof Manifest)) {
             return false;
         }
-        
+
         Manifest rhsManifest = (Manifest)rhs;
         if (!manifestVersion.equals(rhsManifest.manifestVersion)) {
             return false;
@@ -667,11 +667,11 @@ public class Manifest {
         if (sections.size() != rhsManifest.sections.size()) {
             return false;
         }
-        
+
         if (!mainSection.equals(rhsManifest.mainSection)) {
             return false;
         }
-        
+
         for (Enumeration e = sections.elements(); e.hasMoreElements();) {
             Section section = (Section)e.nextElement();
             Section rhsSection = (Section)rhsManifest.sections.get(section.getName().toLowerCase());
@@ -679,7 +679,7 @@ public class Manifest {
                 return false;
             }
         }
-        
+
         return true;
     }
 }
