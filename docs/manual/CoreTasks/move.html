@@ -26,13 +26,13 @@ to move to the <var>todir</var> directory.</p>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the file to move</td>
-    <td valign="top" align="center">One of <var>file</var> or 
+    <td valign="top" align="center">One of <var>file</var> or
      at least one nested fileset element</td>
   </tr>
   <tr>
     <td valign="top">tofile</td>
     <td valign="top">the file to move to</td>
-    <td valign="top" align="center" rowspan="2">With the <var>file</var> attribute, 
+    <td valign="top" align="center" rowspan="2">With the <var>file</var> attribute,
     either <var>tofile</var> or <var>todir</var> can be used.  With nested filesets,
     if the fileset size is greater than 1 or if the only entry in the fileset is a
     directory or if the <var>file</var> attribute is already specified, only
@@ -59,7 +59,7 @@ to move to the <var>todir</var> directory.</p>
     <td valign="top">flatten</td>
     <td valign="top">ignore directory structure of source directory,
       copy all files into a single directory, specified by the <var>todir</var>
-      attribute (default is &quot;false&quot;).Note that you can achieve the 
+      attribute (default is &quot;false&quot;).Note that you can achieve the
       same effect by using a <a href="../CoreTypes/mapper.html#flatten-mapper">flatten mapper</a></td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -76,6 +76,9 @@ to move to the <var>todir</var> directory.</p>
 href="../CoreTypes/mapper.html">mapper</a> element. The default mapper used by
 <code>&lt;copy&gt;</code> is the <a
 href="../CoreTypes/mapper.html#identity-mapper">identity</a>.</p>
+<h4>filterchain</h4>
+<p>The Move task supports nested <a href="../CoreTypes/filterchain.html">
+FilterChain</a>s.</p>
 <h3>Examples</h3>
 <p><b>Move a single file (rename a file)</b></p>
 <pre>
