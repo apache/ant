@@ -97,6 +97,44 @@ implements ACSInfoProvider {
         return getTagName();
     }
 
+	/** 
+	 * Get the display name of this.
+	 * 
+	 * @return Display name.
+	 */
+    public String getDisplayName() {
+        String name = getTagName();
+
+        // Is there only one attribute?
+        if (getAttributes().getLength() == 1) {
+            Node onlyNode = getAttributes().item(0);
+
+            // Display the only attribute
+            name += ": " + onlyNode.getNodeValue();
+        } else {
+            
+            // Display one of these attributes
+            // if they are present.
+            final String[] DISPLAY_ATTRIBUTES =
+            {
+                "name",
+                "id",
+                "property"
+            };
+
+            for(int i = 0; i < DISPLAY_ATTRIBUTES.length; i++) {
+                Node testNode =
+                    getAttributes().getNamedItem(DISPLAY_ATTRIBUTES[i]);
+                if (testNode != null) {
+                    name += ": " + testNode.getNodeValue();
+                    break;
+                }
+            }
+        }
+        
+        return name;
+    }
+    
         /** 
          * Set the task type.
          * 
