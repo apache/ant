@@ -76,11 +76,30 @@ public class DefaultEmbeddor
     }
 
     public Project createProject( final String location, 
-                                  final String type, 
+                                  String type, 
                                   final Parameters parameters )
         throws Exception
     {
-        return m_builder.build( location );
+        if( null == type )
+        {
+            type = guessTypeFor( location );
+        }
+
+        final ProjectBuilder builder = getProjectBuilder( type );
+        return builder.build( location, parameters );
+    }
+
+    private String guessTypeFor( final String location )
+    {
+        //TODO: use hueristics to map filename extention to type
+        return "ant";
+    }
+
+    private ProjectBuilder getProjectBuilder( final String type )
+        throws Exception
+    {
+        //FIXME: Should not be ignoring type
+        return m_builder;
     }
 
     public ProjectManager createProjectManager( final Project project, 

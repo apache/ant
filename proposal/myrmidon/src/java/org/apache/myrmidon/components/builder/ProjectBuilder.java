@@ -10,6 +10,7 @@ package org.apache.myrmidon.components.builder;
 import java.io.File;
 import java.io.IOException;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.components.model.Project;
 
 /**
@@ -30,6 +31,6 @@ public interface ProjectBuilder
      * @exception IOException if an error occurs
      * @exception AntException if an error occurs
      */
-    Project build( String source )
+    Project build( String source, Parameters parameters )
         throws Exception;
 }

@@ -18,6 +18,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.model.Condition;
@@ -50,7 +51,7 @@ public class DefaultProjectBuilder
      * @exception IOException if an error occurs
      * @exception Exception if an error occurs
      */
-    public Project build( final String source )
+    public Project build( final String source, final Parameters parameters )
         throws Exception
     {
         final File file = new File( source );
@@ -102,7 +103,7 @@ public class DefaultProjectBuilder
      * @exception Exception if an error occurs
      * @exception ConfigurationException if an error occurs
      */
-    private DefaultProject buildProject( final File file, 
+    private DefaultProject buildProject( final File file,
                                          final Configuration configuration )
         throws Exception
     {
@@ -226,7 +227,7 @@ public class DefaultProjectBuilder
         if( !validName( name ) )
         {
             throw new Exception( "Projectref with an invalid name attribute at " +
-                                 element.getLocation() );           
+                                 element.getLocation() );
         }
 
         if( null == location )
@@ -301,7 +302,7 @@ public class DefaultProjectBuilder
         if( !validName( name ) )
         {
             throw new Exception( "Target with an invalid name at " +
-                                 target.getLocation() );           
+                                 target.getLocation() );
         }
 
         getLogger().debug( "Parsing target: " + name );
