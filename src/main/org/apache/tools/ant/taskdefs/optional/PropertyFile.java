@@ -430,7 +430,7 @@ public class PropertyFile extends Task
                 NOW_VALUE_.equals(m_default.toLowerCase()) &&
                 (m_operation == Operation.INCREMENT_OPER ||
                  m_operation == Operation.DECREMENT_OPER) ) {
-                oldValue = null;
+                 oldValue = null;
             }
 
             if (oldValue != null) {
@@ -518,12 +518,14 @@ public class PropertyFile extends Task
         {
             int value = 0;
             int newValue  = 0;
+            int oldIntValue  = 0;
 
             DecimalFormat fmt = (m_pattern != null) ? new DecimalFormat(m_pattern)
                                                     : new DecimalFormat();
 
             if (oldValue != null) {
                 try {
+                    oldIntValue = fmt.parse(oldValue).intValue();
                     value = fmt.parse(oldValue).intValue();
                 }
                 catch (NumberFormatException nfe) { /* swollow */ }
@@ -548,10 +550,28 @@ public class PropertyFile extends Task
                 newValue = value;
             }
             else if (m_operation == Operation.INCREMENT_OPER) {
-                newValue = ++value;
+                if (this.m_value == "") {
+                    // No value attr was given, so just increment "value"
+                    // (which is the old value from the prop file, 0 by
+                    // assignment above, if none) by 1.
+                    newValue = ++value;
+                } else {
+                    // A value attr was given, so add it to "value", which
+                    // is the old value from the prop file (0, if none).
+                    newValue = (oldIntValue + value) ;
+                }
             }
             else if (m_operation == Operation.DECREMENT_OPER) {
-                newValue = --value;
+                if (this.m_value == "") {
+                    // No value attr was given, so just decrement "value"
+                    // (which is the old value from the prop file, 0 by
+                    // assignment above, if none) by 1.
+                    newValue = --value;
+                } else {
+                    // A value attr was given, so subtract from it "value",
+                    // which is the old value from the prop file (0, if none).
+                    newValue = (oldIntValue - value);
+                }
             }
             m_value = fmt.format(newValue);
         }
