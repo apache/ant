@@ -95,6 +95,10 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     /** Perforce view for commands. (eg //projects/foobar/main/source/... )*/
     protected String P4View = "";
 
+    // Perforce task directives
+    /** Keep going or fail on error - defaults to fail. */
+    protected boolean failOnError = true;
+
     //P4 g-opts and cmd opts (rtfm)
     /** Perforce 'global' opts.
      * Forms half of low level API */
@@ -122,6 +126,13 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
     public void setCmdopts(String P4CmdOpts) {
         this.P4CmdOpts = P4CmdOpts;
+    }
+
+    /**
+     * Optionally throw a BuildException if p4 command fails
+     */
+    public void setFailonerror(boolean fail) {
+        failOnError = fail;
     }
 
     public void init() {
@@ -201,7 +212,13 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
 
 
         } catch (Exception e) {
-            throw new BuildException("Problem exec'ing P4 command: " + e.getMessage());
+            String failMsg = "Problem exec'ing P4 command: " + e.getMessage();
+            if (failOnError) {
+                throw new BuildException(failMsg);
+            } else {
+                log(failMsg, Project.MSG_ERR);
+            }
+
         }
     }
 }
