@@ -3,6 +3,7 @@
 <HTML>
 <HEAD>
   <TITLE>FilterChains and FilterReaders</TITLE>
+  <link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </HEAD>
 
 <BODY>
@@ -23,12 +24,12 @@ had to create special attributes:<P>
 &lt;copy file=&quot;foo&quot; tofile=&quot;bar&quot; head=&quot;10&quot; contains=&quot;blee&quot;/&gt;
 </code><P>
 The obvious problem thus surfaced: Ant tasks would not be able
-to accomodate such data transformation attributes as they would
+to accommodate such data transformation attributes as they would
 be endless.  The task would also not know in which order these
 attributes were to be interpreted.  That is, must the task execute the
 contains attribute first and then the head attribute or vice-versa?
 What Ant tasks needed was a mechanism to allow pluggable filter (data
-tranformer) chains.  Ant would provide a few filters for which there
+transformer) chains.  Ant would provide a few filters for which there
 have been repeated requests.  Users with special filtering needs
 would be able to easily write their own and plug them in.<P>
 
@@ -1260,6 +1261,8 @@ an explanation of scripts and dependencies.
 <p>
 The script is provided with an object <i>self</i> that has
 getToken() and setToken(String) methods.
+The getToken() method returns the current token. The setToken(String)
+method replaces the current token.
 </p>
 
 This filter may be used directly within a filterchain.<p>
@@ -1286,15 +1289,29 @@ Must be a supported Apache BSF language</TD>
 
 <H4>Examples:</H4>
 
-Convert to uppercase.
+Convert to uppercase:
 <BLOCKQUOTE><PRE>
 &lt;tokenfilter&gt;
     &lt;scriptfilter language="javascript"&gt;
         self.setToken(self.getToken().toUpperCase());
     &lt;/scriptfilter&gt;
 &lt;/tokenfilter&gt;
-
 </PRE></BLOCKQUOTE>
+
+Remove lines containing the string "bad" while
+copying text files:
+  <blockquote>
+    <pre>
+&lt;copy todir="dist"&gt;
+  &lt;fileset dir="src" includes="**/*.txt"/&gt;
+  &lt;scriptfilter language="beanshell"&gt;
+      if (self.getToken().indexOf("bad") != -1) {
+          self.setToken(null);
+      }
+  &lt;/scriptfilter&gt;
+&lt;/copy&gt;
+    </pre>
+  </blockquote>
 
 <H4>Custom tokenizers and string filters</H4>
 

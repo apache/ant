@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,18 +57,19 @@ package org.apache.tools.ant.taskdefs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
-
-import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Describe class <code>MacroDef</code> here.
@@ -76,12 +77,13 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author Peter Reilly
  * @since Ant 1.6
  */
-public class MacroDef extends AntlibDefinition implements TaskContainer {
-    private UnknownElement nestedTask;
+public class MacroDef extends AntlibDefinition  {
+    private NestedSequential nestedSequential;
     private String     name;
     private List       attributes = new ArrayList();
-    private Map        elements = new HashMap();
-    private int        attributeStyle = AttributeStyle.ANT;
+    private Map        elements   = new HashMap();
+    private String     textName   = null;
+    private Text       text       = null;
 
     /**
      * Name of the definition
@@ -92,76 +94,117 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
     }
 
     /**
-     * Enumerated type for attributeStyle attribute
-     *
-     * @see EnumeratedAttribute
+     * Add the text element.
+     * @param text the nested text element to add
+     * @since ant 1.6.1
      */
-    public static class AttributeStyle extends EnumeratedAttribute {
-        /** Enumerated values */
-        public static final int ANT = 0, XPATH = 1;
+    public void addConfiguredText(Text text) {
+        if (this.text != null) {
+            throw new BuildException(
+                "Only one nested text element allowed");
+        }
+        if (text.getName() == null) {
+            throw new BuildException(
+                "the text nested element needed a \"name\" attribute");
+        }
+        // Check if used by attributes
+        for (Iterator i = attributes.iterator(); i.hasNext();) {
+            Attribute attribute = (Attribute) i.next();
+            if (text.getName().equals(attribute.getName())) {
+                throw new BuildException(
+                    "the name \"" + text.getName()
+                    + "\" is already used as an attribute");
+            }
+        }
+        this.text = text;
+        this.textName = text.getName();
+    }
+
+    /**
+     * @return the nested text element
+     * @since ant 1.6.1
+     */
+
+    public Text getText() {
+        return text;
+    }
+
+    /**
+     * This is the sequential nested element of the macrodef.
+     *
+     * @return a sequential element to be configured.
+     */
+    public NestedSequential createSequential() {
+        if (this.nestedSequential != null) {
+            throw new BuildException("Only one sequential allowed");
+        }
+        this.nestedSequential = new NestedSequential();
+        return this.nestedSequential;
+    }
+
+    /**
+     * The class corresponding to the sequential nested element.
+     * This is a simple task container.
+     */
+    public static class NestedSequential implements TaskContainer {
+        private List nested = new ArrayList();
 
         /**
-         * get the values
-         * @return an array of the allowed values for this attribute.
+         * Add a task or type to the container.
+         *
+         * @param task an unknown element.
          */
-        public String[] getValues() {
-            return new String[] {"ant", "xpath"};
+        public void addTask(Task task) {
+            nested.add(task);
+        }
+
+        /**
+         * @return the list of unknown elements
+         */
+        public List getNested() {
+            return nested;
+        }
+
+        /**
+         * A compare function to compare this with another
+         * NestedSequential.
+         * It calls similar on the nested unknown elements.
+         *
+         * @param other the nested sequential to compare with.
+         * @return true if they are similar, false otherwise
+         */
+        public boolean similar(NestedSequential other) {
+            if (nested.size() != other.nested.size()) {
+                return false;
+            }
+            for (int i = 0; i < nested.size(); ++i) {
+                UnknownElement me = (UnknownElement) nested.get(i);
+                UnknownElement o = (UnknownElement) other.nested.get(i);
+                if (!me.similar(o)) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 
     /**
-     * <em>Experimental</em>
-     * I am uncertain at the moment how to encode attributes
-     * using ant style ${attribute} or xpath style @attribute.
-     * The first may get mixed up with ant properties and
-     * the second may get mixed up with xpath.
-     * The default at the moment is ant s
-     *
-     * @param style an <code>AttributeStyle</code> value
-     */
-    public void setAttributeStyle(AttributeStyle style) {
-        attributeStyle = style.getIndex();
-    }
-
-    /**
-     * <em>Experimental</em>
-     * @return the attribute style
-     */
-    public int getAttributeStyle() {
-        return attributeStyle;
-    }
-
-    /**
-     * Set the class loader.
-     * Not used
-     * @param classLoader a <code>ClassLoader</code> value
-     */
-    public void setAntlibClassLoader(ClassLoader classLoader) {
-        // Ignore
-    }
-
-    /**
-     * Add a nested task to ExtendType
-     * @param nestedTask  Nested task/type to extend
-     */
-    public void addTask(Task nestedTask) {
-        if (this.nestedTask != null) {
-            throw new BuildException("Only one sequential/Parallel allowed");
-        }
-        UnknownElement ue = (UnknownElement) nestedTask;
-        if (!ue.getNamespace().equals("")
-            || (!ue.getTag().equals("sequential")
-                && !ue.getTag().equals("parallel"))) {
-            throw new BuildException("Unsupported tag " + ue.getQName());
-        }
-        this.nestedTask = ue;
-    }
-
-    /**
-     * @return the nested task
+     * Convert the nested sequential to an unknown element
+     * @return the nested sequential as an unknown element.
      */
     public UnknownElement getNestedTask() {
-        return nestedTask;
+        UnknownElement ret = new UnknownElement("sequential");
+        ret.setTaskName("sequential");
+        ret.setNamespace("");
+        ret.setQName("sequential");
+        new RuntimeConfigurable(ret, "sequential");
+        for (int i = 0; i < nestedSequential.getNested().size(); ++i) {
+            UnknownElement e =
+                (UnknownElement) nestedSequential.getNested().get(i);
+            ret.addChild(e);
+            ret.getWrapper().addChild(e.getWrapper());
+        }
+        return ret;
     }
 
     /**
@@ -218,6 +261,19 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             throw new BuildException(
                 "the attribute nested element needed a \"name\" attribute");
         }
+        if (attribute.getName().equals(textName)) {
+            throw new BuildException(
+                "the attribute name \"" + attribute.getName()
+                + "\" has already been used by the text element");
+        }
+        for (int i = 0; i < attributes.size(); ++i) {
+            if (((Attribute) attributes.get(i)).getName().equals(
+                    attribute.getName())) {
+                throw new BuildException(
+                    "the attribute " + attribute.getName()
+                    + " has already been specified");
+            }
+        }
         attributes.add(attribute);
     }
 
@@ -231,6 +287,11 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             throw new BuildException(
                 "the element nested element needed a \"name\" attribute");
         }
+        if (elements.get(element.getName()) != null) {
+            throw new BuildException(
+                "the element " + element.getName()
+                + " has already been specified");
+        }
         elements.put(element.getName(), element);
     }
 
@@ -239,8 +300,8 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
      *
      */
     public void execute() {
-        if (nestedTask == null) {
-            throw new BuildException("Missing nested element");
+        if (nestedSequential == null) {
+            throw new BuildException("Missing sequential element");
         }
         if (name == null) {
             throw new BuildException("Name not specified");
@@ -266,6 +327,7 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
     public static class Attribute {
         private String name;
         private String defaultValue;
+        private String description;
 
         /**
          * The name of the attribute.
@@ -277,7 +339,7 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
                 throw new BuildException(
                     "Illegal name [" + name + "] for attribute");
             }
-            this.name = name;
+            this.name = name.toLowerCase(Locale.US);
         }
 
         /**
@@ -305,6 +367,23 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
         }
 
         /**
+         * @param desc Description of the element.
+         * @since ant 1.6.1
+         */
+        public void setDescription(String desc) {
+            description = desc;
+        }
+
+        /**
+         * @return the description of the element, or <code>null</code> if
+         *         no description is available.
+         * @since ant 1.6.1
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
          * equality method
          *
          * @param obj an <code>Object</code> value
@@ -319,18 +398,143 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
             Attribute other = (Attribute) obj;
             if (name == null) {
-                return other.name == null;
-            }
-            if (!name.equals(other.name)) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
                 return false;
             }
             if (defaultValue == null) {
-                return other.defaultValue == null;
-            }
-            if (!name.equals(other.defaultValue)) {
+                if (other.defaultValue != null) {
+                    return false;
+                }
+            } else if (!defaultValue.equals(other.defaultValue)) {
                 return false;
             }
             return true;
+        }
+
+        /**
+         * @return a hash code value for this object.
+         */
+        public int hashCode() {
+            return objectHashCode(defaultValue) + objectHashCode(name);
+        }
+    }
+
+    /**
+     * A nested text element for the MacroDef task.
+     * @since ant 1.6.1
+     */
+    public static class Text {
+        private String  name;
+        private boolean optional;
+        private boolean trim;
+        private String  description;
+
+        /**
+         * The name of the attribute.
+         *
+         * @param name the name of the attribute
+         */
+        public void setName(String name) {
+            if (!isValidName(name)) {
+                throw new BuildException(
+                    "Illegal name [" + name + "] for attribute");
+            }
+            this.name = name.toLowerCase(Locale.US);
+        }
+
+        /**
+         * @return the name of the attribute
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * The optional attribute of the text element.
+         *
+         * @param optional if true this is optional
+         */
+        public void setOptional(boolean optional) {
+            this.optional = optional;
+        }
+
+        /**
+         * @return true if the text is optional
+         */
+        public boolean getOptional() {
+            return optional;
+        }
+
+        /**
+         * The trim attribute of the text element.
+         *
+         * @param trim if true this String.trim() is called on
+         *             the contents of the text element.
+         */
+        public void setTrim(boolean trim) {
+            this.trim = trim;
+        }
+
+        /**
+         * @return true if the text is trim
+         */
+        public boolean getTrim() {
+            return trim;
+        }
+
+        /**
+         * @param desc Description of the text.
+         */
+        public void setDescription(String desc) {
+            description = desc;
+        }
+
+        /**
+         * @return the description of the text, or <code>null</code> if
+         *         no description is available.
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
+         * equality method
+         *
+         * @param obj an <code>Object</code> value
+         * @return a <code>boolean</code> value
+         */
+        public boolean equals(Object obj) {
+            if (obj == null) {
+                return false;
+            }
+            if (obj.getClass() != getClass()) {
+                return false;
+            }
+            Text other = (Text) obj;
+            if (name == null) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
+                return false;
+            }
+            if (optional != other.optional) {
+                return false;
+            }
+            if (trim != other.trim) {
+                return false;
+            }
+            return true;
+        }
+
+        /**
+         * @return a hash code value for this object.
+         */
+        public int hashCode() {
+            return objectHashCode(name);
         }
     }
 
@@ -341,6 +545,8 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
     public static class TemplateElement {
         private String name;
         private boolean optional = false;
+        private String description;
+
         /**
          * The name of the element.
          *
@@ -351,7 +557,7 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
                 throw new BuildException(
                     "Illegal name [" + name + "] for attribute");
             }
-            this.name = name;
+            this.name = name.toLowerCase(Locale.US);
         }
 
         /**
@@ -379,6 +585,23 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
         }
 
         /**
+         * @param desc Description of the element.
+         * @since ant 1.6.1
+         */
+        public void setDescription(String desc) {
+            description = desc;
+        }
+
+        /**
+         * @return the description of the element, or <code>null</code> if
+         *         no description is available.
+         * @since ant 1.6.1
+         */
+        public String getDescription() {
+            return description;
+        }
+
+        /**
          * equality method
          *
          * @param obj an <code>Object</code> value
@@ -393,12 +616,20 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
             TemplateElement other = (TemplateElement) obj;
             if (name == null) {
-                return other.name == null;
-            }
-            if (!name.equals(other.name)) {
+                if (other.name != null) {
+                    return false;
+                }
+            } else if (!name.equals(other.name)) {
                 return false;
             }
             return optional == other.optional;
+        }
+
+        /**
+         * @return a hash code value for this object.
+         */
+        public int hashCode() {
+            return objectHashCode(name) + (optional ? 1 : 0);
         }
     }
 
@@ -423,6 +654,15 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
         if (!name.equals(other.name)) {
             return false;
         }
+        if (text == null) {
+            if (other.text != null) {
+                return false;
+            }
+        } else {
+            if (!text.equals(other.text)) {
+                return false;
+            }
+        }
         if (getURI() == null || getURI().equals("")
             || getURI().equals(ProjectHelper.ANT_CORE_URI)) {
             if (!(other.getURI() == null || other.getURI().equals("")
@@ -435,10 +675,7 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
         }
 
-        if (attributeStyle != other.attributeStyle) {
-            return false;
-        }
-        if (!nestedTask.similar(other.nestedTask)) {
+        if (!nestedSequential.similar(other.nestedSequential)) {
             return false;
         }
         if (!attributes.equals(other.attributes)) {
@@ -448,6 +685,17 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             return false;
         }
         return true;
+    }
+
+    /**
+     * @return a hash code value for this object.
+     */
+    public int hashCode() {
+        return objectHashCode(name)
+            + objectHashCode(getURI())
+            + objectHashCode(nestedSequential)
+            + objectHashCode(attributes)
+            + objectHashCode(elements);
     }
 
     /**
@@ -511,6 +759,14 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
             MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
             return macroDef.equals(otherDef.macroDef);
+        }
+    }
+
+    private static int objectHashCode(Object o) {
+        if (o == null) {
+            return 0;
+        } else {
+            return o.hashCode();
         }
     }
 }

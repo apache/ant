@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001,2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2001,2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -195,9 +195,9 @@ public class IntrospectionHelperTest extends TestCase {
         h.put("fourteen", java.lang.StringBuffer.class);
         h.put("fifteen", java.lang.StringBuffer.class);
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
-        Enumeration enum = ih.getNestedElements();
-        while (enum.hasMoreElements()) {
-            String name = (String) enum.nextElement();
+        Enumeration e = ih.getNestedElements();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
             Class expect = (Class) h.get(name);
             assertNotNull("Support for "+name+" in IntrospectioNHelperTest?",
                           expect);
@@ -408,9 +408,9 @@ public class IntrospectionHelperTest extends TestCase {
         h.put("name", java.lang.String.class);
 
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
-        Enumeration enum = ih.getAttributes();
-        while (enum.hasMoreElements()) {
-            String name = (String) enum.nextElement();
+        Enumeration e = ih.getAttributes();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
             Class expect = (Class) h.get(name);
             assertNotNull("Support for "+name+" in IntrospectionHelperTest?",
                           expect);

@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>CVS Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -54,7 +55,10 @@ from the command line in the target directory in which you are working.
   </tr>
   <tr>
     <td valign="top">dest</td>
-    <td valign="top">the directory where the checked out files should be placed.</td>
+    <td valign="top">the directory where the checked out files should
+    be placed.  Note that this is different from CVS's -d command line
+    switch as Ant will never shorten pathnames to avoid empty
+    directories.</td>
     <td align="center" valign="top">No, default is project's basedir.</td>
   </tr>
   <tr>
@@ -165,8 +169,8 @@ from the <code>&lt;cvs&gt;</code> element.
 <p>Updates from the head of repository ignoring sticky bits (<code>-A</code>) and creating any new directories as necessary (<code>-d</code>).</p>
 <p>Note: the text of the command is passed to cvs &quot;as-is&quot; so any cvs options should appear
 before the command, and any command options should appear after the command as in the diff example
-above. See <a href="http://www.cvshome.org/docs/manual/cvs-1.11.6/cvs.html" target="_top">the cvs manual</a> for details,
-specifically the <a href="http://www.cvshome.org/docs/manual/cvs-1.11.6/cvs_16.html" target="_top">Guide to CVS commands</a></p>
+above. See <a href="http://www.cvshome.org/docs/manual/cvs-1.11.7/cvs.html" target="_top">the cvs manual</a> for details,
+specifically the <a href="http://www.cvshome.org/docs/manual/cvs-1.11.7/cvs_16.html" target="_top">Guide to CVS commands</a></p>
 <hr>
 <p align="center">Copyright &copy; 2000-2003 Apache Software
 Foundation.  All rights Reserved.</p>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,18 +80,24 @@ import org.apache.tools.ant.types.Commandline;
  *      <td>Specifies whether to keep a copy of the file with a .keep extension or not</td>
  *      <td>No</td>
  *   <tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
+ *   <tr>
  * </table>
  *
  * @author Curtis White
  */
 public class CCUnCheckout extends ClearCase {
-    private boolean m_Keep = false;
+    private boolean mKeep = false;
 
     /**
      * Executes the task.
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -111,8 +117,12 @@ public class CCUnCheckout extends ClearCase {
 
         checkOptions(commandLine);
 
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getViewPathBasename(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
             throw new BuildException(msg, getLocation());
         }
@@ -142,7 +152,7 @@ public class CCUnCheckout extends ClearCase {
      * @param keep the status to set the flag to
      */
     public void setKeepCopy(boolean keep) {
-        m_Keep = keep;
+        mKeep = keep;
     }
 
     /**
@@ -151,15 +161,15 @@ public class CCUnCheckout extends ClearCase {
      * @return boolean containing status of keep flag
      */
     public boolean getKeepCopy() {
-        return m_Keep;
+        return mKeep;
     }
 
 
-        /**
+    /**
      *  -keep flag -- keep a copy of the file with .keep extension
      */
     public static final String FLAG_KEEPCOPY = "-keep";
-        /**
+    /**
      *  -rm flag -- remove the copy of the file
      */
     public static final String FLAG_RM = "-rm";

@@ -64,6 +64,8 @@ import java.io.OutputStream;
 import java.io.InputStream;
 import java.text.NumberFormat;
 
+import org.apache.tools.ant.BuildException;
+
 public abstract class AbstractSshMessage {
 
     private Session session;
@@ -91,11 +93,41 @@ public abstract class AbstractSshMessage {
         out.flush();
     }
 
-    protected void waitForAck(InputStream in) throws IOException {
-        int b = 0;
-        do {
-            b = in.read();
-        } while (b > 0);
+    /**
+     * Reads the response, throws a BuildException if the response
+     * indicates an error.
+     */
+    protected void waitForAck(InputStream in) 
+        throws IOException, BuildException {
+        int b = in.read();
+
+        // b may be 0 for success,
+        //          1 for error,
+        //          2 for fatal error,
+
+        if (b == -1) {
+            // didn't receive any response
+            throw new BuildException("No response from server");
+        } else if (b != 0) {
+            StringBuffer sb = new StringBuffer();
+
+            int c = in.read();
+            while (c > 0 && c != '\n') {
+                sb.append((char) c);
+                c = in.read();
+            }
+            
+            if (b == 1) {
+                throw new BuildException("server indicated an error: "
+                                         + sb.toString());
+            } else if (b == 2) {
+                throw new BuildException("server indicated a fatal error: "
+                                         + sb.toString());
+            } else {
+                throw new BuildException("unknown response, code " + b
+                                         + " message: " + sb.toString());
+            }
+        }
     }
 
     public abstract void execute() throws IOException, JSchException;

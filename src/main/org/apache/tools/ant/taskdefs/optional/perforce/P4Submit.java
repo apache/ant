@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,13 +83,37 @@ public class P4Submit extends P4Base {
      * change list number
      */
     public String change;
-
+    /**
+     * change property
+     */
+    private String changeProperty;
+    /**
+     * needsresolveproperty
+     */
+    private String needsResolveProperty;
     /**
      * set the change list number to submit
      * @param change The changelist number to submit; required.
      */
     public void setChange(String change) {
         this.change = change;
+    }
+    /**
+     * property defining the change number if the change number gets renumbered
+     * @param changeProperty name of a new property to which the change number
+     * will be assigned if it changes
+     * @since ant 1.6.1
+     */
+    public void setChangeProperty(String changeProperty) {
+        this.changeProperty = changeProperty;
+    }
+    /**
+     * property defining the need to resolve the change list
+     * @param needsResolveProperty a property which will be set if the change needs resolve
+     * @since ant 1.6.1
+     */
+    public void setNeedsResolveProperty(String needsResolveProperty) {
+        this.needsResolveProperty = needsResolveProperty;
     }
 
     /**
@@ -98,7 +122,7 @@ public class P4Submit extends P4Base {
      */
     public void execute() throws BuildException {
         if (change != null) {
-            execP4Command("submit -c " + change, (P4HandlerAdapter) new P4SubmitAdapter());
+            execP4Command("submit -c " + change, (P4HandlerAdapter) new P4SubmitAdapter(this));
         } else {
             //here we'd parse the output from change -o into submit -i
             //in order to support default change.
@@ -109,13 +133,16 @@ public class P4Submit extends P4Base {
     /**
      * internal class used to process the output of p4 submit
      */
-    public class P4SubmitAdapter extends P4HandlerAdapter {
+    public class P4SubmitAdapter extends SimpleP4OutputHandler {
+        public P4SubmitAdapter(P4Base parent) {
+            super(parent);
+        }
         /**
          * process a line of stdout/stderr coming from Perforce
          * @param line line of stdout or stderr coming from Perforce
          */
         public void process(String line) {
-            log(line, Project.MSG_VERBOSE);
+            super.process(line);
             getProject().setProperty("p4.needsresolve", "0");
             // this type of output might happen
             // Change 18 renamed change 20 and submitted.
@@ -130,6 +157,9 @@ public class P4Submit extends P4Base {
                             int changenumber = Integer.parseInt(chnum);
                             log("Perforce change renamed " + changenumber, Project.MSG_INFO);
                             getProject().setProperty("p4.change", "" + changenumber);
+                            if (changeProperty != null) {
+                                getProject().setNewProperty(changeProperty, chnum);
+                            }
                             found = false;
                         }
                         if (((myarray.elementAt(counter))).equals("renamed")) {
@@ -145,6 +175,9 @@ public class P4Submit extends P4Base {
             }
             if (util.match("/p4 submit -c/", line)) {
                 getProject().setProperty("p4.needsresolve", "1");
+                if (needsResolveProperty != null) {
+                    getProject().setNewProperty(needsResolveProperty, "true");
+                }
             }
 
         }

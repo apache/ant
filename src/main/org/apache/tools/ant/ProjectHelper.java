@@ -86,7 +86,7 @@ import org.xml.sax.AttributeList;
  */
 public class ProjectHelper {
     /** The URI for ant name space */
-    public static final String ANT_CORE_URI       = "ant:core";
+    public static final String ANT_CORE_URI    = "antlib:org.apache.tools.ant";
 
     /** The URI for antlib current definitions */
     public static final String ANT_CURRENT_URI      = "ant:current";
@@ -525,11 +525,54 @@ public class ProjectHelper {
      * @return               The uri or "" if not present
      */
     public static String extractUriFromComponentName(String componentName) {
+        if (componentName == null) {
+            return "";
+        }
         int index = componentName.lastIndexOf(':');
         if (index == -1) {
             return "";
         }
         return componentName.substring(0, index);
     }
-//end class
+    
+    /**
+     * extract the element name from a component name
+     *
+     * @param componentName  The stringified form for {uri, name}
+     * @return               The element name of the component
+     */
+    public static String extractNameFromComponentName(String componentName) {
+        int index = componentName.lastIndexOf(':');
+        if (index == -1) {
+            return componentName;
+        }
+        return componentName.substring(index+1);
+    }
+
+    /**
+     * Add location to build exception.
+     * @param ex the build exception, if the build exception
+     *           does not include
+     * @param newLocation the location of the calling task (may be null)
+     * @return a new build exception based in the build exception with
+     *         location set to newLocation. If the original exception
+     *         did not have a location, just return the build exception
+     */
+    public static BuildException addLocationToBuildException(
+        BuildException ex, Location newLocation) {
+        if (ex.getLocation() == null || ex.getMessage() == null) {
+            return ex;
+        }
+        String errorMessage
+            = "Following error occured while executing this line"
+            + System.getProperty("line.separator")
+            + ex.getLocation().toString()
+            + ex.getMessage();
+        if (newLocation == null) {
+            return new BuildException(errorMessage, ex);
+        } else {
+            return new BuildException(
+                errorMessage, ex, newLocation);
+        }
+    }
 }

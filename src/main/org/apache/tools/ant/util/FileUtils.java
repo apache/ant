@@ -545,7 +545,7 @@ public class FileUtils {
             // ensure that parent dir of dest file exists!
             // not using getParentFile method to stay 1.1 compat
             File parent = getParentFile(destFile);
-            if (!parent.exists()) {
+            if (parent != null && !parent.exists()) {
                 parent.mkdirs();
             }
 
@@ -824,6 +824,8 @@ public class FileUtils {
      *   <li>DOS style paths that start with a drive letter will have
      *     \ as the separator.</li>
      * </ul>
+     * Unlike <code>File#getCanonicalPath()</code> it specifically doesn't
+     * resolve symbolic links.
      *
      * @param path the path to be normalized
      * @return the normalized version of the path.
@@ -935,6 +937,65 @@ public class FileUtils {
             path = path.replace('/', '\\');
         }
         return new File(path);
+    }
+
+    /**
+     * Returns a VMS String representation of a <code>File</code> object.
+     * This is useful since the JVM by default internally converts VMS paths
+     * to Unix style.
+     * The returned String is always an absolute path.
+     * 
+     * @param f The <code>File</code> to get the VMS path for.
+     * @return The absolute VMS path to <code>f</code>.
+     */
+    public String toVMSPath(File f) {
+        // format: "DEVICE:[DIR.SUBDIR]FILE"
+        String osPath;
+        String path = normalize(f.getAbsolutePath()).getPath();
+        String name = f.getName();
+        boolean isAbsolute = path.charAt(0) == File.separatorChar;
+        // treat directories specified using .DIR syntax as files
+        boolean isDirectory = f.isDirectory() &&
+            !name.regionMatches(true, name.length() - 4, ".DIR", 0, 4); 
+
+        String device = null;
+        StringBuffer directory = null;
+        String file = null;
+
+        int index = 0;
+
+        if (isAbsolute) {
+            index = path.indexOf(File.separatorChar, 1);
+            if (index == -1) {
+                return path.substring(1) + ":[000000]";
+            } else {
+                device = path.substring(1, index++);
+            }
+        }
+        if (isDirectory) {
+            directory = new StringBuffer(path.substring(index).
+                                         replace(File.separatorChar, '.'));
+        } else {
+            int dirEnd =
+                path.lastIndexOf(File.separatorChar, path.length());
+            if (dirEnd == -1 || dirEnd < index) {
+                file = path.substring(index);
+            } else {
+                directory = new StringBuffer(path.substring(index, dirEnd).
+                                             replace(File.separatorChar, '.'));
+                index = dirEnd + 1;
+                if (path.length() > index) {
+                    file = path.substring(index);
+                }
+            }
+        }
+        if (!isAbsolute && directory != null) {
+            directory.insert(0, '.');
+        }
+        osPath = ((device != null) ? device + ":" : "") +
+            ((directory != null) ? "[" + directory + "]" : "") +
+            ((file != null) ? file : "");
+        return osPath;
     }
 
     /**
@@ -1319,7 +1380,7 @@ public class FileUtils {
         }
 
         File parent = getParentFile(to);
-        if (!parent.exists() && !parent.mkdirs()) {
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
             throw new IOException("Failed to create directory " + parent
                                   + " while trying to rename " + from);
         }

@@ -58,6 +58,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
@@ -158,6 +159,12 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 throw new BuildException("Could not find main() method in "
                                          + classname);
             }
+
+            if ((main.getModifiers() & Modifier.STATIC) == 0) {
+                throw new BuildException("main() method in " + classname
+                    + " is not declared static");
+            }
+
 
             if (timeout == null) {
                 run();

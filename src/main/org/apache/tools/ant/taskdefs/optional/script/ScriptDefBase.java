@@ -64,9 +64,7 @@ import java.util.ArrayList;
 
 /**
  * The script execution class. This class finds the defining script task
- * and passes control to that task's executeScript method. This class
- * implements the TaskCOntainer interface primarily to stop Ant's core from
- * configuring the nested elements - this is done by the script task itself.
+ * and passes control to that task's executeScript method.
  *
  * @author Conor MacNeill
  * @since Ant 1.6

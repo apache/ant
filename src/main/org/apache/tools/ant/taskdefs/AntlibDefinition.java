@@ -73,10 +73,11 @@ public class AntlibDefinition extends Task {
 
     /**
      * The URI for this definition.
-     * If the URI is "ant:core", the uri will be set to "". (This
-     * is the default uri).
-     * URIs that start with "ant:" and are not
-     * "ant:core" are reserved and are not allowed in this context.
+     * If the URI is "antlib:org.apache.tools.ant",
+     * (this is the default uri)
+     * the uri will be set to "".
+     * URIs that start with "ant:" are reserved
+     * and are not allowed in this context.
      * @param uri the namespace URI
      * @throws BuildException if a reserved URI is used
      */

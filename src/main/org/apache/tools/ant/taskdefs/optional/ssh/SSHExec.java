@@ -65,6 +65,7 @@ import java.io.IOException;
 import java.io.StringReader;
 
 import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 /**
@@ -92,6 +93,9 @@ public class SSHExec extends SSHBase {
     private String outputProperty = null;   // like <exec>
     private File outputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
+
+    private static final String TIMEOUT_MESSAGE = 
+        "Timeout period exceeded, connection dropped.";
 
     /**
      * Constructor for SSHExecTask.
@@ -205,7 +209,11 @@ public class SSHExec extends SSHBase {
             if (thread.isAlive()) {
                 // ran out of time
                 thread = null;
-                log("Timeout period exceeded, connection dropped.");
+                if (getFailonerror()) {
+                    throw new BuildException(TIMEOUT_MESSAGE);
+                } else {
+                    log(TIMEOUT_MESSAGE, Project.MSG_ERR);
+                }
             } else {
                 // completed successfully
                 if (outputProperty != null) {
@@ -227,9 +235,23 @@ public class SSHExec extends SSHBase {
                     }
                 }
             }
-
         } catch (BuildException e) {
             throw e;
+        } catch (JSchException e) {
+            if (e.getMessage().indexOf("session is down") >= 0) {
+                if (getFailonerror()) {
+                    throw new BuildException(TIMEOUT_MESSAGE, e);
+                } else {
+                    log(TIMEOUT_MESSAGE, Project.MSG_ERR);
+                }
+            } else {
+                if (getFailonerror()) {
+                    throw new BuildException(e);
+                } else {
+                    log("Caught exception: " + e.getMessage(), 
+                        Project.MSG_ERR);
+                }
+            }
         } catch (Exception e) {
             if (getFailonerror()) {
                 throw new BuildException(e);

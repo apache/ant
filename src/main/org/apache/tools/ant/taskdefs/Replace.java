@@ -399,6 +399,7 @@ public class Replace extends MatchingTask {
 
         File temp = fileUtils.createTempFile("rep", ".tmp",
                                              fileUtils.getParentFile(src));
+        temp.deleteOnExit();
 
         Reader reader = null;
         Writer writer = null;

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -110,7 +110,7 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
         } else {
             log("Unable to locate jboss cmp descriptor. "
                 + "It was expected to be in "
-                + jbossCMPD.getPath(), Project.MSG_WARN);
+                + jbossCMPD.getPath(), Project.MSG_VERBOSE);
             return;
         }
     }
@@ -120,7 +120,14 @@ public class JbossDeploymentTool extends GenericDeploymentTool {
      * of this jar will be checked against the dependent bean classes.
      */
     File getVendorOutputJarFile(String baseName) {
-        return new File(getParent().getDestdir(), baseName + jarSuffix);
+        if (getDestDir() == null && getParent().getDestdir() == null) {
+            throw new BuildException("DestDir not specified");
+        }
+        if (getDestDir() == null) {
+            return new File(getParent().getDestdir(), baseName + jarSuffix);
+        } else {
+            return new File(getDestDir(), baseName + jarSuffix);
+        }
     }
 
     /**

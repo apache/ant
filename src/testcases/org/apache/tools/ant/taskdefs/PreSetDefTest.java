@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,8 +55,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.FileSet;
 
 /**
  * @author Peter Reilly
@@ -82,5 +84,57 @@ public class PreSetDefTest extends BuildFileTest {
         expectLog("uri", "Hello world");
     }
 
+    public void testDefaultTest() {
+        expectLog("defaulttest", "attribute is false");
+    }
+
+    public void testDoubleDefault() {
+        expectLog("doubledefault", "attribute is falseattribute is true");
+    }
+
+    public void testTextOptional() {
+        expectLog("text.optional", "MyTextoverride text");
+    }
+
+    public void testElementOrder() {
+        expectLog("element.order", "Line 1Line 2");
+    }
+
+    public void testElementOrder2() {
+        expectLog("element.order2", "Line 1Line 2Line 3");
+    }
+
+    public void testAntTypeTest() {
+        expectLog("antTypeTest", "");
+    }
+    
+    /**
+     * A test class to check default properties
+     */
+    public static class DefaultTest extends Task {
+        boolean isSet = false;
+        boolean attribute = false;
+        public void setAttribute(boolean b) {
+            if (isSet) {
+                throw new BuildException("Attribute Already set");
+            }
+            attribute = b;
+            isSet = true;
+        }
+
+        public void execute() {
+            getProject().log("attribute is " + attribute);
+        }
+    }
+
+    /**
+     * A test class to check presetdef with add and addConfigured and ant-type
+     */
+    public static class AntTypeTest extends Task {
+        public void addFileSet(FileSet fileset) {
+        }
+        public void addConfiguredConfigured(FileSet fileset) {
+        }
+    }
 }
 

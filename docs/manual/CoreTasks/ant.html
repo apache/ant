@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>Ant Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -11,7 +12,7 @@
 <h3>Description</h3>
 
 <p>Runs Ant on a supplied buildfile. This can be used to build
-subprojects.  <strong>This task must no be used outside of a
+subprojects.  <strong>This task must not be used outside of a
 <code>target</code> if it invoces the same build file it is part
 of.</strong></p>
 
@@ -20,15 +21,20 @@ in the supplied directory (<i>dir</i> attribute) is used.</p>
 <p>If no target attribute is supplied, the default target of the new project is
 used.</p>
 <p>By default, all of the properties of the current project will be
-available in the new project.   Alternatively, you can
-set the <i>inheritAll</i> attribute to <code>false</code> and only
+available in the new project.  Alternatively, you can set the
+<i>inheritAll</i> attribute to <code>false</code> and only
 &quot;user&quot; properties (i.e., those passed on the command-line)
 will be passed to the new project.  In either case, the set of
-properties passed to the new project will override the properties that 
-are set in the new project (See also the <a href="property.html">property task</a>).</p>
-<p>You can also set properties in the new project from the old project by
-using nested property tags. These properties are always passed regardless of the
-setting of <i>inheritAll</i>.  This allows you to parameterize your subprojects.</p>
+properties passed to the new project will override the properties that
+are set in the new project (See also the <a
+href="property.html">property task</a>).</p>
+
+<p>You can also set properties in the new project from the old project
+by using nested property tags. These properties are always passed
+to the new project and any project created in that project
+regardless of the setting of <i>inheritAll</i>.  This allows you to
+parameterize your subprojects.  Properties defined on the command line
+can not be overridden by nested &lt;property&gt; elements.</p>
 
 <p>References to data types can also be passed to the new project, but
 by default they are not.  If you set the inheritrefs attribute to
@@ -38,8 +44,9 @@ references defined in the new project.</p>
 <p>Nested <a href="#reference"><i>&lt;reference&gt;</i></a> elements
 can also be used to copy references from the calling project to the
 new project, optionally under a different id.  References taken from
-nested elements will override existing references in the new
-project.</p>
+nested elements will override existing references that have been
+defined outside of targets in the new project - but not those defined
+inside of targets.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -57,7 +64,7 @@ project.</p>
   </tr>
   <tr>
     <td valign="top">dir</td>
- 	<td valign="top">the directory to use as a basedir for the new Ant project. 
+         <td valign="top">the directory to use as a basedir for the new Ant project.
       Defaults to the current project's basedir, unless
       inheritall has been set to false, in which case it doesn't
       have a default value.  This will override the basedir
@@ -79,13 +86,13 @@ project.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">inheritAll</td> 
+    <td valign="top">inheritAll</td>
     <td valign="top">If <code>true</code>, pass all properties to the
       new Ant project.  Defaults to <code>true</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
-    <td valign="top">inheritRefs</td> 
+    <td valign="top">inheritRefs</td>
     <td valign="top">If <code>true</code>, pass all references to the
       new Ant project.  Defaults to <code>false</code>.</td>
     <td align="center" valign="top">No</td>
@@ -100,7 +107,7 @@ task</a>.  Note that the <code>refid</code> attribute points to a
 reference in the calling project, not in the new one.</p>
 
 <h4><a name="reference">reference</a></h4>
-<p>Used to chose references that shall be copied into the new project,
+<p>Used to choose references that shall be copied into the new project,
 optionally changing their id.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -242,4 +249,3 @@ Reserved.</p>
 
 </body>
 </html>
-

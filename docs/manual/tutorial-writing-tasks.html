@@ -8,6 +8,7 @@
   .output { color: #FFFFFF; background: #837A67; }
   -->
   </style>
+<link rel="stylesheet" type="text/css" href="stylesheets/antmanual.css">
 </head>
 <body>
 <h1>Tutorial: Writing Tasks</h1>
@@ -20,7 +21,7 @@ tasks.</p>
 <li><a href="#write1">Write the Task</a></li>
 <li><a href="#use1">Use the Task</a></li>
 <li><a href="#TaskAdapter">Integration with TaskAdapter</a></li>
-<li><a href="#derivingFromTask">Deriving from Ant´s Task</a></li>
+<li><a href="#derivingFromTask">Deriving from Ant's Task</a></li>
 <li><a href="#attributes">Attributes</a></li>
 <li><a href="#NestedText">Nested Text</a></li>
 <li><a href="#NestedElements">Nested Elements</a></li>
@@ -29,7 +30,7 @@ tasks.</p>
 <li><a href="#resources">Resources</a></li>
 </ul></p>
 
-<a name="buildenvironment"/>
+<a name="buildenvironment"></a>
 <h2>Set up the build environment</h2>
 <p>Ant builds itself, we are using Ant too (why we would write
 a task if not? :-) therefore we should use Ant for our build.<p>
@@ -96,7 +97,7 @@ the execution of some steps bofore. So the refactored code is:
 build-in properties [1]</a> of Ant.
 
 
-<a name="write1"/>
+<a name="write1"></a>
 <h2>Write the Task</h2>
 
 Now we write the simplest Task - a HelloWorld-Task (what else?). Create a text file
@@ -113,7 +114,7 @@ its <i>depends</i>-clause the "compile" is executed before).
 
 
 
-<a name="use1"/>
+<a name="use1"></a>
 <h2>Use the Task</h2>
 <p>But after creating the jar we want to use our new Task. Therefore we need a
 new target "use". Before we can use our new task we have to declare it with
@@ -134,7 +135,7 @@ new target "use". Before we can use our new task we have to declare it with
 </pre>
 
 Important is the <i>classpath</i>-attribute. Ant searches in its /lib directory for
-tasks and our task isn´t there. So we have to provide the right location. </p>
+tasks and our task isn't there. So we have to provide the right location. </p>
 
 <p>Now we can type in <tt>ant</tt> and all should work ...
 <pre class="output">
@@ -156,16 +157,16 @@ Total time: 3 seconds
 
 
 
-<a name="TaskAdapter"/>
+<a name="TaskAdapter"></a>
 <h2>Integration with TaskAdapter</h2>
 <p>Our class has nothing to do with Ant. It extends no superclass and implements
 no interface. How does Ant know to integrate? Via name convention: our class provides
-a method with signature <tt>public void execute()</tt>. This class is wrapped by Ant´s
+a method with signature <tt>public void execute()</tt>. This class is wrapped by Ant's
 <tt>org.apache.tools.ant.TaskAdapter</tt> which is a task and uses reflection for
 setting a reference to the project and calling the <i>execute()</i> method.</p>
 
 <p><i>Setting a reference to the project</i>? Could be interesting. The Project class
-gives us some nice abilities: access to Ant´s logging facilities getting and setting
+gives us some nice abilities: access to Ant's logging facilities getting and setting
 properties and much more. So we try to use that class:
 <pre class="code">
 import org.apache.tools.ant.Project;
@@ -191,14 +192,14 @@ Here is project 'MyTask'.
 </pre></p>
 
 
-<a name="derivingFromTask"/>
-<h2>Deriving from Ant´s Task</h2>
+<a name="derivingFromTask"></a>
+<h2>Deriving from Ant's Task</h2>
 <p>Ok, that works ... But usually you will extend <tt>org.apache.tools.ant.Task</tt>.
-That class is integrated in Ant, get´s the project-reference, provides documentation
+That class is integrated in Ant, get's the project-reference, provides documentation
 fiels, provides easier access to the logging facility and (very useful) gives you
 the exact location where <i>in the buildfile</i> this task instance is used.</p>
 
-<p>Oki-doki - let´s us use some of these:
+<p>Oki-doki - let's us use some of these:
 <pre class="code">
 import org.apache.tools.ant.Task;
 
@@ -207,7 +208,7 @@ public class HelloWorld extends Task {
         // use of the reference to Project-instance
         String message = getProject().getProperty("ant.project.name");
 
-        // Task´s log method
+        // Task's log method
         log("Here is project '" + message + "'.");
 
         // where this task is used?
@@ -249,10 +250,10 @@ public class HelloWorld extends Task {
 
 }
 </pre>
-<p>Oh, what´s that in execute()? Throw a <i>BuildException</i>? Yes, that´s the usual
+<p>Oh, what's that in execute()? Throw a <i>BuildException</i>? Yes, that's the usual
 way to show Ant that something important is missed and complete build should fail. The
-string provided there is written as build-failes-message. Here it´s necessary because
-the log() method can´t handle a <i>null</i> value as parameter and throws a NullPointerException.
+string provided there is written as build-failes-message. Here it's necessary because
+the log() method can't handle a <i>null</i> value as parameter and throws a NullPointerException.
 (Of course you can initialize the <i>message</i> with a default string.)</p>
 
 <p>After that we have to modify our buildfile:
@@ -264,7 +265,7 @@ the log() method can´t handle a <i>null</i> value as parameter and throws a Null
         &lt;helloworld <b>message="Hello World"</b>/>
     &lt;/target>
 </pre>
-That´s all.</p>
+That's all.</p>
 
 <p>Some background for working with attributes: Ant supports any of these datatypes as
 arguments of the set-method:<ul>
@@ -279,7 +280,7 @@ Before calling the set-method all properties are resolved. So a <tt>&lt;hellowor
 would not set the message string to "${msg}" if there is a property "msg" with a set value.
 
 
-<a name="NestedText"/>
+<a name="NestedText"></a>
 <h2>Nested Text</h2>
 <p>Maybe you have used the &lt;echo> task in a way like <tt>&lt;echo>Hello World&lt;/echo></tt>.
 For that you have to provide a <tt>public void addText(String text)</tt> method.
@@ -294,11 +295,11 @@ public class HelloWorld extends Task {
 }
 </pre>
 But here properties are <b>not</b> resolved! For resolving properties we have to use
-Project´s <tt>replaceProperties(String propname) : String</tt> method which takes the
+Project's <tt>replaceProperties(String propname) : String</tt> method which takes the
 property name as argument and returns its value (or ${propname} if not set).</p>
 
 
-<a name="NestedElements"/>
+<a name="NestedElements"></a>
 <h2>Nested Elements</h2>
 <p>There are several ways for inserting the ability of handling nested elements. See
 the <a href="http://ant.apache.org/manual/develop.html#nested-elements">Manual [4]</a> for other.
@@ -353,7 +354,7 @@ the buildfile
 </pre>
 
 
-<a name="complex"/>
+<a name="complex"></a>
 <h2>Our task in a little more complex version</h2>
 <p>For recapitulation now a little refactored buildfile:
 <pre class="code">
@@ -438,7 +439,7 @@ import java.util.Iterator;
 
 /**
  * The task of the tutorial.
- * Print´s a message or let the build fail.
+ * Print a message or let the build fail.
  * @author Jan Matèrne
  * @since 2003-08-19
  */
@@ -558,7 +559,7 @@ Next step: test ...
 
 
 
-<a name="TestingTasks"/>
+<a name="TestingTasks"></a>
 <h2>Test the Task</h2>
 <p>We have written a test already: the use.* tasks in the buildfile. But its
 difficult to test that automatically. Common (and in Ant) used is JUnit for
@@ -571,7 +572,7 @@ in the output log ... </p>
 
 <p>In Ant it is usual that the testcase has the same name as the task with a prepending
 <i>Test</i>, therefore we will create a file <i>HelloWorldTest.java</i>. Because we
-have a very small project we can put this file into <i>src</i> directory (Ant´s own
+have a very small project we can put this file into <i>src</i> directory (Ant's own
 testclasses are in /src/testcases/...). Because we have already written our tests
 for "hand-test" we can use that for automatic tests, too. But there is one little
 problem we have to solve: all test supporting classes are not part of the binary
@@ -690,7 +691,7 @@ public class HelloWorldTest extends BuildFileTest {
 }
 </pre></p>
 
-<p>When starting <tt>ant</tt> we´ll get a short message to STDOUT and
+<p>When starting <tt>ant</tt> we'll get a short message to STDOUT and
 a nice HTML-report.
 <pre class="output">
 C:\tmp\anttests\MyFirstTask>ant
@@ -723,7 +724,7 @@ C:\tmp\anttests\MyFirstTask>
 </pre></p>
 
 
-<a name="resources"/>
+<a name="resources"></a>
 <h2>Resources</h2>
 <p>This tutorial and its resources are available via
 <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=22570">BugZilla [6]</a>.
@@ -743,13 +744,13 @@ The last sources and the buildfile are also available
 
 
 Used Links:<br/>
-&nbsp;&nbsp;[1] <a href="http://ant.apache.org/manual/using.html#built-in-props">http://ant.apache.org/manual/using.html#built-in-props</a><br/>
-&nbsp;&nbsp;[2] <a href="http://ant.apache.org/manual/CoreTasks/taskdef.html">http://ant.apache.org/manual/CoreTasks/taskdef.html</a><br/>
-&nbsp;&nbsp;[3] <a href="http://ant.apache.org/manual/develop.html#set-magic">http://ant.apache.org/manual/develop.html#set-magic</a><br/>
-&nbsp;&nbsp;[4] <a href="http://ant.apache.org/manual/develop.html#nested-elements">http://ant.apache.org/manual/develop.html#nested-elements</a><br/>
-&nbsp;&nbsp;[5] <a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">http://gump.covalent.net/jars/latest/ant/ant-testutil.jar</a><br/>
-&nbsp;&nbsp;[6] <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=22570">http://nagoya.apache.org/bugzilla/show_bug.cgi?id=22570</a><br/>
-&nbsp;&nbsp;[7] <a href="tutorial-writing-tasks-src.zip">tutorial-writing-tasks-src.zip</a><br/>
+&nbsp;&nbsp;[1] <a href="http://ant.apache.org/manual/using.html#built-in-props">http://ant.apache.org/manual/using.html#built-in-props</a><br>
+&nbsp;&nbsp;[2] <a href="http://ant.apache.org/manual/CoreTasks/taskdef.html">http://ant.apache.org/manual/CoreTasks/taskdef.html</a><br>
+&nbsp;&nbsp;[3] <a href="http://ant.apache.org/manual/develop.html#set-magic">http://ant.apache.org/manual/develop.html#set-magic</a><br>
+&nbsp;&nbsp;[4] <a href="http://ant.apache.org/manual/develop.html#nested-elements">http://ant.apache.org/manual/develop.html#nested-elements</a><br>
+&nbsp;&nbsp;[5] <a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">http://gump.covalent.net/jars/latest/ant/ant-testutil.jar</a><br>
+&nbsp;&nbsp;[6] <a href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=22570">http://nagoya.apache.org/bugzilla/show_bug.cgi?id=22570</a><br>
+&nbsp;&nbsp;[7] <a href="tutorial-writing-tasks-src.zip">tutorial-writing-tasks-src.zip</a><br>
 
 <hr>
 <p align="center">Copyright &copy; 2003 Apache Software Foundation. All rights

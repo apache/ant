@@ -198,7 +198,13 @@ public class SplashTask extends Task {
         }
 
         if (in == null) {
-            in = SplashTask.class.getClassLoader().getResourceAsStream("images/ant_logo_large.gif");
+            ClassLoader cl = SplashTask.class.getClassLoader();
+            if (cl != null) {
+                in = cl.getResourceAsStream("images/ant_logo_large.gif");
+            } else {
+                in = ClassLoader
+                    .getSystemResourceAsStream("images/ant_logo_large.gif");
+            }
         }
 
         if (in != null) {

@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>FixCRLF Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -219,6 +220,12 @@ supports all attributes of <code>&lt;fileset&gt;</code>
     <td valign="top">The encoding of the files</td>
     <td align="center">No - defaults to default JVM encoding</td>
   </tr>
+  <tr>
+    <td valign="top">fixlast</td>
+    <td valign="top">Whether to add a missing EOL to the last line
+                     of a processed file. (Since ant 1.6.1)</td>
+    <td align="center">No - default is <i>true</i></td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;fixcrlf srcdir=&quot;${src}&quot;
@@ -271,9 +278,8 @@ EOF characters are left alone if run on
 DOS systems, and are removed if run on Unix systems.
 You never know what editor a user will use to browse README's.</p>
 <hr>
-<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2004 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
 </html>
-

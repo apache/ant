@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -155,6 +155,8 @@ public class Javac extends MatchingTask {
             facade = new FacadeTaskHelper("javac1.3");
         } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4)) {
             facade = new FacadeTaskHelper("javac1.4");
+        } else if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
+            facade = new FacadeTaskHelper("javac1.5");
         } else {
             facade = new FacadeTaskHelper("classic");
         }
@@ -198,7 +200,7 @@ public class Javac extends MatchingTask {
      *
      * If you use this attribute together with jikes, you must
      * make sure that your version of jikes supports the -source switch.
-     * Legal values are 1.3 and 1.4 - by default, no -source argument
+     * Legal values are 1.3, 1.4 and 1.5 - by default, no -source argument
      * will be used at all.
      *
      * @param v  Value to assign to source.
@@ -845,7 +847,7 @@ public class Javac extends MatchingTask {
      *
      * @param compilerImpl the name of the compiler implementation
      * @return true if compilerImpl is "modern", "classic", "javac1.1",
-     *                 "javac1.2", "javac1.3" or "javac1.4".
+     *                 "javac1.2", "javac1.3", "javac1.4" or "javac1.5".
      */
     protected boolean isJdkCompiler(String compilerImpl) {
         return "modern".equals(compilerImpl)
@@ -853,7 +855,8 @@ public class Javac extends MatchingTask {
             || "javac1.1".equals(compilerImpl)
             || "javac1.2".equals(compilerImpl)
             || "javac1.3".equals(compilerImpl)
-            || "javac1.4".equals(compilerImpl);
+            || "javac1.4".equals(compilerImpl)
+            || "javac1.5".equals(compilerImpl);
     }
 
     /**

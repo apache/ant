@@ -3,7 +3,7 @@
  *                   The Apache Software License, Version 1.1
  * ============================================================================
  *
- *    Copyright (C) 2000-2003 The Apache Software Foundation. All
+ *    Copyright (C) 2000-2004 The Apache Software Foundation. All
  *    rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modifica-
@@ -310,7 +310,7 @@
 
 #macro (footer)
       <p class="copyright">
-        Copyright &copy; 2000-2003&nbsp;The Apache Software Foundation. All rights reserved.
+        Copyright &copy; 2000-2004&nbsp;The Apache Software Foundation. All rights reserved.
         <script type="text/javascript" language="JavaScript"><!--
                 document.write(" - "+"Last Published: " + document.lastModified);
               //  -->

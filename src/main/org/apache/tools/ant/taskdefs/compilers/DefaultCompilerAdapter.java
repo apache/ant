@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -445,6 +445,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                         userDir = new File(userDirName);
                     }
                     tmpFile = fileUtils.createTempFile("files", "", userDir);
+                    tmpFile.deleteOnExit();
                     out = new PrintWriter(new FileWriter(tmpFile));
                     for (int i = firstFileName; i < args.length; i++) {
                         if (quoteFiles && args[i].indexOf(" ") > -1) {

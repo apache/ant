@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -105,7 +105,12 @@ public final class Locator {
             c = Locator.class.getClassLoader();
         }
 
-        URL url = c.getResource(resource);
+        URL url = null;
+        if (c == null) {
+            url = ClassLoader.getSystemResource(resource);
+        } else {
+            url = c.getResource(resource);
+        }
         if (url != null) {
             String u = url.toString();
             if (u.startsWith("jar:file:")) {

@@ -80,12 +80,12 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <pre>&lt;setproxy socksproxyhost="socksy"/&gt;</pre>
  * use socks via socksy:1080
  * <pre>&lt;setproxy socksproxyhost=""/&gt;</pre>
- * stop using the socks server
+ * stop using the socks server.
+ * <p>
  * You can set a username and password for http with the <tt>proxyHost</tt>
  * and <tt>proxyPassword</tt> attributes. On Java1.4 and above these can also be
  * used against SOCKS5 servers.
-
-
+ * </p>
  * @see <a href="http://java.sun.com/j2se/1.4/docs/guide/net/properties.html">
  *  java 1.4 network property list</a>
  * @author Steve Loughran

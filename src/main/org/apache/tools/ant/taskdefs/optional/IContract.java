@@ -87,7 +87,7 @@ import org.apache.tools.ant.types.Reference;
  * <p/>
  * Thanks to Rainer Schmitz for enhancements and comments.
  *
- * @author <a href="mailto:aslak.hellesoy@bekk.no">Aslak Helles�a>
+ * @author <a href="mailto:aslak.hellesoy@bekk.no">Aslak Helles\u00f8y</a>
  *
  * <p/>
  * <table border="1" cellpadding="2" cellspacing="0">

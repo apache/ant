@@ -568,7 +568,10 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      * @param asserts assertion set
      */
-    public void setAssertions(Assertions asserts) {
+    public void addAssertions(Assertions asserts) {
+        if (commandline.getAssertions() != null) {
+            throw new BuildException("Only one assertion declaration is allowed");
+        }
         commandline.setAssertions(asserts);
     }
 
@@ -615,6 +618,7 @@ public class JUnitTask extends Task {
     public void init() {
         antRuntimeClasses = new Path(getProject());
         addClasspathEntry("/junit/framework/TestCase.class");
+        addClasspathEntry("/org/apache/tools/ant/launch/AntMain.class");
         addClasspathEntry("/org/apache/tools/ant/Task.class");
         addClasspathEntry("/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class");
     }
@@ -766,6 +770,7 @@ public class JUnitTask extends Task {
         File propsFile =
             FileUtils.newFileUtils().createTempFile("junit", ".properties",
                 tmpDir != null ? tmpDir : getProject().getBaseDir());
+        propsFile.deleteOnExit();
         cmd.createArgument().setValue("propsfile="
                                       + propsFile.getAbsolutePath());
         Hashtable p = getProject().getProperties();
@@ -1124,6 +1129,8 @@ public class JUnitTask extends Task {
 
     private void logTimeout(FormatterElement[] feArray, JUnitTest test) {
         createClassLoader();
+        test.setCounts(1, 0, 1);
+        test.setProperties(getProject().getProperties());
         for (int i = 0; i < feArray.length; i++) {
             FormatterElement fe = feArray[i];
             File outFile = getOutput(fe, test);
@@ -1153,9 +1160,8 @@ public class JUnitTask extends Task {
                             OutputStream out) {
         formatter.setOutput(out);
         formatter.startTestSuite(test);
-        test.setCounts(0, 0, 1);
         Test t = new Test() {
-            public int countTestCases() { return 0; }
+            public int countTestCases() { return 1; }
             public void run(TestResult r) {
                 throw new AssertionFailedError("Timeout occurred");
             }

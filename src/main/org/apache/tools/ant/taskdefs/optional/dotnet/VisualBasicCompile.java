@@ -59,13 +59,52 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * This task compiles Visual Basic.NET source into executables or modules.
- * The task will only work on win2K until other platforms support vbc.exe or
- * an equivalent. VBC.exe must be on the execute path, too.
+ * The task requires vbc.exe on the execute path, unless it or an equivalent
+ * program is specified in the <tt>executable</tt> parameter
  *
  * <p>
  * All parameters are optional: &lt;vbc/&gt; should suffice to produce a debug
  * build of all *.vb files.
  *
+ * <p>
+
+ * The task is a directory based task, so attributes like
+ * <tt>includes=&quot;**\/*.vb&quot;</tt> and
+ * <tt>excludes=&quot;broken.vb&quot;</tt> can be used to control
+ * the files pulled in. By default,
+ * all *.vb files from the project folder down are included in the command.
+ * When this happens the destFile -if not specified-
+ * is taken as the first file in the list, which may be somewhat hard to control.
+   Specifying the output file with <tt>destfile</tt> is prudent.
+ </p>
+ <p>
+ * Also, dependency checking only works if destfile is set.
+ *
+ * As with &lt;csc&gt; nested <tt>src</tt> filesets of source,
+ * reference filesets, definitions and resources can be provided.
+ *
+ * <p>
+ * Example
+ * </p>
+ * <pre>&lt;vbc
+ *   optimize=&quot;true&quot;
+ *   debug=&quot;false&quot;
+ *   warnLevel=&quot;4&quot;
+ *   targetType=&quot;exe&quot;
+ *   definitions=&quot;RELEASE&quot;
+ *   excludes=&quot;src/unicode_class.vb&quot;
+ *   mainClass = &quot;MainApp&quot;
+ *   destFile=&quot;NetApp.exe&quot;
+ *   optionExplicit=&quot;true&quot;
+ *   optionCompare=&quot;text&quot;
+ *   references="System.Xml,System.Web.Xml"
+ *   &gt;
+ *          &lt;reference file="${testCSC.dll}" /&gt;
+ *          &lt;define name="RELEASE" /&gt;
+ *          &lt;define name="DEBUG" if="debug.property"/&gt;
+ *          &lt;define name="def3" unless="def2.property"/&gt;
+ *   &lt;/vbc&gt;
+ </pre>
  * @author Brian Felder bfelder@providence.org
  * @author Steve Loughran
  * @ant.task    name="vbc" category="dotnet"

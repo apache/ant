@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>Typedef Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -73,7 +74,12 @@
   </tr>
   <tr>
     <td valign="top">resource</td>
-    <td valign="top">Name of the resouce to load definitions from.</td>
+    <td valign="top">
+    Name of the resource to load definitions from.
+    If there is multiple resources of this name in the classpath, and the
+    format is "properties", the first resource will be loaded, otherwise
+    all the resources will be loaded.
+    </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -104,7 +110,7 @@
   <tr>
     <td valign="top">onerror</td>
     <td valign="top">The action to take if there was a failure in defining the
-      type. The values are <i>fail</i> - cause a build exception, <i>warn</i>
+      type. The values are <i>fail</i> - cause a build exception, <i>report</i>,
       output a warning, but continue, <i>ignore</i>, do nothing. The default
       is <i>fail</i>.
       (introduced in ant1.6)
@@ -138,9 +144,8 @@
   <tr>
     <td valign="top">uri</td>
     <td valign="top">
-      <font color="red">Experimental</font>
       The uri that this definition should live in.
-      (introduced in ant1.6 <font color="red">Experimental</font>)
+      <em>since Ant1.6</em>
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -169,7 +174,7 @@
              adapter="org.acme.ant.RunnableAdapter"/&gt;
   </pre>
 <hr>
-<p align="center">Copyright &copy; 2001-2003 Apache Software
+<p align="center">Copyright &copy; 2001-2004 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>

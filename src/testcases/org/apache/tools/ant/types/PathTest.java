@@ -439,6 +439,8 @@ public class PathTest extends TestCase {
                          be.getMessage());
         }
 
+        Path another = new Path(project, "/a:/a");
+        project.addReference("dummyref", another);
         p = new Path(project);
         p.setRefid(new Reference("dummyref"));
         try {

@@ -4,7 +4,7 @@
     <macrodef name="my.echo">
       <attribute name="text"/>
       <sequential>
-        <echo message="${text}"/>
+        <echo message="@{text}"/>
       </sequential>
     </macrodef>
     <my.echo text="Hello World"/>
@@ -14,17 +14,37 @@
     <macrodef name="my.echo">
       <attribute name="text"/>
       <sequential>
-        <echo>${text}</echo>
+        <echo>@{text}</echo>
       </sequential>
     </macrodef>
     <my.echo text="Inner Text"/>
+  </target>
+
+  <target name="duplicate.attribute">
+    <macrodef name="my.echo">
+      <attribute name="text"/>
+      <attribute name="text"/>
+      <sequential>
+        <echo>@{text}</echo>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="duplicate.element">
+    <macrodef name="my.echo">
+      <element name="text"/>
+      <element name="text"/>
+      <sequential>
+        <text/>
+      </sequential>
+    </macrodef>
   </target>
 
   <target name="uri">
     <macrodef name="echo" uri="abc">
       <attribute name="text"/>
       <sequential>
-        <echo message="${text}"/>
+        <echo message="@{text}"/>
       </sequential>
     </macrodef>
     <x:echo xmlns:x="abc" text="Hello World"/>
@@ -45,14 +65,84 @@
     </nested>
   </target>
 
-  <target name="xpathstyle">
-    <macrodef name="testing" attributestyle="xpath">
-      <attribute name="abc"/>
+  <target name="double">
+    <macrodef name="double">
+      <attribute name="prop"/>
       <sequential>
-        <echo>attribute is @abc@abc</echo>
+        <echo>@@{prop} is '@{prop}', value of $${@{prop}} is '${@{prop}}'</echo>
       </sequential>
     </macrodef>
+    <property name="property" value="A property value"/>
+    <double prop="property"/>
+  </target>
 
-    <testing abc="this is a test"/>
+  <target name="ignorecase">
+    <macrodef name="ignore">
+      <attribute name="MyAttribute"/>
+      <sequential>
+        <echo>@{myattribute} is @{MYATTRIBUTE}</echo>
+      </sequential>
+    </macrodef>
+    <ignore myattribute="a"/>
+    <ignore Myattribute="b"/>
+  </target>
+
+  <target name="ignore-element-case">
+    <macrodef name="ignore">
+      <element name="MyElement"/>
+      <sequential>
+        <myElement/>
+        <MyElEmEnT/>
+      </sequential>
+    </macrodef>
+    <ignore>
+      <MYELEMENT>
+        <echo>nested element</echo>
+      </MYELEMENT>
+    </ignore>
+  </target>
+
+  <target name="textelement">
+    <macrodef name="echotest">
+      <text name="text" optional="yes"/>
+      <sequential>
+        <echo>@{text}</echo>
+      </sequential>
+    </macrodef>
+    <echotest>
+      Hello world
+    </echotest>
+  </target>
+
+  <target name="text.trim">
+    <macrodef name="echotest">
+      <text name="text" trim="yes"/>
+      <sequential>
+        <echo>[@{text}]</echo>
+      </sequential>
+    </macrodef>
+    <echotest>
+      Hello world
+    </echotest>
+  </target>
+
+  <target name="duplicatetextname">
+    <macrodef name="echotest">
+      <attribute name="text"/>
+      <text name="text"/>
+      <sequential>
+        <echo>@{text}</echo>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="duplicatetextname2">
+    <macrodef name="echotest">
+      <text name="text"/>
+      <attribute name="text"/>
+      <sequential>
+        <echo>@{text}</echo>
+      </sequential>
+    </macrodef>
   </target>
 </project>

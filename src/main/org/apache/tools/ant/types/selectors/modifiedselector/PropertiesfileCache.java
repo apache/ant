@@ -88,7 +88,7 @@ import java.io.FileOutputStream;
  * </tr>
  * </table>
  *
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */

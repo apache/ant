@@ -4,6 +4,7 @@
   <meta http-equiv="Content-Language" content="en-us">
   <title>Tempfile
  Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body bgcolor="#ffffff" text="#000000" link="#525D76"
@@ -18,7 +19,7 @@
           <td valign="bottom">
             <font size="+3" face="arial,helvetica,sanserif"><strong>Tempfile
  Task</strong></font>
-            <br><font face="arial,helvetica,sanserif">This task sets a property to  the name of a temporary file.</font>
+            <br><font face="arial,helvetica,sanserif">This task sets a property to the name of a temporary file.</font>
           </td>
           <td>
             <!-- PROJECT LOGO -->
@@ -46,34 +47,24 @@
       </td></tr>
 
       <tr><td><blockquote>
-        This task sets a property to  the name of a temporary file. 
-  Unlike the Java1.2 method to create a temporary file, this task
-  does work on Java1.1. Also, it does not actually create the
-  temporary file, but it does guarantee that the file did not
-  exist when the task was executed. 
- <p>  
- Examples
- <pre>&lt;tempfile property="temp.file" /&gt;</pre>
- create a temporary file
- <pre>&lt;tempfile property="temp.file" suffix=".xml" /&gt;</pre>
- create a temporary file with the .xml suffix.
- <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre>
- create a temp file in the build subdir
+        This task sets a property to the name of a temporary file. Unlike the Java1.2 method to create a temporary file, this task does work on Java1.1. Also, it does not actually create the temporary file, but it does guarantee that the file did not exist when the task was executed. <p> Examples <pre>&lt;tempfile property="temp.file" /&gt;</pre> create a temporary file <pre>&lt;tempfile property="temp.file" suffix=".xml" /&gt;</pre> create a temporary file with the .xml suffix. <pre>&lt;tempfile property="temp.file" destDir="build"/&gt;</pre> create a temp file in the build subdir
       </blockquote></td></tr>
 
     </table>
     <!-- End Description -->
 
+ <!-- Ignore -->
+
+
+
     <!-- Start Attributes -->
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <tr><td>&nbsp;</td></tr>
-
       <tr><td bgcolor="#525D76">
         <font color="#ffffff" face="arial,helvetica.sanserif">
           <a name="attributes">
           <strong>Parameters</strong></a></font>
       </td></tr>
-
       <tr><td><blockquote>
         <table>
           <tr>
@@ -86,20 +77,41 @@
         <td bgcolor="#cccccc" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Type</b></font>
         </td>
+        <td bgcolor="#cccccc" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif"><b>Requirement</b></font>
+        </td>
           </tr>
-    <!-- Attribute -->
+    <!-- Attribute Group -->    
+        <!-- Attribute -->
     <tr>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">destDir</font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">property</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          destination directory. If null, 
-the parent directory is used instead
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets the property you wish to assign the temporary file to.</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="1">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Required</font>
+        </td>
+    </tr>
+
+    <!-- Attribute Group -->    
+        <!-- Attribute -->
+    <tr>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">destdir</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets the destination directory. If not set, the basedir directory is used instead.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">File</font>
+        </td>
+        <td bgcolor="#eeeeee" valign="top" align="left" rowspan="3">
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Optional</font>
         </td>
     </tr>
     <!-- Attribute -->
@@ -108,23 +120,7 @@ the parent directory is used instead
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">prefix</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          optional prefix string
-        </font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
-        </td>
-    </tr>
-    <!-- Attribute -->
-    <tr>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">property</font>
-        </td>
-        <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          The property you wish to assign the temporary file to
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets the optional prefix string for the temp file.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
@@ -136,14 +132,13 @@ the parent directory is used instead
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">suffix</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
-          <font color="#000000" size="-1" face="arial,helvetica,sanserif">
-          Suffix string for the temp file (optional)
-        </font>
+          <font color="#000000" size="-1" face="arial,helvetica,sanserif">Sets the optional suffix string for the temp file.</font>
         </td>
         <td bgcolor="#eeeeee" valign="top" align="left">
           <font color="#000000" size="-1" face="arial,helvetica,sanserif">String</font>
         </td>
     </tr>
+
 
         </table>
       </blockquote></td></tr>

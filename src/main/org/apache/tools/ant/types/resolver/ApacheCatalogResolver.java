@@ -64,6 +64,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.ResourceLocation;
 
+import org.apache.xml.resolver.Catalog;
 import org.apache.xml.resolver.CatalogManager;
 
 import org.apache.xml.resolver.tools.CatalogResolver;
@@ -124,7 +125,7 @@ public class ApacheCatalogResolver extends CatalogResolver {
         CatalogManager.getStaticManager().setUseStaticCatalog(false);
 
         // debug
-        // System.setProperty("xml.catalog.verbosity", "4");
+        // CatalogManager.getStaticManager().setVerbosity(4);
     }
 
     /** Set the XMLCatalog object to callback. */
@@ -138,7 +139,11 @@ public class ApacheCatalogResolver extends CatalogResolver {
      */
     public void parseCatalog(String file) {
 
-        ApacheCatalog catalog = (ApacheCatalog) getCatalog();
+        Catalog _catalog = getCatalog();
+        if (!(_catalog instanceof ApacheCatalog)) {
+            throw new BuildException("Wrong catalog type found: " + _catalog.getClass().getName());
+        }
+        ApacheCatalog catalog = (ApacheCatalog) _catalog;
 
         // Pass in reference to ourselves so we can be called back.
         catalog.setResolver(this);

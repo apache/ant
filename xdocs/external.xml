@@ -77,6 +77,38 @@
         </table>
       </subsection>
 
+      <subsection name="AntDoc">
+
+        <p>AntDoc is a tool that generates HTML documentation from Ant
+        buildfiles; the generated HTML is inspired from what javadoc
+        yields.  AntDocGUI offers a simple Ant target launcher named
+        AntDoc GUI. Ant targets may be launched from the generated
+        AntDoc HTML pages. Integration to various IDEs is in
+        progress.</p>
+
+        <p>AntDoc can be run via an Ant task, AntDoc GUI can be run
+        via an Ant task, or via a JVM launch.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://antdoc.free.fr/">http://antdoc.free.fr/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>Edouard Mercier</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>The Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Anteater">
 
         <p>Anteater is a set of Ant tasks for the functional testing of websites
@@ -157,6 +189,33 @@
           <tr>
             <th>License:</th>
             <td>GNU General Public License (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="AntTimerTask">
+        <p><a href="http://www.jeckle.de/freeStuff/AntTimerTask/index.html">Timer</a>
+        is task for measuring the time elapsed to complete other
+        tasks</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.jeckle.de/freeStuff/AntTimerTask/index.html">http://www.jeckle.de/freeStuff/AntTimerTask/index.html</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:mario@jeckle.de">mario@jeckle.de</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Lesser GNU Public License</td>
           </tr>
         </table>
       </subsection>
@@ -298,7 +357,41 @@
         </table>
       </subsection>
 
-      <subsection name="Configure">
+      <subsection name="Cocoon Task">
+        <p>This task allows the generation of static web pages and
+        sites using Apache Cocoon in off-line mode.</p>
+        <p>It allows the configuration information for Cocoon to be
+        included within the Ant build file, and is thus
+        able to take advantage of Ant properties.</p>
+        <p>The task shares its code with the Cocoon Command Line, which
+        means that this task will instantly take
+        advantage of any new functionality added there.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.3 and above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://cocoon.apache.org/2.1/">http://cocoon.apache.org/2.1/</a></td>
+         </tr>
+          <tr>
+            <th>Documentation:</th>
+            <td><a href="http://cocoon.apache.org/2.1/userdocs/offiline/ant.html">http://cocoon.apache.org/2.1/userdocs/offline/ant.html</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:users.at.cocoon.apache.org">users at cocoon.apache.org</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+       </table>
+     </subsection>
+
+     <subsection name="Configure">
 
         <p>Recursive build support (call ant on every package level,
         and only build files in that package or in that package and
@@ -356,6 +449,39 @@
           <tr>
             <th>License:</th>
             <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="Dependency Finder">
+        <p>Dependency Finder extracts dependencies and OO metrics from
+        Java class files produced by most Java compilers. It can compute
+        API differences between versions;  no sources needed. It includes
+        Ant tasks, web, Swing, and command-line interfaces, with XSL
+        stylesheets for formatting output.</p>
+
+        <p>You can use it to extract dependencies between packages, classes,
+        or even methods, or any combination thereof.  You can use Perl
+        regular expressions to filter the information and pinpoint only
+        what you need.  There is even a Web Application version (WAR file)
+        so a whole group of developers can share a common view.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Tested with 1.5.3, should work with 1.4+.</td>
+         </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://depfind.sourceforge.net/">http://depfind.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:jeantessier@users.sourceforge.net">Jean Tessier</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD-like License</td>
           </tr>
         </table>
       </subsection>
@@ -551,6 +677,39 @@
         </table>
       </subsection>
 
+      <subsection name="Image">
+        <p>Image task generates and transforms images. It exposes the
+        imaging capability available in Java2D, Java Advanced Imaging,
+        ImageIO, etc., as set of nested elements.</p>
+
+        <p>Image transformations such as &quot;resize&quot;
+        (scale),&quot;overlay&quot; (one image on another),
+        &quot;border&quot; (add a border), &quot;text&quot; (text on
+        image), &quot;crop&quot; (a sub-image of a bigger image),
+        &quot;rotate&quot;, &quot;grayscale&quot; (change a color
+        image to shades of gray).</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a
+                href="http://www.mullassery.com/software/ANT/">http://www.mullassery.com/software/ANT/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.mullassery.com/contact/feedback.jsp">Abey Mullassery</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Importscrubber">
         <p>Removes unnecessary import statements from a Java source code file.</p>
 
@@ -570,6 +729,32 @@
           <tr>
             <th>License:</th>
             <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="ImTask">
+
+        <p>ImTask is a task to allow one to send an Instant
+        Message. Currently supports yahoo!, AIM, and Jabber</p>
+
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://imtask.sourceforge.net/">http://imtask.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:djallstar@users.sourceforge.net">Jon Madison</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU LGPL</td>
           </tr>
         </table>
       </subsection>
@@ -792,7 +977,7 @@
 
       <subsection name="Java+ Precompile Task">
 
-        <p>Java+ is an open source Java preprocessorthat adds these
+        <p>Java+ is an open source Java preprocessor that adds these
         features to any Java compiler:</p>
 
         <ul>
@@ -1023,6 +1208,28 @@
         </table>
       </subsection>
 
+      <subsection name="JindentTask">
+
+        <p>JindentTask is a very straightforward wrapping of the
+        Jindent tool, a vendor code beautifier. It enables to use
+        Jindent natively from Ant.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4.1 and higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://the.edouard.mercier.free.fr/Jindent_content.php">http://the.edouard.mercier.free.fr/Jindent_content.php</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>Edouard Mercier</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Jing Task">
 
         <p> Validates XML files against the RELAX NG alternative to XML Schema.
@@ -1243,6 +1450,49 @@
         </table>
       </subsection>
 
+      <subsection name="Kanaputs">
+
+        <p>Kanaputs is a parser for java based scripting. It is an
+        interpreter for Java. With Kanaputs you can use Java as an
+        interpreted language: no more compilation, each instruction is
+        executed when you write it.  It is a small programmation
+        language to make script files above Java.</p>
+
+        <p>Kanaputs Ant Task provides a way to add any kind of
+        programmatic features in your Ant script. The code you insert
+        stays OS independent (because Kanaputs uses Java) and is
+        completely integrated with Ant as you can give Ant properties
+        to the Kanaputs code and get back the results in other
+        properties.</p>
+
+        <p>Moreover, as you can invoke any kind of Java code with
+        Kanaputs, you can popup windows from your Ant file to ask the
+        user to do a choice.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and above</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td>
+              <a href="http://www.kanaputs.org/">http://www.kanaputs.org/</a>
+              <a href="http://www.kanaputs.org/ant.html">http://www.kanaputs.org/ant.html</a>
+            </td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>
+              <a href="mailto:kfra@kanaputs.org">kfra@kanaputs.org</a>
+            </td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Freeware</td>
+          </tr>
+        </table>
+      </subsection>
+
      <subsection name="Macker">
 
         <p>A build-time architectural testing tool, designed
@@ -1274,6 +1524,33 @@
         </table>
       </subsection>
 
+      <subsection name="mtxslt">
+
+        <p>The mtxslt (Multi-XSLT) extends the standard Ant "xslt/style" task
+        to make it easy to use multiple XSLT engines during the same build.
+        This is useful for regression testing of XSLT scripts against several
+        engines.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://mtxslt.sourceforge.net/">http://mtxslt.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:abcoates@theOffice.net">Anthony B. Coates</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="pack">
 
         <p>pack is a task to build the smallest possible JAR to link
@@ -1299,6 +1576,58 @@
         </table>
       </subsection>
 
+      <subsection name="Pamda">
+        <p><a href="http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4">Pamda</a>
+        is an MDA tool (UML2Code generator) implemented as Ant task. Pamda supports
+        Aspect-Oriented Modeling (AOM) and comes with AOM UML Profile and sample project.
+        The tool uses XMI as its input and Velocity as template engine. All elements in
+        the metamodel have navigate(XPath expression) and iterate(XPath expression)
+        (powered by JXPath) which make templates easy to write.<br/>
+        Tested with XMI produced by Enterprise Architect.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.2</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4">http://www.pavelvlasov.com/pv/content/menu.show?id=menu.1.4</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.pavelvlasov.com/pv/content/contact.html">Contact Page</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="PCT">
+        <p>PCT is a task to compile Progress code, and in a more general
+        way, to deal with Progress procedures and databases.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://pct.sourceforge.net">http://pct.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:justus_phenix@users.sourceforge.net">Gilles QUERRET</a></td>
+          </tr>
+          <tr>
+            <th>Licence:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="PMD">
 
         <p>PMD checks Java source code for unused variables,
@@ -1320,6 +1649,30 @@
           <tr>
             <th>License:</th>
             <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="PRes">
+        <p>PRes is short for Property Resources and will generate a Java source
+           file from name=value pair .property files which can be compiled like any
+           other class.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and later (may work with earlier)</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://mseries.sourceforge.net">http://mseries.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://web.ukonline.co.uk/mseries/contact.html">MSeries</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
           </tr>
         </table>
       </subsection>
@@ -1581,6 +1934,34 @@
         </table>
       </subsection>
 
+      <subsection name="TestSetGenerator">
+
+        <p>The TestSetGenerator is an ant task for generating property files with
+        testsets based on the results of SQL queries and validation plug-ins. Very
+        usefull when building unit tests that make use of changing datasets. This
+        task is an extension of the Ant SQL task. Hsqldb is used for both the
+        examples and the unittests.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>ANT 1.4 (or later)</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://anttestsetgen.sourceforge.net/">http://anttestsetgen.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:m.c.jansen@planet.nl">m.c.jansen@planet.nl</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Tidy Imports (Tim)">
 
         <p>Tim is a handy utility that can be executed on the command
@@ -1739,6 +2120,36 @@
           <tr>
             <th>License:</th>
             <td>Apache license</td>
+          </tr>
+        </table>
+      </subsection>
+
+      <subsection name="WSDLValidate">
+        <p>WSDLValidate is, as it sounds, a tool to validate WSDL files.
+        <a href="http://dev.eclipse.org/viewcvs/indextech.cgi/~checkout~/wsvt-home/docs/articles/wsdl20Validator/wsdlvalidateant.html">WSDLValidate</a>
+        is similar in configuration to the optional Ant task <a href="http://ant.apache.org/manual/OptionalTasks/xmlvalidate.html">XMLValidate</a>.
+        WSDLValidate can optionally validate a WSDL document against the <a href="http://www.ws-i.org">WS-I Basic Profile</a>.
+        </p>
+        <p>WSDLValidate is available as an Ant task, an Eclipse plug-in and a
+        command line utility.</p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 or later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.eclipse.org/wsvt">http://www.eclipse.org/wsvt</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://www.eclipse.org/wsvt">Project newsgroup and
+            mailing list</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td><a href="http://www-124.ibm.com/developerworks/oss/CPLv1.0.htm">Common Public
+            License (CPL)</a></td>
           </tr>
         </table>
       </subsection>
@@ -2191,12 +2602,13 @@
 
       <subsection name="NetBeans / Sun ONE Studio">
 
-        <p>A module that integrates Ant into the NetBeans or Sun ONE Studio (formerly Forte for Java) IDEs.</p>
+        <p>A module that integrates Ant into the NetBeans or Sun Java Studio (formerly
+        Forte for Java and Sun ONE Studio) IDEs.</p>
 
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles Ant 1.5.1</td>
+            <td>bundles Ant 1.6.0 as of NetBeans 3.6</td>
           </tr>
           <tr>
             <th>URL:</th>

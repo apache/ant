@@ -146,7 +146,7 @@ import org.apache.tools.ant.types.selectors.BaseExtendSelector;
  * </pre> Here all <b>changed</b> files are uploaded to the server. The
  * ModifiedSelector saves therefore much upload time.</p>
  *
- * <p>This selector supports the following nested param´s:
+ * <p>This selector supports the following nested param's:
  * <table>
  * <tr><th>name</th><th>values</th><th>description</th><th>required</th></tr>
  * <tr>
@@ -219,7 +219,7 @@ import org.apache.tools.ant.types.selectors.BaseExtendSelector;
  * a nested <i><param name="algorithm.provider" value="MyProvider"/></i>.
  *
  *
- * @author Jan Matèrne
+ * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
 */
@@ -313,7 +313,7 @@ public class ModifiedSelector extends BaseExtendSelector {
      * <li> set values for name pattern '*': update, cache, algorithm, comparator </li>
      * <li> set values for name pattern '*.*: cache.cachefile, ... </li>
      * </ol></p>
-     * <p>This configuration algorithm is needed because you don´t know
+     * <p>This configuration algorithm is needed because you don't know
      * the order of arriving config-data. E.g. if you first set the
      * <i>cache.cachefilename</i> and after that the <i>cache</i> itself,
      * the default value for cachefilename is used, because setting the

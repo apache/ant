@@ -1,4 +1,4 @@
-<!-- author Antoine Levy-Lambert levylambert@tiscali-dsl.de -->
+<!-- author Antoine Levy-Lambert  -->
 <!-- this file demonstrates that p4.change will be modified by p4submit -->
 <!-- if the change number is modified by the Perforce daemon during the submission -->
 <project name="build1" default="runtest">

@@ -378,7 +378,12 @@ public class Ant extends Task {
                 }
             }
 
-            ProjectHelper.configureProject(newProject, new File(antFile));
+            try {
+                ProjectHelper.configureProject(newProject, new File(antFile));
+            } catch (BuildException ex) {
+                throw ProjectHelper.addLocationToBuildException(
+                    ex, getLocation());
+            }
 
             if (target == null) {
                 target = newProject.getDefaultTarget();
@@ -413,7 +418,10 @@ public class Ant extends Task {
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.executeTarget(target);
-                } finally {
+                } catch (BuildException ex) {
+                    throw ProjectHelper.addLocationToBuildException(
+                        ex, getLocation());
+              } finally {
                     log("Exiting " + antFile + ".", Project.MSG_VERBOSE);
                 }
             }
@@ -450,10 +458,12 @@ public class Ant extends Task {
         Set set = new HashSet();
         for (int i = properties.size() - 1; i >= 0; --i) {
             Property p = (Property) properties.get(i);
-            if (set.contains(p.getName())) {
-                properties.remove(i);
-            } else {
-                set.add(p.getName());
+            if (p.getName() != null && !p.getName().equals("")) {
+                if (set.contains(p.getName())) {
+                    properties.remove(i);
+                } else {
+                    set.add(p.getName());
+                }
             }
         }
         Enumeration e = properties.elements();

@@ -125,6 +125,9 @@ public class ChecksumTest extends BuildFileTest {
         expectPropertySet("verifyFromProperty", "verify", "true");
     }
 
+    public void testVerifyChecksumdirNoTotal() {
+        executeTarget("verifyChecksumdirNoTotal");
+    }
     private void testVerify(String target) {
         assertNull(project.getProperty("logo.MD5"));
         assertNull(project.getProperty("no.logo.MD5"));

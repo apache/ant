@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,11 +84,21 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *      <td>pname</td>
  *      <td>Specifies the object pathname to be unlocked.</td>
- *      <td>Yes</td>
+ *      <td>No</td>
  *   <tr>
  *      <td>objselect</td>
+ *      <td>This variable is obsolete. Should use <i>objsel</i> instead.</td>
+ *      <td>no</td>
+ *   <tr>
+ *   <tr>
+ *      <td>objsel</td>
  *      <td>Specifies the object(s) to be unlocked.</td>
- *      <td>Yes</td>
+ *      <td>No</td>
+ *   <tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
  *   <tr>
  *
  * </table>
@@ -96,15 +106,16 @@ import org.apache.tools.ant.types.Commandline;
  * @author Sean P. Kane (Based on work by: Curtis White)
  */
 public class CCUnlock extends ClearCase {
-    private String m_Comment = null;
-    private String m_Pname = null;
-    private String m_Objselect = null;
+    private String mComment = null;
+    private String mPname = null;
+    private String mObjselect = null;
 
     /**
      * Executes the task.
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -126,12 +137,16 @@ public class CCUnlock extends ClearCase {
         checkOptions(commandLine);
 
         // For debugging
-        System.out.println(commandLine.toString());
+        // System.out.println(commandLine.toString());
 
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getOpType(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -141,9 +156,16 @@ public class CCUnlock extends ClearCase {
 private void checkOptions(Commandline cmd) {
         // ClearCase items
         getCommentCommand(cmd);
+
+        if (getObjselect() == null && getPname() == null) {
+            throw new BuildException("Should select either an element "
+            + "(pname) or an object (objselect)");
+        }
         getPnameCommand(cmd);
-               // object selector
-        cmd.createArgument().setValue(getObjselect());
+        // object selector
+        if (getObjselect() != null) {
+            cmd.createArgument().setValue(getObjselect());
+        }
 }
 
     /**
@@ -153,7 +175,7 @@ private void checkOptions(Commandline cmd) {
      * @param comment comment method to use
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        mComment = comment;
     }
 
     /**
@@ -162,7 +184,7 @@ private void checkOptions(Commandline cmd) {
      * @return String containing the desired comment method
      */
     public String getComment() {
-        return m_Comment;
+        return mComment;
     }
 
     /**
@@ -171,7 +193,7 @@ private void checkOptions(Commandline cmd) {
      * @param pname pathname to be locked
      */
     public void setPname(String pname) {
-        m_Pname = pname;
+        mPname = pname;
     }
 
     /**
@@ -180,7 +202,7 @@ private void checkOptions(Commandline cmd) {
      * @return String containing the pathname to be locked
      */
     public String getPname() {
-        return m_Pname;
+        return mPname;
     }
 
     /**
@@ -189,7 +211,17 @@ private void checkOptions(Commandline cmd) {
      * @param objselect objects to be locked
      */
     public void setObjselect(String objselect) {
-        m_Objselect = objselect;
+        mObjselect = objselect;
+    }
+
+    /**
+     * Sets the object(s) to be locked
+     *
+     * @param objsel objects to be locked
+     * @since ant 1.6.1
+     */
+    public void setObjSel(String objsel) {
+        mObjselect = objsel;
     }
 
     /**
@@ -198,8 +230,9 @@ private void checkOptions(Commandline cmd) {
      * @return String containing the objects to be locked
      */
     public String getObjselect() {
-        return m_Objselect;
+        return mObjselect;
     }
+
 
     /**
      * Get the 'comment' command
@@ -242,22 +275,16 @@ private void checkOptions(Commandline cmd) {
     }
 
     /**
-     * Get the 'pname' command
+     * Return which object/pname is being operated on
      *
-     * @param cmd containing the command line string with or without
-     *        the pname flag and value appended
+     * @return String containing the object/pname being worked on
      */
-    private void getObjselectCommand(Commandline cmd) {
-        if (getObjselect() == null) {
-            return;
+    private String getOpType() {
+
+        if (getPname() != null) {
+            return getPname();
         } else {
-            /* Had to make two separate commands here because if a space is
-               inserted between the flag and the value, it is treated as a
-               Windows filename with a space and it is enclosed in double
-               quotes ("). This breaks clearcase.
-            */
-            cmd.createArgument().setValue(FLAG_OBJSELECT);
-            cmd.createArgument().setValue(getPname());
+            return getObjselect();
         }
     }
 
@@ -269,9 +296,5 @@ private void checkOptions(Commandline cmd) {
      * -pname flag -- pathname to lock
      */
     public static final String FLAG_PNAME = "-pname";
-    /**
-     * object-selector option -- list of objects to lock
-     */
-    public static final String FLAG_OBJSELECT = "";
 }
 

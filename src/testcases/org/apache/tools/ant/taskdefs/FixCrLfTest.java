@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -200,6 +200,18 @@ public class FixCrLfTest extends BuildFileTest {
         executeTarget("testCrCrLfSequence-mac");
         assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/crcrlf.mac"),
                            new File("src/etc/testcases/taskdefs/fixcrlf/result/crcrlf"));
+    }
+
+    public void testFixlastDos() throws IOException {
+        executeTarget("testFixlastDos");
+        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/fixlast.dos"),
+                           new File("src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
+    }
+
+    public void testFixlastFalseMac() throws IOException {
+        executeTarget("testFixlastFalseMac");
+        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/fixlastfalse.mac"),
+                           new File("src/etc/testcases/taskdefs/fixcrlf/result/fixlastfalse.lf"));
     }
 
     /**

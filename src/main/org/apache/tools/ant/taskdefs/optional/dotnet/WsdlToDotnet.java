@@ -60,11 +60,23 @@ import org.apache.tools.ant.Task;
 /**
  * Converts a WSDL file or URL resource into a .NET language.
  *
+ * Why add a wrapper to the MS WSDL tool?
+ * So that you can verify that your web services, be they written with Axis or
+ *anyone else's SOAP toolkit, work with .NET clients.
+ *
+ *This task is dependency aware when using a file as a source and destination;
+ *so if you &lt;get&gt; the file (with <code>usetimestamp="true"</code>) then
+ *you only rebuild stuff when the WSDL file is changed. Of course,
+ *if the server generates a new timestamp every time you ask for the WSDL,
+ *this is not enough...use the &lt;filesmatch&gt; &lt;condition&gt; to
+ *to byte for byte comparison against a cached WSDL file then make
+ *the target conditional on that test failing.
+
  * See "Creating an XML Web Service Proxy", "wsdl.exe" docs in
  * the framework SDK documentation
- * @author      Steve Loughran steve_l@iseran.com
+ * @author      Steve Loughran 
  * @version     0.5
- * @ant.task    name="wsdltodotnet" category="dotnet"
+ * @ant.task    category="dotnet"
  * @since       Ant 1.5
  */
 

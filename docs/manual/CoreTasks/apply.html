@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>Apply Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -26,6 +27,10 @@ target file which is defined by the nested mapper element and searched
 for in the given dest.</p>
 <p>At least one fileset or filelist is required, and you must not specify more than
 one mapper.</p>
+
+<p>Note that you cannot interact with the forked program, the only way
+to send input to it is via the input and inputstring attributes.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -260,6 +265,11 @@ elements to define the files for this task and refer to
 <p>You can use any number of nested <code>&lt;dirset&gt;</code>
 elements to define the directories for this task and refer to
 <code>&lt;dirset&gt;</code>s defined elsewhere.</p>
+<h4>mapper</h4>
+<p>A single <code>&lt;mapper&gt;</code> specifies the target files
+relative to the <CODE>dest</CODE> attribute for dependency checking.
+At least one <code>&lt;fileset&gt;</code> or
+<code>&lt;filelist&gt;</code> is required.</p>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a
@@ -325,9 +335,8 @@ of all files separated by spaces.</p>
 <code>.o</code>, replacing TARGETFILE with the absolute filename of
 the <code>.o</code> and SOURCEFILE with the absolute name of the
 <code>.c</code> file.</p>
-<hr><p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
+<hr><p align="center">Copyright &copy; 2000-2004 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
 </html>
-

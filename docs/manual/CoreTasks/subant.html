@@ -4,6 +4,7 @@
   <meta http-equiv="Content-Language" content="en-us">
   <title>Subant
  Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 
 <body bgcolor="#ffffff" text="#000000" link="#525D76"
@@ -18,7 +19,7 @@
           <td valign="bottom">
             <font size="+3" face="arial,helvetica,sanserif"><strong>Subant
  Task</strong></font>
-            <br><font face="arial,helvetica,sanserif"><i>EXPERIMENTAL:</i> This task is experimental and may be under continual change till Ant1.6 ships; it may even be omitted from the product.</font>
+            <br><font face="arial,helvetica,sanserif">Calls a given target for all defined sub-builds.</font>
           </td>
           <td>
             <!-- PROJECT LOGO -->
@@ -47,17 +48,13 @@
 
       <tr><td><blockquote>
 <p>
-            <i>EXPERIMENTAL:</i> This task is experimental and may be under continual
-            change till Ant1.6 ships; it may even be omitted from the product.
-        </p>
-<p>
-        Calls a given target for all defined sub-builds. This is an extension
-        of ant for bulk project execution.
+            Calls a given target for all defined sub-builds.
+            This is an extension
+            of ant for bulk project execution.
 
-        <strong>This task must no be used outside of a
-        <code>target</code> if it invoces the same build file it is
-        part of.</strong>
-
+            <strong>This task must no be used outside of a
+                <code>target</code> if it invokes the same build file it is
+                part of.</strong>
         </p>
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
       <!-- Subsection heading -->
@@ -78,7 +75,7 @@
                     with different base directories, use the genericantfile attribute
                 </li>
                 <li>if you want to run <code>directory1/mybuild.xml</code>, <code>directory2/mybuild.xml</code>, <code>....</code>,
-                    use the antfile attribute. The subant task does not set the base directory for you in this case.<br/>                    because you can specify it in each build file.
+                    use the antfile attribute. The subant task does not set the base directory for you in this case, because you can specify it in each build file.
                 </li>
             </ul>
 
@@ -89,6 +86,10 @@
 
     </table>
     <!-- End Description -->
+
+ <!-- Ignore -->
+
+
 
     <!-- Start Attributes -->
     <table border="0" cellspacing="0" cellpadding="2" width="100%">
@@ -256,10 +257,8 @@
       </td></tr>
       <tr><td><blockquote>
         Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
-<short-description><![CDATA[Adds a directory set to the implicit build path.]]></short-description>
-<description>
-            <![CDATA[Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
-          </description>
+ <!-- Ignore -->
+ <!-- Ignore -->
 
       </blockquote></td></tr>
     </table>
@@ -273,10 +272,8 @@
       </td></tr>
       <tr><td><blockquote>
         Adds an ordered file list to the implicit build path. <p> <em>Note that contrary to file and directory sets, file lists can reference non-existent files or directories!</em>
-<short-description><![CDATA[Adds an ordered file list to the implicit build path.]]></short-description>
-<description>
-            <![CDATA[Adds an ordered file list to the implicit build path. <p> <em>Note that contrary to file and directory sets, file lists can reference non-existent files or directories!</em>]]>
-          </description>
+ <!-- Ignore -->
+ <!-- Ignore -->
 
       </blockquote></td></tr>
     </table>
@@ -290,10 +287,8 @@
       </td></tr>
       <tr><td><blockquote>
         Adds a file set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
-<short-description><![CDATA[Adds a file set to the implicit build path.]]></short-description>
-<description>
-            <![CDATA[Adds a file set to the implicit]]><![CDATA[ build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
-          </description>
+ <!-- Ignore -->
+ <!-- Ignore -->
 
       </blockquote></td></tr>
     </table>
@@ -307,10 +302,8 @@
       </td></tr>
       <tr><td><blockquote>
         Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.
-<short-description><![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.]]></short-description>
-<description>
-            <![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;property&gt;</code> element.]]>
-          </description>
+ <!-- Ignore -->
+ <!-- Ignore -->
 
       </blockquote></td></tr>
     </table>
@@ -324,27 +317,8 @@
       </td></tr>
       <tr><td><blockquote>
         Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;propertyset&gt;</code> element.
-<short-description><![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;propertyset&gt;</code> element.]]></short-description>
-<description>
-            <![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;propertyset&gt;</code> element.]]>
-          </description>
-
-      </blockquote></td></tr>
-    </table>
-    <!-- End Element -->
-    <!-- Start Element -->
-    <table border="0" cellspacing="0" cellpadding="2" width="100%">
-      <tr><td>&nbsp;</td></tr>
-      <tr><td bgcolor="#828DA6">
-        <font color="#ffffff" face="arial,helvetica.sanserif" size="-1">
-          <strong>reference</strong> (org.apache.tools.ant.taskdefs.Ant.Reference)</font>
-      </td></tr>
-      <tr><td><blockquote>
-        Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;reference&gt;</code> element.
-<short-description><![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;reference&gt;</code> element.]]></short-description>
-<description>
-            <![CDATA[Corresponds to <code>&lt;ant&gt;</code>'s nested <code>&lt;reference&gt;</code> element.]]>
-          </description>
+ <!-- Ignore -->
+ <!-- Ignore -->
 
       </blockquote></td></tr>
     </table>
@@ -358,10 +332,8 @@
       </td></tr>
       <tr><td><blockquote>
         Creates a nested build path, and add it to the implicit build path.
-<short-description><![CDATA[Creates a nested build path, and add it to the implicit build path.]]></short-description>
-<description>
-            <![CDATA[Creates a nested build path, and add it to the implicit build path.]]>
-          </description>
+ <!-- Ignore -->
+ <!-- Ignore -->
 
       </blockquote></td></tr>
     </table>
@@ -375,10 +347,8 @@
       </td></tr>
       <tr><td><blockquote>
         Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build path.
-<short-description><![CDATA[Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build path.]]></short-description>
-<description>
-            <![CDATA[Creates a nested <code>&lt;buildpathelement&gt;</code>, and add it to the implicit build path.]]>
-          </description>
+ <!-- Ignore -->
+ <!-- Ignore -->
 
       </blockquote></td></tr>
     </table>

@@ -3,6 +3,7 @@
 <head>
   <meta http-equiv="Content-Language" content="en-us">
   <title>Import Task</title>
+<link rel="stylesheet" type="text/css" href="../stylesheets/antmanual.css">
 </head>
 <body>
   <h2><a name="import">Import</a></h2>
@@ -59,7 +60,7 @@ relative to its position.<br>
 So if I import for example a <i>docsbuild.xml</i> file named <b>builddocs</b>,
 I can get its path as <b>ant.file.builddocs</b>, similarly to the <b>ant.file</b>
 property of the main buildfile.<br>
-Note that "builddocs" is not the filename, but the @name attribute
+Note that "builddocs" is not the filename, but the name attribute
 present in the imported project tag.<br>
 <br>
 <b>Important</b>: We have not finalized how relative file references
@@ -83,6 +84,15 @@ imported files.<br>
       </td>
       <td valign="top" align="center">Yes</td>
     </tr>
+    <tr>
+      <td valign="top">optional<br>
+      </td>
+      <td valign="top">
+        if true, do not issue stop the build if the file does not exist,
+        default is false.<br>
+      </td>
+      <td valign="top" align="center">No</td>
+    </tr>
   </tbody>
 </table>
 <h3><br>
@@ -99,7 +109,7 @@ Imports the project defined by the property deploy-platform<br>
 <br>
 <br>
 <hr>
-<p align="center">Copyright &copy; 2003 Apache Software
+<p align="center">Copyright &copy; 2003-2004 Apache Software
 Foundation. All rights
 Reserved.</p>
 </body>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -107,18 +107,23 @@ previous baseline.</td>
  *      <td>Allows the baseline to be created without a label.</td>
  *      <td>No</td>
  *   </tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
+ *   <tr>
  * </table>
  *
  * @author Robert Anderson
  */
 public class CCMkbl extends ClearCase {
-    private String m_Comment = null;
-    private String m_Cfile = null;
-    private String m_BaselineRootName = null;
-    private boolean m_Nwarn = false;
-    private boolean m_Identical = true;
-    private boolean m_Full = false;
-    private boolean m_Nlabel = false;
+    private String mComment = null;
+    private String mCfile = null;
+    private String mBaselineRootName = null;
+    private boolean mNwarn = false;
+    private boolean mIdentical = true;
+    private boolean mFull = false;
+    private boolean mNlabel = false;
 
 
     /**
@@ -126,6 +131,7 @@ public class CCMkbl extends ClearCase {
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -145,10 +151,14 @@ public class CCMkbl extends ClearCase {
 
         checkOptions(commandLine);
 
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getBaselineRootName(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -199,7 +209,7 @@ public class CCMkbl extends ClearCase {
      * @param comment the comment string
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        mComment = comment;
     }
 
     /**
@@ -208,7 +218,7 @@ public class CCMkbl extends ClearCase {
      * @return String containing the comment
      */
     public String getComment() {
-        return m_Comment;
+        return mComment;
     }
 
     /**
@@ -217,7 +227,7 @@ public class CCMkbl extends ClearCase {
      * @param cfile the path to the comment file
      */
     public void setCommentFile(String cfile) {
-        m_Cfile = cfile;
+        mCfile = cfile;
     }
 
     /**
@@ -226,16 +236,16 @@ public class CCMkbl extends ClearCase {
      * @return String containing the path to the comment file
      */
     public String getCommentFile() {
-        return m_Cfile;
+        return mCfile;
     }
 
     /**
      * Set baseline_root_name
      *
-     * @param baseline_root_name the name of the baseline
+     * @param baselineRootName the name of the baseline
      */
-    public void setBaselineRootName(String baseline_root_name) {
-        m_BaselineRootName = baseline_root_name;
+    public void setBaselineRootName(String baselineRootName) {
+        mBaselineRootName = baselineRootName;
     }
 
     /**
@@ -244,7 +254,7 @@ public class CCMkbl extends ClearCase {
      * @return String containing the name of the baseline
      */
     public String getBaselineRootName() {
-        return m_BaselineRootName;
+        return mBaselineRootName;
     }
 
     /**
@@ -255,7 +265,7 @@ public class CCMkbl extends ClearCase {
      * @param nwarn the status to set the flag to
      */
     public void setNoWarn(boolean nwarn) {
-        m_Nwarn = nwarn;
+        mNwarn = nwarn;
     }
 
     /**
@@ -264,7 +274,7 @@ public class CCMkbl extends ClearCase {
      * @return boolean containing status of nwarn flag
      */
     public boolean getNoWarn() {
-        return m_Nwarn;
+        return mNwarn;
     }
 
     /**
@@ -273,7 +283,7 @@ public class CCMkbl extends ClearCase {
      * @param identical the status to set the flag to
      */
     public void setIdentical(boolean identical) {
-        m_Identical = identical;
+        mIdentical = identical;
     }
 
     /**
@@ -282,7 +292,7 @@ public class CCMkbl extends ClearCase {
      * @return boolean containing status of identical flag
      */
     public boolean getIdentical() {
-        return m_Identical;
+        return mIdentical;
     }
 
     /**
@@ -291,7 +301,7 @@ public class CCMkbl extends ClearCase {
      * @param full the status to set the flag to
      */
     public void setFull(boolean full) {
-        m_Full = full;
+        mFull = full;
     }
 
     /**
@@ -300,7 +310,7 @@ public class CCMkbl extends ClearCase {
      * @return boolean containing status of full flag
      */
     public boolean getFull() {
-        return m_Full;
+        return mFull;
     }
 
     /**
@@ -309,7 +319,7 @@ public class CCMkbl extends ClearCase {
      * @param nlabel the status to set the flag to
      */
     public void setNlabel(boolean nlabel) {
-        m_Nlabel = nlabel;
+        mNlabel = nlabel;
     }
 
     /**
@@ -318,16 +328,14 @@ public class CCMkbl extends ClearCase {
      * @return boolean containing status of nlabel flag
      */
     public boolean getNlabel() {
-        return m_Nlabel;
+        return mNlabel;
     }
+
 
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified,
-     *         otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
      *                    without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
@@ -344,9 +352,6 @@ public class CCMkbl extends ClearCase {
 
     /**
      * Get the 'commentfile' command
-     *
-     * @return the 'commentfile' command if the attribute was specified,
-     *         otherwise an empty string
      *
      * @param cmd CommandLine containing the command line string with or
      *                    without the commentfile flag and file appended

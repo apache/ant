@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -154,6 +154,7 @@ public class FixCRLF extends MatchingTask {
     private int ctrlz;
     private int tabs;
     private boolean javafiles = false;
+    private boolean fixlast = true;
 
     private File srcDir;
     private File destDir = null;
@@ -339,6 +340,14 @@ public class FixCRLF extends MatchingTask {
     }
 
     /**
+     * Specify whether a missing EOL will be added
+     * to the final line of a file.
+     */
+    public void setFixlast(boolean fixlast) {
+        this.fixlast = fixlast;
+    }
+
+    /**
      * Executes the task.
      */
     public void execute() throws BuildException {
@@ -404,6 +413,7 @@ public class FixCRLF extends MatchingTask {
             // Set up the output Writer
             try {
                 tmpFile = fileUtils.createTempFile("fixcrlf", "", null);
+                tmpFile.deleteOnExit();
                 Writer writer = (encoding == null) ? new FileWriter(tmpFile)
                     : new OutputStreamWriter(new FileOutputStream(tmpFile),
                                              encoding);
@@ -514,11 +524,13 @@ public class FixCRLF extends MatchingTask {
 
                 } // end of else (tabs != ASIS)
 
-                try {
-                    outWriter.write(eolstr);
-                } catch (IOException e) {
-                    throw new BuildException(e);
-                } // end of try-catch
+                if (!("".equals(line.getEol())) || fixlast) {
+                    try {
+                        outWriter.write(eolstr);
+                    } catch (IOException e) {
+                        throw new BuildException(e);
+                    } // end of try-catch
+                } //end if non-blank original eol or fixlast
 
             } // end of while (lines.hasNext())
 

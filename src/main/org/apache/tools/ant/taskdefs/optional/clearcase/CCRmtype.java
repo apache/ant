@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -113,24 +113,30 @@ import org.apache.tools.ant.types.Commandline;
  *          may be used.</td>
  *      <td>No</td>
  *   <tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
+ *   <tr>
  * </table>
  *
  * @author Curtis White
  */
 public class CCRmtype extends ClearCase {
-    private String m_TypeKind = null;
-    private String m_TypeName = null;
-    private String m_VOB = null;
-    private String m_Comment = null;
-    private String m_Cfile = null;
-    private boolean m_Rmall = false;
-    private boolean m_Ignore = false;
+    private String mTypeKind = null;
+    private String mTypeName = null;
+    private String mVOB = null;
+    private String mComment = null;
+    private String mCfile = null;
+    private boolean mRmall = false;
+    private boolean mIgnore = false;
 
     /**
      * Executes the task.
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -153,10 +159,14 @@ public class CCRmtype extends ClearCase {
 
         checkOptions(commandLine);
 
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getTypeSpecifier(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -196,7 +206,7 @@ public class CCRmtype extends ClearCase {
      * @param ignore the status to set the flag to
      */
     public void setIgnore(boolean ignore) {
-        m_Ignore = ignore;
+        mIgnore = ignore;
     }
 
     /**
@@ -205,7 +215,7 @@ public class CCRmtype extends ClearCase {
      * @return boolean containing status of ignore flag
      */
     public boolean getIgnore() {
-        return m_Ignore;
+        return mIgnore;
     }
 
     /**
@@ -214,7 +224,7 @@ public class CCRmtype extends ClearCase {
      * @param rmall the status to set the flag to
      */
     public void setRmAll(boolean rmall) {
-        m_Rmall = rmall;
+        mRmall = rmall;
     }
 
     /**
@@ -223,7 +233,7 @@ public class CCRmtype extends ClearCase {
      * @return boolean containing status of rmall flag
      */
     public boolean getRmAll() {
-        return m_Rmall;
+        return mRmall;
     }
 
     /**
@@ -232,7 +242,7 @@ public class CCRmtype extends ClearCase {
      * @param comment the comment string
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        mComment = comment;
     }
 
     /**
@@ -241,7 +251,7 @@ public class CCRmtype extends ClearCase {
      * @return String containing the comment
      */
     public String getComment() {
-        return m_Comment;
+        return mComment;
     }
 
     /**
@@ -250,7 +260,7 @@ public class CCRmtype extends ClearCase {
      * @param cfile the path to the comment file
      */
     public void setCommentFile(String cfile) {
-        m_Cfile = cfile;
+        mCfile = cfile;
     }
 
     /**
@@ -259,7 +269,7 @@ public class CCRmtype extends ClearCase {
      * @return String containing the path to the comment file
      */
     public String getCommentFile() {
-        return m_Cfile;
+        return mCfile;
     }
 
     /**
@@ -268,7 +278,7 @@ public class CCRmtype extends ClearCase {
      * @param tk the type-kind string
      */
     public void setTypeKind(String tk) {
-        m_TypeKind = tk;
+        mTypeKind = tk;
     }
 
     /**
@@ -277,7 +287,7 @@ public class CCRmtype extends ClearCase {
      * @return String containing the type-kind
      */
     public String getTypeKind() {
-        return m_TypeKind;
+        return mTypeKind;
     }
 
     /**
@@ -286,7 +296,7 @@ public class CCRmtype extends ClearCase {
      * @param tn the type-name string
      */
     public void setTypeName(String tn) {
-        m_TypeName = tn;
+        mTypeName = tn;
     }
 
     /**
@@ -295,7 +305,7 @@ public class CCRmtype extends ClearCase {
      * @return String containing the type-name
      */
     public String getTypeName() {
-        return m_TypeName;
+        return mTypeName;
     }
 
     /**
@@ -304,7 +314,7 @@ public class CCRmtype extends ClearCase {
      * @param vob the VOB name
      */
     public void setVOB(String vob) {
-        m_VOB = vob;
+        mVOB = vob;
     }
 
     /**
@@ -313,7 +323,7 @@ public class CCRmtype extends ClearCase {
      * @return String containing VOB name
      */
     public String getVOB() {
-        return m_VOB;
+        return mVOB;
     }
 
     /**
@@ -321,7 +331,6 @@ public class CCRmtype extends ClearCase {
      *
      * @return the 'type-kind:type-name@vob' specifier
      *
-     * @param CommandLine containing the command line string
      */
     private String getTypeSpecifier() {
         String tkind = getTypeKind();
@@ -339,10 +348,7 @@ public class CCRmtype extends ClearCase {
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified,
-     *         otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
      *        without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
@@ -360,10 +366,7 @@ public class CCRmtype extends ClearCase {
     /**
      * Get the 'commentfile' command
      *
-     * @return the 'commentfile' command if the attribute was specified,
-     *         otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
      *        without the commentfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {

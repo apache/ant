@@ -619,6 +619,10 @@ public class Manifest {
                     if (classpathAttribute == null) {
                         storeAttribute(attribute);
                     } else {
+                        warnings.addElement("Multiple Class-Path attributes "
+                            + "are supported but violate the Jar "
+                            + "specification and may not be correctly "
+                            + "processed in all environments");
                         Enumeration e = attribute.getValues();
                         while (e.hasMoreElements()) {
                             String value = (String) e.nextElement();

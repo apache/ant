@@ -80,7 +80,7 @@ import org.apache.tools.ant.util.LoaderUtils;
  * class will then use this loader rather than the system class loader.
  *
  * @author Conor MacNeill
- * @author <a href="mailto:Jesse.Glick@netbeans.com">Jesse Glick</a>
+ * @author <a href="mailto:jglick@netbeans.org">Jesse Glick</a>
  * @author Magesh Umasankar
  */
 public class AntClassLoader extends ClassLoader implements BuildListener {

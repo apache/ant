@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>Installing Ant</title>
+<link rel="stylesheet" type="text/css" href="stylesheets/antmanual.css">
 </head>
 
 <body>
@@ -52,13 +53,9 @@ You can then either put the jars from your preferred parser into Ant's
 
 <p>
 For the current version of Ant, you will also need a JDK installed on
-your system, version 1.1 or later. Some tasks work better on post-1.1 systems;
-some tasks only work on Java 1.2 and successors.
-A future version of Ant -Ant 2.0- will require JDK 1.2 or later, though
-Ant 1.x strives to retain 1.1 compatibility.
+your system, version 1.2 or later.
 </p><p>
-<strong>Note: </strong>The Microsoft JVM/JDK is not adequate on its own, although the MS
-compiler is supported.
+<strong>Note: </strong>The Microsoft JVM/JDK is not supported.
 </p>
 <p>
 <strong>Note #2: </strong>If a JDK is not present, only the JRE runtime, then many tasks will not work.
@@ -273,7 +270,10 @@ the current Ant version in <code>ANT_HOME</code>.</p>
 <p>The following libraries are needed in your CLASSPATH or in the
 install directory's <code>lib</code> directory if you are using the
 indicated feature. Note that only one of the regexp libraries is
-needed for use with the mappers. You will also need to install the
+needed for use with the mappers
+(and Java 1.4 and higher includes a regexp implementation which
+Ant will find automatically).
+You will also need to install the
 Ant optional jar containing the task definitions to make these
 tasks available. Please refer to the <a href="#optionalTasks">
 Installing Ant / Optional Tasks</a> section above.</p>
@@ -287,11 +287,14 @@ Installing Ant / Optional Tasks</a> section above.</p>
   <tr>
     <td>An XSL transformer like Xalan or XSL:P</td>
     <td>style task</td>
-    <td><a href="http://xml.apache.org/xalan-j/index.html"
-    target="_top">http://xml.apache.org/xalan-j/index.html</a> for Xalan.<br>
-    XSL:P used to live at <a href="http://www.clc-marketing.com/xslp/"
+    <td>
+    <b>If you use JDK 1.4, an XSL transformer is already included, so you need not do anything special.</b><br>
+    <ul><li>XALAN : <a href="http://xml.apache.org/xalan-j/index.html"
+    target="_top">http://xml.apache.org/xalan-j/index.html</a></li>
+    <li>XSL:P : used to live at <a href="http://www.clc-marketing.com/xslp/"
     target="_top">http://www.clc-marketing.com/xslp/</a>, but the link
-    doesn't work any longer and we are not aware of a replacement site.</td>
+    doesn't work any longer and we are not aware of a replacement site.</li></ul>
+    </td>
   </tr>
   <tr>
     <td>jakarta-regexp-1.3.jar</td>
@@ -367,7 +370,10 @@ Installing Ant / Optional Tasks</a> section above.</p>
   </tr>
   <tr>
     <td>BeanShell JAR(s)</td>
-    <td>BeanShell with script task</td>
+    <td>BeanShell with script task.
+      <br/>
+    <strong>Note</strong>: Ant 1.6 and later require BeanShell version 1.3 or
+      later</td>
     <td><a href="http://www.beanshell.org/" target="_top">http://www.beanshell.org/</a></td>
   </tr>
   <tr>
@@ -434,14 +440,10 @@ Already included in jdk 1.4</td>
         target="_top">http://www.clarkware.com/software/JDepend.html</a></td>
   </tr>
   <tr>
-    <td>resolver.jar <b>after the 1.0 release</b></td>
+    <td>resolver.jar <b>1.1beta or later</b></td>
     <td>xmlcatalog datatype <em>only if support for external catalog files is desired</em></td>
-    <td><a href="http://xml.apache.org/dist/commons/"
-    target="_top">http://xml.apache.org/dist/commons/</a> for released
-    versions, <a
-    href="http://gump.covalent.net/jars/latest/xml-commons/"
-    target="_top">http://gump.covalent.net/jars/latest/xml-commons/</a>
-    for a nightly snapshot.</td>
+    <td><a href="http://xml.apache.org/commons/"
+    target="_top">http://xml.apache.org/commons/</a>.</td>
   </tr>
   <tr>
     <td>jsch.jar</td>

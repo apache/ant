@@ -46,31 +46,31 @@
     <typedef loaderref="nested.loader" classpathref="test-classes"
              name = "nested.a"
              classname="${nested.package}AddTypeTest$AImpl"/>
-    <typedef loaderref="nested.loader" classpathref="test-classes"
+    <typedef loaderref="nested.loader"
              name = "nested.b"
              classname="${nested.package}AddTypeTest$BImpl"/>
-    <typedef loaderref="nested.loader" classpathref="test-classes"
+    <typedef loaderref="nested.loader"
              name = "nested.c"
              classname="${nested.package}AddTypeTest$CImpl"/>
-    <typedef loaderref="nested.loader" classpathref="test-classes"
+    <typedef loaderref="nested.loader"
              name = "nested.ab"
              classname="${nested.package}AddTypeTest$ABImpl"/>
-    <taskdef loaderref="nested.loader" classpathref="test-classes"
+    <taskdef loaderref="nested.loader"
              name = "nested.container" 
              classname="${nested.package}AddTypeTest$NestedContainer"/>
-    <taskdef loaderref="nested.loader" classpathref="nested.classes"
+    <taskdef loaderref="nested.loader"
              name = "nested.condition.task" 
              classname="${nested.package}AddTypeTest$MyCondition"/>
-    <typedef loaderref="nested.loader" classpathref="nested.classes"
+    <typedef loaderref="nested.loader"
              name = "nested.condition.type" 
              classname="${nested.package}AddTypeTest$MyCondition"/>
-    <typedef loaderref="nested.loader" classpathref="nested.classes"
+    <typedef loaderref="nested.loader"
              name = "myaddconfigured" 
              classname="${nested.package}AddTypeTest$MyAddConfigured"/>
-    <typedef loaderref="nested.loader" classpathref="nested.classes"
+    <typedef loaderref="nested.loader"
              name = "myvalue" 
              classname="${nested.package}AddTypeTest$MyValue"/>
- </target>
+  </target>
 
   <target name="nested.a" depends="init">
     <nested.container>
@@ -83,7 +83,7 @@
       <nested.b/>
     </nested.container>
   </target>
-
+  
   <target name="nested.c" depends="init">
     <nested.container>
       <nested.c/>
@@ -102,18 +102,21 @@
     <nested.condition.type/>
     <echo>after</echo>
   </target>
+
   <target name="condition.task" depends="init">
     <echo>before</echo>
     <nested.condition.task/>
     <echo>after</echo>
   </target>
+
   <target name="condition.condition.type" depends="init">
     <condition property="condition.condition.type">
       <nested.condition.type/>
     </condition>
   </target>
+
   <target name="condition.condition.task" depends="init">
-    <condition property="condition.condition.task">>
+    <condition property="condition.condition.task">
       <nested.condition.task/>
     </condition>
   </target>
@@ -124,4 +127,11 @@
     </myaddconfigured>
   </target>
 
+  <target name="namespacetest" xmlns:prefix="uri">
+    <typedef name="eq" uri="uri"
+             classname="org.apache.tools.ant.taskdefs.condition.Equals"/>
+    <condition property="p">
+      <prefix:eq arg1="a" arg2="b"/>
+    </condition>
+  </target>
 </project>

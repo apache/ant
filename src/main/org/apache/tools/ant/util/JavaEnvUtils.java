@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -96,6 +96,8 @@ public class JavaEnvUtils {
     public static final String JAVA_1_3 = "1.3";
     /** Version constant for Java 1.4 */
     public static final String JAVA_1_4 = "1.4";
+    /** Version constant for Java 1.5 */
+    public static final String JAVA_1_5 = "1.5";
 
     /** array of packages in the runtime */
     private static Vector jrePackages;
@@ -104,6 +106,7 @@ public class JavaEnvUtils {
     static {
 
         // Determine the Java version by looking at available classes
+        // java.lang.Readable was introduced in JDK 1.5
         // java.lang.CharSequence was introduced in JDK 1.4
         // java.lang.StrictMath was introduced in JDK 1.3
         // java.lang.ThreadLocal was introduced in JDK 1.2
@@ -124,6 +127,9 @@ public class JavaEnvUtils {
             javaVersionNumber++;
             Class.forName("java.lang.CharSequence");
             javaVersion = JAVA_1_4;
+            javaVersionNumber++;
+            Class.forName("java.lang.Readable");
+            javaVersion = JAVA_1_5;
             javaVersionNumber++;
         } catch (Throwable t) {
             // swallow as we've hit the max class version that
@@ -275,6 +281,7 @@ public class JavaEnvUtils {
     private static void buildJrePackages() {
         jrePackages = new Vector();
         switch(javaVersionNumber) {
+            case 15:
             case 14:
                 jrePackages.addElement("org.apache.crimson");
                 jrePackages.addElement("org.apache.xalan");
@@ -317,6 +324,7 @@ public class JavaEnvUtils {
         Vector tests = new Vector();
         tests.addElement("java.lang.Object");
         switch(javaVersionNumber) {
+            case 15:
             case 14:
                 tests.addElement("sun.audio.AudioPlayer");
                 tests.addElement("org.apache.crimson.parser.ContentModel");

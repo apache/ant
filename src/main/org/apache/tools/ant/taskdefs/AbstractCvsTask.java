@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -111,7 +111,10 @@ public abstract class AbstractCvsTask extends Task {
      * the package/module to check out.
      */
     private String cvsPackage;
-
+    /**
+     * the tag
+     */
+    private String tag;
     /**
      * the default command.
      */
@@ -571,6 +574,10 @@ public abstract class AbstractCvsTask extends Task {
     /**
      * The directory where the checked out files should be placed.
      *
+     * <p>Note that this is different from CVS's -d command line
+     * switch as Ant will never shorten pathnames to avoid empty
+     * directories.</p>
+     *
      * @param dest directory where the checked out files should be placed
      */
     public void setDest(File dest) {
@@ -605,6 +612,14 @@ public abstract class AbstractCvsTask extends Task {
 
         return this.cvsPackage;
     }
+    /**
+     * tag or branch
+     * @return tag or branch
+     * @since ant 1.6.1
+     */
+    public String getTag() {
+        return tag;
+    }
 
     /**
      * The tag of the package/module to operate upon.
@@ -613,8 +628,8 @@ public abstract class AbstractCvsTask extends Task {
     public void setTag(String p) {
         // Check if not real tag => set it to null
         if (p != null && p.trim().length() > 0) {
-            addCommandArgument("-r");
-            addCommandArgument(p);
+            tag = p;
+            addCommandArgument("-r" + p);
         }
     }
 

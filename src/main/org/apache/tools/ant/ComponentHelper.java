@@ -192,7 +192,9 @@ public class ComponentHelper  {
             antTypeTable.put(def.getName(), def);
         }
         // add the parsed namespaces of the parent project
-        checkedNamespaces.add(helper.checkedNamespaces);
+        for (Iterator i = helper.checkedNamespaces.iterator(); i.hasNext();) {
+            checkedNamespaces.add(i.next());
+        }
     }
 
     /** Factory method to create the components.
@@ -806,7 +808,7 @@ public class ComponentHelper  {
      * called for each component name, check if the
      * associated URI has been examined for antlibs.
      */
-    private void checkNamespace(String componentName) {
+    private synchronized void checkNamespace(String componentName) {
         if (componentName.indexOf(':') == -1) {
             return; // not a namespaced name
         }

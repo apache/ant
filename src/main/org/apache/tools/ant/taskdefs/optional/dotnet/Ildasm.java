@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
@@ -65,7 +66,7 @@ import java.io.File;
  * into ILASM assembly code. Useful when converting imported typelibs into
  * assembler before patching and recompiling, as one has to do when doing
  * advanced typelib work.
- *
+ * <p>
  * As well as generating the named output file, the ildasm program
  * will also generate resource files <code>Icons.resources</code>
  * <code>Message.resources</code> and a .res file whose filename stub is derived
@@ -76,13 +77,13 @@ import java.io.File;
  * creates the resources in the directory specified by <code>resourceDir</code> if
  * set, else in the same directory as the <code>destFile</code>.
  *
- *
+ * <p>
  * This task requires the .NET SDK installed and ildasm on the path.
  * To disassemble using alternate CLR systems, set the executable attribute
  * to the name/path of the alternate implementation -one that must
  * support all the classic ildasm commands.
  *
- *
+ * <p>
  * Dependency logic: the task executes the command if the output file is missing
  * or older than the source file. It does not take into account changes
  * in the options of the task, or timestamp differences in resource files.
@@ -90,6 +91,7 @@ import java.io.File;
  * .il file in place with some error message. To prevent this from confusing
  * the dependency logic, the file specified by the <code>dest</code>
  * attribute is <i>always</i> deleted after an unsuccessful build.
+ * @ant.task category="dotnet"
  */
 public class Ildasm extends Task {
 
@@ -351,16 +353,26 @@ public class Ildasm extends Task {
     }
 
     /**
-     *
-     * @return
+     * Test for disassembly being needed; use existence and granularity
+     * correct date stamps
+     * @return true iff a rebuild is required.
      */
     private boolean isDisassemblyNeeded() {
         if (!destFile.exists()) {
+            log("Destination file does not exist: a build is required",
+                    Project.MSG_VERBOSE);
             return true;
         }
         long sourceTime = sourceFile.lastModified();
         long destTime = destFile.lastModified();
-        return sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity());
+        if(sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity())) {
+            log("Source file is newer than the dest file: a rebuild is required",
+                    Project.MSG_VERBOSE);
+            return true;
+        } else {
+            log("The .il file is up to date", Project.MSG_VERBOSE);
+            return false;
+        }
 
     }
     /**
@@ -369,6 +381,9 @@ public class Ildasm extends Task {
      */
     public void execute() throws BuildException {
         validate();
+        if(!isDisassemblyNeeded()) {
+            return;
+        }
         NetCommand command = new NetCommand(this, "ildasm", executable);
         command.setFailOnError(true);
         //fill in args
@@ -422,6 +437,7 @@ public class Ildasm extends Task {
         } catch (BuildException e) {
             //forcibly delete the output file in case of trouble
             if (destFile.exists()) {
+                log("Deleting destination file as it may be corrupt");
                 destFile.delete();
             }
             //then rethrow the exception

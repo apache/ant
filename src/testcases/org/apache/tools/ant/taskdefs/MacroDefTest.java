@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,6 +78,18 @@ public class MacroDefTest extends BuildFileTest {
         expectLog("text", "Inner Text");
     }
 
+    public void testDuplicateAttribute() {
+        expectBuildException(
+            "duplicate.attribute",
+            "the attribute text has already been specified");
+    }
+    
+    public void testDuplicateElement() {
+        expectBuildException(
+            "duplicate.element",
+            "the element text has already been specified");
+    }
+    
     public void testUri() {
         expectLog("uri", "Hello World");
     }
@@ -86,8 +98,43 @@ public class MacroDefTest extends BuildFileTest {
         expectLog("nested", "A nested element");
     }
 
-    public void testXPathStyle() {
-        expectLog("xpathstyle", "attribute is this is a testthis is a test");
+    public void testDouble() {
+        expectLog(
+            "double",
+            "@{prop} is 'property', value of ${property} is 'A property value'");
+    }
+
+    public void testIgnoreCase() {
+        expectLog(
+            "ignorecase",
+            "a is ab is b");
+    }
+
+    public void testIgnoreElementCase() {
+        expectLog(
+            "ignore-element-case",
+            "nested elementnested element");
+    }
+
+    public void testTextElement() {
+        expectLogContaining(
+            "textelement", "Hello world");
+    }
+
+    public void testTextTrim() {
+        expectLogContaining(
+            "text.trim", "[Hello world]");
+    }
+
+    public void testDuplicateTextName() {
+        expectBuildException(
+            "duplicatetextname",
+            "the name \"text\" is already used as an attribute");
+    }
+    public void testDuplicateTextName2() {
+        expectBuildException(
+            "duplicatetextname2",
+            "the attribute name \"text\" has already been used by the text element");
     }
 }
 
