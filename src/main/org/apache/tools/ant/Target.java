@@ -102,6 +102,17 @@ public class Target {
         tasks.addElement(task);
     }
 
+	/** 
+	 * Get the current set of tasks to be executed by this target.
+	 * 
+     * @return The current set of tasks.
+	 */
+    public Task[] getTasks() {
+        Task[] retval = new Task[tasks.size()];
+        tasks.copyInto(retval);
+        return retval;
+    }
+
     public void addDependency(String dependency) {
         dependencies.addElement(dependency);
     }
