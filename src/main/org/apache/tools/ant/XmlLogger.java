@@ -240,7 +240,7 @@ public class XmlLogger implements BuildListener {
     public void messageLogged(BuildEvent event) {
         Element messageElement = doc.createElement(MESSAGE_TAG);
 
-        String name;
+        String name = "debug";
         switch(event.getPriority()) {
             case Project.MSG_ERR: name = "error"; break;
             case Project.MSG_WARN: name = "warn"; break;
