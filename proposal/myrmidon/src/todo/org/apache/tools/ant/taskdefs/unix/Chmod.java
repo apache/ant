@@ -48,15 +48,13 @@ public class Chmod
      * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
      *      should be used, "false"|"off"|"no" when they shouldn't be used.
      */
-    public void setDefaultexcludes( boolean useDefaultExcludes )
-        throws TaskException
+    public void setDefaultExcludes( boolean useDefaultExcludes )
     {
         m_defaultSetDefined = true;
-        m_defaultSet.setDefaultexcludes( useDefaultExcludes );
+        m_defaultSet.setDefaultExcludes( useDefaultExcludes );
     }
 
     public void setDir( File src )
-        throws TaskException
     {
         m_defaultSet.setDir( src );
     }
@@ -78,7 +76,6 @@ public class Chmod
     }
 
     public void setFile( File src )
-        throws TaskException
     {
         final FileSet fileSet = new FileSet();
         fileSet.setDir( new File( src.getParent() ) );

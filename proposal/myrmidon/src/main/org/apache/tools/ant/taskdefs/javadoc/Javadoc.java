@@ -941,7 +941,7 @@ public class Javadoc
         }
 
         FileSet fs = new FileSet();
-        fs.setDefaultexcludes( m_useDefaultExcludes );
+        fs.setDefaultExcludes( m_useDefaultExcludes );
 
         Iterator e = packages.iterator();
         while( e.hasNext() )

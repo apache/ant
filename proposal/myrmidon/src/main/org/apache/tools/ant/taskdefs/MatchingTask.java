@@ -10,27 +10,25 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Pattern;
+import org.apache.myrmidon.framework.PatternSet;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ScannerUtil;
-import org.apache.myrmidon.framework.PatternSet;
 
 /**
  * This is an abstract task that should be used by all those tasks that require
  * to include or exclude files based on pattern matching.
  *
- * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">
- *      stefano@apache.org</a>
- * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
+ * @author <a href="mailto:ajkuiper@wxs.nl">Arnout J. Kuiper</a>
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
+ * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
+ * @author <a href="mailto:jon@clearink.com">Jon S. Stevens</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public abstract class MatchingTask
     extends Task
 {
-    private boolean m_useDefaultExcludes = true;
     private FileSet m_fileset = new FileSet();
 
     /**
@@ -38,7 +36,7 @@ public abstract class MatchingTask
      */
     public void setDefaultexcludes( final boolean useDefaultExcludes )
     {
-        m_useDefaultExcludes = useDefaultExcludes;
+        m_fileset.setDefaultExcludes( useDefaultExcludes );
     }
 
     /**
@@ -48,7 +46,6 @@ public abstract class MatchingTask
      * @param excludes the string containing the exclude patterns
      */
     public void setExcludes( final String excludes )
-        throws TaskException
     {
         m_fileset.setExcludes( excludes );
     }
@@ -60,7 +57,6 @@ public abstract class MatchingTask
      * @param includes the string containing the include patterns
      */
     public void setIncludes( final String includes )
-        throws TaskException
     {
         m_fileset.setIncludes( includes );
     }
@@ -100,7 +96,6 @@ public abstract class MatchingTask
         throws TaskException
     {
         m_fileset.setDir( baseDir );
-        m_fileset.setDefaultexcludes( m_useDefaultExcludes );
         return ScannerUtil.getDirectoryScanner( m_fileset );
     }
 }

@@ -20,17 +20,17 @@ import java.util.Hashtable;
 import java.util.Stack;
 import java.util.zip.CRC32;
 import java.util.zip.ZipInputStream;
+import org.apache.aut.zip.ZipEntry;
+import org.apache.aut.zip.ZipOutputStream;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileScanner;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.ant.types.ZipScanner;
-import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.util.mappers.MergingMapper;
-import org.apache.aut.zip.ZipEntry;
-import org.apache.aut.zip.ZipOutputStream;
 
 /**
  * Create a ZIP archive.
@@ -266,8 +266,9 @@ public class Zip
         }
         for( int i = 0; i < m_filesets.size(); i++ )
         {
-            FileSet fs = (FileSet)m_filesets.get( i );
-            dss.add( ScannerUtil.getDirectoryScanner( fs ) );
+            final FileSet fileSet = (FileSet)m_filesets.get( i );
+            final DirectoryScanner scanner = getScanner( fileSet );
+            dss.add( scanner );
         }
         int dssSize = dss.size();
         FileScanner[] scanners = new FileScanner[ dssSize ];
@@ -350,7 +351,8 @@ public class Zip
                     // before we added any files, then we must swallow this exception. Otherwise,
                     // the error that's reported will be the close() error, which is not the real
                     // cause of the problem.
-                    if( success ) {
+                    if( success )
+                    {
                         throw ex;
                     }
                 }
@@ -387,6 +389,20 @@ public class Zip
                     renamedFile.getName();
                 getLogger().warn( message );
             }
+        }
+    }
+
+    private DirectoryScanner getScanner( final FileSet fileSet )
+        throws TaskException
+    {
+        if( fileSet instanceof ZipFileSet )
+        {
+            final ZipFileSet zipFileSet = (ZipFileSet)fileSet;
+            return ScannerUtil.getZipScanner( zipFileSet );
+        }
+        else
+        {
+            return ScannerUtil.getDirectoryScanner( fileSet );
         }
     }
 
@@ -457,7 +473,8 @@ public class Zip
                 }
             }
 
-            if( !zipFile.exists() ) {
+            if( !zipFile.exists() )
+            {
                 return false;
             }
 
@@ -468,7 +485,7 @@ public class Zip
             for( int i = 0; i < scanners.length; i++ )
             {
                 if( scanner.restrict( fileNames[ i ], scanners[ i ].getBasedir(), null,
-                                  mm ).length > 0 )
+                                      mm ).length > 0 )
                 {
                     return false;
                 }
@@ -493,7 +510,8 @@ public class Zip
                              String prefix, String fullpath )
         throws IOException, TaskException
     {
-        if( prefix.length() > 0 && fullpath.length() > 0 ) {
+        if( prefix.length() > 0 && fullpath.length() > 0 )
+        {
             throw new TaskException( "Both prefix and fullpath attributes may not be set on the same fileset." );
         }
 
@@ -501,7 +519,8 @@ public class Zip
 
         // directories that matched include patterns
         String[] dirs = scanner.getIncludedDirectories();
-        if( dirs.length > 0 && fullpath.length() > 0 ) {
+        if( dirs.length > 0 && fullpath.length() > 0 )
+        {
             throw new TaskException( "fullpath attribute may only be specified for filesets that specify a single file." );
         }
         for( int i = 0; i < dirs.length; i++ )
@@ -520,7 +539,8 @@ public class Zip
 
         // files that matched include patterns
         String[] files = scanner.getIncludedFiles();
-        if( files.length > 1 && fullpath.length() > 0 ) {
+        if( files.length > 1 && fullpath.length() > 0 )
+        {
             throw new TaskException( "fullpath attribute may only be specified for filesets that specify a single file." );
         }
         for( int i = 0; i < files.length; i++ )
@@ -557,7 +577,7 @@ public class Zip
         for( int i = 0; i < filesets.size(); i++ )
         {
             FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = ScannerUtil.getDirectoryScanner( fs );
+            DirectoryScanner ds = getScanner( fs );
 
             String prefix = "";
             String fullpath = "";
@@ -649,7 +669,8 @@ public class Zip
                                   ZipOutputStream zOut, String prefix, String fullpath )
         throws IOException, TaskException
     {
-        if( prefix.length() > 0 && fullpath.length() > 0 ) {
+        if( prefix.length() > 0 && fullpath.length() > 0 )
+        {
             throw new TaskException( "Both prefix and fullpath attributes may not be set on the same fileset." );
         }
 

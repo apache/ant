@@ -8,9 +8,6 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.Project;
 
 /**
  * A ZipFileSet is a FileSet with extra attributes useful in the context of
@@ -25,43 +22,23 @@ import org.apache.tools.ant.Project;
  * task, and attributes in the refering ZipFileSet can augment FileSet
  * definition.
  *
- * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
+ * @author <a href="mailto:don@bea.com">Don Ferguson</a>
  */
 public class ZipFileSet
     extends FileSet
 {
-    private File srcFile = null;
-    private String prefix = "";
-    private String fullpath = "";
-    private boolean hasDir = false;
-
-    /**
-     * Set the directory for the fileset. Prevents both "dir" and "src" from
-     * being specified.
-     */
-    public void setDir( final File dir )
-        throws TaskException
-    {
-        if( srcFile != null )
-        {
-            final String message = "Cannot set both dir and src attributes";
-            throw new TaskException( message );
-        }
-        else
-        {
-            super.setDir( dir );
-            hasDir = true;
-        }
-    }
+    private File m_src;
+    private String m_prefix = "";
+    private String m_fullpath = "";
 
     /**
      * Set the full pathname of the single entry in this fileset.
      *
      * @param fullpath The new Fullpath value
      */
-    public void setFullpath( String fullpath )
+    public void setFullpath( final String fullpath )
     {
-        this.fullpath = fullpath;
+        m_fullpath = fullpath;
     }
 
     /**
@@ -70,9 +47,9 @@ public class ZipFileSet
      *
      * @param prefix The prefix to prepend to entries in the zip file.
      */
-    public void setPrefix( String prefix )
+    public void setPrefix( final String prefix )
     {
-        this.prefix = prefix;
+        m_prefix = prefix;
     }
 
     /**
@@ -81,40 +58,9 @@ public class ZipFileSet
      *
      * @param srcFile The zip file from which to extract entries.
      */
-    public void setSrc( File srcFile )
-        throws TaskException
+    public void setSrc( final File src )
     {
-        if( hasDir )
-        {
-            throw new TaskException( "Cannot set both dir and src attributes" );
-        }
-        this.srcFile = srcFile;
-    }
-
-    /**
-     * Return the DirectoryScanner associated with this FileSet. If the
-     * ZipFileSet defines a source Zip file, then a ZipScanner is returned
-     * instead.
-     *
-     * @param p Description of Parameter
-     * @return The DirectoryScanner value
-     */
-    public DirectoryScanner getDirectoryScanner( Project p )
-        throws TaskException
-    {
-        if( srcFile != null )
-        {
-            final ZipScanner zs = new ZipScanner();
-            zs.setSrc( srcFile );
-            super.setDir( p.getBaseDir() );
-            ScannerUtil.setupDirectoryScanner( this, zs, null );
-            zs.init();
-            return zs;
-        }
-        else
-        {
-            return ScannerUtil.getDirectoryScanner( this );
-        }
+        m_src = src;
     }
 
     /**
@@ -124,7 +70,7 @@ public class ZipFileSet
      */
     public String getFullpath()
     {
-        return fullpath;
+        return m_fullpath;
     }
 
     /**
@@ -134,7 +80,7 @@ public class ZipFileSet
      */
     public String getPrefix()
     {
-        return prefix;
+        return m_prefix;
     }
 
     /**
@@ -146,6 +92,6 @@ public class ZipFileSet
      */
     public File getSrc()
     {
-        return srcFile;
+        return m_src;
     }
 }
