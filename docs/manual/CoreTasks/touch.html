@@ -12,7 +12,8 @@
 <p>Changes the modification time of a file and possibly creates it at
 the same time. In addition to working with a single file, this Task
 can also work a <a href="../CoreTypes/fileset.html">Fileset</a> (which
-also includes directories).</p>
+also includes directories)
+or a <a href="../CoreTypes/filelist.html">Filelist</a> (since Ant 1.6).</p>
 <p>For JDK 1.1 only the creation of new files with a modification time
 of now works, all other cases will emit a warning.</p>
 <h3>Parameters</h3>
@@ -26,6 +27,7 @@ of now works, all other cases will emit a warning.</p>
     <td valign="top">file</td>
     <td valign="top">the name of the file</td>
     <td valign="top" align="center">unless a nested fileset element
+       or a nested filelist element
        has been specified.</td>
   </tr>
   <tr>
@@ -67,4 +69,3 @@ Reserved.</p>
 
 </body>
 </html>
-

@@ -12,4 +12,30 @@
   <target name="seconds">
     <touch file="touchtest" datetime="2003/06/24 2:20:12 pm"/>
   </target>
+
+  <target name="testNow">
+    <touch file="touchtest" />
+  </target>
+  
+  <target name="testMillis">
+    <touch file="touchtest" millis="1234567" />
+  </target>
+  
+  <target name="test1970">
+    <touch file="touchtest" millis="0" />
+  </target>
+  
+  <target name="testFilelist">
+    <touch millis="100000" >
+      <filelist dir="." files="touchtest"/>
+    </touch>
+  </target>
+
+  <target name="testFileset" depends="testNow">
+    <touch millis="200000" >
+      <fileset dir="." includes="touchtest"/>
+    </touch>
+  </target>
+
+  
 </project>
