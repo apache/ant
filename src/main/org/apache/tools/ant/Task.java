@@ -91,7 +91,7 @@ public abstract class Task {
      *
      * @param target Target in whose scope this task belongs.
      */
-    public void setTarget(Target target) {
+    public void setOwningTarget(Target target) {
         this.target = target;
     }
 

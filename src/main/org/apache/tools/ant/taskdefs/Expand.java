@@ -75,7 +75,7 @@ public class Expand extends Task {
     // XXX move it to util or tools
     public void execute() throws BuildException {
         Touch touch = (Touch) project.createTask("touch");
-        touch.setTarget(target);
+        touch.setOwningTarget(target);
         
         File srcF=project.resolveFile(source);
         File dir=project.resolveFile(dest);

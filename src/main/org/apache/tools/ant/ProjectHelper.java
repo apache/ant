@@ -333,7 +333,7 @@ public class ProjectHelper {
 
             // Top level tasks don't have associated targets
             if (target != null) {
-                task.setTarget(target);
+                task.setOwningTarget(target);
                 target.addTask(task);
             }
         }

@@ -77,7 +77,7 @@ public class Untar extends Task {
     public void execute() throws BuildException {
 
         Touch touch = (Touch) project.createTask("touch");
-        touch.setTarget(target);
+        touch.setOwningTarget(target);
                     
         File srcF=project.resolveFile(source);
 
