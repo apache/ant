@@ -60,9 +60,9 @@ import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterReaderSet;
 import org.apache.tools.ant.types.Parameterizable;
 
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.io.*;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -104,7 +104,7 @@ public class LoadFile extends Task {
     /**
      * Holds filterReaderSets
      */
-    private Vector filterReaderSets=new Vector();
+    private final Vector filterReaderSets = new Vector();
 
     /**
      * Encoding to use for filenames, defaults to the platform's default
@@ -117,7 +117,7 @@ public class LoadFile extends Task {
      * @param encoding The new Encoding value
      */
 
-    public void setEncoding(String encoding) {
+    public final void setEncoding(final String encoding) {
         this.encoding = encoding;
     }
 
@@ -127,7 +127,7 @@ public class LoadFile extends Task {
      *
      * @param property The new Property value
      */
-    public void setProperty(String property) {
+    public final void setProperty(final String property) {
         this.property = property;
     }
 
@@ -137,7 +137,7 @@ public class LoadFile extends Task {
      *
      * @param srcFile The new SrcFile value
      */
-    public void setSrcFile(File srcFile) {
+    public final void setSrcFile(final File srcFile) {
         this.srcFile = srcFile;
     }
 
@@ -147,7 +147,7 @@ public class LoadFile extends Task {
      *
      * @param fail The new Failonerror value
      */
-    public void setFailonerror(boolean fail) {
+    public final void setFailonerror(final boolean fail) {
         failOnError = fail;
     }
 
@@ -156,7 +156,7 @@ public class LoadFile extends Task {
      * setter to eval properties.
      * @since 1.6
      */
-    public void setEvaluateProperties(boolean evaluateProperties) {
+    public final void setEvaluateProperties(final boolean evaluateProperties) {
         this.evaluateProperties=evaluateProperties;
     }
 
@@ -166,7 +166,7 @@ public class LoadFile extends Task {
      *
      * @exception BuildException if something goes wrong with the build
      */
-    public void execute()
+    public final void execute()
         throws BuildException {
         //validation
         if (srcFile == null) {
@@ -180,13 +180,13 @@ public class LoadFile extends Task {
         Reader instream = null;
         log("loading "+srcFile+" into property "+property,Project.MSG_VERBOSE);
         try {
-            long len = srcFile.length();
+            final long len = srcFile.length();
             log("file size = "+len,Project.MSG_DEBUG);
             //discard most of really big files
             if (len > Integer.MAX_VALUE) {
                 log("this file is far to big to load completely");
             }
-            int size=(int) len;
+            final int size=(int) len;
             //open up the file
             fis = new FileInputStream(srcFile);
             bis = new BufferedInputStream(fis);
@@ -206,13 +206,20 @@ public class LoadFile extends Task {
             log("loaded " + text.length() + " characters",Project.MSG_VERBOSE);
             log(property+" := "+text,Project.MSG_DEBUG);
 
-        } catch (IOException ioe) {
-            String message = "Unable to load file: " + ioe.toString();
+        } catch (final IOException ioe) {
+            final String message = "Unable to load file: " + ioe.toString();
             if (failOnError) {
                 throw new BuildException(message, ioe, location);
             }
             else {
                 log(message, Project.MSG_ERR);
+            }
+        } catch (final BuildException be) {
+            if (failOnError) {
+                throw be;
+            }
+            else {
+                log(be.getMessage(), Project.MSG_ERR);
             }
         } finally {
             try {
@@ -220,6 +227,7 @@ public class LoadFile extends Task {
                     fis.close();
                 }
             } catch (IOException ioex) {
+                //ignore
             }
         }
     }
@@ -227,20 +235,23 @@ public class LoadFile extends Task {
     /**
      * Process the input by passing it through the reader chain.
      */
-    private final String processStream(Reader instream, final int size)
-        throws IOException {
+    private final String processStream(final Reader inputReader, final int size)
+        throws BuildException, IOException {
 
+        Reader instream = inputReader;
         final char[] buffer = new char[size];
         final int filterReadersCount = filterReaderSets.size();
         final Vector finalFilters = new Vector();
 
         for (int i = 0; i < filterReadersCount; i++) {
-            final FilterReaderSet filterset = (FilterReaderSet) filterReaderSets.elementAt(i);
+            final FilterReaderSet filterset =
+                (FilterReaderSet) filterReaderSets.elementAt(i);
             final Vector filterReaders = filterset.getFilterReaders();
             final int readerCount = filterReaders.size();
             for (int j = 0; j < readerCount; j++) {
-                final AntFilterReader fr = (AntFilterReader) filterReaders.elementAt(j);
-                finalFilters.addElement(fr);
+                final AntFilterReader afr =
+                    (AntFilterReader) filterReaders.elementAt(j);
+                finalFilters.addElement(afr);
             }
         }
 
@@ -248,28 +259,32 @@ public class LoadFile extends Task {
 
         if (filtersCount > 0) {
             for (int i = 0; i < filtersCount; i++) {
-                final AntFilterReader filter = (AntFilterReader) finalFilters.elementAt(i);
-                final String clazz = filter.getClassName();
-                if (clazz != null) {
+                final AntFilterReader filter =
+                    (AntFilterReader) finalFilters.elementAt(i);
+                final String className = filter.getClassName();
+                if (className != null) {
                     try {
-                        final Class c = Class.forName(clazz);
-                        if (c != null) {
-                            final Constructor[] constructors = c.getConstructors();
+                        final Class clazz = Class.forName(className);
+                        if (clazz != null) {
+                            final Constructor[] constructors =
+                                clazz.getConstructors();
                             final Reader[] rdr = {instream};
-                            instream = (Reader) constructors[0].newInstance(rdr);
-                            if (Parameterizable.class.isAssignableFrom(c)) {
+                            instream =
+                                (Reader) constructors[0].newInstance(rdr);
+                            if (Parameterizable.class.isAssignableFrom(clazz)) {
                                 final Hashtable params = filter.getParams();
-                                ((Parameterizable) instream).setParameters(params);
+                                ((Parameterizable)
+                                    instream).setParameters(params);
                             }
                         }
                     } catch (final ClassNotFoundException cnfe) {
-                        throw new BuildException(cnfe);
+                        throw new BuildException(cnfe, location);
                     } catch (final InstantiationException ie) {
-                        throw new BuildException(ie);
+                        throw new BuildException(ie, location);
                     } catch (final IllegalAccessException iae) {
-                        throw new BuildException(iae);
+                        throw new BuildException(iae, location);
                     } catch (final InvocationTargetException ite) {
-                        throw new BuildException(ite);
+                        throw new BuildException(ite, location);
                     }
                 }
             }
