@@ -182,8 +182,9 @@ public class TraXLiaison
             if( e.getLocator().getSystemId() != null )
             {
                 String url = e.getLocator().getSystemId();
-                if( url.startsWith( "file:///" ) )
+                if( url.startsWith( "file:///" ) ) {
                     url = url.substring( 8 );
+                }
                 msg.append( url );
             }
             else

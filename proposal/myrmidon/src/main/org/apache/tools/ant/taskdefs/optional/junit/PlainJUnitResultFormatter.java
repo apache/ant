@@ -15,7 +15,7 @@ import java.text.NumberFormat;
 import java.util.Hashtable;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-import junit.framework.TestCase;
+
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
 

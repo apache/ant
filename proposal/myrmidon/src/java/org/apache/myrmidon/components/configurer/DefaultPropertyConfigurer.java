@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 class DefaultPropertyConfigurer
     implements PropertyConfigurer
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultPropertyConfigurer.class );
 
     private final Class m_type;

@@ -123,12 +123,13 @@ public abstract class DefaultRmicAdapter
         String stubVersion = attributes.getStubVersion();
         if( null != stubVersion )
         {
-            if( "1.1".equals( stubVersion ) )
+            if( "1.1".equals( stubVersion ) ) {
                 cmd.addArgument( "-v1.1" );
-            else if( "1.2".equals( stubVersion ) )
+            } else if( "1.2".equals( stubVersion ) ) {
                 cmd.addArgument( "-v1.2" );
-            else
+                 } else {
                 cmd.addArgument( "-vcompat" );
+                   }
         }
 
         if( null != attributes.getSourceBase() )

@@ -149,8 +149,9 @@ public class PathConvert extends Task
 
             elem = elem.replace( fromDirSep, toDirSep );
 
-            if( i != 0 )
+            if( i != 0 ) {
                 rslt.append( m_pathSep );
+            }
             rslt.append( elem );
         }
 
@@ -209,16 +210,19 @@ public class PathConvert extends Task
         throws TaskException
     {
 
-        if( m_path == null )
+        if( m_path == null ) {
             throw new TaskException( "You must specify a path to convert" );
+        }
 
-        if( m_property == null )
+        if( m_property == null ) {
             throw new TaskException( "You must specify a property" );
+        }
 
         // Must either have a target OS or both a dirSep and pathSep
 
-        if( m_targetOS == null && m_pathSep == null && m_dirSep == null )
+        if( m_targetOS == null && m_pathSep == null && m_dirSep == null ) {
             throw new TaskException( "You must specify at least one of targetOS, dirSep, or pathSep" );
+        }
 
         // Determine the separator strings.  The dirsep and pathsep attributes
         // override the targetOS settings.

@@ -28,7 +28,7 @@ public final class Main
      * @param args the CLI arguments
      * @exception Exception if an error occurs
      */
-    public final static void main( final String[] args )
+    public static final void main( final String[] args )
         throws Exception
     {
         try
@@ -69,7 +69,7 @@ public final class Main
         }
     }
 
-    private final static URL[] buildURLList( final File dir )
+    private static final URL[] buildURLList( final File dir )
         throws Exception
     {
         final ArrayList urlList = new ArrayList();
@@ -109,7 +109,7 @@ public final class Main
     /**
      *  Finds the myrmidon.jar file in the classpath.
      */
-    private final static File findInstallDir()
+    private static final File findInstallDir()
         throws Exception
     {
         final String classpath = System.getProperty( "java.class.path" );

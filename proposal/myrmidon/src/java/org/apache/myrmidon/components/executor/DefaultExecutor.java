@@ -30,7 +30,7 @@ public class DefaultExecutor
     extends AbstractLogEnabled
     implements Executor, Composable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultExecutor.class );
 
     private Configurer m_configurer;

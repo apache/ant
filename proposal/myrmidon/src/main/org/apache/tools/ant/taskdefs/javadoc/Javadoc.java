@@ -571,10 +571,12 @@ public class Javadoc
         cmd.addArgument( "-classpath" );
         cmd.addArgument( classpath.toString() );
 
-        if( m_version && m_doclet == null )
+        if( m_version && m_doclet == null ) {
             cmd.addArgument( "-version" );
-        if( m_author && m_doclet == null )
+        }
+        if( m_author && m_doclet == null ) {
             cmd.addArgument( "-author" );
+        }
 
         if( m_doclet == null )
         {
@@ -932,8 +934,9 @@ public class Javadoc
         ArrayList addedPackages = new ArrayList();
 
         String[] list = sourcePath.list();
-        if( list == null )
+        if( list == null ) {
             list = new String[ 0 ];
+        }
 
         FileSet fs = new FileSet();
         fs.setDefaultexcludes( m_useDefaultExcludes );

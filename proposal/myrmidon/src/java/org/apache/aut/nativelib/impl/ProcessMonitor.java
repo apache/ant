@@ -32,13 +32,13 @@ class ProcessMonitor
     private final static int SLEEP_TIME = 5;
 
     //State to indicate process is still running
-    private static final int STATE_RUNNING = 0;
+    private final static int STATE_RUNNING = 0;
 
     //State to indicate process shutdown by itself
-    private static final int STATE_STOPPED = 1;
+    private final static int STATE_STOPPED = 1;
 
     //State to indicate process was terminated due to timeout
-    private static final int STATE_TERMINATED = 2;
+    private final static int STATE_TERMINATED = 2;
 
     /**
      * The state of the process monitor and thus
@@ -244,7 +244,9 @@ class ProcessMonitor
         try
         {
             final int available = input.available();
-            if( 0 >= available ) return;
+            if( 0 >= available ) {
+              return;
+            }
 
             final byte[] data = new byte[ available ];
             final int read = input.read( data );

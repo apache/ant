@@ -11,11 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Properties;
+
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.aut.nativelib.CommandLauncher;
-import org.apache.aut.nativelib.Environment;
+
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecMetaData;
 
@@ -31,10 +31,10 @@ import org.apache.aut.nativelib.ExecMetaData;
 public class DefaultCommandLauncher
     implements CommandLauncher
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultCommandLauncher.class );
 
-    private static final Method c_execWithCWD;
+    private final static Method c_execWithCWD;
 
     static
     {

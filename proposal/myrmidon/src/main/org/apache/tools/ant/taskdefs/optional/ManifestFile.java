@@ -89,8 +89,9 @@ public class ManifestFile extends Task
         throws TaskException
     {
         checkParameters();
-        if( isUpdate( currentMethod ) )
+        if( isUpdate( currentMethod ) ) {
             readFile();
+        }
 
         executeOperation();
         writeFile();
@@ -202,8 +203,9 @@ public class ManifestFile extends Task
                         {
                             stop = true;
                         }
-                        else
+                        else {
                             buffer.append( (char)c );
+                        }
                     }
                     fis.close();
                     StringTokenizer lineTokens = getLineTokens( buffer );
@@ -315,8 +317,9 @@ public class ManifestFile extends Task
             Entry ent = new Entry();
             boolean result = false;
             int res = ent.compare( this, (Entry)obj );
-            if( res == 0 )
+            if( res == 0 ) {
                 result = true;
+            }
 
             return result;
         }

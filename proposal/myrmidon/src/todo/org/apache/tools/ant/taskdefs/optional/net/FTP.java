@@ -703,8 +703,9 @@ public class FTP
         {
             File file = resolveFile( new File( dir, filename ).getPath() );
 
-            if( m_newerOnly && isUpToDate( ftp, file, remoteResolveFile( filename ) ) )
+            if( m_newerOnly && isUpToDate( ftp, file, remoteResolveFile( filename ) ) ) {
                 return;
+            }
 
             if( m_verbose )
             {

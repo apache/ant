@@ -13,7 +13,14 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * An object configurer which uses reflection to determine the properties
@@ -25,7 +32,7 @@ import java.util.*;
 public class DefaultObjectConfigurer
     implements ObjectConfigurer
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultObjectConfigurer.class );
 
     private final Class m_class;

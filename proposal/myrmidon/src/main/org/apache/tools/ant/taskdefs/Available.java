@@ -13,7 +13,7 @@ import java.net.URLClassLoader;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
-import org.apache.tools.ant.types.EnumeratedAttribute;
+
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
 

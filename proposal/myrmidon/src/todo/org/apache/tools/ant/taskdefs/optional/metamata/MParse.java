@@ -53,7 +53,7 @@ public class MParse
      *
      * @return Description of the Returned Value
      */
-    protected final static File createTmpFile()
+    protected static final File createTmpFile()
     {
         // must be compatible with JDK 1.1 !!!!
         final long rand = ( new Random( System.currentTimeMillis() ) ).nextLong();

@@ -23,7 +23,7 @@ import org.apache.avalon.framework.context.ContextException;
 public class Condition
     implements Component
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( Condition.class );
 
     private String m_condition;

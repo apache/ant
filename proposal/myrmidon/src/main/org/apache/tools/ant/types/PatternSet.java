@@ -252,10 +252,11 @@ public class PatternSet
                 if( fileName != null )
                 {
                     File inclFile = resolveFile( fileName );
-                    if( !inclFile.exists() )
+                    if( !inclFile.exists() ) {
                         throw new TaskException( "Includesfile "
                                                  + inclFile.getAbsolutePath()
                                                  + " not found." );
+                    }
                     readPatterns( inclFile, m_includeList, p );
                 }
             }
@@ -272,10 +273,11 @@ public class PatternSet
                 if( fileName != null )
                 {
                     File exclFile = resolveFile( fileName );
-                    if( !exclFile.exists() )
+                    if( !exclFile.exists() ) {
                         throw new TaskException( "Excludesfile "
                                                  + exclFile.getAbsolutePath()
                                                  + " not found." );
+                    }
                     readPatterns( exclFile, m_excludeList, p );
                 }
             }

@@ -30,7 +30,7 @@ import org.xml.sax.XMLReader;
 public class DefaultRoleManager
     implements RoleManager, Initializable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultRoleManager.class );
 
     private final static String ROLE_DESCRIPTOR = "META-INF/ant-roles.xml";

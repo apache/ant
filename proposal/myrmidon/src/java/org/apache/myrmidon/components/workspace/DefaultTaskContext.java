@@ -28,7 +28,7 @@ public class DefaultTaskContext
     extends DefaultContext
     implements TaskContext
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
 
     /**
@@ -178,9 +178,9 @@ public class DefaultTaskContext
     {
         checkPropertyValid( name, value );
 
-        if( CURRENT == scope )
+        if( CURRENT == scope ) {
             put( name, value );
-        else if( PARENT == scope )
+        } else if( PARENT == scope )
         {
             if( null == getParent() )
             {

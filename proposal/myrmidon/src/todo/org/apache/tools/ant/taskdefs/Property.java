@@ -79,8 +79,9 @@ public class Property
             setProperty( m_name, m_value );
         }
 
-        if( m_resource != null )
+        if( m_resource != null ) {
             loadResource( m_resource );
+        }
     }
 
     private void validate() throws TaskException

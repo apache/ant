@@ -24,7 +24,7 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToURLConverter
     extends AbstractConverter
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( StringToURLConverter.class );
 
     public StringToURLConverter()

@@ -25,7 +25,7 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToEnumConverter
     implements Converter
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( StringToEnumConverter.class );
 
     public Object convert( final Class destination,

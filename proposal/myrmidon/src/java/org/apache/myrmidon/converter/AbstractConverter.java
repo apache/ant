@@ -19,7 +19,7 @@ import org.apache.avalon.framework.context.Context;
 public abstract class AbstractConverter
     implements Converter
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( AbstractConverter.class );
 
     private final Class m_source;

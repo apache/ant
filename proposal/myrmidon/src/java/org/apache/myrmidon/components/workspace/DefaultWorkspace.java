@@ -52,7 +52,7 @@ public class DefaultWorkspace
     extends AbstractLogEnabled
     implements Workspace, Composable, Parameterizable, Initializable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultWorkspace.class );
 
     private Executor m_executor;

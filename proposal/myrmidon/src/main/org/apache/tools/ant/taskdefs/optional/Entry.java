@@ -159,8 +159,9 @@ public class Entry
         GregorianCalendar value = new GregorianCalendar();
         GregorianCalendar newValue = new GregorianCalendar();
 
-        if( m_pattern == null )
+        if( m_pattern == null ) {
             m_pattern = "yyyy/MM/dd HH:mm";
+        }
         DateFormat fmt = new SimpleDateFormat( m_pattern );
 
         // special case

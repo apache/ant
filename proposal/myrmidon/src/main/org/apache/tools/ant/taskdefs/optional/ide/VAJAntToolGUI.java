@@ -43,7 +43,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.StringUtils;
+
 
 /**
  * This is a simple grafical user interface to provide the information needed by
@@ -1544,26 +1544,33 @@ public class VAJAntToolGUI extends Frame
                     }
                 }
                 // MenuItems
-                if( e.getSource() == VAJAntToolGUI.this.getSaveMenuItem() )
+                if( e.getSource() == VAJAntToolGUI.this.getSaveMenuItem() ) {
                     saveBuildInfo();
-                if( e.getSource() == VAJAntToolGUI.this.getAboutMenuItem() )
+                }
+                if( e.getSource() == VAJAntToolGUI.this.getAboutMenuItem() ) {
                     getAboutDialog().show();
-                if( e.getSource() == VAJAntToolGUI.this.getShowLogMenuItem() )
+                }
+                if( e.getSource() == VAJAntToolGUI.this.getShowLogMenuItem() ) {
                     getMessageFrame().show();
+                }
                 /*
                  * #### About dialog ####
                  */
-                if( e.getSource() == VAJAntToolGUI.this.getAboutOkButton() )
+                if( e.getSource() == VAJAntToolGUI.this.getAboutOkButton() ) {
                     getAboutDialog().dispose();
+                }
                 /*
                  * #### Log frame ####
                  */
-                if( e.getSource() == VAJAntToolGUI.this.getMessageOkButton() )
+                if( e.getSource() == VAJAntToolGUI.this.getMessageOkButton() ) {
                     getMessageFrame().dispose();
-                if( e.getSource() == VAJAntToolGUI.this.getMessageClearLogButton() )
+                }
+                if( e.getSource() == VAJAntToolGUI.this.getMessageClearLogButton() ) {
                     getMessageTextArea().setText( "" );
-                if( e.getSource() == VAJAntToolGUI.this.getMessageOkButton() )
+                }
+                if( e.getSource() == VAJAntToolGUI.this.getMessageOkButton() ) {
                     getMessageFrame().dispose();
+                }
             }
             catch( Throwable exc )
             {
@@ -1580,12 +1587,15 @@ public class VAJAntToolGUI extends Frame
         {
             try
             {
-                if( e.getSource() == VAJAntToolGUI.this.getTargetList() )
+                if( e.getSource() == VAJAntToolGUI.this.getTargetList() ) {
                     getBuildButton().setEnabled( true );
-                if( e.getSource() == VAJAntToolGUI.this.getMessageOutputLevelChoice() )
+                }
+                if( e.getSource() == VAJAntToolGUI.this.getMessageOutputLevelChoice() ) {
                     getBuildInfo().setOutputMessageLevel( getMessageOutputLevelChoice().getSelectedIndex() );
-                if( e.getSource() == VAJAntToolGUI.this.getTargetList() )
+                }
+                if( e.getSource() == VAJAntToolGUI.this.getTargetList() ) {
                     getBuildInfo().setTarget( getTargetList().getSelectedItem() );
+                }
             }
             catch( Throwable exc )
             {
@@ -1600,10 +1610,12 @@ public class VAJAntToolGUI extends Frame
          */
         public void propertyChange( java.beans.PropertyChangeEvent evt )
         {
-            if( evt.getSource() == VAJAntToolGUI.this.getBuildInfo() && ( evt.getPropertyName().equals( "projectName" ) ) )
+            if( evt.getSource() == VAJAntToolGUI.this.getBuildInfo() && ( evt.getPropertyName().equals( "projectName" ) ) ) {
                 connectProjectNameToLabel();
-            if( evt.getSource() == VAJAntToolGUI.this.getBuildInfo() && ( evt.getPropertyName().equals( "buildFileName" ) ) )
+            }
+            if( evt.getSource() == VAJAntToolGUI.this.getBuildInfo() && ( evt.getPropertyName().equals( "buildFileName" ) ) ) {
                 connectBuildFileNameToTextField();
+            }
         }
 
         /**
@@ -1613,8 +1625,9 @@ public class VAJAntToolGUI extends Frame
          */
         public void textValueChanged( TextEvent e )
         {
-            if( e.getSource() == VAJAntToolGUI.this.getBuildFileTextField() )
+            if( e.getSource() == VAJAntToolGUI.this.getBuildFileTextField() ) {
                 connectTextFieldToBuildFileName();
+            }
         }
 
         public void windowActivated( WindowEvent e )
@@ -1639,10 +1652,12 @@ public class VAJAntToolGUI extends Frame
                     dispose();
                     System.exit( 0 );
                 }
-                if( e.getSource() == VAJAntToolGUI.this.getAboutDialog() )
+                if( e.getSource() == VAJAntToolGUI.this.getAboutDialog() ) {
                     getAboutDialog().dispose();
-                if( e.getSource() == VAJAntToolGUI.this.getMessageFrame() )
+                }
+                if( e.getSource() == VAJAntToolGUI.this.getMessageFrame() ) {
                     getMessageFrame().dispose();
+                }
             }
             catch( Throwable exc )
             {

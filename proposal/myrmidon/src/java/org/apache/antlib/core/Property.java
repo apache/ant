@@ -34,7 +34,7 @@ public class Property
     extends AbstractContainerTask
     implements Configurable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( Property.class );
 
     private String m_name;

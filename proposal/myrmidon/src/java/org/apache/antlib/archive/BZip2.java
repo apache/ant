@@ -22,7 +22,7 @@ import org.apache.aut.bzip2.CBZip2OutputStream;
 public class BZip2
     extends Pack
 {
-    private static final byte[] HEADER = new byte[]{(byte)'B', (byte)'Z'};
+    private final static byte[] HEADER = new byte[]{(byte)'B', (byte)'Z'};
 
     protected OutputStream getPackingStream( OutputStream output )
         throws TaskException, IOException

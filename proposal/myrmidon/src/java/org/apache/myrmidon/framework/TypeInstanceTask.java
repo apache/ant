@@ -30,7 +30,7 @@ public class TypeInstanceTask
     extends AbstractContainerTask
     implements Configurable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( TypeInstanceTask.class );
 
     private String m_id;

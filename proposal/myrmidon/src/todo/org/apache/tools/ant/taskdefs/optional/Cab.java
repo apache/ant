@@ -195,8 +195,9 @@ public class Cab
         {
             String file = files.get( i ).toString();
             if( new File( m_baseDir, file ).lastModified() >
-                m_cabFile.lastModified() )
+                m_cabFile.lastModified() ) {
                 upToDate = false;
+            }
         }
         return upToDate;
     }

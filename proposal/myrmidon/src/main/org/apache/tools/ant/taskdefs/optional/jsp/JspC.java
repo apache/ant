@@ -101,10 +101,11 @@ public class JspC extends MatchingTask
     public void setClasspath( Path cp )
         throws TaskException
     {
-        if( classpath == null )
+        if( classpath == null ) {
             classpath = cp;
-        else
+        } else {
             classpath.append( cp );
+        }
     }
 
     /**
@@ -298,8 +299,9 @@ public class JspC extends MatchingTask
     public Path createClasspath()
         throws TaskException
     {
-        if( classpath == null )
+        if( classpath == null ) {
             classpath = new Path();
+        }
         Path path1 = classpath;
         final Path path = new Path();
         path1.addPath( path );
@@ -332,9 +334,9 @@ public class JspC extends MatchingTask
 
         // calculate where the files will end up:
         File dest = null;
-        if( packageName == null )
+        if( packageName == null ) {
             dest = destDir;
-        else
+        } else
         {
             String path = destDir.getPath() + File.separatorChar +
                 packageName.replace( '.', File.separatorChar );

@@ -14,12 +14,12 @@ package org.apache.tools.ant.util.regexp;
  */
 public class RegexpUtil extends Object
 {
-    public final static boolean hasFlag( int options, int flag )
+    public static final boolean hasFlag( int options, int flag )
     {
         return ( ( options & flag ) > 0 );
     }
 
-    public final static int removeFlag( int options, int flag )
+    public static final int removeFlag( int options, int flag )
     {
         return ( options & ( 0xFFFFFFFF - flag ) );
     }

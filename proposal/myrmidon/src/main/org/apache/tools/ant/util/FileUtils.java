@@ -385,8 +385,9 @@ public class FileUtils
      */
     public static String translateFile( final String source )
     {
-        if( source == null )
+        if( source == null ) {
             return "";
+        }
 
         final StringBuffer result = new StringBuffer( source );
         translateFileSep( result );
@@ -422,8 +423,9 @@ public class FileUtils
         throws TaskException
     {
         final ArrayList result = new ArrayList();
-        if( source == null )
+        if( source == null ) {
             return new String[ 0 ];
+        }
 
         final String[] elements = parsePath( source );
         StringBuffer element = new StringBuffer();

@@ -226,8 +226,9 @@ public class Ilasm
         {
             _targetType = targetType;
         }
-        else
+        else {
             throw new TaskException( "targetType " + targetType + " is not a valid type" );
+        }
     }
 
     /**
@@ -305,7 +306,9 @@ public class Ilasm
     public void execute()
         throws TaskException
     {
-        if( _srcDir == null ) _srcDir = getBaseDirectory();
+        if( _srcDir == null ) {
+          _srcDir = getBaseDirectory();
+        }
 
         //get dependencies list.
         DirectoryScanner scanner = super.getDirectoryScanner( _srcDir );
@@ -372,10 +375,11 @@ public class Ilasm
      */
     protected String getExtraOptionsParameter()
     {
-        if( _extraOptions != null && _extraOptions.length() != 0 )
+        if( _extraOptions != null && _extraOptions.length() != 0 ) {
             return _extraOptions;
-        else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -385,10 +389,11 @@ public class Ilasm
      */
     protected String getKeyfileParameter()
     {
-        if( _keyfile != null )
+        if( _keyfile != null ) {
             return "/keyfile:" + _keyfile.toString();
-        else
+        } else {
             return null;
+        }
     }
 
     /**
@@ -408,8 +413,9 @@ public class Ilasm
      */
     protected String getOutputFileParameter()
     {
-        if( _outputFile == null || _outputFile.length() == 0 )
+        if( _outputFile == null || _outputFile.length() == 0 ) {
             return null;
+        }
         File f = _outputFile;
         return "/output=" + f.toString();
     }
@@ -434,14 +440,16 @@ public class Ilasm
 
     protected String getTargetTypeParameter()
     {
-        if( !notEmpty( _targetType ) )
+        if( !notEmpty( _targetType ) ) {
             return null;
-        if( _targetType.equals( "exe" ) )
+        }
+        if( _targetType.equals( "exe" ) ) {
             return "/exe";
-        else if( _targetType.equals( "library" ) )
+        } else if( _targetType.equals( "library" ) ) {
             return "/dll";
-        else
+               } else {
             return null;
+               }
     }
 
     /**

@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.TaskException;
 public class Pattern
     implements DataType
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( Pattern.class );
 
     private String m_value;
@@ -85,7 +85,9 @@ public class Pattern
     public String toString()
     {
         String result = "Pattern['" + m_value + "',";
-        if( null != m_condition ) result = result + m_condition;
+        if( null != m_condition ) {
+          result = result + m_condition;
+        }
         return result + "]";
     }
 

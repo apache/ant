@@ -34,7 +34,7 @@ public class DefaultConfigurer
     extends AbstractLogEnabled
     implements Configurer, Composable, LogEnabled
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultConfigurer.class );
 
     ///Compile time constant to turn on extreme debugging

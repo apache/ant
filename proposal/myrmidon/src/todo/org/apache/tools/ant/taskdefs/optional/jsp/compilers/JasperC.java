@@ -37,12 +37,14 @@ public class JasperC
             // the project log
             //FIXME
             Java java = null;//(Java)( getJspc().getProject() ).createTask( "java" );
-            if( getJspc().getClasspath() != null )
+            if( getJspc().getClasspath() != null ) {
                 java.addClasspath( getJspc().getClasspath() );
+            }
             java.setClassname( "org.apache.jasper.JspC" );
             String args[] = cmd.getArguments();
-            for( int i = 0; i < args.length; i++ )
+            for( int i = 0; i < args.length; i++ ) {
                 java.addArg( new Argument( args[ i ] ) );
+            }
             java.execute();
             return true;
         }

@@ -51,7 +51,7 @@ public class DefaultDeployer
     extends AbstractLogEnabled
     implements Deployer, Initializable, Composable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultDeployer.class );
 
     private final static String TYPE_DESCRIPTOR = "META-INF/ant-types.xml";

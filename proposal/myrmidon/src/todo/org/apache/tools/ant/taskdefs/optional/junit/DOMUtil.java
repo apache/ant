@@ -97,7 +97,7 @@ public final class DOMUtil
      *      <tt>parent</tt> .
      * @return the cloned node that is appended to <tt>parent</tt>
      */
-    public final static Node importNode( Node parent, Node child )
+    public static final Node importNode( Node parent, Node child )
     {
         Node copy = null;
         final Document doc = parent.getOwnerDocument();

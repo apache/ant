@@ -22,7 +22,7 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToClassConverter
     extends AbstractConverter
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( StringToClassConverter.class );
 
     public StringToClassConverter()

@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.FileSet;
+
+
+
 import org.apache.tools.ant.util.mappers.MergingMapper;
 import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.aut.tar.TarConstants;
@@ -304,8 +304,9 @@ public class Tar
         }
         finally
         {
-            if( input != null )
+            if( input != null ) {
                 input.close();
+            }
         }
     }
 }

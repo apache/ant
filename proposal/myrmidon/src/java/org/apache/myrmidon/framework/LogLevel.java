@@ -22,7 +22,7 @@ public final class LogLevel
     extends Enum
 {
     //Map for all the levels
-    private static final HashMap c_levels = new HashMap();
+    private final static HashMap c_levels = new HashMap();
 
     //standard enums for version of JVM
     public final static LogLevel FATAL_ERROR = new LogLevel( "fatalError" );

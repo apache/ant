@@ -468,8 +468,9 @@ public class SQLExec
                 throw new SQLException( "No suitable Driver for " + url );
             }
 
-            if( !isValidRdbms( conn ) )
+            if( !isValidRdbms( conn ) ) {
                 return;
+            }
 
             conn.setAutoCommit( autocommit );
 
@@ -563,8 +564,9 @@ public class SQLExec
      */
     protected boolean isValidRdbms( Connection conn )
     {
-        if( rdbms == null && version == null )
+        if( rdbms == null && version == null ) {
             return true;
+        }
 
         try
         {
@@ -617,8 +619,9 @@ public class SQLExec
         throws SQLException
     {
         // Check and ignore empty statements
-        if( "".equals( sql.trim() ) )
+        if( "".equals( sql.trim() ) ) {
             return;
+        }
 
         try
         {
@@ -647,8 +650,9 @@ public class SQLExec
         catch( SQLException e )
         {
             getLogger().error( "Failed to execute: " + sql );
-            if( !onError.equals( "continue" ) )
+            if( !onError.equals( "continue" ) ) {
                 throw e;
+            }
             getLogger().error( e.toString() );
         }
     }
@@ -726,10 +730,12 @@ public class SQLExec
             {
                 line = line.trim();
                 line = "" + resolveValue( line );
-                if( line.startsWith( "//" ) )
+                if( line.startsWith( "//" ) ) {
                     continue;
-                if( line.startsWith( "--" ) )
+                }
+                if( line.startsWith( "--" ) ) {
                     continue;
+                }
                 StringTokenizer st = new StringTokenizer( line );
                 if( st.hasMoreTokens() )
                 {
@@ -746,8 +752,9 @@ public class SQLExec
                 // SQL defines "--" as a comment to EOL
                 // and in Oracle it may contain a hint
                 // so we cannot just remove it, instead we must end it
-                if( line.indexOf( "--" ) >= 0 )
+                if( line.indexOf( "--" ) >= 0 ) {
                     sql += "\n";
+                }
 
                 if( delimiterType.equals( DelimiterType.NORMAL ) && sql.endsWith( delimiter ) ||
                     delimiterType.equals( DelimiterType.ROW ) && line.equals( delimiter ) )

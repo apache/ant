@@ -30,7 +30,7 @@ public class ConverterDef
     extends AbstractTask
     implements Composable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( ConverterDef.class );
 
     private String m_sourceType;

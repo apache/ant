@@ -24,7 +24,7 @@ import org.apache.myrmidon.interfaces.model.TypeLib;
 public class DefaultProject
     implements Project
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultProject.class );
 
     ///The imports

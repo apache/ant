@@ -148,7 +148,9 @@ public class Cvs
 
         final Execute2 exe = new Execute2();
         setupLogger( exe );
-        if( m_dest == null ) m_dest = getBaseDirectory();
+        if( m_dest == null ) {
+          m_dest = getBaseDirectory();
+        }
         exe.setWorkingDirectory( m_dest );
 
         exe.setCommandline( command.getCommandline() );

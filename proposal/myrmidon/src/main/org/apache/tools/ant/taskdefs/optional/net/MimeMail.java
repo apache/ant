@@ -113,15 +113,17 @@ public class MimeMail extends Task
                                        )
         throws MessagingException, TaskException
     {
-        if( ( null == addrList ) || ( addrList.trim().length() <= 0 ) )
+        if( ( null == addrList ) || ( addrList.trim().length() <= 0 ) ) {
             return;
+        }
 
         try
         {
             InternetAddress[] addrArray = InternetAddress.parse( addrList );
 
-            if( ( null == addrArray ) || ( 0 == addrArray.length ) )
+            if( ( null == addrArray ) || ( 0 == addrArray.length ) ) {
                 throw new TaskException( "Empty " + addrUserName + " recipients list was specified" );
+            }
 
             msg.setRecipients( recipType, addrArray );
         }

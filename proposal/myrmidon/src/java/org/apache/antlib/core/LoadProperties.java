@@ -26,7 +26,7 @@ import org.apache.myrmidon.framework.AbstractContainerTask;
 public class LoadProperties
     extends AbstractContainerTask
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( LoadProperties.class );
 
     private String m_prefix;

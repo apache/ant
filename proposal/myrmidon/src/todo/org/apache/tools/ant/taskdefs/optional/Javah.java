@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.util.StringUtil;
-import org.apache.avalon.framework.logger.AbstractLogEnabled;
+
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.types.Commandline;

@@ -7,7 +7,7 @@
  */
 package org.apache.antlib.xml;
 
-import org.apache.myrmidon.api.TaskException;
+
 
 public final class XSLTParam
 {

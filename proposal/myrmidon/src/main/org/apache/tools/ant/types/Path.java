@@ -8,10 +8,10 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
+
+
 import java.util.ArrayList;
-import java.util.Locale;
+
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.tools.ant.util.FileUtils;
@@ -241,8 +241,9 @@ public class Path
             final String[] list = list();
 
             // empty path return empty string
-            if( list.length == 0 )
+            if( list.length == 0 ) {
                 return "";
+            }
 
             // path containing one or more elements
             final StringBuffer result = new StringBuffer( list[ 0 ].toString() );

@@ -93,7 +93,7 @@ public abstract class AbstractMetamataTask
      * @param dest The feature to be added to the AllArrayList attribute
      * @param files The feature to be added to the AllArrayList attribute
      */
-    protected final static void addAllArrayList( ArrayList dest, Iterator files )
+    protected static final void addAllArrayList( ArrayList dest, Iterator files )
     {
         while( files.hasNext() )
         {
@@ -101,7 +101,7 @@ public abstract class AbstractMetamataTask
         }
     }
 
-    protected final static File createTmpFile()
+    protected static final File createTmpFile()
     {
         // must be compatible with JDK 1.1 !!!!
         final long rand = ( new Random( System.currentTimeMillis() ) ).nextLong();

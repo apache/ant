@@ -22,7 +22,7 @@ import org.apache.myrmidon.converter.ConverterException;
 public class StringToBooleanConverter
     extends AbstractConverter
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( StringToBooleanConverter.class );
 
     public StringToBooleanConverter()

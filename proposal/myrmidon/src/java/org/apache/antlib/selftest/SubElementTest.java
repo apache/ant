@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
 public class SubElementTest
     extends AbstractTask
 {
-    public static final class Beep
+    public final static class Beep
     {
         public void setMessage( final String string )
         {

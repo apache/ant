@@ -9,7 +9,7 @@ package org.apache.tools.ant.types;
 
 import java.io.File;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.avalon.framework.logger.Logger;
+
 import org.apache.myrmidon.api.TaskException;
 
 /**

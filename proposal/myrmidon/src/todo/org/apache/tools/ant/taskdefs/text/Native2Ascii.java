@@ -14,7 +14,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.util.mappers.Mapper;
 import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.tools.ant.types.Argument;
+
 import org.apache.tools.ant.util.mappers.FileNameMapper;
 import org.apache.tools.ant.util.mappers.IdentityMapper;
 

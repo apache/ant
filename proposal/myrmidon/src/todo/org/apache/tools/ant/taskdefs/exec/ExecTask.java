@@ -313,10 +313,12 @@ public class ExecTask
     {
         try
         {
-            if( m_ouput != null )
+            if( m_ouput != null ) {
                 m_ouput.close();
-            if( m_byteArrayOutput != null )
+            }
+            if( m_byteArrayOutput != null ) {
                 m_byteArrayOutput.close();
+            }
         }
         catch( IOException io )
         {
@@ -344,7 +346,9 @@ public class ExecTask
         throws TaskException
     {
         // default directory to the project's base directory
-        if( m_workingDirectory == null ) m_workingDirectory = getBaseDirectory();
+        if( m_workingDirectory == null ) {
+          m_workingDirectory = getBaseDirectory();
+        }
         // show the command
         getLogger().debug( m_command.toString() );
 

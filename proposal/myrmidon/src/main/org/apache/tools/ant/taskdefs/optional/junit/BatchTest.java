@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.Project;
+
 import org.apache.tools.ant.types.FileSet;
 
 /**
@@ -47,7 +47,7 @@ public final class BatchTest extends BaseTest
      * @param filename the filename to "convert" to a classname.
      * @return the classname matching the filename.
      */
-    public final static String javaToClass( String filename )
+    public static final String javaToClass( String filename )
     {
         return filename.replace( File.separatorChar, '.' );
     }

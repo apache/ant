@@ -22,7 +22,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class DefaultTypeFactory
     implements TypeFactory
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTypeFactory.class );
 
     ///A Map of shortnames to classnames

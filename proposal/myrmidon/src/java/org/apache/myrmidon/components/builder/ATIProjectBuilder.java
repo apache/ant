@@ -33,7 +33,7 @@ public class ATIProjectBuilder
     extends DefaultProjectBuilder
     implements Parameterizable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( ATIProjectBuilder.class );
 
     private Parameters m_parameters;
@@ -74,11 +74,11 @@ public class ATIProjectBuilder
             final String target = reactorHandler.getTarget( i );
             final String data = reactorHandler.getData( i );
 
-            if( target.equals( "xsl-param" ) )
+            if( target.equals( "xsl-param" ) ) {
                 handleParameter( data );
-            else if( target.equals( "xsl-params" ) )
+            } else if( target.equals( "xsl-params" ) ) {
                 handleParameters( data, sourceID );
-            else if( target.equals( "xsl-stylesheet" ) )
+                   } else if( target.equals( "xsl-stylesheet" ) )
             {
                 if( null != transformer )
                 {

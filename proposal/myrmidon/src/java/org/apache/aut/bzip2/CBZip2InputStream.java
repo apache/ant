@@ -175,8 +175,9 @@ public class CBZip2InputStream
 
         m_blockSize100k = newSize100k;
 
-        if( newSize100k == 0 )
+        if( newSize100k == 0 ) {
             return;
+        }
 
         int n = BASE_BLOCK_SIZE * newSize100k;
         m_ll8 = new char[ n ];
@@ -302,8 +303,9 @@ public class CBZip2InputStream
             {
                 m_rNToGo = RAND_NUMS[ m_rTPos ];
                 m_rTPos++;
-                if( m_rTPos == 512 )
+                if( m_rTPos == 512 ) {
                     m_rTPos = 0;
+                }
             }
             m_rNToGo--;
             ch2 ^= (int)( ( m_rNToGo == 1 ) ? 1 : 0 );
@@ -340,8 +342,9 @@ public class CBZip2InputStream
                 {
                     m_rNToGo = RAND_NUMS[ m_rTPos ];
                     m_rTPos++;
-                    if( m_rTPos == 512 )
+                    if( m_rTPos == 512 ) {
                         m_rTPos = 0;
+                    }
                 }
                 m_rNToGo--;
                 z ^= ( ( m_rNToGo == 1 ) ? 1 : 0 );
@@ -464,10 +467,11 @@ public class CBZip2InputStream
                 int N = 1;
                 do
                 {
-                    if( nextSym == RUNA )
+                    if( nextSym == RUNA ) {
                         s = s + ( 0 + 1 ) * N;
-                    else if( nextSym == RUNB )
+                    } else if( nextSym == RUNB ) {
                         s = s + ( 1 + 1 ) * N;
+                           }
                     N = N * 2;
 
                     if( groupPos == 0 )

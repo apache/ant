@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.EnvironmentVariable;
 public class Exec
     extends AbstractTask
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( Exec.class );
 
     private long m_timeout;

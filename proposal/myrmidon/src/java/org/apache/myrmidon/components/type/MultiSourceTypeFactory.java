@@ -21,7 +21,7 @@ import org.apache.myrmidon.interfaces.type.TypeFactory;
 public class MultiSourceTypeFactory
     implements TypeFactory
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( MultiSourceTypeFactory.class );
 
     ///Parent Selector

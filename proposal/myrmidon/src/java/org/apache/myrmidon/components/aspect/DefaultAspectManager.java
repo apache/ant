@@ -28,7 +28,7 @@ import org.apache.myrmidon.interfaces.aspect.AspectManager;
 public class DefaultAspectManager
     implements AspectManager, Initializable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultAspectManager.class );
 
     private HashMap m_aspectMap = new HashMap();

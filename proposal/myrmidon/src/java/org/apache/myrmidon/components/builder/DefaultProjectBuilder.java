@@ -17,7 +17,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.CascadingException;
-import org.apache.avalon.framework.ExceptionUtil;
+
 import org.apache.avalon.framework.Version;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
@@ -40,7 +40,7 @@ public class DefaultProjectBuilder
     extends AbstractLogEnabled
     implements ProjectBuilder
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultProjectBuilder.class );
 
     private final static Version VERSION = new Version( 2, 0, 0 );
@@ -263,9 +263,9 @@ public class DefaultProjectBuilder
                 }
             }
 
-            if( name.equals( "target" ) )
+            if( name.equals( "target" ) ) {
                 buildTarget( project, element );
-            else
+            } else
             {
                 final String message =
                     REZ.getString( "ant.unknown-toplevel-element.error", name, element.getLocation() );
@@ -456,9 +456,10 @@ public class DefaultProjectBuilder
 
     protected boolean validName( final String name )
     {
-        if( -1 != name.indexOf( "->" ) )
+        if( -1 != name.indexOf( "->" ) ) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
 }

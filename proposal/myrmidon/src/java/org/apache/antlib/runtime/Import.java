@@ -27,7 +27,7 @@ public class Import
     extends AbstractTask
     implements Composable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( Import.class );
 
     private File m_lib;

@@ -665,8 +665,9 @@ public class JUnitTask extends Task
         }
         finally
         {
-            if( !propsFile.delete() )
+            if( !propsFile.delete() ) {
                 throw new TaskException( "Could not delete temporary properties file." );
+            }
         }
 
         return retVal;

@@ -26,8 +26,9 @@ import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import javax.xml.parsers.SAXParser;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.bcel.*;
-import org.apache.bcel.classfile.*;
+
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.ClassParser;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -606,8 +607,9 @@ public class GenericDeploymentTool
         while( i.hasNext() )
         {
             String entryName = (String)i.next();
-            if( entryName.endsWith( ".class" ) )
+            if( entryName.endsWith( ".class" ) ) {
                 newSet.add( entryName.substring( 0, entryName.length() - ".class".length() ).replace( File.separatorChar, '/' ) );
+            }
         }
         set.addAll( newSet );
 

@@ -28,7 +28,7 @@ import org.xml.sax.XMLReader;
  */
 public class Deployment
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( Deployment.class );
 
     public final static String DESCRIPTOR_NAME = "META-INF/ant-descriptor.xml";

@@ -169,8 +169,9 @@ public class NetRexxC extends MatchingTask
     public void setCompile( boolean compile )
     {
         this.compile = compile;
-        if( !this.compile && !this.keep )
+        if( !this.compile && !this.keep ) {
             this.keep = true;
+        }
     }
 
     /**

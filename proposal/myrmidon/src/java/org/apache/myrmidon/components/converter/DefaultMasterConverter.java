@@ -31,7 +31,7 @@ public class DefaultMasterConverter
     extends AbstractLogEnabled
     implements MasterConverter, Composable
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultMasterConverter.class );
 
     private final static boolean DEBUG = false;

@@ -28,12 +28,12 @@ import org.apache.tools.ant.taskdefs.exec.Execute;
  */
 public final class Environment
 {
-    private static final String[] COMMAND_COM = new String[]{"command.com", "/c", "set"};
-    private static final String[] CMD_EXE = new String[]{"cmd", "/c", "set"};
+    private final static String[] COMMAND_COM = new String[]{"command.com", "/c", "set"};
+    private final static String[] CMD_EXE = new String[]{"cmd", "/c", "set"};
 
     // Alternatively one could use: /bin/sh -c env
-    private static final String[] ENV_CMD = new String[]{"/usr/bin/env"};
-    private static final String[] ENV_RAW = new String[]{"env"};
+    private final static String[] ENV_CMD = new String[]{"/usr/bin/env"};
+    private final static String[] ENV_RAW = new String[]{"env"};
 
     private static Properties c_procEnvironment;
 
@@ -79,7 +79,7 @@ public final class Environment
      * Get the Property object with all environment variables and
      * attempt to load it if it has not already been loaded.
      */
-    private synchronized static Properties getEnvironmentVariables()
+    private static synchronized Properties getEnvironmentVariables()
         throws IOException, ExecException
     {
         if( null == c_procEnvironment )

@@ -19,7 +19,7 @@ import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Argument;
+
 
 /**
  * Sign a archive.
@@ -282,8 +282,9 @@ public class SignJar
     private void doOneJar( final File jarSource, final File jarTarget )
         throws TaskException
     {
-        if( isUpToDate( jarSource, jarTarget ) )
+        if( isUpToDate( jarSource, jarTarget ) ) {
             return;
+        }
 
         final StringBuffer sb = new StringBuffer();
 

@@ -22,7 +22,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 public class DefaultTypeManager
     implements TypeManager
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTypeManager.class );
 
     ///Parent type manager to inherit values from.

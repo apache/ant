@@ -943,8 +943,9 @@ public class WebsphereDeploymentTool
                     " " + tempdir +
                     " " + destJar.getPath() +
                     " " + getOptions();
-                if( getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0 )
+                if( getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0 ) {
                     args += " -cp " + getCombinedClasspath();
+                }
 
 
 

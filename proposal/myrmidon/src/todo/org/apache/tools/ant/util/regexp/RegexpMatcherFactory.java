@@ -21,9 +21,9 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class RegexpMatcherFactory
 {
-    protected static final String JAKARTA_REGEXP = "org.apache.tools.ant.util.regexp.JakartaRegexpRegexp";
-    protected static final String JAKARTA_ORO = "org.apache.tools.ant.util.regexp.JakartaOroRegexp";
-    protected static final String JDK14_REGEXP = "org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp";
+    protected final static String JAKARTA_REGEXP = "org.apache.tools.ant.util.regexp.JakartaRegexpRegexp";
+    protected final static String JAKARTA_ORO = "org.apache.tools.ant.util.regexp.JakartaOroRegexp";
+    protected final static String JDK14_REGEXP = "org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp";
 
     /**
      * Create a new regular expression instance.

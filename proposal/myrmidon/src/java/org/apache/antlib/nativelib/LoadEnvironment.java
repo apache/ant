@@ -27,7 +27,7 @@ import org.apache.aut.nativelib.ExecException;
 public class LoadEnvironment
     extends AbstractTask
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( LoadEnvironment.class );
 
     private String m_prefix;

@@ -20,7 +20,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  */
 public class Os
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( Os.class );
 
     private final static String OS_NAME =

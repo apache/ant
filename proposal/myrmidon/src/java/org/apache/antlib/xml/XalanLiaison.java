@@ -38,8 +38,9 @@ public class XalanLiaison
     public void setOutputtype( String type )
         throws Exception
     {
-        if( !type.equals( "xml" ) )
+        if( !type.equals( "xml" ) ) {
             throw new TaskException( "Unsupported output type: " + type );
+        }
     }
 
     public void setStylesheet( File stylesheet )

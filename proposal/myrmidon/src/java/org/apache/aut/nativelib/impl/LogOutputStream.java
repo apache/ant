@@ -11,7 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import org.apache.aut.nativelib.ExecOutputHandler;
-import org.apache.avalon.framework.logger.Logger;
+
 
 /**
  * Logs each line written to this stream to the specified

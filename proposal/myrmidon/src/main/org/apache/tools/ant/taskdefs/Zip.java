@@ -349,8 +349,9 @@ public class Zip
                     // before we added any files, then we must swallow this exception. Otherwise,
                     // the error that's reported will be the close() error, which is not the real
                     // cause of the problem.
-                    if( success )
+                    if( success ) {
                         throw ex;
+                    }
                 }
             }
         }
@@ -455,8 +456,9 @@ public class Zip
                 }
             }
 
-            if( !zipFile.exists() )
+            if( !zipFile.exists() ) {
                 return false;
+            }
 
             final SourceFileScanner scanner = new SourceFileScanner();
             setupLogger( scanner );
@@ -490,15 +492,17 @@ public class Zip
                              String prefix, String fullpath )
         throws IOException, TaskException
     {
-        if( prefix.length() > 0 && fullpath.length() > 0 )
+        if( prefix.length() > 0 && fullpath.length() > 0 ) {
             throw new TaskException( "Both prefix and fullpath attributes may not be set on the same fileset." );
+        }
 
         File thisBaseDir = scanner.getBasedir();
 
         // directories that matched include patterns
         String[] dirs = scanner.getIncludedDirectories();
-        if( dirs.length > 0 && fullpath.length() > 0 )
+        if( dirs.length > 0 && fullpath.length() > 0 ) {
             throw new TaskException( "fullpath attribute may only be specified for filesets that specify a single file." );
+        }
         for( int i = 0; i < dirs.length; i++ )
         {
             if( "".equals( dirs[ i ] ) )
@@ -515,8 +519,9 @@ public class Zip
 
         // files that matched include patterns
         String[] files = scanner.getIncludedFiles();
-        if( files.length > 1 && fullpath.length() > 0 )
+        if( files.length > 1 && fullpath.length() > 0 ) {
             throw new TaskException( "fullpath attribute may only be specified for filesets that specify a single file." );
+        }
         for( int i = 0; i < files.length; i++ )
         {
             File f = new File( thisBaseDir, files[ i ] );
@@ -643,8 +648,9 @@ public class Zip
                                   ZipOutputStream zOut, String prefix, String fullpath )
         throws IOException, TaskException
     {
-        if( prefix.length() > 0 && fullpath.length() > 0 )
+        if( prefix.length() > 0 && fullpath.length() > 0 ) {
             throw new TaskException( "Both prefix and fullpath attributes may not be set on the same fileset." );
+        }
 
         ZipScanner zipScanner = (ZipScanner)ds;
         File zipSrc = fs.getSrc();

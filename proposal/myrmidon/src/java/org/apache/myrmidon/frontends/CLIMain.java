@@ -50,28 +50,28 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class CLIMain
     extends AbstractLogEnabled
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( CLIMain.class );
 
-    private static final String PATTERN = "[%8.8{category}] %{message}\\n%{throwable}";
+    private final static String PATTERN = "[%8.8{category}] %{message}\\n%{throwable}";
 
     //defines for the Command Line options
-    private static final int HELP_OPT = 'h';
-    private static final int QUIET_OPT = 'q';
-    private static final int VERBOSE_OPT = 'v';
-    private static final int FILE_OPT = 'f';
-    private static final int LOG_LEVEL_OPT = 'l';
-    private static final int DEFINE_OPT = 'D';
-    private static final int BUILDER_PARAM_OPT = 'B';
-    private static final int VERSION_OPT = 1;
-    private static final int LISTENER_OPT = 2;
-    private static final int TASKLIB_DIR_OPT = 5;
-    private static final int INCREMENTAL_OPT = 6;
-    private static final int HOME_DIR_OPT = 7;
-    private static final int DRY_RUN_OPT = 8;
+    private final static int HELP_OPT = 'h';
+    private final static int QUIET_OPT = 'q';
+    private final static int VERBOSE_OPT = 'v';
+    private final static int FILE_OPT = 'f';
+    private final static int LOG_LEVEL_OPT = 'l';
+    private final static int DEFINE_OPT = 'D';
+    private final static int BUILDER_PARAM_OPT = 'B';
+    private final static int VERSION_OPT = 1;
+    private final static int LISTENER_OPT = 2;
+    private final static int TASKLIB_DIR_OPT = 5;
+    private final static int INCREMENTAL_OPT = 6;
+    private final static int HOME_DIR_OPT = 7;
+    private final static int DRY_RUN_OPT = 8;
 
     //incompatable options for info options
-    private static final int[] INFO_OPT_INCOMPAT = new int[]
+    private final static int[] INFO_OPT_INCOMPAT = new int[]
     {
         HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT,
         LOG_LEVEL_OPT, VERSION_OPT, LISTENER_OPT,
@@ -79,7 +79,7 @@ public class CLIMain
     };
 
     //incompatable options for other logging options
-    private static final int[] LOG_OPT_INCOMPAT = new int[]
+    private final static int[] LOG_OPT_INCOMPAT = new int[]
     {
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
     };
@@ -383,7 +383,9 @@ public class CLIMain
 
             doBuild( workspace, project, m_targets );
 
-            if( !incremental ) break;
+            if( !incremental ) {
+              break;
+            }
 
             final String message = REZ.getString( "repeat.notice" );
             System.out.println( message );
@@ -395,7 +397,9 @@ public class CLIMain
 
             String line = reader.readLine();
 
-            if( line.equalsIgnoreCase( "no" ) ) break;
+            if( line.equalsIgnoreCase( "no" ) ) {
+              break;
+            }
 
         }
 

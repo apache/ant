@@ -83,8 +83,9 @@ public class Jikes
         Commandline cmd = new Commandline();
         cmd.setExecutable( "jikes" );
 
-        if( m_deprecation == true )
+        if( m_deprecation == true ) {
             cmd.addArgument( "-deprecation" );
+        }
 
         if( m_destDir != null )
         {

@@ -55,8 +55,9 @@ public class SysProperties
             throw new TaskException( ee.getMessage(), ee );
         }
 
-        if( props == null )
+        if( props == null ) {
             return null;
+        }
 
         for( int i = 0; i < props.length; i++ )
         {
@@ -82,8 +83,9 @@ public class SysProperties
     public void restoreSystem()
         throws TaskException
     {
-        if( m_system == null )
+        if( m_system == null ) {
             throw new TaskException( "Unbalanced nesting of SysProperties" );
+        }
 
         try
         {

@@ -46,7 +46,7 @@ public class DefaultEmbeddor
     extends AbstractLogEnabled
     implements Embeddor
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultEmbeddor.class );
 
     private Deployer m_deployer;
@@ -499,7 +499,9 @@ public class DefaultEmbeddor
             final String filename = files[ i ].getName();
 
             int index = filename.lastIndexOf( '.' );
-            if( -1 == index ) index = filename.length();
+            if( -1 == index ) {
+              index = filename.length();
+            }
 
             final String name = filename.substring( 0, index );
 
