@@ -1004,19 +1004,10 @@ public class DirectoryScanner
      *  @since ant1.6
      */
     private boolean isMorePowerfulThanExcludes(String name, String includepattern) {
-        String shortpattern = SelectorUtils.rtrimWildcardTokens(includepattern);
+        String soughtexclude = name + File.separator + "**";
         for (int counter=0; counter <excludes.length; counter++) {
-            String shortexclude = SelectorUtils.rtrimWildcardTokens(excludes[counter]);
-            // here we are checking that the trimmed exclude pattern is not a plain directory
-            // <exclude name="foo"/> means exclude only the directory foo, but not its subdirs
-            if (shortexclude.length() < excludes[counter].length()) {
-                if (excludes[counter].charAt(shortexclude.length()) == File.separatorChar) {
-                    if (matchPath(shortexclude, name, isCaseSensitive)) {
-                        if (shortexclude.length() > shortpattern.length()) {
-                            return false;
-                        }
-                    }
-                }
+            if (excludes[counter].equals(soughtexclude))  {
+                return false;
             }
         }
         return true;
