@@ -59,7 +59,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
@@ -287,7 +286,8 @@ public class ReplaceRegExp extends Task {
         Regexp regexp = r.getRegexp(getProject());
 
         if (regexp.matches(input, options)) {
-            res = regexp.substitute(input, s.getExpression(getProject()), options);
+            res = regexp.substitute(input, s.getExpression(getProject()), 
+                                    options);
         }
 
         return res;
@@ -322,18 +322,77 @@ public class ReplaceRegExp extends Task {
                 Project.MSG_VERBOSE);
 
             if (byline) {
-                LineNumberReader lnr = new LineNumberReader(br);
+                StringBuffer linebuf = new StringBuffer();
                 String line = null;
+                String res = null;
+                int c;
+                boolean hasCR = false;
 
-                while ((line = lnr.readLine()) != null) {
-                    String res = doReplace(regex, subs, line, options);
+                do {
+                    c = br.read();
 
-                    if (!res.equals(line)) {
-                        changes = true;
+                    if (c == '\r') {
+                        if (hasCR) {
+                            // second CR -> EOL + possibly empty line
+                            line = linebuf.toString();
+                            res  = doReplace(regex, subs, line, options);
+
+                            if (!res.equals(line)) {
+                                changes = true;
+                            }
+
+                            pw.print(res);
+                            pw.print('\r');
+
+                            linebuf.setLength(0);
+                            // hasCR is still true (for the second one)
+                        } else {
+                            // first CR in this line
+                            hasCR = true;
+                        }
                     }
+                    else if (c == '\n') {
+                        // LF -> EOL
+                        line = linebuf.toString();
+                        res  = doReplace(regex, subs, line, options);
 
-                    pw.println(res);
-                }
+                        if (!res.equals(line)) {
+                            changes = true;
+                        }
+
+                        pw.print(res);
+                        if (hasCR) {
+                            pw.print('\r');
+                            hasCR = false;
+                        }
+                        pw.print('\n');
+
+                        linebuf.setLength(0);
+                    } else { // any other char
+                        if ((hasCR) || (c < 0)) {
+                            // Mac-style linebreak or EOF (or both)
+                            line = linebuf.toString();
+                            res  = doReplace(regex, subs, line, options);
+
+                            if (!res.equals(line)) {
+                                changes = true;
+                            }
+
+                            pw.print(res);
+                            if (hasCR) {
+                                pw.print('\r');
+                                hasCR = false;
+                            }
+
+                            linebuf.setLength(0);
+                        }
+
+                        if (c >= 0) {
+                            linebuf.append((char) c);
+                        }
+                    }
+                } while (c >= 0);
+
                 pw.flush();
             } else {
                 int flen = (int) f.length();

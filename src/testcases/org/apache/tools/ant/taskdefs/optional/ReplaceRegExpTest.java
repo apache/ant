@@ -121,11 +121,6 @@ public class ReplaceRegExpTest extends BuildFileTest {
                                   new File("src/etc/testcases/taskdefs/optional/replaceregexp2.result.properties")));
     }
 
-    /**
-     * FIXME
-     *
-     * will be fixed this week, just running out of time and
-     * committing a partly fixed version now -- Stefan
     public void testDontAddNewline2() throws IOException {
         executeTarget("testDontAddNewline2");
         assertTrue("Files match",
@@ -133,6 +128,5 @@ public class ReplaceRegExpTest extends BuildFileTest {
                    .contentEquals(new File("src/etc/testcases/taskdefs/optional/test.properties"),
                                   new File("src/etc/testcases/taskdefs/optional/replaceregexp2.result.properties")));
     }
-     */
 
 }// ReplaceRegExpTest
