@@ -92,6 +92,7 @@ public class DependSet extends MatchingTask {
 
     /**
      * Add a set of source files.
+     * @param fs the FileSet to add.
      */
     public void addSrcfileset(FileSet fs) {
         sourceFileSets.addElement(fs);
@@ -99,6 +100,7 @@ public class DependSet extends MatchingTask {
 
     /**
      * Add a list of source files.
+     * @param fl the FileList to add.
      */
     public void addSrcfilelist(FileList fl) {
         sourceFileLists.addElement(fl);
@@ -106,6 +108,7 @@ public class DependSet extends MatchingTask {
 
     /**
      * Add a set of target files.
+     * @param fs the FileSet to add.
      */
     public void addTargetfileset(FileSet fs) {
         targetFileSets.addElement(fs);
@@ -113,6 +116,7 @@ public class DependSet extends MatchingTask {
 
     /**
      * Add a list of target files.
+     * @param fl the FileList to add.
      */
     public void addTargetfilelist(FileList fl) {
         targetFileLists.addElement(fl);
@@ -120,20 +124,18 @@ public class DependSet extends MatchingTask {
 
     /**
      * Executes the task.
+     * @throws BuildException if errors occur.
      */
-
     public void execute() throws BuildException {
 
         if ((sourceFileSets.size() == 0) && (sourceFileLists.size() == 0)) {
           throw new BuildException("At least one <srcfileset> or <srcfilelist>"
                                    + " element must be set");
         }
-
         if ((targetFileSets.size() == 0) && (targetFileLists.size() == 0)) {
           throw new BuildException("At least one <targetfileset> or"
                                    + " <targetfilelist> element must be set");
         }
-
         long now = (new Date()).getTime();
         /*
           We have to munge the time to allow for the filesystem time
@@ -141,10 +143,8 @@ public class DependSet extends MatchingTask {
         */
         now += FILE_UTILS.getFileTimestampGranularity();
 
-        //
-        // Grab all the target files specified via filesets
-        //
-        Vector  allTargets         = new Vector();
+        // Grab all the target files specified via filesets:
+        Vector allTargets = new Vector();
         long oldestTargetTime = 0;
         File oldestTarget = null;
         Enumeration enumTargetSets = targetFileSets.elements();
@@ -155,7 +155,6 @@ public class DependSet extends MatchingTask {
                // this is the same as if it was empty, no target files found
                continue;
            }
-
            DirectoryScanner targetDS = targetFS.getDirectoryScanner(getProject());
            String[] targetFiles      = targetDS.getIncludedFiles();
 
@@ -168,7 +167,6 @@ public class DependSet extends MatchingTask {
                  log("Warning: " + targetFiles[i] + " modified in the future.",
                      Project.MSG_WARN);
               }
-
               if (oldestTarget == null
                 || dest.lastModified() < oldestTargetTime) {
                   oldestTargetTime = dest.lastModified();
@@ -176,11 +174,8 @@ public class DependSet extends MatchingTask {
               }
            }
         }
-
-        //
-        // Grab all the target files specified via filelists
-        //
-        boolean upToDate            = true;
+        // Grab all the target files specified via filelists:
+        boolean upToDate = true;
         Enumeration enumTargetLists = targetFileLists.elements();
         while (enumTargetLists.hasMoreElements()) {
 
@@ -201,7 +196,6 @@ public class DependSet extends MatchingTask {
                  log("Warning: " + targetFiles[i] + " modified in the future.",
                      Project.MSG_WARN);
               }
-
               if (oldestTarget == null
                   || dest.lastModified() < oldestTargetTime) {
                   oldestTargetTime = dest.lastModified();
@@ -216,10 +210,7 @@ public class DependSet extends MatchingTask {
             // skip the following tests right away
             upToDate = false;
         }
-
-        //
-        // Check targets vs source files specified via filelists
-        //
+        // Check targets vs source files specified via filelists:
         if (upToDate) {
            Enumeration enumSourceLists = sourceFileLists.elements();
            while (upToDate && enumSourceLists.hasMoreElements()) {
@@ -234,14 +225,12 @@ public class DependSet extends MatchingTask {
                     log("Warning: " + sourceFiles[i]
                         + " modified in the future.", Project.MSG_WARN);
                  }
-
                  if (!src.exists()) {
                     log(sourceFiles[i] + " does not exist.",
                         Project.MSG_VERBOSE);
                     upToDate = false;
                     break;
                  }
-
                  if (src.lastModified() > oldestTargetTime) {
                     upToDate = false;
                     log(oldestTarget + " is out of date with respect to "
@@ -250,15 +239,12 @@ public class DependSet extends MatchingTask {
               }
            }
         }
-
-        //
-        // Check targets vs source files specified via filesets
-        //
+        // Check targets vs source files specified via filesets:
         if (upToDate) {
            Enumeration enumSourceSets = sourceFileSets.elements();
            while (upToDate && enumSourceSets.hasMoreElements()) {
 
-              FileSet sourceFS         = (FileSet) enumSourceSets.nextElement();
+              FileSet sourceFS          = (FileSet) enumSourceSets.nextElement();
               DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(getProject());
               String[] sourceFiles      = sourceDS.getIncludedFiles();
 
@@ -269,7 +255,6 @@ public class DependSet extends MatchingTask {
                     log("Warning: " + sourceFiles[i]
                         + " modified in the future.", Project.MSG_WARN);
                  }
-
                  if (src.lastModified() > oldestTargetTime) {
                     upToDate = false;
                     log(oldestTarget + " is out of date with respect to "
@@ -278,7 +263,6 @@ public class DependSet extends MatchingTask {
               }
            }
         }
-
         if (!upToDate) {
            log("Deleting all target files. ", Project.MSG_VERBOSE);
            for (Enumeration e = allTargets.elements(); e.hasMoreElements();) {
@@ -288,7 +272,5 @@ public class DependSet extends MatchingTask {
               fileToRemove.delete();
            }
         }
-
-    } //-- execute
-
-} //-- DependSet.java
+    }
+}
