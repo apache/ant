@@ -7,6 +7,11 @@
     <pathelement path="${java.class.path}" />
   </path>
 
+  <taskdef name="global"
+           classname="org.example.tasks.TaskdefTestContainerTask">
+    <classpath refid="testclasses" />
+  </taskdef>
+
   <target name="test1">
     <taskdef/>
   </target>
@@ -49,6 +54,12 @@
     <test7>
       <echo message="worked" />
     </test7>
+  </target>
+
+  <target name="testGlobal">
+    <global>
+      <echo message="worked" />
+    </global>
   </target>
 
 </project>

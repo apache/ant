@@ -58,22 +58,22 @@ import java.util.Vector;
 
 /**
  * Wrapper class that holds all information necessary to create a task
- * that did not exist when Ant started.
+ * or data type that did not exist when Ant started.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class UnknownElement extends Task {
 
     /**
-     * Holds the name of the task or nested child element of a task
-     * that hasn't been defined at parser time.
+     * Holds the name of the task/type or nested child element of a
+     * task/type that hasn't been defined at parser time.
      */
     private String elementName;
 
     /**
-     * The task after it has been loaded.
+     * The real object after it has been loaded.
      */
-    private Task realTask;
+    private Object realThing;
 
     /**
      * Childelements, holds UnknownElement instances.
@@ -92,33 +92,41 @@ public class UnknownElement extends Task {
     }
 
     /**
-     * creates the task instance, creates child elements, configures
-     * the attributes of the task.
+     * creates the real object instance, creates child elements, configures
+     * the attributes of the real object.
      */
     public void maybeConfigure() throws BuildException {
-        realTask = makeTask(this, wrapper);
+        realThing = makeObject(this, wrapper);
 
-        wrapper.setProxy(realTask);
-        realTask.setRuntimeConfigurableWrapper(wrapper);
+        wrapper.setProxy(realThing);
+        if (realThing instanceof Task) {
+            ((Task) realThing).setRuntimeConfigurableWrapper(wrapper);
+        }
 
-        handleChildren(realTask, wrapper);
+        handleChildren(realThing, wrapper);
 
-        realTask.maybeConfigure();
-        target.replaceTask(this, realTask);
+        wrapper.maybeConfigure(project);
+        if (realThing instanceof Task) {
+            target.replaceChild(this, realThing);
+        } else {
+            target.replaceChild(this, wrapper);
+        }
     }
 
     /**
      * Called when the real task has been configured for the first time.
      */
     public void execute() {
-        if (realTask == null) {
+        if (realThing == null) {
             // plain impossible to get here, maybeConfigure should 
             // have thrown an exception.
             throw new BuildException("Could not create task of type: "
                                      + elementName, location);
         }
 
-        realTask.perform();
+        if (realThing instanceof Task) {
+            ((Task) realThing).perform();
+        }
     }
 
     /**
@@ -149,7 +157,7 @@ public class UnknownElement extends Task {
             Object realChild = null;
 
             if (parent instanceof TaskContainer) {
-                realChild = makeTask(child, childWrapper);
+                realChild = makeTask(child, childWrapper, false);
                 ((TaskContainer) parent).addTask((Task) realChild);
             } else {
                 realChild = ih.createElement(project, parent, child.getTag());
@@ -169,34 +177,51 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * Creates a named task or data type - if it is a task, configure it up to the init() stage.
+     */
+    protected Object makeObject(UnknownElement ue, RuntimeConfigurable w) {
+        Object o = makeTask(ue, w, true);
+        if (o == null) {
+            o = project.createDataType(ue.getTag());
+        }
+        if (o == null) {
+            throw getNotFoundException("task or type", ue.getTag());
+        }
+        return o;
+    }
+
+    /**
      * Create a named task and configure it up to the init() stage.
      */
-    protected Task makeTask(UnknownElement ue, RuntimeConfigurable w) {
+    protected Task makeTask(UnknownElement ue, RuntimeConfigurable w,
+                            boolean onTopLevel) {
         Task task = project.createTask(ue.getTag());
-        if (task == null) {
-            String lSep = System.getProperty("line.separator");
-            String msg = "Could not create task of type: " + elementName
-                + "." + lSep
-                + "Ant could not find the task or a class this" + lSep
-                + "task relies upon." + lSep
-                + "Common solutions are to use taskdef to declare" + lSep
-                + "your task, or, if this is an optional task," + lSep
-                + "to put the optional.jar and all required libraries of" +lSep
-                + "this task in the lib directory of" + lSep
-                + "your ant installation (ANT_HOME).";
-            throw new BuildException(msg, location);
+        if (task == null && !onTopLevel) {
+            throw getNotFoundException("task", ue.getTag());
         }
 
-        task.setLocation(getLocation());
-        String id = w.getAttributes().getValue("id");
-        if (id != null) {
-            project.addReference(id, task);
+        if (task != null) {
+            task.setLocation(getLocation());
+            // UnknownElement always has an associated target
+            task.setOwningTarget(target);
+            task.init();
         }
-        // UnknownElement always has an associated target
-        task.setOwningTarget(target);
-
-        task.init();
         return task;
+    }
+
+    protected BuildException getNotFoundException(String what,
+                                                  String elementName) {
+        String lSep = System.getProperty("line.separator");
+        String msg = "Could not create " + what + " of type: " + elementName
+            + "." + lSep
+            + "Ant could not find the task or a class this" + lSep
+            + "task relies upon." + lSep
+            + "Common solutions are to use taskdef to declare" + lSep
+            + "your task, or, if this is an optional task," + lSep
+            + "to put the optional.jar and all required libraries of" +lSep
+            + "this task in the lib directory of" + lSep
+            + "your ant installation (ANT_HOME).";
+        return new BuildException(msg, location);
     }
 
     /**
@@ -205,7 +230,8 @@ public class UnknownElement extends Task {
      * @return the name to use in logging messages.
      */
     public String getTaskName() {
-        return realTask == null ? super.getTaskName() : realTask.getTaskName();
+        return realThing == null || !(realThing instanceof Task) ? 
+            super.getTaskName() : ((Task) realThing).getTaskName();
     }
 
 }// UnknownElement

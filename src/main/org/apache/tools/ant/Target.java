@@ -210,10 +210,10 @@ public class Target implements TaskContainer {
         }
     }
     
-    void replaceTask(UnknownElement el, Task t) {
+    void replaceChild(UnknownElement el, Object o) {
         int index = -1;
         while ((index = children.indexOf(el)) >= 0) {
-            children.setElementAt(t, index);
+            children.setElementAt(o, index);
         }
     }
 

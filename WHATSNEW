@@ -28,6 +28,10 @@ Fixed bugs:
   contain at least a manifest file, therefore it will now print a
   warning and do nothing.
 
+* <typedef> hasn't been all that useful as it couldn't be used outside
+  of targets (it can now) and nested "unknown" elements have always
+  been considered to be tasks (changed as well).
+
 Other changes:
 --------------
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -57,51 +57,51 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Project;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @version $Revision$
  */
-public class TaskdefTest extends TaskdefsTest { 
+public class TypedefTest extends TaskdefsTest { 
     
-    public TaskdefTest(String name) { 
+    public TypedefTest(String name) { 
         super(name);
     }    
     
     public void setUp() { 
-        configureProject("src/etc/testcases/taskdefs/taskdef.xml");
+        configureProject("src/etc/testcases/taskdefs/typedef.xml");
     }
     
-    public void test1() { 
-        expectBuildException("test1", "required argument not specified");
+    public void testEmpty() { 
+        expectBuildException("empty", "required argument not specified");
     }
 
-    public void test2() { 
-        expectBuildException("test2", "required argument not specified");
+    public void testNoName() { 
+        expectBuildException("noName", "required argument not specified");
     }
 
-    public void test3() { 
-        expectBuildException("test3", "required argument not specified");
+    public void testNoClassname() { 
+        expectBuildException("noClassname", "required argument not specified");
     }
 
-    public void test4() { 
-        expectBuildException("test4", "classname specified doesn't exist");
-    }
-
-    public void test5() { 
-        expectBuildException("test5", "No public execute() in " + Project.class);
-    }
-
-    public void test5a() { 
-        executeTarget("test5a");
-    }
-
-    public void test6() {
-        expectLog("test6", "simpletask: worked");
-    }
-
-    public void test7() {
-        expectLog("test7", "worked");
+    public void testClassNotFound() { 
+        expectBuildException("classNotFound", 
+                             "classname specified doesn't exist");
     }
 
     public void testGlobal() {
-        expectLog("testGlobal", "worked");
+        expectLog("testGlobal", "");
+        Object ref = project.getReferences().get("global");
+        assertNotNull("ref is not null", ref);
+        assertEquals("org.example.types.TypedefTestType",
+                     ref.getClass().getName());
     }
+
+    public void testLocal() {
+        expectLog("testLocal", 
+                  "Overriding previous definition of reference to local");
+        Object ref = project.getReferences().get("local");
+        assertNotNull("ref is not null", ref);
+        assertEquals("org.example.types.TypedefTestType",
+                     ref.getClass().getName());
+    }
+
 }

@@ -350,6 +350,8 @@ public class ProjectHelper {
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             if (name.equals("taskdef")) {
                 handleTaskdef(name, attrs);
+            } else if (name.equals("typedef")) {
+                handleTypedef(name, attrs);
             } else if (name.equals("property")) {
                 handleProperty(name, attrs);
             } else if (name.equals("target")) {
@@ -362,6 +364,10 @@ public class ProjectHelper {
         }
 
         private void handleTaskdef(String name, AttributeList attrs) throws SAXParseException {
+            (new TaskHandler(this, null, null, null)).init(name, attrs);
+        }
+
+        private void handleTypedef(String name, AttributeList attrs) throws SAXParseException {
             (new TaskHandler(this, null, null, null)).init(name, attrs);
         }
 
