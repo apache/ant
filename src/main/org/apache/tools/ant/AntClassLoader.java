@@ -906,8 +906,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * on the system classpath (when not in isolated mode) or this loader's
      * classpath.
      */
-    protected Class loadClass(String classname, boolean resolve)
+    protected synchronized Class loadClass(String classname, boolean resolve)
          throws ClassNotFoundException {
+        // 'sync' is needed - otherwise 2 threads can load the same class
+        // twice, resulting in LinkageError: duplicated class definition.
+        // findLoadedClass avoids that, but without sync it won't work.
 
         Class theClass = findLoadedClass(classname);
         if (theClass != null) {
