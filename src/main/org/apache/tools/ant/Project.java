@@ -298,10 +298,8 @@ public class Project {
     /**
      * set a property. Any existing property of the same name 
      * is overwritten, unless it is a user property. 
-     * <i>the immutability policy is not implemented at this level</i> 
      * @param name name of property
      * @param value new value of the property
-     * @deprecated use, set setNewProperty
      */
     public void setProperty(String name, String value) {
         // command line properties take precedence
@@ -311,10 +309,8 @@ public class Project {
         }
 
         if (null != properties.get(name)) {
-            log("DEPRECATED - Project.setProperty('" + name + "','" + value + "') used " + 
-                "to overide an immutable property. Task writer should use Project.setNewProperty() " +
-                "instead and the build writer should not reuse the same property name for " + 
-                "different values.");
+            log("Overriding previous definition of property " + name, 
+                MSG_VERBOSE);
         }
 
         log("Setting project property: " + name + " -> " +
@@ -323,15 +319,13 @@ public class Project {
     }
 
     /**
-     * set a property. Any existing property of the same name 
-     * is overwritten, unless it is a user property. 
-     * <i>the immutability policy <b>is</b> enforced at this level</i> 
+     * set a property. An existing property of the same name 
+     * will not be overwritten.
      * @param name name of property
      * @param value new value of the property
      * @since 1.5
      */
     public void setNewProperty(String name, String value) {
-        // command line properties take precedence
         if (null != properties.get(name)) {
             log("Override ignored for property " + name, MSG_VERBOSE);
             return;
