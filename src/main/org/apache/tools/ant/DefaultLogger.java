@@ -55,6 +55,8 @@
 package org.apache.tools.ant;
 
 import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 /**
  *  Writes build event to a PrintStream. Currently, it
@@ -76,7 +78,7 @@ public class DefaultLogger implements BuildLogger {
     /**
      * Set the msgOutputLevel this logger is to respond to.
      *
-     * Only messages with a message level lower than or equal to the given level are 
+     * Only messages with a message level lower than or equal to the given level are
      * output to the log.
      * <P>
      * Constants for the message levels are in Project.java. The order of
@@ -91,7 +93,6 @@ public class DefaultLogger implements BuildLogger {
         this.msgOutputLevel = level;
     }
 
-    
     /**
      * Set the output stream to which this logger is to send its output.
      *
@@ -120,7 +121,6 @@ public class DefaultLogger implements BuildLogger {
         this.emacsMode = emacsMode;
     }
 
-
     public void buildStarted(BuildEvent event) {
         startTime = System.currentTimeMillis();
     }
@@ -131,34 +131,44 @@ public class DefaultLogger implements BuildLogger {
      */
     public void buildFinished(BuildEvent event) {
         Throwable error = event.getException();
+        StringBuffer message = new StringBuffer();
 
         if (error == null) {
-            printlnAndFlush(out, lSep + "BUILD SUCCESSFUL");
+            message.append(lSep + "BUILD SUCCESSFUL");
         }
         else {
-            printlnAndFlush(err, lSep + "BUILD FAILED" + lSep);
+            message.append(lSep + "BUILD FAILED" + lSep);
 
             if (Project.MSG_VERBOSE <= msgOutputLevel ||
                 !(error instanceof BuildException)) {
-                error.printStackTrace(err);
-                err.flush();
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                error.printStackTrace(pw);
+                message.append(sw.toString());
             }
             else {
                 if (error instanceof BuildException) {
-                    printlnAndFlush(err, error.toString());
+                    message.append(error.toString() + lSep);
                 }
                 else {
-                    err.println(error.getMessage());
+                    message.append(error.getMessage() + lSep);
                 }
             }
         }
 
-        printlnAndFlush(out, lSep + "Total time: " + formatTime(System.currentTimeMillis() - startTime));
+        message.append(lSep + "Total time: "
+                       + formatTime(System.currentTimeMillis() - startTime));
+
+        String msg = message.toString();
+        printlnAndFlush(error == null ? out : err, msg);
+        log(msg);
     }
 
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel) {
-            printlnAndFlush(out, lSep + event.getTarget().getName() + ":");
+            String msg = lSep + event.getTarget().getName() + ":";
+            printlnAndFlush(out, msg);
+            log(msg);
         }
     }
 
@@ -169,27 +179,28 @@ public class DefaultLogger implements BuildLogger {
     public void taskFinished(BuildEvent event) {}
 
     public void messageLogged(BuildEvent event) {
-
-        PrintStream logTo = event.getPriority() == Project.MSG_ERR ? err : out;
-
         // Filter out messages based on priority
         if (event.getPriority() <= msgOutputLevel) {
 
+            StringBuffer message = new StringBuffer();
             // Print out the name of the task if we're in one
             if (event.getTask() != null) {
                 String name = event.getTask().getTaskName();
 
                 if (!emacsMode) {
-                    String msg = "[" + name + "] ";
-                    for (int i = 0; i < (LEFT_COLUMN_SIZE - msg.length()); i++) {
-                        logTo.print(" ");
+                    String label = "[" + name + "] ";
+                    for (int i = 0; i < (LEFT_COLUMN_SIZE - label.length()); i++) {
+                        message.append(" ");
                     }
-                    logTo.print(msg);
+                    message.append(label);
                 }
             }
 
-            // Print the message
-            printlnAndFlush(logTo, event.getMessage());
+            message.append(event.getMessage());
+            String msg = message.toString();
+            printlnAndFlush(event.getPriority() != Project.MSG_ERR ? out : err,
+                            msg);
+            log(msg);
         }
     }
 
@@ -212,9 +223,15 @@ public class DefaultLogger implements BuildLogger {
     }
 
     /**
+     * Empty implementation which allows subclasses to receive the
+     * same output that is generated here.
+     */
+    protected void log(String message) {}
+
+    /**
      * Print a line to the given stream and flush the stream right after that.
      */
-    private void printlnAndFlush(PrintStream p, String line) {
+    protected void printlnAndFlush(PrintStream p, String line) {
         p.println(line);
         p.flush();
     }
