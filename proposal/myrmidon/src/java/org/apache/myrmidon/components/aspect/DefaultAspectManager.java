@@ -9,6 +9,7 @@ package org.apache.myrmidon.components.aspect;
 
 import java.util.ArrayList;
 import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
@@ -51,6 +52,12 @@ public class DefaultAspectManager
         return model;
     }
 
+    public void aspect( final Parameters parameters, final Configuration[] elements )
+        throws TaskException
+    {
+        throw new UnsupportedOperationException( "Can not provide parameters to AspectManager" ); 
+    }
+
     public void postCreate( final Task task )
         throws TaskException
     {
@@ -71,13 +78,13 @@ public class DefaultAspectManager
         }
     }
 
-    public void preConfigure()
+    public void preConfigure( final Configuration taskModel )
         throws TaskException
     {
         final AspectHandler[] aspects = m_aspects;
         for( int i = 0; i < aspects.length; i++ )
         {
-            aspects[ i ].preConfigure();
+            aspects[ i ].preConfigure( taskModel );
         }
     }
 
