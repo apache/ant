@@ -289,6 +289,11 @@ public class SQLExec extends Task {
             info.put("password", password);
             conn = driverInstance.connect(url, info);
 
+            if (conn == null) {
+                // Driver doesn't understand the URL
+                throw new SQLException("No suitable Driver for "+url);
+            }
+
             conn.setAutoCommit(autocommit);
 
             statement = conn.createStatement();
