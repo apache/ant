@@ -214,7 +214,7 @@ public class SQLExecTest extends TestCase {
                 props = getProperties("oracle.jdbc.driver.OracleDriver", "test", "test", "jdbc:oracle:thin:@127.0.0.1:1521:orcl");
                 break;
             case MYSQL:
-                props = getProperties("org.gjt.mm.mysql.Driver", "sbailliez", "apollo", "jdbc:mysql://127.0.0.1:3306/test");
+                props = getProperties("org.gjt.mm.mysql.Driver", "test", "test", "jdbc:mysql://127.0.0.1:3306/test");
                 break;
             case NULL:
             default:
