@@ -19,52 +19,89 @@ package org.apache.tools.ant.taskdefs.cvslib;
 /**
  * Holds the information of a line of rdiff
  */
-class CvsTagEntry {
-    String m_filename;
-    String m_prevRevision;
-    String m_revision;
+public class CvsTagEntry {
 
-    public CvsTagEntry(String filename) {
+    /** the filename */
+    private String filename;
+
+    /** the previous revision */
+    private String prevRevision;
+
+    /** the revision */
+    private String revision;
+
+    /**
+     * Creates a new CvsTagEntry
+     * @param filename the filename to add
+     */
+    public CvsTagEntry(final String filename) {
         this(filename, null, null);
     }
 
-    public CvsTagEntry(String filename, String revision) {
+    /**
+     * Creates a new CvsTagEntry
+     * @param filename the filename to add
+     * @param revision the revision
+     */
+    public CvsTagEntry(final String filename, final String revision) {
         this(filename, revision, null);
     }
 
-    public CvsTagEntry(String filename, String revision,
-                       String prevRevision) {
-        m_filename = filename;
-        m_revision = revision;
-        m_prevRevision = prevRevision;
+    /**
+     * Creates a new CvsTagEntry
+     * @param filename the filename to add
+     * @param revision the revision
+     * @param prevRevision the previous revision
+     */
+    public CvsTagEntry(final String filename, final String revision,
+                       final String prevRevision) {
+        this.filename = filename;
+        this.revision = revision;
+        this.prevRevision = prevRevision;
     }
 
+    /**
+     * Gets the filename for this CvsTagEntry
+     * @return the filename
+     */
     public String getFile() {
-        return m_filename;
+        return filename;
     }
 
+    /**
+     * Gets the revision for this CvsTagEntry
+     * @return the revision
+     */
     public String getRevision() {
-        return m_revision;
+        return revision;
     }
 
+    /**
+     * Gets the previous revision for this CvsTagEntry
+     * @return the previous revision
+     */
     public String getPreviousRevision() {
-        return m_prevRevision;
+        return prevRevision;
     }
 
+    /**
+     * Gets a String containing filename and difference from previous version
+     * @return a string representation of this CVSTagEntry
+     */
     public String toString() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append(m_filename);
-        if ((m_revision == null)) {
+        buffer.append(filename);
+        if ((revision == null)) {
             buffer.append(" was removed");
-            if (m_prevRevision != null) {
-                buffer.append("; previous revision was ").append(m_prevRevision);
+            if (prevRevision != null) {
+                buffer.append("; previous revision was ").append(prevRevision);
             }
-        } else if (m_revision != null && m_prevRevision == null) {
+        } else if (revision != null && prevRevision == null) {
             buffer.append(" is new; current revision is ")
-                .append(m_revision);
-        } else if (m_revision != null && m_prevRevision != null) {
+                .append(revision);
+        } else if (revision != null && prevRevision != null) {
             buffer.append(" has changed from ")
-                .append(m_prevRevision).append(" to ").append(m_revision);
+                .append(prevRevision).append(" to ").append(revision);
         }
         return buffer.toString();
     }
