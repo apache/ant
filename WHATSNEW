@@ -246,7 +246,7 @@ Other changes:
 
 * New filterreader <escapeunicode/>.
 
-* Support for HP's NonStop (Tandem) OS has been added.
+* Support for HP's NonStop Kernel (Tandem) OS has been added.
 
 * <cab>'s basedir attribute is now optional if you specify nested
   filesets.  Bugzilla Report 18046.

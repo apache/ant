@@ -263,7 +263,6 @@ public class Chmod extends ExecuteOn {
     }
 
     protected boolean isValidOs() {
-        return (Os.isFamily("unix") || Os.isFamily("tandem")) 
-            && super.isValidOs();
+        return Os.isFamily("unix") && super.isValidOs();
     }
 }

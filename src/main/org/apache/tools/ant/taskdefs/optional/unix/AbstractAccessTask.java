@@ -95,16 +95,30 @@ public abstract class AbstractAccessTask
         addFileset(fs);
     }
 
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setCommand(Commandline cmdl) {
         throw new BuildException(taskType +
                                  " doesn\'t support the command attribute",
                                  getLocation());
     }
 
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setSkipEmptyFilesets(boolean skip) {
         throw new BuildException(taskType + " doesn\'t support the "
                                  + "skipemptyfileset attribute",
                                  getLocation());
+    }
+
+    /**
+     * @ant.attribute ignore="true"
+     */
+    public void setAddsourcefile(boolean b) {
+        throw new BuildException(getTaskType()
+            + " doesn\'t support the addsourcefile attribute", getLocation());
     }
 
     protected boolean isValidOs() {

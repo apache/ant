@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -120,15 +120,56 @@ public class Attrib extends ExecuteOn {
         super.checkConfiguration();
     }
 
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setExecutable(String e) {
         throw new BuildException(taskType + 
                                  " doesn\'t support the executable attribute",
                                  getLocation());
     }
 
+    /**
+     * @ant.attribute ignore="true"
+     */
     public void setCommand(String e) {
         throw new BuildException(taskType + 
                                  " doesn\'t support the command attribute",
+                                 getLocation());
+    }
+
+    /**
+     * @ant.attribute ignore="true"
+     */
+    public void setAddsourcefile(boolean b) {
+        throw new BuildException(getTaskType()
+            + " doesn\'t support the addsourcefile attribute", getLocation());
+    }
+
+    /**
+     * @ant.attribute ignore="true"
+     */
+    public void setSkipEmptyFilesets(boolean skip) {
+        throw new BuildException(taskType + " doesn\'t support the "
+                                 + "skipemptyfileset attribute",
+                                 getLocation());
+    }
+
+    /**
+     * @ant.attribute ignore="true"
+     */
+    public void setParallel(boolean parallel) {
+        throw new BuildException(getTaskType()
+                                 + " doesn\'t support the parallel attribute",
+                                 getLocation());
+    }
+
+    /**
+     * @ant.attribute ignore="true"
+     */
+    public void setMaxParallel(int max) {
+        throw new BuildException(getTaskType()
+                                 + " doesn\'t support the maxparallel attribute",
                                  getLocation());
     }
 

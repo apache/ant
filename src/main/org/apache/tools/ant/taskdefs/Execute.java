@@ -231,8 +231,7 @@ public class Execute {
                 String[] cmd = {"command.com", "/c", "set" };
                 return cmd;
             }
-        } else if (Os.isFamily("z/os") || Os.isFamily("tandem") 
-                   || Os.isFamily("unix")) {
+        } else if (Os.isFamily("z/os") || Os.isFamily("unix")) {
             // On most systems one could use: /bin/sh -c env
 
             // Some systems have /bin/env, others /usr/bin/env, just try
