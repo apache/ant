@@ -11,9 +11,10 @@
 
 <h1>Ant User Manual</h1>
 <p>by</p>
+<!-- Names are in alphabetical order, on last name -->
 <ul>
-  <li>Arnout J. Kuiper (<a href="mailto:(ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>)</li>
   <li>James Duncan Davison (<a href="mailto:(duncan@x180.com">duncan@x180.com</a>)</li>
+  <li>Arnout J. Kuiper (<a href="mailto:(ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>)</li>
   <li>Stefano Mazzocchi (<a href="mailto:(stefano@apache.org">stefano@apache.org</a>)</li>
 </ul>
 <p>Version 1.0.3 - 2000/02/06</p>
@@ -644,11 +645,11 @@ preferred, because of speed.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;cvs cvsRoot=&quot;:pserver:anoncvs@jakarta.apache.org:/home/cvspublic&quot;
-  package=&quot;jakarta-tools&quot; dest=&quot;${ws.dir}&quot; /&gt;</code></p>
-</blockquote>
-<p>This checks out the package/module &quot;jakarta-tools&quot; from the CVS
+<pre>  &lt;cvs cvsRoot=&quot;:pserver:anoncvs@jakarta.apache.org:/home/cvspublic&quot;
+       package=&quot;jakarta-tools&quot;
+       dest=&quot;${ws.dir}&quot;
+  /&gt;</pre>
+<p>checks out the package/module &quot;jakarta-tools&quot; from the CVS
 repository pointed to by the cvsRoot attribute, and stores the files in &quot;${ws.dir}&quot;.</p>
 <hr>
 <h2><a name="delete">Delete</a></h2>
@@ -668,10 +669,10 @@ repository pointed to by the cvsRoot attribute, and stores the files in &quot;${
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;delete file=&quot;/lib/ant.jar&quot; /&gt;</code></p>
-  <p><code>&lt;delete file=&quot;${ant}&quot; /&gt;</code></p>
-</blockquote>
+<pre>  &lt;delete file=&quot;/lib/ant.jar&quot; /&gt;</pre>
+<p>deletes the file <code>/lib/ant.jar</code>.</p>
+<pre>  &lt;delete file=&quot;${ant}&quot; /&gt;</pre>
+<p>deletes the file <code>${ant}</code>.</p>
 <hr>
 <h2><a name="deltree">Deltree</a></h2>
 <h3>Description</h3>
@@ -690,10 +691,12 @@ repository pointed to by the cvsRoot attribute, and stores the files in &quot;${
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;deltree dir=&quot;dist&quot; /&gt;</code></p>
-  <p><code>&lt;deltree dir=&quot;${dist}&quot; /&gt;</code></p>
-</blockquote>
+<pre>  &lt;deltree dir=&quot;dist&quot; /&gt;</pre>
+<p>deletes the directory <code>dist</code>, including its files and
+subdirectories.</p>
+<pre>  &lt;deltree dir=&quot;${dist}&quot; /&gt;</pre>
+<p>deletes the directory <code>${dist}</code>, including its files and
+subdirectories.</p>
 <hr>
 <h2><a name="echo">Echo</a></h2>
 <h3>Description</h3>
@@ -712,9 +715,7 @@ repository pointed to by the cvsRoot attribute, and stores the files in &quot;${
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;echo message=&quot;Hello world&quot; /&gt;</code></p>
-</blockquote>
+<pre>  &lt;echo message=&quot;Hello world&quot; /&gt;</pre>
 <hr>
 <h2><a name="exec">Exec</a></h2>
 <h3>Description</h3>
@@ -815,10 +816,8 @@ archive with http/ftp.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;get src=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot;
-  /&gt;</code></p>
-</blockquote>
+<pre>  &lt;get src=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot; /&gt;</pre>
+<p>gets the index page of http://jakarta.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
 <hr>
 <h2><a name="gzip">GZip</a></h2>
 <h3>Description</h3>
@@ -995,13 +994,13 @@ the one that is currently running Ant.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;java class=&quot;test.Main&quot; /&gt;</code></p>
-  <p><code>&lt;java class=&quot;test.Main&quot; args=&quot;-h&quot; /&gt;</code></p>
-  <p><code>&lt;java class=&quot;test.Main&quot; args=&quot;-h&quot;
-  fork=&quot;yes&quot; jvmargs=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;
-  /&gt;</code></p>
-</blockquote>
+<pre>  &lt;java class=&quot;test.Main&quot; /&gt;</pre>
+<pre>  &lt;java class=&quot;test.Main&quot; args=&quot;-h&quot; /&gt;</pre>
+<pre>  &lt;java class=&quot;test.Main&quot;
+        args=&quot;-h&quot;
+        fork=&quot;yes&quot;
+        jvmargs=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;
+  /&gt;</pre>
 <hr>
 <h2><a name="javac">Javac</a></h2>
 <h3>Description</h3>
@@ -1395,18 +1394,16 @@ instead.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <pre>&lt;javadoc packagenames=&quot;com.dummy.test.*&quot; 
-         sourcepath=&quot;src&quot; 
-         destdir=&quot;docs/api&quot;
-         author=&quot;true&quot;
-         version=&quot;true&quot;
-         use=&quot;true&quot;
-         windowtitle=&quot;Test API&quot;
-         doctitle=&quot;&lt;h1&gt;Test&lt;/h1&gt;&quot;
-         bottom=&quot;&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;&quot;
-/&gt;</pre>
-</blockquote>
+<pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;
+           sourcepath=&quot;src&quot;
+           destdir=&quot;docs/api&quot;
+           author=&quot;true&quot;
+           version=&quot;true&quot;
+           use=&quot;true&quot;
+           windowtitle=&quot;Test API&quot;
+           doctitle=&quot;&lt;h1&gt;Test&lt;/h1&gt;&quot;
+           bottom=&quot;&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;&quot;
+  /&gt;</pre>
 <hr>
 <h2><a name="keysubst">KeySubst</a></h2>
 <h3>Description</h3>
@@ -1448,10 +1445,7 @@ separator, which might we changed with the <i>sep</i> attribute.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;keysubst src=&quot;abc.txt&quot; dest=&quot;def.txt&quot;
-  keys=&quot;VERSION=1.0.3*DATE=2000-01-10&quot; /&gt;</code></p>
-</blockquote>
+<pre>  &lt;keysubst src=&quot;abc.txt&quot; dest=&quot;def.txt&quot; keys=&quot;VERSION=1.0.3*DATE=2000-01-10&quot; /&gt;</pre>
 <hr>
 <h2><a name="mkdir">Mkdir</a></h2>
 <h3>Description</h3>
@@ -1471,10 +1465,10 @@ necessary.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;mkdir dir=&quot;${dist}&quot; /&gt;</code></p>
-  <p><code>&lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;</code></p>
-</blockquote>
+<pre>&lt;mkdir dir=&quot;${dist}&quot; /&gt;</pre>
+<p>creates a directory <code>${dist}</code>.</p>
+<pre>&lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;</pre>
+<p>creates a directory <code>${dist}/lib</code>.</p>
 <hr>
 <h2><a name="property">Property</a></h2>
 <h3>Description</h3>
@@ -1530,16 +1524,16 @@ This also holds for properties loaded from a property file.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot;/&gt;</code></p>
-  <p><code>&lt;property file=&quot;foo.properties&quot; /&gt;</code></p>
-  <p><code>&lt;property resource=&quot;foo.properties&quot; /&gt;</code></p>
-</blockquote>
+<pre>  &lt;property name=&quot;foo.dist&quot; value=&quot;dist&quot; /&gt;</pre>
+<p>sets the property <code>foo.dist</code> to the value &quot;dist&quot;.</p>
+<pre>  &lt;property file=&quot;foo.properties&quot; /&gt;</pre>
+<p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
+<pre>  &lt;property resource=&quot;foo.properties&quot; /&gt;</pre>
+<p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
 <hr>
 <h2><a name="replace">Replace</a></h2>
 <h3>Description</h3>
-<p>Replaces the occurrence of a given string with another string in a file. When
-the <i>value</i> attribute is omitted, it defaults to &quot;&quot;.</p>
+<p>Replaces the occurrence of a given string with another string in a file.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1549,25 +1543,25 @@ the <i>value</i> attribute is omitted, it defaults to &quot;&quot;.</p>
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">file for which the token should be replaced</td>
+    <td valign="top">file for which the token should be replaced.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">token</td>
-    <td valign="top">the token which must be replaced</td>
+    <td valign="top">the token which must be replaced.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">value</td>
-    <td valign="top">the new value for the token</td>
+    <td valign="top">the new value for the token. When omitted, an empty string
+      (&quot;&quot;) is used.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;replace file=&quot;${src}/index.html&quot; token=&quot;@@@&quot;
-  value=&quot;wombat&quot; /&gt;</code></p>
-</blockquote>
+<pre>  &lt;replace file=&quot;${src}/index.html&quot; token=&quot;@@@&quot; value=&quot;wombat&quot; /&gt;</pre>
+<p>replaces occurrences of the string &quot;@@@&quot; with the string
+&quot;wombat&quot;, in the file <code>${src}/index.html</code>.</p>
 <hr>
 <h2><a name="rmic">Rmic</a></h2>
 <h3>Description</h3>
@@ -1591,10 +1585,9 @@ the <i>value</i> attribute is omitted, it defaults to &quot;&quot;.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;rmic class=&quot;com.xyz.FooBar&quot;
-  base=&quot;${build}/classes&quot; /&gt;</code></p>
-</blockquote>
+<pre>  &lt;rmic class=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot; /&gt;</pre>
+<p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The
+compiled files will be stored in the directory <code>${build}/classes</code>.</p>
 <hr>
 <h2><a name="taskdef">Taskdef</a></h2>
 <h3>Description</h3>
@@ -1623,10 +1616,9 @@ href="#writingowntask">Writing your own task</a>&quot;.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;taskdef name=&quot;myjavadoc&quot; value=&quot;com.mydomain.JavadocTask&quot;
-  /&gt;</code></p>
-</blockquote>
+<pre>  &lt;taskdef name=&quot;myjavadoc&quot; value=&quot;com.mydomain.JavadocTask&quot; /&gt;</pre>
+<p>makes a task called <code>myjavadoc</code> available to Ant. The class <code>com.mydomain.JavadocTask</code>
+implements the task.</p>
 <hr>
 <h2><a name="tstamp">Tstamp</a></h2>
 <h3>Description</h3>
@@ -1646,9 +1638,7 @@ href="#inittarget">init target</a>.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;tstamp/&gt;</code></p>
-</blockquote>
+<pre>  &lt;tstamp/&gt;</pre>
 <hr>
 <h2><a name="zip">Zip</a></h2>
 <h3>Description</h3>
@@ -1747,10 +1737,17 @@ or files with the name <code>todo.html</code> are excluded.</p>
 in the <code>${dist}</code> directory. Only html files under the directory <code>api</code>
 are zipped, and files with the name <code>todo.html</code> are excluded.</p>
 <h3>Deprecated examples</h3>
-<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot; basedir=&quot;htdocs/manual&quot; items=&quot;*&quot; /&gt;</pre>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
+       basedir=&quot;htdocs/manual&quot;
+       items=&quot;*&quot;
+  /&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory.</p>
-<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot; basedir=&quot;htdocs/manual&quot; items=&quot;*&quot; ignore=&quot;mydocs, todo.html&quot;/&gt;</pre>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
+       basedir=&quot;htdocs/manual&quot;
+       items=&quot;*&quot;
+       ignore=&quot;mydocs, todo.html&quot;
+  /&gt;</pre>
 <p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory. Files/directories with the names <code>mydocs</code>
 and <code>todo.html</code> are excluded.</p>
