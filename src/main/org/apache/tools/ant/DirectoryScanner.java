@@ -198,7 +198,10 @@ public class DirectoryScanner {
      */
     private Vector dirsExcluded;
 
-
+    /**
+     * Have the Vectors holding our results been built by a slow scan?
+     */
+    private boolean haveSlowResults = false;
 
     /**
      * Constructor.
@@ -207,6 +210,69 @@ public class DirectoryScanner {
     }
 
 
+    /**
+     * Does the path match the start of this pattern up to the first "**".
+     +
+     * <p>This is not a general purpose test and should only be used if you
+     * can live with false positives.</p>
+     *
+     * <p><code>pattern=**\\a</code> and <code>str=b</code> will yield true.
+     *
+     * @param pattern the (non-null) pattern to match against
+     * @param str     the (non-null) string (path) to match
+     */
+    private static boolean matchPatternStart(String pattern, String str) {
+        // When str starts with a File.separator, pattern has to start with a
+        // File.separator.
+        // When pattern starts with a File.separator, str has to start with a
+        // File.separator.
+        if (str.startsWith(File.separator) !=
+            pattern.startsWith(File.separator)) {
+            return false;
+        }
+
+        Vector patDirs = new Vector();
+        StringTokenizer st = new StringTokenizer(pattern,File.separator);
+        while (st.hasMoreTokens()) {
+            patDirs.addElement(st.nextToken());
+        }
+
+        Vector strDirs = new Vector();
+        st = new StringTokenizer(str,File.separator);
+        while (st.hasMoreTokens()) {
+            strDirs.addElement(st.nextToken());
+        }
+
+        int patIdxStart = 0;
+        int patIdxEnd   = patDirs.size()-1;
+        int strIdxStart = 0;
+        int strIdxEnd   = strDirs.size()-1;
+
+        // up to first '**'
+        while (patIdxStart <= patIdxEnd && strIdxStart <= strIdxEnd) {
+            String patDir = (String)patDirs.elementAt(patIdxStart);
+            if (patDir.equals("**")) {
+                break;
+            }
+            if (!match(patDir,(String)strDirs.elementAt(strIdxStart))) {
+                return false;
+            }
+            patIdxStart++;
+            strIdxStart++;
+        }
+
+        if (strIdxStart > strIdxEnd) {
+            // String is exhausted
+            return true;
+        } else if (patIdxStart > patIdxEnd) {
+            // String not exhausted, but pattern is. Failure.
+            return false;
+        } else {
+            // pattern now holds ** while string is not exhausted
+            // this will generate false positives but we can live with that.
+            return true;
+        }
+    }
 
     /**
      * Matches a path against a pattern.
@@ -608,9 +674,38 @@ strLoop:
         dirsNotIncluded  = new Vector();
         dirsExcluded     = new Vector();
 
-        scandir(basedir,"");
+        scandir(basedir, "", true);
     }
 
+    /**
+     * Toplevel invocation for the scan.
+     *
+     * <p>Returns immediately if a slow scan has already been requested.
+     */
+    private void slowScan() {
+        if (haveSlowResults) {
+            return;
+        }
+
+        String[] excl = new String[dirsExcluded.size()];
+        dirsExcluded.copyInto(excl);
+
+        String[] notIncl = new String[dirsNotIncluded.size()];
+        dirsNotIncluded.copyInto(notIncl);
+
+        for (int i=0; i<excl.length; i++) {
+            scandir(new File(basedir, excl[i]), excl[i]+File.separator, false);
+        }
+        
+        for (int i=0; i<notIncl.length; i++) {
+            if (!couldHoldIncluded(notIncl[i])) {
+                scandir(new File(basedir, notIncl[i]), 
+                        notIncl[i]+File.separator, false);
+            }
+        }
+
+        haveSlowResults  = true;
+    }
 
 
     /**
@@ -630,7 +725,7 @@ strLoop:
      * @see #dirsNotIncluded
      * @see #dirsExcluded
      */
-    private void scandir(File dir, String vpath) {
+    private void scandir(File dir, String vpath, boolean fast) {
         String[] newfiles = dir.list();
         for (int i = 0; i < newfiles.length; i++) {
             String name = vpath+newfiles[i];
@@ -639,13 +734,21 @@ strLoop:
                 if (isIncluded(name)) {
                     if (!isExcluded(name)) {
                         dirsIncluded.addElement(name);
+                        if (fast) {
+                            scandir(file, name+File.separator, fast);
+                        }
                     } else {
                         dirsExcluded.addElement(name);
                     }
                 } else {
                     dirsNotIncluded.addElement(name);
+                    if (fast && couldHoldIncluded(name)) {
+                        scandir(file, name+File.separator, fast);
+                    }
                 }
-                scandir(file, name+File.separator);
+                if (!fast) {
+                    scandir(file, name+File.separator, fast);
+                }
             } else if (file.isFile()) {
                 if (isIncluded(name)) {
                     if (!isExcluded(name)) {
@@ -678,7 +781,21 @@ strLoop:
         return false;
     }
 
-
+    /**
+     * Tests whether a name matches the start of at least one include pattern.
+     *
+     * @param name the name to match
+     * @return <code>true</code> when the name matches against at least one
+     *         include pattern, <code>false</code> otherwise.
+     */
+    private boolean couldHoldIncluded(String name) {
+        for (int i = 0; i < includes.length; i++) {
+            if (matchPatternStart(includes[i],name)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Tests whether a name matches against at least one exclude pattern.
@@ -723,6 +840,7 @@ strLoop:
      * @return the names of the files
      */
     public String[] getNotIncludedFiles() {
+        slowScan();
         int count = filesNotIncluded.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
@@ -741,6 +859,7 @@ strLoop:
      * @return the names of the files
      */
     public String[] getExcludedFiles() {
+        slowScan();
         int count = filesExcluded.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
@@ -777,6 +896,7 @@ strLoop:
      * @return the names of the directories
      */
     public String[] getNotIncludedDirectories() {
+        slowScan();
         int count = dirsNotIncluded.size();
         String[] directories = new String[count];
         for (int i = 0; i < count; i++) {
@@ -795,6 +915,7 @@ strLoop:
      * @return the names of the directories
      */
     public String[] getExcludedDirectories() {
+        slowScan();
         int count = dirsExcluded.size();
         String[] directories = new String[count];
         for (int i = 0; i < count; i++) {
@@ -821,7 +942,5 @@ strLoop:
         }
         excludes = newExcludes;
     }
-
-
 
 }
