@@ -214,8 +214,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
      */
     public static class AntHandler  {
         /**
-         * Handles the start of an element. This base implementation just
-         * throws an exception.
+         * Handles the start of an element. This base implementation does nothing.
          * 
          * @param tag The name of the element being started. 
          *            Will not be <code>null</code>.
@@ -230,12 +229,12 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                                    AntXmlContext context)
             throws SAXParseException
         {
-            throw new SAXParseException("Unexpected element \" " + qname + "\"", context.locator);
         }
 
         /**
          * Handles the start of an element. This base implementation just
-         * throws an exception.
+         * throws an exception - you must override this method if you expect
+         * child elements.
          * 
          * @param tag The name of the element being started. 
          *            Will not be <code>null</code>.
@@ -255,14 +254,14 @@ public class ProjectHelperImpl2 extends ProjectHelper {
 
         /**
          * Called when this element and all elements nested into it have been
-         * handled.
+         * handled (i.e. at the </end_tag_of_the_element> ).
          */
         public void onEndElement(String uri, String tag, AntXmlContext context) {
         }
 
         /**
          * Handles text within an element. This base implementation just
-         * throws an exception.
+         * throws an exception, you must override it if you expect content.
          * 
          * @param buf A character array of the text within the element.
          *            Will not be <code>null</code>.
@@ -295,6 +294,9 @@ public class ProjectHelperImpl2 extends ProjectHelper {
          * and setting the project's base directory.
          */
         public File buildFileParent;
+
+        public String currentProjectName;
+
         /** 
          * Locator for the configuration file parser. 
          * Used for giving locations of errors etc.
@@ -313,6 +315,8 @@ public class ProjectHelperImpl2 extends ProjectHelper {
           */
         Target implicitTarget = new Target();
 
+        public Target currentTarget=null;
+        
         public boolean ignoreProjectTag=false;
         public static Hashtable importedFiles = new Hashtable();
         public static int importlevel = 0;
@@ -325,7 +329,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             implicitTarget.setName("");
             this.helper=helper;
         }
-        
+
         /**
          * Scans an attribute list for the <code>id</code> attribute and 
          * stores a reference to the target object in the project if an
@@ -345,7 +349,6 @@ public class ProjectHelperImpl2 extends ProjectHelper {
 
     }
     
-    
     /**
      * Handler for ant processing. Uses a stack of AntHandlers to
      * implement each element ( the original parser used a recursive behavior,
@@ -353,7 +356,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
      */
     public static class RootHandler extends DefaultHandler {
         Stack antHandlers=new Stack();
-        AntHandler currentHandler;
+        AntHandler currentHandler=null;
         AntXmlContext context;
         
         public RootHandler(AntXmlContext context) {
@@ -430,7 +433,6 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         {
             AntHandler next=currentHandler.onStartChild(uri, tag, qname, attrs, context);
             antHandlers.push( currentHandler );
-            //System.out.println("XXX push " + currentHandler );
             currentHandler=next;
             currentHandler.onStartElement( uri, tag, qname, attrs, context );
         }
@@ -460,7 +462,6 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         public void endElement(String uri, String name, String qName) throws SAXException {
             currentHandler.onEndElement(uri, name, context);
             AntHandler prev=(AntHandler)antHandlers.pop();
-            //System.out.println("XXX pop " + currentHandler + " " + prev);
             currentHandler=prev;
         }
 
@@ -472,13 +473,6 @@ public class ProjectHelperImpl2 extends ProjectHelper {
     }
 
     public static class MainHandler extends AntHandler {
-
-        public void onStartElement(String uri, String tag, String qname,
-                                   Attributes attrs,
-                                   AntXmlContext context)
-            throws SAXParseException
-        {
-        }
 
         public AntHandler onStartChild(String uri, String name, String qname,
                                        Attributes attrs,
@@ -519,53 +513,54 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                                    AntXmlContext context)
             throws SAXParseException
         {
-            String def = null;
-            String name = null;
             String id = null;
             String baseDir = null;
 
-            if (! qname.equals("project")) {
-                throw new SAXParseException("Config file is not of expected XML type", context.locator);
-            }
-            
-            if( context.ignoreProjectTag ) {
-                return;
-            }
+            Project project=context.project;
+
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getQName(i);
                 String value = attrs.getValue(i);
                 
                 if (key.equals("default")) {
-                    def = value;
+                    if ( value != null && !value.equals("")) {
+                        if( !context.ignoreProjectTag )
+                            project.setDefaultTarget(value);
+                    }
                 } else if (key.equals("name")) {
-                    name = value;
+                    if (value != null) {
+                        context.currentProjectName=value;
+
+                        if( !context.ignoreProjectTag ) {
+                            project.setName(value);
+                            project.addReference(value, project);
+                        } 
+                    }
                 } else if (key.equals("id")) {
-                    id = value;
+                    if (value != null) {
+                        // What's the difference between id and name ?
+                        if( !context.ignoreProjectTag ) {
+                            project.addReference(value, project);
+                        }
+                    }
                 } else if (key.equals("basedir")) {
-                    baseDir = value;
+                    if( !context.ignoreProjectTag )
+                        baseDir = value;
                 } else {
+                    // XXX ignore attributes in a different NS ( maybe store them ? )
                     throw new SAXParseException("Unexpected attribute \"" + attrs.getQName(i) + "\"", context.locator);
                 }
             }
 
-            Project project=context.project;
-
-            if (def != null && !def.equals("")) {
-                project.setDefaultTarget(def);
+            if( context.ignoreProjectTag ) {
+                // no further processing
+                return;
             }
-            
-            if (name != null) {
-                project.setName(name);
-                project.addReference(name, project);
-            }
-
-            if (id != null) {
-              project.addReference(id, project);
-            }
-
+            // set explicitely before starting ?
             if (project.getProperty("basedir") != null) {
                 project.setBasedir(project.getProperty("basedir"));
             } else {
+                // Default for baseDir is the location of the build file.
                 if (baseDir == null) {
                     project.setBasedir(context.buildFileParent.getAbsolutePath());
                 } else {
@@ -578,7 +573,9 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                     }
                 }
             }
+            
             project.addTarget("", context.implicitTarget);
+            context.currentTarget=context.implicitTarget;
         }
 
         /**
@@ -601,18 +598,11 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                                        AntXmlContext context)
             throws SAXParseException
         {
-//             if (qname.equals("import")) {
-//                 return new ImportHandler();
-//             } else
             if (qname.equals("target")) {
                 return new TargetHandler();
-            } else if (context.project.getDataTypeDefinitions().get(qname) != null) {
-                return new DataTypeHandler(context.implicitTarget);
-            } else if (context.project.getTaskDefinitions().get(qname) != null) {
-                return new TaskHandler(context.implicitTarget,null,context.implicitTarget);
             } else {
-                throw new SAXParseException("Unexpected element \"" + qname + "\" " + name, context.locator);
-            }
+                return new ElementHandler(context.implicitTarget,null,context.implicitTarget);
+            } 
         }
     }
 
@@ -620,7 +610,6 @@ public class ProjectHelperImpl2 extends ProjectHelper {
      * Handler for "target" elements.
      */
     public static class TargetHandler extends AntHandler {
-        private Target target;
 
         /**
          * Initialisation routine called after handler creation
@@ -646,10 +635,10 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         {
             String name = null;
             String depends = "";
-            String ifCond = null;
-            String unlessCond = null;
-            String id = null;
-            String description = null;
+
+            Project project=context.project;
+            Target target = new Target();
+            context.currentTarget=target;
 
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getQName(i);
@@ -662,13 +651,15 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 } else if (key.equals("depends")) {
                     depends = value;
                 } else if (key.equals("if")) {
-                    ifCond = value;
+                    target.setIf(value);
                 } else if (key.equals("unless")) {
-                    unlessCond = value;
+                    target.setUnless(value);
                 } else if (key.equals("id")) {
-                    id = value;
+                    if (value != null && !value.equals("")) {
+                        context.project.addReference(value, target);
+                    }
                 } else if (key.equals("description")) {
-                    description = value;
+                    target.setDescription(value);
                 } else {
                     throw new SAXParseException("Unexpected attribute \"" + key + "\"", context.locator);
                 }
@@ -678,60 +669,36 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 throw new SAXParseException("target element appears without a name attribute",
                                             context.locator);
             }
-            Project project=context.project;
             
-            target = new Target();
-            // No need - it'll be handled explicitly
-            // target.addDependency( "" );
-            target.setName(name);
-            target.setIf(ifCond);
-            target.setUnless(unlessCond);
-            target.setDescription(description);
-
-            // START IMPORT CHANGE XXX Move to Import task
-            int timesRedefined = 0;
-                
             Hashtable currentTargets = project.getTargets();
 
-            //currently tracks only one level of super.
-            if(currentTargets.containsKey(name)){
-                project.log("Defined targets: "+
-                            ProjectHelperImpl2.targetString( currentTargets ) ,Project.MSG_VERBOSE);
-                        
-                timesRedefined++;
-                           
-                project.log("Redefining target named: \""+name+"\"" ,Project.MSG_VERBOSE);
-                
-                //Adding old target as a new target with super.super[timesRedefined].super.name
-                Target oldTarget = (Target) currentTargets.get(name);
-                project.log("Current oldTarget named "+name+" is "+oldTarget.toString() ,Project.MSG_VERBOSE);
-                
-                String superTargetName = "";
-                for(int i=0; i < timesRedefined; i++){
-                    superTargetName += "super."; 
+            // If the name has already beend defined ( import for example )
+            if(currentTargets.containsKey(name)) {
+                // Alter the name.
+                if( context.currentProjectName != null ) {
+                    String newName=context.currentProjectName + "." + name;
+                    project.log("Already defined in main or a previous import, define "
+                                + name + " as " + newName,
+                                Project.MSG_VERBOSE);
+                    name=newName;
+                } else {
+                    project.log("Already defined in main or a previous import, ignore "
+                                + name,
+                                Project.MSG_VERBOSE);
+                    name=null;
                 }
-                superTargetName = superTargetName + name; 
-                oldTarget.setName(superTargetName);
-                
-                project.addTarget(superTargetName, oldTarget);   
             }
-                        
-            // if the target is redefined, it redefines it, otherwise just adds it             
-            project.addOrReplaceTarget(name, target);
 
-            project.log("Targets are now: "+
-                        ProjectHelperImpl2.targetString(currentTargets) ,
+            if( name != null ) {
+                target.setName(name);
+                project.addOrReplaceTarget(name, target);
+            }
+
+
+            project.log("Targets are now: "+ currentTargets ,
                         Project.MSG_VERBOSE);
 
-            // END IMPORT CHANGE
-            // context.project.addTarget(name, target);
-
-            if (id != null && !id.equals("")) {
-                context.project.addReference(id, target);
-            }
-
             // take care of dependencies
-
             if (depends.length() > 0) {
                 target.setDepends(depends);
             }
@@ -753,58 +720,44 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                                        AntXmlContext context)
             throws SAXParseException
         {
-            if (context.project.getDataTypeDefinitions().get(qname) != null) {
-                return new DataTypeHandler(target);
-            } else {
-                return new TaskHandler(target, null, target);
-            }
+            return new ElementHandler(context.currentTarget, null, context.currentTarget);
+        }
+        public void onEndElement(String uri, String tag, AntXmlContext context) {
+            context.currentTarget=context.implicitTarget;
         }
     }
 
-    private static String targetString(Hashtable currentTargets) {
-        Enumeration enum=currentTargets.keys();
-        StringBuffer sb=new StringBuffer();
-        while( enum.hasMoreElements() ) {
-            String tname=(String)enum.nextElement();
-            Target t=(Target)currentTargets.get( tname );
-            sb.append( "|" ).append(tname );
-            Enumeration enum2=t.getDependencies();
-            if( enum2.hasMoreElements() ) sb.append( "=" );
-            while(enum2.hasMoreElements() ) {
-                sb.append(enum2.nextElement());
-                if( enum2.hasMoreElements()) sb.append(",");
-            }
-        }
-        return sb.toString();
-    }
-    
     /**
-     * Handler for all task elements.
+     * Handler for all project elements ( tasks, data types )
      */
-    public static class TaskHandler extends AntHandler {
+    public static class ElementHandler extends AntHandler {
         /** Containing target, if any. */
-        private Target target;
+        protected Target target;
+
         /** 
          * Container for the task, if any. If target is 
          * non-<code>null</code>, this must be too.
          */
-        private TaskContainer container;
+        protected TaskContainer container;
+
         /**
-         * Task created by this handler.
+         * element created by this handler.
          */
-        private Task task;
+        protected Object element;
+
         /**
          * Wrapper for the parent element, if any. The wrapper for this 
          * element will be added to this wrapper as a child.
          */
-        private RuntimeConfigurable2 parentWrapper;
+        protected RuntimeConfigurable2 parentWrapper;
+
         /**
          * Wrapper for this element which takes care of actually configuring
          * the element, if this element is contained within a target. 
          * Otherwise the configuration is performed with the configure method.
          * @see ProjectHelper#configure(Object,Attributes,Project)
          */
-        private RuntimeConfigurable2 wrapper = null;
+        protected RuntimeConfigurable2 wrapper = null;
         
         /**
          * Constructor.
@@ -822,7 +775,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
          * @param target        Target this element is part of.
          *                      Must not be <code>null</code>.
          */
-        public TaskHandler(TaskContainer container, RuntimeConfigurable2 parentWrapper, Target target) {
+        public ElementHandler(TaskContainer container, RuntimeConfigurable2 parentWrapper, Target target) {
             this.container = container;
             this.parentWrapper = parentWrapper;
             this.target = target;
@@ -849,34 +802,52 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                                    AntXmlContext context)
             throws SAXParseException
         {
-            try {
-                task = context.project.createTask(qname);
-            } catch (BuildException e) {
-                // swallow here, will be thrown again in 
-                // UnknownElement.maybeConfigure if the problem persists.
-            }
+            if (context.project.getDataTypeDefinitions().get(qname) != null) {
+                try {
+                    element = context.project.createDataType(qname);
+                    if (element == null) {
+                        throw new BuildException("Unknown data type "+qname);
+                    }
+                
+                    wrapper = new RuntimeConfigurable2(element, qname);
+                    wrapper.setAttributes2(attrs);
+                    target.addDataType(wrapper);
+                } catch (BuildException exc) {
+                    throw new SAXParseException(exc.getMessage(), context.locator, exc);
+                }
+            } else {
+                Task task=null;
+                try {
+                    task = context.project.createTask(qname);
+                } catch (BuildException e) {
+                    // swallow here, will be thrown again in 
+                    // UnknownElement.maybeConfigure if the problem persists.
+                }
 
-            if (task == null) {
-                task = new UnknownElement(qname);
-                task.setProject(context.project);
-                //XXX task.setTaskType(qname);
-                task.setTaskName(qname);
-            }
+                if (task == null) {
+                    task = new UnknownElement(qname);
+                    task.setProject(context.project);
+                    //XXX task.setTaskType(qname);
+                    task.setTaskName(qname);
+                }
+                element=task;
 
-            task.setLocation(new Location(context.locator.getSystemId(),
-                                          context.locator.getLineNumber(),
-                                          context.locator.getColumnNumber()));
-            context.configureId(task, attrs);
-
+                task.setLocation(new Location(context.locator.getSystemId(),
+                                              context.locator.getLineNumber(),
+                                              context.locator.getColumnNumber()));
+                context.configureId(task, attrs);
+                
                 task.setOwningTarget(target);
                 container.addTask(task);
                 task.init();
-                //wrapper = task.getRuntimeConfigurableWrapper();
+
                 wrapper=new RuntimeConfigurable2(task, task.getTaskName());
                 wrapper.setAttributes2(attrs);
+                
                 if (parentWrapper != null) {
                     parentWrapper.addChild(wrapper);
                 }
+            }
         }
 
 
@@ -917,12 +888,12 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                                        AntXmlContext context)
             throws SAXParseException
         {
-            if (task instanceof TaskContainer) {
+            if (element instanceof TaskContainer) {
                 // task can contain other tasks - no other nested elements possible
-                return new TaskHandler((TaskContainer)task, wrapper, target);
+                return new ElementHandler((TaskContainer)element, wrapper, target);
             }
             else {
-                return new NestedElementHandler(task, wrapper, target);
+                return new NestedElementHandler(element, wrapper, target);
             }
         }
     }
@@ -930,25 +901,9 @@ public class ProjectHelperImpl2 extends ProjectHelper {
     /**
      * Handler for all nested properties.
      */
-    public static class NestedElementHandler extends AntHandler {
+    public static class NestedElementHandler extends ElementHandler {
         /** Parent object (task/data type/etc). */
         private Object parent;
-        /** The nested element itself. */
-        private Object child;
-        /**
-         * Wrapper for the parent element, if any. The wrapper for this 
-         * element will be added to this wrapper as a child.
-         */
-        private RuntimeConfigurable2 parentWrapper;
-        /**
-         * Wrapper for this element which takes care of actually configuring
-         * the element, if a parent wrapper is provided.
-         * Otherwise the configuration is performed with the configure method.
-         * @see ProjectHelper#configure(Object,Attributes,Project)
-         */
-        private RuntimeConfigurable2 childWrapper = null;
-        /** Target this element is part of, if any. */
-        private Target target;
 
         /**
          * Constructor.
@@ -969,13 +924,12 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         public NestedElementHandler(Object parent,
                                     RuntimeConfigurable2 parentWrapper,
                                     Target target) {
+            super(null, parentWrapper, target);
             if (parent instanceof TaskAdapter) {
                 this.parent = ((TaskAdapter) parent).getProxy();
             } else {
                 this.parent = parent;
             }
-            this.parentWrapper = parentWrapper;
-            this.target = target;
         }
 
         /**
@@ -999,9 +953,6 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                                    AntXmlContext context)
             throws SAXParseException
         {
-            Class parentClass = parent.getClass();
-            IntrospectionHelper ih = 
-                IntrospectionHelper.getHelper(parentClass);
 
             try {
                 String elementName = qname.toLowerCase(Locale.US);
@@ -1009,168 +960,22 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                     UnknownElement uc = new UnknownElement(elementName);
                     uc.setProject(context.project);
                     ((UnknownElement) parent).addChild(uc);
-                    child = uc;
+                    element = uc;
                 } else {
-                    child = ih.createElement(context.project, parent, elementName);
+                    Class parentClass = parent.getClass();
+                    IntrospectionHelper ih = 
+                        IntrospectionHelper.getHelper(parentClass);
+                    element = ih.createElement(context.project, parent, elementName);
                 }
 
-                context.configureId(child, attrs);
+                context.configureId(element, attrs);
 
-                    childWrapper = new RuntimeConfigurable2(child, qname);
-                    childWrapper.setAttributes2(attrs);
-                    parentWrapper.addChild(childWrapper);
+                wrapper = new RuntimeConfigurable2(element, qname);
+                wrapper.setAttributes2(attrs);
+                parentWrapper.addChild(wrapper);
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), context.locator, exc);
             }
-        }
-
-        /**
-         * Adds text to the element, using the wrapper if one is
-         * available or using addText otherwise.
-         * 
-         * @param buf A character array of the text within the element.
-         *            Will not be <code>null</code>.
-         * @param start The start element in the array.
-         * @param count The number of characters to read from the array.
-         * 
-         * @exception SAXParseException if the element doesn't support text
-         * 
-         * @see ProjectHelper#addText(Project,Object,char[],int,int)
-         */
-        public void characters(char[] buf, int start, int count,
-                               AntXmlContext context)
-            throws SAXParseException
-        {
-                childWrapper.addText(buf, start, count);
-        }
-
-        /**
-         * Handles the start of an element within this one. Task containers
-         * will always use a task handler, and all other elements
-         * will always use another nested element handler.
-         * 
-         * @param tag The name of the element being started. 
-         *            Will not be <code>null</code>.
-         * @param attrs Attributes of the element being started.
-         *              Will not be <code>null</code>.
-         * 
-         * @exception SAXParseException if an error occurs when initialising
-         *                              the appropriate child handler
-         */
-        public AntHandler onStartChild(String uri, String tag, String qname,
-                                       Attributes attrs,
-                                       AntXmlContext context)
-            throws SAXParseException
-        {
-            if (child instanceof TaskContainer) {
-                // taskcontainer nested element can contain other tasks - no other 
-                // nested elements possible
-                return new TaskHandler((TaskContainer)child, childWrapper, target);
-            }
-            else {
-                return new NestedElementHandler(child, childWrapper, target);
-            }
-        }
-    }
-
-    /**
-     * Handler for all data types directly subordinate to project or target.
-     */
-    public static class DataTypeHandler extends AntHandler {
-        /** Parent target, if any. */
-        private Target target;
-        /** The element being configured. */
-        private Object element;
-        /** Wrapper for this element, if it's part of a target. */
-        private RuntimeConfigurable2 wrapper = null;
-        
-        /**
-         * Constructor with a target specified.
-         * 
-         * @param target The parent target of this element.
-         *               May be <code>null</code>.
-         */
-        public DataTypeHandler( Target target) {
-            this.target = target;
-        }
-
-        /**
-         * Initialisation routine called after handler creation
-         * with the element name and attributes. This configures
-         * the element with its attributes and sets it up with
-         * its parent container (if any). Nested elements are then
-         * added later as the parser encounters them.
-         * 
-         * @param tag Name of the element which caused this handler
-         *            to be created. Must not be <code>null</code>.
-         *            
-         * @param attrs Attributes of the element which caused this
-         *              handler to be created. Must not be <code>null</code>.
-         * 
-         * @exception SAXParseException in case of error, such as a 
-         *            BuildException being thrown during configuration.
-         */
-        public void onStartElement(String uri, String propType, String qname,
-                                   Attributes attrs,
-                                   AntXmlContext context)
-            throws SAXParseException
-        {
-            try {
-                element = context.project.createDataType(qname);
-                if (element == null) {
-                    throw new BuildException("Unknown data type "+qname);
-                }
-                
-                    wrapper = new RuntimeConfigurable2(element, qname);
-                    wrapper.setAttributes2(attrs);
-                    target.addDataType(wrapper);
-            } catch (BuildException exc) {
-                throw new SAXParseException(exc.getMessage(), context.locator, exc);
-            }
-        }
-
-        // XXX: (Jon Skeet) Any reason why this doesn't use the wrapper
-        // if one is available, whereas NestedElementHandler.characters does?
-        /**
-         * Adds text to the element.
-         * 
-         * @param buf A character array of the text within the element.
-         *            Will not be <code>null</code>.
-         * @param start The start element in the array.
-         * @param count The number of characters to read from the array.
-         * 
-         * @exception SAXParseException if the element doesn't support text
-         * 
-         * @see ProjectHelper#addText(Project,Object,char[],int,int)
-         */
-        public void characters(char[] buf, int start, int count,
-                               AntXmlContext context)
-            throws SAXParseException
-        {
-            try {
-                ProjectHelper.addText(context.project, element, buf, start, count);
-            } catch (BuildException exc) {
-                throw new SAXParseException(exc.getMessage(), context.locator, exc);
-            }
-        }
-
-        /**
-         * Handles the start of an element within this one.
-         * This will always use a nested element handler.
-         * 
-         * @param tag The name of the element being started. 
-         *            Will not be <code>null</code>.
-         * @param attrs Attributes of the element being started.
-         *              Will not be <code>null</code>.
-         * 
-         * @exception SAXParseException if an error occurs when initialising
-         *                              the child handler
-         */
-        public AntHandler onStartChild(String uri, String tag, String qname,
-                                       Attributes attrs, AntXmlContext context)
-            throws SAXParseException
-        {
-            return new NestedElementHandler(element, wrapper, target);
         }
     }
 }
