@@ -92,7 +92,7 @@ public class Recorder extends Task {
      *  unset state (null).
      */
     private Boolean start = null;
-    /** What level to log?  -1 means not initialized yet. */
+    /** The level to log at. A level of -1 means not initialized yet. */
     private int loglevel = -1;
     /** The list of recorder entries. */
     private static Hashtable recorderEntries = new Hashtable();

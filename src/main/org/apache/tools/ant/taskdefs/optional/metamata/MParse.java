@@ -73,7 +73,7 @@ import java.util.Random;
 
 /**
  * Simple Metamata MParse task based on the original written by
- * <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>
+ * <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>.
  * 
  * This version was written for Metamata 2.0 available at
  * <a href="http://www.metamata.com">http://www.metamata.com</a>

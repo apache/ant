@@ -131,7 +131,7 @@ public class Echo extends Task {
     }
 
     /**
-     * Set the logging level to one of
+     * Set the logging level. Level should be one of
      * <ul>
      *  <li>error</li>
      *  <li>warning</li>

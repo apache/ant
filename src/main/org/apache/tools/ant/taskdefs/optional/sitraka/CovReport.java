@@ -165,7 +165,7 @@ public class CovReport extends Task {
 
 
     /**
-     * Set the coverage home. it must point to JProbe coverage
+     * Set the coverage home. It must point to JProbe coverage
      * directories where are stored native libraries and jars.
      */
     public void setHome(File value) {

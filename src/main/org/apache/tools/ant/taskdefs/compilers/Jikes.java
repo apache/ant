@@ -80,8 +80,6 @@ public class Jikes extends DefaultCompilerAdapter {
      * what they should do.
      *
      * It has been successfully tested with jikes >1.10
-     *
-     * @author skanthak@muehlheim.de
      */
     public boolean execute() throws BuildException {
         attributes.log("Using jikes compiler", Project.MSG_VERBOSE);

@@ -62,7 +62,6 @@ import org.apache.tools.ant.BuildException;
  * A task to sleep for a period of time
  *
  * @author steve_l@iseran.com steve loughran
- * @created 01 May 2001
  */
 
 public class Sleep extends Task {
@@ -186,7 +185,7 @@ public class Sleep extends Task {
 
 
     /**
-     * Executes this build task. throws org.apache.tools.ant.BuildException
+     * Executes this build task. Throws org.apache.tools.ant.BuildException
      * if there is an error during task execution.
      *
      * @exception BuildException Description of Exception

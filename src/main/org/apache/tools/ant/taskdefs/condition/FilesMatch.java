@@ -59,12 +59,11 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * compare two files for bitwise equality based on size and content. timestamps
+ * Compares two files for bitwise equality based on size and content. Timestamps
  * are not looked at at all.
  *
  * @author Steve Loughran
  * @version $Revision$
- * @created 12 January 2002
  * @since Ant 1.5
  */
 

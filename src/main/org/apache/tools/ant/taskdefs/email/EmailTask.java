@@ -76,7 +76,6 @@ import org.apache.tools.ant.types.FileSet;
  * @author ehatcher@apache.org Erik Hatcher
  * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @author roxspring@yahoo.com Rob Oxspring
- * @created 10 Dec 2001
  * @since 1.5
  */
 public class EmailTask

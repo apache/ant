@@ -80,7 +80,7 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * A task that fetches source files from a PVCS archive
+ * A task that fetches source files from a PVCS archive.
  *
  * <b>19-04-2001</b> <p>The task now has a more robust
  * parser. It allows for platform independant file paths

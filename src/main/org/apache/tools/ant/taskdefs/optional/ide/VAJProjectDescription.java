@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * Type class. Holds information about a project edition.
- * @author: Wolf Siberski
+ * @author Wolf Siberski
  */
 public class VAJProjectDescription {
     private String name;

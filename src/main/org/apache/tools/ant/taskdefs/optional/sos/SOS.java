@@ -64,7 +64,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
 /**
- * A base class for creating tasks for executing commands on SourceOffSite
+ * A base class for creating tasks for executing commands on SourceOffSite.
  * <p>
  * The class extends the 'exec' task as it operates by executing the soscmd(.exe) program
  * supplied with SOS. By default the task expects soscmd(.exe) to be in the path,
@@ -169,7 +169,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the path to the item in SOS to operate on
+     * Set the path to the item in SOS to operate on.
      * <p>
      * To avoid the "$$" in th build file we add it here
      *
@@ -181,7 +181,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Set the path to the location of the ss.ini
+     * Set the path to the location of the ss.ini.
      *
      * @param  vssServerPath  The new vssServerPath value
      */
@@ -440,7 +440,7 @@ public abstract class SOS extends Task {
 
 
     /**
-     * Builds and returns the working directory
+     * Builds and returns the working directory.
      * <p>
      * The localpath is created if it didn't exist
      *

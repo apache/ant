@@ -144,7 +144,7 @@ public class StarTeamCheckin extends TreeBasedTask {
      * This attribute tells whether unlocked files on checkin (so that
      * other users may access them) checkout or to leave the checkout status
      * alone (default).
-     * @see setUnlocked()
+     * @see #setUnlocked(boolean)
      */
     private int lockStatus = Item.LockType.UNCHANGED;
 

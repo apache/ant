@@ -92,7 +92,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
     protected String P4Client = "";
     /** Perforce User (eg fbloggs) */
     protected String P4User = "";
-    /** Perforce view for commands (eg //projects/foobar/main/source/... )*/
+    /** Perforce view for commands. (eg //projects/foobar/main/source/... )*/
     protected String P4View = "";
 
     //P4 g-opts and cmd opts (rtfm)

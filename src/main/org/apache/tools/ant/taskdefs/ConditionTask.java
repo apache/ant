@@ -60,7 +60,7 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
 /**
  * &lt;condition&gt; task as a generalization of &lt;available&gt; and
- * &lt;uptodate&gt;
+ * &lt;uptodate&gt;.
  *
  * <p>This task supports boolean logic as well as pluggable conditions
  * to decide, whether a property should be set.</p>

@@ -235,7 +235,7 @@ final class NullLoader implements ClassPathLoader.FileLoader {
 
 /**
  * jar loader specified in looking for classes in jar and zip
- * @todo read the jar manifest in case there is a Class-Path
+ * To-do: read the jar manifest in case there is a Class-Path
  * entry.
  */
 final class JarLoader implements ClassPathLoader.FileLoader {
@@ -270,7 +270,7 @@ final class JarLoader implements ClassPathLoader.FileLoader {
 
 /**
  * directory loader that will look all classes recursively
- * @todo should discard classes which package name does not
+ * To-do: should discard classes which package name does not
  * match the directory ?
  */
 final class DirectoryLoader implements ClassPathLoader.FileLoader {

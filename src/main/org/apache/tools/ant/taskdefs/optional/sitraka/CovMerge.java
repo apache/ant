@@ -89,7 +89,7 @@ public class CovMerge extends Task {
     private boolean verbose;
 
     /**
-     * set the coverage home. it must point to JProbe coverage
+     * set the coverage home. It must point to JProbe coverage
      * directories where are stored native librairies and jars
      */
     public void setHome(File value) {

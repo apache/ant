@@ -394,7 +394,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             else
             {
                 f = StarTeamFinder.findFolder(v.getRootFolder(), getFolderName());
-		assertTrue(null != f,"ERROR: " + getProjectName() + delim + getViewName() + delim +
+        assertTrue(null != f,"ERROR: " + getProjectName() + delim + getViewName() + delim +
                                                  v.getRootFolder() + delim + getFolderName() + delim +
                                                 " does not exist.");
             }
@@ -445,7 +445,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     }
 
     /**
-     * returns a file object that defines the root of the local checkout tree
+     * Returns a file object that defines the root of the local checkout tree.
      * Depending on the value of targetFolderAbsolute, this will be either
      * the targetFolder exactly as set by the user or the path formed by appending
      * the default folder onto the specified target folder.
@@ -453,48 +453,48 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      * @param v      view from which the file is checked out, supplies the "default folder"
      * @param rootSourceFolder   root folder of the checkout operation in Star Team
      * @return an object referencing the local file
-     * @see getTargetFolderAbsolute()
+     * @see #getTargetFolderAbsolute()
      */
     private java.io.File calcTargetFolder(View v, Folder rootSourceFolder)
     {
-	java.io.File root = new java.io.File(getTargetFolder());
+    java.io.File root = new java.io.File(getTargetFolder());
         if (!getTargetFolderAbsolute())
-	{
-	    // Create a variable dir that contains the name of
-	    // the StarTeam folder that is the root folder in this view.
-	    // Get the default path to the current view.
+    {
+        // Create a variable dir that contains the name of
+        // the StarTeam folder that is the root folder in this view.
+        // Get the default path to the current view.
             String defaultPath = v.getDefaultPath();
 
-	    // convert whatever separator char is in starteam to that of the target system.
-	    defaultPath=defaultPath.replace('/', java.io.File.separatorChar);
-	    defaultPath=defaultPath.replace('\\', java.io.File.separatorChar);
+        // convert whatever separator char is in starteam to that of the target system.
+        defaultPath=defaultPath.replace('/', java.io.File.separatorChar);
+        defaultPath=defaultPath.replace('\\', java.io.File.separatorChar);
 
-	    java.io.File dir = new java.io.File(defaultPath);
-	    String dirName = dir.getName();
+        java.io.File dir = new java.io.File(defaultPath);
+        String dirName = dir.getName();
 
             // If it ends with separator then strip it off
-	    if (dirName.endsWith(delim))
-	    {
-		dirName = dirName.substring(0, dirName.length()-1);
-	    }
+        if (dirName.endsWith(delim))
+        {
+        dirName = dirName.substring(0, dirName.length()-1);
+        }
 
-	    // Replace the projectName in the file's absolute path to the viewName.
-	    // This makes the root target of a checkout operation equal to:
-	    // targetFolder + dirName
-	    StringTokenizer pathTokenizer = new StringTokenizer(rootSourceFolder.getFolderHierarchy(), delim);
-	    String currentToken = null;
-	    boolean foundRoot = false;
-	    while (pathTokenizer.hasMoreTokens())
-	    {
-		currentToken = pathTokenizer.nextToken();
-		if (currentToken.equals(getProjectName()) && !foundRoot)
-		{
-		    currentToken = dirName;
-		    foundRoot = true;    // only want to do this the first time
-		}
-		root = new java.io.File(root, currentToken);
-	    }
-	}
+        // Replace the projectName in the file's absolute path to the viewName.
+        // This makes the root target of a checkout operation equal to:
+        // targetFolder + dirName
+        StringTokenizer pathTokenizer = new StringTokenizer(rootSourceFolder.getFolderHierarchy(), delim);
+        String currentToken = null;
+        boolean foundRoot = false;
+        while (pathTokenizer.hasMoreTokens())
+        {
+        currentToken = pathTokenizer.nextToken();
+        if (currentToken.equals(getProjectName()) && !foundRoot)
+        {
+            currentToken = dirName;
+            foundRoot = true;    // only want to do this the first time
+        }
+        root = new java.io.File(root, currentToken);
+        }
+    }
 
         return root;
     }
@@ -631,7 +631,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         com.starbase.starteam.File remote = (com.starbase.starteam.File)item;
 
         // The local file name is simply the local target path (tgt) which has
-	// been passed recursively down from the top of the tree, with the item's name appended.
+    // been passed recursively down from the top of the tree, with the item's name appended.
         java.io.File local = new java.io.File(tgt,(String)item.get(p1.getName()));
 
         try

@@ -154,7 +154,7 @@ public class Parallel extends Task
         private int taskNumber;
 
         /**
-         * Construct a new TaskThread<p>
+         * Construct a new TaskThread.<p>
          *
          * @param task the Task to be executed in a seperate thread
          */

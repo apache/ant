@@ -70,8 +70,6 @@ public class Gcj extends DefaultCompilerAdapter {
 
     /**
      * Performs a compile using the gcj compiler.
-     *  
-     * @author tora@debian.org
      */
     public boolean execute() throws BuildException {
         Commandline cmd;

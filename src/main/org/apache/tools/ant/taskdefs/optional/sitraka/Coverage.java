@@ -134,7 +134,7 @@ public class Coverage extends Task {
         home = value;
     }
 
-    /** seed name for snapshot file. can be null, default to snap */
+    /** seed name for snapshot file. Can be null, default to snap */
     public void setSeedname(String value) {
         seedName = value;
     }
@@ -192,7 +192,7 @@ public class Coverage extends Task {
         }
     }
 
-    /** none, coverage, all. can be null, default to none */
+    /** none, coverage, all. Can be null, default to none */
     public void setFinalsnapshot(String value) {
         finalSnapshot = value;
     }

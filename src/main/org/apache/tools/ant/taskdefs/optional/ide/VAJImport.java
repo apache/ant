@@ -114,7 +114,7 @@ import java.lang.reflect.Field;
  * </tr>
  * </table>
  *
- * @author: Glenn McAllister, inspired by a similar task written by Peter Kelley
+ * @author Glenn McAllister, inspired by a similar task written by Peter Kelley
  */
 public class VAJImport extends VAJTask {
     protected Vector filesets = new Vector();

@@ -108,7 +108,7 @@ import org.apache.tools.ant.util.DateUtils;
  * but in fact I did a lot of <i>code-beautification</i> ;-).
  * <p>
  * @version 1.0 h
- * @author: Christoph Wilhelms, TUI Infotec GmbH
+ * @author Christoph Wilhelms, TUI Infotec GmbH
  */
 public class VAJAntToolGUI extends Frame {
     /**

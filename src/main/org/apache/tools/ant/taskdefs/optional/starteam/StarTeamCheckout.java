@@ -135,8 +135,8 @@ public class StarTeamCheckout extends TreeBasedTask {
      * checkout locks all other users out from making changes.  An unlocked
      * checkout reverts all local files to their previous repository status
      * and removes the lock.
-     * @see setLocked()
-     * @see setUnlocked()
+     * @see #setLocked(boolean)
+     * @see #setUnlocked(boolean)
      */
     private int lockStatus = Item.LockType.UNCHANGED;
 

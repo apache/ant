@@ -338,8 +338,8 @@ class VAJBuildInfo implements Runnable {
     }
 
     /**
-     * Returns true, if the Ant project is initialized
-     * (i.e. buildfile loaded)
+     * Returns true, if the Ant project is initialized.
+     * (i.e., if the buildfile loaded).
      */
     public boolean isProjectInitialized() {
         return projectInitialized;

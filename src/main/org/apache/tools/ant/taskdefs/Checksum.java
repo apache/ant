@@ -102,7 +102,8 @@ public class Checksum extends MatchingTask implements Condition {
      */
     private String property;
     /**
-     * Create new destination file?  Defaults to false.
+     * Whether or not to create a new file.
+     * Defaults to <code>false</code>.
      */
     private boolean forceOverwrite;
     /**
@@ -173,8 +174,9 @@ public class Checksum extends MatchingTask implements Condition {
     }
 
     /**
-     * Overwrite existing file irrespective of whether it is newer than
-     * the source file?  Defaults to false.
+     * Whether or not to overwrite existing file irrespective of 
+     * whether it is newer than
+     * the source file.  Defaults to false.
      */
     public void setForceOverwrite(boolean forceOverwrite) {
         this.forceOverwrite = forceOverwrite;
