@@ -104,7 +104,7 @@ public class AntStructure extends Task {
         if (output == null) {
             throw new BuildException("output attribute is required", location);
         }
-        
+
         PrintWriter out = null;
         try {
             try {
@@ -118,8 +118,8 @@ public class AntStructure extends Task {
                  */
                 out = new PrintWriter(new FileWriter(output));
             }
-            
-            printHead(out, project.getTaskDefinitions().keys(), 
+
+            printHead(out, project.getTaskDefinitions().keys(),
                       project.getDataTypeDefinitions().keys());
 
             printTargetDecl(out);
@@ -127,14 +127,14 @@ public class AntStructure extends Task {
             Enumeration dataTypes = project.getDataTypeDefinitions().keys();
             while (dataTypes.hasMoreElements()) {
                 String typeName = (String) dataTypes.nextElement();
-                printElementDecl(out, typeName, 
+                printElementDecl(out, typeName,
                                  (Class) project.getDataTypeDefinitions().get(typeName));
             }
-            
+
             Enumeration tasks = project.getTaskDefinitions().keys();
             while (tasks.hasMoreElements()) {
                 String taskName = (String) tasks.nextElement();
-                printElementDecl(out, taskName, 
+                printElementDecl(out, taskName,
                                  (Class) project.getTaskDefinitions().get(taskName));
             }
 
@@ -150,7 +150,7 @@ public class AntStructure extends Task {
         }
     }
 
-    private void printHead(PrintWriter out, Enumeration tasks, 
+    private void printHead(PrintWriter out, Enumeration tasks,
                            Enumeration types) {
         out.println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         out.println("<!ENTITY % boolean \"(true|false|on|off|yes|no)\">");
@@ -180,12 +180,12 @@ public class AntStructure extends Task {
         out.println("\">");
 
         out.println("");
-        
+
         out.print("<!ELEMENT project (target | property | taskdef | ");
         out.print(TYPES);
         out.println(")*>");
         out.println("<!ATTLIST project");
-        out.println("          name    CDATA #REQUIRED");
+        out.println("          name    CDATA #IMPLIED");
         out.println("          default CDATA #REQUIRED");
         out.println("          basedir CDATA #IMPLIED>");
         out.println("");
@@ -209,7 +209,7 @@ public class AntStructure extends Task {
         out.println("");
     }
 
-    private void printElementDecl(PrintWriter out, String name, Class element) 
+    private void printElementDecl(PrintWriter out, String name, Class element)
         throws BuildException {
 
         if (visited.containsKey(name)) {
@@ -278,24 +278,24 @@ public class AntStructure extends Task {
         sb.setLength(0);
         sb.append("<!ATTLIST ").append(name);
         sb.append(lSep).append("          id ID #IMPLIED");
-        
+
         enum = ih.getAttributes();
         while (enum.hasMoreElements()) {
             String attrName = (String) enum.nextElement();
             if ("id".equals(attrName)) {
               continue;
             }
-            
+
             sb.append(lSep).append("          ").append(attrName).append(" ");
             Class type = ih.getAttributeType(attrName);
-            if (type.equals(java.lang.Boolean.class) || 
+            if (type.equals(java.lang.Boolean.class) ||
                 type.equals(java.lang.Boolean.TYPE)) {
                 sb.append(BOOLEAN).append(" ");
-            } else if (org.apache.tools.ant.types.Reference.class.isAssignableFrom(type)) { 
+            } else if (org.apache.tools.ant.types.Reference.class.isAssignableFrom(type)) {
                 sb.append("IDREF ");
             } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(type)) {
                 try {
-                    EnumeratedAttribute ea = 
+                    EnumeratedAttribute ea =
                         (EnumeratedAttribute)type.newInstance();
                     String[] values = ea.getValues();
                     if (values == null
@@ -336,7 +336,7 @@ public class AntStructure extends Task {
             }
         }
     }
-    
+
     private void printTail(PrintWriter out) {}
 
     /**
