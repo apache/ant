@@ -39,6 +39,14 @@ Fixed bugs:
 
 * Changed <sql> task so that printing result sets works on Oracle
 
+* Changes to ddcreator and ejbc helper to respect the descriptor hierarchy
+  keppgenerated in ejbc can now be turned off
+  
+* ejbjar now correctly ignores <ejb-ref> elements in the deployment descriptor.
+  CMP files are included by parsing the weblogic deployment descriptor rather than
+  relying on the naming convention used in ant 1.2
+  Include super classes and super interfaces into the generated ejb jar files
+
 Changes from Ant 1.1 to Ant 1.2
 ===============================
 
