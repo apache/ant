@@ -106,6 +106,8 @@ Options:
     -s  &lt;file&gt;           the filesystem and use it
   -nice  number          A niceness value for the main thread:
                          1 (lowest) to 10 (highest); 5 is the default
+  -nouserlib             Run ant without using the jar files from ${user.home}/.ant/lib
+  -noclasspath           Run ant without using CLASSPATH                         
 </pre>
 <p>For more information about <code>-logger</code> and
 <code>-listener</code> see
@@ -122,26 +124,29 @@ default directories scanned are ANT_HOME/lib and a user specific directory,
 ${user.home}/.ant/lib. This arrangement allows the Ant installation to be
 shared by many users while still allowing each user to deploy additional jars.
 Such additional jars could be support jars for Ant's optional tasks or jars
-containing third-party tasks to be used in the build. It also allows the main Ant
-installation to be locked down which will please system adminstrators.
+containing third-party tasks to be used in the build. It also allows the main Ant installation to be locked down which will please system adminstrators.
 </p>
 
 <p>
 Additional directories to be searched may be added by using the -lib option.
 The -lib option specifies a search path. Any jars or classes in the directories
 of the path will be added to Ant's classloader. The order in which jars are
-added to the classpath is as follows
+added to the classpath is as follows:-
 </p>
 
 <ul>
   <li>-lib jars in the order specified by the -lib elements on the command line</li>
-  <li>jars from ${user.home}/.ant/lib</li>
+  <li>jars from ${user.home}/.ant/lib (unless -nouserlib is set)</li>
   <li>jars from ANT_HOME/lib</li>
 </ul>
 
 <p>
 Note that the CLASSPATH environment variable is passed to Ant using a -lib
-option. Ant itself is started with a very minimalistic classpath.
+option. Ant itself is started with a very minimalistic classpath. 
+Ant should work perfectly well with an empty CLASSPATH environment variable,
+something the the -noclasspath option actually enforces. We get many more support calls related to classpath problems (especially quoting problems), than
+we like.
+
 </p>
 
 <p>
@@ -213,14 +218,14 @@ set):</p>
 </ul>
 
 <h3><a name="sysprops">Java System Properties</a></h3>
-<p>Some of Ants core classes ant tasks can be configured via system properties.</p>
-<p>So here the result of a search through the codebase. Because system properties are
+<p>Some of Ant's core classes ant tasks can be configured via system properties.</p>
+<p>Here is the result of a search through the codebase. Because system properties are
 available via Project instance, I searched for them with a
 <pre>
     grep -r -n "getPropert" * &gt; ..\grep.txt
 </pre>
 command. After that I filtered out the often-used but not-so-important values (most of them
-read-only values): <i>path.separator, ant.home, basedir, user.dir, os.name, ant.file,
+read-only values): <i>path.separator, ant.home, basedir, user.dir, os.name, 
 line.separator, java.home, java.version, java.version, user.home, java.class.path</i><br>
 And I filtered out the <i>getPropertyHelper</i> access.</p>
 <table border="1">
@@ -231,11 +236,31 @@ And I filtered out the <i>getPropertyHelper</i> access.</p>
 </tr>
 <tr>
   <td><code>ant.executor.class</code></td>
-  <td>classname; default is org.apache.tools.ant.helper.DefaultExecutor</td>
+  <td>classname; default is org. apache. tools. ant. helper. DefaultExecutor</td>
   <td><b>Since Ant 1.6.3</b> Ant will delegate Target invocation to the
 org.apache.tools.ant.Executor implementation specified here.
   </td>
 </tr>
+
+<tr>
+  <td><code>ant.file</code></td>
+  <td>read only: full filename of the build file</td>
+  <td>This is set to the name of the build file. In
+  <a href="CoreTasks/import.html">
+  &lt;import&gt;-ed</a> files, this is set to the containing build file.
+  </td>
+</tr>
+
+<tr>
+  <td><code>ant.file.*</code></td>
+  <td>read only: full filename of the build file of Ant projects
+  </td>
+  <td>This is set to the name of a file by project;  
+  this lets you determine the location of <a href="CoreTasks/import.html">
+  &lt;import&gt;-ed</a> files,  
+  </td>
+</tr>
+
 <tr>
   <td><code>ant.input.properties</code></td>
   <td>filename (required)</td>
@@ -269,7 +294,7 @@ org.apache.tools.ant.Executor implementation specified here.
   <td><code>ant.regexp.regexpimpl</code></td>
   <td>classname</td>
   <td>classname for a RegExp implementation; if not set Ant tries to
-      find another (Jdk14, Oro...);
+      find another (JDK14+, Apache Oro...);
       <a href="CoreTypes/mapper.html#regexp-mapper">RegExp-Mapper</a>
       "Choice of regular expression implementation"
   </td>
@@ -373,7 +398,7 @@ org.apache.tools.ant.Executor implementation specified here.
 <tr>
   <td><code>org.apache.tools.ant.ProjectHelper</code></td>
   <!-- add the blank after the slash, so the browser can do a line break -->
-  <td>classname (optional, default 'org. apache. tools. ant. ProjectHelper')</td>
+  <td>classname (optional, default 'org.apache.tools.ant.ProjectHelper')</td>
   <td>specifies the classname to use as ProjectHelper. The class must extend
       org.apache.tools.ant.ProjectHelper.
   </td>
@@ -400,6 +425,15 @@ org.apache.tools.ant.Executor implementation specified here.
 </tr>
 </table>
 
+<p>
+If new properties get added (it happens), expect them to appear under the
+"ant." and "org.apache.tools.ant" prefixes, unless the developers have a 
+very good reason to use another prefix. Accordingly, please avoid using 
+properties that begin with these prefixes, to reduce the risk that future
+Ant releases break your build file.
+</p>
+
+
 <h2><a name="cygwin">Cygwin Users</a></h2>
 <p>The Unix launch script that come with Ant works correctly with Cygwin. You
 should not have any problems launching Ant form the Cygwin shell. It is important
@@ -413,7 +447,7 @@ path.
 </p>
 
 <h2><a name="os2">OS/2 Users</a></h2>
-<p>The OS/2 lanuch script was developed so as it can perform complex task. It has two parts:
+<p>The OS/2 launch script was developed so as it can perform complex tasks. It has two parts:
 <code>ant.cmd</code> which calls Ant and <code>antenv.cmd</code> which sets environment for Ant.
 Most often you will just call <code>ant.cmd</code> using the same command line options as described
 above. The behaviour can be modified by a number of ways explained below.</p>
@@ -476,7 +510,7 @@ classpath possible, generally just the ant-launcher.jar.
 
 <br>
 <hr>
-<p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
