@@ -67,7 +67,6 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.xml.sax.EntityResolver;
-import javax.xml.transform.URIResolver;
 
 /**
  * A Task to process via XSLT a set of XML documents. This is
@@ -662,6 +661,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 Param p = (Param) e.nextElement();
                 liaison.addParam(p.getName(), p.getExpression());
             }
+        } catch (Exception ex) {
+            log("Failed to read stylesheet " + stylesheet, Project.MSG_INFO);
+            throw new BuildException(ex);
+        }
+
+        try {
             // if liaison is a TraxLiason, use XMLCatalog as the entity
             // resolver and URI resolver
             if (liaison.getClass().getName().equals(TRAX_LIAISON_CLASS) &&
@@ -675,12 +680,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
                 resolver = liaison.getClass()
                     .getDeclaredMethod("setURIResolver", 
-                                       new Class[] {URIResolver.class});
+                                       new Class[] {loadClass("javax.xml.transform.URIResolver")});
                 resolver.invoke(liaison, new Object[] {xmlCatalog});
             }
-        } catch (Exception ex) {
-            log("Failed to read stylesheet " + stylesheet, Project.MSG_INFO);
-            throw new BuildException(ex);
+        } catch (Exception e) {
+            throw new BuildException("Failed to configure XMLCatalog for "
+                                     + "TraxLiaison", e);
         }
     }
     

@@ -1275,7 +1275,7 @@
           <!-- these tests need to be localised before being ran???? -->
           <exclude name="${optional.package}/PvcsTest.java" />
 
-          <!-- ehm, these are not really a TraX test but rather a xalan2 test..-->
+          <!-- ehm, these are not really TraX tests but rather xalan2 tests..-->
           <exclude name="${optional.package}/TraXLiaisonTest.java"
                    unless="xalan2.present"/>
           <exclude name="${optional.package}/XsltTest.java"
