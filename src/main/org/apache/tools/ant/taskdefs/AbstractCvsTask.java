@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,8 +69,8 @@ import org.apache.tools.ant.types.Environment;
 /**
  * original Cvs.java 1.20
  *
- *  NOTE: This implementation has been moved here from Cvs.java with the addition of 
- *          some accessors for extensibility.  Another task can extend this with 
+ *  NOTE: This implementation has been moved here from Cvs.java with the addition of
+ *          some accessors for extensibility.  Another task can extend this with
  *          some customized output processing.
  *
  * @author costin@dnt.ro
@@ -79,107 +79,107 @@ import org.apache.tools.ant.types.Environment;
  * @author Kevin Ross <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
  */
 public abstract class AbstractCvsTask extends Task {
-    
+
     private Commandline cmd = new Commandline();
-    
+
     /**
      * the CVSROOT variable.
      */
     private String cvsRoot;
-    
+
     /**
      * the CVS_RSH variable.
      */
     private String cvsRsh;
-    
+
     /**
      * the package/module to check out.
      */
     private String cvsPackage;
-    
+
     /**
      * the CVS command to execute.
      */
     private String command = "checkout";
-    
+
     /**
      * suppress information messages.
      */
     private boolean quiet = false;
-    
+
     /**
      * report only, don't change any files.
      */
     private boolean noexec = false;
-    
+
     /**
      * CVS port
      */
     private int port = 0;
-    
+
     /**
      * CVS password file
      */
     private File passFile = null;
-    
+
     /**
      * the directory where the checked out files should be placed.
      */
     private File dest;
-    
+
     /** whether or not to append stdout/stderr to existing files */
     private boolean append = false;
-    
+
     /**
      * the file to direct standard output from the command.
      */
     private File output;
-    
+
     /**
      * the file to direct standard error from the command.
      */
     private File error;
-    
+
     /**
      * If true it will stop the build if cvs exits with error.
      * Default is false. (Iulian)
      */
     private boolean failOnError = false;
-    
-    
+
+
     /**
-     * Create accessors for the following, to allow different handling of 
+     * Create accessors for the following, to allow different handling of
      *  the output.
      */
     private ExecuteStreamHandler executeStreamHandler;
     private OutputStream outputStream;
     private OutputStream errorStream;
-    
+
     public void setExecuteStreamHandler(ExecuteStreamHandler executeStreamHandler){
-        
+
         this.executeStreamHandler = executeStreamHandler;
     }
-    
+
     protected ExecuteStreamHandler getExecuteStreamHandler(){
-        
+
         if(this.executeStreamHandler == null){
 
             setExecuteStreamHandler(new PumpStreamHandler(getOutputStream(), getErrorStream()));
         }
-        
+
         return this.executeStreamHandler;
     }
-    
-    
+
+
     protected void setOutputStream(OutputStream outputStream){
-        
+
         this.outputStream = outputStream;
     }
-    
+
     protected OutputStream getOutputStream(){
-        
+
         if(this.outputStream == null){
-            
+
             if (output != null) {
                 try {
                     setOutputStream(new PrintStream(new BufferedOutputStream(new FileOutputStream(output.getPath(), append))));
@@ -192,21 +192,21 @@ public abstract class AbstractCvsTask extends Task {
                 setOutputStream(new LogOutputStream(this, Project.MSG_INFO));
             }
         }
-        
+
         return this.outputStream;
     }
-    
+
     protected void setErrorStream(OutputStream errorStream){
-        
+
         this.errorStream = errorStream;
     }
-    
+
     protected OutputStream getErrorStream(){
-        
+
         if(this.errorStream == null){
-            
+
             if (error != null) {
-                
+
                 try {
                     setErrorStream(new PrintStream(new BufferedOutputStream(new FileOutputStream(error.getPath(), append))));
                 }
@@ -218,20 +218,20 @@ public abstract class AbstractCvsTask extends Task {
                 setErrorStream(new LogOutputStream(this, Project.MSG_WARN));
             }
         }
-        
+
         return this.errorStream;
     }
-    
+
     public void execute() throws BuildException {
-        
+
         // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
         // execution so that we don't rely on having native CVS stuff around (SM)
-        
+
         // We can't do it ourselves as jCVS is GPLed, a third party task
         // outside of jakarta repositories would be possible though (SB).
-        
+
         Commandline toExecute = new Commandline();
-        
+
         toExecute.setExecutable("cvs");
         if (cvsRoot != null) {
             toExecute.createArgument().setValue("-d");
@@ -243,40 +243,40 @@ public abstract class AbstractCvsTask extends Task {
         if (quiet) {
             toExecute.createArgument().setValue("-q");
         }
-        
+
         toExecute.createArgument().setLine(command);
-        
+
         //
         // get the other arguments.
         //
         toExecute.addArguments(cmd.getCommandline());
-        
+
         if (cvsPackage != null) {
             toExecute.createArgument().setLine(cvsPackage);
         }
-        
+
         Environment env = new Environment();
-        
+
         if(port>0){
             Environment.Variable var = new Environment.Variable();
             var.setKey("CVS_CLIENT_PORT");
             var.setValue(String.valueOf(port));
             env.addVariable(var);
         }
-        
+
         /**
          * Need a better cross platform integration with <cvspass>, so use the same filename.
          */
         /* But currently we cannot because 'cvs log' is not working with a pass file.
         if(passFile == null){
-         
+
             File defaultPassFile = new File(System.getProperty("user.home") + File.separatorChar + ".cvspass");
-            
+
             if(defaultPassFile.exists())
                 this.setPassfile(defaultPassFile);
         }
          */
-        
+
         if(passFile!=null){
             Environment.Variable var = new Environment.Variable();
             var.setKey("CVS_PASSFILE");
@@ -284,21 +284,21 @@ public abstract class AbstractCvsTask extends Task {
             env.addVariable(var);
             log("Using cvs passfile: " + String.valueOf(passFile), Project.MSG_INFO);
         }
-        
+
         if(cvsRsh!=null){
             Environment.Variable var = new Environment.Variable();
             var.setKey("CVS_RSH");
             var.setValue(String.valueOf(cvsRsh));
             env.addVariable(var);
         }
-        
-        
+
+
         //
         // Just call the getExecuteStreamHandler() and let it handle
         //     the semantics of instantiation or retrieval.
         //
         Execute exe = new Execute(getExecuteStreamHandler(), null);
-        
+
         exe.setAntRun(project);
         if (dest == null) {
             dest = project.getBaseDir();
@@ -310,16 +310,16 @@ public abstract class AbstractCvsTask extends Task {
 
         try {
             log("Executing: " + executeToString(exe), Project.MSG_DEBUG);
-            
+
             int retCode = exe.execute();
             /*Throw an exception if cvs exited with error. (Iulian)*/
             if(failOnError && retCode != 0) {
                 throw new BuildException("cvs exited with error code "+ retCode);
             }
-        } 
+        }
         catch (IOException e) {
             throw new BuildException(e, location);
-        } 
+        }
         finally {
             //
             // condition used to be if(output == null) outputStream.close().  This is
@@ -330,7 +330,7 @@ public abstract class AbstractCvsTask extends Task {
                     outputStream.close();
                 } catch (IOException e) {}
             }
-            
+
             if (errorStream != null) {
                 try {
                     errorStream.close();
@@ -338,13 +338,13 @@ public abstract class AbstractCvsTask extends Task {
             }
         }
     }
-    
+
     private String executeToString(Execute execute){
-     
+
         StringBuffer stringBuffer = new StringBuffer(250);
         String[] commandLine = execute.getCommandline();
         for(int i=0; i<commandLine.length; i++){
-         
+
             stringBuffer.append(commandLine[i]);
             stringBuffer.append(" ");
         }
@@ -353,8 +353,8 @@ public abstract class AbstractCvsTask extends Task {
         stringBuffer.append(newLine);
         stringBuffer.append("environment:");
         stringBuffer.append(newLine);
-  
-        
+
+
         String[] variableArray = execute.getEnvironment();
 
         if(variableArray != null){
@@ -368,24 +368,24 @@ public abstract class AbstractCvsTask extends Task {
 
         return stringBuffer.toString();
     }
-    
+
     public void setCvsRoot(String root) {
-        
+
         // Check if not real cvsroot => set it to null
         if (root != null) {
             if (root.trim().equals("")) {
                 root = null;
             }
         }
-        
+
         this.cvsRoot = root;
     }
-    
+
     public String getCvsRoot(){
-     
+
         return this.cvsRoot;
     }
-    
+
     public void setCvsRsh(String rsh) {
         // Check if not real cvsrsh => set it to null
         if (rsh != null) {
@@ -393,51 +393,51 @@ public abstract class AbstractCvsTask extends Task {
                 rsh = null;
             }
         }
-        
+
         this.cvsRsh = rsh;
     }
-    
+
     public String getCvsRsh(){
-     
+
         return this.cvsRsh;
     }
-    
+
     public void setPort(int port){
         this.port = port;
     }
-    
+
     public int getPort(){
-     
+
         return this.port;
     }
-    
+
     public void setPassfile(File passFile){
         this.passFile = passFile;
     }
-    
+
     public File getPassFile(){
-     
+
         return this.passFile;
     }
-    
+
     public void setDest(File dest) {
         this.dest = dest;
     }
-    
+
     public File getDest(){
-     
+
         return this.dest;
     }
-    
+
     public void setPackage(String p) {
         this.cvsPackage = p;
     }
-    
+
     public String getPackage(){
-    
+
         return this.cvsPackage;
     }
-    
+
     public void setTag(String p) {
         // Check if not real tag => set it to null
         if (p != null && p.trim().length() > 0) {
@@ -445,47 +445,47 @@ public abstract class AbstractCvsTask extends Task {
             addCommandArgument(p);
         }
     }
-    
+
     /**
-     * This needs to be public to allow configuration 
+     * This needs to be public to allow configuration
      *      of commands externally.
      */
     public void addCommandArgument(String arg){
-     
+
         this.cmd.createArgument().setValue(arg);
     }
-    
+
     public void setDate(String p) {
         if(p != null && p.trim().length() > 0) {
             addCommandArgument("-D");
             addCommandArgument(p);
         }
     }
-    
+
     public void setCommand(String c) {
         this.command = c;
     }
-    
+
     public void setQuiet(boolean q) {
         quiet = q;
     }
-    
+
     public void setNoexec(boolean ne) {
         noexec = ne;
     }
-    
+
     public void setOutput(File output) {
         this.output = output;
     }
-    
+
     public void setError(File error) {
         this.error = error;
     }
-    
+
     public void setAppend(boolean value){
         this.append = value;
     }
-    
+
     public void setFailOnError(boolean failOnError) {
         this.failOnError = failOnError;
     }
