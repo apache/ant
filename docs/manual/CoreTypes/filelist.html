@@ -11,12 +11,14 @@
 
 <p>FileLists are explicitly named lists of files.  Whereas FileSets
 act as filters, returning only those files that exist in the file
-system and match specified patterns, filelists are useful for
-specifying filenames that may or may not exist.  Multiple files are
-specified via a comma-separated list, with no support for wildcards.
+system and match specified patterns, FileLists are useful for
+specifying files that may or may not exist.  Multiple files are
+specified as a list of files, relative to the specified directory,
+with no support for wildcard expansion (filenames with wildcards will be
+included in the list unchanged).
 FileLists can appear inside tasks that support this feature or at the
-same level as <code>target</code> - i.e., as children of
-<code>project</code>.
+same level as <code>&lt;target&gt;</code> (i.e., as children of
+<code>&lt;project&gt;</code>).
 </p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -26,12 +28,12 @@ same level as <code>target</code> - i.e., as children of
   </tr>
   <tr>
     <td valign="top">dir</td>
-    <td valign="top">the base directory of this FileList.</td>
+    <td valign="top">The base directory of this FileList.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">files</td>
-    <td valign="top">Comma-separated list of file names.</td>
+    <td valign="top">The list of file names.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
 </table>
@@ -48,6 +50,16 @@ same level as <code>target</code> - i.e., as children of
 <code>${doc.src}/bar.xml</code>.  Note that these files may not (yet)
 actually exist.
 </p>
+
+<blockquote><pre>
+&lt;filelist 
+    id=&quot;docfiles&quot; 
+    dir=&quot;${doc.src}&quot;
+    files=&quot;foo.xml
+           bar.xml&quot;/&gt; 
+</pre></blockquote>
+
+<p>Same files as the example above.</p>
 
 <blockquote><pre>
 &lt;filelist refid=&quot;docfiles&quot;/&gt; 
