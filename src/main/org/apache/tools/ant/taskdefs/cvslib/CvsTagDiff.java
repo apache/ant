@@ -70,11 +70,6 @@ import org.w3c.dom.Element;
  */
 public class CvsTagDiff extends AbstractCvsTask {
 
-    /**
-     * Used to create the temp file for cvs log
-     */
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-
     /** stateless helper for writing the XML document */
     private static final DOMElementWriter DOM_WRITER = new DOMElementWriter();
 
