@@ -64,7 +64,7 @@ import java.io.IOException;
 /**
  * Executes a given command, supplying a set of files as arguments. 
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a> 
  */
 public class ExecuteOn extends ExecTask {
@@ -72,6 +72,7 @@ public class ExecuteOn extends ExecTask {
     protected Vector filesets = new Vector();
     private boolean parallel = false;
     protected String type = "file";
+    protected Commandline.Marker srcFilePos = null;
 
     /**
      * Adds a set of files (nested fileset attribute).
@@ -92,6 +93,19 @@ public class ExecuteOn extends ExecTask {
      */
     public void setType(FileDirBoth type) {
         this.type = type.getValue();
+    }
+
+    /**
+     * Marker that indicates where the name of the source file should
+     * be put on the command line.
+     */
+    public Commandline.Marker createSrcfile() {
+        if (srcFilePos != null) {
+            throw new BuildException(taskType + " doesn\'t support multiple srcfile elements.",
+                                     location);
+        }
+        srcFilePos = cmdl.createMarker();
+        return srcFilePos;
     }
 
     protected void checkConfiguration() {
@@ -128,11 +142,11 @@ public class ExecuteOn extends ExecTask {
             v.copyInto(s);
 
             int err = -1;
-            String myos = System.getProperty("os.name");
 
             if (parallel) {
-                cmdl.addArguments(s);
-                exe.setCommandline(cmdl.getCommandline());
+                String[] command = getCommandline(s);
+                log("Executing " + Commandline.toString(command), Project.MSG_VERBOSE);
+                exe.setCommandline(command);
                 err = exe.execute();
                 if (err != 0) {
                     if (failOnError) {
@@ -144,11 +158,10 @@ public class ExecuteOn extends ExecTask {
                 }
 
             } else {
-                String[] cmd = new String[cmdl.size()+1];
-                System.arraycopy(cmdl.getCommandline(), 0, cmd, 0, cmdl.size());
                 for (int i=0; i<s.length; i++) {
-                    cmd[cmdl.size()] = s[i];
-                    exe.setCommandline(cmd);
+                    String[] command = getCommandline(s[i]);
+                    log("Executing " + Commandline.toString(command), Project.MSG_VERBOSE);
+                    exe.setCommandline(command);
                     err = exe.execute();
                     if (err != 0) {
                         if (failOnError) {
@@ -167,6 +180,35 @@ public class ExecuteOn extends ExecTask {
             // close the output file if required
             logFlush();
         }
+    }
+
+    /**
+     * Construct the command line for parallel execution.
+     *
+     * @param srcFiles The filenames to add to the commandline
+     */
+    protected String[] getCommandline(String[] srcFiles) {
+        String[] orig = cmdl.getCommandline();
+        String[] result = new String[orig.length+srcFiles.length];
+
+        int index = orig.length;
+        if (srcFilePos != null) {
+            index = srcFilePos.getPosition();
+        }
+        System.arraycopy(orig, 0, result, 0, index);
+        System.arraycopy(srcFiles, 0, result, index, srcFiles.length);
+        System.arraycopy(orig, index, result, index+srcFiles.length, 
+                         orig.length-index);
+        return result;
+    }
+
+    /**
+     * Construct the command line for serial execution.
+     *
+     * @param srcFile The filename to add to the commandline
+     */
+    protected String[] getCommandline(String srcFile) {
+        return getCommandline(new String[] {srcFile});
     }
 
     /**
