@@ -1053,8 +1053,8 @@ public class CSharp
      */ 
     protected void validate() 
             throws BuildException {
-        if(outputFile==null) {
-            throw new BuildException("destination file must be specified");
+        if(outputFile!=null && outputFile.isDirectory()) {
+            throw new BuildException("destFile cannot be a directory");
         }
     }
 
@@ -1099,7 +1099,7 @@ public class CSharp
         command.addArgument(getFileAlignParameter());
 
         long outputTimestamp;
-        if(outputFile.exists()) {
+        if(outputFile!=null && outputFile.exists()) {
             outputTimestamp = outputFile.lastModified();
         } else {
             outputTimestamp = 0;
