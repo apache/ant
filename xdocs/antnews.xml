@@ -8,6 +8,14 @@
   </properties>
 
 <body>
+  <section name="Ant 1.4">
+  <h3>Ant 1.4 has been released !</h3>
+  <p>Please visit the 
+     <a href="http://jakarta.apache.org/builds/jakarta-ant/release/v1.4/">
+     download area</a>. 
+     </p>
+  </section>
+
 
   <section name="Ant 1.4 Beta">
   <h3>Ant 1.4 Beta Available !</h3>
