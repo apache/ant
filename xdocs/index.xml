@@ -9,6 +9,13 @@
 
 <body>
 
+  <section name="Ant wins again!">
+    <p>We are proud to announce that Ant has won another award.
+    <em>Software Development</em> magazine has awarded Ant its
+    <strong>2002 Productivity Award</strong>.
+    Click on the &quot;News&quot; link to learn more.</p>
+  </section>
+
   <section name="Ant has won!">
     <p>We are proud to announce that Ant has won the JavaWorld
     Editors&apos; Choice Award for <strong>Most Useful Java
