@@ -55,21 +55,17 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Locale;
 import java.util.Properties;
 
 import org.apache.tools.ant.AntTypeDefinition;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -91,34 +87,45 @@ public abstract class Definer extends Task {
     private File file;
     private String resource;
     private ClasspathUtils.Delegate cpDelegate;
-    
-    private   int    format = Format.PROPERTIES;
+
     private   boolean definerSet = false;
     private   ClassLoader internalClassLoader;
     private   int         onError = OnError.FAIL;
     private   String      adapter;
     private   String      adaptTo;
-    
+
     private   Class       adapterClass;
     private   Class       adaptToClass;
-    
+
+    /**
+     * Enumerated type for onError attribute
+     *
+     * @see EnumeratedAttribute
+     */
     public static class OnError extends EnumeratedAttribute {
+        /** Enumerated values */
         public static final int  FAIL = 0, REPORT = 1, IGNORE = 2;
+        /**
+         * Constructor
+         */
         public OnError() {
             super();
         }
+
+        /**
+         * Constructor using a string.
+         * @param value the value of the attribute
+         */
         public OnError(String value) {
             setValue(value);
         }
+
+        /**
+         * get the values
+         * @return an array of the allowed values for this attribute.
+         */
         public String[] getValues() {
             return new String[] {"fail", "report", "ignore"};
-        }
-    }
-
-    public static class Format extends EnumeratedAttribute {
-        public static final int  PROPERTIES=0, XML=1;
-        public String[] getValues() {
-            return new String[] {"properties", "xml"};
         }
     }
 
@@ -137,13 +144,8 @@ public abstract class Definer extends Task {
     }
 
     /**
-     * Sets the format of the file or resource
-     */
-    public void setFormat(Format format) {
-        this.format = format.getIndex();
-    }
-
-    /**
+     * @param reverseLoader if true a delegated loader will take precedence over
+     *                      the parent
      * @deprecated stop using this attribute
      * @ant.attribute ignore="true"
      */
@@ -153,30 +155,53 @@ public abstract class Definer extends Task {
             Project.MSG_WARN);
     }
 
+    /**
+     * @return the name for this definition
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return the class path path for this definition
+     */
     public Path getClasspath() {
         return cpDelegate.getClasspath();
     }
 
+    /**
+     * @return the file containing definitions
+     */
     public File getFile() {
         return file;
     }
 
+    /**
+     * @return the resource containing definitions
+     */
     public String getResource() {
         return resource;
     }
 
+    /**
+     * @return the reverse loader attribute of the classpath delegate.
+     */
     public boolean isReverseLoader() {
         return cpDelegate.isReverseLoader();
     }
 
+    /**
+     * Returns the loader id of the class path Delegate.
+     * @return the loader id
+     */
     public String getLoaderId() {
         return cpDelegate.getClassLoadId();
     }
 
+    /**
+     * Returns the class path id of the class path delegate.
+     * @return the class path id
+     */
     public String getClasspathId() {
         return cpDelegate.getClassLoadId();
     }
@@ -191,7 +216,9 @@ public abstract class Definer extends Task {
     }
 
     /**
-     * Create the classpath to be used when searching for component being defined
+     * Create the classpath to be used when searching for component being
+     * defined
+     * @return the classpath of the this definition
      */
     public Path createClasspath() {
         return this.cpDelegate.createClasspath();
@@ -200,6 +227,7 @@ public abstract class Definer extends Task {
     /**
      * reference to a classpath to use when loading the files.
      * To actually share the same loader, set loaderref as well
+     * @param r the reference to the classpath
      */
     public void setClasspathRef(Reference r) {
         this.cpDelegate.setClasspathref(r);
@@ -214,6 +242,7 @@ public abstract class Definer extends Task {
      * so they can be used together. It eliminate the need to
      * put them in the CLASSPATH.
      *
+     * @param r the reference to locate the loader.
      * @since Ant 1.5
      */
     public void setLoaderRef(Reference r) {
@@ -221,6 +250,11 @@ public abstract class Definer extends Task {
     }
 
 
+    /**
+     * Run the definition.
+     *
+     * @exception BuildException if an error occurs
+     */
     public void execute() throws BuildException {
         ClassLoader al = createLoader();
 
@@ -229,7 +263,7 @@ public abstract class Definer extends Task {
                 "name, file or resource attribute of "
                 + getTaskName() + " is undefined", getLocation());
         }
-        
+
         if (name != null) {
             if (classname == null) {
                 throw new BuildException(
@@ -260,19 +294,19 @@ public abstract class Definer extends Task {
     }
 
     private URL fileToURL() {
-        if (! file.exists()) {
+        if (!(file.exists())) {
             log("File " + file + " does not exist", Project.MSG_WARN);
             return null;
         }
-        if (! file.isFile()) {
+        if (!(file.isFile())) {
             log("File " + file + " is not a file", Project.MSG_WARN);
             return null;
         }
         try {
             return file.toURL();
         } catch (Exception ex) {
-            log("File " + file + " cannot use as URL: " +
-                ex.toString(), Project.MSG_WARN);
+            log("File " + file + " cannot use as URL: "
+                + ex.toString(), Project.MSG_WARN);
             return null;
         }
     }
@@ -288,7 +322,13 @@ public abstract class Definer extends Task {
         }
         return ret;
     }
-    
+
+    /**
+     * Load type definitions as properties from a url.
+     *
+     * @param al the classloader to use
+     * @param url the url to get the definitions from
+     */
     protected void loadProperties(ClassLoader al, URL url) {
         InputStream is = null;
         try {
@@ -312,14 +352,15 @@ public abstract class Definer extends Task {
             if (is != null) {
                 try {
                     is.close();
-                } catch (IOException e) {}
+                } catch (IOException e) {
+                }
             }
         }
     }
-    
 
     /**
      * create a classloader for this definition
+     * @return the classloader from the cpDelegate
      */
     protected ClassLoader createLoader() {
         if (internalClassLoader != null) {
@@ -329,7 +370,7 @@ public abstract class Definer extends Task {
         // need to load Task via system classloader or the new
         // task we want to define will never be a Task but always
         // be wrapped into a TaskAdapter.
-        ((AntClassLoader)al).addSystemPackageRoot("org.apache.tools.ant");
+        ((AntClassLoader) al).addSystemPackageRoot("org.apache.tools.ant");
 
         return al;
     }
@@ -337,6 +378,7 @@ public abstract class Definer extends Task {
     /**
      * Name of the property file  to load
      * ant name/classname pairs from.
+     * @param file the file
      */
     public void setFile(File file) {
         if (definerSet) {
@@ -349,6 +391,7 @@ public abstract class Definer extends Task {
     /**
      * Name of the property resource to load
      * ant name/classname pairs from.
+     * @param res the resource to use
      */
     public void setResource(String res) {
         if (definerSet) {
@@ -359,8 +402,8 @@ public abstract class Definer extends Task {
     }
 
     /**
-     * Name of the property resource to load
-     * ant name/classname pairs from.
+     * Name of the definition
+     * @param name the name of the definition
      */
     public void setName(String name) {
         if (definerSet) {
@@ -373,6 +416,7 @@ public abstract class Definer extends Task {
     /**
      * Returns the classname of the object we are defining.
      * May be <code>null</code>.
+     * @return the class name
      */
     public String getClassname() {
         return classname;
@@ -382,27 +426,65 @@ public abstract class Definer extends Task {
      * The full class name of the object being defined.
      * Required, unless file or resource have
      * been specified.
+     * @param classname the name of the class
      */
-    public void setClassname(String v) {
-        classname = v;
+    public void setClassname(String classname) {
+        this.classname = classname;
     }
+
+    /**
+     * Set the class name of the adapter class.
+     * An adapter class is used to proxy the
+     * definition class. It is used if the
+     * definition class is not assignable to
+     * the adaptto class, or if the adaptto
+     * class is not present.
+     *
+     * @param adapter the name of the adapter class
+     */
 
     public void setAdapter(String adapter) {
         this.adapter = adapter;
     }
 
+    /**
+     * Set the adapter class.
+     *
+     * @param adapterClass the class to use to adapt the definition class
+     */
     protected void setAdapterClass(Class adapterClass) {
         this.adapterClass = adapterClass;
     }
-    
+
+    /**
+     * Set the classname of the class that the definition
+     * must be compatible with, either directly or
+     * by use of the adapeter class.
+     *
+     * @param adaptTo the name of the adaptto class
+     */
     public void setAdaptTo(String adaptTo) {
         this.adaptTo = adaptTo;
     }
 
+    /**
+     * Set the class for adaptToClass, to be
+     * used by derived classes, used instead of
+     * the adaptTo attribute.
+     *
+     * @param adaptToClass the class for adapto.
+     */
     protected void setAdaptToClass(Class adaptToClass) {
         this.adaptToClass = adaptToClass;
     }
 
+
+    /**
+     * Set the class loader, overrides the cpDelagate
+     * classloader.
+     *
+     * @param classLoader a <code>ClassLoader</code> value
+     */
     protected void setInternalClassLoader(ClassLoader classLoader) {
         this.internalClassLoader = classLoader;
     }
@@ -416,9 +498,16 @@ public abstract class Definer extends Task {
         super.init();
     }
 
+    /**
+     * Add a definition using the attributes of Definer
+     *
+     * @param al the ClassLoader to use
+     * @param name the name of the definition
+     * @param classname the classname of the definition
+     * @exception BuildException if an error occurs
+     */
     protected void addDefinition(ClassLoader al, String name, String classname)
-        throws BuildException
-    {
+        throws BuildException {
         Class cl = null;
         try {
             try {
@@ -426,7 +515,7 @@ public abstract class Definer extends Task {
                     cl = al.loadClass(classname);
                     AntClassLoader.initializeClass(cl);
                 }
-                
+
                 if (adapter != null) {
                     adapterClass = al.loadClass(adapter);
                     AntClassLoader.initializeClass(adapterClass);
@@ -476,7 +565,7 @@ public abstract class Definer extends Task {
 
     private void tooManyDefinitions() {
         throw new BuildException(
-            "Only one of the attributes name,file,resource" +
-            " can be set", getLocation());
+            "Only one of the attributes name,file,resource"
+            + " can be set", getLocation());
     }
 }
