@@ -17,26 +17,29 @@ import java.util.List;
  */
 public class ConfigTest1
 {
-    String m_someProp;
-    List m_propList = new ArrayList();
-    String m_content;
+    private String m_someProp;
+    private List m_propList = new ArrayList();
+    private String m_content;
 
     public boolean equals( final Object obj )
     {
-        ConfigTest1 test = (ConfigTest1)obj;
+        final ConfigTest1 test = (ConfigTest1)obj;
         if( !DefaultConfigurerTest.equals( m_someProp, test.m_someProp ) )
         {
             return false;
         }
-        if( !m_propList.equals( test.m_propList ) )
+        else if( !m_propList.equals( test.m_propList ) )
         {
             return false;
         }
-        if( !DefaultConfigurerTest.equals( m_content, test.m_content ) )
+        else if( !DefaultConfigurerTest.equals( m_content, test.m_content ) )
         {
             return false;
         }
-        return true;
+        else
+        {
+            return true;
+        }
     }
 
     public void setSomeProp( final String value )
