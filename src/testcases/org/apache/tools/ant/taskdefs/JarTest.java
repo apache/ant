@@ -57,6 +57,7 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Date;
 import org.apache.tools.ant.BuildFileTest;
 
@@ -66,6 +67,7 @@ import org.apache.tools.ant.BuildFileTest;
 public class JarTest extends BuildFileTest {
 
     private static String tempJar = "tmp.jar";
+    private Reader r1, r2;
 
     public JarTest(String name) {
         super(name);
@@ -76,12 +78,21 @@ public class JarTest extends BuildFileTest {
     }
 
     public void tearDown() {
+        if (r1 != null) {
+            try {
+                r1.close();
+            } catch (IOException e) {
+            }
+        }
+        if (r2 != null) {
+            try {
+                r2.close();
+            } catch (IOException e) {
+            }
+        }
+        
         executeTarget("cleanup");
     }
-    
-//    public static junit.framework.Test suite() {
-//        return new JarTest("testNoRecreateWithoutUpdate");
-//    }
 
     public void test1() {
         expectBuildException("test1", "required argument not specified");
@@ -157,12 +168,13 @@ public class JarTest extends BuildFileTest {
     public void testManifestStaysIntact() 
         throws IOException, ManifestException {
         executeTarget("testManifestStaysIntact");
-        Manifest mf1 = 
-            new Manifest(new FileReader(getProject()
-                                        .resolveFile("jartmp/manifest")));
-        Manifest mf2 = 
-            new Manifest(new FileReader(getProject()
-                                        .resolveFile("jartmp/META-INF/MANIFEST.MF")));
+
+        r1 = new FileReader(getProject()
+                            .resolveFile("jartmp/manifest"));
+        r2 = new FileReader(getProject()
+                            .resolveFile("jartmp/META-INF/MANIFEST.MF"));
+        Manifest mf1 = new Manifest(r1);
+        Manifest mf2 = new Manifest(r2);
         assertEquals(mf1, mf2);
     }
 
