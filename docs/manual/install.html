@@ -333,7 +333,8 @@ Installing Ant / Optional Tasks</a> section above.</p>
   <tr>
     <td >bsf.jar</td>
     <td>script task<br/>
-    bsf2.3 is recommended.</td>
+    <strong>Note</strong>: Ant 1.6 and later require Apache BSF, not
+    the IBM version.  I.e. you need BSF 2.3.0-rc1 or later.</td>
     <td><a href="http://jakarta.apache.org/bsf/" target="_top">http://jakarta.apache.org/bsf/</a></td>
   </tr>
   <tr>
@@ -345,7 +346,8 @@ Installing Ant / Optional Tasks</a> section above.</p>
   <tr>
     <td>js.jar</td>
     <td>Javascript with script task<br/>
-    rhino 1.5R3 is the recommended version. Do not use 1.5R4.</td>
+    If you use Apache BSF 2.3.0-rc1, you must use rhino 1.5R3 - later
+    version of BSF work with 1.5R4 as well.</td>
     <td><a href="http://www.mozilla.org/rhino/" target="_top">www.mozilla.org/rhino</a></td>
   </tr>
   <tr>
