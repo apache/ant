@@ -139,7 +139,7 @@ but excludes all <code>*.gif</code> files from the copy.</p>
 <p> This example can also be expressed using nested elements:</p>
 <pre>
 &lt;copy todir=&quot;${dist}&quot;>
-  &lt;fileset dir=&quot;${src}&quot;/&gt;
+  &lt;fileset dir=&quot;${src}&quot;&gt;
     &lt;include name=&quot;**/images/*&quot;/&gt;
     &lt;exclude name=&quot;**/*.gif&quot;/&gt;
   &lt;/fileset&gt;
