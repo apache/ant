@@ -181,6 +181,7 @@ public class ReplaceRegExp extends Task {
     /**
      * file for which the regular expression should be replaced;
      * required unless a nested fileset is supplied.
+     * @param file The file for which the reg exp should be replaced.
      */
     public void setFile(File file) {
         this.file = file;
@@ -190,6 +191,7 @@ public class ReplaceRegExp extends Task {
     /**
      * the regular expression pattern to match in the file(s);
      * required if no nested &lt;regexp&gt; is used
+     * @param match the match attribute.
      */
     public void setMatch(String match) {
         if (regex != null) {
@@ -205,6 +207,7 @@ public class ReplaceRegExp extends Task {
      * The substitution pattern to place in the file(s) in place
      * of the regular expression.
      * Required if no nested &lt;substitution&gt; is used
+     * @param replace the replace attribute
      */
 
     public void setReplace(String replace) {
@@ -230,6 +233,7 @@ public class ReplaceRegExp extends Task {
      *        "." to match any character, including a newline, which normally,
      *        it would not match.
      *</ul>
+     * @param flags the flags attribute
      */
     public void setFlags(String flags) {
         this.flags = flags;
@@ -242,6 +246,7 @@ public class ReplaceRegExp extends Task {
      * want to only replace the first occurrence of a regular expression on
      * each line, which is not easy to do when processing the file as a whole.
      * Defaults to <i>false</i>.</td>
+     * @param byline the byline attribute as a string
      * @deprecated - use setByLine(boolean)
      */
     public void setByLine(String byline) {
@@ -259,6 +264,7 @@ public class ReplaceRegExp extends Task {
      * want to only replace the first occurrence of a regular expression on
      * each line, which is not easy to do when processing the file as a whole.
      * Defaults to <i>false</i>.</td>
+     * @param byline the byline attribute
      */
     public void setByLine(boolean byline) {
         this.byline = byline;
@@ -268,6 +274,7 @@ public class ReplaceRegExp extends Task {
     /**
      * Specifies the encoding Ant expects the files to be in -
      * defaults to the platforms default encoding.
+     * @param encoding the encoding attribute
      *
      * @since Ant 1.6
      */
@@ -277,6 +284,7 @@ public class ReplaceRegExp extends Task {
 
     /**
      * list files to apply the replacement to
+     * @param set the fileset element
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -287,6 +295,7 @@ public class ReplaceRegExp extends Task {
      * A regular expression.
      * You can use this element to refer to a previously
      * defined regular expression datatype instance
+     * @return the regular expression object to be configured as an element
      */
     public RegularExpression createRegexp() {
         if (regex != null) {
@@ -301,6 +310,7 @@ public class ReplaceRegExp extends Task {
     /**
      * A substitution pattern.  You can use this element to refer to a previously
      * defined substitution pattern datatype instance.
+     * @return the substitution pattern object to be configured as an element
      */
     public Substitution createSubstitution() {
         if (subs != null) {
@@ -313,6 +323,16 @@ public class ReplaceRegExp extends Task {
     }
 
 
+    /**
+     * Invoke a regular expression (r) on a string (input) using
+     * substitutions (s) for a matching regex.
+     *
+     * @param r a regular expression
+     * @param s a Substitution
+     * @param input the string to do the replacement on
+     * @param options The options for the regular expression
+     * @return the replacement result
+     */
     protected String doReplace(RegularExpression r,
                                Substitution s,
                                String input,
@@ -321,7 +341,7 @@ public class ReplaceRegExp extends Task {
         Regexp regexp = r.getRegexp(getProject());
 
         if (regexp.matches(input, options)) {
-            log("Found match; substituting",Project.MSG_DEBUG);
+            log("Found match; substituting", Project.MSG_DEBUG);
             res = regexp.substitute(input, s.getExpression(getProject()),
                                     options);
         }
@@ -330,7 +350,13 @@ public class ReplaceRegExp extends Task {
     }
 
 
-    /** Perform the replace on the entire file  */
+    /**
+     *  Perform the replacement on a file
+     *
+     * @param f the file to perform the relacement on
+     * @param options the regular expressions options
+     * @exception IOException if an error occurs
+     */
     protected void doReplace(File f, int options)
          throws IOException {
         File temp = fileUtils.createTempFile("replace", ".txt", null);
@@ -455,7 +481,7 @@ public class ReplaceRegExp extends Task {
             w = null;
 
             if (changes) {
-                log("File has changed; saving the updated file",Project.MSG_VERBOSE);
+                log("File has changed; saving the updated file", Project.MSG_VERBOSE);
                 try {
                     fileUtils.rename(temp, f);
                     temp = null;
@@ -464,7 +490,7 @@ public class ReplaceRegExp extends Task {
                                              + temp, getLocation());
                 }
             } else {
-                log("No change made",Project.MSG_DEBUG);
+                log("No change made", Project.MSG_DEBUG);
             }
         } finally {
             try {
