@@ -46,6 +46,7 @@
   <property name="etc.dir" value="src/etc"/>
   <property name="tests.dir" value="src/testcases"/>
   <property name="tests.etc.dir" value="src/etc/testcases"/>
+  <property name="test.haltonfailure" value="yes" />
 
   <property name="ant.package" value="org/apache/tools/ant"/>
   <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
@@ -71,7 +72,7 @@
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
   <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
-  <property name="optional.jars.prefix" value="needs"/>
+  <property name="optional.jars.prefix" value="ant"/>
 
   <path id="classpath">
   </path>
@@ -1422,7 +1423,7 @@
       </or>
     </condition>
 
-    <junit printsummary="${junit.summary}" haltonfailure="yes"
+    <junit printsummary="${junit.summary}" haltonfailure="${test.haltonfailure}"
            filtertrace="${junit.filtertrace}"
            fork="${junit.fork}">
 <!--      <jvmarg value="-classic"/> -->
@@ -1539,12 +1540,15 @@
     </junit>
   </target>
 
-  <target name="run-single-test" if="testcase" depends="compile-tests"
+  <target name="run-single-test" if="testcase" depends="compile-tests,run-single-test-only"
+    description="--> runs the single unit test defined in the testcase property"/>
+
+  <target name="run-single-test-only" 
     description="--> runs the single unit test defined in the testcase property">
 
 
     <junit printsummary="${junit.summary}"
-          haltonfailure="yes"
+          haltonfailure="${test.haltonfailure}"
           fork="${junit.fork}"
           filtertrace="${junit.filtertrace}">
 <!--      <jvmarg value="-classic"/> -->
