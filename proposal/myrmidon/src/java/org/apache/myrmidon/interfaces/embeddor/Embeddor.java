@@ -35,6 +35,9 @@ public interface Embeddor
      *             project file name.
      * @param parameters The project builder parameters.
      * @return the created Project
+     * @todo Should location be a URL or will it automatically assume file
+     *       unless there is a protocol section like ftp:, file: etc
+     * @todo parameters needs more thought put into it.
      */
     Project createProject( String location, String type, Parameters parameters )
         throws Exception;
