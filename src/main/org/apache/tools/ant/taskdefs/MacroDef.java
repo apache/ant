@@ -646,6 +646,12 @@ public class MacroDef extends AntlibDefinition  {
         if (!name.equals(other.name)) {
             return false;
         }
+        // Allow two macro definitions with the same location
+        // to be treated as similar - bugzilla 31215
+        if (other.getLocation() != null
+            && other.getLocation().equals(getLocation())) {
+            return true;
+        }
         if (text == null) {
             if (other.text != null) {
                 return false;

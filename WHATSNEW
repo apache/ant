@@ -289,6 +289,11 @@ Changes that could break older environments:
 * <csc>'s extraoptions can now contain multiple arguments.
   Bugzilla Report 23599.
 
+* <macrodef> with default values set by properties would be
+  seen as new definitions when called twice with different properties.
+  This was confusing so the definitions are now treated as similar.
+  Bugzilla Report 31215.
+
 Fixed bugs:
 -----------
 
