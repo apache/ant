@@ -222,12 +222,22 @@ public abstract class BuildFileTest extends TestCase {
      * @param  filename name of project file to run
      */
     protected void configureProject(String filename) throws BuildException {
+        configureProject(filename, Project.MSG_DEBUG);
+    }
+
+    /**
+     *  set up to run the named project
+     *
+     * @param  filename name of project file to run
+     */
+    protected void configureProject(String filename, int logLevel)
+        throws BuildException {
         logBuffer = new StringBuffer();
         fullLogBuffer = new StringBuffer();
         project = new Project();
         project.init();
         project.setUserProperty( "ant.file" , new File(filename).getAbsolutePath() );
-        project.addBuildListener(new AntTestListener());
+        project.addBuildListener(new AntTestListener(logLevel));
         ProjectHelper.configureProject(project, new File(filename));
     }
 
@@ -407,6 +417,16 @@ public abstract class BuildFileTest extends TestCase {
      * our own personal build listener
      */
     private class AntTestListener implements BuildListener {
+        private int logLevel;
+
+        /**
+         * Constructs a test listener which will ignore log events
+         * above the given level
+         */
+        public AntTestListener(int logLevel) {
+            this.logLevel = logLevel;
+        }
+
         /**
          *  Fired before any targets are started.
          */
@@ -467,6 +487,11 @@ public abstract class BuildFileTest extends TestCase {
          *  @see BuildEvent#getPriority()
          */
         public void messageLogged(BuildEvent event) {
+            if (event.getPriority() > logLevel) {
+                // ignore event
+                return;
+            }
+
             if (event.getPriority() == Project.MSG_INFO ||
                 event.getPriority() == Project.MSG_WARN ||
                 event.getPriority() == Project.MSG_ERR) {

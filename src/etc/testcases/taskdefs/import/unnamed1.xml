@@ -1,0 +1,5 @@
+<project default="test">
+  <import file="unnamed2.xml"/>
+
+  <echo message="Unnamed1.xml" level="info"/>
+</project>
