@@ -149,7 +149,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
         
         try {
-            String args = "-noexit " + sourceJar.getPath().replace('\\', '/') + " " + destJar.getPath().replace('\\', '/');
+            String args = "-noexit " + sourceJar.getPath() + " " + destJar.getPath();
             
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setClassname("weblogic.ejbc");

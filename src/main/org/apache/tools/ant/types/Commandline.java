@@ -84,9 +84,8 @@ import java.util.StringTokenizer;
  */
 public class Commandline {
 
-    private Vector definition = new Vector();
+    private Vector arguments = new Vector();
     private String executable = null;
-    private Argument argument = null;
 
     public Commandline(String to_process) {
         super();
@@ -166,7 +165,7 @@ public class Commandline {
      */
     public Argument createArgument() {
         Argument argument = new Argument();
-        definition.addElement(argument);
+        arguments.addElement(argument);
         return argument;
     }
 
@@ -209,9 +208,9 @@ public class Commandline {
      * <code>addValue</code> or the argument object.
      */
     public String[] getArguments() {
-        Vector result = new Vector(definition.size()*2);
-        for (int i=0; i<definition.size(); i++) {
-            Argument arg = (Argument) definition.elementAt(i);
+        Vector result = new Vector(arguments.size()*2);
+        for (int i=0; i<arguments.size(); i++) {
+            Argument arg = (Argument) arguments.elementAt(i);
             String[] s = arg.getParts();
             for (int j=0; j<s.length; j++) {
                 result.addElement(s[j]);
@@ -300,10 +299,18 @@ public class Commandline {
                     }
                 } else if ("\\".equals(nextTok)) {
                     if (tok.hasMoreTokens()) {
-                        current.append(tok.nextToken());
+                        String escapedToken = tok.nextToken();
+                        char escapedChar = escapedToken.charAt(0);
+                        if (escapedChar == '\\' || escapedChar == '\'' ||
+                             escapedChar == '\"') {
+                            current.append(escapedToken);
+                        }
+                        else {
+                            current.append("\\" + escapedToken);
+                        }
                     } else {
-                        throw new BuildException("stray backslash in "
-                                                 + to_process);
+                        // just add the backslash
+                        current.append("\\");
                     }
                 } else {
                     current.append(nextTok);
