@@ -84,8 +84,11 @@ public class SimpleP4OutputHandler extends P4HandlerAdapter {
         //Others mark errors as info, for example edit a file
         //which is already open for edit.....
         //Just look for error: - catches most things....
+        //when running labelsync, if view elements are in sync, Perforce produces a line of output
+        //looking like this one :
+        //error: //depot/file2 - label in sync.
 
-        if (parent.util.match("/error:/", line) && !parent.util.match("/up-to-date/", line)) {
+        if (parent.util.match("/error:/", line) && !parent.util.match("/up-to-date/", line) && !parent.util.match("/label in sync/", line)) {
             throw new BuildException(line);
 
         }

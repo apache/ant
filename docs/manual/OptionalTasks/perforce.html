@@ -9,6 +9,7 @@
     <li>Les Hughes (<a href="mailto:leslie.hughes@rubus.com">leslie.hughes@rubus.com</a>)</li>
     <li>Kirk Wylie (<a href="mailto:kirk@radik.com">kirk@radik.com</a>)</li>
     <li>Matt Bishop (<a href="mailto:matt@thebishops.org">matt@thebishops.org</a>)</li>
+    <li>Antoine Levy-Lambert (<a href="mailto:levylambert@tiscali-dsl.de">levylambert@tiscali-dsl.de</a>)</li>
 </ul>
 <p>Version $Revision$ - $Date$</p>
 <hr>
@@ -60,6 +61,10 @@ You will also need the Perforce client executable (p4 or p4.exe but not p4win.ex
     <tr>
         <td><a href="#p4label">P4Label</a></td>
         <td>Create a label reflecting files in the current workspace</td>
+    </tr>
+    <tr>
+        <td><a href="#p4labelsync">P4Labelsync</a></td>
+        <td>Syncs an existing label</td>
     </tr>
     <tr>
         <td><a href="#p4counter">P4Counter</a></td>
@@ -202,23 +207,6 @@ For more information regarding the underlying 'p4' commands you are referred to 
 available from the <a href="http://www.perforce.com/" target="_top">Perforce website</a>.
 </p>
 
-<h3>Taskdefs</h3>
-<p>Standard taskdefs (for you to copy'n'paste) -- normally this is done automatically if you install this optional task.</p>
-<pre>
-    &lt;taskdef name=&quot;p4sync&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Sync&quot;/&gt;
-    &lt;taskdef name=&quot;p4change&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Change&quot;/&gt;
-    &lt;taskdef name=&quot;p4edit&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Edit&quot;/&gt;
-    &lt;taskdef name=&quot;p4submit&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Submit&quot;/&gt;
-    &lt;taskdef name=&quot;p4have&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Have&quot;/&gt;
-    &lt;taskdef name=&quot;p4label&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Label&quot;/&gt;
-    &lt;taskdef name=&quot;p4counter&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Counter&quot;/&gt;
-    &lt;taskdef name=&quot;p4reopen&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Reopen&quot;/&gt;
-    &lt;taskdef name=&quot;p4revert&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Revert&quot;/&gt;
-    &lt;taskdef name=&quot;p4add&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Add&quot;/&gt;
-    &lt;taskdef name=&quot;p4delete&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Delete&quot;/&gt;
-    &lt;taskdef name=&quot;p4integrate&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Integrate&quot;/&gt;
-    &lt;taskdef name=&quot;p4resolve&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Resolve&quot;/&gt;
-</pre>
 
 <hr>
 <h2>Task Descriptions</h2>
@@ -420,6 +408,96 @@ is not the latest any more.
 	lock=&quot;locked&quot;
 /&gt;
 </pre>
+<hr>
+
+
+<h2><a name="p4labelsync">P4Labelsync</a></h2>
+<h3>Description:</h3>
+<p>Syncs an existing label against the current workspace or against specified revisions.
+</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+    <td align="center" valign="top"><b>Perforce command line flag</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the label</td>
+    <td valign="center" align="center">Yes</td>
+    <td valign="top" align="center">-l labelname</td>
+  </tr>
+  <tr>
+    <td valign="top">view</td>
+    <td valign="top">
+    list of files or revision specs separated by : or ;<br>
+    in the absence of this attribute, the labelsync will be done against the current Perforce client or the value of the p4client attribute or the value of the p4.client property or the value of the environment variable P4CLIENT</td>
+    <td valign="center" align="center">No</td>
+    <td valign="center" align="center">file[revRange] ... </td>
+  </tr>
+  <tr>
+    <td valign="top">simulationmode</td>
+    <td valign="top">Displays which effect the operation would have on the label but do not actually do it</td>
+    <td valign="center" align="center">No</td>
+    <td valign="top" align="center">-n</td>
+  </tr>
+  <tr>
+    <td valign="top">add</td>
+    <td valign="top">If set to true, preserve files which exist in the label, but not in the current view</td>
+    <td valign="center" align="center">No</td>
+    <td valign="top" align="center">-a</td>
+  </tr>
+  <tr>
+    <td valign="top">delete</td>
+    <td valign="top">If set to true, remove from the label the files mentioned in the view attribute</td>
+    <td valign="center" align="center">No</td>
+    <td valign="top" align="center">-d</td>
+  </tr>
+
+
+</table>
+<h3>Examples</h3>
+<pre>
+&lt;
+p4labelsync
+name=&quot;current_release&quot;
+view="//depot/...#head;//depot2/file1#25"
+add=&quot;true&quot;
+/&gt;
+</pre>
+This example will add into the label called <i>current_release</i> the current head revision of all the files located under <i>//depot</i>
+and the revision 25 of the file <i>//depot2/file1</i>.
+<pre>
+&lt;
+p4labelsync
+name=&quot;current_release&quot;
+p4client=&quot;myclient&quot;
+/&gt;
+</pre>
+This example will update the label called <i>current_release</i> so that it reflects the Perforce client <i>myclient</i>.<br>
+Files present in the label before the sync and not present currently in the client will be removed from the label, because the add attribute is not set.
+<pre>
+&lt;
+p4labelsync
+name=&quot;current_release&quot;
+/&gt;
+</pre>
+This example will update the label called <i>current_release</i> so that it reflects the current default client for the ant Perforce tasks.<br>
+The default client is by order of priority :
+<ul>
+<li>
+the value of the p4.client property if set in the project
+</li>
+<li>
+the value of the P4CLIENT environment variable
+</li>
+<li>
+the default Perforce client from the Windows registry under Windows operating systems
+</li>
+</ul>
+Files present in the label before the sync and not present currently in the client will be removed from the label, because the add attribute is not set.
 <hr>
 
 
@@ -872,6 +950,13 @@ P4Resolve does not use a change list number (it takes it from the files it is wo
     <td valign="top">Added globalopts to P4Base to allow 
                      additional global options to be set.<br>
                      Added p4fstat task</td>
+</tr>
+<tr>
+    <td valign="top">May 2003</td>
+    <td valign="top">V1.3</td>
+    <td valign="top">Added p4labelsync, p4resolve, p4integrate.<br>
+                     Changed p4submit (detection of changes of change numbers,
+                     and of failed submits due to resolution needed)</td>
 </tr>
 </table>
 <hr>
