@@ -400,6 +400,7 @@ public class Project {
                 task=taskA;
             }
             task.setProject(this);
+            task.setTaskName(taskType);
             String msg = "   +Task: " + taskType;
             log (msg, MSG_VERBOSE);
             return task;

@@ -56,6 +56,8 @@ package org.apache.tools.ant;
 
 /**
  * Base class for all tasks.
+ *
+ * <p>Use {@link Project#createTask Project.createTask} to create a new Task.
  */
 
 public abstract class Task {
@@ -64,6 +66,7 @@ public abstract class Task {
     protected Target target = null;
     protected String description=null;
     protected Location location = Location.UNKNOWN_LOCATION;
+    protected String taskName = null;
 
     /**
      * Sets the project object of this task. This method is used by
@@ -80,7 +83,7 @@ public abstract class Task {
     /**
      * Get the Project to which this task belongs
      *
-     * @param the task's project.
+     * @return the task's project.
      */
     public Project getProject() {
         return project;
@@ -98,12 +101,30 @@ public abstract class Task {
     /**
      * Get the Target to which this task belongs
      *
-     * @param the task's target.
+     * @return the task's target.
      */
     public Target getOwningTarget() {
         return target;
     }
     
+    /**
+     * Set the name with which the task has been invoked.
+     *
+     * @param name the name the task has been invoked as.
+     */
+    public void setTaskName(String name) {
+        this.taskName = name;
+    }
+
+    /**
+     * Get the name with which the task has been invoked.
+     *
+     * @return the name the task has been invoked as.
+     */
+    public String getTaskName() {
+        return taskName;
+    }
+
     /**
      * Log a message with the default (INFO) priority.
      *

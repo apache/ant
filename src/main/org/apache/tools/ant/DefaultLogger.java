@@ -130,11 +130,7 @@ public class DefaultLogger implements BuildListener {
 
             // Print out the name of the task if we're in one
             if (event.getTask() != null) {
-                String name = event.getTask().getClass().getName();
-                int pos = name.lastIndexOf(".");
-                if (pos != -1) {
-                    name = name.substring(pos + 1);
-                }
+                String name = event.getTask().getTaskName();
 
                 String msg = "[" + name + "] ";
                 for (int i = 0; i < (LEFT_COLUMN_SIZE - msg.length()); i++) {

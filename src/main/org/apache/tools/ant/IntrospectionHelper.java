@@ -116,7 +116,10 @@ public class IntrospectionHelper  {
             Class returnType = m.getReturnType();
             Class[] args = m.getParameterTypes();
 
-            if ("setLocation".equals(name) || "setDescription".equals(name)) {
+            // not really user settable properties
+            if ("setLocation".equals(name) || 
+                "setDescription".equals(name) ||
+                "setTaskName".equals(name)) {
                 continue;
             }
             
