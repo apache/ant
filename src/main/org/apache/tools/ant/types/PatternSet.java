@@ -413,7 +413,7 @@ public class PatternSet extends DataType {
                     readPatterns(inclFile, includeList, p);
                 }
             }
-            includesFileList.clear();
+            includesFileList.removeAllElements();
         }
 
         if (excludesFileList.size() > 0) {
@@ -430,7 +430,7 @@ public class PatternSet extends DataType {
                     readPatterns(exclFile, excludeList, p);
                 }
             }
-            excludesFileList.clear();
+            excludesFileList.removeAllElements();
         }
     }
 

@@ -136,7 +136,7 @@ public class Tstamp extends Task {
                     if (st.hasMoreElements()) {
                         country = st.nextToken();
                         if (st.hasMoreElements()) {
-                            throw new BuildException( "bad locale format", location);
+                            throw new BuildException( "bad locale format", getLocation());
                         }
                     }
                 }
@@ -145,7 +145,7 @@ public class Tstamp extends Task {
                 }
             }
             catch (NoSuchElementException e) {
-                throw new BuildException( "bad locale format", e, location);
+                throw new BuildException( "bad locale format", e, getLocation());
             }
         }
         
@@ -179,7 +179,7 @@ public class Tstamp extends Task {
                 field = Calendar.YEAR;
             }
             else {
-                throw new BuildException(unit + " is not a unit supported by the tstamp task");
+                throw new BuildException(unit + " is not a unit supported by the tstamp task", getLocation());
             }
         }            
         
