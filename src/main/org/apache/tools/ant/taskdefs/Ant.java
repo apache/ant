@@ -281,6 +281,10 @@ public class Ant extends Task {
             File file = FileUtils.newFileUtils().resolveFile(dir, antFile);
             antFile = file.getAbsolutePath();
 
+            
+            log("calling target "+(target!=null?target:"[default]")
+                    + " in build file "+  antFile.toString(),
+                    Project.MSG_VERBOSE);
             newProject.setUserProperty( "ant.file" , antFile );
             ProjectHelper.configureProject(newProject, new File(antFile));
             
