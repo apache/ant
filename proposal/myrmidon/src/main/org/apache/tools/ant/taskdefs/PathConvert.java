@@ -226,7 +226,7 @@ public class PathConvert extends Task
 
         log( "Set property " + property + " = " + value, Project.MSG_VERBOSE );
 
-        getProject().setNewProperty( property, value );
+        setProperty( property, value );
     }
 
     /**

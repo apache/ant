@@ -61,13 +61,13 @@ public class Tstamp extends Task
             Date d = new Date();
 
             SimpleDateFormat dstamp = new SimpleDateFormat( "yyyyMMdd" );
-            project.setNewProperty( prefix + "DSTAMP", dstamp.format( d ) );
+            setProperty( prefix + "DSTAMP", dstamp.format( d ) );
 
             SimpleDateFormat tstamp = new SimpleDateFormat( "HHmm" );
-            project.setNewProperty( prefix + "TSTAMP", tstamp.format( d ) );
+            setProperty( prefix + "TSTAMP", tstamp.format( d ) );
 
             SimpleDateFormat today = new SimpleDateFormat( "MMMM d yyyy", Locale.US );
-            project.setNewProperty( prefix + "TODAY", today.format( d ) );
+            setProperty( prefix + "TODAY", today.format( d ) );
 
             Enumeration i = customFormats.elements();
             while( i.hasMoreElements() )
@@ -243,7 +243,7 @@ public class Tstamp extends Task
             {
                 sdf.setTimeZone( timeZone );
             }
-            project.setNewProperty( propertyName, sdf.format( date ) );
+            getContext().setProperty( propertyName, sdf.format( date ) );
         }
     }
 }

@@ -205,7 +205,7 @@ public class AntSoundPlayer
         }
         catch( UnsupportedAudioFileException uafe )
         {
-            project.log( "Audio format is not yet supported: " + uafe.getMessage() );
+            project.log( "Audio format is not yet supported: " + uafe.getMessage(), Project.MSG_INFO );
         }
         catch( IOException ioe )
         {
@@ -225,7 +225,7 @@ public class AntSoundPlayer
             }
             catch( LineUnavailableException e )
             {
-                project.log( "The sound device is currently unavailable" );
+                project.log( "The sound device is currently unavailable", Project.MSG_INFO );
                 return;
             }
             catch( IOException e )
@@ -246,7 +246,7 @@ public class AntSoundPlayer
         }
         else
         {
-            project.log( "Can't get data from file " + file.getName() );
+            project.log( "Can't get data from file " + file.getName(), Project.MSG_INFO );
         }
     }
 

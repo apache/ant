@@ -1028,9 +1028,7 @@ public class Javadoc extends Task
             }
             else
             {
-                project.log( this,
-                             "Warning: Leaving out empty argument '" + key + "'",
-                             Project.MSG_WARN );
+                log( "Warning: Leaving out empty argument '" + key + "'", Project.MSG_WARN );
             }
         }
     }

@@ -200,8 +200,9 @@ public class Property extends Task
     }
 
     protected void addProperty( String n, String v )
+        throws TaskException
     {
-            project.setNewProperty( n, v );
+        setProperty( n, v );
     }
 
     protected void loadEnvironment( String prefix )

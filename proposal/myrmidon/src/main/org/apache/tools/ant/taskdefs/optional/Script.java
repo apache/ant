@@ -87,7 +87,6 @@ public class Script extends Task
         try
         {
             addBeans( project.getProperties() );
-            addBeans( project.getTargets() );
             addBeans( project.getReferences() );
 
             beans.put( "project", getProject() );

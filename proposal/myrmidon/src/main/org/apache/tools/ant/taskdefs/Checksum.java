@@ -188,8 +188,7 @@ public class Checksum extends MatchingTask implements Condition
         boolean value = validateAndExecute();
         if( verifyProperty != null )
         {
-            project.setNewProperty( verifyProperty,
-                                    new Boolean( value ).toString() );
+            setProperty( verifyProperty, new Boolean( value ).toString() );
         }
     }
 

@@ -267,7 +267,7 @@ public class ExecTask extends Task
                 }
                 val.append( line );
             }
-            project.setNewProperty( outputprop, val.toString() );
+            setProperty( outputprop, val.toString() );
         }
     }
 
@@ -370,11 +370,12 @@ public class ExecTask extends Task
      * @param result Description of Parameter
      */
     protected void maybeSetResultPropertyValue( int result )
+    throws TaskException
     {
         String res = Integer.toString( result );
         if( resultProperty != null )
         {
-            project.setNewProperty( resultProperty, res );
+            setProperty( resultProperty, res );
         }
     }
 

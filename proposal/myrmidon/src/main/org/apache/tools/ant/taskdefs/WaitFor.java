@@ -134,7 +134,7 @@ public class WaitFor extends ConditionBase
 
         if( timeoutProperty != null )
         {
-            project.setNewProperty( timeoutProperty, "true" );
+            setProperty( timeoutProperty, "true" );
         }
     }
 
