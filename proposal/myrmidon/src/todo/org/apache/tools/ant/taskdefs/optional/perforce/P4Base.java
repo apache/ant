@@ -93,9 +93,8 @@ public abstract class P4Base extends org.apache.tools.ant.Task
         this.P4View = P4View;
     }
 
-    public void initialize()
+    private void prepare()
     {
-
         util = new Perl5Util();
 
         //Get default P4 settings from environment - Mark would have done something cool with
@@ -113,6 +112,14 @@ public abstract class P4Base extends org.apache.tools.ant.Task
         throws TaskException
     {
         execP4Command( command, null );
+    }
+
+    public void execute()
+        throws TaskException
+    {
+        //Setup task before executing it
+        prepare();
+        super.execute();
     }
 
     /**

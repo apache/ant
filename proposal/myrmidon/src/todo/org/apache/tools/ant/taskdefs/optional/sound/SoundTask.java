@@ -79,15 +79,9 @@ public class SoundTask extends Task
 
     }
 
-    public void initialize()
-    {
-    }
-
     /**
      * A class to be extended by any BuildAlert's that require the output of
      * sound.
-     *
-     * @author RT
      */
     public class BuildAlert
     {

@@ -27,16 +27,6 @@ public abstract class Task
     }
 
     /**
-     * Called by the project to let the task initialize properly.
-     *
-     * @throws TaskException if someting goes wrong with the build
-     */
-    public void initialize()
-        throws TaskException
-    {
-    }
-
-    /**
      * Log a mesage with the give priority.
      *
      * @param msgLevel the message priority at which this message is to be

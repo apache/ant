@@ -112,6 +112,10 @@ public class ANTLR extends Task
     public void execute()
         throws TaskException
     {
+        //Adds the jars or directories containing Antlr this should make the forked
+        //JVM work without having to specify it directly.
+        addClasspathEntry( "/antlr/Tool.class" );
+
         validateAttributes();
 
         //TODO: use ANTLR to parse the grammer file to do this.
@@ -138,18 +142,6 @@ public class ANTLR extends Task
                 exe.execute( project );
             }
         }
-    }
-
-    /**
-     * Adds the jars or directories containing Antlr this should make the forked
-     * JVM work without having to specify it directly.
-     *
-     * @exception TaskException Description of Exception
-     */
-    public void initialize()
-        throws TaskException
-    {
-        addClasspathEntry( "/antlr/Tool.class" );
     }
 
     /**

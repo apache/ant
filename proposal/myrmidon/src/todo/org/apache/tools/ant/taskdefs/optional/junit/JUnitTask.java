@@ -379,6 +379,15 @@ public class JUnitTask extends Task
     public void execute()
         throws TaskException
     {
+        /*
+         * Adds the jars or directories containing Ant, this task and JUnit to the
+         * classpath - this should make the forked JVM work without having to
+         * specify them directly.
+         */
+        addClasspathEntry( "/junit/framework/TestCase.class" );
+        addClasspathEntry( "/org/apache/tools/ant/Task.class" );
+        addClasspathEntry( "/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class" );
+
         Enumeration list = getIndividualTests();
         while( list.hasMoreElements() )
         {
@@ -388,18 +397,6 @@ public class JUnitTask extends Task
                 execute( test );
             }
         }
-    }
-
-    /**
-     * Adds the jars or directories containing Ant, this task and JUnit to the
-     * classpath - this should make the forked JVM work without having to
-     * specify them directly.
-     */
-    public void initialize()
-    {
-        addClasspathEntry( "/junit/framework/TestCase.class" );
-        addClasspathEntry( "/org/apache/tools/ant/Task.class" );
-        addClasspathEntry( "/org/apache/tools/ant/taskdefs/optional/junit/JUnitTestRunner.class" );
     }
 
     /**
