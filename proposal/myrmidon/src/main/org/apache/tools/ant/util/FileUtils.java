@@ -31,9 +31,24 @@ import org.apache.tools.ant.types.FilterSetCollection;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-
 public class FileUtils
 {
+    /**
+     * Parse out a path as appropriate for current OS.
+     */
+    public static String[] parsePath( final String path )
+    {
+        final PathTokenizer elements = new PathTokenizer( path );
+
+        final ArrayList result = new ArrayList();
+        while( elements.hasNext() )
+        {
+            result.add( elements.next() );
+        }
+
+        return (String[])result.toArray( new String[ result.size() ] );
+    }
+
     /**
      * Convienence method to copy a file from a source to a destination
      * specifying if token filtering must be used, if source files may overwrite

@@ -18,60 +18,60 @@ import java.util.StringTokenizer;
  *
  * @author Conor MacNeill (conor@ieee.org)
  */
-public class PathTokenizer
+class PathTokenizer
 {
     /**
      * A String which stores any path components which have been read ahead.
      */
-    private String lookahead;
+    private String m_lookahead;
 
     /**
      * Flag to indicate whether we are running on a platform with a DOS style
      * filesystem
      */
-    private boolean dosStyleFilesystem;
+    private boolean m_dosStyleFilesystem;
     /**
      * A tokenizer to break the string up based on the ':' or ';' separators.
      */
-    private StringTokenizer tokenizer;
+    private StringTokenizer m_tokenizer;
 
     public PathTokenizer( String path )
     {
-        tokenizer = new StringTokenizer( path, ":;", false );
-        dosStyleFilesystem = File.pathSeparatorChar == ';';
+        m_tokenizer = new StringTokenizer( path, ":;", false );
+        m_dosStyleFilesystem = File.pathSeparatorChar == ';';
     }
 
-    public boolean hasMoreTokens()
+    public boolean hasNext()
     {
-        if( lookahead != null )
+        if( m_lookahead != null )
         {
             return true;
         }
 
-        return tokenizer.hasMoreTokens();
+        return m_tokenizer.hasMoreTokens();
     }
 
-    public String nextToken()
+    public String next()
         throws NoSuchElementException
     {
         String token = null;
-        if( lookahead != null )
+        if( m_lookahead != null )
         {
-            token = lookahead;
-            lookahead = null;
+            token = m_lookahead;
+            m_lookahead = null;
         }
         else
         {
-            token = tokenizer.nextToken().trim();
+            token = m_tokenizer.nextToken().trim();
         }
 
         if( token.length() == 1 && Character.isLetter( token.charAt( 0 ) )
-            && dosStyleFilesystem
-            && tokenizer.hasMoreTokens() )
+            && m_dosStyleFilesystem
+            && m_tokenizer.hasMoreTokens() )
         {
             // we are on a dos style system so this path could be a drive
             // spec. We look at the next token
-            String nextToken = tokenizer.nextToken().trim();
+            String nextToken = m_tokenizer.nextToken().trim();
             if( nextToken.startsWith( "\\" ) || nextToken.startsWith( "/" ) )
             {
                 // we know we are on a DOS style platform and the next path starts with a
@@ -81,7 +81,7 @@ public class PathTokenizer
             else
             {
                 // store the token just read for next time
-                lookahead = nextToken;
+                m_lookahead = nextToken;
             }
         }
 

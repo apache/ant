@@ -17,7 +17,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.PathTokenizer;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Ant task to run JDepend tests. <p>
@@ -233,10 +233,10 @@ public class JDependTask
             // we have to find a cleaner way to put this output
         }
 
-        PathTokenizer sourcesPath = new PathTokenizer( m_sourcesPath.toString() );
-        while( sourcesPath.hasMoreTokens() )
+        final String[] elements = FileUtils.parsePath( m_sourcesPath.toString() );
+        for( int i = 0; i < elements.length; i++ )
         {
-            File f = new File( sourcesPath.nextToken() );
+            File f = new File( elements[ i ] );
 
             // not necessary as JDepend would fail, but why loose some time?
             if( !f.exists() || !f.isDirectory() )
@@ -312,10 +312,10 @@ public class JDependTask
             getLogger().info( "Output to be stored in " + m_outputFile.getPath() );
         }
 
-        PathTokenizer sourcesPath = new PathTokenizer( m_sourcesPath.toString() );
-        while( sourcesPath.hasMoreTokens() )
+        final String[] elements = FileUtils.parsePath( m_sourcesPath.toString() );
+        for( int i = 0; i < elements.length; i++ )
         {
-            File f = new File( sourcesPath.nextToken() );
+            File f = new File( elements[ i ] );
 
             // not necessary as JDepend would fail, but why loose some time?
             if( !f.exists() || !f.isDirectory() )

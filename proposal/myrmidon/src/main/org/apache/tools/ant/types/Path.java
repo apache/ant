@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.util.PathTokenizer;
 import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH environment
@@ -88,7 +88,7 @@ public class Path
      * Returns its argument with all file separator characters replaced so that
      * they match the local OS conventions.
      */
-    private static String translateFile( final String source )
+    protected static String translateFile( final String source )
     {
         if( source == null )
             return "";
@@ -105,18 +105,18 @@ public class Path
     /**
      * Splits a PATH (with : or ; as separators) into its parts.
      */
-    private String[] translatePath( final File baseDirectory, String source )
+    protected String[] translatePath( final File baseDirectory, String source )
     {
         final ArrayList result = new ArrayList();
         if( source == null )
             return new String[ 0 ];
 
-        PathTokenizer tok = new PathTokenizer( source );
+        final String[] elements = FileUtils.parsePath( source );
         StringBuffer element = new StringBuffer();
-        while( tok.hasMoreTokens() )
+        for( int i = 0; i < elements.length; i++ )
         {
             element.setLength( 0 );
-            final String pathElement = tok.nextToken();
+            final String pathElement = elements[ i ];
             try
             {
                 element.append( resolveFile( baseDirectory, pathElement ) );
@@ -128,9 +128,9 @@ public class Path
                 getLogger().debug( message );
             }
 
-            for( int i = 0; i < element.length(); i++ )
+            for( int j = 0; j < element.length(); j++ )
             {
-                translateFileSep( element, i );
+                translateFileSep( element, j );
             }
             result.add( element.toString() );
         }
@@ -557,21 +557,21 @@ public class Path
      */
     public class PathElement
     {
-        private String[] parts;
+        private String[] m_parts;
 
         public void setLocation( File loc )
         {
-            parts = new String[]{translateFile( loc.getAbsolutePath() )};
+            m_parts = new String[]{translateFile( loc.getAbsolutePath() )};
         }
 
         public void setPath( String path )
         {
-            parts = translatePath( getProject().getBaseDir(), path );
+            m_parts = translatePath( getProject().getBaseDir(), path );
         }
 
         public String[] getParts()
         {
-            return parts;
+            return m_parts;
         }
     }
 }
