@@ -62,6 +62,12 @@ Fixed bugs:
 
 Other changes:
 --------------
+* <move> attempts to rename the directory, if everything inside it is
+  included, before performing file-by-file moves.  This attempt will
+  be done only if filtering is off and if mappers are not used.  This
+  is a performance improvement and there is no change otherwise in
+  the funtionality of this task.
+
 * Exec task has extra attribute "resultproperty" to get the return code
   into a property.
   
