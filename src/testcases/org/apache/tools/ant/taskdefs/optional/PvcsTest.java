@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.*;
+import org.apache.tools.ant.taskdefs.TaskdefsTest;
 
 /**
  * @author Thomas Christensen <tchristensen@nordija.com>
