@@ -74,7 +74,13 @@ import org.apache.tools.ant.util.StringUtils;
  * Generates a file in the current directory with
  * an XML description of what happened during a build.
  * The default filename is "log.xml", but this can be overridden
- * with the property <code>XmlLogger.file</code>
+ * with the property <code>XmlLogger.file</code>.
+ * 
+ * This implementation assumes in its sanity checking that only one 
+ * thread runs a particular target/task at a time. This is enforced
+ * by the way that parallel builds and antcalls are done - and
+ * indeed all but the simplest of tasks could run into problems
+ * if executed in parallel.
  *
  * @see Project#addBuildListener(BuildListener)
  */
@@ -119,14 +125,6 @@ public class XmlLogger implements BuildListener {
 
     /** The complete log document for this build. */
     private Document doc = builder.newDocument();
-    // XXX: (Jon Skeet) I don't see the use for these maps, myself,
-    // and they don't seem threadsafe to me. Is there something
-    // preventing a task being executed by two different threads
-    // at the same time? If not, we could get a mismatch error
-    // for no good reason. I'd have thought that checking
-    // the information in the element stored in the TimedElement
-    // would give enough of a validity check and end up being more 
-    // threadsafe.
     /** Mapping for when tasks started (Task to TimedElement). */
     private Hashtable tasks = new Hashtable();
     /** Mapping for when targets started (Task to TimedElement). */
