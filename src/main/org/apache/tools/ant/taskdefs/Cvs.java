@@ -97,7 +97,7 @@ public class Cvs extends Task {
         if (quiet) {
             toExecute.createArgument().setValue("-q");
         }
-        toExecute.createArgument().setValue(command);
+        toExecute.createArgument().setLine(command);
         toExecute.addArguments(cmd.getCommandline());
 
 	if (pack != null) {
