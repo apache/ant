@@ -84,12 +84,34 @@ public class PropertyExpansionTest extends BuildFileTest {
         project.setProperty("expanded","EXPANDED");
         assertExpandsTo("a${expanded}b","aEXPANDEDb");
         assertExpandsTo("${expanded}${expanded}","EXPANDEDEXPANDED");
-        assertExpandsTo("a$b","a$b");
-        assertExpandsTo("$}}","$}}");
-        assertExpandsTo("$$$-","$$-");
         assertExpandsTo("$$$","$$");
         assertExpandsTo("$$$$-","$$-");
         assertExpandsTo("","");
+        assertExpandsTo("Class$$subclass","Class$subclass");    
+    }
+    
+    /**
+     * new things we want
+     */
+    public void testDollarPassthru() {
+        assertExpandsTo("$-","$-");    
+        assertExpandsTo("Class$subclass","Class$subclass");    
+        assertExpandsTo("$$$-","$$-");
+        assertExpandsTo("$$$$$","$$$");
+        assertExpandsTo("${unassigned.property}","${unassigned.property}");
+        assertExpandsTo("a$b","a$b");
+        assertExpandsTo("$}}","$}}");
+    }
+
+    
+    /**
+     * old things we dont want; not a test no more
+     */
+    public void oldtestQuirkyLegacyBehavior() {
+        assertExpandsTo("Class$subclass","Classsubclass");    
+        assertExpandsTo("$$$-","$-");
+        assertExpandsTo("a$b","ab");
+        assertExpandsTo("$}}","}}");
     }
 
     /**
