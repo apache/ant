@@ -111,9 +111,10 @@ public class Depend extends MatchingTask {
     private Hashtable classFileInfoMap;
     
     /**
-     * A map which gives the list of jars a class depends upon 
+     * A map which gives the list of jars and classes from the classpath that
+     * a class depends upon 
      */
-    private Hashtable classJarDependencies;
+    private Hashtable classpathDependencies;
 
     /**
      * The list of classes which are out of date.
@@ -133,32 +134,33 @@ public class Depend extends MatchingTask {
      */
     private boolean dump = false;
 
-    private Path compileClasspath;
+    /** The classpath to look for additional dependencies */
+    private Path dependClasspath;
 
     /**
-     * Set the classpath to be used for this compilation.
+     * Set the classpath to be used for this dependency check.
      */
     public void setClasspath(Path classpath) {
-        if (compileClasspath == null) {
-            compileClasspath = classpath;
+        if (dependClasspath == null) {
+            dependClasspath = classpath;
         } else {
-            compileClasspath.append(classpath);
+            dependClasspath.append(classpath);
         }
     }
 
-    /** Gets the classpath to be used for this compilation. */
+    /** Gets the classpath to be used for this dependency check. */
     public Path getClasspath() {
-        return compileClasspath;
+        return dependClasspath;
     }
 
     /**
-     * Maybe creates a nested classpath element.
+     * Creates a nested classpath element.
      */
     public Path createClasspath() {
-        if (compileClasspath == null) {
-            compileClasspath = new Path(project);
+        if (dependClasspath == null) {
+            dependClasspath = new Path(project);
         }
-        return compileClasspath.createPath();
+        return dependClasspath.createPath();
     }
 
     /**
@@ -167,9 +169,6 @@ public class Depend extends MatchingTask {
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
-
-    
-    
     
     private void writeDependencyList(File depFile, Vector dependencyList) throws IOException {
         // new dependencies so need to write them out to the cache
@@ -279,44 +278,50 @@ public class Depend extends MatchingTask {
             }
         }
         
-        classJarDependencies = null;
-        if (compileClasspath != null) {
+        classpathDependencies = null;
+        if (dependClasspath != null) {
             // now determine which jars each class depends upon
-            classJarDependencies = new Hashtable();
-            AntClassLoader loader = new AntClassLoader(getProject(), compileClasspath);
-            Hashtable jarFileCache = new Hashtable();
-            Object nullJarFile = new Object();
+            classpathDependencies = new Hashtable();
+            AntClassLoader loader = new AntClassLoader(getProject(), dependClasspath);
+            Hashtable classpathFileCache = new Hashtable();
+            Object nullFileMarker = new Object();
             for (Enumeration e = dependencyMap.keys(); e.hasMoreElements();) {
                 String className = (String)e.nextElement();
                 Vector dependencyList = (Vector)dependencyMap.get(className);
-                Hashtable jarDependencies = new Hashtable();
-                classJarDependencies.put(className, jarDependencies);
+                Hashtable dependencies = new Hashtable();
+                classpathDependencies.put(className, dependencies);
                 for (Enumeration e2 = dependencyList.elements(); e2.hasMoreElements();) {
                     String dependency =(String)e2.nextElement();
-                    Object jarFileObject = jarFileCache.get(dependency);
-                    if (jarFileObject == null) {
-                        jarFileObject = nullJarFile;
+                    Object classpathFileObject = classpathFileCache.get(dependency);
+                    if (classpathFileObject == null) {
+                        classpathFileObject = nullFileMarker;
                         
                         if (!dependency.startsWith("java.") && !dependency.startsWith("javax.")) {
                             URL classURL = loader.getResource(dependency.replace('.', '/') + ".class");
                             if (classURL != null) {
-                                String jarFilePath = classURL.getFile();
-                                if (jarFilePath.startsWith("file:")) {
-                                    int classMarker = jarFilePath.indexOf('!');
-                                    jarFilePath = jarFilePath.substring(5, classMarker);
+                                if (classURL.getProtocol().equals("jar")) {
+                                    String jarFilePath = classURL.getFile();
+                                    if (jarFilePath.startsWith("file:")) {
+                                        int classMarker = jarFilePath.indexOf('!');
+                                        jarFilePath = jarFilePath.substring(5, classMarker);
+                                    }
+                                    classpathFileObject = new File(jarFilePath);
                                 }
-                                jarFileObject = new File(jarFilePath);
+                                else if (classURL.getProtocol().equals("file")) {
+                                    String classFilePath = classURL.getFile();
+                                    classpathFileObject = new File(classFilePath);
+                                }
                                 log("Class " + className + 
-                                    " depends on " + jarFileObject + 
+                                    " depends on " + classpathFileObject + 
                                     " due to " + dependency, Project.MSG_DEBUG);
                             }
                         }
-                        jarFileCache.put(dependency, jarFileObject);
+                        classpathFileCache.put(dependency, classpathFileObject);
                     }
-                    if (jarFileObject != null && jarFileObject != nullJarFile) {
+                    if (classpathFileObject != null && classpathFileObject != nullFileMarker) {
                         // we need to add this jar to the list for this class.
-                        File jarFile = (File)jarFileObject;
-                        jarDependencies.put(jarFile, jarFile);
+                        File jarFile = (File)classpathFileObject;
+                        dependencies.put(jarFile, jarFile);
                     }
                 }
             }
@@ -423,15 +428,15 @@ public class Depend extends MatchingTask {
                     }
                 }
                 
-                if (classJarDependencies != null) {
-                    log("Jar dependencies (Forward):", Project.MSG_DEBUG);
-                    for (Enumeration e = classJarDependencies.keys(); e.hasMoreElements();) { 
+                if (classpathDependencies != null) {
+                    log("Classpath file dependencies (Forward):", Project.MSG_DEBUG);
+                    for (Enumeration e = classpathDependencies.keys(); e.hasMoreElements();) { 
                         String className = (String)e.nextElement();
                         log(" Class " + className + " depends on:", Project.MSG_DEBUG);
-                        Hashtable jarDependencies = (Hashtable)classJarDependencies.get(className);
-                        for (Enumeration e2 = jarDependencies.elements(); e2.hasMoreElements();) {
-                            File jarFile = (File)e2.nextElement();
-                            log("    " + jarFile.getPath(), Project.MSG_DEBUG);
+                        Hashtable dependencies = (Hashtable)classpathDependencies.get(className);
+                        for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements();) {
+                            File classpathFile = (File)e2.nextElement();
+                            log("    " + classpathFile.getPath(), Project.MSG_DEBUG);
                         }
                     }
                 }
@@ -450,18 +455,18 @@ public class Depend extends MatchingTask {
                 }
             }
 
-            // now check jar dependencies
-            if (classJarDependencies != null) {
-                for (Enumeration e = classJarDependencies.keys(); e.hasMoreElements();) { 
+            // now check classpath file dependencies
+            if (classpathDependencies != null) {
+                for (Enumeration e = classpathDependencies.keys(); e.hasMoreElements();) { 
                     String className = (String)e.nextElement();
                     if (!outOfDateClasses.containsKey(className)) {
                         ClassFileInfo info = (ClassFileInfo)classFileInfoMap.get(className);
-                        Hashtable jarDependencies = (Hashtable)classJarDependencies.get(className);
-                        for (Enumeration e2 = jarDependencies.elements(); e2.hasMoreElements();) {
-                            File jarFile = (File)e2.nextElement();
-                            if (jarFile.lastModified() > info.absoluteFile.lastModified()) {
+                        Hashtable dependencies = (Hashtable)classpathDependencies.get(className);
+                        for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements();) {
+                            File classpathFile = (File)e2.nextElement();
+                            if (classpathFile.lastModified() > info.absoluteFile.lastModified()) {
                                 log("Class " + className + 
-                                    " is out of date with respect to " + jarFile, Project.MSG_DEBUG);
+                                    " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
                                 outOfDateClasses.put(className, className);
                                 break;
                             }
