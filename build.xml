@@ -294,9 +294,13 @@
     <available property="bsf.present"
                classname="com.ibm.bsf.BSFManager"
                classpathref="classpath" />
-    <available property="netrexx.present"
-               classname="netrexx.lang.Rexx"
-               classpathref="classpath" />
+    <condition property="netrexx.present">
+      <and>
+        <isset property="jdk1.2+"/>                
+        <available classname="netrexx.lang.Rexx"
+                   classpathref="classpath"/>
+      </and>
+    </condition>
     <available property="trax.present"
                classname="javax.xml.transform.Transformer"
                classpathref="classpath" />
@@ -345,9 +349,13 @@
     <available property="jmf.present"
                classname="javax.sound.sampled.Clip"
                classpathref="classpath"/>
-    <available property="icontract.present"
-               classname="com.reliablesystems.iContract.IContracted"
-               classpathref="classpath"/>
+    <condition property="icontract.present">
+        <and>
+            <isset property="jdk1.2+"/>                
+            <available classname="com.reliablesystems.iContract.IContracted"
+                       classpathref="classpath"/>
+        </and>
+    </condition>
     <available property="jdepend.present"
                classname="jdepend.framework.JDepend"
                classpathref="classpath"/>
