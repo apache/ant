@@ -910,6 +910,10 @@ public class DirectoryScanner
      * @param file  included file
      */
     private void accountForIncludedFile(String name, File file) {
+        if (!filesIncluded.contains(name)
+            && !filesExcluded.contains(name)
+            && !filesDeselected.contains(name)) {
+        
         if (!isExcluded(name)) {
             if (isSelected(name, file)) {
                 filesIncluded.addElement(name);
@@ -921,7 +925,7 @@ public class DirectoryScanner
             everythingIncluded = false;
             filesExcluded.addElement(name);
         }
-
+        }
     }
 
     /**
@@ -932,6 +936,9 @@ public class DirectoryScanner
      * @param fast
      */
     private void accountForIncludedDir(String name, File file, boolean fast) {
+        if (!dirsIncluded.contains(name)
+            && !dirsExcluded.contains(name)
+            && !dirsDeselected.contains(name)) {
       if (!isExcluded(name)) {
           if (isSelected(name, file)) {
               dirsIncluded.addElement(name);
@@ -953,7 +960,7 @@ public class DirectoryScanner
               scandir(file, name + File.separator, fast);
           }
       }
-
+        }
     }
     /**
      * Tests whether or not a name matches against at least one include
