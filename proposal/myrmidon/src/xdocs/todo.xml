@@ -44,6 +44,14 @@ public class MyrmidonSecurityManager
 
             </subsection>
 
+            <subsection name="Validation Pass">
+
+                <p>Consider calling validate() on task prior to execute(). This would allow
+                us to have a "make -k" mode that actually did basic validation and would also
+                encourage task writers to do validation properly.</p>
+
+            </subsection>
+
             <subsection name="Paths">
 
                 <p>Consider allowing the user to configure the ant system by setting the
