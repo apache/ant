@@ -9,7 +9,26 @@
 
 <body>
 
-
+ <section name="Ant wins the JavaWorld Editors&apos; Choice Award">
+    <a href="http://www.javaworld.com">
+      <img src="images/jw_ec_logo_winner2003.gif" alt="" 
+           align="right" border="0" height="108" width="252"/>
+    </a>
+    <p>
+    Ant has won the JavaWorld Editors&apos; Choice Award for
+    </p>
+    <p>
+    <strong>Most Useful Java Community-Developed Technology</strong>
+    </p>
+    <p>
+    for the second time in a row!
+    Read the
+    <a href="http://www.javaworld.com/javaworld/jw-06-2003/jw-0609-eca.html">full article</a> 
+    or jump directly to the bit about
+    <a href="http://www.javaworld.com/javaworld/jw-06-2003/jw-0609-eca-p4.html">Ant's award</a>
+    </p>
+</section>
+    
  <section name="Ant 1.5.3">
     <p>Apache Ant 1.5.3 is now available for 
      <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
