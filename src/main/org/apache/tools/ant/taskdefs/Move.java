@@ -63,19 +63,20 @@ import java.util.*;
 /**
  * Moves a file or directory to a new file or directory.  By default,
  * the destination is overwriten when existing.  When overwrite is
- * turned off, then files are only moved if the source file is 
+ * turned off, then files are only moved if the source file is
  * newer than the destination file, or when the destination file does
  * not exist.</p>
  *
- * <p>Source files and directories are only deleted when the file or 
+ * <p>Source files and directories are only deleted when the file or
  * directory has been copied to the destination successfully.  Filtering
  * also works.</p>
  *
  * <p>This implementation is based on Arnout Kuiper's initial design
- * document, the following mailing list discussions, and the 
+ * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
+ * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class Move extends Copy {
 
@@ -90,7 +91,7 @@ public class Move extends Copy {
 
     protected void doFileOperations() {
         if (fileCopyMap.size() > 0) {   // files to move
-            log("Moving " + fileCopyMap.size() + " files to " + 
+            log("Moving " + fileCopyMap.size() + " files to " +
                 destDir.getAbsolutePath() );
 
             Enumeration e = fileCopyMap.keys();
@@ -98,27 +99,51 @@ public class Move extends Copy {
                 String fromFile = (String) e.nextElement();
                 String toFile = (String) fileCopyMap.get(fromFile);
 
-                try {
-                    log("Moving " + fromFile + " to " + toFile, verbosity);
-                    
-                    FilterSet executionFilterSet = new FilterSet();
-                    if (filtering) {
-                        executionFilterSet.addFilterSet(project.getGlobalFilterSet());
-                    }
-                    for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
-                        executionFilterSet.addFilterSet((FilterSet)filterEnum.nextElement());
-                    }
-                    getFileUtils().copyFile(fromFile, toFile, executionFilterSet,
-                                            forceOverwrite);
+                if( fromFile.equals( toFile ) ) {
+                    log("Skipping self-move of " + fromFile, verbosity);
+                    continue;
+                }
 
-                    File f = new File(fromFile);
-                    if (!f.delete()) {
-                        throw new BuildException("Unable to delete file " + f.getAbsolutePath());
-                    }
+                boolean moved = false;
+                File f = new File(fromFile);
+                File d = new File(toFile);
+
+                try {
+                    log("Attempting to rename: " + fromFile +
+                        " to " + toFile, verbosity);
+                    moved = renameFile(f, d, filtering, forceOverwrite);
                 } catch (IOException ioe) {
-                    String msg = "Failed to copy " + fromFile + " to " + toFile
+                    String msg = "Failed to rename " + fromFile 
+                        + " to " + toFile
                         + " due to " + ioe.getMessage();
                     throw new BuildException(msg, ioe, location);
+                }
+
+                if (!moved) {
+                    try {
+                        log("Moving " + fromFile + " to " + toFile, verbosity);
+                    
+                        FilterSet executionFilterSet = new FilterSet();
+                        if (filtering) {
+                            executionFilterSet.addFilterSet(project.getGlobalFilterSet());
+                        }
+                        for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
+                            executionFilterSet.addFilterSet((FilterSet)filterEnum.nextElement());
+                        }
+                        getFileUtils().copyFile(f, d, executionFilterSet,
+                                                forceOverwrite);
+                        
+                        f = new File(fromFile);
+                        if (!f.delete()) {
+                            throw new BuildException("Unable to delete file " 
+                                                     + f.getAbsolutePath());
+                        }
+                    } catch (IOException ioe) {
+                        String msg = "Failed to copy " + fromFile + " to " 
+                            + toFile
+                            + " due to " + ioe.getMessage();
+                        throw new BuildException(msg, ioe, location);
+                    }
                 }
             }
         }
@@ -156,7 +181,7 @@ public class Move extends Copy {
     }
 
     /**
-     * Its only ok to delete a directory tree if there are 
+     * Its only ok to delete a directory tree if there are
      * no files in it.
      */
     protected boolean okToDelete(File d) {
@@ -198,4 +223,42 @@ public class Move extends Copy {
        }
     }
 
+    /**
+     * Attempts to rename a file from a source to a destination.
+     * If overwrite is set to true, this method overwrites existing file
+     * even if the destination file is newer.  Otherwise, the source file is
+     * renamed only if the destination file is older than it.
+     * Method then checks if token filtering is used.  If it is, this method
+     * returns false assuming it is the responsibility to the copyFile method.
+     *
+     * @throws IOException
+     */
+    protected boolean renameFile(File sourceFile, File destFile,
+                                 boolean filtering, boolean overwrite)
+        throws IOException, BuildException {
+
+        boolean renamed = true;
+        if (!filtering) {
+            // ensure that parent dir of dest file exists!
+            // not using getParentFile method to stay 1.1 compat
+            String parentPath = destFile.getParent();
+            if (parentPath != null) {
+                File parent = new File(parentPath);
+                if (!parent.exists()) {
+                    parent.mkdirs();
+                }
+            }
+
+            if (destFile.exists()) {
+                if (!destFile.delete()) {
+                    throw new BuildException("Unable to remove existing file " 
+                                             + destFile);
+                }
+            }
+            renamed = sourceFile.renameTo(destFile);
+        } else {
+            renamed = false;
+        }
+        return renamed;
+    }
 }

@@ -35,6 +35,8 @@ Changes that could break older environments:
   doesn't match files contained in a directory named foo - use foo/*
   instead.
 
+* <fixcrlf> will not remove trailing whitespace at the end of lines anymore.
+
 Other changes:
 --------------
 
@@ -145,6 +147,9 @@ Other changes:
 
 * The .NET tasks have been adapted to the beta2 release of the framework.
 
+* <move> will now try to rename() files before copying them byte by
+  byte - only if filtering is of, of course.
+
 Fixed bugs:
 -----------
 
@@ -219,6 +224,8 @@ Fixed bugs:
   directories that have been excluded
 
 * <fixcrl> failed for large files.
+
+* <move> removed files you tried to move to themselves.
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
