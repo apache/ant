@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -147,7 +147,7 @@ public class TaskAdapter extends Task {
             executeM.invoke(proxy, null);
             return; 
         } catch (java.lang.reflect.InvocationTargetException ie) {
-            log("Error in " + proxy.getClass(), Project.MSG_ERR);
+            log("Error in " + proxy.getClass(), Project.MSG_VERBOSE);
             Throwable t = ie.getTargetException();
             if (t instanceof BuildException) {
                 throw ((BuildException) t);
@@ -155,7 +155,7 @@ public class TaskAdapter extends Task {
                 throw new BuildException(t);
             }
         } catch (Exception ex) {
-            log("Error in " + proxy.getClass(), Project.MSG_ERR);
+            log("Error in " + proxy.getClass(), Project.MSG_VERBOSE);
             throw new BuildException(ex);
         }
 
