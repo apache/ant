@@ -59,6 +59,14 @@ public class DefaultTypeFactory
     }
 
     /**
+     * Determines if this factory can create instances of a particular type.
+     */
+    public boolean canCreate( String name )
+    {
+        return ( getClassName( name ) != null );
+    }
+
+    /**
      * Create a type instance with appropriate name.
      *
      * @param name the name
@@ -68,7 +76,15 @@ public class DefaultTypeFactory
     public Object create( final String name )
         throws TypeException
     {
+        // Determine the name of the class to instantiate
         final String className = getClassName( name );
+        if( null == className )
+        {
+            final String message = REZ.getString( "no-mapping.error", name );
+            throw new TypeException( message );
+        }
+
+        // Instantiate the object
         try
         {
             final ClassLoader classLoader = getClassLoader();
@@ -83,16 +99,8 @@ public class DefaultTypeFactory
     }
 
     private String getClassName( final String name )
-        throws TypeException
     {
-        final String className = (String)m_classNames.get( name );
-        if( null == className )
-        {
-            final String message = REZ.getString( "no-mapping.error", name );
-            throw new TypeException( message );
-        }
-
-        return className;
+        return  (String)m_classNames.get( name );
     }
 
     protected ClassLoader getClassLoader()

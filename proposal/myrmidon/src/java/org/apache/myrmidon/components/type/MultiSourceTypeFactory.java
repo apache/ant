@@ -55,6 +55,14 @@ public class MultiSourceTypeFactory
     }
 
     /**
+     * Determines if this factory can create instances of a particular type.
+     */
+    public boolean canCreate( final String name )
+    {
+        return ( findFactory( name ) != null );
+    }
+
+    /**
      * Create a type instance based on name.
      *
      * @param name the name
@@ -64,30 +72,37 @@ public class MultiSourceTypeFactory
     public Object create( final String name )
         throws TypeException
     {
-        TypeFactory factory = getTypeFactory( name );
-
-        if( null == factory && null != m_parent )
-        {
-            factory = m_parent.getTypeFactory( name );
-        }
-
+        // Locate the factory to use
+        TypeFactory factory = findFactory( name );
         if( null == factory )
         {
             final String message = REZ.getString( "no-factory.error", name );
             throw new TypeException( message );
         }
-        else
+
+        // Create the object
+        final Object object = factory.create( name );
+        if( !m_type.isInstance( object ) )
         {
-            final Object object = factory.create( name );
-
-            if( !m_type.isInstance( object ) )
-            {
-                final String message = REZ.getString( "mismatched-type.error", name, object.getClass().getName() );
-                throw new TypeException( message );
-            }
-
-            return object;
+            final String message = REZ.getString( "mismatched-type.error", name, object.getClass().getName() );
+            throw new TypeException( message );
         }
+
+        return object;
+    }
+
+    /**
+     * Locates the type factory to use for a particular type.
+     */
+    private TypeFactory findFactory( final String name )
+    {
+        TypeFactory factory = getTypeFactory( name );
+        if( null == factory && null != m_parent )
+        {
+            factory = m_parent.getTypeFactory( name );
+        }
+
+        return factory;
     }
 
     /**

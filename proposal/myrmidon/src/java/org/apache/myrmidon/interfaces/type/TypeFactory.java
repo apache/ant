@@ -16,11 +16,18 @@ package org.apache.myrmidon.interfaces.type;
 public interface TypeFactory
 {
     /**
+     * Determines if this factory can create instances of a particular type.
+     *
+     * @param name the type name.
+     */
+    boolean canCreate( String name );
+
+    /**
      * Create a type instance based on name.
      *
-     * @param name the name
+     * @param name the type name
      * @return the type instance
-     * @exception TypeException if an error occurs
+     * @exception TypeException if the type is unknown, or an error occurs.
      */
     Object create( String name )
         throws TypeException;
