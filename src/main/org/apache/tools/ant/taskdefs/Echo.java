@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -134,7 +134,7 @@ public class Echo extends Task {
         /**
          * mapping of enumerated values to log levels
          */
-        private static int levels[] = {
+        private static int[] levels = {
             Project.MSG_ERR,
             Project.MSG_WARN,
             Project.MSG_INFO,
@@ -144,7 +144,7 @@ public class Echo extends Task {
 
         /**
          * get the level of the echo of the current value
-         * @return
+         * @return the level
          */
         public int getLevel() {
             return levels[getIndex()];

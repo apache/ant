@@ -48,7 +48,7 @@ public class Dirname extends Task {
 
     /**
      * Path to take the dirname of.
-     * @param file
+     * @param file a <code>File</code> value
      */
     public void setFile(File file) {
         this.file = file;
@@ -56,14 +56,17 @@ public class Dirname extends Task {
 
     /**
      * The name of the property to set.
-     * @param property
+     * @param property the name of the property
      */
     public void setProperty(String property) {
         this.property = property;
     }
 
 
-    // The method executing the task
+    /**
+     * Execute this task.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute required", getLocation());

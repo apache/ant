@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,18 +60,38 @@ public class Copydir extends MatchingTask {
         destDir = dest;
     }
 
+    /**
+     * The filtering attribute.
+     * Default  is false.
+     * @param filter if true use filtering
+     */
     public void setFiltering(boolean filter) {
         filtering = filter;
     }
 
+    /**
+     * The flattening attribute.
+     * Default  is false.
+     * @param flatten if true use flattening
+     */
     public void setFlatten(boolean flatten) {
         this.flatten = flatten;
     }
 
+    /**
+     * The forceoverwrite attribute.
+     * Default  is false.
+     * @param force if true overwrite even if the destination file
+     *              is newer that the source file
+     */
     public void setForceoverwrite(boolean force) {
         forceOverwrite = force;
     }
 
+    /**
+     * Execute the task.
+     * @throws BuildException on error
+     */
     public void execute() throws BuildException {
         log("DEPRECATED - The copydir task is deprecated.  Use copy instead.");
 

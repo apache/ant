@@ -37,7 +37,6 @@ public class Ear extends Jar {
     private File deploymentDescriptor;
     private boolean descriptorAdded;
 
-
     /**
      * Create an Ear task.
      */
@@ -48,6 +47,8 @@ public class Ear extends Jar {
     }
 
     /**
+     * Set the destination file.
+     * @param earFile the destination file
      * @deprecated Use setDestFile(destfile) instead
      */
     public void setEarfile(File earFile) {
@@ -56,6 +57,7 @@ public class Ear extends Jar {
 
     /**
      * File to incorporate as application.xml.
+     * @param descr the descriptor file
      */
     public void setAppxml(File descr) {
         deploymentDescriptor = descr;
@@ -86,6 +88,12 @@ public class Ear extends Jar {
     }
 
 
+    /**
+     * Initialize the output stream.
+     * @param zOut the zip output stream.
+     * @throws IOException on I/O errors
+     * @throws BuildException on other errors
+     */
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
         // If no webxml file is specified, it's an error.
@@ -98,6 +106,11 @@ public class Ear extends Jar {
 
     /**
      * Overridden from Zip class to deal with application.xml
+     * @param file the file to add to the archive
+     * @param zOut the stream to write to
+     * @param vPath the name this entry shall have in the archive
+     * @param mode the Unix permissions to set.
+     * @throws IOException on error
      */
     protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)
