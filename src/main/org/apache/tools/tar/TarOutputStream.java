@@ -52,14 +52,29 @@ public class TarOutputStream extends FilterOutputStream {
     protected TarBuffer buffer;
     protected int       longFileMode = LONGFILE_ERROR;
 
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     */
     public TarOutputStream(OutputStream os) {
         this(os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
     }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     * @param blockSize the block size to use
+     */
     public TarOutputStream(OutputStream os, int blockSize) {
         this(os, blockSize, TarBuffer.DEFAULT_RCDSIZE);
     }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param os the output stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     */
     public TarOutputStream(OutputStream os, int blockSize, int recordSize) {
         super(os);
 
@@ -71,6 +86,13 @@ public class TarOutputStream extends FilterOutputStream {
         this.oneBuf = new byte[1];
     }
 
+    /**
+     * Set the long file mode.
+     * This can be LONGFILE_ERROR(0), LONGFILE_TRUNCATE(1) or LONGFILE_GNU(2).
+     * This specifies the treatment of long file names (names >= TarConstants.NAMELEN).
+     * Default is LONGFILE_ERROR.
+     * @param longFileMode the mode to use
+     */
     public void setLongFileMode(int longFileMode) {
         this.longFileMode = longFileMode;
     }
@@ -97,6 +119,7 @@ public class TarOutputStream extends FilterOutputStream {
     /**
      * Ends the TAR archive without closing the underlying OutputStream.
      * The result is that the two EOF records of nulls are written.
+     * @throws IOException on error
      */
     public void finish() throws IOException {
         // See Bugzilla 28776 for a discussion on this
@@ -109,6 +132,7 @@ public class TarOutputStream extends FilterOutputStream {
      * Ends the TAR archive and closes the underlying OutputStream.
      * This means that finish() is called followed by calling the
      * TarBuffer's close().
+     * @throws IOException on error
      */
     public void close() throws IOException {
         this.finish();
@@ -134,6 +158,7 @@ public class TarOutputStream extends FilterOutputStream {
      * is completely written to the output stream.
      *
      * @param entry The TarEntry to be written to the archive.
+     * @throws IOException on error
      */
     public void putNextEntry(TarEntry entry) throws IOException {
         if (entry.getName().length() >= TarConstants.NAMELEN) {
@@ -176,6 +201,7 @@ public class TarOutputStream extends FilterOutputStream {
      * data fragments still being assembled that must be written
      * to the output stream before this entry is closed and the
      * next entry written.
+     * @throws IOException on error
      */
     public void closeEntry() throws IOException {
         if (this.assemLen > 0) {
@@ -202,6 +228,7 @@ public class TarOutputStream extends FilterOutputStream {
      * This method simply calls read( byte[], int, int ).
      *
      * @param b The byte written.
+     * @throws IOException on error
      */
     public void write(int b) throws IOException {
         this.oneBuf[0] = (byte) b;
@@ -215,6 +242,7 @@ public class TarOutputStream extends FilterOutputStream {
      * This method simply calls write( byte[], int, int ).
      *
      * @param wBuf The buffer to write to the archive.
+     * @throws IOException on error
      */
     public void write(byte[] wBuf) throws IOException {
         this.write(wBuf, 0, wBuf.length);
@@ -232,6 +260,7 @@ public class TarOutputStream extends FilterOutputStream {
      * @param wBuf The buffer to write to the archive.
      * @param wOffset The offset in the buffer from which to get bytes.
      * @param numToWrite The number of bytes to write.
+     * @throws IOException on error
      */
     public void write(byte[] wBuf, int wOffset, int numToWrite) throws IOException {
         if ((this.currBytes + numToWrite) > this.currSize) {

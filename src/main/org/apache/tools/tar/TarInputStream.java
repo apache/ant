@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,14 +46,29 @@ public class TarInputStream extends FilterInputStream {
     protected TarEntry currEntry;
     private boolean v7Format;
 
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     */
     public TarInputStream(InputStream is) {
         this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
     }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
+     */
     public TarInputStream(InputStream is, int blockSize) {
         this(is, blockSize, TarBuffer.DEFAULT_RCDSIZE);
     }
 
+    /**
+     * Constructor for TarInputStream.
+     * @param is the input stream to use
+     * @param blockSize the block size to use
+     * @param recordSize the record size to use
+     */
     public TarInputStream(InputStream is, int blockSize, int recordSize) {
         super(is);
 
@@ -77,6 +92,7 @@ public class TarInputStream extends FilterInputStream {
 
     /**
      * Closes this stream. Calls the TarBuffer's close() method.
+     * @throws IOException on error
      */
     public void close() throws IOException {
         this.buffer.close();
@@ -100,6 +116,7 @@ public class TarInputStream extends FilterInputStream {
      *
      *
      * @return The number of available bytes for the current entry.
+     * @throws IOException for signature
      */
     public int available() throws IOException {
         return this.entrySize - this.entryOffset;
@@ -112,6 +129,8 @@ public class TarInputStream extends FilterInputStream {
      * to skip extends beyond that point.
      *
      * @param numToSkip The number of bytes to skip.
+     * @return the number actually skipped
+     * @throws IOException on error
      */
     public long skip(long numToSkip) throws IOException {
         // REVIEW
@@ -165,6 +184,7 @@ public class TarInputStream extends FilterInputStream {
      * been reached.
      *
      * @return The next TarEntry in the archive, or null.
+     * @throws IOException on error
      */
     public TarEntry getNextEntry() throws IOException {
         if (this.hasHitEOF) {
@@ -254,6 +274,7 @@ public class TarInputStream extends FilterInputStream {
      * This method simply calls read( byte[], int, int ).
      *
      * @return The byte read, or -1 at EOF.
+     * @throws IOException on error
      */
     public int read() throws IOException {
         int num = this.read(this.oneBuf, 0, 1);
@@ -272,6 +293,7 @@ public class TarInputStream extends FilterInputStream {
      *
      * @param buf The buffer into which to place bytes read.
      * @return The number of bytes read, or -1 at EOF.
+     * @throws IOException on error
      */
     public int read(byte[] buf) throws IOException {
         return this.read(buf, 0, buf.length);
@@ -288,6 +310,7 @@ public class TarInputStream extends FilterInputStream {
      * @param offset The offset at which to place bytes read.
      * @param numToRead The number of bytes to read.
      * @return The number of bytes read, or -1 at EOF.
+     * @throws IOException on error
      */
     public int read(byte[] buf, int offset, int numToRead) throws IOException {
         int totalRead = 0;
@@ -361,6 +384,7 @@ public class TarInputStream extends FilterInputStream {
      * an output stream.
      *
      * @param out The OutputStream into which to write the entry's data.
+     * @throws IOException on error
      */
     public void copyEntryContents(OutputStream out) throws IOException {
         byte[] buf = new byte[32 * 1024];
