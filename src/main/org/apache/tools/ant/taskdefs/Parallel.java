@@ -98,8 +98,40 @@ public class Parallel extends Task
     /** Total number of threads per processor to run.  */
     private int numThreadsPerProcessor = 0;
 
-    /** Interval (in ms) to poll for finished threads. */
-    private int pollInterval = 1000; // default is once a second
+    private long timeout;
+
+    /** Indicates threads are still running and new threads can be issued */
+    private volatile boolean stillRunning;
+
+    /** INdicates that the execution timedout */
+    private boolean timedOut;
+
+    /**
+     * Indicates whether failure of any of the nested tasks should end
+     * execution
+     */
+    private boolean failOnAny;
+
+    /**
+     * Interval to poll for completed threads when threadCount or
+     * threadsPerProcessor is specified.  Integer in milliseconds.; optional
+     *
+     * @param pollInterval New value of property pollInterval.
+     */
+    public void setPollInterval(int pollInterval) {
+    }
+
+    /**
+     * Control whether a failure in a nested task halts execution. Note that
+     * the task will complete but existing threads will continue to run - they
+     * are not stopped
+     *
+     * @param failOnAny if true any nested task failure causes parallel to
+     *        complete.
+     */
+    public void setFailOnAny(boolean failOnAny) {
+        this.failOnAny = failOnAny;
+    }
 
     /**
      * Add a nested task to execute in parallel.
@@ -140,14 +172,19 @@ public class Parallel extends Task
     }
 
     /**
-     * Interval to poll for completed threads when threadCount or
-     * threadsPerProcessor is specified.  Integer in milliseconds.; optional
+     * Sets the timeout on this set of tasks. If the timeout is reached
+     * before the other threads complete, the execution of this
+     * task completes with an exception.
      *
-     * @param pollInterval New value of property pollInterval.
+     * Note that existing threads continue to run.
+     *
+     * @param timeout timeout in milliseconds.
      */
-    public void setPollInterval(int pollInterval) {
-        this.pollInterval = pollInterval;
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
     }
+
+
 
     /**
      * Execute the parallel tasks
@@ -181,56 +218,100 @@ public class Parallel extends Task
      */
     private void spinThreads() throws BuildException {
         final int numTasks = nestedTasks.size();
-        Thread[] threads = new Thread[numTasks];
         TaskRunnable[] runnables = new TaskRunnable[numTasks];
+        stillRunning = true;
+        timedOut = false;
+
         int threadNumber = 0;
         for (Enumeration e = nestedTasks.elements(); e.hasMoreElements();
              threadNumber++) {
             Task nestedTask = (Task) e.nextElement();
-            ThreadGroup group = new ThreadGroup("parallel");
-            TaskRunnable taskRunnable
+            runnables[threadNumber]
                 = new TaskRunnable(threadNumber, nestedTask);
-            runnables[threadNumber] = taskRunnable;
-            threads[threadNumber] = new Thread(group, taskRunnable);
         }
 
-        final int maxRunning = numThreads;
-        Thread[] running = new Thread[maxRunning];
+        final int maxRunning = numTasks < numThreads ? numTasks : numThreads;
+        TaskRunnable[] running = new TaskRunnable[maxRunning];
+
         threadNumber = 0;
+        ThreadGroup group = new ThreadGroup("parallel");
 
         // now run them in limited numbers...
+        // start initial batch of threads
+        for (int i = 0; i < maxRunning; ++i) {
+            running[i] = runnables[threadNumber++];
+            Thread thread =  new Thread(group, running[i]);
+            thread.start();
+        }
+
+        if (timeout != 0) {
+            // start the timeout thread
+            Thread timeoutThread = new Thread() {
+                public synchronized void run() {
+                    try {
+                        wait(timeout);
+                        synchronized(semaphore) {
+                            stillRunning = false;
+                            timedOut = true;
+                            semaphore.notifyAll();
+                        }
+                    } catch (InterruptedException e) {
+                        // ignore
+                    }
+                }
+            };
+            timeoutThread.start();
+        }
+
+        // now find available running slots for the remaining threads
         outer:
-        while (threadNumber < numTasks) {
+        while (threadNumber < numTasks && stillRunning) {
             synchronized (semaphore) {
                 for (int i = 0; i < maxRunning; i++) {
-                    if (running[i] == null || !running[i].isAlive()) {
-                        running[i] = threads[threadNumber++];
-                        running[i].start();
-                        // countinue on outer while loop in case we
-                        // used our last thread
+                    if (running[i] == null || running[i].finished) {
+                        running[i] = runnables[threadNumber++];
+                        Thread thread =  new Thread(group, running[i]);
+                        thread.start();
+                        // countinue on outer while loop to get another
+                        // available slot
                         continue outer;
                     }
                 }
-                // if we got here all are running, so sleep a little
+
+                // if we got here all slots in use, so sleep until
+                // something happens
                 try {
-                    semaphore.wait(pollInterval);
+                    semaphore.wait();
                 } catch (InterruptedException ie) {
                     // dosen't java know interruptions are rude?
-                    // just pretend it didn't happen and go aobut out business.
+                    // just pretend it didn't happen and go about out business.
                     // sheesh!
                 }
             }
         }
 
-        // now join to all the threads
-        for (int i = 0; i < maxRunning; ++i) {
-            try {
-                if (running[i] != null) {
-                    running[i].join();
+        synchronized(semaphore) {
+            // are all threads finished
+            outer2:
+            while (stillRunning) {
+                for (int i = 0; i < maxRunning; ++i) {
+                    if (running[i] != null && !running[i].finished) {
+                        //System.out.println("Thread " + i + " is still alive ");
+                        // still running - wait for it
+                        try {
+                            semaphore.wait();
+                        } catch (InterruptedException ie) {
+                            // who would interrupt me at a time like this?
+                        }
+                        continue outer2;
+                    }
                 }
-            } catch (InterruptedException ie) {
-                // who would interrupt me at a time like this?
+                stillRunning = false;
             }
+        }
+
+        if (timedOut) {
+            throw new BuildException("Parallel execution timed out");
         }
 
         // now did any of the threads throw an exception
@@ -293,6 +374,7 @@ public class Parallel extends Task
         private Throwable exception;
         private Task task;
         private int taskNumber;
+        boolean finished;
 
         /**
          * Construct a new TaskRunnable.<p>
@@ -315,6 +397,10 @@ public class Parallel extends Task
                 exception = t;
             } finally {
                 synchronized (semaphore) {
+                    finished = true;
+                    if (failOnAny) {
+                        stillRunning = false;
+                    }
                     semaphore.notifyAll();
                 }
             }
