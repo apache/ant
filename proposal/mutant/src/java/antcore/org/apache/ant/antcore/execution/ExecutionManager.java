@@ -70,7 +70,7 @@ import org.apache.ant.init.InitConfig;
 /**
  * The ExecutionManager is used to manage the execution of a build. The
  * Execution manager is responsible for loading the Ant task libraries,
- * creating ExecutionFrames for each project that is part of the build and
+ * creating Frames for each project that is part of the build and
  * then executing the tasks within those Execution Frames.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
@@ -84,7 +84,7 @@ public class ExecutionManager {
     private BuildEventSupport eventSupport = new BuildEventSupport();
 
     /** The Execution Frame for the top level project being executed */
-    private ExecutionFrame mainFrame;
+    private Frame mainFrame;
 
     /**
      * The configuration to be used in this execution of Ant. It is formed
@@ -136,7 +136,7 @@ public class ExecutionManager {
 
             addConfigLibPaths();
 
-            mainFrame = new ExecutionFrame(antLibraries, initConfig, config);
+            mainFrame = new Frame(antLibraries, initConfig, config);
         } catch (MalformedURLException e) {
             throw new ExecutionException("Unable to load Ant libraries", e);
         }

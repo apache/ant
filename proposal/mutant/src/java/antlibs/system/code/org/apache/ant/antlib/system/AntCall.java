@@ -52,7 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antlib.system;
-import org.apache.ant.common.service.ComponentService;
+import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 
 /**
@@ -68,10 +68,10 @@ public class AntCall extends AntBase {
      * @exception ExecutionException if the build fails
      */
     public void execute() throws ExecutionException {
-        ComponentService componentService
-             = (ComponentService)getCoreService(ComponentService.class);
-             
-        componentService.callTarget(getProperties(), getTargets());
+        ExecService execService
+             = (ExecService)getCoreService(ExecService.class);
+
+        execService.callTarget(getProperties(), getTargets());
     }
 
     /**

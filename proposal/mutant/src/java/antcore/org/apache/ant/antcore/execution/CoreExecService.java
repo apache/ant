@@ -52,88 +52,85 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import org.apache.ant.common.antlib.Task;
-import org.apache.ant.common.model.ModelElement;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.util.List;
+import java.util.Map;
+import org.apache.ant.antcore.modelparser.XMLProjectParser;
+import org.apache.ant.antcore.xml.XMLParseException;
+import org.apache.ant.common.model.Project;
+import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.init.InitUtils;
+
 /**
- * This is the core's implementation of the AntContext for Tasks.
+ *This is the core's implementation of the Execution Service.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 17 January 2002
+ * @created 8 February 2002
  */
-public class TaskContext extends ExecutionContext {
-
-    /** The task being managed by this context */
-    private Task task;
-
-    /**
-     * the loader used to load this task. Note that this is not necessarily
-     * the loader which is used to load the Task class as loading may have
-     * been delegated to a parent loader.
-     */
-    private ClassLoader loader;
+public class CoreExecService implements ExecService {
+    /** The Frame this service instance is working for */
+    private Frame frame;
 
     /**
-     * Initilaise this context's environment
+     * Constructor
      *
      * @param frame the frame containing this context
      */
-    public TaskContext(Frame frame) {
-        super(frame);
+    protected CoreExecService(Frame frame) {
+        this.frame = frame;
     }
 
     /**
-     * Get the task associated with this context
+     * Run a sub-build.
      *
-     * @return the task instance
+     * @param antFile the file containing the XML description of the model
+     * @param targets A list of targets to be run
+     * @param properties the initiali properties to be used in the build
+     * @exception ExecutionException if the subbuild cannot be run
      */
-    public Task getTask() {
-        return task;
-    }
-
-    /**
-     * Gets the loader for this task
-     *
-     * @return the task's loader
-     */
-    public ClassLoader getLoader() {
-        return loader;
-    }
-
-    /**
-     * Associate a task with this context
-     *
-     * @param task the task to be manager
-     * @param loader the classloader
-     * @param modelElement the model element associated with this context
-     * @exception ExecutionException if the task cannot be initialized
-     */
-    public void init(ClassLoader loader, Task task, ModelElement modelElement)
+    public void runBuild(File antFile, Map properties, List targets)
          throws ExecutionException {
-        this.task = task;
-        this.loader = loader;
-        setModelElement(modelElement);
-        task.init(this);
+        try {
+            // Parse the build file into a project
+            XMLProjectParser parser = new XMLProjectParser();
+            Project project
+                 = parser.parseBuildFile(InitUtils.getFileURL(antFile));
+            runBuild(project, properties, targets);
+        } catch (MalformedURLException e) {
+            throw new ExecutionException(e);
+        } catch (XMLParseException e) {
+            throw new ExecutionException(e);
+        }
     }
 
     /**
-     * execute this context's task
+     * Run a sub-build.
      *
-     * @exception ExecutionException if there is a problem executing the
-     *      task
+     * @param model the project model to be used for the build
+     * @param targets A list of targets to be run
+     * @param properties the initiali properties to be used in the build
+     * @exception ExecutionException if the subbuild cannot be run
      */
-    public void execute() throws ExecutionException {
-        task.execute();
+    public void runBuild(Project model, Map properties, List targets)
+         throws ExecutionException {
+        Frame newFrame = frame.createFrame(model);
+        newFrame.setInitialProperties(properties);
+        newFrame.runBuild(targets);
     }
 
     /**
-     * Destroy this context. The context can be reused for another task
-     * after this one
+     * Run a sub-build using the current frame's project model
+     *
+     * @param targets A list of targets to be run
+     * @param properties the initiali properties to be used in the build
+     * @exception ExecutionException if the subbuild cannot be run
      */
-    public void destroy() {
-        task.destroy();
-        task = null;
-        loader = null;
+    public void callTarget(Map properties, List targets)
+         throws ExecutionException {
+        runBuild(frame.getProject(), properties, targets);
     }
+
 }
 

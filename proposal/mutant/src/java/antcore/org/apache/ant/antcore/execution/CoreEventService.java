@@ -63,15 +63,15 @@ import org.apache.ant.common.util.ExecutionException;
  * @created 7 February 2002
  */
 public class CoreEventService implements EventService {
-    /** The ExecutionFrame this service instance is working for */
-    private ExecutionFrame frame;
+    /** The Frame this service instance is working for */
+    private Frame frame;
 
     /**
      * Constructor
      *
      * @param frame the frame for which this instance is providing service
      */
-    public CoreEventService(ExecutionFrame frame) {
+    public CoreEventService(Frame frame) {
         this.frame = frame;
     }
 

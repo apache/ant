@@ -63,14 +63,14 @@ import org.apache.ant.common.util.PropertyUtils;
 /**
  * This is the core's implementation of the DataService service interface.
  * It gives Ant libraries access to property values maintained in the
- * ExecutionFrame.
+ * Frame.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 31 January 2002
  */
-public class ExecutionDataService implements DataService {
-    /** The ExecutionFrame this service instance is working for */
-    private ExecutionFrame frame;
+public class CoreDataService implements DataService {
+    /** The Frame this service instance is working for */
+    private Frame frame;
 
     /** all properties to be unset without throwing an exception */
     private boolean allowUnsetProperties;
@@ -82,7 +82,7 @@ public class ExecutionDataService implements DataService {
      * @param allowUnsetProperties true if the reference to an unset
      *      property should not throw an exception
      */
-    public ExecutionDataService(ExecutionFrame frame,
+    public CoreDataService(Frame frame,
                                 boolean allowUnsetProperties) {
         this.frame = frame;
         this.allowUnsetProperties = allowUnsetProperties;

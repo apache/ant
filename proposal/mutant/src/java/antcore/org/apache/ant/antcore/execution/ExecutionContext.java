@@ -65,8 +65,8 @@ import org.apache.ant.common.util.ExecutionException;
  * @created 20 January 2002
  */
 public class ExecutionContext implements AntContext {
-    /** The ExecutionFrame containing this context */
-    private ExecutionFrame frame;
+    /** The Frame containing this context */
+    private Frame frame;
 
     /** the event support instance used to manage build events */
     private BuildEventSupport eventSupport;
@@ -79,7 +79,7 @@ public class ExecutionContext implements AntContext {
      *
      * @param frame the frame containing this context
      */
-    public ExecutionContext(ExecutionFrame frame) {
+    public ExecutionContext(Frame frame) {
         this.frame = frame;
         this.eventSupport = frame.getEventSupport();
     }

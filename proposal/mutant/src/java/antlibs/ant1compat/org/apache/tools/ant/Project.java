@@ -63,6 +63,7 @@ import java.util.Properties;
 import java.util.Stack;
 import java.util.Vector;
 import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
@@ -115,6 +116,10 @@ public class Project implements org.apache.ant.common.event.BuildListener {
 
     /** The java version detected that Ant is running on */
     private static String javaVersion;
+
+    /** the factory which created this project instance. This is used to
+        define new types and tasks */
+    private AntLibFactory factory;
 
     /** Collection of Ant1 type definitions */
     private Hashtable dataClassDefinitions = new Hashtable();
@@ -175,8 +180,13 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         }
     }
 
-    /** Create the project */
-    public Project() {
+    /**
+     * Create the project
+     *
+     * @param factory the factory object creating this project
+     */
+    public Project(AntLibFactory factory) {
+        this.factory = factory;
         fileUtils = FileUtils.newFileUtils();
     }
 
@@ -468,6 +478,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @param event target finished event
      */
     public void targetFinished(org.apache.ant.common.event.BuildEvent event) {
+        org.apache.ant.common.model.Target realTarget =
+            (org.apache.ant.common.model.Target)event.getModelElement();
         Target currentTarget = (Target)targetStack.pop();
         fireTargetFinished(currentTarget, event.getCause());
         currentTarget = null;
@@ -818,7 +830,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     public void addTaskDefinition(String taskName, Class taskClass)
          throws BuildException {
         try {
-            componentService.taskdef(taskName, taskClass);
+            componentService.taskdef(factory, taskClass.getClassLoader(),
+                taskName, taskClass.getName());
             taskClassDefinitions.put(taskName, taskClass);
         } catch (ExecutionException e) {
             throw new BuildException(e);
@@ -833,7 +846,8 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
         try {
-            componentService.typedef(typeName, typeClass);
+            componentService.typedef(factory, typeClass.getClassLoader(),
+                typeName, typeClass.getName());
             dataClassDefinitions.put(typeName, typeClass);
         } catch (ExecutionException e) {
             throw new BuildException(e);

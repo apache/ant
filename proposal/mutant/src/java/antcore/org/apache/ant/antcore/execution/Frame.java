@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import org.apache.ant.antcore.antlib.AntLibrary;
+import org.apache.ant.antcore.antlib.ComponentLibrary;
 import org.apache.ant.antcore.config.AntConfig;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.antlib.ExecutionComponent;
@@ -80,16 +81,17 @@ import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.FileUtils;
 import org.apache.ant.common.util.MessageLevel;
 import org.apache.ant.init.InitConfig;
+import org.apache.ant.common.service.ExecService;
 
 /**
- * An ExecutionFrame maintains the state of a project during an execution.
- * The ExecutionFrame contains the data values set by Ant tasks as they are
+ * An Frame maintains the state of a project during an execution.
+ * The Frame contains the data values set by Ant tasks as they are
  * executed, including task definitions, property values, etc.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 14 January 2002
  */
-public class ExecutionFrame {
+public class Frame {
     /** The Ant aspect used to identify Ant metadata */
     public final static String ANT_ASPECT = "ant";
 
@@ -162,7 +164,7 @@ public class ExecutionFrame {
      * @exception ExecutionException if a component of the library cannot be
      *      imported
      */
-    protected ExecutionFrame(Map standardLibs, InitConfig initConfig,
+    protected Frame(Map standardLibs, InitConfig initConfig,
                              AntConfig config) throws ExecutionException {
         this.standardLibs = standardLibs;
         this.config = config;
@@ -184,7 +186,7 @@ public class ExecutionFrame {
     }
 
     /**
-     * Sets the Project of the ExecutionFrame
+     * Sets the Project of the Frame
      *
      * @param project The new Project value
      * @exception ExecutionException if any required sub-frames cannot be
@@ -198,7 +200,7 @@ public class ExecutionFrame {
             String referenceName = (String)i.next();
             Project referencedProject
                  = project.getReferencedProject(referenceName);
-            ExecutionFrame referencedFrame = createFrame(referencedProject);
+            Frame referencedFrame = createFrame(referencedProject);
             referencedFrames.put(referenceName, referencedFrame);
 
         }
@@ -218,7 +220,7 @@ public class ExecutionFrame {
      */
     protected void setDataValue(String name, Object value, boolean mutable)
          throws ExecutionException {
-        ExecutionFrame frame = getContainingFrame(name);
+        Frame frame = getContainingFrame(name);
         if (frame == this) {
             if (dataValues.containsKey(name) && !mutable) {
                 log("Ignoring oveeride for data value " + name,
@@ -282,7 +284,7 @@ public class ExecutionFrame {
         Iterator i = referencedFrames.keySet().iterator();
         while (i.hasNext()) {
             String refName = (String)i.next();
-            ExecutionFrame refFrame = getReferencedFrame(refName);
+            Frame refFrame = getReferencedFrame(refName);
             Map refProperties = refFrame.getAllProperties();
             Iterator j = refProperties.keySet().iterator();
             while (j.hasNext()) {
@@ -345,7 +347,7 @@ public class ExecutionFrame {
     }
 
     /**
-     * Gets the baseDir of the ExecutionFrame
+     * Gets the baseDir of the Frame
      *
      * @return the baseDir value
      */
@@ -357,11 +359,11 @@ public class ExecutionFrame {
      * Get a referenced frame by its reference name
      *
      * @param referenceName the name under which the frame was imported.
-     * @return the ExecutionFrame asscociated with the given reference name
+     * @return the Frame asscociated with the given reference name
      *      or null if there is no such project.
      */
-    protected ExecutionFrame getReferencedFrame(String referenceName) {
-        return (ExecutionFrame)referencedFrames.get(referenceName);
+    protected Frame getReferencedFrame(String referenceName) {
+        return (Frame)referencedFrames.get(referenceName);
     }
 
     /**
@@ -396,7 +398,7 @@ public class ExecutionFrame {
      * @exception ExecutionException if the value is not defined
      */
     protected Object getDataValue(String name) throws ExecutionException {
-        ExecutionFrame frame = getContainingFrame(name);
+        Frame frame = getContainingFrame(name);
         if (frame == this) {
             return dataValues.get(name);
         } else {
@@ -414,7 +416,7 @@ public class ExecutionFrame {
      *      does not exist
      */
     protected boolean isDataValueSet(String name) throws ExecutionException {
-        ExecutionFrame frame = getContainingFrame(name);
+        Frame frame = getContainingFrame(name);
         if (frame == this) {
             return dataValues.containsKey(name);
         } else {
@@ -441,13 +443,13 @@ public class ExecutionFrame {
      * Create a new frame for a given project
      *
      * @param project the project model the frame will deal with
-     * @return an ExecutionFrame ready to build the project
+     * @return an Frame ready to build the project
      * @exception ExecutionException if the frame cannot be created.
      */
-    protected ExecutionFrame createFrame(Project project)
+    protected Frame createFrame(Project project)
          throws ExecutionException {
-        ExecutionFrame newFrame
-             = new ExecutionFrame(standardLibs, initConfig, config);
+        Frame newFrame
+             = new Frame(standardLibs, initConfig, config);
         newFrame.setProject(project);
         for (Iterator j = eventSupport.getListeners(); j.hasNext(); ) {
             BuildListener listener = (BuildListener)j.next();
@@ -473,7 +475,7 @@ public class ExecutionFrame {
      */
     protected void addBuildListener(BuildListener listener) {
         for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
-            ExecutionFrame referencedFrame = (ExecutionFrame)i.next();
+            Frame referencedFrame = (Frame)i.next();
             referencedFrame.addBuildListener(listener);
         }
         eventSupport.addBuildListener(listener);
@@ -486,7 +488,7 @@ public class ExecutionFrame {
      */
     protected void removeBuildListener(BuildListener listener) {
         for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
-            ExecutionFrame subFrame = (ExecutionFrame)i.next();
+            Frame subFrame = (Frame)i.next();
             subFrame.removeBuildListener(listener);
         }
         eventSupport.removeBuildListener(listener);
@@ -536,7 +538,7 @@ public class ExecutionFrame {
             List dependencyOrder = project.getTargetDependencies(targetName);
             for (Iterator i = dependencyOrder.iterator(); i.hasNext(); ) {
                 String fullTargetName = (String)i.next();
-                ExecutionFrame frame = getContainingFrame(fullTargetName);
+                Frame frame = getContainingFrame(fullTargetName);
                 String localTargetName = getNameInFrame(fullTargetName);
                 frame.executeTargetTasks(localTargetName);
             }
@@ -661,7 +663,7 @@ public class ExecutionFrame {
      */
     protected void initialize() throws ExecutionException {
         for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
-            ExecutionFrame referencedFrame = (ExecutionFrame)i.next();
+            Frame referencedFrame = (Frame)i.next();
             referencedFrame.initialize();
         }
         Iterator taskIterator = project.getTasks();
@@ -695,13 +697,13 @@ public class ExecutionFrame {
      * @return the execution frame for the project that contains the given
      *      target
      */
-    private ExecutionFrame getContainingFrame(String targetName) {
+    private Frame getContainingFrame(String targetName) {
         int index = targetName.lastIndexOf(Project.REF_DELIMITER);
         if (index == -1) {
             return this;
         }
 
-        ExecutionFrame currentFrame = this;
+        Frame currentFrame = this;
         String relativeName = targetName.substring(0, index);
         StringTokenizer tokenizer
              = new StringTokenizer(relativeName, Project.REF_DELIMITER);
@@ -745,7 +747,7 @@ public class ExecutionFrame {
         setDataValue(MagicProperties.BASEDIR, baseDir.getAbsolutePath(), true);
 
         for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
-            ExecutionFrame refFrame = (ExecutionFrame)i.next();
+            Frame refFrame = (Frame)i.next();
             refFrame.determineBaseDirs();
         }
     }
@@ -756,16 +758,17 @@ public class ExecutionFrame {
      */
     private void configureServices() {
         // create services and make them available in our services map
-        fileService = new ExecutionFileService(this);
+        fileService = new CoreFileService(this);
         componentManager
              = new ComponentManager(this, config.isRemoteLibAllowed());
-        dataService = new ExecutionDataService(this,
+        dataService = new CoreDataService(this,
             config.isUnsetPropertiesAllowed());
 
         services.put(FileService.class, fileService);
         services.put(ComponentService.class, componentManager);
         services.put(DataService.class, dataService);
         services.put(EventService.class,  new CoreEventService(this));
+        services.put(ExecService.class, new CoreExecService(this));
     }
 
     /**
@@ -986,14 +989,15 @@ public class ExecutionFrame {
         }
 
         String className = taskDefInfo.getClassName();
-        AntLibrary antLibrary = taskDefInfo.getAntLibrary();
+        ComponentLibrary componentLibrary 
+            = taskDefInfo.getComponentLibrary();
 
         try {
-            ClassLoader taskClassLoader = antLibrary.getClassLoader();
+            ClassLoader taskClassLoader = componentLibrary.getClassLoader();
             Class elementClass
                  = Class.forName(className, true, taskClassLoader);
             AntLibFactory libFactory
-                 = componentManager.getLibFactory(antLibrary);
+                 = componentManager.getLibFactory(componentLibrary);
             Object element = libFactory.createTaskInstance(elementClass);
 
             Task task = null;
@@ -1058,16 +1062,17 @@ public class ExecutionFrame {
         }
 
         String className = typeDefInfo.getClassName();
-        AntLibrary antLibrary = typeDefInfo.getAntLibrary();
+        ComponentLibrary componentLibrary 
+            = typeDefInfo.getComponentLibrary();
 
         try {
-            ClassLoader typeClassLoader = antLibrary.getClassLoader();
+            ClassLoader typeClassLoader = componentLibrary.getClassLoader();
             Class typeClass
                  = Class.forName(className, true, typeClassLoader);
 
             ClassLoader currentLoader = setContextLoader(typeClassLoader);
             AntLibFactory libFactory
-                 = componentManager.getLibFactory(antLibrary);
+                 = componentManager.getLibFactory(componentLibrary);
             Object typeInstance
                  = createTypeInstance(typeClass, libFactory, model);
             setContextLoader(currentLoader);

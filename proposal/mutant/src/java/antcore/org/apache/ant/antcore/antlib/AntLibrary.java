@@ -55,10 +55,10 @@ package org.apache.ant.antcore.antlib;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.util.ExecutionException;
 
@@ -68,12 +68,7 @@ import org.apache.ant.common.util.ExecutionException;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 14 January 2002
  */
-public class AntLibrary {
-
-    /** constant indicating a taskdef definition */
-    public final static int TASKDEF = 1;
-    /** constant indicating a typedef definition */
-    public final static int TYPEDEF = 2;
+public class AntLibrary implements ComponentLibrary {
     /** A counter for generating unique ids */
     private static int implicitLibCount = 0;
 
@@ -129,25 +124,6 @@ public class AntLibrary {
     }
 
     /**
-     * Create an Ant library to wrap around an existing class
-     *
-     * @param componentName the name of the component to be wrapped
-     * @param componentClass the class to be wrapped
-     * @param defType the type of definition being defined
-     */
-    public AntLibrary(int defType, String componentName, Class componentClass) {
-        this.libraryId = "_internal" + (implicitLibCount++);
-        this.definitions = new HashMap();
-        AntLibDefinition definition = new AntLibDefinition(defType,
-            componentName, componentClass.getName());
-        this.definitions.put(componentName, definition);
-        this.isolated = false;
-        this.factoryClassName = null;
-        this.definitionURL = null;
-        loader = componentClass.getClassLoader();
-    }
-
-    /**
      * Sets the Library which this library extends
      *
      * @param extendsLibrary The new ExtendsLibrary value
@@ -191,10 +167,21 @@ public class AntLibrary {
     /**
      * Gets the definitions (taskdefs and typedefs) of the AntLibrary
      *
-     * @return the definitions map
+     * @return an iterator over the definition names
      */
-    public Map getDefinitions() {
-        return definitions;
+    public Iterator getDefinitionNames() {
+        return definitions.keySet().iterator();
+    }
+
+    /**
+     * Get the definition of a particular component
+     *
+     * @param definitionName the name of the component within the library
+     * @return an AntLibDefinition instance with information about the
+     *      component's definition
+     */
+    public AntLibDefinition getDefinition(String definitionName) {
+        return (AntLibDefinition)definitions.get(definitionName);
     }
 
     /**
@@ -220,11 +207,14 @@ public class AntLibrary {
      * Gat an instance of a factory object for creating objects in this
      * library.
      *
+     * @param context the context to use for the factory creation if
+     *      required
      * @return an instance of the factory, or null if this library does not
      *      support a factory
      * @exception ExecutionException if the factory cannot be created
      */
-    public AntLibFactory getFactory() throws ExecutionException {
+    public AntLibFactory getFactory(AntContext context)
+         throws ExecutionException {
         try {
             AntLibFactory libFactory = null;
             if (factoryClassName != null) {
@@ -232,6 +222,7 @@ public class AntLibrary {
                     true, getClassLoader());
                 libFactory
                      = (AntLibFactory)factoryClass.newInstance();
+                libFactory.init(context);
             }
             return libFactory;
         } catch (ClassNotFoundException e) {

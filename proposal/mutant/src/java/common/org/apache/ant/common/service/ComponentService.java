@@ -52,10 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.common.service;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import org.apache.ant.common.model.Project;
+import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.util.ExecutionException;
 
 /**
@@ -86,55 +83,29 @@ public interface ComponentService {
          throws ExecutionException;
 
     /**
-     * Run a sub-build.
-     *
-     * @param antFile the file containing the XML description of the model
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
-     */
-    void runBuild(File antFile, Map properties, List targets)
-         throws ExecutionException;
-
-    /**
-     * Run a sub-build.
-     *
-     * @param model the project model to be used for the build
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
-     */
-    void runBuild(Project model, Map properties, List targets)
-         throws ExecutionException;
-
-    /**
-     * Run a sub-build using the current frame's project model
-     *
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
-     */
-    void callTarget(Map properties, List targets)
-         throws ExecutionException;
-
-    /**
      * Experimental - define a new type
      *
      * @param typeName the name by which this type will be referred
-     * @param typeClass the class of the type
+     * @param factory the library factory object to create the type instances
+     * @param loader the class loader to use to create the particular types
+     * @param className the name of the class implementing the type
      * @exception ExecutionException if the type cannot be defined
      */
-    void typedef(String typeName, Class typeClass)
+    void typedef(AntLibFactory factory, ClassLoader loader,
+                 String typeName, String className)
          throws ExecutionException;
-         
+
     /**
      * Experimental - define a new task
      *
      * @param taskName the name by which this task will be referred
-     * @param taskClass the class of the task
+     * @param factory the library factory object to create the task instances
+     * @param loader the class loader to use to create the particular tasks
+     * @param className the name of the class implementing the task
      * @exception ExecutionException if the task cannot be defined
      */
-    void taskdef(String taskName, Class taskClass)
+    void taskdef(AntLibFactory factory, ClassLoader loader,
+                 String taskName, String className)
          throws ExecutionException;
 
 }

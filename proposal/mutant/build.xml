@@ -158,7 +158,7 @@
     <path id="checkstyle.path">
       <fileset dir="${checkstyle.bin}"/>
     </path>
-    <taskdef name="checkstyle" reverseloader="true"
+    <taskdef name="checkstyle"
              classname="com.puppycrawl.tools.checkstyle.CheckStyleTask">
         <classpath refid="checkstyle.path"/>
     </taskdef>

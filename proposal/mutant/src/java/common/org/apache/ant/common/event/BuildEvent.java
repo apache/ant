@@ -58,7 +58,7 @@ import org.apache.ant.common.model.ModelElement;
 
 /**
  * A BuildEvent indicates the occurence of a significant event in the build.
- * All build events come from an ExecutionFrame or an ExecutionManager.
+ * All build events come from an Frame or an ExecutionManager.
  * There are a number of different types of event and they will generally be
  * associated with some build element from the build model.
  *

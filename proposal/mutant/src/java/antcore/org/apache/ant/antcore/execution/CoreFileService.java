@@ -52,88 +52,46 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import org.apache.ant.common.antlib.Task;
-import org.apache.ant.common.model.ModelElement;
+import java.io.File;
+import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.util.FileUtils;
+
 /**
- * This is the core's implementation of the AntContext for Tasks.
+ * The core's implementation of the File Service. The File Service is used
+ * by Ant Library components to perform operations on the local file system
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 17 January 2002
+ * @created 27 January 2002
  */
-public class TaskContext extends ExecutionContext {
+public class CoreFileService implements FileService {
+    /** The Frame this service instance is working for */
+    private Frame frame;
 
-    /** The task being managed by this context */
-    private Task task;
-
-    /**
-     * the loader used to load this task. Note that this is not necessarily
-     * the loader which is used to load the Task class as loading may have
-     * been delegated to a parent loader.
-     */
-    private ClassLoader loader;
+    /** General file utilities */
+    private FileUtils fileUtils = new FileUtils();
 
     /**
-     * Initilaise this context's environment
+     * Constructor
      *
      * @param frame the frame containing this context
      */
-    public TaskContext(Frame frame) {
-        super(frame);
+    public CoreFileService(Frame frame) {
+        this.frame = frame;
     }
 
     /**
-     * Get the task associated with this context
+     * Resolve a file according to the base directory of the project
+     * associated with this context
      *
-     * @return the task instance
+     * @param fileName the file name to be resolved.
+     * @return the file resolved to the project's base dir
+     * @exception ExecutionException if the file cannot be resolved.
      */
-    public Task getTask() {
-        return task;
-    }
-
-    /**
-     * Gets the loader for this task
-     *
-     * @return the task's loader
-     */
-    public ClassLoader getLoader() {
-        return loader;
-    }
-
-    /**
-     * Associate a task with this context
-     *
-     * @param task the task to be manager
-     * @param loader the classloader
-     * @param modelElement the model element associated with this context
-     * @exception ExecutionException if the task cannot be initialized
-     */
-    public void init(ClassLoader loader, Task task, ModelElement modelElement)
-         throws ExecutionException {
-        this.task = task;
-        this.loader = loader;
-        setModelElement(modelElement);
-        task.init(this);
-    }
-
-    /**
-     * execute this context's task
-     *
-     * @exception ExecutionException if there is a problem executing the
-     *      task
-     */
-    public void execute() throws ExecutionException {
-        task.execute();
-    }
-
-    /**
-     * Destroy this context. The context can be reused for another task
-     * after this one
-     */
-    public void destroy() {
-        task.destroy();
-        task = null;
-        loader = null;
+    public File resolveFile(String fileName) throws ExecutionException {
+        File base = frame.getBaseDir();
+        return fileUtils.resolveFile(fileUtils.normalize(base.getPath()),
+            fileName);
     }
 }
 

@@ -52,24 +52,20 @@
  * <http://www.apache.org/>.
  */
 package org.apache.ant.antcore.execution;
-import java.io.File;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import org.apache.ant.antcore.antlib.AntLibDefinition;
 import org.apache.ant.antcore.antlib.AntLibManager;
 import org.apache.ant.antcore.antlib.AntLibrary;
-import org.apache.ant.antcore.modelparser.XMLProjectParser;
-import org.apache.ant.antcore.xml.XMLParseException;
+import org.apache.ant.antcore.antlib.ComponentLibrary;
+import org.apache.ant.antcore.antlib.DynamicLibrary;
 import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.antlib.Converter;
 import org.apache.ant.common.antlib.StandardLibFactory;
-import org.apache.ant.common.model.Project;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.init.InitUtils;
 
 /**
  * The instance of the ComponentServices made available by the core to the
@@ -83,16 +79,16 @@ public class ComponentManager implements ComponentService {
     public final static String ANT_LIB_PREFIX = "ant.";
 
     /**
-     * Type converters for this executionFrame. Converters are used when
-     * configuring Tasks to handle special type conversions.
+     * Type converters for this frame. Converters are used when configuring
+     * Tasks to handle special type conversions.
      */
     private Map converters = new HashMap();
 
     /** The factory objects for each library, indexed by the library Id */
     private Map libFactories = new HashMap();
 
-    /** The ExecutionFrame this service instance is working for */
-    private ExecutionFrame frame;
+    /** The Frame this service instance is working for */
+    private Frame frame;
 
     /** The library manager instance used to configure libraries. */
     private AntLibManager libManager;
@@ -102,20 +98,25 @@ public class ComponentManager implements ComponentService {
      * manager
      */
     private Map antLibraries;
+
+    /** dynamic libraries which have been defined */
+    private Map dynamicLibraries;
+
     /** The definitions which have been imported into this frame. */
     private Map definitions = new HashMap();
 
     /**
      * Constructor
      *
-     * @param executionFrame the frame containing this context
+     * @param frame the frame containing this context
      * @param allowRemoteLibs true if remote libraries can be loaded though
      *      this service.
      */
-    protected ComponentManager(ExecutionFrame executionFrame,
+    protected ComponentManager(Frame frame,
                                boolean allowRemoteLibs) {
-        this.frame = executionFrame;
+        this.frame = frame;
         libManager = new AntLibManager(allowRemoteLibs);
+        dynamicLibraries = new HashMap();
     }
 
     /**
@@ -149,77 +150,37 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
-     * Run a sub-build.
-     *
-     * @param antFile the file containing the XML description of the model
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
-     */
-    public void runBuild(File antFile, Map properties, List targets)
-         throws ExecutionException {
-        try {
-            // Parse the build file into a project
-            XMLProjectParser parser = new XMLProjectParser();
-            Project project
-                 = parser.parseBuildFile(InitUtils.getFileURL(antFile));
-            runBuild(project, properties, targets);
-        } catch (MalformedURLException e) {
-            throw new ExecutionException(e);
-        } catch (XMLParseException e) {
-            throw new ExecutionException(e);
-        }
-    }
-
-    /**
-     * Run a sub-build.
-     *
-     * @param model the project model to be used for the build
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
-     */
-    public void runBuild(Project model, Map properties, List targets)
-         throws ExecutionException {
-        ExecutionFrame newFrame = frame.createFrame(model);
-        newFrame.setInitialProperties(properties);
-        newFrame.runBuild(targets);
-    }
-
-    /**
-     * Run a sub-build using the current frame's project model
-     *
-     * @param targets A list of targets to be run
-     * @param properties the initiali properties to be used in the build
-     * @exception ExecutionException if the subbuild cannot be run
-     */
-    public void callTarget(Map properties, List targets)
-         throws ExecutionException {
-        runBuild(frame.getProject(), properties, targets);
-    }
-
-    /**
      * Experimental - define a new task
      *
      * @param taskName the name by which this task will be referred
-     * @param taskClass the class of the task
+     * @param factory the library factory object to create the task
+     *      instances
+     * @param loader the class loader to use to create the particular tasks
+     * @param className the name of the class implementing the task
      * @exception ExecutionException if the task cannot be defined
      */
-    public void taskdef(String taskName, Class taskClass)
+    public void taskdef(AntLibFactory factory, ClassLoader loader,
+                        String taskName, String className)
          throws ExecutionException {
-        defineComponent(AntLibrary.TASKDEF, taskName, taskClass);
+        defineComponent(factory, loader, ComponentLibrary.TASKDEF,
+            taskName, className);
     }
 
     /**
      * Experimental - define a new type
      *
      * @param typeName the name by which this type will be referred
-     * @param typeClass the class of the type
+     * @param factory the library factory object to create the type
+     *      instances
+     * @param loader the class loader to use to create the particular types
+     * @param className the name of the class implementing the type
      * @exception ExecutionException if the type cannot be defined
      */
-    public void typedef(String typeName, Class typeClass)
+    public void typedef(AntLibFactory factory, ClassLoader loader,
+                        String typeName, String className)
          throws ExecutionException {
-        defineComponent(AntLibrary.TYPEDEF, typeName, typeClass);
+        defineComponent(factory, loader, ComponentLibrary.TYPEDEF,
+            typeName, className);
     }
 
     /**
@@ -233,6 +194,7 @@ public class ComponentManager implements ComponentService {
      */
     protected void setStandardLibraries(Map standardLibs)
          throws ExecutionException {
+
         antLibraries = new HashMap(standardLibs);
 
         // go through the libraries and import all standard ant libraries
@@ -256,33 +218,26 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
-     * Get the collection of Ant Libraries defined for this frame
+     * Get the collection of Ant Libraries defined for this frame Gets the
+     * factory object for the given library
      *
-     * @return a map of Ant Libraries indexed by thier library Id
-     */
-    protected Map getAntLibraries() {
-        return antLibraries;
-    }
-
-    /**
-     * Gets the factory object for the given library
-     *
-     * @param antLibrary the library for which the factory is required
+     * @param componentLibrary the compnent library for which a factory
+     *      objetc is required
      * @return the library's factory object
-     * @exception ExecutionException if the factory cannot be initialised
+     * @exception ExecutionException if the factory cannot be created
      */
-    protected AntLibFactory getLibFactory(AntLibrary antLibrary)
+    protected AntLibFactory getLibFactory(ComponentLibrary componentLibrary)
          throws ExecutionException {
-        String libraryId = antLibrary.getLibraryId();
+        String libraryId = componentLibrary.getLibraryId();
         if (libFactories.containsKey(libraryId)) {
             return (AntLibFactory)libFactories.get(libraryId);
         }
-        AntLibFactory libFactory = antLibrary.getFactory();
+        AntLibFactory libFactory
+             = componentLibrary.getFactory(new ExecutionContext(frame));
         if (libFactory == null) {
             libFactory = new StandardLibFactory();
         }
         libFactories.put(libraryId, libFactory);
-        libFactory.init(new ExecutionContext(frame));
         return libFactory;
     }
 
@@ -309,32 +264,53 @@ public class ComponentManager implements ComponentService {
             throw new ExecutionException("Unable to import library " + libraryId
                  + " as it has not been loaded");
         }
-        Map libDefs = library.getDefinitions();
-        for (Iterator i = libDefs.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator i = library.getDefinitionNames(); i.hasNext(); ) {
             String defName = (String)i.next();
-            AntLibDefinition libdef
-                 = (AntLibDefinition)libDefs.get(defName);
-            definitions.put(defName, new ImportInfo(library, libdef));
+            importLibraryDef(library, defName, null);
         }
         addLibraryConverters(library);
     }
 
     /**
-     * Experimental - define a new component
+     * Import a single component from the given library
+     *
+     * @param library the library which provides the component
+     * @param defName the name of the component in the library
+     * @param alias the name to be used for the component in build files. If
+     *      this is null, the component's name within its library is used.
+     */
+    protected void importLibraryDef(ComponentLibrary library, String defName,
+                                    String alias) {
+        String label = alias;
+        if (label == null) {
+            label = defName;
+        }
+
+        AntLibDefinition libDef = library.getDefinition(defName);
+        definitions.put(label, new ImportInfo(library, libDef));
+    }
+
+    /**
+     * Define a new component
      *
      * @param componentName the name this component will take
-     * @param componentClass the component's class
      * @param defType the type of component being defined
+     * @param factory the library factory object to create the component
+     *      instances
+     * @param loader the class loader to use to create the particular
+     *      components
+     * @param className the name of the class implementing the component
      * @exception ExecutionException if the component cannot be defined
      */
-    private void defineComponent(int defType, String componentName,
-                                 Class componentClass)
+    private void defineComponent(AntLibFactory factory, ClassLoader loader,
+                                 int defType, String componentName,
+                                 String className)
          throws ExecutionException {
-        AntLibrary wrapperLibrary
-             = new AntLibrary(defType, componentName, componentClass);
-        String libraryId = wrapperLibrary.getLibraryId();
-        antLibraries.put(libraryId, wrapperLibrary);
-        importLibrary(libraryId);
+        DynamicLibrary dynamicLibrary
+             = new DynamicLibrary(factory, loader);
+        dynamicLibrary.addComponent(defType, componentName, className);
+        dynamicLibraries.put(dynamicLibrary.getLibraryId(), dynamicLibrary);
+        importLibraryDef(dynamicLibrary, componentName, null);
     }
 
     /**

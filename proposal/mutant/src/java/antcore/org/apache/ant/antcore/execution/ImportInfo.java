@@ -54,7 +54,7 @@
 package org.apache.ant.antcore.execution;
 
 import org.apache.ant.antcore.antlib.AntLibDefinition;
-import org.apache.ant.antcore.antlib.AntLibrary;
+import org.apache.ant.antcore.antlib.ComponentLibrary;
 
 /**
  * This class is used to maintain information about imports
@@ -63,8 +63,8 @@ import org.apache.ant.antcore.antlib.AntLibrary;
  * @created 16 January 2002
  */
 public class ImportInfo {
-    /** the ant library from which the import is made */
-    private AntLibrary library;
+    /** the component library from which the import is made */
+    private ComponentLibrary library;
     /** the library definition information */
     private AntLibDefinition libDefinition;
 
@@ -74,7 +74,8 @@ public class ImportInfo {
      * @param library The library from which the import was made
      * @param libDefinition the library definition information
      */
-    public ImportInfo(AntLibrary library, AntLibDefinition libDefinition) {
+    public ImportInfo(ComponentLibrary library,
+                      AntLibDefinition libDefinition) {
         this.library = library;
         this.libDefinition = libDefinition;
     }
@@ -93,7 +94,7 @@ public class ImportInfo {
      *
      * @return the library from which the import was made
      */
-    public AntLibrary getAntLibrary() {
+    public ComponentLibrary getComponentLibrary() {
         return library;
     }
 

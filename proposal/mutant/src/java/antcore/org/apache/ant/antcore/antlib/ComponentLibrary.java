@@ -51,89 +51,56 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.execution;
-import org.apache.ant.common.antlib.Task;
-import org.apache.ant.common.model.ModelElement;
+package org.apache.ant.antcore.antlib;
+import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.util.ExecutionException;
+
 /**
- * This is the core's implementation of the AntContext for Tasks.
+ * A Component Library supplies components to the Ant core.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 17 January 2002
+ * @created 8 February 2002
  */
-public class TaskContext extends ExecutionContext {
-
-    /** The task being managed by this context */
-    private Task task;
-
-    /**
-     * the loader used to load this task. Note that this is not necessarily
-     * the loader which is used to load the Task class as loading may have
-     * been delegated to a parent loader.
-     */
-    private ClassLoader loader;
+public interface ComponentLibrary {
+    /** constant indicating a taskdef definition */
+    final static int TASKDEF = 1;
+    /** constant indicating a typedef definition */
+    final static int TYPEDEF = 2;
 
     /**
-     * Initilaise this context's environment
+     * Gets the ClassLoader of the AntLibrary
      *
-     * @param frame the frame containing this context
+     * @return The ClassLoader value
      */
-    public TaskContext(Frame frame) {
-        super(frame);
-    }
+    ClassLoader getClassLoader();
 
     /**
-     * Get the task associated with this context
+     * Gat an instance of a factory object for creating objects in this
+     * library.
      *
-     * @return the task instance
+     * @param context the context to use for the factory creation if
+     *      required
+     * @return an instance of the factory, or null if this library does not
+     *      support a factory
+     * @exception ExecutionException if the factory cannot be created
      */
-    public Task getTask() {
-        return task;
-    }
+    AntLibFactory getFactory(AntContext context) throws ExecutionException;
 
     /**
-     * Gets the loader for this task
+     * Gets the libraryId of the AntLibrary
      *
-     * @return the task's loader
+     * @return the libraryId value
      */
-    public ClassLoader getLoader() {
-        return loader;
-    }
+    String getLibraryId();
 
     /**
-     * Associate a task with this context
+     * Get the definition of a particular component
      *
-     * @param task the task to be manager
-     * @param loader the classloader
-     * @param modelElement the model element associated with this context
-     * @exception ExecutionException if the task cannot be initialized
+     * @param definitionName the name of the component within the library
+     * @return an AntLibDefinition instance with information about the
+     *      component's definition
      */
-    public void init(ClassLoader loader, Task task, ModelElement modelElement)
-         throws ExecutionException {
-        this.task = task;
-        this.loader = loader;
-        setModelElement(modelElement);
-        task.init(this);
-    }
-
-    /**
-     * execute this context's task
-     *
-     * @exception ExecutionException if there is a problem executing the
-     *      task
-     */
-    public void execute() throws ExecutionException {
-        task.execute();
-    }
-
-    /**
-     * Destroy this context. The context can be reused for another task
-     * after this one
-     */
-    public void destroy() {
-        task.destroy();
-        task = null;
-        loader = null;
-    }
+    AntLibDefinition getDefinition(String definitionName);
 }
 

@@ -51,47 +51,51 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.antcore.execution;
+package org.apache.ant.common.service;
 import java.io.File;
-import org.apache.ant.common.service.FileService;
+import java.util.List;
+import java.util.Map;
+import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.ExecutionException;
-import org.apache.ant.common.util.FileUtils;
 
 /**
- * The core's implementation of the File Service. The File Service is used
- * by Ant Library components to perform operations on the local file system
+ * The ExecService provides executiuon services to tasks
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 27 January 2002
+ * @created 8 February 2002
  */
-public class ExecutionFileService implements FileService {
-    /** The ExecutionFrame this service instance is working for */
-    private ExecutionFrame executionFrame;
-
-    /** General file utilities */
-    private FileUtils fileUtils = new FileUtils();
+public interface ExecService {
+    /**
+     * Run a sub-build.
+     *
+     * @param antFile the file containing the XML description of the model
+     * @param targets A list of targets to be run
+     * @param properties the initiali properties to be used in the build
+     * @exception ExecutionException if the subbuild cannot be run
+     */
+    void runBuild(File antFile, Map properties, List targets)
+         throws ExecutionException;
 
     /**
-     * Constructor
+     * Run a sub-build.
      *
-     * @param executionFrame the frame containing this context
+     * @param model the project model to be used for the build
+     * @param targets A list of targets to be run
+     * @param properties the initiali properties to be used in the build
+     * @exception ExecutionException if the subbuild cannot be run
      */
-    public ExecutionFileService(ExecutionFrame executionFrame) {
-        this.executionFrame = executionFrame;
-    }
+    void runBuild(Project model, Map properties, List targets)
+         throws ExecutionException;
 
     /**
-     * Resolve a file according to the base directory of the project
-     * associated with this context
+     * Run a sub-build using the current frame's project model
      *
-     * @param fileName the file name to be resolved.
-     * @return the file resolved to the project's base dir
-     * @exception ExecutionException if the file cannot be resolved.
+     * @param targets A list of targets to be run
+     * @param properties the initiali properties to be used in the build
+     * @exception ExecutionException if the subbuild cannot be run
      */
-    public File resolveFile(String fileName) throws ExecutionException {
-        File base = executionFrame.getBaseDir();
-        return fileUtils.resolveFile(fileUtils.normalize(base.getPath()),
-            fileName);
-    }
+    void callTarget(Map properties, List targets)
+         throws ExecutionException;
+
 }
 

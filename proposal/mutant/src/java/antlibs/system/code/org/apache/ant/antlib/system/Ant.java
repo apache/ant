@@ -53,7 +53,7 @@
  */
 package org.apache.ant.antlib.system;
 import java.io.File;
-import org.apache.ant.common.service.ComponentService;
+import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.util.ExecutionException;
 
 /**
@@ -113,10 +113,10 @@ public class Ant extends AntBase {
             }
         }
 
-        ComponentService componentService
-             = (ComponentService)getCoreService(ComponentService.class);
+        ExecService execService
+             = (ExecService)getCoreService(ExecService.class);
 
-        componentService.runBuild(antFile, getProperties(), getTargets());
+        execService.runBuild(antFile, getProperties(), getTargets());
     }
 }
 

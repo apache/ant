@@ -82,13 +82,17 @@ public class Ant1Factory extends StandardLibFactory {
      * @exception ExecutionException if the factory cannot be initialised.
      */
     public void init(AntContext context) throws ExecutionException {
+        if (project != null) {
+            return;
+        }
+        
         this.context = context;
         // set the system classpath. In Ant2, the system classpath will not
         // in general, have any useful information. For Ant1 compatability
         // we set it now to include the Ant1 facade classes
         System.setProperty("java.class.path", getAnt1Classpath());
 
-        project = new Project();
+        project = new Project(this);
         project.init(context);
         
         EventService eventService = 
