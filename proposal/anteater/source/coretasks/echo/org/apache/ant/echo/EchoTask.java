@@ -1,12 +1,12 @@
 package org.apache.ant.echo;
 
-import java.io.*;
-import java.util.*;
-
 import org.apache.ant.*;
 
 /**
- * Basic echo task that just spits out whatever it is supposed to...
+ * A very simple task that takes a bit of text and echos it back out
+ * when it is executed. This is useful for troubleshooting properties
+ * in buildfiles, letting the user know that something is going to happen
+ * and as a very simple example that can be copied to create other tasks.
  *
  * @author James Duncan Davidson (duncan@apache.org)
  */
@@ -19,26 +19,24 @@ public class EchoTask extends AbstractTask {
     /**
      * Data to echo
      */
-    private String data;
+    private String text;
     
     // -----------------------------------------------------------------
     // PUBLIC METHODS
     // -----------------------------------------------------------------    
     
     /**
-     *
+     * Executes this task.
      */
     public boolean execute() throws AntException {
-    
-        PrintStream out = project.getOutput();
-        out.println("ECHOING: " + data);
+        project.getFrontEnd().writeMessage(text);
         return true;
     } 
     
     /**
-     *
+     * Sets the text that this task will echo.
      */
-    public void setData(String data) {
-        this.data = data;
+    public void setText(String text) {
+        this.text = text;
     }
 }

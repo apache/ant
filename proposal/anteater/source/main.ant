@@ -1,13 +1,21 @@
 <?xml version="1.0"?>
 
-<project name="Ant">
+<!-- Comment outside of project -->
 
-  <target name="default">
-    <echo data="Echo In Default"/>
+<project name="Ant" default="default">
+
+  <!-- Comment inside of project -->
+
+  <description>Primary buildfile for building Ant itself</description>
+
+  <property name="foo" value="bar"/>
+
+  <target name="default" depends="main">
+    <echo text="Default Target is Executing"/>
   </target>
 
   <target name="main">
-    <echo data="Echo In Main"/>
+    <echo text="Main Target is Executing"/>
   </target>
 
 </project>

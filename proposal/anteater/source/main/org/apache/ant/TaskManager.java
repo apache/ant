@@ -17,21 +17,16 @@ import java.util.zip.*;
  *
  * @author James Duncan Davidson (duncan@apache.org)
  */
-class TaskManager {
+public class TaskManager {
 
     // -----------------------------------------------------------------
     // PRIVATE DATA MEMBERS
     // -----------------------------------------------------------------
     
     /**
-     * Reference to Ant that holds this TaskManager
+     * FrontEnd that this TaskManager can communicate through.
      */
-    //private Ant ant;
-    
-    /**
-     * Project to which this task manger belongs.
-     */
-    private Project project;
+    private FrontEnd frontEnd;
     
     /**
      * Data structure where all the Class definition for all known tasks are
@@ -51,21 +46,26 @@ class TaskManager {
     /**
      * Creates a new TaskManager.
      */
-    TaskManager(Project project) {
-        this.project = project;
+    TaskManager(FrontEnd frontEnd) {
+        System.out.println("CREATING TM");
+        this.frontEnd = frontEnd;
     }
     
     // -----------------------------------------------------------------
-    // PACKAGE METHODS
+    // PUBLIC METHODS
     // -----------------------------------------------------------------
  
     /**
      * Adds a node to the task path 
      */
-    void addTaskPathNode(File file) {
+    public void addTaskPathNode(File file) {
         taskPathNodes.addElement(file);
         processTaskPathNode(file);
     }
+
+    // -----------------------------------------------------------------
+    // PACKAGE METHODS
+    // -----------------------------------------------------------------
     
     /**
      *
@@ -104,7 +104,7 @@ class TaskManager {
      * Processes a directory to get class defintions from it
      */
     private void processDir(File dir) {
-        project.getFrontEnd().writeMessage("Scanning " + dir + " for tasks", 
+        frontEnd.writeMessage("Scanning " + dir + " for tasks", 
                                        FrontEnd.MSG_LEVEL_LOW);
         File file = new File(dir, "taskdef.properties");
         if (file.exists()) {
@@ -121,7 +121,7 @@ class TaskManager {
                     URLClassLoader loader = new URLClassLoader(new URL[] {dir.toURL()});
                     try {
                         Class clazz = loader.loadClass(taskClass);
-                        project.getFrontEnd().writeMessage("Got Task: " + taskName +
+                        frontEnd.writeMessage("Got Task: " + taskName +
                                                        clazz, FrontEnd.MSG_LEVEL_LOW);
                         taskClasses.put(taskName, clazz);
                     } catch (ClassNotFoundException cnfe) {
@@ -142,7 +142,7 @@ class TaskManager {
      * Processes a jar file to get class definitions from it
      */
     private void processJar(File file) {
-        project.getFrontEnd().writeMessage("Scanning " + file + " for tasks", 
+        frontEnd.writeMessage("Scanning " + file + " for tasks", 
                                        FrontEnd.MSG_LEVEL_LOW);
         try {
             ZipFile zipFile = new ZipFile(file);
@@ -160,7 +160,7 @@ class TaskManager {
                     URLClassLoader loader = new URLClassLoader(new URL[] {file.toURL()});
                     try {
                         Class clazz = loader.loadClass(taskClass);
-                        project.getFrontEnd().writeMessage("Got Task: " + taskName +
+                       	frontEnd.writeMessage("Got Task: " + taskName +
                                                        clazz, FrontEnd.MSG_LEVEL_LOW);
                         taskClasses.put(taskName, clazz);
                     } catch (ClassNotFoundException cnfe) {
@@ -207,4 +207,57 @@ class TaskManager {
             processJar(file);
         }
     }
+    
+    /**
+     * Sets up the taskpath based on the currently running operating
+     * system. In general, the ordering of the taskpath is: user directory,
+     * system directory, and then installation. This allows users or
+     * system admins to override or add tasks.
+     */
+    private void setUpTaskPath() {
+        
+        // 1st, add user's home dir.
+        
+        File f;
+        
+        String userHome = System.getProperty("user.home");
+        
+        // generic unix
+        f = new File(userHome + ".ant", "tasks");
+        if (f.exists() && f.isDirectory()) {
+            addTaskPathNode(f);
+        }
+        
+        // macos x
+        f = new File(userHome + "/Library/Ant", "Tasks");
+        if (f.exists() && f.isDirectory()) {
+            addTaskPathNode(f);
+        }
+        
+        // windows -- todo
+        
+        // 2nd, add system local dir.
+        
+        // generic unix
+        f = new File("/usr/local/ant/tasks");
+        if (f.exists() && f.isDirectory()) {
+            addTaskPathNode(f);
+        }
+        
+        // macos x
+        f = new File("/Library/Ant/Tasks");
+        if (f.exists() && f.isDirectory()) {
+            addTaskPathNode(f);
+        }
+        
+        // windows -- todo
+        
+        // 3rd, add installation local dir.
+        
+        //System.out.println("BASE: " + this.getClass().getResource("/"));
+        
+        // XXX ---- not really sure how the best way of getting this info is...
+        // hafta think about it.
+    }
+
 }

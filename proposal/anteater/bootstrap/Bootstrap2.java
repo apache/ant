@@ -42,11 +42,14 @@ public class Bootstrap2 {
         }
       
         // ------------------------------------------------------------
-        // build crimson
+        // build crimson, but only if it hasn't been built yet since
+        // 127 class files takes more seconds than I like to wait.
         // ------------------------------------------------------------       
         
-        Vector v1 = getSources(base + crimsonSources);
-        doCompile(base + "bootstrap/temp/crimson", v1);
+        if (!(new File(base + "bootstrap/temp/crimson/javax").exists())) {
+            Vector v1 = getSources(base + crimsonSources);
+            doCompile(base + "bootstrap/temp/crimson", v1);
+        }
         
         // ------------------------------------------------------------
         // build the main thing
@@ -75,7 +78,7 @@ public class Bootstrap2 {
         System.out.println("-------------------------------------------");
         System.out.println();     
         
-        String[] cmdarray = new String[9];
+        String[] cmdarray = new String[10];
         cmdarray[0] = "java";
         cmdarray[1] = "-cp";
         cmdarray[2] = base + "bootstrap/temp/main" + File.pathSeparator +
@@ -84,8 +87,9 @@ public class Bootstrap2 {
         cmdarray[4] = "-taskpath";
         cmdarray[5] = base + "bootstrap/temp/taskjars";
         cmdarray[6] = "-buildfile";
-        cmdarray[7] = base + "source/main.ant"; 
-        cmdarray[8] = "default";
+        cmdarray[7] = base + "source/main.ant";
+        cmdarray[8] = "-target"; 
+        cmdarray[9] = "default";
         
         Bootstrap.runCommand(cmdarray, args);
         

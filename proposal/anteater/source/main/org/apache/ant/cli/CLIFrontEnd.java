@@ -23,17 +23,22 @@ public class CLIFrontEnd extends FrontEnd {
     /**
      *
      */
-    //private Ant ant;
+    private String[] args;
 
     /**
-     *
+     * ProjectBuilder that is associated with this frontEnd. 
      */
-    private String[] args;
+    private ProjectBuilder projectBuilder;
 
     /**
      *
      */
     private int msgLevelFilter = MSG_LEVEL_MED;
+    
+    /**
+     * TaskManager instance that we can set taskpaths and such on.
+     */
+    private TaskManager taskManager;
     
     // -----------------------------------------------------------------
     // CONSTRUCTORS
@@ -44,7 +49,8 @@ public class CLIFrontEnd extends FrontEnd {
      * Line.
      */
     public CLIFrontEnd() {
-        //ant = new Ant(this);
+        projectBuilder = new ProjectBuilder(this);
+        taskManager = projectBuilder.getTaskManager();
     }
 
     // -----------------------------------------------------------------
@@ -135,7 +141,7 @@ public class CLIFrontEnd extends FrontEnd {
                 return;
             } else {
                 // XXX need to separate on path seps so that real paths can be taken
-                // ant.addTaskPathNode(new File(argTaskpath));
+                taskManager.addTaskPathNode(new File(argTaskpath));
             }
         }
         
@@ -164,16 +170,15 @@ public class CLIFrontEnd extends FrontEnd {
         // like get the default...
         
         try {
-            ProjectBuilder projectBuilder = new ProjectBuilder(this);
             Project project = projectBuilder.buildFromFile(buildFile);
-            //Project project = ant.getProject();
-            
-            // XXX
-            // get taskmanager from project and set taskpath nodes on it!
             
             project.setFrontEnd(this);
             project.startBuild(target);
-        } catch (AntException ae) {            
+        } catch (AntException ae) {  
+        
+            //XXX this whole write a string at a time message handling
+            // sucks and needs to be improved...
+                    
             writeMessage("Build Stopped");
             writeMessage("    Project: " + ae.getProject().getName());
             writeMessage("     Target: " + ae.getTarget().getName());
@@ -182,6 +187,13 @@ public class CLIFrontEnd extends FrontEnd {
             writeMessage("");
             writeMessage(ae.getMessage());
             ae.printStackTrace(System.out);
+            Throwable t = ae.getCause();
+            if (t != null) {
+                writeMessage("");
+                writeMessage("Cause Exception: " + t.toString());
+                writeMessage(t.getMessage());
+                t.printStackTrace(System.out);
+            }
         }        
     }
 

@@ -70,12 +70,6 @@ public class Bootstrap {
      */
     static void runCommand(String[] command) throws IOException {
     
-        System.out.print("Exec'ing: ");
-        for (int i = 0; i < command.length; i++) {
-            System.out.print(command[i] + " ");
-        }
-        System.out.println();
-    
         Runtime runtime = Runtime.getRuntime();
         Process process = runtime.exec(command);
             

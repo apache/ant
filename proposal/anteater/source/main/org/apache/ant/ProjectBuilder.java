@@ -26,17 +26,17 @@ public class ProjectBuilder {
     /**
      *
      */
-    //private Ant ant;
-    
-    /**
-     *
-     */
     private FrontEnd frontEnd;
     
     /**
      *
      */
     private SAXParserFactory parserFactory;
+    
+    /**
+     *
+     */
+    private TaskManager taskManager;
         
     // -----------------------------------------------------------------
     // CONSTRUCTORS
@@ -49,10 +49,15 @@ public class ProjectBuilder {
      */
     public ProjectBuilder(FrontEnd frontEnd) {
         this.frontEnd = frontEnd;
+        taskManager = new TaskManager(frontEnd);
         parserFactory = SAXParserFactory.newInstance();
         parserFactory.setValidating(false);  
     }
-
+    
+    // -----------------------------------------------------------------
+    // PUBLIC METHODS
+    // -----------------------------------------------------------------
+    
     /**
      * Builds a project from the given file.
      */
@@ -80,6 +85,18 @@ public class ProjectBuilder {
     }
     
     /**
+     * Returns the TaskManager associated with this ProjectBuilder and
+     * the projects that it builds
+     */
+    public TaskManager getTaskManager() {
+        return taskManager;
+    }
+    
+    // -----------------------------------------------------------------
+    // INNER CLASSES
+    // -----------------------------------------------------------------    
+    
+    /**
      * Inner class that implements the needed SAX methods to get all the
      * data needed out of a build file.
      */
@@ -100,7 +117,7 @@ public class ProjectBuilder {
         private Target currentTarget;
         private Task currentTask;
     
-        Project project = new Project();
+        Project project = new Project(frontEnd, taskManager);
     
         Project getProject() {
             return project;

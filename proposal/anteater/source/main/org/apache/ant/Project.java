@@ -71,7 +71,19 @@ public class Project {
     /**
      * TaskManager for this project.
      */
-    private TaskManager taskManager = new TaskManager(this);
+    private TaskManager taskManager;
+
+    // -----------------------------------------------------------------
+    // CONSTRUCTORS
+    // -----------------------------------------------------------------
+
+    /**
+     * Creates a new Project object with the given FrontEnd and TaskManager
+     */
+    public Project(FrontEnd frontEnd, TaskManager taskManager) {
+        this.frontEnd = frontEnd;
+        this.taskManager = taskManager;
+    }
 
     // -----------------------------------------------------------------
     // PUBLIC  METHODS
@@ -225,7 +237,6 @@ public class Project {
         frontEnd.notifyProjectStart(this);
         
         Target target = getTarget(targetName);
-        //TaskManager taskManager = ant.getTaskManager();
         
         frontEnd.notifyTargetStart(target);
         
