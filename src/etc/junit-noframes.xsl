@@ -1,23 +1,24 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0"
+	xmlns:lxslt="http://xml.apache.org/xslt"
+	xmlns:stringutils="xalan://org.apache.tools.ant.util.StringUtils">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"
   doctype-public="-//W3C//DTD HTML 4.01 Transitional//EN" />
 <xsl:decimal-format decimal-separator="." grouping-separator="," />
 <!--
-    Copyright  2001-2002,2004 Apache Software Foundation
-   
-     Licensed under the Apache License, Version 2.0 (the "License");
-     you may not use this file except in compliance with the License.
-     You may obtain a copy of the License at
-   
-         http://www.apache.org/licenses/LICENSE-2.0
-   
-     Unless required by applicable law or agreed to in writing, software
-     distributed under the License is distributed on an "AS IS" BASIS,
-     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-     See the License for the specific language governing permissions and
-     limitations under the License.
-   
--->
+   Copyright 2001-2004 Apache Software Foundation
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ -->
  
 <!--
  
@@ -430,21 +431,9 @@
 
 <xsl:template name="JS-escape">
     <xsl:param name="string"/>
-    <xsl:choose>
-        <xsl:when test="contains($string,&quot;'&quot;)">
-            <xsl:value-of select="substring-before($string,&quot;'&quot;)"/>\&apos;<xsl:call-template name="JS-escape">
-                <xsl:with-param name="string" select="substring-after($string,&quot;'&quot;)"/>
-            </xsl:call-template>
-        </xsl:when> 
-        <xsl:when test="contains($string,'\')">
-            <xsl:value-of select="substring-before($string,'\')"/>\\<xsl:call-template name="JS-escape">
-                <xsl:with-param name="string" select="substring-after($string,'\')"/>
-            </xsl:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-            <xsl:value-of select="$string"/>
-        </xsl:otherwise>
-    </xsl:choose>
+    <xsl:param name="tmp1" select="stringutils:replace(string($string),'\','\\')"/>
+    <xsl:param name="tmp2" select="stringutils:replace(string($tmp1),&quot;'&quot;,&quot;\&apos;&quot;)"/>
+    <xsl:value-of select="$tmp2"/>
 </xsl:template>
 
 
@@ -454,18 +443,8 @@
 -->
 <xsl:template name="br-replace">
     <xsl:param name="word"/>
-    <xsl:choose>
-        <xsl:when test="contains($word,'&#xA;')">
-            <xsl:value-of select="substring-before($word,'&#xA;')"/>
-            <br/>
-            <xsl:call-template name="br-replace">
-                <xsl:with-param name="word" select="substring-after($word,'&#xA;')"/>
-            </xsl:call-template>
-        </xsl:when>
-        <xsl:otherwise>
-            <xsl:value-of select="$word"/>
-        </xsl:otherwise>
-    </xsl:choose>
+    <xsl:param name="br"><br/></xsl:param>
+    <xsl:value-of select='stringutils:replace(string($word),"&#xA;",$br)'/>
 </xsl:template>
 
 <xsl:template name="display-time">
