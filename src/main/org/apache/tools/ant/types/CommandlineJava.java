@@ -69,6 +69,7 @@ public class CommandlineJava implements Cloneable {
     private SysProperties sysProperties = new SysProperties();
     private Path classpath = null;
     private String vmVersion;
+    private String maxMemory = null;
 
     /**
      * Specialized Environment class for System properties
@@ -129,7 +130,7 @@ public class CommandlineJava implements Cloneable {
 
     public CommandlineJava() {
         setVm(getJavaExecutableName());
-        setVmversion(org.apache.tools.ant.Project.getJavaVersion());
+        setVmversion(Project.getJavaVersion());
     }
 
     public Commandline.Argument createArgument() {
@@ -173,17 +174,18 @@ public class CommandlineJava implements Cloneable {
 
     public String[] getCommandline() {
         Path fullClasspath = classpath != null ? classpath.concatSystemClasspath("ignore") : null;
+        Commandline actualVMCommand = getActualVMCommand();
         int size = 
-            vmCommand.size() + javaCommand.size() + sysProperties.size();
+            actualVMCommand.size() + javaCommand.size() + sysProperties.size();
         if (fullClasspath != null && fullClasspath.size() > 0) {
             size += 2;
         }
         
         String[] result = new String[size];
-        System.arraycopy(vmCommand.getCommandline(), 0, 
-                         result, 0, vmCommand.size());
+        System.arraycopy(actualVMCommand.getCommandline(), 0, 
+                         result, 0, actualVMCommand.size());
 
-        int pos = vmCommand.size();
+        int pos = actualVMCommand.size();
         if (sysProperties.size() > 0) {
             System.arraycopy(sysProperties.getVariables(), 0,
                              result, pos, sysProperties.size());
@@ -198,13 +200,32 @@ public class CommandlineJava implements Cloneable {
         return result;
     }
 
+    /**
+     * -mx or -Xmx depending on VM version
+     */
+    public void setMaxmemory(String max){
+        this.maxMemory = max;
+    }
+
 
     public String toString() {
         return Commandline.toString(getCommandline());
     }
 
+    private Commandline getActualVMCommand() {
+        Commandline actualVMCommand = (Commandline)vmCommand.clone();
+        if (maxMemory != null) {
+            if (vmVersion.startsWith("1.1")) {
+                actualVMCommand.createArgument().setValue("-mx" + maxMemory);
+            } else {
+                actualVMCommand.createArgument().setValue("-Xmx" + maxMemory);
+            }
+        }
+        return actualVMCommand;
+    }        
+    
     public int size() {
-        int size = vmCommand.size() + javaCommand.size();
+        int size = getActualVMCommand().size() + javaCommand.size();
         if (classpath != null && classpath.size() > 0) {
             size += 2;
         }
@@ -216,7 +237,7 @@ public class CommandlineJava implements Cloneable {
     }
 
     public Commandline getVmCommand() {
-        return vmCommand;
+        return getActualVMCommand();
     }
 
     public Path getClasspath() {
@@ -240,6 +261,7 @@ public class CommandlineJava implements Cloneable {
         c.vmCommand = (Commandline) vmCommand.clone();
         c.javaCommand = (Commandline) javaCommand.clone();
         c.sysProperties = (SysProperties) sysProperties.clone();
+        c.maxMemory = maxMemory;
         if (classpath != null) {
             c.classpath = (Path) classpath.clone();
         }
