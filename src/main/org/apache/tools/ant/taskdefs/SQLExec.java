@@ -554,7 +554,7 @@ public class SQLExec extends JDBCTask {
                 ret = statement.getMoreResults();
                 updateCount = statement.getUpdateCount();
                 resultSet = statement.getResultSet();
-            } while ((resultSet != null) || (updateCount != -1));
+            } while (ret);
 
             log(updateCountTotal + " rows affected",
                 Project.MSG_VERBOSE);
