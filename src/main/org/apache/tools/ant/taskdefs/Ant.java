@@ -203,9 +203,8 @@ public class Ant extends Task {
     }
 
     /**
-     * Pass output sent to System.out to the new project.
+     * @see Task#handleOutput(String)
      *
-     * @param output a line of output
      * @since Ant 1.5
      */
     public void handleOutput(String output) {
@@ -217,16 +216,6 @@ public class Ant extends Task {
     }
 
     /**
-     * Process input into the ant task
-     *
-     * @param buffer the buffer into which data is to be read.
-     * @param offset the offset into the buffer at which data is stored.
-     * @param length the amount of data to read
-     *
-     * @return the number of bytes read
-     *
-     * @exception IOException if the data cannot be read
-     *
      * @see Task#handleInput(byte[], int, int)
      *
      * @since Ant 1.6
@@ -241,9 +230,7 @@ public class Ant extends Task {
     }
 
     /**
-     * Pass output sent to System.out to the new project.
-     *
-     * @param output The output to log. Should not be <code>null</code>.
+     * @see Task#handleFlush(String)
      *
      * @since Ant 1.5.2
      */
@@ -256,9 +243,7 @@ public class Ant extends Task {
     }
 
     /**
-     * Pass output sent to System.err to the new project.
-     *
-     * @param output The error output to log. Should not be <code>null</code>.
+     * @see Task#handleErrorOutput(String)
      *
      * @since Ant 1.5
      */
@@ -271,9 +256,7 @@ public class Ant extends Task {
     }
 
     /**
-     * Pass output sent to System.err to the new project.
-     *
-     * @param output The error output to log. Should not be <code>null</code>.
+     * @see Task#handleErrorFlush(String)
      *
      * @since Ant 1.5.2
      */
@@ -287,8 +270,8 @@ public class Ant extends Task {
 
     /**
      * Do the execution.
-     * @throws BuildException if a target tries to call itself
-     * probably also if a BuildException is thrown by the new project
+     * @throws BuildException if a target tries to call itself;
+     * probably also if a BuildException is thrown by the new project.
      */
     public void execute() throws BuildException {
         File savedDir = dir;
@@ -435,7 +418,7 @@ public class Ant extends Task {
     /**
      * Override the properties in the new project with the one
      * explicitly defined as nested elements here.
-     * @throws BuildException under unknown circumstances
+     * @throws BuildException under unknown circumstances.
      */
     private void overrideProperties() throws BuildException {
         // remove duplicate properties - last property wins
@@ -465,7 +448,7 @@ public class Ant extends Task {
      * new project.  Also copy over all references that don't override
      * existing references in the new project if inheritrefs has been
      * requested.
-     * @throws BuildException if a reference does not have a refid
+     * @throws BuildException if a reference does not have a refid.
      */
     private void addReferences() throws BuildException {
         Hashtable thisReferences
@@ -511,11 +494,12 @@ public class Ant extends Task {
 
     /**
      * Try to clone and reconfigure the object referenced by oldkey in
-     * the parent project and add it to the new project with the key
-     * newkey.
+     * the parent project and add it to the new project with the key newkey.
      *
      * <p>If we cannot clone it, copy the referenced object itself and
      * keep our fingers crossed.</p>
+     * @param oldKey the reference id in the current project.
+     * @param newKey the reference id in the new project.
      */
     private void copyReference(String oldKey, String newKey) {
         Object orig = getProject().getReference(oldKey);
@@ -564,7 +548,7 @@ public class Ant extends Task {
      * Copies all properties from the given table to the new project -
      * omitting those that have already been set in the new project as
      * well as properties named basedir or ant.file.
-     * @param props properties to copy to the new project
+     * @param props properties <code>Hashtable</code> to copy to the new project.
      * @since Ant 1.6
      */
     private void addAlmostAll(Hashtable props) {
@@ -590,17 +574,16 @@ public class Ant extends Task {
      * Defaults to the current project's basedir, unless inheritall
      * has been set to false, in which case it doesn't have a default
      * value. This will override the basedir setting of the called project.
-     * @param d new directory
+     * @param d new directory as <code>File</code>.
      */
     public void setDir(File d) {
         this.dir = d;
     }
 
     /**
-     * The build file to use.
-     * Defaults to "build.xml". This file is expected to be a filename relative
-     * to the dir attribute given.
-     * @param s build file to use
+     * The build file to use. Defaults to "build.xml". This file is expected
+     * to be a filename relative to the dir attribute given.
+     * @param s the <code>String</code> build file name.
      */
     public void setAntfile(String s) {
         // @note: it is a string and not a file to handle relative/absolute
@@ -612,23 +595,21 @@ public class Ant extends Task {
     /**
      * The target of the new Ant project to execute.
      * Defaults to the new project's default target.
-     * @param s target to invoke
+     * @param s the name of the target to invoke.
      */
     public void setTarget(String s) {
         if (s.equals("")) {
             throw new BuildException("target attribute must not be empty");
         }
-
         targets.add(s);
         targetAttributeSet = true;
     }
 
     /**
-     * Filename to write the output to.
-     * This is relative to the value of the dir attribute
-     * if it has been set or to the base directory of the
+     * Set the filename to write the output to. This is relative to the value
+     * of the dir attribute if it has been set or to the base directory of the
      * current project otherwise.
-     * @param s file to which the output should go to
+     * @param s the name of the file to which the output should go.
      */
     public void setOutput(String s) {
         this.output = s;
@@ -636,8 +617,8 @@ public class Ant extends Task {
 
     /**
      * Property to pass to the new project.
-     * The property is passed as a 'user property'
-     * @return new property created
+     * The property is passed as a 'user property'.
+     * @return the created <code>Property</code> object.
      */
     public Property createProperty() {
         if (newProject == null) {
@@ -651,9 +632,9 @@ public class Ant extends Task {
     }
 
     /**
-     * Reference element identifying a data type to carry
+     * Add a Reference element identifying a data type to carry
      * over to the new project.
-     * @param r reference to add
+     * @param r <code>Reference</code> to add.
      */
     public void addReference(Reference r) {
         references.addElement(r);
@@ -662,7 +643,7 @@ public class Ant extends Task {
     /**
      * Add a target to this Ant invocation.
      * @param t the <CODE>TargetElement</CODE> to add.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public void addConfiguredTarget(TargetElement t) {
         if (targetAttributeSet) {
@@ -677,9 +658,9 @@ public class Ant extends Task {
     }
 
     /**
-     * Set of properties to pass to the new project.
+     * Add a set of properties to pass to the new project.
      *
-     * @param ps property set to add
+     * @param ps <code>PropertySet</code> to add.
      * @since Ant 1.6
      */
     public void addPropertyset(PropertySet ps) {
@@ -700,7 +681,7 @@ public class Ant extends Task {
     public static class Reference
         extends org.apache.tools.ant.types.Reference {
 
-        /** Creates a reference to be configured by Ant */
+        /** Creates a reference to be configured by Ant. */
         public Reference() {
             super();
         }
@@ -712,14 +693,14 @@ public class Ant extends Task {
          * new project.
          *
          * @param targetid the id under which this reference will be passed to
-         *        the new project */
+         *        the new project. */
         public void setToRefid(String targetid) {
             this.targetid = targetid;
         }
 
         /**
          * Get the id under which this reference will be stored in the new
-         * project
+         * project.
          *
          * @return the id of the reference in the new project.
          */
@@ -731,7 +712,7 @@ public class Ant extends Task {
     /**
      * Helper class that implements the nested &lt;target&gt;
      * element of &lt;ant&gt; and &lt;antcall&gt;.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public static class TargetElement {
         private String name;
