@@ -112,6 +112,9 @@ committers to agree
 * unify the namespace of all data types (ie properties + filesets +
   patternset + filtersets).
 
+* add a user defined message if a target will be skipped because the
+  if/unless attribute says so.
+
 IV. Things we probably agree upon but need to discuss the details or
 decide between several possible options.
 ======================================================================
