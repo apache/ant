@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+
+Test: test6
+Class-Path: fubar 
+

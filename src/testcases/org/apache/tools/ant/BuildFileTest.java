@@ -213,7 +213,7 @@ public abstract class BuildFileTest extends TestCase {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
             if ((null != contains) && (ex.getMessage().indexOf(contains) == -1)) {
-                fail("Should throw BuildException because '" + cause + "' with message containing'" + contains + "' (actual message '" + ex.getMessage() + "' instead)");
+                fail("Should throw BuildException because '" + cause + "' with message containing '" + contains + "' (actual message '" + ex.getMessage() + "' instead)");
             }
             return;
         }

@@ -81,8 +81,11 @@ public class Manifest {
     /** The Name Attribute is the first in a named section */
     public final static String ATTRIBUTE_NAME = "Name";
     
-    /** THe From Header is disallowed in a Manifest */    
+    /** The From Header is disallowed in a Manifest */    
     public final static String ATTRIBUTE_FROM = "From";
+    
+    /** The Class-Path Header is special - it can be duplicated */    
+    public final static String ATTRIBUTE_CLASSPATH = "class-path";
     
     /** Default Manifest version if one is not specified */
     public final static String DEFAULT_MANIFEST_VERSION = "1.0";
@@ -321,8 +324,19 @@ public class Manifest {
             
             for (Enumeration e = section.attributes.keys(); e.hasMoreElements();) {
                 String attributeName = (String)e.nextElement();
-                // the merge file always wins
-                attributes.put(attributeName, section.attributes.get(attributeName));
+                if (attributeName.equals(ATTRIBUTE_CLASSPATH) && 
+                        attributes.containsKey(attributeName)) {
+                    // classpath entries are vetors which are merged
+                    Vector classpathAttrs = (Vector)section.attributes.get(attributeName);
+                    Vector ourClasspathAttrs = (Vector)attributes.get(attributeName);
+                    for (Enumeration e2 = classpathAttrs.elements(); e2.hasMoreElements();) {
+                        ourClasspathAttrs.addElement(e2.nextElement());
+                    }
+                }
+                else {        
+                    // the merge file always wins
+                    attributes.put(attributeName, section.attributes.get(attributeName));
+                }
             }
             
             // add in the warnings
@@ -344,8 +358,18 @@ public class Manifest {
                 nameAttr.write(writer);
             }
             for (Enumeration e = attributes.elements(); e.hasMoreElements();) {
-                Attribute attribute = (Attribute)e.nextElement();
-                attribute.write(writer);
+                Object object = e.nextElement();
+                if (object instanceof Attribute) {
+                    Attribute attribute = (Attribute)object;
+                    attribute.write(writer);
+                }
+                else {
+                    Vector attrList = (Vector)object;
+                    for (Enumeration e2 = attrList.elements(); e2.hasMoreElements();) {
+                        Attribute attribute = (Attribute)e2.nextElement();
+                        attribute.write(writer);
+                    }
+                }
             }
             writer.println();
         }
@@ -359,11 +383,21 @@ public class Manifest {
          *         in the section
          */         
         public String getAttributeValue(String attributeName) {
-            Attribute attribute = (Attribute)attributes.get(attributeName.toLowerCase());
+            Object attribute = attributes.get(attributeName.toLowerCase());
             if (attribute == null) {
                 return null;
             }
-            return attribute.getValue();
+            if (attribute instanceof Attribute) {
+                return ((Attribute)attribute).getValue();
+            }
+            else {
+                String value = "";
+                for (Enumeration e = ((Vector)attribute).elements(); e.hasMoreElements();) {
+                    Attribute classpathAttribute = (Attribute)e.nextElement();
+                    value += classpathAttribute.getValue() + " ";
+                }
+                return value.trim();
+            }
         }
 
         /**
@@ -407,12 +441,24 @@ public class Manifest {
                 warnings.addElement("Manifest attributes should not start with \"" +
                                     ATTRIBUTE_FROM + "\" in \"" +attribute.getName() + ": " + attribute.getValue() + "\"");  
             }
-            else if (attributes.containsKey(attribute.getName().toLowerCase())) {
-                throw new ManifestException("The attribute \"" + attribute.getName() + "\" may not " + 
-                                            "occur more than once in the same section");
-            }
             else {
-                attributes.put(attribute.getName().toLowerCase(), attribute);
+                // classpath attributes go into a vector
+                String attributeName = attribute.getName().toLowerCase();
+                if (attributeName.equals(ATTRIBUTE_CLASSPATH)) {
+                    Vector classpathAttrs = (Vector)attributes.get(attributeName);
+                    if (classpathAttrs == null) {
+                        classpathAttrs = new Vector();
+                        attributes.put(attributeName, classpathAttrs);
+                    }
+                    classpathAttrs.addElement(attribute);
+                }
+                else if (attributes.containsKey(attributeName)) {
+                    throw new ManifestException("The attribute \"" + attribute.getName() + "\" may not " + 
+                                                "occur more than once in the same section");
+                }
+                else {
+                    attributes.put(attributeName, attribute);
+                }
             }
             return null;
         }

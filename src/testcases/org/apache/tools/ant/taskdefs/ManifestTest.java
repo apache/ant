@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -105,7 +105,7 @@ public class ManifestTest extends BuildFileTest {
     public void test4() {
         expectBuildExceptionContaining("test4", "Manifest is invalid - section starts with continuation line",
                                        "Invalid Manifest");
-    }
+   }
 
     /**
      * Malformed manifest - Name attribute in main section
@@ -116,4 +116,81 @@ public class ManifestTest extends BuildFileTest {
         boolean hasWarning = output.indexOf("Manifest warning: \"Name\" attributes should not occur in the main section") != -1;
         assertEquals("Expected warning about Name in main section", true, hasWarning);
     }
+    
+    /**
+     * New Section not starting with Name attribute.
+     */
+    public void test6() {
+        expectBuildExceptionContaining("test6", "Manifest is invalid - section starts with incorrect attribute",
+                                       "Invalid Manifest");
+        String output = getLog();
+        boolean hasWarning = output.indexOf("Manifest sections should start with a \"Name\" attribute") != -1;
+        assertEquals("Expected warning about section not starting with Name: attribute", true, hasWarning);
+    }
+     
+    /**
+     * From attribute is illegal
+     */
+    public void test7() {
+        executeTarget("test7");
+
+        boolean hasWarning = getLog().indexOf("Manifest attributes should not start with \"From\"") != -1;
+        assertEquals("Expected warning about From: attribute", true, hasWarning);
+    }
+
+    /**
+     * Inline manifest - OK
+     */
+    public void test8() {
+        executeTarget("test8");
+    }
+     
+    /**
+     * Inline manifest - Invalid since has a Name attribute in the section element
+     */
+    public void test9() {
+        expectBuildExceptionContaining("test9", "Construction is invalid - Name attribute should not be used",
+                                       "Specify the section name using the \"name\" attribute of the <section> element");
+    }
+     
+    /**
+     * Inline manifest - Invalid attribute without name
+     */
+    public void test10() {
+        expectBuildExceptionContaining("test10", "Attribute has no name",
+                                       "Attributes must have name and value");
+    }
+     
+    /**
+     * Inline manifest - Invalid attribute without value
+     */
+    public void test11() {
+        expectBuildExceptionContaining("test11", "Attribute has no value",
+                                       "Attributes must have name and value");
+    }
+     
+    /**
+     * Inline manifest - Invalid attribute without value
+     */
+    public void test12() {
+        expectBuildExceptionContaining("test12", "Section with no name",
+                                       "Sections must have a name");
+    }
+     
+    /**
+     * Inline manifest - Duplicate attribute
+     */
+    public void test13() {
+        expectBuildExceptionContaining("test13", "Duplicate Attribute",
+                                       "The attribute \"Test\" may not occur more than once in the same section");
+    }
+     
+    /**
+     * Inline manifest - OK since classpath entries can be duplicated.
+     */
+    public void test14() {
+        executeTarget("test14");
+    }
+     
+    
 }
