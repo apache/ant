@@ -12,8 +12,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.property.PropertyException;
-import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
