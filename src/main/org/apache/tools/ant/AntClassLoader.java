@@ -392,7 +392,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         }
         if (LoaderUtils.isContextLoaderAvailable()) {
             savedContextLoader = LoaderUtils.getContextClassLoader();
-            LoaderUtils.setContextClassLoader(this);
+            ClassLoader loader = this;
+            if ("only".equals(project.getProperty("build.sysclasspath"))) {
+                loader = this.getClass().getClassLoader();
+            }
+            LoaderUtils.setContextClassLoader(loader);
             isContextLoaderSaved = true;
         }
     }
