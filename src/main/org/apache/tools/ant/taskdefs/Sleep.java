@@ -121,6 +121,7 @@ public class Sleep extends Task {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ie) {
+            // Ignore Exception
         }
     }
 

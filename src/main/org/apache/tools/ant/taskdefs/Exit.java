@@ -105,7 +105,7 @@ public class Exit extends Task {
      * The error message is constructed from the text fields, from
      * the nested condition (if specified), or finally from
      * the if and unless parameters (if present).
-     * @throws BuildException
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
         boolean fail = (nestedConditionPresent()) ? testNestedCondition()
