@@ -270,7 +270,9 @@
 
     <p>This is list is not complete, it just highlights some of the
     rejected features and tries to explain why they&apos;ve been
-    rejected.</p>
+    rejected.  Two very common reasons to reject something were, that
+    the request has been too vague or the same functionality could
+    already be provided by some other accepted new feature.</p>
 
     <p>For a complete listing of all requested features, see <a
     href="requested-features.html">requested-features.html</a>. The
@@ -279,6 +281,74 @@
     for ant-dev</a> in threads starting from 2001-03-21 - the subject
     lines contained either <code>[VOTE]</code> or
     <code>[DISC]</code>.</p>
+
+    <h2>Simple Flow-Control</h2>
+
+    <p>People asking for these kind of things have often heard the
+    standard "Ant shall not become yet another scripting language, Ant
+    shall not fall into the same traps make/Perl did ..." response
+    from the committers and some long-term ant-dev people.</p>
+
+    <p>The long version of that answer is:</p>
+
+    <ul>
+      <li>There are lots of open source scripting languages, there is
+      no need to define a new one.</li>
+
+      <li>Ant has been created to be a build tool.  While you can use
+      it for a whole lot of other things, this is not Ant's primary
+      focus (and it shouldn't be).  Most use-cases that ask for
+      flow-control are out of Ant's scope.</li>
+
+      <li>Ant already provides the requested functionality for many
+      common situations.  The execon and apply tasks can be used to
+      iterate over a set of files as the (planed for Ant2) javaon and
+      anton tasks will do.</li>
+
+      <li>Providing flow-control inside Ant's core would increase the
+      complexity of this core.  This would make it difficult for new
+      contributors to understand how Ant works and increase the
+      maintenance cost for Ant at the same time.  The goal of the Ant
+      developers is to push as much complexity and functionality out
+      of Ant's core into the tasks as possible.</li>
+    </ul>
+
+    <p>That being said, Ant2 will make it easy to write iteration or
+    conditional tasks via the new container task concept.  We expect
+    foreach, switch and if tasks to be written, but they will probably
+    not become core parts of the Ant distribution.</p>
+
+    <h2>Advanced Conditionals for if/unless Attributes</h2>
+
+    <p>The argument here is the same as for flow-control.  We are
+    talking about complexity that can be pushed from the core to tasks
+    - and that is what will be done.  Instead of additional power for
+    the if/unless attributes, Ant2 will have a new task that can set
+    properties based on the values of other properties or logical
+    combinations of other conditions, something like (making up
+    syntax):</p>
+
+<pre>
+&lt;condition name=&quot;javamail-complete&quot;&gt;
+  &lt;and&gt;
+    &lt;available class=&quot;javax.mail.Transport&quot;/&gt;
+    &lt;available class=&quot;javax.activation.DataHandler&quot;/&gt;
+  &lt;/and&gt;
+&lt;/condition&gt;
+</pre>
+
+    <p>will become possible</p>
+
+    <h2>Multi-Threaded Execution of Targets</h2>
+
+    <p>The general feeling was, that the combination of target
+    dependencies and multi-threading would soon become too complex,
+    especially since Ant2 will allow people to explicitly enforce the
+    order in which (independent) targets will be executed.</p>
+
+    <p>This issue will be explored again later, it has not been
+    rejected for all time being, but it is out of scope for
+    Ant&nbsp;2.0</p>
 
     <h1>Ideas for New Tasks and Tools</h1>
 
