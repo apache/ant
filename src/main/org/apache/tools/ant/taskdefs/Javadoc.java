@@ -59,9 +59,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.*;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection
@@ -205,6 +203,18 @@ public class Javadoc extends Task {
     private String packageList = null;
     private Vector links = new Vector(2);
     private Vector groups = new Vector(2);
+	private boolean useDefaultExcludes = true;
+
+    /**
+     * Sets whether default exclusions should be used or not.
+     *
+     * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions 
+     *                           should be used, "false"|"off"|"no" when they
+     *                           shouldn't be used.
+     */
+    public void setDefaultexcludes(boolean useDefaultExcludes) {
+       this.useDefaultExcludes = useDefaultExcludes;
+    }
 
     public void setMaxmemory(String max){
         if(javadoc1){
@@ -769,35 +779,48 @@ public class Javadoc extends Task {
         String[] list = sourcePath.list();
         if (list == null) list = new String[0];
 
+        FileSet fs = new FileSet();
+        fs.setDefaultexcludes(useDefaultExcludes);
+
+        Enumeration e = packages.elements();
+        while (e.hasMoreElements()) {
+            String pkg = (String)e.nextElement();
+            pkg = pkg.replace('.','/');
+            if (pkg.endsWith("*")) {
+                pkg += "*";
+            }
+
+            fs.createInclude().setName(pkg);
+        } // while
+
         for (int j=0; j<list.length; j++) {
             File source = project.resolveFile(list[j]);
-            Vector foundPackages = findPackages(source);
+            fs.setDir(source);
 
-            Enumeration e = foundPackages.elements();
-            while (e.hasMoreElements()) {
-                String pack = (String) e.nextElement();
-                for (int i = 0; i < packages.size(); i++) {
-                    if (matches(pack, (String) packages.elementAt(i))) {
-                        if (!addedPackages.contains(pack)) {
-                            toExecute.createArgument().setValue(pack);
-                            addedPackages.addElement(pack);
+            DirectoryScanner ds = fs.getDirectoryScanner(project);
+            String[] packageDirs = ds.getIncludedDirectories();
+
+            for (int i=0; i<packageDirs.length; i++) {
+                File pd = new File(source, packageDirs[i]);
+                String[] files = pd.list(new FilenameFilter () {
+                    public boolean accept(File dir1, String name) {
+                        if (name.endsWith(".java")) {
+                            return true;
                         }
-                        break;
+                        return false;	// ignore dirs
+                    }
+                });
+
+                if (files.length > 0) {
+                    String pkgDir = packageDirs[i].replace('/','.').replace('\\','.');
+                    if (!addedPackages.contains(pkgDir)) {
+                        toExecute.createArgument().setValue(pkgDir);
+                        addedPackages.addElement(pkgDir);
                     }
                 }
             }
         }
     }
-
-    /**
-     * Implements the pattern matching. For now it's only able to
-     * guarantee that "aaa.bbb.ccc" matches "aaa.*" and "aaa.bbb.*"
-     * FIXME: this code needs much improvement.
-     */
-    private boolean matches(String string, String pattern) {
-        return string.startsWith(pattern.substring(0, pattern.length() - 2));
-    }
-
 
     private class JavadocOutputStream extends LogOutputStream {
         JavadocOutputStream(int level) {
@@ -837,49 +860,4 @@ public class Javadoc extends Task {
         }
     }
 
-    protected Vector findPackages(File srcDir) {
-        Vector foundPkgs = new Vector();
-
-        if ((srcDir != null) && (srcDir.isDirectory())) {
-            scan(srcDir, "", foundPkgs);
-        }
-
-        return foundPkgs;
-    }
-
-    protected void scan(File srcDir, String vpath, Vector pkgs) {
-        foundJavaFile = false;
-        File dir = new File(srcDir, vpath);
-
-        if (!dir.isDirectory()) {
-            return;
-        }
-    
-        String[] files = dir.list(new FilenameFilter () {
-            public boolean accept(File dir1, String name) {
-                if (name.endsWith(".java")) {
-                    foundJavaFile = true;
-                    return false;
-                }
-                File d = new File(dir1, name);
-                if (d.isDirectory() 
-                    && d.getName().indexOf("-") == -1) {
-                        return true;
-                    }
-                return false;
-            }
-        });
-        
-        if (foundJavaFile && vpath.length() > 0) {
-            String newPkg = vpath.substring(1).replace(File.separatorChar, '.');
-            if (!pkgs.contains(newPkg)) {
-                pkgs.addElement(newPkg);
-            }
-        }
-
-        for (int i=0; i<files.length; i++) {
-            scan(srcDir, vpath + File.separator + files[i], pkgs);
-        }
-        return;
-    }
 }
