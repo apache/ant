@@ -103,6 +103,12 @@ public class AntClassLoader  extends ClassLoader {
      */
     private Vector loaderPackages = new Vector();
     
+    /**
+     * This flag indicates that the classloader will ignore the base
+     * classloader if it can;t find a class.
+     */
+    private boolean ignoreBase = false;
+    
     private static Method getProtectionDomain = null;
     private static Method defineClassProtectionDomain = null;
     static {
@@ -143,6 +149,16 @@ public class AntClassLoader  extends ClassLoader {
         this(project, classpath);
         this.systemFirst = systemFirst;
     }
+
+    /**
+     * Set this classloader to run in isolated mode. In isolated mode, classes not
+     * found on the given classpath will not be referred to the base class loader
+     * but will cause a classNotFoundException.
+     */
+    public void setIsolated(boolean isolated) {
+        ignoreBase = isolated;
+    }
+    
     
     /**
      * Add a package root to the list of packages which must be loaded on the 
@@ -354,6 +370,9 @@ public class AntClassLoader  extends ClassLoader {
                     project.log("Class " + classname + " loaded from ant loader", Project.MSG_DEBUG);
                 }
                 catch (ClassNotFoundException cnfe) {
+                    if (ignoreBase) {
+                        throw cnfe;
+                    }
                     theClass = findBaseClass(classname);
                     project.log("Class " + classname + " loaded from system loader", Project.MSG_DEBUG);
                 }

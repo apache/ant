@@ -1,4 +1,4 @@
-Changes from Ant 1.2 to Ant 1.3 Beta 1
+Changes from Ant 1.2 to Ant 1.3 Beta 2
 ===========================================
 
 Changes that could break older environments:
@@ -71,6 +71,10 @@ Other changes:
   may be controlled.
 
 * wlrun, wlstop and ejbjar now support Weblogic 6.0
+
+* The MPasre task has been updated to work with MParse 2.0
+
+* The documentation has been significantly updated.
 
 
 Fixed bugs:

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,59 +52,43 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.ant;
 
-import java.io.*;
 import org.apache.tools.ant.taskdefs.TaskdefsTest;
+
 /**
- * @author Erik Meade <emeade@geekfarm.org>
+ * Test the build file inclusion using XML entities.
+ *
+ * @author Conor MacNeill
  */
-public class ANTLRTest extends TaskdefsTest {
-
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/antlr/";
-
-    public ANTLRTest(String name) {
+public class IncludeTest extends TaskdefsTest { 
+    
+    public IncludeTest(String name) { 
         super(name);
+    }    
+    
+    public void test1() { 
+        configureProject("src/etc/testcases/core/include/basic/include.xml");
+        expectLog("test1", "from included entity");
     }
-
-    public void setUp() {
-        configureProject(TASKDEFS_DIR + "antlr.xml");
+    
+    public void test2() { 
+        configureProject("src/etc/testcases/core/include/frag#ment/include.xml");
+        expectLog("test1", "from included entity");
     }
-
-    public void test1() {
-        expectBuildException("test1", "required argument, target, missing");
+    
+    public void test3() { 
+        configureProject("src/etc/testcases/core/include/frag#ment/simple.xml");
+        expectLog("test1", "from simple buildfile");
     }
-
-    public void test2() {
-        expectBuildException("test2", "Invalid output directory");
+    
+    public void test4() { 
+        configureProject("src/etc/testcases/core/include/basic/relative.xml");
+        expectLog("test1", "from included entity");
     }
-
-    public void test3() {
-        executeTarget("test3");
-        File outputDirectory = new File(TASKDEFS_DIR + "antlr.tmp");
-        String[] calcFiles = outputDirectory.list(new CalcFileFilter());
-        assert(5 == calcFiles.length);
-    }
-
-    public void test4() {
-        executeTarget("test4");
-    }
-
-    public void test5() {
-        expectBuildException("test5", "Invalid working directory");
-    }
-
-    public void test6() {
-        executeTarget("test6");
-    }
-
-    public void test7() {
-        expectBuildException("test7", "Unable to determine generated class");
-    }
-}
-
-class CalcFileFilter implements FilenameFilter {
-    public boolean accept(File dir, String name) {
-        return name.startsWith("Calc");
+    
+    public void test5() { 
+        configureProject("src/etc/testcases/core/include/frag#ment/relative.xml");
+        expectLog("test1", "from included entity");
     }
 }

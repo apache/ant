@@ -298,7 +298,8 @@
 
     <copy todir="${dist.lib}" file="${lib.dir}/optional/README"/>
     
-    <copy todir="${dist.docs}">
+    <copy todir="${dist.docs}"
+          filtering="on">
       <fileset dir="${docs.dir}"/>
     </copy>
 

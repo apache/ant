@@ -67,6 +67,7 @@ public abstract class TaskdefsTest extends TestCase {
     
     private StringBuffer logBuffer;
     private StringBuffer outBuffer;
+    private StringBuffer errBuffer;
     private BuildException buildException;
     
     public TaskdefsTest(String name) {
@@ -92,36 +93,54 @@ public abstract class TaskdefsTest extends TestCase {
         assertEquals(output, realOutput);
     }
 
+    protected void expectOutputAndError(String taskname, String output, String error) { 
+        executeTarget(taskname);
+        String realOutput = getOutput();
+        assertEquals(output, realOutput);
+        String realError = getError();
+        assertEquals(error, realError);
+    }
+
     protected void expectLog(String taskname, String log) { 
         executeTarget(taskname);
         String realLog = getLog();
         assertEquals(log, realLog);
     }
 
-    protected String getOutput() { 
-        StringBuffer cleanOut = new StringBuffer();
+    
+    protected String getOutput() {
+        return cleanBuffer(outBuffer);
+    }
+     
+    protected String getError() {
+        return cleanBuffer(errBuffer);
+    }
+        
+    private String cleanBuffer(StringBuffer buffer) {
+        StringBuffer cleanedBuffer = new StringBuffer();
         boolean cr = false;
-        for (int i = 0; i < outBuffer.length(); i++) { 
-            char ch = outBuffer.charAt(i);
+        for (int i = 0; i < buffer.length(); i++) { 
+            char ch = buffer.charAt(i);
             if (ch == '\r') {
                 cr = true;
                 continue;
             }
 
             if (!cr) { 
-                cleanOut.append(ch);
+                cleanedBuffer.append(ch);
             } else { 
                 if (ch == '\n') {
-                    cleanOut.append(ch);
+                    cleanedBuffer.append(ch);
                 } else {
-                    cleanOut.append('\r').append(ch);
+                    cleanedBuffer.append('\r').append(ch);
                 }
             }
         }
-        return cleanOut.toString();
+        return cleanedBuffer.toString();
     }
     
     protected void configureProject(String filename) { 
+        logBuffer = new StringBuffer();
         project = new Project();
         project.init();
         project.setUserProperty( "ant.file" , new File(filename).getAbsolutePath() );
@@ -131,16 +150,22 @@ public abstract class TaskdefsTest extends TestCase {
     
     protected void executeTarget(String targetName) { 
         PrintStream sysOut = System.out;
+        PrintStream sysErr = System.err;
         try { 
-            outBuffer = new StringBuffer();
             sysOut.flush();
+            sysErr.flush();
+            outBuffer = new StringBuffer();
             PrintStream out = new PrintStream(new AntOutputStream());
             System.setOut(out);
+            errBuffer = new StringBuffer();
+            PrintStream err = new PrintStream(new AntOutputStream());
+            System.setErr(err);
             logBuffer = new StringBuffer();
             buildException = null;
             project.executeTarget(targetName);
         } finally { 
             System.setOut(sysOut);
+            System.setErr(sysErr);
         }
         
     }

@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+
+<html>
+<head>
+	<title>Documentation for Ant 1.3 optional task VSSLABEL</title>
+</head>
+
+<body>
+<h2><a name="vsslabel">VssLabel</a></h2>
+<h3>Description</h3>
+Task to perform LABEL commands to Microsoft Visual Source Safe.
+<p>Assigns a label to the specified version or current version of a file or
+project.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+   <tr>
+     <th>Attribute</th>
+     <th>Values</th>
+     <th>Required</th>
+   </tr>
+   <tr>
+      <td>login</td>
+      <td>username,password</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>vsspath</td>
+      <td>SourceSafe path</td>
+      <td>Yes</td>
+   </tr>
+   <tr>
+      <td>ssdir</td>
+      <td>directory where <code>ss.exe</code> resides. By default the task
+      expects it to be in the PATH.</td>
+      <td>No</td>
+   </tr>
+   <tr>
+      <td>label</td>
+      <td>A label to apply to the hierarchy</td>
+      <td>Yes</td>
+   </tr>
+   <tr>
+      <td>version</td>
+      <td>An existing file or project version to label. By default the current
+      version is labelled.</td>
+      <td>No</td>
+   </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+<pre>
+&lt;vsslabel vsspath=&quot;/source/aProject&quot;
+          login=&quot;me,mypassword&quot;
+          label=&quot;Release1&quot;/&gt;
+</pre>
+</blockquote>
+<p>Labels the current version of the VSS project <i>$/source/aproject</i> with
+the label <i>Release1</i> using the username <i>me</i> and the password 
+<i>mypassword</i>.
+</p>
+<blockquote>
+<pre>
+&lt;vsslabel vsspath=&quot;/source/aProject/myfile.txt&quot;
+          version=&quot;4&quot;
+          label=&quot;1.03.004&quot;/&gt;
+</pre>
+</blockquote>
+<p>Labels version 4 of the VSS file <i>$/source/aproject/myfile.txt</i> with the
+label <i>1.03.004</i>. If this version already has a label, the operation (and
+the build) will fail.
+</p>
+
+<hr>
+<p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
