@@ -111,7 +111,7 @@ public class Assertions extends DataType {
     /**
      * list of type BaseAssertion
      */
-    private List assertionList = new ArrayList();
+    private ArrayList assertionList = new ArrayList();
 
 
     /**
@@ -173,6 +173,47 @@ public class Assertions extends DataType {
     }
 
     /**
+     * how many assertions are made...will resolve references before returning
+     * @return total # of commands to make
+     */
+    public int size() {
+        Assertions clause = getFinalReference();
+        return clause.getFinalSize();
+    }
+
+
+    /**
+     * what is the final size of this object
+     * @return
+     */
+    private int getFinalSize() {
+        return assertionList.size()+ (enableSystemAssertions!=null?1:0);
+    }
+
+    /**
+     * add the assertions to a list in a format suitable
+     * for adding to a command line
+     * @param commandList
+     */
+    public void applyAssertions(List commandList) {
+        Assertions clause = getFinalReference();
+        //do the system assertions
+        if (Boolean.TRUE.equals(clause.enableSystemAssertions)) {
+            commandList.add("-enablesystemassertions");
+        } else if (Boolean.FALSE.equals(clause.enableSystemAssertions)) {
+            commandList.add("-disablesystemassertions");
+        }
+
+        //now any inner assertions
+        Iterator it = clause.assertionList.iterator();
+        while (it.hasNext()) {
+            BaseAssertion assertion = (BaseAssertion) it.next();
+            String arg = assertion.toCommand();
+            commandList.add(arg);
+        }
+    }
+
+    /**
      * apply all the assertions to the command.
      * @param command
      */
@@ -203,6 +244,19 @@ public class Assertions extends DataType {
         Commandline.Argument argument;
         argument = command.createVmArgument();
         argument.setValue(arg);
+    }
+
+    /**
+     * clone the objects.
+     * This is not a full depth clone; the list of assertions is cloned,
+     * but it does not clone the underlying assertions.
+     * @return a cli
+     * @throws CloneNotSupportedException
+     */
+    protected Object clone() throws CloneNotSupportedException {
+        Assertions that=(Assertions) super.clone();
+        that.assertionList=(ArrayList) assertionList.clone();
+		return that;
     }
 
     /**

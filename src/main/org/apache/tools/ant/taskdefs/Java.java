@@ -67,6 +67,7 @@ import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
+import org.apache.tools.ant.types.Assertions;
 
 /**
  * Launcher for Java applications. Allows use of
@@ -94,6 +95,7 @@ public class Java extends Task {
     private Long timeout = null;
     private Redirector redirector = new Redirector(this);
     private String resultProperty;
+
     private boolean spawn = false;
     private boolean incompatibleWithSpawn = false;
     /**
@@ -329,7 +331,7 @@ public class Java extends Task {
     protected void maybeSetResultPropertyValue(int result) {
         String res = Integer.toString(result);
         if (resultProperty != null) {
-            project.setNewProperty(resultProperty, res);
+            getProject().setNewProperty(resultProperty, res);
         }
     }
 
@@ -558,6 +560,15 @@ public class Java extends Task {
     public void setTimeout(Long value) {
         timeout = value;
         incompatibleWithSpawn = true;
+    }
+
+    /**
+     *  assertions to enable in this program (if fork=true)
+     * @since Ant 1.6
+     * @param asserts assertion set 
+     */
+    public void setAssertions(Assertions asserts) {
+        cmdl.setAssertions(asserts);
     }
 
     /**

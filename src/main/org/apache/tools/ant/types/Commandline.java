@@ -57,6 +57,11 @@ package org.apache.tools.ant.types;
 import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.LinkedList;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.util.StringUtils;
@@ -86,7 +91,14 @@ import org.apache.tools.ant.util.StringUtils;
  */
 public class Commandline implements Cloneable {
 
+    /**
+     * The arguments of the command
+     */
     private Vector arguments = new Vector();
+
+    /**
+     * the program to execute
+     */
     private String executable = null;
 
     protected static final String DISCLAIMER =
@@ -96,9 +108,14 @@ public class Commandline implements Cloneable {
         + "not part of the command."
         + StringUtils.LINE_SEP;
 
-    public Commandline(String to_process) {
+    /**
+     * create a command line from a string
+     * @param toProcess the line: the first element becomes the executable, the rest
+     * the arguments
+     */
+    public Commandline(String toProcess) {
         super();
-        String[] tmp = translateCommandline(to_process);
+        String[] tmp = translateCommandline(toProcess);
         if (tmp != null && tmp.length > 0) {
             setExecutable(tmp[0]);
             for (int i = 1; i < tmp.length; i++) {
@@ -107,6 +124,9 @@ public class Commandline implements Cloneable {
         }
     }
 
+    /**
+     *  Create an empty command line
+     */
     public Commandline() {
         super();
     }
@@ -183,10 +203,10 @@ public class Commandline implements Cloneable {
 
     /**
      * Class to keep track of the position of an Argument.
+     <p>This class is there to support the srcfile and targetfile
+     elements of &lt;execon&gt; and &lt;transform&gt; - don't know
+     whether there might be additional use cases.</p> --SB
      */
-    // <p>This class is there to support the srcfile and targetfile
-    // elements of &lt;execon&gt; and &lt;transform&gt; - don't know
-    // whether there might be additional use cases.</p> --SB
     public class Marker {
 
         private int position;
@@ -248,7 +268,8 @@ public class Commandline implements Cloneable {
     }
 
     /**
-     * Sets the executable to run.
+     * Sets the executable to run. All file separators in the string
+     * are converted to the platform specific value
      */
     public void setExecutable(String executable) {
         if (executable == null || executable.length() == 0) {
@@ -259,11 +280,19 @@ public class Commandline implements Cloneable {
     }
 
 
+    /**
+     * get the executable
+     * @return the program to run -null if not yet set
+     */
     public String getExecutable() {
         return executable;
     }
 
 
+    /**
+     * append the arguments to the existing command
+     * @param line an array of arguments to append
+     */
     public void addArguments(String[] line) {
         for (int i = 0; i < line.length; i++) {
             createArgument().setValue(line[i]);
@@ -274,14 +303,23 @@ public class Commandline implements Cloneable {
      * Returns the executable and all defined arguments.
      */
     public String[] getCommandline() {
-        final String[] args = getArguments();
-        if (executable == null) {
-            return args;
+        List commands=new LinkedList();
+        ListIterator list = commands.listIterator();
+        addCommandToList(list);
+        final String[] result = new String[commands.size()];
+        return (String[])commands.toArray(result);
+    }
+
+    /**
+     * add the entire command, including (optional) executable to a list
+     * @param list
+     * @since Ant 1.6
+     */
+    public void addCommandToList(ListIterator list) {
+        if(executable!=null) {
+            list.add(executable);
         }
-        final String[] result = new String[args.length + 1];
-        result[0] = executable;
-        System.arraycopy(args, 0, result, 1, args.length);
-        return result;
+        addArgumentsToList(list);
     }
 
 
@@ -290,23 +328,34 @@ public class Commandline implements Cloneable {
      * <code>addValue</code> or the argument object.
      */
     public String[] getArguments() {
-        Vector result = new Vector(arguments.size() * 2);
+        List result = new ArrayList(arguments.size() * 2);
+        addArgumentsToList(result.listIterator());
+        String [] res = new String[result.size()];
+        return (String[])result.toArray(res);
+    }
+
+    /**
+     * append all the arguments to the tail of a supplied list
+     * @param list
+     * @since Ant 1.6
+     */
+    public void addArgumentsToList(ListIterator list) {
         for (int i = 0; i < arguments.size(); i++) {
             Argument arg = (Argument) arguments.elementAt(i);
             String[] s = arg.getParts();
             if (s != null) {
                 for (int j = 0; j < s.length; j++) {
-                    result.addElement(s[j]);
+                    list.add(s[j]);
                 }
             }
         }
-
-        String [] res = new String[result.size()];
-        result.copyInto(res);
-        return res;
     }
 
 
+    /**
+     * stringify operator returns the command line as a string
+     * @return the command line
+     */
     public String toString() {
         return toString(getCommandline());
     }
@@ -324,7 +373,8 @@ public class Commandline implements Cloneable {
     public static String quoteArgument(String argument) {
         if (argument.indexOf("\"") > -1) {
             if (argument.indexOf("\'") > -1) {
-                throw new BuildException("Can\'t handle single and double quotes in same argument");
+                throw new BuildException("Can\'t handle single and double"
+                        +" quotes in same argument");
             } else {
                 return '\'' + argument + '\'';
             }
@@ -338,6 +388,8 @@ public class Commandline implements Cloneable {
     /**
      * Quotes the parts of the given array in way that makes them
      * usable as command line arguments.
+     * @return empty string for null or no command, else every argument split
+     * by spaces and quoted by quoting rules
      */
     public static String toString(String [] line) {
         // empty path return empty string
@@ -356,8 +408,15 @@ public class Commandline implements Cloneable {
         return result.toString();
     }
 
-    public static String[] translateCommandline(String to_process) {
-        if (to_process == null || to_process.length() == 0) {
+    /**
+     * crack a command line
+     * @param toProcess the command line to process
+     * @return the command line broken into strings.
+     * An empty or null toProcess parameter results in a zero sized array
+     */
+    public static String[] translateCommandline(String toProcess) {
+        if (toProcess == null || toProcess.length() == 0) {
+            //no command? no string
             return new String[0];
         }
 
@@ -367,7 +426,7 @@ public class Commandline implements Cloneable {
         final int inQuote = 1;
         final int inDoubleQuote = 2;
         int state = normal;
-        StringTokenizer tok = new StringTokenizer(to_process, "\"\' ", true);
+        StringTokenizer tok = new StringTokenizer(toProcess, "\"\' ", true);
         Vector v = new Vector();
         StringBuffer current = new StringBuffer();
         boolean lastTokenHasBeenQuoted = false;
@@ -414,7 +473,7 @@ public class Commandline implements Cloneable {
         }
 
         if (state == inQuote || state == inDoubleQuote) {
-            throw new BuildException("unbalanced quotes in " + to_process);
+            throw new BuildException("unbalanced quotes in " + toProcess);
         }
 
         String[] args = new String[v.size()];
@@ -422,10 +481,19 @@ public class Commandline implements Cloneable {
         return args;
     }
 
+    /**
+     * size operator. This actually creates the command line, so it is not
+     * a zero cost operation.
+     * @return number of elements in the command, including the executable
+     */
     public int size() {
         return getCommandline().length;
     }
 
+    /**
+     * a deep clone of the contained object.
+     * @return
+     */
     public Object clone() {
         try {
             Commandline c = (Commandline) super.clone();
