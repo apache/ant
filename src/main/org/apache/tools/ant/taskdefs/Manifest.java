@@ -280,7 +280,7 @@ public class Manifest {
             Attribute attribute = null;
             while (true) { 
                 String line = reader.readLine();
-                if (line == null || line.length() == 0) {
+                if (line == null || line.trim().length() == 0) {
                     return null;
                 }
                 if (line.charAt(0) == ' ') {
