@@ -33,6 +33,10 @@ Other changes:
 
 * <ftp> now supports passive mode.
 
+* New <mapper> data type that can be used to get influence on the
+  target files for some tasks like <copy> or enable new types of tasks
+  like <transform>.
+
 Fixed bugs:
 -----------
 
