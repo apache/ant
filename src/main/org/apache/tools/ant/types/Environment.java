@@ -81,6 +81,10 @@ public class Environment {
          */
         private String key, value;
 
+        /**
+         * Constructor for variable
+         *
+         */
         public Variable() {
             super();
         }

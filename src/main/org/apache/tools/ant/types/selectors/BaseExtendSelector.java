@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -110,6 +110,7 @@ public abstract class BaseExtendSelector
      * @param filename The name of the file to check
      * @param file A File object for this filename
      * @return whether the file should be selected or not
+     * @exception BuildException if an error occurs
      */
     public abstract boolean isSelected(File basedir, String filename,
                                        File file)
