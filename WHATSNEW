@@ -41,6 +41,9 @@ Fixed bugs:
   <replace> can now handle files as long as there is enough disk space
   available.
 
+* Commandline.describeCommand() methods would attempt to describe
+  arguments even when none, other than the executable name, were present.
+
 Other changes:
 --------------
 

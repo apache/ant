@@ -554,7 +554,7 @@ public class Commandline implements Cloneable {
         StringBuffer buf = new StringBuffer("Executing \'");
         buf.append(args[0]);
         buf.append("\'");
-        if (args.length > 0) {
+        if (args.length > 1) {
             buf.append(" with ");
             buf.append(describeArguments(args, 1));
         } else {
