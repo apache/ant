@@ -142,7 +142,6 @@ public class EjbcHelper {
     
         String[] args = new String[v.size()];
         v.copyInto(args);
-        System.out.println("args: "+args);
         return args;
     }
 
