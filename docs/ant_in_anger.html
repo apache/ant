@@ -185,7 +185,7 @@ task can be used to invoke them. It is best to specify that you want a
 new JVM for these tests, so that a significant crash does not break the
 full build. The Junit extensions such as 
 <a href="http://httpunit.sourceforge.net/">HttpUnit</a> for web pages, and 
-<a href="http://jakarta.apache.org/commons/cactus/">Cactus</a> for J2EE and servlet 
+<a href="http://jakarta.apache.org/cactus/">Cactus</a> for J2EE and servlet 
 testing help to expand the testing framework. To test properly you will still
 need to invest a lot of effort in getting these to work with your project, and 
 deriving great unit, system and regression tests -but your customers will love 
@@ -659,10 +659,16 @@ Faster compiles with Jikes
 </b><dd>
 
 The <a href="http://www.jikes.org/">jikes compiler</a> is usually much
-faster than javac, and does dependency checking. Get it. Then set
-build.compiler to "jikes" for it to be used in your build files. Better
-yet, set the JIKES_HOME environment variable for jikes to automatically
-get used, without changing your build files to only work with jikes.
+faster than javac, does dependency checking and has better error
+messages (usually). Get it. Then set
+build.compiler to "jikes" for it to be used in your build files.
+Doing this explicitly in your build files is a bit dubious as it requires the
+whole team (and sub projects) to be using jikes too -something you can only
+control in small, closed source projects. But if you set 
+<tt>ANT_OPTS&nbsp;=&nbsp;-Dbuild.compiler=jikes</tt>
+in your environment, then all your builds on your system will use 
+Jikes automatically, while others can choose their own compiler, or let
+ant choose whichever is appropriate for the current version of Java.   
 
 <dt><b>
 #include targets to simplify multi build.xml projects
@@ -923,6 +929,25 @@ get ugly because XML is a bit ugly, and a complex build is, well,
 complicated. Use XML comments so that the file you wrote last month
 still makes sense when you get back to it, and use Antidote to edit the
 files if you prefer it. 
+
+<h3>Big projects still get complicated fast</h3>
+
+Large software projects create their own complexity, with inter-dependent
+libraries, long test cycles, hard deployment processes and a multitude of
+people each working on their own bit of the solution. That's even before
+the deadlines loom close, the integration problems become insurmountable,
+weekends become indistinguishable from weekdays in terms of workload and 
+half the team stops talking to the other half. Ant may simplify the
+build and test process, and can eliminate the full time 'makefile engineer'
+role, but that doesn't mean that someone can stop 'owning the build'. 
+Being in charge of the build has to mean more than they type 'ant all' on
+their system, it means they need to set the standards of what build tools to
+use, what the common targets, what property names and files should be
+and generally oversee the sub projects build processes. On a small project,
+you don't need to do that -but remember: small projects become big projects
+when you aren't looking. If you start off with a little bit of process, then
+you can scale it if needed. Ff you start with none, by the time you need 
+it it will be too late.   
 
 <h3>You still need all the other foundational bits of a software
 project</h3>
