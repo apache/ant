@@ -341,11 +341,10 @@ public class Ilasm
      *@return    the argument string or null for no argument
      */
     protected String getOutputFileParameter() {
-        if (outputFile == null || outputFile.length() == 0) {
+        if (outputFile == null) {
             return null;
         }
-        File f = outputFile;
-        return "/output=" + f.toString();
+        return "/output=" + outputFile.toString();
     }
 
 

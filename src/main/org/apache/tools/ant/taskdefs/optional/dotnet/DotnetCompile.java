@@ -93,7 +93,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *        First creation
  *      </td>
  *      <td>
- *        Most of the code here was copied verbatim from v0.3 of 
+ *        Most of the code here was copied verbatim from v0.3 of
  *        Steve Loughran's CSharp optional task. Abstracted functionality
  *        to allow subclassing of other dotnet compiler types.
  *      </td>
@@ -255,7 +255,7 @@ public abstract class DotnetCompile
         clear();
         setIncludes(getFilePattern());
     }
-    
+
     /**
      *  reset all contents.
      */
@@ -600,7 +600,7 @@ public abstract class DotnetCompile
                 targetType.equals("module") || targetType.equals("winexe")) {
             targetType = targetType;
         } else {
-            throw new BuildException("targetType " + targetType 
+            throw new BuildException("targetType " + targetType
                     + " is not one of 'exe', 'module', 'winexe' or 'library'" );
         }
     }
@@ -663,7 +663,7 @@ public abstract class DotnetCompile
     public void setWin32Res(File fileName) {
         win32res = fileName;
     }
-    
+
     /**
      * Gets the file of the win32 .res file to include.
      * @return path to the file.
@@ -775,7 +775,7 @@ public abstract class DotnetCompile
     public void setDestFile(File file) {
         outputFile = file;
     }
-    
+
 
     /**
      *  get the argument or null for no argument needed
@@ -784,8 +784,7 @@ public abstract class DotnetCompile
      */
     protected String getDestFileParameter() {
         if (outputFile != null) {
-            File f = outputFile;
-            return "/out:" + f.toString();
+            return "/out:" + outputFile.toString();
         } else {
             return null;
         }
@@ -825,14 +824,14 @@ public abstract class DotnetCompile
     /**
      * validation code
      * @throws  BuildException  if validation failed
-     */ 
-    protected void validate() 
+     */
+    protected void validate()
             throws BuildException {
         if (outputFile != null && outputFile.isDirectory()) {
             throw new BuildException("destFile cannot be a directory");
         }
     }
-    
+
     /**
      * Based on DEFAULT_REFERENCE_LIST and getReferenceDelimiter(),
      * build the appropriate reference string for the compiler.
@@ -846,7 +845,7 @@ public abstract class DotnetCompile
         }
         return referenceList.toString();
     }
-    
+
     /**
      * Get the pattern for files to compile.
      * @return The compilation file pattern.
@@ -878,14 +877,14 @@ public abstract class DotnetCompile
         addFilesAndExecute(command);
 
     }
-    
+
     /**
      * Get the delimiter that the compiler uses between references.
      * For example, c# will return ";"; VB.NET will return ","
      * @return The string delimiter for the reference string.
      */
     public abstract String getReferenceDelimiter();
-    
+
     /**
      * Get the name of the compiler executable.
      * @return The name of the compiler executable.
