@@ -54,8 +54,6 @@
 
 package org.apache.tools.ant;
 
-import org.apache.tools.ant.util.WeakishReference;
-
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.HashSet;
@@ -67,6 +65,7 @@ import java.util.Stack;
 import java.util.Vector;
 import java.io.InputStream;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Modifier;
 
 import org.apache.tools.ant.taskdefs.Typedef;
@@ -87,6 +86,7 @@ import org.apache.tools.ant.taskdefs.Typedef;
  *
  * @author Costin Manolache
  * @author Peter Reilly
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  * @since Ant1.6
  */
 public class ComponentHelper  {
@@ -551,7 +551,7 @@ public class ComponentHelper  {
                 v = new Vector();
                 createdTasks.put(type, v);
             }
-            v.addElement(WeakishReference.createReference(task));
+            v.addElement(new WeakReference(task));
         }
     }
 
@@ -568,8 +568,8 @@ public class ComponentHelper  {
             if (v != null) {
                 Enumeration taskEnum = v.elements();
                 while (taskEnum.hasMoreElements()) {
-                    WeakishReference ref =
-                            (WeakishReference) taskEnum.nextElement();
+                    WeakReference ref =
+                            (WeakReference) taskEnum.nextElement();
                     Task t = (Task) ref.get();
                     //being a weak ref, it may be null by this point
                     if (t != null) {

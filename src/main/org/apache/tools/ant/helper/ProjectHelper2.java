@@ -641,7 +641,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 if (key.equals("default")) {
                     if (value != null && !value.equals("")) {
                         if (!context.isIgnoringProjectTag()) {
-                            project.setDefaultTarget(value);
+                            project.setDefault(value);
                         }
                     }
                 } else if (key.equals("name")) {
@@ -707,8 +707,8 @@ public class ProjectHelper2 extends ProjectHelper {
                     if ((new File(baseDir)).isAbsolute()) {
                         project.setBasedir(baseDir);
                     } else {
-                        project.setBaseDir(project.resolveFile(baseDir,
-                                                               context.getBuildFileParent()));
+                        project.setBaseDir(fu.resolveFile(
+                                               context.getBuildFileParent(), baseDir));
                     }
                 }
             }

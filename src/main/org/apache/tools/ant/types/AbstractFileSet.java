@@ -97,6 +97,7 @@ import org.apache.tools.ant.types.selectors.SizeSelector;
  * @author Stefan Bodewig
  * @author Magesh Umasankar
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
+ * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
 public abstract class AbstractFileSet extends DataType implements Cloneable,
         SelectorContainer {
@@ -208,7 +209,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     /**
-     * add a name entry on the include files list
+     * add a name entry on the excludes files list
      */
     public PatternSet.NameEntry createExcludesFile() {
         if (isReference()) {
@@ -224,8 +225,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         if (isReference()) {
             throw tooManyAttributes();
         }
-        FileUtils fileUtils = FileUtils.newFileUtils();
-        setDir(fileUtils.getParentFile(file));
+        setDir(file.getParentFile());
 
         PatternSet.NameEntry include = createInclude();
         include.setName(file.getName());
@@ -277,7 +277,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      }
 
     /**
-     * Sets the name of the file containing the includes patterns.
+     * Sets the name of the file containing the excludes patterns.
      *
      * @param excl The file to fetch the exclude patterns from.
      */
