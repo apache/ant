@@ -65,72 +65,100 @@ import org.apache.tools.ant.*;
  */
 public class JavaTest extends BuildFileTest {
     
-    protected Java java;
+    private boolean runFatalTests=false;
     
     public JavaTest(String name) { 
         super(name);
     }    
     
+    /**
+     * configure the project. 
+     * if the property junit.run.fatal.tests is set we run
+     * the fatal tests
+     */
     public void setUp() { 
         configureProject("src/etc/testcases/taskdefs/java.xml");
         
-        final String propname="tests-classpath.value";
-        String testClasspath=System.getProperty(propname);
-        System.out.println("Test cp="+testClasspath);
-        //project.setProperty(propname,testClasspath);
-        
+        //final String propname="tests-classpath.value";
+        //String testClasspath=System.getProperty(propname);
+        //System.out.println("Test cp="+testClasspath);
+        String propname="tests-classpath.value";
+        String runFatal=System.getProperty("junit.run.fatal.tests");
+        if(runFatal!=null)
+            runFatalTests=true;
     }
 
     public void tearDown() {
     }
 
     public void testNoJarNoClassname(){
-        expectBuildExceptionContaining("noclassname",
+        expectBuildExceptionContaining("testNoJarNoClassname",
             "parameter validation",
             "Classname must not be null.");   
     }
 
     public void testJarNoFork() {
-        expectBuildExceptionContaining("jarNoFork",
+        expectBuildExceptionContaining("testJarNoFork",
             "parameter validation",
             "Cannot execute a jar in non-forked mode. Please set fork='true'. ");        
     }
       
     public void testJarAndClassName() { 
-        expectBuildException("jarAndClassname",
+        expectBuildException("testJarAndClassName",
             "Should not be able to set both classname AND jar");
     }
                 
 
     public void testClassnameAndJar() { 
-        expectBuildException("ClassnameAndjar",
+        expectBuildException("testClassnameAndJar",
             "Should not be able to set both classname AND jar");
     }
 
     public void testRun() {
-        executeTarget("run");
+        executeTarget("testRun");
     }
+        
 
+
+    /** this test fails but we ignore the return value;
+     *  we verify that failure only matters when failonerror is set
+     */
     public void testRunFail() {
-        executeTarget("run-fail");
+        if(runFatalTests) {
+            executeTarget("testRunFail");
+        }
     }
     
     public void testRunFailFoe() {
-        expectBuildExceptionContaining("run-fail-foe",
-            "java failures being propagated",
-            "Java returned:");
-    }
+        if(runFatalTests) {
+            expectBuildExceptionContaining("testRunFailFoe",
+                "java failures being propagated",
+                "Java returned:");
+        }
+}
 
     public void testRunFailFoeFork() {
-        expectBuildExceptionContaining("run-fail-foe-fork",
+        expectBuildExceptionContaining("testRunFailFoeFork",
             "java failures being propagated",
             "Java returned:");
     }
 
-        
-    public void testRunExpectNoFail() {
-        executeTarget("runExpectNoFail");
+    public void testExcepting() {
+        executeTarget("testExcepting");
     }
+    
+    public void testExceptingFoe() {
+        //if(runFatalTests) {
+            executeTarget("testExceptingFoe");
+        //}
+    }
+    
+    public void testExceptingFoeFork() {
+        expectBuildExceptionContaining("testExceptingFoeFork",
+            "exceptions turned into error codes",
+            "Java returned:");        
+    }   
+        
     
     /**
      * entry point class with no dependencies other
@@ -149,7 +177,7 @@ public class JavaTest extends BuildFileTest {
             int exitCode=0;
             if(argv.length>0) {
                 try {
-                    exitCode=Integer.parseInt(argv[1]);
+                    exitCode=Integer.parseInt(argv[0]);
                 } catch(NumberFormatException nfe) {
                     exitCode=-1;
                 }
@@ -160,7 +188,24 @@ public class JavaTest extends BuildFileTest {
             if(argv.length>2) {
                 System.err.println(argv[2]);
             }
-            System.exit(exitCode);
+            if(exitCode!=0) {
+                System.exit(exitCode);
+            }
+        }
+    }
+    
+    /**
+     * entry point class with no dependencies other
+     * than normal JRE runtime
+     */
+    public static class ExceptingEntryPoint {
+        
+        /**
+         * throw a run time exception which does not need 
+         * to be in the signature of the entry point
+         */
+        public static void main(String[] argv) {
+            throw new NullPointerException("Exception raised inside called program");
         }
     }
 }
