@@ -4,6 +4,9 @@
 
   <target name="cleanup">
     <delete file="asf-logo.gif" />
+    <delete file="unziptest.zip"/>
+    <delete dir="unziptestin"/>
+    <delete dir="unziptestout"/>
   </target>
 
   <target name="test1">
@@ -28,4 +31,36 @@
     <unzip src="expected/asf-logo.gif.zip" dest="." />
   </target>
 
+  <target name="prepareTestZip">
+    <mkdir dir="unziptestin/1"/>
+    <mkdir dir="unziptestin/2"/>
+    <touch file="unziptestin/1/foo"/>
+    <touch file="unziptestin/2/bar"/>
+    <zip destfile="unziptest.zip" basedir="unziptestin"/>
+  </target>
+
+  <target name="testPatternSetExcludeOnly" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <exclude name="1/**"/>
+      </patternset>
+    </unzip>
+  </target>
+
+  <target name="testPatternSetIncludeOnly" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <include name="2/**"/>
+      </patternset>
+    </unzip>
+  </target>
+
+  <target name="testPatternSetIncludeAndExclude" depends="prepareTestZip">
+    <unzip dest="unziptestout" src="unziptest.zip">
+      <patternset>
+        <include name="2/**"/>
+        <exclude name="2/**"/>
+      </patternset>
+    </unzip>
+  </target>
 </project>

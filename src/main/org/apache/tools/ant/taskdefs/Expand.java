@@ -182,17 +182,25 @@ public class Expand extends Task {
             String name = entryName;
             boolean included = false;
             for (int v = 0; v < patternsets.size(); v++) {
-                included = true;
                 PatternSet p = (PatternSet) patternsets.elementAt(v);
                 String[] incls = p.getIncludePatterns(getProject());
-                if (incls != null) {
-                    for (int w = 0; w < incls.length; w++) {
-                        included = DirectoryScanner.match(incls[w], name);
-                        if (included) {
-                            break;
-                        }
+                if (incls == null || incls.length == 0) {
+                    // no include pattern implicitly means includes="**"
+                    incls = new String[] {"**"};
+                }
+                    
+                for (int w = 0; w < incls.length; w++) {
+                    included = DirectoryScanner.match(incls[w], name);
+                    if (included) {
+                        break;
                     }
                 }
+                
+                if (!included) {
+                    break;
+                }
+                
+
                 String[] excls = p.getExcludePatterns(getProject());
                 if (excls != null) {
                     for (int w = 0; w < excls.length; w++) {

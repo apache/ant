@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2001,2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -101,4 +101,37 @@ public class UnzipTest extends BuildFileTest {
                                            project.resolveFile("asf-logo.gif")));
     }
     
+    /*
+     * PR 11100
+     */
+    public void testPatternSetExcludeOnly() {
+        executeTarget("testPatternSetExcludeOnly");
+        assertTrue("1/foo is excluded",
+                   !getProject().resolveFile("unziptestout/1/foo").exists());
+        assertTrue("2/bar is not excluded",
+                   getProject().resolveFile("unziptestout/2/bar").exists());
+    }
+
+    /*
+     * PR 11100
+     */
+    public void testPatternSetIncludeOnly() {
+        executeTarget("testPatternSetIncludeOnly");
+        assertTrue("1/foo is not included",
+                   !getProject().resolveFile("unziptestout/1/foo").exists());
+        assertTrue("2/bar is included",
+                   getProject().resolveFile("unziptestout/2/bar").exists());
+    }
+
+    /*
+     * PR 11100
+     */
+    public void testPatternSetIncludeAndExclude() {
+        executeTarget("testPatternSetIncludeAndExclude");
+        assertTrue("1/foo is not included",
+                   !getProject().resolveFile("unziptestout/1/foo").exists());
+        assertTrue("2/bar is excluded",
+                   !getProject().resolveFile("unziptestout/2/bar").exists());
+    }
+
 }
