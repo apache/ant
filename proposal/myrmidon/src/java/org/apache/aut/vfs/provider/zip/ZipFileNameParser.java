@@ -8,7 +8,6 @@
 package org.apache.aut.vfs.provider.zip;
 
 import org.apache.aut.vfs.FileSystemException;
-import org.apache.aut.vfs.provider.ParsedUri;
 import org.apache.aut.vfs.provider.UriParser;
 
 /**
@@ -16,66 +15,77 @@ import org.apache.aut.vfs.provider.UriParser;
  *
  * @author Adam Murdoch
  */
-public class ZipFileNameParser extends UriParser
+public class ZipFileNameParser
+    extends UriParser
 {
+    private static final char[] ZIP_URL_RESERVED_CHARS = { '!' };
+
     /**
      * Parses an absolute URI, splitting it into its components.
      *
-     * @param name
+     * @param uriStr
      *          The URI.
      */
-    public ParsedUri parseUri( String uriStr ) throws FileSystemException
+    public ParsedZipUri parseZipUri( final String uriStr )
+        throws FileSystemException
     {
-        StringBuffer name = new StringBuffer();
-        ParsedZipUri uri = new ParsedZipUri();
+        final StringBuffer name = new StringBuffer();
+        final ParsedZipUri uri = new ParsedZipUri();
 
         // Extract the scheme
-        String scheme = extractScheme( uriStr, name );
+        final String scheme = extractScheme( uriStr, name );
         uri.setScheme( scheme );
 
         // Extract the Zip file name
-        String zipName = extractZipName( name );
-        uri.setZipFile( zipName );
+        final String zipName = extractZipName( name );
+        uri.setZipFileName( zipName );
 
-        // Adjust the separators
-        fixSeparators( name );
-
-        // Normalise the file name
+        // Decode and normalise the file name
+        decode( name, 0, name.length() );
         normalisePath( name );
         uri.setPath( name.toString() );
-
-        // Build root URI
-        StringBuffer rootUri = new StringBuffer();
-        rootUri.append( scheme );
-        rootUri.append( ":" );
-        rootUri.append( zipName );
-        rootUri.append( "!" );
-        uri.setRootURI( rootUri.toString() );
 
         return uri;
     }
 
     /**
+     * Assembles a root URI from the components of a parsed URI.
+     */
+    public String buildRootUri( final ParsedZipUri uri )
+    {
+        final StringBuffer rootUri = new StringBuffer();
+        rootUri.append( uri.getScheme() );
+        rootUri.append( ":" );
+        appendEncoded( rootUri, uri.getZipFile().getName().getURI(), ZIP_URL_RESERVED_CHARS );
+        rootUri.append( "!" );
+        return rootUri.toString();
+    }
+
+    /**
      * Pops the root prefix off a URI, which has had the scheme removed.
      */
-    protected String extractZipName( StringBuffer uri ) throws FileSystemException
+    private String extractZipName( final StringBuffer uri )
+        throws FileSystemException
     {
         // Looking for <name>!<abspath>
-        // TODO - how does '!' in the file name get escaped?
         int maxlen = uri.length();
-        for( int pos = 0; pos < maxlen; pos++ )
+        int pos = 0;
+        for( ; pos < maxlen && uri.charAt( pos ) != '!'; pos++ )
         {
-            if( uri.charAt( pos ) == '!' )
-            {
-                String prefix = uri.substring( 0, pos );
-                uri.delete( 0, pos + 1 );
-                return prefix;
-            }
         }
 
-        // Assume the URI is the Jar file name
-        String prefix = uri.toString();
-        uri.setLength( 0 );
-        return prefix;
+        // Extract the name
+        String prefix = uri.substring( 0, pos );
+        if( pos < maxlen )
+        {
+            uri.delete( 0, pos + 1 );
+        }
+        else
+        {
+            uri.setLength( 0 );
+        }
+
+        // Decode the name
+        return decode( prefix );
     }
 }

@@ -24,21 +24,19 @@ public class LocalFileSystemTest extends AbstractWritableFileSystemTest
     /**
      * Returns the URI for the base folder.
      */
-    protected String getBaseFolderURI()
-        throws Exception
+    protected FileObject getBaseFolder() throws Exception
     {
         final File testDir = getTestResource( "basedir" );
-        return testDir.toURL().toString();
+        return m_manager.convert( testDir );
     }
 
     /**
      * Returns the URI for the area to do tests in.
      */
-    protected String getWriteFolderURI()
-        throws Exception
+    protected FileObject getWriteFolder() throws Exception
     {
         final File testDir = getTestResource( "write-tests" );
-        return testDir.toURL().toString();
+        return m_manager.convert( testDir );
     }
 
     /**

@@ -21,6 +21,7 @@ import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.NameScope;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.excalibur.io.IOUtil;
 
 /**
  * A partial file object implementation.
@@ -349,7 +350,7 @@ public abstract class AbstractFileObject
         }
 
         // Update cached info
-        updateType( null );
+        updateType();
     }
 
     /**
@@ -463,7 +464,41 @@ public abstract class AbstractFileObject
         }
 
         // Update cached info
-        updateType( type );
+        updateType();
+    }
+
+    /**
+     * Copies the content of another file to this file.
+     */
+    public void copy( final FileObject file ) throws FileSystemException
+    {
+        try
+        {
+            final InputStream instr = file.getContent().getInputStream();
+            try
+            {
+                // Create the output strea via getContent(), to pick up the
+                // validation it does
+                final OutputStream outstr = getContent().getOutputStream();
+                try
+                {
+                    IOUtil.copy( instr, outstr );
+                }
+                finally
+                {
+                    IOUtil.shutdownStream( outstr );
+                }
+            }
+            finally
+            {
+                IOUtil.shutdownStream( instr );
+            }
+        }
+        catch( final Exception exc )
+        {
+            final String message = REZ.getString( "copy-file.error", file.getName(), m_name );
+            throw new FileSystemException( message, exc );
+        }
     }
 
     /**
@@ -598,14 +633,14 @@ public abstract class AbstractFileObject
      */
     public void endOutput() throws Exception
     {
-        updateType( FileType.FILE );
+        updateType();
         doEndOutput();
     }
 
     /**
      * Update cached info when this file's type changes.
      */
-    private void updateType( FileType type )
+    private void updateType()
     {
         // Notify parent that its child list may no longer be valid
         notifyParent();

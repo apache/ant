@@ -182,12 +182,32 @@ public interface FileObject
     void create( FileType type ) throws FileSystemException;
 
     /**
+     * Copies the content of another file to this file.
+     *
+     * If this file does not exist, it is created.  Its parent folder is also
+     * created, if necessary.  If this file does exist, its content is replaced.
+     *
+     * @param file The file to copy the content from.
+     *
+     * @throws FileSystemException
+     *      If this file is read-only, or is a folder, or if the supplied file
+     *      is not a file, or on error copying the content.
+     */
+    void copy( FileObject file ) throws FileSystemException;
+
+    /**
      * Returns this file's content.  The {@link FileContent} returned by this
      * method can be used to read and write the content of the file.
      *
      * <p>This method can be called if the file does not exist, and
      * the returned {@link FileContent} can be used to create the file
      * by writing its content.
+     *
+     * @todo Do not throw an exception if this file is a folder.  Instead,
+     *       throw the exceptions when (if) any methods on the returned object
+     *       are called.  This is to hand 2 cases: when the folder is deleted
+     *       and recreated as a file, and to allow attributes of the folder
+     *       to be set (last modified time, permissions, etc).
      *
      * @return
      *      This file's content.

@@ -8,7 +8,6 @@
 package org.apache.aut.vfs.provider.ftp;
 
 import org.apache.aut.vfs.FileSystemException;
-import org.apache.aut.vfs.provider.ParsedUri;
 import org.apache.aut.vfs.provider.UriParser;
 
 /**
@@ -21,15 +20,27 @@ public class FtpFileNameParser extends UriParser
     /**
      * Parses an absolute URI, splitting it into its components.
      */
-    public ParsedUri parseUri( String uriStr ) throws FileSystemException
+    public ParsedFtpUri parseFtpUri( final String uriStr )
+        throws FileSystemException
     {
-        ParsedFtpUri uri = new ParsedFtpUri();
+        final ParsedFtpUri uri = new ParsedFtpUri();
 
         // FTP URI are generic URI (as per RFC 2396)
         parseGenericUri( uriStr, uri );
 
+        // Adjust the hostname to lower-case
+        final String hostname = uri.getHostName().toLowerCase();
+        uri.setHostName( hostname );
+
+        // Drop the port if it is 21
+        final String port = uri.getPort();
+        if( port != null && port.equals( "21" ) )
+        {
+            uri.setPort( null );
+        }
+
         // Split up the userinfo into a username and password
-        String userInfo = uri.getUserInfo();
+        final String userInfo = uri.getUserInfo();
         if( userInfo != null )
         {
             int idx = userInfo.indexOf( ':' );
@@ -45,6 +56,11 @@ public class FtpFileNameParser extends UriParser
                 uri.setPassword( password );
             }
         }
+
+        // Now build the root URI
+        final StringBuffer rootUri = new StringBuffer();
+        appendRootUri( uri, rootUri );
+        uri.setRootUri( rootUri.toString() );
 
         return uri;
     }

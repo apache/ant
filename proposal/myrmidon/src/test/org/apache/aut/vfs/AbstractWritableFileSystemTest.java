@@ -16,7 +16,8 @@ import java.util.Set;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public abstract class AbstractWritableFileSystemTest extends AbstractFileSystemTest
+public abstract class AbstractWritableFileSystemTest
+    extends AbstractFileSystemTest
 {
     public AbstractWritableFileSystemTest( String name )
     {
@@ -26,14 +27,14 @@ public abstract class AbstractWritableFileSystemTest extends AbstractFileSystemT
     /**
      * Returns the URI for the area to do tests in.
      */
-    protected abstract String getWriteFolderURI() throws Exception;
+    protected abstract FileObject getWriteFolder() throws Exception;
 
     /**
      * Sets up a scratch folder for the test to use.
      */
     protected FileObject createScratchFolder() throws Exception
     {
-        FileObject scratchFolder = m_manager.resolveFile( getWriteFolderURI() );
+        FileObject scratchFolder = getWriteFolder();
 
         // Make sure the test folder is empty
         scratchFolder.delete();

@@ -12,6 +12,11 @@ import org.apache.aut.vfs.FileSystemException;
 
 /**
  * A file system provider, or factory.
+ *
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
+ *
+ * @ant:role shorthand="file-system"
  */
 public interface FileSystemProvider
 {
@@ -24,8 +29,16 @@ public interface FileSystemProvider
     /**
      * Locates a file object, by absolute URI.
      *
+     * @param baseFile
+     *          The base file to use for resolving the individual parts of
+     *          a compound URI.
      * @param uri
      *          The absolute URI of the file to find.
      */
-    FileObject findFile( String uri ) throws FileSystemException;
+    FileObject findFile( FileObject baseFile, String uri ) throws FileSystemException;
+
+    /**
+     * Creates a layered file system.
+     */
+    FileObject createFileSystem( String scheme, FileObject file ) throws FileSystemException;
 }

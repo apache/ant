@@ -8,6 +8,7 @@
 package org.apache.aut.vfs.provider.smb;
 
 import org.apache.aut.vfs.FileName;
+import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystemProvider;
 import org.apache.aut.vfs.provider.DefaultFileName;
@@ -19,27 +20,31 @@ import org.apache.aut.vfs.provider.ParsedUri;
  * A provider for SMB (Samba, Windows share) file systems.
  *
  * @author Adam Murdoch
+ *
+ * @ant:type type="file-system" name="smb"
  */
 public class SmbFileSystemProvider extends AbstractFileSystemProvider implements FileSystemProvider
 {
-    SmbFileNameParser m_parser = new SmbFileNameParser();
+    private final SmbFileNameParser m_parser = new SmbFileNameParser();
 
     /**
      * Parses a URI into its components.
      */
-    protected ParsedUri parseURI( String uri ) throws FileSystemException
+    protected ParsedUri parseUri( final FileObject baseFile,
+                                  final String uri )
+        throws FileSystemException
     {
-        return m_parser.parseUri( uri );
+        return m_parser.parseSmbUri( uri );
     }
 
     /**
      * Creates the filesystem.
      */
-    protected FileSystem createFileSystem( ParsedUri uri ) throws FileSystemException
+    protected FileSystem createFileSystem( final ParsedUri uri )
+        throws FileSystemException
     {
-        ParsedSmbUri smbUri = (ParsedSmbUri)uri;
-
-        FileName rootName = new DefaultFileName( m_parser, smbUri.getRootURI(), "/" );
+        final ParsedSmbUri smbUri = (ParsedSmbUri)uri;
+        final FileName rootName = new DefaultFileName( m_parser, smbUri.getRootUri(), "/" );
         return new SmbFileSystem( rootName );
     }
 }

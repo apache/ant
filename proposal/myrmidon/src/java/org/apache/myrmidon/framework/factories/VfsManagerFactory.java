@@ -8,7 +8,6 @@
 package org.apache.myrmidon.framework.factories;
 
 import org.apache.aut.vfs.FileSystemManager;
-import org.apache.aut.vfs.impl.DefaultFileSystemManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.interfaces.service.AntServiceException;
@@ -34,7 +33,7 @@ public class VfsManagerFactory
     {
         try
         {
-            return new DefaultFileSystemManager();
+            return new VfsManager();
         }
         catch( Exception e )
         {

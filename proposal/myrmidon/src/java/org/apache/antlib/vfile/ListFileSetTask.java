@@ -7,6 +7,7 @@
  */
 package org.apache.antlib.vfile;
 
+import java.util.ArrayList;
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
@@ -22,11 +23,11 @@ import org.apache.myrmidon.api.TaskException;
 public class ListFileSetTask
     extends AbstractTask
 {
-    private FileSet m_fileSet;
+    private final ArrayList m_fileSets = new ArrayList();
 
-    public void set( final FileSet fileSet )
+    public void add( final FileSet fileSet )
     {
-        m_fileSet = fileSet;
+        m_fileSets.add( fileSet );
     }
 
     /**
@@ -35,14 +36,19 @@ public class ListFileSetTask
     public void execute()
         throws TaskException
     {
-        FileSetResult result = m_fileSet.getResult( getContext() );
-        final FileObject[] files = result.getFiles();
-        final String[] paths = result.getPaths();
-        for( int i = 0; i < files.length; i++ )
+        final int count = m_fileSets.size();
+        for( int i = 0; i < count; i++ )
         {
-            final FileObject file = files[ i ];
-            final String path = paths[ i ];
-            getLogger().info( path + " = " + file );
+            final FileSet fileSet = (FileSet)m_fileSets.get(i );
+            FileSetResult result = fileSet.getResult( getContext() );
+            final FileObject[] files = result.getFiles();
+            final String[] paths = result.getPaths();
+            for( int j = 0; j < files.length; j++ )
+            {
+                final FileObject file = files[ j ];
+                final String path = paths[ j ];
+                getLogger().info( path + " = " + file );
+            }
         }
     }
 }

@@ -84,14 +84,41 @@ public class UriParser
      * Parses an absolute URI, splitting it into its components.  This
      * implementation assumes a "generic URI", as defined by RFC 2396.  See
      * {@link #parseGenericUri} for more info.
-     *
-     * <p>Sub-classes should override this method.
      */
     public ParsedUri parseUri( final String uriStr ) throws FileSystemException
     {
-        final ParsedUri retval = new ParsedUri();
-        parseGenericUri( uriStr, retval );
-        return retval;
+        // Parse the URI
+        final ParsedUri uri = new ParsedUri();
+        parseGenericUri( uriStr, uri );
+
+        // Build the root URI
+        final StringBuffer rootUri = new StringBuffer();
+        appendRootUri( uri, rootUri );
+        uri.setRootUri( rootUri.toString() );
+
+        return uri;
+    }
+
+    /**
+     * Assembles a generic URI, appending to the supplied StringBuffer.
+     */
+    protected void appendRootUri( final ParsedUri uri, final StringBuffer rootUri )
+    {
+        rootUri.append( uri.getScheme() );
+        rootUri.append( "://" );
+        final String userInfo = uri.getUserInfo();
+        if( userInfo != null && userInfo.length() != 0 )
+        {
+            rootUri.append( userInfo );
+            rootUri.append( "@" );
+        }
+        rootUri.append( uri.getHostName() );
+        final String port = uri.getPort();
+        if( port != null && port.length() > 0 )
+        {
+            rootUri.append( ":" );
+            rootUri.append( port );
+        }
     }
 
     /**
@@ -119,7 +146,8 @@ public class UriParser
         // Extract the scheme and authority parts
         extractToPath( uriStr, name, uri );
 
-        // Normalise the file name
+        // Decode and normalise the file name
+        decode( name, 0, name.length() );
         normalisePath( name );
         uri.setPath( name.toString() );
 
@@ -128,7 +156,7 @@ public class UriParser
         rootUri.append( uri.getScheme() );
         rootUri.append( "://" );
         rootUri.append( uri.getHostName() );
-        uri.setRootURI( rootUri.toString() );
+        uri.setRootUri( rootUri.toString() );
     }
 
     /**
@@ -404,9 +432,9 @@ public class UriParser
         if( scope == NameScope.CHILD )
         {
             final int baseLen = baseFile.length();
-            if( ! resolvedPath.startsWith( baseFile )
+            if( !resolvedPath.startsWith( baseFile )
                 || resolvedPath.length() == baseLen
-                || resolvedPath.charAt( baseLen ) != m_separatorChar
+                || ( baseLen > 1 && resolvedPath.charAt( baseLen ) != m_separatorChar )
                 || resolvedPath.indexOf( m_separatorChar, baseLen + 1 ) != -1 )
             {
                 final String message = REZ.getString( "invalid-childname.error", path );
@@ -416,9 +444,9 @@ public class UriParser
         else if( scope == NameScope.DESCENDENT )
         {
             final int baseLen = baseFile.length();
-            if( ! resolvedPath.startsWith( baseFile )
+            if( !resolvedPath.startsWith( baseFile )
                 || resolvedPath.length() == baseLen
-                || resolvedPath.charAt( baseLen ) != m_separatorChar )
+                || ( baseLen > 1 && resolvedPath.charAt( baseLen ) != m_separatorChar ) )
             {
                 final String message = REZ.getString( "invalid-descendent-name.error", path );
                 throw new FileSystemException( message );
@@ -463,7 +491,8 @@ public class UriParser
      * <li>Removes trailing separator.
      * </ul>
      */
-    public void normalisePath( final StringBuffer path ) throws FileSystemException
+    public void normalisePath( final StringBuffer path )
+        throws FileSystemException
     {
         if( path.length() == 0 )
         {
@@ -515,14 +544,20 @@ public class UriParser
                 path.charAt( startElem + 1 ) == '.' )
             {
                 // A '..' element - remove the previous element
-                if( startElem > startFirstElem )
+                if( startElem == startFirstElem )
                 {
-                    int pos = startElem - 2;
-                    for( ; pos >= 0 && path.charAt( pos ) != m_separatorChar; pos -- )
-                    {
-                    }
-                    startElem = pos + 1;
+                    // Previous element is missing
+                    final String message = REZ.getString( "invalid-relative-path.error" );
+                    throw new FileSystemException( message );
                 }
+
+                // Find start of previous element
+                int pos = startElem - 2;
+                for( ; pos >= 0 && path.charAt( pos ) != m_separatorChar; pos-- )
+                {
+                }
+                startElem = pos + 1;
+
                 path.delete( startElem, endElem + 1 );
                 maxlen = path.length();
                 continue;
@@ -595,7 +630,8 @@ public class UriParser
      * @return
      *          The scheme name.  Returns null if there is no scheme.
      */
-    protected static String extractScheme( final String uri, final StringBuffer buffer )
+    public static String extractScheme( final String uri,
+                                        final StringBuffer buffer )
     {
         if( buffer != null )
         {
@@ -641,5 +677,104 @@ public class UriParser
 
         // No scheme in URI
         return null;
+    }
+
+    /**
+     * Removes %nn encodings from a string.
+     */
+    public static String decode( final String encodedStr )
+        throws FileSystemException
+    {
+        final StringBuffer buffer = new StringBuffer( encodedStr );
+        decode( buffer, 0, buffer.length() );
+        return buffer.toString();
+    }
+
+    /**
+     * Removes %nn encodings from a string.
+     */
+    public static void decode( final StringBuffer buffer,
+                               final int offset,
+                               final int length )
+        throws FileSystemException
+    {
+        int index = offset;
+        int count = length;
+        for( ; count > 0; count--, index++ )
+        {
+            final char ch = buffer.charAt( index );
+            if( ch != '%' )
+            {
+                continue;
+            }
+            if( count < 3 )
+            {
+                final String message = REZ.getString( "invalid-escape-sequence.error", buffer.substring( index, index + count ) );
+                throw new FileSystemException( message );
+            }
+
+            // Decode
+            int dig1 = Character.digit( buffer.charAt( index + 1 ), 16 );
+            int dig2 = Character.digit( buffer.charAt( index + 2 ), 16 );
+            if( dig1 == -1 || dig2 == -1 )
+            {
+                final String message = REZ.getString( "invalid-escape-sequence.error", buffer.substring( index, index + 3 ) );
+                throw new FileSystemException( message );
+            }
+            char value = (char)( dig1 << 4 | dig2 );
+
+            // Replace
+            buffer.setCharAt( index, value );
+            buffer.delete( index + 1, index + 3 );
+            count -= 2;
+        }
+    }
+
+    /**
+     * Encodes and appends a string to a StringBuffer.
+     */
+    public static void appendEncoded( final StringBuffer buffer,
+                                      final String unencodedValue,
+                                      final char[] reserved )
+    {
+        final int offset = buffer.length();
+        buffer.append( unencodedValue );
+        encode( buffer, offset, unencodedValue.length(), reserved );
+    }
+
+    /**
+     * Encodes a set of reserved characters in a StringBuffer, using the URI
+     * %nn encoding.  Always encodes % characters.
+     */
+    public static void encode( final StringBuffer buffer,
+                               final int offset,
+                               final int length,
+                               final char[] reserved )
+    {
+        int index = offset;
+        int count = length;
+        for( ; count > 0; index++, count-- )
+        {
+            final char ch = buffer.charAt( index );
+            boolean match = ( ch == '%' );
+            for( int i = 0; !match && i < reserved.length; i++ )
+            {
+                if( ch == reserved[ i ] )
+                {
+                    match = true;
+                }
+            }
+            if( match )
+            {
+                // Encode
+                char[] digits = {
+                    Character.forDigit( ( ( ch >> 4 ) & 0xF ), 16 ),
+                    Character.forDigit( ( ch & 0xF ), 16 )
+                };
+                buffer.setCharAt( index, '%' );
+                buffer.insert( index + 1, digits );
+                index += 2;
+            }
+        }
     }
 }

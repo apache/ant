@@ -36,6 +36,15 @@ public class DefaultFileSet
     private FileObject m_dir;
     private final AndFileSelector m_selector = new AndFileSelector();
 
+    public DefaultFileSet()
+    {
+    }
+
+    public DefaultFileSet( final FileObject dir )
+    {
+        m_dir = dir;
+    }
+
     /**
      * Sets the root directory.
      */

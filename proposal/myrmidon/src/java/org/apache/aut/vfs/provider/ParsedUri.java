@@ -34,13 +34,13 @@ public class ParsedUri
     }
 
     /** Returns the root URI, used to identify the file system. */
-    public String getRootURI()
+    public String getRootUri()
     {
         return m_rootURI;
     }
 
     /** Sets the root URI. */
-    public void setRootURI( String rootPrefix )
+    public void setRootUri( String rootPrefix )
     {
         m_rootURI = rootPrefix;
     }

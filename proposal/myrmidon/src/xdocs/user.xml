@@ -32,7 +32,8 @@ files are found in the <code>lib</code> directory:</p>
     <tr>
         <td>SMB VFS support (Samba, Windows shares)</td>
         <td>jcifs.jar</td>
-        <td><a href="http://jcifs.samba.org">jcifs.samba.org</a></td>
+        <td><a href="http://jcifs.samba.org">jcifs.samba.org</a>.
+        <p>Note: there are problems using the 0.6.1 release.  Try 0.6.0 instead.</p></td>
     </tr>
     <tr>
         <td>FTP VFS support</td>

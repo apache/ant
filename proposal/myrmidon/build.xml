@@ -557,6 +557,9 @@ Legal:
         <zip zipfile="${test.vfs.dir}/test.zip">
             <fileset dir="${test.vfs.dir}" includes="basedir/**"/>
         </zip>
+        <zip zipfile="${test.vfs.dir}/nested.zip">
+            <fileset dir="${test.vfs.dir}" includes="test.zip"/>
+        </zip>
 
         <!-- Prepare deployer tests -->
         <property name="test.deployer.dir"

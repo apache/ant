@@ -7,6 +7,8 @@
  */
 package org.apache.aut.vfs;
 
+import org.apache.aut.vfs.provider.smb.SmbFileSystemProvider;
+
 /**
  * Tests for the SMB file system.
  *
@@ -22,16 +24,19 @@ public class SmbFileSystemTest extends AbstractWritableFileSystemTest
     /**
      * Returns the URI for the base folder.
      */
-    protected String getBaseFolderURI()
+    protected FileObject getBaseFolder() throws Exception
     {
-        return System.getProperty( "test.smb.uri" ) + "/read-tests";
+        final String uri = System.getProperty( "test.smb.uri" ) + "/read-tests";
+        m_manager.addProvider( "smb", new SmbFileSystemProvider() );
+        return m_manager.resolveFile( uri );
     }
 
     /**
      * Returns the URI for the area to do tests in.
      */
-    protected String getWriteFolderURI()
+    protected FileObject getWriteFolder() throws Exception
     {
-        return System.getProperty( "test.smb.uri" ) + "/write-tests";
+        final String uri = System.getProperty( "test.smb.uri" ) + "/write-tests";
+        return m_manager.resolveFile( uri );
     }
 }

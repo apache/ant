@@ -1,9 +1,4 @@
 <services version="1.0">
     <exec-manager factory="org.apache.myrmidon.framework.factories.ExecManagerFactory"/>
-    <file-system-manager factory="org.apache.myrmidon.framework.factories.VfsManagerFactory">
-        <provider scheme="zip" classname="org.apache.aut.vfs.provider.zip.ZipFileSystemProvider"/>
-        <provider scheme="jar" classname="org.apache.aut.vfs.provider.zip.ZipFileSystemProvider"/>
-        <provider scheme="smb" classname="org.apache.aut.vfs.provider.smb.SmbFileSystemProvider"/>
-        <provider scheme="ftp" classname="org.apache.aut.vfs.provider.ftp.FtpFileSystemProvider"/>
-    </file-system-manager>
+    <file-system-manager factory="org.apache.myrmidon.framework.factories.VfsManagerFactory"/>
 </services>

@@ -9,14 +9,11 @@ package org.apache.aut.vfs.impl;
 
 import java.io.File;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileSystemManager;
-import org.apache.aut.vfs.provider.FileSystem;
 import org.apache.aut.vfs.provider.FileSystemProvider;
-import org.apache.aut.vfs.provider.FileSystemProviderContext;
 import org.apache.aut.vfs.provider.UriParser;
 import org.apache.aut.vfs.provider.local.LocalFileSystemProvider;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
@@ -25,7 +22,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 /**
  * A default file system manager implementation.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultFileSystemManager
     implements FileSystemManager
@@ -40,69 +38,55 @@ public class DefaultFileSystemManager
     private final Map m_providers = new HashMap();
 
     /** The provider context. */
-    private final ProviderContextImpl m_context = new ProviderContextImpl();
+    private final DefaultProviderContext m_context = new DefaultProviderContext( this );
 
     /** The base file to use for relative URI. */
     private FileObject m_baseFile;
 
-    /**
-     * The cached file systems.  This is a mapping from root URI to
-     * FileSystem object.
-     */
-    private final Map m_fileSystems = new HashMap();
-
-    public DefaultFileSystemManager() throws Exception
+    public DefaultFileSystemManager()
     {
         // Create the local provider
         m_localFileProvider = new LocalFileSystemProvider();
         m_providers.put( "file", m_localFileProvider );
-
-        // TODO - make this list configurable
-        // Create the providers
-
-        FileSystemProvider provider = createProvider( "org.apache.aut.vfs.provider.zip.ZipFileSystemProvider" );
-        if( provider != null )
-        {
-            m_providers.put( "zip", provider );
-            m_providers.put( "jar", provider );
-        }
-
-        provider = createProvider( "org.apache.aut.vfs.provider.smb.SmbFileSystemProvider" );
-        if( provider != null )
-        {
-            m_providers.put( "smb", provider );
-        }
-
-        provider = createProvider( "org.apache.aut.vfs.provider.ftp.FtpFileSystemProvider" );
-        if( provider != null )
-        {
-            m_providers.put( "ftp", provider );
-        }
-
-        // Contextualise the providers
-        for( Iterator iterator = m_providers.values().iterator(); iterator.hasNext(); )
-        {
-            provider = (FileSystemProvider)iterator.next();
-            provider.setContext( m_context );
-        }
+        m_localFileProvider.setContext( m_context );
     }
 
     /**
-     * Creates a provider instance, returns null if the provider class is
-     * not found.
+     * Registers a file system provider.
      */
-    private FileSystemProvider createProvider( final String className )
-        throws Exception
+    public void addProvider( final String urlScheme,
+                             final FileSystemProvider provider )
+        throws FileSystemException
     {
-        try
+        addProvider( new String[] { urlScheme }, provider );
+    }
+
+    /**
+     * Registers a file system provider.
+     */
+    public void addProvider( final String[] urlSchemes,
+                             final FileSystemProvider provider )
+        throws FileSystemException
+    {
+        // Check for duplicates
+        for( int i = 0; i < urlSchemes.length; i++ )
         {
-            // TODO - wrap exceptions
-            return (FileSystemProvider)Class.forName( className ).newInstance();
+            final String scheme = urlSchemes[i ];
+            if( m_providers.containsKey( scheme ) )
+            {
+                final String message = REZ.getString( "multiple-providers-for-scheme.error", scheme );
+                throw new FileSystemException( message );
+            }
         }
-        catch( ClassNotFoundException e )
+
+        // Contextualise
+        provider.setContext( m_context );
+
+        // Add to map
+        for( int i = 0; i < urlSchemes.length; i++ )
         {
-            // This is fine, for now
-            return null;
+            final String scheme = urlSchemes[ i ];
+            m_providers.put( scheme, provider );
         }
     }
 
@@ -152,7 +136,7 @@ public class DefaultFileSystemManager
     public FileObject resolveFile( final File baseFile, final String uri )
         throws FileSystemException
     {
-        final FileObject baseFileObj = m_localFileProvider.findFileByLocalName( baseFile );
+        final FileObject baseFileObj = m_localFileProvider.findLocalFile( baseFile );
         return resolveFile( baseFileObj, uri );
     }
 
@@ -170,14 +154,17 @@ public class DefaultFileSystemManager
             final FileSystemProvider provider = (FileSystemProvider)m_providers.get( scheme );
             if( provider != null )
             {
-                return provider.findFile( uri );
+                return provider.findFile( baseFile, uri );
             }
         }
 
+        // Decode the URI (remove %nn encodings)
+        final String decodedUri = UriParser.decode( uri );
+
         // Handle absolute file names
-        if( m_localFileProvider.isAbsoluteLocalName( uri ) )
+        if( m_localFileProvider.isAbsoluteLocalName( decodedUri ) )
         {
-            return m_localFileProvider.findLocalFile( uri );
+            return m_localFileProvider.findLocalFile( decodedUri );
         }
 
         // Assume a bad scheme
@@ -193,32 +180,31 @@ public class DefaultFileSystemManager
             final String message = REZ.getString( "find-rel-file.error", uri );
             throw new FileSystemException( message );
         }
-        return baseFile.resolveFile( uri );
+        return baseFile.resolveFile( decodedUri );
     }
 
     /**
-     * A provider context implementation.
+     * Converts a local file into a {@link FileObject}.
      */
-    private final class ProviderContextImpl
-        implements FileSystemProviderContext
+    public FileObject convert( final File file )
+        throws FileSystemException
     {
-        /**
-         * Locates a cached file system by root URI.
-         */
-        public FileSystem getFileSystem( final String rootURI )
-        {
-            // TODO - need to have a per-fs uri comparator
-            return (FileSystem)m_fileSystems.get( rootURI );
-        }
+        return m_localFileProvider.findLocalFile( file );
+    }
 
-        /**
-         * Registers a file system for caching.
-         */
-        public void putFileSystem( final String rootURI, final FileSystem fs )
-            throws FileSystemException
+    /**
+     * Creates a layered file system.
+     */
+    public FileObject createFileSystem( final String scheme,
+                                        final FileObject file )
+        throws FileSystemException
+    {
+        FileSystemProvider provider = (FileSystemProvider)m_providers.get( scheme );
+        if( provider == null )
         {
-            // TODO - should really check that there's not one already cached
-            m_fileSystems.put( rootURI, fs );
+            final String message = REZ.getString( "unknown-provider.error", scheme );
+            throw new FileSystemException( message );
         }
+        return provider.createFileSystem( scheme, file );
     }
 }

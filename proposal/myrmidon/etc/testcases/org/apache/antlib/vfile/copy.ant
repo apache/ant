@@ -1,7 +1,7 @@
 <project version="2.0">
     <target name="copy">
         <v-fileset id="src-files" dir="src"/>
-        <v-copy todir="dest">
+        <v-copy destdir="dest">
             <v-fileset-ref id="src-files"/>
         </v-copy>
     </target>

@@ -8,6 +8,7 @@
 package org.apache.aut.vfs;
 
 import java.io.File;
+import org.apache.aut.vfs.provider.zip.ZipFileSystemProvider;
 
 /**
  * Tests for the Zip file system.
@@ -24,10 +25,11 @@ public class ZipFileSystemTest extends AbstractReadOnlyFileSystemTest
     /**
      * Returns the URI for the base folder.
      */
-    protected String getBaseFolderURI()
+    protected FileObject getBaseFolder() throws Exception
     {
         File zipFile = getTestResource( "test.zip" );
-        String uri = "zip:" + zipFile + "!basedir";
-        return uri;
+        String uri = "zip:" + zipFile.getAbsolutePath() + "!basedir";
+        m_manager.addProvider( "zip", new ZipFileSystemProvider() );
+        return m_manager.resolveFile( uri );
     }
 }

@@ -27,19 +27,27 @@ public class SmbFileNameParser
     /**
      * Parses an absolute URI, splitting it into its components.
      */
-    public ParsedUri parseUri( String uriStr ) throws FileSystemException
+    public ParsedUri parseSmbUri( final String uriStr )
+        throws FileSystemException
     {
-        ParsedSmbUri uri = new ParsedSmbUri();
-        StringBuffer name = new StringBuffer();
+        final ParsedSmbUri uri = new ParsedSmbUri();
+        final StringBuffer name = new StringBuffer();
 
         // Extract the scheme and authority parts
         extractToPath( uriStr, name, uri );
 
-        // Normalise paths
+        // Convert the hostname to lowercase
+        final String hostname = uri.getHostName().toLowerCase();
+        uri.setHostName( hostname );
+
+        // TODO - drop the default port
+
+        // Decode and adjust separators
+        decode( name, 0, name.length() );
         fixSeparators( name );
 
         // Extract the share
-        String share = extractFirstElement( name );
+        final String share = extractFirstElement( name );
         if( share == null )
         {
             final String message = REZ.getString( "missing-share-name.error", uriStr );
@@ -47,23 +55,18 @@ public class SmbFileNameParser
         }
         uri.setShare( share );
 
+        // Normalise the path
+        normalisePath( name );
+
         // Set the path
         uri.setPath( name.toString() );
 
         // Set the root URI
         StringBuffer rootUri = new StringBuffer();
-        rootUri.append( uri.getScheme() );
-        rootUri.append( "://" );
-        String userInfo = uri.getUserInfo();
-        if( userInfo != null )
-        {
-            rootUri.append( userInfo );
-            rootUri.append( '@' );
-        }
-        rootUri.append( uri.getHostName() );
+        appendRootUri( uri, rootUri );
         rootUri.append( '/' );
         rootUri.append( share );
-        uri.setRootURI( rootUri.toString() );
+        uri.setRootUri( rootUri.toString() );
 
         return uri;
     }

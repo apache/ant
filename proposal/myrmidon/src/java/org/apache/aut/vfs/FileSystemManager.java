@@ -71,7 +71,8 @@ public interface FileSystemManager
      * @throws FileSystemException
      *          On error parsing the file name.
      */
-    FileObject resolveFile( String name ) throws FileSystemException;
+    FileObject resolveFile( String name )
+        throws FileSystemException;
 
     /**
      * Locates a file by name.  The name is resolved as described
@@ -90,7 +91,8 @@ public interface FileSystemManager
      * @throws FileSystemException
      *          On error parsing the file name.
      */
-    FileObject resolveFile( FileObject baseFile, String name ) throws FileSystemException;
+    FileObject resolveFile( FileObject baseFile, String name )
+        throws FileSystemException;
 
     /**
      * Locates a file by name.  See {@link #resolveFile(FileObject, String)}
@@ -106,5 +108,39 @@ public interface FileSystemManager
      *          On error parsing the file name.
      *
      */
-    FileObject resolveFile( File baseFile, String name ) throws FileSystemException;
+    FileObject resolveFile( File baseFile, String name )
+        throws FileSystemException;
+
+    /**
+     * Converts a local file into a {@link FileObject}.
+     *
+     * @param file
+     *          The file to convert.
+     *
+     * @return
+     *          The {@link FileObject} that represents the local file.
+     *
+     * @throws FileSystemException
+     *          On error converting the file.
+     */
+    FileObject convert( File file )
+        throws FileSystemException;
+
+    /**
+     * Creates a layered file system.  A layered file system is a file system
+     * that is created from the contents of another file file, such as a zip
+     * or tar file.
+     *
+     * @param provider
+     *          The name of the file system provider to use.  This name is
+     *          the same as the scheme used in URI to identify the provider.
+     *
+     * @param file
+     *          The file to use to create the file system.
+     *
+     * @throws FileSystemException
+     *          On error creating the file system.
+     */
+    FileObject createFileSystem( String provider, FileObject file )
+        throws FileSystemException;
 }

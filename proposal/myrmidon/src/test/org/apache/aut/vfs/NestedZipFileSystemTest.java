@@ -7,17 +7,17 @@
  */
 package org.apache.aut.vfs;
 
-import java.io.File;
 import org.apache.aut.vfs.provider.zip.ZipFileSystemProvider;
 
 /**
- * Tests for the Zip file system.
+ * Tests for the Zip file system, using a zip file nested inside another zip file.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class ZipFileSystemTest extends AbstractReadOnlyFileSystemTest
+public class NestedZipFileSystemTest
+    extends AbstractReadOnlyFileSystemTest
 {
-    public ZipFileSystemTest( String name )
+    public NestedZipFileSystemTest( String name )
     {
         super( name );
     }
@@ -27,9 +27,15 @@ public class ZipFileSystemTest extends AbstractReadOnlyFileSystemTest
      */
     protected FileObject getBaseFolder() throws Exception
     {
-        File zipFile = getTestResource( "test.zip" );
-        String uri = "zip:" + zipFile.getAbsolutePath() + "!basedir";
         m_manager.addProvider( "zip", new ZipFileSystemProvider() );
-        return m_manager.resolveFile( uri );
+
+        // Locate the base Zip file
+        final String zipFilePath = getTestResource( "nested.zip" ).getAbsolutePath();
+        String uri = "zip:" + zipFilePath + "!/test.zip";
+        final FileObject zipFile = m_manager.resolveFile( uri );
+
+        // Now build the nested file system
+        final FileObject nestedFS = m_manager.createFileSystem( "zip", zipFile );
+        return nestedFS.resolveFile( "/basedir" );
     }
 }

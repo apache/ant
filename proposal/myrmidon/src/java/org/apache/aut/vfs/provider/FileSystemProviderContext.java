@@ -7,16 +7,27 @@
  */
 package org.apache.aut.vfs.provider;
 
+import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
+import org.apache.aut.vfs.FileSystemManager;
 
 /**
  * Used for a file system provider to access the services it needs, such
  * as the file system cache or other file system providers.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public interface FileSystemProviderContext
 {
+    /**
+     * Locate a file by name.  See
+     * {@link FileSystemManager#resolveFile(FileObject, String)} for a
+     * description of how this works.
+     */
+    FileObject resolveFile( FileObject baseFile, String name )
+        throws FileSystemException;
+
     /**
      * Locates a cached file system by root URI.
      */

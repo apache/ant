@@ -117,15 +117,22 @@
       <blockquote>
                         <p>The VFS needs plenty of work:</p>
                                 <ul>
-                    <li>Move and copy files/folders.</li>
+                    <li>Move files/folders.</li>
+                    <li>Recursive folders copy.</li>
                     <li>Search through a file hierarchy, using Ant-style wildcards.</li>
                     <li>Search through a file hierarchy, using a Selector interface.</li>
                     <li>The in-memory caching mechanism is pretty rudimentary at this stage.
                     It needs work to make it size capped.  In addition, some mechanism needs
                     to be provided to release and refresh cached info.
                     </li>
+                    <li>Convert files/folders into local files, for handing off
+                    to external commands, or legacy tasks.</li>
+                    <li>Refactor the replication mechanism out of ZipFileSystemProvder,
+                    and make more general pluggable.</li>
                     <li>Capabilities discovery.</li>
                     <li>Attributes and attribute schema.</li>
+                    <li>Handle file canonicalisation better (for cases like case-insensitive
+                    file systems, symbolic links, name encoding, etc).</li>
                     <li>File system layering.  That is, the ability for a file system to
                     sit on top of another file system, or a file from another file system
                     (e.g. Zip/Jar/Tar file systems, gzip/encoding file systems, virtual file
@@ -300,10 +307,6 @@
                         <p>A completely unordered list of items, big and small:</p>
                                 <ul>
                     <li>Search through the code for 'TODO' items and fix them.</li>
-                    <li>Tidy-up CLIMain so that it calls System.exit() with a non-zero exit code,
-                    if the build fails.</li>
-                    <li>Tidy-up the 'build failed' message, so that the stack trace is only
-                    printed out if the log level is verbose/debug.</li>
                     <li>Allow service factories to be configured from the contents of the
                     <code>ant-services.xml</code> descriptor.</li>
                     <li>Route external process stdout and stderr through the logger.</li>
@@ -314,11 +317,10 @@
                     <li>Fire ProjectListener events projectStarted() and projectFinished()
                     events on start and finish of referenced projects, adding indicator methods
                     to ProjectEvent.</li>
-                    <li>Convert PropertyUtil to a non-static PropertyResolver service.</li>
                     <li>Validate project and target names in DefaultProjectBuilder - reject dodgy
-                    names like "," or "", or "  ".  Probably want to exclude names that start or
+                    names like "," or "", or "  ".  Probably want to reject names that start or
                     end with white-space (though internal whitespace is probably fine).  We also
-                    want to reserve certain punctuation characters like . , : ? [ ] { }, etc for
+                    want to reserve certain punctuation characters like , : ? $ [ ] { } &lt; &gt;, etc for
                     future use.</li>
                     <li>Similarly, validate property names, using the same rules.</li>
                     <li>Detect duplicate type names.</li>
@@ -330,6 +332,7 @@
                     an antlib.</li>
                     <li>Split up <code>&lt;is-set&gt;</code> condition into is-set and is-true conditions.</li>
                     <li>Allow the <code>&lt;if&gt;</code> task to take any condition implementation.</li>
+                    <li>Add an else block to the <code>&lt;if&gt;</code> task.</li>
                     <li>Unit tests.</li>
                 </ul>
                     </blockquote>

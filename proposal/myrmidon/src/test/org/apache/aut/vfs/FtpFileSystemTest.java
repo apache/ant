@@ -7,12 +7,15 @@
  */
 package org.apache.aut.vfs;
 
+import org.apache.aut.vfs.provider.ftp.FtpFileSystemProvider;
+
 /**
  * Tests for FTP file systems.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class FtpFileSystemTest extends AbstractWritableFileSystemTest
+public class FtpFileSystemTest
+    extends AbstractWritableFileSystemTest
 {
     public FtpFileSystemTest( String name )
     {
@@ -22,16 +25,19 @@ public class FtpFileSystemTest extends AbstractWritableFileSystemTest
     /**
      * Returns the URI for the base folder.
      */
-    protected String getBaseFolderURI()
+    protected FileObject getBaseFolder() throws Exception
     {
-        return System.getProperty( "test.ftp.uri" ) + "/read-tests";
+        final String uri = System.getProperty( "test.ftp.uri" ) + "/read-tests";
+        m_manager.addProvider( "ftp", new FtpFileSystemProvider() );
+        return m_manager.resolveFile( uri );
     }
 
     /**
      * Returns the URI for the area to do tests in.
      */
-    protected String getWriteFolderURI()
+    protected FileObject getWriteFolder() throws Exception
     {
-        return System.getProperty( "test.ftp.uri" ) + "/write-tests";
+        final String uri = System.getProperty( "test.ftp.uri" ) + "/write-tests";
+        return m_manager.resolveFile( uri );
     }
 }

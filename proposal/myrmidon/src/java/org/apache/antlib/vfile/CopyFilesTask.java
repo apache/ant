@@ -7,8 +7,6 @@
  */
 package org.apache.antlib.vfile;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.vfs.FileObject;
@@ -41,7 +39,7 @@ public class CopyFilesTask
     /**
      * Sets the source file.
      */
-    public void setFile( final FileObject file )
+    public void setSrcfile( final FileObject file )
     {
         m_srcFile = file;
     }
@@ -49,7 +47,7 @@ public class CopyFilesTask
     /**
      * Sets the destination file.
      */
-    public void setTofile( final FileObject file )
+    public void setDestfile( final FileObject file )
     {
         m_destFile = file;
     }
@@ -57,9 +55,17 @@ public class CopyFilesTask
     /**
      * Sets the destination directory.
      */
-    public void setTodir( final FileObject file )
+    public void setDestdir( final FileObject file )
     {
         m_destDir = file;
+    }
+
+    /**
+     * Sets the source directory.
+     */
+    public void setSrcdir( final FileObject dir )
+    {
+        add( new DefaultFileSet( dir ) );
     }
 
     /**
@@ -107,7 +113,8 @@ public class CopyFilesTask
                     m_destFile = m_destDir.resolveFile( m_srcFile.getName().getBaseName() );
                 }
 
-                copyFile( m_srcFile, m_destFile );
+                getLogger().info( "copy " + m_srcFile + " to " + m_destFile );
+                m_destFile.copy( m_srcFile );
             }
 
             // Copy the contents of the filesets across
@@ -134,7 +141,8 @@ public class CopyFilesTask
                     final FileObject destFile = m_destDir.resolveFile( path, NameScope.DESCENDENT );
 
                     // Copy the file across
-                    copyFile( srcFile, destFile );
+                    getLogger().info( "copy " + srcFile + " to " + destFile );
+                    destFile.copy( srcFile );
                 }
             }
         }
@@ -144,42 +152,4 @@ public class CopyFilesTask
         }
     }
 
-    /**
-     * Copies a file.
-     */
-    private void copyFile( final FileObject srcFile, final FileObject destFile )
-        throws TaskException
-    {
-        getLogger().info( "copy " + srcFile + " to " + destFile );
-
-        try
-        {
-            // TODO - move copy behind FileObject interface
-            InputStream instr = srcFile.getContent().getInputStream();
-            try
-            {
-                OutputStream outstr = destFile.getContent().getOutputStream();
-                byte[] buffer = new byte[ 4096 ];
-                while( true )
-                {
-                    int nread = instr.read( buffer );
-                    if( nread == -1 )
-                    {
-                        break;
-                    }
-                    outstr.write( buffer, 0, nread );
-                }
-                outstr.close();
-            }
-            finally
-            {
-                instr.close();
-            }
-        }
-        catch( Exception exc )
-        {
-            final String message = REZ.getString( "copyfilestask.copy-file.error", srcFile, destFile );
-            throw new TaskException( message, exc );
-        }
-    }
 }

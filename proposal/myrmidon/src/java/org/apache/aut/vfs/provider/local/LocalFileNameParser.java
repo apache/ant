@@ -50,21 +50,22 @@ abstract class LocalFileNameParser
      *
      * @param uriStr The URI.
      */
-    public ParsedUri parseUri( final String uriStr )
+    public ParsedUri parseFileUri( final String uriStr )
         throws FileSystemException
     {
-        StringBuffer name = new StringBuffer();
-        ParsedFileUri uri = new ParsedFileUri();
+        final StringBuffer name = new StringBuffer();
+        final ParsedFileUri uri = new ParsedFileUri();
 
         // Extract the scheme
-        String scheme = extractScheme( uriStr, name );
+        final String scheme = extractScheme( uriStr, name );
         uri.setScheme( scheme );
 
-        // Adjust the separators
+        // Remove encoding, and adjust the separators
+        decode( name, 0, name.length() );
         fixSeparators( name );
 
         // Extract the root prefix
-        String rootFile = extractRootPrefix( uriStr, name );
+        final String rootFile = extractRootPrefix( uriStr, name );
         uri.setRootFile( rootFile );
 
         // Normalise the path
@@ -72,11 +73,11 @@ abstract class LocalFileNameParser
         uri.setPath( name.toString() );
 
         // Build the root URI
-        StringBuffer rootUri = new StringBuffer();
+        final StringBuffer rootUri = new StringBuffer();
         rootUri.append( scheme );
         rootUri.append( "://" );
         rootUri.append( rootFile );
-        uri.setRootURI( rootUri.toString() );
+        uri.setRootUri( rootUri.toString() );
 
         return uri;
     }

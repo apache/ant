@@ -7,6 +7,7 @@
  */
 package org.apache.aut.vfs.provider.zip;
 
+import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.provider.ParsedUri;
 
 /**
@@ -16,14 +17,25 @@ import org.apache.aut.vfs.provider.ParsedUri;
  */
 public class ParsedZipUri extends ParsedUri
 {
-    private String m_zipFile;
+    private String m_zipFileName;
+    private FileObject m_zipFile;
 
-    public String getZipFile()
+    public String getZipFileName()
+    {
+        return m_zipFileName;
+    }
+
+    public void setZipFileName( final String zipFileName )
+    {
+        m_zipFileName = zipFileName;
+    }
+
+    public FileObject getZipFile()
     {
         return m_zipFile;
     }
 
-    public void setZipFile( String zipFile )
+    public void setZipFile( final FileObject zipFile )
     {
         m_zipFile = zipFile;
     }

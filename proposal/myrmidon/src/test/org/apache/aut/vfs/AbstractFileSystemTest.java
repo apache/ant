@@ -66,9 +66,9 @@ public abstract class AbstractFileSystemTest
     }
 
     /**
-     * Returns the URI for the base folder.
+     * Returns the base folder to run the tests against.
      */
-    protected abstract String getBaseFolderURI() throws Exception;
+    protected abstract FileObject getBaseFolder() throws Exception;
 
     /**
      * Sets up the test
@@ -79,7 +79,10 @@ public abstract class AbstractFileSystemTest
         m_manager = new DefaultFileSystemManager();
 
         // Locate the base folder
-        m_baseFolder = m_manager.resolveFile( getBaseFolderURI() );
+        m_baseFolder = getBaseFolder();
+
+        // Make some assumptions absout the name
+        assertTrue( ! m_baseFolder.getName().getPath().equals( "/" ) );
 
         // Build the expected content of "file1.txt"
         final String eol = System.getProperty( "line.separator" );
@@ -121,6 +124,66 @@ public abstract class AbstractFileSystemTest
         // Locate parent
         file = m_manager.resolveFile( ".." );
         assertSame( "file object", m_baseFolder.getParent(), file );
+    }
+
+    /**
+     * Tests encoding of relative URI.
+     */
+    public void testRelativeUriEncoding() throws Exception
+    {
+        // Build base dir
+        m_manager.setBaseFile( m_baseFolder );
+        final String path = m_baseFolder.getName().getPath();
+
+        // Encode "some file"
+        FileObject file = m_manager.resolveFile( "%73%6f%6d%65%20%66%69%6c%65" );
+        assertEquals( path + "/some file", file.getName().getPath() );
+
+        // Encode "."
+        file = m_manager.resolveFile( "%2e" );
+        assertEquals( path, file.getName().getPath() );
+
+        // Encode '%'
+        file = m_manager.resolveFile( "a%25" );
+        assertEquals( path + "/a%", file.getName().getPath() );
+
+        // Encode /
+        file = m_manager.resolveFile( "dir%2fchild" );
+        assertEquals( path + "/dir/child", file.getName().getPath() );
+
+        // Encode \
+        file = m_manager.resolveFile( "dir%5cchild" );
+        assertEquals( path + "/dir/child", file.getName().getPath() );
+
+        // Use "%" literal
+        try
+        {
+            m_manager.resolveFile( "%" );
+            fail();
+        }
+        catch( FileSystemException e )
+        {
+        }
+
+        // Not enough digits in encoded char
+        try
+        {
+            m_manager.resolveFile( "%5" );
+            fail();
+        }
+        catch( FileSystemException e )
+        {
+        }
+
+        // Invalid digit in encoded char
+        try
+        {
+            m_manager.resolveFile( "%q" );
+            fail();
+        }
+        catch( FileSystemException e )
+        {
+        }
     }
 
     /**
@@ -176,7 +239,7 @@ public abstract class AbstractFileSystemTest
                                        final NameScope scope )
         throws Exception
     {
-        // Make some assumptions about the name explicit
+        // Make some assumptions about the name
         assertTrue( !name.getPath().equals( "/" ) );
         assertTrue( !name.getPath().endsWith( "/a" ) );
         assertTrue( !name.getPath().endsWith( "/a/b" ) );
@@ -330,6 +393,46 @@ public abstract class AbstractFileSystemTest
     }
 
     /**
+     * Tests resolution of absolute names.
+     */
+    public void testAbsoluteNames() throws Exception
+    {
+        // Test against the base folder
+        FileName name = m_baseFolder.getName();
+        checkAbsoluteNames( name );
+
+        // Test against the root
+        name = m_baseFolder.getRoot().getName();
+        checkAbsoluteNames( name );
+
+        // Test against some unknown file
+        name = name.resolveName( "a/b/unknown" );
+        checkAbsoluteNames( name );
+    }
+
+    /**
+     * Tests resolution of absolute names.
+     */
+    private void checkAbsoluteNames( final FileName name ) throws Exception
+    {
+        // Root
+        assertSameName( "/", name, "/" );
+        assertSameName( "/", name, "//" );
+        assertSameName( "/", name, "/." );
+        assertSameName( "/", name, "/some file/.." );
+
+        // Some absolute names
+        assertSameName( "/a", name, "/a" );
+        assertSameName( "/a", name, "/./a" );
+        assertSameName( "/a", name, "/a/." );
+        assertSameName( "/a/b", name, "/a/b" );
+
+        // Some bad names
+        assertBadName( name, "/..", NameScope.FILE_SYSTEM );
+        assertBadName( name, "/a/../..", NameScope.FILE_SYSTEM );
+    }
+
+    /**
      * Asserts that a particular relative name is invalid for a particular
      * scope.
      */
@@ -340,7 +443,7 @@ public abstract class AbstractFileSystemTest
         try
         {
             name.resolveName( relName, scope );
-            fail();
+            fail( "expected failure" );
         }
         catch( FileSystemException e )
         {

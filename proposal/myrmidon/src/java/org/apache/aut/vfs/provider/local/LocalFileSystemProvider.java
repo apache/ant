@@ -51,20 +51,22 @@ public class LocalFileSystemProvider extends AbstractFileSystemProvider
     /**
      * Finds a local file, from its local name.
      */
-    public FileObject findLocalFile( final String name ) throws FileSystemException
+    public FileObject findLocalFile( final String name )
+        throws FileSystemException
     {
         // TODO - tidy this up, no need to turn the name into an absolute URI,
         // and then straight back again
-        return findFile( "file:" + name );
+        return findFile( null, "file:" + name );
     }
 
     /**
      * Finds a local file.
      */
-    public FileObject findFileByLocalName( final File file ) throws FileSystemException
+    public FileObject findLocalFile( final File file )
+        throws FileSystemException
     {
         // TODO - tidy this up, should build file object straight from the file
-        return findFile( "file:" + file.getAbsolutePath() );
+        return findFile( null, "file:" + file.getAbsolutePath() );
     }
 
     /**
@@ -75,22 +77,25 @@ public class LocalFileSystemProvider extends AbstractFileSystemProvider
      * <p>The provider can annotate this object with any additional
      * information it requires to create a file system from the URI.
      */
-    protected ParsedUri parseURI( final String uri ) throws FileSystemException
+    protected ParsedUri parseUri( final FileObject baseFile,
+                                  final String uri )
+        throws FileSystemException
     {
-        return m_parser.parseUri( uri );
+        return m_parser.parseFileUri( uri );
     }
 
     /**
      * Creates the filesystem.
      */
-    protected FileSystem createFileSystem( final ParsedUri uri ) throws FileSystemException
+    protected FileSystem createFileSystem( final ParsedUri uri )
+        throws FileSystemException
     {
         // Build the name of the root file.
         final ParsedFileUri fileUri = (ParsedFileUri)uri;
         final String rootFile = fileUri.getRootFile();
 
         // Create the file system
-        final DefaultFileName rootName = new DefaultFileName( m_parser, fileUri.getRootURI(), "/" );
+        final DefaultFileName rootName = new DefaultFileName( m_parser, fileUri.getRootUri(), "/" );
         return new LocalFileSystem( rootName, rootFile );
     }
 }

@@ -8,39 +8,44 @@
 package org.apache.aut.vfs.provider.ftp;
 
 import org.apache.aut.vfs.FileName;
+import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystemProvider;
 import org.apache.aut.vfs.provider.DefaultFileName;
 import org.apache.aut.vfs.provider.FileSystem;
 import org.apache.aut.vfs.provider.ParsedUri;
-import org.apache.aut.vfs.provider.UriParser;
 
 /**
  * A provider for FTP file systems.
  *
  * @author Adam Murdoch
+ *
+ * @ant:type type="file-system" name="ftp"
  */
 public class FtpFileSystemProvider extends AbstractFileSystemProvider
 {
-    private UriParser m_parser = new FtpFileNameParser();
+    private final FtpFileNameParser m_parser = new FtpFileNameParser();
 
     /**
      * Parses a URI into its components.
      */
-    protected ParsedUri parseURI( String uri ) throws FileSystemException
+    protected ParsedUri parseUri( final FileObject baseFile,
+                                  final String uri )
+        throws FileSystemException
     {
-        return m_parser.parseUri( uri );
+        return m_parser.parseFtpUri( uri );
     }
 
     /**
      * Creates the filesystem.
      */
-    protected FileSystem createFileSystem( ParsedUri uri ) throws FileSystemException
+    protected FileSystem createFileSystem( final ParsedUri uri )
+        throws FileSystemException
     {
-        ParsedFtpUri ftpUri = (ParsedFtpUri)uri;
+        final ParsedFtpUri ftpUri = (ParsedFtpUri)uri;
 
         // Build the root name
-        FileName rootName = new DefaultFileName( m_parser, ftpUri.getRootURI(), "/" );
+        final FileName rootName = new DefaultFileName( m_parser, ftpUri.getRootUri(), "/" );
 
         // Determine the username and password to use
         String username = ftpUri.getUserName();
