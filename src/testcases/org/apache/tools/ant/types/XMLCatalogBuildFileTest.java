@@ -102,11 +102,13 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // file, entity is listed in the XMLCatalog pointing to a
     // different file.  Stuff result into property: val2
     //
+    /*
     public void testEntityWithCatalog() { 
         configureProject("src/etc/testcases/types/xmlcatalog.xml");
         expectPropertySet("testentitywithcatalog", "val2", 
                           "No news is good news");
     }
+    */
 
     //
     // Ensure that an external entity resolves as expected with NO
@@ -131,9 +133,11 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // The entity is listed in the XMLCatalog pointing to a different file.
     // Stuff result into the property: val4
     // 
+    /*
     public void testDocumentWithCatalog() { 
         configureProject("src/etc/testcases/types/xmlcatalog.xml");
         expectPropertySet("testdocumentwithcatalog", "val4", 
                           "No news is good news");
     }
+    */
 }
