@@ -54,6 +54,7 @@
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
 import java.text.MessageFormat;
+import java.util.ResourceBundle;
 
 /**
  * Display a summary message at the end of a testsuite stating

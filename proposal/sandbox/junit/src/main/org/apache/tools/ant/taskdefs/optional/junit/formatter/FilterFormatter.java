@@ -73,39 +73,47 @@ public abstract class FilterFormatter implements Formatter {
         formatter.setOutput(out);
     }
 
-    public void testStarted(String testname) {
-        formatter.testStarted(testname);
+    public void onTestStdOutLine(String testname, String line) {
+        formatter.onTestStdOutLine(testname, line);
+    }
+
+    public void onTestStdErrLine(String testname, String line) {
+        formatter.onTestStdErrLine(testname, line);
+    }
+
+    public void onTestStarted(String testname) {
+        formatter.onTestStarted(testname);
     }
 
     public void setSystemOutput(String out) {
         formatter.setSystemOutput(out);
     }
 
-    public void testEnded(String testname) {
-        formatter.testEnded(testname);
+    public void onTestEnded(String testname) {
+        formatter.onTestEnded(testname);
     }
 
     public void setSystemError(String err) {
         formatter.setSystemError(err);
     }
 
-    public void testFailed(int status, String testname, String trace) {
-        formatter.testFailed(status, testname, trace);
+    public void onTestFailed(int status, String testname, String trace) {
+        formatter.onTestFailed(status, testname, trace);
     }
 
-    public void testRunSystemProperties(Properties props) {
-        formatter.testRunSystemProperties(props);
+    public void onTestRunSystemProperties(Properties props) {
+        formatter.onTestRunSystemProperties(props);
     }
 
-    public void testRunStarted(int testcount) {
-        formatter.testRunStarted(testcount);
+    public void onTestRunStarted(int testcount) {
+        formatter.onTestRunStarted(testcount);
     }
 
-    public void testRunEnded(long elapsedtime) {
-        formatter.testRunEnded(elapsedtime);
+    public void onTestRunEnded(long elapsedtime) {
+        formatter.onTestRunEnded(elapsedtime);
     }
 
-    public void testRunStopped(long elapsedtime) {
-        formatter.testRunEnded(elapsedtime);
+    public void onTestRunStopped(long elapsedtime) {
+        formatter.onTestRunEnded(elapsedtime);
     }
 }

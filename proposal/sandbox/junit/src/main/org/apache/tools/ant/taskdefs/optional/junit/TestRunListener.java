@@ -80,14 +80,14 @@ public interface TestRunListener {
      * @param a testname made of the testname and testcase classname.
      * in the following format: <tt>&lt;testname&gt;(&lt;testcase&gt;)</tt>
      */
-    public void testStarted(String testname);
+    public void onTestStarted(String testname);
 
     /**
      * A test ended.
      * @param a testname made of the testname and testcase classname.
      * in the following format: <tt>&lt;testname&gt;(&lt;testcase&gt;)</tt>
      */
-    public void testEnded(String testname);
+    public void onTestEnded(String testname);
 
     /**
      * A test has failed.
@@ -97,24 +97,24 @@ public interface TestRunListener {
      * @param trace the error/failure stacktrace.
      * @todo change this to a testFailure / testError ?
      */
-    public void testFailed(int status, String testname, String trace);
+    public void onTestFailed(int status, String testname, String trace);
 
     /** test logged this line on stdout */
-    public void testStdOutLine(String testname, String line);
+    public void onTestStdOutLine(String testname, String line);
 
     /** test logged this line on sterr */
-    public void testStdErrLine(String testname, String line);
+    public void onTestStdErrLine(String testname, String line);
 
     /** these system properties are used on the remote client */
-    public void testRunSystemProperties(Properties props);
+    public void onTestRunSystemProperties(Properties props);
 
     /** starting a sequence of <tt>testcount</tt> tests. */
-    public void testRunStarted(int testcount);
+    public void onTestRunStarted(int testcount);
 
     /** ending gracefully the sequence after <tt>elapsedtime</tt> ms. */
-    public void testRunEnded(long elapsedtime);
+    public void onTestRunEnded(long elapsedtime);
 
     /** stopping the sequence after <tt>elapsedtime</tt> ms. */
-    public void testRunStopped(long elapsedtime);
+    public void onTestRunStopped(long elapsedtime);
 
 }

@@ -111,7 +111,7 @@ public class FilterStackFormatterTest extends TestCase {
 
     public void testFiltering() {
         FilterStackFormatter wrapper = new FilterStackFormatter(wrapped);
-        wrapper.testFailed(0, "", trace);
+        wrapper.onTestFailed(0, "", trace);
         assertEquals(expected, wrapped.trace);
     }
 
@@ -121,38 +121,38 @@ public class FilterStackFormatterTest extends TestCase {
         public void setOutput(OutputStream out) {
         }
 
-        public void testStarted(String testname) {
+        public void onTestStarted(String testname) {
         }
 
         public void setSystemOutput(String out) {
         }
 
-        public void testEnded(String testname) {
+        public void onTestEnded(String testname) {
         }
 
         public void setSystemError(String err) {
         }
 
-        public void testFailed(int status, String testname, String trace) {
+        public void onTestFailed(int status, String testname, String trace) {
             this.trace = trace;
         }
 
-        public void testStdOutLine(String testname, String line) {
+        public void onTestStdOutLine(String testname, String line) {
         }
 
-        public void testStdErrLine(String testname, String line) {
+        public void onTestStdErrLine(String testname, String line) {
         }
 
-        public void testRunSystemProperties(Properties props) {
+        public void onTestRunSystemProperties(Properties props) {
         }
 
-        public void testRunStarted(int testcount) {
+        public void onTestRunStarted(int testcount) {
         }
 
-        public void testRunEnded(long elapsedtime) {
+        public void onTestRunEnded(long elapsedtime) {
         }
 
-        public void testRunStopped(long elapsedtime) {
+        public void onTestRunStopped(long elapsedtime) {
         }
     }
 }

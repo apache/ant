@@ -63,32 +63,38 @@ import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
  */
 public class DefaultTestRunListener implements TestRunListener {
 
-    public void testStarted(String testname) {
+    public void onTestStarted(String testname) {
         System.out.println("Started " + testname);
     }
 
-    public void testEnded(String testname) {
+    public void onTestEnded(String testname) {
         System.out.println("Ended " + testname);
     }
 
-    public void testFailed(int status, String testname, String trace) {
+    public void onTestFailed(int status, String testname, String trace) {
         System.out.println(testname + " failed with status " + status);
         System.out.println(trace);
     }
 
-    public void testRunSystemProperties(Properties props) {
+    public void onTestRunSystemProperties(Properties props) {
         System.out.println("properties: " + props);
     }
 
-    public void testRunStarted(int testcount) {
+    public void onTestRunStarted(int testcount) {
         System.out.println("testsuite:  " + testcount);
     }
 
-    public void testRunEnded(long elapsedtime) {
+    public void onTestStdOutLine(String testname, String line) {
+    }
+
+    public void onTestStdErrLine(String testname, String line) {
+    }
+
+    public void onTestRunEnded(long elapsedtime) {
         System.out.println("testsuite ended after: " + elapsedtime);
     }
 
-    public void testRunStopped(long elapsedtime) {
+    public void onTestRunStopped(long elapsedtime) {
         System.out.println("testsuite stopped after: " + elapsedtime);
     }
 }

@@ -190,7 +190,7 @@ public class MessageReader {
     protected void notifyTestStarted(String testname) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).testStarted(testname);
+                ((TestRunListener) listeners.elementAt(i)).onTestStarted(testname);
             }
         }
     }
@@ -198,7 +198,7 @@ public class MessageReader {
     protected void notifyTestEnded(String testname) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).testEnded(testname);
+                ((TestRunListener) listeners.elementAt(i)).onTestEnded(testname);
             }
         }
     }
@@ -206,7 +206,7 @@ public class MessageReader {
     protected void notifyTestFailed(int kind, String testname, String trace) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).testFailed(kind, testname, trace);
+                ((TestRunListener) listeners.elementAt(i)).onTestFailed(kind, testname, trace);
             }
         }
     }
@@ -214,7 +214,7 @@ public class MessageReader {
     protected void notifyTestSuiteStarted(int count) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).testRunStarted(count);
+                ((TestRunListener) listeners.elementAt(i)).onTestRunStarted(count);
             }
         }
     }
@@ -222,7 +222,7 @@ public class MessageReader {
     protected void notifyTestSuiteEnded(long elapsedtime) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).testRunEnded(elapsedtime);
+                ((TestRunListener) listeners.elementAt(i)).onTestRunEnded(elapsedtime);
             }
         }
     }
@@ -230,7 +230,7 @@ public class MessageReader {
     protected void notifyTestSuiteStopped(long elapsedtime) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).testRunStopped(elapsedtime);
+                ((TestRunListener) listeners.elementAt(i)).onTestRunStopped(elapsedtime);
             }
         }
     }
@@ -238,7 +238,7 @@ public class MessageReader {
     protected void notifyTestSystemProperties(Properties props) {
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
-                ((TestRunListener) listeners.elementAt(i)).testRunSystemProperties(props);
+                ((TestRunListener) listeners.elementAt(i)).onTestRunSystemProperties(props);
             }
         }
     }

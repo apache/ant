@@ -62,7 +62,7 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
  */
 public class BriefFormatter extends SummaryFormatter {
 
-    public void testFailed(int status, String testname, String trace) {
+    public void onTestFailed(int status, String testname, String trace) {
         writer.print("TestCase: ");
         writer.print(testname);
         if (status == STATUS_ERROR) {
@@ -74,7 +74,7 @@ public class BriefFormatter extends SummaryFormatter {
         writer.print(trace);
         writer.println();
         writer.println();
-        super.testFailed(status, testname, trace);
+        super.onTestFailed(status, testname, trace);
     }
 
 }

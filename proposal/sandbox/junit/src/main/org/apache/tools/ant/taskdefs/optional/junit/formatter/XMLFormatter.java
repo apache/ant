@@ -135,35 +135,35 @@ public class XMLFormatter extends BaseFormatter {
     /** Timing helper. */
     private Hashtable testStarts = new Hashtable();
 
-    public void testStarted(String testname) {
+    public void onTestStarted(String testname) {
         //@fixme, eh, a testname only can obviouslly be a duplicate...
         testStarts.put(testname, new Long(System.currentTimeMillis()));
         Element currentTest = doc.createElement(TESTCASE);
         currentTest.setAttribute(ATTR_NAME, testname);
         rootElement.appendChild(currentTest);
         testElements.put(testname, currentTest);
-        super.testStarted(testname);
+        super.onTestStarted(testname);
     }
 
-    public void testEnded(String testname) {
+    public void onTestEnded(String testname) {
         Element currentTest = (Element) testElements.get(testname);
         // with a TestSetup, startTest and endTest are not called.
         if (currentTest == null){
-            testStarted(testname);
+            onTestStarted(testname);
             currentTest = (Element) testElements.get(testname);
         }
         Long l = (Long) testStarts.get(testname);
         float time = ((System.currentTimeMillis()-l.longValue()) / 1000.0f);
         currentTest.setAttribute(ATTR_TIME, Float.toString(time));
-        super.testEnded(testname);
+        super.onTestEnded(testname);
         // remove the test objects
         testStarts.remove(testname);
         testElements.remove(testname);
     }
 
-    public void testFailed(int status, String testname, String trace) {
+    public void onTestFailed(int status, String testname, String trace) {
         if (testname != null) {
-            testEnded(testname);
+            onTestEnded(testname);
         }
         String type = status == STATUS_FAILURE ? FAILURE : ERROR;
         Element nested = doc.createElement(type);
@@ -183,19 +183,19 @@ public class XMLFormatter extends BaseFormatter {
         nested.setAttribute(ATTR_TYPE, args[0]);
         Text text = doc.createTextNode(trace);
         nested.appendChild(text);
-        super.testFailed(status, testname, trace);
+        super.onTestFailed(status, testname, trace);
     }
 
-    public void testRunStarted(int testcount) {
-        super.testRunStarted(testcount);
+    public void onTestRunStarted(int testcount) {
+        super.onTestRunStarted(testcount);
     }
 
-    public void testRunEnded(long elapsedtime) {
-        super.testRunEnded(elapsedtime);
+    public void onTestRunEnded(long elapsedtime) {
+        super.onTestRunEnded(elapsedtime);
     }
 
-    public void testRunStopped(long elapsedtime) {
-        super.testRunStopped(elapsedtime);
+    public void onTestRunStopped(long elapsedtime) {
+        super.onTestRunStopped(elapsedtime);
     }
 
     private static DocumentBuilder getDocumentBuilder() {

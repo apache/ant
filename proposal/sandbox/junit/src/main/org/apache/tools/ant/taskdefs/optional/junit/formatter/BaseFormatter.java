@@ -100,22 +100,22 @@ public abstract class BaseFormatter implements Formatter {
     public void setSystemError(String err) {
     }
 
-    public void testStdOutLine(String testname, String line) {
+    public void onTestStdOutLine(String testname, String line) {
     }
 
-    public void testStdErrLine(String testname, String line) {
+    public void onTestStdErrLine(String testname, String line) {
     }
 
-    public void testRunSystemProperties(Properties props) {
+    public void onTestRunSystemProperties(Properties props) {
     }
 
-    public void testStarted(String testname) {
+    public void onTestStarted(String testname) {
     }
 
-    public void testEnded(String testname) {
+    public void onTestEnded(String testname) {
     }
 
-    public void testFailed(int status, String testname, String trace) {
+    public void onTestFailed(int status, String testname, String trace) {
         if (status == STATUS_ERROR) {
             errorCount++;
         } else if (status == STATUS_FAILURE) {
@@ -123,15 +123,15 @@ public abstract class BaseFormatter implements Formatter {
         }
     }
 
-    public void testRunStarted(int testcount) {
+    public void onTestRunStarted(int testcount) {
         runCount = testcount;
     }
 
-    public void testRunEnded(long elapsedtime) {
+    public void onTestRunEnded(long elapsedtime) {
         finished(elapsedtime);
     }
 
-    public void testRunStopped(long elapsedtime) {
+    public void onTestRunStopped(long elapsedtime) {
         finished(elapsedtime);
     }
 

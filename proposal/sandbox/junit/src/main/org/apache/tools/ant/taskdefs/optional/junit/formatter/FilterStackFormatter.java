@@ -103,7 +103,7 @@ public class FilterStackFormatter extends FilterFormatter {
         super(formatter);
     }
 
-    public void testFailed(int status, String testname, String trace) {
+    public void onTestFailed(int status, String testname, String trace) {
         StringTokenizer st = new StringTokenizer(trace,"\r\n");
         StringBuffer buf = new StringBuffer(trace.length());
         while ( st.hasMoreTokens() ){
@@ -112,7 +112,7 @@ public class FilterStackFormatter extends FilterFormatter {
                 buf.append(line).append(StringUtils.LINE_SEP);
             }
         }
-        super.testFailed(status, testname, buf.toString());
+        super.onTestFailed(status, testname, buf.toString());
     }
 
     /**
