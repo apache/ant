@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -54,6 +54,8 @@ public class Resource implements Cloneable, Comparable {
      *
      * @param name relative path of the resource.  Expects
      * &quot;/&quot; to be used as the directory separator.
+     * @param exists if true, this resource exists
+     * @param lastmodified the last modification time of this resource
      */
     public Resource(String name, boolean exists, long lastmodified) {
         this(name, exists, lastmodified, false);
@@ -62,6 +64,9 @@ public class Resource implements Cloneable, Comparable {
     /**
      * @param name relative path of the resource.  Expects
      * &quot;/&quot; to be used as the directory separator.
+     * @param exists if true the resource exists
+     * @param lastmodified the last modification time of the resource
+     * @param directory    if true, this resource is a directory
      */
     public Resource(String name, boolean exists, long lastmodified,
                     boolean directory) {
@@ -81,6 +86,7 @@ public class Resource implements Cloneable, Comparable {
      * adm/resource.txt.</p>
      *
      * <p>&quot;/&quot; will be used as the directory separator.</p>
+     * @return the name of this resource
      */
     public String getName() {
         return name;
@@ -93,13 +99,19 @@ public class Resource implements Cloneable, Comparable {
     public void setName(String name) {
         this.name = name;
     }
+
     /**
-     * the exists attribute tells whether a file exists
+     * The exists attribute tells whether a file exists
+     * @return true if this resource exists
      */
     public boolean isExists() {
         return exists;
     }
 
+    /**
+     * Set the exists attribute.
+     * @param exists if true, this resource exists
+     */
     public void setExists(boolean exists) {
         this.exists = exists;
     }
@@ -114,9 +126,14 @@ public class Resource implements Cloneable, Comparable {
         return !exists || lastmodified < 0 ? 0 : lastmodified;
     }
 
+    /**
+     * Set the last modification attribute.
+     * @param lastmodified the modification time in milliseconds since 01.01.1970
+     */
     public void setLastModified(long lastmodified) {
         this.lastmodified = lastmodified;
     }
+
     /**
      * tells if the resource is a directory
      * @return boolean flag indicating if the resource is a directory
@@ -125,6 +142,10 @@ public class Resource implements Cloneable, Comparable {
         return directory;
     }
 
+    /**
+     * Set the directory attribute.
+     * @param directory if true, this resource is a directory
+     */
     public void setDirectory(boolean directory) {
         this.directory = directory;
     }
@@ -143,7 +164,8 @@ public class Resource implements Cloneable, Comparable {
 
     /**
      * delegates to a comparison of names.
-     *
+     * @param other the object to compare to
+     * @return true if this object's name is the same as the other object's name
      * @since Ant 1.6
      */
     public int compareTo(Object other) {
