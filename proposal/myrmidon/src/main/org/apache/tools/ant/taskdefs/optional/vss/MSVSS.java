@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
@@ -224,7 +225,7 @@ public abstract class MSVSS extends Task
                 }
                 newEnv[ env.length ] = "SSDIR=" + m_serverPath;
 
-                exe.setEnvironment( newEnv );
+                exe.setEnvironment( Environment.createEnvVars( newEnv )  );
             }
 
             exe.setWorkingDirectory( getBaseDirectory() );

@@ -211,17 +211,6 @@ public class Execute
         m_command = commandline;
     }
 
-    /**
-     * Sets the environment variables for the subprocess to launch.
-     *
-     * @param env The new EnvironmentData value
-     */
-    public void setEnvironment( String[] env )
-        throws TaskException
-    {
-        setEnvironment( Environment.createEnvVars( env ) );
-    }
-
     public void setEnvironment( final Properties environment )
     {
         m_environment = environment;
