@@ -37,8 +37,7 @@ public class DirectoryScannerTest extends BuildFileTest {
     public DirectoryScannerTest(String name) {super(name);}
 
     // keep track of what operating systems are supported here.
-    private boolean supportsSymlinks = Os.isFamily("unix")
-        && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
+    private boolean supportsSymlinks = Os.isFamily("unix");
 
     public void setUp() {
         configureProject("src/etc/testcases/core/directoryscanner.xml");

@@ -274,16 +274,14 @@ public class Project {
      */
     private AntClassLoader createClassLoader() {
         AntClassLoader loader = null;
-        if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            try {
-                // 1.2+ - create advanced helper dynamically
-                Class loaderClass
+        try {
+            // 1.2+ - create advanced helper dynamically
+            Class loaderClass
                     = Class.forName(ANTCLASSLOADER_JDK12);
-                loader = (AntClassLoader) loaderClass.newInstance();
-            } catch (Exception e) {
-                    log("Unable to create Class Loader: "
-                        + e.getMessage(), Project.MSG_DEBUG);
-            }
+            loader = (AntClassLoader) loaderClass.newInstance();
+        } catch (Exception e) {
+            log("Unable to create Class Loader: "
+                    + e.getMessage(), Project.MSG_DEBUG);
         }
 
         if (loader == null) {

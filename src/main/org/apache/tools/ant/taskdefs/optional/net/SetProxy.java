@@ -229,13 +229,6 @@ public class SetProxy extends Task {
                 sysprops.remove("java.net.socks.password");
             }
         }
-
-
-        //for Java1.1 we need to tell the system that the settings are new
-        if (settingsChanged
-            && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            legacyResetProxySettingsCall(enablingProxy);
-        }
     }
 
     /**
@@ -247,33 +240,6 @@ public class SetProxy extends Task {
                 + ":" + proxyPort,
                 Project.MSG_VERBOSE);
     }
-
-
-    /**
-     * make a call to sun.net.www.http.HttpClient.resetProperties();
-     * this is only needed for java 1.1; reflection is used to stop the compiler
-     * whining, and in case cleanroom JVMs dont have the class.
-     * @return true if we did something
-     */
-
-    protected boolean legacyResetProxySettingsCall(boolean setProxy) {
-        System.getProperties().put("http.proxySet", new Boolean(setProxy).toString());
-        try {
-            Class c = Class.forName("sun.net.www.http.HttpClient");
-            Method reset = c.getMethod("resetProperties", null);
-            reset.invoke(null, null);
-            return true;
-        } catch (ClassNotFoundException cnfe) {
-            return false;
-        } catch (NoSuchMethodException e) {
-            return false;
-        } catch (IllegalAccessException e) {
-            return false;
-        } catch (InvocationTargetException e) {
-            return false;
-        }
-    }
-
 
     /**
      * Does the work.

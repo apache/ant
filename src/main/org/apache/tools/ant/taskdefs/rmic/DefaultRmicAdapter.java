@@ -147,15 +147,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
         cmd.createArgument().setFile(attributes.getBase());
 
         if (attributes.getExtdirs() != null) {
-            if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-                /*
-                 * XXX - This doesn't mix very well with build.systemclasspath,
-                 */
-                classpath.addExtdirs(attributes.getExtdirs());
-            } else {
-                cmd.createArgument().setValue("-extdirs");
-                cmd.createArgument().setPath(attributes.getExtdirs());
-            }
+            cmd.createArgument().setValue("-extdirs");
+            cmd.createArgument().setPath(attributes.getExtdirs());
         }
 
         cmd.createArgument().setValue("-classpath");

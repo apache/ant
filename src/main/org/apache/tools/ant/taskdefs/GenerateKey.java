@@ -265,10 +265,6 @@ public class GenerateKey extends Task {
     }
 
     public void execute() throws BuildException {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            throw new BuildException("The genkey task is only available on JDK"
-                                     + " versions 1.2 or greater");
-        }
 
         if (null == alias) {
             throw new BuildException("alias attribute must be set");

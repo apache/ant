@@ -271,6 +271,9 @@ public class Javah extends Task {
             classpath = classpath.concatSystemClasspath("ignore");
         }
 
+        /* unused.
+        TODO: If anyone cannot come up with a reason for this, lets delete it
+
         String compiler = getProject().getProperty("build.compiler");
         if (compiler == null) {
             if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
@@ -280,7 +283,7 @@ public class Javah extends Task {
                 compiler = "classic";
             }
         }
-
+        */
         doClassicCompile();
     }
 
