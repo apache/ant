@@ -524,7 +524,7 @@ public class ComponentHelper  {
             if (noArg) {
                 o = ctor.newInstance(new Object[0]);
             } else {
-                o = ctor.newInstance(new Object[] {this});
+                o = ctor.newInstance(new Object[] {project});
             }
             if ( project != null ) {
                 project.setProjectReference( o );
