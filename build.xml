@@ -171,6 +171,7 @@
   <!-- depends on external libraries -->
   <selector id="needs.trax">
     <or>
+      <filename name="${optional.package}/junit/Xalan2Executor*"/>
       <filename name="${optional.package}/TraXLiaison*"/>
       <filename name="${optional.package}/sitraka/**"/>
       <filename name="${optional.package}/metamata/MMetrics*"/>
@@ -184,10 +185,6 @@
       <filename name="${optional.package}/XalanLiaison*"/>
       <filename name="${optional.package}/junit/Xalan1Executor*"/>
     </or>
-  </selector>
-
-  <selector id="needs.xalan2">
-    <filename name="${optional.package}/junit/Xalan2Executor*"/>
   </selector>
 
   <selector id="needs.xslp">
@@ -641,7 +638,6 @@
 
             <selector refid="needs.trax" unless="trax.present"/>
             <selector refid="needs.xalan1" unless="xalan.present"/>
-            <selector refid="needs.xalan2" unless="xalan2.present"/>
             <selector refid="needs.xslp" unless="xslp.present"/>
             <selector refid="needs.apache-resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/>
@@ -819,7 +815,6 @@
           <or>
             <selector refid="needs.trax"/>
             <selector refid="needs.xalan1"/>
-            <selector refid="needs.xalan2"/>
             <selector refid="needs.xslp"/>
             <selector refid="needs.apache-resolver"/>
             <selector refid="needs.junit"/>
@@ -867,7 +862,6 @@
 
     <optional-jar dep="trax"/>
     <optional-jar dep="xalan1"/>
-    <optional-jar dep="xalan2"/>
     <optional-jar dep="xslp"/>
     <optional-jar dep="apache-resolver"/>
     <optional-jar dep="junit"/>
