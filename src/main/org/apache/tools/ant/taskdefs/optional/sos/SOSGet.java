@@ -57,7 +57,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Task to retreive file(s) from Visual Source Safe via a SourceOffSite server.
+ * Task to retrieve a read-only copy of the specified project or file. 
+ * from Visual Source Safe via a SourceOffSite server.
  * <p>
  * The following attributes are interpretted:
  * <table border="1">
