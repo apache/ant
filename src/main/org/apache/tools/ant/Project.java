@@ -429,9 +429,7 @@ public class Project {
         Class c = (Class) taskClassDefinitions.get(taskType);
 
 	if (c == null)
-	    throw new BuildException("Could not create task of type: "+taskType+
-				     " because I can't find it in the list of task"+
-				     " class definitions");
+            return null;
         try {
             Object o = c.newInstance();
             Task task = null;

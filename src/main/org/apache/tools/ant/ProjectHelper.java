@@ -363,7 +363,17 @@ public class ProjectHelper {
         }
 
         public void init(String tag, AttributeList attrs) throws SAXParseException {
-            task = project.createTask(tag);
+            try {
+                task = project.createTask(tag);
+            } catch (BuildException e) {
+                // swallow here, will be thrown again in 
+                // UnknownElement.maybeConfigure if the problem persists.
+            }
+
+            if (task == null) {
+                task = new UnknownElement(tag);
+                task.setProject(project);
+            }
 
             task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));
             configureId(task, attrs);
@@ -422,7 +432,13 @@ public class ProjectHelper {
                 IntrospectionHelper.getHelper(targetClass);
 
             try {
-                child = ih.createElement(target, propType.toLowerCase());
+                if (target instanceof UnknownElement) {
+                    child = new UnknownElement(propType.toLowerCase());
+                    ((UnknownElement) target).addChild((UnknownElement) child);
+                } else {
+                    child = ih.createElement(target, propType.toLowerCase());
+                }
+
                 configureId(child, attrs);
 
                 if (parentWrapper != null) {

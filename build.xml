@@ -12,7 +12,7 @@
 
   <property name="Name" value="Ant"/>
   <property name="name" value="ant"/>
-  <property name="version" value="1.2alpha2"/>
+  <property name="version" value="1.2alpha3"/>
 
   <property name="ant.home" value="."/>
   <property name="src.bin.dir" value="src/bin"/>
@@ -178,6 +178,8 @@
      <copydir src="${docs.dir}" dest="${ant.dist.dir}/docs"/>
      <copydir src="${build.javadocs}" dest="${ant.dist.dir}/docs/api"/>
 
+     <fixcrlf srcdir="${ant.dist.dir}/bin" includes="ant,antRun" cr="remove"/>
+     <fixcrlf srcdir="${ant.dist.dir}/bin" includes="*.bat" cr="add"/>
      <chmod perm="+x">
        <fileset dir="${ant.dist.dir}/bin">
          <patternset refid="chmod.patterns"/>
@@ -185,6 +187,7 @@
      </chmod>
 
      <copyfile src="README" dest="${ant.dist.dir}/README"/>
+     <copyfile src="WHATSNEW" dest="${ant.dist.dir}/WHATSNEW"/>
      <copyfile src="TODO" dest="${ant.dist.dir}/TODO"/>
      <copyfile src="LICENSE" dest="${ant.dist.dir}/LICENSE"/>
   </target>
@@ -302,11 +305,6 @@
   <!-- Run testcase                                                        -->
   <!-- =================================================================== -->
   <target name="runtests" depends="compiletests" if="junit.present">
-
-<!--
-    This would make the buildprocess fail if using an Ant version
-    without the junit task
-
     <junit printsummary="yes" fork="yes" haltonfailure="yes">
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
@@ -324,19 +322,19 @@
         </fileset>
       </batchtest>
     </junit>
--->
-
-    <java fork="yes"
-          classname="junit.textui.TestRunner"
-          taskname="junit">
-      <arg value="org.apache.tools.ant.AllJUnitTests" />
+    <taskdef name="a" classname="A">
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />
         <path refid="classpath" />
         <pathelement path="${java.class.path}" />
+        <path location="/tmp" />
       </classpath>
-    </java>
+    </taskdef>
+    <a test="set">
+Bla
+      <c test="1" />
+    </a>
   </target>
 
 </project>

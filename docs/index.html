@@ -1002,7 +1002,17 @@ execution depending on system parameters.</p>
     <td valign="top">file</td>
     <td valign="top">the file to look for.</td>
   </tr>
+  <tr>
+    <td valign="top">classpath</td> <td valign="top">the classpath to
+      use when looking up <code>classname</code>.</td> <td
+    align="center" valign="top">No</td>
+  </tr>
 </table>
+<h3>Parameters specified as nested elements</h3>
+<h4>classpath</h4>
+<p><code>Available</code>'s <em>classpath</em> attribute is a <a
+href="#path">PATH like structure</a> and can also be set via a nested
+<em>classpath</em> element.</p>
 <h3>Examples</h3>
 <pre>  &lt;available classname=&quot;org.whatever.Myclass&quot; property=&quot;Myclass.present&quot; /&gt;</pre>
 <p>sets the property <code><i>Myclass.present</i></code> to the value &quot;true&quot;
@@ -3650,7 +3660,17 @@ href="#writingowntask">Writing your own task</a>&quot;.</p>
     <td valign="top">the full class name implementing the task</td>
     <td valign="top" align="center">Yes</td>
   </tr>
+  <tr>
+    <td valign="top">classpath</td> <td valign="top">the classpath to
+      use when looking up <code>classname</code>.</td> <td
+    align="center" valign="top">No</td>
+  </tr>
 </table>
+<h3>Parameters specified as nested elements</h3>
+<h4>classpath</h4>
+<p><code>Taskdef</code>'s <em>classpath</em> attribute is a <a
+href="#path">PATH like structure</a> and can also be set via a nested
+<em>classpath</em> element.</p>
 <h3>Examples</h3>
 <pre>  &lt;taskdef name=&quot;myjavadoc&quot; classname=&quot;com.mydomain.JavadocTask&quot; /&gt;</pre>
 <p>makes a task called <code>myjavadoc</code> available to Ant. The class <code>com.mydomain.JavadocTask</code>

@@ -67,6 +67,8 @@ import java.util.*;
 
 public class IntrospectionHelperTest extends TestCase {
 
+    public static boolean isUnixStyle = File.pathSeparatorChar == ':';
+
     public IntrospectionHelperTest(String name) {
         super(name);
     }
@@ -404,7 +406,11 @@ public class IntrospectionHelperTest extends TestCase {
     }
 
     public void setTen(File f) {
-        assertEquals("/tmp/2", f.getAbsolutePath());
+        if (isUnixStyle) { 
+            assertEquals("/tmp/2", f.getAbsolutePath());
+        } else {
+            assertEquals("c:\\tmp\\2", f.getAbsolutePath().toLowerCase());
+        }
     }
 
     public void setEleven(boolean b) {

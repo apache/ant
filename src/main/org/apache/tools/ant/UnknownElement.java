@@ -54,95 +54,92 @@
 
 package org.apache.tools.ant;
 
-import java.util.Enumeration;
 import java.util.Vector;
-import org.xml.sax.AttributeList;
-import org.xml.sax.helpers.AttributeListImpl;
 
 /**
- * Wrapper class that holds the attributes of a Task (or elements
- * nested below that level) and takes care of configuring that element
- * at runtime.
+ * Wrapper class that holds all information necessary to create a task
+ * that did not exist when Ant started.
  *
  * @author <a href="stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
-public class RuntimeConfigurable {
+public class UnknownElement extends Task {
 
+    private String elementName;
+    private Task realTask;
     private Vector children = new Vector();
-    private Object wrappedObject = null;
-    private AttributeList attributes;
-    private StringBuffer characters = new StringBuffer();
-
+    
+    public UnknownElement (String elementName) {
+        this.elementName = elementName;
+    }
+    
     /**
-     * @param proxy The element to wrap.
+     * return the corresponding XML tag.
      */
-    public RuntimeConfigurable(Object proxy) {
-        wrappedObject = proxy;
+    public String getTag() {
+        return elementName;
     }
 
-    void setProxy(Object proxy) {
-        wrappedObject = proxy;
+    public void maybeConfigure() throws BuildException {
+        realTask = project.createTask(elementName);
+        if (realTask == null) {
+            throw new BuildException("Could not create task of type: "+elementName+
+                                     " because I can\'t find it in the list of task"+
+                                     " class definitions", location);
+        }
+
+        realTask.setLocation(location);
+        String id = wrapper.getAttributes().getValue("id");
+        if (id != null) {
+            project.addReference(id, realTask);
+        }
+        realTask.init();
+
+        // UnknownElement always has an associated target
+        realTask.setOwningTarget(target);
+
+        wrapper.setProxy(realTask);
+        realTask.setRuntimeConfigurableWrapper(wrapper);
+
+        handleChildren(realTask, wrapper);
+
+        realTask.maybeConfigure();
+        target.replaceTask(this, realTask);
     }
 
     /**
-     * Set's the attributes for the wrapped element.
+     * Called when the real task has been configured for the first time.
      */
-    public void setAttributes(AttributeList attributes) {
-        this.attributes = new AttributeListImpl(attributes);
+    public void execute() {
+        if (realTask == null) {
+            // plain impossible to get here, maybeConfigure should 
+            // have thrown an exception.
+            throw new BuildException("Could not create task of type: "
+                                     + elementName, location);
+        }
+        realTask.execute();
     }
 
-    /**
-     * Returns the AttributeList of the wrapped element.
-     */
-    public AttributeList getAttributes() {
-        return attributes;
-    }
-
-    /**
-     * Adds child elements to the wrapped element.
-     */
-    public void addChild(RuntimeConfigurable child) {
+    public void addChild(UnknownElement child) {
         children.addElement(child);
     }
 
-    /**
-     * Returns the child with index <code>index</code>.
-     */
-    RuntimeConfigurable getChild(int index) {
-        return (RuntimeConfigurable) children.elementAt(index);
-    }
+    protected void handleChildren(Object parent, 
+                                  RuntimeConfigurable parentWrapper) 
+        throws BuildException {
 
-    /**
-     * Add characters from #PCDATA areas to the wrapped element.
-     */
-    public void addText(String data) {
-        characters.append(data);
-    }
-
-    /**
-     * Add characters from #PCDATA areas to the wrapped element.
-     */
-    public void addText(char[] buf, int start, int end) {
-        addText(new String(buf, start, end).trim());
-    }
-
-    /**
-     * Configure the wrapped element and all children.
-     */
-    public void maybeConfigure(Project p) throws BuildException {
-        if (attributes != null) {
-            ProjectHelper.configure(wrappedObject, attributes, p);
-            attributes = null;
+        if (parent instanceof TaskAdapter) {
+            parent = ((TaskAdapter) parent).getProxy();
         }
-        if (characters.length() != 0) {
-            ProjectHelper.addText(wrappedObject, characters.toString());
-            characters.setLength(0);
-        }
-        Enumeration enum = children.elements();
-        while (enum.hasMoreElements()) {
-            RuntimeConfigurable child = (RuntimeConfigurable) enum.nextElement();
-            child.maybeConfigure(p);
+        Class parentClass = parent.getClass();
+        IntrospectionHelper ih = IntrospectionHelper.getHelper(parentClass);
+
+        for (int i=0; i<children.size(); i++) {
+            UnknownElement child = (UnknownElement) children.elementAt(i);
+            Object realChild = ih.createElement(parent, child.getTag());
+            RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
+            childWrapper.setProxy(realChild);
+            child.handleChildren(realChild, childWrapper);
         }
     }
 
-}
+}// UnknownElement

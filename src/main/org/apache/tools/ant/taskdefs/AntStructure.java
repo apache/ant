@@ -242,6 +242,8 @@ public class AntStructure extends Task {
         enum = ih.getAttributes();
         while (enum.hasMoreElements()) {
             String attrName = (String) enum.nextElement();
+            if ("id".equals(attrName)) continue;
+            
             sb.append(lSep).append("          ").append(attrName).append(" ");
             Class type = ih.getAttributeType(attrName);
             if (type.equals(java.lang.Boolean.class) || 

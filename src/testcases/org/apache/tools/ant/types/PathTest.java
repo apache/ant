@@ -129,7 +129,7 @@ public class PathTest extends TestCase {
             assertEquals("/test", l[1]);
         } else {
             assertEquals("drives on DOS", 1, l.length);
-            assertEquals("c:\\test", l[0]);
+            assertEquals("c:\\test", l[0].toLowerCase());
         }
 
         p = new Path(project, "c:/test");
@@ -141,7 +141,7 @@ public class PathTest extends TestCase {
             assertEquals("/test", l[1]);
         } else {
             assertEquals("drives on DOS", 1, l.length);
-            assertEquals("c:\\test", l[0]);
+            assertEquals("c:\\test", l[0].toLowerCase());
         }
     }
 

@@ -205,6 +205,10 @@ public abstract class Task {
         return wrapper;
     }
 
+    protected void setRuntimeConfigurableWrapper(RuntimeConfigurable wrapper) {
+        this.wrapper = wrapper;
+    }
+
     /**
      * Configure this task - if it hasn't been done already.
      */

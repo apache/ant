@@ -159,6 +159,13 @@ public class Target {
         }
     }
 
+    void replaceTask(UnknownElement el, Task t) {
+        int index = -1;
+        while ((index = tasks.indexOf(el)) >= 0) {
+            tasks.setElementAt(t, index);
+        }
+    }
+
     private boolean testIfCondition() {
         return "".equals(ifCondition) 
             || project.getProperty(ifCondition) != null;

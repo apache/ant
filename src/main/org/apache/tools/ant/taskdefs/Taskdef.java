@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 
 /**
  * Define a new task - name and class
@@ -64,6 +65,26 @@ import org.apache.tools.ant.*;
 public class Taskdef extends Task {
     private String name;
     private String value;
+    private Path classpath;
+
+    public void setClasspath(Path classpath) {
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+
+    public Path createClasspath() {
+        if (this.classpath == null) {
+            this.classpath = new Path(project);
+        }
+        return this.classpath.createPath();
+    }
+
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
+    }
 
     public void execute() throws BuildException {
 	    if (name==null || value==null ) {
@@ -72,8 +93,20 @@ public class Taskdef extends Task {
 		throw new BuildException(msg);
 	    }
 	    try {
-		Class taskClass = Class.forName(value);
-			project.addTaskDefinition(name, taskClass);
+                ClassLoader loader = null;
+                if (classpath != null) {
+                    loader = new AntClassLoader(project, classpath, false);
+                } else {
+                    loader = this.getClass().getClassLoader();
+                }
+
+                Class taskClass = null;
+                if (loader != null) {
+                    taskClass = loader.loadClass(value);
+                } else {
+                    taskClass = Class.forName(value);
+                }
+                project.addTaskDefinition(name, taskClass);
 	    } catch (ClassNotFoundException cnfe) {
 		String msg = "taskdef class " + value +
 		    " cannot be found";
