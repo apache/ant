@@ -60,6 +60,7 @@ public class ExecuteOn extends ExecTask {
     private boolean addSourceFile = true;
     private boolean verbose = false;
     private boolean ignoreMissing = true;
+    private boolean force = false;
 
     /**
      * Has &lt;srcfile&gt; been specified before &lt;targetfile&gt;
@@ -178,6 +179,15 @@ public class ExecuteOn extends ExecTask {
      */
     public void setIgnoremissing(boolean b) {
         ignoreMissing = b;
+    }
+
+    /**
+     * Whether to bypass timestamp comparisons for target files.
+     *
+     * @since Ant 1.7
+     */
+    public void setForce(boolean b) {
+        force = b;
     }
 
     /**
@@ -563,13 +573,7 @@ public class ExecuteOn extends ExecTask {
      * be included on the command line.
      */
     protected String[] getFiles(File baseDir, DirectoryScanner ds) {
-        if (mapper != null) {
-            SourceFileScanner sfs = new SourceFileScanner(this);
-            return sfs.restrict(ds.getIncludedFiles(), baseDir, destDir,
-                                mapper);
-        } else {
-            return ds.getIncludedFiles();
-        }
+        return restrict(ds.getIncludedFiles(), baseDir);
     }
 
     /**
@@ -577,13 +581,7 @@ public class ExecuteOn extends ExecTask {
      * should be included on the command line.
      */
     protected String[] getDirs(File baseDir, DirectoryScanner ds) {
-        if (mapper != null) {
-            SourceFileScanner sfs = new SourceFileScanner(this);
-            return sfs.restrict(ds.getIncludedDirectories(), baseDir, destDir,
-                                mapper);
-        } else {
-            return ds.getIncludedDirectories();
-        }
+        return restrict(ds.getIncludedDirectories(), baseDir);
     }
 
     /**
@@ -593,14 +591,12 @@ public class ExecuteOn extends ExecTask {
      * @since Ant 1.6.2
      */
     protected String[] getFilesAndDirs(FileList list) {
-        if (mapper != null) {
-            SourceFileScanner sfs = new SourceFileScanner(this);
-            return sfs.restrict(list.getFiles(getProject()),
-                                list.getDir(getProject()), destDir,
-                                mapper);
-        } else {
-            return list.getFiles(getProject());
-        }
+        return restrict(list.getFiles(getProject()), list.getDir(getProject()));
+    }
+
+    private String[] restrict(String[] s, File baseDir) {
+        return (mapper == null || force) ? s
+            : new SourceFileScanner(this).restrict(s, baseDir, destDir, mapper);
     }
 
     /**

@@ -378,7 +378,7 @@
         </fail>
     </target>
 
-    <target name="overwrite" depends="init,xyz,pad" if="echo.can.run">
+    <target name="force" depends="init,xyz,pad" if="echo.can.run">
         <presetdef name="ekko">
             <apply executable="echo" append="true" dest="${basedir}">
                 <filelist refid="xyzlist" />
@@ -393,7 +393,7 @@
         </pathconvert>
 
         <ekko outputproperty="foo" />
-        <ekko outputproperty="bar" overwrite="true" />
+        <ekko outputproperty="bar" force="true" />
         <fail>
             <condition>
                 <not>

@@ -554,8 +554,8 @@ public class ExecuteOnTest extends BuildFileTest {
         executeTarget("ignoremissing");
     }
 
-    public void testOverwrite() {
-        executeTarget("overwrite");
+    public void testForce() {
+        executeTarget("force");
     }
 
     //borrowed from TokenFilterTest
