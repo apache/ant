@@ -65,6 +65,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.types.Substitution;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
@@ -358,17 +359,7 @@ public class TokenFilter
         public String getToken(Reader in)
             throws IOException
         {
-            StringBuffer output = new StringBuffer();
-            char[] buffer = new char[8192];
-            while (true) {
-                int nread = in.read(buffer, 0, 8192);
-                if (nread == -1)
-                    break;
-                output.append(buffer, 0, nread);
-            }
-            if (output.length() == 0)
-                return null;
-            return output.toString();
+            return FileUtils.readFully(in);
         }
 
         /**
