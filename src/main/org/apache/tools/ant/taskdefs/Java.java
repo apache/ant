@@ -681,41 +681,41 @@ public class Java extends Task {
      */
     private int fork(String[] command) throws BuildException {
 
-            Execute exe
-                = new Execute(redirector.createHandler(), createWatchdog());
-            exe.setAntRun(getProject());
+        Execute exe
+            = new Execute(redirector.createHandler(), createWatchdog());
+        exe.setAntRun(getProject());
 
-            if (dir == null) {
-                dir = getProject().getBaseDir();
-            } else if (!dir.exists() || !dir.isDirectory()) {
-                throw new BuildException(dir.getAbsolutePath()
-                                         + " is not a valid directory",
-                                         getLocation());
+        if (dir == null) {
+            dir = getProject().getBaseDir();
+        } else if (!dir.exists() || !dir.isDirectory()) {
+            throw new BuildException(dir.getAbsolutePath()
+                                     + " is not a valid directory",
+                                     getLocation());
+        }
+
+        exe.setWorkingDirectory(dir);
+
+        String[] environment = env.getVariables();
+        if (environment != null) {
+            for (int i = 0; i < environment.length; i++) {
+                log("Setting environment variable: " + environment[i],
+                    Project.MSG_VERBOSE);
             }
+        }
+        exe.setNewenvironment(newEnvironment);
+        exe.setEnvironment(environment);
 
-            exe.setWorkingDirectory(dir);
-
-            String[] environment = env.getVariables();
-            if (environment != null) {
-                for (int i = 0; i < environment.length; i++) {
-                    log("Setting environment variable: " + environment[i],
-                        Project.MSG_VERBOSE);
-                }
+        exe.setCommandline(command);
+        try {
+            int rc = exe.execute();
+            redirector.complete();
+            if (exe.killedProcess()) {
+                throw new BuildException("Timeout: killed the sub-process");
             }
-            exe.setNewenvironment(newEnvironment);
-            exe.setEnvironment(environment);
-
-            exe.setCommandline(command);
-            try {
-                int rc = exe.execute();
-                redirector.complete();
-                if (exe.killedProcess()) {
-                    throw new BuildException("Timeout: killed the sub-process");
-                }
-                return rc;
-            } catch (IOException e) {
-                throw new BuildException(e, getLocation());
-            }
+            return rc;
+        } catch (IOException e) {
+            throw new BuildException(e, getLocation());
+        }
     }
 
     /**
@@ -723,36 +723,36 @@ public class Java extends Task {
      */
     private void spawn(String[] command) throws BuildException {
 
-            Execute exe
-                = new Execute();
-            exe.setAntRun(getProject());
+        Execute exe
+            = new Execute();
+        exe.setAntRun(getProject());
 
-            if (dir == null) {
-                dir = getProject().getBaseDir();
-            } else if (!dir.exists() || !dir.isDirectory()) {
-                throw new BuildException(dir.getAbsolutePath()
-                                         + " is not a valid directory",
-                                         getLocation());
+        if (dir == null) {
+            dir = getProject().getBaseDir();
+        } else if (!dir.exists() || !dir.isDirectory()) {
+            throw new BuildException(dir.getAbsolutePath()
+                                     + " is not a valid directory",
+                                     getLocation());
+        }
+
+        exe.setWorkingDirectory(dir);
+
+        String[] environment = env.getVariables();
+        if (environment != null) {
+            for (int i = 0; i < environment.length; i++) {
+                log("Setting environment variable: " + environment[i],
+                    Project.MSG_VERBOSE);
             }
+        }
+        exe.setNewenvironment(newEnvironment);
+        exe.setEnvironment(environment);
 
-            exe.setWorkingDirectory(dir);
-
-            String[] environment = env.getVariables();
-            if (environment != null) {
-                for (int i = 0; i < environment.length; i++) {
-                    log("Setting environment variable: " + environment[i],
-                        Project.MSG_VERBOSE);
-                }
-            }
-            exe.setNewenvironment(newEnvironment);
-            exe.setEnvironment(environment);
-
-            exe.setCommandline(command);
-            try {
-                exe.spawn();
-            } catch (IOException e) {
-                throw new BuildException(e, getLocation());
-            }
+        exe.setCommandline(command);
+        try {
+            exe.spawn();
+        } catch (IOException e) {
+            throw new BuildException(e, getLocation());
+        }
     }
     /**
      * Executes the given classname with the given arguments as it
