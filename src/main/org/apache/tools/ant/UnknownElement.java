@@ -64,8 +64,20 @@ import java.util.Vector;
  */
 public class UnknownElement extends Task {
 
+    /**
+     * Holds the name of the task or nested child element of a task
+     * that hasn't been defined at parser time.
+     */
     private String elementName;
+
+    /**
+     * The task after it has been loaded.
+     */
     private Task realTask;
+
+    /**
+     * Childelements, holds UnknownElement instances.
+     */
     private Vector children = new Vector();
     
     public UnknownElement (String elementName) {
@@ -73,12 +85,16 @@ public class UnknownElement extends Task {
     }
     
     /**
-     * return the corresponding XML tag.
+     * return the corresponding XML element name.
      */
     public String getTag() {
         return elementName;
     }
 
+    /**
+     * creates the task instance, creates child elements, configures
+     * the attributes of the task.
+     */
     public void maybeConfigure() throws BuildException {
         realTask = makeTask(this, wrapper);
 
@@ -105,10 +121,17 @@ public class UnknownElement extends Task {
         realTask.perform();
     }
 
+    /**
+     * Adds a child element to this element.
+     */
     public void addChild(UnknownElement child) {
         children.addElement(child);
     }
 
+    /**
+     * Creates child elements, creates children of the children, sets
+     * attributes of the child elements.
+     */
     protected void handleChildren(Object parent, 
                                   RuntimeConfigurable parentWrapper) 
         throws BuildException {
@@ -124,6 +147,7 @@ public class UnknownElement extends Task {
             RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
             UnknownElement child = (UnknownElement) children.elementAt(i);
             Object realChild = null;
+
             if (parent instanceof TaskContainer) {
                 realChild = makeTask(child, childWrapper);
                 ((TaskContainer) parent).addTask((Task) realChild);
@@ -132,11 +156,13 @@ public class UnknownElement extends Task {
             }
 
             childWrapper.setProxy(realChild);
-            if (realChild instanceof Task) {
+            if (parent instanceof TaskContainer) {
                 ((Task) realChild).setRuntimeConfigurableWrapper(childWrapper);
             }
+
             child.handleChildren(realChild, childWrapper);
-            if (realChild instanceof Task) {
+
+            if (parent instanceof TaskContainer) {
                 ((Task) realChild).maybeConfigure();
             }
         }
