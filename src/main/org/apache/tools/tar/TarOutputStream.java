@@ -96,9 +96,12 @@ public class TarOutputStream extends FilterOutputStream {
 
     /**
      * Ends the TAR archive without closing the underlying OutputStream.
-     * The result is that the EOF record of nulls is written.
+     * The result is that the two EOF records of nulls are written.
      */
     public void finish() throws IOException {
+        // See Bugzilla 28776 for a discussion on this
+        // http://issues.apache.org/bugzilla/show_bug.cgi?id=28776
+        this.writeEOFRecord();
         this.writeEOFRecord();
     }
 
