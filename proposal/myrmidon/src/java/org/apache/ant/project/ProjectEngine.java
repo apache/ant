@@ -9,7 +9,6 @@ package org.apache.ant.project;
 
 import org.apache.ant.AntException;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.framework.component.Component;
 
 /**

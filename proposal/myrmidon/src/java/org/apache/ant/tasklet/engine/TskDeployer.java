@@ -27,7 +27,7 @@ public interface TskDeployer
     void deployDataType( String name, String location, URL url )
         throws DeploymentException;    
 
-    void deployTasklet( String name, String location, URL url )
+    void deployTask( String name, String location, URL url )
         throws DeploymentException;
 }
 

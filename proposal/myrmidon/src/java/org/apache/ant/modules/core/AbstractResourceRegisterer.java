@@ -13,7 +13,7 @@ import java.net.URL;
 import org.apache.ant.AntException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.ant.tasklet.engine.TskDeployer;
-import org.apache.ant.tasklet.engine.TaskletEngine;
+import org.apache.myrmidon.components.executor.Executor;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
@@ -34,13 +34,13 @@ public abstract class AbstractResourceRegisterer
     protected String              m_classname;
     protected TskDeployer         m_tskDeployer;
     protected DataTypeEngine      m_dataTypeEngine;
-    protected TaskletEngine          m_engine;
+    protected Executor            m_engine;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_engine = (TaskletEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
+        m_engine = (Executor)componentManager.
+            lookup( "org.apache.myrmidon.components.executor.Executor" );
 
         m_tskDeployer = (TskDeployer)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TskDeployer" );

@@ -18,21 +18,22 @@ import java.util.zip.ZipFile;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.ConverterRegistry;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.camelot.AbstractDeployer;
 import org.apache.avalon.framework.camelot.DefaultLocator;
 import org.apache.avalon.framework.camelot.DefaultRegistry;
-import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.camelot.DeployerUtil;
+import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.avalon.framework.camelot.Loader;
 import org.apache.avalon.framework.camelot.Registry;
 import org.apache.avalon.framework.camelot.RegistryException;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.log.Logger;
+import org.apache.myrmidon.components.executor.Executor;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -43,12 +44,12 @@ public class DefaultTskDeployer
     extends AbstractDeployer
     implements Composable, TskDeployer
 {
-    protected final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
+    private final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
 
-    protected Registry              m_dataTypeRegistry;
-    protected Registry              m_taskletRegistry;
-    protected Registry              m_converterRegistry;
-    protected ConverterRegistry     m_converterInfoRegistry;
+    private Registry              m_dataTypeRegistry;
+    private Registry              m_taskRegistry;
+    private Registry              m_converterRegistry;
+    private ConverterRegistry     m_converterInfoRegistry;
 
     /**
      * Default constructor.
@@ -57,9 +58,9 @@ public class DefaultTskDeployer
     {
         super();
         m_autoUndeploy = true;
-        m_type = "Tasklet";
+        m_type = "Task";
     }
-    
+
     /**
      * Retrieve relevent services needed to deploy.
      *
@@ -69,10 +70,10 @@ public class DefaultTskDeployer
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        final TaskletEngine taskletEngine = (TaskletEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
-
-        m_taskletRegistry = taskletEngine.getRegistry();
+        //UGLY HACK alert !!!
+        final Executor executor = (Executor)componentManager.
+            lookup( "org.apache.myrmidon.components.executor.Executor" );
+        m_taskRegistry = executor.getRegistry();
 
         final ConverterEngine converterEngine = (ConverterEngine)componentManager.
             lookup( "org.apache.ant.convert.engine.ConverterEngine" );
@@ -82,7 +83,7 @@ public class DefaultTskDeployer
 
         final DataTypeEngine dataTypeEngine = (DataTypeEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
-        
+
         m_dataTypeRegistry = dataTypeEngine.getRegistry();
     }
 
@@ -90,7 +91,7 @@ public class DefaultTskDeployer
      * Deploy a file.
      * Eventually this should be cached for performance reasons.
      *
-     * @param location the location 
+     * @param location the location
      * @param file the file
      * @exception DeploymentException if an error occurs
      */
@@ -100,11 +101,11 @@ public class DefaultTskDeployer
         final ZipFile zipFile = DeployerUtil.getZipFileFor( file );
 
         URL url = null;
-        
+
         try
         {
             try { url = file.toURL(); }
-            catch( final MalformedURLException mue ) 
+            catch( final MalformedURLException mue )
             {
                 throw new DeploymentException( "Unable to form url", mue );
             }
@@ -117,7 +118,7 @@ public class DefaultTskDeployer
         }
     }
 
-    protected void loadResources( final ZipFile zipFile, final String location, final URL url )
+    private void loadResources( final ZipFile zipFile, final String location, final URL url )
         throws DeploymentException
     {
         final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
@@ -127,9 +128,9 @@ public class DefaultTskDeployer
             final Configuration[] tasks = taskdefs.getChildren( "task" );
             for( int i = 0; i < tasks.length; i++ )
             {
-                handleTasklet( tasks[ i ], url );
+                handleTask( tasks[ i ], url );
             }
-            
+
             final Configuration[] converters = taskdefs.getChildren( "converter" );
             for( int i = 0; i < converters.length; i++ )
             {
@@ -147,14 +148,14 @@ public class DefaultTskDeployer
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
         }
     }
-    
+
     public void deployConverter( String name, String location, URL url )
         throws DeploymentException
     {
         checkDeployment( location, url );
         final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
         final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
-        
+
         try
         {
             final Configuration[] converters = taskdefs.getChildren( "converter" );
@@ -178,9 +179,9 @@ public class DefaultTskDeployer
     {
         checkDeployment( location, url );
         final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
-        final Configuration datatypedefs = 
+        final Configuration datatypedefs =
             DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
-        
+
         try
         {
             final Configuration[] datatypes = datatypedefs.getChildren( "datatype" );
@@ -198,14 +199,14 @@ public class DefaultTskDeployer
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
         }
     }
-    
-    public void deployTasklet( final String name, final String location, final URL url )
+
+    public void deployTask( final String name, final String location, final URL url )
         throws DeploymentException
     {
         checkDeployment( location, url );
         final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
         final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
-        
+
         try
         {
             final Configuration[] tasks = taskdefs.getChildren( "task" );
@@ -213,7 +214,7 @@ public class DefaultTskDeployer
             {
                 if( tasks[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    handleTasklet( tasks[ i ], url );
+                    handleTask( tasks[ i ], url );
                     break;
                 }
             }
@@ -223,20 +224,20 @@ public class DefaultTskDeployer
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
         }
     }
-    
-    protected void handleConverter( final Configuration converter, final URL url )
+
+    private void handleConverter( final Configuration converter, final URL url )
         throws DeploymentException, ConfigurationException
     {
         final String name = converter.getAttribute( "classname" );
         final String source = converter.getAttribute( "source" );
         final String destination = converter.getAttribute( "destination" );
-        
+
         final DefaultConverterInfo info = new DefaultConverterInfo( source, destination );
-       
+
         try { m_converterInfoRegistry.register( name, info ); }
         catch( final RegistryException re )
         {
-            throw new DeploymentException( "Error registering converter info " + 
+            throw new DeploymentException( "Error registering converter info " +
                                            name + " due to " + re,
                                            re );
         }
@@ -246,48 +247,48 @@ public class DefaultTskDeployer
         try { m_converterRegistry.register( name, locator ); }
         catch( final RegistryException re )
         {
-            throw new DeploymentException( "Error registering converter locator " + 
+            throw new DeploymentException( "Error registering converter locator " +
                                            name + " due to " + re,
                                            re );
         }
 
-        getLogger().debug( "Registered converter " + name + " that converts from " + 
+        getLogger().debug( "Registered converter " + name + " that converts from " +
                         source + " to " + destination );
     }
-    
-    protected void handleTasklet( final Configuration task, final URL url )
+
+    private void handleTask( final Configuration task, final URL url )
         throws DeploymentException, ConfigurationException
     {
         final String name = task.getAttribute( "name" );
         final String classname = task.getAttribute( "classname" );
 
         final DefaultLocator info = new DefaultLocator( classname, url );
-        
-        try { m_taskletRegistry.register( name, info ); }
+
+        try { m_taskRegistry.register( name, info ); }
         catch( final RegistryException re )
         {
             throw new DeploymentException( "Error registering " + name + " due to " + re,
                                            re );
         }
-        
-        getLogger().debug( "Registered tasklet " + name + " as " + classname );
+
+        getLogger().debug( "Registered task " + name + " as " + classname );
     }
-  
-    protected void handleDataType( final Configuration datatype, final URL url )
+
+    private void handleDataType( final Configuration datatype, final URL url )
         throws DeploymentException, ConfigurationException
     {
         final String name = datatype.getAttribute( "name" );
         final String classname = datatype.getAttribute( "classname" );
-        
+
         final DefaultLocator info = new DefaultLocator( classname, url );
-        
+
         try { m_dataTypeRegistry.register( name, info ); }
         catch( final RegistryException re )
         {
             throw new DeploymentException( "Error registering " + name + " due to " + re,
                                            re );
         }
-        
+
         getLogger().debug( "Registered datatype " + name + " as " + classname );
     }
 }

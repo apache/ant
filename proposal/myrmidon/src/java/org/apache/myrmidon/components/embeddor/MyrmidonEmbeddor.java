@@ -13,7 +13,6 @@ import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
-import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.ant.tasklet.engine.TskDeployer;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Initializable;
@@ -25,10 +24,11 @@ import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.logger.AbstractLoggable;
-import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.components.configurer.Configurer;
+import org.apache.myrmidon.components.executor.Executor;
 
 /**
  * Default implementation of Ant runtime.
@@ -41,7 +41,7 @@ public class MyrmidonEmbeddor
 {
     private ConverterEngine          m_converterEngine;
     private DataTypeEngine           m_dataTypeEngine;
-    private TaskletEngine            m_taskEngine;
+    private Executor                 m_executor;
     private ProjectEngine            m_projectEngine;
 
     private ProjectBuilder           m_builder;
@@ -127,7 +127,7 @@ public class MyrmidonEmbeddor
     {
         m_converterEngine = null;
         m_dataTypeEngine = null;
-        m_taskEngine = null;
+        m_executor = null;
         m_projectEngine = null;
         m_builder = null;
         m_deployer = null;
@@ -163,7 +163,7 @@ public class MyrmidonEmbeddor
         defaults.setParameter( "ant.comp.datatype",
                               "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
         defaults.setParameter( "ant.comp.task",
-                              "org.apache.ant.tasklet.engine.DefaultTaskletEngine" );
+                              "org.apache.myrmidon.components.executor.DefaultExecutor" );
         defaults.setParameter( "ant.comp.project",
                               "org.apache.ant.project.DefaultProjectEngine" );
         defaults.setParameter( "ant.comp.builder",
@@ -185,7 +185,6 @@ public class MyrmidonEmbeddor
     {
         final DefaultComponentManager componentManager = new DefaultComponentManager();
 
-        componentManager.put( "org.apache.ant.tasklet.engine.TaskletEngine", m_taskEngine );
         componentManager.put( "org.apache.ant.project.ProjectEngine", m_projectEngine );
         componentManager.put( "org.apache.ant.convert.engine.ConverterEngine",
                               m_converterEngine );
@@ -194,7 +193,9 @@ public class MyrmidonEmbeddor
         componentManager.put( "org.apache.ant.project.ProjectBuilder", m_builder );
         componentManager.put( "org.apache.ant.tasklet.engine.TskDeployer", m_deployer );
         componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
+
         componentManager.put( "org.apache.myrmidon.components.configurer.Configurer", m_configurer );
+        componentManager.put( "org.apache.myrmidon.components.executor.Executor", m_executor );
 
         return componentManager;
     }
@@ -216,7 +217,7 @@ public class MyrmidonEmbeddor
         m_dataTypeEngine = (DataTypeEngine)createComponent( component, DataTypeEngine.class );
 
         component = getParameter( "ant.comp.task" );
-        m_taskEngine = (TaskletEngine)createComponent( component, TaskletEngine.class );
+        m_executor = (Executor)createComponent( component, Executor.class );
 
         component = getParameter( "ant.comp.project" );
         m_projectEngine = (ProjectEngine)createComponent( component, ProjectEngine.class );
@@ -242,7 +243,7 @@ public class MyrmidonEmbeddor
         setupComponent( m_factory );
         setupComponent( m_converterEngine );
         setupComponent( m_dataTypeEngine );
-        setupComponent( m_taskEngine );
+        setupComponent( m_executor );
         setupComponent( m_projectEngine );
         setupComponent( m_builder );
         setupComponent( m_deployer );

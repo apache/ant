@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.tasklet.engine;
+package org.apache.myrmidon.components.executor;
 
 import java.util.HashMap;
 import org.apache.ant.AntException;
@@ -24,7 +24,6 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
-import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
@@ -36,19 +35,19 @@ import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.configurer.Configurer;
 
-public class DefaultTaskletEngine
+public class DefaultExecutor
     extends AbstractLoggable
-    implements TaskletEngine, Composable
+    implements Executor, Composable
 {
     protected Factory              m_factory;
-    protected Registry             m_locatorRegistry   = new DefaultRegistry( Locator.class );
+    protected Registry             m_registry   = new DefaultRegistry( Locator.class );
     protected Configurer           m_configurer;
 
     protected ComponentManager     m_componentManager;
 
     public Registry getRegistry()
     {
-        return m_locatorRegistry;
+        return m_registry;
     }
 
     /**
@@ -64,6 +63,7 @@ public class DefaultTaskletEngine
         m_componentManager = componentManager;
 
         m_factory = (Factory)componentManager.lookup( "org.apache.avalon.framework.camelot.Factory" );
+
         m_configurer = (Configurer)componentManager.
             lookup( "org.apache.myrmidon.components.configurer.Configurer" );
     }
@@ -104,7 +104,7 @@ public class DefaultTaskletEngine
     {
         try
         {
-            final Locator locator = (Locator)m_locatorRegistry.getInfo( name, Locator.class );
+            final Locator locator = (Locator)m_registry.getInfo( name, Locator.class );
             return (Task)m_factory.create( locator, Task.class );
         }
         catch( final RegistryException re )

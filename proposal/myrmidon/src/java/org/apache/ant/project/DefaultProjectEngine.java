@@ -12,8 +12,7 @@ import java.util.Iterator;
 import org.apache.ant.AntException;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.ant.tasklet.engine.DefaultTaskletEngine;
-import org.apache.ant.tasklet.engine.TaskletEngine;
+import org.apache.myrmidon.components.executor.Executor;
 import org.apache.ant.util.Condition;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
@@ -35,7 +34,7 @@ public class DefaultProjectEngine
     extends AbstractLoggable
     implements ProjectEngine, Composable
 {
-    protected TaskletEngine            m_taskEngine;
+    protected Executor                 m_executor;
     protected ProjectListenerSupport   m_listenerSupport = new ProjectListenerSupport();
     protected DefaultComponentManager  m_componentManager;
 
@@ -69,8 +68,8 @@ public class DefaultProjectEngine
         throws ComponentException
     {
         m_componentManager = (DefaultComponentManager)componentManager;
-        m_taskEngine = (TaskletEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
+        m_executor = (Executor)componentManager.
+            lookup( "org.apache.myrmidon.components.executor.Executor" );
     }
 
     /**
@@ -240,7 +239,7 @@ public class DefaultProjectEngine
         m_listenerSupport.taskStarted( name );
 
         //run task
-        m_taskEngine.execute( task, context );
+        m_executor.execute( task, context );
 
         //notify listeners task has ended
         m_listenerSupport.taskFinished();

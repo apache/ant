@@ -31,7 +31,6 @@ import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
 import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.DefaultTaskContext;
-import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.excalibur.cli.CLArgsParser;
 import org.apache.avalon.excalibur.cli.CLOption;
 import org.apache.avalon.excalibur.cli.CLUtil;
