@@ -72,21 +72,20 @@ public interface BuildLogger extends BuildListener {
      *
      * @param level the logging level for the logger.
      */
-    public void setMessageOutputLevel(int level);
+    void setMessageOutputLevel(int level);
 
     /**
      * Set the output stream to which this logger is to send its output.
      *
      * @param output the output stream for the logger.
      */
-    public void setOutputPrintStream(PrintStream output);
+    void setOutputPrintStream(PrintStream output);
 
     /**
      * Set the output stream to which this logger is to send error messages.
      *
      * @param err the error stream for the logger.
      */
-    public void setErrorPrintStream(PrintStream err);
-
+    void setErrorPrintStream(PrintStream err);
 }
 

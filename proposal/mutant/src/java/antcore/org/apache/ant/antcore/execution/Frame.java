@@ -72,6 +72,7 @@ import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.EventService;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.service.FileService;
+import org.apache.ant.common.service.InputService;
 import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.DemuxOutputReceiver;
 import org.apache.ant.common.util.ExecutionException;
@@ -898,6 +899,7 @@ public class Frame implements DemuxOutputReceiver {
         services.put(DataService.class, dataService);
         services.put(EventService.class, new CoreEventService(this));
         services.put(ExecService.class, execService);
+        services.put(InputService.class, new CoreInputService(this));
     }
 
 

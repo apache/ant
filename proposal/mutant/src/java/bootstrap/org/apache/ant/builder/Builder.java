@@ -176,6 +176,7 @@ public class Builder {
         files.remove(new File(TASKDEFS_ROOT, "Recorder.java"));
         files.remove(new File(TASKDEFS_ROOT, "RecorderEntry.java"));
         files.remove(new File(TASKDEFS_ROOT, "SendEmail.java"));
+        files.remove(new File(TASKDEFS_ROOT, "Do.java"));
         files.remove(new File(INPUT_ROOT, "InputRequest.java"));
         
         // not needed for bootstrap

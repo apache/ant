@@ -31,6 +31,7 @@
     <exclude name="org/apache/tools/ant/taskdefs/AntStructure.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/Recorder.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/RecorderEntry.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/Do.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/optional/jdepend/*.java"/>
   </patternset>
   
