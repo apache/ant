@@ -54,6 +54,9 @@ export CLASSPATH
 
 
 if [ "$REALANTHOME" != "" ] ; then
+  if $cygwin; then
+     REALANTHOME=`cygpath --path --windows "$REALANTHOME"`
+  fi
   ANT_INSTALL="-Dant.install=$REALANTHOME"
 else
   ANT_INSTALL="-emacs"
