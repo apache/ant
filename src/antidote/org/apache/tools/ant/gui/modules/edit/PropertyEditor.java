@@ -130,6 +130,7 @@ public class PropertyEditor extends AntModule {
             }
         }
 
+        _container.validate();
         _container.repaint();
     }
 
