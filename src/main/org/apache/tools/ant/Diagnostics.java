@@ -72,7 +72,7 @@ public final class Diagnostics {
     public static void validateVersion() throws BuildException {
         try {
             Class optional
-                = Class.forName("org.apache.tools.ant.taskdefs.optional.Test");
+                = Class.forName(TEST_CLASS);
             String coreVersion = getImplementationVersion(Main.class);
             String optionalVersion = getImplementationVersion(optional);
 
@@ -94,7 +94,7 @@ public final class Diagnostics {
      * <tt>null</tt> if an error occurs.
      */
     public static File[] listLibraries() {
-        String home = System.getProperty("ant.home");
+        String home = System.getProperty(Launcher.ANTHOME_PROPERTY);
         if (home == null) {
             return null;
         }
@@ -211,8 +211,7 @@ public final class Diagnostics {
 
         Class optional = null;
         try {
-            optional = Class.forName(
-                    "org.apache.tools.ant.taskdefs.optional.Test");
+            optional = Class.forName(TEST_CLASS);
             out.println("optional tasks : "
                 + getImplementationVersion(optional));
         } catch (ClassNotFoundException e) {
@@ -340,7 +339,7 @@ public final class Diagnostics {
      */
     private static void doReportTasksAvailability(PrintStream out) {
         InputStream is = Main.class.getResourceAsStream(
-                "/org/apache/tools/ant/taskdefs/defaults.properties");
+                MagicNames.TASKDEF_PROPERTIES_RESOURCE);
         if (is == null) {
             out.println("None available");
         } else {

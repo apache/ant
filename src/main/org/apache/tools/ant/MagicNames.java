@@ -24,11 +24,43 @@ package org.apache.tools.ant;
  * @since Ant 1.6
  */
 public class MagicNames {
-    /** The name of the script repository used by the script repo task */
+    /**
+     * The name of the script repository used by the script repo task
+     * Value {@value}
+     */
     public static final String SCRIPT_REPOSITORY = "org.apache.ant.scriptrepo";
 
-    /** The name of the reference to the System Class Loader */
+    /**
+     * The name of the reference to the System Class Loader
+     * Value {@value}
+     **/
     public static final String SYSTEM_LOADER_REF = "ant.coreLoader";
+
+    /**
+     * Name of the property which can provide an override of the repository dir
+     * for the libraries task
+     * Value {@value}
+     */
+    public static final String REPOSITORY_DIR_PROPERTY = "ant.maven.repository.dir";
+    /**
+     * Name of the property which can provide an override of the repository URL
+     * for the libraries task
+     * Value {@value}
+     */
+    public static final String REPOSITORY_URL_PROPERTY = "ant.maven.repository.url";
+
+    /**
+     * name of the resource that taskdefs are stored under
+     * Value: {@value}
+     */
+    public static final String TASKDEF_PROPERTIES_RESOURCE =
+            "/org/apache/tools/ant/taskdefs/defaults.properties";
+    /**
+     * name of the resource that typedefs are stored under
+     * Value: {@value}
+     */
+    public static final String TYPEDEFS_PROPERTIES_RESOURCE =
+            "/org/apache/tools/ant/types/defaults.properties";
 
 }
 

@@ -17,6 +17,9 @@
 
 package org.apache.tools.ant;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
+
 
 /**
  * This class contains all the information
@@ -143,15 +146,8 @@ public class AntTypeDefinition {
      * @return the type of the definition.
      */
     public Class getTypeClass(Project project) {
-        if (clazz != null) {
-            return clazz;
-        }
         try {
-            if (classLoader == null) {
-                clazz = Class.forName(className);
-            } else {
-                clazz = classLoader.loadClass(className);
-            }
+            return innerGetTypeClass();
         } catch (NoClassDefFoundError ncdfe) {
             project.log("Could not load a dependent class ("
                         + ncdfe.getMessage() + ") for type "
@@ -159,6 +155,24 @@ public class AntTypeDefinition {
         } catch (ClassNotFoundException cnfe) {
             project.log("Could not load class (" + className
                         + ") for type " + name, Project.MSG_DEBUG);
+        }
+        return null;
+    }
+
+    /**
+     * Try and load a class, with no attempt to catch any fault.
+     * @return the class that implements this component
+     * @throws ClassNotFoundException
+     * @throws NoClassDefFoundError
+     */
+    public Class innerGetTypeClass() throws ClassNotFoundException {
+        if (clazz != null) {
+            return clazz;
+        }
+        if (classLoader == null) {
+            clazz = Class.forName(className);
+        } else {
+            clazz = classLoader.loadClass(className);
         }
         return clazz;
     }
@@ -238,23 +252,9 @@ public class AntTypeDefinition {
      */
     private Object createAndSet(Project project, Class c) {
         try {
-            java.lang.reflect.Constructor ctor = null;
-            boolean noArg = false;
-            // DataType can have a "no arg" constructor or take a single
-            // Project argument.
-            try {
-                ctor = c.getConstructor(new Class[0]);
-                noArg = true;
-            } catch (NoSuchMethodException nse) {
-                ctor = c.getConstructor(new Class[] {Project.class});
-                noArg = false;
-            }
-            Object o = ctor.newInstance(
-                ((noArg) ? new Object[0] : new Object[] {project}));
-
-            project.setProjectReference(o);
+            Object o = innerCreateAndSet(c, project);
             return o;
-        } catch (java.lang.reflect.InvocationTargetException ex) {
+        } catch (InvocationTargetException ex) {
             Throwable t = ex.getTargetException();
             throw new BuildException(
                 "Could not create type " + name + " due to " + t, t);
@@ -262,10 +262,58 @@ public class AntTypeDefinition {
             String msg = "Type " + name + ": A class needed by class "
                 + c + " cannot be found: " + ncdfe.getMessage();
             throw new BuildException(msg, ncdfe);
-       } catch (Throwable t) {
+        } catch (NoSuchMethodException nsme) {
+            throw new BuildException("Could not create type " + name
+                    + " as the class " + c +" has no compatible constructor" );
+        } catch (InstantiationException nsme) {
+            throw new BuildException("Could not create type " +
+                    name
+                    + " as the class " + c + " is abstract");
+        } catch(IllegalAccessException e) {
+            throw new BuildException("Could not create type " +
+                    name
+                    + " as the constructor " + c + " is not accessible");
+        } catch (Throwable t) {
             throw new BuildException(
                 "Could not create type " + name + " due to " + t, t);
         }
+    }
+
+    /**
+     * Inner implementation of the {@see #createAndSet} logic, with no
+     * exception catching
+     * @param newclass class to create
+     * @param project
+     * @return a newly constructed and bound instance.
+     * @throws NoSuchMethodException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws InvocationTargetException
+     */
+    public Object innerCreateAndSet(Class newclass, Project project)
+            throws NoSuchMethodException,
+            InstantiationException,
+            IllegalAccessException,
+            InvocationTargetException {
+        Constructor ctor = null;
+        boolean noArg = false;
+        // DataType can have a "no arg" constructor or take a single
+        // Project argument.
+        try {
+            ctor = newclass.getConstructor(new Class[0]);
+            noArg = true;
+        } catch (NoSuchMethodException nse) {
+            //can throw the same exception, if there is no this(Project) ctor.
+            ctor = newclass.getConstructor(new Class[] {Project.class});
+            noArg = false;
+        }
+        //now we instantiate
+        Object o = ctor.newInstance(
+            ((noArg) ? new Object[0] : new Object[] {project}));
+
+        //set up project references.
+        project.setProjectReference(o);
+        return o;
     }
 
     /**

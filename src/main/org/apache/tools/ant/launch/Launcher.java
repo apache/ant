@@ -32,7 +32,10 @@ import java.util.Iterator;
  * @since Ant 1.6
  */
 public class Launcher {
-    /** The Ant Home property */
+    /**
+     * Ant home directory
+     * Value : {@value}
+     */
     public static final String ANTHOME_PROPERTY = "ant.home";
 
     /** The Ant Library Directory property */
