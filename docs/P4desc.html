@@ -1,0 +1,90 @@
+<html>
+
+<body>
+
+<h2><a name="perforce">Perforce</a></h2>
+
+<h3>Description</h3>
+
+<p>Handles packages/modules retrieved from a <a href="http://www.perforce.com/">Perforce</a> repository.</p>
+
+<h3>Parameters</h3>
+
+<table border="1" cellpadding="2" cellspacing="0">
+    <tr>
+        <td valign="top"><b>Attribute</b></td>
+        <td valign="top"><b>Description</b></td>
+        <td align="center" valign="top"><b>Required</b></td>
+    </tr>
+    <tr>
+        <td valign="top">localpath</td>
+        <td valign="top">The local path of the file/directory to
+        write file(s) to.</td>
+        <td align="center" valign="top">Yes</td>
+    </tr>
+    <tr>
+        <td>user</td>
+        <td>Specifies the user name, overriding the value of $P4USER,
+        $USER, and $USERNAME in the environment.</td>
+        <td><p align="center">No</p>
+        </td>
+    </tr>
+    <tr>
+        <td>port</td>
+        <td>Specifies the server's listen address, overriding the
+        value of $P4PORT in the environment and the default (perforce:1666).</td>
+        <td><p align="center">No</p>
+        </td>
+    </tr>
+    <tr>
+        <td valign="top">version</td>
+        <td valign="top">The revision number of the file being
+        extracted.</td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">date</td>
+        <td valign="top">Get files as of this date. Either [yyyy/mm/dd]
+        or [yyyy/mm/dd:hh:mm:ss]. Note that [yyyy/mm/dd] means [yyyy/mm/dd:00:00:00],
+        so if you want to include all events on that day refer to
+        the next day.</td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">label</td>
+        <td valign="top">A label from which to check out files.</td>
+        <td align="center" valign="top">No</td>
+    </tr>
+    <tr>
+        <td valign="top">force</td>
+        <td valign="top">&quot;[true|false]&quot;. Forces
+        resynchronization even if the client already has the
+        file, and clobbers writable files. This flag doesn't
+        affect open files.</td>
+        <td align="center" valign="top">No, default &quot;false&quot;</td>
+    </tr>
+    <tr>
+        <td>change</td>
+        <td>Gets the file(s) as they were when a specified change
+        number was applied.</td>
+        <td><p align="center">No</p>
+        </td>
+    </tr>
+</table>
+
+<h3>Examples</h3>
+
+<pre>  &lt;perforce localpath=&quot;//path/to/source/...&quot;
+       force=&quot;true&quot;
+       change=&quot;4513&quot;
+  /&gt;</pre>
+
+<p>syncs the files in the source directory that are in the
+Perforce repository, as of change number 4513, overwriting any
+modified files in the current source tree is needed.</p>
+
+<pre>  &lt;perforce localpath=&quot;//path/to/source/...&quot; /&gt;</pre>
+
+<p>Syncs with the latest version of the file in the repository.</p>
+</body>
+</html>
