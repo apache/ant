@@ -532,6 +532,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a "Select" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addSelector(SelectSelector selector) {
         appendSelector(selector);
@@ -539,6 +540,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add an "And" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addAnd(AndSelector selector) {
         appendSelector(selector);
@@ -546,6 +548,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add an "Or" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addOr(OrSelector selector) {
         appendSelector(selector);
@@ -553,6 +556,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a "Not" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addNot(NotSelector selector) {
         appendSelector(selector);
@@ -560,6 +564,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a "None" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addNone(NoneSelector selector) {
         appendSelector(selector);
@@ -567,6 +572,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a majority selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addMajority(MajoritySelector selector) {
         appendSelector(selector);
@@ -574,6 +580,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a selector date entry on the selector list
+     * @param selector the selector to add
      */
     public void addDate(DateSelector selector) {
         appendSelector(selector);
@@ -581,6 +588,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a selector size entry on the selector list
+     * @param selector the selector to add
      */
     public void addSize(SizeSelector selector) {
         appendSelector(selector);
@@ -588,6 +596,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a DifferentSelector entry on the selector list
+     * @param selector the selector to add
      */
     public void addDifferent(DifferentSelector selector) {
         appendSelector(selector);
@@ -595,6 +604,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a selector filename entry on the selector list
+     * @param selector the selector to add
      */
     public void addFilename(FilenameSelector selector) {
         appendSelector(selector);
@@ -602,6 +612,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a selector type entry on the selector list
+     * @param selector the selector to add
      */
     public void addType(TypeSelector selector) {
         appendSelector(selector);
@@ -609,6 +620,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add an extended selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addCustom(ExtendSelector selector) {
         appendSelector(selector);
@@ -616,6 +628,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a contains selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addContains(ContainsSelector selector) {
         appendSelector(selector);
@@ -623,6 +636,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a present selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addPresent(PresentSelector selector) {
         appendSelector(selector);
@@ -630,6 +644,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a depth selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addDepth(DepthSelector selector) {
         appendSelector(selector);
@@ -637,6 +652,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a depends selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addDepend(DependSelector selector) {
         appendSelector(selector);
@@ -644,6 +660,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add a regular expression selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addContainsRegexp(ContainsRegexpSelector selector) {
         appendSelector(selector);
@@ -651,6 +668,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
     /**
      * add an arbitary selector
+     * @param selector the selector to add
      * @since Ant 1.6
      */
     public void add(FileSelector selector) {

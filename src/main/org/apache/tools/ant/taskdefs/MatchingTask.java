@@ -289,7 +289,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * Returns the set of selectors as an array.
-     *
+     * @param p the current project
      * @return an array of selectors in this container
      */
     public FileSelector[] getSelectors(Project p) {
@@ -318,6 +318,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a "Select" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addSelector(SelectSelector selector) {
         fileset.addSelector(selector);
@@ -325,6 +326,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add an "And" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addAnd(AndSelector selector) {
         fileset.addAnd(selector);
@@ -332,6 +334,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add an "Or" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addOr(OrSelector selector) {
         fileset.addOr(selector);
@@ -339,6 +342,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a "Not" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addNot(NotSelector selector) {
         fileset.addNot(selector);
@@ -346,6 +350,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a "None" selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addNone(NoneSelector selector) {
         fileset.addNone(selector);
@@ -353,6 +358,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a majority selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addMajority(MajoritySelector selector) {
         fileset.addMajority(selector);
@@ -360,6 +366,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a selector date entry on the selector list
+     * @param selector the selector to add
      */
     public void addDate(DateSelector selector) {
         fileset.addDate(selector);
@@ -367,6 +374,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a selector size entry on the selector list
+     * @param selector the selector to add
      */
     public void addSize(SizeSelector selector) {
         fileset.addSize(selector);
@@ -374,6 +382,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a selector filename entry on the selector list
+     * @param selector the selector to add
      */
     public void addFilename(FilenameSelector selector) {
         fileset.addFilename(selector);
@@ -381,6 +390,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add an extended selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addCustom(ExtendSelector selector) {
         fileset.addCustom(selector);
@@ -388,6 +398,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a contains selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addContains(ContainsSelector selector) {
         fileset.addContains(selector);
@@ -395,6 +406,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a present selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addPresent(PresentSelector selector) {
         fileset.addPresent(selector);
@@ -402,6 +414,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a depth selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addDepth(DepthSelector selector) {
         fileset.addDepth(selector);
@@ -409,6 +422,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a depends selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addDepend(DependSelector selector) {
         fileset.addDepend(selector);
@@ -416,6 +430,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a regular expression selector entry on the selector list
+     * @param selector the selector to add
      */
     public void addContainsRegexp(ContainsRegexpSelector selector) {
         fileset.addContainsRegexp(selector);
@@ -423,7 +438,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a type selector entry on the type list
-     * @param selector
+     * @param selector the selector to add
      * @since ant 1.6
      */
     public void addDifferent(DifferentSelector selector) {
@@ -432,7 +447,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add a type selector entry on the type list
-     * @param selector
+     * @param selector the selector to add
      * @since ant 1.6
      */
     public void addType(TypeSelector selector) {
@@ -441,6 +456,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
 
     /**
      * add an arbitary selector
+     * @param selector the selector to add
      * @since Ant 1.6
      */
     public void add(FileSelector selector) {
