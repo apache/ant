@@ -135,7 +135,7 @@ public class RuntimeConfigurable {
             attributes = null;
         }
         if (characters.length() != 0) {
-            ProjectHelper.addText(wrappedObject, characters.toString());
+            ProjectHelper.addText(p, wrappedObject, characters.toString());
             characters.setLength(0);
         }
         Enumeration enum = children.elements();

@@ -140,7 +140,7 @@ public class UnknownElement extends Task {
 
         for (int i=0; i<children.size(); i++) {
             UnknownElement child = (UnknownElement) children.elementAt(i);
-            Object realChild = ih.createElement(parent, child.getTag());
+            Object realChild = ih.createElement(project, parent, child.getTag());
             RuntimeConfigurable childWrapper = parentWrapper.getChild(i);
             childWrapper.setProxy(realChild);
             child.handleChildren(realChild, childWrapper);

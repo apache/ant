@@ -490,7 +490,7 @@ public class ProjectHelper {
         public void characters(char[] buf, int start, int end) throws SAXParseException {
             if (wrapper == null) {
                 try {
-                    addText(task, buf, start, end);
+                    addText(project, task, buf, start, end);
                 } catch (BuildException exc) {
                     throw new SAXParseException(exc.getMessage(), locator, exc);
                 }
@@ -536,7 +536,7 @@ public class ProjectHelper {
                     child = new UnknownElement(propType.toLowerCase());
                     ((UnknownElement) target).addChild((UnknownElement) child);
                 } else {
-                    child = ih.createElement(target, propType.toLowerCase());
+                    child = ih.createElement(project, target, propType.toLowerCase());
                 }
 
                 configureId(child, attrs);
@@ -556,7 +556,7 @@ public class ProjectHelper {
         public void characters(char[] buf, int start, int end) throws SAXParseException {
             if (parentWrapper == null) {
                 try {
-                    addText(child, buf, start, end);
+                    addText(project, child, buf, start, end);
                 } catch (BuildException exc) {
                     throw new SAXParseException(exc.getMessage(), locator, exc);
                 }
@@ -609,7 +609,7 @@ public class ProjectHelper {
 
         public void characters(char[] buf, int start, int end) throws SAXParseException {
             try {
-                addText(element, buf, start, end);
+                addText(project, element, buf, start, end);
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), locator, exc);
             }
@@ -648,15 +648,15 @@ public class ProjectHelper {
     /**
      * Adds the content of #PCDATA sections to an element.
      */
-    public static void addText(Object target, char[] buf, int start, int end)
+    public static void addText(Project project, Object target, char[] buf, int start, int end)
         throws BuildException {
-        addText(target, new String(buf, start, end));
+        addText(project, target, new String(buf, start, end));
     }
 
     /**
      * Adds the content of #PCDATA sections to an element.
      */
-    public static void addText(Object target, String text)
+    public static void addText(Project project, Object target, String text)
         throws BuildException {
 
         if (text == null || text.trim().length() == 0) {
@@ -666,7 +666,7 @@ public class ProjectHelper {
         if(target instanceof TaskAdapter)
             target = ((TaskAdapter) target).getProxy();
 
-        IntrospectionHelper.getHelper(target.getClass()).addText(target, text);
+        IntrospectionHelper.getHelper(target.getClass()).addText(project, target, text);
     }
 
 

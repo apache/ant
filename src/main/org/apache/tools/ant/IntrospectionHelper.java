@@ -219,8 +219,9 @@ public class IntrospectionHelper  {
         throws BuildException {
         AttributeSetter as = (AttributeSetter) attributeSetters.get(attributeName);
         if (as == null) {
-            String msg = "Class " + element.getClass().getName() +
-                " doesn't support the \"" + attributeName + "\" attribute";
+	    String msg = getElementName(p, element) +
+            //String msg = "Class " + element.getClass().getName() +
+                " doesn't support the \"" + attributeName + "\" attribute.";
             throw new BuildException(msg);
         }
         try {
@@ -240,10 +241,11 @@ public class IntrospectionHelper  {
     /**
      * Adds PCDATA areas.
      */
-    public void addText(Object element, String text) {
+    public void addText(Project project, Object element, String text) {
         if (addText == null) {
-            String msg = "Class " + element.getClass().getName() +
-                " doesn't support nested text elements";
+	   String msg = getElementName(project, element) +
+           //String msg = "Class " + element.getClass().getName() +
+                " doesn't support nested text data.";
             throw new BuildException(msg);
         }
         try {
@@ -263,12 +265,13 @@ public class IntrospectionHelper  {
     /**
      * Creates a named nested element.
      */
-    public Object createElement(Object element, String elementName) 
+    public Object createElement(Project project, Object element, String elementName) 
         throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
         if (nc == null) {
-            String msg = "Class " + element.getClass().getName() +
-                " doesn't support the nested \"" + elementName + "\" element";
+	    String msg = getElementName(project, element) +
+            //String msg = "Class " + element.getClass().getName() +
+                " doesn't support the nested \"" + elementName + "\" element.";
             throw new BuildException(msg);
         }
         try {
@@ -296,7 +299,7 @@ public class IntrospectionHelper  {
         Class nt = (Class) nestedTypes.get(elementName);
         if (nt == null) {
             String msg = "Class " + bean.getName() +
-                " doesn't support the nested \"" + elementName + "\" element";
+                " doesn't support the nested \"" + elementName + "\" element.";
             throw new BuildException(msg);
         }
         return nt;
@@ -310,7 +313,7 @@ public class IntrospectionHelper  {
         Class at = (Class) attributeTypes.get(attributeName);
         if (at == null) {
             String msg = "Class " + bean.getName() +
-                " doesn't support the \"" + attributeName + "\" attribute";
+                " doesn't support the \"" + attributeName + "\" attribute.";
             throw new BuildException(msg);
         }
         return at;
@@ -498,6 +501,37 @@ public class IntrospectionHelper  {
         }
         
         return null;
+    }
+
+    protected String getElementName(Project project, Object element)
+    {
+	Hashtable elements = project.getTaskDefinitions();
+	String typeName = "task";
+	if (!elements.contains( element.getClass() ))
+	{
+	    elements = project.getDataTypeDefinitions();
+	    typeName = "data type";
+	    if (!elements.contains( element.getClass() ))
+	    {
+		elements = null;
+	    }
+	}
+
+	if (elements != null)
+	{
+	    Enumeration e = elements.keys();
+	    while (e.hasMoreElements())
+	    {
+		String elementName = (String) e.nextElement();
+		Class elementClass = (Class) elements.get( elementName );
+		if ( element.getClass().equals( elementClass ) )
+		{
+		    return "The <" + elementName + "> " + typeName;
+		}
+	    }
+	}
+	
+	return "Class " + element.getClass().getName();
     }
 
     /**
