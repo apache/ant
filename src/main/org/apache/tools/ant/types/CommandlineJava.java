@@ -189,7 +189,7 @@ public class CommandlineJava implements Cloneable {
                              result, pos, sysProperties.size());
             pos += sysProperties.size();
         }
-        if (fullClasspath != null && fullClasspath.size() > 0) {
+        if (fullClasspath != null && fullClasspath.toString().trim().length() > 0) {
             result[pos++] = "-classpath";
             result[pos++] = fullClasspath.toString();
         }
