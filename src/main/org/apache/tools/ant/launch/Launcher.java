@@ -121,8 +121,7 @@ public class Launcher {
             while (myTokenizer.hasMoreElements()) {
                 String elementName = myTokenizer.nextToken();
                 File element = new File(elementName);
-                if (elementName.startsWith("%") && elementName.endsWith("%")
-                    && !element.exists()) {
+                if (elementName.indexOf("%") != -1 && !element.exists()) {
                     continue;
                 }
                 if (element.isDirectory()) {
@@ -132,6 +131,7 @@ public class Launcher {
                         libPathURLs.add(dirURLs[j]);
                     }
                 }
+                
                 libPathURLs.add(element.toURL());
             }
         }
