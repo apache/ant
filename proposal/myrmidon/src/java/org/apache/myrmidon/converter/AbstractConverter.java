@@ -46,7 +46,9 @@ public abstract class AbstractConverter
      * @return the converted object
      * @exception Exception if an error occurs
      */
-    public Object convert( final Class destination, final Object original, Context context )
+    public Object convert( final Class destination,
+                           final Object original,
+                           final Context context )
         throws ConverterException
     {
         if( m_destination != destination )
