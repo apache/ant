@@ -74,14 +74,19 @@ public abstract class BaseSelectorTest extends TestCase {
 
     private Project project;
     private TaskdefForMakingBed tbed = null;
-    protected String basedirname = "src/etc/testcases/types/selectortest";
+    protected String basedirname = "src/etc/testcases/types";
+    protected String beddirname = basedirname + "/selectortest";
+    protected String mirrordirname = basedirname + "/selectortest2";
     protected File basedir = new File(basedirname);
+    protected File beddir = new File(beddirname);
+    protected File mirrordir = new File(mirrordirname);
     protected String[] filenames = {".","asf-logo.gif.md5","asf-logo.gif.bz2",
             "asf-logo.gif.gz","copy.filterset.filtered","zip/asf-logo.gif.zip",
             "tar/asf-logo.gif.tar","tar/asf-logo-huge.tar",
             "tar/gz/asf-logo.gif.tar.gz","tar/bz2/asf-logo.gif.tar.bz2",
             "tar/bz2/asf-logo-huge.tar.bz2","tar/bz2"};
     protected File[] files = new File[filenames.length];
+    protected File[] mirrorfiles = new File[filenames.length];
 
     public BaseSelectorTest(String name) {
         super(name);
@@ -89,9 +94,11 @@ public abstract class BaseSelectorTest extends TestCase {
 
     public void setUp() {
         project = new Project();
-        project.setBasedir(".");
+        project.init();
+        project.setBaseDir(basedir);
         for (int x = 0; x < files.length; x++) {
-            files[x] = new File(basedir,filenames[x]);
+            files[x] = new File(beddir,filenames[x]);
+            mirrorfiles[x] = new File(mirrordir,filenames[x]);
         }
     }
 
@@ -100,6 +107,10 @@ public abstract class BaseSelectorTest extends TestCase {
      */
     public abstract BaseSelector getInstance();
 
+
+    public Project getProject() {
+        return project;
+    }
 
     /**
      * This is a test that all Selectors derived from BaseSelector can
@@ -113,7 +124,7 @@ public abstract class BaseSelectorTest extends TestCase {
         }
         s.setError("test error");
         try {
-            s.isSelected(basedir,filenames[0],files[0]);
+            s.isSelected(beddir,filenames[0],files[0]);
             fail("Cannot cause BuildException when setError() is called");
         } catch (BuildException be) {
             assertEquals("test error",
@@ -128,6 +139,26 @@ public abstract class BaseSelectorTest extends TestCase {
      * a string of "T"s amd "F"s
      */
     public String selectionString(FileSelector selector) {
+        return selectionString(beddir,files,selector);
+    }
+
+    /**
+     * This is a helper method that takes a selector and calls its
+     * isSelected() method on each file in the mirror testbed. This
+     * variation is used for dependency checks and to get around the
+     * limitations in the touch task when running JDK 1.1. It returns
+     * a string of "T"s amd "F"s.
+     */
+    public String mirrorSelectionString(FileSelector selector) {
+        return selectionString(mirrordir,mirrorfiles,selector);
+    }
+
+    /**
+     * Worker method for the two convenience methods above. Applies a
+     * selector on a set of files passed in and returns a string of
+     * "T"s amd "F"s from applying the selector to each file.
+     */
+    public String selectionString(File basedir, File[] files, FileSelector selector) {
         StringBuffer buf = new StringBuffer();
         for (int x = 0; x < files.length; x++) {
             if (selector.isSelected(basedir,filenames[x],files[x])) {
@@ -168,6 +199,30 @@ public abstract class BaseSelectorTest extends TestCase {
     }
 
 
+    /**
+     * <p>Creates a mirror of the testbed for use in dependency checks.</p>
+     *
+     * <p>Note that the right way to call this is within a try block,
+     * with a finally clause that calls cleanupMirror(). You place tests of
+     * the isSelected() method within the try block.</p>
+     */
+    protected void makeMirror() {
+        tbed = new TaskdefForMakingBed("mirrorfiles");
+        tbed.setUp();
+        tbed.makeMirror();
+    }
+
+    /**
+     * Cleans up the mirror testbed by calling a target in the
+     * <code>src/etc/testcases/types/selectors.xml</code> file.
+     */
+    protected void cleanupMirror() {
+        if (tbed != null) {
+            tbed.deleteMirror();
+            tbed = null;
+        }
+    }
+
     private class TaskdefForMakingBed extends BuildFileTest {
 
         TaskdefForMakingBed(String name) {
@@ -184,6 +239,14 @@ public abstract class BaseSelectorTest extends TestCase {
 
         public void makeTestbed() {
             executeTarget("setupfiles");
+        }
+
+        public void makeMirror() {
+            executeTarget("mirrorfiles");
+        }
+
+        public void deleteMirror() {
+            executeTarget("cleanup.mirrorfiles");
         }
     }
 

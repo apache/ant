@@ -5,6 +5,8 @@
   <property name="etc.dir" value=".."/>
   <property name="test.dir"
           value="selectortest"/>
+  <property name="mirror.dir"
+          value="selectortest2"/>
 
   <target name="setupfiles">
     <mkdir dir="${test.dir}" />
@@ -55,6 +57,29 @@
 
   <target name="cleanup">
     <delete dir="${test.dir}" />
+  </target>
+
+  <target name="mirrorfiles">
+    <mkdir dir="${mirror.dir}" />
+    <mkdir dir="${mirror.dir}/zip" />
+    <mkdir dir="${mirror.dir}/tar" />
+    <mkdir dir="${mirror.dir}/tar/gz" />
+    <mkdir dir="${mirror.dir}/tar/bz2" />
+    <touch file="${mirror.dir}/asf-logo.gif.md5"/>
+    <touch file="${mirror.dir}/asf-logo.gif.bz2"/>
+    <sleep seconds="2"/>
+    <touch file="${mirror.dir}/zip/asf-logo.gif.zip"/>
+    <sleep seconds="3"/>
+    <touch file="${mirror.dir}/tar/asf-logo.gif.tar"/>
+    <sleep seconds="2"/>
+    <touch file="${mirror.dir}/tar/asf-logo-huge.tar"/>
+    <touch file="${mirror.dir}/tar/gz/asf-logo.gif.tar.gz"/>
+    <touch file="${mirror.dir}/tar/bz2/asf-logo.gif.tar.bz2"/>
+    <touch file="${mirror.dir}/tar/bz2/asf-logo-huge.tar.bz2"/>
+  </target>
+
+  <target name="cleanup.mirrorfiles">
+    <delete dir="${mirror.dir}" />
   </target>
 
 </project>
