@@ -121,6 +121,9 @@ public class Copy extends Task {
     private FileUtils fileUtils;
     private String encoding = null;
 
+    /**
+     * Copy task constructor. 
+     */
     public Copy() {
         fileUtils = FileUtils.newFileUtils();
     }

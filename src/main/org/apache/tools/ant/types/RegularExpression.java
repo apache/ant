@@ -97,6 +97,7 @@ import org.apache.tools.ant.util.regexp.RegexpFactory;
  * @ant.datatype name="regexp"
  */
 public class RegularExpression extends DataType {
+    /** Name of this data type */
     public static final String DATA_TYPE_NAME = "regexp";
 
     // The regular expression factory

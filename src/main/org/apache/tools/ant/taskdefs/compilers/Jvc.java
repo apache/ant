@@ -73,6 +73,11 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class Jvc extends DefaultCompilerAdapter {
 
+    /**
+     * Run the compilation.
+     *
+     * @exception BuildException if the compilation has problems.
+     */
     public boolean execute() throws BuildException {
         attributes.log("Using jvc compiler", Project.MSG_VERBOSE);
 

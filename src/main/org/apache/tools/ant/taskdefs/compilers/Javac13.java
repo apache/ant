@@ -82,6 +82,11 @@ public class Javac13 extends DefaultCompilerAdapter {
      */
     private static final int MODERN_COMPILER_SUCCESS = 0;
 
+    /**
+     * Run the compilation.
+     *
+     * @exception BuildException if the compilation has problems.
+     */
     public boolean execute() throws BuildException {
         attributes.log("Using modern compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupModernJavacCommand();

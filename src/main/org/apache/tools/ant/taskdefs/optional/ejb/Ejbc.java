@@ -65,7 +65,7 @@ import java.io.File;
 /**
  * Build EJB support classes using Weblogic's ejbc tool from a directory containing
  * a set of deployment descriptors.
- 
+ *
  *
  * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */

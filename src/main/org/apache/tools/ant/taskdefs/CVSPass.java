@@ -106,6 +106,9 @@ public class CVSPass extends Task {
         243, 233, 253, 240, 194, 250, 191, 155, 142, 137, 245, 235, 163, 242, 178, 152 
     };
 
+    /**
+     * Create a CVS task using the default cvspass file location.
+     */
     public CVSPass(){
         passFile = new File(System.getProperty("user.home") + "/.cvspass");
     }

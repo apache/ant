@@ -535,7 +535,9 @@ public class Ant extends Task {
     public static class Reference
         extends org.apache.tools.ant.types.Reference {
 
-        public Reference() {super();}
+        public Reference() {
+            super();
+        }
 
         private String targetid = null;
 

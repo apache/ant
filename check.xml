@@ -1,13 +1,15 @@
 <project default="checkstyle" name="CheckAnt">
   <property name="java.dir" value="src/main"/>
   <property name="tocheck" value="**/*.java"/>  
-
+  <property name="javadoc.scope" value="public"/>
+  
   <target name="checkstyle">
     <taskdef name="checkstyle"
              classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
     <checkstyle headerFile="src/etc/RequiredHeader.txt"
                 headerIgnoreLine="4"
-                allowProtected="true">
+                allowProtected="true"
+                javadocScope="${javadoc.scope}">
       <fileset dir="${java.dir}">
         <include name="${tocheck}"/>
       </fileset>

@@ -79,6 +79,11 @@ import java.lang.reflect.Method;
  */
 public class Javac12 extends DefaultCompilerAdapter {
 
+    /**
+     * Run the compilation.
+     *
+     * @exception BuildException if the compilation has problems.
+     */
     public boolean execute() throws BuildException {
         attributes.log("Using classic compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupJavacCommand(true);

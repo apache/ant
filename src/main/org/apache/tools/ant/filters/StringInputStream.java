@@ -100,7 +100,7 @@ public class StringInputStream
     }
 
     /**
-     * Resetthe StringReader
+     * Reset the StringReader.
      */
     public synchronized void reset() throws IOException {
         in.reset();

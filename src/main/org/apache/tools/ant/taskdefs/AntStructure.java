@@ -83,7 +83,6 @@ import java.io.IOException;
  *
  * @ant.task category="xml"
  */
-
 public class AntStructure extends Task {
 
     private final String lSep = System.getProperty("line.separator");
@@ -103,6 +102,11 @@ public class AntStructure extends Task {
         this.output = output;
     }
 
+    /**
+     * Build the antstructure DTD.
+     *
+     * @exception BuildException if the DTD cannot be written.
+     */
     public void execute() throws BuildException {
 
         if (output == null) {

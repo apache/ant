@@ -182,11 +182,11 @@ public abstract class AbstractCvsTask extends Task {
         super();
     }
 
-    public void setExecuteStreamHandler(ExecuteStreamHandler handler){
+    public void setExecuteStreamHandler(ExecuteStreamHandler handler) {
         this.executeStreamHandler = handler;
     }
 
-    protected ExecuteStreamHandler getExecuteStreamHandler(){
+    protected ExecuteStreamHandler getExecuteStreamHandler() {
 
         if (this.executeStreamHandler == null) {
             setExecuteStreamHandler(new PumpStreamHandler(getOutputStream(), 
@@ -197,12 +197,12 @@ public abstract class AbstractCvsTask extends Task {
     }
 
 
-    protected void setOutputStream(OutputStream outputStream){
+    protected void setOutputStream(OutputStream outputStream) {
 
         this.outputStream = outputStream;
     }
 
-    protected OutputStream getOutputStream(){
+    protected OutputStream getOutputStream() {
 
         if (this.outputStream == null) {
 
@@ -224,12 +224,12 @@ public abstract class AbstractCvsTask extends Task {
         return this.outputStream;
     }
 
-    protected void setErrorStream(OutputStream errorStream){
+    protected void setErrorStream(OutputStream errorStream) {
 
         this.errorStream = errorStream;
     }
 
-    protected OutputStream getErrorStream(){
+    protected OutputStream getErrorStream() {
 
         if (this.errorStream == null) {
 

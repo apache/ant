@@ -76,6 +76,9 @@ public class Ear extends Jar {
     private File deploymentDescriptor;
     private boolean descriptorAdded;
 
+    /**
+     * Create an Ear task.
+     */
     public Ear() {
         super();
         archiveType = "ear";

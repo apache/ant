@@ -114,6 +114,12 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
+    /**
+     * Set the Javac instance which contains the configured compilation
+     * attributes.
+     *
+     * @param attributes a configured Javac task.
+     */
     public void setJavac(Javac attributes) {
         this.attributes = attributes;
         src = attributes.getSrcdir();
@@ -138,6 +144,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         memoryMaximumSize = attributes.getMemoryMaximumSize();
     }
 
+    /**
+     * Get the Javac task instance associated with this compiler adapter
+     *
+     * @return the configured Javac task instance used by this adapter.
+     */
     public Javac getJavac() {
         return attributes;
     }

@@ -71,6 +71,7 @@ import org.apache.tools.ant.Project;
  * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class Substitution extends DataType {
+    /** The name of this data type */
     public static final String DATA_TYPE_NAME = "substitition";
 
     private String expression;

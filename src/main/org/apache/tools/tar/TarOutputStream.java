@@ -71,8 +71,13 @@ import java.io.IOException;
  * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
  */
 public class TarOutputStream extends FilterOutputStream {
+    /** Fail if a long file name is required in the archive. */
     public static final int LONGFILE_ERROR = 0;
+    
+    /** Long paths will be truncated in the archive. */
     public static final int LONGFILE_TRUNCATE = 1;
+    
+    /** GNU tar extensions are used to store long file names in the archive. */
     public static final int LONGFILE_GNU = 2;
     
     protected boolean   debug;
