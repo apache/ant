@@ -61,6 +61,7 @@ import java.util.Vector;
 
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Available;
+import org.apache.tools.ant.taskdefs.Checksum;
 import org.apache.tools.ant.taskdefs.UpToDate;
 
 /**
@@ -96,6 +97,13 @@ public abstract class ConditionBase extends ProjectComponent {
      * @since 1.1
      */
     public void addAvailable(Available a) {conditions.addElement(a);}
+
+    /**
+     * Add an &lt;checksum&gt; condition.
+     *
+     * @since 1.4
+     */
+    public void addAvailable(Checksum c) {conditions.addElement(c);}
 
     /**
      * Add an &lt;uptodate&gt; condition.
