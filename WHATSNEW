@@ -42,6 +42,8 @@ Fixed bugs:
 Other changes:
 --------------
 
+* Added support for specifying CVS_RSH in the <cvs/> task
+
 * New tasks bzip2 and bunzip2 to pack and unpack files using the 
   BZip2 alogrithm, replaceregexp, checksum
 

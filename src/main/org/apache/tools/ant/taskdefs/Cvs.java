@@ -54,17 +54,17 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Environment;
-import java.io.File;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Environment;
 
 /**
  *
@@ -82,6 +82,11 @@ public class Cvs extends Task {
      * the CVSROOT variable.
      */
     private String cvsRoot;
+
+    /**
+     * the CVS_RSH variable.
+     */
+    private String cvsRsh;
 
     /**
      * the package/module to check out.
@@ -179,9 +184,16 @@ public class Cvs extends Task {
             env.addVariable(var);
         }
 
+        if(cvsRsh!=null){
+            Environment.Variable var = new Environment.Variable();
+            var.setKey("CVS_RSH");
+            var.setValue(String.valueOf(cvsRsh));
+            env.addVariable(var);
+        }
+
         ExecuteStreamHandler streamhandler = null;
         OutputStream outputstream = null;
-        OutputStream errorstream = null; 
+        OutputStream errorstream = null;
         if (error == null && output == null) {
             streamhandler = new LogStreamHandler(this, Project.MSG_INFO,
                                                  Project.MSG_WARN);
@@ -210,7 +222,7 @@ public class Cvs extends Task {
             streamhandler = new PumpStreamHandler(outputstream, errorstream);
         }
 
-        Execute exe = new Execute(streamhandler, 
+        Execute exe = new Execute(streamhandler,
                                   null);
 
         exe.setAntRun(project);
@@ -220,10 +232,10 @@ public class Cvs extends Task {
         exe.setCommandline(toExecute.getCommandline());
         exe.setEnvironment(env.getVariables());
         try {
-	    int retCode = exe.execute();
-	    /*Throw an exception if cvs exited with error. (Iulian)*/
-	    if(failOnError && retCode != 0)
-		throw new BuildException("cvs exited with error code "+ retCode);
+            int retCode = exe.execute();
+            /*Throw an exception if cvs exited with error. (Iulian)*/
+            if(failOnError && retCode != 0)
+                throw new BuildException("cvs exited with error code "+ retCode);
         } catch (IOException e) {
             throw new BuildException(e, location);
         } finally {
@@ -241,13 +253,23 @@ public class Cvs extends Task {
     }
 
     public void setCvsRoot(String root) {
-        // Check if not real cvsroot => set it to null 
-        if (root != null) { 
-            if (root.trim().equals("")) 
-                root = null; 
-        } 
+        // Check if not real cvsroot => set it to null
+        if (root != null) {
+            if (root.trim().equals(""))
+                root = null;
+        }
 
         this.cvsRoot = root;
+    }
+
+    public void setCvsRsh(String rsh) {
+        // Check if not real cvsrsh => set it to null
+        if (rsh != null) {
+            if (rsh.trim().equals(""))
+                rsh = null;
+        }
+
+        this.cvsRsh = rsh;
     }
 
     public void setPort(int port){
@@ -266,15 +288,15 @@ public class Cvs extends Task {
         this.pack = p;
     }
 
-    public void setTag(String p) { 
-        // Check if not real tag => set it to null 
+    public void setTag(String p) {
+        // Check if not real tag => set it to null
         if (p != null && p.trim().length() > 0) {
             cmd.createArgument().setValue("-r");
             cmd.createArgument().setValue(p);
         }
-    } 
+    }
 
-    
+
     public void setDate(String p) {
         if(p != null && p.trim().length() > 0) {
             cmd.createArgument().setValue("-D");
@@ -285,11 +307,11 @@ public class Cvs extends Task {
     public void setCommand(String c) {
         this.command = c;
     }
-    
+
     public void setQuiet(boolean q) {
         quiet = q;
     }
-    
+
     public void setNoexec(boolean ne) {
         noexec = ne;
     }
@@ -297,13 +319,13 @@ public class Cvs extends Task {
     public void setOutput(File output) {
         this.output = output;
     }
-    
+
     public void setError(File error) {
         this.error = error;
     }
 
     public void setFailOnError(boolean failOnError) {
-	this.failOnError = failOnError;
+        this.failOnError = failOnError;
     }
 }
 
