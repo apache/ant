@@ -290,7 +290,13 @@
          Create the complete distribution
        ===================================================================
   -->
-  <target name="dist" depends="dist-lite,javadocs">
+  <target name="dist">
+    <antcall target="internal_dist">
+      <param name="dist.dir" value="${dist.name}" />
+    </antcall>
+  </target>  
+  
+  <target name="internal_dist" depends="dist-lite,javadocs">
     <mkdir dir="${dist.docs}"/>
     <mkdir dir="${dist.javadocs}"/>
 
@@ -397,7 +403,7 @@
   <target name="distribution">
     <mkdir dir="${dist.base}"/>
 
-    <antcall target="dist">
+    <antcall target="internal_dist">
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
     <zip zipfile="${dist.base}/${dist.name}-bin.zip" 
@@ -624,6 +630,8 @@
          Main target - runs dist-lite by default                                               
        =================================================================== 
   -->
-  <target name="main" depends="dist-lite"/>
-
+  <target name="main">
+    <antcall target="dist-lite"/>
+  </target>
+  
 </project>
