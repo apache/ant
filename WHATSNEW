@@ -443,6 +443,8 @@ Other changes:
 * <touch>'s datetime attribute can now accept time with a granularity
   of seconds as well.  Bugzilla Report 21014.
 
+* <checksum> has two new properties: totalproperty and todir.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
