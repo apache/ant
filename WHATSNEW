@@ -198,6 +198,9 @@ Other changes:
 * The xml formatter for JUnit will now honor test case names set with
   setName.  Bugzilla Report 17040.
 
+* <concat> now supports filtering and can check timestamps before
+  overriding a file.  Bugzilla Report 18166.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -7,6 +7,12 @@
 
   <property name="world" value="World" />
 
+  <target name="cleanup">
+    <delete file="TESTDEST"/>
+    <delete file="${tmp.file}"/>
+    <delete file="${tmp.file.2}"/>
+  </target>    
+
   <target name="test1">
     <concat>
     </concat>
@@ -52,4 +58,99 @@
     </concat>
   </target>
 
+  <target name="testPath">
+    <concat destfile="${tmp.file.2}">
+      <path path="${tmp.file}"/>
+    </concat>
+  </target>
+
+  <target name="testAppend">
+    <concat destfile="${tmp.file.2}">
+      <path path="${tmp.file}"/>
+    </concat>
+    <concat destfile="${tmp.file.2}" append="true">
+      <path path="${tmp.file}"/>
+    </concat>
+  </target>
+
+  <target name="testfilter">
+    <concat destfile="${tmp.file}">@REPLACEME@</concat>
+    <concat>
+      <path path="${tmp.file}"/>
+      <filterchain>
+        <replacetokens>
+          <token key="REPLACEME" value="REPLACED"/>
+        </replacetokens>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="testnooverwrite">
+    <touch file="${tmp.file.2}"/>
+    <!-- concat.xml is now older than tmp.file.2
+         so the following should not do anything -->
+    <concat destfile="${tmp.file.2}" force="false">
+      <path path="concat.xml"/>
+    </concat>
+  </target>
+
+  <target name="testheaderfooter">
+    <concat>
+      <header filtering="false" trim="yes">
+        header
+      </header>
+      <path path="${tmp.file}"/>
+      <footer filtering="no">footer</footer>
+    </concat>
+  </target>
+
+  <target name="testfileheader">
+    <concat>
+      <header file="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+    </concat>
+  </target>
+
+  <target name="samefile">
+    <touch file="${tmp.file}"/>
+    <concat destfile="${tmp.file}">
+      <path path="${tmp.file}"/>
+    </concat>
+  </target>
+
+  <target name="testfilterinline">
+    <concat>
+      @REPLACEME@
+      <filterchain>
+        <replacetokens>
+          <token key="REPLACEME" value="REPLACED"/>
+        </replacetokens>
+      </filterchain>
+    </concat>
+  </target>
+  
+  <target name="testmultireader">
+    <concat destfile="${tmp.file}">Hello, World
+    </concat>
+    <concat destfile="${tmp.file.2}">Bye, World
+    </concat>
+    <concat>
+      <path path="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+      <path path="${tmp.file}"/>
+      <!-- tailfilter seems to behave a little stange, place two
+           here in case the implementation changes -->
+      <path path="${tmp.file.2}"/>
+      <path path="${tmp.file.2}"/>
+      <filterchain>
+        <tailfilter lines="2"/>
+      </filterchain>
+    </concat>
+  </target>
 </project>

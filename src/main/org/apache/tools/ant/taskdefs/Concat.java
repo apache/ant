@@ -51,18 +51,23 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+
 package org.apache.tools.ant.taskdefs;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.Enumeration;
@@ -72,8 +77,12 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.FilterChain;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.StringUtils; // 1.1
 
 /**
@@ -93,6 +102,7 @@ import org.apache.tools.ant.util.StringUtils; // 1.1
  * </pre>
  *
  * @author <a href="mailto:derek@activate.net">Derek Slager</a>
+ * @author Peter Reilly
  */
 public class Concat extends Task {
 
@@ -127,7 +137,20 @@ public class Concat extends Task {
      * Stores a collection of file sets and/or file lists, used to
      * select multiple files for concatenation.
      */
-    private Vector fileSets = new Vector(); // 1.1
+    private Vector sources = new Vector();
+
+    /** for filtering the concatenated */
+    private Vector        filterChains = null;
+    /** ignore dates on input files */
+    private boolean       forceOverwrite = true;
+    /** String to place at the start of the concatented stream */
+    private TextElement   footer;
+    /** String to place at the end of the concatented stream */
+    private TextElement   header;
+    private Vector        sourceFiles = new Vector();
+
+    /** 1.1 utilities and copy utilities */
+    private static FileUtils     fileUtils = FileUtils.newFileUtils();
 
     // Constructors.
 
@@ -156,27 +179,54 @@ public class Concat extends Task {
     }
 
     /**
-     * Sets the encoding for the input files, used when displaying the
-     * data via the console.
+     * Sets the character encoding
      */
     public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
 
+    /**
+     * Force overwrite existing destination file
+     * @since Ant 1.6
+     */
+    public void setForce(boolean force) {
+        this.forceOverwrite = force;
+    }
+
     // Nested element creators.
+
+    /**
+     * Path of files to concatenate.
+     * @since Ant 1.6
+     */
+     public Path createPath() {
+        Path path = new Path(getProject());
+        sources.addElement(path);
+        return path;
+    }
 
     /**
      * Set of files to concatenate.
      */
     public void addFileset(FileSet set) {
-        fileSets.addElement(set);
+        sources.addElement(set);
     }
 
     /**
      * List of files to concatenate.
      */
     public void addFilelist(FileList list) {
-        fileSets.addElement(list);
+        sources.addElement(list);
+    }
+
+    /**
+     * Adds a FilterChain.
+     * @since Ant 1.6
+     */
+    public void addFilterChain(FilterChain filterChain) {
+        if (filterChains == null)
+            filterChains = new Vector();
+        filterChains.addElement(filterChain);
     }
 
     /**
@@ -195,6 +245,22 @@ public class Concat extends Task {
     }
 
     /**
+     * Add a header to the concatenated output
+     * @since Ant 1.6
+     */
+    public void addHeader(TextElement el) {
+        this.header = el;
+    }
+
+    /**
+     * Add a footer to the concatenated output
+     * @since Ant 1.6
+     */
+    public void addFooter(TextElement el) {
+        this.footer = el;
+    }
+
+    /**
      * This method performs the concatenation.
      */
     public void execute() 
@@ -204,7 +270,7 @@ public class Concat extends Task {
         sanitizeText();
 
         // Sanity check our inputs.
-        if (fileSets.size() == 0 && textBuffer == null) {
+        if (sources.size() == 0 && textBuffer == null) {
             // Nothing to concatenate!
             throw new BuildException("At least one file " + 
                                      "must be provided, or " + 
@@ -214,69 +280,59 @@ public class Concat extends Task {
         // If using filesets, disallow inline text. This is similar to
         // using GNU 'cat' with file arguments -- stdin is simply
         // ignored.
-        if (fileSets.size() > 0 && textBuffer != null) {
+        if (sources.size() > 0 && textBuffer != null) {
             throw new BuildException("Cannot include inline text " + 
                                      "when using filesets.");
         }
 
-        boolean savedAppend = append;
-        try {
-            // Iterate the FileSet collection, concatenating each file as
-            // it is encountered.
-            for (Enumeration e = fileSets.elements(); e.hasMoreElements();) {
-                
-                // Root directory for files.
-                File fileSetBase = null;
-                
-                // List of files.
-                String[] srcFiles = null;
-                
-                // Get the next file set, which could be a FileSet or a
-                // FileList instance.
-                Object next = e.nextElement();
-                
-                if (next instanceof FileSet) {
-                    
-                    FileSet fileSet = (FileSet) next;
-                    
-                    // Get a directory scanner from the file set, which will
-                    // determine the files from the set which need to be
-                    // concatenated.
-                    DirectoryScanner scanner = 
-                        fileSet.getDirectoryScanner(getProject());
-                    
-                    // Determine the root path.
-                    fileSetBase = fileSet.getDir(getProject());
-                    
-                    // Get the list of files.
-                    srcFiles = scanner.getIncludedFiles();
-                    
-                } else if (next instanceof FileList) {
-                    
-                    FileList fileList = (FileList) next;
-                    
-                    // Determine the root path.
-                    fileSetBase = fileList.getDir(getProject());
-                    
-                    // Get the list of files.
-                    srcFiles = fileList.getFiles(getProject());
-                    
-                }
+        // Iterate thru the sources - paths, filesets and filelists
+        for (Enumeration e = sources.elements(); e.hasMoreElements();) {
+            Object o = e.nextElement();
+            if (o instanceof Path) {
+                Path path = (Path) o;
+                checkAddFiles(null, path.list());
 
-                // Concatenate the files.
-                if (srcFiles != null) {
-                    catFiles(fileSetBase, srcFiles);
-                } else {
-                    log("Warning: Concat received empty fileset.", 
-                        Project.MSG_WARN);
+            } else if (o instanceof FileSet) {
+                FileSet fileSet = (FileSet) o;
+                DirectoryScanner scanner =
+                    fileSet.getDirectoryScanner(getProject());
+                checkAddFiles(fileSet.getDir(getProject()),
+                              scanner.getIncludedFiles());
+
+            } else if (o instanceof FileList) {
+                FileList fileList = (FileList) o;
+                checkAddFiles(fileList.getDir(getProject()),
+                              fileList.getFiles(getProject()));
+            }
+        }
+
+        // check if the files are outofdate
+        if (destinationFile != null && !forceOverwrite
+            && (sourceFiles.size() > 0) && destinationFile.exists()) {
+            boolean outofdate = false;
+            for (int i = 0; i < sourceFiles.size(); ++i) {
+                File file = (File) sourceFiles.elementAt(i);
+                if (file.lastModified() > destinationFile.lastModified()) {
+                    outofdate = true;
+                    break;
                 }
             }
-        } finally {
-            append = savedAppend;
+            if (!outofdate) {
+                log(destinationFile + " is up-to-date.", Project.MSG_VERBOSE);
+                return; // no need to do anything
+            }
         }
-        
-        // Now, cat the inline text, if applicable.
-        catText();
+
+        // Do nothing if all the sources are not present
+        // And textBuffer is null
+        if (textBuffer == null && sourceFiles.size() == 0 
+            && header == null && footer == null) {
+            log("No existing files and no nested text, doing nothing", 
+                Project.MSG_INFO);
+            return;
+        }
+
+        cat();
     }
 
     /**
@@ -284,240 +340,132 @@ public class Concat extends Task {
      */
     public void reset() {
         append = false;
+        forceOverwrite = true;
         destinationFile = null;
         encoding = null;
-        fileSets = new Vector();
+        sources.removeAllElements();
+        sourceFiles.removeAllElements();
+        filterChains = null;
+        footer = null;
+        header = null;
     }
 
-    /**
-     * This method concatenates a series of files to a single
-     * destination.
-     *
-     * @param base the base directory for the list of file names.
-     *
-     * @param files the names of the files to be concatenated,
-     * relative to the <code>base</code>.
-     */
-    private void catFiles(File base, String[] files) {
-
-        // First, create a list of absolute paths for the input files.
-        Vector inputFileNames = new Vector();
-        for (int i = 0; i < files.length; i++) {
-
-            File current = new File(base, files[i]);
-
-            // Make sure the file exists. This will rarely fail when
-            // using file sets, but it could be rather common when
-            // using file lists.
-            if (!current.exists()) {
-                // File does not exist, log an error and continue.
-                log("File " + current + " does not exist.", 
-                    Project.MSG_ERR);
+    private void checkAddFiles(File base, String[] filenames) {
+        for (int i = 0; i < filenames.length; ++i) {
+            File file = new File(base, filenames[i]);
+            if (!file.exists()) {
+                log("File " + file + " does not exist.", Project.MSG_ERR);
                 continue;
             }
-
-            inputFileNames.addElement(current.getAbsolutePath());
+            if (destinationFile != null 
+                && fileUtils.fileNameEquals(destinationFile, file)) {
+                throw new BuildException("Input file \"" 
+                                         + file + "\" "
+                                         + "is the same as the output file.");
+            }
+            sourceFiles.addElement(file);
         }
+    }
+    
+    /** perform the concatenation */
+    private void cat() {
+        OutputStream os = null;
+        Reader       reader = null;
+        char[]       buffer = new char[8192];
 
-        final int len = inputFileNames.size();
-        if (len == 0) {
-            log("Warning: Could not find any of the files specified " +
-                "in concat task.", Project.MSG_WARN);
-            return;
-        }
+        try {
 
-        String[] input = new String[len];
-        inputFileNames.copyInto(input);
+            if (destinationFile == null) {
+                // Log using WARN so it displays in 'quiet' mode.
+                os = new LogOutputStream(this, Project.MSG_WARN);
+            } else {
+                // ensure that the parent dir of dest file exists
+                File parent = fileUtils.getParentFile(destinationFile);
+                if (!parent.exists()) {
+                    parent.mkdirs();
+                }
 
-        // Next, perform the concatenation.
-        if (encoding == null) {
-            OutputStream os = null;
-            InputStream is = null;
+                os = new FileOutputStream(destinationFile.getAbsolutePath(),
+                                          append);
+            }
 
-            try {
+            PrintWriter writer = null;
+            if (encoding == null) {
+                writer = new PrintWriter(
+                    new BufferedWriter(
+                        new OutputStreamWriter(os)));
+            } else {
+                writer = new PrintWriter(
+                    new BufferedWriter(
+                        new OutputStreamWriter(os, encoding)));
+            }
 
-                if (destinationFile == null) {
-                    // Log using WARN so it displays in 'quiet' mode.
-                    os = new LogOutputStream(this, Project.MSG_WARN);
+
+            if (header != null) {
+                if (header.getFiltering()) {
+                    concatenate(
+                        buffer, writer, new StringReader(header.getValue()));
                 } else {
-                    os = 
-                        new FileOutputStream(destinationFile.getAbsolutePath(),
-                                             append);
-                    
-                    // This flag should only be recognized for the first
-                    // file. In the context of a single 'cat', we always
-                    // want to append.
-                    append = true;
-                }
-            
-                for (int i = 0; i < len; i++) {
-
-                    // Make sure input != output.
-                    if (destinationFile != null &&
-                        destinationFile.getAbsolutePath().equals(input[i])) {
-                        throw new BuildException("Input file \"" 
-                            + destinationFile.getName() 
-                            + "\" is the same as the output file.");
-                    }
-
-                    is = new FileInputStream(input[i]);
-                    byte[] buffer = new byte[8192];
-                    while (true) {
-                        int bytesRead = is.read(buffer);
-                        if (bytesRead == -1) { // EOF
-                            break;
-                        }
-                        
-                        // Write the read data.
-                        os.write(buffer, 0, bytesRead);
-                    }
-                    os.flush();
-                    is.close();
-                    is = null;
-                }
-            } catch (IOException ioex) {
-                throw new BuildException("Error while concatenating: "
-                                         + ioex.getMessage(), ioex);
-            } finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    } catch (Exception ignore) {}
-                }
-                if (os != null) {
-                    try {
-                        os.close();
-                    } catch (Exception ignore) {}
+                    writer.print(header.getValue());
                 }
             }
 
-        } else { // user specified encoding
+            if (textBuffer != null) {
+                reader = new StringReader(
+                    getProject().replaceProperties(textBuffer.toString()));
+            } else {
+                reader =  new MultiReader();
+            }
+            
+            concatenate(buffer, writer, reader);
 
-            Writer out = null;
-            BufferedReader in = null;
-
-            try {
-                if (destinationFile == null) {
-                    // Log using WARN so it displays in 'quiet' mode.
-                    out = new OutputStreamWriter(
-                              new LogOutputStream(this, Project.MSG_WARN));
+            if (footer != null) {
+                if (footer.getFiltering()) {
+                    concatenate(
+                        buffer, writer, new StringReader(footer.getValue()));
                 } else {
-                    out = new OutputStreamWriter(
-                              new FileOutputStream(destinationFile
-                                                   .getAbsolutePath(),
-                                                   append),
-                              encoding);
-                    
-                    // This flag should only be recognized for the first
-                    // file. In the context of a single 'cat', we always
-                    // want to append.
-                    append = true;
+                    writer.print(footer.getValue());
                 }
+            }
 
-                for (int i = 0; i < len; i++) {
-                    in = new BufferedReader(
-                            new InputStreamReader(new FileInputStream(input[i]), 
-                                encoding));
+            writer.flush();
+            os.flush();
 
-                    String line;
-                    char[] buffer = new char[4096];
-                    while (true) {
-                        int charsRead = in.read(buffer);
-                        if (charsRead == -1) { // EOF
-                            break;
-                        }
-                        
-                        // Write the read data.
-                        out.write(buffer, 0, charsRead);
-                    }
-                    out.flush();
-                    in.close();
-                    in = null;
-                }
-            } catch (IOException ioe) {
-                throw new BuildException("Error while concatenating: " 
-                                         + ioe.getMessage(), ioe);
-            } finally {
-                // Close resources.
-                if (in != null) {
-                    try {
-                        in.close();
-                    } catch (Exception ignore) {}
-                }
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (Exception ignore) {}
-                }
+        } catch (IOException ioex) {
+            throw new BuildException("Error while concatenating: "
+                                     + ioex.getMessage(), ioex);
+        } finally {
+            if (reader != null) {
+                try {reader.close();} catch (IOException ignore) {}
+            }
+            if (os != null) {
+                try {os.close();} catch (IOException ignore) {}
             }
         }
     }
 
-    /**
-     * This method concatenates the text which was added inside the
-     * 'concat' tags. If the text between the tags consists only of
-     * whitespace characters, it is ignored.
-     */
-    private void catText() {
 
-        // Check the buffer.
-        if (textBuffer == null) {
-            // No text to write.
-            return;
+    /** Concatenate a single reader to the writer using buffer */
+    private void concatenate(char[] buffer, Writer writer, Reader in)
+        throws IOException {
+        if (filterChains != null) {
+            ChainReaderHelper helper = new ChainReaderHelper();
+            helper.setBufferSize(8192);
+            helper.setPrimaryReader(in);
+            helper.setFilterChains(filterChains);
+            helper.setProject(getProject());
+            in = new BufferedReader(helper.getAssembledReader());
         }
-
-        String text = textBuffer.toString();
-
-        // Replace ${property} strings.
-        text = getProject().replaceProperties(text);
-
-        // Set up a writer if necessary.
-        FileWriter writer = null;
-        if (destinationFile != null) {
-            try {
-                writer = new FileWriter(destinationFile.getAbsolutePath(), 
-                                        append);
-            } catch (IOException ioe) {
-                throw new BuildException("Error creating destination " + 
-                                         "file.", ioe);
+        
+        while (true) {
+            int nRead = in.read(buffer, 0, buffer.length);
+            if (nRead == -1) {
+                break;
             }
+            writer.write(buffer, 0, nRead);
         }
-
-        // Reads the text, line by line.
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new StringReader(text));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (destinationFile == null) {
-                    // Log the line, using WARN so it displays in
-                    // 'quiet' mode.
-                    log(line, Project.MSG_WARN);
-                } else {
-                    writer.write(line);
-                    writer.write(StringUtils.LINE_SEP);
-                    writer.flush();
-                }
-            }
-
-        } catch (IOException ioe) {
-            throw new BuildException("Error while concatenating " + 
-                                     "text.", ioe);
-        } finally {
-            // Close resources.
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (Exception ignore) {}
-            }
-
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (Exception ignore) {}
-            }
-        }
+        
+        writer.flush();
     }
 
     /**
@@ -534,4 +482,204 @@ public class Concat extends Task {
         }
     }
 
-}
+    /**
+     * sub element points to a file or contains text
+     */
+    public static class TextElement {
+        private String   value;
+        private boolean  trimLeading = false;
+        private boolean  trim = false;
+        private boolean  filtering = true;
+
+        /**
+         * whether to filter the text in this element
+         * or not.
+         *
+         * @param filtering true if the text should be filtered.
+         *                  the default value is true.
+         */
+        public void setFiltering(boolean filtering) {
+            this.filtering = filtering;
+        }
+        
+        /** return the filtering attribute */
+        private boolean getFiltering() {
+            return filtering;
+        }
+        
+        /**
+         * set the text using a file
+         * @param file the file to use
+         * @throws BuildException if the file does not exist, or cannot be
+         *                        read
+         */
+        public void setFile(File file) {
+            // non-existing files are not allowed
+            if (!file.exists()) {
+                throw new BuildException("File " + file + " does not exist.");
+            }
+
+            BufferedReader reader = null;
+            try {
+                reader = new BufferedReader(new FileReader(file));
+                value = fileUtils.readFully(reader);
+            } catch (IOException ex) {
+                throw new BuildException(ex);
+            } finally {
+                if (reader != null) {
+                    try {reader.close();} catch (Throwable t) {}
+                }
+            }
+        }
+
+        /**
+         * set the text using inline
+         */
+        public void addText(String value) {
+            if (value.trim().length() == 0) {
+                return;
+            }
+            this.value = value;
+        }
+
+        /**
+         * s:^\s*:: on each line of input
+         * @param strip if true do the trim
+         */
+        public void setTrimLeading(boolean strip) {
+            this.trimLeading = strip;
+        }
+
+        /**
+         * whether to call text.trim()
+         */
+        public void setTrim(boolean trim) {
+            this.trim = trim;
+        }
+
+        /**
+         * return the text, after possible trimming
+         */
+        public String getValue() {
+            if (value == null) {
+                value = "";
+            }
+            if (value.trim().length() == 0) {
+                value = "";
+            }
+            if (trimLeading) {
+                char[] current = value.toCharArray();
+                StringBuffer b = new StringBuffer(current.length);
+                boolean startOfLine = true;
+                int pos = 0;
+                while (pos < current.length) {
+                    char ch = current[pos++];
+                    if (startOfLine) {
+                        if (ch == ' ' || ch == '\t') {
+                            continue;
+                        }
+                        startOfLine = false;
+                    }
+                    b.append(ch);
+                    if (ch == '\n' || ch == '\r') {
+                        startOfLine = true;
+                    }
+                }
+                value = b.toString();
+            }
+            if (trim) {
+                value = value.trim();
+            }
+            return value;
+        }
+    }
+
+    /**
+     * This class reads from each of the source files in turn.
+     * The concatentated result can then be filtered as
+     * a single stream.
+     */
+    private class MultiReader extends Reader {
+        private int pos = 0;
+        private Reader reader = null;
+
+        private Reader getReader() throws IOException {
+            if (reader == null) {
+                if (encoding == null) {
+                    reader = new BufferedReader(
+                        new FileReader((File) sourceFiles.elementAt(pos)));
+                } else {
+                    // invoke the zoo of io readers
+                    reader = new BufferedReader(
+                        new InputStreamReader(
+                            new FileInputStream(
+                                (File) sourceFiles.elementAt(pos)),
+                            encoding));
+                }                
+            }
+            return reader;
+        }
+
+        /**
+         * Read a character from the current reader object. Advance
+         * to the next if the reader is finished.
+         * @return the character read, -1 for EOF on the last reader.
+         * @exception IOException - possiblly thrown by the read for a reader
+         *            object.
+         */
+        public int read() throws IOException {
+            while (pos < sourceFiles.size()) {
+                int ch = getReader().read();
+                if (ch == -1) {
+                    reader.close();
+                    reader = null;
+                } else {
+                    return ch;
+                }
+                pos++; 
+            }
+            return -1;
+        }
+
+        /**
+         * Read into the buffer <code>cbuf</code>.
+         * @param cbuf The array to be read into.
+         * @param off The offset.
+         * @param len The length to read.
+         * @exception IOException - possiblely thrown by the reads to the
+         *            reader objects.
+         */
+        public int read(char cbuf[], int off, int len)
+            throws IOException {
+            int amountRead = 0;
+            int iOff = off;
+            while (pos < sourceFiles.size()) {
+                int nRead = getReader().read(cbuf, off, len);
+                if (nRead == -1 || nRead == 0) {
+                    reader.close();
+                    reader = null;
+                    pos++;
+                } else {
+                    len -= nRead;
+                    off += nRead;
+                    amountRead += nRead;
+                    if (len == 0) {
+                        return amountRead;
+                    }
+                }
+            }
+            if (amountRead == 0) {
+                return -1;
+            } else {
+                return amountRead;
+            }
+        }
+
+        public void close() throws IOException {
+            if (reader != null) {
+                reader.close();
+            }
+        }
+    }
+ }
+

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -97,14 +97,7 @@ public class ConcatTest
      * test.
      */
     public void tearDown() {
-        // Remove temporary files.
-        String[] rm = new String[] { tempFile, tempFile2 };
-        for (int i = 0; i < rm.length; i++) {
-            File f = new File(getProjectDir(), rm[i]);
-            if (f.exists()) {
-                f.delete();
-            }
-        }
+        executeTarget("cleanup");
     }
 
     /**
@@ -140,7 +133,6 @@ public class ConcatTest
      * Cats the file created in test3 three times.
      */
     public void test4() {
-
         test3();
 
         File file = new File(getProjectDir(), tempFile);
@@ -174,4 +166,80 @@ public class ConcatTest
     public void testConcatNoNewlineEncoding() {
         expectLog("testConcatNoNewlineEncoding", "ab");
     }
+
+    public void testPath() {
+        test3();
+
+        File file = new File(getProjectDir(), tempFile);
+        final long origSize = file.length();
+
+        executeTarget("testPath");
+
+        File file2 = new File(getProjectDir(), tempFile2);
+        final long newSize = file2.length();
+
+        assertEquals(origSize, newSize);
+        
+    }
+    public void testAppend() {
+        test3();
+
+        File file = new File(getProjectDir(), tempFile);
+        final long origSize = file.length();
+
+        executeTarget("testAppend");
+
+        File file2 = new File(getProjectDir(), tempFile2);
+        final long newSize = file2.length();
+
+        assertEquals(origSize*2, newSize);
+        
+    }
+
+    public void testFilter() {
+        executeTarget("testfilter");
+        assertTrue(getLog().indexOf("REPLACED") > -1);
+    }
+
+    public void testNoOverwrite() {
+        executeTarget("testnooverwrite");
+        File file2 = new File(getProjectDir(), tempFile2);
+        long size = file2.length();
+        assertEquals(size, 0);
+    }
+
+    public void testheaderfooter() {
+        test3();
+        expectLog("testheaderfooter", "headerHello, World!footer");
+    }
+
+    public void testfileheader() {
+        test3();
+        expectLog("testfileheader", "Hello, World!Hello, World!");
+    }
+
+    /**
+     * Expect an exception when attempting to cat an file to itself
+     */
+    public void testsame() {
+        expectBuildException("samefile", "output file same as input");
+    }
+
+    /**
+     * Check if filter inline works
+     */
+    public void testfilterinline() {
+        executeTarget("testfilterinline");
+        assertTrue(getLog().indexOf("REPLACED") > -1);
+    }
+
+    /**
+     * Check if multireader works
+     */
+    public void testmultireader() {
+        executeTarget("testmultireader");
+        assertTrue(getLog().indexOf("Bye") > -1);
+        assertTrue(getLog().indexOf("Hello") == -1);
+    }        
+        
 }
