@@ -1041,6 +1041,7 @@
              destdir="${build.javadocs}"
              author="true"
              version="true"
+             locale="en"
              windowtitle="${Name} API"
              doctitle="${Name}">
       <tag name="todo" description="To do:" scope="all" />

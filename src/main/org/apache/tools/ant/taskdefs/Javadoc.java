@@ -480,8 +480,10 @@ public class Javadoc extends Task {
     }
     public void setLocale(String src) {
         if (!javadoc1) {
-            cmd.createArgument().setValue("-locale");
-            cmd.createArgument().setValue(src);
+            // createArgument(true) is necessary to make sure, -locale
+            // is the first argument (required in 1.3+).
+            cmd.createArgument(true).setValue(src);
+            cmd.createArgument(true).setValue("-locale");
         }
     }
     public void setEncoding(String enc) {
