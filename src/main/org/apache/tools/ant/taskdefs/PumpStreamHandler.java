@@ -173,8 +173,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
     /**
      * Create the pump to handle process output.
-     * @param is the <CODE>InputStream</CODE>.
-     * @param os the <CODE>OutputStream</CODE>.
+     * @param is the <code>InputStream</code>.
+     * @param os the <code>OutputStream</code>.
      */
     protected void createProcessOutputPump(InputStream is, OutputStream os) {
         outputThread = createPump(is, os);
@@ -182,8 +182,8 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
 
     /**
      * Create the pump to handle error output.
-     * @param is the <CODE>InputStream</CODE>.
-     * @param os the <CODE>OutputStream</CODE>.
+     * @param is the input stream to copy from.
+     * @param os the output stream to copy to.
      */
     protected void createProcessErrorPump(InputStream is, OutputStream os) {
         errorThread = createPump(is, os);
@@ -192,6 +192,9 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     /**
      * Creates a stream pumper to copy the given input stream to the
      * given output stream.
+     * @param is the input stream to copy from.
+     * @param os the output stream to copy to.
+     * @return a thread object that does the pumping.
      */
     protected Thread createPump(InputStream is, OutputStream os) {
         return createPump(is, os, false);
@@ -200,6 +203,10 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
     /**
      * Creates a stream pumper to copy the given input stream to the
      * given output stream.
+     * @param is the input stream to copy from.
+     * @param os the output stream to copy to.
+     * @param closeWhenExhausted if true close the inputstream.
+     * @return a thread object that does the pumping.
      */
     protected Thread createPump(InputStream is, OutputStream os,
                                 boolean closeWhenExhausted) {
@@ -208,7 +215,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
         result.setDaemon(true);
         return result;
     }
-    
+
     /**
      * Creates a stream pumper to copy the given input stream to the
      * given output stream. Used for standard input.
