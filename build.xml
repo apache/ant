@@ -754,6 +754,7 @@
             <include name="coverage-frames.xsl"/>
             <include name="maudit-frames.xsl"/>
             <include name="mmetrics-frames.xsl"/>
+            <include name="changelog.xsl"/>
             <include name="jdepend.xsl"/>
             <include name="jdepend-frames.xsl"/>
             <include name="checkstyle-frames.xsl"/>

@@ -135,6 +135,21 @@ under the <code>dve/network</code> directory, substituting the name
 anytime it encounters a change made by the user ID &quot;donaldp&quot;.
 It writes these changes into the file <code>changelog.xml</code>.</p>
 
+<h4>Generate Report</h4>
+<p>Ant includes a basic XSLT stylesheet that you can use to generate 
+a HTML report based on the xml output. The following example illustrates
+how to generate a HTML report from the XML report.</p>
+
+<pre>
+        &lt;style in="changelog.xml" 
+               out="changelog.html" 
+               style="${ant.home}/etc/changelog.xsl"&gt;
+          &lt;param name="title" expression="Ant ChangeLog"/&gt;
+          &lt;param name="module" expression="jakarta-ant"/&gt;
+          &lt;param name="cvsweb" expression="http://cvs.apache.org/viewcvs/"/&gt;
+        &lt;/style&gt;
+</pre>
+
 <h4>Sample Output</h4>
 <pre>
 &lt;changelog&gt;
