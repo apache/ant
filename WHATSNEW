@@ -28,7 +28,7 @@ beahvior has been dropped.
 Other changes:
 --------------
 
-* New tasks: sql, genkey, cab, ftp, junit.
+* New tasks: antstructure, cab, ftp, genkey, junit, sql.
 
 * New tasks mparse, execon. All pending documentation, most of
 them pending review.
