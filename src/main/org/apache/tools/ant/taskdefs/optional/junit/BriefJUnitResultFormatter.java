@@ -198,12 +198,23 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter {
     }
 
     /**
-     * A test failed.
+     * Interface TestListener for JUnit &lt;= 3.4.
+     *
+     * <p>A Test failed.
      */
-    public void addFailure(Test test, AssertionFailedError failure) {
-        formatError("\tFAILED", test, failure);
+    public void addFailure(Test test, Throwable t) {
+        formatError("\tFAILED", test, t);
     }
-    
+
+    /**
+     * Interface TestListener for JUnit &gt; 3.4.
+     *
+     * <p>A Test failed.
+     */
+    public void addFailure(Test test, AssertionFailedError t) {
+        addFailure(test, (Throwable) t);
+    }
+
     /**
      * A test caused an error.
      */
