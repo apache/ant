@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="ISO-8859-1" ?>
 <document>
 
   <properties>
@@ -87,6 +87,14 @@
       <tr>
         <td>Justin Ransom (Justin.Ransom at rubus.com)</td>
         <td><img src="images/hughes2.gif" /></td>
+      </tr>
+      <tr>
+        <td>Martin Schlömer (martin.schloemer at phase26.de)</td>
+        <td><img src="images/schloemer.gif" /></td>
+      </tr>
+      <tr>
+        <td>Martin Schlömer (martin.schloemer at phase26.de)</td>
+        <td><img src="images/schloemer2.gif" /></td>
       </tr>
     </table>
   </section>
