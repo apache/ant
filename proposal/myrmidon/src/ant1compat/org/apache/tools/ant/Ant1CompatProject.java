@@ -10,6 +10,7 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -41,11 +42,24 @@ public class Ant1CompatProject extends Project
 {
     public static final String ANT1_TASK_PREFIX = "ant1.";
 
+    private static String javaclasspath;
+
+    static
+    {
+        URL ant1jar =
+            Ant1CompatProject.class.getProtectionDomain().getCodeSource().getLocation();
+        String ant1classpath = ant1jar.getFile().toString();
+        javaclasspath = System.getProperty( "java.class.path" ) +
+            File.pathSeparator +
+            ant1classpath;
+    }
+
     private final PropertyResolver m_ant1PropertyResolver;
     private final Converter m_converter;
 
     private Set m_userProperties = new HashSet();
     private TaskContext m_context;
+    private TaskContext m_underlyingContext;
 
     /**
      * Create an Ant1 project.
@@ -55,7 +69,8 @@ public class Ant1CompatProject extends Project
         throws TaskException
     {
         super();
-        m_context = context;
+        recontextulize( context );
+
         setBaseDir( m_context.getBaseDirectory() );
         String projectName = (String)
             m_context.getProperty( org.apache.myrmidon.interfaces.model.Project.PROJECT );
@@ -64,9 +79,9 @@ public class Ant1CompatProject extends Project
             setName( projectName );
         }
 
-        m_converter = (Converter)context.getService( Converter.class );
+        m_converter = (Converter)m_context.getService( Converter.class );
 
-        TypeManager typeManager = (TypeManager)context.getService( TypeManager.class );
+        TypeManager typeManager = (TypeManager)m_context.getService( TypeManager.class );
         try
         {
             TypeFactory factory = typeManager.getFactory( PropertyResolver.ROLE );
@@ -76,7 +91,6 @@ public class Ant1CompatProject extends Project
         {
             throw new TaskException( "Failed to create PropertyResolver.", e );
         }
-
     }
 
     /**
@@ -84,8 +98,21 @@ public class Ant1CompatProject extends Project
      * @param context The TaskContext for the currently executing Task.
      */
     void recontextulize( TaskContext context )
+        throws TaskException
     {
-        m_context = context;
+        // Only reset the context if it is a different instance.
+        if( m_underlyingContext == context )
+        {
+            return;
+        }
+
+        // Need the underlying context for setting properties which
+        // should be propogated to other Tasks.
+        m_underlyingContext = context;
+
+        // The main context allows Ant1 specific property overrides.
+        m_context = context.createSubContext( "ant1-overrides" );
+        m_context.setProperty( "java.class.path", javaclasspath );
     }
 
     /**
@@ -360,7 +387,7 @@ public class Ant1CompatProject extends Project
     }
 
     /**
-     * Sets a property value in the context, wrapping exceptions as
+     * Sets a property value in the underlying context, wrapping exceptions as
      * Ant1 BuildExceptions.
      * @param name property name
      * @param value property value
@@ -369,7 +396,7 @@ public class Ant1CompatProject extends Project
     {
         try
         {
-            m_context.setProperty( name, value );
+            m_underlyingContext.setProperty( name, value );
         }
         catch( TaskException e )
         {

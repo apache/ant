@@ -19,6 +19,7 @@ Legal:
     <property name="build.dir" value="build"/>
     <property name="build.lib" value="${build.dir}/lib"/>
     <property name="build.custom-tasks" value="${build.dir}/tasks"/>
+    <property name="build.classes" value="${build.dir}/classes"/>
 
     <property name="src.base" value="src"/>
     <property name="java.dir" value="${src.base}/java"/>
@@ -42,6 +43,16 @@ Legal:
         <pathelement path="${build.classes}" />
         <pathelement path="${build.custom-tasks}" />
     </path>
+
+    <taskdef name="antlib-jar"
+             classname="org.apache.myrmidon.build.AntlibJarTask">
+        <classpath location="${build.custom-tasks}"/>
+    </taskdef>
+
+    <taskdef name="antlib-descriptor"
+             classname="org.apache.myrmidon.build.AntlibDescriptorTask">
+        <classpath refid="project.class.path"/>
+    </taskdef>
 
     <!-- Main target -->
     <target name="main" depends="antlib-jar" />
