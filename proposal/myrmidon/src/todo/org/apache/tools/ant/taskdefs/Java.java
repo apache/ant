@@ -374,8 +374,8 @@ public class Java extends Task
             if( out == null )
             {
                 exe = new Execute();
-                exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-                exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+                exe.setOutput( new LogOutputStream( getLogger(), false ) );
+                exe.setError( new LogOutputStream( getLogger(), true ) );
 
             }
             else
