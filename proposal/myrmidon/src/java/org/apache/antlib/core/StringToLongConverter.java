@@ -30,7 +30,7 @@ public class StringToLongConverter
         super( String.class, Long.class );
     }
 
-    public Object convert( final Object object, final Context context )
+    public Object convert( final Object object, final Object context )
         throws ConverterException
     {
         try

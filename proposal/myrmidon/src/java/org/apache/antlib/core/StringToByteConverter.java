@@ -30,7 +30,7 @@ public class StringToByteConverter
         super( String.class, Byte.class );
     }
 
-    public Object convert( final Object object, final Context context )
+    public Object convert( final Object object, final Object context )
         throws ConverterException
     {
         try

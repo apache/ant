@@ -30,7 +30,7 @@ public class StringToBooleanConverter
         super( String.class, Boolean.class );
     }
 
-    public Object convert( final Object object, final Context context )
+    public Object convert( final Object object, final Object context )
         throws ConverterException
     {
         final String string = (String)object;

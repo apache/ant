@@ -9,7 +9,6 @@ package org.apache.myrmidon.converter;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.context.Context;
 
 /**
  * Instances of this interface are used to convert between different types.
@@ -45,11 +44,11 @@ public abstract class AbstractConverter
      * @param original the original Object
      * @param context the context in which to convert
      * @return the converted object
-     * @exception Exception if an error occurs
+     * @exception ConverterException if an error occurs
      */
     public Object convert( final Class destination,
                            final Object original,
-                           final Context context )
+                           final Object context )
         throws ConverterException
     {
         if( m_destination != destination )
@@ -75,9 +74,9 @@ public abstract class AbstractConverter
      * @param original the original Object
      * @param context the context in which to convert
      * @return the converted object
-     * @exception Exception if an error occurs
+     * @exception ConverterException if an error occurs
      */
-    protected abstract Object convert( Object original, Context context )
+    protected abstract Object convert( Object original, Object context )
         throws ConverterException;
 }
 

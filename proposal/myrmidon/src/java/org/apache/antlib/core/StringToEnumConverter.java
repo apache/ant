@@ -30,7 +30,7 @@ public class StringToEnumConverter
 
     public Object convert( final Class destination,
                            final Object original,
-                           final Context context )
+                           final Object context )
         throws ConverterException
     {
         final Object object = getEnum( destination, original );

@@ -74,7 +74,7 @@ public class DefaultMasterConverter
      */
     public Object convert( final Class destination,
                            final Object original,
-                           final Context context )
+                           final Object context )
         throws ConverterException
     {
         final Class originalClass = original.getClass();

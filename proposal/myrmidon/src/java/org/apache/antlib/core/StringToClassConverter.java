@@ -30,7 +30,7 @@ public class StringToClassConverter
         super( String.class, Class.class );
     }
 
-    public Object convert( final Object object, final Context context )
+    public Object convert( final Object object, final Object context )
         throws ConverterException
     {
         //TODO: Should we use ContextClassLoader here???

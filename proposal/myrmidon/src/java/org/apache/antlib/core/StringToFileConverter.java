@@ -10,7 +10,6 @@ package org.apache.antlib.core;
 import java.io.File;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.converter.AbstractConverter;
@@ -33,7 +32,7 @@ public class StringToFileConverter
         super( String.class, File.class );
     }
 
-    public Object convert( final Object object, final Context context )
+    public Object convert( final Object object, final Object context )
         throws ConverterException
     {
         try

@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.converter;
 
-import org.apache.avalon.framework.context.Context;
-
 /**
  * Instances of this interface are used to convert between different types.
  *
@@ -31,6 +29,6 @@ public interface Converter
      * @return the converted object
      * @exception ConverterException if an error occurs
      */
-    Object convert( Class destination, Object original, Context context )
+    Object convert( Class destination, Object original, Object context )
         throws ConverterException;
 }
