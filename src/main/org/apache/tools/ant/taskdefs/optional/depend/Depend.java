@@ -327,6 +327,7 @@ public class Depend extends MatchingTask {
             // now determine which jars each class depends upon
             classpathDependencies = new Hashtable();
             AntClassLoader loader = new AntClassLoader(getProject(), dependClasspath);
+            
             Hashtable classpathFileCache = new Hashtable();
             Object nullFileMarker = new Object();
             for (Enumeration e = dependencyMap.keys(); e.hasMoreElements();) {
@@ -510,14 +511,19 @@ public class Depend extends MatchingTask {
                     String className = (String)e.nextElement();
                     if (!outOfDateClasses.containsKey(className)) {
                         ClassFileInfo info = (ClassFileInfo)classFileInfoMap.get(className);
-                        Hashtable dependencies = (Hashtable)classpathDependencies.get(className);
-                        for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements();) {
-                            File classpathFile = (File)e2.nextElement();
-                            if (classpathFile.lastModified() > info.absoluteFile.lastModified()) {
-                                log("Class " + className + 
+                        
+                        // if we have no info about the class - it may have been deleted already and we 
+                        // are using cached info.
+                        if (info != null) {
+                            Hashtable dependencies = (Hashtable)classpathDependencies.get(className);
+                            for (Enumeration e2 = dependencies.elements(); e2.hasMoreElements();) {
+                                File classpathFile = (File)e2.nextElement();
+                                if (classpathFile.lastModified() > info.absoluteFile.lastModified()) {
+                                    log("Class " + className + 
                                     " is out of date with respect to " + classpathFile, Project.MSG_DEBUG);
-                                outOfDateClasses.put(className, className);
-                                break;
+                                    outOfDateClasses.put(className, className);
+                                    break;
+                                }
                             }
                         }
                     }
