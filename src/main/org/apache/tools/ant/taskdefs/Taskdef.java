@@ -97,11 +97,10 @@ public class Taskdef extends Task {
                 if (classpath != null) {
                     AntClassLoader al = new AntClassLoader(project, classpath,
                                                            false);
+                    // need to load Task via system classloader or the new
+                    // task we want to define will never be a Task but always
+                    // be wrapped into a TaskAdapter.
                     al.addSystemPackageRoot("org.apache.tools.ant");
-                    if (project.getJavaVersion().startsWith("1.1")) {
-                        // JDK > 1.1 adds these by default
-                        al.addSystemPackageRoot("java");
-                    }
                     loader = al;
                 } else {
                     loader = this.getClass().getClassLoader();

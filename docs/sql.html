@@ -47,6 +47,26 @@
   <td width="78%" valign="top">Auto commit flag for database connection (default false)</td>
   <td width="10%" valign="top">No, default "false"</td>
 </tr>
+<tr>
+  <td width="12%" valign="top">print</td>
+  <td width="78%" valign="top">Print result sets from the statements (default false)</td>
+  <td width="10%" valign="top">No, default "false"</td>
+</tr>
+<tr>
+  <td width="12%" valign="top">showheaders</td>
+  <td width="78%" valign="top">Print headers for result sets from the statements (default true)</td>
+  <td width="10%" valign="top">No, default "true"</td>
+</tr>
+<tr>
+  <td width="12%" valign="top">output</td>
+  <td width="78%" valign="top">Output file for result sets (defaults to System.out)</td>
+  <td width="10%" valign="top">No (print to System.out by default)</td>
+</tr>
+<tr>
+  <td width="12%" valign="top">classpath</td>
+  <td width="78%" valign="top">Classpath used to load driver</td>
+  <td width="10%" valign="top">No (use system classpath)</td>
+</tr>
 </table>
 
 <h3>Examples</h3>
@@ -80,7 +100,7 @@ truncate table some_other_table;
 <p>Note that you may want to enclose your statements in
 <code>&lt;![CDATA[</code> ... <code>]]&gt;</code> sections so you don't
 need to escape <code>&lt;</code>, <code>&gt;</code> <code>&amp;</code>
-or other special characters. For exampe:</p>
+or other special characters. For example:</p>
 
 <blockquote><pre>&lt;sql
     driver="org.database.jdbcDriver"
@@ -93,6 +113,24 @@ update some_table set column1 = column1 + 1 where column2 &lt; 42;
 
 ]]&gt;&lt;/sql&gt;
 </pre></blockquote>
+
+<p>The following connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the sql statements contained within the file data.sql, with output piped to outputfile.txt, searching /some/jdbc.jar as well as the system classpath for the driver class.</p>
+
+<pre><blockquote>&lt;sql
+    driver="org.database.jdbcDriver"
+    url="jdbc:database-url"
+    userid="sa"
+    password="pass"
+    src="data.sql"
+    print="yes"
+    output="outputfile.txt"
+    &gt;
+&lt;classpath&gt;
+	&lt;pathelement location="/some/jdbc.jar"&gt;
+&lt;/classpath&gt;
+&lt;/sql&gt;
+</pre></blockquote>
+
 
 
 </body>

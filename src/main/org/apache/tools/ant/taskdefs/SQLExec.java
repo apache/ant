@@ -55,11 +55,13 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 
 import java.io.*;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import java.util.Properties;
 import java.util.zip.*;
 import java.sql.*;
 
@@ -71,6 +73,10 @@ import java.sql.*;
  * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
  */
 public class SQLExec extends Task {
+    
+    private Path classpath;
+
+    private AntClassLoader loader;
 
     /**
      * Database connection
@@ -131,6 +137,34 @@ public class SQLExec extends Task {
      * Results Output file.
      */
     private File output = null;
+
+    /**
+     * Set the classpath for loading the driver.
+     */
+    public void setClasspath(Path classpath) {
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+
+    /**
+     * Create the classpath for loading the driver.
+     */
+    public Path createClasspath() {
+        if (this.classpath == null) {
+            this.classpath = new Path(project);
+        }
+        return this.classpath.createPath();
+    }
+
+    /**
+     * Set the classpath for loading the driver using the classpath reference.
+     */
+    public void setClasspathRef(Reference r) {
+        createClasspath().setRefid(r);
+    }
     
     /**
      * Set the name of the sql file to be run.
@@ -185,28 +219,27 @@ public class SQLExec extends Task {
      * Set the print flag.
      */
     public void setPrint(boolean print) {
-    	this.print = print;
+        this.print = print;
     }
     
     /**
      * Set the showheaders flag.
      */
     public void setShowheaders(boolean showheaders) {
-    	this.showheaders = showheaders;
+        this.showheaders = showheaders;
     }
 
     /**
      * Set the output file.
      */
     public void setOutput(File output) {
-    	this.output = output;
+        this.output = output;
     }
-     
+
     /**
      * Load the sql file and then execute it
      */
     public void execute() throws BuildException {
-
         sqlCommand = sqlCommand.trim();
 
         if (srcFile == null && sqlCommand.length() == 0) {
@@ -227,16 +260,34 @@ public class SQLExec extends Task {
         if (srcFile != null && !srcFile.exists()) {
             throw new BuildException("Source file does not exist!", location);
         }
-
-        try{
-            Class.forName(driver);
+        Driver driverInstance = null;
+        // Load the driver using the 
+        try {
+            Class dc;
+            if (classpath != null) {
+		log("Loading " + driver + " using AntClassLoader with classpath " + classpath, Project.MSG_VERBOSE);
+                loader = new AntClassLoader(project, classpath, false);
+                dc = loader.loadClass(driver);
+            }
+            else {
+		log("Loading " + driver + " using system loader.", Project.MSG_VERBOSE);
+                dc = Class.forName(driver);
+            }
+            driverInstance = (Driver) dc.newInstance();
         }catch(ClassNotFoundException e){
-            throw new BuildException("JDBC driver " + driver + " could not be loaded", location);
+            throw new BuildException("Class Not Found: JDBC driver " + driver + " could not be loaded", location);
+        }catch(IllegalAccessException e){
+            throw new BuildException("Illegal Access: JDBC driver " + driver + " could not be loaded", location);
+        }catch(InstantiationException e) {
+            throw new BuildException("Instantiation Exception: JDBC driver " + driver + " could not be loaded", location);
         }
 
         try{
             log("connecting to " + url, Project.MSG_VERBOSE );
-            conn = DriverManager.getConnection(url, userId, password);
+            Properties info = new Properties();
+            info.put("user", userId);
+            info.put("password", password);
+            conn = driverInstance.connect(url, info);
 
             conn.setAutoCommit(autocommit);
 
@@ -288,9 +339,9 @@ public class SQLExec extends Task {
         String sql = "";
         String line = "";
  
- 	BufferedReader in = new BufferedReader(reader);
+        BufferedReader in = new BufferedReader(reader);
  
- 	try{
+        try{
             while ((line=in.readLine()) != null){
                 if (line.trim().startsWith("//")) continue;
                 if (line.trim().startsWith("--")) continue;
@@ -304,15 +355,16 @@ public class SQLExec extends Task {
                 }
             }
  
- 	    // Catch any statements not followed by ;
- 	    if(!sql.equals("")){
- 	    	execSQL(sql);
- 	    }
- 	}catch(SQLException e){
+            // Catch any statements not followed by ;
+            if(!sql.equals("")){
+                execSQL(sql);
+            }
+        }catch(SQLException e){
             log("Failed to execute: " + sql, Project.MSG_ERR);
- 	    throw e;
- 	}
-     }
+            throw e;
+        }
+
+    }
  
 
     /**
@@ -324,9 +376,9 @@ public class SQLExec extends Task {
                 Project.MSG_VERBOSE);
         }
 
-	if (print) {
-	    printResults();
-	}
+        if (print) {
+            printResults();
+        }
 
         SQLWarning warning = conn.getWarnings();
         while(warning!=null){
@@ -344,13 +396,15 @@ public class SQLExec extends Task {
         PrintStream out = System.out;
         try {
             if (output != null) {
-	    	out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
+		log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
+                out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
             }
             while ((rs = statement.getResultSet()) != null) {
+		log("Processing new result set.", Project.MSG_VERBOSE);
                 ResultSetMetaData md = rs.getMetaData();
                 int columnCount = md.getColumnCount();
                 StringBuffer line = new StringBuffer();
-		if (showheaders) {
+                if (showheaders) {
                     for (int col = 1; col < columnCount; col++) {
                         line.append(md.getColumnName(col));
                         line.append(",");
@@ -358,7 +412,7 @@ public class SQLExec extends Task {
                     line.append(md.getColumnName(columnCount));
                     out.println(line);
                     line.setLength(0);
-		}
+                }
                 while (rs.next()) {
                     for (int col = 1; col < columnCount; col++) {
                         line.append(rs.getString(col).trim());
@@ -374,11 +428,10 @@ public class SQLExec extends Task {
         catch (IOException ioe) {
             throw new BuildException("Error writing " + output.getAbsolutePath(), ioe, location);
         }
-	finally {
-            if (out != null) {
+        finally {
+            if (out != null && out != System.out) {
                 out.close();
             }
         }
     }
-
 }
