@@ -31,7 +31,7 @@
     </menu>
 
     <menu name="Jakarta">
-        <item name="News &amp; Status"     href="/site/news.html"/>
+        <item name="News &amp;amp; Status"     href="/site/news.html"/>
         <item name="Mission"               href="/site/mission.html"/>
         <item name="Guidelines Notes"      href="/site/guidelines.html"/>
         <item name="FAQs"                  href="/site/faqs.html"/>
@@ -43,7 +43,7 @@
         <item name="Mailing Lists"         href="/site/mail.html"/>
         <item name="Reference Library"     href="/site/library.html"/>
         <item name="Bug Database"          href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant"/>
-        <item name="Enhancement Requests"  href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;bug_severity=Enhancement"/>
-        <item name="Patch Queue"           href="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Ant&amp;short_desc=%5BPATCH%5D&amp;short_desc_type=allwordssubstr&amp;long_desc=&amp;long_desc_type=allwordssubstr&amp;bug_file_loc=&amp;bug_file_loc_type=allwordssubstr&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time"/>    </menu>
+        <item name="Enhancement Requests"  href="http://nagoya.apache.org/bugzilla/enter_bug.cgi?product=Ant&amp;amp;bug_severity=Enhancement"/>
+        <item name="Patch Queue"           href="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=NEW&amp;amp;bug_status=ASSIGNED&amp;amp;bug_status=REOPENED&amp;amp;email1=&amp;amp;emailtype1=substring&amp;amp;emailassigned_to1=1&amp;amp;email2=&amp;amp;emailtype2=substring&amp;amp;emailreporter2=1&amp;amp;bugidtype=include&amp;amp;bug_id=&amp;amp;changedin=&amp;amp;votes=&amp;amp;chfieldfrom=&amp;amp;chfieldto=Now&amp;amp;chfieldvalue=&amp;amp;product=Ant&amp;amp;short_desc=%5BPATCH%5D&amp;amp;short_desc_type=allwordssubstr&amp;amp;long_desc=&amp;amp;long_desc_type=allwordssubstr&amp;amp;bug_file_loc=&amp;amp;bug_file_loc_type=allwordssubstr&amp;amp;keywords=&amp;amp;keywords_type=anywords&amp;amp;field0-0-0=noop&amp;amp;type0-0-0=noop&amp;amp;value0-0-0=&amp;amp;cmdtype=doit&amp;amp;order=Reuse+same+sort+as+last+time"/>    </menu>
     </body>
 </project>
