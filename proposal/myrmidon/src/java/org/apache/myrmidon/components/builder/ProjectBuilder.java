@@ -30,6 +30,6 @@ public interface ProjectBuilder
      * @exception IOException if an error occurs
      * @exception AntException if an error occurs
      */
-    Project build( File source )
+    Project build( String source )
         throws Exception;
 }

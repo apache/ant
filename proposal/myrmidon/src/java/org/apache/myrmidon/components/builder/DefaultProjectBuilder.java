@@ -9,6 +9,8 @@ package org.apache.myrmidon.components.builder;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.apache.avalon.framework.ExceptionUtil;
@@ -20,7 +22,7 @@ import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.model.Condition;
 import org.apache.myrmidon.components.model.DefaultProject;
-import org.apache.myrmidon.components.model.DefaultTarget;
+import org.apache.myrmidon.components.model.Import;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
 import org.xml.sax.SAXException;
@@ -35,6 +37,11 @@ public class DefaultProjectBuilder
     extends AbstractLoggable
     implements ProjectBuilder
 {
+    private final static int    PROJECT_REFERENCES  = 0;
+    private final static int    LIBRARY_IMPORTS     = 1;
+    private final static int    IMPLICIT_TASKS      = 2;
+    private final static int    TARGETS             = 3;
+
     /**
      * build a project from file.
      *
@@ -43,9 +50,24 @@ public class DefaultProjectBuilder
      * @exception IOException if an error occurs
      * @exception Exception if an error occurs
      */
-    public Project build( final File projectFile )
+    public Project build( final String source )
         throws Exception
     {
+        final File file = new File( source );
+        return build( file, new HashMap() );
+    }
+
+    private Project build( final File file, final HashMap projects )
+        throws Exception
+    {
+        final String systemID = file.toURL().toString();
+
+        Project result = (Project)projects.get( systemID );
+        if( null != result )
+        {
+            return result;
+        }
+
         final SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
         final SAXParser saxParser = saxParserFactory.newSAXParser();
         final XMLReader parser = saxParser.getXMLReader();
@@ -57,24 +79,18 @@ public class DefaultProjectBuilder
         parser.setContentHandler( handler );
         parser.setErrorHandler( handler );
 
-        final String location = projectFile.toURL().toString();
-        parser.parse( location );
+        parser.parse( systemID );
 
-        return build( projectFile, handler.getConfiguration() );
-    }
-/*
-    private final void dump( final Configuration configuration )
-        throws Exception
-    {
-        System.out.println( "Configuration: "+ configuration.getName() + "/" + configuration.getLocation() );
-        final Configuration[] children = configuration.getChildren();
+        final Configuration configuration = handler.getConfiguration();
+        final DefaultProject project = buildProject( file, configuration );
 
-        for( int i = 0; i < children.length; i++ )
-        {
-            dump( children[ i ] );
-        }
+        projects.put( systemID, project );
+
+        //build using all top-level attributes
+        buildTopLevelProject( project, configuration, projects );
+
+        return project;
     }
-*/
 
     /**
      * build project from configuration.
@@ -86,10 +102,11 @@ public class DefaultProjectBuilder
      * @exception Exception if an error occurs
      * @exception ConfigurationException if an error occurs
      */
-    protected final Project build( final File file, final Configuration configuration )
+    private DefaultProject buildProject( final File file, 
+                                         final Configuration configuration )
         throws Exception
     {
-        if( !configuration.getName().equals("project") )
+        if( !configuration.getName().equals( "project" ) )
         {
             throw new Exception( "Project file must be enclosed in project element" );
         }
@@ -111,9 +128,6 @@ public class DefaultProjectBuilder
         project.setBaseDirectory( baseDirectory );
         //project.setName( name );
 
-        //build using all top-level attributes
-        buildTopLevelProject( project, configuration );
-
         return project;
     }
 
@@ -124,26 +138,144 @@ public class DefaultProjectBuilder
      * @param configuration the Configuration
      * @exception Exception if an error occurs
      */
-    protected void buildTopLevelProject( final DefaultProject project,
-                                         final Configuration configuration )
+    private void buildTopLevelProject( final DefaultProject project,
+                                       final Configuration configuration,
+                                       final HashMap projects )
         throws Exception
     {
+        final ArrayList implicitTaskList = new ArrayList();
         final Configuration[] children = configuration.getChildren();
+
+        int state = PROJECT_REFERENCES;
 
         for( int i = 0; i < children.length; i++ )
         {
             final Configuration element = children[ i ];
             final String name = element.getName();
 
-            //handle individual elements
+            if( PROJECT_REFERENCES == state )
+            {
+                if( name.equals( "projectref" ) )
+                {
+                    buildProjectRef( project, element, projects );
+                    continue;
+                }
+                else
+                {
+                    state = LIBRARY_IMPORTS;
+                }
+            }
+
+            if( LIBRARY_IMPORTS == state )
+            {
+                if( name.equals( "import" ) )
+                {
+                    buildImport( project, element );
+                    continue;
+                }
+                else
+                {
+                    state = IMPLICIT_TASKS;
+                }
+            }
+
+            if( IMPLICIT_TASKS == state )
+            {
+                //Check for any implicit tasks here
+                if( !name.equals( "target" ) )
+                {
+                    implicitTaskList.add( element );
+                    continue;
+                }
+                else
+                {
+                    state = TARGETS;
+                }
+            }
+
             if( name.equals( "target" ) ) buildTarget( project, element );
-            else if( name.equals( "property" ) ) buildImplicitTask( project, element );
             else
             {
                 throw new Exception( "Unknown top-level element " + name +
-                                        " at " + element.getLocation() );
+                                     " at " + element.getLocation() +
+                                     ". Expecting target" );
             }
         }
+
+        final Configuration[] implicitTasks =
+            (Configuration[])implicitTaskList.toArray( new Configuration[ 0 ] );
+
+        final Target implicitTarget = new Target( null, implicitTasks, null );
+        project.setImplicitTarget( implicitTarget );
+    }
+
+    private void buildProjectRef( final DefaultProject project,
+                                  final Configuration element,
+                                  final HashMap projects )
+        throws Exception
+    {
+        final String name = element.getAttribute( "name", null );
+        final String location = element.getAttribute( "location", null );
+
+        if( null == name )
+        {
+            throw new Exception( "Malformed projectref without a name attribute at " +
+                                 element.getLocation() );
+        }
+
+        if( !validName( name ) )
+        {
+            throw new Exception( "Projectref with an invalid name attribute at " +
+                                 element.getLocation() );           
+        }
+
+        if( null == location )
+        {
+            throw new Exception( "Malformed projectref without a location attribute at " +
+                                 element.getLocation() );
+        }
+
+        final File baseDirectory = project.getBaseDirectory();
+
+        //TODO: standardize and migrate to Avalon-Excalibur.io
+        final File file = new File( baseDirectory, location );
+
+        final String systemID = file.toURL().toString();
+        Project other = (Project)projects.get( systemID );
+
+        if( null == other )
+        {
+            other = build( file, projects );
+        }
+
+        project.addProject( name, other );
+    }
+
+    private void buildImport( final DefaultProject project,
+                              final Configuration element )
+        throws Exception
+    {
+        final String library = element.getAttribute( "library", null );
+        final String name = element.getAttribute( "name", null );
+        final String type = element.getAttribute( "type", null );
+
+        if( null == library )
+        {
+            throw new Exception( "Malformed import without a library attribute at " +
+                                 element.getLocation() );
+        }
+
+        if( null == name || null == type )
+        {
+            if( null != name || null != type )
+            {
+                throw new Exception( "Malformed import at " + element.getLocation() +
+                                     ". If name or type attribute is specified, both " +
+                                     "attributes must be specified." );
+            }
+        }
+
+        project.addImport( new Import( library, type, name ) );
     }
 
     /**
@@ -152,7 +284,7 @@ public class DefaultProjectBuilder
      * @param project the project
      * @param task the Configuration
      */
-    protected void buildTarget( final DefaultProject project, final Configuration target )
+    private void buildTarget( final DefaultProject project, final Configuration target )
         throws Exception
     {
         final String name = target.getAttribute( "name", null );
@@ -163,7 +295,13 @@ public class DefaultProjectBuilder
         if( null == name )
         {
             throw new Exception( "Discovered un-named target at " +
-                                    target.getLocation() );
+                                 target.getLocation() );
+        }
+
+        if( !validName( name ) )
+        {
+            throw new Exception( "Target with an invalid name at " +
+                                 target.getLocation() );           
         }
 
         getLogger().debug( "Parsing target: " + name );
@@ -187,12 +325,13 @@ public class DefaultProjectBuilder
             condition = new Condition( false, unlessCondition );
         }
 
-        final DefaultTarget defaultTarget = new DefaultTarget( condition );
+        String[] dependencies = null;
 
         //apply depends attribute
         if( null != depends )
         {
             final String[] elements = ExceptionUtil.splitString( depends, "," );
+            final ArrayList dependsList = new ArrayList();
 
             for( int i = 0; i < elements.length; i++ )
             {
@@ -205,39 +344,23 @@ public class DefaultProjectBuilder
                 }
 
                 getLogger().debug( "Target dependency: " + dependency );
-                defaultTarget.addDependency( dependency );
+                dependsList.add( dependency );
+                //defaultTarget.addDependency( dependency );
             }
+
+            dependencies = (String[])dependsList.toArray( new String[ 0 ] );
         }
 
-        //add all the targets from element
-        final Configuration[] tasks = target.getChildren();
-        for( int i = 0; i < tasks.length; i++ )
-        {
-            getLogger().debug( "Parsed task: " + tasks[ i ].getName() );
-            defaultTarget.addTask( tasks[ i ] );
-        }
+        final Target defaultTarget =
+            new Target( condition, target.getChildren(), dependencies );
 
         //add target to project
         project.addTarget( name, defaultTarget );
     }
 
-    /**
-     * Create an implict task from configuration
-     *
-     * @param project the project
-     * @param task the configuration
-     */
-    protected void buildImplicitTask( final DefaultProject project, final Configuration task )
+    protected boolean validName( final String name )
     {
-        DefaultTarget target = (DefaultTarget)project.getImplicitTarget();
-
-        if( null == target )
-        {
-            target = new DefaultTarget();
-            project.setImplicitTarget( target );
-        }
-
-        getLogger().debug( "Parsed implicit task: " + task.getName() );
-        target.addTask( task );
+        if( -1 != name.indexOf( "->" ) ) return false;
+        else return true;
     }
 }
