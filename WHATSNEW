@@ -467,6 +467,9 @@ Other changes:
   enable it to expand archives created with filenames using an encoding
   other than UTF8.  Bugzilla Report 10504.
 
+* <patch> has a new attribute destfile that can be used to create a new
+  file instead of patching files in place.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,6 +83,19 @@ public class Patch extends Task {
      */
     public void setOriginalfile(File file) {
         originalFile = file;
+    }
+
+    /**
+     * The name of a file to send the output to, instead of patching
+     * the file(s) in place; optional.
+     *
+     * @since Ant 1.6
+     */
+    public void setDestfile(File file) {
+        if (file != null) {
+            cmd.createArgument().setValue("-o");
+            cmd.createArgument().setFile(file);
+        }
     }
 
     /**
