@@ -44,7 +44,8 @@ public class CLIMain
     private final static Resources REZ =
         ResourceManager.getPackageResources( CLIMain.class );
 
-    private final String DEFAULT_EMBEDDOR_CLASS = "org.apache.myrmidon.components.embeddor.DefaultEmbeddor";
+    private static final String DEFAULT_EMBEDDOR_CLASS =
+        "org.apache.myrmidon.components.embeddor.DefaultEmbeddor";
 
     //defines for the Command Line options
     private final static int HELP_OPT = 'h';
