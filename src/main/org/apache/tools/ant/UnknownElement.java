@@ -126,6 +126,7 @@ public class UnknownElement extends Task {
         if (realThing instanceof Task) {
             Task task=(Task)realThing;
 
+            task.setProject(project);
             task.setRuntimeConfigurableWrapper(getWrapper());
             task.setLocation(this.getLocation());
             // UnknownElement always has an associated target
