@@ -70,6 +70,8 @@ import org.apache.tools.ant.util.StringUtils;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
  * @since Ant 1.5
+ *
+ * @ant.task category="control"
  */
 public class Input extends Task {
     private String validargs = null;
@@ -136,12 +138,7 @@ public class Input extends Task {
         getProject().getInputHandler().handleInput(request);
 
         if (addproperty != null) {
-            if (project.getProperty(addproperty) == null) {
-                project.setNewProperty(addproperty, request.getInput());
-            } else {
-                log("Override ignored for " + addproperty,
-                    Project.MSG_VERBOSE);
-            }
+            project.setNewProperty(addproperty, request.getInput());
         }
     }
 

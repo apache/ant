@@ -59,6 +59,7 @@ package org.apache.tools.ant.input;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
+ * @since Ant 1.5
  */
 public interface InputHandler {
 

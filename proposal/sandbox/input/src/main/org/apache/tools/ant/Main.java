@@ -82,7 +82,7 @@ import java.util.Enumeration;
 public class Main {
 
     /** The default build file name. */
-    public final static String DEFAULT_BUILD_FILENAME = "build.xml";
+    public static final String DEFAULT_BUILD_FILENAME = "build.xml";
 
     /** Our current message output status. Follows Project.MSG_XXX. */
     private int msgOutputLevel = Project.MSG_INFO;
@@ -91,10 +91,10 @@ public class Main {
     private File buildFile; /* null */
 
     /** Stream to use for logging. */
-    private PrintStream out = System.out;
+    private static PrintStream out = System.out;
 
     /** Stream that we are using for logging error messages. */
-    private PrintStream err = System.err;
+    private static PrintStream err = System.err;
 
     /** The build targets. */
     private Vector targets = new Vector(5);
@@ -104,13 +104,13 @@ public class Main {
 
     /** Names of classes to add as listeners to project. */
     private Vector listeners = new Vector(5);
-    
+
     /** File names of property files to load on startup. */
     private Vector propertyFiles = new Vector(5);
-    
+
     /**
-     * The Ant logger class. There may be only one logger. It will have 
-     * the right to use the 'out' PrintStream. The class must implements the 
+     * The Ant logger class. There may be only one logger. It will have
+     * the right to use the 'out' PrintStream. The class must implements the
      * BuildLogger interface.
      */
     private String loggerClassname = null;
@@ -135,15 +135,21 @@ public class Main {
     private boolean readyToRun = false;
 
     /**
-     * Whether or not we should only parse and display the project help 
+     * Whether or not we should only parse and display the project help
      * information.
      */
     private boolean projectHelp = false;
 
     /**
-     * Prints the message of the Throwable if it (the message) is not 
+     * Is a logfile being used?  This is used to
+     * check if the output streams must be closed.
+     */
+    private static boolean isLogFileUsed = false;
+
+    /**
+     * Prints the message of the Throwable if it (the message) is not
      * <code>null</code>.
-     * 
+     *
      * @param t Throwable to print the message of.
      *          Must not be <code>null</code>.
      */
@@ -158,12 +164,12 @@ public class Main {
      * Creates a new instance of this class using the
      * arguments specified, gives it any extra user properties which have been
      * specified, and then runs the build using the classloader provided.
-     * 
+     *
      * @param args Command line arguments. Must not be <code>null</code>.
-     * @param additionalUserProperties Any extra properties to use in this 
-     *        build. May be <code>null</code>, which is the equivalent to 
+     * @param additionalUserProperties Any extra properties to use in this
+     *        build. May be <code>null</code>, which is the equivalent to
      *        passing in an empty set of properties.
-     * @param coreLoader Classloader used for core classes. May be 
+     * @param coreLoader Classloader used for core classes. May be
      *        <code>null</code> in which case the system classloader is used.
      */
     public static void start(String[] args, Properties additionalUserProperties,
@@ -172,19 +178,20 @@ public class Main {
 
         try {
             m = new Main(args);
-        } catch(Throwable exc) {
+        } catch (Throwable exc) {
             printMessage(exc);
             System.exit(1);
         }
 
         if (additionalUserProperties != null) {
-            for (Enumeration e = additionalUserProperties.keys(); e.hasMoreElements(); ) {
+            for (Enumeration e = additionalUserProperties.keys();
+                    e.hasMoreElements();) {
                 String key = (String) e.nextElement();
                 String property = additionalUserProperties.getProperty(key);
                 m.definedProps.put(key, property);
             }
         }
-        
+
         try {
             m.runBuild(coreLoader);
             System.exit(0);
@@ -193,13 +200,30 @@ public class Main {
                 printMessage(be);
             }
             System.exit(1);
-        } catch(Throwable exc) {
+        } catch (Throwable exc) {
             exc.printStackTrace();
             printMessage(exc);
             System.exit(1);
+        } finally {
+            if (isLogFileUsed) {
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (final Exception e) {
+                        //ignore
+                    }
+                }
+                if (err != null) {
+                    try {
+                        err.close();
+                    } catch (final Exception e) {
+                        //ignore
+                    }
+                }
+            }
         }
     }
-                                        
+
     /**
      * Command line entry point. This method kicks off the building
      * of a project object and executes a build using either a given
@@ -216,11 +240,11 @@ public class Main {
     // BuildException is thrown. What's the rationale for when to do
     // what?
     /**
-     * Sole constructor, which parses and deals with command line 
+     * Sole constructor, which parses and deals with command line
      * arguments.
-     * 
+     *
      * @param args Command line arguments. Must not be <code>null</code>.
-     * 
+     *
      * @exception BuildException if the specified build file doesn't exist
      *                           or is a directory.
      */
@@ -249,15 +273,17 @@ public class Main {
                 msgOutputLevel = Project.MSG_DEBUG;
             } else if (arg.equals("-logfile") || arg.equals("-l")) {
                 try {
-                    File logFile = new File(args[i+1]);
+                    File logFile = new File(args[i + 1]);
                     i++;
                     out = new PrintStream(new FileOutputStream(logFile));
                     err = out;
                     System.setOut(out);
                     System.setErr(out);
+                    isLogFileUsed = true;
                 } catch (IOException ioe) {
-                    String msg = "Cannot write on the specified log file. " +
-                        "Make sure the path exists and you have write permissions.";
+                    String msg = "Cannot write on the specified log file. "
+                        + "Make sure the path exists and you have write "
+                        + "permissions.";
                     System.out.println(msg);
                     return;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
@@ -266,9 +292,10 @@ public class Main {
                     System.out.println(msg);
                     return;
                 }
-            } else if (arg.equals("-buildfile") || arg.equals("-file") || arg.equals("-f")) {
+            } else if (arg.equals("-buildfile") || arg.equals("-file")
+                       || arg.equals("-f")) {
                 try {
-                    buildFile = new File(args[i+1]);
+                    buildFile = new File(args[i + 1]);
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a buildfile when " +
@@ -278,7 +305,7 @@ public class Main {
                 }
             } else if (arg.equals("-listener")) {
                 try {
-                    listeners.addElement(args[i+1]);
+                    listeners.addElement(args[i + 1]);
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a classname when " +
@@ -303,35 +330,35 @@ public class Main {
                 String value = null;
                 int posEq = name.indexOf("=");
                 if (posEq > 0) {
-                    value = name.substring(posEq+1);
+                    value = name.substring(posEq + 1);
                     name = name.substring(0, posEq);
-                } else if (i < args.length-1) {
+                } else if (i < args.length - 1) {
                     value = args[++i];
                        }
 
                 definedProps.put(name, value);
             } else if (arg.equals("-logger")) {
                 if (loggerClassname != null) {
-                    System.out.println("Only one logger class may be specified.");
+                    System.out.println("Only one logger class may "
+                        + " be specified.");
                     return;
                 }
                 try {
                     loggerClassname = args[++i];
-                } 
-                catch (ArrayIndexOutOfBoundsException aioobe) {
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
                     System.out.println("You must specify a classname when " +
                                        "using the -logger argument");
                     return;
                 }
             } else if (arg.equals("-inputhandler")) {
                 if (inputHandlerClassname != null) {
-                    System.out.println("Only one input handler class may be specified.");
+                    System.out.println("Only one input handler class may " +
+                                       "be specified.");
                     return;
                 }
                 try {
                     inputHandlerClassname = args[++i];
-                } 
-                catch (ArrayIndexOutOfBoundsException aioobe) {
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
                     System.out.println("You must specify a classname when " +
                                        "using the -inputhandler argument");
                     return;
@@ -343,14 +370,14 @@ public class Main {
                 projectHelp = true;
             } else if (arg.equals("-find")) {
                 // eat up next arg if present, default to build.xml
-                if (i < args.length-1) {
+                if (i < args.length - 1) {
                     searchForThis = args[++i];
                 } else {
                     searchForThis = DEFAULT_BUILD_FILENAME;
                 }
             } else if (arg.startsWith("-propertyfile")) {
                 try {
-                    propertyFiles.addElement(args[i+1]);
+                    propertyFiles.addElement(args[i + 1]);
                     i++;
                 } catch (ArrayIndexOutOfBoundsException aioobe) {
                     String msg = "You must specify a property filename when " +
@@ -369,12 +396,12 @@ public class Main {
                 targets.addElement(arg);
             }
         }
-        
+
         // if buildFile was not specified on the command line,
         if (buildFile == null) {
             // but -find then search for it
             if (searchForThis != null) {
-                buildFile = findBuildFile(System.getProperty("user.dir"), 
+                buildFile = findBuildFile(System.getProperty("user.dir"),
                                           searchForThis);
             } else {
                 buildFile = new File(DEFAULT_BUILD_FILENAME);
@@ -396,17 +423,17 @@ public class Main {
         }
 
         // Load the property files specified by -propertyfile
-        for (int propertyFileIndex=0;
+        for (int propertyFileIndex = 0;
              propertyFileIndex < propertyFiles.size();
              propertyFileIndex++) {
-            String filename = (String) propertyFiles.elementAt(propertyFileIndex);
+            String filename
+                = (String) propertyFiles.elementAt(propertyFileIndex);
             Properties props = new Properties();
             FileInputStream fis = null;
             try {
                 fis = new FileInputStream(filename);
                 props.load(fis);
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 System.out.println("Could not load property file "
                    + filename + ": " + e.getMessage());
             } finally {
@@ -417,7 +444,7 @@ public class Main {
                 }
               }
             }
-            
+
             // ensure that -D properties take precedence
             Enumeration propertyNames = props.propertyNames();
             while (propertyNames.hasMoreElements()) {
@@ -445,7 +472,7 @@ public class Main {
         filename = file.getParent();
 
         if (filename != null && msgOutputLevel >= Project.MSG_VERBOSE) {
-            System.out.println("Searching in "+filename);
+            System.out.println("Searching in " + filename);
         }
 
         return (filename == null) ? null : new File(filename);
@@ -463,34 +490,35 @@ public class Main {
      *               Must not be <code>null</code>.
      * @param suffix  Suffix filename to look for in parents.
      *                Must not be <code>null</code>.
-     * 
+     *
      * @return A handle to the build file if one is found
      *
      * @exception BuildException if no build file is found
      */
-    private File findBuildFile(String start, String suffix) throws BuildException {
+    private File findBuildFile(String start, String suffix)
+         throws BuildException {
         if (msgOutputLevel >= Project.MSG_INFO) {
             System.out.println("Searching for " + suffix + " ...");
         }
 
         File parent = new File(new File(start).getAbsolutePath());
         File file = new File(parent, suffix);
-        
+
         // check if the target file exists in the current directory
         while (!file.exists()) {
             // change to parent directory
             parent = getParentFile(parent);
-            
+
             // if parent is null, then we are at the root of the fs,
             // complain that we can't find the build file.
             if (parent == null) {
                 throw new BuildException("Could not locate a build file!");
             }
-            
+
             // refresh our file handle
             file = new File(parent, suffix);
         }
-        
+
         return file;
     }
 
@@ -498,11 +526,11 @@ public class Main {
      * Executes the build. If the constructor for this instance failed
      * (e.g. returned after issuing a warning), this method returns
      * immediately.
-     * 
+     *
      * @param coreLoader The classloader to use to find core classes.
      *                   May be <code>null</code>, in which case the
      *                   system classloader is used.
-     * 
+     *
      * @exception BuildException if the build fails
      */
     private void runBuild(ClassLoader coreLoader) throws BuildException {
@@ -532,11 +560,11 @@ public class Main {
             // use a system manager that prevents from System.exit()
             // only in JDK > 1.1
             SecurityManager oldsm = null;
-            if ( !Project.JAVA_1_0.equals(Project.getJavaVersion()) &&
-                !Project.JAVA_1_1.equals(Project.getJavaVersion()) ){
+            if (!Project.JAVA_1_0.equals(Project.getJavaVersion()) &&
+                !Project.JAVA_1_1.equals(Project.getJavaVersion())){
                 oldsm = System.getSecurityManager();
 
-                //SecurityManager can not be installed here for backwards 
+                //SecurityManager can not be installed here for backwards
                 //compatability reasons (PD). Needs to be loaded prior to
                 //ant class if we are going to implement it.
                 //System.setSecurityManager(new NoExitSecurityManager());
@@ -554,17 +582,19 @@ public class Main {
                 // set user-define properties
                 Enumeration e = definedProps.keys();
                 while (e.hasMoreElements()) {
-                    String arg = (String)e.nextElement();
-                    String value = (String)definedProps.get(arg);
+                    String arg = (String) e.nextElement();
+                    String value = (String) definedProps.get(arg);
                     project.setUserProperty(arg, value);
                 }
-                
-                project.setUserProperty("ant.file" , buildFile.getAbsolutePath() );
-                
+
+                project.setUserProperty("ant.file",
+                    buildFile.getAbsolutePath());
+
                 // first use the ProjectHelper to create the project object
                 // from the given build file.
-                String noParserMessage = 
-                    "No JAXP compliant XML parser found. Please visit http://xml.apache.org for a suitable parser";
+                String noParserMessage = "No JAXP compliant XML parser found. "
+                    + "Please visit http://xml.apache.org "
+                    + "for a suitable parser";
                 try {
                     Class.forName("javax.xml.parsers.SAXParserFactory");
                     ProjectHelper.configureProject(project, buildFile);
@@ -578,18 +608,17 @@ public class Main {
 
                 if (projectHelp) {
                     printDescription(project);
-                    printTargets(project, msgOutputLevel > Project.MSG_INFO );
+                    printTargets(project, msgOutputLevel > Project.MSG_INFO);
                     return;
                 }
-                
+
                 // make sure that we have a target to execute
                 if (targets.size() == 0) {
                     targets.addElement(project.getDefaultTarget());
                 }
-                
+
                 project.executeTargets(targets);
-            }
-            finally {
+            } finally {
                 // put back the original security manager
                 //The following will never eval to true. (PD)
                 if (oldsm != null){
@@ -599,16 +628,13 @@ public class Main {
                 System.setOut(out);
                 System.setErr(err);
             }
-        }
-        catch(RuntimeException exc) {
+        } catch (RuntimeException exc) {
             error = exc;
             throw exc;
-        }
-        catch(Error err) {
+        } catch (Error err) {
             error = err;
             throw err;
-        }
-        finally {
+        } finally {
             if (!projectHelp) {
                 project.fireBuildFinished(error);
             }
@@ -618,7 +644,7 @@ public class Main {
     /**
      * Adds the listeners specified in the command line arguments,
      * along with the default listener, to the specified project.
-     * 
+     *
      * @param project The project to add listeners to.
      *                Must not be <code>null</code>.
      */
@@ -633,9 +659,9 @@ public class Main {
                 BuildListener listener =
                     (BuildListener) Class.forName(className).newInstance();
                 project.addBuildListener(listener);
-            }
-            catch(Throwable exc) {
-                throw new BuildException("Unable to instantiate listener " + className, exc);
+            } catch (Throwable exc) {
+                throw new BuildException("Unable to instantiate listener "
+                    + className, exc);
             }
         }
     }
@@ -654,48 +680,51 @@ public class Main {
             handler = new DefaultInputHandler();
         } else {
             try {
-                handler = (InputHandler)(Class.forName(inputHandlerClassname).newInstance());
-            }
-            catch (ClassCastException e) {
+                handler = (InputHandler)
+                    (Class.forName(inputHandlerClassname).newInstance());
+            } catch (ClassCastException e) {
                 String msg = "The specified input handler class " 
                     + inputHandlerClassname 
                     + " does not implement the InputHandler interface";
                 throw new BuildException(msg);
             }
             catch (Exception e) {
-                String msg = "Unable to instantiate specified input handler class " 
-                    + inputHandlerClassname + " : " + e.getClass().getName();
+                String msg = "Unable to instantiate specified input handler "
+                    + "class " + inputHandlerClassname + " : " 
+                    + e.getClass().getName();
                 throw new BuildException(msg);
             }
         }
         project.setInputHandler(handler);
     }
 
-    // XXX: (Jon Skeet) Any reason for writing a message and then using a bare 
+    // XXX: (Jon Skeet) Any reason for writing a message and then using a bare
     // RuntimeException rather than just using a BuildException here? Is it
-    // in case the message could end up being written to no loggers (as the loggers
-    // could have failed to be created due to this failure)?
+    // in case the message could end up being written to no loggers (as the
+    // loggers could have failed to be created due to this failure)?
     /**
-     *  Creates the default build logger for sending build events to the ant log.
+     * Creates the default build logger for sending build events to the ant
+     * log.
+     *
+     * @return the logger instance for this build.
      */
     private BuildLogger createLogger() {
         BuildLogger logger = null;
         if (loggerClassname != null) {
             try {
-                logger = (BuildLogger)(Class.forName(loggerClassname).newInstance());
-            }
-            catch (ClassCastException e) {
-                System.err.println("The specified logger class " + loggerClassname +
-                                         " does not implement the BuildLogger interface");
+                logger = (BuildLogger) (Class.forName(loggerClassname).newInstance());
+            } catch (ClassCastException e) {
+                System.err.println("The specified logger class "
+                    + loggerClassname
+                    + " does not implement the BuildLogger interface");
+                throw new RuntimeException();
+            } catch (Exception e) {
+                System.err.println("Unable to instantiate specified logger "
+                    + "class " + loggerClassname + " : " 
+                    + e.getClass().getName());
                 throw new RuntimeException();
             }
-            catch (Exception e) {
-                System.err.println("Unable to instantiate specified logger class " +
-                                           loggerClassname + " : " + e.getClass().getName());
-                throw new RuntimeException();
-            }
-        }
-        else {
+        } else {
             logger = new DefaultLogger();
         }
 
@@ -736,7 +765,7 @@ public class Main {
 
     /**
      * Prints the Ant version information to <code>System.out</code>.
-     * 
+     *
      * @exception BuildException if the version information is unavailable
      */
     private static void printVersion() throws BuildException {
@@ -752,10 +781,10 @@ public class Main {
      * Returns the Ant version information, if available. Once the information
      * has been loaded once, it's cached and returned from the cache on future
      * calls.
-     * 
-     * @return the Ant version information as a String 
+     *
+     * @return the Ant version information as a String
      *         (always non-<code>null</code>)
-     * 
+     *
      * @exception BuildException if the version information is unavailable
      */
     public static synchronized String getAntVersion() throws BuildException {
@@ -766,7 +795,7 @@ public class Main {
                     Main.class.getResourceAsStream("/org/apache/tools/ant/version.txt");
                 props.load(in);
                 in.close();
-                
+
                 String lSep = System.getProperty("line.separator");
                 StringBuffer msg = new StringBuffer();
                 msg.append("Apache Ant version ");
@@ -785,9 +814,9 @@ public class Main {
     }
 
      /**
-      * Prints the description of a project (if there is one) to 
+      * Prints the description of a project (if there is one) to
       * <code>System.out</code>.
-      * 
+      *
       * @param project The project to display a description of.
       *                Must not be <code>null</code>.
       */
@@ -798,9 +827,9 @@ public class Main {
     }
 
     /**
-     * Prints a list of all targets in the specified project to 
+     * Prints a list of all targets in the specified project to
      * <code>System.out</code>, optionally including subtargets.
-     * 
+     *
      * @param project The project to display a description of.
      *                Must not be <code>null</code>.
      * @param printSubTargets Whether or not subtarget names should also be
@@ -820,7 +849,7 @@ public class Main {
         Vector subNames = new Vector();
 
         while (ptargets.hasMoreElements()) {
-            currentTarget = (Target)ptargets.nextElement();
+            currentTarget = (Target) ptargets.nextElement();
             targetName = currentTarget.getName();
             targetDescription = currentTarget.getDescription();
             // maintain a sorted list of targets
@@ -838,31 +867,32 @@ public class Main {
         }
 
         printTargets(topNames, topDescriptions, "Main targets:", maxLength);
-        
-        if( printSubTargets ) {
+
+        if (printSubTargets) {
             printTargets(subNames, null, "Subtargets:", 0);
         }
 
         String defaultTarget = project.getDefaultTarget();
-        if (defaultTarget != null && !"".equals(defaultTarget)) { // shouldn't need to check but...
-            System.out.println( "Default target: " + defaultTarget );
+        if (defaultTarget != null && !"".equals(defaultTarget)) {
+            // shouldn't need to check but...
+            System.out.println("Default target: " + defaultTarget);
         }
     }
 
     /**
      * Searches for the correct place to insert a name into a list so as
      * to keep the list sorted alphabetically.
-     * 
+     *
      * @param names The current list of names. Must not be <code>null</code>.
      * @param name  The name to find a place for.
      *              Must not be <code>null</code>.
-     * 
+     *
      * @return the correct place in the list for the given name
      */
     private static int findTargetPosition(Vector names, String name) {
         int res = names.size();
-        for (int i=0; i<names.size() && res == names.size(); i++) {
-            if (name.compareTo((String)names.elementAt(i)) < 0) {
+        for (int i = 0; i < names.size() && res == names.size(); i++) {
+            if (name.compareTo((String) names.elementAt(i)) < 0) {
                 res = i;
             }
         }
@@ -871,23 +901,38 @@ public class Main {
 
     /**
      * Writes a formatted list of target names to <code>System.out</code>
-     * with an optional description
+     * with an optional description.
+     *
+     * @param names The names to be printed.
+     *              Must not be <code>null</code>.
+     * @param descriptions The associated target descriptions.
+     *                     May be <code>null</code>, in which case
+     *                     no descriptions are displayed.
+     *                     If non-<code>null</code>, this should have
+     *                     as many elements as <code>names</code>.
+     * @param heading The heading to display.
+     *                Should not be <code>null</code>.
+     * @param maxlen The maximum length of the names of the targets.
+     *               If descriptions are given, they are padded to this
+     *               position so they line up (so long as the names really
+     *               <i>are</i> shorter than this).
      */
-    private static void printTargets(Vector names, Vector descriptions, String heading, int maxlen) {
+    private static void printTargets(Vector names, Vector descriptions,
+                                     String heading, int maxlen) {
         // now, start printing the targets and their descriptions
         String lSep = System.getProperty("line.separator");
         // got a bit annoyed that I couldn't find a pad function
         String spaces = "    ";
-        while (spaces.length()<maxlen) {
+        while (spaces.length() < maxlen) {
             spaces += spaces;
         }
         StringBuffer msg = new StringBuffer();
         msg.append(heading + lSep + lSep);
-        for (int i=0; i<names.size(); i++) {
+        for (int i = 0; i < names.size(); i++) {
             msg.append(" ");
             msg.append(names.elementAt(i));
             if (descriptions != null) {
-                msg.append(spaces.substring(0, maxlen - ((String)names.elementAt(i)).length() + 2));
+                msg.append(spaces.substring(0, maxlen - ((String) names.elementAt(i)).length() + 2));
                 msg.append(descriptions.elementAt(i));
             }
             msg.append(lSep);

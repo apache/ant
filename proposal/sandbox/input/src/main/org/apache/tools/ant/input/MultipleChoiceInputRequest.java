@@ -61,6 +61,7 @@ import java.util.Vector;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
+ * @since Ant 1.5
  */
 public class MultipleChoiceInputRequest extends InputRequest {
     private Vector choices = new Vector();
@@ -79,12 +80,15 @@ public class MultipleChoiceInputRequest extends InputRequest {
     }
 
     /**
-     * The possible values.
+     * @return The possible values.
      */
     public Vector getChoices() {
         return choices;
     }
 
+    /**
+     * @return true if the input is one of the allowed values.
+     */
     public boolean isInputValid() {
         return choices.contains(getInput());
     }

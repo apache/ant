@@ -67,6 +67,7 @@ import org.apache.tools.ant.BuildException;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
+ * @since Ant 1.5
  */
 public class DefaultInputHandler implements InputHandler {
     
@@ -76,6 +77,10 @@ public class DefaultInputHandler implements InputHandler {
     public DefaultInputHandler() {
     }
 
+    /**
+     * Prompts and requests input.  May loop until a valid input has
+     * been entered.
+     */
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
         BufferedReader in = 
@@ -95,7 +100,7 @@ public class DefaultInputHandler implements InputHandler {
     /**
      * Constructs user prompt from a request.
      *
-     * <p>This implemenation adds (choice1,choice2,choice3,...) to the
+     * <p>This implementation adds (choice1,choice2,choice3,...) to the
      * prompt for <code>MultipleChoiceInputRequest</code>s.</p>
      *
      * @param request the request to construct the prompt for.
@@ -110,12 +115,11 @@ public class DefaultInputHandler implements InputHandler {
                 ((MultipleChoiceInputRequest) request).getChoices().elements();
             boolean first = true;
             while (enum.hasMoreElements()) {
-                if (first) {
-                    first = false;
-                } else {
+                if (!first) {
                     sb.append(",");
                 }
                 sb.append(enum.nextElement());
+                first = false;
             }
             sb.append(")");
             prompt = sb.toString();

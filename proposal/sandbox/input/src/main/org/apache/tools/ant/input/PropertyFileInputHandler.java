@@ -66,6 +66,7 @@ import java.util.Properties;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
+ * @since Ant 1.5
  */
 public class PropertyFileInputHandler implements InputHandler {
     private Properties props = null;
@@ -81,6 +82,12 @@ public class PropertyFileInputHandler implements InputHandler {
     public PropertyFileInputHandler() {
     }
 
+    /**
+     * Picks up the input from a property, using the prompt as the
+     * name of the property.
+     *
+     * @exception BuildException if no property of that name can be found.
+     */
     public void handleInput(InputRequest request) throws BuildException {
         readProps();
         Object o = props.get(request.getPrompt());
@@ -95,13 +102,17 @@ public class PropertyFileInputHandler implements InputHandler {
         }
     }
 
+    /**
+     * Reads the properties file if it hasn't already been read.
+     */
     private synchronized void readProps() throws BuildException {
         if (props == null) {
             String propsFile = System.getProperty(FILE_NAME_KEY);
             if (propsFile == null) {
                 throw new BuildException("System property "
                                          + FILE_NAME_KEY
-                                         + " for PropertyFileInputHandler not set");
+                                         + " for PropertyFileInputHandler not"
+                                         + " set");
             }
             
             props = new Properties();
@@ -109,7 +120,7 @@ public class PropertyFileInputHandler implements InputHandler {
             try {
                 props.load(new FileInputStream(propsFile));
             } catch (IOException e) {
-                throw new BuildException("Couldn't load "+propsFile, e);
+                throw new BuildException("Couldn't load " + propsFile, e);
             }
         }
     }
