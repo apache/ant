@@ -89,9 +89,6 @@ public class GenerateKey extends Task {
     }
 
     public static class DistinguishedName {
-        private String name;
-        private String path;
-        
         private Vector params = new Vector();
         
         public Object createParam() {
@@ -240,7 +237,7 @@ public class GenerateKey extends Task {
     } 
 
     public void execute() throws BuildException {
-        if (project.getJavaVersion().equals(Project.JAVA_1_1)) {
+        if (Project.getJavaVersion().equals(Project.JAVA_1_1)) {
             throw new BuildException( "The genkey task is only available on JDK" +
                                       " versions 1.2 or greater" );
         } 
