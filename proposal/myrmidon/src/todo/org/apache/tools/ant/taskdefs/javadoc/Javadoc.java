@@ -130,7 +130,7 @@ public class Javadoc
     public void setBottom( String src )
     {
         Html h = new Html();
-        h.addText( src );
+        h.addContent( src );
         addBottom( h );
     }
 
@@ -219,7 +219,7 @@ public class Javadoc
     public void setDoctitle( String src )
     {
         Html h = new Html();
-        h.addText( src );
+        h.addContent( src );
         addDoctitle( h );
     }
 
@@ -250,7 +250,7 @@ public class Javadoc
     public void setFooter( String src )
     {
         Html h = new Html();
-        h.addText( src );
+        h.addContent( src );
         addFooter( h );
     }
 
@@ -262,7 +262,7 @@ public class Javadoc
     public void setHeader( String src )
     {
         Html h = new Html();
-        h.addText( src );
+        h.addContent( src );
         addHeader( h );
     }
 

@@ -85,7 +85,7 @@ public class Input extends Task
      *
      * @param msg The feature to be added to the Text attribute
      */
-    public void addText( String msg )
+    public void addContent( String msg )
         throws TaskException
     {
         message += getProject().replaceProperties( msg );

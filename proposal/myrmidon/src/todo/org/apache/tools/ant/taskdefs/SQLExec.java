@@ -354,7 +354,7 @@ public class SQLExec extends Task
      *
      * @param sql The feature to be added to the Text attribute
      */
-    public void addText( String sql )
+    public void addContent( String sql )
     {
         this.sqlCommand += sql;
     }
@@ -425,7 +425,7 @@ public class SQLExec extends Task
             // Make a transaction group for the outer command
             Transaction t = createTransaction();
             t.setSrc( srcFile );
-            t.addText( sqlCommand );
+            t.addContent( sqlCommand );
         }
 
         if( driver == null )
@@ -839,7 +839,7 @@ public class SQLExec extends Task
             this.tSrcFile = src;
         }
 
-        public void addText( String sql )
+        public void addContent( String sql )
         {
             this.tSqlCommand += sql;
         }

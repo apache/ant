@@ -114,7 +114,7 @@ public class Replace extends MatchingTask
      */
     public void setToken( String token )
     {
-        createReplaceToken().addText( token );
+        createReplaceToken().addContent( token );
     }
 
     /**
@@ -124,7 +124,7 @@ public class Replace extends MatchingTask
      */
     public void setValue( String value )
     {
-        createReplaceValue().addText( value );
+        createReplaceValue().addContent( value );
     }
 
     public Properties getProperties( File propertyFile )
@@ -485,7 +485,7 @@ public class Replace extends MatchingTask
             return buf.toString();
         }
 
-        public void addText( String val )
+        public void addContent( String val )
         {
             buf.append( val );
         }

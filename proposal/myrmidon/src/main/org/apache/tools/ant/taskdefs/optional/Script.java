@@ -71,7 +71,7 @@ public class Script extends Task
      *
      * @param text The feature to be added to the Text attribute
      */
-    public void addText( String text )
+    public void addContent( String text )
     {
         this.script += text;
     }

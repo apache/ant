@@ -30,7 +30,7 @@ public class GroupArgument
     public void setTitle( final String src )
     {
         final Html h = new Html();
-        h.addText( src );
+        h.addContent( src );
         addTitle( h );
     }
 

@@ -16,7 +16,7 @@ public class Html
         return m_text.toString();
     }
 
-    public void addText( final String text )
+    public void addContent( final String text )
     {
         m_text.append( text );
     }

@@ -60,7 +60,7 @@ public class Echo
      *
      * @param msg The feature to be added to the Text attribute
      */
-    public void addText( final String message )
+    public void addContent( final String message )
         throws TaskException
     {
         m_message = message;

@@ -369,7 +369,7 @@ public class TelnetTask extends Task
             taskString += s;
         }
 
-        public void addText( String s )
+        public void addContent( String s )
         {
             setString( s );
         }
