@@ -73,6 +73,8 @@ public abstract class Task extends ProjectComponent
     protected String taskType = null;
     /** The description of this task */
     protected String description = null;
+    /** The location within the build file of this project component */
+    protected Location location;
 
     /**
      * Called by the project to let the task do its work. This method may be 
@@ -142,6 +144,16 @@ public abstract class Task extends ProjectComponent
         return description;
     }
 
+    /**
+     * Gets the location of the ProjectComponent's associated model element
+     * in the build file
+     *
+     * @return the location of the associated model element
+     */
+    public Location getLocation() {
+        return location;
+    }
+
 
     /**
      * Add a nested task to this Ant1 task.
@@ -181,6 +193,18 @@ public abstract class Task extends ProjectComponent
 
         taskType = componentType;
         taskName = componentType;
+        
+        org.apache.ant.common.util.Location contextLocation
+             = context.getLocation();
+
+        if (contextLocation
+             == org.apache.ant.common.util.Location.UNKNOWN_LOCATION) {
+            location = Location.UNKNOWN_LOCATION;
+        } else {
+            location = new Location(contextLocation.getSource(),
+                contextLocation.getLineNumber(),
+                contextLocation.getColumnNumber());
+        }
         init();
     }
 
@@ -257,5 +281,15 @@ public abstract class Task extends ProjectComponent
     void setTaskType(String type) {
         this.taskType = type;
     }
+    
+    /**
+     * Sets the file location where this task was defined.
+     *
+     * @param location the new location value
+     */
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
 }
 

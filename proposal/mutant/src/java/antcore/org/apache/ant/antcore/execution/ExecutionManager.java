@@ -136,7 +136,7 @@ public class ExecutionManager implements DemuxOutputReceiver {
 
             librarySpecs.clear();
             // add any additional libraries.
-            for (Iterator i = config.getLibraryLocations(); i.hasNext(); ) {
+            for (Iterator i = config.getLibraryLocations(); i.hasNext();) {
                 // try file first
                 String libLocation = (String)i.next();
                 libManager.loadLibs(librarySpecs, libLocation);
@@ -168,7 +168,7 @@ public class ExecutionManager implements DemuxOutputReceiver {
             project.validate();
 
             mainFrame = new Frame(antLibraries, initConfig, config);
-            for (Iterator j = eventSupport.getListeners(); j.hasNext(); ) {
+            for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
                 BuildListener listener = (BuildListener)j.next();
                 mainFrame.addBuildListener(listener);
             }

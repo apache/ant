@@ -187,7 +187,7 @@ public class Frame implements DemuxOutputReceiver {
         this.project = project;
         referencedFrames = new HashMap();
 
-        for (Iterator i = project.getReferencedProjectNames(); i.hasNext(); ) {
+        for (Iterator i = project.getReferencedProjectNames(); i.hasNext();) {
             String referenceName = (String)i.next();
             Project referencedProject
                  = project.getReferencedProject(referenceName);
@@ -507,7 +507,7 @@ public class Frame implements DemuxOutputReceiver {
      * @exception ExecutionException if the frame cannot be created.
      */
     protected void addProperties(Map properties) throws ExecutionException {
-        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
             String name = (String)i.next();
             Object value = properties.get(name);
             setDataValue(name, value, false);
@@ -526,7 +526,7 @@ public class Frame implements DemuxOutputReceiver {
         Frame newFrame
              = new Frame(standardLibs, initConfig, config);
         newFrame.setProject(project);
-        for (Iterator j = eventSupport.getListeners(); j.hasNext(); ) {
+        for (Iterator j = eventSupport.getListeners(); j.hasNext();) {
             BuildListener listener = (BuildListener)j.next();
             newFrame.addBuildListener(listener);
         }
@@ -549,7 +549,7 @@ public class Frame implements DemuxOutputReceiver {
      * @param listener the listener to be added to the frame
      */
     protected void addBuildListener(BuildListener listener) {
-        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
+        for (Iterator i = getReferencedFrames(); i.hasNext();) {
             Frame referencedFrame = (Frame)i.next();
             referencedFrame.addBuildListener(listener);
         }
@@ -562,7 +562,7 @@ public class Frame implements DemuxOutputReceiver {
      * @param listener the listener to be removed
      */
     protected void removeBuildListener(BuildListener listener) {
-        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
+        for (Iterator i = getReferencedFrames(); i.hasNext();) {
             Frame subFrame = (Frame)i.next();
             subFrame.removeBuildListener(listener);
         }
@@ -588,7 +588,7 @@ public class Frame implements DemuxOutputReceiver {
                 executeTarget(defaultTarget);
             }
         } else {
-            for (Iterator i = targets.iterator(); i.hasNext(); ) {
+            for (Iterator i = targets.iterator(); i.hasNext();) {
                 String targetName = (String)i.next();
                 log("Executing target: " + targetName, MessageLevel.MSG_DEBUG);
                 executeTarget(targetName);
@@ -611,7 +611,7 @@ public class Frame implements DemuxOutputReceiver {
         try {
             // firstly build a list of fully qualified target names to execute.
             List dependencyOrder = project.getTargetDependencies(targetName);
-            for (Iterator i = dependencyOrder.iterator(); i.hasNext(); ) {
+            for (Iterator i = dependencyOrder.iterator(); i.hasNext();) {
                 String fullTargetName = (String)i.next();
                 Frame frame = getContainingFrame(fullTargetName);
                 String localTargetName = getNameInFrame(fullTargetName);
@@ -717,7 +717,7 @@ public class Frame implements DemuxOutputReceiver {
      *      failed
      */
     protected void initialize() throws ExecutionException {
-        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
+        for (Iterator i = getReferencedFrames(); i.hasNext();) {
             Frame referencedFrame = (Frame)i.next();
             referencedFrame.initialize();
         }
@@ -765,7 +765,7 @@ public class Frame implements DemuxOutputReceiver {
         }
         setDataValue(MagicProperties.BASEDIR, baseDir.getAbsolutePath(), true);
 
-        for (Iterator i = getReferencedFrames(); i.hasNext(); ) {
+        for (Iterator i = getReferencedFrames(); i.hasNext();) {
             Frame refFrame = (Frame)i.next();
             refFrame.determineBaseDirs();
         }

@@ -111,7 +111,7 @@ public class CallTarget extends Task {
 
     /** execute the call */
     public void execute() {
-        for (Iterator i = properties.iterator(); i.hasNext(); ) {
+        for (Iterator i = properties.iterator(); i.hasNext();) {
             Property property = (Property)i.next();
             AntBase.Property newProperty = new AntBase.Property();
             newProperty.setName(property.getName());

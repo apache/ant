@@ -65,8 +65,6 @@ import org.apache.ant.common.util.ExecutionException;
 public abstract class ProjectComponent {
     /** The project in which the project component operates */
     protected Project project;
-    /** The location within the build file of this project component */
-    protected Location location;
     /** The core context for this component */
     private AntContext context;
     /** The type of the component bneing created */
@@ -83,31 +81,12 @@ public abstract class ProjectComponent {
     }
 
     /**
-     * Sets the file location where this task was defined.
-     *
-     * @param location the new location value
-     */
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    /**
      * Gets the project of the ProjectComponent
      *
      * @return the project
      */
     public Project getProject() {
         return project;
-    }
-
-    /**
-     * Gets the location of the ProjectComponent's associated model element
-     * in the build file
-     *
-     * @return the location of the associated model element
-     */
-    public Location getLocation() {
-        return location;
     }
 
     /**
@@ -141,17 +120,6 @@ public abstract class ProjectComponent {
         this.context = context;
         this.componentType = componentType;
 
-        org.apache.ant.common.util.Location contextLocation
-             = context.getLocation();
-
-        if (contextLocation
-             == org.apache.ant.common.util.Location.UNKNOWN_LOCATION) {
-            location = Location.UNKNOWN_LOCATION;
-        } else {
-            location = new Location(contextLocation.getSource(),
-                contextLocation.getLineNumber(),
-                contextLocation.getColumnNumber());
-        }
     }
 
     /**

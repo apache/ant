@@ -416,7 +416,7 @@ public class Project extends ModelElement {
                 targetGlobalName = globalName + REF_DELIMITER + targetName;
             }
             checker.visitNode(targetGlobalName);
-            for (Iterator i = target.getDependencies(); i.hasNext(); ) {
+            for (Iterator i = target.getDependencies(); i.hasNext();) {
                 String dependency = (String)i.next();
                 boolean localTarget = (dependency.indexOf(REF_DELIMITER) == -1);
                 Target dependencyTarget
@@ -459,7 +459,7 @@ public class Project extends ModelElement {
      */
     protected void validate(String globalName) throws ModelException {
         Set keys = referencedProjects.keySet();
-        for (Iterator i = keys.iterator(); i.hasNext(); ) {
+        for (Iterator i = keys.iterator(); i.hasNext();) {
             String refName = (String)i.next();
             Project referencedProject
                  = (Project)referencedProjects.get(refName);
@@ -481,7 +481,7 @@ public class Project extends ModelElement {
         // dependency order is purely recorded for debug purposes
         List dependencyOrder = new ArrayList();
 
-        for (Iterator i = getTargets(); i.hasNext(); ) {
+        for (Iterator i = getTargets(); i.hasNext();) {
             Target target = (Target)i.next();
             target.validate();
             fillinDependencyOrder(globalName, target, dependencyOrder,
@@ -526,7 +526,7 @@ public class Project extends ModelElement {
                 throw new ConfigException("Target " + fullTargetName
                      + " does not exist");
             }
-            for (Iterator i = target.getDependencies(); i.hasNext(); ) {
+            for (Iterator i = target.getDependencies(); i.hasNext();) {
                 String localDependencyName = (String)i.next();
                 String fullDependencyName
                      = fullProjectName == null ? localDependencyName

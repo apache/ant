@@ -173,7 +173,7 @@ public class BuildHelper {
             args[index++] = "-classpath";
             args[index++] = path;
         }
-        for (Iterator i = javaFiles.iterator(); i.hasNext(); ) {
+        for (Iterator i = javaFiles.iterator(); i.hasNext();) {
             args[index++] = ((File)i.next()).getPath();
         }
 

@@ -186,8 +186,7 @@ public class FileUtils {
 
             for (int i = 2; i < ca.length; i++) {
                 if ((ca[i] != '\\') ||
-                    (ca[i] == '\\' && ca[i - 1] != '\\')
-                    ) {
+                    (ca[i] == '\\' && ca[i - 1] != '\\')) {
                     sb.append(ca[i]);
                 }
             }

@@ -160,7 +160,7 @@ public class Commandline {
         // Add the default listener
         execManager.addBuildListener(logger);
 
-        for (Iterator i = listeners.iterator(); i.hasNext(); ) {
+        for (Iterator i = listeners.iterator(); i.hasNext();) {
             String className = (String)i.next();
             try {
                 BuildListener listener =
@@ -284,7 +284,7 @@ public class Commandline {
                 config.merge(userConfig);
             }
 
-            for (Iterator i = configFiles.iterator(); i.hasNext(); ) {
+            for (Iterator i = configFiles.iterator(); i.hasNext();) {
                 File configFile = (File)i.next();
                 AntConfig runConfig = getAntConfigFile(configFile);
                 config.merge(runConfig);

@@ -162,7 +162,7 @@ public class Ant extends Task {
      *            problem
      */
     public void execute() throws BuildException {
-        for (Iterator i = properties.iterator(); i.hasNext(); ) {
+        for (Iterator i = properties.iterator(); i.hasNext();) {
             Property property = (Property)i.next();
             AntBase.Property newProperty = new AntBase.Property();
             newProperty.setName(property.getName());

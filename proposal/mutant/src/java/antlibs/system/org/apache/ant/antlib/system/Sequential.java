@@ -101,7 +101,7 @@ public class Sequential extends AbstractTask
         AntContext context = getAntContext();
         ExecService execService
              = (ExecService)context.getCoreService(ExecService.class);
-        for (Iterator i = nestedTasks.iterator(); i.hasNext(); ) {
+        for (Iterator i = nestedTasks.iterator(); i.hasNext();) {
             Task nestedTask = (Task)i.next();
             execService.executeTask(nestedTask);
         }

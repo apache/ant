@@ -113,7 +113,7 @@ public abstract class ModelElement {
      */
     public void setAspects(Map aspects) {
         aspectMaps = new HashMap();
-        for (Iterator i = aspects.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator i = aspects.keySet().iterator(); i.hasNext();) {
             String aspectName = (String)i.next();
             int separator = aspectName.indexOf(":");
             if (separator != -1) {

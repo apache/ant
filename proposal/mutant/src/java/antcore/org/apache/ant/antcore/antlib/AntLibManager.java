@@ -161,7 +161,7 @@ public class AntLibManager {
          throws ExecutionException {
 
         // check if any already defined
-        for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext();) {
             String libraryId = (String)i.next();
             if (libraries.containsKey(libraryId)) {
                 AntLibrary currentVersion
@@ -174,7 +174,7 @@ public class AntLibManager {
 
         CircularDependencyChecker configuring
              = new CircularDependencyChecker("configuring Ant libraries");
-        for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator i = librarySpecs.keySet().iterator(); i.hasNext();) {
             String libraryId = (String)i.next();
             if (!libraries.containsKey(libraryId)) {
                 configLibrary(initConfig, librarySpecs, libraryId,
@@ -309,7 +309,7 @@ public class AntLibManager {
                 }
             }
 
-            for (Iterator i = urlsList.iterator(); i.hasNext(); ) {
+            for (Iterator i = urlsList.iterator(); i.hasNext();) {
                 antLibrary.addLibraryURL((URL)i.next());
             }
             if (extendsId != null) {
@@ -322,7 +322,7 @@ public class AntLibManager {
 
             List libPaths = (List)libPathsMap.get(libraryId);
             if (libPaths != null) {
-                for (Iterator j = libPaths.iterator(); j.hasNext(); ) {
+                for (Iterator j = libPaths.iterator(); j.hasNext();) {
                     URL pathURL = (URL)j.next();
                     addLibPath(antLibrary, pathURL);
                 }

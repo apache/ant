@@ -245,7 +245,7 @@ public class ComponentManager implements ComponentService {
             throw new ExecutionException("Unable to import library " + libraryId
                  + " as it has not been loaded");
         }
-        for (Iterator i = library.getDefinitionNames(); i.hasNext(); ) {
+        for (Iterator i = library.getDefinitionNames(); i.hasNext();) {
             String defName = (String)i.next();
             importLibraryDef(library, defName, null);
         }
@@ -360,7 +360,7 @@ public class ComponentManager implements ComponentService {
         antLibraries = new HashMap(standardLibs);
 
         // go through the libraries and import all standard ant libraries
-        for (Iterator i = antLibraries.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator i = antLibraries.keySet().iterator(); i.hasNext();) {
             String libraryId = (String)i.next();
             if (libraryId.startsWith(Constants.ANT_LIB_PREFIX)) {
                 // standard library - import whole library
@@ -805,7 +805,7 @@ public class ComponentManager implements ComponentService {
          throws ExecutionException {
         Setter setter = getSetter(element.getClass());
         // start by setting the attributes of this element
-        for (Iterator i = model.getAttributeNames(); i.hasNext(); ) {
+        for (Iterator i = model.getAttributeNames(); i.hasNext();) {
             String attributeName = (String)i.next();
             String attributeValue = model.getAttributeValue(attributeName);
             if (!setter.supportsAttribute(attributeName)) {
@@ -828,7 +828,7 @@ public class ComponentManager implements ComponentService {
         }
 
         // now do the nested elements
-        for (Iterator i = model.getNestedElements(); i.hasNext(); ) {
+        for (Iterator i = model.getNestedElements(); i.hasNext();) {
             BuildElement nestedElementModel = (BuildElement)i.next();
             String nestedElementName = nestedElementModel.getType();
             ImportInfo info = getDefinition(nestedElementName);
@@ -901,7 +901,7 @@ public class ComponentManager implements ComponentService {
         try {
             AntLibFactory libFactory = getLibFactory(library);
             ClassLoader converterLoader = library.getClassLoader();
-            for (Iterator i = library.getConverterClassNames(); i.hasNext(); ) {
+            for (Iterator i = library.getConverterClassNames(); i.hasNext();) {
                 className = (String)i.next();
                 Class converterClass
                      = Class.forName(className, true, converterLoader);

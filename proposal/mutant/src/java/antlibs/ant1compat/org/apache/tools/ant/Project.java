@@ -472,7 +472,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     public Hashtable getProperties() {
         Map properties = dataService.getAllProperties();
         Hashtable result = new Hashtable();
-        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
             String name = (String)i.next();
             Object value = properties.get(name);
             if (value instanceof String) {
@@ -500,7 +500,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     public Hashtable getReferences() {
         Map properties = dataService.getAllProperties();
         Hashtable result = new Hashtable();
-        for (Iterator i = properties.keySet().iterator(); i.hasNext(); ) {
+        for (Iterator i = properties.keySet().iterator(); i.hasNext();) {
             String name = (String)i.next();
             Object value = properties.get(name);
             if (!(value instanceof String)) {

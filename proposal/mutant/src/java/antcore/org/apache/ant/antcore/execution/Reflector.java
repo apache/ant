@@ -415,7 +415,7 @@ public class Reflector implements Setter {
         if (converters != null) {
             // desparate by now - try top find a converter which handles a super
             // class of this type and which supports subclass instantiation
-            for (Iterator i = converters.keySet().iterator(); i.hasNext(); ) {
+            for (Iterator i = converters.keySet().iterator(); i.hasNext();) {
                 Class converterType = (Class)i.next();
                 if (converterType.isAssignableFrom(type)) {
                     // could be a candidate

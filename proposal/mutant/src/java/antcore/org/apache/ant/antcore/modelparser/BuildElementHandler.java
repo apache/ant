@@ -88,7 +88,7 @@ public class BuildElementHandler extends ModelElementHandler {
              = new BuildElement(getLocation(), elementName);
         setModelElement(buildElement);
         
-        for (Iterator i = getAttributes(); i.hasNext(); ) {
+        for (Iterator i = getAttributes(); i.hasNext();) {
             String attributeName = (String)i.next();
             buildElement.addAttribute(attributeName,
                 getAttribute(attributeName));

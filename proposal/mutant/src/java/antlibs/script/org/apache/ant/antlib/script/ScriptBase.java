@@ -128,7 +128,7 @@ public class ScriptBase extends AbstractTask implements DeferredTask {
             BSFEngine engine = manager.loadScriptingEngine(language);
             
             engine.exec(scriptName, 0, 0, script);
-            for (Iterator i = attributes.keySet().iterator(); i.hasNext(); ) {
+            for (Iterator i = attributes.keySet().iterator(); i.hasNext();) {
                 String attributeName = (String)i.next();
                 String value = (String)attributes.get(attributeName);
                 StringBuffer setter = new StringBuffer(attributeName);
