@@ -23,6 +23,7 @@
         <exclude name='org/apache/tools/ant/Project.class' />
         <exclude name='org/apache/tools/ant/TaskAdapter.class' />
         <exclude name='org/apache/tools/ant/taskdefs/Ant.class' />
+        <exclude name='org/apache/tools/ant/ComponentHelper.class' />
       </fileset>
     </copy>
   </target>

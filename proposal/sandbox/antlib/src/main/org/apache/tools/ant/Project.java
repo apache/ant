@@ -1,122 +1,114 @@
 /*
- *  The Apache Software License, Version 1.1
+ * The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
- *  reserved.
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * reserved.
  *
- *  Redistribution and use in source and binary forms, with or without
- *  modification, are permitted provided that the following conditions
- *  are met:
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
  *
- *  1. Redistributions of source code must retain the above copyright
- *  notice, this list of conditions and the following disclaimer.
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
  *
- *  2. Redistributions in binary form must reproduce the above copyright
- *  notice, this list of conditions and the following disclaimer in
- *  the documentation and/or other materials provided with the
- *  distribution.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in
+ *    the documentation and/or other materials provided with the
+ *    distribution.
  *
- *  3. The end-user documentation included with the redistribution, if
- *  any, must include the following acknowlegement:
- *  "This product includes software developed by the
- *  Apache Software Foundation (http://www.apache.org/)."
- *  Alternately, this acknowlegement may appear in the software itself,
- *  if and wherever such third-party acknowlegements normally appear.
+ * 3. The end-user documentation included with the redistribution, if
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
+ *        Apache Software Foundation (http://www.apache.org/)."
+ *    Alternately, this acknowlegement may appear in the software itself,
+ *    if and wherever such third-party acknowlegements normally appear.
  *
- *  4. The names "The Jakarta Project", "Ant", and "Apache Software
- *  Foundation" must not be used to endorse or promote products derived
- *  from this software without prior written permission. For written
- *  permission, please contact apache@apache.org.
+ * 4. The names "Ant" and "Apache Software
+ *    Foundation" must not be used to endorse or promote products derived
+ *    from this software without prior written permission. For written
+ *    permission, please contact apache@apache.org.
  *
- *  5. Products derived from this software may not be called "Apache"
- *  nor may "Apache" appear in their names without prior written
- *  permission of the Apache Group.
+ * 5. Products derived from this software may not be called "Apache"
+ *    nor may "Apache" appear in their names without prior written
+ *    permission of the Apache Group.
  *
- *  THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- *  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- *  DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
- *  ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- *  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- *  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- *  USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- *  ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- *  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- *  OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- *  SUCH DAMAGE.
- *  ====================================================================
+ * THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED.  IN NO EVENT SHALL THE APACHE SOFTWARE FOUNDATION OR
+ * ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ * USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ * OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ * ====================================================================
  *
- *  This software consists of voluntary contributions made by many
- *  individuals on behalf of the Apache Software Foundation.  For more
- *  information on the Apache Software Foundation, please see
- *  <http://www.apache.org/>.
+ * This software consists of voluntary contributions made by many
+ * individuals on behalf of the Apache Software Foundation.  For more
+ * information on the Apache Software Foundation, please see
+ * <http://www.apache.org/>.
  */
+
 package org.apache.tools.ant;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
 import java.io.EOFException;
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Properties;
-import java.util.Enumeration;
-import java.util.Stack;
+import java.io.InputStream;
 import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-
-import org.apache.tools.ant.types.DataTypeAdapterTask;
+import java.lang.reflect.Modifier;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Stack;
+import java.util.Vector;
+import org.apache.tools.ant.input.DefaultInputHandler;
+import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.taskdefs.Antlib;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
-import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.LazyHashtable;
-import org.apache.tools.ant.util.JavaEnvUtils;
+import org.apache.tools.ant.types.Description;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.taskdefs.Antlib;
-import org.apache.tools.ant.input.InputHandler;
+import org.apache.tools.ant.types.DataTypeAdapterTask;
+import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- *  Central representation of an Ant project. This class defines a Ant project
- *  with all of it's targets and tasks. It also provides the mechanism to kick
- *  off a build using a particular target name. <p>
+ * Central representation of an Ant project. This class defines an
+ * Ant project with all of its targets, tasks and various other
+ * properties. It also provides the mechanism to kick off a build using
+ * a particular target name.
+ * <p>
+ * This class also encapsulates methods which allow files to be referred
+ * to using abstract path names which are translated to native system
+ * file paths at runtime.
  *
- *  This class also encapsulates methods which allow Files to be refered to
- *  using abstract path names which are translated to native system file paths
- *  at runtime as well as defining various project properties.
+ * @author duncan@x180.com
  *
- *@author     duncan@x180.com
- *@author     j_a_fernandez@yahoo.com
- *@created    February 27, 2002
+ * @version $Revision$
  */
 
 public class Project {
-
-    /**
-     *  Description of the Field
-     */
-    public final static int MSG_ERR = 0;
-    /**
-     *  Description of the Field
-     */
-    public final static int MSG_WARN = 1;
-    /**
-     *  Description of the Field
-     */
-    public final static int MSG_INFO = 2;
-    /**
-     *  Description of the Field
-     */
-    public final static int MSG_VERBOSE = 3;
-    /**
-     *  Description of the Field
-     */
-    public final static int MSG_DEBUG = 4;
+    /** Message priority of "error". */
+    public static final int MSG_ERR = 0;
+    /** Message priority of "warning". */
+    public static final int MSG_WARN = 1;
+    /** Message priority of "information". */
+    public static final int MSG_INFO = 2;
+    /** Message priority of "verbose". */
+    public static final int MSG_VERBOSE = 3;
+    /** Message priority of "debug". */
+    public static final int MSG_DEBUG = 4;
 
     /**
      *  LoaderId for the CoreLoader.
      */
     public final static String CORELOADER_ID = null;
+
 
     /**
      *  Description of the Field
@@ -126,13 +118,16 @@ public class Project {
      *  Description of the Field
      */
     public final static String DATATYPE_ROLE = "data-type";
-
-    // private set of constants to represent the state
-    // of a DFS of the Target dependencies
-    private final static String VISITING = "VISITING";
-    private final static String VISITED = "VISITED";
-
-    private static String javaVersion;
+     /**
+     * Constant for the "visiting" state, used when
+     * traversing a DFS of target dependencies.
+     */
+    private static final String VISITING = "VISITING";
+    /**
+     * Constant for the "visited" state, used when
+     * traversing a DFS of target dependencies.
+     */
+    private static final String VISITED = "VISITED";
 
     /**
      * The class name of the Ant class loader to use for
@@ -142,59 +137,76 @@ public class Project {
         = "org.apache.tools.ant.loader.AntClassLoader2";
 
     /**
-     *  Description of the Field
+     * Version constant for Java 1.0
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
      */
-    public final static String JAVA_1_0 = "1.0";
+    public static final String JAVA_1_0 = JavaEnvUtils.JAVA_1_0;
     /**
-     *  Description of the Field
+     * Version constant for Java 1.1
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
      */
-    public final static String JAVA_1_1 = "1.1";
+    public static final String JAVA_1_1 = JavaEnvUtils.JAVA_1_1;
     /**
-     *  Description of the Field
+     * Version constant for Java 1.2
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
      */
-    public final static String JAVA_1_2 = "1.2";
+    public static final String JAVA_1_2 = JavaEnvUtils.JAVA_1_2;
     /**
-     *  Description of the Field
+     * Version constant for Java 1.3
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
      */
-    public final static String JAVA_1_3 = "1.3";
+    public static final String JAVA_1_3 = JavaEnvUtils.JAVA_1_3;
     /**
-     *  Description of the Field
+     * Version constant for Java 1.4
+     *
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
      */
-    public final static String JAVA_1_4 = "1.4";
+    public static final String JAVA_1_4 = JavaEnvUtils.JAVA_1_4;
 
-    /**
-     *  Description of the Field
-     */
-    public final static String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
-    /**
-     *  Description of the Field
-     */
-    public final static String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
+    /** Default filter start token. */
+    public static final String TOKEN_START = FilterSet.DEFAULT_TOKEN_START;
+    /** Default filter end token. */
+    public static final String TOKEN_END = FilterSet.DEFAULT_TOKEN_END;
 
     private final static String CORE_DEFINITIONS = "org/apache/tools/ant/antlib.xml";
-
+    /** Name of this project. */
     private String name;
+    /** Description for this project (if any). */
     private String description;
-    /** Map of references within the project (paths etc) (String to Object). */
 
-    private Hashtable properties = new Hashtable();
-    private Hashtable userProperties = new Hashtable();
+
+    /** Map of references within the project (paths etc) (String to Object). */
     private Hashtable references = new AntRefTable(this);
+
+    /** Name of the project's default target. */
     private String defaultTarget;
-    /** Map from data type names to implementing classes (String to Class). */
-    private Hashtable dataClassDefinitions = new AntTaskTable(this, false);
-    /** Map from task names to implementing classes (String to Class). */
-    private Hashtable taskClassDefinitions = new AntTaskTable(this, true);
+
     private Hashtable createdTasks = new Hashtable();
+    /** Map from target names to targets (String to Target). */
     private Hashtable targets = new Hashtable();
+    /** Set of global filters. */
     private FilterSet globalFilterSet = new FilterSet();
-    private FilterSetCollection globalFilters = new FilterSetCollection(globalFilterSet);
+    /**
+     * Wrapper around globalFilterSet. This collection only ever
+     * contains one FilterSet, but the wrapper is needed in order to
+     * make it easier to use the FileUtils interface.
+     */
+    private FilterSetCollection globalFilters
+        = new FilterSetCollection(globalFilterSet);
+
+    /** Project base directory. */
     private File baseDir;
 
+    /** List of listeners to notify of build events. */
     private Vector listeners = new Vector();
 
     /**
-     *  The Ant core classloader - may be null if using system loader
+     * The Ant core classloader - may be <code>null</code> if using
+     * parent classloader.
      */
     private ClassLoader coreLoader = null;
 
@@ -203,36 +215,6 @@ public class Project {
 
     /** Records the latest task to be executed on a thread Group. */
     private Hashtable threadGroupTasks = new Hashtable();
-
-
-    /**
-     *  Store symbol tables
-     */
-    private SymbolTable symbols;
-
-    static {
-
-        // Determine the Java version by looking at available classes
-        // java.lang.StrictMath was introduced in JDK 1.3
-        // java.lang.ThreadLocal was introduced in JDK 1.2
-        // java.lang.Void was introduced in JDK 1.1
-        // Count up version until a NoClassDefFoundError ends the try
-
-        try {
-            javaVersion = JAVA_1_0;
-            Class.forName("java.lang.Void");
-            javaVersion = JAVA_1_1;
-            Class.forName("java.lang.ThreadLocal");
-            javaVersion = JAVA_1_2;
-            Class.forName("java.lang.StrictMath");
-            javaVersion = JAVA_1_3;
-            Class.forName("java.lang.CharSequence");
-            javaVersion = JAVA_1_4;
-        } catch (ClassNotFoundException cnfe) {
-            // swallow as we've hit the max class version that
-            // we have
-        }
-    }
 
     /**
      * Called to handle any input requests.
@@ -243,6 +225,11 @@ public class Project {
      * The default input stream used to read any input
      */
     private InputStream defaultInputStream = null;
+
+    /**
+     * Strore symbol tables
+     */
+    private SymbolTable symbols;
 
     /**
      * Sets the input handler
@@ -286,13 +273,13 @@ public class Project {
         return inputHandler;
     }
 
+    /** Instance of a utility class to use for file operations. */
     private FileUtils fileUtils;
 
     /**
      * Flag which catches Listeners which try to use System.out or System.err
      */
     private boolean loggingMessage = false;
-
 
     /**
      *  <p>
@@ -323,16 +310,15 @@ public class Project {
         }
     }
 
-
     /**
-     *  create a new ant project
+     * Creates a new Ant project.
      */
     public Project() {
         fileUtils = FileUtils.newFileUtils();
+        inputHandler = new DefaultInputHandler();
         symbols = new SymbolTable();
         symbols.setProject(this);
     }
-
 
     /**
      *  create a new ant project that inherits from caller project
@@ -341,16 +327,18 @@ public class Project {
      */
     private Project(Project p) {
         fileUtils = FileUtils.newFileUtils();
+        inputHandler = new DefaultInputHandler();
         symbols = new SymbolTable(p.getSymbols());
         symbols.setProject(this);
         setCoreLoader(p.getCoreLoader());
     }
-
-
     /**
      *  Loads the core definitions into the Root project.
      */
-    private void loadDefinitions() {
+    /**
+     * TODO should be private temporarily called from ComponentHelper
+     */
+    protected void loadDefinitions() {
         // Initialize symbol table just in case
         symbols.addRole(TASK_ROLE, TaskContainer.class, TaskAdapter.class);
         symbols.addRole(DATATYPE_ROLE, TaskContainer.class,
@@ -362,6 +350,7 @@ public class Project {
         // If the most basic of tasks, "property", is not defined
         // then there was no antlib jars from where to load the descriptors
         // we should be doing bootstrapping, or ant.jar is not an antlib.
+        /*
         if (!isDefinedOnRole(TASK_ROLE, "property")) {
             load.loadCoreDefinitions();
 
@@ -369,6 +358,7 @@ public class Project {
                 throw new BuildException("Can't load core definitions");
             }
         }
+        */
         autoLoadDefinitions();
     }
 
@@ -430,63 +420,17 @@ public class Project {
     public void init() throws BuildException {
         setJavaVersionProperty();
         setSystemProperties();
+
         if (!isRoleDefined(TASK_ROLE)) {
             // Top project, need to load the core definitions
             loadDefinitions();
         }
-        /*
-        String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
+        setSystemProperties();
 
-        try {
-            Properties props = new Properties();
-            InputStream in = this.getClass().getResourceAsStream(defs);
-            if (in == null) {
-                throw new BuildException("Can't load default task list");
-            }
-            props.load(in);
-            in.close();
-            ((AntTaskTable) taskClassDefinitions).addDefinitions(props);
+        ComponentHelper.getComponentHelper(this).initDefaultDefinitions();
 
-
-        } catch (IOException ioe) {
-            throw new BuildException("Can't load default task list");
-        }
-
-        String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
-
-        try {
-            Properties props = new Properties();
-            InputStream in = this.getClass().getResourceAsStream(dataDefs);
-            if (in == null) {
-                throw new BuildException("Can't load default datatype list");
-            }
-            props.load(in);
-            in.close();
-
-            ((AntTaskTable) dataClassDefinitions).addDefinitions(props);
-
-
-        } catch (IOException ioe) {
-            throw new BuildException("Can't load default datatype list");
-        }
-        */
+        setSystemProperties();
     }
-
-
-
-    /**
-     *  Sets the CoreLoader to the default of the Project object
-     */
-    private void setDefaultCoreLoader() {
-        coreLoader = this.getClass().getClassLoader();
-        if (coreLoader == null) {
-            // This should only happen if ANT is being
-            // loader by the Bootstrap classloader
-            // This may be the case in JDK 1.1
-            coreLoader = ClassLoader.getSystemClassLoader();
-        }
-    }
-
 
     /**
      * Factory method to create a class loader for loading classes
@@ -516,6 +460,20 @@ public class Project {
     }
 
     /**
+     *  Sets the CoreLoader to the default of the Project object
+     */
+    private void setDefaultCoreLoader() {
+        coreLoader = this.getClass().getClassLoader();
+        if (coreLoader == null) {
+            // This should only happen if ANT is being
+            // loader by the Bootstrap classloader
+            // This may be the case in JDK 1.1
+            coreLoader = ClassLoader.getSystemClassLoader();
+        }
+    }
+
+
+    /**
      * Factory method to create a class loader for loading classes from
      * a given path
      *
@@ -530,22 +488,26 @@ public class Project {
     }
 
     /**
-     *  Sets the coreLoader attribute of the Project object
+     * Sets the core classloader for the project. If a <code>null</code>
+     * classloader is specified, the parent classloader should be used.
      *
-     *@param  coreLoader  The new coreLoader value
+     * @param coreLoader The classloader to use for the project.
+     *                   May be <code>null</code>.
      */
     public void setCoreLoader(ClassLoader coreLoader) {
         if (coreLoader == null) {
             setDefaultCoreLoader();
         }
-        else this.coreLoader = coreLoader;
+        this.coreLoader = coreLoader;
     }
 
-
     /**
-     *  Gets the coreLoader attribute of the Project object
+     * Returns the core classloader to use for this project.
+     * This may be <code>null</code>, indicating that
+     * the parent classloader should be used.
      *
-     *@return    The coreLoader value
+     * @return the core classloader to use for this project.
+     *
      */
     public ClassLoader getCoreLoader() {
         if (coreLoader == null) {
@@ -554,36 +516,36 @@ public class Project {
         return coreLoader;
     }
 
-
     /**
-     *  Adds a feature to the BuildListener attribute of the Project object
+     * Adds a build listener to the list. This listener will
+     * be notified of build events for this project.
      *
-     *@param  listener  The feature to be added to the BuildListener attribute
+     * @param listener The listener to add to the list.
+     *                 Must not be <code>null</code>.
      */
     public void addBuildListener(BuildListener listener) {
         listeners.addElement(listener);
     }
 
-
     /**
-     *  Description of the Method
+     * Removes a build listener from the list. This listener
+     * will no longer be notified of build events for this project.
      *
-     *@param  listener  Description of the Parameter
+     * @param listener The listener to remove from the list.
+     *                 Should not be <code>null</code>.
      */
     public void removeBuildListener(BuildListener listener) {
         listeners.removeElement(listener);
     }
 
-
     /**
-     *  Gets the buildListeners attribute of the Project object
+     * Returns a list of build listeners for the project.
      *
-     *@return    The buildListeners value
+     * @return a list of build listeners for the project
      */
     public Vector getBuildListeners() {
         return (Vector) listeners.clone();
     }
-
 
     /**
      *  Get the symbols associated with this project.
@@ -595,123 +557,96 @@ public class Project {
         return symbols;
     }
 
-
     /**
-     *  Output a message to the log with the default log level of MSG_INFO
-     *
-     *@param  msg  text to log
+     * Writes a message to the log with the default log level
+     * of MSG_INFO
+     * @param message The text to log. Should not be <code>null</code>.
      */
 
-    public void log(String msg) {
-        log(msg, MSG_INFO);
+    public void log(String message) {
+        log(message, MSG_INFO);
     }
 
-
     /**
-     *  Output a message to the log with the given log level and an event scope
-     *  of project
-     *
-     *@param  msg       text to log
-     *@param  msgLevel  level to log at
+     * Writes a project level message to the log with the given log level.
+     * @param message The text to log. Should not be <code>null</code>.
+     * @param msgLevel The priority level to log at.
      */
-    public void log(String msg, int msgLevel) {
-        fireMessageLogged(this, msg, msgLevel);
+    public void log(String message, int msgLevel) {
+        fireMessageLogged(this, message, msgLevel);
     }
 
-
     /**
-     *  Output a message to the log with the given log level and an event scope
-     *  of a task
-     *
-     *@param  task      task to use in the log
-     *@param  msg       text to log
-     *@param  msgLevel  level to log at
+     * Writes a task level message to the log with the given log level.
+     * @param task The task to use in the log. Must not be <code>null</code>.
+     * @param message The text to log. Should not be <code>null</code>.
+     * @param msgLevel The priority level to log at.
      */
-    public void log(Task task, String msg, int msgLevel) {
-        fireMessageLogged(task, msg, msgLevel);
+    public void log(Task task, String message, int msgLevel) {
+        fireMessageLogged(task, message, msgLevel);
     }
 
-
     /**
-     *  Output a message to the log with the given log level and an event scope
-     *  of a target
-     *
-     *@param  target    target to use in the log
-     *@param  msg       text to log
-     *@param  msgLevel  level to log at
+     * Writes a target level message to the log with the given log level.
+     * @param target The target to use in the log.
+     *               Must not be <code>null</code>.
+     * @param message The text to log. Should not be <code>null</code>.
+     * @param msgLevel The priority level to log at.
      */
-    public void log(Target target, String msg, int msgLevel) {
-        fireMessageLogged(target, msg, msgLevel);
+    public void log(Target target, String message, int msgLevel) {
+        fireMessageLogged(target, message, msgLevel);
     }
 
-
     /**
-     *  Gets the globalFilterSet attribute of the Project object
+     * Returns the set of global filters.
      *
-     *@return    The globalFilterSet value
+     * @return the set of global filters
      */
     public FilterSet getGlobalFilterSet() {
         return globalFilterSet;
     }
 
-
     /**
-     *  set a property. Any existing property of the same name is overwritten,
-     *  unless it is a user property.
-     *
-     *@param  name   name of property
-     *@param  value  new value of the property
+     * Sets a property. Any existing property of the same name
+     * is overwritten, unless it is a user property.
+     * @param name The name of property to set.
+     *             Must not be <code>null</code>.
+     * @param value The new value of the property.
+     *              Must not be <code>null</code>.
      */
-    public void setProperty(String name, String value) {
-        // command line properties take precedence
-        if (null != userProperties.get(name)) {
-            log("Override ignored for user property " + name, MSG_VERBOSE);
-            return;
-        }
-
-        if (null != properties.get(name)) {
-            log("Overriding previous definition of property " + name,
-                    MSG_VERBOSE);
-        }
-
-        log("Setting project property: " + name + " -> " +
-                value, MSG_DEBUG);
-        properties.put(name, value);
+    public synchronized void setProperty(String name, String value) {
+        PropertyHelper.getPropertyHelper(this).
+                setProperty(null, name, value, true);
     }
 
-
     /**
-     *  set a property. An existing property of the same name will not be
-     *  overwritten.
+     * Sets a property if no value currently exists. If the property
+     * exists already, a message is logged and the method returns with
+     * no other effect.
      *
-     *@param  name   name of property
-     *@param  value  new value of the property
-     *@since         1.5
+     * @param name The name of property to set.
+     *             Must not be <code>null</code>.
+     * @param value The new value of the property.
+     *              Must not be <code>null</code>.
+     * @since 1.5
      */
-    public void setNewProperty(String name, String value) {
-        if (null != properties.get(name)) {
-            log("Override ignored for property " + name, MSG_VERBOSE);
-            return;
-        }
-        log("Setting project property: " + name + " -> " +
-                value, MSG_DEBUG);
-        properties.put(name, value);
+    public synchronized void setNewProperty(String name, String value) {
+        PropertyHelper.getPropertyHelper(this).setNewProperty(null, name,
+                                                              value);
     }
 
-
     /**
-     *  set a user property, which can not be overwritten by set/unset property
-     *  calls
-     *
-     *@param  name   The new userProperty value
-     *@param  value  The new userProperty value
-     *@see           #setProperty(String,String)
+     * Sets a user property, which cannot be overwritten by
+     * set/unset property calls. Any previous value is overwritten.
+     * @param name The name of property to set.
+     *             Must not be <code>null</code>.
+     * @param value The new value of the property.
+     *              Must not be <code>null</code>.
+     * @see #setProperty(String,String)
      */
-    public void setUserProperty(String name, String value) {
-        log("Setting ro project property: " + name + " -> " +
-                value, MSG_DEBUG);
-        userProperties.put(name, value);
-        properties.put(name, value);
+    public synchronized void setUserProperty(String name, String value) {
+        PropertyHelper.getPropertyHelper(this).setUserProperty(null, name,
+                                                               value);
     }
 
     /**
@@ -731,103 +666,84 @@ public class Project {
         ph.setInheritedProperty(null, name, value);
     }
 
-
     /**
-     *  Allows Project and subclasses to set a property unless its already
-     *  defined as a user property. There are a few cases internally to Project
-     *  that need to do this currently.
+     * Sets a property unless it is already defined as a user property
+     * (in which case the method returns silently).
      *
-     *@param  name   The new propertyInternal value
-     *@param  value  The new propertyInternal value
+     * @param name The name of the property.
+     *             Must not be <code>null</code>.
+     * @param value The property value. Must not be <code>null</code>.
      */
     private void setPropertyInternal(String name, String value) {
-        if (null != userProperties.get(name)) {
-            return;
-        }
-        properties.put(name, value);
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        ph.setProperty(null, name, value, false);
     }
 
-
     /**
-     *  query a property.
+     * Returns the value of a property, if it is set.
      *
-     *@param  name  the name of the property
-     *@return       the property value, or null for no match
+     * @param name The name of the property.
+     *             May be <code>null</code>, in which case
+     *             the return value is also <code>null</code>.
+     * @return the property value, or <code>null</code> for no match
+     *         or if a <code>null</code> name is provided.
      */
     public String getProperty(String name) {
-        if (name == null) {
-            return null;
-        }
-        String property = (String) properties.get(name);
-        return property;
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        return (String) ph.getProperty(null, name);
     }
 
-
     /**
-     *  Replace ${} style constructions in the given value with the string value
-     *  of the corresponding data types.
+     * Replaces ${} style constructions in the given value with the
+     * string value of the corresponding data types.
      *
-     *@param  value               the string to be scanned for property
-     *      references.
-     *@return                     Description of the Return Value
-     *@exception  BuildException  Description of the Exception
+     * @param value The string to be scanned for property references.
+     *              May be <code>null</code>.
+     *
+     * @return the given string with embedded property names replaced
+     *         by values, or <code>null</code> if the given string is
+     *         <code>null</code>.
+     *
+     * @exception BuildException if the given value has an unclosed
+     *                           property name, e.g. <code>${xxx</code>
      */
     public String replaceProperties(String value)
-             throws BuildException {
-        return ProjectHelper.replaceProperties(this, value, properties);
+        throws BuildException {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        return ph.replaceProperties(null, value, null);
     }
 
-
     /**
-     *  query a user property.
+     * Returns the value of a user property, if it is set.
      *
-     *@param  name  the name of the property
-     *@return       the property value, or null for no match
+     * @param name The name of the property.
+     *             May be <code>null</code>, in which case
+     *             the return value is also <code>null</code>.
+     * @return the property value, or <code>null</code> for no match
+     *         or if a <code>null</code> name is provided.
      */
-    public String getUserProperty(String name) {
-        if (name == null) {
-            return null;
-        }
-        String property = (String) userProperties.get(name);
-        return property;
+     public String getUserProperty(String name) {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        return (String) ph.getUserProperty(null, name);
     }
 
-
     /**
-     *  get a copy of the property hashtable
-     *
-     *@return    the hashtable containing all properties, user included
+     * Returns a copy of the properties table.
+     * @return a hashtable containing all properties
+     *         (including user properties).
      */
     public Hashtable getProperties() {
-        Hashtable propertiesCopy = new Hashtable();
-
-        Enumeration e = properties.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            Object value = properties.get(name);
-            propertiesCopy.put(name, value);
-        }
-
-        return propertiesCopy;
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        return ph.getProperties();
     }
 
-
     /**
-     *  get a copy of the user property hashtable
-     *
-     *@return    the hashtable user properties only
+     * Returns a copy of the user property hashtable
+     * @return a hashtable containing just the user properties
      */
     public Hashtable getUserProperties() {
-        Hashtable propertiesCopy = new Hashtable();
-
-        Enumeration e = userProperties.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            Object value = properties.get(name);
-            propertiesCopy.put(name, value);
-        }
-
-        return propertiesCopy;
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        return ph.getUserProperties();
     }
 
     /**
@@ -864,85 +780,96 @@ public class Project {
         ph.copyInheritedProperties(other);
     }
 
-
     /**
-     *  set the default target of the project
+     * Sets the default target of the project.
      *
-     *@param  defaultTarget  The new defaultTarget value
-     *@deprecated,           use setDefault
-     *@see                   #setDefault(String)
+     * @param defaultTarget The name of the default target for this project.
+     *                      May be <code>null</code>, indicating that there is
+     *                      no default target.
+     *
+     * @deprecated use setDefault
+     * @see #setDefault(String)
      */
     public void setDefaultTarget(String defaultTarget) {
         this.defaultTarget = defaultTarget;
     }
 
-
     /**
-     *  get the default target of the project
-     *
-     *@return    default target or null
+     * Returns the name of the default target of the project.
+     * @return name of the default target or
+     *         <code>null</code> if no default has been set.
      */
     public String getDefaultTarget() {
         return defaultTarget;
     }
 
-
     /**
-     *  set the default target of the project XML attribute name.
+     * Sets the default target of the project.
      *
-     *@param  defaultTarget  The new default value
+     * @param defaultTarget The name of the default target for this project.
+     *                      May be <code>null</code>, indicating that there is
+     *                      no default target.
      */
     public void setDefault(String defaultTarget) {
         this.defaultTarget = defaultTarget;
     }
 
-
     /**
-     *  ant xml property. Set the project name as an attribute of this class,
-     *  and of the property ant.project.name
+     * Sets the name of the project, also setting the user
+     * property <code>ant.project.name</code>.
      *
-     *@param  name  The new name value
+     * @param name The name of the project.
+     *             Must not be <code>null</code>.
      */
     public void setName(String name) {
-        setUserProperty("ant.project.name", name);
+        setUserProperty("ant.project.name",  name);
         this.name = name;
     }
 
-
     /**
-     *  get the project name
+     * Returns the project name, if one has been set.
      *
-     *@return    name string
+     * @return the project name, or <code>null</code> if it hasn't been set.
      */
     public String getName() {
         return name;
     }
 
-
     /**
-     *  set the project description
+     * Sets the project description.
      *
-     *@param  description  text
+     * @param description The description of the project.
+     *                    May be <code>null</code>.
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
-
     /**
-     *  get the project description
+     * Returns the project description, if one has been set.
      *
-     *@return    description or null if no description has been set
+     * @return the project description, or <code>null</code> if it hasn't
+     *         been set.
      */
     public String getDescription() {
+        if (description == null) {
+            description = Description.getDescription(this);
+        }
+
         return description;
     }
 
-
     /**
-     *@param  token  The feature to be added to the Filter attribute
-     *@param  value  The feature to be added to the Filter attribute
-     *@deprecated
+     * Adds a filter to the set of global filters.
+     *
+     * @param token The token to filter.
+     *              Must not be <code>null</code>.
+     * @param value The replacement value.
+     *              Must not be <code>null</code>.
+     * @deprecated Use getGlobalFilterSet().addFilter(token,value)
+     *
+     * @see #getGlobalFilterSet()
+     * @see FilterSet#addFilter(String,String)
      */
     public void addFilter(String token, String value) {
         if (token == null) {
@@ -952,55 +879,65 @@ public class Project {
         globalFilterSet.addFilter(new FilterSet.Filter(token, value));
     }
 
-
     /**
-     *@return        The filters value
-     *@deprecated
+     * Returns a hashtable of global filters, mapping tokens to values.
+     *
+     * @return a hashtable of global filters, mapping tokens to values
+     *         (String to String).
+     *
+     * @deprecated Use getGlobalFilterSet().getFilterHash()
+     *
+     * @see #getGlobalFilterSet()
+     * @see FilterSet#getFilterHash()
      */
     public Hashtable getFilters() {
         // we need to build the hashtable dynamically
         return globalFilterSet.getFilterHash();
     }
 
-
     /**
-     *  match basedir attribute in xml
+     * Sets the base directory for the project, checking that
+     * the given filename exists and is a directory.
      *
-     *@param  baseD            project base directory.
-     *@throws  BuildException  if the directory was invalid
+     * @param baseD The project base directory.
+     *              Must not be <code>null</code>.
+     *
+     * @exception BuildException if the directory if invalid
      */
     public void setBasedir(String baseD) throws BuildException {
         setBaseDir(new File(baseD));
     }
 
-
     /**
-     *  set the base directory; XML attribute. checks for the directory existing
-     *  and being a directory type
+     * Sets the base directory for the project, checking that
+     * the given file exists and is a directory.
      *
-     *@param  baseDir          project base directory.
-     *@throws  BuildException  if the directory was invalid
+     * @param baseDir The project base directory.
+     *                Must not be <code>null</code>.
+     * @exception BuildException if the specified file doesn't exist or
+     *                           isn't a directory
      */
     public void setBaseDir(File baseDir) throws BuildException {
         baseDir = fileUtils.normalize(baseDir.getAbsolutePath());
         if (!baseDir.exists()) {
-            throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " does not exist");
+            throw new BuildException("Basedir " + baseDir.getAbsolutePath()
+                + " does not exist");
         }
         if (!baseDir.isDirectory()) {
-            throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " is not a directory");
+            throw new BuildException("Basedir " + baseDir.getAbsolutePath()
+                + " is not a directory");
         }
         this.baseDir = baseDir;
         setPropertyInternal("basedir", this.baseDir.getPath());
         String msg = "Project base dir set to: " + this.baseDir;
-        log(msg, MSG_VERBOSE);
+         log(msg, MSG_VERBOSE);
     }
 
-
     /**
-     *  get the base directory of the project as a file object
+     * Returns the base directory of the project as a file object.
      *
-     *@return    the base directory. If this is null, then the base dir is not
-     *      valid
+     * @return the project base directory, or <code>null</code> if the
+     *         base directory has not been successfully set to a valid value.
      */
     public File getBaseDir() {
         if (baseDir == null) {
@@ -1013,40 +950,44 @@ public class Project {
         return baseDir;
     }
 
-
     /**
-     *  static query of the java version
-     *
-     *@return    something like "1.1" or "1.3"
+     * Returns the version of Java this class is running under.
+     * @return the version of Java as a String, e.g. "1.1"
+     * @see org.apache.tools.ant.util.JavaEnvUtils#getJavaVersion
+     * @deprecated use org.apache.tools.ant.util.JavaEnvUtils instead
      */
     public static String getJavaVersion() {
-        return javaVersion;
+        return JavaEnvUtils.getJavaVersion();
     }
 
-
     /**
-     *  set the ant.java.version property, also tests for unsupported JVM
-     *  versions, prints the verbose log messages
+     * Sets the <code>ant.java.version</code> property and tests for
+     * unsupported JVM versions. If the version is supported,
+     * verbose log messages are generated to record the Java version
+     * and operating system name.
      *
-     *@throws  BuildException  if this Java version is not supported
+     * @exception BuildException if this Java version is not supported
+     *
+     * @see org.apache.tools.ant.util.JavaEnvUtils#getJavaVersion
      */
     public void setJavaVersionProperty() throws BuildException {
+        String javaVersion = JavaEnvUtils.getJavaVersion();
         setPropertyInternal("ant.java.version", javaVersion);
 
         // sanity check
-        if (javaVersion == JAVA_1_0) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_0)) {
             throw new BuildException("Ant cannot work on Java 1.0");
         }
 
-        log("Detected Java version: " + javaVersion + " in: " + System.getProperty("java.home"), MSG_VERBOSE);
+        log("Detected Java version: " + javaVersion + " in: "
+            + System.getProperty("java.home"), MSG_VERBOSE);
 
         log("Detected OS: " + System.getProperty("os.name"), MSG_VERBOSE);
     }
 
-
     /**
-     *  turn all the system properties into ant properties. user properties
-     *  still override these values
+     * Adds all system properties which aren't already defined as
+     * user properties to the project properties.
      */
     public void setSystemProperties() {
         Properties systemP = System.getProperties();
@@ -1057,7 +998,6 @@ public class Project {
             this.setPropertyInternal(name.toString(), value);
         }
     }
-
 
     /**
      *  Adds a feature to the ToLoader attribute of the Project object
@@ -1131,74 +1071,122 @@ public class Project {
 
 
     /**
-     *  add a new task definition, complain if there is an overwrite attempt
+     * Adds a new task definition to the project.
+     * Attempting to override an existing definition with an
+     * equivalent one (i.e. with the same classname) results in
+     * a verbose log message. Attempting to override an existing definition
+     * with a different one results in a warning log message and
+     * invalidates any tasks which have already been created with the
+     * old definition.
      *
-     *@param  taskName         name of the task
-     *@param  taskClass        full task classname
-     *@throws  BuildException  and logs as Project.MSG_ERR for conditions, that
-     *      will cause the task execution to fail.
+     * @param taskName The name of the task to add.
+     *                 Must not be <code>null</code>.
+     * @param taskClass The full name of the class implementing the task.
+     *                  Must not be <code>null</code>.
+     *
+     * @exception BuildException if the class is unsuitable for being an Ant
+     *                           task. An error level message is logged before
+     *                           this exception is thrown.
+     *
+     * @see #checkTaskClass(Class)
      */
     public void addTaskDefinition(String taskName, Class taskClass)
-             throws BuildException {
-        addDefinitionOnRole(TASK_ROLE, taskName, taskClass);
+         throws BuildException {
+        ComponentHelper.getComponentHelper(this).addTaskDefinition(taskName,
+                taskClass);
     }
 
-
     /**
-     *  Checks a class, whether it is suitable for serving as ant task.
+     * Checks whether or not a class is suitable for serving as Ant task.
+     * Ant task implementation classes must be public, concrete, and have
+     * a no-arg constructor.
      *
-     *@param  taskClass        Description of the Parameter
-     *@throws  BuildException  and logs as Project.MSG_ERR for conditions, that
-     *      will cause the task execution to fail.
-     *@deprecated              this is done now when added to SymbolTable
+     * @param taskClass The class to be checked.
+     *                  Must not be <code>null</code>.
+     *
+     * @exception BuildException if the class is unsuitable for being an Ant
+     *                           task. An error level message is logged before
+     *                           this exception is thrown.
      */
     public void checkTaskClass(final Class taskClass) throws BuildException {
+        ComponentHelper.getComponentHelper(this).checkTaskClass(taskClass);
+
+        if (!Modifier.isPublic(taskClass.getModifiers())) {
+            final String message = taskClass + " is not public";
+            log(message, Project.MSG_ERR);
+            throw new BuildException(message);
+        }
+        if (Modifier.isAbstract(taskClass.getModifiers())) {
+            final String message = taskClass + " is abstract";
+            log(message, Project.MSG_ERR);
+            throw new BuildException(message);
+        }
+        try {
+            taskClass.getConstructor(null);
+            // don't have to check for public, since
+            // getConstructor finds public constructors only.
+        } catch (NoSuchMethodException e) {
+            final String message = "No public no-arg constructor in "
+                + taskClass;
+            log(message, Project.MSG_ERR);
+            throw new BuildException(message);
+        }
         if (!Task.class.isAssignableFrom(taskClass)) {
             TaskAdapter.checkTaskClass(taskClass, this);
         }
     }
 
-
     /**
-     *  get the current task definition hashtable
+     * Returns the current task definition hashtable. The returned hashtable is
+     * "live" and so should not be modified.
      *
-     *@return    The taskDefinitions value
+     * @return a map of from task name to implementing class
+     *         (String to Class).
      */
     public Hashtable getTaskDefinitions() {
-        return symbols.getDefinitions(TASK_ROLE);
+        return ComponentHelper.getComponentHelper(this).getTaskDefinitions();
     }
 
-
     /**
-     *  add a new datatype
+     * Adds a new datatype definition.
+     * Attempting to override an existing definition with an
+     * equivalent one (i.e. with the same classname) results in
+     * a verbose log message. Attempting to override an existing definition
+     * with a different one results in a warning log message, but the
+     * definition is changed.
      *
-     *@param  typeName   name of the datatype
-     *@param  typeClass  full datatype classname
+     * @param typeName The name of the datatype.
+     *                 Must not be <code>null</code>.
+     * @param typeClass The full name of the class implementing the datatype.
+     *                  Must not be <code>null</code>.
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-        addDefinitionOnRole(DATATYPE_ROLE, typeName, typeClass);
+        ComponentHelper.getComponentHelper(this).addDataTypeDefinition(typeName,
+                typeClass);
     }
 
-
     /**
-     *  get the current task definition hashtable
+     * Returns the current datatype definition hashtable. The returned
+     * hashtable is "live" and so should not be modified.
      *
-     *@return    The dataTypeDefinitions value
+     * @return a map of from datatype name to implementing class
+     *         (String to Class).
      */
     public Hashtable getDataTypeDefinitions() {
-        return symbols.getDefinitions(DATATYPE_ROLE);
+        return ComponentHelper.getComponentHelper(this).getDataTypeDefinitions();
     }
 
-
     /**
-     *  This call expects to add a <em>new</em> Target.
+     * Adds a <em>new</em> target to the project.
      *
-     *@param  target              is the Target to be added to the current
-     *      Project.
-     *@see                        Project#addOrReplaceTarget to replace existing
-     *      Targets.
+     * @param target The target to be added to the project.
+     *               Must not be <code>null</code>.
+     *
+     * @exception BuildException if the target already exists in the project
+     *
+     * @see Project#addOrReplaceTarget
      */
-    public void addTarget(Target target) {
+    public void addTarget(Target target) throws BuildException {
         String name = target.getName();
         if (targets.get(name) != null) {
             throw new BuildException("Duplicate target: `" + name + "'");
@@ -1206,39 +1194,45 @@ public class Project {
         addOrReplaceTarget(name, target);
     }
 
-
     /**
-     *  This call expects to add a <em>new</em> Target.
+     * Adds a <em>new</em> target to the project.
      *
-     *@param  target              is the Target to be added to the current
-     *      Project.
-     *@param  targetName          is the name to use for the Target
-     *@exception  BuildException  if the Target already exists in the project.
-     *@see                        Project#addOrReplaceTarget to replace existing
-     *      Targets.
+     * @param targetName The name to use for the target.
+     *             Must not be <code>null</code>.
+     * @param target The target to be added to the project.
+     *               Must not be <code>null</code>.
+     *
+     * @exception BuildException if the target already exists in the project
+     *
+     * @see Project#addOrReplaceTarget
      */
-    public void addTarget(String targetName, Target target)
-             throws BuildException {
-        if (targets.get(targetName) != null) {
-            throw new BuildException("Duplicate target: `" + targetName + "'");
-        }
-        addOrReplaceTarget(targetName, target);
-    }
-
+     public void addTarget(String targetName, Target target)
+         throws BuildException {
+         if (targets.get(targetName) != null) {
+             throw new BuildException("Duplicate target: `" + targetName + "'");
+         }
+         addOrReplaceTarget(targetName, target);
+     }
 
     /**
-     *@param  target  is the Target to be added or replaced in the current
-     *      Project.
+     * Adds a target to the project, or replaces one with the same
+     * name.
+     *
+     * @param target The target to be added or replaced in the project.
+     *               Must not be <code>null</code>.
      */
     public void addOrReplaceTarget(Target target) {
         addOrReplaceTarget(target.getName(), target);
     }
 
-
     /**
-     *@param  target      is the Target to be added/replaced in the current
-     *      Project.
-     *@param  targetName  is the name to use for the Target
+     * Adds a target to the project, or replaces one with the same
+     * name.
+     *
+     * @param targetName The name to use for the target.
+     *                   Must not be <code>null</code>.
+     * @param target The target to be added or replaced in the project.
+     *               Must not be <code>null</code>.
      */
     public void addOrReplaceTarget(String targetName, Target target) {
         String msg = " +Target: " + targetName;
@@ -1247,16 +1241,14 @@ public class Project {
         targets.put(targetName, target);
     }
 
-
     /**
-     *  get the target hashtable
-     *
-     *@return    hashtable, the contents of which can be cast to Target
+     * Returns the hashtable of targets. The returned hashtable
+     * is "live" and so should not be modified.
+     * @return a map from name to target (String to Target).
      */
     public Hashtable getTargets() {
         return targets;
     }
-
 
     /**
      *  Create a new element instance on a Role
@@ -1273,7 +1265,7 @@ public class Project {
 
         try {
             Object o = f.create(this);
-            setProjectReference( o );
+            setProjectReference(o);
             if (o instanceof ProjectComponent) {
                 ((ProjectComponent) o).setProject(this);
                 if (o instanceof Task) {
@@ -1294,69 +1286,6 @@ public class Project {
             throw new BuildException(msg, t);
         }
     }
-
-
-    /**
-     *@param  container  Description of the Parameter
-     *@param  type       Description of the Parameter
-     *@return            Description of the Return Value
-     */
-    public Object createInRole(Object container, String type) {
-        Class clz = container.getClass();
-        String roles[] = symbols.findRoles(clz);
-        Object theOne = null;
-        Method add = null;
-
-        for (int i = 0; i < roles.length; i++) {
-            Object o = createForRole(roles[i], type);
-            if (o != null) {
-                if (theOne != null) {
-                    String msg = "Element " + type +
-                            " is ambiguous for container " + clz.getName();
-                    if (theOne instanceof RoleAdapter) {
-                        theOne = ((RoleAdapter) theOne).getProxy();
-                    }
-                    if (o instanceof RoleAdapter) {
-                        o = ((RoleAdapter) o).getProxy();
-                    }
-
-                    log(msg, MSG_ERR);
-                    log("cannot distinguish between " +
-                            theOne.getClass().getName() +
-                            " and " + o.getClass().getName(), MSG_ERR);
-                    throw new BuildException(msg);
-                }
-                theOne = o;
-                add = symbols.getRole(roles[i]).getInterfaceMethod();
-            }
-        }
-        if (theOne != null) {
-            try {
-                add.invoke(container, new Object[]{theOne});
-            } catch (InvocationTargetException ite) {
-                if (ite.getTargetException() instanceof BuildException) {
-                    throw (BuildException) ite.getTargetException();
-                }
-                throw new BuildException(ite.getTargetException());
-            } catch (Exception e) {
-                throw new BuildException(e);
-            }
-        }
-        return theOne;
-    }
-
-
-    /**
-     *  create a new task instance
-     *
-     *@param  taskType         name of the task
-     *@return                  null if the task name is unknown
-     *@throws  BuildException  when task creation goes bad
-     */
-    public Task createTask(String taskType) throws BuildException {
-        return (Task) createForRole(TASK_ROLE, taskType);
-    }
-
 
     /**
      *  Keep a record of all tasks that have been created so that they can be
@@ -1400,35 +1329,53 @@ public class Project {
 
 
     /**
-     *  create a new DataType instance
+     * Creates a new instance of a task, adding it to a list of
+     * created tasks for later invalidation. This causes all tasks
+     * to be remembered until the containing project is removed
+     * @param taskType The name of the task to create an instance of.
+     *                 Must not be <code>null</code>.
      *
-     *@param  typeName         name of the datatype
-     *@return                  null if the datatype name is unknown
-     *@throws  BuildException  when datatype creation goes bad
+     * @return an instance of the specified task, or <code>null</code> if
+     *         the task name is not recognised.
+     *
+     * @exception BuildException if the task name is recognised but task
+     *                           creation fails.
      */
-    public Object createDataType(String typeName) throws BuildException {
-        // This is to make the function backward compatible
-        // Since we know if it returning an adapter for it
-        DataTypeAdapterTask dt =
-                (DataTypeAdapterTask) createForRole(DATATYPE_ROLE, typeName);
-        return (dt != null ? dt.getProxy() : null);
+    public Task createTask(String taskType) throws BuildException {
+        return ComponentHelper.getComponentHelper(this).createTask( taskType );
     }
 
+    /**
+     * Creates a new instance of a data type.
+     *
+     * @param typeName The name of the data type to create an instance of.
+     *                 Must not be <code>null</code>.
+     *
+     * @return an instance of the specified data type, or <code>null</code> if
+     *         the data type name is not recognised.
+     *
+     * @exception BuildException if the data type name is recognised but
+     *                           instance creation fails.
+     */
+    public Object createDataType(String typeName) throws BuildException {
+        return ComponentHelper.getComponentHelper(this).createDataType(typeName);
+    }
 
     /**
-     *  execute the sequence of targets, and the targets they depend on
+     * Execute the specified sequence of targets, and the targets
+     * they depend on.
      *
-     *@param  targetNames      Description of the Parameter
-     *@throws  BuildException  if the build failed
+     * @param targetNames A vector of target name strings to execute.
+     *                    Must not be <code>null</code>.
+     *
+     * @exception BuildException if the build failed
      */
     public void executeTargets(Vector targetNames) throws BuildException {
-        Throwable error = null;
 
         for (int i = 0; i < targetNames.size(); i++) {
             executeTarget((String) targetNames.elementAt(i));
         }
     }
-
 
     /**
      * Demultiplexes output so that each task receives the appropriate
@@ -1473,7 +1420,6 @@ public class Project {
             throw new EOFException("No input provided for project");
         }
     }
-
 
     /**
      * Demux an input request to the correct task.
@@ -1524,10 +1470,12 @@ public class Project {
 
 
     /**
-     *  execute the targets and any targets it depends on
+     * Executes the specified target and any targets it depends on.
      *
-     *@param  targetName       the target to execute
-     *@throws  BuildException  if the build failed
+     * @param targetName The name of the target to execute.
+     *                   Must not be <code>null</code>.
+     *
+     * @exception BuildException if the build failed
      */
     public void executeTarget(String targetName) throws BuildException {
 
@@ -1555,52 +1503,66 @@ public class Project {
         } while (!curtarget.getName().equals(targetName));
     }
 
-
     /**
-     *  Return the canonical form of fileName as an absolute path. <p>
+     * Returns the canonical form of a filename.
+     * <p>
+     * If the specified file name is relative it is resolved
+     * with respect to the given root directory.
      *
-     *  If fileName is a relative file name, resolve it relative to rootDir.</p>
+     * @param fileName The name of the file to resolve.
+     *                 Must not be <code>null</code>.
      *
-     *@param  fileName  Description of the Parameter
-     *@param  rootDir   Description of the Parameter
-     *@return           Description of the Return Value
-     *@deprecated
+     * @param rootDir  The directory to resolve relative file names with
+     *                 respect to. May be <code>null</code>, in which case
+     *                 the current directory is used.
+     *
+     * @return the resolved File.
+     *
+     * @deprecated
      */
     public File resolveFile(String fileName, File rootDir) {
         return fileUtils.resolveFile(rootDir, fileName);
     }
 
-
     /**
-     *  Description of the Method
+     * Returns the canonical form of a filename.
+     * <p>
+     * If the specified file name is relative it is resolved
+     * with respect to the project's base directory.
      *
-     *@param  fileName  Description of the Parameter
-     *@return           Description of the Return Value
+     * @param fileName The name of the file to resolve.
+     *                 Must not be <code>null</code>.
+     *
+     * @return the resolved File.
+     *
      */
     public File resolveFile(String fileName) {
         return fileUtils.resolveFile(baseDir, fileName);
     }
 
-
     /**
-     *  Translate a path into its native (platform specific) format. <p>
+     * Translates a path into its native (platform specific) format.
+     * <p>
+     * This method uses PathTokenizer to separate the input path
+     * into its components. This handles DOS style paths in a relatively
+     * sensible way. The file separators are then converted to their platform
+     * specific versions.
      *
-     *  This method uses the PathTokenizer class to separate the input path into
-     *  its components. This handles DOS style paths in a relatively sensible
-     *  way. The file separators are then converted to their platform specific
-     *  versions.
+     * @param toProcess The path to be translated.
+     *                  May be <code>null</code>.
      *
-     *@param  to_process  the path to be converted
-     *@return             the native version of to_process or an empty string if
-     *      to_process is null or empty
+     * @return the native version of the specified path or
+     *         an empty string if the path is <code>null</code> or empty.
+     *
+     * @see PathTokenizer
      */
-    public static String translatePath(String to_process) {
-        if (to_process == null || to_process.length() == 0) {
+    public static String translatePath(String toProcess) {
+        if (toProcess == null || toProcess.length() == 0) {
             return "";
         }
 
-        StringBuffer path = new StringBuffer(to_process.length() + 50);
-        PathTokenizer tokenizer = new PathTokenizer(to_process);
+        StringBuffer path = new StringBuffer(toProcess.length() + 50);
+        PathTokenizer tokenizer = new PathTokenizer(toProcess);
         while (tokenizer.hasMoreTokens()) {
             String pathComponent = tokenizer.nextToken();
             pathComponent = pathComponent.replace('/', File.separatorChar);
@@ -1614,174 +1576,228 @@ public class Project {
         return path.toString();
     }
 
-
     /**
-     *  Convienence method to copy a file from a source to a destination. No
-     *  filtering is performed.
+     * Convenience method to copy a file from a source to a destination.
+     * No filtering is performed.
      *
-     *@param  sourceFile    Description of the Parameter
-     *@param  destFile      Description of the Parameter
-     *@throws  IOException
-     *@deprecated
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     *
+     * @exception IOException if the copying fails
+     *
+     * @deprecated
      */
-    public void copyFile(String sourceFile, String destFile) throws IOException {
+    public void copyFile(String sourceFile, String destFile)
+          throws IOException {
         fileUtils.copyFile(sourceFile, destFile);
     }
 
-
     /**
-     *  Convienence method to copy a file from a source to a destination
-     *  specifying if token filtering must be used.
+     * Convenience method to copy a file from a source to a destination
+     * specifying if token filtering should be used.
      *
-     *@param  sourceFile    Description of the Parameter
-     *@param  destFile      Description of the Parameter
-     *@param  filtering     Description of the Parameter
-     *@throws  IOException
-     *@deprecated
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filtering Whether or not token filtering should be used during
+     *                  the copy.
+     *
+     * @exception IOException if the copying fails
+     *
+     * @deprecated
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering)
-             throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null);
+        throws IOException {
+        fileUtils.copyFile(sourceFile, destFile,
+            filtering ? globalFilters : null);
     }
 
-
     /**
-     *  Convienence method to copy a file from a source to a destination
-     *  specifying if token filtering must be used and if source files may
-     *  overwrite newer destination files.
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering should be used and if
+     * source files may overwrite newer destination files.
      *
-     *@param  sourceFile    Description of the Parameter
-     *@param  destFile      Description of the Parameter
-     *@param  filtering     Description of the Parameter
-     *@param  overwrite     Description of the Parameter
-     *@throws  IOException
-     *@deprecated
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filtering Whether or not token filtering should be used during
+     *                  the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     *
+     * @exception IOException if the copying fails
+     *
+     * @deprecated
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
-            boolean overwrite) throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, overwrite);
+                         boolean overwrite) throws IOException {
+        fileUtils.copyFile(sourceFile, destFile,
+            filtering ? globalFilters : null, overwrite);
     }
 
-
     /**
-     *  Convienence method to copy a file from a source to a destination
-     *  specifying if token filtering must be used, if source files may
-     *  overwrite newer destination files and the last modified time of <code>destFile</code>
-     *  file should be made equal to the last modified time of <code>sourceFile</code>
-     *  .
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering should be used, if
+     * source files may overwrite newer destination files, and if the
+     * last modified time of the resulting file should be set to
+     * that of the source file.
      *
-     *@param  sourceFile            Description of the Parameter
-     *@param  destFile              Description of the Parameter
-     *@param  filtering             Description of the Parameter
-     *@param  overwrite             Description of the Parameter
-     *@param  preserveLastModified  Description of the Parameter
-     *@throws  IOException
-     *@deprecated
+     * @param sourceFile Name of file to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile Name of file to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filtering Whether or not token filtering should be used during
+     *                  the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     *
+     * @exception IOException if the copying fails
+     *
+     * @deprecated
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
-            boolean overwrite, boolean preserveLastModified)
-             throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null,
-                overwrite, preserveLastModified);
+                         boolean overwrite, boolean preserveLastModified)
+        throws IOException {
+        fileUtils.copyFile(sourceFile, destFile,
+            filtering ? globalFilters : null, overwrite, preserveLastModified);
     }
 
-
     /**
-     *  Convienence method to copy a file from a source to a destination. No
-     *  filtering is performed.
+     * Convenience method to copy a file from a source to a destination.
+     * No filtering is performed.
      *
-     *@param  sourceFile    Description of the Parameter
-     *@param  destFile      Description of the Parameter
-     *@throws  IOException
-     *@deprecated
+     * @param sourceFile File to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile File to copy to.
+     *                 Must not be <code>null</code>.
+     *
+     * @exception IOException if the copying fails
+     *
+     * @deprecated
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
         fileUtils.copyFile(sourceFile, destFile);
     }
 
-
     /**
-     *  Convienence method to copy a file from a source to a destination
-     *  specifying if token filtering must be used.
+     * Convenience method to copy a file from a source to a destination
+     * specifying if token filtering should be used.
      *
-     *@param  sourceFile    Description of the Parameter
-     *@param  destFile      Description of the Parameter
-     *@param  filtering     Description of the Parameter
-     *@throws  IOException
-     *@deprecated
+     * @param sourceFile File to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile File to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filtering Whether or not token filtering should be used during
+     *                  the copy.
+     *
+     * @exception IOException if the copying fails
+     *
+     * @deprecated
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering)
-             throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null);
+        throws IOException {
+        fileUtils.copyFile(sourceFile, destFile,
+            filtering ? globalFilters : null);
     }
 
-
     /**
-     *  Convienence method to copy a file from a source to a destination
-     *  specifying if token filtering must be used and if source files may
-     *  overwrite newer destination files.
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering should be used and if
+     * source files may overwrite newer destination files.
      *
-     *@param  sourceFile    Description of the Parameter
-     *@param  destFile      Description of the Parameter
-     *@param  filtering     Description of the Parameter
-     *@param  overwrite     Description of the Parameter
-     *@throws  IOException
-     *@deprecated
+     * @param sourceFile File to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile File to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filtering Whether or not token filtering should be used during
+     *                  the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     *
+     * @exception IOException if the file cannot be copied.
+     *
+     * @deprecated
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
-            boolean overwrite) throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null, overwrite);
+                         boolean overwrite) throws IOException {
+        fileUtils.copyFile(sourceFile, destFile,
+            filtering ? globalFilters : null, overwrite);
     }
 
-
     /**
-     *  Convienence method to copy a file from a source to a destination
-     *  specifying if token filtering must be used, if source files may
-     *  overwrite newer destination files and the last modified time of <code>destFile</code>
-     *  file should be made equal to the last modified time of <code>sourceFile</code>
-     *  .
+     * Convenience method to copy a file from a source to a
+     * destination specifying if token filtering should be used, if
+     * source files may overwrite newer destination files, and if the
+     * last modified time of the resulting file should be set to
+     * that of the source file.
      *
-     *@param  sourceFile            Description of the Parameter
-     *@param  destFile              Description of the Parameter
-     *@param  filtering             Description of the Parameter
-     *@param  overwrite             Description of the Parameter
-     *@param  preserveLastModified  Description of the Parameter
-     *@throws  IOException
-     *@deprecated
+     * @param sourceFile File to copy from.
+     *                   Must not be <code>null</code>.
+     * @param destFile File to copy to.
+     *                 Must not be <code>null</code>.
+     * @param filtering Whether or not token filtering should be used during
+     *                  the copy.
+     * @param overwrite Whether or not the destination file should be
+     *                  overwritten if it already exists.
+     * @param preserveLastModified Whether or not the last modified time of
+     *                             the resulting file should be set to that
+     *                             of the source file.
+     *
+     * @exception IOException if the file cannot be copied.
+     *
+     * @deprecated
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
-            boolean overwrite, boolean preserveLastModified)
-             throws IOException {
-        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilters : null,
-                overwrite, preserveLastModified);
+                         boolean overwrite, boolean preserveLastModified)
+        throws IOException {
+        fileUtils.copyFile(sourceFile, destFile,
+            filtering ? globalFilters : null, overwrite, preserveLastModified);
     }
 
-
     /**
-     *  Calls File.setLastModified(long time) in a Java 1.1 compatible way.
+     * Calls File.setLastModified(long time) on Java above 1.1, and logs
+     * a warning on Java 1.1.
      *
-     *@param  file                The new fileLastModified value
-     *@param  time                The new fileLastModified value
-     *@exception  BuildException  Description of the Exception
-     *@deprecated
+     * @param file The file to set the last modified time on.
+     *             Must not be <code>null</code>.
+     *
+     * @param time the required modification time.
+     *
+     * @deprecated
+     *
+     * @exception BuildException if the last modified time cannot be set
+     *                           despite running on a platform with a version
+     *                           above 1.1.
      */
-    public void setFileLastModified(File file, long time) throws BuildException {
-        if (getJavaVersion() == JAVA_1_1) {
+    public void setFileLastModified(File file, long time)
+         throws BuildException {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
             log("Cannot change the modification time of " + file
-                     + " in JDK 1.1", Project.MSG_WARN);
+                + " in JDK 1.1", Project.MSG_WARN);
             return;
         }
         fileUtils.setFileLastModified(file, time);
         log("Setting modification time for " + file, MSG_VERBOSE);
     }
 
-
     /**
-     *  returns the boolean equivalent of a string, which is considered true if
-     *  either "on", "true", or "yes" is found, ignoring case.
+     * Returns the boolean equivalent of a string, which is considered
+     * <code>true</code> if either <code>"on"</code>, <code>"true"</code>,
+     * or <code>"yes"</code> is found, ignoring case.
      *
-     *@param  s  Description of the Parameter
-     *@return    Description of the Return Value
+     * @param s The string to convert to a boolean value.
+     *          Must not be <code>null</code>.
+     *
+     * @return <code>true</code> if the given string is <code>"on"</code>,
+     *         <code>"true"</code> or <code>"yes"</code>, or
+     *         <code>false</code> otherwise.
      */
     public static boolean toBoolean(String s) {
         return (s.equalsIgnoreCase("on") ||
@@ -1789,22 +1805,22 @@ public class Project {
                 s.equalsIgnoreCase("yes"));
     }
 
-
     /**
-     *  Topologically sort a set of Targets.
+     * Topologically sorts a set of targets.
      *
-     *@param  root                is the (String) name of the root Target. The
-     *      sort is created in such a way that the sequence of Targets uptil the
-     *      root target is the minimum possible such sequence.
-     *@param  targets             is a Hashtable representing a "name to Target"
-     *      mapping
-     *@return                     a Vector of Strings with the names of the
-     *      targets in sorted order.
-     *@exception  BuildException  if there is a cyclic dependency among the
-     *      Targets, or if a Target does not exist.
+     * @param root The name of the root target. The sort is created in such
+     *             a way that the sequence of Targets up to the root
+     *             target is the minimum possible such sequence.
+     *             Must not be <code>null</code>.
+     * @param targets A map of names to targets (String to Target).
+     *                Must not be <code>null</code>.
+     * @return a vector of strings with the names of the targets in
+     *         sorted order.
+     * @exception BuildException if there is a cyclic dependency among the
+     *                           targets, or if a named target does not exist.
      */
     public final Vector topoSort(String root, Hashtable targets)
-             throws BuildException {
+        throws BuildException {
         Vector ret = new Vector();
         Hashtable state = new Hashtable();
         Stack visiting = new Stack();
@@ -1819,55 +1835,68 @@ public class Project {
 
         tsort(root, targets, state, visiting, ret);
         log("Build sequence for target `" + root + "' is " + ret, MSG_VERBOSE);
-        for (Enumeration en = targets.keys(); en.hasMoreElements(); ) {
-            String curTarget = (String) (en.nextElement());
+        for (Enumeration en = targets.keys(); en.hasMoreElements();) {
+            String curTarget = (String) en.nextElement();
             String st = (String) state.get(curTarget);
             if (st == null) {
                 tsort(curTarget, targets, state, visiting, ret);
             } else if (st == VISITING) {
-                throw new RuntimeException("Unexpected node in visiting state: " + curTarget);
+                throw new RuntimeException("Unexpected node in visiting state: "
+                    + curTarget);
             }
         }
         log("Complete build sequence is " + ret, MSG_VERBOSE);
         return ret;
     }
 
-
-    // one step in a recursive DFS traversal of the Target dependency tree.
-    // - The Hashtable "state" contains the state (VISITED or VISITING or null)
-    // of all the target names.
-    // - The Stack "visiting" contains a stack of target names that are
-    // currently on the DFS stack. (NB: the target names in "visiting" are
-    // exactly the target names in "state" that are in the VISITING state.)
-    // 1. Set the current target to the VISITING state, and push it onto
-    // the "visiting" stack.
-    // 2. Throw a BuildException if any child of the current node is
-    // in the VISITING state (implies there is a cycle.) It uses the
-    // "visiting" Stack to construct the cycle.
-    // 3. If any children have not been VISITED, tsort() the child.
-    // 4. Add the current target to the Vector "ret" after the children
-    //   have been visited. Move the current target to the VISITED state.
-    //   "ret" now contains the sorted sequence of Targets upto the current
-    //   Target.
-
     /**
-     *  Description of the Method
+     * Performs a single step in a recursive depth-first-search traversal of
+     * the target dependency tree.
+     * <p>
+     * The current target is first set to the "visiting" state, and pushed
+     * onto the "visiting" stack.
+     * <p>
+     * An exception is then thrown if any child of the current node is in the
+     * visiting state, as that implies a circular dependency. The exception
+     * contains details of the cycle, using elements of the "visiting" stack.
+     * <p>
+     * If any child has not already been "visited", this method is called
+     * recursively on it.
+     * <p>
+     * The current target is then added to the ordered list of targets. Note
+     * that this is performed after the children have been visited in order
+     * to get the correct order. The current target is set to the "visited"
+     * state.
+     * <p>
+     * By the time this method returns, the ordered list contains the sequence
+     * of targets up to and including the current target.
      *
-     *@param  root                Description of the Parameter
-     *@param  targets             Description of the Parameter
-     *@param  state               Description of the Parameter
-     *@param  visiting            Description of the Parameter
-     *@param  ret                 Description of the Parameter
-     *@exception  BuildException  Description of the Exception
+     * @param root The current target to inspect.
+     *             Must not be <code>null</code>.
+     * @param targets A mapping from names to targets (String to Target).
+     *                Must not be <code>null</code>.
+     * @param state   A mapping from target names to states
+     *                (String to String).
+     *                The states in question are "VISITING" and "VISITED".
+     *                Must not be <code>null</code>.
+     * @param visiting A stack of targets which are currently being visited.
+     *                 Must not be <code>null</code>.
+     * @param ret     The list to add target names to. This will end up
+     *                containing the complete list of depenencies in
+     *                dependency order.
+     *                Must not be <code>null</code>.
+     *
+     * @exception BuildException if a non-existent target is specified or if
+     *                           a circular dependency is detected.
      */
     private final void tsort(String root, Hashtable targets,
-            Hashtable state, Stack visiting,
-            Vector ret)
-             throws BuildException {
+                             Hashtable state, Stack visiting,
+                             Vector ret)
+        throws BuildException {
         state.put(root, VISITING);
         visiting.push(root);
 
-        Target target = (Target) (targets.get(root));
+        Target target = (Target) targets.get(root);
 
         // Make sure we exist
         if (target == null) {
@@ -1885,7 +1914,7 @@ public class Project {
             throw new BuildException(new String(sb));
         }
 
-        for (Enumeration en = target.getDependencies(); en.hasMoreElements(); ) {
+        for (Enumeration en = target.getDependencies(); en.hasMoreElements();) {
             String cur = (String) en.nextElement();
             String m = (String) state.get(cur);
             if (m == null) {
@@ -1899,19 +1928,21 @@ public class Project {
 
         String p = (String) visiting.pop();
         if (root != p) {
-            throw new RuntimeException("Unexpected internal error: expected to pop " + root + " but got " + p);
+            throw new RuntimeException("Unexpected internal error: expected to "
+                + "pop " + root + " but got " + p);
         }
         state.put(root, VISITED);
         ret.addElement(target);
     }
 
-
     /**
-     *  Description of the Method
+     * Builds an appropriate exception detailing a specified circular
+     * dependency.
      *
-     *@param  end  Description of the Parameter
-     *@param  stk  Description of the Parameter
-     *@return      Description of the Return Value
+     * @param end The dependency to stop at. Must not be <code>null</code>.
+     * @param stk A stack of dependencies. Must not be <code>null</code>.
+     *
+     * @return a BuildException detailing the specified circular dependency.
      */
     private static BuildException makeCircularException(String end, Stack stk) {
         StringBuffer sb = new StringBuffer("Circular dependency: ");
@@ -1924,7 +1955,6 @@ public class Project {
         } while (!c.equals(end));
         return new BuildException(new String(sb));
     }
-
 
     /**
      * Adds a reference to the project.
@@ -1958,25 +1988,28 @@ public class Project {
         }
     }
 
-
     /**
-     *  Gets the references attribute of the Project object
+     * Returns a map of the references in the project (String to Object).
+     * The returned hashtable is "live" and so must not be modified.
      *
-     *@return    The references value
+     * @return a map of the references in the project (String to Object).
      */
     public Hashtable getReferences() {
         return references;
     }
 
-
     /**
-     *@param  key  Description of the Parameter
-     *@return      The object with the "id" key.
+     * Looks up a reference by its key (ID).
+     *
+     * @param key The key for the desired reference.
+     *            Must not be <code>null</code>.
+     *
+     * @return the reference with the specified ID, or <code>null</code> if
+     *         there is no such reference in the project.
      */
     public Object getReference(String key) {
         return references.get(key);
     }
-
 
     /**
      * Returns a description of the type of the given element, with
@@ -1992,29 +2025,7 @@ public class Project {
      * @since 1.95, Ant 1.5
      */
     public String getElementName(Object element) {
-        Hashtable elements = taskClassDefinitions;
-        Class elementClass = element.getClass();
-        String typeName = "task";
-        if (!elements.contains(elementClass)) {
-            elements = dataClassDefinitions;
-            typeName = "data type";
-            if (!elements.contains(elementClass)) {
-                elements = null;
-            }
-        }
-
-        if (elements != null) {
-            Enumeration e = elements.keys();
-            while (e.hasMoreElements()) {
-                String name = (String) e.nextElement();
-                Class clazz = (Class) elements.get(name);
-                if (elementClass.equals(clazz)) {
-                    return "The <" + name + "> " + typeName;
-                }
-            }
-        }
-
-        return "Class " + elementClass.getName();
+        return ComponentHelper.getComponentHelper(this).getElementName(element);
     }
 
     /**
@@ -2157,44 +2168,50 @@ public class Project {
         }
     }
 
-
     /**
-     *  Description of the Method
+     * Sends a "message logged" project level event to the build listeners for
+     * this project.
      *
-     *@param  project   Description of the Parameter
-     *@param  message   Description of the Parameter
-     *@param  priority  Description of the Parameter
+     * @param project  The project generating the event.
+     *                 Should not be <code>null</code>.
+     * @param message  The message to send. Should not be <code>null</code>.
+     * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Project project, String message, int priority) {
+    protected void fireMessageLogged(Project project, String message,
+                                     int priority) {
         BuildEvent event = new BuildEvent(project);
         fireMessageLoggedEvent(event, message, priority);
     }
 
-
     /**
-     *  Description of the Method
+     * Sends a "message logged" target level event to the build listeners for
+     * this project.
      *
-     *@param  target    Description of the Parameter
-     *@param  message   Description of the Parameter
-     *@param  priority  Description of the Parameter
+     * @param target   The target generating the event.
+     *                 Must not be <code>null</code>.
+     * @param message  The message to send. Should not be <code>null</code>.
+     * @param priority The priority of the message.
      */
-    protected void fireMessageLogged(Target target, String message, int priority) {
+    protected void fireMessageLogged(Target target, String message,
+                                     int priority) {
         BuildEvent event = new BuildEvent(target);
         fireMessageLoggedEvent(event, message, priority);
     }
 
-
     /**
-     *  Description of the Method
+     * Sends a "message logged" task level event to the build listeners for
+     * this project.
      *
-     *@param  task      Description of the Parameter
-     *@param  message   Description of the Parameter
-     *@param  priority  Description of the Parameter
+     * @param task     The task generating the event.
+     *                 Must not be <code>null</code>.
+     * @param message  The message to send. Should not be <code>null</code>.
+     * @param priority The priority of the message.
      */
     protected void fireMessageLogged(Task task, String message, int priority) {
         BuildEvent event = new BuildEvent(task);
         fireMessageLoggedEvent(event, message, priority);
     }
+
     /**
      * Register a task as the current task for a thread.
      * If the task is null, the thread's entry is removed.
@@ -2236,7 +2253,7 @@ public class Project {
     // Should move to a separate public class - and have API to add
     // listeners, etc.
     private static class AntRefTable extends Hashtable {
-        private Project project;
+        Project project;
         public AntRefTable(Project project) {
             super();
             this.project = project;
@@ -2276,101 +2293,6 @@ public class Project {
         }
     }
 
-    private static class AntTaskTable extends LazyHashtable {
-        private Project project;
-        private Properties props;
-        private boolean tasks = false;
-
-        public AntTaskTable(Project p, boolean tasks) {
-            this.project = p;
-            this.tasks = tasks;
-        }
-
-        public void addDefinitions(Properties props) {
-            this.props = props;
-        }
-
-        protected void initAll() {
-            if (initAllDone) {
-                return;
-            }
-            project.log("InitAll", Project.MSG_DEBUG);
-            if (props == null) {
-                return;
-            }
-            Enumeration enum = props.propertyNames();
-            while (enum.hasMoreElements()) {
-                String key = (String) enum.nextElement();
-                Class taskClass = getTask(key);
-                if (taskClass != null) {
-                    // This will call a get() and a put()
-                    if (tasks)
-                        project.addTaskDefinition(key, taskClass);
-                    else
-                        project.addDataTypeDefinition(key, taskClass );
-                }
-            }
-            initAllDone = true;
-        }
-
-        protected Class getTask(String key) {
-            if (props == null) {
-                return null; // for tasks loaded before init()
-            }
-            String value = props.getProperty(key);
-            if (value == null) {
-                //project.log( "No class name for " + key, Project.MSG_VERBOSE);
-                return null;
-            }
-            try {
-                Class taskClass = null;
-                if (project.getCoreLoader() != null &&
-                    !("only".equals(project.getProperty("build.sysclasspath")))) {
-                    try {
-                        taskClass = project.getCoreLoader().loadClass(value);
-                        if (taskClass != null) {
-                            return taskClass;
-                        }
-                    } catch (Exception ex) {
-                        // ignore
-                    }
-                }
-                taskClass = Class.forName(value);
-                return taskClass;
-            } catch (NoClassDefFoundError ncdfe) {
-                project.log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for task "
-                        + key, Project.MSG_DEBUG);
-            } catch (ClassNotFoundException cnfe) {
-                project.log("Could not load class (" + value
-                        + ") for task " + key, Project.MSG_DEBUG);
-            }
-            return null;
-        }
-
-        // Hashtable implementation
-        public Object get(Object key) {
-            Object orig = super.get(key);
-            if (orig != null) {
-                return orig;
-            }
-            if (!(key instanceof String)) {
-                return null;
-            }
-
-            project.log("Get task " + key, Project.MSG_DEBUG);
-            Object taskClass = getTask((String) key);
-            if (taskClass != null) {
-                super.put(key, taskClass);
-            }
-            return taskClass;
-        }
-
-        public boolean containsKey(Object key) {
-            return get(key) != null;
-        }
-
-    }
     /**
      * Set a reference to this Project on the parameterized object.
      * Need to set the project before other set/add elements
