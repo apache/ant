@@ -77,7 +77,7 @@
 	id CDATA #IMPLIED
 	refid CDATA #IMPLIED
 >
-<!ELEMENT fileset (include | exclude)*>
+<!ELEMENT fileset (include | exclude | patternset)*>
 <!ATTLIST fileset
 	id CDATA #IMPLIED
 	refid CDATA #IMPLIED
