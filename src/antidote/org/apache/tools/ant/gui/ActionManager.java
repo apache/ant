@@ -225,7 +225,9 @@ public class ActionManager {
                         new JCheckBoxMenuItem(action.getName());
                     b.setActionCommand(action.getID());
                     b.addActionListener(action);
-                    b.setAction(action);
+                    // XXX eck. This is a 1.3 feature. Fix ME!
+                    // Need to provide binding between action and widget.
+//                    b.setAction(action);
                     addNiceStuff(b, action);
                     menu.add(b);
                 }
@@ -256,6 +258,29 @@ public class ActionManager {
                 button.setText(null);
 
                 addNiceStuff(button, action);
+            }
+        }
+
+        return retval;
+    }
+
+	/** 
+	 * Create a popup menu with the given actionIDs.
+     * XXX check this for object leak. Does the button
+     * get added to the action as a listener? There are also some
+     * changes to this behavior in 1.3.
+	 * 
+	 * @param actionIDs List of action IDs for actions
+     *  to appear in popup menu.
+	 * @return Popup menu to display.
+	 */
+    public JPopupMenu createPopup(String[] actionIDs) {
+        JPopupMenu retval = new JPopupMenu();
+
+        for(int i = 0; i < actionIDs.length; i++) {
+            AntAction action = (AntAction) _actions.get(actionIDs[i]);
+            if(action != null) {
+                retval.add(action);
             }
         }
 

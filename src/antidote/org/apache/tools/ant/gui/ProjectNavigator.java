@@ -56,6 +56,8 @@ import org.apache.tools.ant.gui.event.*;
 import javax.swing.*;
 import java.awt.GridLayout;
 import java.awt.Dimension;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.EventObject;
 
 /**
@@ -83,11 +85,12 @@ class ProjectNavigator extends AntEditor {
         _tree = new JTree();
         _tree.setModel(null);
         _tree.setCellRenderer(new AntTreeCellRenderer());
+        _tree.addMouseListener(new PopupHandler());
         JScrollPane scroller = new JScrollPane(_tree);
         add(scroller);
 
-        setPreferredSize(new Dimension(150, 100));
-        setMinimumSize(new Dimension(150, 100));
+        setPreferredSize(new Dimension(200, 100));
+        setMinimumSize(new Dimension(200, 100));
 	}
 
     /** Class for handling project events. */
@@ -112,7 +115,7 @@ class ProjectNavigator extends AntEditor {
          * it should be cancelled.
          */
         public boolean eventPosted(EventObject event) {
-            ProjectProxy project = getAppContext().getProject();
+            ProjectProxy project = getContext().getProject();
 
             if(project == null) {
                 // The project has been closed.
@@ -142,4 +145,26 @@ class ProjectNavigator extends AntEditor {
         }
     }
 
+    /** Mouse listener for showing popup menu. */
+    private class PopupHandler extends MouseAdapter {
+        private void handle(MouseEvent e) {
+            if(e.isPopupTrigger()) {
+                ActionManager mgr = getContext().getActions();
+                JPopupMenu menu = mgr.createPopup(
+                    getContext().getResources().getStringArray(
+                        ProjectNavigator.class, "popupActions"));
+                menu.show((JComponent)e.getSource(), e.getX(), e.getY());
+            }
+        }
+
+        public void mousePressed(MouseEvent e) {
+            handle(e);
+        }
+        public void mouseReleased(MouseEvent e) {
+            handle(e);
+        }
+        public void mouseClicked(MouseEvent e) {
+            handle(e);
+        }
+    }
 }

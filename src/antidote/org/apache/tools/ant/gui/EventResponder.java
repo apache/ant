@@ -123,6 +123,11 @@ class EventResponder {
             else {
 				// XXX log me.
                 System.err.println("Unhandled action: " + command);
+                // XXX temporary.
+                new DisplayErrorCmd(
+                    _context, 
+                    "Sorry. \"" + command + 
+                    "\" not implemented yet. Care to help out?").run();
                 return true;
             }
         }

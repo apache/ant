@@ -52,82 +52,24 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.event;
-import org.apache.tools.ant.gui.acs.*;
-import org.apache.tools.ant.gui.command.Command;
-import org.apache.tools.ant.gui.command.DisplayErrorCmd;
+import org.apache.tools.ant.gui.acs.ACSElement;
 import org.apache.tools.ant.gui.AppContext;
 
 /**
- * Event indicating that the current set of selected targets has changed.
+ * Event fired when one or more tasks are selected.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class ElementSelectionEvent extends AntEvent {
-
-    /** New set of selected elements. */
-    private ACSElement[] _selected = null;
-
+public class TaskSelectionEvent extends ElementSelectionEvent {
 	/** 
 	 * Standard ctor.
 	 * 
 	 * @param context application context.
      * @param selected the selected Elements.
 	 */
-    protected ElementSelectionEvent(AppContext context, 
-                                    ACSElement[] selected) {
-        super(context);
-        _selected = selected;
-    }
-
-	/** 
-	 * Current set of selected elements.
-	 * 
-     * @return selected element set.
-	 */
-    public ACSElement[] getSelectedElements() {
-        return _selected;
-    }
-
-
-	/** 
-	 * Factory method for creating the appropriate specialization of this
-     * for communicating an element selection.
-	 * 
-	 * @param context App context.
-	 * @param selected The set of selected events. The last elemetn in the 
-     *                 array is used to determine the specialization of this
-     *                 that should be returned.
-	 * @return Event to communicate selection to.
-	 */
-    public static ElementSelectionEvent createEvent(AppContext context, 
-                                                    ACSElement[] selected) {
-        ElementSelectionEvent retval = null;
-
-        if(selected != null && selected.length > 0) {
-            Class type = selected[selected.length - 1].getClass();
-            if(type.isAssignableFrom(ACSTargetElement.class)) {
-                retval = new TargetSelectionEvent(context, selected);
-            }
-            else if(type.isAssignableFrom(ACSTaskElement.class)) {
-                retval = new TaskSelectionEvent(context, selected);
-            }
-            else if(type.isAssignableFrom(ACSPropertyElement.class)) {
-                retval = new PropertySelectionEvent(context, selected);
-            }
-            else if(type.isAssignableFrom(ACSProjectElement.class)) {
-                retval = new ProjectSelectionEvent(context, selected);
-            }
-            else {
-                // For elements without a specific event
-                // type just send and instance of this.
-                retval = new ElementSelectionEvent(context, selected);
-            }
-        }
-        else {
-            retval = new NullSelectionEvent(context);
-        }
-
-        return retval;
+    public TaskSelectionEvent(AppContext context, 
+                              ACSElement[] selected) {
+        super(context, selected);
     }
 }
