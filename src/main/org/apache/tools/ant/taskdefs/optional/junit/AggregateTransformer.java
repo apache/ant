@@ -101,7 +101,7 @@ public class AggregateTransformer {
     protected File toDir;
 
     /** the format to use for the report. Must be <tt>FRAMES</tt> or <tt>NOFRAMES</tt> */
-    protected String format;
+    protected String format = FRAMES;
 
     /** XML Parser factory */
     private static DocumentBuilderFactory privateDBFactory;
