@@ -1203,6 +1203,12 @@ public class FTP
                     throw new BuildException("could not set transfer type: "
                         + ftp.getReplyString());
                 }
+            } else {
+                ftp.setFileType(org.apache.commons.net.ftp.FTP.ASCII_FILE_TYPE);
+                if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
+                    throw new BuildException("could not set transfer type: "
+                        + ftp.getReplyString());
+                }
             }
 
             if (passive) {
