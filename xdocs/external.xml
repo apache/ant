@@ -2026,6 +2026,37 @@
         </table>
       </subsection>
 
+      <subsection name="Nurflugel AntScript Visualizer">
+
+        <p>The Nurflugel AntScript Visualizer takes your build file,
+        finds any imported build files, and shows all relationships
+        between targets, taskdefs, macrodefs, Ant and Antcalls; output
+        options include PDF, SVG, and PNG.  Many options including
+        grouping by build file, inclusion/exclusion of targets,
+        taskdefs, imports, etc.  Installation is via Java WebStart, so
+        you'll always have the freshest version available.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.1 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.nurflugel.com/webstart/AntScriptVisualizer/">http://www.nurflugel.com/webstart/AntScriptVisualizer/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>dbullard &lt;at&gt; nurflugel &lt;dot&gt; com (email
+            will receive a challenge to weed out spam)</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="pack">
 
         <p>pack is a task to build the smallest possible JAR to link
