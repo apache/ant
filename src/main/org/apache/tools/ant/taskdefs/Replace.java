@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -162,7 +162,7 @@ public class Replace extends MatchingTask {
         public String getReplaceValue()
         {
             if (property != null) {
-                return (String)properties.getProperty(property);
+                return properties.getProperty(property);
             }
             else if (value != null) {
                 return value;
