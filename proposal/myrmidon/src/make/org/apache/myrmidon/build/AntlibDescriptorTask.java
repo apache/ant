@@ -10,6 +10,7 @@ package org.apache.myrmidon.build;
 import java.io.File;
 import java.util.Iterator;
 import java.util.Vector;
+import java.net.URL;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.UpToDate;
 import org.apache.tools.ant.types.FileSet;
@@ -102,9 +103,8 @@ public class AntlibDescriptorTask
                                                  final String destinationFile )
     {
         final TemplateSubTask templateSubTask = new TemplateSubTask();
-        final String templateFile =
-            getClass().getResource( templateLocation ).getFile();
-        templateSubTask.setTemplateFile( new File( templateFile ) );
+        final URL resource = getClass().getResource( templateLocation );
+        templateSubTask.setTemplateURL( resource );
         templateSubTask.setDestinationFile( destinationFile );
         return templateSubTask;
     }
