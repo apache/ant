@@ -870,7 +870,8 @@
 
       <sysproperty key="ant.home" value="${ant.home}" />
       <sysproperty key="build.tests" value="${build.tests}"/>
-    
+      <sysproperty key="java.home" value="${java.home}" />
+
       <formatter type="brief" usefile="false" />
 
       <batchtest>
@@ -944,6 +945,7 @@
 <!--      <jvmarg value="-classic"/> -->
       <sysproperty key="ant.home" value="${ant.home}" />
       <sysproperty key="build.tests" value="${build.tests}"/>
+      <sysproperty key="java.home" value="${java.home}" />
       <classpath location="${java.home}/lib/classes.zip" />
       <classpath refid="tests-classpath"/>
       <formatter type="plain" usefile="false" />
