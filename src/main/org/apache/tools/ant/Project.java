@@ -1244,7 +1244,6 @@ public class Project {
      * @exception BuildException if the build failed
      */
     public void executeTargets(Vector targetNames) throws BuildException {
-        Throwable error = null;
 
         for (int i = 0; i < targetNames.size(); i++) {
             executeTarget((String) targetNames.elementAt(i));
