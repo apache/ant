@@ -7,4 +7,14 @@
   <target name="testdtd">
     <xmlproperty file="xmlproperty_withdtd.xml"/>
   </target>
+
+  <target name="testneedscat">
+    <xmlproperty file="xmlproperty_needscat.xml">
+      <xmlcatalog>
+        <dtd publicId="-//FOO//DTD Skin Configuration V0.1//EN"
+             location="skinconfig.dtd"/>
+      </xmlcatalog>
+    </xmlproperty>
+  </target>
+
 </project>

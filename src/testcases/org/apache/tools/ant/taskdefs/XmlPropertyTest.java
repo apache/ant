@@ -104,6 +104,11 @@ public class XmlPropertyTest extends BuildFileTest {
         doTest("testSemanticInclude", false, false, true, false, true);
     }
 
+    public void testNeedsCatalog() {
+        executeTarget("testneedscat");
+        assertEquals("true", getProject().getProperty("skinconfig.foo"));
+    }
+
     /**
      * Actually run a test, finding all input files (and corresponding
      * goldfile)
