@@ -284,7 +284,8 @@ Legal:
     </target>
 
     <target name="changelog-test">
-        <changelog basedir="." destfile="../../changelog.txt">
+        <changelog basedir="." destfile="../../changelog.txt"
+            start="20 Feb 2002" end="20 Mar 2002">
             <user displayname="Peter Donald" userid="donaldp"/>
         </changelog>
     </target>
