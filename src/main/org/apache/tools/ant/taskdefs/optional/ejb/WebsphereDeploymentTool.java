@@ -671,11 +671,13 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      */
     public void validateConfigured() throws BuildException {
         super.validateConfigured();
-        String home = getTask().getProject().getProperty("websphere.home");
-        if (home == null) {
-            throw new BuildException("Please set the property 'websphere.home' in your buildfile");
+        if (ejbdeploy) {
+            String home = getTask().getProject().getProperty("websphere.home");
+            if (home == null) {
+                throw new BuildException("The 'websphere.home' property must be set when 'ejbdeploy=true'");
+            }
+            websphereHome = getTask().getProject().resolveFile(home);
         }
-        websphereHome = getTask().getProject().resolveFile(home);
     }
 
 
