@@ -71,6 +71,8 @@ import java.net.URL;
  *   property="log4j.url" &gt;
  * </pre>
  * @author steve loughran while stuck in Enumclaw, WA, with a broken down car
+ * @since Ant 1.6
+ * @ant.attribute.group name="oneof" description="Exactly one of these two"
  */
 public class WhichResource extends Task {
     /**
@@ -96,6 +98,7 @@ public class WhichResource extends Task {
 
     /**
      * Set the classpath to be used for this compilation.
+     * @param cp the classpath to be used.
      */
     public void setClasspath(Path cp) {
         if (classpath == null) {
@@ -107,6 +110,7 @@ public class WhichResource extends Task {
 
     /**
      * Adds a path to the classpath.
+     * @return a classpath to be configured.
      */
     public Path createClasspath() {
         if (classpath == null) {
@@ -183,7 +187,8 @@ public class WhichResource extends Task {
 
     /**
      * name the resource to look for
-     * @param resource
+     * @param resource the name of the resource to look for.
+     * @ant.attribute group="oneof"
      */
     public void setResource(String resource) {
         this.resource = resource;
@@ -191,7 +196,8 @@ public class WhichResource extends Task {
 
     /**
      * name the class to look for
-     * @param classname
+     * @param classname the name of the class to look for.
+     * @ant.attribute group="oneof"
      */
     public void setClass(String classname) {
         this.classname = classname;
@@ -199,7 +205,8 @@ public class WhichResource extends Task {
 
     /**
      * the property to fill with the URL of the resource or class
-     * @param property
+     * @param property the property to be set.
+     * @ant.attribute group="required"
      */
     public void setProperty(String property) {
         this.property = property;
