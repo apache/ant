@@ -10,6 +10,10 @@ Other changes:
   fileset to be constructed without having to specify its parent
   directory separately.
 
+* <junit> will now return the result of a call to getName instead of
+  "unknown" for Test implementations that don't extend TestCase but have
+  a public String getName() method.
+
 Changes from Ant 1.5 to 1.5.1Beta1
 ==================================
 
