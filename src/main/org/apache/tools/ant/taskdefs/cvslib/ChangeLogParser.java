@@ -110,7 +110,7 @@ class ChangeLogParser {
         }
         return array;
     }
-   
+
     /**
      * Receive notification about the process writing
      * to standard output.
