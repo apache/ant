@@ -271,10 +271,10 @@ public class UnknownElement extends Task {
 
             if (!ih.supportsNestedElement(child.getTag()) 
                 && parent instanceof TaskContainer) {
-                realChild = makeTask(child, childWrapper, false);
+                realChild = makeTask(child, childWrapper);
 
                 if (realChild == null) {
-                    throw getNotFoundException("task", child.getTag());
+                    ih.throwNotSupported(getProject(), parent, child.getTag());
                 }
 
                 // XXX DataTypes will be wrapped or treated like normal components
@@ -286,7 +286,8 @@ public class UnknownElement extends Task {
                     task.setOwningTarget(this.getOwningTarget());
                     task.init();
                 } else {
-                    // What ? Add data type ? createElement ?
+                    // should not happen
+                    ih.throwNotSupported(getProject(), parent, child.getTag());
                 }
             } else {
                 realChild 
@@ -318,7 +319,7 @@ public class UnknownElement extends Task {
      * @return the task or data type represented by the given unknown element.
      */
     protected Object makeObject(UnknownElement ue, RuntimeConfigurable w) {
-        Object o = makeTask(ue, w, true);
+        Object o = makeTask(ue, w);
         if (o == null) {
             o = getProject().createDataType(ue.getTag());
         }
@@ -334,21 +335,12 @@ public class UnknownElement extends Task {
      * @param ue The UnknownElement to create the real task for.
      *           Must not be <code>null</code>.
      * @param w  Ignored.
-     * @param onTopLevel Whether or not this is definitely trying to create
-     *                   a task. If this is <code>true</code> and the
-     *                   task name is not recognised, a BuildException
-     *                   is thrown.
      *
      * @return the task specified by the given unknown element, or
-     *         <code>null</code> if the task name is not recognised and
-     *         onTopLevel is <code>false</code>.
+     *         <code>null</code> if the task name is not recognised.
      */
-    protected Task makeTask(UnknownElement ue, RuntimeConfigurable w,
-                            boolean onTopLevel) {
+    protected Task makeTask(UnknownElement ue, RuntimeConfigurable w) {
         Task task = getProject().createTask(ue.getTag());
-        if (task == null && !onTopLevel) {
-            throw getNotFoundException("task", ue.getTag());
-        }
 
         if (task != null) {
             task.setLocation(getLocation());

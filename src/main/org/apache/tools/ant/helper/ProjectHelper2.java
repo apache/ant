@@ -846,11 +846,6 @@ public class ProjectHelper2 extends ProjectHelper {
                                        Attributes attrs,
                                        AntXMLContext context)
             throws SAXParseException {
-            // this element
-            RuntimeConfigurable wrapper = context.currentWrapper();
-
-            Object element = wrapper.getProxy();
-//            return ProjectHelper2.nestedElementHandler;
             return ProjectHelper2.elementHandler;
         }
 

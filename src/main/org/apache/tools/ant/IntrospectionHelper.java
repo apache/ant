@@ -503,6 +503,13 @@ public class IntrospectionHelper implements BuildListener {
         }
     }
 
+    public void throwNotSupported(Project project, Object parent, 
+        String elementName) {
+        String msg = project.getElementName(parent) +
+            " doesn't support the nested \"" + elementName + "\" element.";
+        throw new BuildException(msg);
+    }        
+    
     /**
      * Creates a named nested element. Depending on the results of the
      * initial introspection, either a method in the given parent instance
@@ -538,9 +545,7 @@ public class IntrospectionHelper implements BuildListener {
             }
         }
         if (nc == null) {
-            String msg = project.getElementName(parent) +
-                " doesn't support the nested \"" + elementName + "\" element.";
-            throw new BuildException(msg);
+            throwNotSupported(project, parent, elementName);
         }
         try {
             Object nestedElement = nc.create(parent);
