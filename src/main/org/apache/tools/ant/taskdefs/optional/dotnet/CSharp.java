@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ *  Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -51,13 +51,11 @@
  *  information on the Apache Software Foundation, please see
  *  <http://www.apache.org/>.
  */
+
 /*
  *  build notes
  *  -The reference CD to listen to while editing this file is
  *  nap: Underworld  - Everything, Everything
- *  -variable naming policy from Fowler's refactoring book.
- *  -tested against the PDC pre-beta of csc.exe; future versions will
- *  inevitably change things
  */
 // ====================================================================
 // place in the optional ant tasks package
@@ -941,7 +939,7 @@ public class CSharp
 
 
     /**
-     *  Set the definitions
+     *  Set the output file
      *
      *@param  params  The new outputFile value
      */
@@ -949,6 +947,15 @@ public class CSharp
         outputFile = params;
     }
 
+    /**
+     *  Set the output file
+     *
+     *@param  params  The new outputFile value
+     */
+    public void setDestFile(File file) {
+        outputFile = file;
+    }
+    
 
     /**
      *  get the argument or null for no argument needed
@@ -1040,17 +1047,28 @@ public class CSharp
         return s != null && s.length() != 0;
     }
 
+    /**
+     * validation code
+     * @throws  BuildException  if validation failed
+     */ 
+    protected void validate() 
+            throws BuildException {
+        if(outputFile==null) {
+            throw new BuildException("destination file must be specified");
+        }
+    }
 
     /**
      *  do the work by building the command line and then calling it
      *
-     *@exception  BuildException  Description of the Exception
+     *@throws  BuildException  if validation or execution failed
      */
     public void execute()
              throws BuildException {
         if (srcDir == null) {
             srcDir = project.resolveFile(".");
         }
+        validate();
 
         NetCommand command = new NetCommand(this, "CSC", csc_exe_name);
         command.setFailOnError(getFailOnError());
@@ -1080,20 +1098,33 @@ public class CSharp
         command.addArgument(getExtraOptionsParameter());
         command.addArgument(getFileAlignParameter());
 
+        long outputTimestamp;
+        if(outputFile.exists()) {
+            outputTimestamp = outputFile.lastModified();
+        } else {
+            outputTimestamp = 0;
+        }
+        int filesOutOfDate=0;
         //get dependencies list.
         DirectoryScanner scanner = super.getDirectoryScanner(srcDir);
         String[] dependencies = scanner.getIncludedFiles();
         log("compiling " + dependencies.length + " file" + ((dependencies.length == 1) ? "" : "s"));
         String baseDir = scanner.getBasedir().toString();
+        File base=scanner.getBasedir();
         //add to the command
         for (int i = 0; i < dependencies.length; i++) {
-            String targetFile = dependencies[i];
-            targetFile = baseDir + File.separator + targetFile;
-            command.addArgument(targetFile);
+            File targetFile = new File(base,dependencies[i]);
+            command.addArgument(targetFile.toString());
+            if(targetFile.lastModified()>outputTimestamp) {
+                filesOutOfDate++;
+                log("Source file "+targetFile.toString()+" is out of date");
+            }
         }
 
         //now run the command of exe + settings + files
-        command.runCommand();
+        if(filesOutOfDate>0) {
+            command.runCommand();
+        }
     }
     // end execute
 
