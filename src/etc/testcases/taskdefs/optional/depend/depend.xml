@@ -27,14 +27,16 @@
 
   <target name="testdirect" depends="compile">
     <sleep seconds="3"/>
-    <touch file="${tempsrc.dir}/C.java"/>
+    <delete file="${tempsrc.dir}/C.java"/>
+    <copy file="${cvssrc.dir}/C.java" tofile="${tempsrc.dir}/C.java"/>
     <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}"/>
     <fileset id="result" dir="${classes.dir}"/>
   </target>
 
   <target name="testclosure" depends="compile">
     <sleep seconds="3"/>
-    <touch file="${tempsrc.dir}/C.java"/>
+    <delete file="${tempsrc.dir}/C.java"/>
+    <copy file="${cvssrc.dir}/C.java" tofile="${tempsrc.dir}/C.java"/>
     <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
     <fileset id="result" dir="${classes.dir}"/>
   </target>

@@ -122,8 +122,6 @@
              unless="jdk1.2+" />
     <exclude name="${optional.package}/metamata/*.java" 
              unless="jdk1.2+" />
-    <exclude name="${util.package}/depend/*.java"
-             unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/EjbJar.java"
              unless="jdk1.2+" />
     <exclude name="${optional.package}/ejb/*DeploymentTool.java"
@@ -132,6 +130,9 @@
              unless="jdk1.2+" />
     <!-- uses the context classloader -->
     <exclude name="${optional.package}/junit/JUnitClassLoaderTest.java"
+             unless="jdk1.2+" />
+    <!-- use various 1.2 methods -->             
+    <exclude name="${optional.package}/sitraka/**/*.java"
              unless="jdk1.2+" />
   </patternset>
   <patternset id="needs.jdk1.3+">
@@ -144,7 +145,7 @@
   </patternset>
 
   <!-- classes that should be present in Sun based JVMs, but not in
-  Kaffe for example -->
+       Kaffe for example -->
   <patternset id="needs.sun.tools">
     <exclude name="${optional.package}/Native2Ascii.java"
              unless="sun.tools.present" />
@@ -205,7 +206,7 @@
              unless="bcel.present" />
     <exclude name="${util.package}/depend/bcel/*.java"
              unless="bcel.present" />
-    <exclude name="${optional.type.package}/depend/*.java"
+    <exclude name="${optional.type.package}/depend/ClassFileSetTest.java"
              unless="bcel.present" />
   </patternset>
   <patternset id="needs.jakarta.log4j">
@@ -380,9 +381,13 @@
     <available property="xerces.present"
                classname="org.apache.xerces.parsers.SAXParser"
                classpathref="classpath" />
-    <available property="bcel.present"
-               classname="org.apache.bcel.Constants"
-               classpathref="classpath" />
+    <condition property="bcel.present">
+        <and>
+            <isset property="jdk1.2+"/>                
+            <available classname="org.apache.bcel.Constants"
+                       classpathref="classpath"/>
+        </and>
+    </condition>
     <available property="sunuue.present"
                classname="sun.misc.UUEncoder"
                classpathref="classpath" />
@@ -1181,7 +1186,12 @@
           <patternset refid="needs.xalan1" />
           <patternset refid="needs.xslp" />
           <patternset refid="needs.jakarta.bcel" />
+          <patternset refid="needs.trax" />
 
+          <!-- fails under 1.1 -->
+          <exclude name="${optional.package}/perforce/P4ChangeTest.java"
+                   unless="jdk1.2+"/>
+          
           <!-- tests excluded if the test is run in offline mode -->
           <patternset refid="onlinetests"/> 
 
@@ -1216,9 +1226,6 @@
                    unless="jdk1.2+" />
           <!-- DateTime handling seems to be broken in JDK 1.1 -->
           <exclude name="${util.package}/DateUtilsTest.java"
-                   unless="jdk1.2+" />
-          <!-- test needs a working touch task -->
-          <exclude name="${optional.package}/depend/DependTest.java"
                    unless="jdk1.2+" />
 
           <exclude name="${optional.package}/JspcTest.java"
