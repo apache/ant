@@ -54,89 +54,58 @@
 
 package org.apache.tools.ant;
 
-import java.util.*;
+import java.io.*;
 
 /**
- * This class implements a target object with required parameters.
- *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
+ *  Writes build event to a PrintStream. Currently, it
+ *  only writes which targets are being executed, and
+ *  any messages that get logged.
  */
+public class DefaultLogger implements BuildListener {
+    private PrintStream out;
+    private int msgOutputLevel;
 
-public class Target {
-
-    private String name;
-    private String condition = "";
-    private Vector dependencies = new Vector(2);
-    private Vector tasks = new Vector(5);
-    private Project project;
-
-    public void setProject(Project project) {
-        this.project = project;
+    /**
+     *  Constructs a new logger which will write to the specified
+     *  PrintStream. Messages with a priority lower (higher?) than
+     *  msgOutputLevel will be ignored.
+     */
+    public DefaultLogger(PrintStream out, int msgOutputLevel) {
+        this.out = out;
+        this.msgOutputLevel = msgOutputLevel;
     }
 
-    public Project getProject() {
-        return project;
-    }
+    public void buildStarted(BuildEvent event) {}
+    public void buildFinished(BuildEvent event) {}
 
-    public void setDepends(String depS) {
-        if (depS.length() > 0) {
-            StringTokenizer tok =
-                new StringTokenizer(depS, ",", false);
-            while (tok.hasMoreTokens()) {
-                addDependency(tok.nextToken().trim());
-            }
+    public void targetStarted(BuildEvent event) {
+        if (msgOutputLevel <= Project.MSG_INFO) {
+            out.println("Executing Target: " + event.getTarget().getName());
         }
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void targetFinished(BuildEvent event) {}
 
-    public String getName() {
-        return name;
-    }
+    public void taskStarted(BuildEvent event) {}
+    public void taskFinished(BuildEvent event) {}
 
-    public void addTask(Task task) {
-        tasks.addElement(task);
-    }
+    public void messageLogged(BuildEvent event) {
 
-    public void addDependency(String dependency) {
-        dependencies.addElement(dependency);
-    }
+        // Filter out messages based on priority
+        if (event.getPriority() <= msgOutputLevel) {
 
-    public Enumeration getDependencies() {
-        return dependencies.elements();
-    }
-
-    public void setCondition(String property) {
-        this.condition = (property == null) ? "" : property;
-    }
-
-    public void execute() throws BuildException {
-        if (("".equals(this.condition)) || (project.getProperty(this.condition) != null)) {
-            Enumeration enum = tasks.elements();
-            while (enum.hasMoreElements()) {
-                Task task = (Task) enum.nextElement();
-
-                try {
-                    project.currentTask = task;
-                    project.fireTaskStarted();
-               	    task.execute();
-                    project.fireTaskFinished(null);
-		}
-                catch(RuntimeException exc) {
-                    if (exc instanceof BuildException) {
-                        ((BuildException)exc).setLocation(task.getLocation());
-                    }
-                    project.fireTaskFinished(exc);
-                    throw exc;
+            // Print out the name of the task if we're in one
+            if (event.getTask() != null) {
+                String name = event.getTask().getClass().getName();
+                int pos = name.lastIndexOf(".");
+                if (pos != -1) {
+                    name = name.substring(pos + 1);
                 }
-                finally {
-                    project.currentTask = null;
-                }
+                out.print("[" + name + "] ");
             }
-        } else {
-            project.log("Skipped because property '" + this.condition + "' not set.", this.name, Project.MSG_VERBOSE);
+
+            // Print the message
+            out.println(event.getMessage());
         }
     }
 }

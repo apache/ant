@@ -73,19 +73,27 @@ import java.util.*;
 public class Main {
 
     /** Our current message output status. Follows Project.MSG_XXX */
-    private static int msgOutputLevel = Project.MSG_INFO;
+    private int msgOutputLevel = Project.MSG_INFO;
 
     /** File that we are using for configuration */
-    private static File buildFile = new File("build.xml");
+    private File buildFile = new File("build.xml");
 
     /** Stream that we are using for logging */
-    private static PrintStream out = System.out;
+    private PrintStream out = System.out;
 
     /** The build targets */
-    private static Vector targets = new Vector(5);
+    private Vector targets = new Vector(5);
 
     /** Set of properties that can be used by tasks */
-    private static Properties definedProps = new Properties();
+    private Properties definedProps = new Properties();
+
+    /** Names of classes to add as listeners to project */
+    private Vector listeners = new Vector(5);
+
+    /**
+     * Indicates if this ant should be run.
+     */
+    private boolean readyToRun = false;
 
     /**
      * Command line entry point. This method kicks off the building
@@ -94,8 +102,11 @@ public class Main {
      *
      * @param args Command line args.
      */
-
     public static void main(String[] args) {
+        new Main(args).runBuild();
+    }
+
+    protected Main(String[] args) {
 
         // cycle through given args
 
@@ -137,6 +148,16 @@ public class Main {
                     System.out.println(msg);
                     return;
                 }
+            } else if (arg.equals("-listener")) {
+                try {
+                    listeners.addElement(args[i+1]);
+                    i++;
+                } catch (ArrayIndexOutOfBoundsException aioobe) {
+                    String msg = "You must specify a classname when " +
+                        "using the -listener argument";
+                    System.out.println(msg);
+                    return;
+                }
             } else if (arg.startsWith("-D")) {
 
                 /* Interestingly enough, we get to here when a user
@@ -170,6 +191,7 @@ public class Main {
                 // if it's no other arg, it may be the target
                 targets.addElement(arg);
             }
+            
         }
 
         // make sure buildfile exists
@@ -187,18 +209,19 @@ public class Main {
             return;
         }
 
-        // ok, so if we've made it here, let's run the damn build allready
-        runBuild();
-
-        return;
+        readyToRun = true;
     }
 
     /**
      * Executes the build.
      */
 
-    private static void runBuild() {
+    private void runBuild() {
 
+        if (!readyToRun) {
+            return;
+        }
+        
         // track when we started
 
         long startTime = System.currentTimeMillis();
@@ -206,7 +229,10 @@ public class Main {
             System.out.println("Buildfile: " + buildFile);
         }
 
-        Project project = new Project(out, msgOutputLevel);
+        Project project = new Project();
+        addBuildListeners(project);
+        project.fireBuildStarted();
+        project.init();
 
         // set user-define properties
         Enumeration e = definedProps.keys();
@@ -215,7 +241,8 @@ public class Main {
             String value = (String)definedProps.get(arg);
             project.setUserProperty(arg, value);
         }
-	project.setUserProperty( "ant.file" , buildFile.getAbsolutePath() );
+
+        project.setUserProperty( "ant.file" , buildFile.getAbsolutePath() );
 
         // first use the ProjectHelper to create the project object
         // from the given build file.
@@ -248,10 +275,7 @@ public class Main {
 
         // actually do some work
         try {
-            Enumeration en = targets.elements();
-            while (en.hasMoreElements()) {
-                project.executeTarget((String) en.nextElement());
-            }
+            project.executeTargets(targets);
         } catch (BuildException be) {
             String msg = "\nBUILD FATAL ERROR\n\n";
             System.out.println(msg + be.toString());
@@ -270,6 +294,31 @@ public class Main {
         }
     }
 
+    protected void addBuildListeners(Project project) {
+
+        // Add the default listener
+        project.addBuildListener(createDefaultBuildListener());
+
+        for (int i = 0; i < listeners.size(); i++) {
+            String className = (String) listeners.elementAt(i);
+            try {
+                BuildListener listener =
+                    (BuildListener) Class.forName(className).newInstance();
+                project.addBuildListener(listener);
+            }
+            catch(Exception exc) {
+                throw new BuildException("Unable to instantiate " + className, exc);
+            }
+        }
+    }
+
+    /**
+     *  Creates the default build listener for displaying output to the screen.
+     */
+    private BuildListener createDefaultBuildListener() {
+        return new DefaultLogger(out, msgOutputLevel);
+    }
+
     /**
      * Prints the usage of how to use this class to System.out
      */
@@ -282,6 +331,7 @@ public class Main {
         msg.append("  -quiet                 be extra quiet" + lSep);
         msg.append("  -verbose               be extra verbose" + lSep);
         msg.append("  -logfile <file>        use given file for log" + lSep);
+        msg.append("  -listener <classname>  add an instance of class as a project listener" + lSep);
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
         System.out.println(msg.toString());

@@ -54,89 +54,100 @@
 
 package org.apache.tools.ant;
 
-import java.util.*;
+import java.util.EventObject;
 
-/**
- * This class implements a target object with required parameters.
- *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- */
-
-public class Target {
-
-    private String name;
-    private String condition = "";
-    private Vector dependencies = new Vector(2);
-    private Vector tasks = new Vector(5);
+public class BuildEvent extends EventObject {
     private Project project;
+    private Target target;
+    private Task task;
+    private String message;
+    private int priority;
+    private Throwable exception;
 
-    public void setProject(Project project) {
+    /**
+     *  Constructs a new build event. Fields that are not relevant
+     *  can be set to null, except for the project field which is
+     *  required.
+     */
+    public BuildEvent(
+        Project project,
+        Target target,
+        Task task,
+        String message,
+        int priority,
+        Throwable exception) {
+
+        super(getSource(project, target, task));
+
         this.project = project;
+        this.target = target;
+        this.task = task;
+        this.message = message;
+        this.priority = priority;
+        this.exception = exception;
     }
 
+    /**
+     *  Returns the project that fired this event.
+     */
     public Project getProject() {
         return project;
     }
 
-    public void setDepends(String depS) {
-        if (depS.length() > 0) {
-            StringTokenizer tok =
-                new StringTokenizer(depS, ",", false);
-            while (tok.hasMoreTokens()) {
-                addDependency(tok.nextToken().trim());
-            }
-        }
+    /**
+     *  Returns the target that fired this event.
+     */
+    public Target getTarget() {
+        return target;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    /**
+     *  Returns the task that fired this event.
+     */
+    public Task getTask() {
+        return task;
     }
 
-    public String getName() {
-        return name;
+    /**
+     *  Returns the logging message. This field will only be set
+     *  for "messageLogged" events.
+     *
+     *  @see BuildListener#messageLogged(BuildEvent)
+     */
+    public String getMessage() {
+        return message;
     }
 
-    public void addTask(Task task) {
-        tasks.addElement(task);
+    /**
+     *  Returns the priority of the logging message. This field will only
+     *  be set for "messageLogged" events.
+     *
+     *  @see BuildListener#messageLogged(BuildEvent)
+     */
+    public int getPriority(){
+        return priority;
     }
 
-    public void addDependency(String dependency) {
-        dependencies.addElement(dependency);
+    /**
+     *  Returns the exception that was thrown, if any. This field will only
+     *  be set for "taskFinished", "targetFinished", and "buildFinished" events.
+     *
+     *  @see BuildListener#taskFinished(BuildEvent)
+     *  @see BuildListener#targetFinished(BuildEvent)
+     *  @see BuildListener#buildFinished(BuildEvent)
+     */
+    public Throwable getException() {
+        return exception;
     }
 
-    public Enumeration getDependencies() {
-        return dependencies.elements();
-    }
+    /**
+     *  Returns the object that fired this event.
+     */
+    private static Object getSource(Project project, Target target, Task task) {
+        if (task != null) return task;
+        if (target != null) return target;
+        if (project != null) return project;
 
-    public void setCondition(String property) {
-        this.condition = (property == null) ? "" : property;
-    }
-
-    public void execute() throws BuildException {
-        if (("".equals(this.condition)) || (project.getProperty(this.condition) != null)) {
-            Enumeration enum = tasks.elements();
-            while (enum.hasMoreElements()) {
-                Task task = (Task) enum.nextElement();
-
-                try {
-                    project.currentTask = task;
-                    project.fireTaskStarted();
-               	    task.execute();
-                    project.fireTaskFinished(null);
-		}
-                catch(RuntimeException exc) {
-                    if (exc instanceof BuildException) {
-                        ((BuildException)exc).setLocation(task.getLocation());
-                    }
-                    project.fireTaskFinished(exc);
-                    throw exc;
-                }
-                finally {
-                    project.currentTask = null;
-                }
-            }
-        } else {
-            project.log("Skipped because property '" + this.condition + "' not set.", this.name, Project.MSG_VERBOSE);
-        }
+        throw new IllegalArgumentException("Project field cannot be null");
     }
 }

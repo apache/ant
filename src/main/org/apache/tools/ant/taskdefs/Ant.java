@@ -86,9 +86,25 @@ public class Ant extends Task {
 
     Vector properties=new Vector();
     Project p1;
-    
+
     public void init() {
-        p1 = new Project(project.getOutput(), project.getOutputLevel());
+        p1 = new Project();
+        Vector listeners = project.getBuildListeners();
+        for (int i = 0; i < listeners.size(); i++) {
+            p1.addBuildListener((BuildListener)listeners.elementAt(i));
+        }
+
+        if (output != null) {
+            try {
+                PrintStream out = new PrintStream(new FileOutputStream(output));
+                p1.addBuildListener(new DefaultLogger(out, Project.MSG_INFO));
+            }
+            catch( IOException ex ) {
+                project.log( "Ant: Can't set output to " + output );
+            }
+        }
+
+        p1.init();
 
         // set user-define properties
         Hashtable prop1 = project.getProperties();
@@ -99,36 +115,27 @@ public class Ant extends Task {
             p1.setProperty(arg, value);
         }
     }
-    
+
     /**
      * Do the execution.
      */
     public void execute() throws BuildException {
         if( dir==null) dir=".";
-	
-	if( output != null ) {
-	    try {
-		PrintStream out=new PrintStream(new FileOutputStream(output));
-		p1.setOutput( out );
-	    } catch( IOException ex ) {
-		project.log( "Ant: Can't set output to " + output );
-	    }
-	}
 
-	p1.setBasedir(dir);
+        p1.setBasedir(dir);
         p1.setUserProperty("basedir" , dir);
 
-	// Override with local-defined properties
-	Enumeration e = properties.elements();
+        // Override with local-defined properties
+        Enumeration e = properties.elements();
         while (e.hasMoreElements()) {
             Property p=(Property) e.nextElement();
-	    //	    System.out.println("Setting " + p.getName()+ " " + p.getValue());
-	    p.init();
+            //	    System.out.println("Setting " + p.getName()+ " " + p.getValue());
+            p.init();
         }
 
-	if (antFile == null) antFile = dir + "/build.xml";
+        if (antFile == null) antFile = dir + "/build.xml";
 
-	p1.setUserProperty( "ant.file" , antFile );
+        p1.setUserProperty( "ant.file" , antFile );
         ProjectHelper.configureProject(p1, new File(antFile));
 
         if (target == null) {

@@ -299,7 +299,7 @@ public class ProjectHelper {
             // take care of dependencies
 
             if (depends.length() > 0) {
-                StringTokenizer tok = 
+                StringTokenizer tok =
                     new StringTokenizer(depends, ",", false);
                 while (tok.hasMoreTokens()) {
                     target.addDependency(tok.nextToken().trim());

@@ -54,89 +54,66 @@
 
 package org.apache.tools.ant;
 
-import java.util.*;
+import java.util.EventListener;
 
 /**
- * This class implements a target object with required parameters.
+ *  Classes that implement this interface will be notified when
+ *  things happend during a build.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
+ *  @see BuildEvent
+ *  @see Project#addBuildListener(BuildListener)
  */
+public interface BuildListener extends EventListener {
 
-public class Target {
+    /**
+     *  Fired before any targets are started.
+     */
+    public void buildStarted(BuildEvent event);
 
-    private String name;
-    private String condition = "";
-    private Vector dependencies = new Vector(2);
-    private Vector tasks = new Vector(5);
-    private Project project;
+    /**
+     *  Fired after the last target has finished. This event
+     *  will still be thrown if an error occured during the build.
+     *
+     *  @see BuildEvent.getException()
+     */
+    public void buildFinished(BuildEvent event);
 
-    public void setProject(Project project) {
-        this.project = project;
-    }
+    /**
+     *  Fired when a target is started.
+     *
+     *  @see BuildEvent#getTarget()
+     */
+    public void targetStarted(BuildEvent event);
 
-    public Project getProject() {
-        return project;
-    }
+    /**
+     *  Fired when a target has finished. This event will
+     *  still be thrown if an error occured during the build.
+     *
+     *  @see BuildEvent.getException()
+     */
+    public void targetFinished(BuildEvent event);
 
-    public void setDepends(String depS) {
-        if (depS.length() > 0) {
-            StringTokenizer tok =
-                new StringTokenizer(depS, ",", false);
-            while (tok.hasMoreTokens()) {
-                addDependency(tok.nextToken().trim());
-            }
-        }
-    }
+    /**
+     *  Fired when a task is started.
+     *
+     *  @see BuildEvent#getTask()
+     */
+    public void taskStarted(BuildEvent event);
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    /**
+     *  Fired when a task has finished. This event will still
+     *  be throw if an error occured during the build.
+     *
+     *  @see BuildEvent#getException()
+     */
+    public void taskFinished(BuildEvent event);
 
-    public String getName() {
-        return name;
-    }
+    /**
+     *  Fired whenever a message is logged.
+     *
+     *  @see BuildEvent#getMessage()
+     *  @see BuildEvent#getPriority()
+     */
+    public void messageLogged(BuildEvent event);
 
-    public void addTask(Task task) {
-        tasks.addElement(task);
-    }
-
-    public void addDependency(String dependency) {
-        dependencies.addElement(dependency);
-    }
-
-    public Enumeration getDependencies() {
-        return dependencies.elements();
-    }
-
-    public void setCondition(String property) {
-        this.condition = (property == null) ? "" : property;
-    }
-
-    public void execute() throws BuildException {
-        if (("".equals(this.condition)) || (project.getProperty(this.condition) != null)) {
-            Enumeration enum = tasks.elements();
-            while (enum.hasMoreElements()) {
-                Task task = (Task) enum.nextElement();
-
-                try {
-                    project.currentTask = task;
-                    project.fireTaskStarted();
-               	    task.execute();
-                    project.fireTaskFinished(null);
-		}
-                catch(RuntimeException exc) {
-                    if (exc instanceof BuildException) {
-                        ((BuildException)exc).setLocation(task.getLocation());
-                    }
-                    project.fireTaskFinished(exc);
-                    throw exc;
-                }
-                finally {
-                    project.currentTask = null;
-                }
-            }
-        } else {
-            project.log("Skipped because property '" + this.condition + "' not set.", this.name, Project.MSG_VERBOSE);
-        }
-    }
 }

@@ -275,7 +275,7 @@ public class Javac extends MatchingTask {
                                                     + ".class");
 
                     if (srcFile.lastModified() > now) {
-                        project.log("Warning: file modified in the future: " + 
+                        project.log("Warning: file modified in the future: " +
                             files[i], project.MSG_WARN);
                     }
 
@@ -423,14 +423,19 @@ public class Javac extends MatchingTask {
         // XXX
         // provide the compiler a different message sink - namely our own
 
-        JavacOutputStream jos = new JavacOutputStream(project);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        sun.tools.javac.Main compiler = new sun.tools.javac.Main(out, "javac");
 
-        sun.tools.javac.Main compiler =
-            new sun.tools.javac.Main(jos, "javac");
-        compiler.compile(args);
-        if (jos.getErrorFlag()) {
-            String msg = "Compile failed, messages should have been provided.";
-            throw new BuildException(msg);
+        if (compiler.compile(args)) {
+            String output = out.toString().trim();
+            if (output.length() > 0) {
+                project.log(output, Project.MSG_WARN);
+            }
+        }
+        else {
+            project.log(out.toString().trim(), Project.MSG_ERR);
+
+            throw new BuildException("Compile failed");
         }
     }
 

@@ -93,8 +93,6 @@ public class Project {
     public static final String TOKEN_END = "@";
 
     private String name;
-    private PrintStream out;
-    private int msgOutputLevel = MSG_INFO;
 
     private Hashtable properties = new Hashtable();
     private Hashtable userProperties = new Hashtable();
@@ -105,11 +103,20 @@ public class Project {
     private Hashtable filters = new Hashtable();
     private File baseDir;
 
-    public Project(PrintStream out, int msgOutputLevel) {
+    private Vector listeners = new Vector();
+    protected Target currentTarget = null;
+    protected Task currentTask = null;
 
-        this.out = out;
-        this.msgOutputLevel = msgOutputLevel;
+    public Project() {
+    }
 
+    /**
+     * Initialise the project.
+     *
+     * This involves setting the default task definitions and loading the
+     * system properties.
+     */
+    public void init() {
         detectJavaVersion();
 
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
@@ -148,16 +155,16 @@ public class Project {
         }
     }
 
-    public PrintStream getOutput() {
-        return this.out;
+    public void addBuildListener(BuildListener listener) {
+        listeners.addElement(listener);
     }
 
-    public void setOutput(PrintStream out) {
-        this.out=out;
+    public void removeBuildListener(BuildListener listener) {
+        listeners.removeElement(listener);
     }
 
-    public int getOutputLevel() {
-        return this.msgOutputLevel;
+    public Vector getBuildListeners() {
+        return listeners;
     }
 
     public void log(String msg) {
@@ -165,15 +172,11 @@ public class Project {
     }
 
     public void log(String msg, int msgLevel) {
-        if (msgLevel <= msgOutputLevel) {
-            out.println(msg);
-        }
+        fireMessageLogged(msg, msgLevel);
     }
 
     public void log(String msg, String tag, int msgLevel) {
-        if (msgLevel <= msgOutputLevel) {
-            out.println("[" + tag + "] " + msg);
-        }
+        fireMessageLogged(msg, msgLevel);
     }
 
     public void setProperty(String name, String value) {
@@ -403,6 +406,23 @@ public class Project {
         }
     }
 
+    public void executeTargets(Vector targetNames) throws BuildException {
+        Throwable error = null;
+
+        try {
+            for (int i = 0; i < targetNames.size(); i++) {
+                executeTarget((String)targetNames.elementAt(i));
+            }
+        }
+        catch(RuntimeException exc) {
+            error = exc;
+            throw exc;
+        }
+        finally {
+            fireBuildFinished(error);
+        }
+    }
+
     public void executeTarget(String targetName) throws BuildException {
 
         // sanity check ourselves, if we've been asked to build nothing
@@ -432,7 +452,7 @@ public class Project {
     public File resolveFile(String fileName) {
         // deal with absolute files
         if (fileName.startsWith("/")) return new File( fileName );
-        if (fileName.startsWith(System.getProperty("file.separator"))) 
+        if (fileName.startsWith(System.getProperty("file.separator")))
             return new File( fileName );
 
         // Eliminate consecutive slashes after the drive spec
@@ -672,13 +692,25 @@ public class Project {
     // Target and execute it.
     private final void runTarget(String target, Hashtable targets)
         throws BuildException {
-        Target t = (Target)targets.get(target);
-        if (t == null) {
+
+        currentTarget = (Target)targets.get(target);
+        if (currentTarget == null) {
             throw new RuntimeException("Unexpected missing target `"+target+
                                        "' in this project.");
         }
-        log("Executing Target: "+target, MSG_INFO);
-        t.execute();
+
+        try {
+            fireTargetStarted();
+            currentTarget.execute();
+            fireTargetFinished(null);
+        }
+        catch(RuntimeException exc) {
+            fireTargetFinished(exc);
+            throw exc;
+        }
+        finally {
+            currentTarget = null;
+        }
     }
 
     /**
@@ -803,5 +835,73 @@ public class Project {
 
     public Hashtable getReferences() {
         return references;
+    }
+
+    protected void fireBuildStarted() {
+        BuildEvent event = createBuildEvent();
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.buildStarted(event);
+        }
+    }
+
+    protected void fireBuildFinished(Throwable exception) {
+        BuildEvent event = createBuildEvent(exception);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.buildFinished(event);
+        }
+    }
+
+    protected void fireTargetStarted() {
+        BuildEvent event = createBuildEvent();
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.targetStarted(event);
+        }
+    }
+
+    protected void fireTargetFinished(Throwable exception) {
+        BuildEvent event = createBuildEvent(exception);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.targetFinished(event);
+        }
+    }
+
+    protected void fireTaskStarted() {
+        BuildEvent event = createBuildEvent();
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.taskStarted(event);
+        }
+    }
+
+    protected void fireTaskFinished(Throwable exception) {
+        BuildEvent event = createBuildEvent(exception);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.taskFinished(event);
+        }
+    }
+
+    protected void fireMessageLogged(String message, int priority) {
+        BuildEvent event = createBuildEvent(message, priority);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener) listeners.elementAt(i);
+            listener.messageLogged(event);
+        }
+    }
+
+    public BuildEvent createBuildEvent() {
+        return new BuildEvent(this, currentTarget, currentTask, null, MSG_VERBOSE, null);
+    }
+
+    public BuildEvent createBuildEvent(String msg, int priority) {
+        return new BuildEvent(this, currentTarget, currentTask, msg, priority, null);
+    }
+
+    public BuildEvent createBuildEvent(Throwable exception) {
+        return new BuildEvent(this, currentTarget, currentTask, null, MSG_VERBOSE, exception);
     }
 }
