@@ -102,7 +102,12 @@ inside of targets.</p>
 
 <h4>property</h4>
 <p>See the description of the <a href="property.html">property
-task</a>.  Note that the <code>refid</code> attribute points to a
+task</a>. <br/>
+These properties become equivalent to properties you define on
+the command line. These are special properties and they will always get passed
+down, even through additional &lt;*ant*&gt; tasks with inheritall set to
+false (see above). <br/>
+Note that the <code>refid</code> attribute points to a
 reference in the calling project, not in the new one.</p>
 
 <h4><a name="reference">reference</a></h4>

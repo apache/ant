@@ -88,7 +88,12 @@ attribute).</p>
 <h3>Parameters specified as nested elements</h3>
 <h4>param</h4>
 <p>Specifies the properties to set before running the specified target. See <a
-href="property.html">property</a> for usage guidelines.</p>
+href="property.html">property</a> for usage guidelines.<br/>
+These properties become equivalent to properties you define on
+the command line. These are special properties and they will always get passed
+down, even through additional &lt;*ant*&gt; tasks with inheritall set to
+false (see above).
+</p>
 
 <h4><a name="reference">reference</a></h4>
 <p>Used to choose references that shall be copied into the new project,
