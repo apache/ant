@@ -1,7 +1,11 @@
-/*
+package org.apache.tools.ant.taskdefs.optional;
+
+import org.apache.tools.ant.taskdefs.XSLTLiaison;
+
+/* 
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +13,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +21,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
+ *    any, must include the following acknowlegement:  
+ *       "This product includes software developed by the 
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Ant", and "Apache Software
+ * 4. The names "The Jakarta Project", "Jakarta-Regexp", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
+ *    from this software without prior written permission. For written 
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -50,55 +54,19 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
+ *
  */
-
-package org.apache.tools.ant.taskdefs;
-
-import java.io.File;
 
 /**
- * Proxy interface for XSLT processors.
- *
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
+ * XSLP Liaison testcase
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @see #XSLTProcess
  */
-public interface XSLTLiaison {
+public class XslpLiaisonTest extends AbstractXSLTLiaisonTest {
+    public XslpLiaisonTest(String name){
+        super(name);
+    }
 
-    /**
-     * the file protocol prefix for systemid.
-     * This file protocol must be appended to an absolute path.
-     * Typically: <tt>FILE_PROTOCOL_PREFIX + file.getAbsolutePath()</tt>
-     * This is not correct in specification terms since an absolute
-     * url in Unix is file:// + file.getAbsolutePath() while it is
-     * file:/// + file.getAbsolutePath() under Windows.
-     * Whatever, it should not be a problem to put file:/// in every
-     * case since most parsers for now incorrectly makes no difference
-     * between it.. and users also have problem with that :)
-     */
-    public final static String FILE_PROTOCOL_PREFIX = "file:///";
-
-    /**
-     * set the stylesheet to use for the transformation.
-     * @param stylesheet the stylesheet to be used for transformation.
-     */
-    public void setStylesheet(File stylesheet) throws Exception;
-
-    /**
-     * Add a parameter to be set during the XSL transformation.
-     * @param name the parameter name.
-     * @param expression the parameter value as an expression string.
-     * @throws Exception thrown if any problems happens.
-     */
-    public void addParam(String name, String expression) throws Exception;
-
-    /**
-     * Perform the transformation of a file into another.
-     * @param infile the input file, probably an XML one. :-)
-     * @param outfile the output file resulting from the transformation
-     * @throws Exception thrown if any problems happens.
-     * @see #setStylesheet(File)
-     */
-    public void transform(File infile, File outfile) throws Exception;
-
-} //-- XSLTLiaison
+    protected XSLTLiaison createLiaison() throws Exception {
+        return new XslpLiaison();
+    }
+}

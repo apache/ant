@@ -61,7 +61,7 @@ import java.util.Stack;
 
 import org.apache.tools.ant.BuildException; 
 import org.apache.tools.ant.Project; 
-import org.apache.tools.ant.types.FilterSet; 
+import org.apache.tools.ant.types.FilterSetCollection; 
 
 /**
  * This class also encapsulates methods which allow Files to be
@@ -106,10 +106,10 @@ public class FileUtils {
      *
      * @throws IOException
      */
-    public void copyFile(String sourceFile, String destFile, FilterSet filterSet)
+    public void copyFile(String sourceFile, String destFile, FilterSetCollection filters)
         throws IOException
     {
-        copyFile(new File(sourceFile), new File(destFile), filterSet, false, false);
+        copyFile(new File(sourceFile), new File(destFile), filters, false, false);
     }
 
     /**
@@ -119,9 +119,9 @@ public class FileUtils {
      *
      * @throws IOException 
      */
-    public void copyFile(String sourceFile, String destFile, FilterSet filterSet,
+    public void copyFile(String sourceFile, String destFile, FilterSetCollection filters,
                          boolean overwrite) throws IOException {
-        copyFile(new File(sourceFile), new File(destFile), filterSet, 
+        copyFile(new File(sourceFile), new File(destFile), filters, 
                  overwrite, false);
     }
 
@@ -134,10 +134,10 @@ public class FileUtils {
      *
      * @throws IOException 
      */
-    public void copyFile(String sourceFile, String destFile, FilterSet filterSet,
+    public void copyFile(String sourceFile, String destFile, FilterSetCollection filters,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        copyFile(new File(sourceFile), new File(destFile), filterSet, 
+        copyFile(new File(sourceFile), new File(destFile), filters, 
                  overwrite, preserveLastModified);
     }
 
@@ -157,9 +157,9 @@ public class FileUtils {
      *
      * @throws IOException
      */
-    public void copyFile(File sourceFile, File destFile, FilterSet filterSet)
+    public void copyFile(File sourceFile, File destFile, FilterSetCollection filters)
         throws IOException {
-        copyFile(sourceFile, destFile, filterSet, false, false);
+        copyFile(sourceFile, destFile, filters, false, false);
     }
 
     /**
@@ -169,9 +169,9 @@ public class FileUtils {
      *
      * @throws IOException 
      */
-    public void copyFile(File sourceFile, File destFile, FilterSet filterSet,
+    public void copyFile(File sourceFile, File destFile, FilterSetCollection filters,
                          boolean overwrite) throws IOException {
-        copyFile(sourceFile, destFile, filterSet, overwrite, false);
+        copyFile(sourceFile, destFile, filters, overwrite, false);
     }
 
     /**
@@ -183,7 +183,7 @@ public class FileUtils {
      *
      * @throws IOException 
      */
-    public void copyFile(File sourceFile, File destFile, FilterSet filterSet,
+    public void copyFile(File sourceFile, File destFile, FilterSetCollection filters,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
         
@@ -201,7 +201,7 @@ public class FileUtils {
                 parent.mkdirs();
             }
 
-            if (filterSet != null && filterSet.hasFilters()) {
+            if (filters != null && filters.hasFilters()) {
                 BufferedReader in = new BufferedReader(new FileReader(sourceFile));
                 BufferedWriter out = new BufferedWriter(new FileWriter(destFile));
 
@@ -212,7 +212,7 @@ public class FileUtils {
                     if (line.length() == 0) {
                         out.newLine();
                     } else {
-                        newline = filterSet.replaceTokens(line);
+                        newline = filters.replaceTokens(line);
                         out.write(newline);
                         out.newLine();
                     }

@@ -187,7 +187,7 @@ public class DependSet extends MatchingTask {
            for (int i = 0; i < targetFiles.length; i++) {
                     
               File dest = new File(targetFS.getDir(project), targetFiles[i]);
-              allTargets.add(dest);
+              allTargets.addElement(dest);
 
               if (dest.lastModified() > now) {
                  log("Warning: "+targetFiles[i]+" modified in the future.", 
@@ -215,7 +215,7 @@ public class DependSet extends MatchingTask {
                  continue;
               }
               else {
-                 allTargets.add(dest);
+                 allTargets.addElement(dest);
               }
               if (dest.lastModified() > now) {
                  log("Warning: "+targetFiles[i]+" modified in the future.", 

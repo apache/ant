@@ -60,39 +60,70 @@ import org.apache.xalan.xslt.XSLTProcessorFactory;
 import org.apache.xalan.xslt.XSLTProcessor;
 import org.apache.xalan.xslt.XSLTInputSource;
 import org.apache.xalan.xslt.XSLTResultTarget;
+import org.xml.sax.InputSource;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
+ * Concrete liaison for Xalan 1.x API.
  *
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @version $Revision$ $Date$
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class XalanLiaison implements XSLTLiaison {
 
-    protected final static String FILEURL = "file:";
-
-    XSLTProcessor processor;
-    XSLTInputSource xslSheet;
+    protected XSLTProcessor processor;
+    protected File stylesheet;
 
     public XalanLiaison() throws Exception {
       processor = XSLTProcessorFactory.getProcessor();
     }
 
-    public void setStylesheet(String fileName) throws Exception {
-        xslSheet = new XSLTInputSource (normalize(fileName));
-    };
-
-    public void transform(String infile, String outfile) throws Exception {
-        processor.process(new XSLTInputSource(normalize(infile)), xslSheet,
-                        new XSLTResultTarget(outfile));
+    public void setStylesheet(File stylesheet) throws Exception {
+        this.stylesheet = stylesheet;
     }
 
-    protected String normalize(String fileName) {
-        if(fileName != null && !fileName.startsWith(FILEURL)) {
-            return FILEURL + fileName;
+    public void transform(File infile, File outfile) throws Exception {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        FileInputStream xslStream = null;
+        try {
+            xslStream = new FileInputStream(stylesheet);
+            fis = new FileInputStream(infile);
+            fos = new FileOutputStream(outfile);
+            // systemid such as file:/// + getAbsolutePath() are considered
+            // invalid here...
+            XSLTInputSource xslSheet = new XSLTInputSource(xslStream);
+            xslSheet.setSystemId(stylesheet.getAbsolutePath());
+            XSLTInputSource src = new XSLTInputSource(fis);
+            src.setSystemId(infile.getAbsolutePath());
+            XSLTResultTarget res = new XSLTResultTarget(fos);
+            processor.process(src, xslSheet, res);
+        } finally {
+            // make sure to close all handles, otherwise the garbage
+            // collector will close them...whenever possible and
+            // Windows may complain about not being able to delete files.
+            try {
+                if (xslStream != null){
+                    xslStream.close();
+                }
+            } catch (IOException ignored){}
+            try {
+                if (fis != null){
+                    fis.close();
+                }
+            } catch (IOException ignored){}
+            try {
+                if (fos != null){
+                    fos.close();
+                }
+            } catch (IOException ignored){}
         }
-        return fileName;
     }
-    
+
     public void addParam(String name, String value){
         processor.setStylesheetParam(name, value);
     }

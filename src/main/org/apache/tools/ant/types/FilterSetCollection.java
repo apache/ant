@@ -51,54 +51,77 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+package org.apache.tools.ant.types;
 
-package org.apache.tools.ant.taskdefs;
-
+// java io classes
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+// java util classes
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Vector;
+
+// ant classes
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 /**
- * Proxy interface for XSLT processors.
+ * A FilterSetCollection is a collection of filtersets each of which may have
+ * a different start/end token settings.
  *
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @see #XSLTProcess
+ * @author     <A href="mailto:conor@apache.org">Conor MacNeill</A>
  */
-public interface XSLTLiaison {
+public class FilterSetCollection {
+    
+    private Vector filterSets = new Vector();
 
+    public FilterSetCollection() {
+    }
+    
+    public FilterSetCollection(FilterSet filterSet) {
+        addFilterSet(filterSet);
+    }
+    
+    
+    public void addFilterSet(FilterSet filterSet) {
+        filterSets.addElement(filterSet);
+    }
+    
     /**
-     * the file protocol prefix for systemid.
-     * This file protocol must be appended to an absolute path.
-     * Typically: <tt>FILE_PROTOCOL_PREFIX + file.getAbsolutePath()</tt>
-     * This is not correct in specification terms since an absolute
-     * url in Unix is file:// + file.getAbsolutePath() while it is
-     * file:/// + file.getAbsolutePath() under Windows.
-     * Whatever, it should not be a problem to put file:/// in every
-     * case since most parsers for now incorrectly makes no difference
-     * between it.. and users also have problem with that :)
+     * Does replacement on the given string with token matching.
+     * This uses the defined starttoken and endtoken values which default to @ for both.
+     *
+     * @param line  The line to process the tokens in.
+     * @return      The string with the tokens replaced.
      */
-    public final static String FILE_PROTOCOL_PREFIX = "file:///";
-
+    public String replaceTokens(String line) {
+        String replacedLine = line;
+        for (Enumeration e = filterSets.elements(); e.hasMoreElements();) {
+            FilterSet filterSet = (FilterSet)e.nextElement();
+            replacedLine = filterSet.replaceTokens(replacedLine);
+        }
+        return replacedLine;
+    }
+    
     /**
-     * set the stylesheet to use for the transformation.
-     * @param stylesheet the stylesheet to be used for transformation.
-     */
-    public void setStylesheet(File stylesheet) throws Exception;
+    * Test to see if this filter set it empty.
+    *
+    * @return   Return true if there are filter in this set otherwise false.
+    */
+    public boolean hasFilters() {
+        for (Enumeration e = filterSets.elements(); e.hasMoreElements();) {
+            FilterSet filterSet = (FilterSet)e.nextElement();
+            if (filterSet.hasFilters()) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+ 
 
-    /**
-     * Add a parameter to be set during the XSL transformation.
-     * @param name the parameter name.
-     * @param expression the parameter value as an expression string.
-     * @throws Exception thrown if any problems happens.
-     */
-    public void addParam(String name, String expression) throws Exception;
 
-    /**
-     * Perform the transformation of a file into another.
-     * @param infile the input file, probably an XML one. :-)
-     * @param outfile the output file resulting from the transformation
-     * @throws Exception thrown if any problems happens.
-     * @see #setStylesheet(File)
-     */
-    public void transform(File infile, File outfile) throws Exception;
-
-} //-- XSLTLiaison
