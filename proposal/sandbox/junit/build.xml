@@ -21,13 +21,15 @@
   <property name="java.dir" value="src/java"/>
   <property name="tests.dir" value="src/testcases"/>
   <property name="ant.base.dir" location="../../.."/>
-  <property name="lib.dir" location="${ant.base.dir}/lib"/>
+  <property name="ant.lib.dir" location="${ant.base.dir}/lib"/>
+  <property name="lib.dir" location="lib"/>
   <property name="bootstrap.dir" location="${ant.base.dir}/bootstrap"/>
   
   <path id="project.class.path">
     <pathelement path="${build.classes}" />
-    <fileset dir="${lib.dir}" includes="**/*.jar"/>
+    <fileset dir="${ant.lib.dir}" includes="**/*.jar"/>
     <fileset dir="${bootstrap.dir}/lib" includes="ant.jar"/>
+    <fileset dir="${lib.dir}" includes="**/*.jar"/>
   </path>
 
 
