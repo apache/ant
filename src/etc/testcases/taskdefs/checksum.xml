@@ -8,7 +8,9 @@
     <delete file="../asf-logo.gif.md5sum" />
     <delete file="../asf-logo.gif.SVF" />
     <delete file="../asf-logo.gif.svf" />
-	<delete>
+    <delete file="../asf-logo.gif.pattern" />
+    <delete file="../asf-logo.gif.PATTERN" />
+    <delete>
       <fileset dir="checksum">
         <include name="**/*.MD5"/>
       </fileset>
