@@ -72,30 +72,24 @@ public class CVSPass
 
     /**
      * Sets cvs root to be added to the password file
-     *
-     * @param cvsRoot The new Cvsroot value
      */
-    public void setCvsroot( String cvsRoot )
+    public void setCvsroot( final String cvsRoot )
     {
         m_cvsRoot = cvsRoot;
     }
 
     /**
      * Sets the password file attribute.
-     *
-     * @param passFile The new Passfile value
      */
-    public void setPassfile( File passFile )
+    public void setPassfile( final File passFile )
     {
         m_passwordFile = passFile;
     }
 
     /**
      * Sets the password attribute.
-     *
-     * @param password The new Password value
      */
-    public void setPassword( String password )
+    public void setPassword( final String password )
     {
         m_password = password;
     }
