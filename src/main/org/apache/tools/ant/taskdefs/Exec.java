@@ -67,7 +67,7 @@ import java.io.*;
 public class Exec extends Task {
     private String os;
     private String out;
-    private String dir = ".";
+    private File dir;
     private String command;
 
     private static final int BUFFER_SIZE = 512;
@@ -89,15 +89,18 @@ public class Exec extends Task {
             return 0;
         }
 
+        // default directory to the project's base directory
+        if (dir == null) dir = project.getBaseDir();
+
         if (myos.toLowerCase().indexOf("windows") >= 0) {
-            if (!dir.equals("."))
-                command = "cmd /c cd " + project.resolveFile(dir) + " && " + command;
+            if (!dir.equals(project.resolveFile(".")))
+                command = "cmd /c cd " + dir + " && " + command;
         } else {
             String ant = project.getProperty("ant.home");
             if (ant == null) throw new BuildException("Property 'ant.home' not found");
             String antRun = project.resolveFile(ant + "/bin/antRun").toString();
 
-            command = antRun + " " + project.resolveFile(dir) + " " + command;
+            command = antRun + " " + dir + " " + command;
         }
 
         try {
@@ -145,7 +148,7 @@ public class Exec extends Task {
     }
 
     public void setDir(String d) {
-        this.dir = d;
+        this.dir = project.resolveFile(d);
     }
 
     public void setOs(String os) {
