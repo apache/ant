@@ -62,11 +62,17 @@ import java.io.Reader;
  * (if you have more complex Java parsing needs, use a real lexer).
  * Since this class heavily relies on the single char read function,
  * you are reccomended to make it work on top of a buffered reader.
+ *
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class StripJavaComments
     extends BaseFilterReader
     implements ChainableReader
 {
+    private int readAheadCh = -1;
+
+    private boolean inString = false;
+
     /**
      * This constructor is a dummy constructor and is
      * not meant to be used by any class other than Ant's
@@ -90,50 +96,44 @@ public final class StripJavaComments
      * Filter out Java Style comments
      */
     public final int read() throws IOException {
-        int ch = in.read();
-        if (ch == '/') {
+        int ch = -1;
+        if (readAheadCh != -1) {
+            ch = readAheadCh;
+            readAheadCh = -1;
+        } else {
             ch = in.read();
-            if (ch == '/') {
-                while (ch != '\n' && ch != -1) {
-                    ch = in.read();
-                }
-            } else if (ch == '*') {
-                while (ch != -1) {
-                    ch = in.read();
-                    if (ch == '*') {
+            if (ch == '"') {
+                inString = !inString;
+            } else {
+                if (!inString) {
+                    if (ch == '/') {
                         ch = in.read();
-                        while (ch == '*' && ch != -1) {
-                            ch = in.read();
-                        }
-
                         if (ch == '/') {
-                            ch = read();
-                            break;
+                            while (ch != '\n' && ch != -1) {
+                                ch = in.read();
+                            }
+                        } else if (ch == '*') {
+                            while (ch != -1) {
+                                ch = in.read();
+                                if (ch == '*') {
+                                    ch = in.read();
+                                    while (ch == '*' && ch != -1) {
+                                        ch = in.read();
+                                    }
+
+                                    if (ch == '/') {
+                                        ch = read();
+                                        break;
+                                    }
+                                }
+                            }
+                        } else {
+                            readAheadCh = ch;
+                            ch = '/';
                         }
                     }
                 }
             }
-        }
-
-        if (ch == '"') {
-            while (ch != -1) {
-                ch = in.read();
-                if (ch == '\\') {
-                    ch = in.read();
-                } else if (ch == '"') {
-                    ch = read();
-                    break;
-                }
-            }
-        }
-
-        if (ch == '\'') {
-            ch = in.read();
-            if (ch == '\\') {
-                ch = in.read();
-            }
-            ch = in.read();
-            ch = read();
         }
 
         return ch;
