@@ -1188,7 +1188,7 @@ public class FileUtils {
 
         // ensure that l ends with a /
         // so we never think /foo was a parent directory of /foobar
-        if (!l.endsWith("/")) {
+        if (!l.endsWith(File.separator)) {
             l += File.separator;
         }
 
