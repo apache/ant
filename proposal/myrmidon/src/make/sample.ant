@@ -20,11 +20,11 @@ Legal:
 
   <target name="main" depends="property-test" />
 
-  <target name="no-test-target" if="no-do-tests">
+  <target name="no-test-target" unless="no-do-tests">
     <echo message="No tests done here"/>
   </target>
 
-  <target name="test-target" depends="no-test-target" unless="no-do-tests">
+  <target name="test-target" depends="no-test-target" if="no-do-tests">
 
     <echo message="Tests away"/>
 
@@ -95,6 +95,10 @@ Legal:
     </property>
 
     <echo message="foo2=${foo2}" />
+
+    <pattern id="foo3" name="*.java" if="foo" />
+
+    <echo message="foo3=${foo3}" />
 
   </target>
 
