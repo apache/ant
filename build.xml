@@ -351,14 +351,14 @@
 
     <copy file="LICENSE" tofile="${build.dir}/LICENSE.txt"/>
     
-    <jar file="${build.lib}/${name}.jar"
+    <jar destfile="${build.lib}/${name}.jar"
          basedir="${build.classes}"
          manifest="${manifest}">
       <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
     </jar>
 
-    <jar file="${build.lib}/optional.jar"
+    <jar destfile="${build.lib}/optional.jar"
          basedir="${build.classes}"
          manifest="${manifest}">
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
@@ -583,7 +583,7 @@
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
-    <zip file="${dist.base}/bin/${dist.name}-bin.zip"
+    <zip destfile="${dist.base}/bin/${dist.name}-bin.zip"
          basedir="${dist.name}/.."
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
@@ -613,7 +613,7 @@
     <antcall inheritAll="false" target="src-dist">
       <param name="src.dist.dir" value="${dist.name}" />
     </antcall>
-    <zip file="${dist.base}/src/${dist.name}-src.zip"
+    <zip destfile="${dist.base}/src/${dist.name}-src.zip"
          basedir="${dist.name}/.."
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
