@@ -159,6 +159,7 @@ public class Depend extends MatchingTask {
         classFileInfoMap = new Hashtable();
         for (Enumeration e = getClassFiles(destPath).elements(); e.hasMoreElements(); ) {
             ClassFileInfo info = (ClassFileInfo)e.nextElement();
+            log("Adding class info for " + info.className, Project.MSG_DEBUG);
             classFileInfoMap.put(info.className, info);
             
             Vector dependencyList = null;
@@ -236,13 +237,13 @@ public class Depend extends MatchingTask {
                     }
                     else {
                         // without closure we may delete an inner class but not the
-                        // top level class which will not trigger a recompile.
+                        // top level class which would not trigger a recompile.
                            
                         if (affectedClassName.indexOf("$") != -1) {
                             // need to delete the main class
                             String topLevelClassName 
                                 = affectedClassName.substring(0, affectedClassName.indexOf("$"));
-                            log("Top level class = " + topLevelClassName, Project.MSG_INFO);
+                            log("Top level class = " + topLevelClassName, Project.MSG_VERBOSE);
                             ClassFileInfo topLevelClassInfo 
                                 = (ClassFileInfo)classFileInfoMap.get(topLevelClassName);
                             if (topLevelClassInfo != null &&
@@ -287,20 +288,19 @@ public class Depend extends MatchingTask {
             }
         
             determineDependencies();
-            
+ 
 /*            
             for (Enumeration e = affectedClassMap.keys(); e.hasMoreElements(); ) {
                 String className = (String)e.nextElement();
-                System.out.println("Class " + className + " affects:");
+                log("Class " + className + " affects:", Project.MSG_DEBUG);
                 Hashtable affectedClasses = (Hashtable)affectedClassMap.get(className);
                 for (Enumeration e2 = affectedClasses.keys(); e2.hasMoreElements(); ) {
                     String affectedClass = (String)e2.nextElement();
                     ClassFileInfo info = (ClassFileInfo)affectedClasses.get(affectedClass);
-                    System.out.println("   " + affectedClass + " in " + info.absoluteFile.getPath());
+                    log("   " + affectedClass + " in " + info.absoluteFile.getPath(), Project.MSG_DEBUG);
                 }
             }
-*/
-            
+*/            
             // we now need to scan for out of date files. When we have the list
             // we go through and delete all class files which are affected by these files.
             outOfDateClasses = new Vector();
@@ -356,9 +356,8 @@ public class Depend extends MatchingTask {
     }
 
 
-
     /** 
-     * Get the list of class files we are ging to analyse.
+     * Get the list of class files we are going to analyse.
      *
      * @param classLocations a path structure containing all the directories
      *                       where classes can be found.
