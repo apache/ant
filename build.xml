@@ -391,7 +391,7 @@
   <target name="check_for_optional_packages">
     <available property="jdk1.3+" classname="java.lang.StrictMath"/>
     <available property="jdk1.4+" classname="java.lang.CharSequence"/>
-    <available property="jdk1.5+" classname="java.util.concurrent.Callable"/>
+    <available property="jdk1.5+" classname="java.lang.Readable"/>
     <available property="kaffe" classname="kaffe.util.NotImplemented"/>
     <available property="bsf.present"
                classname="org.apache.bsf.BSFManager"
