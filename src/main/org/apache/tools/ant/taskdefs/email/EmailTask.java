@@ -68,12 +68,8 @@ import org.apache.tools.ant.types.FileSet;
 
 /**
  * A task to send SMTP email. This is a refactoring of the SendMail and MimeMail
- * tasks such that both are within a single task. The functionality of SendMail can
- * be found in {@link org.apache.tools.ant.taskdefs.email.PlainMailer PlainMailer},
- * MimeMail in {@link org.apache.tools.ant.taskdefs.email.MimeMailer MimeMailer},
- * and a new intermediate UU format.
- * {@link org.apache.tools.ant.taskdefs.email.UUMailer UUMailer}.
- * 
+ * tasks such that both are within a single task.
+ *
  * @author Magesh Umasankar
  * @author glenn_twiggs@bmc.com
  * @author steve_l@iseran.com steve loughran
@@ -165,7 +161,6 @@ public class EmailTask
     }
 
     /** Sets the mail server port
-     * @see Mailer#setPort(int)
      * @param port The port to use
      */
     public void setMailport( int port )
@@ -174,7 +169,6 @@ public class EmailTask
     }
 
     /** Sets the host
-     * @see Mailer#setHost()
      * @param host The host to connect to
      */
     public void setMailhost( String host )

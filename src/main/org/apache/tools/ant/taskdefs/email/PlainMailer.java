@@ -68,7 +68,7 @@ import org.apache.tools.mail.MailMessage;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since 1.5
  */
-public class PlainMailer
+class PlainMailer
     extends Mailer
 {
     /** Sends the email using the apache {@link org.apache.tools.mail.MailMessage MailMessage} class.

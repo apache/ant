@@ -63,7 +63,7 @@ import org.apache.tools.ant.Task;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since 1.5
  */
-public abstract class Mailer
+abstract class Mailer
 {
     protected String host = null;
     protected int port = -1;

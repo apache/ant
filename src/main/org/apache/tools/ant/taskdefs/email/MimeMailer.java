@@ -80,7 +80,7 @@ import org.apache.tools.ant.BuildException;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since 1.5
  */
-public class MimeMailer
+class MimeMailer
     extends Mailer
 {
     /** Sends the email
