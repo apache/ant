@@ -81,7 +81,7 @@ import org.xml.sax.EntityResolver;
  *
  * @since Ant 1.1
  *
- * @ant.task name="style" category="xml"
+ * @ant.task name="xslt" category="xml"
  */
 
 public class XSLTProcess extends MatchingTask implements XSLTLogger {
@@ -159,8 +159,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     } //-- XSLTProcess
     
     /**
-     * Whether to style all files in the included directories as well.
-     *
+     * Whether to style all files in the included directories as well;
+     * optional, default is true.
+     * 
      * @param b true if files in included directories are processed.
      * @since Ant 1.5
      */
@@ -172,6 +173,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * Executes the task.
      *
      * @exception BuildException if there is an execution problem.
+     * @todo validate that if either in or our is defined, then both are
      */
     public void execute() throws BuildException {
         File savedBaseDir = baseDir;
@@ -254,7 +256,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Set whether to check dependencies, or always generate.
+     * Set whether to check dependencies, or always generate;
+     * optional, default is false.
      *
      * @param force true if always generate.
      */
@@ -263,7 +266,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Set the base directory.
+     * Set the base directory; 
+     * optional, default is the project's basedir.
      *
      * @param dir the base directory
      **/
@@ -273,7 +277,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     
     /**
      * Set the destination directory into which the XSL result
-     * files should be copied to
+     * files should be copied to; 
+     * required, unless <tt>in</tt> and <tt>out</tt> are
+     * specified.
      * @param dir the name of the destination directory
      **/
     public void setDestdir(File dir) {
@@ -281,7 +287,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Set the desired file extension to be used for the target
+     * Set the desired file extension to be used for the target;
+     * optional, default is html. 
      * @param name the extension to use
      **/
     public void setExtension(String name) {
@@ -289,9 +296,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Sets the file to use for styling relative to the base directory
-     * of this task.
-     *
+     * Name of the stylesheet to use - given either relative
+     * to the project's basedir or as an absolute path; required.
+     * 
      * @param xslFile the stylesheet to use
      */
     public void setStyle(String xslFile) {
@@ -299,7 +306,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Set the classpath to load the Processor through (attribute).
+     * Set the optional classpath to the XSL processor
      *
      * @param classpath the classpath to use when loading the XSL processor
      */
@@ -308,7 +315,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Set the classpath to load the Processor through (nested element).
+     * Set the optional classpath to the XSL processor
      *
      * @return a path instance to be configured by the Ant core.
      */
@@ -320,8 +327,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Set the classpath to load the Processor through via reference
-     * (attribute).
+     * Set the reference to an optional classpath to the XSL processor
      *
      * @param r the id of the Ant path instance to act as the classpath 
      *          for loading the XSL processor
@@ -331,7 +337,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Set the name of the XSL processor to use 
+     * Set the name of the XSL processor to use; optional, default trax.
+     * Other values are "xalan" for Xalan1 and "xslp" for XSL:P, though the
+     * later is strongly deprecated. 
      *
      * @param processor the name of the XSL processor
      */
@@ -393,7 +401,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Sets an out file
+     * Specifies the output name for the styled result from the 
+     * <tt>in</tt> attribute; required if <tt>in</tt> is set
      *
      * @param outFile the output File instance.
      */
@@ -402,7 +411,8 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Sets an input xml file to be styled
+     * specifies a single XML document to be styled. Should be used 
+     * with the <tt>out</tt> attribute; ; required if <tt>out</tt> is set
      *
      * @param inFile the input file
      */
@@ -624,9 +634,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     }
     
     /**
-     * Set the output type to use for the transformation.  Only "xml" (the
-     * default) is guaranteed to work for all parsers.  Xalan2 also
-     * supports "html" and "text".
+     * Set the output type to use for the transformation; 
+     * optional, default="xml".  
+     * Only "xml" is guaranteed to work for all parsers.  
+     * Xalan2 also supports "html" and "text".
      * @param type the output method to use
      */
     public void setOutputtype(String type) {
