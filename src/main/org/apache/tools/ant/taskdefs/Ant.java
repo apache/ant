@@ -411,10 +411,10 @@ public class Ant extends Task {
 
             if (target != null && !"".equals(target)) {
                 try {
-                    log("Entering " + antFile + "...");
+                    log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.executeTarget(target);
                 } finally {
-                    log("Exiting " + antFile + ".");
+                    log("Exiting " + antFile + ".", Project.MSG_VERBOSE);
                 }
             }
         } finally {
