@@ -116,6 +116,21 @@ public class SQLExec extends Task {
      * SQL input command
      */
     private String sqlCommand = "";
+
+    /**
+     * Print SQL results.
+     */
+    private boolean print = false;
+
+    /**
+     * Print header columns.
+     */
+    private boolean showheaders = true;
+
+    /**
+     * Results Output file.
+     */
+    private File output = null;
     
     /**
      * Set the name of the sql file to be run.
@@ -164,6 +179,27 @@ public class SQLExec extends Task {
      */
     public void setAutocommit(boolean autocommit) {
         this.autocommit = autocommit;
+    }
+
+    /**
+     * Set the print flag.
+     */
+    public void setPrint(boolean print) {
+    	this.print = print;
+    }
+    
+    /**
+     * Set the showheaders flag.
+     */
+    public void setShowheaders(boolean showheaders) {
+    	this.showheaders = showheaders;
+    }
+
+    /**
+     * Set the output file.
+     */
+    public void setOutput(File output) {
+    	this.output = output;
     }
      
     /**
@@ -282,11 +318,15 @@ public class SQLExec extends Task {
     /**
      * Exec the sql statement.
      */
-    protected void execSQL(String sql) throws SQLException{
+    protected void execSQL(String sql) throws SQLException {
         if (!statement.execute(sql)) {
             log(statement.getUpdateCount()+" rows affected", 
                 Project.MSG_VERBOSE);
         }
+
+	if (print) {
+	    printResults();
+	}
 
         SQLWarning warning = conn.getWarnings();
         while(warning!=null){
@@ -294,6 +334,51 @@ public class SQLExec extends Task {
             warning=warning.getNextWarning();
         }
         conn.clearWarnings();
+    }
+
+    /**
+     * print any results in the statement.
+     */
+    protected void printResults() throws java.sql.SQLException {
+        ResultSet rs = null;
+        PrintStream out = System.out;
+        try {
+            if (output != null) {
+	    	out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
+            }
+            while ((rs = statement.getResultSet()) != null) {
+                ResultSetMetaData md = rs.getMetaData();
+                int columnCount = md.getColumnCount();
+                StringBuffer line = new StringBuffer();
+		if (showheaders) {
+                    for (int col = 1; col < columnCount; col++) {
+                        line.append(md.getColumnName(col));
+                        line.append(",");
+                    }
+                    line.append(md.getColumnName(columnCount));
+                    out.println(line);
+                    line.setLength(0);
+		}
+                while (rs.next()) {
+                    for (int col = 1; col < columnCount; col++) {
+                        line.append(rs.getString(col).trim());
+                        line.append(",");
+                    }
+                    line.append(rs.getString(columnCount).trim());
+                    out.println(line);
+                    line.setLength(0);
+                }
+                statement.getMoreResults();
+            }
+        }
+        catch (IOException ioe) {
+            throw new BuildException("Error writing " + output.getAbsolutePath(), ioe, location);
+        }
+	finally {
+            if (out != null) {
+                out.close();
+            }
+        }
     }
 
 }
