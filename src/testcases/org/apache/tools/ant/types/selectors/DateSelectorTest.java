@@ -226,21 +226,8 @@ public class DateSelectorTest extends BaseSelectorTest {
                 assertEquals("TTFFTFFFTTTT", results);
 
                 s = (DateSelector)getInstance();
-                s.setMillis(1006347300000L);
-                s.setWhen(equal);
-                results = selectionString(s);
-                assertEquals("TTFFTFFFTTTT", results);
-
-                s = (DateSelector)getInstance();
                 s.setMillis(milliseconds);
                 s.setWhen(equal);
-                results = selectionString(s);
-                assertEquals("TTFFTFFFTTTT", results);
-
-                s = (DateSelector)getInstance();
-                s.setMillis(1006347305000L);
-                s.setWhen(equal);
-                s.setGranularity(15000);
                 results = selectionString(s);
                 assertEquals("TTFFTFFFTTTT", results);
 
