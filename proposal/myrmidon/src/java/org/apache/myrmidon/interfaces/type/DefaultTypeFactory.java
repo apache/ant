@@ -31,6 +31,11 @@ public class DefaultTypeFactory
 
     public DefaultTypeFactory( final ClassLoader classLoader )
     {
+        if( null == classLoader )
+        {
+            throw new NullPointerException( "classLoader" );
+        }
+
         m_classLoader = classLoader;
     }
 
@@ -50,10 +55,11 @@ public class DefaultTypeFactory
         throws TypeException
     {
         final String className = getClassName( name );
-
         try
         {
-            return m_classLoader.loadClass( className ).newInstance();
+            final ClassLoader classLoader = getClassLoader();
+            final Class clazz = classLoader.loadClass( className );
+            return clazz.newInstance();
         }
         catch( final Exception e )
         {
@@ -66,7 +72,6 @@ public class DefaultTypeFactory
         throws TypeException
     {
         final String className = (String)m_classNames.get( name );
-
         if( null == className )
         {
             final String message = REZ.getString( "no-mapping.error", name );
@@ -74,5 +79,10 @@ public class DefaultTypeFactory
         }
 
         return className;
+    }
+
+    private ClassLoader getClassLoader()
+    {
+        return m_classLoader;
     }
 }
