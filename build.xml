@@ -384,14 +384,14 @@
          basedir="${dist.name}/.." 
          includes="${dist.name}/**"
          excludes="${dist.name}/lib/optional.jar"/>
-    <!--
-    <tar tarfile="${dist.base}/${dist.name}-bin.tar" 
+    <tar longfile="gnu"
+         tarfile="${dist.base}/${dist.name}-bin.tar" 
          basedir="${dist.name}/.." 
-         includes="${dist.name}/**"/
-         excludes="${dist.name}/lib/optional.jar">
+         includes="${dist.name}/**"
+         excludes="${dist.name}/lib/optional.jar"/>
     <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
           src="${dist.base}/${dist.name}-bin.tar"/>
-    -->
+    <delete file="${dist.base}/${dist.name}-bin.tar"/>
     <copy file="${dist.name}/lib/optional.jar" tofile="${dist.base}/${dist.name}-optional.jar"/>
     <delete dir="${dist.name}" />
 
@@ -402,13 +402,13 @@
     <zip zipfile="${dist.base}/${dist.name}-src.zip" 
          basedir="${dist.name}/.." 
          includes="${dist.name}/**"/>
-    <!--
-    <tar tarfile="${dist.base}/${dist.name}-src.tar" 
-         basedir="${src.dist.dir}/.." 
-         includes="${src.dist.dir}/**"/>
+    <tar longfile="gnu"
+         tarfile="${dist.base}/${dist.name}-src.tar" 
+         basedir="${dist.name}/.." 
+         includes="${dist.name}/**"/>
     <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
           src="${dist.base}/${dist.name}-src.tar"/>
-    -->
+    <delete file="${dist.base}/${dist.name}-src.tar"/>
     <delete dir="${dist.name}" />
   </target>
 

@@ -179,4 +179,13 @@ public interface TarConstants {
      */
     public static final String GNU_TMAGIC = "ustar  ";
 
+    /**
+     * The namr of the GNU tar entry which contains a long name.
+     */
+    public static final String GNU_LONGLINK = "././@LongLink";
+    
+    /**
+     * Identifies the *next* file on the tape as having a long name.  
+     */
+    public static final byte LF_GNUTYPE_LONGNAME = (byte) 'L';
 }

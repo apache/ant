@@ -68,8 +68,13 @@ import org.apache.tools.tar.*;
 
 public class Tar extends MatchingTask {
 
+    static public final String TRUNCATE = "truncate";
+    static public final String GNU = "gnu";
+
     File tarFile;
     File baseDir;
+    
+    String longFileMode = null;
     
     /**
      * This is the name/location of where to create the tar file.
@@ -83,6 +88,17 @@ public class Tar extends MatchingTask {
      */
     public void setBasedir(File baseDir) {
         this.baseDir = baseDir;
+    }
+    
+    /**
+     * Set how to handle long files.
+     *
+     * Allowable values are
+     *   truncate
+     *   gnu
+     */
+    public void setLongfile(String method) {
+        this.longFileMode = method;
     }
 
     public void execute() throws BuildException {
@@ -115,6 +131,15 @@ public class Tar extends MatchingTask {
         try {
             tOut = new TarOutputStream(new FileOutputStream(tarFile));
             tOut.setDebug(true);
+            if (longFileMode == null) {
+                tOut.setLongFileMode(TarOutputStream.LONGFILE_ERROR);
+            }
+            else if (longFileMode.equalsIgnoreCase(TRUNCATE)) {
+                tOut.setLongFileMode(TarOutputStream.LONGFILE_TRUNCATE);
+            }
+            else if (longFileMode.equalsIgnoreCase(GNU)) {
+                tOut.setLongFileMode(TarOutputStream.LONGFILE_GNU);
+            }
 
             for (int i = 0; i < files.length; i++) {
                 File f = new File(baseDir,files[i]);

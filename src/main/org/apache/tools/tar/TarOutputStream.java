@@ -69,6 +69,10 @@ import java.io.*;
  * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
  */
 public class TarOutputStream extends FilterOutputStream {
+    static public final int LONGFILE_ERROR = 0;
+    static public final int LONGFILE_TRUNCATE = 1;
+    static public final int LONGFILE_GNU = 2;
+    
     protected boolean   debug;
     protected int       currSize;
     protected int       currBytes;
@@ -77,6 +81,7 @@ public class TarOutputStream extends FilterOutputStream {
     protected int       assemLen;
     protected byte[]    assemBuf;
     protected TarBuffer buffer;
+    protected int       longFileMode = LONGFILE_ERROR;
 
     public TarOutputStream(OutputStream os) {
         this(os, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
@@ -96,6 +101,11 @@ public class TarOutputStream extends FilterOutputStream {
         this.recordBuf = new byte[recordSize];
         this.oneBuf = new byte[1];
     }
+
+    public void setLongFileMode(int longFileMode) {
+        this.longFileMode = longFileMode;
+    }
+    
 
     /**
      * Sets the debugging flag.
@@ -154,6 +164,27 @@ public class TarOutputStream extends FilterOutputStream {
      * @param entry The TarEntry to be written to the archive.
      */
     public void putNextEntry(TarEntry entry) throws IOException {
+        if (entry.getName().length() > TarConstants.NAMELEN) {
+
+            if (longFileMode == LONGFILE_GNU) {
+                // create a TarEntry for the LongLink, the contents
+                // of which are the entry's name 
+                TarEntry longLinkEntry = new TarEntry(TarConstants.GNU_LONGLINK,
+                                                      TarConstants.LF_GNUTYPE_LONGNAME);
+                 
+                longLinkEntry.setSize(entry.getName().length() + 1);
+                putNextEntry(longLinkEntry);                                                    
+                write(entry.getName().getBytes());
+                write(0);
+                closeEntry();
+            }
+            else if (longFileMode != LONGFILE_TRUNCATE) {
+                throw new RuntimeException("file name '" + entry.getName() 
+                                             + "' is too long ( > " 
+                                             + TarConstants.NAMELEN + " bytes)");
+            }
+        } 
+
         entry.writeEntryHeader(this.recordBuf);
         this.buffer.writeRecord(this.recordBuf);
 
@@ -210,7 +241,7 @@ public class TarOutputStream extends FilterOutputStream {
     /**
      * Writes bytes to the current tar archive entry.
      * 
-     * This method simply calls read( byte[], int, int ).
+     * This method simply calls write( byte[], int, int ).
      * 
      * @param wBuf The buffer to write to the archive.
      * @return The number of bytes read, or -1 at EOF.
@@ -227,8 +258,6 @@ public class TarOutputStream extends FilterOutputStream {
      * record buffering required by TarBuffer, and manages buffers
      * that are not a multiple of recordsize in length, including
      * assembling records from small buffers.
-     * 
-     * This method simply calls read( byte[], int, int ).
      * 
      * @param wBuf The buffer to write to the archive.
      * @param wOffset The offset in the buffer from which to get bytes.

@@ -178,11 +178,14 @@ public class TarEntry implements TarConstants {
         this.devMajor = 0;
         this.devMinor = 0;
 
-        if (this.name.length() > NAMELEN) {
-            throw new RuntimeException("file name '" + this.name 
-                                             + "' is too long ( > " 
-                                             + NAMELEN + " bytes)");
-        } 
+    }   
+        
+    /** 
+     * Construct an entry with a name an a link flag.
+     */ 
+    public TarEntry(String name, byte linkFlag) {
+        this(name);
+        this.linkFlag = linkFlag;
     }   
         
     /** 
@@ -242,14 +245,6 @@ public class TarEntry implements TarConstants {
         } else {
             this.mode = 0100644;
             this.linkFlag = LF_NORMAL;
-        } 
-        
-        if (this.name.length() > NAMELEN) {
-            throw new RuntimeException("file name '" + this.name 
-                                             + "' is too long ( > " 
-                                             + NAMELEN + " bytes)");
-        
-            // UNDONE When File lets us get the userName, use it!
         } 
         
         this.size = file.length();
