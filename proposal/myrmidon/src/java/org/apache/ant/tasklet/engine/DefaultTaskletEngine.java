@@ -40,38 +40,15 @@ public class DefaultTaskletEngine
     extends AbstractLoggable
     implements TaskletEngine, Composable
 {
-    protected TskDeployer          m_tskDeployer;
     protected Factory              m_factory;
     protected Registry             m_locatorRegistry   = new DefaultRegistry( Locator.class );
     protected Configurer           m_configurer;
-    protected DataTypeEngine       m_dataTypeEngine;
-    protected ConverterEngine      m_converterEngine;
 
     protected ComponentManager     m_componentManager;
-
-    public TskDeployer getTskDeployer()
-    {
-        return m_tskDeployer;
-    }
-
-    public ConverterEngine getConverterEngine()
-    {
-        return m_converterEngine;
-    }
 
     public Registry getRegistry()
     {
         return m_locatorRegistry;
-    }
-
-    /**
-     * Retrieve datatype engine.
-     *
-     * @return the DataTypeEngine
-     */
-    public DataTypeEngine getDataTypeEngine()
-    {
-        return m_dataTypeEngine;
     }
 
     /**
@@ -87,14 +64,8 @@ public class DefaultTaskletEngine
         m_componentManager = componentManager;
 
         m_factory = (Factory)componentManager.lookup( "org.apache.avalon.framework.camelot.Factory" );
-        m_tskDeployer = (TskDeployer)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
         m_configurer = (Configurer)componentManager.
             lookup( "org.apache.myrmidon.components.configurer.Configurer" );
-        m_dataTypeEngine = (DataTypeEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
-        m_converterEngine = (ConverterEngine)componentManager.
-            lookup( "org.apache.ant.convert.engine.ConverterEngine" );
     }
 
     public void execute( final Configuration taskData, final TaskContext context )

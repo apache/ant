@@ -28,7 +28,7 @@ public class RegisterTasklet
     {
         if( null == classname )
         {
-            try { m_engine.getTskDeployer().deployTasklet( name, url.toString(), url ); }
+            try { m_tskDeployer.deployTasklet( name, url.toString(), url ); }
             catch( final DeploymentException de )
             {
                 throw new AntException( "Failed deploying " + name + " from " + url, de );

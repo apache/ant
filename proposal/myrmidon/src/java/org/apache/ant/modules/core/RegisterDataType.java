@@ -28,7 +28,7 @@ public class RegisterDataType
     {
         if( null == classname )
         {
-            try { m_engine.getTskDeployer().deployDataType( name, url.toString(), url ); }
+            try { m_tskDeployer.deployDataType( name, url.toString(), url ); }
             catch( final DeploymentException de )
             {
                 throw new AntException( "Failed deploying " + name + " from " + url, de );
@@ -37,7 +37,7 @@ public class RegisterDataType
         else
         {
             final DefaultLocator locator = new DefaultLocator( classname, url );
-            m_engine.getDataTypeEngine().getRegistry().register( name, locator ); 
+            m_dataTypeEngine.getRegistry().register( name, locator ); 
         }
     }
 }

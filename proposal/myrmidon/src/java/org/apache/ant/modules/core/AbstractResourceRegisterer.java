@@ -12,7 +12,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.ant.AntException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.ant.tasklet.engine.TskDeployer;
 import org.apache.ant.tasklet.engine.TaskletEngine;
+import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.Composable;
@@ -30,13 +32,21 @@ public abstract class AbstractResourceRegisterer
     protected String              m_lib;
     protected String              m_name;
     protected String              m_classname;
-    protected TaskletEngine       m_engine;
-    
+    protected TskDeployer         m_tskDeployer;
+    protected DataTypeEngine      m_dataTypeEngine;
+    protected TaskletEngine          m_engine;
+
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
         m_engine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
+
+        m_tskDeployer = (TskDeployer)componentManager.
+            lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
+
+        m_dataTypeEngine = (DataTypeEngine)componentManager.
+            lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
     }
 
     public void setLib( final String lib )

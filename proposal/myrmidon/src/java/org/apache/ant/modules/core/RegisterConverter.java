@@ -14,7 +14,7 @@ import org.apache.ant.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.ant.tasklet.engine.TaskletEngine;
+import org.apache.ant.tasklet.engine.TskDeployer;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.Composable;
@@ -35,13 +35,17 @@ public class RegisterConverter
     protected String              m_destinationType;
     protected String              m_lib;
     protected String              m_classname;
-    protected TaskletEngine       m_engine;
-    
+    protected TskDeployer         m_tskDeployer;
+    protected ConverterEngine     m_converterEngine;
+
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_engine = (TaskletEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
+        m_tskDeployer = (TskDeployer)componentManager.
+            lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
+
+        m_converterEngine = (ConverterEngine)componentManager.
+            lookup( "org.apache.ant.convert.engine.ConverterEngine" );
     }
 
     public void setLib( final String lib )
@@ -95,7 +99,7 @@ public class RegisterConverter
         {
             try 
             { 
-                m_engine.getTskDeployer().deployConverter( m_classname, url.toString(), url ); 
+                m_tskDeployer.deployConverter( m_classname, url.toString(), url ); 
             }
             catch( final DeploymentException de )
             {
@@ -111,8 +115,8 @@ public class RegisterConverter
 
             try
             {
-                m_engine.getConverterEngine().getInfoRegistry().register( m_classname, info ); 
-                m_engine.getConverterEngine().getRegistry().register( m_classname, locator ); 
+                m_converterEngine.getInfoRegistry().register( m_classname, info ); 
+                m_converterEngine.getRegistry().register( m_classname, locator ); 
             }
             catch( final RegistryException re )
             {
