@@ -59,6 +59,7 @@ import java.util.*;
 import java.text.*;
 
 import org.apache.tools.ant.types.FilterSet; 
+import org.apache.tools.ant.util.FileUtils; 
 
 /**
  * Central representation of an Ant project. This class defines a
@@ -140,7 +141,10 @@ public class Project {
         }
     }
 
+    private FileUtils fileUtils;
+
     public Project() {
+        fileUtils = FileUtils.getFileUtils();
     }
 
     /**
@@ -690,7 +694,7 @@ public class Project {
      * @deprecated
      */
     public void copyFile(String sourceFile, String destFile) throws IOException {
-        FileUtils.copyFile(sourceFile, destFile);
+        fileUtils.copyFile(sourceFile, destFile);
     }
 
     /**
@@ -703,7 +707,7 @@ public class Project {
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering)
         throws IOException {
-        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null);
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null);
     }
 
     /**
@@ -717,7 +721,7 @@ public class Project {
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite) throws IOException {
-        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, overwrite);
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, overwrite);
     }
 
      /**
@@ -734,7 +738,7 @@ public class Project {
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, 
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, 
                            overwrite, preserveLastModified);
     }
 
@@ -747,7 +751,7 @@ public class Project {
      * @deprecated
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
-        FileUtils.copyFile(sourceFile, destFile);
+        fileUtils.copyFile(sourceFile, destFile);
     }
 
     /**
@@ -760,7 +764,7 @@ public class Project {
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering)
         throws IOException {
-        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null);
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null);
     }
 
     /**
@@ -774,7 +778,7 @@ public class Project {
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite) throws IOException {
-        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, overwrite);
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, overwrite);
     }
 
     /**
@@ -791,7 +795,7 @@ public class Project {
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
-        FileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, 
+        fileUtils.copyFile(sourceFile, destFile, filtering ? globalFilterSet : null, 
                            overwrite, preserveLastModified);
     }
 
@@ -806,7 +810,7 @@ public class Project {
                 + " in JDK 1.1", Project.MSG_WARN);
             return;
         }
-        FileUtils.setFileLastModified(file, time);
+        fileUtils.setFileLastModified(file, time);
         log("Setting modification time for " + file, MSG_VERBOSE);
     }
 

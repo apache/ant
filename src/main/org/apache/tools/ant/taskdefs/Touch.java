@@ -89,6 +89,11 @@ public class Touch extends Task {
     private long millis = -1;
     private String dateTime;
     private Vector filesets = new Vector();
+    private FileUtils fileUtils;
+
+    public Touch() {
+        fileUtils = FileUtils.getFileUtils();
+    }
 
     /**
      * Sets a single source file to touch.  If the file does not exist
@@ -204,9 +209,9 @@ public class Touch extends Task {
         }
 
         if (millis < 0) {
-            project.setFileLastModified(file, System.currentTimeMillis());
+            fileUtils.setFileLastModified(file, System.currentTimeMillis());
         } else {
-            project.setFileLastModified(file, millis);
+            fileUtils.setFileLastModified(file, millis);
         }
     }
 

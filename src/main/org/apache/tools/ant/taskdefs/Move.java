@@ -108,8 +108,8 @@ public class Move extends Copy {
                     for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
                         executionFilterSet.addFilterSet((FilterSet)filterEnum.nextElement());
                     }
-                    FileUtils.copyFile(fromFile, toFile, executionFilterSet,
-                                       forceOverwrite);
+                    getFileUtils().copyFile(fromFile, toFile, executionFilterSet,
+                                            forceOverwrite);
 
                     File f = new File(fromFile);
                     if (!f.delete()) {

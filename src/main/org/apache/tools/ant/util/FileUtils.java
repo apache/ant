@@ -52,11 +52,13 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant;
+package org.apache.tools.ant.util;
 
 import java.io.*;
-import java.util.*;
+import java.lang.reflect.Method;
 
+import org.apache.tools.ant.BuildException; 
+import org.apache.tools.ant.Project; 
 import org.apache.tools.ant.types.FilterSet; 
 
 /**
@@ -77,12 +79,24 @@ public class FileUtils {
     private static java.lang.reflect.Method setLastModified = null;
 
     /**
+     * Factory method.
+     */
+    public static FileUtils getFileUtils() {
+        return new FileUtils();
+    }
+
+    /**
+     * Empty constructor.
+     */
+    protected FileUtils() {}
+
+    /**
      * Convienence method to copy a file from a source to a destination.
      * No filtering is performed.
      *
      * @throws IOException
      */
-    public static void copyFile(String sourceFile, String destFile) throws IOException {
+    public void copyFile(String sourceFile, String destFile) throws IOException {
         copyFile(new File(sourceFile), new File(destFile), null, false, false);
     }
 
@@ -92,7 +106,7 @@ public class FileUtils {
      *
      * @throws IOException
      */
-    public static void copyFile(String sourceFile, String destFile, FilterSet filterSet)
+    public void copyFile(String sourceFile, String destFile, FilterSet filterSet)
         throws IOException
     {
         copyFile(new File(sourceFile), new File(destFile), filterSet, false, false);
@@ -105,7 +119,7 @@ public class FileUtils {
      *
      * @throws IOException 
      */
-    public static void copyFile(String sourceFile, String destFile, FilterSet filterSet,
+    public void copyFile(String sourceFile, String destFile, FilterSet filterSet,
                          boolean overwrite) throws IOException {
         copyFile(new File(sourceFile), new File(destFile), filterSet, 
                  overwrite, false);
@@ -120,7 +134,7 @@ public class FileUtils {
      *
      * @throws IOException 
      */
-    public static void copyFile(String sourceFile, String destFile, FilterSet filterSet,
+    public void copyFile(String sourceFile, String destFile, FilterSet filterSet,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
         copyFile(new File(sourceFile), new File(destFile), filterSet, 
@@ -133,7 +147,7 @@ public class FileUtils {
      *
      * @throws IOException
      */
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
+    public void copyFile(File sourceFile, File destFile) throws IOException {
         copyFile(sourceFile, destFile, null, false, false);
     }
 
@@ -143,7 +157,7 @@ public class FileUtils {
      *
      * @throws IOException
      */
-    public static void copyFile(File sourceFile, File destFile, FilterSet filterSet)
+    public void copyFile(File sourceFile, File destFile, FilterSet filterSet)
         throws IOException {
         copyFile(sourceFile, destFile, filterSet, false, false);
     }
@@ -155,7 +169,7 @@ public class FileUtils {
      *
      * @throws IOException 
      */
-    public static void copyFile(File sourceFile, File destFile, FilterSet filterSet,
+    public void copyFile(File sourceFile, File destFile, FilterSet filterSet,
                          boolean overwrite) throws IOException {
         copyFile(sourceFile, destFile, filterSet, overwrite, false);
     }
@@ -169,7 +183,7 @@ public class FileUtils {
      *
      * @throws IOException 
      */
-    public static void copyFile(File sourceFile, File destFile, FilterSet filterSet,
+    public void copyFile(File sourceFile, File destFile, FilterSet filterSet,
                          boolean overwrite, boolean preserveLastModified)
         throws IOException {
         
@@ -229,11 +243,11 @@ public class FileUtils {
     }
 
     /**
-     * Calls File.setLastModified(long time) in a Java 1.1 compatible way.
+     * see whether we have a setLastModified method in File and return it.
      */
-    public static void setFileLastModified(File file, long time) throws BuildException {
+    protected final Method getSetLastModified() {
         if (Project.getJavaVersion() == Project.JAVA_1_1) {
-            return;
+            return null;
         }
         if (setLastModified == null) {
             synchronized (lockReflection) {
@@ -249,14 +263,25 @@ public class FileUtils {
                 }
             }
         }
+        return setLastModified;
+    }
+
+    /**
+     * Calls File.setLastModified(long time) in a Java 1.1 compatible way.
+     */
+    public void setFileLastModified(File file, long time) throws BuildException {
+        if (Project.getJavaVersion() == Project.JAVA_1_1) {
+            return;
+        }
         Long[] times = new Long[1];
         if (time < 0) {
             times[0] = new Long(System.currentTimeMillis());
         } else {
             times[0] = new Long(time);
         }
+
         try {
-            setLastModified.invoke(file, times);
+            getSetLastModified().invoke(file, times);
         } catch (java.lang.reflect.InvocationTargetException ite) {
             Throwable nested = ite.getTargetException();
             throw new BuildException("Exception setting the modification time "

@@ -93,7 +93,14 @@ public class Copy extends Task {
 
     protected Mapper mapperElement = null;
     private Vector filterSets = new Vector();
+    private FileUtils fileUtils;
     
+    public Copy() {
+        fileUtils = FileUtils.getFileUtils();
+    }
+
+    protected FileUtils getFileUtils() {return fileUtils;}
+
     /**
      * Sets a single source file to copy.
      */
@@ -365,7 +372,7 @@ public class Copy extends Task {
                     for (Enumeration filterEnum = filterSets.elements(); filterEnum.hasMoreElements();) {
                         executionFilterSet.addFilterSet((FilterSet)filterEnum.nextElement());
                     }
-                    FileUtils.copyFile(fromFile, toFile, executionFilterSet,
+                    fileUtils.copyFile(fromFile, toFile, executionFilterSet,
                                        forceOverwrite, preserveLastModified);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
