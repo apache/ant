@@ -426,13 +426,17 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
             setCompressedSizeMethod.invoke(ze, (Object[])s);
         } catch (InvocationTargetException ite) {
             Throwable nested = ite.getTargetException();
+            String msg = getDisplayableMessage(nested);
+            if (msg == null) {
+                msg = getDisplayableMessage(ite);
+            }
+            throw new RuntimeException("InvocationTargetException setting the "
+                                       + "compressed size of " + ze + ": "
+                                       + msg);
+        } catch (Exception other) {
             throw new RuntimeException("Exception setting the compressed size "
                                        + "of " + ze + ": "
-                                       + nested.getMessage());
-        } catch (Throwable other) {
-            throw new RuntimeException("Exception setting the compressed size "
-                                       + "of " + ze + ": "
-                                       + other.getMessage());
+                                       + getDisplayableMessage(other));
         }
     }
 
@@ -453,6 +457,22 @@ public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {
                 }
             }
         }
+    }
+
+    /**
+     * try to get as much single-line information out of the exception
+     * as possible.
+     */
+    private static String getDisplayableMessage(Throwable e) {
+        String msg = null;
+        if (e != null) {
+            if (e.getMessage() != null) {
+                msg = e.getClass().getName() + ": " + e.getMessage();
+            } else {
+                msg = e.getClass().getName();
+            }
+        }
+        return msg;
     }
 
 }
