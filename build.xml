@@ -41,6 +41,7 @@
   <property name="build.compiler" value="classic"/>
   <property name="build.compiler.emacs" value="on"/>
   <property name="junit.fork" value="false" />
+  <property name="javac.optimize" value="true" />
 
   <!-- =================================================================== -->
   <!-- Define a global set of patterns that can be referenced by           -->
@@ -96,7 +97,7 @@
            destdir="${build.classes}"
            debug="on"
            deprecation="off"
-           optimize="on" >
+           optimize="${javac.optimize}" >
       <classpath refid="classpath" />
 
       <exclude name="**/Script.java" unless="bsf.present" />

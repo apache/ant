@@ -56,6 +56,7 @@ package org.apache.tools.ant.util;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
+import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -70,30 +71,23 @@ public class RegexpPatternMapper implements FileNameMapper {
     protected RegexpMatcher reg = null;
     protected char[] to = null;
     protected StringBuffer result = new StringBuffer();
-    protected Class regexpMatcherClass = null;
 
     public RegexpPatternMapper() throws BuildException {
-        try {
-            regexpMatcherClass = Class.forName("org.apache.tools.ant.util.regexp.JakartaOroMatcher");
-
-            if (regexpMatcherClass == null) {
-                regexpMatcherClass = Class.forName("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
-                 
-            }
-        } catch (ClassNotFoundException ce) {
-        } catch (NoClassDefFoundError ne) {
-        }
-
-        if (regexpMatcherClass == null) {
-            throw new BuildException("No supported regular expression matcher found");
-        }
+        reg = (new RegexpMatcherFactory()).newRegexpMatcher();
     }
     
     /**
      * Sets the &quot;from&quot; pattern. Required.
      */
     public void setFrom(String from) throws BuildException {
-        reg = createMatcher(from);
+        try {
+            reg.setPattern(from);
+        } catch (NoClassDefFoundError e) {
+            // depending on the implementation the actual RE won't
+            // get instantiated in the constructor.
+            throw new BuildException("Cannot load regular expression matcher",
+                                     e);
+        }
     }
 
     /**
@@ -144,19 +138,4 @@ public class RegexpPatternMapper implements FileNameMapper {
         return result.toString();
     }
 
-    /**
-     * Create an implementation of RegexpMatcher based on the classes
-     * that can be loaded.
-     */
-    protected RegexpMatcher createMatcher(String pattern) 
-        throws BuildException {
-        try {
-            RegexpMatcher rm = (RegexpMatcher) regexpMatcherClass.newInstance();
-            rm.setPattern(pattern);
-            return rm;
-        } catch (Throwable t) {
-            throw new BuildException(t);
-        }
-        
-    }
 }

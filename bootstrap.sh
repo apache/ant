@@ -49,10 +49,10 @@ mkdir -p ${CLASSDIR}
 echo ... Compiling Ant Classes
 
 ${JAVAC} -d ${CLASSDIR} ${TOOLS}/tar/*.java
+${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/util/regexp/RegexpMatcher.java ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java
+${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/util/*.java
 ${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/types/*.java
 ${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/*.java
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/util/regexp/RegexpMatcher.java
-${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/util/*.java
 ${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/taskdefs/*.java
 
 echo ... Copying Required Files
