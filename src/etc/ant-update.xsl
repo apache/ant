@@ -3,7 +3,7 @@
 <!--
  The Apache Software License, Version 1.1
 
- Copyright (c) 2001 The Apache Software Foundation.  All rights
+ Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -70,16 +70,26 @@
 -->
  
  
-  <!-- jarfile and zipfile attributes are replaced by file in their respective task -->
+  <!-- (zip|jar|war|ear)file attributes are replaced by destfile in their respective task -->
   <xsl:template match="zip">
-    <zip file="{@zipfile}">
+    <zip destfile="{@zipfile}">
       <xsl:apply-templates select="@*[not(name()='zipfile')]|node()"/>
     </zip>
   </xsl:template>
   <xsl:template match="jar">
-    <jar file="{@jarfile}">
+    <jar destfile="{@jarfile}">
       <xsl:apply-templates select="@*[not(name()='jarfile')]|node()"/>
     </jar>
+  </xsl:template>
+  <xsl:template match="war">
+    <war destfile="{@warfile}">
+      <xsl:apply-templates select="@*[not(name()='warfile')]|node()"/>
+    </war>
+  </xsl:template>
+  <xsl:template match="ear">
+    <ear destfile="{@earfile}">
+      <xsl:apply-templates select="@*[not(name()='earfile')]|node()"/>
+    </ear>
   </xsl:template>
    
  
