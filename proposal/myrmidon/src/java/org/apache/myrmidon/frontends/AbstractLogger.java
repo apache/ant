@@ -18,11 +18,11 @@ import org.apache.avalon.framework.logger.Logger;
 public abstract class AbstractLogger
     implements Logger
 {
-    public final static int LEVEL_DEBUG = 0;
-    public final static int LEVEL_INFO = 1;
-    public final static int LEVEL_WARN = 2;
-    public final static int LEVEL_ERROR = 3;
-    public final static int LEVEL_FATAL = 4;
+    public static final int LEVEL_DEBUG = 0;
+    public static final int LEVEL_INFO = 1;
+    public static final int LEVEL_WARN = 2;
+    public static final int LEVEL_ERROR = 3;
+    public static final int LEVEL_FATAL = 4;
 
     /**
      * Log a debug message.

@@ -21,14 +21,14 @@ final class TargetState
     }
 
     /** Target has not been started. */
-    public final static TargetState NOT_STARTED = new TargetState();
+    public static final TargetState NOT_STARTED = new TargetState();
 
     /**
      * Target has been started, and the dependencies of the target are being
      * traversed.
      */
-    public final static TargetState TRAVERSING = new TargetState();
+    public static final TargetState TRAVERSING = new TargetState();
 
     /** Target has been completed. */
-    public final static TargetState FINISHED = new TargetState();
+    public static final TargetState FINISHED = new TargetState();
 }

@@ -21,7 +21,7 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class AntParam
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( AntParam.class );
 
     private String m_name;

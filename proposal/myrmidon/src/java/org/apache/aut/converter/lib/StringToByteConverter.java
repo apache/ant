@@ -24,7 +24,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class StringToByteConverter
     extends AbstractConverter
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( StringToByteConverter.class );
 
     public StringToByteConverter()

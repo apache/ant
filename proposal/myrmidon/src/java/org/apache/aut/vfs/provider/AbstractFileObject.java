@@ -31,10 +31,10 @@ import org.apache.avalon.excalibur.io.IOUtil;
 public abstract class AbstractFileObject
     implements FileObject
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( AbstractFileObject.class );
 
-    private final static FileObject[] EMPTY_FILE_ARRAY = {};
+    private static final FileObject[] EMPTY_FILE_ARRAY = {};
 
     private FileName m_name;
     private AbstractFileSystem m_fs;

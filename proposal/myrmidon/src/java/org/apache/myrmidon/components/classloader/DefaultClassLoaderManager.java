@@ -43,7 +43,7 @@ public class DefaultClassLoaderManager
     extends AbstractLogEnabled
     implements ClassLoaderManager, Serviceable, Initializable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultClassLoaderManager.class );
 
     /**

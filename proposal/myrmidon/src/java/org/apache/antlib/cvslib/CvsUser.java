@@ -20,7 +20,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
  */
 public class CvsUser
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( CvsUser.class );
 
     private String m_userID;

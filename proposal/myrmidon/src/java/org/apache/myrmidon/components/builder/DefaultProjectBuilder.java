@@ -42,15 +42,15 @@ public class DefaultProjectBuilder
     extends AbstractLogEnabled
     implements ProjectBuilder
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultProjectBuilder.class );
 
-    private final static Version VERSION = new Version( 2, 0, 0 );
+    private static final Version VERSION = new Version( 2, 0, 0 );
 
-    private final static int PROJECT_REFERENCES = 0;
-    private final static int LIBRARY_IMPORTS = 1;
-    private final static int IMPLICIT_TASKS = 2;
-    private final static int TARGETS = 3;
+    private static final int PROJECT_REFERENCES = 0;
+    private static final int LIBRARY_IMPORTS = 1;
+    private static final int IMPLICIT_TASKS = 2;
+    private static final int TARGETS = 3;
 
     // Use a name validator with the default rules.
     private DefaultNameValidator m_nameValidator = new DefaultNameValidator();

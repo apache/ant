@@ -23,7 +23,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 public class MultiSourceServiceManager
     implements ServiceManager
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( MultiSourceServiceManager.class );
 
     /** The source service managers, in order. */

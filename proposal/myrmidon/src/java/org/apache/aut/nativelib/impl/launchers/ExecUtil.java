@@ -26,7 +26,7 @@ class ExecUtil
     /**
      * The file representing the current working directory.
      */
-    private final static File c_cwd;
+    private static final File c_cwd;
 
     static
     {

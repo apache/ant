@@ -30,7 +30,7 @@ final class LocalFile
     extends AbstractFileObject
     implements FileObject
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( LocalFile.class );
 
     private File m_file;

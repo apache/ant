@@ -35,7 +35,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public abstract class AbstractMasterConverter
     implements Converter
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( AbstractMasterConverter.class );
 
     /**

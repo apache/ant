@@ -27,7 +27,7 @@ public class Facility
     extends AbstractContainerTask
     implements Configurable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( Facility.class );
 
     private String m_namespace;

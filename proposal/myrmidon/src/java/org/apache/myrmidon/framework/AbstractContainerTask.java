@@ -34,7 +34,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 public abstract class AbstractContainerTask
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( AbstractContainerTask.class );
 
     ///For converting own attributes

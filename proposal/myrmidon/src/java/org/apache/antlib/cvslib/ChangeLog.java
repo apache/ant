@@ -60,7 +60,7 @@ import org.apache.tools.todo.types.Commandline;
 public class ChangeLog
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( ChangeLog.class );
 
     /** User list */

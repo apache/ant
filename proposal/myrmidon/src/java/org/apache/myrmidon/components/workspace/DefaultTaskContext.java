@@ -31,7 +31,7 @@ import org.apache.myrmidon.interfaces.property.PropertyResolver;
 public class DefaultTaskContext
     implements TaskContext
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
 
     // Property name validator allows digits, but no internal whitespace.

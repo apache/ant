@@ -25,7 +25,7 @@ import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 public class Import
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( Import.class );
 
     private File m_lib;

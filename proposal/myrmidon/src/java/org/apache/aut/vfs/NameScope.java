@@ -20,14 +20,14 @@ public final class NameScope
      * as described by {@link #FILE_SYSTEM}.  However, an exception is
      * thrown if the resolved file is not a direct child of the base file.
      */
-    public final static NameScope CHILD = new NameScope( "child" );
+    public static final NameScope CHILD = new NameScope( "child" );
 
     /**
      * Resolve against the descendents of the base file.  The name is resolved
      * as described by {@link #FILE_SYSTEM}.  However, an exception is thrown
      * if the resolved file is not a descendent of the base file.
      */
-    public final static NameScope DESCENDENT = new NameScope( "descendent" );
+    public static final NameScope DESCENDENT = new NameScope( "descendent" );
 
     /**
      * Resolve against files in the same file system as the base file.
@@ -44,7 +44,7 @@ public final class NameScope
      * <p>A path is considered absolute if it starts with a separator character,
      * and relative if it does not.
      */
-    public final static NameScope FILE_SYSTEM = new NameScope( "filesystem" );
+    public static final NameScope FILE_SYSTEM = new NameScope( "filesystem" );
 
     private String m_name;
 

@@ -37,7 +37,7 @@ import org.apache.tools.todo.types.ScannerUtil;
 public class Touch
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( Touch.class );
 
     private long m_millis = -1;

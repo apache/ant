@@ -24,7 +24,7 @@ import org.apache.myrmidon.api.TaskException;
 public class Mkdir
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( Mkdir.class );
 
     private File m_dir;

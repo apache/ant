@@ -34,7 +34,7 @@ import org.apache.myrmidon.interfaces.workspace.Workspace;
 public class SoundTask
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( SoundTask.class );
 
     private BuildAlert m_success;

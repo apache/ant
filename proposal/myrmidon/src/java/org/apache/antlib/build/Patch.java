@@ -26,7 +26,7 @@ import org.apache.tools.todo.types.Commandline;
 public class Patch
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( Patch.class );
 
     private File m_originalFile;

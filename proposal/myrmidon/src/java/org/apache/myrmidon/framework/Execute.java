@@ -33,7 +33,7 @@ import org.apache.tools.todo.util.FileUtils;
  */
 public class Execute
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( Execute.class );
 
     private Commandline m_command;

@@ -25,10 +25,10 @@ import org.apache.avalon.excalibur.i18n.Resources;
 class FtpFileObject
     extends AbstractFileObject
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( FtpFileObject.class );
 
-    private final static FTPFile[] EMPTY_FTP_FILE_ARRAY = {};
+    private static final FTPFile[] EMPTY_FTP_FILE_ARRAY = {};
 
     private FtpFileSystem m_ftpFs;
 

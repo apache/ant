@@ -23,7 +23,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class StringToURLConverter
     extends AbstractConverter
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( StringToURLConverter.class );
 
     public StringToURLConverter()

@@ -24,7 +24,7 @@ import org.apache.myrmidon.api.TaskException;
 public class StringToFileConverter
     extends AbstractConverter
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( StringToFileConverter.class );
 
     public StringToFileConverter()

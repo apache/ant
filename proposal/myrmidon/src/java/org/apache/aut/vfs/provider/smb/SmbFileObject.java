@@ -29,7 +29,7 @@ public class SmbFileObject
     extends AbstractFileObject
     implements FileObject
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( SmbFileObject.class );
 
     private String m_fileName;

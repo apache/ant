@@ -100,17 +100,17 @@ public class CSharp
      * name of the executable. the .exe suffix is deliberately not included in
      * anticipation of the unix version
      */
-    private final static String EXE_NAME = "csc";
+    private static final String EXE_NAME = "csc";
 
     /**
      * what is the file extension we search on?
      */
-    private final static String FILE_EXT = "cs";
+    private static final String FILE_EXT = "cs";
 
     /**
      * derive the search pattern from the extension
      */
-    private final static String FILE_PATTERN = "**/*." + FILE_EXT;
+    private static final String FILE_PATTERN = "**/*." + FILE_EXT;
 
     /**
      * Fix C# reference inclusion. C# is really dumb in how it handles
@@ -125,7 +125,7 @@ public class CSharp
      * system <i>exactly</i> so may work on a unix box too.
      */
 
-    private final static String DEFAULT_REFERENCE_LIST =
+    private static final String DEFAULT_REFERENCE_LIST =
         "Accessibility.dll;" +
         "cscompmgd.dll;" +
         "CustomMarshalers.dll;" +

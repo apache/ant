@@ -44,17 +44,17 @@ public class Ilasm
      * name of the executable. the .exe suffix is deliberately not included in
      * anticipation of the unix version
      */
-    private final static String EXE_NAME = "ilasm";
+    private static final String EXE_NAME = "ilasm";
 
     /**
      * what is the file extension we search on?
      */
-    private final static String FILE_EXT = "il";
+    private static final String FILE_EXT = "il";
 
     /**
      * and now derive the search pattern from the extension
      */
-    private final static String FILE_PATTERN = "**/*." + FILE_EXT;
+    private static final String FILE_PATTERN = "**/*." + FILE_EXT;
 
     /**
      * debug flag. Controls generation of debug information.

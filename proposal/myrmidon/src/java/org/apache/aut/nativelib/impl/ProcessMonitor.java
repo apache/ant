@@ -29,16 +29,16 @@ class ProcessMonitor
 {
     //Time to sleep in loop while processing output
     //of command and monitoring for timeout
-    private final static int SLEEP_TIME = 5;
+    private static final int SLEEP_TIME = 5;
 
     //State to indicate process is still running
-    private final static int STATE_RUNNING = 0;
+    private static final int STATE_RUNNING = 0;
 
     //State to indicate process shutdown by itself
-    private final static int STATE_STOPPED = 1;
+    private static final int STATE_STOPPED = 1;
 
     //State to indicate process was terminated due to timeout
-    private final static int STATE_TERMINATED = 2;
+    private static final int STATE_TERMINATED = 2;
 
     /**
      * The state of the process monitor and thus

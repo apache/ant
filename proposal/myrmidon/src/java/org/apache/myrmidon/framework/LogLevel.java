@@ -23,14 +23,14 @@ public final class LogLevel
     extends Enum
 {
     //Map for all the levels
-    private final static HashMap c_levels = new HashMap();
+    private static final HashMap c_levels = new HashMap();
 
     //standard enums for version of JVM
-    public final static LogLevel ERROR = new LogLevel( "error" );
-    public final static LogLevel WARN = new LogLevel( "warn" );
-    public final static LogLevel INFO = new LogLevel( "info" );
-    public final static LogLevel VERBOSE = new LogLevel( "verbose" );
-    public final static LogLevel DEBUG = new LogLevel( "debug" );
+    public static final LogLevel ERROR = new LogLevel( "error" );
+    public static final LogLevel WARN = new LogLevel( "warn" );
+    public static final LogLevel INFO = new LogLevel( "info" );
+    public static final LogLevel VERBOSE = new LogLevel( "verbose" );
+    public static final LogLevel DEBUG = new LogLevel( "debug" );
 
     /**
      * Retrieve the log level for the specified name.

@@ -25,7 +25,7 @@ import org.apache.myrmidon.framework.DataType;
 public class Property
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( Property.class );
 
     private String m_name;

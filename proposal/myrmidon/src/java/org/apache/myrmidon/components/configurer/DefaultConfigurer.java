@@ -40,7 +40,7 @@ public class DefaultConfigurer
     extends AbstractLogEnabled
     implements Configurer, Serviceable, LogEnabled
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultConfigurer.class );
 
     ///Converter to use for converting between values

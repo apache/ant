@@ -49,7 +49,7 @@ public class InstantiatingServiceManager
     extends AbstractLogEnabled
     implements ServiceManager, Parameterizable, Serviceable, Disposable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( InstantiatingServiceManager.class );
 
     /** Map from service class -> service object. */

@@ -29,7 +29,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 class DefaultObjectConfigurer
     implements ObjectConfigurer
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultObjectConfigurer.class );
 
     private final Class m_class;

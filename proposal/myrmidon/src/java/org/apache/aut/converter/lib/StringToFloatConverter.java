@@ -21,7 +21,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class StringToFloatConverter
     extends AbstractConverter
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( StringToFloatConverter.class );
 
     public StringToFloatConverter()

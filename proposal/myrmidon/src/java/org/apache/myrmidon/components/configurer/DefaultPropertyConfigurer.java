@@ -23,7 +23,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 class DefaultPropertyConfigurer
     implements PropertyConfigurer
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultPropertyConfigurer.class );
 
     private final int m_propertyIndex;

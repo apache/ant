@@ -33,10 +33,10 @@ import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 public class AspectAwareExecutor
     extends DefaultExecutor
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( AspectAwareExecutor.class );
 
-    private final static Configuration[] EMPTY_ELEMENTS = new Configuration[ 0 ];
+    private static final Configuration[] EMPTY_ELEMENTS = new Configuration[ 0 ];
 
     private AspectManager m_aspectManager;
 

@@ -27,7 +27,7 @@ import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 public abstract class AbstractTypeDef
     extends AbstractContainerTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( AbstractTypeDef.class );
 
     // TODO - replace lib with class-path

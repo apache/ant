@@ -28,10 +28,10 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class DefaultCommandLauncher
     implements CommandLauncher
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultCommandLauncher.class );
 
-    private final static Method c_execWithCWD;
+    private static final Method c_execWithCWD;
 
     static
     {

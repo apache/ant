@@ -26,7 +26,7 @@ public abstract class AbstractFacadeTask
     extends AbstractContainerTask
     implements Configurable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( AbstractFacadeTask.class );
 
     /**

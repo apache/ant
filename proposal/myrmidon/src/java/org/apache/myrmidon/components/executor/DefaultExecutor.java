@@ -34,7 +34,7 @@ public class DefaultExecutor
     extends AbstractLogEnabled
     implements Executor, Serviceable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultExecutor.class );
 
     private Configurer m_configurer;

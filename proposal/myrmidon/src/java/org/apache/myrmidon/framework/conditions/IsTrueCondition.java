@@ -28,7 +28,7 @@ import org.apache.aut.converter.ConverterException;
 public class IsTrueCondition
     implements Condition
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( IsTrueCondition.class );
 
     private String m_property;

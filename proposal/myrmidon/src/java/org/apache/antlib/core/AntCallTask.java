@@ -22,7 +22,7 @@ import org.apache.myrmidon.interfaces.model.Project;
  */
 public class AntCallTask extends AbstractAntTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( AntCallTask.class );
 
     private String m_project;

@@ -27,7 +27,7 @@ import org.apache.myrmidon.api.TaskException;
 public class LoadEnvironment
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( LoadEnvironment.class );
 
     private String m_prefix;

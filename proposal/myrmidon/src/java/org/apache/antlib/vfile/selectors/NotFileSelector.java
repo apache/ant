@@ -24,7 +24,7 @@ import org.apache.myrmidon.api.TaskException;
 public class NotFileSelector
     implements FileSelector
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( NotFileSelector.class );
 
     private FileSelector m_selector;

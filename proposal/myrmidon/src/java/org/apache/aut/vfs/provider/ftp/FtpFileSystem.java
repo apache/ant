@@ -26,7 +26,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 class FtpFileSystem
     extends AbstractFileSystem
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( FtpFileSystem.class );
 
     private FTPClient m_client;

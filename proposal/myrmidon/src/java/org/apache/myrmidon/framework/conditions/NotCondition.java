@@ -24,7 +24,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class NotCondition
     implements Condition
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( NotCondition.class );
 
     private Condition m_condition;

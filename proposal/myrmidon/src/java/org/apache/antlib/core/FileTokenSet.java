@@ -30,7 +30,7 @@ import org.apache.myrmidon.framework.filters.TokenSet;
 public class FileTokenSet
     implements TokenSet
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( FileTokenSet.class );
 
     private Map m_tokens = new HashMap();

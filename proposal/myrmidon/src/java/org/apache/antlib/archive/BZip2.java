@@ -23,7 +23,7 @@ import org.apache.myrmidon.api.TaskException;
 public class BZip2
     extends Pack
 {
-    private final static byte[] HEADER = new byte[]{(byte)'B', (byte)'Z'};
+    private static final byte[] HEADER = new byte[]{(byte)'B', (byte)'Z'};
 
     protected OutputStream getPackingStream( OutputStream output )
         throws TaskException, IOException

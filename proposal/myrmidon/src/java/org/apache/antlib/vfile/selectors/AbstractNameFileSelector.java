@@ -27,7 +27,7 @@ import org.apache.oro.text.regex.Perl5Matcher;
 public abstract class AbstractNameFileSelector
     implements FileSelector
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( AbstractNameFileSelector.class );
 
     private Object m_type;

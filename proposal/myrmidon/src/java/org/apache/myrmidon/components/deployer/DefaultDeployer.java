@@ -42,7 +42,7 @@ public class DefaultDeployer
     extends AbstractLogEnabled
     implements Deployer, Serviceable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultDeployer.class );
 
     // The components used to deploy

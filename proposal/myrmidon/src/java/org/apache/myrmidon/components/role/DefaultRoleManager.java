@@ -23,7 +23,7 @@ import org.apache.myrmidon.interfaces.role.RoleManager;
 public class DefaultRoleManager
     implements RoleManager
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultRoleManager.class );
 
     /** Parent <code>RoleManager</code> for nested resolution */

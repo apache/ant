@@ -28,7 +28,7 @@ import org.apache.myrmidon.framework.conditions.NotCondition;
 public class IfTask
     extends AbstractContainerTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( IfTask.class );
 
     private Condition m_condition;

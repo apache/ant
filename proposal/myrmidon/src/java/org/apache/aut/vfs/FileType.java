@@ -17,19 +17,19 @@ import org.apache.avalon.excalibur.i18n.Resources;
  */
 public final class FileType
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( FileType.class );
 
     /**
      * A folder, which can contain other files, but does not have any data
      * content.
      */
-    public final static FileType FOLDER = new FileType( REZ.getString( "folder.name" ) );
+    public static final FileType FOLDER = new FileType( REZ.getString( "folder.name" ) );
 
     /**
      * A regular file, which has data content, but cannot contain other files.
      */
-    public final static FileType FILE = new FileType( REZ.getString( "file.name" ) );
+    public static final FileType FILE = new FileType( REZ.getString( "file.name" ) );
 
     private String m_name;
 

@@ -23,7 +23,7 @@ import org.apache.myrmidon.api.TaskException;
 public class GUnzip
     extends Unpack
 {
-    private final static String DEFAULT_EXTENSION = ".gz";
+    private static final String DEFAULT_EXTENSION = ".gz";
 
     protected String getDefaultExtension()
     {

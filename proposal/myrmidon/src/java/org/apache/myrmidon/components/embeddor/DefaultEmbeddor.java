@@ -58,7 +58,7 @@ public class DefaultEmbeddor
     extends AbstractLogEnabled
     implements Embeddor, Parameterizable, Initializable, Startable, Disposable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultEmbeddor.class );
 
     /** Package containing the default component implementations. */

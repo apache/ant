@@ -23,7 +23,7 @@ import org.apache.myrmidon.api.TaskException;
 public class NameFileSelector
     extends AbstractNameFileSelector
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( NameFileSelector.class );
 
     /**

@@ -36,12 +36,12 @@ class Deployment
     extends AbstractLogEnabled
     implements TypeDeployer
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( Deployment.class );
 
-    private final static String TYPE_DESCRIPTOR_NAME = "META-INF/ant-descriptor.xml";
-    private final static String ROLE_DESCRIPTOR_NAME = "META-INF/ant-roles.xml";
-    private final static String SERVICE_DESCRIPTOR_NAME = "META-INF/ant-services.xml";
+    private static final String TYPE_DESCRIPTOR_NAME = "META-INF/ant-descriptor.xml";
+    private static final String ROLE_DESCRIPTOR_NAME = "META-INF/ant-roles.xml";
+    private static final String SERVICE_DESCRIPTOR_NAME = "META-INF/ant-services.xml";
 
     private ClassLoader m_classLoader;
     private DefaultDeployer m_deployer;

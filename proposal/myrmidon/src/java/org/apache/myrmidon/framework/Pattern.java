@@ -25,7 +25,7 @@ import org.apache.myrmidon.framework.conditions.NotCondition;
 public class Pattern
     implements DataType
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( Pattern.class );
 
     private String m_name;

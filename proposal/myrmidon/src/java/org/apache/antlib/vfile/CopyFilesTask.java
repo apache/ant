@@ -28,7 +28,7 @@ import org.apache.myrmidon.api.TaskException;
 public class CopyFilesTask
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( CopyFilesTask.class );
 
     private FileObject m_srcFile;

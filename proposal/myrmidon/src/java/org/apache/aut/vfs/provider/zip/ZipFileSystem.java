@@ -28,7 +28,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  */
 public class ZipFileSystem extends AbstractFileSystem implements FileSystem
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( ZipFileSystem.class );
 
     private File m_file;

@@ -28,7 +28,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class DefaultFileSystemManager
     implements FileSystemManager
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( DefaultFileSystemManager.class );
 
     /** The default provider. */

@@ -36,28 +36,28 @@ import org.apache.myrmidon.interfaces.executor.Executor;
  */
 public class CLIMain
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( CLIMain.class );
 
     //defines for the Command Line options
-    private final static int HELP_OPT = 'h';
-    private final static int QUIET_OPT = 'q';
-    private final static int VERBOSE_OPT = 'v';
-    private final static int FILE_OPT = 'f';
-    private final static int LOG_LEVEL_OPT = 'l';
-    private final static int DEFINE_OPT = 'D';
-    private final static int BUILDER_PARAM_OPT = 'B';
-    private final static int NO_PREFIX_OPT = 'p';
-    private final static int VERSION_OPT = 1;
-    private final static int LISTENER_OPT = 2;
-    private final static int TASKLIB_DIR_OPT = 5;
-    private final static int INCREMENTAL_OPT = 6;
-    private final static int HOME_DIR_OPT = 7;
-    private final static int DRY_RUN_OPT = 8;
-    private final static int DEBUG_OPT = 9;
+    private static final int HELP_OPT = 'h';
+    private static final int QUIET_OPT = 'q';
+    private static final int VERBOSE_OPT = 'v';
+    private static final int FILE_OPT = 'f';
+    private static final int LOG_LEVEL_OPT = 'l';
+    private static final int DEFINE_OPT = 'D';
+    private static final int BUILDER_PARAM_OPT = 'B';
+    private static final int NO_PREFIX_OPT = 'p';
+    private static final int VERSION_OPT = 1;
+    private static final int LISTENER_OPT = 2;
+    private static final int TASKLIB_DIR_OPT = 5;
+    private static final int INCREMENTAL_OPT = 6;
+    private static final int HOME_DIR_OPT = 7;
+    private static final int DRY_RUN_OPT = 8;
+    private static final int DEBUG_OPT = 9;
 
     //incompatable options for info options
-    private final static int[] INFO_OPT_INCOMPAT = new int[]
+    private static final int[] INFO_OPT_INCOMPAT = new int[]
     {
         HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT,
         LOG_LEVEL_OPT, BUILDER_PARAM_OPT, NO_PREFIX_OPT,
@@ -66,13 +66,13 @@ public class CLIMain
     };
 
     //incompatable options for other logging options
-    private final static int[] LOG_OPT_INCOMPAT = new int[]
+    private static final int[] LOG_OPT_INCOMPAT = new int[]
     {
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT, DEBUG_OPT
     };
 
     //incompatible options for listener options
-    private final static int[] LISTENER_OPT_INCOMPAT = new int[]
+    private static final int[] LISTENER_OPT_INCOMPAT = new int[]
     {
         LISTENER_OPT, NO_PREFIX_OPT
     };

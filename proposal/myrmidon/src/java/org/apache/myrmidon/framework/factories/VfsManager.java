@@ -30,7 +30,7 @@ public class VfsManager
     extends DefaultFileSystemManager
     implements Serviceable, Initializable, Disposable
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( VfsManager.class );
 
     private TypeManager m_typeManager;

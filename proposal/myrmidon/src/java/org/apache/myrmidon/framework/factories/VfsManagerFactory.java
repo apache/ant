@@ -22,7 +22,7 @@ import org.apache.myrmidon.interfaces.service.ServiceFactory;
 public class VfsManagerFactory
     implements ServiceFactory
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( VfsManagerFactory.class );
 
     /**

@@ -30,12 +30,12 @@ import org.apache.avalon.excalibur.util.StringUtil;
  */
 final class Environment
 {
-    private final static String[] COMMAND_COM = new String[]{"command.com", "/c", "set"};
-    private final static String[] CMD_EXE = new String[]{"cmd", "/c", "set"};
+    private static final String[] COMMAND_COM = new String[]{"command.com", "/c", "set"};
+    private static final String[] CMD_EXE = new String[]{"cmd", "/c", "set"};
 
     // Alternatively one could use: /bin/sh -c env
-    private final static String[] ENV_CMD = new String[]{"/usr/bin/env"};
-    private final static String[] ENV_RAW = new String[]{"env"};
+    private static final String[] ENV_CMD = new String[]{"/usr/bin/env"};
+    private static final String[] ENV_RAW = new String[]{"env"};
 
     /**
      * This is a cached version of the native environment variables.

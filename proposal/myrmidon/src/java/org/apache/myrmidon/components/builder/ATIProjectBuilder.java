@@ -35,7 +35,7 @@ public class ATIProjectBuilder
     extends DefaultProjectBuilder
     implements Parameterizable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( ATIProjectBuilder.class );
 
     private Parameters m_parameters;

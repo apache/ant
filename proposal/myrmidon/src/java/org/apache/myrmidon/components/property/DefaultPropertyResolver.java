@@ -30,7 +30,7 @@ import org.apache.myrmidon.interfaces.property.PropertyResolver;
 public class DefaultPropertyResolver
     implements PropertyResolver, Serviceable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultPropertyResolver.class );
 
     private Converter m_converter;

@@ -40,7 +40,7 @@ import org.apache.tools.todo.util.FileUtils;
  */
 public class ExecuteJava
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( ExecuteJava.class );
 
     private final Path m_classPath = new Path();

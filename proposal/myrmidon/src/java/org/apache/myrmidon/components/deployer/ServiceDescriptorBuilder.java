@@ -22,10 +22,10 @@ import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 class ServiceDescriptorBuilder
     implements DescriptorBuilder
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( ServiceDescriptorBuilder.class );
 
-    private final static Version SERVICE_DESCRIPTOR_VERSION = new Version( 1, 0, 0 );
+    private static final Version SERVICE_DESCRIPTOR_VERSION = new Version( 1, 0, 0 );
 
     /**
      * Builds a descriptor from a set of configuration.

@@ -27,7 +27,7 @@ import org.apache.myrmidon.interfaces.service.ServiceFactory;
 public class ExecManagerFactory
     implements ServiceFactory, Parameterizable
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( ExecManagerFactory.class );
 
     private Parameters m_parameters;

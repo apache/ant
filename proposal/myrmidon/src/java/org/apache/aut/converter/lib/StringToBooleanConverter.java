@@ -21,7 +21,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class StringToBooleanConverter
     extends AbstractConverter
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( StringToBooleanConverter.class );
 
     public StringToBooleanConverter()

@@ -24,12 +24,12 @@ public class TokenLineFilter
     /**
      * The default token start string
      */
-    private final static char[] DEFAULT_TOKEN_START = {'@'};
+    private static final char[] DEFAULT_TOKEN_START = {'@'};
 
     /**
      * The default token end string
      */
-    private final static char[] DEFAULT_TOKEN_END = {'@'};
+    private static final char[] DEFAULT_TOKEN_END = {'@'};
 
     /**
      * List of ordered filters and filter files.

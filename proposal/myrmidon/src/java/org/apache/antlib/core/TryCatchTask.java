@@ -25,7 +25,7 @@ import org.apache.myrmidon.framework.TaskList;
 public final class TryCatchTask
     extends AbstractContainerTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( TryCatchTask.class );
 
     private TaskList m_try;

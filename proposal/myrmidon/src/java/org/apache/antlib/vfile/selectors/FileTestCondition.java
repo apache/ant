@@ -25,7 +25,7 @@ import org.apache.myrmidon.framework.conditions.Condition;
 public class FileTestCondition
     implements Condition
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( FileTestCondition.class );
 
     private FileObject m_file;

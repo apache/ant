@@ -22,50 +22,50 @@ import java.util.Set;
  */
 public class Os
 {
-    private final static String OS_NAME =
+    private static final String OS_NAME =
         System.getProperty( "os.name" ).toLowerCase( Locale.US );
-    private final static String OS_ARCH =
+    private static final String OS_ARCH =
         System.getProperty( "os.arch" ).toLowerCase( Locale.US );
-    private final static String OS_VERSION =
+    private static final String OS_VERSION =
         System.getProperty( "os.version" ).toLowerCase( Locale.US );
-    private final static String PATH_SEP =
+    private static final String PATH_SEP =
         System.getProperty( "path.separator" );
-    private final static OsFamily OS_FAMILY;
-    private final static OsFamily[] OS_ALL_FAMILIES;
+    private static final OsFamily OS_FAMILY;
+    private static final OsFamily[] OS_ALL_FAMILIES;
 
     /** All Windows based OSes. */
-    public final static OsFamily OS_FAMILY_WINDOWS = new OsFamily( "windows" );
+    public static final OsFamily OS_FAMILY_WINDOWS = new OsFamily( "windows" );
 
     /** All DOS based OSes. */
-    public final static OsFamily OS_FAMILY_DOS = new OsFamily( "dos" );
+    public static final OsFamily OS_FAMILY_DOS = new OsFamily( "dos" );
 
     /** All Windows NT based OSes. */
-    public final static OsFamily OS_FAMILY_WINNT =
+    public static final OsFamily OS_FAMILY_WINNT =
         new OsFamily( "nt", new OsFamily[]{OS_FAMILY_WINDOWS} );
 
     /** All Windows 9x based OSes. */
-    public final static OsFamily OS_FAMILY_WIN9X =
+    public static final OsFamily OS_FAMILY_WIN9X =
         new OsFamily( "win9x", new OsFamily[]{OS_FAMILY_WINDOWS, OS_FAMILY_DOS} );
 
     /** OS/2 */
-    public final static OsFamily OS_FAMILY_OS2 =
+    public static final OsFamily OS_FAMILY_OS2 =
         new OsFamily( "os/2", new OsFamily[]{OS_FAMILY_DOS} );
 
     /** Netware */
-    public final static OsFamily OS_FAMILY_NETWARE =
+    public static final OsFamily OS_FAMILY_NETWARE =
         new OsFamily( "netware" );
 
     /** All UNIX based OSes. */
-    public final static OsFamily OS_FAMILY_UNIX = new OsFamily( "unix" );
+    public static final OsFamily OS_FAMILY_UNIX = new OsFamily( "unix" );
 
     /** All Mac based OSes. */
-    public final static OsFamily OS_FAMILY_MAC = new OsFamily( "mac" );
+    public static final OsFamily OS_FAMILY_MAC = new OsFamily( "mac" );
 
     /** OSX */
-    public final static OsFamily OS_FAMILY_OSX =
+    public static final OsFamily OS_FAMILY_OSX =
         new OsFamily( "osx", new OsFamily[]{OS_FAMILY_UNIX, OS_FAMILY_MAC} );
 
-    private final static OsFamily[] ALL_FAMILIES = new OsFamily[]
+    private static final OsFamily[] ALL_FAMILIES = new OsFamily[]
     {
         OS_FAMILY_DOS,
         OS_FAMILY_MAC,

@@ -24,7 +24,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class StringToEnumConverter
     implements Converter
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( StringToEnumConverter.class );
 
     public Object convert( final Class destination,

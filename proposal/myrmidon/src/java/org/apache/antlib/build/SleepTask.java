@@ -22,7 +22,7 @@ import org.apache.myrmidon.api.TaskException;
 public class SleepTask
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( SleepTask.class );
 
     private int m_seconds;

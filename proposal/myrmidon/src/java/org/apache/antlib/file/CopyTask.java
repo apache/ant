@@ -39,7 +39,7 @@ import org.apache.tools.todo.util.mappers.IdentityMapper;
 public class CopyTask
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( CopyTask.class );
 
     private File m_file;

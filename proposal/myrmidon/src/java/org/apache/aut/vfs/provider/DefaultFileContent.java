@@ -26,12 +26,12 @@ import org.apache.avalon.excalibur.i18n.Resources;
 public class DefaultFileContent
     implements FileContent
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultFileContent.class );
 
-    private final static int STATE_NONE = 0;
-    private final static int STATE_READING = 1;
-    private final static int STATE_WRITING = 2;
+    private static final int STATE_NONE = 0;
+    private static final int STATE_READING = 1;
+    private static final int STATE_WRITING = 2;
 
     private AbstractFileObject m_file;
     private int _state = STATE_NONE;

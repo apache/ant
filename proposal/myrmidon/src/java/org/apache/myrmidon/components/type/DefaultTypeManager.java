@@ -28,7 +28,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 public class DefaultTypeManager
     implements TypeManager, Serviceable
 {
-    private final static Resources REZ
+    private static final Resources REZ
         = ResourceManager.getPackageResources( DefaultTypeManager.class );
 
     ///Parent type manager to inherit values from.

@@ -30,7 +30,7 @@ import org.apache.myrmidon.api.TaskException;
 public class DefaultFileSet
     implements FileSet
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultFileSet.class );
 
     private FileObject m_dir;

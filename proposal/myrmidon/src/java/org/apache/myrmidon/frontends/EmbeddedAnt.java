@@ -38,7 +38,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class EmbeddedAnt
     extends AbstractLogEnabled
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( EmbeddedAnt.class );
 
     private static final String DEFAULT_EMBEDDOR_CLASS =

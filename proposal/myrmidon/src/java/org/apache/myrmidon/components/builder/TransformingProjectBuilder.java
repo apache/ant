@@ -32,10 +32,10 @@ import org.apache.myrmidon.interfaces.builder.ProjectException;
 public class TransformingProjectBuilder
     extends DefaultProjectBuilder
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( TransformingProjectBuilder.class );
 
-    private final static String STYLESHEET = "ant1convert.xsl";
+    private static final String STYLESHEET = "ant1convert.xsl";
     private Transformer m_transformer;
 
     protected Configuration parseProject( String systemID )

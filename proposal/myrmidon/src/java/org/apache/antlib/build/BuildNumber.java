@@ -33,7 +33,7 @@ import org.apache.myrmidon.api.TaskException;
 public class BuildNumber
     extends AbstractTask
 {
-    private final static Resources REZ =
+    private static final Resources REZ =
         ResourceManager.getPackageResources( BuildNumber.class );
 
     /**
