@@ -306,8 +306,6 @@
       <exclude name="${optional.package}/metamata/MMetrics*"
                unless="trax.present"/>
       <exclude name="${optional.package}/metamata/**" unless="jdk1.2+" />
-      <exclude name="${optional.package}/ManifestFile.java"
-               unless="jdk1.2+" />
       <exclude name="${optional.type.package}/depend/*.java"
                unless="bcel.present" />
       <exclude name="${util.package}/depend/*.java"
