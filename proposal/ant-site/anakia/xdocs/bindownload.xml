@@ -122,8 +122,8 @@ using</p>
 </code>
 <em>or</em><br />
 <code>
-% gpg -import KEYS<br />
-% gpg -verify jakarta-ant-bin-1.5.1.tar.gz.asc
+% gpg --import KEYS<br />
+% gpg --verify jakarta-ant-bin-1.5.1.tar.gz.asc
 </code></p>
 
 <p>Alternatively, you can verify the MD5 signature on the files.  A
