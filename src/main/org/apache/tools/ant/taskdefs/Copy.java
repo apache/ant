@@ -73,9 +73,9 @@ public class Copy extends Task {
     protected Hashtable completeDirMap = new Hashtable();
 
     protected Mapper mapperElement = null;
+    protected FileUtils fileUtils;
     private Vector filterChains = new Vector();
     private Vector filterSets = new Vector();
-    private FileUtils fileUtils;
     private String inputEncoding = null;
     private String outputEncoding = null;
     private long granularity = 0;

@@ -20,8 +20,10 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 
@@ -61,55 +63,23 @@ public class Move extends Copy {
         setOverwrite(true);
     }
 
-    /**
-     * Performs the move operation.
-     */
-    public void execute() throws BuildException {
+    // inherit doc
+    protected void validateAttributes() throws BuildException {
         if (file != null && file.isDirectory()) {
-            if (destFile != null && destDir != null) {
-                throw new BuildException("Only one of tofile and todir "
-                                         + "may be set.");
+            if ((destFile != null && destDir != null)
+                || (destFile == null && destDir == null)){
+                throw new BuildException("One and only one of tofile and todir "
+                                         + "must be set.");
             }
+            destFile = (destFile == null)
+                ? new File(destDir, file.getName()) : destFile;
+            destDir = (destDir == null)
+                ? fileUtils.getParentFile(destFile) : destDir;
 
-            if (destFile == null && destDir == null) {
-                throw new BuildException("One of tofile or todir must be set.");
-            }
-
-            destFile = (destFile != null)
-                ? destFile : new File(destDir, file.getName());
-
-            try {
-                boolean renamed = false;
-                log("Moving directory " + file
-                    + " to " + destFile, Project.MSG_INFO);
-                try {
-                    renamed =
-                        renameFile(file, destFile, filtering, forceOverwrite);
-                } catch (IOException eyeOhEx) {
-                    throw new BuildException(eyeOhEx.getMessage());
-                }
-                if (!renamed) {
-                    StringBuffer buf = new StringBuffer(
-                        "Failed to move directory ").append(
-                        file.getAbsolutePath());
-
-                    if ((getFilterChains() != null && getFilterChains().size() > 0)
-                        || (getFilterSets() != null && getFilterSets().size() > 0)
-                        || filtering) {
-                        buf.append(
-                            "; use a fileset to move directories with filtering");
-                    }
-                    throw new BuildException(buf.append('.').toString());
-                }
-            } catch (BuildException e) {
-                if (!failonerror) {
-                    log("Warning: " + e.getMessage(), Project.MSG_ERR);
-                } else {
-                    throw e;
-                }
-            }
+            completeDirMap.put(file, destFile);
+            file = null;
         } else {
-            super.execute();
+            super.validateAttributes();
         }
     }
 
@@ -128,21 +98,35 @@ public class Move extends Copy {
             while (e.hasMoreElements()) {
                 File fromDir = (File) e.nextElement();
                 File toDir = (File) completeDirMap.get(fromDir);
+                boolean renamed = false;
                 try {
                     log("Attempting to rename dir: " + fromDir
                         + " to " + toDir, verbosity);
-                    renameFile(fromDir, toDir, filtering, forceOverwrite);
+                    renamed =
+                        renameFile(fromDir, toDir, filtering, forceOverwrite);
                 } catch (IOException ioe) {
                     String msg = "Failed to rename dir " + fromDir
                         + " to " + toDir
                         + " due to " + ioe.getMessage();
                     throw new BuildException(msg, ioe, getLocation());
                 }
+                if (!renamed) {
+                    FileSet fs = new FileSet();
+                    fs.setProject(getProject());
+                    fs.setDir(fromDir);
+                    addFileset(fs);
+                    DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+                    String[] files = ds.getIncludedFiles();
+                    String[] dirs = ds.getIncludedDirectories();
+                    scan(fromDir, toDir, files, dirs);
+                }
             }
         }
-        if (fileCopyMap.size() > 0) {   // files to move
-            log("Moving " + fileCopyMap.size() + " files to "
-                + destDir.getAbsolutePath());
+        int moveCount = fileCopyMap.size();
+        if (moveCount > 0) {   // files to move
+            log("Moving " + moveCount + " file"
+                + ((moveCount == 1) ? "" : "s")
+                + " to " + destDir.getAbsolutePath());
 
             Enumeration e = fileCopyMap.keys();
             while (e.hasMoreElements()) {
@@ -325,6 +309,15 @@ public class Move extends Copy {
      * @param d the directory to delete
      */
     protected void deleteDir(File d) {
+        deleteDir(d, false);
+    }
+
+    /**
+     * Go and delete the directory tree.
+     * @param d the directory to delete
+     * @param deleteFiles whether to delete files
+     */
+    protected void deleteDir(File d, boolean deleteFiles) {
         String[] list = d.list();
         if (list == null) {
             return;
@@ -335,6 +328,9 @@ public class Move extends Copy {
             File f = new File(d, s);
             if (f.isDirectory()) {
                 deleteDir(f);
+            } else if (deleteFiles && !(f.delete())) {
+                throw new BuildException("Unable to delete file "
+                                         + f.getAbsolutePath());
             } else {
                 throw new BuildException("UNEXPECTED ERROR - The file "
                                          + f.getAbsolutePath()
@@ -370,34 +366,19 @@ public class Move extends Copy {
                                  boolean filtering, boolean overwrite)
         throws IOException, BuildException {
 
-        boolean renamed = true;
-        if ((getFilterSets() != null && getFilterSets().size() > 0)
-            || (getFilterChains() != null && getFilterChains().size() > 0)) {
-            renamed = false;
-        } else {
-            if (!filtering) {
-                // ensure that parent dir of dest file exists!
-                File parent = destFile.getParentFile();
-                if (parent != null && !parent.exists()) {
-                    parent.mkdirs();
-                }
-
-                if (destFile.exists()) {
-                    if (sourceFile.isDirectory()) {
-                     throw new BuildException(
-                        new StringBuffer("Cannot replace ").append(
-                        ((destFile.isFile()) ? "file " : "directory ")).append(
-                        destFile).append(" with directory ").append(
-                        sourceFile).toString());
-                    } else if (destFile.isFile() && !destFile.delete()) {
-                        throw new BuildException("Unable to remove existing "
-                                                 + "file " + destFile);
-                    }
-                }
-                renamed = sourceFile.renameTo(destFile);
-            } else {
-                renamed = false;
+        boolean renamed = false;
+        if ((getFilterSets().size() + getFilterChains().size() == 0)
+            && !(filtering || destFile.isDirectory())) {
+            // ensure that parent dir of dest file exists!
+            File parent = destFile.getParentFile();
+            if (parent != null && !parent.exists()) {
+                parent.mkdirs();
             }
+            if (destFile.isFile() && !destFile.delete()) {
+                throw new BuildException("Unable to remove existing "
+                                         + "file " + destFile);
+            }
+            renamed = sourceFile.renameTo(destFile);
         }
         return renamed;
     }
