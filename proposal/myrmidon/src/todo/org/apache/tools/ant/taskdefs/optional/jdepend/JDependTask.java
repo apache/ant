@@ -16,7 +16,7 @@ import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.ExecuteWatchdog;
+import org.apache.myrmidon.framework.exec.ExecuteWatchdog;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -265,14 +265,7 @@ public class JDependTask extends Task
         }
         else
         {
-            ExecuteWatchdog watchdog = createWatchdog();
-            exitValue = executeAsForked( commandline, watchdog );
-            // null watchdog means no timeout, you'd better not check with null
-            if( watchdog != null )
-            {
-                //info will be used in later version do nothing for now
-                //wasKilled = watchdog.killedProcess();
-            }
+            exitValue = executeAsForked( commandline );
         }
 
         // if there is an error/failure and that it should halt, stop everything otherwise
@@ -302,7 +295,7 @@ public class JDependTask extends Task
      * @exception TaskException Description of Exception
      */
     // JL: comment extracted from JUnitTask (and slightly modified)
-    public int executeAsForked( CommandlineJava commandline, ExecuteWatchdog watchdog )
+    public int executeAsForked( CommandlineJava commandline )
         throws TaskException
     {
         // if not set, auto-create the ClassPath from the project
@@ -336,7 +329,8 @@ public class JDependTask extends Task
             commandline.createArgument().setValue( f.getPath() );
         }
 
-        Execute execute = new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ), watchdog );
+        Execute execute =
+            new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ) );
         execute.setCommandline( commandline.getCommandline() );
         if( getDir() != null )
         {
@@ -421,24 +415,6 @@ public class JDependTask extends Task
         }
         jdepend.analyze();
         return SUCCESS;
-    }
-
-    /**
-     * @return <tt>null</tt> if there is a timeout value, otherwise the watchdog
-     *      instance.
-     * @exception TaskException Description of Exception
-     */
-    protected ExecuteWatchdog createWatchdog()
-        throws TaskException
-    {
-
-        return null;
-        /*
-         * if (getTimeout() == null){
-         * return null;
-         * }
-         * return new ExecuteWatchdog(getTimeout().intValue());
-         */
     }
 
     public static class FormatAttribute extends EnumeratedAttribute
