@@ -164,6 +164,7 @@ public class Main {
             }
             System.exit(1);
         } catch(Throwable exc) {
+            exc.printStackTrace();
             printMessage(exc);
             System.exit(1);
         }
@@ -424,7 +425,11 @@ public class Main {
             if ( !Project.JAVA_1_0.equals(Project.getJavaVersion()) &&
                 !Project.JAVA_1_1.equals(Project.getJavaVersion()) ){
                 oldsm = System.getSecurityManager();
-                System.setSecurityManager(new NoExitSecurityManager());
+
+                //SecurityManager can not be installed here for backwards 
+                //compatability reasons (PD). Needs to be loaded prior to
+                //ant class if we are going to implement it.
+                //System.setSecurityManager(new NoExitSecurityManager());
             }
             try {
                 System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
@@ -476,9 +481,11 @@ public class Main {
             }
             finally {
                 // put back the original security manager
+                //The following will never eval to true. (PD)
                 if (oldsm != null){
                     System.setSecurityManager(oldsm);
                 }
+
                 System.setOut(out);
                 System.setErr(err);
             }
