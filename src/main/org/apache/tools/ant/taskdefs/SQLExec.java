@@ -219,14 +219,14 @@ public class SQLExec extends Task {
             }
             
         } catch(IOException e){
-            if (!autocommit) {
+            if (!autocommit && conn != null) {
                 try {
                     conn.rollback();
                 } catch (SQLException ex) {}
             }
             throw new BuildException(e, location);
         } catch(SQLException e){
-            if (!autocommit) {
+            if (!autocommit && conn != null) {
                 try {
                     conn.rollback();
                 } catch (SQLException ex) {}
