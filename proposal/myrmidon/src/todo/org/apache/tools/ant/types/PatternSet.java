@@ -206,7 +206,7 @@ public class PatternSet
      */
     private NameEntry addPatternToList( final ArrayList list )
     {
-        final NameEntry result = new NameEntry();
+        final NameEntry result = new NameEntry( this );
         list.add( result );
         return result;
     }
@@ -338,78 +338,4 @@ public class PatternSet
         }
     }
 
-    /**
-     * inner class to hold a name on list. "If" and "Unless" attributes may be
-     * used to invalidate the entry based on the existence of a property
-     * (typically set thru the use of the Available task).
-     */
-    public class NameEntry
-    {
-        private String ifCond;
-        private String name;
-        private String unlessCond;
-
-        public void setIf( String cond )
-        {
-            ifCond = cond;
-        }
-
-        public void setName( String name )
-        {
-            this.name = name;
-        }
-
-        public void setUnless( String cond )
-        {
-            unlessCond = cond;
-        }
-
-        public String getName()
-        {
-            return name;
-        }
-
-        public String evalName( Project p )
-        {
-            return valid( p ) ? name : null;
-        }
-
-        public String toString()
-        {
-            StringBuffer buf = new StringBuffer( name );
-            if( ( ifCond != null ) || ( unlessCond != null ) )
-            {
-                buf.append( ":" );
-                String connector = "";
-
-                if( ifCond != null )
-                {
-                    buf.append( "if->" );
-                    buf.append( ifCond );
-                    connector = ";";
-                }
-                if( unlessCond != null )
-                {
-                    buf.append( connector );
-                    buf.append( "unless->" );
-                    buf.append( unlessCond );
-                }
-            }
-
-            return buf.toString();
-        }
-
-        private boolean valid( Project p )
-        {
-            if( ifCond != null && p.getProperty( ifCond ) == null )
-            {
-                return false;
-            }
-            else if( unlessCond != null && p.getProperty( unlessCond ) != null )
-            {
-                return false;
-            }
-            return true;
-        }
-    }
 }

@@ -13,6 +13,7 @@ import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.NameEntry;
 
 /**
  * This is an abstract task that should be used by all those tasks that require
@@ -26,9 +27,9 @@ import org.apache.tools.ant.types.PatternSet;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
-public abstract class MatchingTask extends Task
+public abstract class MatchingTask
+    extends Task
 {
-
     protected boolean useDefaultExcludes = true;
     protected FileSet fileset = new FileSet();
 
@@ -96,7 +97,7 @@ public abstract class MatchingTask extends Task
      *
      * @return Description of the Returned Value
      */
-    public PatternSet.NameEntry createExclude()
+    public NameEntry createExclude()
         throws TaskException
     {
         return fileset.createExclude();
@@ -107,7 +108,7 @@ public abstract class MatchingTask extends Task
      *
      * @return Description of the Returned Value
      */
-    public PatternSet.NameEntry createExcludesFile()
+    public NameEntry createExcludesFile()
         throws TaskException
     {
         return fileset.createExcludesFile();
@@ -118,7 +119,7 @@ public abstract class MatchingTask extends Task
      *
      * @return Description of the Returned Value
      */
-    public PatternSet.NameEntry createInclude()
+    public NameEntry createInclude()
         throws TaskException
     {
         return fileset.createInclude();
@@ -129,7 +130,7 @@ public abstract class MatchingTask extends Task
      *
      * @return Description of the Returned Value
      */
-    public PatternSet.NameEntry createIncludesFile()
+    public NameEntry createIncludesFile()
         throws TaskException
     {
         return fileset.createIncludesFile();

@@ -15,6 +15,7 @@ import org.apache.tools.ant.taskdefs.exec.ExecuteOn;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.NameEntry;
 
 /**
  * Chmod equivalent for unix-like environments.
@@ -118,7 +119,7 @@ public class Chmod extends ExecuteOn
      *
      * @return Description of the Returned Value
      */
-    public PatternSet.NameEntry createExclude()
+    public NameEntry createExclude()
         throws TaskException
     {
         defaultSetDefined = true;
@@ -130,7 +131,7 @@ public class Chmod extends ExecuteOn
      *
      * @return Description of the Returned Value
      */
-    public PatternSet.NameEntry createInclude()
+    public NameEntry createInclude()
         throws TaskException
     {
         defaultSetDefined = true;

@@ -167,7 +167,7 @@ public class FileSet
     /**
      * add a name entry on the exclude list
      */
-    public PatternSet.NameEntry createExclude()
+    public NameEntry createExclude()
     {
         return m_defaultPatterns.createExclude();
     }
@@ -175,7 +175,7 @@ public class FileSet
     /**
      * add a name entry on the include files list
      */
-    public PatternSet.NameEntry createExcludesFile()
+    public NameEntry createExcludesFile()
     {
         return m_defaultPatterns.createExcludesFile();
     }
@@ -183,7 +183,7 @@ public class FileSet
     /**
      * add a name entry on the include list
      */
-    public PatternSet.NameEntry createInclude()
+    public NameEntry createInclude()
     {
         return m_defaultPatterns.createInclude();
     }
@@ -191,7 +191,7 @@ public class FileSet
     /**
      * add a name entry on the include files list
      */
-    public PatternSet.NameEntry createIncludesFile()
+    public NameEntry createIncludesFile()
     {
         return m_defaultPatterns.createIncludesFile();
     }
