@@ -91,15 +91,6 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
     }
 
     /**
-     * Set the class loader.
-     * Not used
-     * @param classLoader a <code>ClassLoader</code> value
-     */
-    public void setAntlibClassLoader(ClassLoader classLoader) {
-        // Ignore
-    }
-
-    /**
      * Add a nested task to ExtendType
      * @param nestedTask  Nested task/type to extend
      */
