@@ -157,8 +157,8 @@ public class Java extends Task {
             + "not compatible with spawn");
         }
         if (fork) {
-            if(perm != null) {
-                log("Permissions can not be set this way in forked mode.",Project.MSG_WARN);
+            if (perm != null) {
+                log("Permissions can not be set this way in forked mode.", Project.MSG_WARN);
             }
             log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         } else {

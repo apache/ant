@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -82,7 +82,7 @@ public class RecorderEntry implements BuildLogger {
     /** The output PrintStream to record to.  */
     private PrintStream out = null;
     /** The start time of the last know target.  */
-    private long targetStartTime = 0l;
+    private long targetStartTime = 0L;
     /** Strip task banners if true.  */
     private boolean emacsMode = false;
 

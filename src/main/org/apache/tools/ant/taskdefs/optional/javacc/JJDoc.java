@@ -73,7 +73,7 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *
  * @author Jene Jasper <a href="mailto:jjasper@abz.nl">jjasper@abz.nl</a>
  * @author thomas.haas@softwired-inc.com
- * @author Michael Saunders 
+ * @author Michael Saunders
  *         <a href="mailto:michael@amtec.com">michael@amtec.com</a>
  */
 public class JJDoc extends Task {
@@ -156,12 +156,12 @@ public class JJDoc extends Task {
         }
 
         if (outputFile != null) {
-            cmdl.createArgument() .setValue("-" + OUTPUT_FILE + ":" 
+            cmdl.createArgument() .setValue("-" + OUTPUT_FILE + ":"
                                             + outputFile.replace('\\', '/'));
         }
 
         // use the directory containing the target as the output directory
-        File javaFile = new File(createOutputFileName(target, outputFile, 
+        File javaFile = new File(createOutputFileName(target, outputFile,
                                                       plainText));
 
         if (javaFile.exists()
@@ -173,7 +173,7 @@ public class JJDoc extends Task {
 
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
-        cmdl.setClassname(JavaCC.getMainClass(javaccHome, 
+        cmdl.setClassname(JavaCC.getMainClass(javaccHome,
                                               JavaCC.TASKDEF_TYPE_JJDOC));
 
         final Path classpath = cmdl.createClasspath(getProject());
@@ -205,7 +205,7 @@ public class JJDoc extends Task {
     private String createOutputFileName(File target, String optionalOutputFile,
                                         boolean plainText) {
         String suffix = DEFAULT_SUFFIX_HTML;
-        String javaccFile = target.getAbsolutePath().replace('\\','/');
+        String javaccFile = target.getAbsolutePath().replace('\\', '/');
 
         if (plainText) {
             suffix = DEFAULT_SUFFIX_TEXT;
@@ -228,12 +228,12 @@ public class JJDoc extends Task {
                 if (currentSuffix.equals(suffix)) {
                     optionalOutputFile = javaccFile + suffix;
                 } else {
-                    optionalOutputFile = javaccFile.substring(0, suffixPos) 
+                    optionalOutputFile = javaccFile.substring(0, suffixPos)
                         + suffix;
                 }
             }
         } else {
-            optionalOutputFile = optionalOutputFile.replace('\\','/');
+            optionalOutputFile = optionalOutputFile.replace('\\', '/');
         }
 
         return (getProject().getBaseDir() + "/" + optionalOutputFile)

@@ -114,7 +114,7 @@ public class FileUtils {
     /**
      * the granularity of timestamps under FAT
      */
-    public static final long FAT_FILE_TIMESTAMP_GRANULARITY=2000;
+    public static final long FAT_FILE_TIMESTAMP_GRANULARITY = 2000;
 
 
     // stolen from FilePathToURI of the Xerces-J team
@@ -1334,7 +1334,7 @@ public class FileUtils {
     }
 
     public long getFileTimestampGranularity() {
-        if(Os.isFamily("dos")) {
+        if (Os.isFamily("dos")) {
             return FAT_FILE_TIMESTAMP_GRANULARITY;
         } else {
             return 0;

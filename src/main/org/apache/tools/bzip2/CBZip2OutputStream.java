@@ -204,10 +204,10 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
 
                 weight[nNodes] = ((weight[n1] & 0xffffff00)
                                   + (weight[n2] & 0xffffff00))
-                    | (1 + (((weight[n1] & 0x000000ff) >
-                             (weight[n2] & 0x000000ff)) ?
-                            (weight[n1] & 0x000000ff) :
-                            (weight[n2] & 0x000000ff)));
+                    | (1 + (((weight[n1] & 0x000000ff)
+                            > (weight[n2] & 0x000000ff))
+                            ? (weight[n1] & 0x000000ff)
+                            : (weight[n2] & 0x000000ff)));
 
                 parent[nNodes] = -1;
                 nHeap++;
@@ -1246,8 +1246,8 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
                         vv = runningOrder[i];
                         j = i;
                         while ((ftab[((runningOrder[j - h]) + 1) << 8]
-                                - ftab[(runningOrder[j - h]) << 8]) >
-                               (ftab[((vv) + 1) << 8] - ftab[(vv) << 8])) {
+                                - ftab[(runningOrder[j - h]) << 8])
+                                > (ftab[((vv) + 1) << 8] - ftab[(vv) << 8])) {
                             runningOrder[j] = runningOrder[j - h];
                             j = j - h;
                             if (j <= (h - 1)) {
@@ -1535,9 +1535,9 @@ public class CBZip2OutputStream extends OutputStream implements BZip2Constants {
       because the number of elems to sort is
       usually small, typically <= 20.
     */
-    private int[] incs = { 1, 4, 13, 40, 121, 364, 1093, 3280,
+    private int[] incs = {1, 4, 13, 40, 121, 364, 1093, 3280,
                            9841, 29524, 88573, 265720,
-                           797161, 2391484 };
+                           797161, 2391484};
 
     private void allocateCompressStructures () {
         int n = baseBlockSize * blockSize100k;

@@ -394,7 +394,7 @@ public abstract class DotnetCompile
      *@return    The Parameter to CSC
      */
     protected String getIncludeDefaultReferencesParameter() {
-        if(standardLib==null) {
+        if (standardLib == null) {
             return "/nostdlib" + (includeDefaultReferences ? "-" : "+");
         } else {
             return null;
@@ -868,7 +868,7 @@ public abstract class DotnetCompile
         if (outputFile != null && outputFile.isDirectory()) {
             throw new BuildException("destFile cannot be a directory");
         }
-        if(getExecutable()==null) {
+        if (getExecutable() == null) {
             throw new BuildException("There is no executable defined for this task");
         }
     }

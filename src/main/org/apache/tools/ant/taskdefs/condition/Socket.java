@@ -108,13 +108,11 @@ public class Socket extends ProjectComponent implements Condition {
             s = new java.net.Socket(server, port);
         } catch (IOException e) {
             return false;
-        }
-        finally {
-          if (s != null){
+        } finally {
+          if (s != null) {
             try {
               s.close();
-            }
-            catch (IOException ioe){
+            } catch (IOException ioe) {
               // Intentionally left blank
             }
           }

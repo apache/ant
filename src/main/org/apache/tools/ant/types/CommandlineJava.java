@@ -96,13 +96,13 @@ public class CommandlineJava implements Cloneable {
     /**
      *  any assertions to make? Currently only supported in forked JVMs
      */
-    private Assertions assertions=null;
+    private Assertions assertions = null;
 
     /**
      * Indicate whether it will execute a jar file or not, in this case
      * the first vm option must be a -jar and the 'executable' is a jar file.
      */
-     private boolean executeJar  = false;
+     private boolean executeJar = false;
 
     /**
      * Specialized Environment class for System properties
@@ -119,13 +119,13 @@ public class CommandlineJava implements Cloneable {
          */
         public String[] getVariables() throws BuildException {
 
-            List definitions=new LinkedList();
-            ListIterator list=definitions.listIterator();
+            List definitions = new LinkedList();
+            ListIterator list = definitions.listIterator();
             addDefinitionsToList(list);
-            if(definitions.size()==0) {
+            if (definitions.size() == 0) {
                 return null;
             } else {
-                return (String[])definitions.toArray(new String[0]);
+                return (String[]) definitions.toArray(new String[0]);
             }
         }
 
@@ -135,8 +135,8 @@ public class CommandlineJava implements Cloneable {
          */
         public void addDefinitionsToList(ListIterator listIt) {
             String[] props = super.getVariables();
-            if(props!=null) {
-                for (int i=0; i < props.length; i++) {
+            if (props != null) {
+                for (int i = 0; i < props.length; i++) {
                     listIt.add("-D" + props[i]);
                 }
             }
@@ -379,12 +379,12 @@ public class CommandlineJava implements Cloneable {
      */
     public String[] getCommandline() {
         //create the list
-        List commands=new LinkedList();
+        List commands = new LinkedList();
         final ListIterator listIterator = commands.listIterator();
         //fill it
         addCommandsToList(listIterator);
         //convert to an array
-        return (String[])commands.toArray(new String[0]);
+        return (String[]) commands.toArray(new String[0]);
     }
 
     /**
@@ -503,8 +503,8 @@ public class CommandlineJava implements Cloneable {
             size++;
         }
         //assertions take up space too
-        if(getAssertions()!=null) {
-            size+=getAssertions().size();
+        if (getAssertions() != null) {
+            size += getAssertions().size();
         }
         return size;
     }
@@ -582,7 +582,7 @@ public class CommandlineJava implements Cloneable {
             if (bootclasspath != null) {
                 c.bootclasspath = (Path) bootclasspath.clone();
             }
-            if( assertions != null ) {
+            if (assertions != null) {
                 c.assertions = (Assertions) assertions.clone();
             }
             return c;

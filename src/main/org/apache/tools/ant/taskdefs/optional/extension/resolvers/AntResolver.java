@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,8 +99,7 @@ public class AntResolver
             final File dir =
                 m_antfile.getParentFile().getCanonicalFile();
             ant.setDir(dir);
-        }
-        catch (final IOException ioe) {
+        } catch (final IOException ioe) {
             throw new BuildException(ioe.getMessage(), ioe);
         }
 

@@ -244,7 +244,7 @@ public class NetCommand {
         }
         File dir = owner.getProject().getBaseDir();
         if (directory != null) {
-            dir=directory;
+            dir = directory;
         }
 
         ExecuteStreamHandler handler = new LogStreamHandler(owner,

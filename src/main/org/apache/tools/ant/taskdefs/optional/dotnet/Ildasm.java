@@ -105,7 +105,7 @@ public class Ildasm extends Task {
     /**
      * progress bar switch
      */
-    private boolean progressBar=false;
+    private boolean progressBar = false;
 
     /**
      * what is our encoding
@@ -116,45 +116,45 @@ public class Ildasm extends Task {
      * /bytes flag for byte markup
      */
 
-    private boolean bytes=false;
+    private boolean bytes = false;
 
     /**
      * line numbers? /linenum
      */
-    private boolean linenumbers=false;
+    private boolean linenumbers = false;
 
     /**
      * /raweh flag for raw exception handling
      */
-    private boolean rawExceptionHandling=false;
+    private boolean rawExceptionHandling = false;
 
     /**
      * show the source; /source
      */
-    private boolean showSource=false;
+    private boolean showSource = false;
 
     /**
      * /quoteallnames to quote all names
      */
-    private boolean quoteallnames=false;
+    private boolean quoteallnames = false;
 
     /**
      * /header for header information
      */
-    private boolean header=false;
+    private boolean header = false;
 
     /**
      * when false, sets the /noil attribute
      * to suppress assembly info
      */
-    private boolean assembler=true;
+    private boolean assembler = true;
 
     /**
      * include metadata
      * /tokens
      */
 
-    private boolean metadata=false;
+    private boolean metadata = false;
 
     /**
      * what visibility do we want.
@@ -171,7 +171,7 @@ public class Ildasm extends Task {
     /**
      * override for the executable
      */
-    private String executable="ildasm";
+    private String executable = "ildasm";
 
     /**
      *  name of the directory for resources to be created. We cannot control
@@ -338,13 +338,13 @@ public class Ildasm extends Task {
      *  verify that source and dest are ok
      */
     private void validate() {
-        if(sourceFile==null || !sourceFile.exists() || !sourceFile.isFile()) {
+        if (sourceFile == null || !sourceFile.exists() || !sourceFile.isFile()) {
             throw new BuildException("invalid source");
         }
-        if(destFile==null || destFile.isDirectory()) {
+        if (destFile == null || destFile.isDirectory()) {
             throw new BuildException("invalid dest");
         }
-        if(resourceDir!=null
+        if (resourceDir != null
                 && (!resourceDir.exists() || !resourceDir.isDirectory())) {
             throw new BuildException("invalid resource directory");
         }
@@ -355,13 +355,13 @@ public class Ildasm extends Task {
      * @return
      */
     private boolean isDisassemblyNeeded() {
-        if(!destFile.exists()) {
+        if (!destFile.exists()) {
             return true;
         }
-        long sourceTime=sourceFile.lastModified();
-        long destTime=destFile.lastModified();
-        return sourceTime>(destTime+ FileUtils.newFileUtils().getFileTimestampGranularity());
-            
+        long sourceTime = sourceFile.lastModified();
+        long destTime = destFile.lastModified();
+        return sourceTime > (destTime + FileUtils.newFileUtils().getFileTimestampGranularity());
+
     }
     /**
      * do the work
@@ -373,11 +373,11 @@ public class Ildasm extends Task {
         command.setFailOnError(true);
         //fill in args
         command.addArgument("/text");
-        command.addArgument("/out="+destFile.toString());
-        if(!progressBar) {
+        command.addArgument("/out=" + destFile.toString());
+        if (!progressBar) {
             command.addArgument("/nobar");
         }
-        if(linenumbers) {
+        if (linenumbers) {
             command.addArgument("/linenum");
         }
         if (showSource) {
@@ -395,7 +395,7 @@ public class Ildasm extends Task {
         if (metadata) {
             command.addArgument("/tokens");
         }
-        command.addArgument("/item:",item);
+        command.addArgument("/item:", item);
         if (rawExceptionHandling) {
             command.addArgument("/raweh");
         }
@@ -403,16 +403,16 @@ public class Ildasm extends Task {
         if (bytes) {
             command.addArgument("/bytes");
         }
-        command.addArgument("/vis:",visibility);
+        command.addArgument("/vis:", visibility);
 
         //add the source file
         command.addArgument(sourceFile.getAbsolutePath());
 
         //determine directory: resourceDir if set,
         //the dir of the destFile if not
-        File execDir=resourceDir;
-        if(execDir==null) {
-            execDir=destFile.getParentFile();
+        File execDir = resourceDir;
+        if (execDir == null) {
+            execDir = destFile.getParentFile();
         }
         command.setDirectory(execDir);
 
@@ -421,7 +421,7 @@ public class Ildasm extends Task {
             command.runCommand();
         } catch (BuildException e) {
             //forcibly delete the output file in case of trouble
-            if(destFile.exists()) {
+            if (destFile.exists()) {
                 destFile.delete();
             }
             //then rethrow the exception
@@ -434,7 +434,7 @@ public class Ildasm extends Task {
      * encoding options; the default is ascii
      */
     public static class EncodingTypes extends EnumeratedAttribute {
-        public final static String UNICODE= "unicode";
+        public final static String UNICODE = "unicode";
         public final static String UTF8 = "utf8";
         public final static String ASCII = "ascii";
         public String[] getValues() {
@@ -451,7 +451,7 @@ public class Ildasm extends Task {
          * @return
          */
         public static String getEncodingOption(String enumValue) {
-            if(UNICODE.equals(enumValue)) {
+            if (UNICODE.equals(enumValue)) {
                 return "/unicode";
             }
             if (UTF8.equals(enumValue)) {

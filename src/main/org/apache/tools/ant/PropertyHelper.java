@@ -156,7 +156,7 @@ public class PropertyHelper {
      *
      * @return the project's property helper.
      */
-    public synchronized static 
+    public static synchronized
         PropertyHelper getPropertyHelper(Project project) {
         PropertyHelper helper
             = (PropertyHelper) project.getReference("ant.PropertyHelper");

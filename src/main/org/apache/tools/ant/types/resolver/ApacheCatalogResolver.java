@@ -145,11 +145,9 @@ public class ApacheCatalogResolver extends CatalogResolver {
 
         try {
             catalog.parseCatalog(file);
-        }
-        catch (MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
             throw new BuildException(ex);
-        }
-        catch (IOException ex) {
+        } catch (IOException ex) {
             throw new BuildException(ex);
         }
     }

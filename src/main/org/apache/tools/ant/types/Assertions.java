@@ -187,7 +187,7 @@ public class Assertions extends DataType {
      * @return
      */
     private int getFinalSize() {
-        return assertionList.size()+ (enableSystemAssertions!=null?1:0);
+        return assertionList.size() + (enableSystemAssertions != null ? 1 : 0);
     }
 
     /**
@@ -254,16 +254,16 @@ public class Assertions extends DataType {
      * @throws CloneNotSupportedException
      */
     protected Object clone() throws CloneNotSupportedException {
-        Assertions that=(Assertions) super.clone();
-        that.assertionList=(ArrayList) assertionList.clone();
-		return that;
+        Assertions that = (Assertions) super.clone();
+        that.assertionList = (ArrayList) assertionList.clone();
+        return that;
     }
 
     /**
      * base class for our assertion elements.
      */
 
-    public static abstract class BaseAssertion {
+    public abstract static class BaseAssertion {
         private String packageName;
         private String className;
 

@@ -117,24 +117,24 @@ public class Exit extends Task {
      */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            String text=null;
+            String text = null;
             if (message != null && message.length() > 0) {
-                text=message;
+                text = message;
             } else {
 
-                if(getProject().getProperty(ifCondition) != null) {
-                    text="if="+ifCondition;
+                if (getProject().getProperty(ifCondition) != null) {
+                    text = "if=" + ifCondition;
                 }
-                if (unlessCondition!=null && unlessCondition.length()>0
+                if (unlessCondition != null && unlessCondition.length() > 0
                         && getProject().getProperty(unlessCondition) == null) {
                     if (text == null) {
                         text = "";
                     } else {
-                        text+=" and ";
+                        text += " and ";
                     }
-                    text+="unless="+unlessCondition;
+                    text += "unless=" + unlessCondition;
                 } else {
-                    if(text==null) {
+                    if (text == null) {
                         text = "No message";
                     }
                 }

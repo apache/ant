@@ -144,8 +144,9 @@ public class GenericHotDeploymentTool extends AbstractHotDeploymentTool {
     public void validateAttributes() throws BuildException {
         super.validateAttributes();
 
-        if (className == null)
+        if (className == null) {
             throw new BuildException("The classname attribute must be set");
+        }
     }
 
     /**

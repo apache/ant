@@ -303,11 +303,11 @@ public class Commandline implements Cloneable {
      * Returns the executable and all defined arguments.
      */
     public String[] getCommandline() {
-        List commands=new LinkedList();
+        List commands = new LinkedList();
         ListIterator list = commands.listIterator();
         addCommandToList(list);
         final String[] result = new String[commands.size()];
-        return (String[])commands.toArray(result);
+        return (String[]) commands.toArray(result);
     }
 
     /**
@@ -316,7 +316,7 @@ public class Commandline implements Cloneable {
      * @since Ant 1.6
      */
     public void addCommandToList(ListIterator list) {
-        if(executable!=null) {
+        if (executable != null) {
             list.add(executable);
         }
         addArgumentsToList(list);
@@ -331,7 +331,7 @@ public class Commandline implements Cloneable {
         List result = new ArrayList(arguments.size() * 2);
         addArgumentsToList(result.listIterator());
         String [] res = new String[result.size()];
-        return (String[])result.toArray(res);
+        return (String[]) result.toArray(res);
     }
 
     /**
@@ -374,7 +374,7 @@ public class Commandline implements Cloneable {
         if (argument.indexOf("\"") > -1) {
             if (argument.indexOf("\'") > -1) {
                 throw new BuildException("Can\'t handle single and double"
-                        +" quotes in same argument");
+                        + " quotes in same argument");
             } else {
                 return '\'' + argument + '\'';
             }

@@ -136,9 +136,8 @@ public class P4Submit extends P4Base {
                             found = true;
                         }
                     }
-                }
-                        // NumberFormatException or ArrayOutOfBondsException could happen here
-                catch (Exception e) {
+                // NumberFormatException or ArrayOutOfBondsException could happen here
+                } catch (Exception e) {
                     String msg = "Failed to parse " + line  + "\n"
                             + " due to " + e.getMessage();
                     throw new BuildException(msg, e, getLocation());

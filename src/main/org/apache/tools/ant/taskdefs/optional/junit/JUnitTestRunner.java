@@ -318,16 +318,16 @@ public class JUnitTestRunner implements TestListener {
                 }
                 perm = null;
             } else {
-                if(perm != null) {
+                if (perm != null) {
                     perm.setSecurityManager();
                 }
             }
-            
+
 
             try {
                 suite.run(res);
             } finally {
-                if(perm != null) {
+                if (perm != null) {
                     perm.restoreSecurityManager();
                 }
                 if (savedOut != null) {
@@ -413,7 +413,7 @@ public class JUnitTestRunner implements TestListener {
             res.stop();
         }
     }
-    
+
     /**
      * Permissions for the test run.
      * @since Ant 1.6

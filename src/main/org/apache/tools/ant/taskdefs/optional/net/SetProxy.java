@@ -301,17 +301,13 @@ public class SetProxy extends Task {
             Method reset = c.getMethod("resetProperties", null);
             reset.invoke(null, null);
             return true;
-        }
-        catch (ClassNotFoundException cnfe) {
+        } catch (ClassNotFoundException cnfe) {
             return false;
-        }
-        catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException e) {
             return false;
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             return false;
-        }
-        catch (InvocationTargetException e) {
+        } catch (InvocationTargetException e) {
             return false;
         }
     }

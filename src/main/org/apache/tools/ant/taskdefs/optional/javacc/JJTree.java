@@ -308,7 +308,7 @@ public class JJTree extends Task {
                                         String outputDirectory) {
         optionalOutputFile = validateOutputFile(optionalOutputFile,
                                                 outputDirectory);
-        String jjtreeFile = target.getAbsolutePath().replace('\\','/');
+        String jjtreeFile = target.getAbsolutePath().replace('\\', '/');
 
         if ((optionalOutputFile == null) || optionalOutputFile.equals("")) {
             int filePos = jjtreeFile.lastIndexOf("/");
@@ -340,7 +340,7 @@ public class JJTree extends Task {
         return (outputDirectory + "/" + optionalOutputFile).replace('\\', '/');
     }
 
- /*   
+ /*
   * Not used anymore
     private boolean isAbsolute(String fileName) {
         return (fileName.startsWith("/") || (new File(fileName).isAbsolute()));
@@ -357,8 +357,8 @@ public class JJTree extends Task {
      * @return
      * @throws BuildException
      */
-    private String validateOutputFile(String outputFile, 
-                                      String outputDirectory) 
+    private String validateOutputFile(String outputFile,
+                                      String outputDirectory)
         throws BuildException {
         if (outputFile == null) {
             return null;

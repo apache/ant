@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -101,9 +101,9 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  @return A Path object representing the classpath to be used.
      */
     public Path createClasspath() {
-        if (classpath == null)
+        if (classpath == null) {
             classpath = new Path(task.getProject());
-
+        }
         return classpath.createPath();
     }
 
@@ -126,14 +126,17 @@ public abstract class AbstractHotDeploymentTool implements HotDeploymentTool {
      *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
     public void validateAttributes() throws BuildException {
-        if (task.getAction() == null)
+        if (task.getAction() == null) {
             throw new BuildException("The \"action\" attribute must be set");
+        }
 
-        if (!isActionValid())
+        if (!isActionValid()) {
             throw new BuildException("Invalid action \"" + task.getAction() + "\" passed");
+        }
 
-        if (classpath == null)
+        if (classpath == null) {
             throw new BuildException("The classpath attribute must be set");
+        }
     }
 
     /**

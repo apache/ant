@@ -106,7 +106,7 @@ public class JAXPUtils {
      *
      * @since Ant 1.5
      */
-    public synchronized static SAXParserFactory getParserFactory()
+    public static synchronized SAXParserFactory getParserFactory()
         throws BuildException {
 
         if (parserFactory == null) {
@@ -123,7 +123,7 @@ public class JAXPUtils {
      *
      * @since Ant 1.6
      */
-    public synchronized static SAXParserFactory getNSParserFactory()
+    public static synchronized SAXParserFactory getNSParserFactory()
         throws BuildException {
 
         if (nsParserFactory == null) {

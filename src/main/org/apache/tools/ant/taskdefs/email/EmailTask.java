@@ -602,8 +602,7 @@ public class EmailTask
             if (failOnError) {
                 throw e;
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
           log("Failed to send email", Project.MSG_WARN);
           if (failOnError) {
             throw new BuildException(e);

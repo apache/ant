@@ -83,7 +83,7 @@ public class Scale extends TransformOperation implements DrawOperation {
     /**
      *  Sets the behaviour regarding the image proportions.
      */
-    public void setProportions(ProportionsAttribute pa){
+    public void setProportions(ProportionsAttribute pa) {
         proportions = pa.getValue();
     }
 
@@ -139,23 +139,20 @@ public class Scale extends TransformOperation implements DrawOperation {
             y_fl = (y_fl / image.getHeight());
         }
 
-        if("width".equals(proportions)){
+        if ("width".equals(proportions)) {
             y_fl = x_fl;
-        }
-        else if("height".equals(proportions)){
+        } else if ("height".equals(proportions)) {
             x_fl = y_fl;
-        }
-        else if("fit".equals(proportions)){
-            x_fl = y_fl = Math.min(x_fl,y_fl);
-        }
-        else if("cover".equals(proportions)){
-            x_fl = y_fl = Math.max(x_fl,y_fl);
+        } else if ("fit".equals(proportions)) {
+            x_fl = y_fl = Math.min(x_fl, y_fl);
+        } else if ("cover".equals(proportions)) {
+            x_fl = y_fl = Math.max(x_fl, y_fl);
         }
 
         pb.add(new Float(x_fl));
         pb.add(new Float(y_fl));
 
-        log("\tScaling to " + (x_fl*100) + "% x " + (y_fl*100)+ "%");
+        log("\tScaling to " + (x_fl * 100) + "% x " + (y_fl * 100) + "%");
 
         return JAI.create("scale", pb);
     }
