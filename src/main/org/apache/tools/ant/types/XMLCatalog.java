@@ -63,6 +63,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.AntClassLoader;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -90,7 +91,8 @@ import org.apache.tools.ant.util.FileUtils;
  * <p>Possible future extension could allow a catalog file instead of nested
  * elements, or use Norman Walsh's entity resolver from xml-commons</p>
  *
- * @author  dIon Gillard
+ * @author dIon Gillard
+ * @author Erik Hatcher
  * @version $Id$
  */
 public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
@@ -101,7 +103,9 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
     
     /** holds dtd/entity objects until needed */
     private Vector elements = new Vector();
-    
+
+    private Path classpath;
+
     //-- Methods ---------------------------------------------------------------
     
     /**
@@ -110,7 +114,14 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
     private Vector getElements() {
         return elements;
     }
-    
+
+    /**
+     * @return the classpath
+     */
+    private Path getClasspath() {
+        return classpath;
+    }
+
     /**
      * Set the list of DTDLocation object sin the catalog
      *
@@ -128,7 +139,44 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
     private void addElement(DTDLocation aDTD) {
         getElements().addElement(aDTD);
     }
-    
+
+    /**
+     * Allows nested classpath elements
+     */
+    public Path createClasspath() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        if (this.classpath == null) {
+            this.classpath = new Path(getProject());
+        }
+        return this.classpath.createPath();
+    }
+
+    /**
+     * Allows simple classpath string
+     */
+    public void setClasspath(Path classpath) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+
+    /**
+     * Allows classpath reference
+     */
+    public void setClasspathRef(Reference r) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        createClasspath().setRefid(r);
+    }
+
     /**
      * Creates the nested <code>&lt;dtd&gt;</code> element.
      *
@@ -140,6 +188,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
         if (isReference()) {
             throw noChildrenAllowed();
         }
+
         getElements().addElement(dtd);
     }
     
@@ -164,12 +213,17 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
             throw noChildrenAllowed();
         }
 
+        // Add all nested elements to our catalog
         Vector newElements = catalog.getElements();
         Vector ourElements = getElements();
         Enumeration enum = newElements.elements();
         while (enum.hasMoreElements()) {
             ourElements.addElement(enum.nextElement());
         }
+
+        // Append the classpath of the nested catalog
+        Path nestedClasspath = catalog.getClasspath();
+        createClasspath().append(nestedClasspath);
     }
 
     /**
@@ -193,7 +247,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
             XMLCatalog catalog = (XMLCatalog) o;
             setElements(catalog.getElements());
         } else {
-            String msg = r.getRefId() + " doesn\'t refer to an XMLCatalog";
+            String msg = r.getRefId() + " does not refer to an XMLCatalog";
             throw new BuildException(msg);
         }
 
@@ -212,7 +266,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
             log("Matching DTD found for publicId: '" + publicId +
                 "' location: '" + matchingDTD.getLocation() + "'",
                 Project.MSG_DEBUG);
-            File dtdFile = new File(matchingDTD.getLocation());
+            File dtdFile = project.resolveFile(matchingDTD.getLocation());
             if (dtdFile.exists() && dtdFile.canRead()) {
                 source = new InputSource(new FileInputStream(dtdFile));
                 URL dtdFileURL = fileUtils.getFileURL(dtdFile);
@@ -220,13 +274,15 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
                 log("matched a readable file", Project.MSG_DEBUG);
             } else {
                 // check if publicId is a resource
-                // FIXME: ClassLoader: should this be context?
-                ClassLoader loader = LoaderUtils.getContextClassLoader();
-                if (loader == null) {
-                    loader = getClass().getClassLoader();
+
+                AntClassLoader loader = null;
+                if (classpath != null) {
+                    loader = new AntClassLoader(project, classpath);
+                } else {
+                    loader = new AntClassLoader(project, Path.systemClasspath);
                 }
-                
-                InputStream is 
+
+                InputStream is
                     = loader.getResourceAsStream(matchingDTD.getLocation());
                 if (is != null) {
                     source = new InputSource(is);
