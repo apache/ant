@@ -211,15 +211,20 @@ public final class ChainReaderHelper {
         final char[] buffer = new char[bufferSize];
         int bufferLength = 0;
         String text = null;
+        StringBuffer textBuffer = null;
         while (bufferLength != -1) {
             bufferLength = rdr.read(buffer);
             if (bufferLength != -1) {
-                if (text == null) {
-                    text = new String(buffer, 0, bufferLength);
+                if (textBuffer == null) {
+                    textBuffer = new StringBuffer(
+                                    new String(buffer, 0, bufferLength));
                 } else {
-                    text += new String(buffer, 0, bufferLength);
+                    textBuffer.append(new String(buffer, 0, bufferLength));
                 }
             }
+        }
+        if (textBuffer != null) {
+            text = textBuffer.toString();
         }
         return text;
     }
