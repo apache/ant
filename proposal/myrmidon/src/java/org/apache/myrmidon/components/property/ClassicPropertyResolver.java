@@ -7,9 +7,8 @@
  */
 package org.apache.myrmidon.components.property;
 
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  * A {@link PropertyResolver} implementation which resolves properties
@@ -30,15 +29,16 @@ public class ClassicPropertyResolver
      * @param context the set of known properties
      */
     protected Object getPropertyValue( final String propertyName,
-                                       final Context context )
+                                       final TaskContext context )
     {
-        try
-        {
-            return context.get( propertyName );
-        }
-        catch( ContextException e )
+        Object propertyValue = context.getProperty( propertyName );
+        if ( propertyValue == null )
         {
             return "${" + propertyName + "}";
+        }
+        else
+        {
+            return propertyValue;
         }
     }
 }

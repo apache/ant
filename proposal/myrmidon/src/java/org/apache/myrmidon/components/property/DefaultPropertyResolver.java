@@ -9,9 +9,8 @@ package org.apache.myrmidon.components.property;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
 /**
@@ -43,7 +42,7 @@ public class DefaultPropertyResolver
      * @exception TaskException if an error occurs
      */
     public Object resolveProperties( final String content,
-                                     final Context context )
+                                     final TaskContext context )
         throws TaskException
     {
         int start = findNextProperty( content, 0 );
@@ -100,7 +99,7 @@ public class DefaultPropertyResolver
      * @exception TaskException if an error occurs
      */
     private Object recursiveResolveProperty( final String content,
-                                             final Context context )
+                                             final TaskContext context )
         throws TaskException
     {
         int start = findNextProperty( content, 0 );
@@ -238,17 +237,18 @@ public class DefaultPropertyResolver
      * @exception TaskException if the property is undefined
      */
     protected Object getPropertyValue( final String propertyName,
-                                       final Context context )
+                                       final TaskContext context )
         throws TaskException
     {
-        try
-        {
-            return context.get( propertyName );
-        }
-        catch( ContextException e )
+        Object propertyValue = context.getProperty( propertyName );
+        if ( propertyValue == null )
         {
             final String message = REZ.getString( "prop.missing-value.error", propertyName );
             throw new TaskException( message );
+        }
+        else
+        {
+            return propertyValue;
         }
     }
 }

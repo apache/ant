@@ -7,8 +7,8 @@
  */
 package org.apache.myrmidon.interfaces.property;
 
-import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 
 /**
  *
@@ -33,6 +33,6 @@ public interface PropertyResolver
      * @exception TaskException if an error occurs
      */
     Object resolveProperties( final String value,
-                              final Context context )
+                              final TaskContext context )
         throws TaskException;
 }

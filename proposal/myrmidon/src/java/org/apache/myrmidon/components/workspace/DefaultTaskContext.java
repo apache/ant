@@ -10,11 +10,10 @@ package org.apache.myrmidon.components.workspace;
 import java.io.File;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
@@ -30,17 +29,19 @@ import org.apache.myrmidon.interfaces.property.PropertyResolver;
  * @version $Revision$ $Date$
  */
 public class DefaultTaskContext
-    implements TaskContext, Context
+    implements TaskContext
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
 
     // Property name validator allows digits, but no internal whitespace.
-    private static DefaultNameValidator c_propertyNameValidator = new DefaultNameValidator();
+    private static DefaultNameValidator c_propertyNameValidator =
+        new DefaultNameValidator();
 
     static
     {
         c_propertyNameValidator.setAllowInternalWhitespace( false );
+        c_propertyNameValidator.setAdditionalInternalCharacters( "_-.+" );
     }
 
     private final Map m_contextData = new Hashtable();
@@ -193,7 +194,7 @@ public class DefaultTaskContext
      */
     public Map getProperties()
     {
-        return null;
+        return new HashMap( m_contextData );
     }
 
     /**
@@ -352,20 +353,6 @@ public class DefaultTaskContext
         context.setProperty( TaskContext.BASE_DIRECTORY, getBaseDirectory() );
 
         return context;
-    }
-
-    /**
-     * Returns a property.
-     */
-    public Object get( final Object key ) throws ContextException
-    {
-        final Object value = getProperty( (String)key );
-        if( value == null )
-        {
-            final String message = REZ.getString( "unknown-property.error", key );
-            throw new ContextException( message );
-        }
-        return value;
     }
 
     /**

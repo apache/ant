@@ -62,6 +62,7 @@
         <patternset id="ant1.omit">
           <exclude name="${ant1.package}/ant/Main.class"/>
           <exclude name="${ant1.package}/ant/Task.class"/>
+          <exclude name="${ant1.package}/ant/BuildException.class"/>
           <exclude name="${ant1.package}/ant/types/Path.class"/>
         </patternset>
 

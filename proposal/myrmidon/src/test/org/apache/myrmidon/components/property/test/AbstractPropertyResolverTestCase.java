@@ -10,9 +10,9 @@ package org.apache.myrmidon.components.property.test;
 import java.io.File;
 import java.util.Date;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.context.Context;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
@@ -117,7 +117,7 @@ public abstract class AbstractPropertyResolverTestCase
      */
     protected void doTestResolution( final String value,
                                      final Object expected,
-                                     final Context context )
+                                     final TaskContext context )
         throws Exception
     {
         final Object resolved = m_resolver.resolveProperties( value, context );
@@ -131,7 +131,7 @@ public abstract class AbstractPropertyResolverTestCase
      */
     protected void doTestFailure( final String value,
                                   final String expectedErrorMessage,
-                                  final Context context )
+                                  final TaskContext context )
     {
         try
         {

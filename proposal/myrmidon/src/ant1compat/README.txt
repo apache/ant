@@ -18,7 +18,7 @@ it may can mimic the Ant1 configuration policy using the IntrospectionHelper.
 The idea is to provide hooks between the Ant1 project and the Myrmidon
 project, eg
 	logging: done
-	properties: done but not quite working
+	properties: done
 	references: not done
 	Task definitions: done.
 
@@ -51,10 +51,8 @@ BUILD INSTRUCTIONS
 TODO
 ----
 * Convert this to an Xdoc document
-* Try out automatic registration of tasks - remove everything
-  from ant-descriptor.xml and just use Project.addTaskDefinition()
-  to register tasks? (similar for DataTypes)
 * Get a version of <ant> and <antcall> working
 * Test heaps more tasks
-* Check that "if" and "unless" conversions are working.
+* Provide hooks between Ant1 references and Myrmidon properties. Need to use
+  converters for adapting Ant2 objects (like Ant2 <path> or <fileset>) as Ant1 types.
 
