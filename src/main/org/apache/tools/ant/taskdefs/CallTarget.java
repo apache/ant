@@ -85,8 +85,9 @@ public class CallTarget extends Task {
 
     private Ant callee;
     private String subTarget;
-    private boolean initialized = false;
+    // must match the default value of Ant#inheritAll
     private boolean inheritAll = true;
+    // must match the default value of Ant#inheritRefs
     private boolean inheritRefs = false;
 
     /**
@@ -96,7 +97,7 @@ public class CallTarget extends Task {
      **/
     public void setInheritAll(boolean inherit) {
        inheritAll = inherit;
-    } //-- setInheritAll
+    }
 
     /**
      * set the inherit refs flag
@@ -111,12 +112,11 @@ public class CallTarget extends Task {
      * configuring it's by calling its own init method.
      */
     public void init() {
-        callee = (Ant) project.createTask("ant");
-        callee.setOwningTarget(target);
+        callee = (Ant) getProject().createTask("ant");
+        callee.setOwningTarget(getOwningTarget());
         callee.setTaskName(getTaskName());
-        callee.setLocation(location);
+        callee.setLocation(getLocation());
         callee.init();
-        initialized = true;
     }
 
     /**
@@ -125,7 +125,7 @@ public class CallTarget extends Task {
      * execute
      */
     public void execute() throws BuildException {
-        if (!initialized) {
+        if (callee == null) {
             init();
         }
         
@@ -134,30 +134,49 @@ public class CallTarget extends Task {
                                      location);
         }
         
-        callee.setDir(project.getBaseDir());
-        callee.setAntfile(project.getProperty("ant.file"));
+        callee.setDir(getProject().getBaseDir());
+        callee.setAntfile(getProject().getProperty("ant.file"));
         callee.setTarget(subTarget);
         callee.setInheritAll(inheritAll);
         callee.setInheritRefs(inheritRefs);
         callee.execute();
     }
 
+    /**
+     * Create a nested param element.
+     */
     public Property createParam() {
+        if (callee == null) {
+            init();
+        }
         return callee.createProperty();
     }
 
     /** 
      * create a reference element that identifies a data type that
      * should be carried over to the new project.
+     *
+     * @since Ant 1.5
      */
     public void addReference(Ant.Reference r) {
+        if (callee == null) {
+            init();
+        }
         callee.addReference(r);
     }
 
+    /**
+     * Sets the target attribute, required.
+     */
     public void setTarget(String target) {
         subTarget = target;
     }
 
+    /**
+     * Pass output sent to System.out to the new project.
+     *
+     * @since Ant 1.5
+     */
     protected void handleOutput(String line) {
         if (callee != null) {
             callee.handleOutput(line);
@@ -167,6 +186,11 @@ public class CallTarget extends Task {
         }
     }
     
+    /**
+     * Pass output sent to System.err to the new project.
+     *
+     * @since Ant 1.5
+     */
     protected void handleErrorOutput(String line) {
         if (callee != null) {
             callee.handleErrorOutput(line);

@@ -157,7 +157,7 @@ public class Ant extends Task {
     }
 
     /**
-     * Called in execute or createProperty of newProject is null.
+     * Called in execute or createProperty if newProject is null.
      *
      * <p>This can happen if the same instance of this task is run
      * twice as newProject is set to null at the end of execute (to
