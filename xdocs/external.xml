@@ -1000,6 +1000,32 @@
         </table>
       </subsection>
 
+      <subsection name="SmartAnalyzer">
+
+        <p>Powerful analysis of dependencies between Java classes.
+        Only affected classes will be recompiled and it can be used
+        with any bytecode compiler.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Apache Ant version 1.5.1</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://smartanalyzer.sourceforge.net/">http://smartanalyzer.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://sourceforge.net/projects/smartanalyzer">support at sourceforge project page</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public Licence (GPL)</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Styler">
 
         <p>The styler task makes useful combinations of XSLT transformations
