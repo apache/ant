@@ -208,7 +208,7 @@ public class AggregateTransformer {
     /**
      * Get the systemid of the appropriate stylesheet based on its
      * name and styledir. If no styledir is defined it will load
-     * it as a java resource in the current package, otherwise it
+     * it as a java resource in the xsl child package, otherwise it
      * will get it from the given directory.
      * @throws IOException thrown if the requested stylesheet does
      * not exist.
@@ -220,7 +220,7 @@ public class AggregateTransformer {
         }
         URL url = null;
         if (styleDir == null){
-            url = getClass().getResource(xslname);
+            url = getClass().getResource("xsl/" + xslname);
             if (url == null){
                 throw new FileNotFoundException("Could not find jar resource " + xslname);
             }
