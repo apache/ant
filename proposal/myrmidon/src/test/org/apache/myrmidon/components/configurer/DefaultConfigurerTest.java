@@ -11,15 +11,21 @@ import java.io.File;
 import org.apache.antlib.core.StringToIntegerConverter;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
-import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.components.configurer.data.ConfigTestAttributeConvert;
+import org.apache.myrmidon.components.configurer.data.ConfigTestConfigAdder;
 import org.apache.myrmidon.components.configurer.data.ConfigTestContent;
 import org.apache.myrmidon.components.configurer.data.ConfigTestEmpty;
+import org.apache.myrmidon.components.configurer.data.ConfigTestIdResolve;
+import org.apache.myrmidon.components.configurer.data.ConfigTestIgnoreStringMethods;
 import org.apache.myrmidon.components.configurer.data.ConfigTestInterfaceAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestMismatchedRefType;
+import org.apache.myrmidon.components.configurer.data.ConfigTestMultipleTypedAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestNestedErrors;
 import org.apache.myrmidon.components.configurer.data.ConfigTestNonInterfaceAdder;
 import org.apache.myrmidon.components.configurer.data.ConfigTestPropResolution;
 import org.apache.myrmidon.components.configurer.data.ConfigTestReferenceAttribute;
@@ -27,18 +33,12 @@ import org.apache.myrmidon.components.configurer.data.ConfigTestReferenceConvers
 import org.apache.myrmidon.components.configurer.data.ConfigTestReferenceElement;
 import org.apache.myrmidon.components.configurer.data.ConfigTestSetAttribute;
 import org.apache.myrmidon.components.configurer.data.ConfigTestSetElement;
-import org.apache.myrmidon.components.configurer.data.ConfigTestMultipleTypedAdder;
 import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdder;
-import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdderRole;
-import org.apache.myrmidon.components.configurer.data.ConfigTestIgnoreStringMethods;
 import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdderConversion;
-import org.apache.myrmidon.components.configurer.data.ConfigTestTypedConfigAdder;
-import org.apache.myrmidon.components.configurer.data.ConfigTestIdResolve;
-import org.apache.myrmidon.components.configurer.data.ConfigTestUnknownReference;
 import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdderReference;
-import org.apache.myrmidon.components.configurer.data.ConfigTestMismatchedRefType;
-import org.apache.myrmidon.components.configurer.data.ConfigTestConfigAdder;
-import org.apache.myrmidon.components.configurer.data.ConfigTestNestedErrors;
+import org.apache.myrmidon.components.configurer.data.ConfigTestTypedAdderRole;
+import org.apache.myrmidon.components.configurer.data.ConfigTestTypedConfigAdder;
+import org.apache.myrmidon.components.configurer.data.ConfigTestUnknownReference;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
@@ -96,7 +96,7 @@ public class DefaultConfigurerTest
         final ConfigTestSetAttribute test = new ConfigTestSetAttribute();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check result
         final ConfigTestSetAttribute expected = new ConfigTestSetAttribute();
@@ -122,7 +122,7 @@ public class DefaultConfigurerTest
         final ConfigTestAttributeConvert test = new ConfigTestAttributeConvert();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check result
         final ConfigTestAttributeConvert expected = new ConfigTestAttributeConvert();
@@ -176,7 +176,7 @@ public class DefaultConfigurerTest
         final ConfigTestSetElement test = new ConfigTestSetElement();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check result
         final ConfigTestSetElement expected = new ConfigTestSetElement();
@@ -229,7 +229,7 @@ public class DefaultConfigurerTest
         final ConfigTestContent test = new ConfigTestContent();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check result
         final ConfigTestContent expected = new ConfigTestContent();
@@ -277,7 +277,7 @@ public class DefaultConfigurerTest
         m_context.setProperty( "prop-a", "other" );
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check the configured object
         final ConfigTestPropResolution expected = new ConfigTestPropResolution();
@@ -299,7 +299,7 @@ public class DefaultConfigurerTest
         m_context.setProperty( "prop-a", "some value" );
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check the configured object
         final ConfigTestReferenceAttribute expected = new ConfigTestReferenceAttribute();
@@ -380,7 +380,7 @@ public class DefaultConfigurerTest
         final ConfigTestReferenceConversion test = new ConfigTestReferenceConversion();
 
         // Configure
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check result
         final ConfigTestReferenceConversion expected = new ConfigTestReferenceConversion();
@@ -406,7 +406,7 @@ public class DefaultConfigurerTest
         final ConfigTestInterfaceAdder test = new ConfigTestInterfaceAdder();
 
         // Configure object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check result
         final ConfigTestInterfaceAdder expected = new ConfigTestInterfaceAdder();
@@ -493,7 +493,7 @@ public class DefaultConfigurerTest
         final ConfigTestTypedAdder test = new ConfigTestTypedAdder();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         final ConfigTestTypedAdder expected = new ConfigTestTypedAdder();
         expected.add( new MyType1() );
@@ -520,7 +520,7 @@ public class DefaultConfigurerTest
         final ConfigTestTypedAdderRole test = new ConfigTestTypedAdderRole();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Check the result
         final ConfigTestTypedAdderRole expected = new ConfigTestTypedAdderRole();
@@ -546,7 +546,7 @@ public class DefaultConfigurerTest
         final ConfigTestTypedAdderConversion test = new ConfigTestTypedAdderConversion();
 
         // Configure the object
-            configure( test, config );
+        configure( test, config );
 
         // Check the result
         final ConfigTestTypedAdderConversion expected = new ConfigTestTypedAdderConversion();
@@ -554,21 +554,6 @@ public class DefaultConfigurerTest
         nested.setProp( "some value" );
         expected.add( new MyRole1Adaptor( nested ) );
         assertEquals( expected, test );
-    }
-
-    private void configure( final Object test,
-                            final DefaultConfiguration config )
-        throws ConfigurationException
-    {
-        try
-        {
-            m_configurer.configure( test, config, m_context );
-        }
-        catch( final ConfigurationException ce )
-        {
-            ExceptionUtil.printStackTrace( ce );
-            throw ce;
-        }
     }
 
     /**
@@ -587,7 +572,7 @@ public class DefaultConfigurerTest
         final ConfigTestTypedConfigAdder test = new ConfigTestTypedConfigAdder();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         final ConfigTestTypedConfigAdder expected = new ConfigTestTypedConfigAdder();
         expected.add( child1 );
@@ -611,7 +596,7 @@ public class DefaultConfigurerTest
         final ConfigTestConfigAdder test = new ConfigTestConfigAdder();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         final ConfigTestConfigAdder expected = new ConfigTestConfigAdder();
         expected.addConfig( child1 );
@@ -744,7 +729,7 @@ public class DefaultConfigurerTest
         final ConfigTestTypedAdderReference test = new ConfigTestTypedAdderReference();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Compare against expected value
         final ConfigTestTypedAdderReference expected = new ConfigTestTypedAdderReference();
@@ -797,12 +782,27 @@ public class DefaultConfigurerTest
         final ConfigTestIgnoreStringMethods test = new ConfigTestIgnoreStringMethods();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        configure( test, config );
 
         // Test expected value
         final ConfigTestIgnoreStringMethods expected = new ConfigTestIgnoreStringMethods();
         expected.addProp1( new ConfigTestIgnoreStringMethods() );
         expected.addProp2( new ConfigTestIgnoreStringMethods() );
         assertEquals( expected, test );
+    }
+
+    private void configure( final Object test,
+                            final DefaultConfiguration config )
+        throws ConfigurationException
+    {
+        try
+        {
+            m_configurer.configure( test, config, m_context );
+        }
+        catch( final ConfigurationException ce )
+        {
+            ExceptionUtil.printStackTrace( ce );
+            throw ce;
+        }
     }
 }
