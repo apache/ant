@@ -138,7 +138,12 @@ public class ClassfileSet extends FileSet {
      * @return a dependency scanner.
      */
     public DirectoryScanner getDirectoryScanner(Project p) {
-        DependScanner scanner = new DependScanner();
+        if (isReference()) {
+            return getRef(p).getDirectoryScanner(p);
+        }
+
+        DirectoryScanner parentScanner = super.getDirectoryScanner(p);
+        DependScanner scanner = new DependScanner(parentScanner);
         scanner.setBasedir(getDir(p));
         scanner.setRootClasses(rootClasses);
         scanner.scan();

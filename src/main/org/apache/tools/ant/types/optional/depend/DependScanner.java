@@ -56,6 +56,7 @@ package org.apache.tools.ant.types.optional.depend;
 import java.io.File;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.tools.ant.util.depend.DependencyAnalyzer;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.BuildException;
@@ -90,6 +91,17 @@ public class DependScanner extends DirectoryScanner {
      * The names of the classes to include in the fileset
      */
     private Vector included;
+
+    /**
+     * The parent scanner which gives the basic set of files. Only files which 
+     * are in this set and which can be reached from a root class will end
+     * up being included in the result set
+     */
+    private DirectoryScanner parentScanner;
+    
+    public DependScanner(DirectoryScanner parentScanner) {
+        this.parentScanner = parentScanner;
+    }
     
     /**
      * Sets the basedir for scanning. This is the directory that is scanned
@@ -126,12 +138,7 @@ public class DependScanner extends DirectoryScanner {
         int count = included.size();
         String[] files = new String[count];
         for (int i = 0; i < count; i++) {
-            String classname = (String)included.elementAt(i); 
-            String filename = classname.replace('.', File.separatorChar);
-            filename = filename + ".class";
-            File file = new File(basedir, filename); 
-            files[i] =  file.getPath();
-            //System.err.println("  " + files[i]);
+            files[i] = (String)included.elementAt(i); 
         }
         return files;
     }
@@ -142,6 +149,7 @@ public class DependScanner extends DirectoryScanner {
      * @exception IllegalStateException when basedir was set incorrecly
      */
     public void scan() throws IllegalStateException {
+        included = new Vector();
         String analyzerClassName = DEFAULT_ANALYZER_CLASS;
         DependencyAnalyzer analyzer = null;
         try {
@@ -154,14 +162,27 @@ public class DependScanner extends DirectoryScanner {
         analyzer.addClassPath(new Path(null, basedir.getPath()));
         
         for (Enumeration e = rootClasses.elements(); e.hasMoreElements(); ) {
-            analyzer.addRootClass((String)e.nextElement());
+            String rootClass = (String)e.nextElement();
+            analyzer.addRootClass(rootClass);
         }
 
         Enumeration e = analyzer.getClassDependencies();
 
-        included.removeAllElements();
+        String[] parentFiles = parentScanner.getIncludedFiles();
+        Hashtable parentSet = new Hashtable();
+        for (int i = 0; i < parentFiles.length; ++i) {
+            parentSet.put(parentFiles[i], parentFiles[i]);
+        }
+
         while (e.hasMoreElements()) {
-            included.addElement(e.nextElement());
+            String classname = (String)e.nextElement();
+            String filename = classname.replace('.', File.separatorChar);
+            filename = filename + ".class";
+            File depFile = new File(basedir, filename);
+            if (depFile.exists() && parentSet.containsKey(filename)) {
+                // This is included
+                included.addElement(filename);
+            }
         }
     }
 
