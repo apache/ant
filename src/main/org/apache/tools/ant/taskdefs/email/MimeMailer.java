@@ -70,10 +70,8 @@ import java.util.Vector;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
+import javax.mail.*;
 import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -89,7 +87,7 @@ import org.apache.tools.ant.BuildException;
  * @author <a href="mailto:ishu@akm.ru">Aleksandr Ishutin</a>
  * @since Ant 1.5
  */
-class MimeMailer extends Mailer {
+public class MimeMailer extends Mailer {
     // Default character set
     private static final String defaultCharset = System.getProperty("file.encoding");
 
@@ -157,7 +155,16 @@ class MimeMailer extends Mailer {
             // Aside, the JDK is clearly unaware of the scottish
             // 'session', which //involves excessive quantities of
             // alcohol :-)
-            Session sesh = Session.getDefaultInstance(props, null);
+            Session sesh;
+            Authenticator auth;
+            if (user==null && password == null) {
+                sesh = Session.getDefaultInstance(props, null);
+            }
+            else {
+                props.put("mail.smtp.auth", "true");
+                auth = new SimpleAuthenticator(user,password);
+                sesh = Session.getInstance(props,auth);
+            }
 
             //create the message
             MimeMessage msg = new MimeMessage(sesh);
@@ -260,6 +267,7 @@ class MimeMailer extends Mailer {
         }
 
         return addrs;
+
     }
 
     private String parseCharSetFromMimeType(String type){
@@ -271,5 +279,18 @@ class MimeMailer extends Mailer {
       token.nextToken();// Skip 'charset='
       return token.nextToken();
     }
-}
+  static class SimpleAuthenticator extends Authenticator {
+        private String user=null;
+        private String password=null;
+        public SimpleAuthenticator(String user, String password) {
+            this.user=user;
+            this.password=password;
+        }
+        public PasswordAuthentication getPasswordAuthentication() {
+
+            return new PasswordAuthentication(user, password);
+
+        }
+
+    }}
 

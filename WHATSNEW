@@ -301,6 +301,12 @@ Other changes:
 
 * <mail> has a new attribute encoding. Bugzilla Report 15434.
 
+* <mail> has new attributes user and password for SMTP auth.
+maillogger can also use this. 
+The implementation only with JavaMail (encoding="MIME").
+Implementation with plain mail remains to do.
+Bugzilla Report 5969.
+
 * <zipfileset> can now be defined in the main body of a project
   and referred to with refid="xyz". Bugzilla Report 17007.
 

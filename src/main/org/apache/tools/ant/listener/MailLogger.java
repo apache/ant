@@ -57,13 +57,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Properties;
-import java.util.StringTokenizer;
+import java.util.*;
+
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.email.MimeMailer;
+import org.apache.tools.ant.taskdefs.email.EmailAddress;
+import org.apache.tools.ant.taskdefs.email.Message;
 import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.mail.MailMessage;
@@ -96,6 +97,8 @@ import org.apache.tools.mail.MailMessage;
  *
  * @author Erik Hatcher
  *         <a href="mailto:ehatcher@apache.org">ehatcher@apache.org</a>
+ * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
+ *
  */
 public class MailLogger extends DefaultLogger {
     /** Buffer in which the message is constructed prior to sending */
@@ -152,13 +155,19 @@ public class MailLogger extends DefaultLogger {
 
             String mailhost = getValue(properties, "mailhost", "localhost");
             int port = Integer.parseInt(getValue(properties,"port",String.valueOf(MailMessage.DEFAULT_PORT)));
+            String user = getValue(properties, "user", null);
+            String password = getValue(properties, "password", null);
             String from = getValue(properties, "from", null);
             String replytoList = getValue(properties,"replyto","");
             String toList = getValue(properties, prefix + ".to", null);
             String subject = getValue(properties, prefix + ".subject",
                     (success) ? "Build Success" : "Build Failure");
-
-            sendMail(mailhost, port, from, replytoList, toList, subject, buffer.substring(0));
+            if (user==null && password==null) {
+                sendMail(mailhost, port,  from, replytoList, toList, subject, buffer.substring(0));
+            }
+            else {
+                sendMimeMail(event.getProject(), mailhost, port, user, password, from, replytoList, toList, subject, buffer.substring(0));
+            }
         } catch (Exception e) {
             System.out.println("MailLogger failed to send e-mail!");
             e.printStackTrace(System.err);
@@ -207,7 +216,6 @@ public class MailLogger extends DefaultLogger {
 
     /**
      *  Send the mail
-     *
      * @param  mailhost         mail server
      * @param  port             mail server port number
      * @param  from             from address
@@ -240,6 +248,50 @@ public class MailLogger extends DefaultLogger {
         ps.println(message);
 
         mailMessage.sendAndClose();
+    }
+    /**
+     *  Send the mail  (MimeMail)
+     * @param  project          current ant project
+     * @param  host             mail server
+     * @param  port             mail server port number
+     * @param  user             user name for SMTP auth
+     * @param  password         password for SMTP auth
+     * @param  from             from address
+     * @param  replyToString    comma-separated replyto list
+     * @param  toString         comma-separated recipient list
+     * @param  subject          mail subject
+     * @param  message          mail body
+     * @exception  IOException  thrown if sending message fails
+     */
+    private void sendMimeMail(Project project, String host, int port, String user, String password, String from, String replyToString, String toString,
+                          String subject, String message) throws IOException {
+        // convert the replyTo string into a vector of emailaddresses
+        Vector replyToList = vectorizeEmailAddresses(replyToString);
+        MimeMailer mailer=new MimeMailer();
+        mailer.setHost(host);
+        mailer.setPort(port);
+        mailer.setUser(user);
+        mailer.setPassword(password);
+        Message mymessage = new Message(message);
+        mymessage.setProject(project);
+        mailer.setMessage(mymessage);
+        mailer.setFrom(new EmailAddress(from));
+        mailer.setReplyToList(replyToList);
+        Vector toList = vectorizeEmailAddresses(toString);
+        mailer.setToList(toList);
+        mailer.setCcList(new Vector());
+        mailer.setBccList(new Vector());
+        mailer.setFiles(new Vector());
+        mailer.setSubject(subject);
+        mailer.send();
+    }
+    private Vector vectorizeEmailAddresses(String listString) {
+        Vector emailList = new Vector();
+        StringTokenizer tokens = new StringTokenizer(listString, ",");
+        while (tokens.hasMoreTokens()) {
+            emailList.addElement(new EmailAddress(tokens.nextToken()));
+        }
+        return emailList;
     }
 }
 

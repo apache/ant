@@ -67,6 +67,8 @@ import org.apache.tools.ant.util.DateUtils;
 abstract class Mailer {
     protected String host = null;
     protected int port = -1;
+    protected String user = null;
+    protected String password = null;
     protected Message message;
     protected EmailAddress from;
     protected Vector replyToList = null;
@@ -97,6 +99,23 @@ abstract class Mailer {
         this.port = port;
     }
 
+    /**
+     * Sets the user for smtp auth
+     *
+     * @param user
+     */
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    /**
+     * Sets the password for smtp auth
+     *
+     * @param password
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     /**
      * Sets the message

@@ -142,7 +142,28 @@ public class EmailTask
     private boolean debugonly=false;
     /** a location where to print the email message */
     private File debugoutput;
+    /** User for SMTP auth */
+    private String user=null;
+    /** Password for SMTP auth */
+    private String password=null;
 
+    /**
+     * sets the user for SMTP auth; this requires JavaMail
+     * @param user
+     * @since ant 1.6
+     */
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    /**
+     * sets the password for SMTP auth; this requires JavaMail
+     * @param password
+     * @since ant 1.6
+     */
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     /**
      * Allows the build writer to choose the preferred encoding method
@@ -431,7 +452,6 @@ public class EmailTask
 
             // prepare for the auto select mechanism
             boolean autoFound = false;
-
             // try MIME format
             if (encoding.equals(MIME)
                  || (encoding.equals(AUTO) && !autoFound)) {
@@ -444,6 +464,10 @@ public class EmailTask
                 } catch (Throwable e) {
                     log("Failed to initialise MIME mail: "+e.getMessage(),Project.MSG_WARN);
                 }
+            }
+            // SMTP auth only allowed with MIME mail
+            if (autoFound==false && ((user !=null) || (password != null)) && (encoding.equals(UU) || encoding.equals(PLAIN))) {
+                throw new BuildException("SMTP auth only possible with MIME mail");
             }
 
             // try UU format
@@ -538,6 +562,8 @@ public class EmailTask
             // pass the params to the mailer
             mailer.setHost(host);
             mailer.setPort(port);
+            mailer.setUser(user);
+            mailer.setPassword(password);
             mailer.setMessage(message);
             mailer.setFrom(from);
             mailer.setReplyToList(replyToList);
