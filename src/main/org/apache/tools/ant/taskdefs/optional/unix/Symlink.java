@@ -97,11 +97,11 @@ import org.apache.tools.ant.taskdefs.Execute;
  * <p> This task performs several related operations. In the most trivial,
  * and default usage, it creates a link specified in the link atribute to
  * a resource specified in the resource atribute. The second usage of this
- * task is to traverses a directory structure specified by a fileset, 
+ * task is to traverses a directory structure specified by a fileset,
  * and write a properties file in each included directory describing the
  * links found in that directory. The third usage is to traverse a
  * directory structure specified by a fileset, looking for properties files
- * (also specified as included in the fileset) and recreate the links 
+ * (also specified as included in the fileset) and recreate the links
  * that have been previously recorded for each directory. Finally, it can be
  * used to remove a symlink without deleting the file or directory it points
  * to.
@@ -133,21 +133,21 @@ import org.apache.tools.ant.taskdefs.Execute;
  * &lt;symlink action="delete" link="${dir.top}/foo"/&gt;
  * </pre>
  *
- * <p><strong>LIMITATIONS:</strong> Because Java has no direct support for 
+ * <p><strong>LIMITATIONS:</strong> Because Java has no direct support for
  * handling symlinks this task divines them by comparing canoniacal and
- * absolute paths. On non-unix systems this may cause false positives. 
- * Furthermore, any operating system on which the command 
- * <code>ln -s link resource</code> is not a valid command on the comandline 
- * will not be able to use action= "delete", action="single" or 
- * action="recreate", but action="record" should still work. Finally, the 
- * lack of support for symlinks in Java means that all links are recorded 
- * as links to the <strong>canonical</strong> resource name. Therefore 
- * the link: <code>link --> subdir/dir/../foo.bar</code> will be recorded 
- * as <code>link=subdir/foo.bar</code> and restored as 
+ * absolute paths. On non-unix systems this may cause false positives.
+ * Furthermore, any operating system on which the command
+ * <code>ln -s link resource</code> is not a valid command on the comandline
+ * will not be able to use action= "delete", action="single" or
+ * action="recreate", but action="record" should still work. Finally, the
+ * lack of support for symlinks in Java means that all links are recorded
+ * as links to the <strong>canonical</strong> resource name. Therefore
+ * the link: <code>link --> subdir/dir/../foo.bar</code> will be recorded
+ * as <code>link=subdir/foo.bar</code> and restored as
  * <code>link --> subdir/foo.bar</code>
  *
  * @version $Revision$
- * @author  <a href="mailto:gus.heck@olin.edu">Patrick G. Heck</a> 
+ * @author  <a href="mailto:gus.heck@olin.edu">Patrick G. Heck</a>
  */
 
 public class Symlink extends Task {
@@ -163,8 +163,7 @@ public class Symlink extends Task {
 
     /** Initialize the task. */
 
-    public void init() throws BuildException
-    {
+    public void init() throws BuildException {
         super.init();
         failonerror = true;   // default behavior is to fail on an error
         overwrite = false;    // devault behavior is to not overwrite
@@ -187,48 +186,47 @@ public class Symlink extends Task {
                 } catch (IOException ioe) {
                     handleError(ioe.toString());
                 }
-            } else if (action.equals("recreate")) { 
+            } else if (action.equals("recreate")) {
                 Properties listOfLinks;
                 Enumeration keys;
 
-                if (fileSets.size() == 0){
-                    handleError("File set identifying link file(s) " +
-                                "required for action recreate");
+                if (fileSets.size() == 0) {
+                    handleError("File set identifying link file(s) "
+                                + "required for action recreate");
                     return;
                 }
 
                 listOfLinks = loadLinks(fileSets);
-                
+
                 keys = listOfLinks.keys();
-                
-                while(keys.hasMoreElements()) {
+
+                while (keys.hasMoreElements()) {
                     link = (String) keys.nextElement();
                     resource = listOfLinks.getProperty(link);
                     doLink(resource, link);
-                } 
+                }
             } else if (action.equals("record")) {
                 Vector vectOfLinks;
                 Hashtable byDir = new Hashtable();
                 Enumeration links, dirs;
-            
-            
+
                 if (fileSets.size() == 0) {
-                    handleError("File set identifying links to " +
-                                "record required");
+                    handleError("File set identifying links to "
+                                + "record required");
                     return;
                 }
 
                 if (linkFileName == null) {
-                    handleError("Name of file to record links in " +
-                                "required");
+                    handleError("Name of file to record links in "
+                                + "required");
                     return;
                 }
-            
+
                 // fill our vector with file objects representing
                 // links (canonical)
                 vectOfLinks = findLinks(fileSets);
-                
-                    // create a hashtable to group them by parent directory
+
+                // create a hashtable to group them by parent directory
                 links = vectOfLinks.elements();
                 while (links.hasMoreElements()) {
                     File thisLink = (File) links.nextElement();
@@ -240,7 +238,7 @@ public class Symlink extends Task {
                         ((Vector) byDir.get(parent)).addElement(thisLink);
                     }
                 }
-                
+
                 // write a Properties file in each directory
                 dirs = byDir.keys();
                 while (dirs.hasMoreElements()) {
@@ -249,7 +247,7 @@ public class Symlink extends Task {
                     Properties linksToStore = new Properties();
                     Enumeration eachlink = linksInDir.elements();
                     File writeTo;
-                    
+
                     // fill up a Properties object with link and resource
                     // names
                     while(eachlink.hasMoreElements()) {
@@ -258,21 +256,19 @@ public class Symlink extends Task {
                             linksToStore.put(alink.getName(),
                                              alink.getCanonicalPath());
                         } catch (IOException ioe) {
-                            handleError("Couldn't get canonical "+
-                                        "name of a parent link");
+                            handleError("Couldn't get canonical " 
+                                        + "name of a parent link");
                         }
                     }
-                    
+
 
                     // Get a place to record what we are about to write
-                    writeTo = new File(dir + File.separator + 
-                                       linkFileName);
+                    writeTo = new File(dir + File.separator
+                                       + linkFileName);
 
                     writePropertyFile(linksToStore, writeTo,
                                       "Symlinks from " + writeTo.getParent());
-
                 }
-
             }
             else {
                 handleError("Invalid action specified in symlink");
@@ -326,10 +322,10 @@ public class Symlink extends Task {
     public void setAction(String typ) {
         this.action = typ;
     }
-   
+
     /**
      * The setter for the "link" attribute. Only used for action = single.
-     * 
+     *
      * @param lnk     The name for the link
      */
     public void setLink(String lnk) {
@@ -370,7 +366,7 @@ public class Symlink extends Task {
     /**
      * Deletes a symlink without deleteing the resource it points to.
      *
-     * <p>This is a convenience method that simply invokes 
+     * <p>This is a convenience method that simply invokes
      * <code>deleteSymlink(java.io.File)</code>
      *
      * @param path    A string containing the path of the symlink to delete
@@ -380,8 +376,8 @@ public class Symlink extends Task {
      * @throws IOException             If calls to <code>File.rename</code>
      *                                   or <code>File.delete</code> fail.
      */
-    
-    public static void deleteSymlink(String path) 
+
+    public static void deleteSymlink(String path)
         throws IOException, FileNotFoundException {
 
         File linkfil = new File(path);
@@ -395,8 +391,8 @@ public class Symlink extends Task {
      * the resource that the symlink points to. If it is accidentally invoked
      * on a real file, the real file will not be harmed, but an exception
      * will be thrown when the deletion is attempted. This method works by
-     * getting the canonical path of the link, using the canonical path to 
-     * rename the resource (breaking the link) and then deleting the link. 
+     * getting the canonical path of the link, using the canonical path to
+     * rename the resource (breaking the link) and then deleting the link.
      * The resource is then returned to it's original name inside a finally
      * block to ensure that the resource is unharmed even in the event of
      * an exception.
@@ -406,12 +402,12 @@ public class Symlink extends Task {
      * @throws FileNotFoundException   When the path results in a
      *                                   <code>File</code> that doesn't exist.
      * @throws IOException             If calls to <code>File.rename</code>,
-     *                                   <code>File.delete</code> or 
+     *                                   <code>File.delete</code> or
      *                                   <code>File.getCanonicalPath</code>
      *                                   fail.
      */
 
-    public static void deleteSymlink(File linkfil) 
+    public static void deleteSymlink(File linkfil)
         throws IOException, FileNotFoundException {
 
         if (!linkfil.exists()) {
@@ -421,35 +417,35 @@ public class Symlink extends Task {
         // find the resource of the existing link
         String canstr = linkfil.getCanonicalPath();
         File canfil = new File(canstr);
-        
+
         // rename the resource, thus breaking the link
         String parentStr = canfil.getParent();
         File parentDir = new File(parentStr);
         FileUtils fu = FileUtils.newFileUtils();
-        File temp = fu.createTempFile("symlink",".tmp", parentDir);
+        File temp = fu.createTempFile("symlink", ".tmp", parentDir);
         try {
             try {
                 fu.rename(canfil, temp);
             } catch (IOException e) {
-                throw new IOException("Couldn't rename resource when " +
-                                      "attempting to delete " + linkfil);
+                throw new IOException("Couldn't rename resource when "
+                                      + "attempting to delete " + linkfil);
             }
-            
+
             // delete the (now) broken link
-            if(!linkfil.delete()) {
-                throw new IOException("Couldn't delete symlink: " + linkfil +
-                                      " (was it a real file? is this not a " +
-                                      "UNIX system?)");
+            if (!linkfil.delete()) {
+                throw new IOException("Couldn't delete symlink: " + linkfil
+                                      + " (was it a real file? is this not a "
+                                      + "UNIX system?)");
             }
         } finally {
             // return the resource to its original name.
             try {
                 fu.rename(temp, canfil);
             } catch (IOException e) {
-                throw new IOException("Couldn't return resource " + temp +
-                                      " its original name: " + canstr +
-                                      "\n THE RESOURCE'S NAME ON DISK HAS " +
-                                      "BEEN CHANGED BY THIS ERROR!\n");
+                throw new IOException("Couldn't return resource " + temp
+                                      + " to its original name: " + canstr
+                                      + "\n THE RESOURCE'S NAME ON DISK HAS "
+                                      + "BEEN CHANGED BY THIS ERROR!\n");
             }
         }
     }
@@ -462,7 +458,7 @@ public class Symlink extends Task {
     /**
      * Writes a properties file.
      *
-     * In jdk 1.2+ this method will use <code>Properties.store</code> 
+     * In jdk 1.2+ this method will use <code>Properties.store</code>
      * and thus report exceptions that occur while writing the file.
      * In jdk 1.1 we are forced to use <code>Properties.save</code>
      * and therefore all exceptions are masked. This method was lifted
@@ -476,8 +472,8 @@ public class Symlink extends Task {
      */
 
     private void writePropertyFile(Properties properties,
-                                   File propertyfile, 
-                                   String comment) 
+                                   File propertyfile,
+                                   String comment)
         throws BuildException {
 
         BufferedOutputStream bos = null;
@@ -506,7 +502,9 @@ public class Symlink extends Task {
             if (bos != null) {
                 try {
                     bos.close();
-                } catch (IOException ioex) {}
+                } catch (IOException ioex) {
+                    log("Failed to close output stream");
+                }
             }
         }
     }
@@ -514,7 +512,7 @@ public class Symlink extends Task {
     /**
      * Handles errors correctly based on the setting of failonerror.
      *
-     * @param msg    The message to log, or include in the 
+     * @param msg    The message to log, or include in the
      *                  <code>BuildException</code>
      */
 
@@ -543,8 +541,8 @@ public class Symlink extends Task {
             return;
         }
         if (link == null) {
-            handleError("Must define the link " +
-                        "name for symlink!");
+            handleError("Must define the link " 
+                        + "name for symlink!");
             return;
         }
 
@@ -566,7 +564,7 @@ public class Symlink extends Task {
             handleError("Unable to overwrite preexisting link " + link);
         }
 
-        log(cmd[0]+" "+cmd[1]+" "+cmd[2]+" "+cmd[3]);
+        log(cmd[0] + " " + cmd[1] + " " + cmd[2] + " " + cmd[3]);
         Execute.runCommand(this,cmd);
     }
 
@@ -588,10 +586,10 @@ public class Symlink extends Task {
         files = ds.getIncludedFiles();
         dirs = ds.getIncludedDirectories();
 
-        for (int i=0; i<files.length; i++) {
+        for (int i = 0; i < files.length; i++) {
             list.addElement(files[i]);
         }
-        for (int i=0; i<dirs.length; i++) {
+        for (int i = 0; i < dirs.length; i++) {
             list.addElement(dirs[i]);
         }
 
@@ -609,16 +607,16 @@ public class Symlink extends Task {
      *   <ol>
      *      <li> Compile a list of all matches </li>
      *      <li> Convert matches to <code>File</code> objects </li>
-     *      <li> Remove all non-symlinks using 
+     *      <li> Remove all non-symlinks using
      *             <code>FileUtils.isSymbolicLink</code> </li>
      *      <li> Convert all parent directories to the canonical form </li>
-     *      <li> Add the remaining links from each file set to a 
+     *      <li> Add the remaining links from each file set to a
      *             master list of links unless the link is already recorded
      *             in the list</li>
      *   </ol>
      *
      * @param fileSets   The filesets specified by the user.
-     * @return           A vector of <code>File</code> objects containing the 
+     * @return           A vector of <code>File</code> objects containing the
      *                     links (with canonical parent directories)
      */
 
@@ -626,7 +624,7 @@ public class Symlink extends Task {
         Vector result = new Vector();
 
         // loop through the supplied file sets
-        FSLoop: for (int i=0; i<fileSets.size(); i++){
+        FSLoop: for (int i = 0; i < fileSets.size(); i++) {
             FileSet fsTemp = (FileSet) fileSets.elementAt(i);
             String workingDir = null;
             Vector links = new Vector();
@@ -640,11 +638,11 @@ public class Symlink extends Task {
                 tmpfil = fsTemp.getDir(this.getProject());
                 workingDir = tmpfil.getCanonicalPath();
             } catch (IOException ioe) {
-                handleError("Exception caught getting "+
-                            "canonical path of working dir " + tmpfil +
-                            " in a FileSet passed to the symlink " +
-                            "task. Further processing of this " +
-                            "fileset skipped");
+                handleError("Exception caught getting "
+                            + "canonical path of working dir " + tmpfil
+                            + " in a FileSet passed to the symlink "
+                            + "task. Further processing of this "
+                            + "fileset skipped");
                 continue FSLoop;
             }
 
@@ -656,10 +654,12 @@ public class Symlink extends Task {
             // Now convert the strings to File Objects
             // using the canonical version of the working dir
             enumLinks = links.elements();
-            
-            while(enumLinks.hasMoreElements()) {
-                linksFiles.addElement(new File(workingDir +
-                    File.separator + (String) enumLinks.nextElement()));
+
+            while (enumLinks.hasMoreElements()) {
+                linksFiles.addElement(new File(workingDir
+                                               + File.separator
+                                               + (String) enumLinks
+                                               .nextElement()));
             }
 
             // Now loop through and remove the non-links
@@ -674,14 +674,14 @@ public class Symlink extends Task {
                 next = (File) enumLinks.nextElement();
                 nameParentNext = next.getParent();
 
-                parentNext= new File(nameParentNext);
+                parentNext = new File(nameParentNext);
                 try {
                     if (!fu.isSymbolicLink(parentNext, next.getName())) {
                         removals.addElement(next);
                     }
                 } catch (IOException ioe) {
-                    handleError("Failed checking " + next +
-                                " for symbolic link. FileSet skipped.");
+                    handleError("Failed checking " + next
+                                + " for symbolic link. FileSet skipped.");
                     continue FSLoop;
                     // Otherwise this file will be falsely recorded as a link,
                     // if failonerror = false, hence the warn and skip.
@@ -690,7 +690,7 @@ public class Symlink extends Task {
 
             enumLinks = removals.elements();
 
-            while(enumLinks.hasMoreElements()) {
+            while (enumLinks.hasMoreElements()) {
                 linksFiles.removeElement(enumLinks.nextElement());
             }
 
@@ -699,10 +699,10 @@ public class Symlink extends Task {
             // to the link. (no symlinks in the parent dir)
 
             enumLinks = linksFiles.elements();
-            while(enumLinks.hasMoreElements()) {
+            while (enumLinks.hasMoreElements()) {
                 File temp, parent;
                 next = (File) enumLinks.nextElement();
-                try{
+                try {
                     parent = new File(next.getParent());
                     parent = new File(parent.getCanonicalPath());
                     temp = new File(parent, next.getName());
@@ -725,7 +725,7 @@ public class Symlink extends Task {
     /**
      * Load the links from a properties file.
      *
-     * <p> This method is only invoked when the action atribute is set to 
+     * <p> This method is only invoked when the action atribute is set to
      * "multi". The filesets passed in are assumed to specify the names
      * of the property files with the link information and the
      * subdirectories in which to look for them.
@@ -736,7 +736,7 @@ public class Symlink extends Task {
      *      <li> Scan for properties files </li>
      *      <li> load the contents of each properties file found. </li>
      *   </ol>
-     * 
+     *
      * @param fileSets    The <code>FileSet</code>s for this task
      * @return            The links to be made.
      */
@@ -748,20 +748,20 @@ public class Symlink extends Task {
         String[] includedFiles;
 
         // loop through the supplied file sets
-        FSLoop: for (int i=0; i<fileSets.size(); i++){
+        FSLoop: for (int i = 0; i < fileSets.size(); i++) {
             String workingDir;
             FileSet fsTemp = (FileSet) fileSets.elementAt(i);
-            
+
             DirectoryScanner ds;
 
             try {
                 File linelength = fsTemp.getDir(this.getProject());
                 workingDir = linelength.getCanonicalPath();
             } catch (IOException ioe) {
-                handleError("Exception caught getting "+
-                            "canonical path of working dir " +
-                            "of a FileSet passed to symlink " +
-                            "task. FileSet skipped.");
+                handleError("Exception caught getting "
+                            + "canonical path of working dir "
+                            + "of a FileSet passed to symlink "
+                            + "task. FileSet skipped.");
                 continue FSLoop;
             }
 
@@ -769,12 +769,12 @@ public class Symlink extends Task {
             ds.setFollowSymlinks(false);
             ds.scan();
             includedFiles = ds.getIncludedFiles();
-            
+
             // loop through the files identified by each file set
             // and load their contents.
-            for (int j=0; j<includedFiles.length; j++){
-                File inc = new File(workingDir + File.separator +
-                                    includedFiles[j]);
+            for (int j = 0; j < includedFiles.length; j++){
+                File inc = new File(workingDir + File.separator
+                                    + includedFiles[j]);
                 String inDir;
                 Properties propTemp = new Properties();
 
@@ -783,16 +783,16 @@ public class Symlink extends Task {
                     inDir = inc.getParent();
                     inDir = (new File(inDir)).getCanonicalPath();
                 } catch (FileNotFoundException fnfe) {
-                    handleError("Unable to find " + includedFiles[j] +
-                                "FileSet skipped.");
+                    handleError("Unable to find " + includedFiles[j]
+                                + "FileSet skipped.");
                     continue FSLoop;
                 } catch (IOException ioe) {
-                    handleError("Unable to open " + includedFiles[j] +
-                                " or it's parent dir" +
-                                "FileSet skipped.");
+                    handleError("Unable to open " + includedFiles[j]
+                                + " or it's parent dir"
+                                + "FileSet skipped.");
                     continue FSLoop;
                 }
-                
+
                 keys = propTemp.keys();
                 propTemp.list(System.out);
                 // Write the contents to our master list of links
@@ -800,7 +800,7 @@ public class Symlink extends Task {
                 // This method assumes that all links are defined in
                 // terms of absolute paths, or paths relative to the
                 // working directory
-                while(keys.hasMoreElements()) {
+                while (keys.hasMoreElements()) {
                     key = (String) keys.nextElement();
                     value = propTemp.getProperty(key);
                     finalList.put(inDir + File.separator + key, value);
