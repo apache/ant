@@ -78,7 +78,7 @@ import java.util.Enumeration;
  * Creates a JAR archive.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Brian Deitte 
+ * @author Brian Deitte
  *         <a href="mailto:bdeitte@macromedia.com">bdeitte@macromedia.com</a>
  *
  * @since Ant 1.1
@@ -101,7 +101,12 @@ public class Jar extends Zip {
      *  whether to merge fileset manifests;
      *  value is true if filesetmanifest is 'merge' or 'mergewithoutmain'
      */
-    private boolean mergeManifests = false;
+    private FilesetManifestConfig filesetManifestConfig;
+
+    /**
+     *  Whether to create manifest file on finalizeOutputStream?
+     */
+    private boolean manifestOnFinalize = true;
 
     /**
      * whether to merge the main section of fileset manifests;
@@ -151,7 +156,7 @@ public class Jar extends Zip {
         index = flag;
     }
 
-    public void addConfiguredManifest(Manifest newManifest) 
+    public void addConfiguredManifest(Manifest newManifest)
         throws ManifestException {
         if (configuredManifest == null) {
             configuredManifest = newManifest;
@@ -178,8 +183,8 @@ public class Jar extends Zip {
             r = new FileReader(manifestFile);
             newManifest = getManifest(r);
         } catch (IOException e) {
-            throw new BuildException("Unable to read manifest file: " 
-                                     + manifestFile 
+            throw new BuildException("Unable to read manifest file: "
+                                     + manifestFile
                                      + " (" + e.getMessage() + ")", e);
         } finally {
             if (r != null) {
@@ -200,7 +205,7 @@ public class Jar extends Zip {
             newManifest = new Manifest(r);
         } catch (ManifestException e) {
             log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
-            throw new BuildException("Invalid Manifest: " + manifestFile, 
+            throw new BuildException("Invalid Manifest: " + manifestFile,
                                      e, getLocation());
         } catch (IOException e) {
             throw new BuildException("Unable to read manifest file"
@@ -210,9 +215,8 @@ public class Jar extends Zip {
     }
 
     public void setFilesetmanifest(FilesetManifestConfig config) {
-        String filesetManifestConfig = config.getValue();
-        mergeManifests = !("skip".equals(filesetManifestConfig));
-        mergeManifestsMain = "merge".equals(filesetManifestConfig);
+        filesetManifestConfig = config;
+        mergeManifestsMain = "merge".equals(config.getValue());
     }
 
     public void addMetainf(ZipFileSet fs) {
@@ -223,8 +227,16 @@ public class Jar extends Zip {
 
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
-        String ls = System.getProperty("line.separator");
+        if (filesetManifestConfig == null
+            || filesetManifestConfig.getValue().equals("skip")) {
+            manifestOnFinalize = false;
+            createManifest(zOut);
+        }
+    }
 
+    private void createManifest(ZipOutputStream zOut)
+        throws IOException, BuildException {
+        String ls = System.getProperty("line.separator");
         try {
             Manifest finalManifest = Manifest.getDefaultManifest();
 
@@ -239,7 +251,7 @@ public class Jar extends Zip {
                 } else if (configuredManifest != null) {
                     // configuredManifest is the final merge
                     finalManifest.merge(filesetManifest);
-                    finalManifest.merge(configuredManifest, 
+                    finalManifest.merge(configuredManifest,
                                         !mergeManifestsMain);
                 } else if (filesetManifest != null) {
                     // filesetManifest is the final (and only) merge
@@ -252,9 +264,9 @@ public class Jar extends Zip {
                 finalManifest.merge(manifest, !mergeManifestsMain);
             }
 
-            for (Enumeration e = finalManifest.getWarnings(); 
+            for (Enumeration e = finalManifest.getWarnings();
                  e.hasMoreElements();) {
-                log("Manifest warning: " + (String) e.nextElement(), 
+                log("Manifest warning: " + (String) e.nextElement(),
                     Project.MSG_WARN);
             }
 
@@ -269,9 +281,9 @@ public class Jar extends Zip {
             finalManifest.write(writer);
             writer.flush();
 
-            ByteArrayInputStream bais = 
+            ByteArrayInputStream bais =
                 new ByteArrayInputStream(baos.toByteArray());
-            super.zipFile(bais, zOut, "META-INF/MANIFEST.MF", 
+            super.zipFile(bais, zOut, "META-INF/MANIFEST.MF",
                           System.currentTimeMillis(), null);
             super.initZipOutputStream(zOut);
         } catch (ManifestException e) {
@@ -284,6 +296,10 @@ public class Jar extends Zip {
 
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
             throws IOException, BuildException {
+        if (manifestOnFinalize) {
+            createManifest(zOut);
+        }
+
         if (index) {
             createIndexList(zOut);
         }
@@ -302,7 +318,7 @@ public class Jar extends Zip {
     private void createIndexList(ZipOutputStream zOut) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // encoding must be UTF8 as specified in the specs.
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(baos, 
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(baos,
                                                                     "UTF8"));
 
         // version-info blankline
@@ -338,7 +354,7 @@ public class Jar extends Zip {
         }
 
         writer.flush();
-        ByteArrayInputStream bais = 
+        ByteArrayInputStream bais =
             new ByteArrayInputStream(baos.toByteArray());
         super.zipFile(bais, zOut, INDEX_NAME, System.currentTimeMillis(), null);
     }
@@ -378,9 +394,10 @@ public class Jar extends Zip {
             } else {
                 manifest = getManifest(file);
             }
-        } else if (mergeManifests) {
+        } else if (filesetManifestConfig != null && 
+                   !filesetManifestConfig.getValue().equals("skip")) {
             // we add this to our group of fileset manifests
-            log("Found manifest to merge in file " + file, 
+            log("Found manifest to merge in file " + file,
                 Project.MSG_VERBOSE);
 
             try {
@@ -391,16 +408,20 @@ public class Jar extends Zip {
                     filesetManifest.merge(newManifest);
                 }
             } catch (ManifestException e) {
-                log("Manifest in file " + file + " is invalid: " 
+                log("Manifest in file " + file + " is invalid: "
                     + e.getMessage(), Project.MSG_ERR);
                 throw new BuildException("Invalid Manifest", e, getLocation());
             }
         } else {
             // assuming 'skip' otherwise
-            log("File " + file 
-                + " includes a META-INF/MANIFEST.MF which will be ignored. " 
+            // don't warn if skip has been requested explicitly, warn if user
+            // didn't set the attribute
+            int logLevel = filesetManifestConfig == null ?
+                Project.MSG_WARN : Project.MSG_VERBOSE;
+            log("File " + file
+                + " includes a META-INF/MANIFEST.MF which will be ignored. "
                 + "To include this file, set filesetManifest to a value other "
-                + "than 'skip'.", Project.MSG_WARN);
+                + "than 'skip'.", logLevel);
         }
     }
 
@@ -412,34 +433,34 @@ public class Jar extends Zip {
      *         already); false if archive creation should proceed
      * @exception BuildException if it likes
      */
-    protected boolean isUpToDate(FileScanner[] scanners, File zipFile) 
+    protected boolean isUpToDate(FileScanner[] scanners, File zipFile)
         throws BuildException {
         // need to handle manifest as a special check
         if (configuredManifest != null || manifestFile == null) {
             java.util.zip.ZipFile theZipFile = null;
             try {
                 theZipFile = new java.util.zip.ZipFile(zipFile);
-                java.util.zip.ZipEntry entry = 
+                java.util.zip.ZipEntry entry =
                     theZipFile.getEntry("META-INF/MANIFEST.MF");
                 if (entry == null) {
-                    log("Updating jar since the current jar has no manifest", 
+                    log("Updating jar since the current jar has no manifest",
                         Project.MSG_VERBOSE);
                     return false;
                 }
-                Manifest currentManifest = 
+                Manifest currentManifest =
                     new Manifest(new InputStreamReader(theZipFile
                                                        .getInputStream(entry)));
                 if (configuredManifest == null) {
                     configuredManifest = Manifest.getDefaultManifest();
                 }
                 if (!currentManifest.equals(configuredManifest)) {
-                    log("Updating jar since jar manifest has changed", 
+                    log("Updating jar since jar manifest has changed",
                         Project.MSG_VERBOSE);
                     return false;
                 }
             } catch (Exception e) {
                 // any problems and we will rebuild
-                log("Updating jar since cannot read current jar manifest: " 
+                log("Updating jar since cannot read current jar manifest: "
                     + e.getClass().getName() + " - " + e.getMessage(),
                     Project.MSG_VERBOSE);
                 return false;
@@ -487,7 +508,7 @@ public class Jar extends Zip {
     public void reset() {
         super.reset();
         configuredManifest = null;
-        mergeManifests = false;
+        filesetManifestConfig = null;
         mergeManifestsMain = false;
         manifestFile = null;
         index = false;

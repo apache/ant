@@ -118,7 +118,9 @@ public abstract class BaseSelector extends DataType implements FileSelector {
      * in isSelected() in the case of an error condition.
      */
     public void validate() {
-        verifySettings();
+        if (getError() == null) {
+            verifySettings();
+        }
         if (getError() != null) {
             throw new BuildException(errmsg);
         }

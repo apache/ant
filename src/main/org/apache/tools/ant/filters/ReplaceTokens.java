@@ -60,7 +60,7 @@ import java.util.Hashtable;
 import org.apache.tools.ant.types.Parameter;
 
 /**
- * Replaces tokens in the original input with user-supplied values
+ * Replaces tokens in the original input with user-supplied values.
  *
  * Example:
  *

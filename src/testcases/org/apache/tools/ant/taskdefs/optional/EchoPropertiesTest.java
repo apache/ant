@@ -71,6 +71,7 @@ public class EchoPropertiesTest extends BuildFileTest {
     private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
     private static final String GOOD_OUTFILE = "test.properties";
     private static final String PREFIX_OUTFILE = "test-prefix.properties";
+    private static final String TEST_VALUE = "isSet";
     private static final String BAD_OUTFILE = ".";
 
     public EchoPropertiesTest(String name) {
@@ -79,7 +80,7 @@ public class EchoPropertiesTest extends BuildFileTest {
 
     public void setUp() {
         configureProject(TASKDEFS_DIR + "echoproperties.xml");
-        project.setProperty( "test.property", "is set" );
+        project.setProperty( "test.property", TEST_VALUE );
     }
 
     public void tearDown() {
@@ -88,11 +89,7 @@ public class EchoPropertiesTest extends BuildFileTest {
     
     
     public void testEchoToLog() {
-        executeTarget( "testEchoToLog" );
-        String out = getLog();
-        assertTrue(
-            "Did not output testEchoToLog.",
-            out.indexOf( "test.property=is set" ) >= 0 );
+        expectLogContaining("testEchoToLog", "test.property="+TEST_VALUE);
     }
     
     
@@ -167,7 +164,7 @@ public class EchoPropertiesTest extends BuildFileTest {
         Properties props=loadPropFile(GOOD_OUTFILE);
         props.list(System.out);
         assertEquals("test property not found ",
-                     "is set",props.getProperty("test.property"));
+                     TEST_VALUE, props.getProperty("test.property"));
 /*
         // read in the file
         FileReader fr = new FileReader( f );
@@ -176,7 +173,7 @@ public class EchoPropertiesTest extends BuildFileTest {
             String read = null;
             while ( (read = br.readLine()) != null)
             {
-                if (read.indexOf("test.property=is set") >= 0)
+                if (read.indexOf("test.property" + TEST_VALUE) >= 0)
                 {
                     // found the property we set - it's good.
                     return;

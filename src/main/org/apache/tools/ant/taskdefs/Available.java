@@ -185,8 +185,9 @@ public class Available extends Task implements Condition {
      *
      * @param file the name of the file which is required.
      */
-    public void setFile(String file) {
-        this.file = file;
+    public void setFile(File f) {
+        this.file = FileUtils.newFileUtils()
+            .removeLeadingPath(getProject().getBaseDir(), f);
     }
 
     /**
@@ -464,19 +465,20 @@ public class Available extends Task implements Condition {
         try {
             Class requiredClass = null;
             if (ignoreSystemclasses) {
-                loader = new AntClassLoader(null, getProject(), 
-                    classpath, false);
+                loader = new AntClassLoader(null, getProject(), classpath, 
+                                            false);
                 if (loader != null) {
                     try {
-                        loader.findClass(classname);
+                        requiredClass = loader.findClass(classname);
                     } catch (SecurityException se) {
-                        // class found but restricted name; this is actually
-                        // the case we're looking for, so catch the exception
-                        // and return
+                        // class found but restricted name; this is
+                        // actually the case we're looking for in JDK 1.3+,
+                        // so catch the exception and return
                         return true;
                     }
+                } else {
+                    return false;
                 }
-                return false;
             } else if (loader != null) {
                 requiredClass = loader.loadClass(classname);
             } else {

@@ -120,7 +120,7 @@ public class JspC extends MatchingTask {
     private String compilerName = "jasper";
 
     /**
-     *  -ieplugin <clsid>Java Plugin classid for Internet Explorer
+     *  -ieplugin &lt;clsid&gt; Java Plugin classid for Internet Explorer
      */
     private String iepluginid ;
     private boolean mapped ;
@@ -134,25 +134,25 @@ public class JspC extends MatchingTask {
     protected boolean failOnError = true;
         
     /**
-     *  -uribase <dir>The uri directory compilations should be relative to
+     *  -uribase &lt;dir&gt; The uri directory compilations should be relative to
      *  (Default is "/")
      */
 
     private File uribase;
 
     /**
-     *  -uriroot <dir>The root directory that uri files should be resolved
+     *  -uriroot &lt;dir&gt; The root directory that uri files should be resolved
      *  against, 
      */
     private File uriroot;
 
     /**
-     *  -webinc <file>Creates partial servlet mappings for the -webapp option
+     *  -webinc &lt;file&gt; Creates partial servlet mappings for the -webapp option
      */
     private File webinc;
 
     /**
-     *  -webxml <file>Creates a complete web.xml when using the -webapp option.
+     *  -webxml &lt;file&gt; Creates a complete web.xml when using the -webapp option.
      */
 
     private File webxml;
@@ -298,7 +298,7 @@ public class JspC extends MatchingTask {
     }
 
     /**
-     *  -webxml <file>Creates a complete web.xml when using the -webapp option.
+     *  -webxml &lt;file&gt; Creates a complete web.xml when using the -webapp option.
      *
      * @param  webxml  The new Webxml value
      */

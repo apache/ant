@@ -307,31 +307,51 @@ public class TaskTagsHandler extends XDocletTagSupport {
         return false;
     }
 
-    /**
-     * @todo need to add checks for number of parameters and non-supported parameters
-     */
     private MethodDoc[] getAttributeMethods(ClassDoc cur_class) throws XDocletException {
         MethodDoc[] methods = getMethods(cur_class);
         List attributeMethods = new ArrayList();
+        Map nameTypeMap = new HashMap();
 
         for (int i = 0; i < methods.length; i++) {
-            if (!methods[i].name().startsWith("set")) {
+            MethodDoc method = methods[i];
+
+            if (!method.isPublic()) {
+                continue;
+            }
+
+            if (!method.name().startsWith("set")) {
                 continue;
             }
 
             // if superclass is org.apache.tools.ant.Task then
             // remove some known unallowed properties
-            if (isAntAttribute(methods[i])) {
+            if (isAntAttribute(method)) {
                 continue;
             }
 
             // ensure method only has one parameter
-            Parameter[] params = methods[i].parameters();
+            Parameter[] params = method.parameters();
             if (params.length != 1) {
                 continue;
             }
 
-            attributeMethods.add(methods[i]);
+            Parameter param = params[0];
+
+            // Screen out attribute setters if there are duplicates,
+            // and only return the first non-String one
+            // (this may or may not jive with IntrospectionHelper)
+            MethodDoc oldMethod = (MethodDoc) nameTypeMap.get(method.name());
+            if (oldMethod == null) {
+                nameTypeMap.put(method.name(), method);
+            }
+            else {
+                if ("java.lang.String".equals(oldMethod.parameters()[0].typeName())) {
+                    attributeMethods.remove(oldMethod);
+                    nameTypeMap.put(method.name(), method);
+                }
+            }
+
+            attributeMethods.add(method);
         }
 
         return (MethodDoc[]) attributeMethods.toArray(new MethodDoc[0]);
@@ -347,6 +367,10 @@ public class TaskTagsHandler extends XDocletTagSupport {
         List attributeMethods = new ArrayList();
 
         for (int i = 0; i < methods.length; i++) {
+            if (! methods[i].isPublic()) {
+                continue;
+            }
+
             String name = methods[i].name();
 
             // ensure if there are no parameters, there is a return type,
@@ -354,6 +378,12 @@ public class TaskTagsHandler extends XDocletTagSupport {
             Parameter[] params = methods[i].parameters();
             if (params.length == 0) {
                 if (methods[i].returnType().asClassDoc() == null) {
+                    continue;
+                }
+
+                // only the "createXXX" method has zero params
+                // the "addXXX" and "addConfiguredXXX" have 1 param
+                if (!name.startsWith("create")) {
                     continue;
                 }
             }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,48 +51,62 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.extension;
+
+package org.apache.tools.ant;
+import org.apache.tools.ant.types.Path;
+import junit.framework.TestCase;
 
 /**
- * Enum used in (@link Extension) to indicate the compatability
- * of one extension to another. See (@link Extension) for instances
- * of object.
+ * Test case for ant class loader
  *
- * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
- *  This file is from excalibur.extension package. Dont edit this file
- * directly as there is no unit tests to make sure it is operational
- * in ant. Edit file in excalibur and run tests there before changing
- * ants file.
- * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
- *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @version $Revision$ $Date$
- * @see Extension
+ * @author Conor MacNeill</a> 
  */
-public final class Compatability
-{
-    /**
-     * A string representaiton of compatability level.
-     */
-    private final String m_name;
+public class AntClassLoaderTest extends TestCase {
 
-    /**
-     * Create a compatability enum with specified name.
-     *
-     * @param name the name of compatability level
-     */
-    Compatability( final String name )
-    {
-        m_name = name;
+    private Project p;
+
+    public AntClassLoaderTest(String name) {
+        super(name);
     }
 
-    /**
-     * Return name of compatability level.
-     *
-     * @return the name of compatability level
-     */
-    public String toString()
-    {
-        return m_name;
+    public void setUp() {
+        p = new Project();
+        p.init();
+    }
+
+    public void testCleanup() throws BuildException {
+        Path path = new Path(p, ".");
+        AntClassLoader loader = new AntClassLoader(p, path);
+        try {
+            // we don't expect to find this
+            loader.findClass("fubar");
+            fail("Did not expect to find fubar class");
+        } catch (ClassNotFoundException e) {
+            // ignore expected
+        }
+        
+        loader.cleanup();
+        try {
+            // we don't expect to find this
+            loader.findClass("fubar");
+            fail("Did not expect to find fubar class");
+        } catch (ClassNotFoundException e) {
+            // ignore expected
+        } catch (NullPointerException e) {
+            fail("loader should not fail even if cleaned up");
+        }
+        
+        // tell the build it is finished
+        p.fireBuildFinished(null);
+        try {
+            // we don't expect to find this
+            loader.findClass("fubar");
+            fail("Did not expect to find fubar class");
+        } catch (ClassNotFoundException e) {
+            // ignore expected
+        } catch (NullPointerException e) {
+            fail("loader should not fail even if project finished");
+        }
     }
 }
+

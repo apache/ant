@@ -164,12 +164,16 @@ public class JavaEnvUtils {
             return command;
         }
 
-        File jExecutable = findInDir(javaHome + "/bin", command);
+        File jExecutable = null;
 
-        if (jExecutable == null && isAix) {
+        if (isAix) {
             // On IBM's JDK 1.2 the directory layout is different, 1.3 follows
             // Sun's layout.
             jExecutable = findInDir(javaHome + "/sh", command);
+        }
+
+        if (jExecutable == null) { 
+            jExecutable = findInDir(javaHome + "/bin", command);
         }
 
         if (jExecutable != null) {
@@ -200,19 +204,24 @@ public class JavaEnvUtils {
             return command;
         }
 
-        File jExecutable = findInDir(javaHome + "/../bin", command);
+        File jExecutable = null;
 
-        if (jExecutable == null && isAix) {
+        if (isAix) {
             // On IBM's JDK 1.2 the directory layout is different, 1.3 follows
             // Sun's layout.
             jExecutable = findInDir(javaHome + "/../sh", command);
+        }
+
+        if (jExecutable == null) { 
+            jExecutable = findInDir(javaHome + "/../bin", command);
         }
 
         if (jExecutable != null) {
             return jExecutable.getAbsolutePath();
         } else {
             // fall back to JRE bin directory, also catches JDK 1.0 and 1.1
-            // where java.home points to the root of the JDK
+            // where java.home points to the root of the JDK and Mac OS X where
+            // the whole directory layout is different from Sun's
             return getJreExecutable(command);
         }
     }

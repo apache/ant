@@ -661,20 +661,31 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 Param p = (Param) e.nextElement();
                 liaison.addParam(p.getName(), p.getExpression());
             }
-            // if liaison is a TraxLiason, use XMLCatalog as the entity
-            // resolver
-            if (liaison.getClass().getName().equals(TRAX_LIAISON_CLASS) &&
-                xmlCatalog != null) {
-                log("Configuring TraxLiaison and calling entity resolver",
-                    Project.MSG_DEBUG);
-                Method resolver = liaison.getClass()
-                                    .getDeclaredMethod("setEntityResolver", 
-                                        new Class[] {EntityResolver.class});
-                resolver.invoke(liaison, new Object[] {xmlCatalog});
-            }
         } catch (Exception ex) {
             log("Failed to read stylesheet " + stylesheet, Project.MSG_INFO);
             throw new BuildException(ex);
+        }
+
+        try {
+            // if liaison is a TraxLiason, use XMLCatalog as the entity
+            // resolver and URI resolver
+            if (liaison.getClass().getName().equals(TRAX_LIAISON_CLASS) &&
+                xmlCatalog != null) {
+                log("Configuring TraxLiaison: setting entity resolver " +
+                    "and setting URI resolver", Project.MSG_DEBUG);
+                Method resolver = liaison.getClass()
+                    .getDeclaredMethod("setEntityResolver", 
+                                       new Class[] {EntityResolver.class});
+                resolver.invoke(liaison, new Object[] {xmlCatalog});
+
+                resolver = liaison.getClass()
+                    .getDeclaredMethod("setURIResolver", 
+                                       new Class[] {loadClass("javax.xml.transform.URIResolver")});
+                resolver.invoke(liaison, new Object[] {xmlCatalog});
+            }
+        } catch (Exception e) {
+            throw new BuildException("Failed to configure XMLCatalog for "
+                                     + "TraxLiaison", e);
         }
     }
     

@@ -2,6 +2,10 @@
 
 <project name="ant-test" basedir="." default="test1">
 
+  <path id="inheritable">
+    <pathelement path="${java.class.path}" />
+  </path>
+
   <target name="cleanup">
     <delete file="test1.log" />
     <delete file="test2.log" />
@@ -82,5 +86,11 @@
          inheritall="false" dir="ant" />
     <ant antfile="ant.xml" target="dummy" output="test4.log" 
          dir="ant" />
+  </target>
+
+  <target name="testRefid">
+    <ant antfile="ant/references.xml" inheritRefs="false" target="dummy">
+      <property name="testprop" refid="inheritable" />
+    </ant>
   </target>
 </project>

@@ -41,12 +41,12 @@ To build and use Ant, you must have a JAXP-compliant XML parser installed and
 available on your classpath.</p>
 <p>
 The binary distribution of Ant includes the latest version of the
-<a href="http://xml.apache.org/crimson/index.html">Apache Crimson</a> XML parser. 
+<a href="http://xml.apache.org/xerces2-j/index.html">Apache Xerces2</a> XML parser. 
 Please see 
 <a href="http://java.sun.com/xml/" target="_top">http://java.sun.com/xml/</a> 
 for more information about JAXP. 
 If you wish to use a different JAXP-compliant parser, you should remove
-<code>jaxp.jar</code> and <code>crimson.jar</code>
+<code>xercesImpl.jar</code> and <code>xmlParserAPIs.jar</code>
 from Ant's <code>lib</code> directory.
 
 You can then either put the jars from your preferred parser into Ant's 
@@ -319,7 +319,7 @@ Installing Ant / Optional Tasks</a> section above.</p>
         www2.hursley.ibm.com/netrexx</a></td>
   </tr>
   <tr>
-    <td>rhino.jar</td>
+    <td>js.jar</td>
     <td>javascript with script task</td>
     <td><a href="http://www.mozilla.org/rhino/" target="_top">www.mozilla.org/rhino</a></td>
   </tr>
@@ -332,6 +332,11 @@ Installing Ant / Optional Tasks</a> section above.</p>
     <td>jacl.jar and tcljava.jar</td>
     <td>TCL with script task</td>
     <td><a href="http://www.scriptics.com/java" target="_top">www.scriptics.com/java</a></td>
+  </tr>
+  <tr>
+    <td>BeanShell JAR(s)</td>
+    <td>BeanShell with script task</td>
+    <td><a href="http://www.beanshell.org" target="_top">www.beanshell.org</a></td>
   </tr>
   <tr>
     <td>netcomponents.jar</td>
@@ -368,7 +373,7 @@ Installing Ant / Optional Tasks</a> section above.</p>
 </table>
 <br>
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

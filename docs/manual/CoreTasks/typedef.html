@@ -62,6 +62,13 @@ the project level and referenced via their ID attribute.</p>
       use when looking up <code>classname</code>.</td> <td
     align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">loaderRef</td> <td valign="top">the name of the loader that is
+    used to load the class, constructed from the specified classpath. Use this to
+    allow multiple tasks/types to be loaded with the same loader, so they can call
+    each other. ( introduced in ant1.5 )</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 <h4>classpath</h4>
@@ -73,7 +80,7 @@ via a nested <i>classpath</i> element.</p>
 <p>makes a data type called <code>urlset</code> available to Ant. The
 class <code>com.mydomain.URLSet</code> implements this type.</p>
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software
+<p align="center">Copyright &copy; 2001-2002 Apache Software
 Foundation. All rights Reserved.</p>
 
 </body>

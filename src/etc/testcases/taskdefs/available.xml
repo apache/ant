@@ -110,7 +110,14 @@
 
   <target name="test21">
     <available property="test" ignoresystemclasses="true"
-               classname="java.awt.Graphics" classpath="${java.home}/lib/rt.jar:${java.home}/lib/classes.zip"/>
+               classname="java.awt.Graphics">
+      <classpath>
+        <pathelement location="${java.home}/lib/rt.jar" />
+        <pathelement location="${java.home}/lib/classes.jar" />
+        <pathelement location="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/classes.jar" />
+        <pathelement location="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes/ui.jar" />
+      </classpath>
+    </available>
   </target>
 
   <target name="test22">
@@ -133,5 +140,15 @@
                classname="test.test" classpath="${user.dir}/test.jar"/>
     <delete dir="${user.dir}/test"/>
     <delete file="${user.dir}/test.jar"/>
+  </target>
+
+  <target name="searchInPathNotThere">
+    <available file="not_there" filepath="..:optional"
+               property="test" />
+  </target>
+
+  <target name="searchInPathIsThere">
+    <available file="pvcs.xml" filepath="..:optional"
+               property="test" />
   </target>
 </project>

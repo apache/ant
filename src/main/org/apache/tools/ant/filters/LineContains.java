@@ -77,7 +77,7 @@ import org.apache.tools.ant.types.Parameter;
  *    &lt;param type="contains" value="bar"/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * This will include only those lines that contain <code>foo</code> and 
+ * This will include only those lines that contain <code>foo</code> and
  * <code>bar</code>.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
@@ -91,7 +91,7 @@ public final class LineContains
     /** Vector that holds the strings that input lines must contain. */
     private Vector contains = new Vector();
 
-    /** 
+    /**
      * Remaining line to be read from this filter, or <code>null</code> if
      * the next call to <code>read()</code> should read the original stream
      * to find the next matching line.
@@ -100,7 +100,7 @@ public final class LineContains
 
     /**
      * Constructor for "dummy" instances.
-     * 
+     *
      * @see BaseFilterReader#BaseFilterReader()
      */
     public LineContains() {
@@ -120,12 +120,12 @@ public final class LineContains
     /**
      * Returns the next character in the filtered stream, only including
      * lines from the original stream which contain all of the specified words.
-     * 
+     *
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
-     * 
+     *
      * @exception IOException if the underlying stream throws an IOException
-     * during reading     
+     * during reading
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -143,21 +143,24 @@ public final class LineContains
                 line = line.substring(1);
             }
         } else {
+            String goodLine = null;
             line = readLine();
-            if (line == null) {
-                ch = -1;
-            } else {
+            while((line != null) && (goodLine == null)) {
+                goodLine = line;
                 int containsSize = contains.size();
                 for (int i = 0; i < containsSize; i++) {
                     String containsStr = (String) contains.elementAt(i);
                     if (line.indexOf(containsStr) == -1) {
-                        line = null;
+                        goodLine = null;
                         break;
                     }
                 }
-
-                return read();
+                line = readLine();
             }
+            if (goodLine != null) {
+                line = goodLine;
+                return read();
+            };
         }
 
         return ch;
@@ -165,8 +168,8 @@ public final class LineContains
 
     /**
      * Adds a <code>contains</code> element.
-     * 
-     * @param contains The <code>contains</code> element to add. 
+     *
+     * @param contains The <code>contains</code> element to add.
      *                 Must not be <code>null</code>.
      */
     public final void addConfiguredContains(final Contains contains) {
@@ -176,7 +179,7 @@ public final class LineContains
     /**
      * Sets the vector of words which must be contained within a line read
      * from the original stream in order for it to match this filter.
-     * 
+     *
      * @param contains A vector of words which must be contained within a line
      * in order for it to match in this filter. Must not be <code>null</code>.
      */
@@ -187,7 +190,7 @@ public final class LineContains
     /**
      * Returns the vector of words which must be contained within a line read
      * from the original stream in order for it to match this filter.
-     * 
+     *
      * @return the vector of words which must be contained within a line read
      * from the original stream in order for it to match this filter. The
      * returned object is "live" - in other words, changes made to the
@@ -200,10 +203,10 @@ public final class LineContains
     /**
      * Creates a new LineContains using the passed in
      * Reader for instantiation.
-     * 
+     *
      * @param rdr A Reader object providing the underlying stream.
      *            Must not be <code>null</code>.
-     * 
+     *
      * @return a new filter based on this configuration, but filtering
      *         the specified reader
      */
@@ -238,8 +241,8 @@ public final class LineContains
 
         /**
          * Sets the contains string
-         * 
-         * @param contains The contains string to set. 
+         *
+         * @param contains The contains string to set.
          *                 Must not be <code>null</code>.
          */
         public final void setValue(String contains) {
@@ -248,7 +251,7 @@ public final class LineContains
 
         /**
          * Returns the contains string.
-         * 
+         *
          * @return the contains string for this element
          */
         public final String getValue() {

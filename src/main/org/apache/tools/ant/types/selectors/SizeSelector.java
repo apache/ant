@@ -71,16 +71,16 @@ public class SizeSelector extends BaseExtendSelector {
     private long size = -1;
     private long multiplier = 1;
     private long sizelimit = -1;
-    private int cmp = 0;
-    public final static String SIZE_KEY = "millis";
-    public final static String UNITS_KEY = "datetime";
+    private int cmp = 2;
+    public final static String SIZE_KEY = "value";
+    public final static String UNITS_KEY = "units";
     public final static String WHEN_KEY = "when";
 
     public SizeSelector() {
     }
 
     public String toString() {
-        StringBuffer buf = new StringBuffer("{sizeselector size: ");
+        StringBuffer buf = new StringBuffer("{sizeselector value: ");
         buf.append(sizelimit);
         buf.append("compare: ");
         if (cmp == 0) {
@@ -102,7 +102,7 @@ public class SizeSelector extends BaseExtendSelector {
      *
      * @param size the size to select against expressed in units
      */
-    public void setSize(long size) {
+    public void setValue(long size) {
         this.size = size;
         if ((multiplier != 0) && (size > -1)) {
             sizelimit = size * multiplier;
@@ -179,7 +179,7 @@ public class SizeSelector extends BaseExtendSelector {
     }
 
     /**
-     * When using this as a dynamic selector, this method will be called.
+     * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
      * @param parameters the complete set of parameters for this selector
@@ -191,7 +191,7 @@ public class SizeSelector extends BaseExtendSelector {
                 String paramname = parameters[i].getName();
                 if (SIZE_KEY.equalsIgnoreCase(paramname)) {
                     try {
-                        setSize(new Long(parameters[i].getValue()
+                        setValue(new Long(parameters[i].getValue()
                                 ).longValue());
                     } catch (NumberFormatException nfe) {
                         setError("Invalid size setting "
@@ -227,7 +227,7 @@ public class SizeSelector extends BaseExtendSelector {
      */
     public void verifySettings() {
         if (size < 0) {
-            setError("The size attribute is required, and must be positive");
+            setError("The value attribute is required, and must be positive");
         }
         else if (multiplier < 1) {
             setError("Invalid Units supplied, must be K,Ki,M,Mi,G,Gi,T,or Ti");

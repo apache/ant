@@ -190,6 +190,11 @@ public class DependSet extends MatchingTask {
         while (enumTargetSets.hasMoreElements()) {
                  
            FileSet targetFS          = (FileSet) enumTargetSets.nextElement();
+           if (!targetFS.getDir(getProject()).exists()) {
+               // this is the same as if it was empty, no target files found
+               continue;
+           }
+           
            DirectoryScanner targetDS = targetFS.getDirectoryScanner(project);
            String[] targetFiles      = targetDS.getIncludedFiles();
                  

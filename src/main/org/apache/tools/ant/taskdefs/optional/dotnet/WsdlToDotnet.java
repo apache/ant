@@ -63,7 +63,7 @@ import java.io.File;
  * the framework SDK docos
  * @author      Steve Loughran steve_l@iseran.com
  * @version     0.5
- * @ant.task    name="csc" category="dotnet"
+ * @ant.task    name="wsdltodotnet" category="dotnet"
  * @since       ant 1.5
  */
 

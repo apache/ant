@@ -306,7 +306,7 @@ public class Move extends Copy {
                     }
                 }
 
-                if (destFile.exists()) {
+                if (destFile.exists() && destFile.isFile()) {
                     if (!destFile.delete()) {
                         throw new BuildException("Unable to remove existing "
                                                  + "file " + destFile);

@@ -190,6 +190,15 @@ public class ConditionTest extends BuildFileTest {
         expectPropertySet("filesmatch-match","filesmatch-match"); 
     }   
     
+    public void testFilesmatchDifferentSizes() {
+        expectPropertyUnset("filesmatch-different-sizes",
+            "filesmatch-different-sizes"); 
+    } 
+
+    public void testFilesmatchDifferentOnemissing() {
+        expectPropertyUnset("filesmatch-different-onemissing",
+            "filesmatch-different-onemissing"); 
+    } 
     
     public void testContains() {
         expectPropertySet("contains","contains"); 
