@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -191,7 +191,7 @@ public class DependScanner extends DirectoryScanner {
     }
 
     public void addDefaultExcludes() {}
-    public String[] getExcludedDirectories() { return null; };
+    public String[] getExcludedDirectories() { return null; }
     public String[] getExcludedFiles() { return null; }
     public String[] getIncludedDirectories() { return new String[0]; }
     public String[] getNotIncludedDirectories() { return null; }
