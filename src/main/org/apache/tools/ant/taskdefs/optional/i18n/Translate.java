@@ -74,12 +74,47 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Translates text embedded in files using Resource Bundle files.
+ * Since ant 1.6 preserves line endings
  *
  * @author Magesh Umasankar, Don Brown
  * @author <a href="mailto:tom@tbee.org">Tom Eugelink</a>
  */
 public class Translate extends MatchingTask {
-
+    /**
+     * search a bundle matching the specified language, the country and the variant
+     */
+    private static final int BUNDLE_SPECIFIED_LANGUAGE_COUNTRY_VARIANT = 0;
+    /**
+     * search a bundle matching the specified language, and the country
+     */
+    private static final int BUNDLE_SPECIFIED_LANGUAGE_COUNTRY = 1;
+    /**
+     * search a bundle matching the specified language only
+     */
+    private static final int BUNDLE_SPECIFIED_LANGUAGE = 2;
+    /**
+     * search a bundle matching nothing special
+     */
+    private static final int BUNDLE_NOMATCH = 3;
+    /**
+     * search a bundle matching the language, the country and the variant
+     * of the current locale of the computer
+     */
+    private static final int BUNDLE_DEFAULT_LANGUAGE_COUNTRY_VARIANT = 4;
+    /**
+     * search a bundle matching the language, and the country
+     * of the current locale of the computer
+     */
+    private static final int BUNDLE_DEFAULT_LANGUAGE_COUNTRY = 5;
+    /**
+     * search a bundle matching the language only
+     * of the current locale of the computer
+     */
+    private static final int BUNDLE_DEFAULT_LANGUAGE = 6;
+    /**
+     * number of possibilities for the search
+     */
+     private static final int BUNDLE_MAX_ALTERNATIVES = BUNDLE_DEFAULT_LANGUAGE + 1;
     /**
      * Family name of resource bundle
      */
@@ -154,7 +189,7 @@ public class Translate extends MatchingTask {
     /**
      * Last Modified Timestamp of resource bundle file being used.
      */
-    private long[] bundleLastModified = new long[7];
+    private long[] bundleLastModified = new long[BUNDLE_MAX_ALTERNATIVES];
 
     /**
      * Last Modified Timestamp of source file being used.
@@ -173,6 +208,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets Family name of resource bundle; required.
+     * @param bundle family name of resource bundle
      */
     public void setBundle(String bundle) {
         this.bundle = bundle;
@@ -180,6 +216,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets locale specific language of resource bundle; optional.
+     * @param bundleLanguage langage of the bundle
      */
     public void setBundleLanguage(String bundleLanguage) {
         this.bundleLanguage = bundleLanguage;
@@ -187,6 +224,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets locale specific country of resource bundle; optional.
+     * @param bundleCountry country of the bundle
      */
     public void setBundleCountry(String bundleCountry) {
         this.bundleCountry = bundleCountry;
@@ -194,6 +232,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets locale specific variant of resource bundle; optional.
+     * @param bundleVariant locale variant of resource bundle
      */
     public void setBundleVariant(String bundleVariant) {
         this.bundleVariant = bundleVariant;
@@ -201,6 +240,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets Destination directory; required.
+     * @param toDir destination directory
      */
     public void setToDir(File toDir) {
         this.toDir = toDir;
@@ -208,6 +248,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets starting token to identify keys; required.
+     * @param startToken starting token to identify keys
      */
     public void setStartToken(String startToken) {
         this.startToken = startToken;
@@ -215,6 +256,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Sets ending token to identify keys; required.
+     * @param endToken ending token to identify keys
      */
     public void setEndToken(String endToken) {
         this.endToken = endToken;
@@ -223,6 +265,7 @@ public class Translate extends MatchingTask {
     /**
      * Sets source file encoding scheme; optional,
      * defaults to encoding of local system.
+     * @param srcEncoding source file encoding
      */
     public void setSrcEncoding(String srcEncoding) {
         this.srcEncoding = srcEncoding;
@@ -231,6 +274,7 @@ public class Translate extends MatchingTask {
     /**
      * Sets destination file encoding scheme; optional.  Defaults to source file
      * encoding
+     * @param destEncoding destination file encoding scheme
      */
     public void setDestEncoding(String destEncoding) {
         this.destEncoding = destEncoding;
@@ -239,6 +283,7 @@ public class Translate extends MatchingTask {
     /**
      * Sets Resource Bundle file encoding scheme; optional.  Defaults to source file
      * encoding
+     * @param bundleEncoding bundle file encoding scheme
      */
     public void setBundleEncoding(String bundleEncoding) {
         this.bundleEncoding = bundleEncoding;
@@ -249,6 +294,7 @@ public class Translate extends MatchingTask {
      * whether it is newer than the source file as well as the
      * resource bundle file.
      * Defaults to false.
+     * @param forceOverwrite whether or not to overwrite existing files
      */
     public void setForceOverwrite(boolean forceOverwrite) {
         this.forceOverwrite = forceOverwrite;
@@ -256,6 +302,7 @@ public class Translate extends MatchingTask {
 
     /**
      * Adds a set of files to translate as a nested fileset element.
+     * @param set the fileset to be added
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -263,6 +310,12 @@ public class Translate extends MatchingTask {
 
     /**
      * Check attributes values, load resource map and translate
+     * @throws BuildException if the required attributes are not set
+     * Required : <ul>
+     *       <li>bundle</li>
+     *       <li>starttoken</li>
+     *       <li>endtoken</li>
+     *            </ul>
      */
     public void execute() throws BuildException {
         if (bundle == null) {
@@ -352,16 +405,16 @@ public class Translate extends MatchingTask {
         String variant = locale.getVariant().length() > 0
             ? "_" + locale.getVariant() : "";
         String bundleFile = bundle + language + country + variant;
-        processBundle(bundleFile, 0, false);
+        processBundle(bundleFile, BUNDLE_SPECIFIED_LANGUAGE_COUNTRY_VARIANT, false);
 
         bundleFile = bundle + language + country;
-        processBundle(bundleFile, 1, false);
+        processBundle(bundleFile, BUNDLE_SPECIFIED_LANGUAGE_COUNTRY, false);
 
         bundleFile = bundle + language;
-        processBundle(bundleFile, 2, false);
+        processBundle(bundleFile, BUNDLE_SPECIFIED_LANGUAGE, false);
 
         bundleFile = bundle;
-        processBundle(bundleFile, 3, false);
+        processBundle(bundleFile, BUNDLE_NOMATCH, false);
 
         //Load default locale bundle files
         //using default file encoding scheme.
@@ -376,13 +429,13 @@ public class Translate extends MatchingTask {
         bundleEncoding = System.getProperty("file.encoding");
 
         bundleFile = bundle + language + country + variant;
-        processBundle(bundleFile, 4, false);
+        processBundle(bundleFile, BUNDLE_DEFAULT_LANGUAGE_COUNTRY_VARIANT, false);
 
         bundleFile = bundle + language + country;
-        processBundle(bundleFile, 5, false);
+        processBundle(bundleFile, BUNDLE_DEFAULT_LANGUAGE_COUNTRY, false);
 
         bundleFile = bundle + language;
-        processBundle(bundleFile, 6, true);
+        processBundle(bundleFile, BUNDLE_DEFAULT_LANGUAGE, true);
     }
 
     /**
@@ -500,15 +553,17 @@ public class Translate extends MatchingTask {
                     File src = fileUtils.resolveFile(ds.getBasedir(), srcFiles[j]);
                     srcLastModified = src.lastModified();
                     //Check to see if dest file has to be recreated
-                    if (forceOverwrite
-                        || destLastModified < srcLastModified
-                        || destLastModified < bundleLastModified[0]
-                        || destLastModified < bundleLastModified[1]
-                        || destLastModified < bundleLastModified[2]
-                        || destLastModified < bundleLastModified[3]
-                        || destLastModified < bundleLastModified[4]
-                        || destLastModified < bundleLastModified[5]
-                        || destLastModified < bundleLastModified[6]) {
+                    boolean needsWork = forceOverwrite
+                        || destLastModified < srcLastModified;
+                    if (!needsWork) {
+                        for (int icounter = 0; icounter < BUNDLE_MAX_ALTERNATIVES; icounter++) {
+                            needsWork = (destLastModified < bundleLastModified[icounter]);
+                            if (needsWork) {
+                                break;
+                            }
+                        }
+                    }
+                    if (needsWork) {
                         log("Processing " + srcFiles[j],
                             Project.MSG_DEBUG);
                         FileOutputStream fos = new FileOutputStream(dest);
