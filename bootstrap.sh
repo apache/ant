@@ -19,12 +19,19 @@ else
   CLASSPATH=$LOCALCLASSPATH
 fi
 
-if test -f $JAVA_HOME/lib/tools.jar ; then
-  CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
-fi
-
-if test -f $JAVA_HOME/lib/classes.zip ; then
-  CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/classes.zip
+if [ "$JAVA_HOME" != "" ] ; then
+  if test -f $JAVA_HOME/lib/tools.jar ; then
+    CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/tools.jar
+  fi
+ 
+  if test -f $JAVA_HOME/lib/classes.zip ; then
+    CLASSPATH=$CLASSPATH:$JAVA_HOME/lib/classes.zip
+  fi
+else
+  echo "Warning: JAVA_HOME environment variable not set."
+  echo "  If build fails because sun.* classes could not be found"
+  echo "  you will need to set the JAVA_HOME environment variable"
+  echo "  to the installation directory of java."
 fi
 
 TOOLS=src/main/org/apache/tools

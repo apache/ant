@@ -268,6 +268,7 @@
   <!-- Run testcase                                                        -->
   <!-- =================================================================== -->
   <target name="runtests" depends="compiletests" if="junit.present">
+
 <!--
     This would make the buildprocess fail if using an Ant version
     without the junit task
@@ -280,7 +281,11 @@
         <pathelement path="${java.class.path}" />
       </classpath>
 
-      <test name="org.apache.tools.ant.AllJUnitTests" />
+      <test name="org.apache.tools.ant.IntrospectionHelperTest" />
+      <test name="org.apache.tools.ant.types.CommandlineTest" />
+      <test name="org.apache.tools.ant.types.CommandlineJavaTest" />
+      <test name="org.apache.tools.ant.types.EnumeratedAttributeTest" />
+      <test name="org.apache.tools.ant.types.PathTest" />
     </junit>
 -->
 

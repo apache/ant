@@ -51,6 +51,11 @@ if [ "$JAVA_HOME" != "" ] ; then
   if test -f $JAVA_HOME/lib/classes.zip ; then
     LOCALCLASSPATH=$LOCALCLASSPATH:$JAVA_HOME/lib/classes.zip
   fi
+else
+  echo "Warning: JAVA_HOME environment variable not set."
+  echo "  If build fails because sun.* classes could not be found"
+  echo "  you will need to set the JAVA_HOME environment variable"
+  echo "  to the installation directory of java."
 fi
 
 $JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} $ANT_OPTS org.apache.tools.ant.Main $@
