@@ -9,25 +9,9 @@ package org.apache.ant.tasklet.engine;
 
 import java.util.HashMap;
 import org.apache.ant.AntException;
-import org.apache.ant.configuration.Configurer;
-import org.apache.ant.configuration.DefaultConfigurer;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.ant.convert.engine.ConverterEngine;
-import org.apache.myrmidon.api.Task;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.avalon.framework.logger.AbstractLoggable;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.DefaultComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.Loggable;
 import org.apache.avalon.framework.camelot.DefaultFactory;
 import org.apache.avalon.framework.camelot.DefaultRegistry;
 import org.apache.avalon.framework.camelot.Factory;
@@ -35,7 +19,23 @@ import org.apache.avalon.framework.camelot.FactoryException;
 import org.apache.avalon.framework.camelot.Locator;
 import org.apache.avalon.framework.camelot.Registry;
 import org.apache.avalon.framework.camelot.RegistryException;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.component.DefaultComponentManager;
+import org.apache.avalon.framework.component.DefaultComponentManager;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
+import org.apache.myrmidon.api.Task;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.components.Configurer;
+import org.apache.myrmidon.components.configurer.DefaultConfigurer;
 
 public class DefaultTaskletEngine
     extends AbstractLoggable
@@ -74,7 +74,7 @@ public class DefaultTaskletEngine
     {
         return m_dataTypeEngine;
     }
-    
+
     /**
      * Retrieve relevent services needed to deploy.
      *
@@ -91,7 +91,7 @@ public class DefaultTaskletEngine
         m_tskDeployer = (TskDeployer)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
         m_configurer = (Configurer)componentManager.
-            lookup( "org.apache.ant.configuration.Configurer" );
+            lookup( "org.apache.myrmidon.components.Configurer" );
         m_dataTypeEngine = (DataTypeEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
         m_converterEngine = (ConverterEngine)componentManager.
@@ -128,7 +128,7 @@ public class DefaultTaskletEngine
         getLogger().debug( "Disposing" );
         doDispose( task, taskData );
     }
-    
+
     protected Task createTask( final String name )
         throws AntException
     {
@@ -147,7 +147,7 @@ public class DefaultTaskletEngine
         }
     }
 
-    protected void doConfigure( final Task task, 
+    protected void doConfigure( final Task task,
                                 final Configuration taskData,
                                 final TaskContext context )
         throws AntException
@@ -156,11 +156,11 @@ public class DefaultTaskletEngine
         catch( final Throwable throwable )
         {
             throw new AntException( "Error configuring task " +  taskData.getName() + " at " +
-                                    taskData.getLocation() + "(Reason: " + 
+                                    taskData.getLocation() + "(Reason: " +
                                     throwable.getMessage() + ")", throwable );
         }
     }
-    
+
     protected void doCompose( final Task task, final Configuration taskData )
         throws AntException
     {
@@ -170,29 +170,29 @@ public class DefaultTaskletEngine
             catch( final Throwable throwable )
             {
                 throw new AntException( "Error composing task " +  taskData.getName() + " at " +
-                                        taskData.getLocation() + "(Reason: " + 
-                                        throwable.getMessage() + ")", throwable );            
+                                        taskData.getLocation() + "(Reason: " +
+                                        throwable.getMessage() + ")", throwable );
             }
         }
     }
 
-    protected void doContextualize( final Task task, 
+    protected void doContextualize( final Task task,
                                     final Configuration taskData,
                                     final TaskContext context )
         throws AntException
     {
-        try 
-        { 
+        try
+        {
             if( task instanceof Contextualizable )
             {
-                ((Contextualizable)task).contextualize( context ); 
+                ((Contextualizable)task).contextualize( context );
             }
         }
         catch( final Throwable throwable )
         {
             throw new AntException( "Error contextualizing task " +  taskData.getName() + " at " +
-                                    taskData.getLocation() + "(Reason: " + 
-                                    throwable.getMessage() + ")", throwable );            
+                                    taskData.getLocation() + "(Reason: " +
+                                    throwable.getMessage() + ")", throwable );
         }
     }
 
@@ -205,7 +205,7 @@ public class DefaultTaskletEngine
             catch( final Throwable throwable )
             {
                 throw new AntException( "Error disposing task " +  taskData.getName() + " at " +
-                                        taskData.getLocation() + "(Reason: " + 
+                                        taskData.getLocation() + "(Reason: " +
                                         throwable.getMessage() + ")", throwable );
             }
         }

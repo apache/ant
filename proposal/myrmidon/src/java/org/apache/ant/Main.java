@@ -100,8 +100,8 @@ public class Main
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
     };
 
-    protected ProjectListener      m_listener;
-    protected File                 m_homeDir;
+    private ProjectListener      m_listener;
+    private File                 m_homeDir;
 
     /**
      * Main entry point called to run standard Ant.
@@ -139,9 +139,8 @@ public class Main
 
     /**
      * Initialise the options for command line parser.
-     * This is called by super-class.
      */
-    protected CLOptionDescriptor[] createCLOptions()
+    private CLOptionDescriptor[] createCLOptions()
     {
         //TODO: localise
         final CLOptionDescriptor[] options = new CLOptionDescriptor[ 11 ];

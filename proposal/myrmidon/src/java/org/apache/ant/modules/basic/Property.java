@@ -9,7 +9,7 @@ package org.apache.ant.modules.basic;
 
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.ant.configuration.Configurer;
+import org.apache.myrmidon.components.Configurer;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.tasklet.DataType;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
@@ -44,7 +44,7 @@ public class Property
         throws ComponentException
     {
         m_configurer = (Configurer)componentManager.
-            lookup( "org.apache.ant.configuration.Configurer" );
+            lookup( "org.apache.myrmidon.components.Configurer" );
 
         m_engine = (DataTypeEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );

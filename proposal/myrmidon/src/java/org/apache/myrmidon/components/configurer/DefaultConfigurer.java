@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.configuration;
+package org.apache.myrmidon.components.configurer;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,13 +18,14 @@ import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
-import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
+import org.apache.myrmidon.components.Configurer;
 
 /**
  * Class used to configure tasks.
@@ -35,18 +36,27 @@ public class DefaultConfigurer
     extends AbstractLoggable
     implements Configurer, Composable, Loggable
 {
-    protected final static String  RESERVED_ATTRIBUTES[] =
+    ///Compile time constant to turn on extreme debugging
+    private final static boolean   DEBUG         = false;
+
+    /*
+     * TODO: Should reserved names be "configurable" ?
+     */
+
+    ///Attribute names that are reserved
+    private final static String  RESERVED_ATTRIBUTES[] =
     {
-        "id"
+        "id", "logger"
     };
 
-    protected final static String  RESERVED_ELEMENTS[] =
+    ///Element names that are reserved
+    private final static String  RESERVED_ELEMENTS[] =
     {
         "content"
     };
 
-    protected final static boolean DEBUG         = false;
-    protected Converter            m_converter;
+    ///Converter to use for converting between values
+    private Converter            m_converter;
 
     public void compose( final ComponentManager componentManager )
         throws ComponentException
@@ -62,7 +72,7 @@ public class DefaultConfigurer
      * and if it does will pass the task the configuration - else it will use
      * ants rules to map configuration to types
      *
-     * @param tasklet the tasklet
+     * @param object the object
      * @param configuration the configuration
      * @param context the Context
      * @exception ConfigurationException if an error occurs
@@ -102,7 +112,7 @@ public class DefaultConfigurer
                 if( DEBUG )
                 {
                     getLogger().debug( "Configuring attribute name=" + name +
-                                    " value=" + value );
+                                       " value=" + value );
                 }
 
                 configureAttribute( object, name, value, context );
@@ -147,18 +157,18 @@ public class DefaultConfigurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    protected void configureContent( final Object object,
-                                     final String content,
-                                     final Context context )
+    private void configureContent( final Object object,
+                                   final String content,
+                                   final Context context )
         throws ConfigurationException
     {
         setValue( object, "addContent", content, context );
     }
 
-    protected void configureAttribute( final Object object,
-                                       final String name,
-                                       final String value,
-                                       final Context context )
+    private void configureAttribute( final Object object,
+                                     final String name,
+                                     final String value,
+                                     final Context context )
         throws ConfigurationException
     {
         for( int i = 0; i < RESERVED_ATTRIBUTES.length; i++ )
@@ -170,10 +180,10 @@ public class DefaultConfigurer
         setValue( object, methodName, value, context );
     }
 
-    protected void setValue( final Object object,
-                             final String methodName,
-                             final String value,
-                             final Context context )
+    private void setValue( final Object object,
+                           final String methodName,
+                           final String value,
+                           final Context context )
         throws ConfigurationException
     {
         // OMFG the rest of this is soooooooooooooooooooooooooooooooo
@@ -192,10 +202,10 @@ public class DefaultConfigurer
         setValue( object, value, context, methods );
     }
 
-    protected void setValue( final Object object,
-                             final String value,
-                             final Context context,
-                             final Method methods[] )
+    private void setValue( final Object object,
+                           final String value,
+                           final Context context,
+                           final Method methods[] )
         throws ConfigurationException
     {
         try
@@ -212,10 +222,10 @@ public class DefaultConfigurer
         }
     }
 
-    protected void setValue( final Object object,
-                             Object value,
-                             final Method methods[],
-                             final Context context )
+    private void setValue( final Object object,
+                           Object value,
+                           final Method methods[],
+                           final Context context )
         throws ConfigurationException
     {
         final Class sourceClass = value.getClass();
@@ -234,12 +244,12 @@ public class DefaultConfigurer
                                           source + " to a matching type" );
     }
 
-    protected boolean setValue( final Object object,
-                                Object value,
-                                final Method method,
-                                final Class sourceClass,
-                                final String source,
-                                final Context context )
+    private boolean setValue( final Object object,
+                              Object value,
+                              final Method method,
+                              final Class sourceClass,
+                              final String source,
+                              final Context context )
         throws ConfigurationException
     {
         Class parameterType = method.getParameterTypes()[ 0 ];
@@ -289,7 +299,7 @@ public class DefaultConfigurer
         return true;
     }
 
-    protected Class getComplexTypeFor( final Class clazz )
+    private Class getComplexTypeFor( final Class clazz )
     {
         if( String.class == clazz ) return String.class;
         else if( Integer.TYPE.equals( clazz ) ) return Integer.class;
@@ -306,7 +316,7 @@ public class DefaultConfigurer
         }
     }
 
-    protected Method[] getMethodsFor( final Class clazz, final String methodName )
+    private Method[] getMethodsFor( final Class clazz, final String methodName )
     {
         final Method methods[] = clazz.getMethods();
         final ArrayList matches = new ArrayList();
@@ -331,7 +341,7 @@ public class DefaultConfigurer
         return (Method[])matches.toArray( new Method[0] );
     }
 
-    protected Method[] getCreateMethodsFor( final Class clazz, final String methodName )
+    private Method[] getCreateMethodsFor( final Class clazz, final String methodName )
     {
         final Method methods[] = clazz.getMethods();
         final ArrayList matches = new ArrayList();
@@ -358,12 +368,12 @@ public class DefaultConfigurer
         return (Method[])matches.toArray( new Method[0] );
     }
 
-    protected String getMethodNameFor( final String attribute )
+    private String getMethodNameFor( final String attribute )
     {
         return "set" + getJavaNameFor( attribute.toLowerCase() );
     }
 
-    protected String getJavaNameFor( final String name )
+    private String getJavaNameFor( final String name )
     {
         final StringBuffer sb = new StringBuffer();
 
@@ -387,9 +397,9 @@ public class DefaultConfigurer
         return sb.toString();
     }
 
-    protected void configureElement( final Object object,
-                                     final Configuration configuration,
-                                     final Context context )
+    private void configureElement( final Object object,
+                                   final Configuration configuration,
+                                   final Context context )
         throws ConfigurationException
     {
         final String name = configuration.getName();
@@ -427,10 +437,10 @@ public class DefaultConfigurer
         }
     }
 
-    protected void createElement( final Object object,
-                                  final Method method,
-                                  final Configuration configuration,
-                                  final Context context )
+    private void createElement( final Object object,
+                                final Method method,
+                                final Configuration configuration,
+                                final Context context )
         throws ConfigurationException
     {
         try
@@ -448,10 +458,10 @@ public class DefaultConfigurer
         }
     }
 
-    protected void addElement( final Object object,
-                               final Method method,
-                               final Configuration configuration,
-                               final Context context )
+    private void addElement( final Object object,
+                             final Method method,
+                             final Configuration configuration,
+                             final Context context )
         throws ConfigurationException
     {
         try

@@ -10,7 +10,7 @@ package org.apache.ant.runtime;
 import java.io.File;
 import java.util.Properties;
 import org.apache.ant.AntException;
-import org.apache.ant.configuration.Configurer;
+import org.apache.myrmidon.components.Configurer;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
@@ -170,7 +170,7 @@ public class DefaultAntEngine
         defaults.setProperty( "ant.comp.deployer",
                               "org.apache.ant.tasklet.engine.DefaultTskDeployer" );
         defaults.setProperty( "ant.comp.configurer",
-                              "org.apache.ant.configuration.DefaultConfigurer" );
+                              "org.apache.myrmidon.components.configurer.DefaultConfigurer" );
 
         return defaults;
     }
@@ -193,7 +193,7 @@ public class DefaultAntEngine
         componentManager.put( "org.apache.ant.project.ProjectBuilder", m_builder );
         componentManager.put( "org.apache.ant.tasklet.engine.TskDeployer", m_deployer );
         componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
-        componentManager.put( "org.apache.ant.configuration.Configurer", m_configurer );
+        componentManager.put( "org.apache.myrmidon.components.Configurer", m_configurer );
 
         return componentManager;
     }
