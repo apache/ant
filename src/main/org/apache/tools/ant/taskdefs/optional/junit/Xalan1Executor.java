@@ -30,10 +30,35 @@ import org.apache.xalan.xslt.XSLTResultTarget;
  * @ant.task ignore="true"
  */
 public class Xalan1Executor extends XalanExecutor {
+
+    private static final String xsltP = "org.apache.xalan.xslt.XSLTProcessor";
+
+    private XSLTProcessor processor = XSLTProcessorFactory.getProcessor();
+
+    protected String getImplementation() {
+        return processor.getClass().getName();
+    }
+
+    protected String getProcVersion(String classNameImpl) 
+        throws BuildException {
+        try {
+            // xalan 1
+            if (classNameImpl.equals(xsltP)){
+                return getXalanVersion(xsltP + "Version");
+            }
+            throw new BuildException("Could not find a valid processor version"
+                                     + " implementation from " 
+                                     + classNameImpl);
+        } catch (ClassNotFoundException e){
+            throw new BuildException("Could not find processor version "
+                                     + "implementation", e);
+        }
+    }
+
     void execute() throws Exception {
-        XSLTProcessor processor = XSLTProcessorFactory.getProcessor();
         // need to quote otherwise it breaks because of "extra illegal tokens"
-        processor.setStylesheetParam("output.dir", "'" + caller.toDir.getAbsolutePath() + "'");
+        processor.setStylesheetParam("output.dir", "'" 
+                                     + caller.toDir.getAbsolutePath() + "'");
         XSLTInputSource xml_src = new XSLTInputSource(caller.document);
         String system_id = caller.getStylesheetSystemId();
         XSLTInputSource xsl_src = new XSLTInputSource(system_id);

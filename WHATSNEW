@@ -44,6 +44,17 @@ Changes that could break older environments:
 * Nested elements for namespaced tasks and types may belong to the
   Ant default namespace as well as the task's or type's namespace.
 
+* <junitreport> will very likely no longer work with Xalan-J 1.
+
+  Note that Xalan-J 1 has been deprecated for a very long time and we
+  highly recommend that you upgrade.
+
+  If you really need to continue using Xalan-J 1, please copy the
+  junit-frames-xalan1.xsl from the distributions etc directory as
+  junit-frames.xsl into a new directory and use the tasks styledir
+  attribute to point to.  This is the last version of the XSLT
+  stylesheet that is expected to be compatible with Xalan-J 1.
+
 Fixed bugs:
 -----------
 
@@ -244,6 +255,9 @@ Other changes:
 * <apply> has a new ignoremissing attribute (default true for BC)
   which will allow nonexistent files specified via <filelist>s to
   be passed to the executable.  Bugzilla Report 29585.
+
+* <junitreport> now also works with Xalan XSLTC and/or JDK 1.5.
+  Bugzilla Report 27541.
 
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================

@@ -14,21 +14,25 @@ the Ant distribution.  See <a href="../install.html#librarydependencies">
 Library Dependencies</a> for more information.</p>
 
 <h3>Requirements</h3>
-<p>The task needs <a href="http://xml.apache.org/xalan-j/">Xalan
-2.x</a>; although <a
+
+<p>The task needs Apache <a
+href="http://xml.apache.org/xalan-j/">Xalan 2.x or Xalan XSLTC</a>
+(JDK 1.4 contains a version of Xalan-J 2.x while JDK 1.5 ships with a
+version of XSLTC).  Versions prior to Ant 1.6.2 worked with Apache <a
 href="http://xml.apache.org/dist/xalan-j/old/xalan-j_1_2_2.zip">Xalan
-1.2.2</a> does work, but as Xalan1 is not supported, we do not
-recommend this.  While JDK 1.4.x contains a version of Xalan-J 2, JDK
-1.5 and later have <a
-href="http://java.sun.com/j2se/1.5.0/compatibility.html#4959783">moved
-to XSLTC</a>.  Since this task uses Xalan's redirect extensions for
-its internal stylesheet, Ant doesn't support XSLTC yet.  This means
-that you have to install Xalan-J 2 in order to use this task with JDK
-1.5.</p>
-<p>
-If you do you use Xalan 1.2.2 you will need a compatible (older) version of Xerces.
-as well as BSF(bsf.jar). Again, using Xalan 2 is simpler and supported.
-</i></p>
+1.2.2</a>, but as Xalan1 is no longer supported, we do not recommend
+this.  With Ant 1.6.2 we had to decide between supporting Xalan-J 1
+and XSLTC, since there was no way to support both at the same
+time.</p>
+
+<p>If you want to use Xalan 1.2.2, the noframes report is still
+supposed to work.  If you want the frames support, copy the file
+junit-frames-xalan1.xsl from the Ant distribution's etc directory to a
+new directory, change its name to junit-frames.xsl and use the task's
+styledir attribute to point to it.  You will also need a compatible
+(older) version of Xerces.  as well as BSF(bsf.jar). Again, using
+Xalan 2 is simpler and supported.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
