@@ -52,7 +52,7 @@ import org.apache.tools.ant.util.KeepAliveOutputStream;
  */
 public class Redirector {
 
-    private static final String defaultEncoding
+    private static final String DEFAULT_ENCODING
         = System.getProperty("file.encoding");
 
     private class PropertyOutputStream extends ByteArrayOutputStream {
@@ -152,13 +152,13 @@ public class Redirector {
     private Vector inputFilterChains;
 
     /** The output encoding */
-    private String outputEncoding = defaultEncoding;
+    private String outputEncoding = DEFAULT_ENCODING;
 
     /** The error encoding */
-    private String errorEncoding = defaultEncoding;
+    private String errorEncoding = DEFAULT_ENCODING;
 
     /** The input encoding */
-    private String inputEncoding = defaultEncoding;
+    private String inputEncoding = DEFAULT_ENCODING;
 
     /** Whether to complete properties settings **/
     private boolean appendProperties = true;
@@ -725,17 +725,22 @@ public class Redirector {
                     try {
                         managingTask.log(thread[i].toString(), Project.MSG_DEBUG);
                     } catch (NullPointerException enPeaEx) {
+                        // Ignore exception
                     }
                 }
                 Thread.sleep(1000);
             } catch (InterruptedException eyeEx) {
+                // Ignore exception
             }
         }
 
         setProperties();
 
         inputStream = null;
-        outputStream = errorStream = outPrintStream = errorPrintStream = null;
+        outputStream = null;
+        errorStream = null;
+        outPrintStream = null;
+        errorPrintStream = null;
    }
 
     /**
@@ -747,12 +752,14 @@ public class Redirector {
             try {
                 baos.close();
             } catch (IOException eyeOhEx) {
+                // Ignore exception
             }
         }
         if (errorBaos != null) {
             try {
                 errorBaos.close();
             } catch (IOException eyeOhEx) {
+                // Ignore exception
             }
         }
     }
