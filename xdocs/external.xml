@@ -2954,15 +2954,24 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>Ant 1.3 - 1.4.1</td>
+            <td>
+              Ant 1.3 - 1.4.1
+              Bundles Ant 1.6.2 as of Eclipse 3.0.1 (tested with Ant 1.5.4 - 1.6.2)
+            </td>
           </tr>
           <tr>
             <th>URL:</th>
-            <td><a href="http://www.eclipse.org/">http://www.eclipse.org/</a></td>
+            <td>
+              <a href="http://www.eclipse.org/">http://www.eclipse.org/</a>
+              or
+              <a href="http://dev.eclipse.org/viewcvs/index.cgi/~checkout~/platform-ant-home/index.html">
+                http://dev.eclipse.org/viewcvs/index.cgi/~checkout~/platform-ant-home/index.html
+              </a> 
+            </td>
           </tr>
           <tr>
             <th>Contact:</th>
-            <td><a href="news://news.eclipse.org/eclipse.tools">news://news.eclipse.org/eclipse.tools</a></td>
+            <td><a href="news://news.eclipse.org/eclipse.platform">news://news.eclipse.org/eclipse.platform</a></td>
           </tr>
           <tr>
             <th>License:</th>
