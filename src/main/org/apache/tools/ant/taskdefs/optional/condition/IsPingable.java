@@ -71,7 +71,7 @@ public class IsPingable extends ProjectComponent implements Condition  {
      *          if an error occurs
      */
     public boolean eval() throws BuildException {
-        if(host==null && host.length()==0) {
+        if(host==null || host.length()==0) {
             throw new BuildException(ERROR_NO_HOSTNAME);
         }
         if(timeout<0) {
