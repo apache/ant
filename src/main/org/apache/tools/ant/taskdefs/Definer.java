@@ -315,9 +315,9 @@ public abstract class Definer extends DefBase {
      */
     private void loadAntlib(ClassLoader classLoader, URL url) {
         try {
-            Antlib antlib = Antlib.createAntlib(getProject(), url, getUri());
+            Antlib antlib = Antlib.createAntlib(getProject(), url, getURI());
             antlib.setClassLoader(classLoader);
-            antlib.setURI(getUri());
+            antlib.setURI(getURI());
             antlib.perform();
         } catch (BuildException ex) {
             Location exLocation = ex.getLocation();
@@ -449,7 +449,7 @@ public abstract class Definer extends DefBase {
         Class cl = null;
         try {
             try {
-                name = ProjectHelper.genComponentName(getUri(), name);
+                name = ProjectHelper.genComponentName(getURI(), name);
 
                 if (onError != OnError.IGNORE) {
                     cl = Class.forName(classname, true, al);

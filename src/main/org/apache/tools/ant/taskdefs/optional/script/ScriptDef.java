@@ -271,7 +271,7 @@ public class ScriptDef extends DefBase {
             }
         }
 
-        name = ProjectHelper.genComponentName(getUri(), name);
+        name = ProjectHelper.genComponentName(getURI(), name);
         scriptRepository.put(name, this);
         AntTypeDefinition def = new AntTypeDefinition();
         def.setName(name);

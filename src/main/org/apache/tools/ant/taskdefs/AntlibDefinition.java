@@ -54,28 +54,65 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.Task;
+
 /**
- * Interface for tasks that should be informed when
- * they are loaded in antlib's.
+ * Base class for tasks that that can be used in antlibs.
  * For handling uri and class loading.
  *
  * @author Peter Reilly
  *
  * @since Ant 1.6
  */
-public interface AntlibInterface  {
+public class AntlibDefinition extends Task {
+
+    private String uri = "";
+    private ClassLoader antlibClassLoader;
 
     /**
      * The URI for this definition.
+     * If the URI is "ant:core", the uri will be set to "". (This
+     * is the default uri).
+     * URIs that start with "ant:" and are not
+     * "ant:core" are reserved and are not allowed in this context.
      * @param uri the namespace URI
+     * @throws BuildException if a reserved URI is used
      */
-    void setURI(String uri);
+    public void setURI(String uri) throws BuildException {
+        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
+            uri = "";
+        }
+        if (uri.startsWith("ant:")) {
+            throw new BuildException("Attempt to use a reserved URI " + uri);
+        }
+        this.uri = uri;
+    }
+
+    /**
+     * The URI for this definition.
+     * @return The URI for this defintion.
+     */
+    public String getURI() {
+        return uri;
+    }
 
     /**
      * Set the class loader of the loading object
      *
      * @param classLoader a <code>ClassLoader</code> value
      */
-    void setAntlibClassLoader(ClassLoader classLoader);
+    public void setAntlibClassLoader(ClassLoader classLoader) {
+        this.antlibClassLoader = classLoader;
+    }
 
+    /**
+     * The current antlib classloader
+     * @return the antlib classloader for the definition, this
+     *         is null if the definition is not used in an antlib.
+     */
+    public ClassLoader getAntlibClassLoader() {
+        return antlibClassLoader;
+    }
 }

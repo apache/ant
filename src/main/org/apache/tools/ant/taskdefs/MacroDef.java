@@ -76,12 +76,11 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author Peter Reilly
  * @since Ant 1.6
  */
-public class MacroDef extends Task implements AntlibInterface, TaskContainer {
+public class MacroDef extends AntlibDefinition implements TaskContainer {
     private UnknownElement nestedTask;
     private String     name;
     private List       attributes = new ArrayList();
     private Map        elements = new HashMap();
-    private String     uri;
     private int        attributeStyle = AttributeStyle.ANT;
 
     /**
@@ -90,21 +89,6 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
      */
      public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * The URI for this definition.
-     * @param uri the namespace URI
-     * @throws BuildException if uri is not allowed
-     */
-    public void setURI(String uri) throws BuildException {
-        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
-            uri = "";
-        }
-        if (uri.startsWith("ant:")) {
-            throw new BuildException("Attempt to use a reserved URI " + uri);
-        }
-        this.uri = uri;
     }
 
     /**
@@ -262,7 +246,7 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
             throw new BuildException("Name not specified");
         }
 
-        name = ProjectHelper.genComponentName(uri, name);
+        name = ProjectHelper.genComponentName(getURI(), name);
 
         MyAntTypeDefinition def = new MyAntTypeDefinition(this);
         def.setName(name);
@@ -439,13 +423,16 @@ public class MacroDef extends Task implements AntlibInterface, TaskContainer {
         if (!name.equals(other.name)) {
             return false;
         }
-        if (uri == null || uri.equals("")
-            || uri.equals(ProjectHelper.ANT_CORE_URI)) {
-            return other.uri == null || other.uri.equals("")
-                || other.uri.equals(ProjectHelper.ANT_CORE_URI);
-        }
-        if (!uri.equals(other.uri)) {
-            return false;
+        if (getURI() == null || getURI().equals("")
+            || getURI().equals(ProjectHelper.ANT_CORE_URI)) {
+            if (!(other.getURI() == null || other.getURI().equals("")
+                  || other.getURI().equals(ProjectHelper.ANT_CORE_URI))) {
+                return false;
+            }
+        } else {
+            if (!getURI().equals(other.getURI())) {
+                return false;
+            }
         }
 
         if (attributeStyle != other.attributeStyle) {

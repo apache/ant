@@ -57,8 +57,6 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.ClasspathUtils;
@@ -74,48 +72,9 @@ import org.apache.tools.ant.util.ClasspathUtils;
  *
  * @since Ant 1.6
  */
-public abstract class DefBase extends Task implements AntlibInterface {
-    private String uri = "";
-    private ClassLoader internalClassLoader;
+public abstract class DefBase extends AntlibDefinition {
     private ClassLoader createdLoader;
     private ClasspathUtils.Delegate cpDelegate;
-
-    /**
-     * The URI for this definition.
-     * If the URI is "ant:core", the uri will be set to "". (This
-     * is the default uri).
-     * URIs that start with "ant:" and are not
-     * "ant:core" are reserved and are not allowed in this context.
-     * @param uri the namespace URI
-     * @throws BuildException if a reserved URI is used
-     */
-    public void setURI(String uri) throws BuildException {
-        if (uri.equals(ProjectHelper.ANT_CORE_URI)) {
-            uri = "";
-        }
-        if (uri.startsWith("ant:")) {
-            throw new BuildException("Attempt to use a reserved URI " + uri);
-        }
-        this.uri = uri;
-    }
-
-    /**
-     * @return the namespace uri for this definition
-     */
-    public String getUri() {
-        return uri;
-    }
-
-
-    /**
-     * Set the class loader, overrides the cpDelagate
-     * classloader.
-     *
-     * @param classLoader a <code>ClassLoader</code> value
-     */
-    public void setAntlibClassLoader(ClassLoader classLoader) {
-        this.internalClassLoader = classLoader;
-    }
 
     /**
      * @param reverseLoader if true a delegated loader will take precedence over
@@ -207,8 +166,8 @@ public abstract class DefBase extends Task implements AntlibInterface {
      * @return the classloader from the cpDelegate
      */
     protected ClassLoader createLoader() {
-        if (internalClassLoader != null) {
-            return internalClassLoader;
+        if (getAntlibClassLoader() != null) {
+            return getAntlibClassLoader();
         }
         if (createdLoader == null) {
             createdLoader = this.cpDelegate.getClassLoader();

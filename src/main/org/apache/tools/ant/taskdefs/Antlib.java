@@ -70,7 +70,9 @@ import org.apache.tools.ant.UnknownElement;
 
 
 /**
- * Antlib task.
+ * Antlib task. It does not
+ * occur in an ant build file. It is the root element
+ * an antlib xml file.
  *
  * @author Peter Reilly
  *
@@ -179,21 +181,21 @@ public class Antlib extends Task implements TaskContainer {
             UnknownElement ue = (UnknownElement) i.next();
             setLocation(ue.getLocation());
             ue.maybeConfigure();
-            Task t = ue.getTask();
-            if (t == null) {
+            Object configuredObject = ue.getRealThing();
+            if (configuredObject == null) {
                 continue;
             }
-            if (!(t instanceof AntlibInterface)) {
+            if (!(configuredObject instanceof AntlibDefinition)) {
                 throw new BuildException(
-                    "Invalid element in antlib " + ue.getTag());
+                    "Invalid task in antlib " + ue.getTag()
+                    + " " + configuredObject.getClass() + " does not "
+                    + "extend org.apache.tools.ant.taskdefs.AntlibDefinition");
             }
-            if (t instanceof AntlibInterface) {
-                AntlibInterface d = (AntlibInterface) t;
-                d.setURI(uri);
-                d.setAntlibClassLoader(getClassLoader());
-            }
-            t.init();
-            t.execute();
+            AntlibDefinition def = (AntlibDefinition) configuredObject;
+            def.setURI(uri);
+            def.setAntlibClassLoader(getClassLoader());
+            def.init();
+            def.execute();
         }
     }
 
