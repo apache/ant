@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-
-<project name="property-test" basedir="." default="test1">
-
-  <target name="test1">
-    <property environment="testenv"/>
-  </target>
-</project>
