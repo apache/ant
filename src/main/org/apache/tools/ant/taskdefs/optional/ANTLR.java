@@ -117,6 +117,9 @@ public class ANTLR extends Task {
     /** captures ANTLR's output */
     private ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
+    /** The debug attribute */
+    private boolean debug;
+
     public ANTLR() {
         commandline.setVm(JavaEnvUtils.getJreExecutable("java"));
         commandline.setClassname("antlr.Tool");
@@ -149,7 +152,7 @@ public class ANTLR extends Task {
      * Sets a flag to enable ParseView debugging
      */
     public void setDebug(boolean enable) {
-        log( "debug attribute is never used", Project.MSG_WARN);
+        this.debug = enable;
     }
 
     /**
@@ -336,6 +339,9 @@ public class ANTLR extends Task {
         }
         if (traceTreeWalker) {
             commandline.createArgument().setValue("-traceTreeWalker");
+        }
+        if (debug) {
+            commandline.createArgument().setValue("-debug");
         }
     }
 
