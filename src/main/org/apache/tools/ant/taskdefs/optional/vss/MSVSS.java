@@ -720,10 +720,10 @@ public abstract class MSVSS extends Task implements MSVSSConstants {
      */
     private String formatCommandLine(Commandline cmd) {
         StringBuffer sBuff = new StringBuffer(cmd.toString());
-        int indexUser = sBuff.indexOf(FLAG_LOGIN);
+        int indexUser = sBuff.substring(0).indexOf(FLAG_LOGIN);
         if (indexUser > 0) {
-            int indexPass = sBuff.indexOf(",", indexUser);
-            int indexAfterPass = sBuff.indexOf(" ", indexPass);
+            int indexPass = sBuff.substring(0).indexOf(",", indexUser);
+            int indexAfterPass = sBuff.substring(0).indexOf(" ", indexPass);
 
             for (int i = indexPass + 1; i < indexAfterPass; i++) {
                 sBuff.setCharAt(i, '*');
