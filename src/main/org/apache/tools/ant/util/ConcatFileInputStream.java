@@ -28,7 +28,7 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
 
 /**
- * Special <CODE>InputStream</CODE> that will
+ * Special <code>InputStream</code> that will
  * concatenate the contents of an array of files.
  */
 public class ConcatFileInputStream extends InputStream {
@@ -41,9 +41,9 @@ public class ConcatFileInputStream extends InputStream {
     private ProjectComponent managingPc;
 
   /**
-   * Construct a new <CODE>ConcatFileInputStream</CODE>
-   * with the specified <CODE>File[]</CODE>.
-   * @param file   <CODE>File[]</CODE>.
+   * Construct a new <code>ConcatFileInputStream</code>
+   * with the specified <code>File[]</code>.
+   * @param file   <code>File[]</code>.
    * @throws IOException if I/O errors occur.
    */
     public ConcatFileInputStream(File[] file) throws IOException {
@@ -67,18 +67,18 @@ public class ConcatFileInputStream extends InputStream {
     }
 
     /**
-     * Set a managing <CODE>Task</CODE> for
-     * this <CODE>ConcatFileInputStream</CODE>.
-     * @param task   the managing <CODE>Task</CODE>.
+     * Set a managing <code>Task</code> for
+     * this <code>ConcatFileInputStream</code>.
+     * @param task   the managing <code>Task</code>.
      */
     public void setManagingTask(Task task) {
         setManagingComponent(task);
     }
 
     /**
-     * Set a managing <CODE>Task</CODE> for
-     * this <CODE>ConcatFileInputStream</CODE>.
-     * @param task   the managing <CODE>Task</CODE>.
+     * Set a managing <code>Task</code> for
+     * this <code>ConcatFileInputStream</code>.
+     * @param task   the managing <code>Task</code>.
      */
     public void setManagingComponent(ProjectComponent pc) {
         this.managingPc = pc;
@@ -86,8 +86,8 @@ public class ConcatFileInputStream extends InputStream {
 
     /**
      * Log a message with the specified logging level.
-     * @param message    the <CODE>String</CODE> message.
-     * @param loglevel   the <CODE>int</CODE> logging level.
+     * @param message    the <code>String</code> message.
+     * @param loglevel   the <code>int</code> logging level.
      */
     public void log(String message, int loglevel) {
         if (managingPc != null) {
