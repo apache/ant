@@ -115,6 +115,8 @@ committers to agree
 * add a user defined message if a target will be skipped because the
   if/unless attribute says so.
 
+* allow user-datatypes to be defined via a <typedef> similar to <taskdef>.
+
 IV. Things we probably agree upon but need to discuss the details or
 decide between several possible options.
 ======================================================================
@@ -149,6 +151,8 @@ decide between several possible options.
 * allow facilities to build projects from multiple sources. ie CSS+xml
   or XSLT+ XML or Velocity+text or database or from inside jars or normal 
   build.xmls etc.
+
+  allow the project tree to be built dynamically.
 
 * move to a system that allows docs to be generated - doc snippets
   should be included with the tasks they document.
@@ -360,3 +364,6 @@ V. Things we probably don't agree on.
   <http://marc.theaimsgroup.com/?l=ant-dev&m=98130655812010&w=2>.
 
 * Task level if and unless attributes.
+
+* Make all datatypes interfaces to allow them to be customized in many
+  ways.
