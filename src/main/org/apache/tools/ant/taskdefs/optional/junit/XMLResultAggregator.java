@@ -112,7 +112,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     
     public AggregateTransformer createReport(){
         AggregateTransformer transformer = new AggregateTransformer(this);
-        transformers.add(transformer);
+        transformers.addElement(transformer);
         return transformer;
     }
     
