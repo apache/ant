@@ -149,8 +149,8 @@ public class FixCRLF extends MatchingTask {
      */
     public FixCRLF () {
         tabs = ASIS;
-	if (System.getProperty("path.separator").equals(":")) {
-	    ctrlz = REMOVE;
+        if (System.getProperty("path.separator").equals(":")) {
+            ctrlz = REMOVE;
             if (System.getProperty("os.name").indexOf("Mac") > -1) {
                 eol = CR;
                 eolstr = "\r";
@@ -158,12 +158,12 @@ public class FixCRLF extends MatchingTask {
                 eol = LF;
                 eolstr = "\n";
             }
-	}
-	else {
-	    ctrlz = ASIS;
+        }
+        else {
+            ctrlz = ASIS;
             eol = CRLF;
             eolstr = "\r\n";
-	}
+        }
     }
 
     /**
@@ -211,7 +211,7 @@ public class FixCRLF extends MatchingTask {
             eol = LF;
             eolstr = "\n";
         } else {
-	    // Must be "crlf"
+            // Must be "crlf"
             eol = CRLF;
             eolstr = "\r\n";
         }
@@ -276,13 +276,13 @@ public class FixCRLF extends MatchingTask {
     public void setTablength(int tlength) throws BuildException {
         if (tlength < 2 || tlength >80) {
             throw new BuildException("tablength must be between 2 and 80",
-				     location);
+                                     location);
         }
         tablength = tlength;
         StringBuffer sp = new StringBuffer();
-	for (int i = 0; i < tablength; i++) {
-	    sp.append(' ');
-	}
+        for (int i = 0; i < tablength; i++) {
+            sp.append(' ');
+        }
         spaces = sp.toString();
     }
 
@@ -335,7 +335,7 @@ public class FixCRLF extends MatchingTask {
         // log options used
         log("options:" +
             " eol=" +
-	    (eol==ASIS ? "asis" : eol==CR ? "cr" : eol==LF ? "lf" : "crlf") +
+            (eol==ASIS ? "asis" : eol==CR ? "cr" : eol==LF ? "lf" : "crlf") +
             " tab=" + (tabs==TABS ? "add" : tabs==ASIS ? "asis" : "remove") +
             " eof=" + (ctrlz==ADD ? "add" : ctrlz==ASIS ? "asis" : "remove") +
             " tablength=" + tablength,
@@ -345,7 +345,7 @@ public class FixCRLF extends MatchingTask {
         String[] files = ds.getIncludedFiles();
 
         for (int i = 0; i < files.length; i++) {
-	    processFile(files[i]);
+            processFile(files[i]);
         }
     }
 
@@ -363,12 +363,12 @@ public class FixCRLF extends MatchingTask {
     }
 
     private void processFile(String file) throws BuildException {
-	File srcFile = new File(srcDir, file);
-	File tmpFile = null;
+        File srcFile = new File(srcDir, file);
+        File tmpFile = null;
         BufferedWriter outWriter;
         OneLiner.BufferLine line;
 
-	// read the contents of the file
+        // read the contents of the file
         OneLiner lines = new OneLiner(srcFile);
 
         try {
@@ -507,17 +507,34 @@ public class FixCRLF extends MatchingTask {
             
             File destFile = new File(destDir == null ? srcDir : destDir,
                                      file);
+
+            try {                                            
+                lines.close();
+                lines = null;
+            }
+            catch (IOException e) {
+                throw new BuildException("Unable to close source file " + srcFile);
+            }
+                                     
+            if (destFile.exists()) {
+                if (!destFile.delete()) {
+                    throw new BuildException("Unable to delete " + destFile);
+                }
+            }
+                                     
             if (!tmpFile.renameTo(destFile)) {
                 throw new BuildException("Failed to transform " + srcFile
                                          + " to " + destFile
-                                         + ". Couldn't rename temporary file.");
+                                         + ". Couldn't rename temporary file: " + tmpFile);
             } else {
                 tmpFile = null;
             }
 
         } finally {
             try {
-                lines.close();
+                if (lines != null) {
+                    lines.close();
+                }
             } catch (IOException io) {
                 log("Error closing "+srcFile, Project.MSG_ERR);
             } // end of catch
@@ -596,13 +613,13 @@ public class FixCRLF extends MatchingTask {
      *                                 before the terminator is found.
      */
     private void endOfCharConst(OneLiner.BufferLine bufline, char terminator)
-	throws BuildException
+        throws BuildException
     {
         int ptr = bufline.getNext();
-	int eol = bufline.length();
+        int eol = bufline.length();
         char c;
-	ptr++;		// skip past initial quote
-	while (ptr < eol) {
+        ptr++;          // skip past initial quote
+        while (ptr < eol) {
             if ((c = bufline.getChar(ptr++)) == '\\') {
                 ptr++;
             }
@@ -612,9 +629,9 @@ public class FixCRLF extends MatchingTask {
                     return;
                 }
             }
-	} // end of while (ptr < eol)
-	// Must have fallen through to the end of the line
-	throw new BuildException("endOfCharConst: unterminated char constant");
+        } // end of while (ptr < eol)
+        // Must have fallen through to the end of the line
+        throw new BuildException("endOfCharConst: unterminated char constant");
     }
 
 
@@ -630,64 +647,64 @@ public class FixCRLF extends MatchingTask {
      * @param BufferedWriter outWriter Sink for the processed string
      */
     private void notInConstant(OneLiner.BufferLine bufline, int end,
-				BufferedWriter outWriter)
+                                BufferedWriter outWriter)
     {
-	// N.B. both column and string index are zero-based
-	// Process a string not part of a constant;
-	// i.e. convert tabs<->spaces as required
-	// This is NOT called for ASIS tab handling
-	int nextTab;
+        // N.B. both column and string index are zero-based
+        // Process a string not part of a constant;
+        // i.e. convert tabs<->spaces as required
+        // This is NOT called for ASIS tab handling
+        int nextTab;
         int nextStop;
         int tabspaces;
-	String line = bufline.substring(bufline.getNext(), end);
-	int place = 0;		// Zero-based
-	int col = bufline.getColumn();	// Zero-based
+        String line = bufline.substring(bufline.getNext(), end);
+        int place = 0;          // Zero-based
+        int col = bufline.getColumn();  // Zero-based
 
-	// process sequences of white space
-	// first convert all tabs to spaces
-	linebuf.setLength(0);
-	while ((nextTab = line.indexOf((int) '\t', place)) >= 0) {
-	    linebuf.append(line.substring(place, nextTab)); // copy to the TAB
-	    col += nextTab - place;
-	    tabspaces = tablength - (col % tablength);
-	    linebuf.append(spaces.substring(0, tabspaces));
-	    col += tabspaces;
-	    place = nextTab + 1;
-	} // end of while
-	linebuf.append(line.substring(place, line.length()));
-	// if converting to spaces, all finished
-	String linestring = new String(linebuf.toString());
-	if (tabs == REMOVE) {
+        // process sequences of white space
+        // first convert all tabs to spaces
+        linebuf.setLength(0);
+        while ((nextTab = line.indexOf((int) '\t', place)) >= 0) {
+            linebuf.append(line.substring(place, nextTab)); // copy to the TAB
+            col += nextTab - place;
+            tabspaces = tablength - (col % tablength);
+            linebuf.append(spaces.substring(0, tabspaces));
+            col += tabspaces;
+            place = nextTab + 1;
+        } // end of while
+        linebuf.append(line.substring(place, line.length()));
+        // if converting to spaces, all finished
+        String linestring = new String(linebuf.toString());
+        if (tabs == REMOVE) {
             try {
                 outWriter.write(linestring);
             } catch (IOException e) {
                 throw new BuildException(e);
             } // end of try-catch
-	}
-	else { // tabs == ADD
+        }
+        else { // tabs == ADD
             int tabCol;
-	    linebuf2.setLength(0);
-	    place = 0;
-	    col = bufline.getColumn();
-	    int placediff = col - 0;
-	    // for the length of the string, cycle through the tab stop
-	    // positions, checking for a space preceded by at least one
-	    // other space at the tab stop.  if so replace the longest possible
-	    // preceding sequence of spaces with a tab.
-	    nextStop = col + (tablength - col % tablength);
-	    if (nextStop - col < 2) {
+            linebuf2.setLength(0);
+            place = 0;
+            col = bufline.getColumn();
+            int placediff = col - 0;
+            // for the length of the string, cycle through the tab stop
+            // positions, checking for a space preceded by at least one
+            // other space at the tab stop.  if so replace the longest possible
+            // preceding sequence of spaces with a tab.
+            nextStop = col + (tablength - col % tablength);
+            if (nextStop - col < 2) {
                 linebuf2.append(linestring.substring(
                                         place, nextStop - placediff));
                 place = nextStop - placediff;
-		nextStop += tablength;
-	    }
-	    
-	    for ( ; nextStop - placediff <= linestring.length()
-			  ; nextStop += tablength)
-	    {
-		for (tabCol = nextStop;
+                nextStop += tablength;
+            }
+            
+            for ( ; nextStop - placediff <= linestring.length()
+                          ; nextStop += tablength)
+            {
+                for (tabCol = nextStop;
                              --tabCol - placediff >= place
-			     && linestring.charAt(tabCol - placediff) == ' '
+                             && linestring.charAt(tabCol - placediff) == ' '
                              ;)
                 {
                     ; // Loop for the side-effects
@@ -707,8 +724,8 @@ public class FixCRLF extends MatchingTask {
                 place = nextStop - placediff;
             } // end of for (nextStop ... )
 
-	    // pick up that last bit, if any
-	    linebuf2.append(linestring.substring(place, linestring.length()));
+            // pick up that last bit, if any
+            linebuf2.append(linestring.substring(place, linestring.length()));
 
             try {
                 outWriter.write(linebuf2.toString());
@@ -716,11 +733,11 @@ public class FixCRLF extends MatchingTask {
                 throw new BuildException(e);
             } // end of try-catch
             
-	} // end of else tabs == ADD
+        } // end of else tabs == ADD
 
-	// Set column position as modified by this method
-	bufline.setColumn(bufline.getColumn() + linestring.length());
-	bufline.setNext(end);
+        // Set column position as modified by this method
+        bufline.setColumn(bufline.getColumn() + linestring.length());
+        bufline.setNext(end);
 
     }
 
@@ -730,101 +747,101 @@ public class FixCRLF extends MatchingTask {
         private int state = javafiles ? LOOKING : NOTJAVA;
 
         private StringBuffer eolStr = new StringBuffer(LINEBUFLEN);
-	private StringBuffer eofStr = new StringBuffer();
+        private StringBuffer eofStr = new StringBuffer();
 
-	private BufferedReader reader;
-	private String line;
+        private BufferedReader reader;
+        private String line;
 
-	public OneLiner(File srcFile)
+        public OneLiner(File srcFile)
             throws BuildException
-	{
-	    try {
-		reader = new BufferedReader
-			(new FileReader(srcFile), INBUFLEN);
-		nextLine();
-	    } catch (IOException e) {
-		throw new BuildException(e);
-	    }
-	}
+        {
+            try {
+                reader = new BufferedReader
+                        (new FileReader(srcFile), INBUFLEN);
+                nextLine();
+            } catch (IOException e) {
+                throw new BuildException(e);
+            }
+        }
 
-	protected void nextLine()
-	    throws BuildException {
-	    int ch;
-	    int eolcount = 0;
+        protected void nextLine()
+            throws BuildException {
+            int ch;
+            int eolcount = 0;
 
-	    eolStr.setLength(0);
+            eolStr.setLength(0);
 
-	    try {
-		int linelen;
+            try {
+                int linelen;
 
-		reader.mark(INBUFLEN);
-		line = reader.readLine();
-		if (line == null) {
-		    // Eof has been reached
-		    linelen = 0;
-		}
-		else {
-		    linelen = line.length();
-		}
-		
-		
-		// Find the EOL character(s)
+                reader.mark(INBUFLEN);
+                line = reader.readLine();
+                if (line == null) {
+                    // Eof has been reached
+                    linelen = 0;
+                }
+                else {
+                    linelen = line.length();
+                }
+                
+                
+                // Find the EOL character(s)
 
-		reader.reset();
+                reader.reset();
 
-		// an IOException will be thrown
-		reader.skip((long)linelen);
-		reader.mark(INBUFLEN);
-		ch = reader.read();
-		switch ((char) ch) {
-		case '\r':
-		    // Check for \r, \r\n and \r\r\n
-		    // Regard \r\r not followed by \n as two lines
-		    ++eolcount;
-		    eolStr.append('\r');
-		    switch ((char)(ch = reader.read())) {
-		    case '\r':
-			if ((char)(ch = reader.read()) == '\n') {
-			    eolcount += 2;
-			    eolStr.append("\r\n");
-			}
-			break;
-		    case '\n':
-			++eolcount;
-			eolStr.append('\n');
-			break;
-		    } // end of switch ((char)(ch = reader.read()))
-		    break;
-		    
-		case '\n':
-		    ++eolcount;
-		    eolStr.append('\n');
-		    break;
-		    
-		} // end of switch ((char) ch)
+                // an IOException will be thrown
+                reader.skip((long)linelen);
+                reader.mark(INBUFLEN);
+                ch = reader.read();
+                switch ((char) ch) {
+                case '\r':
+                    // Check for \r, \r\n and \r\r\n
+                    // Regard \r\r not followed by \n as two lines
+                    ++eolcount;
+                    eolStr.append('\r');
+                    switch ((char)(ch = reader.read())) {
+                    case '\r':
+                        if ((char)(ch = reader.read()) == '\n') {
+                            eolcount += 2;
+                            eolStr.append("\r\n");
+                        }
+                        break;
+                    case '\n':
+                        ++eolcount;
+                        eolStr.append('\n');
+                        break;
+                    } // end of switch ((char)(ch = reader.read()))
+                    break;
+                    
+                case '\n':
+                    ++eolcount;
+                    eolStr.append('\n');
+                    break;
+                    
+                } // end of switch ((char) ch)
 
-		// Reset the position of the file reader
-		reader.reset();
-		reader.skip((long)eolcount);
+                // Reset the position of the file reader
+                reader.reset();
+                reader.skip((long)eolcount);
 
-		// if at eolcount == 0 and trailing characters of string
-		// are CTRL-Zs, set eofStr
-		if (line != null && eolcount == 0) {
-		    int i = linelen;
-		    while (--i >= 0 && line.charAt(i) == CTRLZ) {}
-		    if (i < linelen - 1) {
-			// Trailing characters are ^Zs
-			// Construct new line and eofStr
-			eofStr.append(line.substring(i + 1));
-			line = i < 0 ? null : line.substring(0, i + 1);
-		    }
-		    
-		} // end of if (eolcount == 0)
-		
-	    } catch (IOException e) {
-		throw new BuildException(e);
-	    }
-	}
+                // if at eolcount == 0 and trailing characters of string
+                // are CTRL-Zs, set eofStr
+                if (line != null && eolcount == 0) {
+                    int i = linelen;
+                    while (--i >= 0 && line.charAt(i) == CTRLZ) {}
+                    if (i < linelen - 1) {
+                        // Trailing characters are ^Zs
+                        // Construct new line and eofStr
+                        eofStr.append(line.substring(i + 1));
+                        line = i < 0 ? null : line.substring(0, i + 1);
+                    }
+                    
+                } // end of if (eolcount == 0)
+                
+            } catch (IOException e) {
+                throw new BuildException(e);
+            }
+        }
 
         public String getEofStr() {
             return eofStr.toString();
@@ -838,22 +855,22 @@ public class FixCRLF extends MatchingTask {
             this.state = state;
         }
 
-	public boolean hasMoreElements()
-	{
-	    return line != null;
-	}
+        public boolean hasMoreElements()
+        {
+            return line != null;
+        }
 
-	public Object nextElement()
-	    throws NoSuchElementException
-	{
-	    if (! hasMoreElements()) {
-		throw new NoSuchElementException("OneLiner");
-	    }
-	    BufferLine tmpLine =
-		    new BufferLine(line, eolStr.toString());
-	    nextLine();
-	    return tmpLine;
-	}
+        public Object nextElement()
+            throws NoSuchElementException
+        {
+            if (! hasMoreElements()) {
+                throw new NoSuchElementException("OneLiner");
+            }
+            BufferLine tmpLine =
+                    new BufferLine(line, eolStr.toString());
+            nextLine();
+            return tmpLine;
+        }
 
         public void close() throws IOException {
             if (reader != null) {
@@ -861,94 +878,94 @@ public class FixCRLF extends MatchingTask {
             }
         }
 
-	class BufferLine {
-	    private int next = 0;
-	    private int column = 0;
-	    private int lookahead = UNDEF;
-	    private String line;
-	    private String eolStr;
-	
-	    public BufferLine(String line, String eolStr)
-		throws BuildException
-	    {
-		next = 0;
-		column = 0;
-		this.line = line;
-		this.eolStr = eolStr;
-	    }
+        class BufferLine {
+            private int next = 0;
+            private int column = 0;
+            private int lookahead = UNDEF;
+            private String line;
+            private String eolStr;
+        
+            public BufferLine(String line, String eolStr)
+                throws BuildException
+            {
+                next = 0;
+                column = 0;
+                this.line = line;
+                this.eolStr = eolStr;
+            }
 
-	    public int getNext() {
-		return next;
-	    }
+            public int getNext() {
+                return next;
+            }
 
-	    public void setNext(int next) {
-		this.next = next;
-	    }
+            public void setNext(int next) {
+                this.next = next;
+            }
 
-	    public int getLookahead() {
-		return lookahead;
-	    }
+            public int getLookahead() {
+                return lookahead;
+            }
 
-	    public void setLookahead(int lookahead) {
-		this.lookahead = lookahead;
-	    }
+            public void setLookahead(int lookahead) {
+                this.lookahead = lookahead;
+            }
 
-	    public char getChar(int i) {
-		return line.charAt(i);
-	    }
+            public char getChar(int i) {
+                return line.charAt(i);
+            }
 
-	    public char getNextChar() {
-		return getChar(next);
-	    }
+            public char getNextChar() {
+                return getChar(next);
+            }
 
-	    public char getNextCharInc() {
-		return getChar(next++);
-	    }
+            public char getNextCharInc() {
+                return getChar(next++);
+            }
 
-	    public int getColumn() {
-		return column;
-	    }
+            public int getColumn() {
+                return column;
+            }
 
-	    public void setColumn(int col) {
-		column = col;
-	    }
+            public void setColumn(int col) {
+                column = col;
+            }
 
-	    public int incColumn() {
-		return column++;
-	    }
+            public int incColumn() {
+                return column++;
+            }
 
-	    public int length() {
-		return line.length();
-	    }
+            public int length() {
+                return line.length();
+            }
 
-	    public int getEolLength() {
-		return eolStr.length();
-	    }
+            public int getEolLength() {
+                return eolStr.length();
+            }
 
-	    public String getLineString() {
-		return line;
-	    }
+            public String getLineString() {
+                return line;
+            }
 
-	    public String getEol() {
-		return eolStr;
-	    }
+            public String getEol() {
+                return eolStr;
+            }
 
-	    public String substring(int begin) {
-		return line.substring(begin);
-	    }
+            public String substring(int begin) {
+                return line.substring(begin);
+            }
 
-	    public String substring(int begin, int end) {
-		return line.substring(begin, end);
-	    }
+            public String substring(int begin, int end) {
+                return line.substring(begin, end);
+            }
 
-	    public void setState(int state) {
-		OneLiner.this.setState(state);
-	    }
+            public void setState(int state) {
+                OneLiner.this.setState(state);
+            }
 
-	    public int getState() {
-		return OneLiner.this.getState();
-	    }
-	}
+            public int getState() {
+                return OneLiner.this.getState();
+            }
+        }
     }
 
     /**
@@ -964,9 +981,9 @@ public class FixCRLF extends MatchingTask {
      * Enumerated attribute with the values "asis", "cr", "lf" and "crlf".
      */
     public static class CrLf extends EnumeratedAttribute {
-	public String[] getValues() {
-	    return new String[] {"asis", "cr", "lf", "crlf"};
-	}
+        public String[] getValues() {
+            return new String[] {"asis", "cr", "lf", "crlf"};
+        }
     }
 
 }
