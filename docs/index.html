@@ -37,8 +37,8 @@
   <li><a href="#introduction">Introduction</a></li>
   <li><a href="#getting">Getting Ant</a></li>
   <li><a href="#sysrequirements">System Requirements</a></li>
-  <li><a href="#buildingant">Building Ant</a></li>
   <li><a href="#installing">Installing Ant</a></li>
+  <li><a href="#buildingant">Building Ant</a></li>
   <li><a href="#running">Running Ant</a></li>
   <li><a href="#buildfile">Writing a simple buildfile</a>
   <li><a href="#directorybasedtasks">Directory based tasks</a></li>
@@ -101,39 +101,24 @@ build Ant from the source code.</p>
 <hr>
 <h2><a name="sysrequirements">System Requirements</a></h2>
 <p>
-  To build and use ant you must have a JAXP compliant XML parser installed and available on your classpath.
+  To build and use Ant you must have a JAXP compliant XML parser installed and available on your classpath.
   <p>
-  If you do not have a JAXP compliant XML parse installed, you may use the reference implementation 
-  available from Sun. It is available from <a href="http://java.sun.com/xml/">http://java.sun.com/xml/</a>.
-  Once installed make sure the &quot;jaxp.jar&quot; and &quot;parser.jar&quot; files are in your classpath.
+  Both the binary and source distributions of Ant include the reference implementation of JAXP 1.0.
+  Please see <a href="http://java.sun.com/xml/">http://java.sun.com/xml/</a> for more information. 
+  If you wish to use a different, JAXP-compliant parser, you should remove jaxp.jar and parser.jar 
+  from Ant's lib/core directory. You can then either put the jars from your preferred parser into Ant's 
+  lib/core directory or put the jars on the system classpath.
   <p>
-  You will also need the JDK installed on your system, version 1.1 or later. 
+  For the current version of Ant, you will also need the JDK installed on your system, version 1.1 
+  or later. A future version of Ant will require JDK 1.2 or later.
   </p>
-<hr>  
-<h2><a name="buildingant">Building Ant</a></h2>
-<p>Go to the directory <code>jakarta-ant</code>.</p>
-<p>Make sure the JDK is in you path.</p>
-<p>Set the JAVA_HOME environment variable. This should be set to the
-directory where the JDK is installed. See <a href="#installing">Installing Ant</a>
-for examples on how to do this for your operating system.</p>
-<p>Make sure you have downloaded any auxilliary jars required to build tasks you are interested in. The list of auxilliary tasks and requirements is in lib/README </p>
-<p>Run <code>bootstrap.bat</code> (Windows) or <code>bootstrap.sh</code> (UNIX)
-to build a bootstrap version of Ant.</p>
-<p>When finished, use</p>
-<blockquote>
-  <p><code>build.bat -Dant.dist.dir=&lt;directory to install Ant&gt; dist</code></p>
-</blockquote>
-<p>for Windows, and</p>
-<blockquote>
-  <p><code>build.sh -Dant.dist.dir=&lt;directory to install Ant&gt; dist</code></p>
-</blockquote>
-<p>for UNIX, to create a binary distribution of Ant. This distribution can be
-found in the directory you specified.</p>
+  
 <hr>
 <h2><a name="installing">Installing Ant</a></h2>
-<p>The binary distribution of Ant consists of three directories: <code>bin</code>,
-<code>docs</code> and <code>lib</code>. Only the <code>bin</code> and <code>lib</code>
-directory are crucial for running Ant. To run Ant, the following must be done:</p>
+<p>The binary distribution of Ant consists of four directories: <code>bin</code>,
+<code>docs</code>, <code>lib</code> and <code>src</code>. Only the <code>bin</code> 
+and <code>lib</code> directory are required for running Ant. To run Ant, the 
+following must be done:</p>
 <ul>
   <li>Add the <code>bin</code> directory to your path.</li>
   <li>Set the ANT_HOME environment variable. This should be set to the directory
@@ -167,14 +152,60 @@ must be added. The scripts supplied with ant, in the bin directory, will add
 href="#exec">exec</a> task, or the <a href="#cvs">cvs</a> task), the property <code>ant.home</code>
 must be set to the directory containing a bin directory, which contains the <code>antRun</code> 
 shell script necessary to run execs on Unix.</p>
+
+<hr>  
+<h2><a name="buildingant">Building Ant</a></h2>
+<p>To build ant you should install the Ant source distribution. Whilst the binary distribution 
+includes the Ant source code, it is intended for reference purposes only. The boostrap and 
+build scripts used to build ant itself are not included in the binary distribution
+<p>
+<p>Once you have installed the source distribution, go to the 
+directory <code>jakarta-ant</code>.</p>
+<p>Set the JAVA_HOME environment variable. This should be set to the
+directory where the JDK is installed. See <a href="#installing">Installing Ant</a>
+for examples on how to do this for your operating system. </p>
+<p>Make sure you have downloaded any auxilliary jars required to build tasks you are 
+interested in. These should either be available on the classpath or added to Ant's lib
+directory. The list of auxilliary tasks and requirements is in lib/README </p>
+
+<p>Run <code>bootstrap.bat</code> (Windows) or <code>bootstrap.sh</code> (UNIX)
+to build a bootstrap version of Ant.</p>
+<p>When finished, use</p>
+<blockquote>
+  <p><code>build -Dant.dist.dir=&lt;directory to contain Ant distribution&gt; dist</code></p>
+</blockquote>
+<p>for Windows, and</p>
+<blockquote>
+  <p><code>build.sh -Dant.dist.dir=&lt;directory to Ant distribution&gt; dist</code></p>
+</blockquote>
+<p>for UNIX, to create a binary distribution of Ant. This distribution can be
+found in the directory you specified.</p>
+
+If you wish to install the build into the current ANT_HOME directory, you can use
+<blockquote>
+  <p><code>build install</code>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Windows)</i></p>
+  <p><code>build.sh install</code>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Unix)</i></p>
+</blockquote>
+
+You can avoid the length Javadoc step, if desired, with
+<blockquote>
+  <p><code>build mininstall</code>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Windows)</i></p>
+  <p><code>build.sh mininstall</code>&nbsp;&nbsp;&nbsp;&nbsp;<i>(Unix)</i></p>
+</blockquote>
+This will only install the bin and lib directories. 
+<p>Both the <code>install</code> and 
+<code>mininstall</code> targets will overwrite 
+the current ant version in ANT_HOME.
+
 <hr>
 <h2><a name="running">Running Ant</a></h2>
 <p>Running Ant is simple, when you installed it as described in the previous
 section. Just type <code>ant</code>.</p>
 <p>When nothing is specified, Ant looks for a <code>build.xml</code>
 file in the current directory. When found, it uses that file as a
-buildfile, otherwise it searches in the parent directory and so on
-until the root of the filesystem has been reached. To make Ant use
+buildfile. If you use the <i>-find</i> option, Ant will search for a build file in 
+the parent directory and so on until the root of the filesystem 
+has been reached. To make Ant use
 another buildfile, use the commandline option <i>-buildfile
 &lt;file&gt;</i>, where <i>&lt;file&gt;</i> is the buildfile you want
 to use.</p>
