@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -282,18 +282,36 @@ public class CommonsLoggingListener implements BuildListener, BuildLogger {
     PrintStream out = System.out;
     PrintStream err = System.err;
 
+    /**
+     * Set the the output level.
+     * This is not used, the logger config is used instead.
+     * @param level ignored
+     */
     public void setMessageOutputLevel(int level) {
         // Use the logger config
     }
 
+    /**
+     * Set the output print stream.
+     * @param output the output stream
+     */
     public void setOutputPrintStream(PrintStream output) {
         this.out = output;
     }
 
+    /**
+     * Set emacs mode.
+     * This is ignored.
+     * @param emacsMode ignored
+     */
     public void setEmacsMode(boolean emacsMode) {
         // Doesn't make sense for c-l. Use the logger config
     }
 
+    /**
+     * Set the error print stream.
+     * @param err the error stream
+     */
     public void setErrorPrintStream(PrintStream err) {
         this.err = err;
     }

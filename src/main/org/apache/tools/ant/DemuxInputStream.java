@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -43,6 +43,11 @@ public class DemuxInputStream extends InputStream {
         this.project = project;
     }
 
+    /**
+     * Read a byte from the project's demuxed input.
+     * @return the next byte
+     * @throws IOException on error
+     */
     public int read() throws IOException {
         byte[] buffer = new byte[1];
         if (project.demuxInput(buffer, 0, 1) == -1) {
@@ -52,6 +57,14 @@ public class DemuxInputStream extends InputStream {
     }
 
 
+    /**
+     * Read bytes from the project's demuxed input.
+     * @param buffer an array of bytes to read into
+     * @param offset the offset in the array of bytes
+     * @param length the number of bytes in the array
+     * @return the number of bytes read
+     * @throws IOException on error
+     */
     public int read(byte[] buffer, int offset, int length) throws IOException {
         return project.demuxInput(buffer, offset, length);
     }
