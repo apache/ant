@@ -71,12 +71,12 @@ public interface FileNameMapper {
     /**
      * Sets the from part of the transformation rule.
      */
-    public void setFrom(String from);
+    void setFrom(String from);
 
     /**
      * Sets the to part of the transformation rule.
      */
-    public void setTo(String to);
+    void setTo(String to);
 
     /**
      * Returns an array containing the target filename(s) for the
@@ -89,5 +89,5 @@ public interface FileNameMapper {
      * @param sourceFileName the name of the source file relative to
      *                       some given basedirectory.
      */
-    public String[] mapFileName(String sourceFileName);
+    String[] mapFileName(String sourceFileName);
 }

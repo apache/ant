@@ -66,6 +66,6 @@ public interface Condition {
     /**
      * Is this condition true?
      */
-    public boolean eval() throws BuildException;
+    boolean eval() throws BuildException;
 }
 

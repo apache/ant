@@ -629,17 +629,17 @@ public class IntrospectionHelper implements BuildListener {
     }
 
     private interface NestedCreator {
-        public Object create(Object parent) 
+        Object create(Object parent) 
             throws InvocationTargetException, IllegalAccessException, InstantiationException;
     }
     
     private interface NestedStorer {
-        public void store(Object parent, Object child) 
+        void store(Object parent, Object child) 
             throws InvocationTargetException, IllegalAccessException, InstantiationException;
     }
     
     private interface AttributeSetter {
-        public void set(Project p, Object parent, String value)
+        void set(Project p, Object parent, String value)
             throws InvocationTargetException, IllegalAccessException, 
                    BuildException;
     }

@@ -72,29 +72,29 @@ public interface ExecuteStreamHandler {
      * @param os output stream to write to the standard input stream of the
      *           subprocess
      */
-    public void setProcessInputStream(OutputStream os) throws IOException;
+    void setProcessInputStream(OutputStream os) throws IOException;
 
     /**
      * Install a handler for the error stream of the subprocess.
      *
      * @param is input stream to read from the error stream from the subprocess
      */
-    public void setProcessErrorStream(InputStream is) throws IOException;
+    void setProcessErrorStream(InputStream is) throws IOException;
 
     /**
      * Install a handler for the output stream of the subprocess.
      *
      * @param is input stream to read from the error stream from the subprocess
      */
-    public void setProcessOutputStream(InputStream is) throws IOException;
+    void setProcessOutputStream(InputStream is) throws IOException;
 
     /**
      * Start handling of the streams.
      */
-    public void start() throws IOException;
+    void start() throws IOException;
 
     /**
      * Stop handling of the streams - will not be restarted.
      */
-    public void stop();
+    void stop();
 }

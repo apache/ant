@@ -75,12 +75,12 @@ public interface CompilerAdapter {
     /**
      * Sets the compiler attributes, which are stored in the Jspc task.
      */
-    public void setJspc( JspC attributes );
+    void setJspc( JspC attributes );
 
     /**
      * Executes the task.
      *
      * @return has the compilation been successful
      */
-    public boolean execute() throws BuildException;
+    boolean execute() throws BuildException;
 }

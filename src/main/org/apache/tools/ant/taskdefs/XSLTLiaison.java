@@ -76,13 +76,13 @@ public interface XSLTLiaison {
      * case since most parsers for now incorrectly makes no difference
      * between it.. and users also have problem with that :)
      */
-    public final static String FILE_PROTOCOL_PREFIX = "file:///";
+    String FILE_PROTOCOL_PREFIX = "file:///";
 
     /**
      * set the stylesheet to use for the transformation.
      * @param stylesheet the stylesheet to be used for transformation.
      */
-    public void setStylesheet(File stylesheet) throws Exception;
+    void setStylesheet(File stylesheet) throws Exception;
 
     /**
      * Add a parameter to be set during the XSL transformation.
@@ -90,7 +90,7 @@ public interface XSLTLiaison {
      * @param expression the parameter value as an expression string.
      * @throws Exception thrown if any problems happens.
      */
-    public void addParam(String name, String expression) throws Exception;
+    void addParam(String name, String expression) throws Exception;
 
     /**
      * Perform the transformation of a file into another.
@@ -99,6 +99,6 @@ public interface XSLTLiaison {
      * @throws Exception thrown if any problems happens.
      * @see #setStylesheet(File)
      */
-    public void transform(File infile, File outfile) throws Exception;
+    void transform(File infile, File outfile) throws Exception;
 
 } //-- XSLTLiaison

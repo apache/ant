@@ -77,14 +77,14 @@ public interface BuildLogger extends BuildListener {
      *
      * @param level the logging level for the logger.
      */
-    public void setMessageOutputLevel(int level);
+    void setMessageOutputLevel(int level);
     
     /**
      * Set the output stream to which this logger is to send its output.
      *
      * @param output the output stream for the logger.
      */
-    public void setOutputPrintStream(PrintStream output);
+    void setOutputPrintStream(PrintStream output);
     
     /**
      * Set this logger to produce emacs (and other editor) friendly output.
@@ -92,13 +92,12 @@ public interface BuildLogger extends BuildListener {
      * @param emacsMode true if output is to be unadorned so that emacs and other
      * editors can parse files names, etc.
      */
-    public void setEmacsMode(boolean emacsMode);
+    void setEmacsMode(boolean emacsMode);
 
     /**
      * Set the output stream to which this logger is to send error messages.
      *
      * @param err the error stream for the logger.
      */
-    public void setErrorPrintStream(PrintStream err);
-    
+    void setErrorPrintStream(PrintStream err);    
 }

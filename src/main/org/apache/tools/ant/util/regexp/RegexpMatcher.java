@@ -67,17 +67,17 @@ public interface RegexpMatcher {
     /**
      * Set the regexp pattern from the String description.
      */
-    public void setPattern(String pattern) throws BuildException;
+    void setPattern(String pattern) throws BuildException;
 
     /**
      * Get a String representation of the regexp pattern
      */
-    public String getPattern();
+    String getPattern();
 
     /**
      * Does the given argument match the pattern?
      */
-    public boolean matches(String argument);
+    boolean matches(String argument);
 
     /**
      * Returns a Vector of matched groups found in the argument.
@@ -85,5 +85,5 @@ public interface RegexpMatcher {
      * <p>Group 0 will be the full match, the rest are the
      * parenthesized subexpressions</p>.
      */
-    public Vector getGroups(String argument);
+    Vector getGroups(String argument);
 }

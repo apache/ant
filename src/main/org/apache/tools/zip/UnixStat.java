@@ -67,25 +67,25 @@ public interface UnixStat {
      *
      * @since 1.1
      */
-    public static final int PERM_MASK =           07777;
+    int PERM_MASK =           07777;
     /**
      * Indicates symbolic links.
      *
      * @since 1.1
      */
-    public static final int LINK_FLAG =         0120000;
+    int LINK_FLAG =         0120000;
     /**
      * Indicates plain files.
      *
      * @since 1.1
      */
-    public static final int FILE_FLAG =         0100000;
+    int FILE_FLAG =         0100000;
     /**
      * Indicates directories.
      *
      * @since 1.1
      */
-    public static final int DIR_FLAG =           040000;
+    int DIR_FLAG =           040000;
     
     // ----------------------------------------------------------
     // somewhat arbitrary choices that are quite common for shared 
@@ -97,17 +97,17 @@ public interface UnixStat {
      *
      * @since 1.1
      */
-    public static final int DEFAULT_LINK_PERM =    0777;
+    int DEFAULT_LINK_PERM =    0777;
     /**
      * Default permissions for directories.
      *
      * @since 1.1
      */
-    public static final int DEFAULT_DIR_PERM =     0755;
+    int DEFAULT_DIR_PERM =     0755;
     /**
      * Default permissions for plain files.
      *
      * @since 1.1
      */
-    public static final int DEFAULT_FILE_PERM =    0644;
+    int DEFAULT_FILE_PERM =    0644;
 }

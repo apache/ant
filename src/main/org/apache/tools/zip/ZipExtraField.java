@@ -75,7 +75,7 @@ public interface ZipExtraField {
      *
      * @since 1.1
      */
-    public ZipShort getHeaderId();
+    ZipShort getHeaderId();
 
     /**
      * Length of the extra field in the local file data - without
@@ -83,7 +83,7 @@ public interface ZipExtraField {
      *
      * @since 1.1
      */
-    public ZipShort getLocalFileDataLength();
+    ZipShort getLocalFileDataLength();
 
     /**
      * Length of the extra field in the central directory - without
@@ -91,7 +91,7 @@ public interface ZipExtraField {
      *
      * @since 1.1
      */
-    public ZipShort getCentralDirectoryLength();
+    ZipShort getCentralDirectoryLength();
 
     /**
      * The actual data to put into local file data - without Header-ID
@@ -99,7 +99,7 @@ public interface ZipExtraField {
      *
      * @since 1.1
      */
-    public byte[] getLocalFileDataData();
+    byte[] getLocalFileDataData();
 
     /**
      * The actual data to put central directory - without Header-ID or
@@ -107,13 +107,13 @@ public interface ZipExtraField {
      *
      * @since 1.1
      */
-    public byte[] getCentralDirectoryData();
+    byte[] getCentralDirectoryData();
 
     /**
      * Populate data from this array as if it was in local file data.
      *
      * @since 1.1
      */
-    public void parseFromLocalFileData(byte[] data, int offset, int length)
+    void parseFromLocalFileData(byte[] data, int offset, int length)
         throws ZipException;
 }

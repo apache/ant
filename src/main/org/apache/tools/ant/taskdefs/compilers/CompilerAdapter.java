@@ -75,12 +75,12 @@ public interface CompilerAdapter {
     /**
      * Sets the compiler attributes, which are stored in the Javac task.
      */
-    public void setJavac( Javac attributes );
+    void setJavac( Javac attributes );
 
     /**
      * Executes the task.
      *
      * @return has the compilation been successful
      */
-    public boolean execute() throws BuildException;
+    boolean execute() throws BuildException;
 }

@@ -68,7 +68,7 @@ public interface BuildListener extends EventListener {
     /**
      *  Fired before any targets are started.
      */
-    public void buildStarted(BuildEvent event);
+    void buildStarted(BuildEvent event);
 
     /**
      *  Fired after the last target has finished. This event
@@ -76,14 +76,14 @@ public interface BuildListener extends EventListener {
      *
      *  @see BuildEvent#getException()
      */
-    public void buildFinished(BuildEvent event);
+    void buildFinished(BuildEvent event);
 
     /**
      *  Fired when a target is started.
      *
      *  @see BuildEvent#getTarget()
      */
-    public void targetStarted(BuildEvent event);
+    void targetStarted(BuildEvent event);
 
     /**
      *  Fired when a target has finished. This event will
@@ -91,14 +91,14 @@ public interface BuildListener extends EventListener {
      *
      *  @see BuildEvent#getException()
      */
-    public void targetFinished(BuildEvent event);
+    void targetFinished(BuildEvent event);
 
     /**
      *  Fired when a task is started.
      *
      *  @see BuildEvent#getTask()
      */
-    public void taskStarted(BuildEvent event);
+    void taskStarted(BuildEvent event);
 
     /**
      *  Fired when a task has finished. This event will still
@@ -106,7 +106,7 @@ public interface BuildListener extends EventListener {
      *
      *  @see BuildEvent#getException()
      */
-    public void taskFinished(BuildEvent event);
+    void taskFinished(BuildEvent event);
 
     /**
      *  Fired whenever a message is logged.
@@ -114,6 +114,5 @@ public interface BuildListener extends EventListener {
      *  @see BuildEvent#getMessage()
      *  @see BuildEvent#getPriority()
      */
-    public void messageLogged(BuildEvent event);
-
+    void messageLogged(BuildEvent event);
 }
