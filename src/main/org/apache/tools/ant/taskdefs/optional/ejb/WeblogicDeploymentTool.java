@@ -488,6 +488,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                     javaTask.createArg().setLine(compiler);
                 }
             }
+            
+            javaTask.createArg().setValue("-classpath");
+            javaTask.createArg().setPath(getCombinedClasspath());
+            
             javaTask.createArg().setValue(sourceJar.getPath());
             javaTask.createArg().setValue(destJar.getPath());
 
