@@ -571,13 +571,16 @@ public class Execute {
 
             // Use cmd.exe to change to the specified directory before running
             // the command
-            String[] newcmd = new String[cmd.length+5];
+            final int preCmdLength = 6;
+            String[] newcmd = new String[cmd.length + preCmdLength];
             newcmd[0] = "cmd";
             newcmd[1] = "/c";
             newcmd[2] = "cd";
-            newcmd[3] = workingDir.getAbsolutePath();
-            newcmd[4] = "&&";
-            System.arraycopy(cmd, 0, newcmd, 5, cmd.length);
+            newcmd[3] = "/d";
+            newcmd[4] = workingDir.getAbsolutePath();
+            newcmd[5] = "&&";
+            System.arraycopy(cmd, 0, newcmd, preCmdLength, cmd.length);
+
             return exec(project, newcmd, env);
         }
     }
