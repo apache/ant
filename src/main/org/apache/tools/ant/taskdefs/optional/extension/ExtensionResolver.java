@@ -64,18 +64,18 @@ import org.apache.tools.ant.Project;
  * @author <a href="mailto:jeff@socialchange.net.au">Jeff Turner</>
  * @version $Revision$ $Date$
  */
-public interface ExtensionResolver
-{
+public interface ExtensionResolver {
     /**
      * Attempt to locate File that satisfies
      * extension via resolver.
      *
      * @param extension the extension
+     * @param project the Ant project instance
      * @return the File satisfying extension, null
      *         if can not resolve extension
      * @throws BuildException if error occurs attempting to
      *         resolve extension
      */
-    File resolve( Extension extension, Project project )
+    File resolve(Extension extension, Project project)
         throws BuildException;
 }

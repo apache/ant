@@ -69,21 +69,19 @@ package org.apache.tools.ant.taskdefs.optional.extension;
  * @version $Revision$ $Date$
  * @see Extension
  */
-public final class Compatability
-{
+public final class Compatability {
     /**
      * A string representaiton of compatability level.
      */
-    private final String m_name;
+    private final String name;
 
     /**
      * Create a compatability enum with specified name.
      *
      * @param name the name of compatability level
      */
-    Compatability( final String name )
-    {
-        m_name = name;
+    Compatability(final String name) {
+        this.name = name;
     }
 
     /**
@@ -91,8 +89,7 @@ public final class Compatability
      *
      * @return the name of compatability level
      */
-    public String toString()
-    {
-        return m_name;
+    public String toString() {
+        return name;
     }
 }

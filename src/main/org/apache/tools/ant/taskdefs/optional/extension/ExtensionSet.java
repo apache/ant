@@ -70,26 +70,24 @@ import org.apache.tools.ant.types.Reference;
  * @ant.data-type name="extension-set"
  */
 public class ExtensionSet
-    extends DataType
-{
+    extends DataType {
     /**
      * ExtensionAdapter objects representing extensions.
      */
-    private final ArrayList m_extensions = new ArrayList();
+    private final ArrayList extensions = new ArrayList();
 
     /**
      * Filesets specifying all the extensions wanted.
      */
-    private final ArrayList m_extensionsFilesets = new ArrayList();
+    private final ArrayList extensionsFilesets = new ArrayList();
 
     /**
      * Adds an extension that this library requires.
      *
      * @param extensionAdapter an extension that this library requires.
      */
-    public void addExtension( final ExtensionAdapter extensionAdapter )
-    {
-        m_extensions.add( extensionAdapter );
+    public void addExtension(final ExtensionAdapter extensionAdapter) {
+        extensions.add(extensionAdapter);
     }
 
     /**
@@ -97,9 +95,8 @@ public class ExtensionSet
      *
      * @param fileSet a set of files about which extensions data will be extracted.
      */
-    public void addLibfileset( final LibFileSet fileSet )
-    {
-        m_extensionsFilesets.add( fileSet );
+    public void addLibfileset(final LibFileSet fileSet) {
+        extensionsFilesets.add(fileSet);
     }
 
     /**
@@ -107,22 +104,22 @@ public class ExtensionSet
      *
      * @param fileSet a set of files about which extensions data will be extracted.
      */
-    public void addFileset( final FileSet fileSet )
-    {
-        m_extensionsFilesets.add( fileSet );
+    public void addFileset(final FileSet fileSet) {
+        extensionsFilesets.add(fileSet);
     }
 
     /**
      * Extract a set of Extension objects from the ExtensionSet.
      *
+     * @param project the project instance.
+     * @return an array containing the Extensions from this set
      * @throws BuildException if an error occurs
      */
-    public Extension[] toExtensions( final Project project )
-        throws BuildException
-    {
-        final ArrayList extensions = ExtensionUtil.toExtensions( m_extensions );
-        ExtensionUtil.extractExtensions( project, extensions, m_extensionsFilesets );
-        return (Extension[])extensions.toArray( new Extension[ extensions.size() ] );
+    public Extension[] toExtensions(final Project project)
+        throws BuildException {
+        final ArrayList extensionsList = ExtensionUtil.toExtensions(extensions);
+        ExtensionUtil.extractExtensions(project, extensionsList, extensionsFilesets);
+        return (Extension[]) extensionsList.toArray(new Extension[extensionsList.size()]);
     }
 
     /**
@@ -135,35 +132,31 @@ public class ExtensionSet
      * @param reference the reference to which this instance is associated
      * @exception BuildException if this instance already has been configured.
      */
-    public void setRefid( final Reference reference )
-        throws BuildException
-    {
-        if( !m_extensions.isEmpty() ||
-            !m_extensionsFilesets.isEmpty() )
-        {
+    public void setRefid(final Reference reference)
+        throws BuildException {
+        if (!extensions.isEmpty() || !extensionsFilesets.isEmpty()) {
             throw tooManyAttributes();
         }
         // change this to get the objects from the other reference
         final Object object =
-            reference.getReferencedObject( getProject() );
-        if( object instanceof ExtensionSet )
-        {
-            final ExtensionSet other = (ExtensionSet)object;
-            m_extensions.addAll( other.m_extensions );
-            m_extensionsFilesets.addAll( other.m_extensionsFilesets );
-        }
-        else
-        {
+            reference.getReferencedObject(getProject());
+        if (object instanceof ExtensionSet) {
+            final ExtensionSet other = (ExtensionSet) object;
+            extensions.addAll(other.extensions);
+            extensionsFilesets.addAll(other.extensionsFilesets);
+        } else {
             final String message =
                 reference.getRefId() + " doesn\'t refer to a ExtensionSet";
-            throw new BuildException( message );
+            throw new BuildException(message);
         }
 
-        super.setRefid( reference );
+        super.setRefid(reference);
     }
 
-    public String toString()
-    {
-        return "ExtensionSet" + Arrays.asList( toExtensions( getProject() ) );
+    /**
+     * @see java.lang.Object#toString()
+     */
+    public String toString() {
+        return "ExtensionSet" + Arrays.asList(toExtensions(getProject()));
     }
 }

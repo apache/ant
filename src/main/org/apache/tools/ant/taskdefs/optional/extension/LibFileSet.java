@@ -64,21 +64,20 @@ import org.apache.tools.ant.types.FileSet;
  * @version $Revision$ $Date$
  */
 public class LibFileSet
-    extends FileSet
-{
+    extends FileSet {
     /**
      * Flag indicating whether should include the
      * "Implementation-URL" attribute in manifest.
      * Defaults to false.
      */
-    private boolean m_includeURL;
+    private boolean includeURL;
 
     /**
      * Flag indicating whether should include the
      * "Implementation-*" attributes in manifest.
      * Defaults to false.
      */
-    private boolean m_includeImpl;
+    private boolean includeImpl;
 
     /**
      * String that is the base URL for the librarys
@@ -94,7 +93,7 @@ public class LibFileSet
      *
      * Note that this also implies includeURL=true
      */
-    private String m_urlBase;
+    private String urlBase;
 
     /**
      * Flag indicating whether should include the
@@ -102,11 +101,10 @@ public class LibFileSet
      * Defaults to false.
      *
      * @param includeURL the flag
-     * @see #m_includeURL
+     * @see #includeURL
      */
-    public void setIncludeUrl( boolean includeURL )
-    {
-        m_includeURL = includeURL;
+    public void setIncludeUrl(boolean includeURL) {
+        this.includeURL = includeURL;
     }
 
     /**
@@ -115,22 +113,20 @@ public class LibFileSet
      * Defaults to false.
      *
      * @param includeImpl the flag
-     * @see #m_includeImpl
+     * @see #includeImpl
      */
-    public void setIncludeImpl( boolean includeImpl )
-    {
-        m_includeImpl = includeImpl;
+    public void setIncludeImpl(boolean includeImpl) {
+        this.includeImpl = includeImpl;
     }
 
     /**
      * Set the url base for fileset.
      *
      * @param urlBase the base url
-     * @see #m_urlBase
+     * @see #urlBase
      */
-    public void setUrlBase( String urlBase )
-    {
-        m_urlBase = urlBase;
+    public void setUrlBase(String urlBase) {
+        this.urlBase = urlBase;
     }
 
     /**
@@ -138,9 +134,8 @@ public class LibFileSet
      *
      * @return the includeURL flag.
      */
-    boolean isIncludeURL()
-    {
-        return m_includeURL;
+    boolean isIncludeURL() {
+        return includeURL;
     }
 
     /**
@@ -148,9 +143,8 @@ public class LibFileSet
      *
      * @return the includeImpl flag.
      */
-    boolean isIncludeImpl()
-    {
-        return m_includeImpl;
+    boolean isIncludeImpl() {
+        return includeImpl;
     }
 
     /**
@@ -158,8 +152,7 @@ public class LibFileSet
      *
      * @return the urlbase.
      */
-    String getUrlBase()
-    {
-        return m_urlBase;
+    String getUrlBase() {
+        return urlBase;
     }
 }

@@ -63,19 +63,17 @@ import org.apache.tools.ant.BuildException;
  * @todo Refactor this and all the other parameter, sysproperty,
  *   property etc into a single class in framework
  */
-public class ExtraAttribute
-{
-    private String m_name;
-    private String m_value;
+public class ExtraAttribute {
+    private String name;
+    private String value;
 
     /**
      * Set the name of the parameter.
      *
      * @param name the name of parameter
      */
-    public void setName( final String name )
-    {
-        m_name = name;
+    public void setName(final String name) {
+        this.name = name;
     }
 
     /**
@@ -83,9 +81,8 @@ public class ExtraAttribute
      *
      * @param value the parameter value
      */
-    public void setValue( final String value )
-    {
-        m_value = value;
+    public void setValue(final String value) {
+        this.value = value;
     }
 
     /**
@@ -93,9 +90,8 @@ public class ExtraAttribute
      *
      * @return the name of parameter.
      */
-    String getName()
-    {
-        return m_name;
+    String getName() {
+        return name;
     }
 
     /**
@@ -103,27 +99,23 @@ public class ExtraAttribute
      *
      * @return the value of parameter.
      */
-    String getValue()
-    {
-        return m_value;
+    String getValue() {
+        return value;
     }
 
     /**
      * Make sure that neither the name or the value
      * is null.
+     *
+     * @throws BuildException if the attribute is invalid.
      */
-    public void validate()
-        throws BuildException
-    {
-        if( null == m_name )
-        {
+    public void validate() throws BuildException {
+        if (null == name) {
             final String message = "Missing name from parameter.";
-            throw new BuildException( message );
-        }
-        else if( null == m_value )
-        {
-            final String message = "Missing value from parameter " + m_name + ".";
-            throw new BuildException( message );
+            throw new BuildException(message);
+        } else if (null == value) {
+            final String message = "Missing value from parameter " + name + ".";
+            throw new BuildException(message);
         }
     }
 }
