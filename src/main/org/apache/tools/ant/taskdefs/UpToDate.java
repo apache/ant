@@ -42,10 +42,10 @@ import org.apache.tools.ant.util.SourceFileScanner;
 
 public class UpToDate extends Task implements Condition {
 
-    private String _property;
-    private String _value;
-    private File _sourceFile;
-    private File _targetFile;
+    private String property;
+    private String value;
+    private File sourceFile;
+    private File targetFile;
     private Vector sourceFileSets = new Vector();
 
     protected Mapper mapperElement = null;
@@ -56,8 +56,8 @@ public class UpToDate extends Task implements Condition {
      *
      * @param property the name of the property to set if Target is up-to-date.
      */
-    public void setProperty(String property) {
-        _property = property;
+    public void setProperty(final String property) {
+        this.property = property;
     }
 
     /**
@@ -66,15 +66,15 @@ public class UpToDate extends Task implements Condition {
      *
      * @param value the value to set the property to if Target is up-to-date
      */
-    public void setValue(String value) {
-        _value = value;
+    public void setValue(final String value) {
+        this.value = value;
     }
 
     /**
      * Returns the value, or "true" if a specific value wasn't provided.
      */
     private String getValue() {
-        return (_value != null) ? _value : "true";
+        return (value != null) ? value : "true";
     }
 
     /**
@@ -83,8 +83,8 @@ public class UpToDate extends Task implements Condition {
      *
      * @param file the file we are checking against.
      */
-    public void setTargetFile(File file) {
-        _targetFile = file;
+    public void setTargetFile(final File file) {
+        this.targetFile = file;
     }
 
     /**
@@ -93,19 +93,22 @@ public class UpToDate extends Task implements Condition {
      *
      * @param file the file we are checking against the target file.
      */
-    public void setSrcfile(File file) {
-        _sourceFile = file;
+    public void setSrcfile(final File file) {
+        this.sourceFile = file;
     }
 
     /**
      * Nested &lt;srcfiles&gt; element.
+     * @param fs the source files
      */
-    public void addSrcfiles(FileSet fs) {
+    public void addSrcfiles(final FileSet fs) {
         sourceFileSets.addElement(fs);
     }
 
     /**
      * Defines the FileNameMapper to use (nested mapper element).
+     * @return a mapper to be configured
+     * @throws BuildException if more than one mapper is defined
      */
     public Mapper createMapper() throws BuildException {
         if (mapperElement != null) {
@@ -128,34 +131,35 @@ public class UpToDate extends Task implements Condition {
     /**
      * Evaluate (all) target and source file(s) to
      * see if the target(s) is/are up-to-date.
+     * @return true if the target(s) is/are up-to-date
      */
     public boolean eval() {
-        if (sourceFileSets.size() == 0 && _sourceFile == null) {
+        if (sourceFileSets.size() == 0 && sourceFile == null) {
             throw new BuildException("At least one srcfile or a nested "
                                      + "<srcfiles> element must be set.");
         }
 
-        if (sourceFileSets.size() > 0 && _sourceFile != null) {
+        if (sourceFileSets.size() > 0 && sourceFile != null) {
             throw new BuildException("Cannot specify both the srcfile "
                                      + "attribute and a nested <srcfiles> "
                                      + "element.");
         }
 
-        if (_targetFile == null && mapperElement == null) {
+        if (targetFile == null && mapperElement == null) {
             throw new BuildException("The targetfile attribute or a nested "
                                      + "mapper element must be set.");
         }
 
         // if the target file is not there, then it can't be up-to-date
-        if (_targetFile != null && !_targetFile.exists()) {
-            log("The targetfile \"" + _targetFile.getAbsolutePath()
+        if (targetFile != null && !targetFile.exists()) {
+            log("The targetfile \"" + targetFile.getAbsolutePath()
                     + "\" does not exist.", Project.MSG_VERBOSE);
             return false;
         }
 
         // if the source file isn't there, throw an exception
-        if (_sourceFile != null && !_sourceFile.exists()) {
-            throw new BuildException(_sourceFile.getAbsolutePath()
+        if (sourceFile != null && !sourceFile.exists()) {
+            throw new BuildException(sourceFile.getAbsolutePath()
                                      + " not found.");
         }
 
@@ -168,14 +172,14 @@ public class UpToDate extends Task implements Condition {
                                            ds.getIncludedFiles());
         }
 
-        if (_sourceFile != null) {
+        if (sourceFile != null) {
             if (mapperElement == null) {
                 upToDate = upToDate
-                    && (_targetFile.lastModified() >= _sourceFile.lastModified());
+                    && (targetFile.lastModified() >= sourceFile.lastModified());
             } else {
                 SourceFileScanner sfs = new SourceFileScanner(this);
                 upToDate = upToDate
-                    && (sfs.restrict(new String[] {_sourceFile.getAbsolutePath()},
+                    && (sfs.restrict(new String[] {sourceFile.getAbsolutePath()},
                                   null, null,
                                   mapperElement.getImplementation()).length == 0);
             }
@@ -187,17 +191,18 @@ public class UpToDate extends Task implements Condition {
     /**
      * Sets property to true if target file(s) have a more recent timestamp
      * than (each of) the corresponding source file(s).
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
-        if (_property == null) {
+        if (property == null) {
             throw new BuildException("property attribute is required.",
                                      getLocation());
         }
         boolean upToDate = eval();
         if (upToDate) {
-            this.getProject().setNewProperty(_property, getValue());
+            getProject().setNewProperty(property, getValue());
             if (mapperElement == null) {
-                log("File \"" + _targetFile.getAbsolutePath()
+                log("File \"" + targetFile.getAbsolutePath()
                     + "\" is up-to-date.", Project.MSG_VERBOSE);
             } else {
                 log("All target files are up-to-date.",
@@ -206,13 +211,19 @@ public class UpToDate extends Task implements Condition {
         }
     }
 
+    /**
+     * Scan a directory for files to check for "up to date"ness
+     * @param srcDir the directory
+     * @param files the files to scan for
+     * @return true if the files are up to date
+     */
     protected boolean scanDir(File srcDir, String[] files) {
         SourceFileScanner sfs = new SourceFileScanner(this);
         FileNameMapper mapper = null;
         File dir = srcDir;
         if (mapperElement == null) {
             MergingMapper mm = new MergingMapper();
-            mm.setTo(_targetFile.getAbsolutePath());
+            mm.setTo(targetFile.getAbsolutePath());
             mapper = mm;
             dir = null;
         } else {
