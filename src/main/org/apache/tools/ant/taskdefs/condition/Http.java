@@ -78,7 +78,7 @@ public class Http extends ProjectComponent implements Condition {
 
     private int errorsBeginAt=400;
     
-    public void SetErrorsBeginAt(int errorsBeginAt) {
+    public void setErrorsBeginAt(int errorsBeginAt) {
         this.errorsBeginAt=errorsBeginAt;
     }
     
