@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002,2004 The Apache Software Foundation
+ * Copyright  2000,2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ package org.apache.tools.tar;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * The TarBuffer class implements the tar archive concept
@@ -231,6 +232,14 @@ public class TarBuffer {
             // Thanks to 'Yohann.Roussel@alcatel.fr' for this fix.
             //
             if (numBytes == -1) {
+                // However, just leaving the unread portion of the buffer dirty does 
+                // cause problems in some cases.  This problem is described in
+                // http://issues.apache.org/bugzilla/show_bug.cgi?id=29877
+                //
+                // The solution is to fill the unused portion of the buffer with zeros.
+
+                Arrays.fill(blockBuffer, offset, offset + bytesNeeded, (byte) 0);
+
                 break;
             }
 
