@@ -74,11 +74,7 @@ public class ImportTest extends BuildFileTest {
 
     public void testSimpleImport() {
         configureProject("src/etc/testcases/taskdefs/import/import.xml");
-        String logMessage = getLog();
-        String expect = "Before importIn imported topAfter import";
-        assertTrue("expecting log to contain \"" + expect + "\" log was \""
-                   + logMessage + "\"",
-                   logMessage.indexOf(expect) >= 0);
+        assertLogContaining("Before importIn imported topAfter import");
     }
 
     public void testUnnamedNesting() {
@@ -87,6 +83,12 @@ public class ImportTest extends BuildFileTest {
         String log = getLog();
         assertTrue("Warnings logged when not expected: " + log,
                     log.length() == 0);
+    }
+
+    public void testSerial() {
+        configureProject("src/etc/testcases/taskdefs/import/subdir/serial.xml");
+        assertLogContaining(
+            "Unnamed2.xmlUnnamed1.xmlSkipped already imported file");
     }
 }
 

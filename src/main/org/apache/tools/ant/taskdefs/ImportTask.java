@@ -125,14 +125,17 @@ public class ImportTask extends Task {
             // helper that doesn't set the import.
             throw new BuildException("import requires support in ProjectHelper");
         }
-        Object currentSource = importStack.elementAt(importStack.size() - 1);
-
 //        ProjectHelper2.AntXmlContext context;
 //        context=(ProjectHelper2.AntXmlContext)project.getReference("ant.parsing.context");
 
 //        File buildFile=context.buildFile;
 //        File buildFileParent=context.buildFileParent;
-        File buildFile = (File) currentSource;
+
+        if (getLocation() == null || getLocation().getFileName() == null) {
+            throw new BuildException("Unable to get location of import task");
+        }
+
+        File buildFile = new File(getLocation().getFileName());
         buildFile = new File(buildFile.getAbsolutePath());
         //System.out.println("Importing from " + currentSource);
         File buildFileParent = new File(buildFile.getParent());
@@ -153,9 +156,11 @@ public class ImportTask extends Task {
                     + buildFile.getAbsolutePath());
         }
 
+        importedFile = new File(getPath(importedFile));
+
         if (importStack.contains(importedFile)) {
             getProject().log(
-                "\nSkipped already imported file to avoid loop:\n   "
+                "Skipped already imported file:\n   "
                 + importedFile + "\n", Project.MSG_WARN);
             return;
         }

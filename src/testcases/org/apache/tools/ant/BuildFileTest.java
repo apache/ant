@@ -108,17 +108,25 @@ public abstract class BuildFileTest extends TestCase {
         String realLog = getLog();
         assertEquals(log, realLog);
     }
+    
+    /**
+     * Assert that the given substring is in the log messages
+     */
 
+    protected void assertLogContaining(String substring) {
+        String realLog = getLog();
+        assertTrue("expecting log to contain \"" + substring + "\" log was \""
+                   + realLog + "\"",
+                   realLog.indexOf(substring) >= 0);
+    }
+    
     /**
      * Assert that the given message has been logged with a priority
      * &gt;= INFO when running the given target.
      */
     protected void expectLogContaining(String target, String log) {
         executeTarget(target);
-        String realLog = getLog();
-        assertTrue("expecting log to contain \""+log+"\" log was \""
-                   + realLog + "\"",
-                   realLog.indexOf(log) >= 0);
+        assertLogContaining(log);
     }
 
     /**
