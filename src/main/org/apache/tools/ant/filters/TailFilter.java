@@ -240,7 +240,7 @@ public final class TailFilter extends BaseParamFilterReader
      * implement a tail filter on a stream of lines.
      * line = null is the end of the stream.
      * @return "" while reading in the lines,
-     *         line while outputing the lines
+     *         line while outputting the lines
      *         null at the end of outputting the lines
      */
     private String tailFilter(String line) {

@@ -104,7 +104,7 @@ public class RuntimeConfigurable implements Serializable {
      *  preserving the order ( AFAIK ), some ant tests do rely on the
      *  exact order. The following code is copied from AttributeImpl.
      *  We could also just use SAX2 Attributes and convert to SAX1 ( DOM
-     *  attribute Nodes can also be stored in SAX2 Attributges )
+     *  attribute Nodes can also be stored in SAX2 Attributes )
      *  XXX under JDK 1.4 you can just use a LinkedHashMap for this purpose -jglick
      */
     private List/*<String>*/ attributeNames = null;

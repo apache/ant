@@ -80,7 +80,7 @@ public interface TypeAdapter {
      * Sets the proxy object, whose methods are going to be
      * invoked by ant.
      * A proxy object is normally the object defined by
-     * a &lttypedef/&gt task that is adapted by the "adapter"
+     * a &lt;typedef/&gt; task that is adapted by the "adapter"
      * attribute.
      *
      * @param o The target object. Must not be <code>null</code>.

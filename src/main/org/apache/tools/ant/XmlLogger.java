@@ -253,7 +253,7 @@ public class XmlLogger implements BuildLogger {
     /**
      * Fired when a target starts building, this pushes a timed element
      * for the target onto the stack of elements for the current thread,
-     * rememebering the current time and the name of the target.
+     * remembering the current time and the name of the target.
      *
      * @param event An event with any relevant extra information.
      *              Will not be <code>null</code>.
@@ -309,7 +309,7 @@ public class XmlLogger implements BuildLogger {
     /**
      * Fired when a task starts building, this pushes a timed element
      * for the task onto the stack of elements for the current thread,
-     * rememebering the current time and the name of the task.
+     * remembering the current time and the name of the task.
      *
      * @param event An event with any relevant extra information.
      *              Will not be <code>null</code>.

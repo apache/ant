@@ -72,8 +72,8 @@ import org.xml.sax.AttributeList;
  *
  * This class also provide static wrappers for common introspection.
  *
- * All helper plugins must provide backward compatiblity with the
- * original ant patterns, unless a different behavior is explicitely
+ * All helper plugins must provide backward compatibility with the
+ * original ant patterns, unless a different behavior is explicitly
  * specified. For example, if namespace is used on the &lt;project&gt; tag
  * the helper can expect the entire build file to be namespace-enabled.
  * Namespaces or helper-specific tags can provide meta-information to
@@ -115,7 +115,7 @@ public class ProjectHelper {
      * @param buildFile An XML file giving the project's configuration.
      *                  Must not be <code>null</code>.
      *
-     * @deprecated Use the non-statuc parse method
+     * @deprecated Use the non-static parse method
      * @exception BuildException if the configuration is invalid or cannot
      *                           be read
      */
@@ -198,7 +198,7 @@ public class ProjectHelper {
     public static ProjectHelper getProjectHelper()
         throws BuildException {
         // Identify the class loader we will be using. Ant may be
-        // in a webapp or embeded in a different app
+        // in a webapp or embedded in a different app
         ProjectHelper helper = null;
 
         // First, try the system property

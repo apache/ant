@@ -78,7 +78,7 @@ public class ExitException extends SecurityException {
 
     /**
      * Constructs an exit exception.
-     * @param msg the messge to be displayed.
+     * @param msg the message to be displayed.
      * @param status the status code returned via System.exit()
      */
     public ExitException(String msg, int status) {

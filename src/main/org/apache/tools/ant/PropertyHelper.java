@@ -63,7 +63,7 @@ import java.util.Enumeration;
  - ns param. It could be used to provide "namespaces" for properties, which
  may be more flexible.
  - Object value. In ant1.5 String is used for Properties - but it would be nice
- to support generic Objects (the property remains imutable - you can't change
+ to support generic Objects (the property remains immutable - you can't change
  the associated object). This will also allow JSP-EL style setting using the
  Object if an attribute contains only the property (name="${property}" could
  avoid Object->String->Object conversion)
@@ -117,7 +117,7 @@ public class PropertyHelper {
     /**
      * Set the project for which this helper is performing property resolution
      *
-     * @param p the projetc instance.
+     * @param p the project instance.
      */
     public void setProject(Project p) {
         this.project = p;
@@ -140,7 +140,7 @@ public class PropertyHelper {
     /**
      * Get the next property helper in the chain.
      *
-     * @return the next proprty helper.
+     * @return the next property helper.
      */
     public PropertyHelper getNext() {
         return next;
@@ -149,7 +149,7 @@ public class PropertyHelper {
     /**
      * Factory method to create a property processor.
      * Users can provide their own or replace it using "ant.PropertyHelper"
-     * reference. User tasks can also add themself to the chain, and provide
+     * reference. User tasks can also add themselves to the chain, and provide
      * dynamic properties.
      *
      * @param project the project fro which the property helper is required.
@@ -245,7 +245,7 @@ public class PropertyHelper {
      * <code>null</code> entries in the first list indicate a property
      * reference from the second list.
      *
-     * It can be overriden with a more efficient or customized version.
+     * It can be overridden with a more efficient or customized version.
      *
      * @param value     Text to parse. Must not be <code>null</code>.
      * @param fragments List to add text fragments to.
@@ -508,7 +508,7 @@ public class PropertyHelper {
         }
 
         // There is a better way to save the context. This shouldn't
-        // delegate to next, it's for backward compat only.
+        // delegate to next, it's for backward compatibility only.
 
         return propertiesCopy;
     }
@@ -583,7 +583,7 @@ public class PropertyHelper {
     // this is used for backward compatibility (for code that calls
     // the parse method in ProjectHelper).
 
-    /** Default parsing method. It is here only to support backward compat
+    /** Default parsing method. It is here only to support backward compatibility
      * for the static ProjectHelper.parsePropertyString().
      */
     static void parsePropertyStringDefault(String value, Vector fragments,

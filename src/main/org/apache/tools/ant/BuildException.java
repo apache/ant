@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@ public class BuildException extends RuntimeException {
     /** Exception that might have caused this one. */
     private Throwable cause;
 
-    /** Location in the build file where the exception occured */
+    /** Location in the build file where the exception occurred */
     private Location location = Location.UNKNOWN_LOCATION;
 
     /**

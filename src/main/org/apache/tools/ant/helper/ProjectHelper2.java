@@ -423,7 +423,7 @@ public class ProjectHelper2 extends ProjectHelper {
         /**
          * Resolves file: URIs relative to the build file.
          *
-         * @param publicId The public identifer, or <code>null</code>
+         * @param publicId The public identifier, or <code>null</code>
          *                 if none is available. Ignored in this
          *                 implementation.
          * @param systemId The system identifier provided in the XML
@@ -631,7 +631,7 @@ public class ProjectHelper2 extends ProjectHelper {
              *
              * If we eventually switch to ( or add support for ) DOM,
              * things will work smoothly - UE can be avoided almost completely
-             * ( it could still be created on demand, for backward compat )
+             * ( it could still be created on demand, for backward compatibility )
              */
 
             for (int i = 0; i < attrs.getLength(); i++) {
@@ -695,7 +695,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 // no further processing
                 return;
             }
-            // set explicitely before starting ?
+            // set explicitly before starting ?
             if (project.getProperty("basedir") != null) {
                 project.setBasedir(project.getProperty("basedir"));
             } else {
@@ -820,7 +820,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
             Hashtable currentTargets = project.getTargets();
 
-            // If the name has already beend defined ( import for example )
+            // If the name has already been defined ( import for example )
             if (currentTargets.containsKey(name)) {
                 // Alter the name.
                 if (context.getCurrentProjectName() != null) {
@@ -960,7 +960,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 // PR: Hack for ant-type value
                 //  an ant-type is a component name which can
                 // be namespaced, need to extract the name
-                // and convert from qualifed name to uri/name
+                // and convert from qualified name to uri/name
                 if (name.equals("ant-type")) {
                     int index = value.indexOf(":");
                     if (index != -1) {

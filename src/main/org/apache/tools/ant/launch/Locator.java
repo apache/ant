@@ -176,13 +176,13 @@ public final class Locator {
     /**
      * Get the File necessary to load the Sun compiler tools. If the classes
      * are available to this class, then no additional URL is required and
-     * null is returned. This may be because the classes are explcitly in the
+     * null is returned. This may be because the classes are explicitly in the
      * class path or provided by the JVM directly
      *
      * @return the tools jar as a File if required, null otherwise
      */
     public static File getToolsJar() {
-        // firstly check if the tols jar is alreayd n the classpath
+        // firstly check if the tools jar is already in the classpath
         boolean toolsJarAvailable = false;
 
         try {

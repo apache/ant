@@ -191,9 +191,9 @@ public class TokenFilter extends BaseFilterReader
     }
 
     /**
-     * set the output delimitor.
+     * set the output delimiter.
      * @param delimOutput replaces the delim string returned by the
-     *                    tokenizer, it it present.
+     *                    tokenizer, if present.
      */
 
     public void setDelimOutput(String delimOutput) {
@@ -231,7 +231,7 @@ public class TokenFilter extends BaseFilterReader
     }
 
     /**
-     * add an arbirarty tokenizer
+     * add an arbitrary tokenizer
      * @param tokenizer the tokenizer to all, only one allowed
      */
 
@@ -296,14 +296,14 @@ public class TokenFilter extends BaseFilterReader
 
     /**
      * delete chars
-     * @param filter the delete chaarcters filter
+     * @param filter the delete characters filter
      */
     public void addDeleteCharacters(DeleteCharacters filter) {
         filters.addElement(filter);
     }
 
     /**
-     * Add an arbitary filter
+     * Add an arbitrary filter
      * @param filter the filter to add
      */
     public void add(Filter filter) {
@@ -342,7 +342,7 @@ public class TokenFilter extends BaseFilterReader
     }
 
     /**
-     * class to tokenize the input as areas seperated
+     * class to tokenize the input as areas separated
      * by white space, or by a specified list of
      * delim characters. Behaves like java.util.StringTokenizer.
      * if the stream starts with delim characters, the first
@@ -359,7 +359,7 @@ public class TokenFilter extends BaseFilterReader
         private boolean includeDelims = false;
 
         /**
-         * attribute delims - the delimeter characters
+         * attribute delims - the delimiter characters
          * @param delims a string containing the delimiter characters
          */
         public void setDelims(String delims) {
@@ -388,7 +388,7 @@ public class TokenFilter extends BaseFilterReader
          * attribute includedelims - treat delimiters as part
          * of the token.
          * default - false
-         * @param includeDelims if true add deliters to the token
+         * @param includeDelims if true add delimiters to the token
          */
         public void setIncludeDelims(boolean includeDelims) {
             this.includeDelims = includeDelims;
@@ -489,7 +489,7 @@ public class TokenFilter extends BaseFilterReader
         private boolean byLine = true;
 
         /**
-         * set wheter to use filetokenizer or line tokenizer
+         * set whether to use filetokenizer or line tokenizer
          * @param byLine if true use a linetokenizer (default) otherwise
          *               use a filetokenizer
          */
@@ -539,7 +539,7 @@ public class TokenFilter extends BaseFilterReader
         }
 
         /**
-         * Filter a string 'line' replaceing from with to
+         * Filter a string 'line' replacing from with to
          * (C&P from the Replace task)
          * @param line the string to be filtered
          * @return the filtered line
@@ -752,7 +752,7 @@ public class TokenFilter extends BaseFilterReader
     /** Filter to trim white space */
     public static class Trim extends ChainableReaderFilter {
         /**
-         * @param line the string to be trimed
+         * @param line the string to be trimmed
          * @return the trimmed string
          */
         public String filter(String line) {
@@ -766,7 +766,7 @@ public class TokenFilter extends BaseFilterReader
     public static class IgnoreBlank extends ChainableReaderFilter {
         /**
          * @param line the line to modify
-         * @return the trimed line
+         * @return the trimmed line
          */
         public String filter(String line) {
             if (line.trim().length() == 0) {
@@ -852,9 +852,9 @@ public class TokenFilter extends BaseFilterReader
     // --------------------------------------------------------
 
     /**
-     * xml does not do "c" like interpetation of strings.
+     * xml does not do "c" like interpretation of strings.
      * i.e. \n\r\t etc.
-     * this methid processes \n, \r, \t, \f, \\
+     * this method processes \n, \r, \t, \f, \\
      * also subs \s -> " \n\r\t\f"
      * a trailing '\' will be ignored
      *

@@ -71,7 +71,7 @@ import org.apache.tools.ant.launch.AntMain;
 
 /**
  * Command line entry point into Ant. This class is entered via the
- * cannonical `public static void main` entry point and reads the
+ * canonical `public static void main` entry point and reads the
  * command line arguments. It then assembles and executes an Ant
  * project.
  * <p>
@@ -462,7 +462,7 @@ public class Main implements AntMain {
         }
 
         // make sure it's not a directory (this falls into the ultra
-        // paranoid lets check everything catagory
+        // paranoid lets check everything category
 
         if (buildFile.isDirectory()) {
             System.out.println("What? Buildfile: " + buildFile + " is a dir!");
@@ -540,7 +540,7 @@ public class Main implements AntMain {
      * Search parent directories for the build file.
      * <p>
      * Takes the given target as a suffix to append to each
-     * parent directory in seach of a build file.  Once the
+     * parent directory in search of a build file.  Once the
      * root of the file-system has been reached an exception
      * is thrown.
      *
@@ -618,7 +618,7 @@ public class Main implements AntMain {
                 oldsm = System.getSecurityManager();
 
                 //SecurityManager can not be installed here for backwards
-                //compatability reasons (PD). Needs to be loaded prior to
+                //compatibility reasons (PD). Needs to be loaded prior to
                 //ant class if we are going to implement it.
                 //System.setSecurityManager(new NoExitSecurityManager());
             }

@@ -328,7 +328,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Search for file/directory either either relative to project's
+     * Search for file/directory either relative to project's
      * basedir or in the path given as filepath.
      *
      * <p>filepath can be a list of directory and/or file names (gen'd

@@ -567,7 +567,7 @@ public class Ant extends Task {
 
     /**
      * Copies all properties from the given table to the new project -
-     * ommiting those that have already been set in the new project as
+     * omitting those that have already been set in the new project as
      * well as properties named basedir or ant.file.
      * @param props properties to copy to the new project
      * @since Ant 1.6

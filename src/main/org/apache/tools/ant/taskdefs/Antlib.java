@@ -164,7 +164,7 @@ public class Antlib extends Task implements TaskContainer {
     /**
      * add a task to the list of tasks
      *
-     * @param nestedTask Nested task to execute in antlibe
+     * @param nestedTask Nested task to execute in antlib
      */
     public void addTask(Task nestedTask) {
         tasks.add(nestedTask);

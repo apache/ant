@@ -233,7 +233,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         /** Helper impl. With non-static internal classes, the compiler will generate
             this automatically - but this will fail with some compilers ( reporting
             "Expecting to find object/array on stack" ). If we pass it
-            explicitely it'll work with more compilers.
+            explicitly it'll work with more compilers.
         */
         ProjectHelperImpl helperImpl;
 
@@ -322,7 +322,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         /**
          * Resolves file: URIs relative to the build file.
          *
-         * @param publicId The public identifer, or <code>null</code>
+         * @param publicId The public identifier, or <code>null</code>
          *                 if none is available. Ignored in this
          *                 implementation.
          * @param systemId The system identifier provided in the XML
@@ -501,7 +501,7 @@ public class ProjectHelperImpl extends ProjectHelper {
         }
 
         /**
-         * Handles a target defintion element by creating a target handler
+         * Handles a target definition element by creating a target handler
          * and initialising is with the details of the element.
          *
          * @param tag The name of the element to be handled.

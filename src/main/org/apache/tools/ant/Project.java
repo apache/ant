@@ -228,11 +228,11 @@ public class Project {
 
     /**
      * Set the default System input stream. Normally this stream is set to
-     * System.in. This inputStream is used when no task inptu redirection is
+     * System.in. This inputStream is used when no task input redirection is
      * being performed.
      *
      * @param defaultInputStream the default input stream to use when input
-     *        is reuested.
+     *        is requested.
      * @since Ant 1.6
      */
     public void setDefaultInputStream(InputStream defaultInputStream) {
@@ -242,7 +242,7 @@ public class Project {
     /**
      * Get this project's input stream
      *
-     * @return the InputStream instance in use by this Porject instance to
+     * @return the InputStream instance in use by this Project instance to
      * read input
      */
     public InputStream getDefaultInputStream() {
@@ -332,7 +332,7 @@ public class Project {
      * Factory method to create a class loader for loading classes from
      * a given path
      *
-     * @param path the path from whcih clases are to be loaded.
+     * @param path the path from which classes are to be loaded.
      *
      * @return an appropriate classloader
      */
@@ -1656,7 +1656,7 @@ public class Project {
      * @param visiting A stack of targets which are currently being visited.
      *                 Must not be <code>null</code>.
      * @param ret     The list to add target names to. This will end up
-     *                containing the complete list of depenencies in
+     *                containing the complete list of dependencies in
      *                dependency order.
      *                Must not be <code>null</code>.
      *
@@ -2007,7 +2007,7 @@ public class Project {
     }
 
     /**
-     * Get the current task assopciated with a thread, if any
+     * Get the current task associated with a thread, if any
      *
      * @param thread the thread for which the task is required.
      * @return the task which is currently registered for the given thread or

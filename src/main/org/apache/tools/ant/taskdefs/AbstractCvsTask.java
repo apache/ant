@@ -225,7 +225,7 @@ public abstract class AbstractCvsTask extends Task {
      * if the stream has not yet been set, if the attribute output
      * has been set, the output stream will go to the output file
      * otherwise the output will go to ant's logging system
-     * @return output stream to which cvs'stdout should go to
+     * @return output stream to which cvs' stdout should go to
      */
     protected OutputStream getOutputStream() {
 
@@ -264,7 +264,7 @@ public abstract class AbstractCvsTask extends Task {
      * if the stream has not yet been set, if the attribute error
      * has been set, the output stream will go to the file denoted by the error attribute
      * otherwise the stderr output will go to ant's logging system
-     * @return output stream to which cvs'stderr should go to
+     * @return output stream to which cvs' stderr should go to
      */
     protected OutputStream getErrorStream() {
 
@@ -499,7 +499,7 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     /**
-     * access the the CVSROOT variable
+     * access the CVSROOT variable
      * @return CVSROOT
      */
     public String getCvsRoot() {
@@ -631,7 +631,7 @@ public abstract class AbstractCvsTask extends Task {
      * add a command line argument to an external command
      *
      * I do not understand what this method does in this class ???
-     * particulary not why it is public ????
+     * particularly not why it is public ????
      * AntoineLL July 23d 2003
      *
      * @param c  command line to which one argument should be added

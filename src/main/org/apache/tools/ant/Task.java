@@ -202,7 +202,7 @@ public abstract class Task extends ProjectComponent {
      * Called by the project to let the task initialize properly.
      * The default implementation is a no-op.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception BuildException if something goes wrong with the build
      */
     public void init() throws BuildException {
     }
@@ -373,7 +373,7 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
-     * Logs a mesage with the given priority. This delegates
+     * Logs a message with the given priority. This delegates
      * the actual logging to the project.
      *
      * @param msg The message to be logged. Should not be <code>null</code>.

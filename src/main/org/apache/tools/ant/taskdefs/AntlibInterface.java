@@ -57,7 +57,7 @@ package org.apache.tools.ant.taskdefs;
 /**
  * Interface for tasks that should be informed when
  * they are loaded in antlib's.
- * For handling uri and and class loading.
+ * For handling uri and class loading.
  *
  * @author Peter Reilly
  *

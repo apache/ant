@@ -360,13 +360,13 @@ public class AntStructure extends Task {
     /**
      * Does this String match the XML-NMTOKEN production?
      * @param s the string to test
-     * @return true if the string matche the XML-NMTOKEN
+     * @return true if the string matches the XML-NMTOKEN
      */
     protected boolean isNmtoken(String s) {
         final int length = s.length();
         for (int i = 0; i < length; i++) {
             char c = s.charAt(i);
-            // XXX - we are ommitting CombiningChar and Extender here
+            // XXX - we are committing CombiningChar and Extender here
             if (!Character.isLetterOrDigit(c)
                 && c != '.' && c != '-' && c != '_' && c != ':') {
                 return false;
