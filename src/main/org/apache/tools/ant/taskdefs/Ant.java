@@ -105,7 +105,6 @@ public class Ant extends Task {
     
     /** the output */
     private String output  = null;
-    private String outfile = null;
     
     /** should we inherit properties from the parent ? */
     private boolean inheritAll = true;
@@ -175,9 +174,11 @@ public class Ant extends Task {
         }
 
         if (output != null) {
+            File outfile = null;
             if (dir != null) {
-                File file = FileUtils.newFileUtils().resolveFile(dir, output);
-                outfile = file.getAbsolutePath();
+                outfile = FileUtils.newFileUtils().resolveFile(dir, output);
+            } else {
+                outfile = getProject().resolveFile(output);
             }
             try {
                 PrintStream out = new PrintStream(new FileOutputStream(outfile));

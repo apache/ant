@@ -2,6 +2,13 @@
 
 <project name="ant-test" basedir="." default="test1">
 
+  <target name="cleanup">
+    <delete file="test1.log" />
+    <delete file="test2.log" />
+    <delete file="ant/test3.log" />
+    <delete file="ant/test4.log" />
+  </target>
+
   <target name="all" depends="test1,test2,test3,test4"/>
 
   <target name="test1">
@@ -67,4 +74,13 @@
     </ant>
   </target>
 
+  <target name="testLogfilePlacement">
+    <ant antfile="ant.xml" target="dummy" output="test1.log"
+         inheritall="false" />
+    <ant antfile="ant.xml" target="dummy" output="test2.log" />
+    <ant antfile="ant.xml" target="dummy" output="test3.log"
+         inheritall="false" dir="ant" />
+    <ant antfile="ant.xml" target="dummy" output="test4.log" 
+         dir="ant" />
+  </target>
 </project>

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -78,6 +78,10 @@ public class AntTest extends BuildFileTest {
         configureProject("src/etc/testcases/taskdefs/ant.xml");
     }
     
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+
     public void test1() { 
         expectBuildException("test1", "recursive call");
     }
@@ -213,6 +217,26 @@ public class AntTest extends BuildFileTest {
         project.removeBuildListener(rc);
     }
 
+    public void testLogfilePlacement() {
+        File[] logFiles = new File[] {
+            getProject().resolveFile("test1.log"),
+            getProject().resolveFile("test2.log"),
+            getProject().resolveFile("ant/test3.log"),
+            getProject().resolveFile("ant/test3.log")
+        };
+        for (int i=0; i<logFiles.length; i++) {
+            assertTrue(logFiles[i].getName()+" doesn\'t exist",
+                       !logFiles[i].exists());
+        }
+        
+        executeTarget("testLogfilePlacement");
+
+        for (int i=0; i<logFiles.length; i++) {
+            assertTrue(logFiles[i].getName()+" exists",
+                       logFiles[i].exists());
+        }
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;
@@ -232,8 +256,13 @@ public class AntTest extends BuildFileTest {
         public void targetStarted(BuildEvent event) {
             if (error == null) {
                 try {
-                    assertEquals(expectedBasedirs[calls++],
-                                 event.getProject().getBaseDir().getAbsolutePath());
+                    if (calls == expectedBasedirs.length) {
+                        assertEquals("cleanup",
+                                     event.getTarget().getName());
+                    } else {
+                        assertEquals(expectedBasedirs[calls++],
+                                     event.getProject().getBaseDir().getAbsolutePath());
+                    }
                 } catch (AssertionFailedError e) {
                     error = e;
                 }
