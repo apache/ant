@@ -116,21 +116,17 @@ public class FixCRLF extends MatchingTask {
 
     /**
      * Set the source dir to find the source text files.
-     *
-     * @param srcDirName name of the source directory.
      */
-    public void setSrcdir(String srcDirName) {
-        srcDir = project.resolveFile(srcDirName);
+    public void setSrcdir(File srcDir) {
+        this.srcDir = srcDir;
     }
 
     /**
      * Set the destination where the fixed files should be placed.
      * Default is to replace the original file.
-     *
-     * @param destDirName name of the destination directory.
      */
-    public void setDestdir(String destDirName) {
-        destDir = project.resolveFile(destDirName);
+    public void setDestdir(File destDir) {
+        this.destDir = destDir;
     }
 
     /**
@@ -182,8 +178,12 @@ public class FixCRLF extends MatchingTask {
      *
      * @param tlength specify the length of tab in spaces, has to be a power of 2
      */
-    public void setTablength(String tlength) {
-        tablength = Integer.parseInt(tlength);
+    public void setTablength(int tlength) throws BuildException {
+        if (tlength < 2 || (tlength % 2) != 0) {
+            throw new BuildException("tablength must be a positive power of 2",
+                                     location);
+        }
+        tablength = tlength;
     }
 
     /**

@@ -62,6 +62,7 @@ import java.io.*;
  *
  * @author costin@dnt.ro
  * @author stefano@apache.org
+ * @author Wolfgang Werner <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
  */
 
 public class Cvs extends Exec {
@@ -141,12 +142,12 @@ public class Cvs extends Exec {
 	this.command = c;
     }
     
-    public void setQuiet(String q) {
-        quiet = Project.toBoolean(q);
+    public void setQuiet(boolean q) {
+        quiet = q;
     }
     
-    public void setNoexec(String ne) {
-        noexec = Project.toBoolean(ne);
+    public void setNoexec(boolean ne) {
+        noexec = ne;
     }
 }
 
