@@ -30,7 +30,8 @@ enhancements of existing tasks.
   fileset as arguments - similar to <apply>.
 
 * Include some more sophisticated loggers with the Ant distribution -
-  especially for sending emails. 
+  especially for sending emails. Make the existing one more flexible
+  (stylesheet used by XmlLogger).
 
   Could be part of the same module task would be developed in?
 
