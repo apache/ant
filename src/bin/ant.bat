@@ -8,7 +8,7 @@ rem agruments (up to the command line limit, anyway).
 set ANT_CMD_LINE_ARGS=
 
 :setupArgs
-if %1a==a goto doneArgs
+if "%1"=="" goto doneArgs
 set ANT_CMD_LINE_ARGS=%ANT_CMD_LINE_ARGS% %1
 shift
 goto setupArgs
@@ -36,17 +36,18 @@ echo ANT_HOME is not set and ant could not be located. Please set ANT_HOME.
 goto end
 
 :checkJava
-if "%JAVACMD%" == "" set JAVACMD=java
-
+set _JAVACMD=%JAVACMD%
 set LOCALCLASSPATH="%CLASSPATH%"
 for %%i in ("%ANT_HOME%\lib\*.jar") do call "%ANT_HOME%\bin\lcp.bat" "%%i"
 
 if "%JAVA_HOME%" == "" goto noJavaHome
+if "%_JAVACMD%" == "" set _JAVACMD=%JAVA_HOME%\bin\java
 if exist "%JAVA_HOME%\lib\tools.jar" call "%ANT_HOME%\bin\lcp.bat" "%JAVA_HOME%\lib\tools.jar"
 if exist "%JAVA_HOME%\lib\classes.zip" call "%ANT_HOME%\bin\lcp.bat" "%JAVA_HOME%\lib\classes.zip"
 goto checkJikes
 
 :noJavaHome
+if "%_JAVACMD%" == "" set _JAVACMD=java
 echo.
 echo Warning: JAVA_HOME environment variable is not set.
 echo   If build fails because sun.* classes could not be found
@@ -58,7 +59,7 @@ echo.
 if not "%JIKESPATH%" == "" goto runAntWithJikes
 
 :runAnt
-%JAVACMD% -classpath %LOCALCLASSPATH% -Dant.home="%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
+%_JAVACMD% -classpath %LOCALCLASSPATH% -Dant.home="%ANT_HOME%" %ANT_OPTS% org.apache.tools.ant.Main %ANT_CMD_LINE_ARGS%
 goto end
 
 :runAntWithJikes
