@@ -71,6 +71,7 @@ public class Target {
     private Vector tasks = new Vector(5);
     private Project project;
     private String description = null;
+    private String token = null;
 
     public void setProject(Project project) {
         this.project = project;
@@ -78,6 +79,14 @@ public class Target {
 
     public Project getProject() {
         return project;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getToken() {
+        return token;
     }
 
     public void setDepends(String depS) {
@@ -143,6 +152,7 @@ public class Target {
 
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
+            project.setToken(token);
             Enumeration enum = tasks.elements();
             while (enum.hasMoreElements()) {
                 Task task = (Task) enum.nextElement();

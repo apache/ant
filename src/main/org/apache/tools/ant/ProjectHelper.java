@@ -81,7 +81,8 @@ public class ProjectHelper {
     /**
      * Configures the Project with the contents of the specified XML file.
      */
-    public static void configureProject(Project project, File buildFile) throws BuildException {
+    public static void configureProject(Project project, File buildFile) 
+        throws BuildException {
         new ProjectHelper(project, buildFile).parse();
     }
 
@@ -108,11 +109,13 @@ public class ProjectHelper {
             saxParser.parse(inputStream, new RootHandler());
         }
         catch(ParserConfigurationException exc) {
-            throw new BuildException("Parser has not been configured correctly", exc);
+            throw new BuildException("Parser has not been configured " + 
+                "correctly", exc);
         }
         catch(SAXParseException exc) {
             Location location =
-                new Location(buildFile.toString(), exc.getLineNumber(), exc.getColumnNumber());
+                new Location(buildFile.toString(), exc.getLineNumber(), 
+                    exc.getColumnNumber());
 
             Throwable t = exc.getException();
             if (t instanceof BuildException) {
@@ -172,15 +175,19 @@ public class ProjectHelper {
             parser.setDocumentHandler(this);
         }
 
-        public void startElement(String tag, AttributeList attrs) throws SAXParseException {
-            throw new SAXParseException("Unexpected element \"" + tag + "\"", locator);
+        public void startElement(String tag, AttributeList attrs) 
+            throws SAXParseException {
+            throw new SAXParseException("Unexpected element \"" + tag + "\"", 
+                locator);
         }
 
-        public void characters(char[] buf, int start, int end) throws SAXParseException {
+        public void characters(char[] buf, int start, int end) 
+            throws SAXParseException {
             String s = new String(buf, start, end).trim();
 
             if (s.length() > 0) {
-                throw new SAXParseException("Unexpected text \"" + s + "\"", locator);
+                throw new SAXParseException("Unexpected text \"" + s + "\"", 
+                    locator);
             }
         }
 
@@ -199,7 +206,8 @@ public class ProjectHelper {
     }
 
     /**
-     * Handler for the root element. It's only child must be the "project" element.
+     * Handler for the root element. It's only child must be the "project" 
+     * element.
      */
     private class RootHandler extends HandlerBase {
 
@@ -227,11 +235,13 @@ public class ProjectHelper {
             return null;
         }
 
-        public void startElement(String tag, AttributeList attrs) throws SAXParseException {
+        public void startElement(String tag, AttributeList attrs) 
+            throws SAXParseException {
             if (tag.equals("project")) {
                 new ProjectHandler(this).init(tag, attrs);
             } else {
-                throw new SAXParseException("Config file is not of expected XML type", locator);
+                throw new SAXParseException("Config file is not of " + 
+                    "expected XML type", locator);
             }
         }
 
@@ -248,7 +258,8 @@ public class ProjectHelper {
             super(parentHandler);
         }
 
-        public void init(String tag, AttributeList attrs) throws SAXParseException {
+        public void init(String tag, AttributeList attrs) 
+            throws SAXParseException {
             String def = null;
             String name = null;
             String id = null;
@@ -267,15 +278,15 @@ public class ProjectHelper {
                 } else if (key.equals("basedir")) {
                     baseDir = value;
                 } else {
-                    throw new SAXParseException("Unexpected attribute \"" + attrs.getName(i) + "\"", locator);
+                    throw new SAXParseException("Unexpected attribute \"" + 
+                        attrs.getName(i) + "\"", locator);
                 }
             }
 
             if (def == null) {
-                throw new SAXParseException("The default attribute of project is required", 
-                                            locator);
+                throw new SAXParseException("The default attribute of " + 
+                    "project is required", locator);
             }
-            
 
             project.setDefaultTarget(def);
 
@@ -296,14 +307,17 @@ public class ProjectHelper {
                     if ((new File(baseDir)).isAbsolute()) {
                         project.setBasedir(baseDir);
                     } else {
-                        project.setBasedir((new File(buildFileParent, baseDir)).getAbsolutePath());
+                        project.setBasedir((
+                            new File(buildFileParent, baseDir))
+                            .getAbsolutePath());
                     }
                 }
             }
 
         }
 
-        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+        public void startElement(String name, AttributeList attrs) 
+            throws SAXParseException {
             if (name.equals("taskdef")) {
                 handleTaskdef(name, attrs);
             } else if (name.equals("property")) {
@@ -313,23 +327,28 @@ public class ProjectHelper {
             } else if (project.getDataTypeDefinitions().get(name) != null) {
                 handleDataType(name, attrs);
             } else {
-                throw new SAXParseException("Unexpected element \"" + name + "\"", locator);
+                throw new SAXParseException("Unexpected element \"" + name + 
+                    "\"", locator);
             }
         }
 
-        private void handleTaskdef(String name, AttributeList attrs) throws SAXParseException {
+        private void handleTaskdef(String name, AttributeList attrs) 
+            throws SAXParseException {
             (new TaskHandler(this, null)).init(name, attrs);
         }
 
-        private void handleProperty(String name, AttributeList attrs) throws SAXParseException {
+        private void handleProperty(String name, AttributeList attrs) 
+            throws SAXParseException {
             (new TaskHandler(this, null)).init(name, attrs);
         }
 
-        private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
+        private void handleTarget(String tag, AttributeList attrs) 
+            throws SAXParseException {
             new TargetHandler(this).init(tag, attrs);
         }
 
-        private void handleDataType(String name, AttributeList attrs) throws SAXParseException {
+        private void handleDataType(String name, AttributeList attrs) 
+            throws SAXParseException {
             new DataTypeHandler(this).init(name, attrs);
         }
 
@@ -345,13 +364,15 @@ public class ProjectHelper {
             super(parentHandler);
         }
 
-        public void init(String tag, AttributeList attrs) throws SAXParseException {
+        public void init(String tag, AttributeList attrs) 
+            throws SAXParseException {
             String name = null;
             String depends = "";
             String ifCond = null;
             String unlessCond = null;
             String id = null;
             String description = null;
+            String token = null;
 
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getName(i);
@@ -369,13 +390,17 @@ public class ProjectHelper {
                     id = value;
                 } else if (key.equals("description")) {
                     description = value;
+                } else if (key.equals("token")) {
+                    token = value;
                 } else {
-                    throw new SAXParseException("Unexpected attribute \"" + key + "\"", locator);
+                    throw new SAXParseException("Unexpected attribute \"" + 
+                        key + "\"", locator);
                 }
             }
 
             if (name == null) {
-                throw new SAXParseException("target element appears without a name attribute", locator);
+                throw new SAXParseException("target element appears without " +
+                "a name attribute", locator);
             }
 
             target = new Target();
@@ -383,6 +408,11 @@ public class ProjectHelper {
             target.setIf(ifCond);
             target.setUnless(unlessCond);
             target.setDescription(description);
+            if (token == null) {
+                target.setToken("@");
+            }
+            else
+                target.setToken(token);
             project.addTarget(name, target);
 
             if (id != null && !id.equals(""))
@@ -399,7 +429,8 @@ public class ProjectHelper {
             }
         }
 
-        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+        public void startElement(String name, AttributeList attrs) 
+            throws SAXParseException {
             new TaskHandler(this, target).init(name, attrs);
         }
     }
@@ -418,7 +449,8 @@ public class ProjectHelper {
             this.target = target;
         }
 
-        public void init(String tag, AttributeList attrs) throws SAXParseException {
+        public void init(String tag, AttributeList attrs) 
+            throws SAXParseException {
             try {
                 task = project.createTask(tag);
             } catch (BuildException e) {
@@ -431,7 +463,8 @@ public class ProjectHelper {
                 task.setProject(project);
             }
 
-            task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));
+            task.setLocation(new Location(buildFile.toString(), 
+                locator.getLineNumber(), locator.getColumnNumber()));
             configureId(task, attrs);
 
             // Top level tasks don't have associated targets
@@ -453,7 +486,8 @@ public class ProjectHelper {
             }
         }
 
-        public void characters(char[] buf, int start, int end) throws SAXParseException {
+        public void characters(char[] buf, int start, int end) 
+            throws SAXParseException {
             if (wrapper == null) {
                 try {
                     addText(task, buf, start, end);
@@ -465,7 +499,8 @@ public class ProjectHelper {
             }
         }
 
-        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+        public void startElement(String name, AttributeList attrs) 
+            throws SAXParseException {
             new NestedElementHandler(this, task, wrapper).init(name, attrs);
         }
     }
@@ -492,7 +527,8 @@ public class ProjectHelper {
             this.parentWrapper = parentWrapper;
         }
 
-        public void init(String propType, AttributeList attrs) throws SAXParseException {
+        public void init(String propType, AttributeList attrs) 
+            throws SAXParseException {
             Class targetClass = target.getClass();
             IntrospectionHelper ih = 
                 IntrospectionHelper.getHelper(targetClass);
@@ -519,7 +555,8 @@ public class ProjectHelper {
             }
         }
 
-        public void characters(char[] buf, int start, int end) throws SAXParseException {
+        public void characters(char[] buf, int start, int end) 
+            throws SAXParseException {
             if (parentWrapper == null) {
                 try {
                     addText(child, buf, start, end);
@@ -531,8 +568,10 @@ public class ProjectHelper {
             }
         }
 
-        public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedElementHandler(this, child, childWrapper).init(name, attrs);
+        public void startElement(String name, AttributeList attrs) 
+            throws SAXParseException {
+            new NestedElementHandler(this, child, childWrapper)
+                .init(name, attrs);
         }
     }
 
@@ -546,7 +585,8 @@ public class ProjectHelper {
             super(parentHandler);
         }
 
-        public void init(String propType, AttributeList attrs) throws SAXParseException {
+        public void init(String propType, AttributeList attrs) 
+            throws SAXParseException {
             try {
                 element = project.createDataType(propType);
                 if (element == null) {
@@ -560,7 +600,8 @@ public class ProjectHelper {
             }
         }
 
-        public void characters(char[] buf, int start, int end) throws SAXParseException {
+        public void characters(char[] buf, int start, int end) 
+            throws SAXParseException {
             try {
                 addText(element, buf, start, end);
             } catch (BuildException exc) {
@@ -568,7 +609,8 @@ public class ProjectHelper {
             }
         }
 
-        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+        public void startElement(String name, AttributeList attrs) 
+            throws SAXParseException {
             new NestedElementHandler(this, element, null).init(name, attrs);
         }
     }
@@ -625,7 +667,8 @@ public class ProjectHelper {
 
     /** Replace ${NAME} with the property value
      */
-    public static String replaceProperties(Project project, String value, Hashtable keys )
+    public static String replaceProperties(Project project, String value, 
+        Hashtable keys )
         throws BuildException
     {
         // XXX use Map instead of proj, it's too heavy
@@ -655,10 +698,12 @@ public class ProjectHelper {
                 }
                 String n=value.substring( pos+2, endName );
                 if (!keys.containsKey(n)) {
-                    project.log("Property ${" + n + "} has not been set", Project.MSG_VERBOSE);
+                    project.log("Property ${" + n + "} has not been set", 
+                        Project.MSG_VERBOSE);
                 }
                 
-                String v = (keys.containsKey(n)) ? (String) keys.get(n) : "${"+n+"}"; 
+                String v = (keys.containsKey(n)) ? 
+                           (String) keys.get(n) : "${"+n+"}"; 
                 
                 //System.out.println("N: " + n + " " + " V:" + v);
                 sb.append( v );
@@ -692,5 +737,4 @@ public class ProjectHelper {
             project.addReference(id, target);
         }
     }
-
 }
