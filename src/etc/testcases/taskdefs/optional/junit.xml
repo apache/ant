@@ -9,6 +9,7 @@
 
   <target name="cleanup">
     <delete file="testlog.txt"/>
+    <delete dir="out"/>
   </target>
 
   <target name="testForkedOutput">
@@ -90,6 +91,56 @@
     <junit fork="${fork}" printSummary="withOutAndErr">
       <test name="org.apache.tools.ant.taskdefs.optional.junit.Printer"/>
       <classpath refid="test"/>
+    </junit>
+  </target>
+
+  <target name="testBatchTestForkOnceToDir">
+    <mkdir dir="out"/>
+    <junit fork="true" forkmode="once">
+      <formatter type="xml"/>
+      <classpath refid="test"/>
+      <batchtest todir="out">
+        <fileset dir="../../../../testcases">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <!-- Bugzilla Report 32973 -->
+  <target name="testBatchTestForkOnceExtension">
+    <mkdir dir="out"/>
+    <junit fork="true" forkmode="once">
+      <formatter type="xml" extension=".foo"/>
+      <classpath refid="test"/>
+      <batchtest todir="out">
+        <fileset dir="../../../../testcases">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+
+  <target name="testBatchTestForkOnceCustomFormatter">
+    <mkdir dir="out"/>
+    <junit fork="true" forkmode="once">
+      <formatter extension="foo"
+        classname="org.apache.tools.ant.taskdefs.optional.junit.TestFormatter"/>
+      <classpath refid="test"/>
+      <batchtest todir="out">
+        <fileset dir="../../../../testcases">
+          <include
+            name="org/apache/tools/ant/taskdefs/optional/junit/*Test.java"/>
+          <exclude name="**/JUnitTaskTest.java"/>
+          <exclude name="**/JUnitReportTest.java"/>
+        </fileset>
+      </batchtest>
     </junit>
   </target>
 </project>

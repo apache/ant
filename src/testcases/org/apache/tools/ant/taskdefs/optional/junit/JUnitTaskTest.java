@@ -1,5 +1,5 @@
 /*
- * Copyright  2004 The Apache Software Foundation
+ * Copyright 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -75,6 +75,34 @@ public class JUnitTaskTest extends BuildFileTest {
         assertNoPrint(getOutput(), "output");
         assertNoPrint(getError(), "error output");
         assertOutput();
+    }
+
+    public void testBatchTestForkOnceToDir() {
+        assertResultFilesExist("testBatchTestForkOnceToDir", ".xml");
+    }
+
+    /** Bugzilla Report 32973 */
+    public void testBatchTestForkOnceExtension() {
+        assertResultFilesExist("testBatchTestForkOnceExtension", ".foo");
+    }
+
+    public void testBatchTestForkOnceCustomFormatter() {
+        assertResultFilesExist("testBatchTestForkOnceCustomFormatter", "foo");
+    }
+
+    private void assertResultFilesExist(String target, String extension) {
+        executeTarget(target);
+        assertResultFileExists("JUnitClassLoader", extension);
+        assertResultFileExists("JUnitTestRunner", extension);
+        assertResultFileExists("JUnitVersionHelper", extension);
+    }
+
+    private void assertResultFileExists(String classNameFragment, String ext) {
+        assertTrue("result for " + classNameFragment + "Test" + ext + " exists",
+                   getProject().resolveFile("out/TEST-org.apache.tools.ant."
+                                            + "taskdefs.optional.junit."
+                                            + classNameFragment + "Test" + ext)
+                   .exists());
     }
 
     private void assertNoPrint(String result, String where) {

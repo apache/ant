@@ -1522,6 +1522,7 @@
           <!-- helper classes, not testcases -->
           <exclude name="org/example/**"/>
           <exclude name="${taskdefs.package}/TaskdefTest*Task.java"/>
+          <exclude name="${optional.package}/junit/TestFormatter.java"/>
 
           <!-- interactive tests -->
           <exclude name="${taskdefs.package}/TestProcess.java"/>
