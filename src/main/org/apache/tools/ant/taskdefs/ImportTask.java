@@ -98,7 +98,7 @@ public class ImportTask extends Task {
         }
 
         ProjectHelper helper=
-                (ProjectHelper)project.getReference("ant.projectHelper");
+                (ProjectHelper)getProject().getReference("ant.projectHelper");
         Vector importStack=helper.getImportStack();
         if( importStack.size() == 0) {
             // this happens if ant is used with a project
@@ -117,7 +117,7 @@ public class ImportTask extends Task {
         //System.out.println("Importing from " + currentSource);
         File buildFileParent=new File(buildFile.getParent());
 
-        project.log("Importing file "+ file +" from "+
+        getProject().log("Importing file "+ file +" from "+
                     buildFile.getAbsolutePath(), Project.MSG_VERBOSE);
 
         // Paths are relative to the build file they're imported from,
@@ -133,7 +133,7 @@ public class ImportTask extends Task {
         }
 
         if( importStack.contains(importedFile) ) {
-            project.log("\nSkipped already imported file to avoid loop:\n   "+
+            getProject().log("\nSkipped already imported file to avoid loop:\n   "+
                     importedFile + "\n",Project.MSG_WARN);
             return;
         }
@@ -158,7 +158,7 @@ public class ImportTask extends Task {
 //        context.helper.parse(project, importedFile,
 //                new ProjectHelper2.RootHandler(context));
 
-        helper.parse( project, importedFile );
+        helper.parse( getProject(), importedFile );
     }
 
     private static String getPath(File file) {
