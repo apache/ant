@@ -218,6 +218,32 @@
         </table>
       </subsection>
 
+      <subsection name="CMSDeploy">
+
+        <p><a href="http://cmsdeploy.sourceforge.net">CMSDeploy</a> is
+        an Apache Ant Task to submit files and templates to Vignette
+        CMS.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5.1 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://cmsdeploy.sourceforge.net">http://cmsdeploy.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="masogato@users.sourceforge.net">masogato@users.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU Lesser General Public License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Configure">
 
         <p>Recursive build support (call ant on every package level,
