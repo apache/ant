@@ -362,6 +362,16 @@ mv /tmp/foo $ANT_HOME/bin/antRun
 ]]></source>
       </answer>
     </faq>
+
+    <faq id="javadoc-cannot-execute">
+      <question>JavaDoc failed: java.io.IOException: javadoc: cannot execute</question>
+      <answer>
+        <p>There is a bug in the Solaris reference implementation of
+        the JDK, see <a href="http://developer.java.sun.com/developer/bugParade/bugs/4230399.html">http://developer.java.sun.com/developer/bugParade/bugs/4230399.html</a>.
+        This also appears to be true under Linux, moving the JDK to
+        the front of the PATH fixes the problem.</p>
+      </answer>
+    </faq>
   </faqsection>
 
 </document>

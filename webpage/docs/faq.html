@@ -179,6 +179,9 @@
   &lt;chmod&gt; or &lt;exec&gt; don't work in Ant
         1.3 on Unix
   </a></li>
+                    <li><a href="#javadoc-cannot-execute">
+  JavaDoc failed: java.io.IOException: javadoc: cannot execute
+  </a></li>
                 </ul>
       </blockquote>
     </td></tr>
@@ -754,6 +757,25 @@ mv /tmp/foo $ANT_HOME/bin/antRun
       </tr>
     </table>
   </div>
+                        </blockquote>
+    </td></tr>
+  </table>
+  </a>
+        <a name="javadoc-cannot-execute">
+  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <strong>
+          JavaDoc failed: java.io.IOException: javadoc: cannot execute
+        </strong>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                              <p>There is a bug in the Solaris reference implementation of
+        the JDK, see <a href="http://developer.java.sun.com/developer/bugParade/bugs/4230399.html">http://developer.java.sun.com/developer/bugParade/bugs/4230399.html</a>.
+        This also appears to be true under Linux, moving the JDK to
+        the front of the PATH fixes the problem.</p>
                         </blockquote>
     </td></tr>
   </table>
