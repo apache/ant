@@ -242,7 +242,7 @@ public class Depend extends MatchingTask {
                             // need to delete the main class
                             String topLevelClassName 
                                 = affectedClassName.substring(0, affectedClassName.indexOf("$"));
-                            System.out.println("Top level class = " + topLevelClassName);
+                            log("Top level class = " + topLevelClassName, Project.MSG_INFO);
                             ClassFileInfo topLevelClassInfo 
                                 = (ClassFileInfo)classFileInfoMap.get(topLevelClassName);
                             if (topLevelClassInfo.absoluteFile.exists()) {
