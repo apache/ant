@@ -1497,7 +1497,7 @@ public class FTP
                 FTPFile [] ftpFiles = ftp.listFiles(tempFile.getName());
                 if (ftpFiles.length == 1) {
                     long remoteTimeStamp = ftpFiles[0].getTimestamp().getTime().getTime();
-                    returnValue = remoteTimeStamp - localTimeStamp;
+                    returnValue = localTimeStamp - remoteTimeStamp;
                 }
                 ftp.deleteFile(ftpFiles[0].getName());
             }
