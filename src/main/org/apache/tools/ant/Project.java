@@ -581,7 +581,11 @@ public class Project {
         while (tok.hasMoreTokens()) {
             String part = tok.nextToken();
             if (part.equals("..")) {
-                file = new File(file.getParent());
+                String parentFile = file.getParent();
+                if (parentFile == null) {
+                    throw new BuildException("The file or path you specified (" + fileName + ") is invalid releative to " + baseDir.getAbsolutePath());
+                }
+                file = new File(parentFile);
             } else if (part.equals(".")) {
                 // Do nothing here
             } else {
