@@ -363,28 +363,6 @@
 
   <!--
        ===================================================================
-         Set up a preset def for javac depending on
-         the java version
-       ===================================================================
-  -->
-
-  <target name="javac.preset" depends="javac.preset.1.5+,javac.preset.1.5-"/>
-  <target name="javac.preset.1.5+" depends="check_for_optional_packages"
-          if="jdk1.5+">
-    <presetdef name="javac.preset">
-      <javac source="${javac.source}"/>
-    </presetdef>
-  </target>
-  <target name="javac.preset.1.5-" depends="check_for_optional_packages"
-          unless="jdk1.5+">
-    <presetdef name="javac.preset">
-      <javac/>
-    </presetdef>
-  </target>
-
-
-  <!--
-       ===================================================================
          Check to see what optional dependencies are available
        ===================================================================
   -->
@@ -534,6 +512,7 @@
         <!-- absolute paths in CLASSPATH -->
         <contains string="${java.class.path}"
                   substring="${build.tests.resolved}"/>
+        <istrue value="${junit.fork}"/>
       </or>
     </condition>
 
@@ -616,17 +595,18 @@
        ===================================================================
   -->
   <target name="build"
-          depends="prepare, check_for_optional_packages, javac.preset"
+          depends="prepare, check_for_optional_packages"
           description="--> compiles the source code">
     <mkdir dir="${build.dir}"/>
     <mkdir dir="${build.classes}"/>
     <mkdir dir="${build.lib}"/>
 
-    <javac.preset srcdir="${java.dir}"
+    <javac srcdir="${java.dir}"
            destdir="${build.classes}"
            debug="${debug}"
            deprecation="${deprecation}"
            target="${javac.target}"
+           source="${javac.source}"
            optimize="${optimize}" >
       <classpath refid="classpath"/>
 
@@ -672,7 +652,7 @@
           </or>
         </not>
       </selector>
-    </javac.preset>
+    </javac>
 
     <copy todir="${build.classes}">
       <fileset dir="${java.dir}">
@@ -905,6 +885,10 @@
           depends="compile-tests"
           description="--> creates the Apache Ant Test Utilties jar">
 
+    <fail unless="junit.present">
+      We cannot build the test jar unless JUnit is present,
+      as JUnit is needed to compile the test classes.
+    </fail>
     <jar destfile="${build.lib}/${name}-testutil.jar"
          basedir="${build.tests}">
       <patternset refid="useful.tests"/>
@@ -1371,15 +1355,16 @@
   <target name="compile-tests" depends="build" if="junit.present">
     <mkdir dir="${build.tests}"/>
 
-    <javac.preset srcdir="${tests.dir}"
+    <javac srcdir="${tests.dir}"
            destdir="${build.tests}"
            debug="${debug}"
            target="${javac.target}"
+           source="${javac.source}"
            deprecation="${deprecation}" >
       <classpath refid="tests-classpath"/>
 
       <selector refid="conditional-patterns"/>
-    </javac.preset>
+    </javac>
 
     <!-- Used by AntlibTest.testAntlibResource: -->
     <jar jarfile="${build.tests}/org/apache/tools/ant/taskdefs/test2-antlib.jar">
