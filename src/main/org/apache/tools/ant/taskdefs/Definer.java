@@ -126,7 +126,7 @@ public abstract class Definer extends Task {
      * with the specified name.
      *     
      * This allow multiple taskdef/typedef to use the same class loader,
-     * so they can be used togheter. It eliminate the need to
+     * so they can be used together. It eliminate the need to
      * put them in the CLASSPATH.
      *
      * @since Ant 1.5
