@@ -10,15 +10,18 @@
 <h2><a name="xmlvalidate">XMLValidate</a></h2>
 <h3>Description</h3>
 
-<p>This task checks xml files are valid (or only well formed). The
+<p>This task checks that XML files are valid (or only well formed). The
 task uses the SAX2 parser implementation provided by JAXP by default
 (probably the one that is used by Ant itself), but one can specify any
 SAX1/2 parser if needed.</p>
 
 <p>This task supports the use of nested
-  <li/><a href="../CoreTypes/xmlcatalog.html"><tt>&lt;xmlcatalog&gt;</tt></a> elements 
-  <li/><tt>&lt;dtd&gt;</tt> elements which are used to resolve DTDs and entities.
-  <li/><tt>&lt;attribute&gt;</tt> elements which are used to set features on the parser. These can be any number of <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">http://xml.org/sax/features/</a> or other features that your parser may support.
+  <li><a href="../CoreTypes/xmlcatalog.html"><tt>&lt;xmlcatalog&gt;</tt></a> elements</li>
+  <li><tt>&lt;dtd&gt;</tt> elements which are used to resolve DTDs and entities</li>
+  <li><tt>&lt;attribute&gt;</tt> elements which are used to set features on the parser.
+      These can be any number of
+      <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><tt>http://xml.org/sax/features/</tt></a>
+      or other features that your parser may support.</li>
 </p>
 
 <h3>Parameters</h3>
@@ -36,8 +39,8 @@ SAX1/2 parser if needed.</p>
   <tr>
     <td valign="top">lenient</td>
     <td valign="top">
-      if true, only check the xml document is well formed
-        (ignored if the specified parser is as SAX1 parser)
+      if true, only check the XML document is well formed
+        (ignored if the specified parser is a SAX1 parser)
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -48,7 +51,7 @@ SAX1/2 parser if needed.</p>
   </tr>
   <tr>
     <td valign="top">classpathref</td>
-    <td valign="top">where to find the parser class. Optionally can use an embedded classpath element.</td>
+    <td valign="top">where to find the parser class. Optionally can use an embedded <tt>&lt;classpath&gt;</tt> element.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -65,7 +68,9 @@ SAX1/2 parser if needed.</p>
 
 <h3><a name="nested">Nested Elements</a></h3>
 <h4>dtd</h4>
-&lt;dtd&gt; is used to specify different locations for DTD resolution.
+<p>
+<tt>&lt;dtd&gt;</tt> is used to specify different locations for DTD resolution.
+</p>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
@@ -85,14 +90,14 @@ SAX1/2 parser if needed.</p>
   </tr>
 </table>
 <h4>xmlcatalog</h4>
-<p>The <a href="../CoreTypes/xmlcatalog.html">xmlcatalog</a>
-element is used to perform Entity resolution.</p>
+<p>The <a href="../CoreTypes/xmlcatalog.html"><tt>&lt;xmlcatalog&gt;</tt></a>
+element is used to perform entity resolution.</p>
 <h4>attribute</h4>
-<p>The attribute element is used to set SAX Parser features.
-There can an arbitrary amount of attribute set as defined here:
- <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">http://xml.org/sax/features/</a>
+<p>The <tt>&lt;attribute&gt;</tt> element is used to set SAX Parser features.
+There can be any number of attributes set, as defined here:
+ <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><tt>http://xml.org/sax/features/</tt></a>
 A feature essentialy changes the mode of the parser.
-&lt;attribute&gt; an attribute is used to set specific features on the parser. 
+</p>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
