@@ -63,8 +63,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Vector;
 import java.util.Hashtable;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Enumeration;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
@@ -127,7 +125,7 @@ public class XMLValidateTask extends Task {
     /**
      * The list of configured DTD locations
      */
-    public ArrayList dtdLocations = new ArrayList();
+    public Vector dtdLocations = new Vector();
 
     /**
      * Specify how parser error are to be handled.
@@ -227,7 +225,7 @@ public class XMLValidateTask extends Task {
      */
     public DTDLocation createDTD() {
         DTDLocation dtdLocation = new DTDLocation();
-        dtdLocations.add(dtdLocation);
+        dtdLocations.addElement(dtdLocation);
 
         return dtdLocation;
     }
@@ -235,8 +233,8 @@ public class XMLValidateTask extends Task {
     protected EntityResolver getEntityResolver() {
         LocalResolver resolver = new LocalResolver();
 
-        for (Iterator i = dtdLocations.iterator(); i.hasNext();) {
-            DTDLocation location = (DTDLocation)i.next();
+        for (Enumeration i = dtdLocations.elements(); i.hasMoreElements();) {
+            DTDLocation location = (DTDLocation)i.nextElement();
             resolver.registerDTD(location);
         }
         return resolver;

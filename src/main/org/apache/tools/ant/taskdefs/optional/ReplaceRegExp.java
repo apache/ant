@@ -69,6 +69,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
+import java.util.Random;
 import java.util.Vector;
 
 /***
@@ -214,7 +215,7 @@ public class ReplaceRegExp extends Task
 
     public void addFileset(FileSet set)
     {
-        filesets.add(set);
+        filesets.addElement(set);
     }
 
     public RegularExpression createRegularExpression()
@@ -258,8 +259,8 @@ public class ReplaceRegExp extends Task
     protected void doReplace(File f, int options)
         throws IOException
     {
-        File parentDir = new File(f.getAbsolutePath()).getParentFile();
-        File temp = File.createTempFile("replace", ".txt", parentDir);
+        File parentDir = new File(new File(f.getAbsolutePath()).getParent());
+        File temp = createTempFile(parentDir);
 
         FileReader r = null;
         FileWriter w = null;
@@ -418,6 +419,14 @@ public class ReplaceRegExp extends Task
             }
         }
     }
+
+    /**
+     * Creates a temporary file.
+     */
+    private File createTempFile(File dir) {
+        return new File(dir, "replace" + (new Random(System.currentTimeMillis())).nextLong()+".txt");
+    }
+
 }
 
 
