@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,6 +66,7 @@ import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Simple Metamata MParse task.
@@ -114,7 +115,7 @@ public class MParse extends AbstractMetamataTask {
     }
 
     public MParse() {
-        cmdl.setVm("java");
+        cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
         cmdl.setClassname("com.metamata.jj.MParse");
     }
 
