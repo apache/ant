@@ -172,10 +172,13 @@ public class ContainsRegexpSelector extends BaseExtendSelector {
         } catch (IOException ioe) {
             throw new BuildException("Could not read file " + filename);
         } finally {
-            try {
-                in.close();
-            } catch (Exception e) {
-                throw new BuildException("Could not close file " + filename);
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (Exception e) {
+                    throw new BuildException("Could not close file " 
+                                             + filename);
+                }
             }
         }
     }
