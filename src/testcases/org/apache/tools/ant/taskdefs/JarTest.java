@@ -256,7 +256,7 @@ public class JarTest extends BuildFileTest {
     }
 
     // bugzilla report 16972
-    public void XtestRootFilesInIndex() throws IOException {
+    public void testRootFilesInIndex() throws IOException {
         ZipFile archive = null;
         try {
             executeTarget("testIndexTests");
