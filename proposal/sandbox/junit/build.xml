@@ -17,6 +17,8 @@
   <property name="build.lib" value="${build.dir}/lib"/>
   <property name="build.src" value="${build.dir}/src"/>
   <property name="build.classes" value="${build.dir}/classes"/>
+  
+  <property name="testcases.classes" value="${build.dir}/testcases"/>
 
   <property name="java.dir" value="src/java"/>
   <property name="tests.dir" value="src/testcases"/>
@@ -44,6 +46,7 @@
            includeantruntime="no">
       <classpath refid="project.class.path"/>
     </javac>
+    <antcall target="compile-tests"/>
   </target>
   
 
@@ -55,4 +58,22 @@
     </delete>
   </target>
 
+  <target name="compile-tests">
+    <mkdir dir="${testcases.classes}"/>
+    <javac srcdir="src/testcases"
+           destdir="${testcases.classes}"
+           debug="${debug}"
+           optimize="${optimize}"
+           deprecation="${deprecation}"
+           includeantruntime="no">
+      <classpath refid="project.class.path"/>
+    </javac>
+  </target>
+  
+  <target name="run-ant-tests" depends="compile">
+     <!--ant dir="${ant.base.dir}" target="build" inheritall="false"/>
+     <ant dir="${ant.base.dir}" target="compile-tests" inheritall="false"/-->
+     <ant antfile="rjunit-ant-tests.xml"/>
+  </target>
+  
 </project>
