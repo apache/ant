@@ -790,6 +790,7 @@
             <include name="jdepend-frames.xsl"/>
             <include name="checkstyle-frames.xsl"/>
             <include name="log.xsl"/>
+            <include name="tagdiff.xsl"/>
         </fileset>
     </copy>
 
