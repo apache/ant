@@ -141,7 +141,7 @@ public class DependSet extends MatchingTask
          * be able to check file modification times.
          * (Windows has a max resolution of two secs for modification times)
          */
-        if( Os.isFamily( "windows" ) )
+        if( Os.isFamily( Os.OS_FAMILY_WINDOWS ) )
         {
             now += 2000;
         }

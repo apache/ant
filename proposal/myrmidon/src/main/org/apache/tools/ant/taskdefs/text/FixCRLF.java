@@ -21,6 +21,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -122,25 +123,23 @@ public class FixCRLF
     public FixCRLF()
     {
         tabs = ASIS;
-        if( File.pathSeparator.equals( ":" ) )
-        {
-            ctrlz = REMOVE;
-            if( System.getProperty( "os.name" ).indexOf( "Mac" ) > -1 )
-            {
-                eol = CR;
-                eolstr = "\r";
-            }
-            else
-            {
-                eol = LF;
-                eolstr = "\n";
-            }
-        }
-        else
+        if( Os.isFamily( Os.OS_FAMILY_WINDOWS) )
         {
             ctrlz = ASIS;
             eol = CRLF;
             eolstr = "\r\n";
+        }
+        else if( Os.isFamily( Os.OS_FAMILY_MAC ) )
+        {
+            ctrlz = REMOVE;
+            eol = CR;
+            eolstr = "\r";
+        }
+        else
+        {
+            ctrlz = REMOVE;
+            eol = LF;
+            eolstr = "\n";
         }
     }
 
@@ -618,9 +617,7 @@ public class FixCRLF
                 }
                 else
                 {// (tabs != ASIS)
-                    int ptr;
-
-                    while( ( ptr = line.getNext() ) < linelen )
+                    while( line.getNext() < linelen )
                     {
 
                         switch( lines.getState() )

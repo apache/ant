@@ -12,14 +12,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Locale;
 import java.util.Properties;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.Os;
-import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
  * This is the class that can be used to retrieve the environment
@@ -178,33 +177,27 @@ final class Environment
     private static String[] getEnvCommand()
         throws ExecException
     {
-        if( Os.isFamily( "os/2" ) )
+        if( Os.isFamily( Os.OS_FAMILY_OS2 ) )
         {
             // OS/2 - use same mechanism as Windows 2000
             return CMD_EXE;
         }
-        else if( Os.isFamily( "windows" ) )
+        else if( Os.isFamily( Os.OS_FAMILY_WINNT ) )
         {
-            final String osname =
-                System.getProperty( "os.name" ).toLowerCase( Locale.US );
-            // Determine if we're running under 2000/NT or 98/95
-            if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
-            {
-                // Windows 2000/NT
-                return CMD_EXE;
-            }
-            else
-            {
-                // Windows 98/95 - need to use an auxiliary script
-                return COMMAND_COM;
-            }
+            // Windows 2000/NT
+            return CMD_EXE;
         }
-        else if( Os.isFamily( "unix" ) )
+        else if( Os.isFamily( Os.OS_FAMILY_WINDOWS) )
+        {
+            // Windows 98/95 - need to use an auxiliary script
+            return COMMAND_COM;
+        }
+        else if( Os.isFamily( Os.OS_FAMILY_UNIX ) )
         {
             // Generic UNIX
             return ENV_CMD;
         }
-        else if( Os.isFamily( "netware" ) )
+        else if( Os.isFamily( Os.OS_FAMILY_NETWARE ) )
         {
             return ENV_RAW;
         }

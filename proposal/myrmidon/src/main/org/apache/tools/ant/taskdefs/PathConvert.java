@@ -9,6 +9,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.util.ArrayList;
+import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Path;
@@ -45,7 +46,7 @@ public class PathConvert extends AbstractTask
     /**
      * Override the default path separator string for the target os
      *
-     * @param sep The new PathSep value
+     * @param pathSep The new PathSep value
      */
     public void setPathSep( final String pathSep )
     {
@@ -64,7 +65,7 @@ public class PathConvert extends AbstractTask
     /**
      * Set the value of the targetos attribute
      *
-     * @param target The new Targetos value
+     * @param targetOS The new Targetos value
      */
     public void setTargetos( String targetOS )
         throws TaskException
@@ -121,13 +122,10 @@ public class PathConvert extends AbstractTask
         // And Unix is everything that is not Windows
         // (with the exception for NetWare below)
 
-        String osname = System.getProperty( "os.name" ).toLowerCase();
-
         // for NetWare, piggy-back on Windows, since here and in the
         // apply code, the same assumptions can be made as with windows -
         // that \\ is an OK separator, and do comparisons case-insensitive.
-        m_onWindows = ( ( osname.indexOf( "windows" ) >= 0 ) ||
-            ( osname.indexOf( "netware" ) >= 0 ) );
+        m_onWindows = ( Os.isFamily( Os.OS_FAMILY_WINDOWS ) || Os.isFamily( Os.OS_FAMILY_NETWARE ) );
 
         // Determine the from/to char mappings for dir sep
         char fromDirSep = m_onWindows ? '\\' : '/';

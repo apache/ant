@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Locale;
 import java.util.Properties;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecManager;
@@ -174,37 +173,28 @@ public class DefaultExecManager
     {
         CommandLauncher launcher = null;
 
-        if( Os.isFamily( "mac" ) )
+        if( Os.isFamily( Os.OS_FAMILY_MAC ) )
         {
             // Mac
             launcher = new MacCommandLauncher();
         }
-        else if( Os.isFamily( "os/2" ) )
+        else if( Os.isFamily( Os.OS_FAMILY_OS2 ) )
         {
             // OS/2 - use same mechanism as Windows 2000
             launcher = new WinNTCommandLauncher();
         }
-        else if( Os.isFamily( "windows" ) )
+        else if( Os.isFamily( Os.OS_FAMILY_WINNT ) )
         {
-            // Windows.  Need to determine which JDK we're running in
-
-            // Determine if we're running under 2000/NT or 98/95
-            final String osname =
-                System.getProperty( "os.name" ).toLowerCase( Locale.US );
-
-            if( osname.indexOf( "nt" ) >= 0 || osname.indexOf( "2000" ) >= 0 )
-            {
-                // Windows 2000/NT
-                launcher = new WinNTCommandLauncher();
-            }
-            else
-            {
-                // Windows 98/95 - need to use an auxiliary script
-                final String script = resolveCommand( homeDir, "bin/antRun.bat" );
-                launcher = new ScriptCommandLauncher( script );
-            }
+            // Windows 2000/NT
+            launcher = new WinNTCommandLauncher();
         }
-        else if( Os.isFamily( "netware" ) )
+        else if( Os.isFamily( Os.OS_FAMILY_WINDOWS ) )
+        {
+            // Windows 98/95 - need to use an auxiliary script
+            final String script = resolveCommand( homeDir, "bin/antRun.bat" );
+            launcher = new ScriptCommandLauncher( script );
+        }
+        else if( Os.isFamily( Os.OS_FAMILY_NETWARE ) )
         {
             // NetWare.  Need to determine which JDK we're running in
             final String perlScript = resolveCommand( homeDir, "bin/antRun.pl" );

@@ -264,7 +264,7 @@ public class CommandlineJava
     {
         // This is the most common extension case - exe for windows and OS/2,
         // nothing for *nix.
-        String extension = Os.isFamily( "dos" ) ? ".exe" : "";
+        String extension = Os.isFamily( Os.OS_FAMILY_DOS ) ? ".exe" : "";
 
         // Look for java in the java.home/../bin directory.  Unfortunately
         // on Windows java.home doesn't always refer to the correct location,
@@ -274,7 +274,7 @@ public class CommandlineJava
             new File( System.getProperty( "java.home" ) +
                       "/../bin/java" + extension );
 
-        if( jExecutable.exists() && !Os.isFamily( "netware" ) )
+        if( jExecutable.exists() && !Os.isFamily( Os.OS_FAMILY_NETWARE ) )
         {
             // NetWare may have a "java" in that directory, but 99% of
             // the time, you don't want to execute it -- Jeff Tulley

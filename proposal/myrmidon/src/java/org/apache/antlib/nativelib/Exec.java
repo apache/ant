@@ -72,8 +72,7 @@ public class Exec
     }
 
     /**
-     * Only execute the process if <code>os.name</code> is included in this
-     * string.
+     * Only execute the process if running on the specified OS family.
      */
     public void setOs( final String os )
     {

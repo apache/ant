@@ -17,8 +17,8 @@ import java.util.Iterator;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -103,7 +103,7 @@ public class Cab
 
         getLogger().info( "Building cab: " + m_cabFile.getAbsolutePath() );
 
-        if( !Os.isFamily( "windows" ) )
+        if( !Os.isFamily( Os.OS_FAMILY_WINDOWS ) )
         {
             getLogger().debug( "Using listcab/libcabinet" );
 

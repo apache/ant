@@ -845,7 +845,7 @@ public class Javadoc
     {
         // This is the most common extension case - exe for windows and OS/2,
         // nothing for *nix.
-        String extension = Os.isFamily( "dos" ) ? ".exe" : "";
+        String extension = Os.isFamily( Os.OS_FAMILY_DOS ) ? ".exe" : "";
 
         // Look for javadoc in the java.home/../bin directory.  Unfortunately
         // on Windows java.home doesn't always refer to the correct location,
@@ -854,17 +854,12 @@ public class Javadoc
         File jdocExecutable = new File( System.getProperty( "java.home" ) +
                                         "/../bin/javadoc" + extension );
 
-        if( jdocExecutable.exists() && !Os.isFamily( "netware" ) )
+        if( jdocExecutable.exists() && !Os.isFamily( Os.OS_FAMILY_NETWARE ) )
         {
             return jdocExecutable.getAbsolutePath();
         }
         else
         {
-            if( !Os.isFamily( "netware" ) )
-            {
-                getLogger().debug( "Unable to locate " + jdocExecutable.getAbsolutePath() +
-                                   ". Using \"javadoc\" instead." );
-            }
             return "javadoc";
         }
     }

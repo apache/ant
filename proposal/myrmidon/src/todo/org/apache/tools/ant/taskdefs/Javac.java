@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.framework.JavaVersion;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapterFactory;
@@ -726,7 +725,7 @@ public class Javac extends MatchingTask
     {
         // This is the most common extension case - exe for windows and OS/2,
         // nothing for *nix.
-        String extension = Os.isFamily( "dos" ) ? ".exe" : "";
+        String extension = Os.isFamily( Os.OS_FAMILY_DOS ) ? ".exe" : "";
 
         // Look for java in the java.home/../bin directory.  Unfortunately
         // on Windows java.home doesn't always refer to the correct location,
@@ -736,7 +735,7 @@ public class Javac extends MatchingTask
             new java.io.File( System.getProperty( "java.home" ) +
                               "/../bin/javac" + extension );
 
-        if( jExecutable.exists() && !Os.isFamily( "netware" ) )
+        if( jExecutable.exists() && !Os.isFamily( Os.OS_FAMILY_NETWARE ) )
         {
             return jExecutable.getAbsolutePath();
         }

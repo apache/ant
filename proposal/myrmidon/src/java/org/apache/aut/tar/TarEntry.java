@@ -9,6 +9,7 @@ package org.apache.aut.tar;
 
 import java.io.File;
 import java.util.Date;
+import org.apache.aut.nativelib.Os;
 
 /**
  * This class represents an entry in a Tar archive. It consists of the entry's
@@ -178,37 +179,29 @@ public class TarEntry
         m_file = file;
 
         String name = file.getPath();
-        final String osname = System.getProperty( "os.name" );
 
-        if( osname != null )
+        // Strip off drive letters!
+        if( Os.isFamily( Os.OS_FAMILY_WINDOWS) )
         {
-            // Strip off drive letters!
-            // REVIEW Would a better check be "(File.separator == '\')"?
-            final String win32Prefix = "Windows";
-            final String prefix = osname.substring( 0, win32Prefix.length() );
-
-            if( prefix.equalsIgnoreCase( win32Prefix ) )
+            if( name.length() > 2 )
             {
-                if( name.length() > 2 )
-                {
-                    final char ch1 = name.charAt( 0 );
-                    final char ch2 = name.charAt( 1 );
+                final char ch1 = name.charAt( 0 );
+                final char ch2 = name.charAt( 1 );
 
-                    if( ch2 == ':' &&
-                        ( ( ch1 >= 'a' && ch1 <= 'z' ) ||
-                        ( ch1 >= 'A' && ch1 <= 'Z' ) ) )
-                    {
-                        name = name.substring( 2 );
-                    }
+                if( ch2 == ':' &&
+                    ( ( ch1 >= 'a' && ch1 <= 'z' ) ||
+                    ( ch1 >= 'A' && ch1 <= 'Z' ) ) )
+                {
+                    name = name.substring( 2 );
                 }
             }
-            else if( osname.toLowerCase().indexOf( "netware" ) > -1 )
+        }
+        else if( Os.isFamily( Os.OS_FAMILY_NETWARE) )
+        {
+            final int colon = name.indexOf( ':' );
+            if( colon != -1 )
             {
-                final int colon = name.indexOf( ':' );
-                if( colon != -1 )
-                {
-                    name = name.substring( colon + 1 );
-                }
+                name = name.substring( colon + 1 );
             }
         }
 
@@ -584,7 +577,7 @@ public class TarEntry
     /**
      * Write an entry's header information to a header buffer.
      *
-     * @param outbuf The tar entry header buffer to fill in.
+     * @param buffer The tar entry header buffer to fill in.
      */
     public void writeEntryHeader( final byte[] buffer )
     {

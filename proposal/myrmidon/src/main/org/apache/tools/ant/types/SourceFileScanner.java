@@ -56,7 +56,7 @@ public class SourceFileScanner
          * not have it, so if we could reliably passively test for an NTFS
          * file systems we could turn this off...
          */
-        if( Os.isFamily( "windows" ) )
+        if( Os.isFamily( Os.OS_FAMILY_WINDOWS ) )
         {
             now += 2000;
         }

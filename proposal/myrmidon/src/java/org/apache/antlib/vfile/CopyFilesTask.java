@@ -14,6 +14,7 @@ import java.util.Iterator;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileType;
+import org.apache.aut.vfs.NameScope;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.AbstractTask;
@@ -129,9 +130,10 @@ public class CopyFilesTask
                         continue;
                     }
 
-                    // TODO - use scope here, to make sure that the result
-                    // is a descendent of the dest dir
-                    final FileObject destFile = m_destDir.resolveFile( path );
+                    // Locate the destination file
+                    final FileObject destFile = m_destDir.resolveFile( path, NameScope.DESCENDENT );
+
+                    // Copy the file across
                     copyFile( srcFile, destFile );
                 }
             }
