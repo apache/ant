@@ -23,7 +23,7 @@ import org.apache.aut.vfs.provider.ParsedUri;
  *
  * @author Adam Murdoch
  *
- * @ant:type type="file-system" name="zip"
+ * @ant.type type="file-system" name="zip"
  */
 public class ZipFileSystemProvider
     extends AbstractFileSystemProvider

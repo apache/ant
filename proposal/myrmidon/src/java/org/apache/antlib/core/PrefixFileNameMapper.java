@@ -17,7 +17,7 @@ import org.apache.myrmidon.framework.FileNameMapper;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="mapper" name="prefix"
+ * @ant.type type="mapper" name="prefix"
  */
 public class PrefixFileNameMapper
     implements FileNameMapper

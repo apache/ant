@@ -16,7 +16,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * String to integer converter.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:converter source="java.lang.String" destination="java.lang.Integer"
+ * @ant.converter source="java.lang.String" destination="java.lang.Integer"
  */
 public class StringToIntegerConverter
     extends AbstractConverter

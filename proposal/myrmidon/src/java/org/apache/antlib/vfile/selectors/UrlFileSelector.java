@@ -15,7 +15,7 @@ import org.apache.aut.vfs.FileObject;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="v-file-selector" name="url"
+ * @ant.type type="v-file-selector" name="url"
  */
 public class UrlFileSelector
     extends AbstractNameFileSelector

@@ -34,7 +34,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @ant:type type="configurer" name="default"
+ * @ant.type type="configurer" name="default"
  */
 public class DefaultConfigurer
     extends AbstractLogEnabled

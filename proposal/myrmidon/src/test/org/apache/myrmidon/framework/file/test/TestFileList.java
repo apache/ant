@@ -18,7 +18,7 @@ import java.io.File;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="path" name="test-file-list"
+ * @ant.type type="path" name="test-file-list"
  */
 public class TestFileList
     implements FileList

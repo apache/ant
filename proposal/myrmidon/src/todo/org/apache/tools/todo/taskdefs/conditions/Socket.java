@@ -18,7 +18,7 @@ import org.apache.myrmidon.framework.conditions.Condition;
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  *
- * @ant:type type="condition" name="socket"
+ * @ant.type type="condition" name="socket"
  */
 public class Socket
     implements Condition

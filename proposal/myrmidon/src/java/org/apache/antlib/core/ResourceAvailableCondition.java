@@ -21,7 +21,7 @@ import org.apache.myrmidon.framework.conditions.Condition;
  *      stefano@apache.org</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
- * @ant:type type="condition" name="resource-available"
+ * @ant.type type="condition" name="resource-available"
  */
 public class ResourceAvailableCondition
     extends AbstractAvailableCondition

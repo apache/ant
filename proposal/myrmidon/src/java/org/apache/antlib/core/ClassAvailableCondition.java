@@ -19,7 +19,7 @@ import org.apache.myrmidon.framework.conditions.Condition;
  *      stefano@apache.org</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
- * @ant:type type="condition" name="class-available"
+ * @ant.type type="condition" name="class-available"
  */
 public class ClassAvailableCondition
     extends AbstractAvailableCondition

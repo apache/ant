@@ -17,7 +17,7 @@ import org.apache.aut.converter.ConverterException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:converter source="java.lang.Object" destination="java.lang.String"
+ * @ant.converter source="java.lang.Object" destination="java.lang.String"
  */
 public class ObjectToStringConverter
     extends AbstractConverter

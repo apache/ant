@@ -30,7 +30,7 @@ import org.apache.myrmidon.interfaces.configurer.Configurer;
  * Class used to configure tasks.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:type type="configurer" name="classic"
+ * @ant.type type="configurer" name="classic"
  */
 public class ClassicConfigurer
     extends AbstractLogEnabled

@@ -19,7 +19,7 @@ import org.apache.tools.todo.util.regexp.RegexpMatcherFactory;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:type type="mapper" name="regexp"
+ * @ant.type type="mapper" name="regexp"
  */
 public class RegexpPatternMapper
     implements FileNameMapper

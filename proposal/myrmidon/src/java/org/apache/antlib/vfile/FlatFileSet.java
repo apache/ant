@@ -17,8 +17,8 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="flat-fileset"
- * @ant:type type="v-fileset" name="flat-fileset"
+ * @ant.data-type name="flat-fileset"
+ * @ant.type type="v-fileset" name="flat-fileset"
  */
 public class FlatFileSet
     implements FileSet

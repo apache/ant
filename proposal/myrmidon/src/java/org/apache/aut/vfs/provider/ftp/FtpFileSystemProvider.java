@@ -20,7 +20,7 @@ import org.apache.aut.vfs.provider.ParsedUri;
  *
  * @author Adam Murdoch
  *
- * @ant:type type="file-system" name="ftp"
+ * @ant.type type="file-system" name="ftp"
  */
 public class FtpFileSystemProvider extends AbstractFileSystemProvider
 {

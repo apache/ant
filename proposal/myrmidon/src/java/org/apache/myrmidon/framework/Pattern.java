@@ -20,7 +20,7 @@ import org.apache.myrmidon.framework.conditions.NotCondition;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @ant:data-type name="pattern"
+ * @ant.data-type name="pattern"
  */
 public class Pattern
     implements DataType

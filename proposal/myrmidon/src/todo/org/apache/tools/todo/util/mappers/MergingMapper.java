@@ -17,7 +17,7 @@ import org.apache.myrmidon.framework.FileNameMapper;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:type type="mapper" name="merge"
+ * @ant.type type="mapper" name="merge"
  */
 public class MergingMapper
     implements FileNameMapper

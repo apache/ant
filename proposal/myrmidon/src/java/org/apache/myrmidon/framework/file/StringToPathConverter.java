@@ -17,7 +17,7 @@ import org.apache.myrmidon.framework.file.Path;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:converter source="java.lang.String" destination="org.apache.myrmidon.framework.file.Path"
+ * @ant.converter source="java.lang.String" destination="org.apache.myrmidon.framework.file.Path"
  */
 public class StringToPathConverter
     extends AbstractConverter

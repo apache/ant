@@ -15,7 +15,7 @@ import org.apache.myrmidon.framework.FileNameMapper;
 /**
  * Maps file extensions.
  *
- * @ant:type type="mapper" name="map-extension"
+ * @ant.type type="mapper" name="map-extension"
  */
 public class ExtFileNameMapper
     implements FileNameMapper

@@ -21,7 +21,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="condition" name="is-set"
+ * @ant.type type="condition" name="is-set"
  */
 public class IsSetCondition
     implements Condition

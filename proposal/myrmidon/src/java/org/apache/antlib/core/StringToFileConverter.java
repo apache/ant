@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.TaskException;
  * String to file converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:converter source="java.lang.String" destination="java.io.File"
+ * @ant.converter source="java.lang.String" destination="java.io.File"
  */
 public class StringToFileConverter
     extends AbstractConverter

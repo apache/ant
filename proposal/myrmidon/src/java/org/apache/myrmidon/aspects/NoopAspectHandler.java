@@ -12,7 +12,7 @@ package org.apache.myrmidon.aspects;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @ant:type type="aspect" name="noop"
+ * @ant.type type="aspect" name="noop"
  */
 public class NoopAspectHandler
     extends AbstractAspectHandler

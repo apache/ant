@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="v-file-selector" name="name"
+ * @ant.type type="v-file-selector" name="name"
  */
 public class NameFileSelector
     extends AbstractNameFileSelector

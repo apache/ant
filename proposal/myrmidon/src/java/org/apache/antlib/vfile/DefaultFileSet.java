@@ -24,8 +24,8 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  *
- * @ant:data-type name="v-fileset"
- * @ant:type type="v-fileset" name="v-fileset"
+ * @ant.data-type name="v-fileset"
+ * @ant.type type="v-fileset" name="v-fileset"
  */
 public class DefaultFileSet
     implements FileSet

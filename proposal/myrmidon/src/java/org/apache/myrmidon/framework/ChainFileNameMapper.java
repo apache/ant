@@ -17,7 +17,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="mapper" name="chain"
+ * @ant.type type="mapper" name="chain"
  */
 public class ChainFileNameMapper
     implements FileNameMapper

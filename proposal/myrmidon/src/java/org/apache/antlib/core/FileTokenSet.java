@@ -25,7 +25,7 @@ import org.apache.myrmidon.framework.filters.TokenSet;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="token-set" name="tokens-file"
+ * @ant.type type="token-set" name="tokens-file"
  */
 public class FileTokenSet
     implements TokenSet

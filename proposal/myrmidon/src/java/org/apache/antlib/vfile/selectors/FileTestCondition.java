@@ -20,7 +20,7 @@ import org.apache.myrmidon.framework.conditions.Condition;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="condition" name="file-test"
+ * @ant.type type="condition" name="file-test"
  */
 public class FileTestCondition
     implements Condition

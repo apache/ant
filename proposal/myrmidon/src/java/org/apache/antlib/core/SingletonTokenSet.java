@@ -17,7 +17,7 @@ import org.apache.myrmidon.framework.filters.TokenSet;
  * @author Michael McCallum
  * @created 14 March 2001
  *
- * @ant:type type="token-set" name="token"
+ * @ant.type type="token-set" name="token"
  */
 public class SingletonTokenSet
     implements TokenSet

@@ -18,7 +18,7 @@ import org.apache.myrmidon.framework.conditions.Condition;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  *
- * @ant:type type="condition" nam="equals"
+ * @ant.type type="condition" nam="equals"
  */
 public class Equals implements Condition
 {

@@ -14,8 +14,8 @@ import org.apache.myrmidon.api.TaskException;
 /**
  * A collection of line filters.
  *
- * @ant:data-type name="filterset"
- * @ant:type type="line-filter" name="filterset"
+ * @ant.data-type name="filterset"
+ * @ant.type type="line-filter" name="filterset"
  */
 public class LineFilterSet
     implements LineFilter

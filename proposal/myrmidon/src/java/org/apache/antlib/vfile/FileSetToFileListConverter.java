@@ -16,7 +16,7 @@ import org.apache.aut.converter.ConverterException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:converter source="org.apache.antlib.vfile.FileSet"
+ * @ant.converter source="org.apache.antlib.vfile.FileSet"
  *                destination="org.apache.antlib.vfile.FileList"
  */
 public class FileSetToFileListConverter

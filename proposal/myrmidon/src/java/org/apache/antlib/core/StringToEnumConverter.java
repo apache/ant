@@ -19,7 +19,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * String to Enum converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:converter source="java.lang.String" destination="org.apache.avalon.framework.Enum"
+ * @ant.converter source="java.lang.String" destination="org.apache.avalon.framework.Enum"
  */
 public class StringToEnumConverter
     implements Converter

@@ -20,7 +20,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  *
- * @ant:type type="condition" name="and"
+ * @ant.type type="condition" name="and"
  */
 public class AndCondition
     implements Condition

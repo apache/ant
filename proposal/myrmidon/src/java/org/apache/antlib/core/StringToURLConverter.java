@@ -18,7 +18,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * String to url converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:converter source="java.lang.String" destination="java.net.URL"
+ * @ant.converter source="java.lang.String" destination="java.net.URL"
  */
 public class StringToURLConverter
     extends AbstractConverter

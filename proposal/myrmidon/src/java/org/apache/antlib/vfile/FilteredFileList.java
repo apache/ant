@@ -20,8 +20,8 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="filtered-path"
- * @ant:type type="v-path" name="filtered-path"
+ * @ant.data-type name="filtered-path"
+ * @ant.type type="v-path" name="filtered-path"
  */
 public class FilteredFileList
     implements FileList

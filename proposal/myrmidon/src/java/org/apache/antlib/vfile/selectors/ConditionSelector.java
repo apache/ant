@@ -19,7 +19,7 @@ import org.apache.myrmidon.framework.conditions.Condition;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="v-file-selector" name="condition"
+ * @ant.type type="v-file-selector" name="condition"
  */
 public class ConditionSelector
     implements FileSelector

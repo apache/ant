@@ -16,7 +16,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * String to byte converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:converter source="java.lang.String" destination="java.lang.Byte"
+ * @ant.converter source="java.lang.String" destination="java.lang.Byte"
  */
 public class StringToByteConverter
     extends AbstractConverter

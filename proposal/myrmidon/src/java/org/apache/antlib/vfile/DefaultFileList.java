@@ -19,8 +19,8 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  *
- * @ant:data-type name="v-path"
- * @ant:type type="v-path" name="v-path"
+ * @ant.data-type name="v-path"
+ * @ant.type type="v-path" name="v-path"
  */
 public class DefaultFileList implements FileList
 {

@@ -19,7 +19,7 @@ import org.apache.myrmidon.framework.ChainFileNameMapper;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="mapped-fileset"
+ * @ant.data-type name="mapped-fileset"
  */
 public class MappedFileSet
     implements FileSet

@@ -16,7 +16,7 @@ import org.apache.myrmidon.api.TaskException;
  *
  * @author <A href="mailto:gholam@xtra.co.nz"> Michael McCallum </A>
  *
- * @ant:type type="line-filter" name="token-filter"
+ * @ant.type type="line-filter" name="token-filter"
  */
 public class TokenLineFilter
     implements LineFilter

@@ -20,7 +20,7 @@ import org.apache.tools.todo.types.PathUtil;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:converter source="org.apache.myrmidon.framework.file.FileList" destination="java.lang.String"
+ * @ant.converter source="org.apache.myrmidon.framework.file.FileList" destination="java.lang.String"
  */
 public class FileListToStringConverter
     extends AbstractConverter

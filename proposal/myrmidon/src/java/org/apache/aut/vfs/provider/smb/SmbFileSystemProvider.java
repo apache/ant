@@ -21,7 +21,7 @@ import org.apache.aut.vfs.provider.ParsedUri;
  *
  * @author Adam Murdoch
  *
- * @ant:type type="file-system" name="smb"
+ * @ant.type type="file-system" name="smb"
  */
 public class SmbFileSystemProvider extends AbstractFileSystemProvider implements FileSystemProvider
 {

@@ -16,7 +16,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * String to long converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:converter source="java.lang.String" destination="java.lang.Long"
+ * @ant.converter source="java.lang.String" destination="java.lang.Long"
  */
 public class StringToLongConverter
     extends AbstractConverter

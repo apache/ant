@@ -16,7 +16,7 @@ import org.apache.myrmidon.framework.FileNameMapper;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:type type="mapper" name="identity"
+ * @ant.type type="mapper" name="identity"
  */
 public class IdentityMapper
     implements FileNameMapper

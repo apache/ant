@@ -15,7 +15,7 @@ import org.apache.myrmidon.framework.DataType;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="property-test-type"
+ * @ant.data-type name="property-test-type"
  */
 public class PropertyTestType
     implements DataType

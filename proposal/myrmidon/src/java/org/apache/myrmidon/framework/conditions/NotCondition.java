@@ -17,7 +17,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  *
- * @ant:type type="condition" name="not"
+ * @ant.type type="condition" name="not"
  */
 public class NotCondition
     implements Condition

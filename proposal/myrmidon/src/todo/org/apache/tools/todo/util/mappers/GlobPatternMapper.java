@@ -22,7 +22,7 @@ import org.apache.myrmidon.framework.FileNameMapper;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:type type="mapper" name="glob"
+ * @ant.type type="mapper" name="glob"
  */
 public class GlobPatternMapper
     implements FileNameMapper

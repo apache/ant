@@ -29,7 +29,7 @@ import org.xml.sax.XMLReader;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @ant:type type="project-builder" name="ati"
+ * @ant.type type="project-builder" name="ati"
  */
 public class ATIProjectBuilder
     extends DefaultProjectBuilder

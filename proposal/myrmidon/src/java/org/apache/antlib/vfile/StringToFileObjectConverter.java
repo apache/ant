@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.TaskContext;
  * Converts a String to a {@link FileObject}
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
- * @ant:converter source="java.lang.String" destination="org.apache.aut.vfs.FileObject"
+ * @ant.converter source="java.lang.String" destination="org.apache.aut.vfs.FileObject"
  */
 public class StringToFileObjectConverter
     extends AbstractConverter

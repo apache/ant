@@ -50,7 +50,7 @@ import org.apache.tools.todo.types.ScannerUtil;
  * @author Thomas.Haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
- * @ant:data-type name="path"
+ * @ant.data-type name="path"
  */
 public class Path
     implements DataType, FileList

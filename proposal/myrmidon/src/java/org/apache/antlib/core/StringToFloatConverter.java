@@ -16,7 +16,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * String to float converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:converter source="java.lang.String" destination="java.lang.Float"
+ * @ant.converter source="java.lang.String" destination="java.lang.Float"
  */
 public class StringToFloatConverter
     extends AbstractConverter

@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="v-file-selector" name="is-folder"
+ * @ant.type type="v-file-selector" name="is-folder"
  */
 public class IsFolderSelector
     implements FileSelector

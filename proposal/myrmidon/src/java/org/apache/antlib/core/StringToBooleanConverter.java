@@ -16,7 +16,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * String to boolean converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @ant:converter source="java.lang.String" destination="java.lang.Boolean"
+ * @ant.converter source="java.lang.String" destination="java.lang.Boolean"
  */
 public class StringToBooleanConverter
     extends AbstractConverter
