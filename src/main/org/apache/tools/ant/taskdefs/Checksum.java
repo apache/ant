@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -176,6 +176,8 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the root directory where checksum files will be
      * written/read
+     *
+     * @since Ant 1.6
      */
     public void setTodir(File todir) {
         this.todir = todir;
@@ -215,6 +217,8 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the property to hold the generated total checksum
      * for all files.
+     *
+     * @since Ant 1.6
      */
     public void setTotalproperty(String totalproperty) {
         this.totalproperty = totalproperty;
