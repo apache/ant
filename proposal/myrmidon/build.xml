@@ -620,7 +620,7 @@ Legal:
         </junit>
     </target>
 
-    <target name="test" if="test.failed" depends="run-tests">
+    <target name="test" if="test.failed" depends="run-tests" description="Runs the unit tests">
         <fail> - One or more tests failed.</fail>
     </target>
 

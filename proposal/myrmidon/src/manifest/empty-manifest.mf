@@ -1,0 +1,1 @@
+Manifest-version: 1.0

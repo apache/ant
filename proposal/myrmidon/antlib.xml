@@ -80,11 +80,19 @@ Legal:
             </fileset>
             <!-- antdoc docsDestDir="${gen.dir}/docs"/-->
         </antlib-descriptor>
+
+        <!-- Manifest -->
+        <copy todir="${gen.dir}">
+            <fileset dir="src/manifest" includes="${antlib.name}-manifest.mf" />
+        </copy>
+        <copy file="src/manifest/empty-manifest.mf" tofile="${gen.dir}/${antlib.name}-manifest.mf"/>
+
     </target>
 
     <!-- Generate an "atl" jar file for this antlib. -->
     <target name="antlib-jar" depends="antlib-descriptors">
         <antlib-jar jarfile="${build.lib}/${antlib.name}.atl"
+            manifest="${gen.dir}/${antlib.name}-manifest.mf"
             descriptor="${gen.dir}/${antlib.descriptor}"
             rolesDescriptor="${gen.dir}/${antlib.role.descriptor}">
             <fileset dir="${build.classes}">
