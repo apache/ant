@@ -88,26 +88,13 @@ import java.util.*;
 
 public class Javac extends MatchingTask {
 
-    public class SourcePathElement {
-        private String path;
-        
-        public void setPath(String path) {
-            this.path = path;
-        }
-        
-        public String getPath() {
-            return path;
-        }
-    };
-
     /**
      * Integer returned by the "Modern" jdk1.3 compiler to indicate success.
      */
     private static final int
         MODERN_COMPILER_SUCCESS = 0;
 
-    private Vector srcPathElements = new Vector();
-    private Vector srcDirs= new Vector();
+    private Path src;
     private File destDir;
     private Path compileClasspath;
     private boolean debug = false;
@@ -127,53 +114,22 @@ public class Javac extends MatchingTask {
      *
      * @return a nexted src element.
      */
-    public SourcePathElement createSrc() {
-        SourcePathElement element = new SourcePathElement();
-        srcPathElements.addElement(element);
-        return element;
-    }
-
-    /**
-     * Add a single directory to the collection of directories that
-     * make up the source path.
-     *
-     * @param srcDirName the name of the directory to add to the list of source directories.
-     */
-    private void addSrcDir(String srcDirName) {
-        addSrcDir(project.resolveFile(srcDirName));
-    }
-
-    /**
-     * Add a single directory to the collection of directories that
-     * make up the source path.
-     *
-     * @param srcDir the directory to add to the list of source directories.
-     */
-    private void addSrcDir(File srcDir) {
-        srcDirs.addElement(srcDir);
-    }
-
-    /**
-     * Add a set of source directories specified as path.
-     *
-     * @param srcPath the list of source directories.
-     */
-    private void addSrcPath(String srcPath) {
-        // use a Path tokenizer to find the paths and add them to 
-        // the vector of source paths.
-        PathTokenizer tokenizer = new PathTokenizer(srcPath);
-        while (tokenizer.hasMoreTokens()) {
-            addSrcDir(tokenizer.nextToken());
+    public Path createSrc() {
+        if (src != null) {
+            src = new Path();
         }
-    }        
+        return src;
+    }
 
     /**
      * Set the source dirs to find the source Java files.
      */
-    public void setSrcdir(String srcPath) {
-        // clean out the list of source dirs
-        srcDirs = new Vector();
-        addSrcPath(srcPath);
+    public void setSrcdir(Path srcDir) {
+        if (src == null) {
+            src = srcDir;
+        } else {
+            src.append(srcDir);
+        }
     }
 
     /**
@@ -291,23 +247,15 @@ public class Javac extends MatchingTask {
     public void execute() throws BuildException {
         // first off, make sure that we've got a srcdir and destdir
 
-        // process the source elements into the srcDirs collection
-        for (Enumeration e = srcPathElements.elements(); e.hasMoreElements(); ) {
-            SourcePathElement element = (SourcePathElement)e.nextElement();
-            addSrcPath(element.getPath());
-        }
-
-        if (srcDirs.size() == 0) {
+        if (src == null) {
             throw new BuildException("srcdir attribute must be set!");
         }
         
-        for (Enumeration e = srcDirs.elements(); e.hasMoreElements(); ) {
-            File srcDir = (File)e.nextElement();
-            if (!srcDir.exists()) {
-                throw new BuildException("srcdir " + srcDir.getPath() + " does not exist!");
-            }
+        String [] list = src.list();
+        if (list.length == 0) {
+            throw new BuildException("srcdir attribute must be set!");
         }
-
+        
         if (destDir == null) {
             throw new BuildException("destdir attribute must be set!");
         }
@@ -315,15 +263,19 @@ public class Javac extends MatchingTask {
         // scan source directories and dest directory to build up both copy lists and
         // compile lists
         resetFileLists();
-        for (Enumeration e = srcDirs.elements(); e.hasMoreElements(); ) {
-            File srcDir = (File)e.nextElement();
+        for (int i=0; i<list.length; i++) {
+            File srcDir = (File)project.resolveFile(list[i]);
+            if (!srcDir.exists()) {
+                throw new BuildException("srcdir " + srcDir.getPath() + " does not exist!");
+            }
+
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
 
             String[] files = ds.getIncludedFiles();
 
             scanDir(srcDir, destDir, files);
         }
-
+        
         // compile the source files
 
         String compiler = project.getProperty("build.compiler");
@@ -500,25 +452,6 @@ public class Javac extends MatchingTask {
     }
 
     /**
-     * Get the list of source directories separated by a platform specific
-     * path separator.
-     *
-     * @return the current source directories in a single path separated using the 
-     * platform specific path separator.
-     */
-    private String getSourcePath() {
-        String sourcePath = "";
-        for (Enumeration e = srcDirs.elements(); e.hasMoreElements(); ) {
-            File srcDir = (File)e.nextElement();
-            if (sourcePath.length() != 0) {
-                sourcePath += File.pathSeparator;
-            }
-            sourcePath += srcDir.getAbsolutePath();
-        }
-        return sourcePath;
-    }
-
-    /**
      * Peforms a copmile using the classic compiler that shipped with
      * JDK 1.1 and 1.2.
      */
@@ -537,11 +470,11 @@ public class Javac extends MatchingTask {
         // Just add "sourcepath" to classpath ( for JDK1.1 )
         if (Project.getJavaVersion().startsWith("1.1")) {
             argList.addElement(classpath.toString() + File.pathSeparator +
-                               getSourcePath());
+                               src.toString());
         } else {
             argList.addElement(classpath.toString());
             argList.addElement("-sourcepath");
-            argList.addElement(getSourcePath());
+            argList.addElement(src.toString());
             if (target != null) {
                 argList.addElement("-target");
                 argList.addElement(target);
@@ -624,7 +557,7 @@ public class Javac extends MatchingTask {
         argList.addElement("-classpath");
         argList.addElement(classpath.toString());
         argList.addElement("-sourcepath");
-        argList.addElement(getSourcePath());
+        argList.addElement(src.toString());
         if (target != null) {
             argList.addElement("-target");
             argList.addElement(target);
@@ -717,7 +650,7 @@ public class Javac extends MatchingTask {
 
         // Jikes has no option for source-path so we
         // will add it to classpath.
-        classpath.setPath(getSourcePath());
+        classpath.append(src);
 
         Vector argList = new Vector();
 

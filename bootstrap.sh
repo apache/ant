@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# You will need to specify JAVA_HOME if compiling with 1.2 or later.
+
 ANT_HOME=.
 export ANT_HOME
 

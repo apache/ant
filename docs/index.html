@@ -395,6 +395,38 @@ this should not cause problems.</p>
 </pre>
 </blockquote>
 
+<h3><a name="path">PATH like structures</a></h3>
+<p>You can specify PATH and CLASSPATH variables using both
+&quot;:&quot; and &quot;;&quot; as separator characters, Ant will
+convert it to the correct character of the current operating
+system.</p>
+<p>Wherever PATH like values need to be specified a nested element can
+be used. This takes the general form of</p>
+<pre>
+    &lt;classpath&gt;
+      &lt;pathelement path=&quot;${classpath}&quot; /&gt;
+      &lt;pathelement location=&quot;lib/helper.jar&quot; /&gt;
+    &lt;/classpath&gt;
+</pre>
+<p>The <code>location</code> attribute specifies a single file or
+directory relative to the project's base directory (or an absolute
+filename), while the <code>path</code> attribute accepts &quot;:&quot;
+or &quot;;&quot; separated lists of locations. The <code>path</code>
+attribute is intended to be used with predefined paths - in any other
+case multiple elements with <code>location</code> attributes should be
+preferred.</p>
+<p>As a shortcut the surrounding PATH element supports path and
+location attributes of its own, so</p>
+<pre>
+    &lt;classpath&gt;
+      &lt;pathelement path=&quot;${classpath}&quot; /&gt;
+    &lt;/classpath&gt;
+</pre>
+<p>can be abreviated to</p>
+<pre>
+    &lt;classpath path=&quot;${classpath}&quot; /&gt;
+</pre>
+
 <hr>
 <h2><a name="directorybasedtasks">Directory based tasks</a></h2>
 <p>Some tasks use directory trees for the task they perform. For instance, the <a
@@ -1013,6 +1045,7 @@ relative to the <i>dir</i> directory.</p>
 </pre>
 <p>deletes all files with the extension &quot;<code>.bak</code>&quot from the current directory 
 and any sub-directories.</p>
+<hr>
 <h2><a name="deltree">Deltree</a></h2>
 <h3>Description</h3>
 <p>Deletes a directory with all its files and subdirectories.</p>
@@ -1607,6 +1640,19 @@ the one that is currently running Ant.</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+<h3>Parameters specified as nested elements</h3>
+<p><code>Java</code>'s <em>classpath</em> attribute is a <a
+href="#path">PATH like structure</a> and can also be set via a nested
+<em>classpath</em> element.</p>
+<h4>Example</h4>
+<pre>  
+       &lt;java classname=&quot;test.Main&quot; args=&quot;-h&quot; &gt;
+         &lt;classpath&gt;
+           &lt;pathelement location=&quot;\test.jar&quot; /&gt;
+           &lt;pathelement path=&quot;${java.class.path}&quot; /&gt;
+         &lt;/classpath&gt;
+       &lt;/java&gt;
+</pre>
 <h3>Examples</h3>
 <pre>  &lt;java classname=&quot;test.Main&quot; /&gt;</pre>
 <pre>  &lt;java classname=&quot;test.Main&quot; args=&quot;-h&quot; /&gt;</pre>
@@ -1747,21 +1793,12 @@ nested <code>&lt;src&gt;</code> element. This is used to specify multiple source
 Multiple <code>src</code> elements may be present and each specifies a source path which will be 
 searched by Javac for classes to compile.
 
-<h4>src</h4>
-Define a source path to be search for source files.
-<H4>Parameters</h4>
-<table width="60%" border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">src</td>
-    <td valign="top">A source path. It may contain multiple elements separated with either a ';' or a ':'</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-</table>
+<h4>src, classpath, bootclasspath and extdirs</h4>
+<p><code>Javac</code>'s <em>srcdir</em>, <em>classpath</em>,
+<em>bootclasspath</em> and <em>extdirs</em> attributes are <a
+href="#path">PATH like structure</a> and can also be set via nested
+<em>src</em>, <em>classpath</em>, <em>bootclasspath</em> and
+<em>extdirs</em> elements respectively.</p>
 
 <h3>Examples</h3>
 <pre>  &lt;javac srcdir=&quot;${src}&quot;
@@ -2180,6 +2217,13 @@ one group per table.
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
+
+<h4>sourcepath, classpath and bootclasspath</h4>
+<p><code>Javadoc</code>'s <em>sourcepath</em>, <em>classpath</em> and
+<em>bootclasspath</em> attributes are <a href="#path">PATH like
+structure</a> and can also be set via nested <em>sourcepath</em>,
+<em>classpath</em> and <em>bootclasspath</em> elements
+respectively.</p>
 
 <h3>Example</h3>
 <pre>  &lt;javadoc packagenames=&quot;com.dummy.test.*&quot;
@@ -2608,6 +2652,11 @@ relative to the <i>base</i> directory.</p>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
+<h3>Parameters specified as nested elements</h3>
+<h4>classpath</h4>
+<p><code>Rmic</code>'s <em>classpath</em> attribute is a <a
+href="#path">PATH like structure</a> and can also be set via a nested
+<em>classpath</em> elements.</p>
 <h3>Examples</h3>
 <pre>  &lt;rmic classname=&quot;com.xyz.FooBar&quot; base=&quot;${build}/classes&quot; /&gt;</pre>
 <p>runs the rmic compiler for the class <code>com.xyz.FooBar</code>. The
