@@ -244,6 +244,22 @@
     </section>
 
     <section name="Presentations">
+
+      <subsection name="Ant - presented to the Tucson Java Users Group">
+        <p>A PowerPoint technical overview presentation on Ant.  Comes complete with a straightforward example demonstrating code compilation, JAR'ing, JUnit testing, JUnit reporting, and Zipping a distribution.  A few advanced topics are touched upon like property immutabality and using &lt;antcall&gt; to get around it, build listeners, and writing custom tasks.</p>
+
+        <table>
+          <tr>
+            <th>Author:</th>
+            <td><a href="mailto:erik@hatcher.net">Erik Hatcher</a></td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://erik.hatcher.net/ant-jug.zip">http://erik.hatcher.net/ant-jug.zip</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Ant Build Tool">
         <p>A PowerPoint presentation on Ant 1.2.  It provides a basic overview
         of Ant&apos;s capabilities.</p>
