@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -27,36 +27,36 @@ import org.apache.tools.ant.util.FileNameMapper;
 /**
  * @author Peter Reilly
  */
-public class MultiMapTest extends BuildFileTest { 
-    
-    public MultiMapTest(String name) { 
+public class MultiMapTest extends BuildFileTest {
+
+    public MultiMapTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/multimap.xml");
     }
 
     public void tearDown() {
         executeTarget("cleanup");
     }
-    
+
     public void testMultiCopy() {
         executeTarget("multicopy");
     }
-    
+
     public void testMultiMove() {
         executeTarget("multimove");
     }
-    
+
     public void testSingleCopy() {
         executeTarget("singlecopy");
     }
-    
+
     public void testSingleMove() {
         executeTarget("singlemove");
     }
-    
+
     public void testCopyWithEmpty() {
         executeTarget("copywithempty");
     }
@@ -64,7 +64,7 @@ public class MultiMapTest extends BuildFileTest {
     public void testMoveWithEmpty() {
         executeTarget("movewithempty");
     }
-    
+
     public static class TestMapper implements FileNameMapper {
         public TestMapper() {}
         public void setFrom(String from) {}

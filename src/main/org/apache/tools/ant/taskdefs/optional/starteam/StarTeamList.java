@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
@@ -63,7 +63,7 @@ public class StarTeamList extends TreeBasedTask {
     public void setAsOfDate(String asOfDateParam) {
         _setAsOfDate(asOfDateParam);
     }
-    
+
     /**
      * Date Format with which asOfDate parameter to be parsed; optional.
      * Must be a SimpleDateFormat compatible string.
@@ -94,7 +94,7 @@ public class StarTeamList extends TreeBasedTask {
         // otherwise use current view
         if (labelID >= 0) {
             return new View(raw, ViewConfiguration.createFromLabel(labelID));
-        } 
+        }
         // if a date has been supplied use a view configured to the date.
         View view = getViewConfiguredByDate(raw);
         if (view != null) {

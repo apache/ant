@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional.ssh;
@@ -57,7 +57,7 @@ public class SSHExec extends SSHBase {
     private File outputFile = null;   // like <exec>
     private boolean append = false;   // like <exec>
 
-    private static final String TIMEOUT_MESSAGE = 
+    private static final String TIMEOUT_MESSAGE =
         "Timeout period exceeded, connection dropped.";
 
     /**
@@ -211,7 +211,7 @@ public class SSHExec extends SSHBase {
                 if (getFailonerror()) {
                     throw new BuildException(e);
                 } else {
-                    log("Caught exception: " + e.getMessage(), 
+                    log("Caught exception: " + e.getMessage(),
                         Project.MSG_ERR);
                 }
             }

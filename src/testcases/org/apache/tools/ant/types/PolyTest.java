@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -36,7 +36,7 @@ public class PolyTest extends BuildFileTest {
     public void testFileSet() {
         expectLogContaining("fileset", "types.FileSet");
     }
-    
+
     public void testFileSetAntType() {
         expectLogContaining("fileset-ant-type", "types.PolyTest$MyFileSet");
     }
@@ -44,7 +44,7 @@ public class PolyTest extends BuildFileTest {
     public void testPath() {
         expectLogContaining("path", "types.Path");
     }
-    
+
     public void testPathAntType() {
         expectLogContaining("path-ant-type", "types.PolyTest$MyPath");
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 /*
@@ -418,7 +418,7 @@ public class Symlink extends Task {
      *
      * This method use <code>Properties.store</code>
      * and thus report exceptions that occur while writing the file.
-     * 
+     *
      * This is not jdk 1.1 compatible, but ant 1.6 is not anymore.
      *
      * @param properties     The properties object to be written.

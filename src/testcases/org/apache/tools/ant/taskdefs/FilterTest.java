@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -25,44 +25,44 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  */
-public class FilterTest extends BuildFileTest { 
-      
-    public FilterTest(String name) { 
+public class FilterTest extends BuildFileTest {
+
+    public FilterTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/filter.xml");
     }
 
     public void tearDown() {
         executeTarget("cleanup");
     }
-    
-    public void test1() { 
+
+    public void test1() {
         expectBuildException("test1", "required argument missing");
     }
 
-    public void test2() { 
+    public void test2() {
         expectBuildException("test2", "required argument missing");
     }
 
-    public void test3() { 
+    public void test3() {
         expectBuildException("test3", "required argument missing");
     }
-    
-    public void test4() { 
+
+    public void test4() {
         executeTarget("test4");
     }
-    
+
     public void test5() {
         executeTarget("test5");
         assertEquals("2000",
                      getFilteredFile("5", "filtered.tmp"));
     }
-    
+
 
     public void test6() {
         executeTarget("test6");
@@ -81,15 +81,15 @@ public class FilterTest extends BuildFileTest {
         assertEquals("<%@ include file=\"root/some/include.jsp\"%>",
                      getFilteredFile("8", "taskdefs.tmp/filter2.txt"));
     }
-    
+
     public void test9() {
         executeTarget("test9");
         assertEquals("included",
                     getFilteredFile("9", "taskdefs.tmp/filter3.txt"));
     }
-        
+
     private String getFilteredFile(String testNumber, String filteredFile) {
-    
+
         String line = null;
         File f = new File(getProjectDir(), filteredFile);
         if (!f.exists()) {

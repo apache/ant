@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.util.regexp;
@@ -27,7 +27,7 @@ import junit.framework.TestSuite;
 /**
  * Tests for all implementations of the RegexpMatcher interface.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public abstract class RegexpMatcherTest extends TestCase {
 
@@ -77,15 +77,15 @@ public abstract class RegexpMatcherTest extends TestCase {
         reg.setPattern("aaaa");
         Vector v = reg.getGroups("xaaaa");
         assertEquals("No parens -> no extra groups", 1, v.size());
-        assertEquals("Trivial match with no parens", "aaaa", 
+        assertEquals("Trivial match with no parens", "aaaa",
                      (String) v.elementAt(0));
 
         reg.setPattern("(aaaa)");
         v = reg.getGroups("xaaaa");
         assertEquals("Trivial match with single paren", 2, v.size());
-        assertEquals("Trivial match with single paren, full match", "aaaa", 
+        assertEquals("Trivial match with single paren, full match", "aaaa",
                      (String) v.elementAt(0));
-        assertEquals("Trivial match with single paren, matched paren", "aaaa", 
+        assertEquals("Trivial match with single paren, matched paren", "aaaa",
                      (String) v.elementAt(0));
 
         reg.setPattern("(a+)b(b+)");
@@ -109,7 +109,7 @@ public abstract class RegexpMatcherTest extends TestCase {
     public void testCaseInsensitiveMatch() {
         reg.setPattern("aaaa");
         assertTrue("aaaa doesn't match AAaa", !reg.matches("AAaa"));
-        assertTrue("aaaa matches AAaa ignoring case", 
+        assertTrue("aaaa matches AAaa ignoring case",
                    reg.matches("AAaa", RegexpMatcher.MATCH_CASE_INSENSITIVE));
     }
 
@@ -160,7 +160,7 @@ public abstract class RegexpMatcherTest extends TestCase {
         buf.append("Line3 endtest").append(UNIX_LINE);
         buf.append("Line4").append(UNIX_LINE);
         String text = buf.toString();
-        
+
         doStartTest1(text);
         doStartTest2(text);
         doEndTest1(text);
@@ -170,36 +170,36 @@ public abstract class RegexpMatcherTest extends TestCase {
     protected void doStartTest1(String text) {
         reg.setPattern("^starttest");
         assertTrue("^starttest in default mode", !reg.matches(text));
-        assertTrue("^starttest in single line mode", 
+        assertTrue("^starttest in single line mode",
                !reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
-        assertTrue("^starttest in multi line mode", 
+        assertTrue("^starttest in multi line mode",
                reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
     }
 
     protected void doStartTest2(String text) {
         reg.setPattern("^Line1");
         assertTrue("^Line1 in default mode", reg.matches(text));
-        assertTrue("^Line1 in single line mode", 
+        assertTrue("^Line1 in single line mode",
                reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
-        assertTrue("^Line1 in multi line mode", 
+        assertTrue("^Line1 in multi line mode",
                reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
     }
 
     protected void doEndTest1(String text) {
         reg.setPattern("endtest$");
         assertTrue("endtest$ in default mode", !reg.matches(text));
-        assertTrue("endtest$ in single line mode", 
+        assertTrue("endtest$ in single line mode",
                !reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
-        assertTrue("endtest$ in multi line mode", 
+        assertTrue("endtest$ in multi line mode",
                reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
     }
 
     protected void doEndTest2(String text) {
         reg.setPattern("Line4$");
         assertTrue("Line4$ in default mode", reg.matches(text));
-        assertTrue("Line4$ in single line mode", 
+        assertTrue("Line4$ in single line mode",
                reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
-        assertTrue("Line4$ in multi line mode", 
+        assertTrue("Line4$ in multi line mode",
                reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
     }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.mail;
@@ -41,15 +41,15 @@ import junit.framework.TestCase;
  * @since Ant 1.6
  */
 public class MailMessageTest extends TestCase {
-    
+
     // 27224 = magic (a random port which is unlikely to be in use)
     private static int TEST_PORT = 27224;
-    
+
     private String local = null;
-    
+
     public MailMessageTest(String name) {
         super(name);
-    }    
+    }
 
     public void setUp() {
         try {
@@ -58,7 +58,7 @@ public class MailMessageTest extends TestCase {
             // ignore
         }
     }
-    
+
     /**
      *  Test an example that is similar to the one given in the API
      *  If this testcase takes >90s to complete, it is very likely that
@@ -66,13 +66,13 @@ public class MailMessageTest extends TestCase {
      *  timed out.
      */
     public void testAPIExample() {
-        
+
         ServerThread testMailServer = new ServerThread();
         Thread server = new Thread(testMailServer);
         server.start();
-        
+
         ClientThread testMailClient = new ClientThread();
-        
+
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
         testMailClient.cc("cc1@you.com");
@@ -81,17 +81,17 @@ public class MailMessageTest extends TestCase {
         testMailClient.setSubject("Test subject");
         testMailClient.setMessage( "test line 1\n" +
             "test line 2" );
-            
+
         Thread client = new Thread(testMailClient);
         client.start();
-        
+
         try {
             server.join(60 * 1000); // 60s
             client.join(30 * 1000); // a further 30s
         } catch (InterruptedException ie ) {
             fail( "InterruptedException: " + ie );
         }
-        
+
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
         "HELO " + local + "\r\n" +
@@ -144,7 +144,7 @@ public class MailMessageTest extends TestCase {
             fail(testMailClient.getFailMessage());
         }
     }
-    
+
     /**
      *  Test a MailMessage with no cc or bcc lines
      */
@@ -154,23 +154,23 @@ public class MailMessageTest extends TestCase {
         server.start();
 
         ClientThread testMailClient = new ClientThread();
-        
+
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
         testMailClient.setSubject("Test subject");
         testMailClient.setMessage( "test line 1\n" +
             "test line 2" );
-            
+
         Thread client = new Thread(testMailClient);
         client.start();
-        
+
         try {
             server.join(60 * 1000); // 60s
             client.join(30 * 1000); // a further 30s
         } catch (InterruptedException ie ) {
             fail("InterruptedException: " + ie);
         }
-        
+
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
         "HELO " + local + "\r\n" +
@@ -199,8 +199,8 @@ public class MailMessageTest extends TestCase {
             fail(testMailClient.getFailMessage());
         }
     }
-    
-    
+
+
     /**
      *  Test a MailMessage with no to or bcc lines
      */
@@ -210,23 +210,23 @@ public class MailMessageTest extends TestCase {
         server.start();
 
         ClientThread testMailClient = new ClientThread();
-        
+
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.cc("cc@you.com");
         testMailClient.setSubject("Test subject");
         testMailClient.setMessage( "test line 1\n" +
             "test line 2" );
-            
+
         Thread client = new Thread(testMailClient);
         client.start();
-        
+
         try {
             server.join(60 * 1000); // 60s
             client.join(30 * 1000); // a further 30s
         } catch (InterruptedException ie ) {
             fail( "InterruptedException: " + ie );
         }
-        
+
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
         "HELO " + local + "\r\n" +
@@ -255,8 +255,8 @@ public class MailMessageTest extends TestCase {
             fail(testMailClient.getFailMessage());
         }
     }
-    
-    
+
+
     /**
      *  Test a MailMessage with no to or cc lines
      */
@@ -266,23 +266,23 @@ public class MailMessageTest extends TestCase {
         server.start();
 
         ClientThread testMailClient = new ClientThread();
-        
+
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.bcc("bcc@you.com");
         testMailClient.setSubject("Test subject");
         testMailClient.setMessage( "test line 1\n" +
             "test line 2" );
-            
+
         Thread client = new Thread(testMailClient);
         client.start();
-        
+
         try {
             server.join(60 * 1000); // 60s
             client.join(30 * 1000); // a further 30s
         } catch (InterruptedException ie ) {
             fail( "InterruptedException: " + ie );
         }
-        
+
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
         "HELO " + local + "\r\n" +
@@ -310,8 +310,8 @@ public class MailMessageTest extends TestCase {
             fail( testMailClient.getFailMessage() );
         }
     }
-    
-    
+
+
     /**
      *  Test a MailMessage with no subject line
      *  Subject is an optional field (RFC 822 s4.1)
@@ -322,22 +322,22 @@ public class MailMessageTest extends TestCase {
         server.start();
 
         ClientThread testMailClient = new ClientThread();
-        
+
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
         testMailClient.setMessage( "test line 1\n" +
             "test line 2" );
-            
+
         Thread client = new Thread(testMailClient);
         client.start();
-        
+
         try {
             server.join(60 * 1000); // 60s
             client.join(30 * 1000); // a further 30s
         } catch (InterruptedException ie ) {
             fail( "InterruptedException: " + ie );
         }
-        
+
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
         "HELO " + local + "\r\n" +
@@ -365,8 +365,8 @@ public class MailMessageTest extends TestCase {
             fail( testMailClient.getFailMessage() );
         }
     }
-    
-    
+
+
     /**
      *  Test a MailMessage with empty body message
      */
@@ -376,22 +376,22 @@ public class MailMessageTest extends TestCase {
         server.start();
 
         ClientThread testMailClient = new ClientThread();
-        
+
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("to@you.com");
         testMailClient.setSubject("Test subject");
         testMailClient.setMessage("");
-            
+
         Thread client = new Thread(testMailClient);
         client.start();
-        
+
         try {
             server.join(60 * 1000); // 60s
             client.join(30 * 1000); // a further 30s
         } catch (InterruptedException ie ) {
             fail( "InterruptedException: " + ie );
         }
-        
+
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
         "HELO " + local + "\r\n" +
@@ -419,8 +419,8 @@ public class MailMessageTest extends TestCase {
             fail(testMailClient.getFailMessage());
         }
     }
-    
-    
+
+
     /**
      *  Test a MailMessage with US-ASCII character set
      *  The next four testcase can be kinda hard to debug as Ant will often
@@ -433,7 +433,7 @@ public class MailMessageTest extends TestCase {
         server.start();
 
         ClientThread testMailClient = new ClientThread();
-        
+
         testMailClient.from("Mail Message <EmailTaskTest@ant.apache.org>");
         testMailClient.to("Ceki G\u00fclc\u00fc <abuse@mail-abuse.org>");
         testMailClient.setSubject("Test subject");
@@ -441,14 +441,14 @@ public class MailMessageTest extends TestCase {
 
         Thread client = new Thread(testMailClient);
         client.start();
-        
+
         try {
             server.join(60 * 1000); // 60s
             client.join(30 * 1000); // a further 30s
         } catch (InterruptedException ie ) {
             fail("InterruptedException: " + ie);
         }
-        
+
         String result = testMailServer.getResult();
         String expectedResult = "220 test SMTP EmailTaskTest\r\n" +
         "HELO " + local + "\r\n" +
@@ -486,15 +486,15 @@ public class MailMessageTest extends TestCase {
             fail(testMailClient.getFailMessage());
         }
     }
-    
-    
 
-    
+
+
+
     /**
      * A private test class that pretends to be a mail transfer agent
      */
     private class ServerThread implements Runnable {
-        
+
         private StringBuffer sb = null;
         private boolean loop = false;
         ServerSocket ssock = null;
@@ -522,10 +522,10 @@ public class MailMessageTest extends TestCase {
                         break;
                     }
                     sb.append( response + "\r\n" );
-                 
+
                     if ( !data && response.startsWith( "HELO" ) ) {
                         send( "250 " + local + " Hello " + local + " " +
-                        "[127.0.0.1], pleased to meet you\r\n" );                   
+                        "[127.0.0.1], pleased to meet you\r\n" );
                     } else if ( !data && response.startsWith("MAIL") ) {
                         send( "250\r\n" );
                     } else if ( !data && response.startsWith("RCPT")) {
@@ -548,7 +548,7 @@ public class MailMessageTest extends TestCase {
                     } else {
                         // sb.append( response + "\r\n" );
                     }
-                    
+
                 } // while
             } catch (IOException ioe) {
                 fail();
@@ -556,13 +556,13 @@ public class MailMessageTest extends TestCase {
                 disconnect();
             }
         }
-        
+
         private void send(String retmsg) throws IOException {
             out.write( retmsg );
             out.flush();
             sb.append( retmsg );
         }
-        
+
         private void disconnect() {
             if (out != null) {
                 try {
@@ -598,32 +598,32 @@ public class MailMessageTest extends TestCase {
                 }
             }
         }
-        
+
         public synchronized String getResult() {
             loop = false;
             return sb.toString();
         }
-        
+
     }
-    
+
     /**
      *  A private test class that wraps MailMessage
      */
     private class ClientThread implements Runnable {
-        
+
         private MailMessage msg;
         private boolean fail = false;
         private String failMessage = null;
-        
+
         protected String from = null;
         protected String subject = null;
         protected String message = null;
-        
+
         protected Vector replyToList = new Vector();
         protected Vector toList = new Vector();
         protected Vector ccList = new Vector();
         protected Vector bccList = new Vector();
-        
+
 
         public void run() {
             for (int i = 9; i > 0; i--) {
@@ -644,47 +644,47 @@ public class MailMessageTest extends TestCase {
                     break;
                 }
             }
-            
+
             if (msg == null) {
                 fail = true;
                 failMessage = "java.net.ConnectException: Connection refused";
                 return;
             }
-            
+
             try {
                 msg.from(from);
-                
+
                 Enumeration e;
-                
+
                 e = replyToList.elements();
                 while (e.hasMoreElements()) {
                     msg.replyto(e.nextElement().toString());
                 }
-                
+
                 e = toList.elements();
                 while (e.hasMoreElements()) {
                     msg.to(e.nextElement().toString());
                 }
-                
+
                 e = ccList.elements();
                 while (e.hasMoreElements()) {
                     msg.cc(e.nextElement().toString());
                 }
-                
+
                 e = bccList.elements();
                 while (e.hasMoreElements()) {
                     msg.bcc(e.nextElement().toString());
                 }
-                
+
                 if (subject != null) {
                     msg.setSubject(subject);
                 }
-                
+
                 if (message != null ) {
                     PrintStream out = msg.getPrintStream();
                     out.println( message );
                 }
-                
+
                 msg.sendAndClose();
             } catch (IOException ioe) {
                 fail = true;
@@ -692,43 +692,43 @@ public class MailMessageTest extends TestCase {
                 return;
             }
         }
-        
+
         public boolean isFailed() {
             return fail;
         }
-        
+
         public String getFailMessage() {
             return failMessage;
         }
-        
+
         public void replyTo(String replyTo) {
             replyToList.add(replyTo);
         }
-        
+
         public void to(String to) {
             toList.add(to);
         }
-        
+
         public void cc(String cc) {
             ccList.add(cc);
         }
-        
+
         public void bcc(String bcc) {
             bccList.add(bcc);
         }
-        
+
         public void setSubject(String subject) {
             this.subject = subject;
         }
-        
+
         public void from(String from) {
             this.from = from;
         }
-        
+
         public void setMessage(String message) {
             this.message = message;
         }
-        
+
     }
-    
+
 }

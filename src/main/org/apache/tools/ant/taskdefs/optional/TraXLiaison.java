@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional;
@@ -164,7 +164,7 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
      * @return the configured source instance matching the stylesheet.
      * @throws Exception if there is a problem creating the source.
      */
-    private Source getSource(InputStream is, File infile) 
+    private Source getSource(InputStream is, File infile)
         throws ParserConfigurationException, SAXException {
         // todo: is this comment still relevant ??
         // FIXME: need to use a SAXSource as the source for the transform
@@ -194,7 +194,7 @@ public class TraXLiaison implements XSLTLiaison2, ErrorListener, XSLTLoggerAware
      * Read in templates from the stylesheet
      */
     private void readTemplates()
-        throws IOException, TransformerConfigurationException, 
+        throws IOException, TransformerConfigurationException,
                ParserConfigurationException, SAXException {
 
         // Use a stream so that you can close it yourself quickly

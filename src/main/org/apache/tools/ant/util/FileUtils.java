@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.util;
@@ -907,7 +907,7 @@ public class FileUtils {
      * This is useful since the JVM by default internally converts VMS paths
      * to Unix style.
      * The returned String is always an absolute path.
-     * 
+     *
      * @param f The <code>File</code> to get the VMS path for.
      * @return The absolute VMS path to <code>f</code>.
      */
@@ -919,7 +919,7 @@ public class FileUtils {
         boolean isAbsolute = path.charAt(0) == File.separatorChar;
         // treat directories specified using .DIR syntax as files
         boolean isDirectory = f.isDirectory() &&
-            !name.regionMatches(true, name.length() - 4, ".DIR", 0, 4); 
+            !name.regionMatches(true, name.length() - 4, ".DIR", 0, 4);
 
         String device = null;
         StringBuffer directory = null;

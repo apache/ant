@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -71,7 +71,7 @@ public class ImportTask extends Task {
     public void setOptional(boolean optional) {
         this.optional = true;
     }
-    
+
     /**
      * the name of the file to import. How relative paths are resolved is still
      * in flux: use absolute paths for safety.
@@ -95,7 +95,7 @@ public class ImportTask extends Task {
             || !"".equals(getOwningTarget().getName())) {
             throw new BuildException("import only allowed as a top-level task");
         }
-        
+
         ProjectHelper helper =
                 (ProjectHelper) getProject().getReference("ant.projectHelper");
         Vector importStack = helper.getImportStack();

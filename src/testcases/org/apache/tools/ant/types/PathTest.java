@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -30,8 +30,8 @@ import java.util.Locale;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Path
  *
- * @author Stefan Bodewig 
- * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a> 
+ * @author Stefan Bodewig
+ * @author <a href="mailto:jtulley@novell.com">Jeff Tulley</a>
  */
 
 public class PathTest extends TestCase {
@@ -64,28 +64,28 @@ public class PathTest extends TestCase {
         } else {
             assertEquals(":\\a", l[0].substring(1));
             assertEquals(":\\b", l[1].substring(1));
-        }        
+        }
     }
 
     public void testRelativePathUnixStyle() {
         project.setBasedir("src/etc");
         Path p = new Path(project, "..:testcases");
-        String[] l = p.list(); 
+        String[] l = p.list();
         assertEquals("two items, Unix style", 2, l.length);
         if (isUnixStyle) {
-           assertTrue("test resolved relative to src/etc", 
+           assertTrue("test resolved relative to src/etc",
                  l[0].endsWith("/src"));
-           assertTrue("test resolved relative to src/etc", 
+           assertTrue("test resolved relative to src/etc",
                  l[1].endsWith("/src/etc/testcases"));
         } else if (isNetWare) {
-           assertTrue("test resolved relative to src/etc", 
+           assertTrue("test resolved relative to src/etc",
                  l[0].endsWith("\\src"));
-           assertTrue("test resolved relative to src/etc", 
+           assertTrue("test resolved relative to src/etc",
                  l[1].endsWith("\\src\\etc\\testcases"));
         } else {
-           assertTrue("test resolved relative to src/etc", 
+           assertTrue("test resolved relative to src/etc",
                  l[0].endsWith("\\src"));
-           assertTrue("test resolved relative to src/etc", 
+           assertTrue("test resolved relative to src/etc",
                  l[1].endsWith("\\src\\etc\\testcases"));
         }
     }
@@ -103,13 +103,13 @@ public class PathTest extends TestCase {
         } else {
             assertEquals(":\\a", l[0].substring(1));
             assertEquals(":\\b", l[1].substring(1));
-        }        
+        }
 
         p = new Path(project, "c:\\test");
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertTrue("c resolved relative to project\'s basedir", 
+            assertTrue("c resolved relative to project\'s basedir",
                    l[0].endsWith("/c"));
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
@@ -124,10 +124,10 @@ public class PathTest extends TestCase {
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 4, l.length);
-            assertTrue("c resolved relative to project\'s basedir", 
+            assertTrue("c resolved relative to project\'s basedir",
                    l[0].endsWith("/c"));
             assertEquals("/test", l[1]);
-            assertTrue("d resolved relative to project\'s basedir", 
+            assertTrue("d resolved relative to project\'s basedir",
                    l[2].endsWith("/d"));
             assertEquals("/programs", l[3]);
         } else if (isNetWare) {
@@ -144,7 +144,7 @@ public class PathTest extends TestCase {
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertTrue("c resolved relative to project\'s basedir", 
+            assertTrue("c resolved relative to project\'s basedir",
                    l[0].endsWith("/c"));
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
@@ -159,10 +159,10 @@ public class PathTest extends TestCase {
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 4, l.length);
-            assertTrue("c resolved relative to project\'s basedir", 
+            assertTrue("c resolved relative to project\'s basedir",
                    l[0].endsWith("/c"));
             assertEquals("/test", l[1]);
-            assertTrue("d resolved relative to project\'s basedir", 
+            assertTrue("d resolved relative to project\'s basedir",
                    l[2].endsWith("/d"));
             assertEquals("/programs", l[3]);
         } else if (isNetWare) {
@@ -182,7 +182,7 @@ public class PathTest extends TestCase {
         String[] l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("/sys"));
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
@@ -190,9 +190,9 @@ public class PathTest extends TestCase {
             assertEquals("volumes on NetWare", 1, l.length);
         } else {
             assertEquals("no multiple character-length volumes on Windows", 2, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("\\sys"));
-            assertTrue("test resolved relative to project\'s basedir", 
+            assertTrue("test resolved relative to project\'s basedir",
                    l[1].endsWith("\\test"));
         }
 
@@ -201,10 +201,10 @@ public class PathTest extends TestCase {
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 4, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("/sys"));
             assertEquals("/test", l[1]);
-            assertTrue("dev resolved relative to project\'s basedir", 
+            assertTrue("dev resolved relative to project\'s basedir",
                    l[2].endsWith("/dev"));
             assertEquals("/temp", l[3]);
         } else if (isNetWare) {
@@ -213,13 +213,13 @@ public class PathTest extends TestCase {
             assertEquals("dev:\\temp", l[1].toLowerCase(Locale.US));
         } else {
             assertEquals("no multiple character-length volumes on Windows", 4, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("\\sys"));
-            assertTrue("test resolved relative to project\'s basedir", 
+            assertTrue("test resolved relative to project\'s basedir",
                    l[1].endsWith("\\test"));
-            assertTrue("dev resolved relative to project\'s basedir", 
+            assertTrue("dev resolved relative to project\'s basedir",
                    l[2].endsWith("\\dev"));
-            assertTrue("temp resolved relative to project\'s basedir", 
+            assertTrue("temp resolved relative to project\'s basedir",
                    l[3].endsWith("\\temp"));
         }
 
@@ -228,7 +228,7 @@ public class PathTest extends TestCase {
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("/sys"));
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
@@ -236,9 +236,9 @@ public class PathTest extends TestCase {
             assertEquals("sys:\\test", l[0].toLowerCase(Locale.US));
         } else {
             assertEquals("no multiple character-length volumes on Windows", 2, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("\\sys"));
-            assertTrue("test resolved relative to project\'s basedir", 
+            assertTrue("test resolved relative to project\'s basedir",
                    l[1].endsWith("\\test"));
         }
 
@@ -247,10 +247,10 @@ public class PathTest extends TestCase {
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 4, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("/sys"));
             assertEquals("/test", l[1]);
-            assertTrue("dev resolved relative to project\'s basedir", 
+            assertTrue("dev resolved relative to project\'s basedir",
                    l[2].endsWith("/dev"));
             assertEquals("/temp", l[3]);
         } else if (isNetWare) {
@@ -259,25 +259,25 @@ public class PathTest extends TestCase {
             assertEquals("dev:\\temp", l[1].toLowerCase(Locale.US));
         } else {
             assertEquals("no multiple character-length volumes on Windows", 4, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("\\sys"));
-            assertTrue("test resolved relative to project\'s basedir", 
+            assertTrue("test resolved relative to project\'s basedir",
                    l[1].endsWith("\\test"));
-            assertTrue("dev resolved relative to project\'s basedir", 
+            assertTrue("dev resolved relative to project\'s basedir",
                    l[2].endsWith("\\dev"));
-            assertTrue("temp resolved relative to project\'s basedir", 
+            assertTrue("temp resolved relative to project\'s basedir",
                    l[3].endsWith("\\temp"));
          }
 
         // try a multi-part netware-volume length path with UNIX
         // separator (this testcase if from an actual bug that was
         // found, in AvailableTest, which uses PathTokenizer)
-        p = new Path(project, 
+        p = new Path(project,
                      "SYS:\\JAVA/lib/rt.jar:SYS:\\JAVA/lib/classes.zip");
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 3, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("/SYS"));
             assertEquals("/JAVA/lib/rt.jar", l[1]);
             assertEquals("/JAVA/lib/classes.zip", l[2]);
@@ -287,11 +287,11 @@ public class PathTest extends TestCase {
             assertEquals("sys:\\java\\lib\\classes.zip", l[1].toLowerCase(Locale.US));
         } else {
             assertEquals("no multiple character-length volumes on Windows", 3, l.length);
-            assertTrue("sys resolved relative to project\'s basedir", 
+            assertTrue("sys resolved relative to project\'s basedir",
                    l[0].endsWith("\\SYS"));
-            assertTrue("java/lib/rt.jar resolved relative to project\'s basedir", 
+            assertTrue("java/lib/rt.jar resolved relative to project\'s basedir",
                    l[1].endsWith("\\JAVA\\lib\\rt.jar"));
-            assertTrue("java/lib/classes.zip resolved relative to project\'s basedir", 
+            assertTrue("java/lib/classes.zip resolved relative to project\'s basedir",
                    l[2].endsWith("\\JAVA\\lib\\classes.zip"));
         }
     }
@@ -312,7 +312,7 @@ public class PathTest extends TestCase {
             assertEquals(":\\a", l[0].substring(1));
             assertEquals(":\\b", l[1].substring(1));
             assertEquals(":\\c", l[2].substring(1));
-        }        
+        }
     }
 
     public void testSetLocation() {

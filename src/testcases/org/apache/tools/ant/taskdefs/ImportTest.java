@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -69,7 +69,7 @@ public class ImportTest extends BuildFileTest {
         expectPropertySet("do-import", "foo", "bar");
         assertNotNull(getProject().getReference("baz"));
     }
-    
+
     public void testImportInTargetNotAllowed() {
         configureProject(
             "src/etc/testcases/taskdefs/import/subdir/importintarget.xml");

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -37,28 +37,28 @@ public class DescriptionTest extends BuildFileTest {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
     }
 
     public void tearDown() {
     }
 
-    public void test1() { 
+    public void test1() {
         configureProject("src/etc/testcases/types/description1.xml");
         assertEquals("Single description failed", "Test Project Description", project.getDescription());
     }
 
-    public void test2() { 
+    public void test2() {
         configureProject("src/etc/testcases/types/description2.xml");
         assertEquals("Multi line description failed", "Multi Line\nProject Description", project.getDescription());
     }
-    
-    public void test3() { 
+
+    public void test3() {
         configureProject("src/etc/testcases/types/description3.xml");
         assertEquals("Multi instance description failed", "Multi Instance Project Description", project.getDescription());
     }
-    
-    public void test4() { 
+
+    public void test4() {
         configureProject("src/etc/testcases/types/description4.xml");
         assertEquals("Multi instance nested description failed", "Multi Instance Nested Project Description", project.getDescription());
     }

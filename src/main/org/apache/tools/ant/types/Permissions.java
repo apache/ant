@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -29,21 +29,21 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ExitException;
 
 /**
- * This class implements a security manager meant for useage by tasks that run inside the 
+ * This class implements a security manager meant for useage by tasks that run inside the
  * ant VM. An examples are the Java Task and JUnitTask.
- * 
- * The basic functionality is that nothing (except for a base set of permissions) is allowed, unless 
+ *
+ * The basic functionality is that nothing (except for a base set of permissions) is allowed, unless
  * the permission is granted either explicitly or implicitly.
  * If an permission is granted this can be overruled by explicitly revoking the permission.
- * 
+ *
  * It is not permissible to add permissions (either granted or revoked) while the Security Manager
  * is active (after calling setSecurityManager() but before calling restoreSecurityManager()).
- * 
+ *
  * @since Ant 1.6
  * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
 public class Permissions {
-    
+
     private List grantedPermissions = new LinkedList();
     private List revokedPermissions = new LinkedList();
     private java.security.Permissions granted = null;
@@ -68,25 +68,25 @@ public class Permissions {
     }
     /**
      * Adds a permission to be granted.
-     * @param perm The Permissions.Permission to be granted. 
+     * @param perm The Permissions.Permission to be granted.
      */
     public void addConfiguredGrant(Permissions.Permission perm) {
         grantedPermissions.add(perm);
-    }    
+    }
 
-    /** 
+    /**
      * Adds a permission to be revoked.
-     * @param perm The Permissions.Permission to be revoked 
+     * @param perm The Permissions.Permission to be revoked
      */
     public void addConfiguredRevoke(Permissions.Permission perm) {
         revokedPermissions.add(perm);
     }
-    
-    /** 
+
+    /**
      * To be used by tasks wishing to use this security model before executing the part to be
-     * subject to these Permissions. Note that setting the SecurityManager too early may 
+     * subject to these Permissions. Note that setting the SecurityManager too early may
      * prevent your part from starting, as for instance changing classloaders may be prohibited.
-     * The classloader for the new situation is supposed to be present. 
+     * The classloader for the new situation is supposed to be present.
      */
     public void setSecurityManager() throws BuildException{
         origSm = System.getSecurityManager();
@@ -111,7 +111,7 @@ public class Permissions {
             if (p.getClassName() == null) {
                 throw new BuildException("Granted permission " + p + " does not contain a class.");
             } else {
-                java.security.Permission perm =  new UnresolvedPermission(p.getClassName(),p.getName(),p.getActions(),null);                    
+                java.security.Permission perm =  new UnresolvedPermission(p.getClassName(),p.getName(),p.getActions(),null);
                 granted.add(perm);
             }
         }
@@ -146,13 +146,13 @@ public class Permissions {
         active = false;
         System.setSecurityManager(origSm);
     }
-    
+
     /**
      * This inner class implements the actual SecurityManager that can be used by tasks
-     * supporting Permissions. 
+     * supporting Permissions.
      */
     private class MySM extends SecurityManager {
-        
+
         /**
          * Exit is treated in a special way in order to be able to return the exit code towards tasks.
          * An ExitException is thrown instead of a simple SecurityException to indicate the exit
@@ -163,16 +163,16 @@ public class Permissions {
         public void checkExit(int status) {
             java.security.Permission perm = new java.lang.RuntimePermission("exitVM",null);
             try {
-                checkPermission(perm);  
+                checkPermission(perm);
             } catch (SecurityException e) {
                 throw new ExitException(e.getMessage(), status);
             }
         }
-        
+
         /**
          * The central point in checking permissions.
          * Overridden from java.lang.SecurityManager
-         * 
+         *
          * @param perm The permission requested.
          */
         public void checkPermission(java.security.Permission perm) {
@@ -218,15 +218,15 @@ public class Permissions {
         private String name;
         private String actionString;
         private Set actions;
-    
-        /** 
+
+        /**
          * Sets the class, mandatory.
-         * @param aClass The class name of the permission. 
+         * @param aClass The class name of the permission.
          */
         public void setClass(String aClass) {
                 className = aClass.trim();
         }
-        
+
         /** Get the class of the permission
          * @return The class name of the permission.
          */
@@ -234,25 +234,25 @@ public class Permissions {
             return className;
         }
 
-        /** 
+        /**
          * Sets the name of the permission.
          * @param aName The name of the permission.
-         */        
+         */
         public void setName(String aName) {
             name = aName.trim();
         }
-        
-        /** 
+
+        /**
          * Get the name of the permission.
          * @return  The name of the permission.
          */
         public String getName() {
             return name;
         }
-    
+
         /**
          * Sets the actions.
-         * @param actions The actions of the permission. 
+         * @param actions The actions of the permission.
          */
         public void setActions(String actions) {
             actionString = actions;
@@ -260,25 +260,25 @@ public class Permissions {
                 this.actions = parseActions(actions);
             }
         }
-        
+
         /**
          * Gets the actions.
-         * @return The actions of the permission. 
+         * @return The actions of the permission.
          */
         public String getActions() {
             return actionString;
         }
-        
+
         /**
          *  Checks if the permission matches in case of a revoked permission.
          * @param perm The permission to check against.
          */
         boolean matches(java.security.Permission perm) {
-            
+
             if (!className.equals(perm.getClass().getName())) {
                 return false;
             }
-            
+
             if (name != null) {
                 if (name.endsWith("*")) {
                     if (!perm.getName().startsWith(name.substring(0, name.length() - 1))) {
@@ -290,7 +290,7 @@ public class Permissions {
                     }
                 }
             }
-            
+
             if (actions != null) {
                 Set as = parseActions(perm.getActions());
                 int size = as.size();
@@ -300,11 +300,11 @@ public class Permissions {
                     return false;
                 }
             }
-            
+
             return true;
         }
-  
-        /** 
+
+        /**
          * Parses the actions into a set of separate strings.
          * @param actions The actions to be parsed.
          */
@@ -326,5 +326,5 @@ public class Permissions {
         public String toString() {
             return ("Permission: " + className + " (\"" + name + "\", \"" + actions + "\")");
         }
-    }   
+    }
 }

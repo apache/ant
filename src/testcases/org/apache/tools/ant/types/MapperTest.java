@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -30,7 +30,7 @@ import java.io.File;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Mapper.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 
 public class MapperTest extends TestCase {
@@ -117,7 +117,7 @@ public class MapperTest extends TestCase {
                          be.getMessage());
         }
 
-        // dummy1 --> dummy2 --> dummy3 
+        // dummy1 --> dummy2 --> dummy3
         // (which holds a glob mapper from "*.java" to "*.class"
         m1 = new Mapper(project);
         project.addReference("dummy1", m1);
@@ -154,7 +154,7 @@ public class MapperTest extends TestCase {
             super(name);
         }
 
-        public void setUp() { 
+        public void setUp() {
             configureProject("src/etc/testcases/types/mapper.xml");
         }
 
@@ -162,7 +162,7 @@ public class MapperTest extends TestCase {
             executeTarget("cleanup");
         }
 
-        public void test1() { 
+        public void test1() {
             executeTarget("test1");
         }
     }

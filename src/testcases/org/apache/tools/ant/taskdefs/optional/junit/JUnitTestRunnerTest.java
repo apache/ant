@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
 
@@ -73,7 +73,7 @@ public class JUnitTestRunnerTest extends TestCase {
         //@fixme as of now does not report the original stacktrace.
         //assertTrue(error, error.indexOf("thrown on purpose") != -1);
     }
-    
+
     protected TestRunner createRunner(Class clazz){
         return new TestRunner(new JUnitTest(clazz.getName()), true, true, true);
     }
@@ -127,7 +127,7 @@ public class JUnitTestRunnerTest extends TestCase {
             throw new NullPointerException("thrown on purpose");
         }
     }
-    
+
     public static class NoSuiteTestCase extends TestCase {
         public NoSuiteTestCase(String name){ super(name); }
         public void testA(){}

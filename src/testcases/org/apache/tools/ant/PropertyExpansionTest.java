@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 
@@ -50,15 +50,15 @@ public class PropertyExpansionTest extends BuildFileTest {
         assertExpandsTo("$$$","$$");
         assertExpandsTo("$$$$-","$$-");
         assertExpandsTo("","");
-        assertExpandsTo("Class$$subclass","Class$subclass");    
+        assertExpandsTo("Class$$subclass","Class$subclass");
     }
-    
+
     /**
      * new things we want
      */
     public void testDollarPassthru() {
-        assertExpandsTo("$-","$-");    
-        assertExpandsTo("Class$subclass","Class$subclass");    
+        assertExpandsTo("$-","$-");
+        assertExpandsTo("Class$subclass","Class$subclass");
         assertExpandsTo("$$$-","$$-");
         assertExpandsTo("$$$$$","$$$");
         assertExpandsTo("${unassigned.property}","${unassigned.property}");
@@ -66,12 +66,12 @@ public class PropertyExpansionTest extends BuildFileTest {
         assertExpandsTo("$}}","$}}");
     }
 
-    
+
     /**
      * old things we dont want; not a test no more
      */
     public void oldtestQuirkyLegacyBehavior() {
-        assertExpandsTo("Class$subclass","Classsubclass");    
+        assertExpandsTo("Class$subclass","Classsubclass");
         assertExpandsTo("$$$-","$-");
         assertExpandsTo("a$b","ab");
         assertExpandsTo("$}}","}}");

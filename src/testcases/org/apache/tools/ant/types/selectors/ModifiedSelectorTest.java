@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types.selectors;
@@ -647,7 +647,7 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             File dir = getProject().getBaseDir();
             File file = new File(dir, propfile);
             try {
-                java.io.FileWriter out = 
+                java.io.FileWriter out =
                     new java.io.FileWriter(file.getAbsolutePath(), true);
                 out.write(line);
                 out.write(System.getProperty("line.separator"));

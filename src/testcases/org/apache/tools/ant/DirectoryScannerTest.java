@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant;
@@ -63,7 +63,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/"});
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
@@ -72,9 +72,9 @@ public class DirectoryScannerTest extends BuildFileTest {
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml"},
-                     new String[] {"", "alpha", "alpha/beta", 
+                     new String[] {"", "alpha", "alpha/beta",
                                    "alpha/beta/gamma"});
     }
 
@@ -111,7 +111,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         if (!supportsSymlinks) {
             return;
         }
-        
+
         getProject().executeTarget("symlink-setup");
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -125,7 +125,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         if (!supportsSymlinks) {
             return;
         }
-        
+
         getProject().executeTarget("symlink-setup");
         DirectoryScanner ds = new DirectoryScanner();
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
@@ -137,7 +137,7 @@ public class DirectoryScannerTest extends BuildFileTest {
 
     // father and child pattern test
     public void testOrderOfIncludePatternsIrrelevant() {
-        String [] expectedFiles = {"alpha/beta/beta.xml", 
+        String [] expectedFiles = {"alpha/beta/beta.xml",
                                    "alpha/beta/gamma/gamma.xml"};
         String [] expectedDirectories = {"alpha/beta", "alpha/beta/gamma" };
         DirectoryScanner ds = new DirectoryScanner();
@@ -158,7 +158,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/", "ALPHA/"});
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
@@ -169,7 +169,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.setIncludes(new String[] {"alpha/", "ALPHA/"});
         ds.setCaseSensitive(false);
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
@@ -204,7 +204,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
         ds.setIncludes(new String[] {"alpha/", "ALPHA/beta/"});
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
@@ -215,7 +215,7 @@ public class DirectoryScannerTest extends BuildFileTest {
         ds.setIncludes(new String[] {"alpha/", "ALPHA/beta/"});
         ds.setCaseSensitive(false);
         ds.scan();
-        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml",
                                        "alpha/beta/gamma/gamma.xml"},
                      new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
     }
@@ -291,7 +291,7 @@ public class DirectoryScannerTest extends BuildFileTest {
                 for (int i=0; i<included.length; i++) {
                     if (included[i].equals("zip")) {
                         haveZipPackage = true;
-                    } else if (included[i].equals("ThisIsALink" 
+                    } else if (included[i].equals("ThisIsALink"
                                                   + File.separator
                                                   + "taskdefs")) {
                         haveTaskdefsPackage = true;
@@ -391,13 +391,13 @@ public class DirectoryScannerTest extends BuildFileTest {
 
     }
 
-    private void compareFiles(DirectoryScanner ds, String[] expectedFiles, 
+    private void compareFiles(DirectoryScanner ds, String[] expectedFiles,
                               String[] expectedDirectories) {
         String includedFiles[] = ds.getIncludedFiles();
         String includedDirectories[] = ds.getIncludedDirectories();
-        assertEquals("file present: ", expectedFiles.length,  
+        assertEquals("file present: ", expectedFiles.length,
                      includedFiles.length);
-        assertEquals("directories present: ", expectedDirectories.length,  
+        assertEquals("directories present: ", expectedDirectories.length,
                      includedDirectories.length);
 
         TreeSet files = new TreeSet();

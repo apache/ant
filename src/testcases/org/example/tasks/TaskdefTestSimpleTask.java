@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.example.tasks;
@@ -27,15 +27,15 @@ public class TaskdefTestSimpleTask extends Task {
         private String message = null;
         public void setMessage(String s) {message = s;}
     }
-    
+
     public TaskdefTestSimpleTask() {}
-    
+
     private Echo echo;
     public Echo createEcho() {
         echo = new Echo();
         return echo;
     }
-    
+
     public void execute() {
         log("simpletask: "+echo.message, Project.MSG_INFO);
     }

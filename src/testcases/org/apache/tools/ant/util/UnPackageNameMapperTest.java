@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.util;
 
@@ -21,7 +21,7 @@ import junit.framework.TestCase;
 
 public class UnPackageNameMapperTest extends TestCase {
     public UnPackageNameMapperTest(String name) { super(name); }
-    
+
     public void testMapping() {
         UnPackageNameMapper mapper = new UnPackageNameMapper();
         mapper.setFrom("TEST-*.xml");
@@ -29,10 +29,10 @@ public class UnPackageNameMapperTest extends TestCase {
         String file ="TEST-org.apache.tools.ant.util.UnPackageNameMapperTest.xml";
         String result = mapper.mapFileName(file)[0];
         String expected = fixupPath("org/apache/tools/ant/util/UnPackageNameMapperTest.java");
-        
+
         assertEquals(expected, result);
     }
-    
+
     private String fixupPath(String file) {
         return file.replace('/', File.separatorChar);
     }

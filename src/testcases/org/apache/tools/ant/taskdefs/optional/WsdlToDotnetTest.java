@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional;
 
@@ -36,7 +36,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
 
 
     /**
-     * Constructor 
+     * Constructor
      *
      * @param name testname
      */
@@ -61,7 +61,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
     }
 
 
-    
+
     /**
      * A unit test for JUnit
      */
@@ -88,7 +88,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
                 "expected failure",
                 "is a directory");
     }
-    
+
     /**
      * A unit test for JUnit
      */
@@ -96,7 +96,7 @@ public class WsdlToDotnetTest extends BuildFileTest {
         expectBuildExceptionContaining("testBothSrc",
                 "expected failure",
                 "both a source file and a URL");
-    } 
+    }
      /**
      * A unit test for JUnit
      */
@@ -104,8 +104,8 @@ public class WsdlToDotnetTest extends BuildFileTest {
         expectBuildExceptionContaining("testSrcIsDir",
                 "expected failure",
                 "is a directory");
-    } 
-    
+    }
+
     /**
      * A unit test for JUnit
      */
@@ -114,19 +114,19 @@ public class WsdlToDotnetTest extends BuildFileTest {
                 "expected failure",
                 "does not exist");
     }
-     
+
     /**
      * A unit test for JUnit
      */
     public void testLocalWsdl() throws Exception {
         executeTarget("testLocalWsdl");
-    } 
+    }
     /**
      * A unit test for JUnit
      */
     public void testLocalWsdlServer() throws Exception {
         executeTarget("testLocalWsdlServer");
-    } 
+    }
      /**
      * A unit test for JUnit
      */
@@ -134,20 +134,20 @@ public class WsdlToDotnetTest extends BuildFileTest {
         expectBuildExceptionContaining("testInvalidExtraOps",
                 "expected failure",
                 "WSDL returned: 1");
-    }   
-     
+    }
+
     /**
      * A unit test for JUnit
      */
     public void testLocalWsdlVB() throws Exception {
         executeTarget("testLocalWsdlVB");
-    } 
+    }
     /**
      * A unit test for JUnit
      */
     public void testLocalWsdlServerVB() throws Exception {
         executeTarget("testLocalWsdlServerVB");
-    } 
+    }
      /**
      * A unit test for JUnit
      */
@@ -155,6 +155,6 @@ public class WsdlToDotnetTest extends BuildFileTest {
         expectBuildExceptionContaining("testInvalidExtraOpsVB",
                 "expected failure",
                 "WSDL returned: 1");
-    }  
+    }
 }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2001,2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -20,32 +20,32 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  * @author Stefan Bodewig
  */
-public class UnzipTest extends BuildFileTest { 
-    
-    public UnzipTest(String name) { 
+public class UnzipTest extends BuildFileTest {
+
+    public UnzipTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/unzip.xml");
     }
-    
+
     public void tearDown() {
         executeTarget("cleanup");
     }
 
-    public void test1() { 
+    public void test1() {
         expectBuildException("test1", "required argument not specified");
     }
 
-    public void test2() { 
+    public void test2() {
         expectBuildException("test2", "required argument not specified");
     }
 
-    public void test3() { 
+    public void test3() {
         expectBuildException("test3", "required argument not specified");
     }
 
@@ -56,21 +56,21 @@ public class UnzipTest extends BuildFileTest {
         assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
-    
+
     public void testTestZipTask() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testZipTask");
         assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
-    
+
     public void testTestUncompressedZipTask() throws java.io.IOException {
         FileUtils fileUtils = FileUtils.newFileUtils();
         executeTarget("testUncompressedZipTask");
         assertTrue(fileUtils.contentEquals(project.resolveFile("../asf-logo.gif"),
                                            project.resolveFile("asf-logo.gif")));
     }
-    
+
     /*
      * PR 11100
      */

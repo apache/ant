@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional.javacc;
@@ -78,7 +78,7 @@ public class JavaCC extends Task {
 
     protected static final String[] ARCHIVE_LOCATIONS =
         new String[] {
-            "JavaCC.zip", 
+            "JavaCC.zip",
             "bin/lib/JavaCC.zip",
             "bin/lib/javacc.jar",
             "javacc.jar", // used by jpackage for JavaCC 3.x
@@ -91,13 +91,13 @@ public class JavaCC extends Task {
             3,
             3,
         };
- 
+
     protected static final String COM_PACKAGE = "COM.sun.labs.";
     protected static final String COM_JAVACC_CLASS = "javacc.Main";
     protected static final String COM_JJTREE_CLASS = "jjtree.Main";
     protected static final String COM_JJDOC_CLASS = "jjdoc.JJDocMain";
 
-    protected static final String ORG_PACKAGE_3_0 = "org.netbeans.javacc.";   
+    protected static final String ORG_PACKAGE_3_0 = "org.netbeans.javacc.";
     protected static final String ORG_PACKAGE_3_1 = "org.javacc.";
     protected static final String ORG_JAVACC_CLASS = "parser.Main";
     protected static final String ORG_JJTREE_CLASS = COM_JJTREE_CLASS;
@@ -466,8 +466,8 @@ public class JavaCC extends Task {
      */
     protected static int getMajorVersionNumber(File home)
         throws BuildException {
- 
-        return 
+
+        return
             ARCHIVE_LOCATIONS_VS_MAJOR_VERSION[getArchiveLocationIndex(home)];
     }
 

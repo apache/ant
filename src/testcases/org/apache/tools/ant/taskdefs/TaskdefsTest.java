@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -22,12 +22,12 @@ import java.io.*;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de> 
+ * @author Nico Seessle <nico@seessle.de>
  *
  * @deprecated use BuildFileTest instead.
  */
-public abstract class TaskdefsTest extends BuildFileTest { 
-    
+public abstract class TaskdefsTest extends BuildFileTest {
+
     public TaskdefsTest(String name) {
         super(name);
     }

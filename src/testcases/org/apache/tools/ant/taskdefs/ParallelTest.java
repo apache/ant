@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs;
 import java.io.PrintStream;
@@ -82,10 +82,10 @@ public class ParallelTest extends BuildFileTest {
             pos = countThreads(log, pos);
         }
     }
-    
+
     /**
-     * the test result string should match the regex 
-     * <code>^(\|\d+\/(+-)*)+\|$</code> for someting like 
+     * the test result string should match the regex
+     * <code>^(\|\d+\/(+-)*)+\|$</code> for someting like
      * <code>|3/++--+-|5/+++++-----|</code>
      *
      *@returns -1 no more tests
@@ -99,30 +99,30 @@ public class ParallelTest extends BuildFileTest {
         if ((firstPipe == -1) || (beginSlash == -1) || (lastPipe == -1)) {
             return -1;
         }
-        
+
         int max = Integer.parseInt(s.substring(firstPipe + 1, beginSlash));
         int current = 0;
         int pos = beginSlash + 1;
         while (pos < lastPipe) {
             switch (s.charAt(pos++)) {
-                case '+': 
+                case '+':
                     current++;
                     break;
                 case '-':
                     current--;
                     break;
                 default:
-                    throw new AssertionFailedError("Only expect '+-' in result count, found " 
+                    throw new AssertionFailedError("Only expect '+-' in result count, found "
                         + s.charAt(--pos) + " at position " + pos);
             }
             if (current > max) {
-                throw new AssertionFailedError("Number of executing threads exceeded number allowed: " 
+                throw new AssertionFailedError("Number of executing threads exceeded number allowed: "
                     + current + " > " + max);
             }
         }
         return lastPipe;
     }
-    
+
 
     /** tests the failure of a task within a parallel construction */
     public void testFail() {
@@ -150,6 +150,6 @@ public class ParallelTest extends BuildFileTest {
             System.setErr(err);
         }
     }
-    
+
 }
 

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.util;
 
@@ -224,13 +224,13 @@ public final class DateUtils {
      * <code>yyyy-MM-dd'T'HH:mm:ss</code>
      *
      * @param datestr string to be parsed
-     * 
+     *
      * @return a java.util.Date object as parsed by the format.
      * @exception ParseException if the supplied string cannot be parsed by
      * this pattern.
      * @since Ant 1.6
      */
-    public static Date parseIso8601DateTime(String datestr) 
+    public static Date parseIso8601DateTime(String datestr)
         throws ParseException {
         return new SimpleDateFormat(ISO8601_DATETIME_PATTERN).parse(datestr);
     }
@@ -240,7 +240,7 @@ public final class DateUtils {
      * <code>yyyy-MM-dd</code>
      *
      * @param datestr string to be parsed
-     * 
+     *
      * @return a java.util.Date object as parsed by the format.
      * @exception ParseException if the supplied string cannot be parsed by
      * this pattern.
@@ -255,13 +255,13 @@ public final class DateUtils {
      * or ISO8601_DATE formats.
      *
      * @param datestr string to be parsed
-     * 
+     *
      * @return a java.util.Date object as parsed by the formats.
      * @exception ParseException if the supplied string cannot be parsed by
      * either of these patterns.
      * @since Ant 1.6
      */
-    public static Date parseIso8601DateTimeOrDate(String datestr) 
+    public static Date parseIso8601DateTimeOrDate(String datestr)
         throws ParseException {
         try {
             return parseIso8601DateTime(datestr);

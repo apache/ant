@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -26,10 +26,10 @@ import junit.framework.AssertionFailedError;
 
 /**
  * BuildFileTest testcases for org.apache.tools.ant.types.XMLCatalog
- * 
+ *
  * @see org.apache.tools.ant.types.XMLCatalogTest
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a> 
+ * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
  */
 public class XMLCatalogBuildFileTest extends BuildFileTest {
@@ -38,7 +38,7 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
     }
 
     public void tearDown() {
@@ -51,9 +51,9 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // Transform an XML file that refers to the entity into a text
     // file, stuff result into property: val1
     //
-    public void testEntityNoCatalog() { 
+    public void testEntityNoCatalog() {
         configureProject("src/etc/testcases/types/xmlcatalog.xml");
-        expectPropertySet("testentitynocatalog", "val1", 
+        expectPropertySet("testentitynocatalog", "val1",
                           "A stitch in time saves nine");
     }
 
@@ -65,9 +65,9 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // file, entity is listed in the XMLCatalog pointing to a
     // different file.  Stuff result into property: val2
     //
-    public void testEntityWithCatalog() { 
+    public void testEntityWithCatalog() {
         configureProject("src/etc/testcases/types/xmlcatalog.xml");
-        expectPropertySet("testentitywithcatalog", "val2", 
+        expectPropertySet("testentitywithcatalog", "val2",
                           "No news is good news");
     }
 
@@ -78,10 +78,10 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // Transform an XML file that contains a reference to a _second_ XML file
     // via the document() function.  The _second_ XML file refers to an entity.
     // Stuff result into the property: val3
-    // 
-    public void testDocumentNoCatalog() { 
+    //
+    public void testDocumentNoCatalog() {
         configureProject("src/etc/testcases/types/xmlcatalog.xml");
-        expectPropertySet("testdocumentnocatalog", "val3", 
+        expectPropertySet("testdocumentnocatalog", "val3",
                           "A stitch in time saves nine");
     }
 
@@ -93,10 +93,10 @@ public class XMLCatalogBuildFileTest extends BuildFileTest {
     // via the document() function.  The _second_ XML file refers to an entity.
     // The entity is listed in the XMLCatalog pointing to a different file.
     // Stuff result into the property: val4
-    // 
-    public void testDocumentWithCatalog() { 
+    //
+    public void testDocumentWithCatalog() {
         configureProject("src/etc/testcases/types/xmlcatalog.xml");
-        expectPropertySet("testdocumentwithcatalog", "val4", 
+        expectPropertySet("testdocumentwithcatalog", "val4",
                           "No news is good news");
     }
 }

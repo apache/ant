@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional;
 
@@ -381,12 +381,12 @@ public class EchoProperties extends Task {
     /**
      *  JDK 1.2 allows for the safer method
      *  <tt>Properties.store(OutputStream, String)</tt>, which throws an
-     *  <tt>IOException</tt> on an output error. 
+     *  <tt>IOException</tt> on an output error.
      *
      *@param props the properties to record
      *@param os record the properties to this output stream
      *@param header prepend this header to the property output
-     *@exception IOException on an I/O error during a write.  
+     *@exception IOException on an I/O error during a write.
      */
     protected void jdkSaveProperties(Properties props, OutputStream os,
                                      String header) throws IOException {

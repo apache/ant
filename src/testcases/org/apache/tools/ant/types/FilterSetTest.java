@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -36,12 +36,12 @@ import java.util.Hashtable;
 public class FilterSetTest extends BuildFileTest {
 
     static private final int BUF_SIZE = 32768;
-    
+
     public FilterSetTest(String name) {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
         configureProject("src/etc/testcases/types/filterset.xml");
     }
 
@@ -49,19 +49,19 @@ public class FilterSetTest extends BuildFileTest {
         executeTarget("cleanup");
     }
 
-    public void test1() { 
+    public void test1() {
         executeTarget("test1");
         assertTrue("Filterset 1 failed", compareFiles("src/etc/testcases/types/gold/filterset1.txt",
                                                       "src/etc/testcases/types/dest1.txt"));
     }
 
-    public void test2() { 
+    public void test2() {
         executeTarget("test2");
         assertTrue("Filterset 2 failed", compareFiles("src/etc/testcases/types/gold/filterset2.txt",
                                                       "src/etc/testcases/types/dest2.txt"));
     }
 
-    public void test3() { 
+    public void test3() {
         executeTarget("test3");
         assertTrue("Filterset 3 failed", compareFiles("src/etc/testcases/types/gold/filterset3.txt",
                                                       "src/etc/testcases/types/dest3.txt"));
@@ -70,7 +70,7 @@ public class FilterSetTest extends BuildFileTest {
     /**
      * This will test the recursive FilterSet.  Which means that if
      * the filter value @test@ contains another filter value, it will
-     * actually resolve.  
+     * actually resolve.
      */
     public void testRecursive() {
         String result = "it works line";
@@ -129,23 +129,23 @@ public class FilterSetTest extends BuildFileTest {
     private boolean compareFiles(String name1, String name2) {
         File file1 = new File(name1);
         File file2 = new File(name2);
-        
+
         try {
             if (!file1.exists() || !file2.exists()) {
                 System.out.println("One or both files do not exist:" + name1 + ", " + name2);
                 return false;
             }
-            
+
             if (file1.length() != file2.length()) {
-                System.out.println("File size mismatch:" + name1 + "(" + file1.length() + "), " + 
+                System.out.println("File size mismatch:" + name1 + "(" + file1.length() + "), " +
                                    name2  + "(" + file2.length() + ")");
                 return false;
             }
-            
+
             // byte - byte compare
             byte[] buffer1 = new byte[BUF_SIZE];
             byte[] buffer2 = new byte[BUF_SIZE];
-            
+
             FileInputStream fis1 = new FileInputStream(file1);
             FileInputStream fis2 = new FileInputStream(file2);
             int index = 0;
@@ -154,7 +154,7 @@ public class FilterSetTest extends BuildFileTest {
                 fis2.read(buffer2);
                 for (int i = 0; i < read; ++i, ++index) {
                     if (buffer1[i] != buffer2[i]) {
-                        System.out.println("Bytes mismatch:" + name1 + ", " + name2 + 
+                        System.out.println("Bytes mismatch:" + name1 + ", " + name2 +
                                            " at byte " + index);
                         return false;
                     }

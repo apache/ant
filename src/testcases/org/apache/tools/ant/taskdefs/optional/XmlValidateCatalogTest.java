@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 package org.apache.tools.ant.taskdefs.optional;
 
@@ -39,7 +39,7 @@ public class XmlValidateCatalogTest extends BuildFileTest {
 
 
     /**
-     * Constructor 
+     * Constructor
      *
      * @param name testname
      */
@@ -65,7 +65,7 @@ public class XmlValidateCatalogTest extends BuildFileTest {
 
     /**
      * catalogfiles fileset should be ignored
-     * if resolver.jar is not present, but will 
+     * if resolver.jar is not present, but will
      * be used if it is.  either way, test should
      * work b/c we have a nested dtd with the same
      * entity

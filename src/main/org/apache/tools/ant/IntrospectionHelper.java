@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant;
@@ -996,7 +996,7 @@ public final class IntrospectionHelper implements BuildListener {
             }
             final boolean finalIncludeProject = includeProject;
             final Constructor finalConstructor = c;
-            
+
             return new AttributeSetter() {
                 public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException, BuildException {
@@ -1017,7 +1017,7 @@ public final class IntrospectionHelper implements BuildListener {
                     }
                 }
             };
-            
+
         }
     }
 

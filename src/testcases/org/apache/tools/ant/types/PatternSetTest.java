@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2000-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.types;
@@ -30,7 +30,7 @@ import java.io.File;
  *
  * <p>This doesn't actually test much, mainly reference handling.</p>
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 
 public class PatternSetTest extends TestCase {
@@ -164,7 +164,7 @@ public class PatternSetTest extends TestCase {
                          be.getMessage());
         }
 
-        // dummy1 --> dummy2 --> dummy3 
+        // dummy1 --> dummy2 --> dummy3
         // (which holds patterns "include" and "exclude")
         p1 = new PatternSet();
         project.addReference("dummy1", p1);
@@ -185,7 +185,7 @@ public class PatternSetTest extends TestCase {
                      1, i.length);
         assertEquals("exclude", i[0]);
     }
-    
+
     public void testNestedPatternset() {
         PatternSet p = new PatternSet();
         p.setIncludes("**/*.java");

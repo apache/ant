@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 /*
@@ -41,7 +41,7 @@ import org.apache.tools.ant.Project;
  * Symlink.deleteSymlink, making a separate test redundant.
  *
  * @version $Revision$
- * @author <a href="mailto:gus.heck@olin.edu">Patrick G. Heck</a> 
+ * @author <a href="mailto:gus.heck@olin.edu">Patrick G. Heck</a>
  */
 
 public class SymlinkTest extends BuildFileTest {
@@ -67,7 +67,7 @@ public class SymlinkTest extends BuildFileTest {
         if (supportsSymlinks) {
             executeTarget("test-single");
             p = getProject();
-            assertNotNull("Failed to create file", 
+            assertNotNull("Failed to create file",
                           p.getProperty("test.single.file.created"));
             assertNotNull("Failed to create link",
                           p.getProperty("test.single.link.created"));

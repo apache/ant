@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs.optional;
@@ -23,17 +23,17 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * @author Thomas Christensen <tchristensen@nordija.com>
  */
-public class PvcsTest extends BuildFileTest { 
-    
-    public PvcsTest(String name) { 
+public class PvcsTest extends BuildFileTest {
+
+    public PvcsTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/optional/pvcs.xml");
     }
-    
-    public void test1() { 
+
+    public void test1() {
         expectBuildException("test1", "Required argument repository not specified");
     }
 
@@ -41,19 +41,19 @@ public class PvcsTest extends BuildFileTest {
         executeTarget("test2");
     }
 
-    public void test3() { 
+    public void test3() {
         executeTarget("test3");
     }
 
-    public void test4() { 
+    public void test4() {
         executeTarget("test4");
     }
 
-    public void test5() { 
+    public void test5() {
         executeTarget("test5");
     }
 
-    public void test6() { 
+    public void test6() {
         expectBuildException("test6", "Failed executing: /never/heard/of/a/directory/structure/like/this/pcli lvf -z -aw -pr//ct4serv2/pvcs/monitor /. Exception: /never/heard/of/a/directory/structure/like/this/pcli: not found");
     }
 }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -29,16 +29,16 @@ import org.apache.tools.ant.TypeAdapter;
 /**
  * @author Peter Reilly
  */
-public class TypeAdapterTest extends BuildFileTest { 
-    
-    public TypeAdapterTest(String name) { 
+public class TypeAdapterTest extends BuildFileTest {
+
+    public TypeAdapterTest(String name) {
         super(name);
-    }    
-    
-    public void setUp() { 
+    }
+
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/typeadapter.xml");
     }
-    
+
     public void testTaskAdapter() {
         expectLogContaining("taskadapter", "MyExec called");
     }
@@ -70,13 +70,13 @@ public class TypeAdapterTest extends BuildFileTest {
             log("MyTask called");
         }
     }
-    
+
     public static class MyExec {
         private Project project;
         public void setProject(Project project) {
             this.project = project;
         }
-        
+
         public void execute() {
             project.log("MyExec called");
         }
@@ -87,7 +87,7 @@ public class TypeAdapterTest extends BuildFileTest {
         public void setProject(Project project) {
             this.project = project;
         }
-        
+
         public void run() {
             project.log("MyRunnable called");
         }
@@ -98,16 +98,16 @@ public class TypeAdapterTest extends BuildFileTest {
     {
         private String execMethodName = "run";
         private Object proxy;
-    
+
         public Method getExecuteMethod(Class proxyClass) {
             try {
                 Method execMethod = proxyClass.getMethod(
                     execMethodName, null);
                 if (!Void.TYPE.equals(execMethod.getReturnType())) {
                     String message =
-                        "return type of " + execMethodName + "() should be " 
+                        "return type of " + execMethodName + "() should be "
                         + "void but was \"" + execMethod.getReturnType() +
-                        "\" in " 
+                        "\" in "
                         + proxyClass;
                     log(message, Project.MSG_WARN);
                 }
@@ -123,7 +123,7 @@ public class TypeAdapterTest extends BuildFileTest {
         public void checkProxyClass(Class proxyClass) {
             getExecuteMethod(proxyClass);
         }
-        
+
         public void setProxy(Object o) {
             getExecuteMethod(o.getClass());
             this.proxy = o;
@@ -132,7 +132,7 @@ public class TypeAdapterTest extends BuildFileTest {
         public Object getProxy() {
             return proxy;
         }
-    
+
         public void execute() {
             getProject().setProjectReference(proxy);
             Method executeMethod = getExecuteMethod(proxy.getClass());

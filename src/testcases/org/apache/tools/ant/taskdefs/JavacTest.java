@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -61,17 +61,17 @@ public class JavacTest extends TestCase {
 
         javac.setFork(true);
         assertNotNull("normal fork", javac.getJavacExecutable());
-        assertTrue("name should contain \"javac\"", 
+        assertTrue("name should contain \"javac\"",
                    javac.getJavacExecutable().indexOf("javac") > -1);
 
         project.setProperty("build.compiler", "extJavac");
         javac.setFork(false);
         assertNotNull("fork via property", javac.getJavacExecutable());
-        assertTrue("name should contain \"javac\"", 
+        assertTrue("name should contain \"javac\"",
                    javac.getJavacExecutable().indexOf("javac") > -1);
 
         project.setProperty("build.compiler", "whatever");
-        assertNull("no fork and not extJavac means no executable", 
+        assertNull("no fork and not extJavac means no executable",
                    javac.getJavacExecutable());
 
         String myJavac = "Slartibartfast";
@@ -100,13 +100,13 @@ public class JavacTest extends TestCase {
         arg.setCompiler("jikes");
         args = javac.getCurrentCompilerArgs();
         assertNotNull(args);
-        assertEquals("implementation is jikes but build.compiler is null", 
+        assertEquals("implementation is jikes but build.compiler is null",
                      0, args.length);
 
         project.setProperty("build.compiler", "jvc");
         args = javac.getCurrentCompilerArgs();
         assertNotNull(args);
-        assertEquals("implementation is jikes but build.compiler is jvc", 
+        assertEquals("implementation is jikes but build.compiler is jvc",
                      0, args.length);
 
         project.setProperty("build.compiler", "jikes");
@@ -145,11 +145,11 @@ public class JavacTest extends TestCase {
         // check defaults
         String compiler = javac.getCompiler();
         assertNotNull(compiler);
-        assertTrue("default value", 
-                   "javac1.1".equals(compiler) 
-                   || "javac1.2".equals(compiler) 
-                   || "javac1.3".equals(compiler) 
-                   || "javac1.4".equals(compiler) 
+        assertTrue("default value",
+                   "javac1.1".equals(compiler)
+                   || "javac1.2".equals(compiler)
+                   || "javac1.3".equals(compiler)
+                   || "javac1.4".equals(compiler)
                    || "classic".equals(compiler));
 
         javac.setFork(true);
@@ -184,8 +184,8 @@ public class JavacTest extends TestCase {
     }
 
     public void testCompilerAdapter() {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) 
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2) 
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
+            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
             || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
             javac.setCompiler("javac1.1");
         } else {
@@ -193,11 +193,11 @@ public class JavacTest extends TestCase {
         }
 
         javac.setDepend(true);
-        CompilerAdapter adapter = 
+        CompilerAdapter adapter =
             CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
 
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) 
-            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2) 
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
+            || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
             || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3)) {
             assertTrue(adapter instanceof Javac12);
         } else {
@@ -205,7 +205,7 @@ public class JavacTest extends TestCase {
         }
 
         javac.setFork(true);
-        adapter = 
+        adapter =
             CompilerAdapterFactory.getCompiler(javac.getCompiler(), javac);
         assertTrue(adapter instanceof JavacExternal);
     }

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant;
@@ -22,22 +22,22 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * @author Erik Hatcher
  */
-public class ImmutableTest extends BuildFileTest { 
+public class ImmutableTest extends BuildFileTest {
 
-    public ImmutableTest(String name) { 
+    public ImmutableTest(String name) {
         super(name);
     }
-    
-    public void setUp() { 
+
+    public void setUp() {
         configureProject("src/etc/testcases/core/immutable.xml");
     }
-    
+
     // override allowed on <available>
-    public void test1() { 
+    public void test1() {
         executeTarget("test1");
         assertEquals("override", project.getProperty("test"));
     }
-    
+
     // ensure <tstamp>'s new prefix attribute is working
     public void test2() {
         executeTarget("test2");

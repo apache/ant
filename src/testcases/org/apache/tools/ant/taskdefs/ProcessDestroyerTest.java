@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 /*
@@ -38,13 +38,13 @@ public class ProcessDestroyerTest extends TestCase {
     public ProcessDestroyerTest(String arg0) {
         super(arg0);
     }
-    
+
     public void testProcessDestroyer(){
         if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
             || JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)) {
             return;
         }
-        
+
         try {
             ProcessDestroyer processDestroyer = new ProcessDestroyer();
             Process process =
@@ -53,12 +53,12 @@ public class ProcessDestroyerTest extends TestCase {
                         + System.getProperty("java.class.path")
                         + " "
                         + getClass().getName());
-            
+
             assertFalse("Not registered as shutdown hook",
                         processDestroyer.isAddedAsShutdownHook());
 
             processDestroyer.add(process);
-            
+
             assertTrue("Registered as shutdown hook",
                        processDestroyer.isAddedAsShutdownHook());
             try {
@@ -66,14 +66,14 @@ public class ProcessDestroyerTest extends TestCase {
             } finally {
                 processDestroyer.remove(process);
             }
-            
+
             assertFalse("Not registered as shutdown hook",
                         processDestroyer.isAddedAsShutdownHook());
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
+
     public static void main(String[] args){
         new ProcessDestroyerTest("testProcessDestroyer").testProcessDestroyer();
         try{

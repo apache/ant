@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2003-2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.ant.taskdefs;
@@ -25,14 +25,14 @@ public class TouchTest extends BuildFileTest {
         super(name);
     }
 
-    public void setUp() { 
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/touch.xml");
     }
-    
-    public void tearDown() { 
+
+    public void tearDown() {
         executeTarget("cleanup");
     }
-    
+
     /**
      * No real test, simply checks whether the dateformat without
      * seconds is accepted - by erroring out otherwise.

@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright  2001-2002,2004 Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- * 
+ *
  */
 
 package org.apache.tools.zip;
@@ -22,7 +22,7 @@ import junit.framework.TestCase;
 /**
  * JUnit 3 testcases for org.apache.tools.zip.ZipEntry.
  *
- * @author Stefan Bodewig 
+ * @author Stefan Bodewig
  */
 public class ZipEntryTest extends TestCase {
 
@@ -90,13 +90,13 @@ public class ZipEntryTest extends TestCase {
         assertEquals(0, ze.getPlatform());
         ze.setUnixMode(0755);
         assertEquals(3, ze.getPlatform());
-        assertEquals(0755, 
+        assertEquals(0755,
                      (ze.getExternalAttributes() >> 16) & 0xFFFF);
         assertEquals(0, ze.getExternalAttributes()  & 0xFFFF);
 
         ze.setUnixMode(0444);
         assertEquals(3, ze.getPlatform());
-        assertEquals(0444, 
+        assertEquals(0444,
                      (ze.getExternalAttributes() >> 16) & 0xFFFF);
         assertEquals(1, ze.getExternalAttributes()  & 0xFFFF);
 
@@ -104,13 +104,13 @@ public class ZipEntryTest extends TestCase {
         assertEquals(0, ze.getPlatform());
         ze.setUnixMode(0777);
         assertEquals(3, ze.getPlatform());
-        assertEquals(0777, 
+        assertEquals(0777,
                      (ze.getExternalAttributes() >> 16) & 0xFFFF);
         assertEquals(0x10, ze.getExternalAttributes()  & 0xFFFF);
 
         ze.setUnixMode(0577);
         assertEquals(3, ze.getPlatform());
-        assertEquals(0577, 
+        assertEquals(0577,
                      (ze.getExternalAttributes() >> 16) & 0xFFFF);
         assertEquals(0x11, ze.getExternalAttributes()  & 0xFFFF);
     }
