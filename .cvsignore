@@ -7,5 +7,5 @@ distribution
 *.ipr
 *.iws
 *.pif
-velocity.log
+velocity.log*
 
