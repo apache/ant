@@ -3,6 +3,7 @@ Instructions for making a Release:
 Authors: Conor MacNeill
          Stefan Bodewig
          Magesh Umasankar
+         Antoine Levy-Lambert
 
 Note: This document was updated in the context of releasing Ant 1.6.
       Please interpret the branch names, tags, etc. according to
@@ -172,6 +173,8 @@ Note: This document was updated in the context of releasing Ant 1.6.
     * Make sure that the symbolic link README.html points to the new
       RELEASE-NOTES.
 
+    (**)
+
 18. Update the ant.apache.org site :
 
     running cvs update *.html under /www/ant.apache.org should update the
@@ -212,6 +215,12 @@ Note: This document was updated in the context of releasing Ant 1.6.
 
 (*)  the xdocs need to be updated on both the branch and the HEAD revision
      because traditionally the ant.apache.org web site reflects the HEAD
-     revisio of the xdocs, but the users downloading a distribution will get
+     revision of the xdocs, but the users downloading a distribution will get
      the xdocs and the generated html from the branch and will complain if there
      are discrepancies in version numbers.
+
+(**) Mirrors : the srcdownload.html and bindownload.html each list a number of
+     mirrors. For ant 1.6.0 the mirrors picked up the new version in 8 hours
+     or less, the release having been done at midnight on Dec 18th, the
+     mirrors had it on Dec 19th at 8 am. The srcdownload/bindownload pages both
+     contain a note advising users to be patient immediately after the release.
