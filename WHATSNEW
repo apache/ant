@@ -293,6 +293,10 @@ Other changes:
 * <javadoc> now supports a source attribute to enable javadoc to
   handle assertions present in JDK 1.4 source code.
 
+* <replace> supports a new replacefilterfile attribute that
+  automatically turns all properties of a given file into
+  replacefilters.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

@@ -38,8 +38,9 @@ must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
   <tr>
     <td valign="top">token</td>
     <td valign="top">the token which must be replaced.</td>
-    <td valign="top" align="center">Yes, unless a nested <code>replacetoken</code>
-      element is used.</td>
+    <td valign="top" align="center">Yes, unless a nested
+    <code>replacetoken</code> element or the replacefilterfile
+    attribute is used.</td>
   </tr>
   <tr>
     <td valign="top">value</td>
@@ -59,6 +60,13 @@ must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
     <td valign="top">propertyFile</td>
     <td valign="top">valid property file from which properties specified using nested <code>&lt;replacefilter&gt;</code> elements are drawn.</td>
     <td valign="top" align="center">Yes only if <i>property</i> attribute of <code>&lt;replacefilter&gt;</code> is used.</td>
+  </tr>
+  <tr>
+    <td valign="top">replacefilterfile</td>
+    <td valign="top">valid property file.  Each property will be
+    treated as a replacefilter where <code>token</code> is the name of
+    the property and <code>value</code> is the properties value.
+    <td valign="top" align="center">No.</td>
   </tr>
   <tr>
     <td valign="top">includes</td>
@@ -169,7 +177,7 @@ token]]>&lt;/replacevalue&gt;
 <p><b>Note:</b> It is possible to use either the <i>token</i>/<code>&lt;replacetoken&gt;</code> and <i>value</i>/<code>&lt;replacevalue&gt;</code> attributes/elements, the nested replacefilter elements, or both in the same operation.
 </p>
 <hr>
-<p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

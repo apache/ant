@@ -65,7 +65,8 @@ import java.io.File;
  *
  * @author haas@softwired.ch
  *
- * @deprecated The rename task is deprecated.  Use move instead.
+ * @deprecated The rename task is deprecated since Ant 1.2.  Use move instead.
+ * @since Ant 1.1
  */
 public class Rename extends Task {
 
@@ -91,7 +92,7 @@ public class Rename extends Task {
     }
 
     /**
-     * Sets wheter an existing file should be replaced.
+     * Sets whether an existing file should be replaced.
      * @param replace <code>on</code>, if an existing file should be replaced.
      */
     public void setReplace(String replace) {
@@ -120,7 +121,7 @@ public class Rename extends Task {
                 throw new BuildException("Unable to remove existing file " +
                       dest);
             }
-       }
+        }
         if (!src.renameTo(dest)) {
             throw new BuildException("Unable to rename " + src + " to " +
                   dest);
