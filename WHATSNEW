@@ -61,6 +61,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* The start and end tokens for <translate> may now be longer than a 
+  single character.
+
 * <setproxy> lets you set the username and password for proxies that want authentication
 
 * <loadproperties> has a new encoding attribute.

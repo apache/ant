@@ -74,7 +74,7 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Translates text embedded in files using Resource Bundle files.
  *
- * @author Magesh Umasankar
+ * @author Magesh Umasankar, Don Brown
  */
 public class Translate extends MatchingTask {
 
@@ -256,21 +256,9 @@ public class Translate extends MatchingTask {
                                      getLocation());
         }
 
-        if (startToken.length() != 1) {
-            throw new BuildException(
-                "The starttoken attribute must be a single character.",
-                getLocation());
-        }
-
         if (endToken == null) {
             throw new BuildException("The endtoken attribute must be set.",
                                      getLocation());
-        }
-
-        if (endToken.length() != 1) {
-            throw new BuildException(
-                "The endtoken attribute must be a single character.",
-                getLocation());
         }
 
         if (bundleLanguage == null) {
@@ -391,7 +379,7 @@ public class Translate extends MatchingTask {
      */
     private void processBundle(final String bundleFile, final int i,
                                final boolean checkLoaded) throws BuildException {
-        final File propsFile = new File(bundleFile + ".properties");
+        final File propsFile = getProject().resolveFile(bundleFile + ".properties");
         FileInputStream ins = null;
         try {
             ins = new FileInputStream(propsFile);
@@ -520,23 +508,25 @@ public class Translate extends MatchingTask {
                         BufferedReader in
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
+                        int stLength = startToken.length();
+                        int etLength = endToken.length();
                         while ((line = in.readLine()) != null) {
                             int startIndex = -1;
                             int endIndex = -1;
 outer:                      while (true) {
-                                startIndex = line.indexOf(startToken, endIndex + 1);
+                                startIndex = line.indexOf(startToken, endIndex + etLength);
                                 if (startIndex < 0 ||
-                                    startIndex + 1 >= line.length()) {
+                                    startIndex + stLength >= line.length()) {
                                     break;
                                 }
-                                endIndex = line.indexOf(endToken, startIndex + 1);
+                                endIndex = line.indexOf(endToken, startIndex + stLength);
                                 if (endIndex < 0) {
                                     break;
                                 }
-                                String matches = line.substring(startIndex + 1,
+                                String matches = line.substring(startIndex + stLength,
                                                                 endIndex);
-                                    //If there is a white space or = or :, then
-                                    //it isn't to be treated as a valid key.
+                                //If there is a white space or = or :, then
+                                //it isn't to be treated as a valid key.
                                 for (int k = 0; k < matches.length(); k++) {
                                     char c = matches.charAt(k);
                                     if (c == ':' ||
@@ -558,9 +548,9 @@ outer:                      while (true) {
                                 }
                                 line = line.substring(0, startIndex)
                                     + replace
-                                    + line.substring(endIndex + 1);
-                                endIndex = startIndex + replace.length() + 1;
-                                if (endIndex + 1 >= line.length()) {
+                                    + line.substring(endIndex + etLength);
+                                endIndex = startIndex + replace.length() + etLength;
+                                if (endIndex + etLength >= line.length()) {
                                     break;
                                 }
                             }
