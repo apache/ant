@@ -96,7 +96,6 @@ import org.apache.tools.ant.types.selectors.SizeSelector;
 
 public abstract class MatchingTask extends Task implements SelectorContainer {
 
-    protected boolean useDefaultExcludes = true;
     protected FileSet fileset = new FileSet();
 
     /**
@@ -214,7 +213,7 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      *                           shouldn't be used.
      */
     public void setDefaultexcludes(boolean useDefaultExcludes) {
-        this.useDefaultExcludes = useDefaultExcludes;
+        fileset.setDefaultexcludes(useDefaultExcludes);
     }
 
     /**
@@ -222,7 +221,6 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
      */
     protected DirectoryScanner getDirectoryScanner(File baseDir) {
         fileset.setDir(baseDir);
-        fileset.setDefaultexcludes(useDefaultExcludes);
         return fileset.getDirectoryScanner(getProject());
     }
 
