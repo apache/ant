@@ -34,6 +34,9 @@ Fixed bugs:
 
 * <fixcrlf> would fail for files that contained lines longer than 8kB.
 
+* Some junit formatters incorrectly assumed that all testcases would
+  inherit from junit.framework.TestCase.
+
 Other changes:
 --------------
 

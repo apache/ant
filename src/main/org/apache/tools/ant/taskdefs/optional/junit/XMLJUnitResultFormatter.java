@@ -195,7 +195,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
         Element currentTest = doc.createElement(TESTCASE);
         currentTest.setAttribute(ATTR_NAME, 
-                                 JUnitVersionHelper.getTestCaseName((TestCase) t));
+                                 JUnitVersionHelper.getTestCaseName(t));
         rootElement.appendChild(currentTest);
         testElements.put(t, currentTest);
     }

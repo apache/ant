@@ -200,7 +200,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
     public void endTest(Test test) {
         synchronized (wri) {
             wri.print("Testcase: " 
-                      + JUnitVersionHelper.getTestCaseName((TestCase) test));
+                      + JUnitVersionHelper.getTestCaseName(test));
             if (Boolean.TRUE.equals(failed.get(test))) {
                 return;
             }

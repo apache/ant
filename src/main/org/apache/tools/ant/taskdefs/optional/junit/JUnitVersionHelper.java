@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.lang.reflect.Method;
 
+import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
@@ -85,8 +86,8 @@ public class JUnitVersionHelper {
      * access to the name of a TestCase via reflection that is
      * supposed to work with version before and after JUnit 3.7.
      */
-    public static String getTestCaseName(TestCase t) {
-        if (testCaseName != null) {
+    public static String getTestCaseName(Test t) {
+        if (t instanceof TestCase && testCaseName != null) {
             try {
                 return (String) testCaseName.invoke(t, new Object[0]);
             } catch (Throwable e) {}
