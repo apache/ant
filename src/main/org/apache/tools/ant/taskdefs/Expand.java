@@ -201,7 +201,6 @@ public class Expand extends MatchingTask {
             }
         }
 
-        log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
         File f = fileUtils.resolveFile(dir, entryName);
         try {
             if (!overwrite && f.exists()
