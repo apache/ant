@@ -54,6 +54,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Commandline;
 import java.io.File;
 
 /**
@@ -208,9 +209,9 @@ public class SignJar extends Task {
         sb.append("\" ");
 
         log("Signing Jar : " + (new File(jar)).getAbsolutePath());
-        final Exec cmd = (Exec) project.createTask("exec");
-        cmd.setCommand(sb.toString());
-        cmd.setFailonerror("true");
+        final ExecTask cmd = (ExecTask) project.createTask("exec");
+        cmd.setCommand(new Commandline(sb.toString()));
+        cmd.setFailonerror(true);
         cmd.setTaskName( getTaskName() );
         cmd.execute();
     } 

@@ -54,6 +54,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Commandline;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -326,10 +327,10 @@ public class GenerateKey extends Task {
         } 
 
         log("Generating Key for " + alias );
-        final Exec cmd = (Exec) project.createTask("exec");
-        cmd.setCommand(sb.toString());
-		cmd.setFailonerror("true");
-		cmd.setTaskName( getTaskName() );
+        final ExecTask cmd = (ExecTask) project.createTask("exec");
+        cmd.setCommand(new Commandline(sb.toString()));
+        cmd.setFailonerror(true);
+        cmd.setTaskName( getTaskName() );
         cmd.execute();
     } 
 }
