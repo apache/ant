@@ -5,7 +5,7 @@
   <body>
     <h2><a name="namespace">XML Namespace Support</a></h2>
     Ant 1.6 introduces support for XML namespaces. 
-    <h2>History</h2>
+    <h3>History</h3>
     
     <p>
       All releases of Ant prior to Ant 1.6 do not support XML namespaces.
@@ -30,7 +30,7 @@
       IIRC, and using any attribute starting with "xml" is actually strongly
       discouraged by the XML spec to reserve such names for future use.
     </p>
-    <h2>Motivation</h2>
+    <h3>Motivation</h3>
 
     <p>In build files using a lot of custom and third-party tasks, it is
       easy to get into name conflicts. When individual types are defined, the
@@ -39,7 +39,7 @@
       libraries of types using the <code>&lt;typedef&gt;</code> 'resource' attribute, the
       build file writer has no chance to override or even prefix the names
       supplied by the library. </p>
-    <h2>Assigning Namespaces</h2>
+    <h3>Assigning Namespaces</h3>
 
     <p>
       Adding a 'prefix' attribute to <code>&lt;typedef&gt;</code> might have been enough,
@@ -78,7 +78,7 @@
       Here, the namespace is set as the default namespace for the <code>&lt;task&gt;</code>
       element and all its descendants.
     </p>
-    <h2>Default namespace</h2>
+    <h3>Default namespace</h3>
     <p>
       The default namespace used by Ant is "antlib:org.apache.tools.ant".
     </p>
@@ -91,7 +91,7 @@
 
      
 
-    <h2>Namespaces and Nested Elements</h2>
+    <h3>Namespaces and Nested Elements</h3>
 
     <p>
       Almost always in Ant 1.6, elements nested inside a namespaced
@@ -125,7 +125,7 @@
  &lt;/my:task&gt;
 </pre>
       
-    <h2>Namespaces and Attributes</h2>
+    <h3>Namespaces and Attributes</h3>
 
     <p>
       Attributes are only used to configure the element they belong to if:
@@ -164,7 +164,7 @@
       XML-Schema (whether that's a good thing or not). The same is not true
       for elements from unknown namespaces, which result in a error.
     </p>
-    <h2>Mixing Elements from Different Namespaces</h2>
+    <h3>Mixing Elements from Different Namespaces</h3>
 
     <p>Now comes the difficult part: elements from different namespaces can
       be woven together under certain circumstances. This has a lot to do
@@ -192,7 +192,7 @@
       and elements like the builtin Ant conditions and selectors are not
       really types in 1.6. This is expected to change in Ant 1.7.
     </p>
-    <h2>Namespaces and Antlib</h2>
+    <h3>Namespaces and Antlib</h3>
 
     <p>
       The new <a href="antlib.html">AntLib</a>
