@@ -141,6 +141,8 @@ Other changes:
 
 * <sshexec> now also captures stderr output.  Bugzilla Report 28349.
 
+* <xslt> now supports a nested <mapper>.  Bugzilla Report 11249.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 =============================================
 

@@ -42,6 +42,21 @@
       </style>
   </target>
 
+  <target name="testDefaultMapper">
+    <property name="value" value="myvalue"/>
+    <style style="printParams.xsl" destDir="${out.dir}" basedir=".">
+      <param name="set" expression="${value}"/>
+    </style>
+  </target>
+
+  <target name="testCustomMapper">
+    <property name="value" value="myvalue"/>
+    <style style="printParams.xsl" destDir="${out.dir}" basedir=".">
+      <param name="set" expression="${value}"/>
+      <mapper type="glob" from="data.*" to="out.*"/>
+    </style>
+  </target>
+
   <target name="testNewerStylesheet">
       <antcall target="copyXsl">
         <param name="xsl.value" value="old-value"/>

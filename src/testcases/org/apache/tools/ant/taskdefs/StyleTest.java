@@ -82,6 +82,20 @@ public class StyleTest extends BuildFileTest {
     }
 
 
+    public void testDefaultMapper() throws Exception {
+        assertTrue(!getProject().resolveFile("out/data.html").exists());
+        expectFileContains("testDefaultMapper",
+                           "out/data.html",
+                           "set='myvalue'");
+    }
+
+    public void testCustomMapper() throws Exception {
+        assertTrue(!getProject().resolveFile("out/out.xml").exists());
+        expectFileContains("testCustomMapper",
+                           "out/out.xml",
+                           "set='myvalue'");
+    }
+
     // *************  copied from ConcatTest  *************
 
     // ------------------------------------------------------
