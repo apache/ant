@@ -99,15 +99,27 @@ public class ProjectHelper2 extends ProjectHelper {
     public void parse(Project project, Object source)
             throws BuildException
     {
-        AntXmlContext context=new AntXmlContext(project, this);
-        
-        project.addReference( "ant.parsing.context", context );
-        project.addReference( "ant.targets", context.targetVector );
+        this.getImportStack().addElement(source);
+        AntXmlContext context=null;
+        context=(AntXmlContext)project.getReference("ant.parsing.context");
+//        System.out.println("Parsing " + getImportStack().size() + " " +
+//                context+ " " + getImportStack() );
+        if( context==null ) {
+            context=new AntXmlContext(project, this);
+            project.addReference( "ant.parsing.context", context );
+            project.addReference( "ant.targets", context.targetVector );
+        }
 
-        parse(project, source,new RootHandler(context));
-
-        // Execute the top-level target
-        context.implicitTarget.execute();
+        if( this.getImportStack().size() > 1 ) {
+            // we are in an imported file.
+            context.ignoreProjectTag=true;
+            parse(project, source, new RootHandler(context));
+        } else {
+            // top level file
+            parse(project, source,new RootHandler(context));
+            // Execute the top-level target
+            context.implicitTarget.execute();
+        }
     }
 
     /**
@@ -858,7 +870,11 @@ public class ProjectHelper2 extends ProjectHelper {
             // This is a nop in UE: task.init();
 
             wrapper=new RuntimeConfigurable( task, task.getTaskName());
-            wrapper.setAttributes2(attrs);
+
+            for (int i = 0; i < attrs.getLength(); i++) {
+                wrapper.setAttribute( attrs.getQName(i),
+                        attrs.getValue(i));
+            }
 
             if (parentWrapper != null) {
                 parentWrapper.addChild(wrapper);
