@@ -747,15 +747,14 @@ public class Javac extends MatchingTask {
         File tmpFile = null;
 
         try {
-            String myos = System.getProperty("os.name");
-
-            // Windows has a 32k limit on total arg size, so
-            // create a temporary file to store all the arguments
-
-            // There have been reports that 300 files could be compiled
-            // so 250 is a conservative approach
-            if (myos.toLowerCase().indexOf("windows") >= 0 
-                && args.length > 250) {
+            /*
+             * Many system have been reported to get into trouble with 
+             * long command lines - no, not only Windows 8^).
+             *
+             * POSIX seems to define a lower limit of 4k, so use a temporary 
+             * file if the total length of the command line exceeds this limit.
+             */
+            if (Commandline.toString(args).length() > 4096) {
                 PrintWriter out = null;
                 try {
                     tmpFile = new File("jikes"+(new Random(System.currentTimeMillis())).nextLong());
