@@ -25,8 +25,8 @@ import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.FileScanner;
-import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.ScannerUtil;
 
 /**

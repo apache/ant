@@ -8,7 +8,7 @@
 package org.apache.tools.todo.taskdefs.archive;
 
 import java.io.File;
-import org.apache.tools.todo.types.FileSet;
+import org.apache.myrmidon.framework.FileSet;
 
 /**
  * A ZipFileSet is a FileSet with extra attributes useful in the context of
@@ -57,7 +57,7 @@ public class ZipFileSet
      * Set the source Zip file for the zipfileset. Prevents both "dir" and "src"
      * from being specified.
      *
-     * @param srcFile The zip file from which to extract entries.
+     * @param src The zip file from which to extract entries.
      */
     public void setSrc( final File src )
     {

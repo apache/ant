@@ -14,16 +14,12 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Execute;
-import org.apache.tools.todo.taskdefs.MatchingTask;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.ScannerUtil;
 
 /**

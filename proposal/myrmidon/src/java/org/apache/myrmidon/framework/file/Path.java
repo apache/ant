@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.DataType;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.myrmidon.framework.file.ArrayFileList;
 import org.apache.myrmidon.framework.file.FileList;
 import org.apache.tools.todo.util.FileUtils;
-import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.ScannerUtil;
 

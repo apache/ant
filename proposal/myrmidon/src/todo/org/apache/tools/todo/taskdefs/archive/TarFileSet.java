@@ -7,7 +7,7 @@
  */
 package org.apache.tools.todo.taskdefs.archive;
 
-import org.apache.tools.todo.types.FileSet;
+import org.apache.myrmidon.framework.FileSet;
 
 public class TarFileSet
     extends FileSet

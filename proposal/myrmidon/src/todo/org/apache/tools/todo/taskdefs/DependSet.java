@@ -13,8 +13,8 @@ import java.util.Date;
 import java.util.Iterator;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.types.ScannerUtil;
 import org.apache.tools.todo.types.SimpleFileList;
 

@@ -20,8 +20,8 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.FileSet;
 import org.apache.myrmidon.framework.file.Path;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.ScannerUtil;
 
 /**

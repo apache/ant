@@ -16,10 +16,10 @@ import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.myrmidon.framework.file.FileListUtil;
-import org.apache.tools.todo.types.FileSet;
 import org.apache.tools.todo.util.FileUtils;
 import org.apache.aut.nativelib.PathUtil;
 

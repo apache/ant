@@ -16,9 +16,9 @@ import java.util.ArrayList;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.FileSet;
 import org.apache.myrmidon.framework.file.Path;
 import org.apache.aut.nativelib.PathUtil;
 
