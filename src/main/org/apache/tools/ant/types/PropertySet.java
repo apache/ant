@@ -19,8 +19,10 @@ package org.apache.tools.ant.types;
 
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Stack;
@@ -202,6 +204,9 @@ public class PropertySet extends DataType {
      * @return
      */
     public Properties getProperties() {
+        if (isReference()) {
+            return getRef().getProperties();
+        }
         Set names = null;
         Project prj = getProject();
         Hashtable props =
@@ -209,11 +214,7 @@ public class PropertySet extends DataType {
 
         if (getDynamic() || cachedNames == null) {
             names = new HashSet();
-            if (isReference()) {
-                getRef().addPropertyNames(names, props);
-            } else {
-                addPropertyNames(names, props);
-            }
+            addPropertyNames(names, props);
             // Add this PropertySet's nested PropertySets' property names.
             for (Enumeration e = setRefs.elements(); e.hasMoreElements();) {
                 PropertySet set = (PropertySet) e.nextElement();
@@ -375,5 +376,26 @@ public class PropertySet extends DataType {
             return new String[] {ALL, SYSTEM, COMMANDLINE};
         }
     }
-} // END class PropertySet
 
+    /**
+     * A debug toString.
+     * This gets a comma separated list of key=value pairs for
+     * the properties in the set.
+     * The output order is sorted according to the keys' <i>natural order</i>.
+     * @return a string rep of this object
+     */
+    public String toString() {
+        StringBuffer b = new StringBuffer();
+        TreeMap sorted = new TreeMap(getProperties());
+        for (Iterator i = sorted.entrySet().iterator(); i.hasNext();) {
+            Map.Entry e = (Map.Entry) i.next();
+            if (b.length() != 0) {
+                b.append(", ");
+            }
+            b.append(e.getKey().toString());
+            b.append("=");
+            b.append(e.getValue().toString());
+        }
+        return b.toString();
+    }
+}
