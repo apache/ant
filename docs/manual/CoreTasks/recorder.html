@@ -1,0 +1,158 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+
+<body>
+
+<h2><a name="log">Recorder</a></h2>
+<h3>Description</h3>
+<p>A recorder is a listener to the current build process that records the
+output to a file.
+
+<p>Several recorders can exist at the same time.  Each recorder is
+associated with a file.  The filename is used as a unique identifier for
+the recorders.  The first call to the recorder task with an unused filename
+will create a recorder (using the parameters provided) and add it to the
+listeners of the build.  All subsiquent calls to the recorder task using
+this filename will modify that recorders state (recording or not) or other
+properties (like logging level).
+
+<p>Some technical issues: the file's print stream is flushed for "finished"
+events (buildFinished, targetFinished and taskFinished), and is closed on
+a buildFinished event.
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the file this logger is associated with.</td>
+    <td align="center" valign="middle">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">action</td>
+    <td valign="top">This tells the logger what to do: should it start
+    recording or stop?  The first time that the recorder task is called for
+    this logfile, and if this attribute is not provided, then the default
+    for this attribute is "start".  If this attribute is not provided on
+    subsiquest calls, then the state remains as previous.
+    [Values = {start|stop}, Default = no state change]</td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+  <tr>
+    <td valign="top">append</td>
+    <td valign="top">Should the recorder append to a file, or create a new
+    one? This is only applicable the first time this task is called for
+    this file.  [Vaules = {yes|no}, Default=yes]</td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+  <tr>
+    <td valign="top">loglevel</td>
+    <td valign="top">At what logging level should this recorder instance
+    record to?  This is not a once only parameter (like <code>append</code>
+    is) -- you can increase or decrease the logging level as the build process
+    continues.  [Vaules= {error|warn|info|verbose|debug}, Default = no change]
+    </td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+<p>The following build.xml snippit is an example of how to use the recorder
+to record just the <code>&lt;javac&gt;</code> task:
+<pre>
+    ...
+    &lt;compile &gt;
+        &lt;recorder name="log.txt" action="start" /&gt;
+        &lt;javac ...
+        &lt;recorder name="log.txt" action="stop" /&gt;
+    &lt;compile/&gt;
+    ...
+</pre>
+
+<p>The following two calls to <code>&lt;recorder&gt;</code> set up two
+recorders: one to file "records-simple.log" at logging level <code>info</code>
+(the default) and one to file "ISO.log" using logging level of
+<code>verbose</code>.
+<pre>
+    ...
+    &lt;recorder name="records-simple.log" /&gt;
+    &lt;recorder name="ISO.log" loglevel="verbose" /&gt;
+    ...
+</pre>
+
+<h3>Notes</h3>
+<p>There is some funtionality that I would like to be able to add in the
+future.  They include things like the following:
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">messageprefix</td>
+    <td valign="top">Whether or not to include the message prefixes (things
+    like the name of the tasks or targets, etc). This has the same effect as
+    the <code>-emacs</code> command line parameter does to the screen output.
+    [yes|no]</td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+  <tr>
+    <td valign="top">listener</td>
+    <td valign="top">A classname of a build listener to use from this point
+    on instead of the default listener.</td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+  <tr>
+    <td valign="top">includetarget</td>
+    <td valign="top" rowspan=2>A comma-separated list of targets to automaticly
+    record.  If this value is "all", then all targets are recorded.
+    [Default = all]</td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+  <tr>
+    <td valign="top">excludetarget</td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+  <tr>
+    <td valign="top">includetask</td>
+    <td valign="top" rowspan=2>A comma-separated list of task to automaticly
+    record or not.  This could be difficult as it could conflict with the
+    <code>includetarget/excludetarget</code>.  (e.g.:
+    <code>includetarget="compile" exlcudetask="javac"</code>, what should
+    happen?)</td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+  <tr>
+    <td valign="top">excludetask</td>
+    <td align="center" valign="middle">no</td>
+  </tr>
+  <tr>
+    <td valign="top">action</td>
+    <td valign="top">add greater flexability to the action attribute.  Things
+    like <code>close</code> to close the print stream.</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top"></td>
+    <td valign="top"></td>
+    <td align="center" valign="top"></td>
+  </tr>
+</table>
+
+
+
+<hr><p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

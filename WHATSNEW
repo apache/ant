@@ -13,7 +13,7 @@ Changes that could break older environments:
 Other changes:
 --------------
 
-* New tasks: ear, p4counter
+* New tasks: ear, p4counter, recorder
 
 * Ant now uses JAXP 1.1
 
