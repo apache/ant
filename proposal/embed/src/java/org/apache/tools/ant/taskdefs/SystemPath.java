@@ -120,24 +120,29 @@ public class SystemPath extends Task {
      */
     private void initSystemLoader(Path path) {
         try {
-            if( project.getReference( SYSTEM_LOADER_REF ) != null )
-                return; // already done that.
+            //if( project.getReference( SYSTEM_LOADER_REF ) != null )
+            //    return; // already done that.
             
             // reverse loader
-            AntClassLoader acl=new AntClassLoader( this.getClass().getClassLoader(), true );
-            acl.addLoaderPackageRoot( "org.apache.tools.ant.taskdefs.optional");
-            project.addReference( SYSTEM_LOADER_REF, acl );
-            
-            
+            AntClassLoader acl=(AntClassLoader)project.getReference(SYSTEM_LOADER_REF);
+            if( acl==null ) {
+                acl=new AntClassLoader( this.getClass().getClassLoader(), true );
+                acl.addLoaderPackageRoot( "org.apache.tools.ant.taskdefs.optional");
+                project.addReference( SYSTEM_LOADER_REF, acl );
+            }
+
+
             String list[]=path.list();
             for( int i=0; i<list.length; i++ ) {
                 File f= new File( list[i] );
                 if( f.exists() ) {
                     acl.addPathElement(f.getAbsolutePath());
+                    log("Adding to class loader " +  acl + " " + f.getAbsolutePath(),
+                        Project.MSG_DEBUG);
                 }
             }
             
-            // XXX find the classpath
+            // XXX find the classpath - add the optional jars.
             String antHome=project.getProperty( "ant.home" );
             File optionalJar=new File( antHome + "/lib/optional.jar" );
             if( optionalJar.exists() )
