@@ -75,7 +75,7 @@
 
   <target name="test15">
     <available property="test" 
-               classname=""/>
+               classname="org.apache.tools.ant.taskdefs.this_class_does_not_exist"/>
   </target>
 
 </project>

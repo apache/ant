@@ -103,7 +103,9 @@ public class Available extends Task {
     }
 
     public void setClassname(String classname) {
-        this.classname = classname;
+        if (!"".equals(classname)) {
+            this.classname = classname;
+        }
     }
 
     public void setFile(File file) {
