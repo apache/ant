@@ -195,9 +195,9 @@
       <exclude name="${optional.package}/perforce/*.java" unless="jakarta.oro.present" />
       <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
       <exclude name="${optional.package}/junit/XMLResultAggregator.java"
-               unless="trax.present" />
+               unless="xalan.present" />
       <exclude name="${optional.package}/junit/AggregateTransformer.java"
-               unless="trax.present" />
+               unless="xalan.present" />
     </javac>
     
     <copy todir="${build.classes}">
@@ -293,11 +293,11 @@
       <fileset dir="${lib.dir}">
         <include name="*.jar" />
         <include name="*.zip" />
-        <exclude name="ant.jar"/>
-        <exclude name="optional.jar"/>
       </fileset>
     </copy>
 
+    <copy todir="${dist.lib}" file="${lib.dir}/optional/README"/>
+    
     <copy todir="${dist.docs}">
       <fileset dir="${docs.dir}"/>
     </copy>
@@ -345,6 +345,7 @@
       <fileset dir="${lib.dir}">
         <include name="*.jar" />
         <include name="*.zip" />
+        <include name="optional/README"/>
       </fileset>
     </copy>
 
