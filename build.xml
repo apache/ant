@@ -158,7 +158,9 @@
     <available property="trax.impl.present"
                resource="META-INF/services/javax.xml.transform.TransformerFactory"
                classpathref="classpath"/>
-               
+    <available property="xalan.envcheck"
+               classname="org.apache.xalan.xslt.EnvironmentCheck"
+               classpathref="classpath" />
     <condition property="javamail.complete">
       <and>
         <available classname="javax.activation.DataHandler"
@@ -642,7 +644,7 @@
     </javac>
   </target>
 
-  <target name="dump-info">
+  <target name="dump-info" depends="xml-check">
     <echo message="java.vm.info=${java.vm.info}" />
     <echo message="java.vm.name=${java.vm.name}" />
     <echo message="java.vm.vendor=${java.vm.vendor}" />
@@ -652,6 +654,11 @@
     <echo message="os.version=${os.version}" />
     <echo message="file.encoding=${file.encoding}" />
     <echo message="user.language=${user.language}" />
+  </target>
+
+  <!-- helper class from Xalan2 to check for jar versioning of xml/xsl processors -->
+  <target name="xml-check" depends="check_for_optional_packages" if="xalan.envcheck">
+    <java classname="org.apache.xalan.xslt.EnvironmentCheck"/>
   </target>
 
   <!-- 
