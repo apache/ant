@@ -97,7 +97,7 @@ public class Jasper41Mangler implements JspMangler {
                 modifiedClassName.append(mangleChar(ch));
             }
         }
-        return modifiedClassName.toString()+".java";
+        return modifiedClassName.toString();
     }
 
     /**
