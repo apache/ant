@@ -174,11 +174,11 @@ public class PropertySet extends DataType {
     }
 
     public boolean getDynamic() {
-        return getRef().dynamic;
+        return isReference() ? getRef().dynamic : dynamic;
     }
 
     public Mapper getMapper() {
-        return getRef()._mapper;
+        return isReference() ? getRef()._mapper : _mapper;
     }
 
     public Properties getProperties() {
@@ -187,7 +187,12 @@ public class PropertySet extends DataType {
 
         if (getDynamic() || cachedNames == null) {
             names = new Vector(); // :TODO: should be a Set!
-            getRef().addPropertyNames(names, prj.getProperties());
+            if (isReference()) {
+                getRef().addPropertyNames(names, prj.getProperties());    
+            } else {
+                addPropertyNames(names, prj.getProperties());
+            }
+
             if (!getDynamic()) {
                 cachedNames = names;
             }

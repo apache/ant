@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -99,22 +99,37 @@ public class CommandlineJava implements Cloneable {
      */
     public static class SysProperties extends Environment implements Cloneable {
         Properties sys = null;
+        private Vector propertySets = new Vector();
 
         public String[] getVariables() throws BuildException {
             String[] props = super.getVariables();
+            Properties p = mergePropertySets();
       
             if (props == null) {
-              return null;
+                if (p.size() == 0) {
+                    return null;
+                } else {
+                    props = new String[0];
+                }
             }
 
-            for (int i = 0; i < props.length; i++) {
-                props[i] = "-D" + props[i];
+            String[] result = new String[props.length + p.size()];
+            int i = 0;
+            for (; i < props.length; i++) {
+                result[i] = "-D" + props[i];
             }
-            return props;
+            for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
+                String key = (String) enum.nextElement();
+                String value = p.getProperty(key);
+                result[i++] = "-D" + key + "=" + value;
+            }
+            
+            return result;
         }
 
         public int size() {
-            return variables.size();
+            Properties p = mergePropertySets();
+            return variables.size() + p.size();
         }
 
         public void setSystem() throws BuildException {
@@ -125,6 +140,7 @@ public class CommandlineJava implements Cloneable {
                     Object o = e.nextElement();
                     p.put(o, sys.get(o));
                 }
+                p.putAll(mergePropertySets());
                 for (Enumeration e = variables.elements(); e.hasMoreElements();) {
                     Environment.Variable v = (Environment.Variable) e.nextElement();
                     p.put(v.getKey(), v.getValue());
@@ -152,12 +168,26 @@ public class CommandlineJava implements Cloneable {
             try {
                 SysProperties c = (SysProperties) super.clone();
                 c.variables = (Vector) variables.clone();
+                c.propertySets = (Vector) propertySets.clone();
                 return c;
             } catch (CloneNotSupportedException e) {
                 return null;
             }
         }
 
+        public void addSyspropertyset(PropertySet ps) {
+            propertySets.addElement(ps);
+        }
+
+        private Properties mergePropertySets() {
+            Properties p = new Properties();
+            for (Enumeration e = propertySets.elements(); 
+                 e.hasMoreElements();) {
+                PropertySet ps = (PropertySet) e.nextElement();
+                p.putAll(ps.getProperties());
+            }
+            return p;
+        }
     }
 
     /**
@@ -178,6 +208,10 @@ public class CommandlineJava implements Cloneable {
 
     public void addSysproperty(Environment.Variable sysp) {
         sysProperties.addVariable(sysp);
+    }
+
+    public void addSyspropertyset(PropertySet sysp) {
+        sysProperties.addSyspropertyset(sysp);
     }
 
     public void setVm(String vm) {

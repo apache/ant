@@ -75,6 +75,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LoaderUtils;
 import junit.framework.AssertionFailedError;
@@ -400,6 +401,19 @@ public class JUnitTask extends Task {
      */
     public void addSysproperty(Environment.Variable sysp) {
         commandline.addSysproperty(sysp);
+    }
+
+    /**
+     * Adds a set of properties that will be used as system properties
+     * that tests can access.
+     *
+     * This might be useful to tranfer Ant properties to the
+     * testcases when JVM forking is not enabled.
+     *
+     * @since Ant 1.6
+     */
+    public void addSyspropertyset(PropertySet sysp) {
+        commandline.addSyspropertyset(sysp);
     }
 
     /**

@@ -65,6 +65,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
 
 /**
@@ -301,6 +302,15 @@ public class Java extends Task {
      */
     public void addSysproperty(Environment.Variable sysp) {
         cmdl.addSysproperty(sysp);
+    }
+
+    /**
+     * Adds a set of properties as system properties.
+     *
+     * @since Ant 1.6
+     */
+    public void addSyspropertyset(PropertySet sysp) {
+        cmdl.addSyspropertyset(sysp);
     }
 
     /**

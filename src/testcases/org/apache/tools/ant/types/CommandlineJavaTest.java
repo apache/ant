@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -143,6 +143,13 @@ public class CommandlineJavaTest extends TestCase {
         v.setKey("key");
         v.setValue("value");
         c.addSysproperty(v);
+
+        project.setProperty("key2", "value2");
+        PropertySet ps = new PropertySet();
+        ps.setProject(project);
+        ps.appendName("key2");
+        c.addSyspropertyset(ps);
+
         try {
             c.setSystemProperties();
             String newClasspath = System.getProperty("java.class.path");
@@ -151,10 +158,13 @@ public class CommandlineJavaTest extends TestCase {
             assertNotNull(System.getProperty("key"));
             assertEquals("value", System.getProperty("key"));
             assertTrue(System.getProperties().containsKey("java.class.path"));
+            assertNotNull(System.getProperty("key2"));
+            assertEquals("value2", System.getProperty("key2"));
         } finally {
             c.restoreSystemProperties();
         }
         assertNull(System.getProperty("key"));
+        assertNull(System.getProperty("key2"));
     }
 
 }
