@@ -513,6 +513,9 @@ Other changes:
   mappings per source path. This behaviour is enabled by using
   an enablemultiplemapping attribute. Bugzilla Report 21320.
 
+* <exec> will now work on OpenVMS (please read the notes in
+  <exec>'s manual page).  Bugzilla Report 21877.  
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 

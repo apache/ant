@@ -19,6 +19,14 @@ the executable parameter. This is because the Java VM in which Ant is running is
 Windows executable and is not aware of Cygwin conventions.
 </p>
  
+<h4>OpenVMS Users</h4>
+<p>The command specified using <code>executable</code> and <code>&lt;arg&gt;</code>
+elements is executed exactly as specified inside a temporary DCL script.  This means
+that paths have to be written in VMS style.  It is also required that the logical
+<code>JAVA$FORK_SUPPORT_CHDIR</code> is set to <code>TRUE</code> (see the <i>JDK Release
+Notes</i>).
+</p>
+ 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -108,7 +116,7 @@ Windows executable and is not aware of Cygwin conventions.
   <tr>
     <td valign="top">resultproperty</td>
     <td valign="top">the name of a property in which the return code of the 
-      command should be stored. Only of interest if failonerror=false</td>
+      command should be stored. Only of interest if failonerror=false.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -120,7 +128,7 @@ Windows executable and is not aware of Cygwin conventions.
   <tr>
     <td valign="top">failonerror</td>
     <td valign="top">Stop the buildprocess if the command exits with a
-      returncode other than 0. Defaults to false</td>
+      return code signaling failure. Defaults to false.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -204,15 +212,15 @@ system command via nested <code>&lt;env&gt;</code> elements.</p>
 
 <h3>Errors and return codes</h3>
 By default the return code of a &lt;exec&gt; is ignored; when you set 
-<code>failonerror="true"</code> then any non zero response is treated as an
-error. Alternatively, you can set <code>resultproperty</code> to the name
-of a property and have it assigned to the result code (barring immutability,
-of course).
+<code>failonerror="true"</code> then any return code signaling failure
+(OS specific) causes the build to fail. Alternatively, you can set
+<code>resultproperty</code> to the name of a property and have it assigned to
+the result code (barring immutability, of course).
 <p>
 If the attempt to start the program fails with an OS dependent error code,
 then &lt;exec&gt; halts the build unless <code>failifexecutionfails</code>
-is set. You can use that to run a program if it exists, but otherwise 
-do nothing.
+is set to <code>false</code>. You can use that to run a program if it exists, but
+otherwise do nothing.
 <p>
 What do those error codes mean? Well, they are OS dependent. On Windows
 boxes you have to look in include\error.h in your windows compiler or wine files;

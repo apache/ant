@@ -413,7 +413,7 @@ public class ExecTask extends Task {
             log("Timeout: killed the sub-process", Project.MSG_WARN);
         }
         maybeSetResultPropertyValue(returnCode);
-        if (returnCode != 0) {
+        if (Execute.isFailure(returnCode)) {
             if (failOnError) {
                 throw new BuildException(getTaskType() + " returned: "
                     + returnCode, getLocation());

@@ -57,7 +57,9 @@ package org.apache.tools.ant.taskdefs;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -109,7 +111,9 @@ public class Execute {
     static {
         // Try using a JDK 1.3 launcher
         try {
-            if (!Os.isFamily("os/2")) {
+            if (Os.isFamily("openvms")) {
+                vmLauncher = new VmsCommandLauncher();
+            } else if (!Os.isFamily("os/2")) {
                 vmLauncher = new Java13CommandLauncher();
             }
         } catch (NoSuchMethodException exc) {
@@ -155,6 +159,9 @@ public class Execute {
 
             shellLauncher
                 = new PerlScriptCommandLauncher("bin/antRun.pl", baseLauncher);
+        } else if (Os.isFamily("openvms")) {
+            // the vmLauncher already uses the shell
+            shellLauncher = vmLauncher;
         } else {
             // Generic
             shellLauncher = new ScriptCommandLauncher("bin/antRun",
@@ -248,6 +255,9 @@ public class Execute {
         } else if (Os.isFamily("netware") || Os.isFamily("os/400")) {
             // rely on PATH
             String[] cmd = {"env"};
+            return cmd;
+        } else if (Os.isFamily("openvms")) {
+            String[] cmd = {"show", "logical"};
             return cmd;
         } else {
             // MAC OS 9 and previous
@@ -490,12 +500,28 @@ public class Execute {
     }
 
     /**
-     * query the exit value of the process.
+     * Query the exit value of the process.
      * @return the exit value, 1 if the process was killed,
-     * or Project.INVALID if no exit value has been received
+     * or Execute.INVALID if no exit value has been received
      */
     public int getExitValue() {
         return exitValue;
+    }
+
+    /**
+     * Checks whether <code>exitValue</code> signals a failure on the current
+     * system (OS specific).
+     * @param exitValue the exit value (return code) to be checked
+     * @return <code>true</code> if <code>exitValue</code> signals a failure
+     */
+    public static boolean isFailure(int exitValue) {
+        if (Os.isFamily("openvms")) {
+            // odd exit value signals failure
+            return (exitValue % 2) == 0;
+        } else {
+            // non zero exit value signals failure
+            return exitValue != 0;
+        }
     }
 
     /**
@@ -911,5 +937,62 @@ public class Execute {
         }
 
         private String _script;
+    }
+    
+    /**
+     * A command launcher for VMS that writes the command to a temporary DCL
+     * script before launching commands.  This is due to limitations of both
+     * the DCL interpreter and the Java VM implementation.
+     */
+    private static class VmsCommandLauncher extends Java13CommandLauncher {
+
+        public VmsCommandLauncher() throws NoSuchMethodException {
+            super();
+        }
+
+        /**
+         * Launches the given command in a new process.
+         */
+        public Process exec(Project project, String[] cmd, String[] env)
+            throws IOException {
+            String[] vmsCmd = { createCommandFile(cmd).getPath() };
+            return super.exec(project, vmsCmd, env);
+        }
+
+        /**
+         * Launches the given command in a new process, in the given working
+         * directory.  Note that under Java 1.3.1, 1.4.0 and 1.4.1 on VMS this
+         * method only works if <code>workingDir</code> is null or the logical
+         * JAVA$FORK_SUPPORT_CHDIR needs to be set to TRUE.
+         */
+        public Process exec(Project project, String[] cmd, String[] env,
+                            File workingDir) throws IOException {
+            String[] vmsCmd = { createCommandFile(cmd).getPath() };
+            return super.exec(project, vmsCmd, env, workingDir);
+        }
+
+        /*
+         * Writes the command into a temporary DCL script and returns the
+         * corresponding File object.  The script will be deleted on exit.
+         */
+        private File createCommandFile(String[] cmd) throws IOException {
+            File script = File.createTempFile("ANT", ".COM");
+            script.deleteOnExit();
+            PrintWriter out = null;
+            try {
+                out = new PrintWriter(new FileWriter(script));
+                StringBuffer dclCmd = new StringBuffer("$");
+                for (int i = 0; i < cmd.length; i++) {
+                    dclCmd.append(' ').append(cmd[i]);
+                }
+                out.println(dclCmd.toString());
+            } finally {
+                if (out != null) {
+                    out.close();
+                }
+            }                
+            return script;
+        }
+
     }
 }
