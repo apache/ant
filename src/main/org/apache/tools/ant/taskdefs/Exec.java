@@ -69,6 +69,7 @@ public class Exec extends Task {
     private String out;
     private File dir;
     private String command;
+    protected PrintWriter fos = null;
 
     private static final int BUFFER_SIZE = 512;
 
@@ -110,7 +111,6 @@ public class Exec extends Task {
             // exec command on system runtime
             Process proc = Runtime.getRuntime().exec(command);
 
-            PrintWriter fos=null;
             if( out!=null )  {
                 fos=new PrintWriter( new FileWriter( out ) );
                 project.log("Output redirected to " + out, Project.MSG_VERBOSE);
@@ -118,9 +118,9 @@ public class Exec extends Task {
 
             // copy input and error to the output stream
             StreamPumper inputPumper =
-                new StreamPumper(proc.getInputStream(), Project.MSG_INFO, project, fos);
+                new StreamPumper(proc.getInputStream(), Project.MSG_INFO, this);
             StreamPumper errorPumper =
-                new StreamPumper(proc.getErrorStream(), Project.MSG_WARN, project, fos);
+                new StreamPumper(proc.getErrorStream(), Project.MSG_WARN, this);
 
             // starts pumping away the generated output/error
             inputPumper.start();
@@ -133,7 +133,7 @@ public class Exec extends Task {
             proc.destroy();
 
             // close the output file if required
-            if (fos != null) fos.close();
+            logFlush();
 
             // check its exit value
             err = proc.exitValue();
@@ -163,6 +163,18 @@ public class Exec extends Task {
         this.out = out;
     }
 
+    protected void outputLog(String line, int messageLevel) {
+        if (fos == null) {
+            project.log(line, messageLevel); 
+        } else {
+            fos.println(line);
+        }
+    };
+
+    protected void logFlush() {
+        if (fos != null) fos.close();
+    }
+
     // Inner class for continually pumping the input stream during
     // Process's runtime.
     class StreamPumper extends Thread {
@@ -170,14 +182,12 @@ public class Exec extends Task {
         private int messageLevel;
         private boolean endOfStream = false;
         private int SLEEP_TIME = 5;
-        private Project project;
-        private PrintWriter fos;
+        private Exec parent;
 
-        public StreamPumper(InputStream is, int messageLevel, Project project, PrintWriter fos) {
+        public StreamPumper(InputStream is, int messageLevel, Exec parent) {
             this.din = new BufferedReader(new InputStreamReader(is));
             this.messageLevel = messageLevel;
-            this.project = project;
-            this.fos = fos;
+            this.parent = parent;
         }
 
         public void pumpStream()
@@ -188,10 +198,7 @@ public class Exec extends Task {
                 String line = din.readLine();
 
                 if (line != null) {
-                    if (fos == null)
-                        project.log(line, messageLevel);
-                    else
-                        fos.println(line);
+                    outputLog(line, messageLevel);
                 } else {
                     endOfStream = true;
                 }

@@ -727,6 +727,38 @@ public class Javadoc extends Exec {
         return name;
     }
 
+    //
+    // Override the logging of output in order to filter out Generating
+    // messages.  Generating messages are set to a priority of VERBOSE
+    // unless they appear after what could be an informational message.
+    //
+    private String queuedLine = null;
+    protected void outputLog(String line, int messageLevel) {
+        if (messageLevel==project.MSG_INFO && line.startsWith("Generating ")) {
+            if (queuedLine != null) {
+                super.outputLog(queuedLine, project.MSG_VERBOSE);
+            }
+            queuedLine = line;
+        } else {
+            if (queuedLine != null) {
+                if (line.startsWith("Building "))
+                    super.outputLog(queuedLine, project.MSG_VERBOSE);
+                else
+                    super.outputLog(queuedLine, project.MSG_INFO);
+                queuedLine = null;
+            }
+            super.outputLog(line, messageLevel);
+        }
+    }
+
+    protected void logFlush() {
+        if (queuedLine != null) {
+            super.outputLog(queuedLine, project.MSG_VERBOSE);
+            queuedLine = null;
+        }
+        super.logFlush();
+    }
+
     /**
      * This is a java comment and string stripper reader that filters
      * these lexical tokens out for purposes of simple Java parsing.
