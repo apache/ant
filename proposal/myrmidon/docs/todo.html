@@ -170,18 +170,16 @@
                     </ul></li>
                     <li>File Name Mappers:
                     <ul>
-                        <li>Add a file name mapper interface, and port the current Mapper
-                        implementations to it.</li>
+                        <li>Change FileNameMapper.mapFileName() to take vfs.FileName objects.</li>
+                        <li>Move the current mapper implementations across to antlib.</li>
                     </ul></li>
                     <li>File Sets:
                     <ul>
-                        <li>Add a file set implementation that uses a mapper to transform a nested
-                        file set.</li>
                         <li>Add a file set implementation that provides the union of several
                         nested file sets (that is, a file set that merges several file sets
                         together).</li>
                         <li>Add a file set implementation that filters files that are up-to-date
-                        WRT some other file.  Alternatively, this might be better done using a
+                        WRT some other file.  Alternatively, this might be better done as a
                         file selector.</li>
                     </ul></li>
                     <li>Paths:
@@ -199,6 +197,7 @@
                         <li>Implement 'preservelastmodified', 'overwrite', and 'includeemptydirs'.</li>
                         <li>Support a file name mapper.</li>
                         <li>Support file filters.</li>
+                        <li>Detect and handle destination file name collisions.</li>
                     </ul></li>
                     <li>Implement the <code>&lt;move&gt;</code>, <code>&lt;delete&gt;</code>,
                     <code>&lt;touch&gt;</code> and <code>&lt;mkdir&gt;</code> tasks on top

@@ -132,6 +132,11 @@
   </flat-fileset>
 </v-copy>
 ]]></source>
+                <h3><code>&lt;mapped-fileset&gt;</code></h3>
+
+                <p>A fileset that applies a <a href="buildfile.html#File Name Mappers">file name mapper</a>
+                    to a nested fileset.
+                </p>
 
             </subsection>
 

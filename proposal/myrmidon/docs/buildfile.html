@@ -613,12 +613,12 @@ attributes:</p>
     <tr><td>
       <blockquote>
                         <p>
-Listed below are some of the current set of tasks.  You can find example
-usages of these tasks in the sample project file <code>src/make/sample.ant</code>.
-</p>
+    Listed below are some of the current set of tasks.  You can find example
+    usages of these tasks in the sample project file <code>src/make/sample.ant</code>.
+    </p>
                                 <h3><code>&lt;condition&gt;</code></h3>
                                 <p>Sets a property if a particular condition is true.  See
-<a href="#Conditions">Conditions</a> for a list of available conditions.</p>
+    <a href="#Conditions">Conditions</a> for a list of available conditions.</p>
                                 <h3><code>&lt;fail&gt;</code></h3>
                                 <p>Causes the build to fail.</p>
                                 <h3><code>&lt;if&gt;</code></h3>
@@ -633,7 +633,7 @@ usages of these tasks in the sample project file <code>src/make/sample.ant</code
                                 <p>Runs a set of tasks, with a provided error and clean-up handler.</p>
                                 <h3><code>&lt;converter-def&gt;</code></h3>
                                 <p>Register a type converter.  These are used when configuring a task
-or data-type from attributes.</p>
+    or data-type from attributes.</p>
                                 <h3><code>&lt;type-def&gt;</code></h3>
                                 <p>Register a task or data-type.</p>
                                 <h3><code>&lt;import&gt;</code></h3>
@@ -652,7 +652,7 @@ or data-type from attributes.</p>
                         <p>The following conditions are available </p>
                                 <h3><code>&lt;and&gt;</code></h3>
                                 <p>Evaluates a set of nested conditions, and AND them together.  Evaluation is
-lazy.  An empty <code>&lt;and&gt;</code> condition evaluates to true.</p>
+    lazy.  An empty <code>&lt;and&gt;</code> condition evaluates to true.</p>
                                 <h3><code>&lt;available&gt;</code></h3>
                                 <p>Tests if a particular class or resource is available.</p>
                                 <h3><code>&lt;file-test&gt;</code></h3>
@@ -661,11 +661,31 @@ lazy.  An empty <code>&lt;and&gt;</code> condition evaluates to true.</p>
                                 <p>Tests whether a proeprty is set, and not set to 'false'.</p>
                                 <h3><code>&lt;or&gt;</code></h3>
                                 <p>Evaluates a set of nested conditions, and OR them together.  Evaluation is
-lazy.  An empty <code>&lt;or&gt;</code> evaluates to true.</p>
+    lazy.  An empty <code>&lt;or&gt;</code> evaluates to true.</p>
                                 <h3><code>&lt;os&gt;</code></h3>
                                 <p>Tests which operating system the build is running on.</p>
                                 <h3><code>&lt;not&gt;</code></h3>
                                 <p>Negates a nested condition.</p>
+                    </blockquote>
+    </td></tr>
+  </table>
+        <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#525D76">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="File Name Mappers"><strong>File Name Mappers</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>The following file name mappers are available:</p>
+                                <h3><code>&lt;chain&gt;</code></h3>
+                                <p>Applies a set of nested file name mappers to file names.</p>
+                                <h3><code>&lt;flatten&gt;</code></h3>
+                                <p>Maps all file names to a single directory.</p>
+                                <h3><code>&lt;prefix&gt;</code></h3>
+                                <p>Adds a prefix to the front of each file name.</p>
+                                <h3><code>&lt;map-extension&gt;</code></h3>
+                                <p>Changes the extension of file names.</p>
                     </blockquote>
     </td></tr>
   </table>
