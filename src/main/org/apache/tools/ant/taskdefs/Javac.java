@@ -515,7 +515,7 @@ public class Javac extends MatchingTask {
         try {
             PrintStream logstr = 
                 new PrintStream(new LogOutputStream(this, Project.MSG_WARN));
-            System.setErr(logstr);
+            System.setOut(logstr);
             System.setErr(logstr);
             Class c = Class.forName ("com.sun.tools.javac.Main");
             Object compiler = c.newInstance ();
@@ -533,7 +533,7 @@ public class Javac extends MatchingTask {
                 throw new BuildException("Error starting modern compiler", ex, location);
             }
         } finally {
-            System.setErr(err);
+            System.setOut(err);
             System.setErr(out);
         }
     }
