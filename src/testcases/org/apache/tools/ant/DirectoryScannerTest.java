@@ -236,6 +236,27 @@ public class DirectoryScannerTest extends BuildFileTest {
                      new String[] {});
     }
 
+    public void testParentDiffersInCaseScanningSensitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/", "ALPHA/beta/"});
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+                                       "alpha/beta/gamma/gamma.xml"},
+                     new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
+    }
+
+    public void testParentDiffersInCaseScanningInsensitive() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {"alpha/", "ALPHA/beta/"});
+        ds.setCaseSensitive(false);
+        ds.scan();
+        compareFiles(ds, new String[] {"alpha/beta/beta.xml", 
+                                       "alpha/beta/gamma/gamma.xml"},
+                     new String[] {"alpha", "alpha/beta", "alpha/beta/gamma"});
+    }
+
     /**
      * Test case for setFollowLinks() and associated funtionality.
      * Only supports test on linux, at the moment because Java has
