@@ -120,7 +120,8 @@ public class Execute {
             !antWorkingDirectory.equals(workingDirectory.getAbsolutePath())) {
 
             if (myos.toLowerCase().indexOf("windows") >= 0 &&
-                myos.toLowerCase().indexOf("nt") >= 0) {
+                (myos.toLowerCase().indexOf("nt") >= 0 ||
+                 myos.indexOf("2000") >= 0)) {
 
                 commandLine = new String[cmdl.length+5];
                 commandLine[0] = "cmd";
