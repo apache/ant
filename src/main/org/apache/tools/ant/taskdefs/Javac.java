@@ -362,7 +362,14 @@ public class Javac extends MatchingTask {
         m.setFrom("*.java");
         m.setTo("*.class");
         SourceFileScanner sfs = new SourceFileScanner(this);
-        compileList = sfs.restrictAsFiles(files, srcDir, destDir, m);
+        File[] newFiles = sfs.restrictAsFiles(files, srcDir, destDir, m);
+        
+        if (newFiles.length > 0) {
+            File[] newCompileList = new File[compileList.length + newFiles.length];
+            System.arraycopy(compileList, 0, newCompileList, 0, compileList.length);
+            System.arraycopy(newFiles, 0, newCompileList, compileList.length, newFiles.length);
+            compileList = newCompileList;
+        }
     }
 
     // XXX
