@@ -117,7 +117,7 @@ public class Location implements Serializable {
     public int getColumnNumber() {
         return columnNumber;
     }
-    
+
     /**
      * Returns the file name, line number, a colon and a trailing space.
      * An error message can be appended easily. For unknown locations, an
@@ -145,4 +145,30 @@ public class Location implements Serializable {
         return buf.toString();
     }
 
+    /**
+     * Equality operation.
+     * @param other the object to compare to.
+     * @return true if the other object contains the same information
+     *              as this object.
+     */
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
+            return false;
+        }
+        if (!(other.getClass() == getClass())) {
+            return false;
+        }
+        return toString().equals(other.toString());
+    }
+
+    /**
+     * Hash operation.
+     * @return a hash code value for this location.
+     */
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }
