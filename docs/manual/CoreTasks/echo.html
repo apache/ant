@@ -33,6 +33,15 @@
     <td valign="top">Append to an existing file?</td>
     <td valign="top" align="center">No - default is false.</td>
   </tr>
+  <tr>
+    <td valign="top">level</td>
+    <td valign="top">Control the level at which this message is reported.
+            One of "error", "warning", "info", "verbose", "debug"</td>
+    <td valign="top" align="center">No - default is "warning".</td>
+  </tr>
+  
+  
+  
 </table>
 <h3>Examples</h3>
 <pre>  &lt;echo message=&quot;Hello world&quot;/&gt;</pre>
@@ -42,7 +51,11 @@ This is a longer message stretching over
 two lines.
 &lt;/echo&gt;
 </pre>
+<pre>&lt;echo message=&quot;Deleting drive C:&quot; 
+  level=&quot;debug&quot; /&gt;</pre>
+
 <hr>
+
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
 
