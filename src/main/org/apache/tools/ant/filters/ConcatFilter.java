@@ -110,7 +110,7 @@ public final class ConcatFilter extends BaseParamFilterReader
             ch = super.read();
         }
         if (ch == -1) {
-            // don´t call super.close() because that reader is used
+            // don't call super.close() because that reader is used
             // on other places ...
             if (appendReader != null) {
                 ch = appendReader.read();
