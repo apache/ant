@@ -156,7 +156,7 @@ public class PathConvert extends Task {
      */
     public static class TargetOs extends EnumeratedAttribute {
         /**
-         * @return the list of values for this enumerated attribute
+         * @return the list of values for this enumerated attribute.
          */
         public String[] getValues() {
             return new String[]{"windows", "unix", "netware", "os/2", "tandem"};
@@ -291,31 +291,21 @@ public class PathConvert extends Task {
             // If we are a reference, create a Path from the reference
             if (isReference()) {
                 path = new Path(getProject()).createPath();
-
                 Object obj = refid.getReferencedObject(getProject());
 
                 if (obj instanceof Path) {
                     path.setRefid(refid);
                 } else if (obj instanceof FileSet) {
-                    FileSet fs = (FileSet) obj;
-
-                    path.addFileset(fs);
+                    path.addFileset((FileSet) obj);
                 } else if (obj instanceof DirSet) {
-                    DirSet ds = (DirSet) obj;
-
-                    path.addDirset(ds);
+                    path.addDirset((DirSet) obj);
                 } else if (obj instanceof FileList) {
-                    FileList fl = (FileList) obj;
-
-                    path.addFilelist(fl);
-
+                    path.addFilelist((FileList) obj);
                 } else {
                     throw new BuildException("'refid' does not refer to a "
-                         + "path, fileset, dirset, or "
-                         + "filelist.");
+                         + "path, fileset, dirset, or filelist.");
                 }
             }
-
             validateSetup(); // validate our setup
 
             // Currently, we deal with only two path formats: Unix and Windows
@@ -344,11 +334,8 @@ public class PathConvert extends Task {
                 }
                 elems = (String[]) ret.toArray(new String[] {});
             }
-
             for (int i = 0; i < elems.length; i++) {
-                String elem = elems[i];
-
-                elem = mapElement(elem); // Apply the path prefix map
+                String elem = mapElement(elems[i]); // Apply the path prefix map
 
                 // Now convert the path and file separator characters from the
                 // current os to the target os.
@@ -356,35 +343,21 @@ public class PathConvert extends Task {
                 if (i != 0) {
                     rslt.append(pathSep);
                 }
-
                 StringTokenizer stDirectory =
                     new StringTokenizer(elem, fromDirSep, true);
-                String token = null;
 
                 while (stDirectory.hasMoreTokens()) {
-                    token = stDirectory.nextToken();
-
-                    if (fromDirSep.equals(token)) {
-                        rslt.append(dirSep);
-                    } else {
-                        rslt.append(token);
-                    }
+                    String token = stDirectory.nextToken();
+                    rslt.append(fromDirSep.equals(token) ? dirSep : token);
                 }
             }
-
             // Place the result into the specified property,
             // unless setonempty == false
-            String value = rslt.toString();
-            if (setonempty) {
+            if (setonempty || rslt.length() > 0) {
+                String value = rslt.toString();
                 log("Set property " + property + " = " + value,
                     Project.MSG_VERBOSE);
                 getProject().setNewProperty(property, value);
-            } else {
-                if (rslt.length() > 0) {
-                    log("Set property " + property + " = " + value,
-                        Project.MSG_VERBOSE);
-                    getProject().setNewProperty(property, value);
-                }
             }
         } finally {
             path = savedPath;
@@ -392,7 +365,6 @@ public class PathConvert extends Task {
             pathSep = savedPathSep;
         }
     }
-
 
     /**
      * Apply the configured map to a path element. The map is used to convert
@@ -424,7 +396,6 @@ public class PathConvert extends Task {
                 }
             }
         }
-
         return elem;
     }
 
@@ -463,18 +434,15 @@ public class PathConvert extends Task {
         if (path == null) {
             throw new BuildException("You must specify a path to convert");
         }
-
         if (property == null) {
             throw new BuildException("You must specify a property");
         }
-
         // Must either have a target OS or both a dirSep and pathSep
 
         if (targetOS == null && pathSep == null && dirSep == null) {
             throw new BuildException("You must specify at least one of "
                  + "targetOS, dirSep, or pathSep");
         }
-
         // Determine the separator strings.  The dirsep and pathsep attributes
         // override the targetOS settings.
         String dsep = File.separator;
@@ -484,17 +452,14 @@ public class PathConvert extends Task {
             psep = targetWindows ? ";" : ":";
             dsep = targetWindows ? "\\" : "/";
         }
-
         if (pathSep != null) {
             // override with pathsep=
             psep = pathSep;
         }
-
         if (dirSep != null) {
             // override with dirsep=
             dsep = dirSep;
         }
-
         pathSep = psep;
         dirSep = dsep;
     }
