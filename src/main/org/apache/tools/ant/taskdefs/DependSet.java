@@ -237,8 +237,7 @@ public class DependSet extends MatchingTask {
               DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(project);
               String[] sourceFiles      = sourceDS.getIncludedFiles();
 
-              int i = 0;
-              do {
+              for (int i=0; upToDate && i < sourceFiles.length; i++) {
                  File src = new File(sourceFS.getDir(project), sourceFiles[i]);
 
                  if (src.lastModified() > now) {
@@ -257,7 +256,7 @@ public class DependSet extends MatchingTask {
 
                     }
                  }
-              } while (upToDate && (++i < sourceFiles.length) );
+              }
            }
         }
 
