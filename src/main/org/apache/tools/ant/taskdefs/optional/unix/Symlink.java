@@ -457,7 +457,7 @@ public class Symlink extends DispatchTask {
         } catch (IOException ioe) {
             throw new BuildException(ioe, getLocation());
         } finally {
-            FILE_UTILS.close(bos);
+            FileUtils.close(bos);
         }
     }
 
