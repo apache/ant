@@ -70,7 +70,7 @@ import org.apache.tools.ant.types.Path;
  * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>
  * @author <a href="mailto:Jesse.Glick@netbeans.com">Jesse Glick</a>
  */
-public class AntClassLoader  extends ClassLoader {
+public class AntClassLoader  extends ClassLoader implements BuildListener {
 
     /**
      * An enumeration of all resources of a given name found within the
@@ -228,6 +228,7 @@ public class AntClassLoader  extends ClassLoader {
      */
     public AntClassLoader(Project project, Path classpath) {
         this.project = project;
+        this.project.addBuildListener(this);
         this.classpath = classpath.concatSystemClasspath("ignore");
     }
 
@@ -838,5 +839,27 @@ public class AntClassLoader  extends ClassLoader {
         else {
             return base.loadClass(name);
         }
+    }
+
+    public void buildStarted(BuildEvent event) {}
+
+    public void buildFinished(BuildEvent event) {
+        classpath = null;
+        project = null;
+    }
+
+    public void targetStarted(BuildEvent event) {
+    }
+
+    public void targetFinished(BuildEvent event) {
+    }
+
+    public void taskStarted(BuildEvent event) {
+    }
+
+    public void taskFinished(BuildEvent event) {
+    }
+
+    public void messageLogged(BuildEvent event) {
     }
 }

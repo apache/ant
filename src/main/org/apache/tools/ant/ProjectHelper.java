@@ -628,6 +628,8 @@ public class ProjectHelper {
         IntrospectionHelper ih = 
             IntrospectionHelper.getHelper(target.getClass());
 
+        project.addBuildListener(ih);
+
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
             String value=replaceProperties(project, attrs.getValue(i), 

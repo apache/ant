@@ -68,7 +68,7 @@ import java.util.*;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class IntrospectionHelper  {
+public class IntrospectionHelper implements BuildListener {
 
     /**
      * holds the types of the attributes that could be set.
@@ -552,4 +552,20 @@ public class IntrospectionHelper  {
             throws InvocationTargetException, IllegalAccessException, 
                    BuildException;
     }
+
+    public void buildStarted(BuildEvent event) {}
+    public void buildFinished(BuildEvent event) {
+	attributeTypes.clear();
+	attributeSetters.clear();
+	nestedTypes.clear();
+	nestedCreators.clear();
+	addText = null;
+        helpers.clear();
+    }
+
+    public void targetStarted(BuildEvent event) {}
+    public void targetFinished(BuildEvent event) {}
+    public void taskStarted(BuildEvent event) {}
+    public void taskFinished(BuildEvent event) {}
+    public void messageLogged(BuildEvent event) {}
 }
