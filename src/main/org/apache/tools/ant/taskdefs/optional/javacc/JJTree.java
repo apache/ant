@@ -196,12 +196,9 @@ public class JJTree extends Task {
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
-        if (javaccHome == null || !javaccHome.isDirectory()) {
-            throw new BuildException("Javacchome not set.");
-        }
         final Path classpath = cmdl.createClasspath(project);
-        classpath.createPathElement().setPath(javaccHome.getAbsolutePath() +
-                                                  "/JavaCC.zip");
+        final File javaccJar = JavaCC.getArchiveFile(javaccHome);
+        classpath.createPathElement().setPath( javaccJar.getAbsolutePath() );
         classpath.addJavaRuntime();
 
         final Commandline.Argument arg = cmdl.createVmArgument();
@@ -222,7 +219,7 @@ public class JJTree extends Task {
             }
         }
         catch (IOException e) {
-            throw new BuildException("Failed to launch JJTree: " + e);
+            throw new BuildException("Failed to launch JJTree", e);
         }
     }
 }

@@ -239,12 +239,9 @@ public class JavaCC extends Task {
         }
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
-        if (javaccHome == null || !javaccHome.isDirectory()) {
-            throw new BuildException("Javacchome not set.");
-        }
         final Path classpath = cmdl.createClasspath(project);
-        classpath.createPathElement().setPath(javaccHome.getAbsolutePath() +
-                                                  "/JavaCC.zip");
+        final File javaccJar = JavaCC.getArchiveFile(javaccHome);
+        classpath.createPathElement().setPath( javaccJar.getAbsolutePath() );
         classpath.addJavaRuntime();
 
         final Commandline.Argument arg = cmdl.createVmArgument();
@@ -252,6 +249,31 @@ public class JavaCC extends Task {
         arg.setValue("-Dinstall.root="+javaccHome.getAbsolutePath());
 
         Execute.runCommand(this, cmdl.getCommandline());
+    }
+
+    /**
+     * Helper class to retrieve the path used to store the JavaCC.zip which is
+     * different from versions.
+     * @param home the javacc home path directory.
+     * @throws BuildException thrown if the home directory is invalid or if the archive
+     * could not be found despite attemps to do so.
+     * @return the file object pointing to the JavaCC archive.
+     */
+    protected static File getArchiveFile(File home) throws BuildException {
+        if (home == null || !home.isDirectory()) {
+            throw new BuildException("JavaCC home must be a valid directory.");
+        }
+        // javacc prior to 2.0
+        File f = new File(home, "JavaCC.zip");
+        if ( f.exists() ){
+          return f;
+        }
+        // javacc install 2.0+
+        f = new File(home, "bin/lib/JavaCC.zip");
+        if ( f.exists() ){
+          return f;
+        }
+        throw new BuildException("Could not find a path to JavaCC.zip from '" + home + "'.");
     }
 
     /**
