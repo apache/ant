@@ -35,4 +35,3 @@ public interface Deployer
     void deployType( String role, String name, File file )
         throws DeploymentException;
 }
-
