@@ -10,10 +10,11 @@
 <p>by</p>
 <!-- Names are in alphabetical order, on last name -->
 <ul>
+  <li>Thomas Christen (<a href="mailto:chr@active.ch">chr@active.ch</a>)</li>
   <li>Jeremy Mawson (<a href="mailto:jem@loftinspace.com.au">jem@loftinspace.com/au</a>)</li>
 </ul>
 
-<p>Version 1.0 - 2000/11/02</p>
+<p>Version 1.1 - 2001/01/28</p>
 <hr>
 <h2>Table of Contents</h2>
 <ul>
@@ -53,7 +54,7 @@ are lost.  Work is being done to make this task a bit more "human friendly".
 
 <h3>Parameters specified as nested elements</h3>
 <h4>Entry</h4>
-<p>Use nested <code>&lt;entry&gt;</code> 
+<p>Use nested <code>&lt;entry&gt;</code>
 elements to specify actual modifcations to the property file itself
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -68,17 +69,31 @@ elements to specify actual modifcations to the property file itself
   </tr>
   <tr>
     <td valign="top">value</td>
-    <td valign="top">Value to set for the key the property name/value pair</td>
+    <td valign="top">Value to set (=), to add (+) or subtract (-)</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">type</td>
-    <td valign="top">Manipulate the value as type: int, date</td>
-    <td valign="top" align="center">No, but must be used if opertion attribute used</td>
+    <td valign="top">Regard the value as : int, date or string (default)</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">operation</td>
-    <td valign="top">If type is date, this cane be "now" or "never". If the type is int, only "-" and "+" may be used.</td>
+    <td valign="top">"+" or "=" (default) for all datatypes<br>"-" (for date and int only).<br>
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">default</td>
+    <td valign="top">Initial value to set for a property if it is not
+                     already defined in the property file.<br>
+                     For type date, two additional keywordsw are allowed: "now" or "never".</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">pattern</td>
+    <td valign="top">For int and date type only. If present, Values will
+                     be paresed and formated accordingly.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
@@ -94,7 +109,9 @@ After running, the file would now look like
 <ul>#Thu Nov 02 23:41:47 EST 2000<br>
 akey=avalue<br>
 adate=2000/11/02 23\:41<br>
-anint=1<br></ul>
+anint=1<br>
+formated.int=0014<br>
+formated.date=028 17\:34<br></ul>
 </p>
 The slashes conform to the expectations of the Properties class.  The file will be stored in a manner so that each character is examined and escaped if necessary.  Note that the original comment is now lost.  Please keep this in mind when running this task against heavily commented properties files.  It may be best to have a commented version in the source tree, copy it to a deployment area, and then run the modifications on the copy.  Future versions of PropertyFile will hopefully eliminate this shortcoming.
 </p>
@@ -103,10 +120,35 @@ The slashes conform to the expectations of the Properties class.  The file will 
     file="my.properties"
     comment"My properties" &gt;
   &lt;entry  key="akey" value="avalue" /&gt;
-  &lt;entry  key="adate" type="date" operation="now"/&gt;
+  &lt;entry  key="adate" type="date" value="now"/&gt;
   &lt;entry  key="anint" type="int" operation="+"/&gt;
+  &lt;entry  key="formated.int" type="int" default="0013" operation="+" pattern="0000"/&gt;
+  &lt;entry  key="formated.date" type="date" value="now" pattern="DDD HH:mm"/&gt;
 &lt;/propertyfile&gt;
-</pre></blockquote>
-
+</blockquote></pre>
+<p>
+To produce dates relative from today :
+<pre><blockquote>&lt;propertyfile
+    file="my.properties"
+    comment"My properties" &gt;
+  &lt;entry  key="formated.date-1"
+      type="date" default="now" pattern="DDD"
+      operation="-" value="1"/&gt;
+  &lt;entry  key="formated.tomorrow"
+      type="date" default="now" pattern="DDD"
+      operation="+" value="1"/&gt;
+&lt;/propertyfile&gt;
+</blockquote></pre>
+</p>
+<p>
+Concatenation of strings :
+<pre><blockquote>&lt;propertyfile
+    file="my.properties"
+    comment"My properties" &gt;
+  &lt;entry  key="progress" default="" operation="+" value="."/&gt;
+&lt;/propertyfile&gt;
+</blockquote></pre>
+Each time called, a "." will be appended to "progress"
+</p>
 </body>
 </html>
