@@ -61,6 +61,8 @@ import java.util.Enumeration;
  *
  * All operations that need access to the full list of objects
  * will call initAll() first. Get and put are cheap.
+ *
+ * @since Ant 1.6
  */
 public class LazyHashtable extends Hashtable {
     protected boolean initAllDone=false;
@@ -96,12 +98,19 @@ public class LazyHashtable extends Hashtable {
 
     public boolean contains( Object value ) {
         initAll();
-        return super.contains(value );
+        return super.contains(value);
     }
 
-    public boolean containsValue( Object value ) {
+    public boolean containsKey(Object value) {
         initAll();
-        return super.contains( value );
+        return super.containsKey(value);
+    }
+
+    /**
+     * Delegates to {@link #contains contains}.
+     */
+    public boolean containsValue( Object value ) {
+        return contains(value);
     }
 
     public Enumeration keys() {
