@@ -179,6 +179,10 @@ platform (J2EE, XML, ...).
 </p>
 
             <p>
+                <b>Antoine Levy-Lambert</b><br/>
+            </p>
+            
+            <p>
                 <b>Adam Murdoch</b>
 <br/>
 </p>
@@ -219,6 +223,10 @@ well as the web application framework, <a href="http://java.apache.org/turbine/"
 </p>
 
             <p>
+                <b>Jesse Stockall</b><br/>
+            </p>
+
+            <p>
                 <b>James Todd</b> (jwtodd at pacbell.net)
 <br/>
 James has developed real time customer oriented apps for roughly 10
@@ -236,15 +244,6 @@ implementing the CORBA IDL to C++ 2.0 mapping, skydiving, IDL to Java
 compilers, Object Databases (SIGSEV, you da man!) for C++, Java ORB
 and EJB runtime environments -- in that order.
 </p>
-
-            <p>
-                <b>Jesse Stockall</b><br/>
-            </p>
-
-            <p>
-                <b>Antoine Levy-Lambert</b><br/>
-            </p>
-            
 
       </subsection>
       <subsection name="Emeritus Committers">
