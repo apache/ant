@@ -60,41 +60,41 @@ import java.io.*;
 import java.net.URL;
 
 /**
- * A BuildFileTest is a TestCase which executes targets from an Ant buildfile 
+ * A BuildFileTest is a TestCase which executes targets from an Ant buildfile
  * for testing.
- * 
- * This class provides a number of utility methods for particular build file 
- * tests which extend this class. 
- * 
+ *
+ * This class provides a number of utility methods for particular build file
+ * tests which extend this class.
+ *
  * @author Nico Seessle <nico@seessle.de>
  * @author Conor MacNeill
  */
-public abstract class BuildFileTest extends TestCase { 
-    
+public abstract class BuildFileTest extends TestCase {
+
     protected Project project;
-    
+
     private StringBuffer logBuffer;
     private StringBuffer fullLogBuffer;
     private StringBuffer outBuffer;
     private StringBuffer errBuffer;
     private BuildException buildException;
-    
+
     /**
      *  Constructor for the BuildFileTest object
      *
      *@param  name string to pass up to TestCase constructor
-     */    
+     */
     public BuildFileTest(String name) {
         super(name);
     }
-    
+
     /**
-     *  run a target, expect for any build exception 
+     *  run a target, expect for any build exception
      *
      *@param  target target to run
      *@param  cause  information string to reader of report
-     */    
-    protected void expectBuildException(String target, String cause) { 
+     */
+    protected void expectBuildException(String target, String cause) {
         expectSpecificBuildException(target, cause, null);
     }
 
@@ -102,7 +102,7 @@ public abstract class BuildFileTest extends TestCase {
      * Assert that only the given message has been logged with a
      * priority &gt;= INFO when running the given target.
      */
-    protected void expectLog(String target, String log) { 
+    protected void expectLog(String target, String log) {
         executeTarget(target);
         String realLog = getLog();
         assertEquals(log, realLog);
@@ -112,11 +112,11 @@ public abstract class BuildFileTest extends TestCase {
      * Assert that the given message has been logged with a priority
      * &gt;= INFO when running the given target.
      */
-    protected void expectLogContaining(String target, String log) { 
+    protected void expectLogContaining(String target, String log) {
         executeTarget(target);
         String realLog = getLog();
         assertTrue("expecting log to contain \""+log+"\" log was \""
-                   + realLog + "\"", 
+                   + realLog + "\"",
                    realLog.indexOf(log) >= 0);
     }
 
@@ -126,8 +126,8 @@ public abstract class BuildFileTest extends TestCase {
      *  been called.
      * @pre logBuffer!=null
      * @return    The log value
-     */    
-    protected String getLog() { 
+     */
+    protected String getLog() {
         return logBuffer.toString();
     }
 
@@ -135,7 +135,7 @@ public abstract class BuildFileTest extends TestCase {
      * Assert that the given message has been logged with a priority
      * &gt;= DEBUG when running the given target.
      */
-    protected void expectDebuglog(String target, String log) { 
+    protected void expectDebuglog(String target, String log) {
         executeTarget(target);
         String realLog = getFullLog();
         assertEquals(log, realLog);
@@ -148,7 +148,7 @@ public abstract class BuildFileTest extends TestCase {
      * @pre fullLogBuffer!=null
      * @return    The log value
      */
-    protected String getFullLog() { 
+    protected String getFullLog() {
         return fullLogBuffer.toString();
     }
 
@@ -158,8 +158,8 @@ public abstract class BuildFileTest extends TestCase {
      *@param  target  target to execute
      *@param  output  output to look for
      */
-    
-    protected void expectOutput(String target, String output) { 
+
+    protected void expectOutput(String target, String output) {
         executeTarget(target);
         String realOutput = getOutput();
         assertEquals(output, realOutput);
@@ -172,8 +172,8 @@ public abstract class BuildFileTest extends TestCase {
      *@param  output  output to look for
      *@param  error   Description of Parameter
      */
-     
-    protected void expectOutputAndError(String target, String output, String error) { 
+
+    protected void expectOutputAndError(String target, String output, String error) {
         executeTarget(target);
         String realOutput = getOutput();
         assertEquals(output, realOutput);
@@ -184,11 +184,11 @@ public abstract class BuildFileTest extends TestCase {
     protected String getOutput() {
         return cleanBuffer(outBuffer);
     }
-     
+
     protected String getError() {
         return cleanBuffer(errBuffer);
     }
-        
+
     protected BuildException getBuildException() {
         return buildException;
     }
@@ -196,16 +196,16 @@ public abstract class BuildFileTest extends TestCase {
     private String cleanBuffer(StringBuffer buffer) {
         StringBuffer cleanedBuffer = new StringBuffer();
         boolean cr = false;
-        for (int i = 0; i < buffer.length(); i++) { 
+        for (int i = 0; i < buffer.length(); i++) {
             char ch = buffer.charAt(i);
             if (ch == '\r') {
                 cr = true;
                 continue;
             }
 
-            if (!cr) { 
+            if (!cr) {
                 cleanedBuffer.append(ch);
-            } else { 
+            } else {
                 if (ch == '\n') {
                     cleanedBuffer.append(ch);
                 } else {
@@ -215,13 +215,13 @@ public abstract class BuildFileTest extends TestCase {
         }
         return cleanedBuffer.toString();
     }
-    
+
     /**
      *  set up to run the named project
      *
      * @param  filename name of project file to run
-     */    
-    protected void configureProject(String filename) throws BuildException { 
+     */
+    protected void configureProject(String filename) throws BuildException {
         logBuffer = new StringBuffer();
         fullLogBuffer = new StringBuffer();
         project = new Project();
@@ -230,16 +230,16 @@ public abstract class BuildFileTest extends TestCase {
         project.addBuildListener(new AntTestListener());
         ProjectHelper.configureProject(project, new File(filename));
     }
-    
+
     /**
      *  execute a target we have set up
      * @pre configureProject has been called
      * @param  targetName  target to run
-     */    
-    protected void executeTarget(String targetName) { 
+     */
+    protected void executeTarget(String targetName) {
         PrintStream sysOut = System.out;
         PrintStream sysErr = System.err;
-        try { 
+        try {
             sysOut.flush();
             sysErr.flush();
             outBuffer = new StringBuffer();
@@ -252,13 +252,13 @@ public abstract class BuildFileTest extends TestCase {
             fullLogBuffer = new StringBuffer();
             buildException = null;
             project.executeTarget(targetName);
-        } finally { 
+        } finally {
             System.setOut(sysOut);
             System.setErr(sysErr);
         }
-        
+
     }
-    
+
     /**
      * Get the project which has been configured for a test.
      *
@@ -277,14 +277,14 @@ public abstract class BuildFileTest extends TestCase {
     }
 
     /**
-     *  run a target, wait for a build exception 
+     *  run a target, wait for a build exception
      *
      *@param  target target to run
      *@param  cause  information string to reader of report
      *@param  msg    the message value of the build exception we are waiting for
               set to null for any build exception to be valid
-     */    
-    protected void expectSpecificBuildException(String target, String cause, String msg) { 
+     */
+    protected void expectSpecificBuildException(String target, String cause, String msg) {
         try {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
@@ -298,17 +298,16 @@ public abstract class BuildFileTest extends TestCase {
         }
         fail("Should throw BuildException because: " + cause);
     }
-    
+
     /**
      *  run a target, expect an exception string
      *  containing the substring we look for (case sensitive match)
      *
      *@param  target target to run
      *@param  cause  information string to reader of report
-     *@param  msg    the message value of the build exception we are waiting for
      *@param  contains  substring of the build exception to look for
      */
-    protected void expectBuildExceptionContaining(String target, String cause, String contains) { 
+    protected void expectBuildExceptionContaining(String target, String cause, String contains) {
         try {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
@@ -320,7 +319,7 @@ public abstract class BuildFileTest extends TestCase {
         }
         fail("Should throw BuildException because: " + cause);
     }
-    
+
 
     /**
      * call a target, verify property is as expected
@@ -399,7 +398,7 @@ public abstract class BuildFileTest extends TestCase {
      * an output stream which saves stuff to our buffer.
      */
     private class AntOutputStream extends java.io.OutputStream {
-        public void write(int b) { 
+        public void write(int b) {
             outBuffer.append((char)b);
         }
     }
@@ -474,7 +473,7 @@ public abstract class BuildFileTest extends TestCase {
                 logBuffer.append(event.getMessage());
             }
             fullLogBuffer.append(event.getMessage());
-            
+
         }
     }
 

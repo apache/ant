@@ -287,12 +287,17 @@ public abstract class Definer extends Task {
         if (loaderId != null) {
             Object reusedLoader = getProject().getReference(loaderId);
             if (reusedLoader != null) {
+                if (!(reusedLoader instanceof ClassLoader)) {
+                    throw new BuildException("The specified loader id " +
+                        loaderId + " does not reference a class loader");
+                }
+
                 return (ClassLoader)reusedLoader;
                 //if (reusedLoader instanceof AntClassLoader) {
                 //    return (AntClassLoader)reusedLoader;
                 //}
                 // In future the reference object may be the <loader> type
-                // if( reusedLoader instanceof Loader ) {
+                // if (reusedLoader instanceof Loader ) {
                 //      return ((Loader)reusedLoader).getLoader(project);
                 // }
             }
@@ -300,10 +305,10 @@ public abstract class Definer extends Task {
 
         ClassLoader al = null;
 
-        if( classpath ==null ) {
+        if (classpath == null) {
             // do we need to create another loader ?
             al=project.getCoreLoader();
-            if( al != null ) {
+            if (al != null ) {
                 return al;
             }
         }
