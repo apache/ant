@@ -506,20 +506,19 @@ public class Main implements AntMain {
      * Helper to get the parent file for a given file.
      * <p>
      * Added to simulate File.getParentFile() from JDK 1.2.
+     * @deprecated
      *
      * @param file   File to find parent of. Must not be <code>null</code>.
      * @return       Parent file or null if none
      */
     private File getParentFile(File file) {
-        String filename = file.getAbsolutePath();
-        file = new File(filename);
-        filename = file.getParent();
+        File parent = file.getParentFile();
 
-        if (filename != null && msgOutputLevel >= Project.MSG_VERBOSE) {
-            System.out.println("Searching in " + filename);
+        if (parent != null && msgOutputLevel >= Project.MSG_VERBOSE) {
+            System.out.println("Searching in " + parent.getAbsolutePath());
         }
 
-        return (filename == null) ? null : new File(filename);
+        return parent;
     }
 
     /**
