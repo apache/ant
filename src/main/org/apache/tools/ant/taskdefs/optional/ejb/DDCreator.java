@@ -149,7 +149,7 @@ public class DDCreator extends MatchingTask {
     }
     
     /**
-     * Set the directory into which the serialised deployment descriptors are to 
+     * Set the directory into which the serialized deployment descriptors are to
      * be written.
      *
      * @param dirName the name of the directory into which the serialised deployment
