@@ -329,7 +329,7 @@ Attaches a prefix to every line.
 <P>
 <H4>Example:</H4>
 
-This will attach the prefix <code>foo</code> to all lines.
+This will attach the prefix <code>Foo</code> to all lines.
 <BLOCKQUOTE><PRE>
 &lt;filterreader classname=&quot;org.apache.tools.ant.filters.PrefixLines&quot;&gt;
   &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
@@ -621,8 +621,8 @@ Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.mid}&quot;&gt;
   &lt;filterchain&gt;
-    &lt;HeadFilter lines=&quot;15&quot;/&gt;
-    &lt;TailFilter lines=&quot;5&quot;/&gt;
+    &lt;headfilter lines=&quot;15&quot;/&gt;
+    &lt;tailfilter lines=&quot;5&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
