@@ -44,7 +44,7 @@ public class ScriptDefBase extends Task implements DynamicConfigurator {
      * control to it
      */
     public void execute() {
-        getScript().executeScript(attributes, nestedElementMap);
+        getScript().executeScript(attributes, nestedElementMap, this);
     }
 
     private ScriptDef getScript() {

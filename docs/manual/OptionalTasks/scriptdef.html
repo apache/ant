@@ -41,10 +41,13 @@ lowercase names, so even if you use name="SomeAttribute", you'll have
 to use "someattribute" to retrieve the attribute's value from the
 <code>attributes</code> collection.</p>
 
+  <p>The name "self" (<i>since Ant 1.6.3</i>) is a pre-defined reference to the script def task instance.
+  It can be used for logging purposes</p>
 <p>The name "project" is a pre-defined reference to the Ant Project. For
 more information on writing scripts, please refer to the
 <a href="script.html">&lt;script&gt;</a> task
 </p>
+
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -133,9 +136,9 @@ of the first fileset.
     &lt;element name=&quot;path&quot; type=&quot;path&quot;/&gt;
     &lt;![CDATA[
 
-      project.log(&quot;Hello from script&quot;);
-      project.log(&quot;Attribute attr1 = &quot; + attributes.get(&quot;attr1&quot;));
-      project.log(&quot;First fileset basedir = &quot;
+      self.log(&quot;Hello from script&quot;);
+      self.log(&quot;Attribute attr1 = &quot; + attributes.get(&quot;attr1&quot;));
+      self.log(&quot;First fileset basedir = &quot;
         + elements.get(&quot;fileset&quot;).get(0).getDir(project));
 
     ]]&gt;
@@ -159,9 +162,9 @@ and iterates through them
     &lt;element name=&quot;fileset&quot; type=&quot;fileset&quot;/&gt;
     &lt;![CDATA[
       filesets = elements.get(&quot;fileset&quot;);
-      project.log(&quot;Number of filesets = &quot; + filesets.size());
+      self.log(&quot;Number of filesets = &quot; + filesets.size());
       for (i = 0; i &lt; filesets.size(); ++i) {
-        project.log(&quot;fileset &quot; + i + &quot; basedir = &quot;
+        self.log(&quot;fileset &quot; + i + &quot; basedir = &quot;
           + filesets.get(i).getDir(project));
       }
     ]]&gt;
