@@ -345,6 +345,22 @@ public abstract class BuildFileTest extends TestCase {
         assertEquals("property " + property,value,result);
     }
 
+    /**
+     * assert that a property equals &quot;true&quot;
+     * @param property property name
+     */
+    protected void assertPropertySet(String property) {
+        assertPropertyEquals(property, "true");
+    }
+
+    /**
+     * assert that a property is null
+     * @param property property name
+     */
+    protected void assertPropertyUnset(String property) {
+        assertPropertyEquals(property, null);
+    }
+
 
     /**
      * call a target, verify named property is "true".

@@ -196,4 +196,11 @@ public abstract class ConditionBase extends ProjectComponent {
      */
     public void addIsFalse(IsFalse test) {conditions.addElement(test);}
       
+    /**
+     * Add an &lt;isreference&gt; condition.
+     *
+     * @since Ant 1.6
+     */
+    public void addIsReference(IsReference i) {conditions.addElement(i);}
+
 }
