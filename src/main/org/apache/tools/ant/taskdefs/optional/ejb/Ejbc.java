@@ -54,9 +54,7 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.*;
 import org.apache.tools.ant.taskdefs.*;
 import org.apache.tools.ant.types.Path;
 
@@ -70,6 +68,19 @@ import java.io.File;
  * @author <a href="mailto:conor@cortexebusiness.com.au">Conor MacNeill</a>, Cortex ebusiness Pty Limited
  */
 public class Ejbc extends MatchingTask {
+    static public interface Helper {
+        public void initialize(Ejbc ejbcTask);
+        public void setDescriptorDir(File dir);
+        public void setDest(File dir);
+        public void setManifest(File manifestFile);
+        public void setClasspath(Path classpath);
+        public void setSrc(File dir);
+        public void setDescriptors(String[] descriptors);
+        public void execute();
+    }
+        
+        
+        
     /**
      * The root directory of the tree containing the serialised deployment desciptors. The actual
      * deployment descriptor files are selected using include and exclude constructs
@@ -91,7 +102,7 @@ public class Ejbc extends MatchingTask {
      * The classpath to be used in the weblogic ejbc calls. It must contain the weblogic
      * classes <b>and</b> the implementation classes of the home and remote interfaces.
      */
-    private String classpath;
+    private Path classpath;
     
     /**
      * The source directory for the home and remote interfaces. This is used to determine if
@@ -129,49 +140,53 @@ public class Ejbc extends MatchingTask {
         }
         
         String systemClassPath = System.getProperty("java.class.path");
-        String execClassPath = project.translatePath(systemClassPath + ":" + classpath +
-                                                         ":" + generatedFilesDirectory);
+        Path execClassPath = new Path(project, classpath + ":" + generatedFilesDirectory + ":" + systemClassPath);
+        
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner(descriptorDirectory);
    
-        String[] files = ds.getIncludedFiles();
+        String[] descriptorNames = ds.getIncludedFiles();
+        
 
-        Java helperTask = (Java)project.createTask("java");
-        helperTask.setFork(true);
-        helperTask.setClassname("org.apache.tools.ant.taskdefs.optional.ejb.EjbcHelper");
-        String args = "";
-        args += " " + descriptorDirectory;
-        args += " " + generatedFilesDirectory;
-        args += " " + sourceDirectory;
-        args += " " + generatedManifestFile;
-        for (int i = 0; i < files.length; ++i) {
-            args += " " + files[i];
+        // create an class loader
+        AntClassLoader loader = new AntClassLoader(project, execClassPath, false);
+        loader.addSystemPackageRoot("org.apache.tools.ant");
+        loader.addSystemPackageRoot("javax");
+        try {
+            Helper helper = (Helper)(loader.forceLoadClass("org.apache.tools.ant.taskdefs.optional.ejb.EjbcHelper").newInstance());
+            helper.initialize(this);
+            helper.setDescriptorDir(descriptorDirectory);
+            helper.setDest(generatedFilesDirectory);
+            helper.setManifest(generatedManifestFile);
+            helper.setSrc(sourceDirectory);
+            helper.setDescriptors(descriptorNames);
+            helper.setClasspath(execClassPath);
+            helper.execute();
+            helper = null;
         }
-                                    
-        helperTask.setArgs(args);
-        helperTask.setClasspath(new Path(project, execClassPath));
-        if (helperTask.executeJava() != 0) {                         
-            throw new BuildException("Execution of ejbc helper failed");
+        catch (Exception e) {
+            throw new BuildException(e);
         }
+        loader = null;
     }
 
     /**
      * Set the directory from where the serialised deployment descriptors are
      * to be read.
      *
-     * @param dirName the name of the directory containing the serialised deployment descriptors.
+     * @param dir the directory containing the serialised deployment descriptors.
      */
-    public void setDescriptors(String dirName) {
-        descriptorDirectory = new File(dirName);
+    public void setDescriptors(File dir) {
+        descriptorDirectory = dir;
     }
     
     /**
      * Set the directory into which the support classes, RMI stubs, etc are to be written
      *
-     * @param dirName the name of the directory into which code is generated
+     * @param dir the directory into which code is generated
      */
-    public void setDest(String dirName) {
-        generatedFilesDirectory = new File(dirName);
+    public void setDest(File dir) {
+        generatedFilesDirectory = dir;
     }
 
     /**
@@ -180,27 +195,27 @@ public class Ejbc extends MatchingTask {
      * For each EJB that is processed an entry is created in this file. This can then be used
      * to create a jar file for dploying the beans.
      *
-     * @param manfestFilename the name of the manifest file to be generated.
+     * @param manfestFilename the manifest file to be generated.
      */
-    public void setManifest(String manifestFilename) {
-        generatedManifestFile = new File(manifestFilename);
+    public void setManifest(File manifestFile) {
+        generatedManifestFile = manifestFile;
     }
     
     /**
      * Set the classpath to be used for this compilation.
      */
-    public void setClasspath(String s) {
-        this.classpath = project.translatePath(s);
+    public void setClasspath(Path classpath) {
+        this.classpath = classpath;
     }
 
     /**
      * Set the directory containing the source code for the home interface, remote interface
      * and public key class definitions.
      *
-     * @param dirName the directory containg the source tree for the EJB's interface classes.
+     * @param dir the directory containg the source tree for the EJB's interface classes.
      */
-    public void setSrc(String dirName) {
-        sourceDirectory = new File(dirName);
+    public void setSrc(File dir) {
+        sourceDirectory = dir;
     }
                 
 }

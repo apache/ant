@@ -57,6 +57,7 @@ package org.apache.tools.ant;
 import java.util.*;
 import java.util.zip.*;
 import java.io.*;
+import org.apache.tools.ant.types.Path;
 
 /**
  * Used to load classes within ant with a different claspath from that used to start ant.
@@ -75,7 +76,7 @@ public class AntClassLoader  extends ClassLoader {
     /**
      * The classpath that is to be used when loading classes using this class loader.
      */ 
-    private org.apache.tools.ant.types.Path classpath;
+    private Path classpath;
     
     /**
      * The project to which this class loader belongs.
@@ -83,9 +84,22 @@ public class AntClassLoader  extends ClassLoader {
     private Project project;
 
     /**
-     * The File components of the path. Typically these will be directories or jar files.
+     * Indicates whether the system class loader should be 
+     * consulted before trying to load with this class loader. 
      */
-    private Vector components = null;
+    private boolean systemFirst = true;
+
+    /**
+     * These are the package roots that are to be loaded by the system class loader
+     * regardless of whether the system class loader is being searched first or not.
+     */
+    private Vector systemPackages = new Vector();
+    
+    /**
+     * These are the package roots that are to be loaded by this class loader
+     * regardless of whether the system class loader is being searched first or not.
+     */
+    private Vector loaderPackages = new Vector();
     
     /**
      * Create a classloader for the given project using the classpath given.
@@ -93,28 +107,47 @@ public class AntClassLoader  extends ClassLoader {
      * @param project the project to ehich this classloader is to belong.
      * @param classpath the classpath to use to load the classes.
      */
-    public AntClassLoader(Project project, 
-                          org.apache.tools.ant.types.Path classpath) {
+    public AntClassLoader(Project project, Path classpath) {
         this.project = project;
         this.classpath = classpath;
     }
 
     /**
-     * Set up this classloader for the first time. 
+     * Create a classloader for the given project using the classpath given.
      *
-     * This method will set up the components field with the components from the
-     * given classpath. 
+     * @param project the project to ehich this classloader is to belong.
+     * @param classpath the classpath to use to load the classes.
      */
-    private void setup() {
-        // We iterate through the class path, resolving each element. 
-        components = new Vector();
-        
-        String[] pathElements = classpath.list();
-        for (int i = 0; i < pathElements.length; ++i) {
-            File element = project.resolveFile(pathElements[i]);
-            components.addElement(element);
-        }
+    public AntClassLoader(Project project, Path classpath, boolean systemFirst) {
+        this(project, classpath);
+        this.systemFirst = systemFirst;
     }
+    
+    /**
+     * Add a package root to the list of packages which must be loaded on the 
+     * system loader.
+     *
+     * All subpackages are also included.
+     *
+     * @param packageRoot the root of akll packages to be included.
+     */
+    public void addSystemPackageRoot(String packageRoot) {
+        systemPackages.addElement(packageRoot + ".");
+    }
+    
+    /**
+     * Add a package root to the list of packages which must be loaded using
+     * this loader.
+     *
+     * All subpackages are also included.
+     *
+     * @param packageRoot the root of akll packages to be included.
+     */
+    public void addLoaderPackageRoot(String packageRoot) {
+        loaderPackages.addElement(packageRoot + ".");
+    }
+    
+
 
     /**
      * Load a class through this class loader even if that class is available on the
@@ -131,10 +164,35 @@ public class AntClassLoader  extends ClassLoader {
      * this loader's classpath.
      */
     public Class forceLoadClass(String classname) throws ClassNotFoundException {
+        project.log("force loading " + classname, Project.MSG_VERBOSE);
         Class theClass = findLoadedClass(classname);
 
         if (theClass == null) {
             theClass = findClass(classname);
+        }
+        
+        return theClass;
+    }
+
+    /**
+     * Load a class through this class loader but defer to the system class loader
+     *
+     * This ensures that instances of the returned class will be compatible with instances which
+     * which have already been loaded on the system loader.
+     *
+     * @param classname the classname to be loaded.
+     * 
+     * @return the required Class object
+     *
+     * @throws ClassNotFoundException if the requested class does not exist on
+     * this loader's classpath.
+     */
+    public Class forceLoadSystemClass(String classname) throws ClassNotFoundException {
+        project.log("force system loading " + classname, Project.MSG_VERBOSE);
+        Class theClass = findLoadedClass(classname);
+
+        if (theClass == null) {
+            theClass = findSystemClass(classname);
         }
         
         return theClass;
@@ -149,17 +207,13 @@ public class AntClassLoader  extends ClassLoader {
      * found on the loader's classpath.
      */
     public InputStream getResourceAsStream(String name) {
-        if (components == null) {
-            // we haven't set up the list of directories and jars yet.
-            setup();
-        }
-
         // we need to search the components of the path to see if we can find the 
         // class we want. 
         InputStream stream = null;
-
-        for (Enumeration e = components.elements(); e.hasMoreElements() && stream == null; ) {
-            File pathComponent = (File)e.nextElement();
+ 
+        String[] pathElements = classpath.list();
+        for (int i = 0; i < pathElements.length && stream == null; ++i) {
+            File pathComponent = project.resolveFile((String)pathElements[i]);
             stream = getResourceStream(pathComponent, name);
         }
 
@@ -168,7 +222,7 @@ public class AntClassLoader  extends ClassLoader {
 
     /**
      * Get an inputstream to a given resource in the given file which may
-     * either be a directory or a jar type file.
+     * either be a directory or a zip file.
      *
      * @param file the file (directory or jar) in which to search for the resource.
      * @param resourceName the name of the resource for which a stream is required.
@@ -184,6 +238,7 @@ public class AntClassLoader  extends ClassLoader {
             
             if (file.isDirectory()) {
                 File resource = new File(file, resourceName); 
+                
                 if (resource.exists()) {   
                     return new FileInputStream(resource);
                 }
@@ -238,14 +293,49 @@ public class AntClassLoader  extends ClassLoader {
      * the system classpath or this loader's classpath.
      */
     protected Class loadClass(String classname, boolean resolve) throws ClassNotFoundException {
-        
+
+        // default to the global setting and then see
+        // if this class belongs to a package which has been
+        // designated to use a specific loader first (this one or the system one)
+        boolean useSystemFirst = systemFirst; 
+
+        for (Enumeration e = systemPackages.elements(); e.hasMoreElements();) {
+            String packageName = (String)e.nextElement();
+            if (classname.startsWith(packageName)) {
+                useSystemFirst = true;
+                break;
+            }
+        }
+
+        for (Enumeration e = loaderPackages.elements(); e.hasMoreElements();) {
+            String packageName = (String)e.nextElement();
+            if (classname.startsWith(packageName)) {
+                useSystemFirst = false;
+                break;
+            }
+        }
+
         Class theClass = findLoadedClass(classname);
         if (theClass == null) {
-            try {
-                theClass = findSystemClass(classname);
+            if (useSystemFirst) {
+                try {
+                    theClass = findSystemClass(classname);
+                    project.log("Class " + classname + " loaded from system loader", Project.MSG_VERBOSE);
+                }
+                catch (ClassNotFoundException cnfe) {
+                    theClass = findClass(classname);
+                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_VERBOSE);
+                }
             }
-            catch (ClassNotFoundException cnfe) {
-                theClass = findClass(classname);
+            else {
+                try {
+                    theClass = findClass(classname);
+                    project.log("Class " + classname + " loaded from ant loader", Project.MSG_VERBOSE);
+                }
+                catch (ClassNotFoundException cnfe) {
+                    theClass = findSystemClass(classname);
+                    project.log("Class " + classname + " loaded from system loader", Project.MSG_VERBOSE);
+                }
             }
         }
             
@@ -294,6 +384,7 @@ public class AntClassLoader  extends ClassLoader {
         return defineClass(classname, classData, 0, classData.length); 
     }
 
+
     /**
      * Search for and load a class on the classpath of this class loader.
      *
@@ -305,18 +396,29 @@ public class AntClassLoader  extends ClassLoader {
      * this loader's classpath.
      */
     public Class findClass(String name) throws ClassNotFoundException {
-        if (components == null) {
-            // we haven't set up the list of directories and jars yet.
-            setup();
-        }
+        project.log("Finding class " + name, Project.MSG_VERBOSE);
 
+        try {
+            return findClass(name, classpath);
+        }
+        catch (ClassNotFoundException e) {
+            throw e;
+        }
+    }
+
+
+    /**
+     * Find a class on the given classpath.
+     */
+    private Class findClass(String name, Path path) throws ClassNotFoundException {
         // we need to search the components of the path to see if we can find the 
         // class we want. 
         InputStream stream = null;
         String classFilename = getClassFilename(name);
         try {
-            for (Enumeration e = components.elements(); e.hasMoreElements() && stream == null; ) {
-                File pathComponent = (File)e.nextElement();
+            String[] pathElements = path.list();
+            for (int i = 0; i < pathElements.length && stream == null; ++i) {
+                File pathComponent = project.resolveFile((String)pathElements[i]);
                 stream = getResourceStream(pathComponent, classFilename);
             }
         
