@@ -440,7 +440,23 @@ location attributes of its own, so</p>
 <pre>
     &lt;classpath path=&quot;${classpath}&quot; /&gt;
 </pre>
-
+<p>In addition, <a href="#fileset">FileSet</a>s can be specified via
+nested <code>&lt;fileset&gt;</code> and
+<code>&lt;filesetref&gt;</code> elements. The order in which the files
+building up FileSet are added to the PATH like structure is not
+defined.</p>
+<pre>
+    &lt;classpath&gt;
+      &lt;pathelement path=&quot;${classpath}&quot; /&gt;
+      &lt;fileset dir=&quot;lib&quot;&gt;
+        &lt;include name=&quot;**/*.jar&quot; /&gt;
+      &lt;/fileset;&gt;
+      &lt;pathelement location=&quot;classes&quot; /&gt;
+    &lt;/classpath&gt;
+</pre>
+<p>Builds a PATH which holds the value of <code>${classpath}</code>
+followed by all JAR files in the <code>lib</code> directory, followed
+by the <code>classes</code> directory.</p>
 <h3><a name="arg">Command line arguments</a></h3>
 
 <p>Several tasks take arguments that shall be passed to another
@@ -957,8 +973,13 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>src</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>src</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1160,8 +1181,12 @@ the files you want to have excluded from the deletion process. This is also done
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>dir</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code> as well as the
+nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1426,8 +1451,13 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>src</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>srcdir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1798,8 +1828,13 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>basedir</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>basedir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1990,8 +2025,7 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>srcdir</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
 <p>It is possible to use different compilers. This can be selected with the
 &quot;build.compiler&quot; property. There are three choices:</p>
 <ul>
@@ -2090,12 +2124,12 @@ relative to the <i>srcdir</i> directory.</p>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
-Being a directory based task, Javac supports the <code>&lt;include&gt;</code> and 
-<code>&lt;exclude&gt;</code> nested elements common to a number of Ant tasks. Javac also supports a 
-nested <code>&lt;src&gt;</code> element. This is used to specify multiple source paths. 
-Multiple <code>src</code> elements may be present and each specifies a source path which will be 
-searched by Javac for classes to compile.
-
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>srcdir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h4>src, classpath, bootclasspath and extdirs</h4>
 <p><code>Javac</code>'s <em>srcdir</em>, <em>classpath</em>,
 <em>bootclasspath</em> and <em>extdirs</em> attributes are <a
@@ -2742,15 +2776,13 @@ must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">file for which the token should be replaced. If not present the dir attribute 
-                     must be specified</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top">file for which the token should be replaced.</td>
+    <td align="center" rowspan=2">Exactly one of the two.</td>
   </tr>
   <tr>
     <td valign="top">dir</td>
-    <td valign="top">The base directory to use when replacing a token in multiple files. If not present the file attribute
-                     must be specified</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top">The base directory to use when replacing a token in 
+      multiple files.</td>
   </tr>
   <tr>
     <td valign="top">token</td>
@@ -2800,6 +2832,11 @@ must use a nested <code>&lt;replacetoken&gt;</code> element.</p>
 <p>replaces occurrences of the string &quot;@@@&quot; with the string
 &quot;wombat&quot;, in the file <code>${src}/index.html</code>.</p>
 <h3>Parameters specified as nested elements</h3>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code> as well as the
+nested <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <p>If either the text you want to replace or the replacement text
 cross line boundaries, you can use nested elements to specify
 them.</p>
@@ -2838,8 +2875,13 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>base</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>base</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3020,8 +3062,13 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>basedir</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>basedir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <p>Note that this task does not perform compression. You might want to use the <a href="#gzip">GZip</a>
 task to come up with a .tar.gz package.</p>
 <h3>Parameters</h3>
@@ -3192,8 +3239,13 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>basedir</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>basedir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3344,8 +3396,13 @@ the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The patterns are
-relative to the <i>basedir</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns. 
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>basedir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3443,8 +3500,13 @@ other platforms.  You must have the Microsoft cabarc tool available in
 your executable path.</p>
 <p>See the section on <a href="#directorybasedtasks">directory based
 tasks</a>, on how the inclusion/exclusion of files works, and how to
-write patterns. The patterns are relative to the <i>basedir</i>
-directory.</p>
+write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>basedir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3707,8 +3769,13 @@ excluded.  This is also done with patterns.  And finally with the
 <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
 href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The
-patterns are relative to the <i>srcDir</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns.</p>
+<p>This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>srcdir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -3952,8 +4019,13 @@ patterns are relative to the <i>srcDir</i> directory.</p>
 </p>
 <p>See the section on 
 <a href="#directorybasedtasks">directory based tasks</a>, on how the
-inclusion/exclusion of files works, and how to write patterns. The
-patterns are relative to the <i>srcDir</i> directory.</p>
+inclusion/exclusion of files works, and how to write patterns. 
+This task forms an implicit <a href="#fileset">FileSet</a> and
+supports all attributes of <code>&lt;fileset&gt;</code>
+(<code>dir</code> becomes <code>srcDir</code>) as well as the nested
+<code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
+<code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
+elements.</p>
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
