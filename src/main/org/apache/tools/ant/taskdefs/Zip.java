@@ -292,22 +292,6 @@ public class Zip extends MatchingTask {
 
         addingNewFiles = true;
         doUpdate = doUpdate && zipFile.exists();
-        if (doUpdate) {
-            FileUtils fileUtils = FileUtils.newFileUtils();
-            renamedFile = 
-                fileUtils.createTempFile("zip", ".tmp",
-                                         fileUtils.getParentFile(zipFile));
-
-            try {
-                if (!zipFile.renameTo(renamedFile)) {
-                    throw new BuildException("Unable to rename old file to "
-                                             + "temporary file");
-                }
-            } catch (SecurityException e) {
-                throw new BuildException("Not allowed to rename old file to "
-                                         + "temporary file");
-            }
-        }
 
         // Add the files found in groupfileset to fileset
         for (int i = 0; i < groupfilesets.size(); i++) {
@@ -349,6 +333,23 @@ public class Zip extends MatchingTask {
                 return;
             }
             
+            if (doUpdate) {
+                FileUtils fileUtils = FileUtils.newFileUtils();
+                renamedFile = 
+                    fileUtils.createTempFile("zip", ".tmp",
+                                             fileUtils.getParentFile(zipFile));
+
+                try {
+                    if (!zipFile.renameTo(renamedFile)) {
+                        throw new BuildException("Unable to rename old file "
+                                                 + "to temporary file");
+                    }
+                } catch (SecurityException e) {
+                    throw new BuildException("Not allowed to rename old file "
+                                             + "to temporary file");
+                }
+            }
+
             String action = doUpdate ? "Updating " : "Building ";
             
             log(action + archiveType + ": " + zipFile.getAbsolutePath());
@@ -419,13 +420,13 @@ public class Zip extends MatchingTask {
             String msg = "Problem creating " + archiveType + ": " 
                 + ioe.getMessage();
 
-            // delete a bogus ZIP file
-            if (!zipFile.delete()) {
+            // delete a bogus ZIP file (but only if it's not the original one)
+            if ((!doUpdate || renamedFile != null) && !zipFile.delete()) {
                 msg += " (and the archive is probably corrupt but I could not "
                     + "delete it)";
             }
 
-            if (doUpdate) {
+            if (doUpdate && renamedFile != null) {
                 if (!renamedFile.renameTo(zipFile)) {
                     msg += " (and I couldn't rename the temporary file " +
                         renamedFile.getName() + " back)";
