@@ -63,7 +63,6 @@ import org.apache.tools.ant.types.FileSet;
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import java.util.Vector;
 
 /**
  * Moves a file or directory to a new file or directory.  By default,

@@ -55,7 +55,6 @@
 package org.apache.tools.ant.taskdefs.condition;
 
 import java.util.Enumeration;
-import java.util.NoSuchElementException;
 import java.util.Vector;
 
 
