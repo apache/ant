@@ -434,7 +434,15 @@ public class ComponentHelper  {
      */
     public Task createTask(String taskType) throws BuildException {
         Task task=createNewTask(taskType);
-        if(task!=null) {
+        if (task == null && taskType.equals("property")) {
+            // quick fix for Ant.java use of property before
+            // initializeing the project
+            addTaskDefinition("property",
+                              org.apache.tools.ant.taskdefs.Property.class);
+            task = createNewTask(taskType);
+        }
+            
+        if (task != null) {
             addCreatedTask(taskType, task);
         }
         return task;
