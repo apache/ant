@@ -14,6 +14,8 @@ Fixed bugs:
 
 * SQL task did not work with Informix IDS 9.2. Bugzilla Report 27162.
 
+* MacroDef did not allow attributes named 'description'. Bugzilla Report 27175.
+
 Other changes:
 --------------
 
