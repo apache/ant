@@ -103,6 +103,35 @@ public class TouchTest extends BuildFileTest {
     }
 
     /**
+     * test the mapped file set
+     */
+    public void testMappedFileset() {
+        executeTarget("testMappedFileset");
+    }
+
+    /**
+     * test the mapped file list
+     */
+    public void testMappedFilelist() {
+        executeTarget("testMappedFilelist");
+    }
+
+    /**
+     * test the pattern attribute
+     */
+    public void testGoodPattern() {
+        executeTarget("testGoodPattern");
+    }
+
+    /**
+     * test the pattern attribute again
+     */
+    public void testBadPattern() {
+        expectBuildExceptionContaining("testBadPattern",
+            "No parsing exception thrown", "Unparseable");
+    }
+
+    /**
      * run a target to touch the test file; verify the timestamp is as expected
      * @param targetName
      * @param timestamp
@@ -110,7 +139,7 @@ public class TouchTest extends BuildFileTest {
     private void touchFile(String targetName, long timestamp) {
         executeTarget(targetName);
         long time = getTargetTime();
-        assertTimesNearlyMatch(timestamp,time);
+        assertTimesNearlyMatch(timestamp, time);
     }
 
     /**
@@ -130,7 +159,7 @@ public class TouchTest extends BuildFileTest {
      * @param range
      */
     private void assertTimesNearlyMatch(long timestamp, long time, long range) {
-        assertTrue("Time "+timestamp+" is not within "+range+" ms of "+time,
-                Math.abs(time-timestamp)<=range);
+        assertTrue("Time " + timestamp + " is not within " + range + " ms of "
+            + time, (Math.abs(time - timestamp) <= range));
     }
 }

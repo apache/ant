@@ -1,16 +1,24 @@
 <?xml version="1.0"?>
 <project default="cleanup" basedir=".">
 
+  <property name="mappermillis" value="1072224000000" />
+  
+  <selector id="map.selector">
+    <date millis="${mappermillis}" />
+  </selector>
+
   <target name="cleanup">
-    <delete file="touchtest" />
+    <delete>
+      <fileset dir="." includes="touchtest*" />
+    </delete>
   </target>
 
   <target name="noSeconds">
-    <touch file="touchtest" datetime="2003/06/24 2:20 pm"/>
+    <touch file="touchtest" datetime="06/24/2003 2:20 pm"/>
   </target>
 
   <target name="seconds">
-    <touch file="touchtest" datetime="2003/06/24 2:20:12 pm"/>
+    <touch file="touchtest" datetime="06/24/2003 2:20:12 pm"/>
   </target>
 
   <target name="testNow">
@@ -45,5 +53,69 @@
     </touch>
   </target>
 
-  
+  <target name="testMappedFileset">
+    <touch file="touchtest" millis="${mappermillis}" />
+    <touch>
+      <fileset file="touchtest" />
+      <compositemapper>
+        <globmapper from="*" to="*foo" />
+        <globmapper from="*" to="*bar" />
+      </compositemapper>
+    </touch>
+
+    <fail>
+      <condition>
+        <not>
+          <and>
+            <isfileselected file="touchtest">
+              <selector refid="map.selector" />
+            </isfileselected>
+            <isfileselected file="touchtestfoo">
+              <selector refid="map.selector" />
+            </isfileselected>
+            <isfileselected file="touchtestbar">
+              <selector refid="map.selector" />
+            </isfileselected>
+          </and>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
+  <target name="testMappedFilelist">
+    <touch millis="${mappermillis}">
+      <filelist dir="." files="idonotexist" />
+      <mergemapper to="touchtest" />
+    </touch>
+
+    <fail>
+      <condition>
+        <not>
+          <isfileselected file="touchtest">
+            <selector refid="map.selector" />
+          </isfileselected>
+        </not>
+      </condition>
+    </fail>
+
+  </target>
+
+  <target name="testGoodPattern">
+    <touch file="touchtest" datetime="06242003142012foo" pattern="MMddyyyyHHmmss'foo'" />
+    <fail>
+      <condition>
+        <not>
+          <isfileselected file="touchtest">
+            <date millis="1056482412000" />
+          </isfileselected>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testBadPattern">
+    <touch file="touchtest" datetime="06242003142012foo" pattern="MMddyyyyHHmmss'bar'" />
+  </target>
+
 </project>

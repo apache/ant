@@ -1097,6 +1097,23 @@ public class FileUtils {
      * @since Ant 1.5
      */
     public boolean createNewFile(File f) throws IOException {
+        return createNewFile(f, false);
+    }
+
+    /**
+     * Create a new file, optionally creating parent directories.
+     *
+     * @param f the file to be created.
+     * @param mkdirs <code>boolean</code> whether to create parent directories.
+     * @return true if the file did not exist already.
+     * @throws IOException on error.
+     * @since Ant 1.6.3
+     */
+    public boolean createNewFile(File f, boolean mkdirs) throws IOException {
+        File parent = f.getParentFile();
+        if (mkdirs && !(parent.exists())) {
+            parent.mkdirs();
+        }
         return f.createNewFile();
     }
 
