@@ -63,7 +63,6 @@ import java.net.URLConnection;
 import java.net.HttpURLConnection;
 import java.util.Date;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
@@ -147,7 +146,7 @@ public class Get extends Task {
                 // check to see if sun's Base64 encoder is available.
                 try {
                     sun.misc.BASE64Encoder encoder =
-                        (sun.misc.BASE64Encoder) 
+                        (sun.misc.BASE64Encoder)
                         Class.forName("sun.misc.BASE64Encoder").newInstance();
                     encoding = encoder.encode (up.getBytes());
 
@@ -155,7 +154,7 @@ public class Get extends Task {
                     Base64Converter encoder = new Base64Converter();
                     encoding = encoder.encode(up.getBytes());
                 }
-                connection.setRequestProperty ("Authorization", 
+                connection.setRequestProperty ("Authorization",
                                                "Basic " + encoding);
             }
 
@@ -165,7 +164,7 @@ public class Get extends Task {
             if (connection instanceof HttpURLConnection) {
                 HttpURLConnection httpConnection
                     = (HttpURLConnection) connection;
-                if (httpConnection.getResponseCode() 
+                if (httpConnection.getResponseCode()
                     == HttpURLConnection.HTTP_NOT_MODIFIED)  {
                     //not modified so no file download. just return
                     //instead and trace out something so the user
@@ -212,7 +211,7 @@ public class Get extends Task {
             try {
                 byte[] buffer = new byte[100 * 1024];
                 int length;
-                
+
                 while ((length = is.read(buffer)) >= 0) {
                     fos.write(buffer, 0, length);
                     if (verbose) {
@@ -244,7 +243,7 @@ public class Get extends Task {
                 if (verbose)  {
                     Date t = new Date(remoteTimestamp);
                     log("last modified = " + t.toString()
-                        + ((remoteTimestamp == 0) 
+                        + ((remoteTimestamp == 0)
                           ? " - using current time instead"
                           : ""));
                 }
@@ -307,7 +306,7 @@ public class Get extends Task {
      * HTTP connections, it is ignored in other cases.  When the flag
      * is set, the local copy of the downloaded file will also have
      * its timestamp set to the remote file time.</p>
-     * 
+     *
      * <p>Note that remote files of date 1/1/1970 (GMT) are treated as
      * 'no timestamp', and web servers often serve files with a
      * timestamp in the future by replacing their timestamp with that
