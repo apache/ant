@@ -266,6 +266,12 @@
         <td>Alicia Kolesnikova</td>
         <td><img src="images/bogaert.gif"/></td>
       </tr>
+      <tr>
+        <td>42</td>
+        <td>32</td>
+        <td>Joe Marron (jmarron at contextmedia.com)</td>
+        <td><img src="images/marron.gif"/></td>
+      </tr>
      </table>
   </section>
 </body>
