@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -53,20 +53,20 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-import java.io.IOException;
 import java.io.DataInputStream;
+import java.io.IOException;
 
 
 /**
  * A NameAndType CP Info
- * 
+ *
  * @author Conor MacNeill
  */
 public class NameAndTypeCPInfo extends ConstantPoolEntry {
 
     /**
      * Constructor.
-     * 
+     *
      */
     public NameAndTypeCPInfo() {
         super(CONSTANT_NameAndType, 1);
@@ -74,19 +74,19 @@ public class NameAndTypeCPInfo extends ConstantPoolEntry {
 
     /**
      * read a constant pool entry from a class stream.
-     * 
+     *
      * @param cpStream the DataInputStream which contains the constant pool entry to be read.
-     * 
+     *
      * @throws IOException if there is a problem reading the entry from the stream.
      */
     public void read(DataInputStream cpStream) throws IOException {
         nameIndex = cpStream.readUnsignedShort();
         descriptorIndex = cpStream.readUnsignedShort();
-    } 
+    }
 
     /**
      * Print a readable version of the constant pool entry.
-     * 
+     *
      * @return the string representation of this constant pool entry.
      */
     public String toString() {
@@ -96,15 +96,15 @@ public class NameAndTypeCPInfo extends ConstantPoolEntry {
             value = "Name = " + name + ", type = " + type;
         } else {
             value = "Name index = " + nameIndex + ", descriptor index = " + descriptorIndex;
-        } 
+        }
 
         return value;
-    } 
+    }
 
     /**
      * Resolve this constant pool entry with respect to its dependents in
      * the constant pool.
-     * 
+     *
      * @param constantPool the constant pool of which this entry is a member
      * and against which this entry is to be resolved.
      */
@@ -113,19 +113,19 @@ public class NameAndTypeCPInfo extends ConstantPoolEntry {
         type = ((Utf8CPInfo) constantPool.getEntry(descriptorIndex)).getValue();
 
         super.resolve(constantPool);
-    } 
+    }
 
     public String getName() {
         return name;
-    } 
+    }
 
     public String getType() {
         return type;
-    } 
+    }
 
     private String name;
     private String type;
-    private int    nameIndex;
-    private int    descriptorIndex;
+    private int nameIndex;
+    private int descriptorIndex;
 }
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -53,15 +53,15 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
 
-import java.util.zip.ZipInputStream;
-import java.util.zip.ZipEntry;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ByteArrayOutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * A class file iterator which iterates through the contents of a Java jar file.
- * 
+ *
  * @author Conor MacNeill
  */
 public class JarFileIterator implements ClassFileIterator {
@@ -74,19 +74,19 @@ public class JarFileIterator implements ClassFileIterator {
     }
 
     private byte[] getEntryBytes(InputStream stream) throws IOException {
-        byte[]                buffer = new byte[8192];
+        byte[] buffer = new byte[8192];
         ByteArrayOutputStream baos = new ByteArrayOutputStream(2048);
-        int                   n;
+        int n;
 
         while ((n = stream.read(buffer, 0, buffer.length)) != -1) {
             baos.write(buffer, 0, n);
-        } 
+        }
 
         return baos.toByteArray();
-    } 
+    }
 
     public ClassFile getNextClassFile() {
-        ZipEntry         jarEntry;
+        ZipEntry jarEntry;
         ClassFile nextElement = null;
 
         try {
@@ -98,30 +98,30 @@ public class JarFileIterator implements ClassFileIterator {
 
                 if (!jarEntry.isDirectory() && entryName.endsWith(".class")) {
 
-                        // create a data input stream from the jar input stream
-                        ClassFile javaClass = new ClassFile();
+                    // create a data input stream from the jar input stream
+                    ClassFile javaClass = new ClassFile();
 
-                        javaClass.read(jarStream);
+                    javaClass.read(jarStream);
 
-                        nextElement = javaClass;
+                    nextElement = javaClass;
                 } else {
-                        
+
                     jarEntry = jarStream.getNextEntry();
-                } 
-            } 
+                }
+            }
         } catch (IOException e) {
             String message = e.getMessage();
             String text = e.getClass().getName();
 
             if (message != null) {
                 text += ": " + message;
-            } 
+            }
 
             throw new RuntimeException("Problem reading JAR file: " + text);
-        } 
+        }
 
         return nextElement;
-    } 
+    }
 
 }
 

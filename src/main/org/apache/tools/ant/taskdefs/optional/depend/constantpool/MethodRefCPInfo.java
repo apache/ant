@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -53,25 +53,25 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-import java.io.IOException;
 import java.io.DataInputStream;
+import java.io.IOException;
 
 
 /**
  * A MethodRef CP Info
- * 
+ *
  * @author Conor MacNeill
  */
 public class MethodRefCPInfo extends ConstantPoolEntry {
     private String methodClassName;
     private String methodName;
     private String methodType;
-    private int    classIndex;
-    private int    nameAndTypeIndex;
+    private int classIndex;
+    private int nameAndTypeIndex;
 
     /**
      * Constructor.
-     * 
+     *
      */
     public MethodRefCPInfo() {
         super(CONSTANT_MethodRef, 1);
@@ -79,19 +79,19 @@ public class MethodRefCPInfo extends ConstantPoolEntry {
 
     /**
      * read a constant pool entry from a class stream.
-     * 
+     *
      * @param cpStream the DataInputStream which contains the constant pool entry to be read.
-     * 
+     *
      * @throws IOException if there is a problem reading the entry from the stream.
      */
     public void read(DataInputStream cpStream) throws IOException {
         classIndex = cpStream.readUnsignedShort();
         nameAndTypeIndex = cpStream.readUnsignedShort();
-    } 
+    }
 
     /**
      * Print a readable version of the constant pool entry.
-     * 
+     *
      * @return the string representation of this constant pool entry.
      */
     public String toString() {
@@ -101,15 +101,15 @@ public class MethodRefCPInfo extends ConstantPoolEntry {
             value = "Method : Class = " + methodClassName + ", name = " + methodName + ", type = " + methodType;
         } else {
             value = "Method : Class index = " + classIndex + ", name and type index = " + nameAndTypeIndex;
-        } 
+        }
 
         return value;
-    } 
+    }
 
     /**
      * Resolve this constant pool entry with respect to its dependents in
      * the constant pool.
-     * 
+     *
      * @param constantPool the constant pool of which this entry is a member
      * and against which this entry is to be resolved.
      */
@@ -128,19 +128,19 @@ public class MethodRefCPInfo extends ConstantPoolEntry {
         methodType = nt.getType();
 
         super.resolve(constantPool);
-    } 
+    }
 
     public String getMethodClassName() {
         return methodClassName;
-    } 
+    }
 
     public String getMethodName() {
         return methodName;
-    } 
+    }
 
     public String getMethodType() {
         return methodType;
-    } 
+    }
 
 }
 

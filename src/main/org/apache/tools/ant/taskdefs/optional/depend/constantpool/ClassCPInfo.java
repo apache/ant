@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -53,13 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-import java.io.IOException;
 import java.io.DataInputStream;
+import java.io.IOException;
 
 
 /**
  * The constant pool entry which stores class information.
- * 
+ *
  * @author Conor MacNeill
  */
 public class ClassCPInfo extends ConstantPoolEntry {
@@ -75,11 +75,11 @@ public class ClassCPInfo extends ConstantPoolEntry {
      * name is changed, this entry is invalid until this entry is connected to a constant
      * pool.
      */
-    private int    index;
+    private int index;
 
     /**
      * Constructor.
-     * 
+     *
      * Sets the tag value for this entry to type Class
      */
     public ClassCPInfo() {
@@ -88,42 +88,42 @@ public class ClassCPInfo extends ConstantPoolEntry {
 
     /**
      * Read the entry from a stream.
-     * 
+     *
      * @param cpStream the stream containing the constant pool entry to be read.
-     * 
+     *
      * @exception IOException thrown if there is a problem reading the entry from the stream.
      */
     public void read(DataInputStream cpStream) throws IOException {
         index = cpStream.readUnsignedShort();
         className = "unresolved";
-    } 
+    }
 
     /**
      * Generate a string readable version of this entry
      */
     public String toString() {
         return "Class Constant Pool Entry for " + className + "[" + index + "]";
-    } 
+    }
 
     /**
      * Resolve this class info against the given constant pool.
-     * 
+     *
      * @param constantPool the constant pool with which to resolve the class.
      */
     public void resolve(ConstantPool constantPool) {
         className = ((Utf8CPInfo) constantPool.getEntry(index)).getValue();
 
         super.resolve(constantPool);
-    } 
+    }
 
     /**
      * Get the class name of this entry.
-     * 
+     *
      * @return the class' name.
      */
     public String getClassName() {
         return className;
-    } 
+    }
 
 }
 

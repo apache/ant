@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,11 +55,11 @@ package org.apache.tools.ant.taskdefs.optional.depend;
 
 /**
  * Utility class file routines.
- * 
+ *
  * This class porovides a number of static utility methods to convert between the
  * formats used in the Java class file format and those commonly used in Java
  * programming.
- * 
+ *
  * @author Conor MacNeill
  */
 public class ClassFileUtils {
@@ -67,24 +67,24 @@ public class ClassFileUtils {
     /**
      * Convert a class name from class file slash notation to java source
      * file dot notation.
-     * 
+     *
      * @param slashName the class name in slash notation (eg. java/lang/Object)
-     * 
+     *
      * @return the class name in dot notation (eg. java.lang.Object).
      */
     public static String convertSlashName(String name) {
-        return name.replace('\\', '.').replace( '/', '.' );
-    } 
+        return name.replace('\\', '.').replace('/', '.');
+    }
 
     /**
      * Convert a class name from java source file dot notation to class file slash notation..
-     * 
+     *
      * @param dotName the class name in dot notation (eg. java.lang.Object).
-     * 
+     *
      * @return the class name in slash notation (eg. java/lang/Object).
      */
     public static String convertDotName(String dotName) {
-        return dotName.replace( '.', '/');
-    } 
+        return dotName.replace('.', '/');
+    }
 }
 

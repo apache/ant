@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -53,19 +53,19 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
 
-import java.util.Stack;
-import java.util.Enumeration;
-import java.util.Vector;
-import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Stack;
+import java.util.Vector;
 
 /**
  * An iterator which iterates through the contents of a java directory.
- * 
+ *
  * The iterator should be created with the directory at the root of the
  * Java namespace.
- * 
+ *
  * @author Conor MacNeill
  */
 public class DirectoryIterator implements ClassFileIterator {
@@ -92,15 +92,15 @@ public class DirectoryIterator implements ClassFileIterator {
 
     /**
      * Creates a directory iterator.
-     * 
+     *
      * The directory iterator is created to scan the root directory. If the
      * changeInto flag is given, then the entries returned will be relative to this
      * directory and not the current directory.
-     * 
+     *
      * @param rootDirectory the root if the directory namespace which is to be iterated over
      * @param changeInto if true then the returned entries will be relative to the rootDirectory
      * and not the current directory.
-     * 
+     *
      * @throws IOException if there is a problem reading the directory information.
      */
     public DirectoryIterator(File rootDirectory, boolean changeInto) throws IOException {
@@ -112,7 +112,7 @@ public class DirectoryIterator implements ClassFileIterator {
             rootLength = rootDirectory.getPath().length() + 1;
         } else {
             rootLength = 0;
-        } 
+        }
 
         Vector filesInRoot = getDirectoryEntries(rootDirectory);
 
@@ -121,9 +121,9 @@ public class DirectoryIterator implements ClassFileIterator {
 
     /**
      * Get a vector covering all the entries (files and subdirectories in a directory).
-     * 
+     *
      * @param directory the directory to be scanned.
-     * 
+     *
      * @return a vector containing File objects for each entry in the directory.
      */
     private Vector getDirectoryEntries(File directory) {
@@ -137,15 +137,15 @@ public class DirectoryIterator implements ClassFileIterator {
 
             for (int i = 0; i < length; ++i) {
                 files.addElement(new File(directory, filesInDir[i]));
-            } 
-        } 
+            }
+        }
 
         return files;
-    } 
+    }
 
     /**
      * Template method to allow subclasses to supply elements for the iteration.
-     * 
+     *
      * The directory iterator maintains a stack of iterators covering each level
      * in the directory hierarchy. The current iterator covers the current directory
      * being scanned. If the next entry in that directory is a subdirectory, the current
@@ -153,7 +153,7 @@ public class DirectoryIterator implements ClassFileIterator {
      * subdirectory. If the entry is a file, it is returned as the next element and the
      * iterator remains valid. If there are no more entries in the current directory,
      * the topmost iterator on the statck is popped off to become the current iterator.
-     * 
+     *
      * @return the next ClassFile in the iteration.
      */
     public ClassFile getNextClassFile() {
@@ -186,23 +186,23 @@ public class DirectoryIterator implements ClassFileIterator {
                             javaClass.read(inFileStream);
 
                             nextElement = javaClass;
-                        } 
-                    } 
+                        }
+                    }
                 } else {
                     // this iterator is exhausted. Can we pop one off the stack
                     if (enumStack.empty()) {
                         break;
                     } else {
                         currentEnum = (Enumeration) enumStack.pop();
-                    } 
-                } 
-            } 
+                    }
+                }
+            }
         } catch (IOException e) {
             nextElement = null;
-        } 
+        }
 
         return nextElement;
-    } 
+    }
 
 }
 
