@@ -125,6 +125,9 @@ Other changes:
 * <fail> no supports builds to fail based on conditions via if and
   unless attributes.
 
+* Ant now comes with a BuildLogger implementation that can send emails
+  containing a log of the build process.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 
