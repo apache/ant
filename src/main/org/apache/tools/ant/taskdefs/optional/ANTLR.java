@@ -59,6 +59,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -337,7 +338,11 @@ public class ANTLR extends Task {
             commandline.createArgument().setValue("-traceLexer");
         }
         if (traceTreeWalker) {
-            commandline.createArgument().setValue("-traceTreeWalker");
+            if (is272()) {
+                commandline.createArgument().setValue("-traceTreeParser");
+            } else {
+                commandline.createArgument().setValue("-traceTreeWalker");
+            }
         }
         if (debug) {
             commandline.createArgument().setValue("-debug");
@@ -385,9 +390,9 @@ public class ANTLR extends Task {
         PumpStreamHandler psh = 
             new PumpStreamHandler(new LogOutputStream(this, Project.MSG_INFO),
                                   new TeeOutputStream(
-                                      new LogOutputStream(this, 
-                                                          Project.MSG_WARN),
-                                      bos)
+                                                      new LogOutputStream(this, 
+                                                                          Project.MSG_WARN),
+                                                      bos)
                                   );
         Execute exe = new Execute(psh, null);
         exe.setAntRun(getProject());
@@ -405,5 +410,21 @@ public class ANTLR extends Task {
             } catch (IOException e) {
             }
         }
+    }
+
+    /**
+     * Whether the antlr version is 2.7.2 (or higher).
+     *
+     * @since Ant 1.6
+     */
+    protected boolean is272() {
+        try {
+            AntClassLoader l = new AntClassLoader(getProject(),
+                                                  commandline.getClasspath());
+            l.loadClass("antlr.Version");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        } // end of try-catch
     }
 }
