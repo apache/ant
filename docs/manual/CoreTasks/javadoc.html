@@ -347,6 +347,13 @@ instead.</i></p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">tag</td>
+    <td valign="top">Specifies how custom tags should be handled. See
+      <a href="#tagelement">below</a> for details.</td>
+    <td align="center" valign="top">1.4</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">additionalparam</td>
     <td valign="top">Lets you add additional parameters to the javadoc
             command line. Useful for doclets. Parameters containing
@@ -543,6 +550,42 @@ of the doclet element is shown below:</p>
   &lt;/javadoc&gt;
 </pre>
 
+<h4><a name="tagelement">tag</a></h4> 
+<p>The tag nested element is used to specify custom tags. This option is only available
+with Java 1.4.</p>
+
+<h5>Parameters</h5>
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">Name of the tag (e.g. <code>todo</code>)</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">description</td>
+    <td valign="top">Description for tag (e.g. <code>To do:</code>)</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">enabled</td>
+    <td valign="top">Whether or not the tag is enabled (defaults to <code>true</code>)</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">scope</td>
+    <td valign="top">Scope for the tag - the elements in which it can be used. This
+    is a comma separated list of some of the elements: <code>overview</code>, 
+    <code>packages</code>, <code>types</code>, <code>constructors</code>, 
+    <code>methods</code>, <code>fields</code> or the default, <code>all</code>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
 <h4>sourcepath, classpath and bootclasspath</h4>
 <p><code>Javadoc</code>'s <i>sourcepath</i>, <i>classpath</i> and
 <i>bootclasspath</i> attributes are <a href="../using.html#path">PATH like
@@ -562,6 +605,7 @@ respectively.</p>
            windowtitle=&quot;Test API&quot;&gt;
     &lt;doctitle&gt;&lt;![CDATA[&lt;h1&gt;Test&lt;/h1&gt;]]&gt;&lt;/doctitle&gt;
     &lt;bottom&gt;&lt;![CDATA[&lt;i&gt;Copyright &amp;#169; 2000 Dummy Corp. All Rights Reserved.&lt;/i&gt;]]&gt;&lt;/bottom&gt;
+    &lt;tag name=&quot;todo&quot; scope=&quot;all&quot; description=&quot;To do:&quot; /&gt;
     &lt;group title=&quot;Group 1 Packages&quot; packages=&quot;com.dummy.test.a*&quot;/&gt;
     &lt;group title=&quot;Group 2 Packages&quot; packages=&quot;com.dummy.test.b*:com.dummy.test.c*&quot;/&gt;
     &lt;link offline=&quot;true&quot; href=&quot;http://java.sun.com/products/jdk/1.2/docs/api/&quot; packagelistLoc=&quot;C:\tmp&quot;/&gt;
