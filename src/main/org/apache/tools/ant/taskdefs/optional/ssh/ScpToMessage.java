@@ -112,7 +112,7 @@ public class ScpToMessage extends AbstractSshMessage {
     }
 
     private void doMultipleTransfer() throws IOException, JSchException {
-        Channel channel = openExecChannel("scp -d -t " + remotePath);
+        Channel channel = openExecChannel("scp -r -d -t " + remotePath);
         try {
             OutputStream out = channel.getOutputStream();
             InputStream in = channel.getInputStream();
