@@ -216,6 +216,9 @@ Fixed bugs:
 * ftp chmod failed when the remote system was UNIX and local system Windows
   Bugzilla Report 21865.
 
+* ftp did not set the ascii mode explicity, causing problems with ftp servers
+  having binary as default
+
 * replace would change \r\n into \r\r\n under Windows.
 
 Other changes:
@@ -506,6 +509,9 @@ Other changes:
 
 * DirectoryScanner has been optimized for cases where include patterns do not
   start with wildcards.  Bugzilla Report 20103.
+
+* DirectoryScanner begins to be optimized not to scan excluded directories.
+  Bugzilla Report 21941.
 
 * Added keep-going feature. Bugzilla Report 21144
 
