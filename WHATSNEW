@@ -61,6 +61,10 @@ Other changes:
 
 * New condition <isreference>
 
+* <junit> will now return the result of a call to getName instead of
+  "unknown" for Test implementations that don't extend TestCase but have
+  a public String getName() method.
+
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
 
