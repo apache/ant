@@ -48,7 +48,7 @@ public class CVSPass
     /**
      * Array contain char conversion data
      */
-    private final char[] m_shifts =
+    private static final char[] c_shifts =
         {
             0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
             16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
@@ -177,7 +177,7 @@ public class CVSPass
         final StringBuffer sb = new StringBuffer();
         for( int i = 0; i < size; i++ )
         {
-            sb.append( m_shifts[ password.charAt( i ) ] );
+            sb.append( c_shifts[ password.charAt( i ) ] );
         }
         return sb.toString();
     }
