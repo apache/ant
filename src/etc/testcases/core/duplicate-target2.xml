@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+
+<project>
+
+    <import file="duplicate-target-imported.xml"/>
+
+    <target name="once">
+        <echo>once from buildfile</echo>
+    </target>
+</project>

@@ -204,12 +204,18 @@ public class ProjectTest extends TestCase {
         assertTrue(p.getTaskDefinitions().contains(org.apache.tools.ant.taskdefs.Echo.class));
     }
 
-    // Bug in Ant 1.6/1.7 found by Dominique: there must no multiple
-    // targets with the same name in a project.
     public void testDuplicateTargets() {
+        // fail, because buildfile contains two targets with the same name
         BFT bft = new BFT("", "core/duplicate-target.xml");
         bft.expectBuildException("twice", "Duplicate target");
     }
+
+    public void testDuplicateTargetsImport() {
+        // overriding target from imported buildfile is allowed
+        BFT bft = new BFT("", "core/duplicate-target2.xml");
+        bft.expectLog("once", "once from buildfile");
+    }
+
 
     private class DummyTaskPrivate extends Task {
         public DummyTaskPrivate() {}
