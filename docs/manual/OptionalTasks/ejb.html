@@ -38,9 +38,9 @@ to support additional EJB Servers.
  <tr><td>Task</td><td>Application Servers</td></tr>
  <tr><td><a href="#ddcreator">ddcreator</a></td><td>Weblogic 4.5.1</td></tr>
  <tr><td><a href="#ejbc">ejbc</a></td><td>Weblogic 4.5.1</td></tr>
- <tr><td><a href="#wlrun">wlrun</a></td><td>Weblogic 4.5.1 and 5.1</td></tr>
- <tr><td><a href="#wlstop">wlstop</a></td><td>Weblogic 4.5.1 and 5.1</td></tr>
- <tr><td><a href="#ejbjar">ejbjar</a></td><td>Weblogic 5.1</td></tr>
+ <tr><td><a href="#wlrun">wlrun</a></td><td>Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
+ <tr><td><a href="#wlstop">wlstop</a></td><td>Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
+ <tr><td><a href="#ejbjar">ejbjar</a></td><td>Weblogic 5.1 &amp; 6.0</td></tr>
 </table>
 
 <hr>
@@ -151,7 +151,8 @@ or are out of date, the ejbc tool is run to generate new versions.</p>
 <hr>
 <h2><a name="wlrun">wlrun</a></h2>
 <h3><b>Description:</b></h3>
-<p>The <code>wlrun</code> task is used to start a weblogic server. The task runs
+
+<p>The <code>wlrun</code> task is used to start a weblogic server. The task runs 
 a weblogic instance in a separate Java Virtual Machine. A number of parameters 
 are used to control the operation of the weblogic instance. Note that the task, 
 and hence ant, will not complete until the weblogic instance is stopped.</p>
@@ -161,35 +162,58 @@ and hence ant, will not complete until the weblogic instance is stopped.</p>
   <tr>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
+    <td align="center" valign="top"><b>Required for 4.5.1 and 5.1</b></td>
+    <td align="center" valign="top"><b>Required for 6.0</b></td>
+  </tr>
+  <tr>
+    <td valign="top">BEA Home</td>
+    <td valign="top">The location of the BEA Home qwhere the server's config is defined.
+                     If this attribute is present, wlrun assumes that the server will
+                     be running under Weblogic 6.0</td>
+    <td valign="top" align="center">N/A</td>
+    <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">home</td>
     <td valign="top">The location of the weblogic home that is to be used. This is the location 
                      where weblogic is installed.</td>
     <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">Yes. Note this is the absolute location, not relative to 
+                                    BEA home.</td>
+  </tr>
+  <tr>
+    <td valign="top">Domain</td>
+    <td valign="top">The domain to which the server belongs.</td>
+    <td valign="top" align="center">N/A</td>
+    <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">classpath</td>
     <td valign="top">The classpath to be used with the Java Virtual Machine that runs the Weblogic 
-                     Server. This is typically set to the Weblogic boot classpath.</td>
+                     Server. Prior to Weblogic 6.0, this is typically set to the Weblogic 
+                     boot classpath. Under Weblogic 6.0 this should include all the 
+                     weblogic jars</td>
+    <td valign="top" align="center">Yes</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
     <td valign="top">wlclasspath</td>
     <td valign="top">The weblogic classpath used by the Weblogic Server.</td>
     <td valign="top" align="center">No</td>
+    <td valign="top" align="center">N/A</td>
   </tr>
   <tr>
     <td valign="top">properties</td>
     <td valign="top">The name of the server's properties file within the weblogic home directory
                      used to control the weblogic instance.</td>
     <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">N/A</td>
   </tr>
   <tr>
     <td valign="top">name</td>
     <td valign="top">The name of the weblogic server within the weblogic home which is to be run. 
                      This defaults to &quot;myserver&quot;</td>
+    <td valign="top" align="center">No</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -198,28 +222,85 @@ and hence ant, will not complete until the weblogic instance is stopped.</p>
                      is to be used. If not specified, the default policy file <code>weblogic.policy</code>
                      is used.</td>
     <td valign="top" align="center">No</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">The management username used to manage the server</td>
+    <td valign="top" align="center">N/A</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">The server's management password</td>
+    <td valign="top" align="center">N/A</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">pkPassword</td>
+    <td valign="top">The private key password so the server can decrypt the SSL 
+                     private key file</td>
+    <td valign="top" align="center">N/A</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">jvmargs</td>
     <td valign="top">Additional argument string passed to the Java Virtual Machine used to run the
                      Weblogic instance.</td>
     <td valign="top" align="center">No</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">args</td>
     <td valign="top">Additional argument string passed to the Weblogic instance.</td>
     <td valign="top" align="center">No</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 
+<h3>Nested Elements</h3>
+
+<p>The wlrun task supports nested &lt;classpath&gt; and &lt;wlclasspath&gt; 
+elements to set the repsective classpaths.</p>
+
+<h3>Examples</h3>
+
+<p>This example shows the use of wlrun to run a server under Weblogic 5.1</p>
+
+<pre>
+    &lt;wlrun taskname=&quot;myserver&quot;
+           classpath=&quot;${weblogic.boot.classpath}&quot;
+           wlclasspath=&quot;${weblogic.classes}:${code.jars}&quot;
+           name=&quot;myserver&quot; 
+           home=&quot;${weblogic.home}&quot;
+           properties=&quot;myserver/myserver.properties&quot;/&gt;
+</pre>
+
+<p>This example shows wlrun being used to run the petstore server under
+Weblogic 6.0</p>
+
+<pre>
+    &lt;wlrun taskname=&quot;petstore&quot;
+           classpath=&quot;${weblogic.classes}&quot;
+           name=&quot;petstoreServer&quot; 
+           domain=&quot;petstore&quot; 
+           home=&quot;${weblogic.home}&quot;
+           password=&quot;petstorePassword&quot;
+           beahome=&quot;${bea.home}&quot;/&gt;
+</pre>
 
 <hr>
 <h2><a name="wlstop">wlstop</a></h2>
 <h3><b>Description:</b></h3>
-<p>The <code>wlstop</code> task is used to stop a weblogic instance which is currently running.
-To shut down an instance you must supply both a username and a password. These will be stored 
-in the clear in the build script used to stop the instance. For security reasons, this task is 
-therefore only appropriate in a development environment. </p>
+
+<p>The <code>wlstop</code> task is used to stop a weblogic instance which is 
+currently running. To shut down an instance you must supply both a username and 
+a password. These will be stored in the clear in the build script used to stop 
+the instance. For security reasons, this task is therefore only appropriate in a 
+development environment. </p>
+
+<p>This task works for most version of Weblogic, including 6.0. You need to 
+specify the BEA Home to have this task work correctly under 6.0</p>
 
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -227,6 +308,11 @@ therefore only appropriate in a development environment. </p>
     <td valign="top"><b>Attribute</b></td>
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">BEAHome</td>
+    <td valign="top">This attribute selects Weblogic 6.0 shutdown.</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">classpath</td>
@@ -258,6 +344,21 @@ therefore only appropriate in a development environment. </p>
   </tr>
 </table>
 
+<h3>Nested Element</h3>
+
+<p>The classpath of the welstop task can be set by a &lt;classpath&gt; nested element.</p>
+
+<h3>Examples</h3>
+
+<p>This example show the shutdown for a Weblogic 6.0 server</p>
+
+<pre>
+    &lt;wlstop classpath=&quot;${weblogic.classes}&quot;
+            user=&quot;system&quot;
+            url=&quot;t3://localhost:7001&quot;
+            password=&quot;foobar&quot;
+            beahome=&quot;${bea.home}&quot;/&gt;
+</pre>
 
 <hr>
 <h2><a name="ejbjar">ejbjar</a></h2>
