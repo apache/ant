@@ -47,6 +47,10 @@ enhancements of existing tasks.
 * add an attribute to <property> to read in an entire file as the
   value of a property.
 
+* Task for splitting files (head/tail/split like functionality).
+
+* Task to create XMI from Java.
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
