@@ -77,22 +77,22 @@
     </td></tr>
     <tr><td>
       <blockquote>
-                        <p>In many ways Ant2 needs to follow rules similar to a number of 
-different application servers with respect to ClassLoader management. 
-Ant2 will create a number of different ClassLoaders that have access 
-to different sets of resources (and thus Classes). The main reason
-for this arrangment is to partition different sections of the 
-application such as the Container, the Task API, task/type libraries 
-and support libraries.</p>
+                        <p>In many ways Ant2 needs to follow rules similar to a number of
+            different application servers with respect to ClassLoader management.
+            Ant2 will create a number of different ClassLoaders that have access
+            to different sets of resources (and thus Classes). The main reason
+            for this arrangment is to partition different sections of the
+            application such as the Container, the Task API, task/type libraries
+            and support libraries.</p>
                                 <p>The recomended structure for ClassLoader relationships is a hierarchy.
-When a ClassLoader is asked for a resource (or a class) it first delegates
-to it's parent to ask for the resource. If the resource is not present in 
-its parent ClassLoader then the ClassLoader attempts to locate the resource
-in it's own store. In practice this means that all the classes (and static 
-variables defined by said classes) in a parent ClassLoader are shared with 
-the child ClassLoaders.</p>
-                                <p>Using kooky ascii art, the specific ClassLoader structure for Ant2 is as 
-follows:</p>
+            When a ClassLoader is asked for a resource (or a class) it first delegates
+            to it's parent to ask for the resource. If the resource is not present in
+            its parent ClassLoader then the ClassLoader attempts to locate the resource
+            in it's own store. In practice this means that all the classes (and static
+            variables defined by said classes) in a parent ClassLoader are shared with
+            the child ClassLoaders.</p>
+                                <p>Using kooky ascii art, the specific ClassLoader structure for Ant2 is as
+            follows:</p>
                                   <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
       <tr>
@@ -103,16 +103,16 @@ follows:</p>
       <tr>
         <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
         <td bgcolor="#ffffff"><pre>
-      Bootstrap
-          |
-       System
-          |
-       Common
-      /      \
- Container  Shared
-             /   \
-        Antlib1  Antlib2 ... 
-</pre></td>
+                  Bootstrap
+                      |
+                   System
+                      |
+                   Common
+                  /      \
+             Container  Shared
+                         /   \
+                    Antlib1  Antlib2 ...
+            </pre></td>
         <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
       </tr>
       <tr>
@@ -123,70 +123,93 @@ follows:</p>
     </table>
   </div>
                                 <ul>
-  <li>
-    The <strong>Bootstrap</strong> ClassLoader contains the classes and resources 
-    provided by the Java runtime.
-  </li>
-  <li>
-    The <strong>System</strong> ClassLoader contains the classes that were made accessible 
-    via the CLASSPATH environment variable. If the standard ant script was used then this 
-    should only contain the classes that are used to bootstrap the ant runtime. ie 
-    <code>$ANT_HOME/bin/ant-launcher.jar</code>
-  </li>
-  <li>
-    The <strong>Common</strong> ClassLoader contains the classes and resources 
-    that are made visible to both the Container and to all the ant type librarys. This 
-    contains all the classes that the Container uses to communicate with tasks and other
-    supporting infrastructure. In particular it contains the following APIs;
-    <ul>
-      <li>
-        <em>Task API</em> - Contains the classes that are part of the API used
-        to define tasks.
-      </li>
-      <li>
-        <em>ProjectListener API</em> - Contains the classes necessary to define new 
-        ProjectListeners.
-      </li>
-      <li>
-        <em>Aspect API</em> - Contains the classes that are used to define Aspects 
-        of the container.
-      </li>
-      <li>
-        <em>Container API</em> - Contains the interfaces that are required to communicate
-        with the objects deep within the container. <strong>NOTE</strong>: These interfaces
-        are not to be used by user tasks but are made available so that certain tasks (such 
-        as &lt;antcall/&gt;) can be implemented. However they are subject to change without 
-        notice between between different ant2 versions.
-      </li>
-    </ul>
-    <p>
-      These classes are loaded from all the jars present in the <code>$ANT_HOME/lib</code>
-      directory. 
-    </p>
-  </li>
-  <li>
-    The <strong>Container</strong> ClassLoader contains all the classes and resources
-    that are part of the actual implementation of the Container. These classes are not
-    directly accessible to any Ant library or task. Some of the classes are indirectly 
-    accessible to tasks and other elements defined in the ant librarys as they implement 
-    interfaces defined in the <strong>Common</strong> ClassLoader. The classes that are 
-    stored in jars in the <code>$ANT_HOME/bin/lib/</code> directory.
-  </li>
-  <li>
-    The <strong>Shared</strong> ClassLoader contains all the classes and resources
-    that are shared across all of the ant librarys (unless they are als needed by the
-    container in which case they should be placed int the <strong>Container</strong> 
-    ClassLoader). This ClassLoader is populated by all the jars that are contained in
-    the <code>$ANT_HOME/shared/</code> directory.
-  </li>
-  <li>
-    The <strong>AntLib</strong> ClassLoaders each contain the classes and resources
-    that required by that particular library. Note that in some cases a single Ant 
-    Library will manifest as a single ClassLoader containing a single jar. However 
-    in some cases it is possible for one Ant Library to have multiple jars in its 
-    ClassLoader or even have multiple ClassLoaders. See XXXX for further details.
-  </li>
-</ul>
+                <li>
+                  The
+                    <strong>Bootstrap</strong> ClassLoader contains the classes and resources
+                  provided by the Java runtime.
+
+                </li>
+                <li>
+                  The
+                    <strong>System</strong> ClassLoader contains the classes that were made accessible
+                  via the CLASSPATH environment variable. If the standard ant script was used then this
+                  should only contain the classes that are used to bootstrap the ant runtime. ie
+
+                    <code>$ANT_HOME/bin/ant-launcher.jar</code>
+                </li>
+                <li>
+                  The
+                    <strong>Common</strong> ClassLoader contains the classes and resources
+                  that are made visible to both the Container and to all the ant type librarys. This
+                  contains all the classes that the Container uses to communicate with tasks and other
+                  supporting infrastructure. In particular it contains the following APIs;
+
+                    <ul>
+                        <li>
+                            <em>Task API</em> - Contains the classes that are part of the API used
+                          to define tasks.
+
+                        </li>
+                        <li>
+                            <em>ProjectListener API</em> - Contains the classes necessary to define new
+                          ProjectListeners.
+
+                        </li>
+                        <li>
+                            <em>Aspect API</em> - Contains the classes that are used to define Aspects
+                          of the container.
+
+                        </li>
+                        <li>
+                            <em>Container API</em> - Contains the interfaces that are required to communicate
+                          with the objects deep within the container.
+                            <strong>NOTE</strong>: These interfaces
+                          are not to be used by user tasks but are made available so that certain tasks (such
+                          as &lt;antcall/&gt;) can be implemented. However they are subject to change without
+                          notice between between different ant2 versions.
+
+                        </li>
+                    </ul>
+                    <p>
+                      These classes are loaded from all the jars present in the
+                        <code>$ANT_HOME/lib</code>
+                      directory.
+
+                    </p>
+                </li>
+                <li>
+                  The
+                    <strong>Container</strong> ClassLoader contains all the classes and resources
+                  that are part of the actual implementation of the Container. These classes are not
+                  directly accessible to any Ant library or task. Some of the classes are indirectly
+                  accessible to tasks and other elements defined in the ant librarys as they implement
+                  interfaces defined in the
+                    <strong>Common</strong> ClassLoader. The classes that are
+                  stored in jars in the
+                    <code>$ANT_HOME/bin/lib/</code> directory.
+
+                </li>
+                <li>
+                  The
+                    <strong>Shared</strong> ClassLoader contains all the classes and resources
+                  that are shared across all of the ant librarys (unless they are als needed by the
+                  container in which case they should be placed int the
+                    <strong>Container</strong>
+                  ClassLoader). This ClassLoader is populated by all the jars that are contained in
+                  the
+                    <code>$ANT_HOME/shared/</code> directory.
+
+                </li>
+                <li>
+                  The
+                    <strong>AntLib</strong> ClassLoaders each contain the classes and resources
+                  that required by that particular library. Note that in some cases a single Ant
+                  Library will manifest as a single ClassLoader containing a single jar. However
+                  in some cases it is possible for one Ant Library to have multiple jars in its
+                  ClassLoader or even have multiple ClassLoaders. See XXXX for further details.
+
+                </li>
+            </ul>
                     </blockquote>
     </td></tr>
   </table>

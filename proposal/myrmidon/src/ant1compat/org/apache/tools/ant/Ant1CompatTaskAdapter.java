@@ -9,6 +9,8 @@ package org.apache.tools.ant;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
 
 /**
  * An adapter for running (in Myrmidon) Ant1 tasks which do not extend Task
@@ -19,7 +21,18 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 public class Ant1CompatTaskAdapter
     extends TaskAdapter
 {
-    public void configure( Configuration configuration ) throws ConfigurationException
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( Ant1CompatTaskAdapter.class );
+
+    /**
+     * Gets the adapted task name from the configuration, and looks up the
+     * Class for the adapted task. The adapted task is then instantiated and
+     * configured.
+     * @param configuration The Task Model
+     * @throws ConfigurationException If the configuration is invalid.
+     */
+    public void configure( Configuration configuration )
+        throws ConfigurationException
     {
         // Create a new instance of the proxy object,
         // and configure it.
@@ -29,7 +42,9 @@ public class Ant1CompatTaskAdapter
 
         if( taskClass == null )
         {
-            throw new ConfigurationException( "Invalid task name for TaskAdapter: " + taskName );
+            String message =
+                REZ.getString( "taskadapter.invalid-task-name.error", taskName );
+            throw new ConfigurationException( message );
         }
 
         Object adaptedTask = null;
@@ -39,7 +54,9 @@ public class Ant1CompatTaskAdapter
         }
         catch( Exception e )
         {
-            throw new ConfigurationException( "Could not instantiate adapted task: " + taskClass.getName() );
+            String message =
+                REZ.getString( "taskadapter.no-create.error", taskClass.getName() );
+            throw new ConfigurationException( message );
         }
 
         configure( adaptedTask, configuration );

@@ -9,6 +9,8 @@ package org.apache.tools.ant;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A task for instantiating Ant1 datatypes.
@@ -19,11 +21,14 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 public class Ant1CompatTypeInstanceTask
     extends Task
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( Ant1CompatTypeInstanceTask.class );
+
     public void configure( Configuration configuration ) throws ConfigurationException
     {
         if( configuration.getAttribute( "id", null ) == null )
         {
-            final String message = "id is required.";
+            final String message = REZ.getString( "type.no-id.error" );
             throw new ConfigurationException( message );
         }
 

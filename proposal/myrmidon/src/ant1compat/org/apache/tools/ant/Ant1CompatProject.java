@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.security.CodeSource;
 import org.apache.aut.converter.Converter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.api.TaskContext;
@@ -38,16 +39,21 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
 public class Ant1CompatProject extends Project
 {
     public static final String ANT1_TASK_PREFIX = "ant1.";
+    public static final String MYRMIDON_PROJECT_PROP =
+        org.apache.myrmidon.interfaces.model.Project.PROJECT;
 
     private static String javaclasspath;
 
     static
     {
-        URL ant1jar =
-            Ant1CompatProject.class.getProtectionDomain().getCodeSource().getLocation();
-        String ant1classpath = ant1jar.getFile().toString();
+        // Find the path to the Ant1 antlib file.
+        CodeSource ant1codesource =
+            Ant1CompatProject.class.getProtectionDomain().getCodeSource();
+        String ant1jar = ant1codesource.getLocation().getFile().toString();
+
+        // Append this to the java.class.path system property.
         javaclasspath = System.getProperty( "java.class.path" );
-        javaclasspath = javaclasspath + File.pathSeparator + ant1classpath;
+        javaclasspath = javaclasspath + File.pathSeparator + ant1jar;
     }
 
     private final Converter m_converter;
@@ -67,8 +73,8 @@ public class Ant1CompatProject extends Project
         recontextulize( context );
 
         setBaseDir( m_context.getBaseDirectory() );
-        String projectName = (String)
-            m_context.getProperty( org.apache.myrmidon.interfaces.model.Project.PROJECT );
+        String projectName =
+            (String) m_context.getProperty( MYRMIDON_PROJECT_PROP );
         if( projectName != null )
         {
             setName( projectName );
