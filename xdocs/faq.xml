@@ -845,6 +845,31 @@ while(<STDIN>) {
    <!ENTITY include SYSTEM "file:./header.xml">
 ]>
 ]]></source>
+
+        <p>Starting with Ant 1.6, there is a new
+        <code>&lt;import&gt;</code> task that can (also) be used to
+        include build file fragments.  Unlike the snippets used with
+        entity includes, the referenced files have to be complete Ant
+        build files, though.</p>
+
+        <p>The example above would become:</p>
+        <source><![CDATA[
+<?xml version="1.0"?>
+<project name="test" default="test" basedir=".">
+
+  <target name="setup">
+    ...
+  </target>
+
+  <import file="../common.xml"/>
+
+  ...
+
+</project>
+]]></source>
+
+        <p>Unlike entity includes, <code>&lt;import&gt;</code> will
+        let you use Ant properties in the file name.</p>
       </answer>
     </faq>
 
