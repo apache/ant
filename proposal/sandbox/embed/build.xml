@@ -2,7 +2,7 @@
   <property name="ant.src" location="../../.." />
   <property name="ant.build" location="${ant.src}/build" />
   <property name="debug" value="true"/>
-    
+
   <target name="main">
     <copy file="ProjectHelperImpl2.java"  
           todir="${ant.src}/src/main/org/apache/tools/ant/helper" />
@@ -10,6 +10,8 @@
           todir="${ant.src}/src/main/org/apache/tools/ant" />
     <copy file="RuntimeConfigurable2.java"  
           todir="${ant.src}/src/main/org/apache/tools/ant" />
+    <copy file="Import.java"  
+          todir="${ant.src}/src/main/org/apache/tools/ant/tasks" />
     <copy file="RuntimeConfigurable2.java"  
           todir="${ant.src}/src/main/org/apache/tools/ant" />
     <copy file="PropertyInterceptor.java"  
@@ -29,6 +31,7 @@
       <include name="**/PropertyHelper.java" />
       <include name="**/PropertyInterceptor.java" />
       <include name="**/RuntimeConfigurable2.java" />
+      <include name="**/Import.java" />
       <include name="**/SystemPath.java" />
     </javac>
 
@@ -44,6 +47,7 @@
       <include name="org/apache/tools/ant/PropertyHelper*" />
       <include name="org/apache/tools/ant/PropertyInterceptor*" />
       <include name="org/apache/tools/ant/types/SystemPath*" />
+      <include name="org/apache/tools/ant/tasks/Import*" />
     </jar>
 
     <copy file="ant-sax2.jar" todir="${ant.home}/lib" />
