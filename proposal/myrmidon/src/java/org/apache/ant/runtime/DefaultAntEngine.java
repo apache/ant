@@ -18,17 +18,16 @@ import org.apache.ant.tasklet.JavaVersion;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.ant.tasklet.engine.TskDeployer;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
-import org.apache.avalon.DefaultComponentManager;
-import org.apache.avalon.Initializable;
-import org.apache.avalon.camelot.CamelotUtil;
-import org.apache.avalon.camelot.DefaultFactory;
-import org.apache.avalon.camelot.Deployer;
-import org.apache.avalon.camelot.Factory;
-import org.apache.avalon.util.ObjectUtil;
-import org.apache.avalon.util.io.FileUtil;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.component.DefaultComponentManager;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.camelot.CamelotUtil;
+import org.apache.avalon.framework.camelot.DefaultFactory;
+import org.apache.avalon.framework.camelot.Deployer;
+import org.apache.avalon.framework.camelot.Factory;
+import org.apache.avalon.excalibur.io.FileUtil;
 
 /**
  * Default implementation of Ant runtime.
@@ -97,7 +96,7 @@ public class DefaultAntEngine
      *
      * @exception Exception if an error occurs
      */
-    public void init()
+    public void initialize()
         throws Exception
     {
         //setup default properties
@@ -193,7 +192,7 @@ public class DefaultAntEngine
         componentManager.put( "org.apache.ant.tasklet.engine.DataTypeEngine", m_dataTypeEngine );
         componentManager.put( "org.apache.ant.project.ProjectBuilder", m_builder );
         componentManager.put( "org.apache.ant.tasklet.engine.TskDeployer", m_deployer );
-        componentManager.put( "org.apache.avalon.camelot.Factory", m_factory );
+        componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
         componentManager.put( "org.apache.ant.configuration.Configurer", m_configurer );
 
         return componentManager;
@@ -260,14 +259,14 @@ public class DefaultAntEngine
     {
         setupLogger( component );
 
-        if( component instanceof Composer )
+        if( component instanceof Composable )
         {
-            ((Composer)component).compose( m_componentManager );
+            ((Composable)component).compose( m_componentManager );
         }
 
         if( component instanceof Initializable )
         {
-            ((Initializable)component).init();
+            ((Initializable)component).initialize();
         }
     }
 
@@ -383,7 +382,7 @@ public class DefaultAntEngine
     {
         try
         {
-            final Object object = ObjectUtil.createObject( component );
+            final Object object = Class.forName( component ).newInstance();
 
             if( !clazz.isInstance( object ) )
             {

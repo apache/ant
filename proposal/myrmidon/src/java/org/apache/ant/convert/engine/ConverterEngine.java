@@ -8,8 +8,8 @@
 package org.apache.ant.convert.engine;
 
 import org.apache.ant.convert.Converter;
-import org.apache.avalon.Component;
-import org.apache.avalon.camelot.LocatorRegistry;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.camelot.Registry;
 
 /**
  * Converter engine to handle converting between types.
@@ -24,7 +24,7 @@ public interface ConverterEngine
      *
      * @return the LocatorRegistry
      */
-    LocatorRegistry getRegistry();
+    Registry getRegistry();
 
     /**
      * Get registry for converterInfo objects.

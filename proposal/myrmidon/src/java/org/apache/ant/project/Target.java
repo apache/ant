@@ -9,7 +9,7 @@ package org.apache.ant.project;
 
 import java.util.Iterator;
 import org.apache.ant.util.Condition;
-import org.apache.avalon.Component;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * Interface to represent targets in build file.

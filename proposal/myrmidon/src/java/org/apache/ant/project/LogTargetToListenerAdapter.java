@@ -7,7 +7,7 @@
  */
 package org.apache.ant.project;
 
-import org.apache.log.LogEntry;
+import org.apache.log.LogEvent;
 import org.apache.log.LogTarget;
 
 /**
@@ -31,19 +31,19 @@ public class LogTargetToListenerAdapter
     }
 
     /**
-     * Process a log entry.
+     * Process a log event.
      *
-     * @param entry the entry
+     * @param event the event
      */
-    public void processEntry( final LogEntry entry )
+    public void processEvent( final LogEvent event )
     {
-        if( null == entry.getThrowable() )
+        if( null == event.getThrowable() )
         {
-            m_listener.log( entry.getMessage() );
+            m_listener.log( event.getMessage() );
         }
         else
         {
-            m_listener.log( entry.getMessage(), entry.getThrowable() );
+            m_listener.log( event.getMessage(), event.getThrowable() );
         }
     }
 }

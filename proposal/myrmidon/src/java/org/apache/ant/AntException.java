@@ -7,7 +7,7 @@
  */
 package org.apache.ant;
 
-import org.apache.avalon.CascadingRuntimeException;
+import org.apache.avalon.framework.CascadingRuntimeException;
 
 /**
  * AntException thrown when a problem with tasks etc.

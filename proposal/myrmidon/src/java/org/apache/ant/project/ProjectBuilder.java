@@ -10,7 +10,7 @@ package org.apache.ant.project;
 import java.io.File;
 import java.io.IOException;
 import org.apache.ant.AntException;
-import org.apache.avalon.Component;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * Interface implemented by components that build projects from sources.

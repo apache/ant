@@ -8,14 +8,14 @@
 package org.apache.ant.tasklet.engine;
 
 import org.apache.ant.AntException;
-import org.apache.ant.configuration.Configuration;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.tasklet.TaskletContext;
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.camelot.LocatorRegistry;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.logger.Loggable;
+import org.apache.avalon.framework.camelot.Registry;
 import org.apache.log.Logger;
  
 /**
@@ -38,7 +38,7 @@ public interface TaskletEngine
      *
      * @return the LocatorRegistry
      */
-    LocatorRegistry getRegistry();
+    Registry getRegistry();
 
     /**
      * Retrieve converter engine.

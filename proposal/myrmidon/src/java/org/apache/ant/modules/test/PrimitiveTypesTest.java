@@ -84,7 +84,7 @@ public class PrimitiveTypesTest
         getLogger().warn( "setString( " + value + " );" );
     }
 
-    public void run()
+    public void execute()
         throws AntException
     {
     }

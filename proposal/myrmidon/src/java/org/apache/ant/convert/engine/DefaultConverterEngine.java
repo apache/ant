@@ -10,16 +10,16 @@ package org.apache.ant.convert.engine;
 import org.apache.ant.AntException;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.convert.ConverterException;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Context;
-import org.apache.avalon.camelot.DefaultFactory;
-import org.apache.avalon.camelot.DefaultLocatorRegistry;
-import org.apache.avalon.camelot.Factory;
-import org.apache.avalon.camelot.Locator;
-import org.apache.avalon.camelot.LocatorRegistry;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.camelot.DefaultFactory;
+import org.apache.avalon.framework.camelot.DefaultRegistry;
+import org.apache.avalon.framework.camelot.Factory;
+import org.apache.avalon.framework.camelot.Locator;
+import org.apache.avalon.framework.camelot.Registry;
 
 /**
  * Converter engine to handle converting between types.
@@ -28,12 +28,12 @@ import org.apache.avalon.camelot.LocatorRegistry;
  */
 public class DefaultConverterEngine
     extends AbstractLoggable
-    implements ConverterEngine, Composer
+    implements ConverterEngine, Composable
 {
     protected final static boolean DEBUG                = false;
 
     protected Factory              m_factory;
-    protected LocatorRegistry      m_registry      = new DefaultLocatorRegistry();
+    protected Registry             m_registry      = new DefaultRegistry( Locator.class );
     protected ConverterRegistry    m_infoRegistry  = new DefaultConverterRegistry();
 
     /**
@@ -41,7 +41,7 @@ public class DefaultConverterEngine
      *
      * @return the LocatorRegistry
      */
-    public LocatorRegistry getRegistry()
+    public Registry getRegistry()
     {
         return m_registry;
     }
@@ -60,12 +60,12 @@ public class DefaultConverterEngine
      * Retrieve relevent services needed to deploy.
      *
      * @param componentManager the ComponentManager
-     * @exception ComponentManagerException if an error occurs
+     * @exception ComponentException if an error occurs
      */
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
-        m_factory = (Factory)componentManager.lookup( "org.apache.avalon.camelot.Factory" );
+        m_factory = (Factory)componentManager.lookup( "org.apache.avalon.framework.camelot.Factory" );
     }
 
     /**
@@ -89,8 +89,8 @@ public class DefaultConverterEngine
 
         if( DEBUG )
         {
-            m_logger.debug( "Looking for converter from " + originalClass.getName() +
-                            " to " + destination.getName() );
+            getLogger().debug( "Looking for converter from " + originalClass.getName() +
+                               " to " + destination.getName() );
         }
 
         //TODO: Start searching inheritance hierarchy for converter
@@ -106,7 +106,7 @@ public class DefaultConverterEngine
         }
 
         //TODO: Start caching converters instead of repeatedly instantiating em.
-        final Locator locator = m_registry.getLocator( name );
+        final Locator locator = (Locator)m_registry.getInfo( name, Locator.class );
         final Converter converter = (Converter)m_factory.create( locator, Converter.class );
         return converter.convert( destination, original, context );
     }

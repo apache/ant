@@ -33,34 +33,35 @@ import org.apache.ant.runtime.DefaultAntEngine;
 import org.apache.ant.tasklet.JavaVersion;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.Initializable;
-import org.apache.avalon.camelot.CamelotUtil;
-import org.apache.avalon.camelot.Deployer;
-import org.apache.avalon.camelot.DeploymentException;
-import org.apache.avalon.util.ObjectUtil;
-import org.apache.avalon.util.StringUtil;
-import org.apache.avalon.util.cli.AbstractMain;
-import org.apache.avalon.util.cli.CLOption;
-import org.apache.avalon.util.cli.CLOptionDescriptor;
-import org.apache.avalon.util.io.ExtensionFileFilter;
-import org.apache.log.Category;
-import org.apache.log.LogKit;
+import org.apache.avalon.excalibur.cli.CLArgsParser;
+import org.apache.avalon.excalibur.cli.CLOption;
+import org.apache.avalon.excalibur.cli.CLUtil;
+import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
+import org.apache.avalon.excalibur.io.ExtensionFileFilter;
+import org.apache.avalon.framework.ExceptionUtil;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.camelot.CamelotUtil;
+import org.apache.avalon.framework.camelot.Deployer;
+import org.apache.avalon.framework.camelot.DeploymentException;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.log.Hierarchy;
 import org.apache.log.Logger;
+import org.apache.log.LogTarget;
 import org.apache.log.Priority;
 
 /**
  * The class to kick the tires and light the fires.
  * Starts ant, loads ProjectBuilder, builds project then uses ProjectEngine
  * to run project.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class Main
-    extends AbstractMain
+    extends AbstractLoggable
 {
     //Constants to indicate the build of Ant/Myrmidon
-    public final static String     VERSION                   = 
+    public final static String     VERSION                   =
         "Ant " + Constants.BUILD_VERSION + " compiled on " + Constants.BUILD_DATE;
 
     //default log level
@@ -69,7 +70,7 @@ public class Main
     //Some defaults for file locations/names
     protected final static String  DEFAULT_FILENAME          = "build.ant";
 
-    protected final static String  DEFAULT_LISTENER          = 
+    protected final static String  DEFAULT_LISTENER          =
         "org.apache.ant.project.DefaultProjectListener";
 
     //defines for the Command Line options
@@ -84,17 +85,17 @@ public class Main
     private static final int       TASKLIB_DIR_OPT           = 5;
     private static final int       INCREMENTAL_OPT           = 6;
     private static final int       HOME_DIR_OPT              = 7;
-    
+
     //incompatable options for info options
-    private static final int[]     INFO_OPT_INCOMPAT         = new int[] 
-    { 
-        HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT, 
+    private static final int[]     INFO_OPT_INCOMPAT         = new int[]
+    {
+        HELP_OPT, QUIET_OPT, VERBOSE_OPT, FILE_OPT,
         LOG_LEVEL_OPT, VERSION_OPT, LISTENER_OPT,
         DEFINE_OPT //TASKLIB_DIR_OPT, HOME_DIR_OPT
     };
-    
+
     //incompatable options for other logging options
-    private static final int[]     LOG_OPT_INCOMPAT          = new int[] 
+    private static final int[]     LOG_OPT_INCOMPAT          = new int[]
     {
         QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
     };
@@ -110,19 +111,30 @@ public class Main
     public static void main( final String[] args )
     {
         final Main main = new Main();
-        main.setLogger( LogKit.getLoggerFor( "default" ) );
+        main.setLogger( Hierarchy.getDefaultHierarchy().getLoggerFor( "default" ) );
 
         try { main.execute( args ); }
         catch( final AntException ae )
         {
             main.getLogger().error( "Error: " + ae.getMessage() );
-            main.getLogger().debug( "Exception..." + StringUtil.printStackTrace( ae ) );
+            main.getLogger().debug( "Exception..." + ExceptionUtil.printStackTrace( ae ) );
         }
         catch( final Throwable throwable )
         {
             main.getLogger().error( "Error: " + throwable );
-            main.getLogger().debug( "Exception..." + StringUtil.printStackTrace( throwable ) );
+            main.getLogger().debug( "Exception..." + ExceptionUtil.printStackTrace( throwable ) );
         }
+    }
+
+    /**
+     * Display usage report.
+     *
+     */
+    protected void usage( final CLOptionDescriptor[] options )
+    {
+        System.out.println( "java " + getClass().getName() + " [options]" );
+        System.out.println( "\tAvailable options:");
+        System.out.println( CLUtil.describeOptions( options ) );
     }
 
     /**
@@ -140,7 +152,7 @@ public class Main
                                     HELP_OPT,
                                     "display this help message",
                                     INFO_OPT_INCOMPAT );
-        
+
         options[1] =
             new CLOptionDescriptor( "file",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
@@ -206,14 +218,19 @@ public class Main
         return options;
     }
 
-    /**
-     * Entry point for standard ant.
-     *
-     * @param clOptions the list of command line options
-     */
-    protected void execute( final List clOptions )
+    protected void execute( final String[] args )
         throws Exception
     {
+        final CLOptionDescriptor[] options = createCLOptions();
+        final CLArgsParser parser = new CLArgsParser( args, options );
+
+        if( null != parser.getErrorString() )
+        {
+            System.err.println( "Error: " + parser.getErrorString() );
+            return;
+        }
+        
+        final List clOptions = parser.getArguments();
         final int size = clOptions.size();
         final ArrayList targets = new ArrayList();
         String filename = null;
@@ -224,25 +241,25 @@ public class Main
         boolean incremental = false;
         HashMap defines = new HashMap();
 
-        for( int i = 0; i < size; i++ ) 
+        for( int i = 0; i < size; i++ )
         {
             final CLOption option = (CLOption)clOptions.get( i );
-                
+
             switch( option.getId() )
             {
             case 0: targets.add( option.getArgument() ); break;
-            case HELP_OPT: usage(); return;
+            case HELP_OPT: usage( options ); return;
             case VERSION_OPT: System.out.println( VERSION ); return;
             case FILE_OPT: filename = option.getArgument(); break;
             case HOME_DIR_OPT: homeDir = option.getArgument(); break;
             case TASKLIB_DIR_OPT: taskLibDir = option.getArgument(); break;
             case VERBOSE_OPT: logLevel = "INFO"; break;
             case QUIET_OPT: logLevel = "ERROR"; break;
-            case LOG_LEVEL_OPT: logLevel = option.getArgument(); break; 
+            case LOG_LEVEL_OPT: logLevel = option.getArgument(); break;
             case LISTENER_OPT: listenerName = option.getArgument(); break;
             case INCREMENTAL_OPT: incremental = true; break;
 
-            case DEFINE_OPT: 
+            case DEFINE_OPT:
                 defines.put( option.getArgument( 0 ), option.getArgument( 1 ) );
                 break;
             }
@@ -255,7 +272,7 @@ public class Main
         //handle logging...
         setLogger( createLogger( logLevel ) );
 
-        //if ant home not set then use system property ant.home 
+        //if ant home not set then use system property ant.home
         //that was set up by launcher.
         if( null == homeDir ) homeDir = System.getProperty( "ant.home" );
 
@@ -277,14 +294,14 @@ public class Main
         {
             throw new AntException( "File " + buildFile + " is not a file or doesn't exist" );
         }
-        
+
         //setup classloader so that it will correctly load
         //the Project/ProjectBuilder/ProjectEngine and all dependencies
         final ClassLoader classLoader = createClassLoader( libDir );
         Thread.currentThread().setContextClassLoader( classLoader );
 
-        //handle listener.. 
-        final ProjectListener listener = createListener( listenerName ); 
+        //handle listener..
+        final ProjectListener listener = createListener( listenerName );
 
         getLogger().warn( "Ant Build File: " + buildFile );
         getLogger().info( "Ant Home Directory: " + m_homeDir );
@@ -295,7 +312,7 @@ public class Main
         final AntEngine antEngine = new DefaultAntEngine();
         setupLogger( antEngine );
         antEngine.setProperties( properties );
-        antEngine.init();
+        antEngine.initialize();
 
         final ProjectBuilder builder = antEngine.getProjectBuilder();
 
@@ -324,9 +341,9 @@ public class Main
             }
 
             String line = reader.readLine();
-            
+
             if( line.equalsIgnoreCase( "no" ) ) break;
-            
+
         }
 
         antEngine.dispose();
@@ -339,14 +356,14 @@ public class Main
      * @param project the project
      * @param targets the targets to build as passed by CLI
      */
-    protected void doBuild( final ProjectEngine engine, 
-                            final Project project, 
+    protected void doBuild( final ProjectEngine engine,
+                            final Project project,
                             final ArrayList targets )
     {
         try
         {
             final int targetCount = targets.size();
-        
+
             //if we didn't specify a target on CLI then choose default
             if( 0 == targetCount )
             {
@@ -363,10 +380,10 @@ public class Main
         catch( final AntException ae )
         {
             getLogger().error( "BUILD FAILED" );
-            getLogger().error( "Reason:\n" + StringUtil.printStackTrace( ae, 5, true ) );
+            getLogger().error( "Reason:\n" + ExceptionUtil.printStackTrace( ae, 5, true ) );
         }
-    } 
-    
+    }
+
     /**
      * Create Logger of appropriate log-level.
      *
@@ -378,15 +395,19 @@ public class Main
         throws AntException
     {
         final String logLevelCapitalized = logLevel.toUpperCase();
-        final Priority.Enum priority = LogKit.getPriorityForName( logLevelCapitalized );
-        
+        final Priority priority = Priority.getPriorityForName( logLevelCapitalized );
+
         if( !priority.getName().equals( logLevelCapitalized ) )
         {
             throw new AntException( "Unknown log level - " + logLevel );
         }
+
+        final Logger logger = 
+            Hierarchy.getDefaultHierarchy().getLoggerFor( "ant" );
+
+        logger.setPriority( priority );
         
-        final Category category = LogKit.createCategory( "ant", priority );
-        return LogKit.createLogger( category );
+        return logger;
     }
 
     /**
@@ -399,15 +420,17 @@ public class Main
     {
         ProjectListener result = null;
 
-        try { result = (ProjectListener)ObjectUtil.createObject( listenerName ); }
+        try { result = (ProjectListener)Class.forName( listenerName ).newInstance(); }
         catch( final Throwable t )
         {
-            throw new AntException( "Error creating the listener " + listenerName + 
-                                    " due to " + StringUtil.printStackTrace( t, 5, true ), 
+            throw new AntException( "Error creating the listener " + listenerName +
+                                    " due to " + ExceptionUtil.printStackTrace( t, 5, true ),
                                     t );
         }
 
-        getLogger().addLogTarget( new LogTargetToListenerAdapter( result ) );
+        final LogTarget target = new LogTargetToListenerAdapter( result );
+
+        getLogger().setLogTargets( new LogTarget[] { target } );
 
         return result;
     }
@@ -420,41 +443,41 @@ public class Main
     protected ClassLoader createClassLoader( final File libDir )
     {
         final ClassLoader candidate = getClass().getClassLoader();
-        
+
         if( !(candidate instanceof AntClassLoader) )
         {
-            getLogger().warn( "Warning: Unable to add entries from " + 
+            getLogger().warn( "Warning: Unable to add entries from " +
                               "lib-path to classloader" );
             return candidate;
         }
-        
+
         final AntClassLoader classLoader = (AntClassLoader)candidate;
 
-        final ExtensionFileFilter filter = 
+        final ExtensionFileFilter filter =
             new ExtensionFileFilter( new String[] { ".jar", ".zip" } );
 
         final File[] files = libDir.listFiles( filter );
 
         for( int i = 0; i < files.length; i++ )
         {
-            //except for a few *special* files add all the 
+            //except for a few *special* files add all the
             //.zip/.jars to classloader
             final String name = files[ i ].getName();
             if( !name.equals( "ant.jar" ) &&
                 !name.equals( "myrmidon.jar" ) &&
                 !name.equals( "avalonapi.jar" ) )
-            {                
+            {
                 try { classLoader.addURL( files[ i ].toURL() ); }
                 catch( final MalformedURLException mue ) {}
             }
-        }        
+        }
 
         return classLoader;
     }
 
     /**
      * Setup the projects context so all the "default" properties are defined.
-     * This also takes a hashmap that is added to context. Usually these are the 
+     * This also takes a hashmap that is added to context. Usually these are the
      * ones defined on command line.
      *
      * @param project the project

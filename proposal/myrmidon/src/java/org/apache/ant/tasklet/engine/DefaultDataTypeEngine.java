@@ -8,16 +8,16 @@
 package org.apache.ant.tasklet.engine;
 
 import org.apache.ant.tasklet.DataType;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Composer;
-import org.apache.avalon.camelot.DefaultLocatorRegistry;
-import org.apache.avalon.camelot.Factory;
-import org.apache.avalon.camelot.FactoryException;
-import org.apache.avalon.camelot.Locator;
-import org.apache.avalon.camelot.LocatorRegistry;
-import org.apache.avalon.camelot.RegistryException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.camelot.DefaultRegistry;
+import org.apache.avalon.framework.camelot.Factory;
+import org.apache.avalon.framework.camelot.FactoryException;
+import org.apache.avalon.framework.camelot.Locator;
+import org.apache.avalon.framework.camelot.Registry;
+import org.apache.avalon.framework.camelot.RegistryException;
 
 /**
  * This is basically a engine that can be used to access data-types.
@@ -26,10 +26,10 @@ import org.apache.avalon.camelot.RegistryException;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultDataTypeEngine
-    implements DataTypeEngine, Composer
+    implements DataTypeEngine, Composable
 {
     protected Factory              m_factory;
-    protected LocatorRegistry      m_registry  = new DefaultLocatorRegistry();
+    protected Registry             m_registry  = new DefaultRegistry( Locator.class );
     
     /**
      * Retrieve registry of data-types.
@@ -37,7 +37,7 @@ public class DefaultDataTypeEngine
      *
      * @return the registry
      */
-    public LocatorRegistry getRegistry()
+    public Registry getRegistry()
     {
         return m_registry;
     }
@@ -46,12 +46,12 @@ public class DefaultDataTypeEngine
      * Retrieve relevent services needed to deploy.
      *
      * @param componentManager the ComponentManager
-     * @exception ComponentManagerException if an error occurs
+     * @exception ComponentException if an error occurs
      */
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
-        m_factory = (Factory)componentManager.lookup( "org.apache.avalon.camelot.Factory" );
+        m_factory = (Factory)componentManager.lookup( "org.apache.avalon.framework.camelot.Factory" );
     }
     
     /**
@@ -65,7 +65,7 @@ public class DefaultDataTypeEngine
     public DataType createDataType( final String name )
         throws RegistryException, FactoryException
     {
-        final Locator locator = m_registry.getLocator( name );
+        final Locator locator = (Locator)m_registry.getInfo( name, Locator.class );
         return (DataType)m_factory.create( locator, DataType.class );
     }
 }

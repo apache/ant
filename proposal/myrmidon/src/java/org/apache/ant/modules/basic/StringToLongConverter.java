@@ -8,7 +8,7 @@
 package org.apache.ant.modules.basic;
 
 import org.apache.ant.convert.AbstractConverter;
-import org.apache.avalon.Context;
+import org.apache.avalon.framework.context.Context;
 
 /**
  * String to long converter

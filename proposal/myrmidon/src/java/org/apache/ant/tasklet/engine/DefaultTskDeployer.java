@@ -18,20 +18,20 @@ import java.util.zip.ZipFile;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.ConverterRegistry;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
-import org.apache.avalon.Component;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Configuration;
-import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.camelot.AbstractZipDeployer;
-import org.apache.avalon.camelot.DefaultLocator;
-import org.apache.avalon.camelot.DefaultLocatorRegistry;
-import org.apache.avalon.camelot.DeploymentException;
-import org.apache.avalon.camelot.DeployerUtil;
-import org.apache.avalon.camelot.Loader;
-import org.apache.avalon.camelot.LocatorRegistry;
-import org.apache.avalon.camelot.RegistryException;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.camelot.AbstractDeployer;
+import org.apache.avalon.framework.camelot.DefaultLocator;
+import org.apache.avalon.framework.camelot.DefaultRegistry;
+import org.apache.avalon.framework.camelot.DeploymentException;
+import org.apache.avalon.framework.camelot.DeployerUtil;
+import org.apache.avalon.framework.camelot.Loader;
+import org.apache.avalon.framework.camelot.Registry;
+import org.apache.avalon.framework.camelot.RegistryException;
 import org.apache.log.Logger;
 
 /**
@@ -40,14 +40,14 @@ import org.apache.log.Logger;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultTskDeployer
-    extends AbstractZipDeployer
-    implements Composer, TskDeployer
+    extends AbstractDeployer
+    implements Composable, TskDeployer
 {
     protected final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
 
-    protected LocatorRegistry       m_dataTypeRegistry;
-    protected LocatorRegistry       m_taskletRegistry;
-    protected LocatorRegistry       m_converterRegistry;
+    protected Registry              m_dataTypeRegistry;
+    protected Registry              m_taskletRegistry;
+    protected Registry              m_converterRegistry;
     protected ConverterRegistry     m_converterInfoRegistry;
 
     /**
@@ -64,10 +64,10 @@ public class DefaultTskDeployer
      * Retrieve relevent services needed to deploy.
      *
      * @param componentManager the ComponentManager
-     * @exception ComponentManagerException if an error occurs
+     * @exception ComponentException if an error occurs
      */
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
         final TaskletEngine taskletEngine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
@@ -86,6 +86,37 @@ public class DefaultTskDeployer
         m_dataTypeRegistry = dataTypeEngine.getRegistry();
     }
 
+    /**
+     * Deploy a file.
+     * Eventually this should be cached for performance reasons.
+     *
+     * @param location the location 
+     * @param file the file
+     * @exception DeploymentException if an error occurs
+     */
+    protected void deployFromFile( final String location, final File file )
+        throws DeploymentException
+    {
+        final ZipFile zipFile = DeployerUtil.getZipFileFor( file );
+
+        URL url = null;
+        
+        try
+        {
+            try { url = file.toURL(); }
+            catch( final MalformedURLException mue ) 
+            {
+                throw new DeploymentException( "Unable to form url", mue );
+            }
+            loadResources( zipFile, location, url );
+        }
+        finally
+        {
+            try { zipFile.close(); }
+            catch( final IOException ioe ) {}
+        }
+    }
+
     protected void loadResources( final ZipFile zipFile, final String location, final URL url )
         throws DeploymentException
     {
@@ -93,25 +124,22 @@ public class DefaultTskDeployer
 
         try
         {
-            final Iterator tasks = taskdefs.getChildren( "task" );
-            while( tasks.hasNext() )
+            final Configuration[] tasks = taskdefs.getChildren( "task" );
+            for( int i = 0; i < tasks.length; i++ )
             {
-                final Configuration task = (Configuration)tasks.next();
-                handleTasklet( task, url );
+                handleTasklet( tasks[ i ], url );
             }
             
-            final Iterator converters = taskdefs.getChildren( "converter" );
-            while( converters.hasNext() )
+            final Configuration[] converters = taskdefs.getChildren( "converter" );
+            for( int i = 0; i < converters.length; i++ )
             {
-                final Configuration converter = (Configuration)converters.next();
-                handleConverter( converter, url );
+                handleConverter( converters[ i ], url );
             }
 
-            final Iterator datatypes = taskdefs.getChildren( "datatype" );
-            while( datatypes.hasNext() )
+            final Configuration[] datatypes = taskdefs.getChildren( "datatype" );
+            for( int i = 0; i < datatypes.length; i++ )
             {
-                final Configuration datatype = (Configuration)datatypes.next();
-                handleDataType( datatype, url );
+                handleDataType( datatypes[ i ], url );
             }
         }
         catch( final ConfigurationException ce )
@@ -129,13 +157,12 @@ public class DefaultTskDeployer
         
         try
         {
-            final Iterator converters = taskdefs.getChildren( "converter" );
-            while( converters.hasNext() )
+            final Configuration[] converters = taskdefs.getChildren( "converter" );
+            for( int i = 0; i < converters.length; i++ )
             {
-                final Configuration converter = (Configuration)converters.next();
-                if( converter.getAttribute( "classname" ).equals( name ) )
+                if( converters[ i ].getAttribute( "classname" ).equals( name ) )
                 {
-                    handleConverter( converter, url );
+                    handleConverter( converters[ i ], url );
                     break;
                 }
             }
@@ -156,13 +183,12 @@ public class DefaultTskDeployer
         
         try
         {
-            final Iterator datatypes = datatypedefs.getChildren( "datatype" );
-            while( datatypes.hasNext() )
+            final Configuration[] datatypes = datatypedefs.getChildren( "datatype" );
+            for( int i = 0; i < datatypes.length; i++ )
             {
-                final Configuration datatype = (Configuration)datatypes.next();
-                if( datatype.getAttribute( "name" ).equals( name ) )
+                if( datatypes[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    handleDataType( datatype, url );
+                    handleDataType( datatypes[ i ], url );
                     break;
                 }
             }
@@ -182,13 +208,12 @@ public class DefaultTskDeployer
         
         try
         {
-            final Iterator tasks = taskdefs.getChildren( "task" );
-            while( tasks.hasNext() )
+            final Configuration[] tasks = taskdefs.getChildren( "task" );
+            for( int i = 0; i < tasks.length; i++ )
             {
-                final Configuration task = (Configuration)tasks.next();
-                if( task.getAttribute( "name" ).equals( name ) )
+                if( tasks[ i ].getAttribute( "name" ).equals( name ) )
                 {
-                    handleTasklet( task, url );
+                    handleTasklet( tasks[ i ], url );
                     break;
                 }
             }
@@ -226,7 +251,7 @@ public class DefaultTskDeployer
                                            re );
         }
 
-        m_logger.debug( "Registered converter " + name + " that converts from " + 
+        getLogger().debug( "Registered converter " + name + " that converts from " + 
                         source + " to " + destination );
     }
     
@@ -245,7 +270,7 @@ public class DefaultTskDeployer
                                            re );
         }
         
-        m_logger.debug( "Registered tasklet " + name + " as " + classname );
+        getLogger().debug( "Registered tasklet " + name + " as " + classname );
     }
   
     protected void handleDataType( final Configuration datatype, final URL url )
@@ -263,6 +288,6 @@ public class DefaultTskDeployer
                                            re );
         }
         
-        m_logger.debug( "Registered datatype " + name + " as " + classname );
+        getLogger().debug( "Registered datatype " + name + " as " + classname );
     }
 }

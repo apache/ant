@@ -8,9 +8,11 @@
 package org.apache.ant.tasklet;
 
 import org.apache.ant.AntException;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Context;
-import org.apache.avalon.Initializable;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 
 /**
  * This is abstract base class for tasklets.
@@ -19,11 +21,9 @@ import org.apache.avalon.Initializable;
  */
 public abstract class AbstractTasklet
     extends AbstractLoggable
-    implements Tasklet, Initializable
+    implements Tasklet, Contextualizable, Initializable, Disposable
 {
-    //the user should set this in constructors of sub-classes
-    protected JavaVersion             m_requiredJavaVersion;
-
+    ///Variable to hold context for use by sub-classes
     private TaskletContext            m_context;
 
     /**
@@ -37,27 +37,24 @@ public abstract class AbstractTasklet
     }
 
     /**
-     * This will be called before run() method and checks any preconditions.
+     * This will be called before execute() method and checks any preconditions.
      *
-     * Intially preconditions just include JVM version but in future it 
-     * will automagically also check if all required parameters are present.
-     *
-     * @exception AntException if an error occurs
+     * @exception Exception if an error occurs
      */
-    public void init()
-        throws AntException
+    public void initialize()
+        throws Exception
     {
-        if( null != m_requiredJavaVersion )
-        {
-            final JavaVersion suppliedVersion = m_context.getJavaVersion();
+    }
 
-            if( m_requiredJavaVersion.isLessThan( suppliedVersion ) )
-            {
-                throw new AntException( "Task requires a JavaVersion of at least " + 
-                                        m_requiredJavaVersion + " but current version is " +
-                                        suppliedVersion );
-            }
-        }
+    /**
+     * This will be called after execute() method.
+     * Use this to clean up any resources associated with task.
+     *
+     * @exception Exception if an error occurs
+     */
+    public void dispose()
+        throws Exception
+    {
     }
 
     /**
@@ -65,7 +62,7 @@ public abstract class AbstractTasklet
      *
      * @return the context
      */
-    protected TaskletContext getContext()
+    protected final TaskletContext getContext()
     {
         return m_context;
     }

@@ -9,7 +9,7 @@ package org.apache.ant.modules.basic;
 
 import java.net.URL;
 import org.apache.ant.convert.AbstractConverter;
-import org.apache.avalon.Context;
+import org.apache.avalon.framework.context.Context;
 
 /**
  * String to url converter

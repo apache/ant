@@ -25,7 +25,7 @@ public class Echo
         m_message = message;
     }
 
-    public void run()
+    public void execute()
         throws AntException
     {
         getLogger().warn( m_message );

@@ -37,7 +37,7 @@ public class SubElementTest
         System.out.println( "addBeeper(" + beep + ");" );
     }
 
-    public void run()
+    public void execute()
         throws AntException
     {
     }

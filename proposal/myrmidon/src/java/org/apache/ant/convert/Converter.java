@@ -7,7 +7,7 @@
  */
 package org.apache.ant.convert;
 
-import org.apache.avalon.Context;
+import org.apache.avalon.framework.context.Context;
 
 /**
  * Instances of this interface are used to convert between different types.

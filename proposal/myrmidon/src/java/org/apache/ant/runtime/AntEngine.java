@@ -10,9 +10,9 @@ package org.apache.ant.runtime;
 import java.util.Properties;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
-import org.apache.avalon.Component;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.Initializable;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * Interface to the Ant runtime.
@@ -23,7 +23,7 @@ public interface AntEngine
     extends Component, Initializable, Disposable
 {
     /**
-     * Setup basic properties of engine. 
+     * Setup basic properties of engine.
      * Called before init() and can be used to specify alternate components in system.
      *
      * @param properties the properties
@@ -37,7 +37,7 @@ public interface AntEngine
      * @return the ProjectBuilder
      */
     ProjectBuilder getProjectBuilder();
-    
+
     /**
      * Retrieve project engine for runtime.
      * Valid after init() call

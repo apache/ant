@@ -10,35 +10,35 @@ package org.apache.ant.project;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.ant.configuration.Configuration;
 import org.apache.ant.tasklet.DefaultTaskletContext;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.DefaultTaskletEngine;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.ant.util.Condition;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.Composer;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.DefaultComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.DefaultComponentManager;
-import org.apache.avalon.Disposable;
-import org.apache.avalon.Initializable;
+import org.apache.avalon.framework.activity.Disposable;
+import org.apache.avalon.framework.activity.Initializable;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.component.DefaultComponentManager;
+import org.apache.avalon.framework.component.DefaultComponentManager;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
 
 /**
  * This is the default implementation of ProjectEngine.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultProjectEngine
     extends AbstractLoggable
-    implements ProjectEngine, Composer
+    implements ProjectEngine, Composable
 {
     protected TaskletEngine            m_taskletEngine;
     protected ProjectListenerSupport   m_listenerSupport = new ProjectListenerSupport();
     protected DefaultComponentManager  m_componentManager;
-    
+
     /**
      * Add a listener to project events.
      *
@@ -48,7 +48,7 @@ public class DefaultProjectEngine
     {
         m_listenerSupport.addProjectListener( listener );
     }
-    
+
     /**
      * Remove a listener from project events.
      *
@@ -58,15 +58,15 @@ public class DefaultProjectEngine
     {
         m_listenerSupport.removeProjectListener( listener );
     }
-    
+
     /**
      * Retrieve relevent services needed for engine.
      *
      * @param componentManager the ComponentManager
-     * @exception ComponentManagerException if an error occurs
+     * @exception ComponentException if an error occurs
      */
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
         m_componentManager = (DefaultComponentManager)componentManager;
         m_taskletEngine = (TaskletEngine)componentManager.
@@ -80,7 +80,7 @@ public class DefaultProjectEngine
      * @param project the Project
      * @param target the name of the target
      * @exception AntException if an error occurs
-     */    
+     */
     public void execute( final Project project, final String target )
         throws AntException
     {
@@ -125,8 +125,8 @@ public class DefaultProjectEngine
      * @param done the list of targets already executed in current run
      * @exception AntException if an error occurs
      */
-    protected void execute( final Project project, 
-                            final String targetName, 
+    protected void execute( final Project project,
+                            final String targetName,
                             final TaskletContext context,
                             final ArrayList done )
         throws AntException
@@ -137,7 +137,7 @@ public class DefaultProjectEngine
         {
             throw new AntException( "Unable to find target " + targetName );
         }
-        
+
         //add target to list of targets executed
         done.add( targetName );
 
@@ -163,8 +163,8 @@ public class DefaultProjectEngine
      * @param context the context in which to execute
      * @exception AntException if an error occurs
      */
-    protected void executeTarget( final String targetName, 
-                                  final Target target, 
+    protected void executeTarget( final String targetName,
+                                  final Target target,
                                   final TaskletContext context )
         throws AntException
     {
@@ -175,13 +175,13 @@ public class DefaultProjectEngine
         //create project context and set target name
         final TaskletContext targetContext = new DefaultTaskletContext( context );
         targetContext.setProperty( Project.TARGET, targetName );
-        
+
         //notify listeners
         m_listenerSupport.targetStarted( targetName );
 
-        //actually do the execution work 
+        //actually do the execution work
         executeTargetWork( targetName, target, targetContext );
-        
+
         //notify listeners
         m_listenerSupport.targetFinished();
     }
@@ -194,8 +194,8 @@ public class DefaultProjectEngine
      * @param target the target
      * @param context the context
      */
-    protected void executeTargetWork( final String name, 
-                                      final Target target, 
+    protected void executeTargetWork( final String name,
+                                      final Target target,
                                       final TaskletContext context )
     {
         //check the condition associated with target.
@@ -205,7 +205,7 @@ public class DefaultProjectEngine
         {
             if( false == condition.evaluate( context ) )
             {
-                getLogger().debug( "Skipping target " + name + 
+                getLogger().debug( "Skipping target " + name +
                                    " as it does not satisfy condition" );
                 return;
             }
@@ -226,7 +226,7 @@ public class DefaultProjectEngine
      * Execute a task.
      *
      * @param task the task definition
-     * @param context the context 
+     * @param context the context
      * @exception AntException if an error occurs
      */
     protected void executeTask( final Configuration task, final TaskletContext context )

@@ -7,7 +7,7 @@
  */
 package org.apache.ant.convert.engine;
 
-import org.apache.avalon.camelot.Info;
+import org.apache.avalon.framework.camelot.Info;
 
 /**
  * This info represents meta-information about a converter.

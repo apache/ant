@@ -8,10 +8,10 @@
 package org.apache.ant.tasklet.engine;
 
 import org.apache.ant.tasklet.DataType;
-import org.apache.avalon.Component;
-import org.apache.avalon.camelot.FactoryException;
-import org.apache.avalon.camelot.LocatorRegistry;
-import org.apache.avalon.camelot.RegistryException;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.camelot.FactoryException;
+import org.apache.avalon.framework.camelot.Registry;
+import org.apache.avalon.framework.camelot.RegistryException;
 
 /**
  * This is basically a engine that can be used to access data-types.
@@ -28,7 +28,7 @@ public interface DataTypeEngine
      *
      * @return the registry
      */
-    LocatorRegistry getRegistry();
+    Registry getRegistry();
 
     /**
      * Create a data-type of type registered under name.

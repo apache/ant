@@ -7,13 +7,14 @@
  */
 package org.apache.ant.configuration;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.Context;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.context.Context;
 
 /**
  * Class used to configure tasks.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Configurer
@@ -21,7 +22,7 @@ public interface Configurer
 {
     /**
      * Configure an object based on a configuration in a particular context.
-     * This configuring can be done in different ways for different 
+     * This configuring can be done in different ways for different
      * configurers.
      *
      * @param object the object

@@ -8,9 +8,9 @@
 package org.apache.ant.convert.engine;
 
 import java.util.HashMap;
-import org.apache.avalon.camelot.DefaultRegistry;
-import org.apache.avalon.camelot.Info;
-import org.apache.avalon.camelot.RegistryException;
+import org.apache.avalon.framework.camelot.DefaultRegistry;
+import org.apache.avalon.framework.camelot.Info;
+import org.apache.avalon.framework.camelot.RegistryException;
 
 /**
  * Default implementation of ConverterInfo registry.

@@ -7,7 +7,7 @@
  */
 package org.apache.ant.convert.engine;
 
-import org.apache.avalon.camelot.Registry;
+import org.apache.avalon.framework.camelot.Registry;
 
 /**
  * Interface for registry for ConverterInfos.

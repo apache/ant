@@ -10,7 +10,7 @@ package org.apache.ant.project;
 import java.util.Iterator;
 import org.apache.ant.AntException;
 import org.apache.ant.tasklet.TaskletContext;
-import org.apache.avalon.Component;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * Interface through which to interact with projects.

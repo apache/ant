@@ -9,10 +9,11 @@ package org.apache.ant.tasklet;
 
 import java.io.File;
 import org.apache.ant.AntException;
-import org.apache.avalon.DefaultContext;
-import org.apache.avalon.util.PropertyException;
-import org.apache.avalon.util.PropertyUtil; 
-import org.apache.avalon.util.io.FileUtil;
+import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.excalibur.property.PropertyException;
+import org.apache.avalon.excalibur.property.PropertyUtil; 
+import org.apache.avalon.excalibur.io.FileUtil;
 
 /**
  * Default implementation of TaskletContext.
@@ -42,7 +43,7 @@ public class DefaultTaskletContext
 
         if( null != parent )
         {
-            m_baseDirectory = (File)parent.get( BASE_DIRECTORY );
+            m_baseDirectory = (File)parent.getBaseDirectory();
         }
     }
 
@@ -53,7 +54,14 @@ public class DefaultTaskletContext
      */
     public JavaVersion getJavaVersion()
     {
-        return (JavaVersion)get( JAVA_VERSION );
+        try
+        {
+            return (JavaVersion)get( JAVA_VERSION );
+        }
+        catch( final ContextException ce )
+        {
+            throw new IllegalStateException( "No JavaVersion in Context" );
+        }
     }
 
     
@@ -64,7 +72,14 @@ public class DefaultTaskletContext
      */
     public String getName()
     {
-        return (String)get( NAME );
+        try
+        {
+            return (String)get( NAME );
+        }
+        catch( final ContextException ce )
+        {
+            throw new IllegalStateException( "No Name in Context" );
+        }
     }
 
     /**
@@ -119,7 +134,11 @@ public class DefaultTaskletContext
      */
     public Object getProperty( final String name )
     {
-        return get( name );
+        try { return get( name ); }
+        catch( final ContextException ce )
+        {
+            return null;
+        }
     }
 
     /**

@@ -46,111 +46,39 @@ Legal:
   <property name="build.lib" value="${build.dir}/lib"/>
   <property name="build.src" value="${build.dir}/src"/>
   <property name="build.classes" value="${build.dir}/classes"/>
-  <property name="build.javadocs" value="${build.dir}/javadocs"/>
-  <property name="build.docs" value="${build.dir}/docs"/>
 
   <property name="src.base" value="src"/>
   <property name="manifest.dir" value="${src.base}/manifest"/>
-  <property name="xdocs.dir" value="${src.base}/xdocs"/>
   <property name="java.dir" value="${src.base}/java"/>
-  <property name="skins.dir" value="${src.base}/skins"/>
   <property name="script.dir" value="${src.base}/script"/>
   <property name="lib.dir" value="lib"/>
 
   <property name="dist.name" value="${Name}-${version}"/>
-  <!--   <property name="dist.dir" value="${dist.name}"/> -->
   <property name="dist.dir" value="dist"/>
   <property name="dist.bin" value="${dist.dir}/bin"/>
-  <property name="dist.blocks" value="${dist.dir}/bin/blocks"/>
   <property name="dist.lib" value="${dist.dir}/lib"/>
-  <property name="dist.docs" value="${dist.dir}/docs"/>
-  <property name="dist.javadocs" value="${dist.dir}/docs/api"/>
-  <property name="dist.src.base" value="${dist.dir}/src"/>
-  <property name="dist.conf" value="${dist.dir}/conf"/>
-  <property name="dist.log" value="${dist.dir}/logs"/>
 
   <property name="constants.file" value="org/apache/ant/Constants.java"/>
 
-  <!--
-       ===================================================================
-                                  Main target
-       ===================================================================
-  -->
+  <path id="project.class.path">
+    <pathelement path="${java.class.path}" />
+    <fileset dir="${lib.dir}">
+      <include name="*.jar" />
+    </fileset>
+    <pathelement path="${build.classes}" />
+  </path>
+
+  <!-- Main target -->
   <target name="main" depends="dist" />
-
-  <!--
-       ===================================================================
-                                  Help on usage
-       ===================================================================
-  -->
-  <target name="usage">
-    <echo message=""/>
-    <echo message="${Name} Build file"/>
-    <echo message="-------------------------------------------------------------"/>
-    <echo message=""/>
-    <echo message=" available targets are:"/>
-    <echo message=""/>
-    <echo message="   jar        -> generates the ${Name} jar files"/>
-    <echo message="   compile    -> compiles the source code"/>
-    <echo message="   dist       -> generates the ${Name} distribution (default)"/>
-    <echo message="   clean      -> cleans up the created directories"/>
-    <echo message="   real-clean -> cleans up all genereated files and directories"/>
-<!--
-    <echo message="   test       -> perform unit tests"/>
-    <echo message="   javadocs   -> generates the API documentation (java 1.2+ only)"/>
-    <echo message="   docs       -> generates the ${Name} documentation"/> 
--->
-    <echo message=""/>
-    <echo message="-------------------------------------------------------------"/>
-    <echo message=""/>
-  </target>
-
-  <target name="help" depends="usage"/>
-
-  <!--
-       ===================================================================
-                         Prepares the build directory
-       ===================================================================
-  -->
-  <target name="prepare">
-    <tstamp/>
-    <mkdir dir="${build.dir}"/>
-  </target>
-
-  <!--
-       ===================================================================
-                           Prepares the library code
-       ===================================================================
-   -->
-  <target name="prepare-lib" depends="prepare">
-    <mkdir dir="${build.lib}"/>
-    <copy file="${lib.dir}/xerces.jar" todir="${build.lib}"/>
-    <copy file="${lib.dir}/avalonapi.jar" todir="${build.lib}"/>
-  </target>
-
-  <!--
-       ===================================================================
-                           Prepares the source code
-       ===================================================================
-   -->
-  <target name="prepare-src" depends="prepare">
-    <mkdir dir="${build.src}"/>
-    <copy todir="${build.src}">
-      <fileset dir="${java.dir}">
-        <include name="${constants.file}" />
-      </fileset>
-    </copy>
  
+  <!-- Compiles the source code -->
+  <target name="compile">
+
+    <tstamp/>
+    <mkdir dir="${build.src}"/>
+    <copy file="${java.dir}/${constants.file}" tofile="${build.src}/${constants.file}"/>
     <replace file="${build.src}/${constants.file}" token="@@VERSION@@" value="${version}" />
     <replace file="${build.src}/${constants.file}" token="@@DATE@@" value="${TODAY}" />
-  </target>
- 
-  <!--
-       ===================================================================
-                        Compiles the source code
-       ===================================================================
-  -->
-  <target name="compile" depends="prepare-src,prepare-lib">
 
     <mkdir dir="${build.classes}"/>
     <javac srcdir="${java.dir}"
@@ -158,43 +86,25 @@ Legal:
            debug="${debug}"
            optimize="${optimize}"
            deprecation="${deprecation}">
+        <classpath refid="project.class.path"/>        
         <exclude name="org/apache/ant/gui/**"/>
         <exclude name="${constants.file}"/>
         <src path="${build.src}" />
     </javac>
 
-<!--
-    <copy todir="${build.classes}">
-      <fileset dir="${java.dir}">
-        <include name="**/*.properties"/>
-      </fileset>
-    </copy>
--->
-
-    <mkdir dir="${build.classes}/TASK-LIB"/>
-    <copy file="${manifest.dir}/taskdefs.xml" todir="${build.classes}/TASK-LIB"/>
-
   </target>
 
-  <!--
-       ===================================================================
-                          Creates the ant.jar file
-       ===================================================================
-  -->
-  <target name="jar-ant" depends="compile">
+  <!-- Creates the jars file -->
+  <target name="jars" depends="compile">
+
+    <mkdir dir="${build.lib}"/>
+
     <jar jarfile="${build.lib}/ant.jar" 
          basedir="${build.classes}" 
          manifest="${manifest.dir}/ant-manifest.mf">
       <include name="org/apache/ant/launcher/*" />
     </jar>
-  </target>
 
-  <!--
-       ===================================================================
-                          Creates the myrmidon.jar file
-       ===================================================================
-  -->
-  <target name="jar-myrmidon" depends="compile">
     <jar jarfile="${build.lib}/myrmidon.jar" 
          basedir="${build.classes}" 
          manifest="${manifest.dir}/myrmidon-manifest.mf">
@@ -203,32 +113,29 @@ Legal:
       <exclude name="org/apache/ant/tasks/**" />
       <exclude name="org/apache/ant/convert/core/**" />
     </jar>
-  </target>
 
-  <!--
-       ===================================================================
-                          Creates the ant.jar file
-       ===================================================================
-  -->
-  <target name="jar-core" depends="compile">
     <jar jarfile="${build.lib}/core.tsk" basedir="${build.classes}">
       <include name="org/apache/ant/modules/**" />
-      <include name="TASK-LIB/*" />
+
+      <zipfileset dir="${manifest.dir}" fullpath="TASK-LIB/taskdefs.xml">
+        <include name="taskdefs.xml"/>
+      </zipfileset>
+
     </jar>
   </target>
 
-  <!--
-       ===================================================================
-                          Creates the distribution
-       ===================================================================
-  -->
-  <target name="dist" depends="jar-ant,jar-core,jar-myrmidon">
-    <mkdir dir="${dist.dir}"/>
+  <!-- Creates the distribution -->
+  <target name="dist" depends="jars">
+
     <mkdir dir="${dist.bin}"/>
     <mkdir dir="${dist.lib}"/>
 
     <copy todir="${dist.lib}">
-      <fileset dir="${build.lib}">
+      <fileset dir="${build.lib}"/>
+    </copy>
+
+    <copy todir="${dist.lib}">
+      <fileset dir="${lib.dir}">
         <exclude name="xalan*" />
         <exclude name="StyleBook*" />
       </fileset>
@@ -246,37 +153,13 @@ Legal:
 
   </target>
 
-  <!-- 
-       ===================================================================
-       Performs unit tests
-       =================================================================== 
-  -->
-  <target name="test" depends="jar-ant" if="test-task.present">
-    <ant antfile="build-test.xml" dir="src/make" target="test" />
-  </target>
-
-  <!--
-       ===================================================================
-                 Cleans up build and distribution directories
-       ===================================================================
-  -->
+  <!-- Cleans up build and distribution directories -->
   <target name="clean">
     <delete dir="${build.dir}"/>
     <delete dir="${dist.dir}"/>
     <delete>
       <fileset dir="." includes="**/*~" defaultexcludes="no"/>
     </delete>
-  </target>
-
-  <!--
-       ===================================================================
-                      Cleans absolutely everything up
-       ===================================================================
-  -->
-  <target name="real-clean" depends="clean">
-    <delete file="${dist.name}.tar.gz"/>
-    <delete file="${dist.name}.zip"/>
-    <delete dir="${javadocs.dir}"/>
   </target>
 
 </project>

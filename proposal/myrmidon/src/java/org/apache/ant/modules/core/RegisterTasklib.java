@@ -13,10 +13,10 @@ import java.net.URL;
 import org.apache.ant.AntException;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.engine.TaskletEngine;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.camelot.DeploymentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.camelot.DeploymentException;
 
 /**
  * Method to register a tasklib.
@@ -25,13 +25,13 @@ import org.apache.avalon.camelot.DeploymentException;
  */
 public class RegisterTasklib 
     extends AbstractTasklet
-    implements Composer
+    implements Composable
 {
     protected String              m_lib;
     protected TaskletEngine       m_engine;
     
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
         m_engine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
@@ -42,7 +42,7 @@ public class RegisterTasklib
         m_lib = lib;
     }
 
-    public void run()
+    public void execute()
         throws AntException
     {
         if( null == m_lib )

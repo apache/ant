@@ -11,13 +11,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.ant.configuration.Configuration;
-import org.apache.ant.configuration.ConfigurationBuilder;
-import org.apache.ant.util.Condition;
 import org.apache.ant.tasklet.TaskletContext;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.util.StringUtil;
+import org.apache.ant.util.Condition;
+import org.apache.avalon.framework.ExceptionUtil;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.log.Logger;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -31,11 +31,11 @@ public class DefaultProjectBuilder
     extends AbstractLoggable
     implements ProjectBuilder
 {
-    protected ConfigurationBuilder  m_builder;
+    protected DefaultConfigurationBuilder  m_builder;
 
     public DefaultProjectBuilder()
     {
-        m_builder = new ConfigurationBuilder();
+        m_builder = new DefaultConfigurationBuilder();
     }
 
     /**
@@ -63,7 +63,7 @@ public class DefaultProjectBuilder
 
     /**
      * Utility method to build a Configuration tree from a source.
-     * Overide this in sub-classes if you want to provide extra 
+     * Overide this in sub-classes if you want to provide extra
      * functionality (ie xslt/css).
      *
      * @param location the location
@@ -76,7 +76,7 @@ public class DefaultProjectBuilder
     {
         try
         {
-            return (Configuration)m_builder.build( location ); 
+            return (Configuration)m_builder.buildFromFile( location );
         }
         catch( final SAXException se )
         {
@@ -108,7 +108,7 @@ public class DefaultProjectBuilder
         final String projectName = configuration.getAttribute( "name" );
 
         //determine base directory for project
-        final File baseDirectory = 
+        final File baseDirectory =
             (new File( file.getParentFile(), baseDirectoryName )).getAbsoluteFile();
 
         getLogger().debug( "Project " + projectName + " base directory: " + baseDirectory );
@@ -116,7 +116,7 @@ public class DefaultProjectBuilder
         //create project and ...
         final DefaultProject project = new DefaultProject();
         project.setDefaultTargetName( defaultTarget );
-        
+
         //setup basic context of project
         final TaskletContext context = project.getContext();
         context.setProperty( TaskletContext.BASE_DIRECTORY, baseDirectory );
@@ -136,15 +136,15 @@ public class DefaultProjectBuilder
      * @param configuration the Configuration
      * @exception AntException if an error occurs
      */
-    protected void buildTopLevelProject( final DefaultProject project, 
+    protected void buildTopLevelProject( final DefaultProject project,
                                          final Configuration configuration )
         throws AntException
     {
-        final Iterator elements = configuration.getChildren();
+        final Configuration[] children = configuration.getChildren();
 
-        while( elements.hasNext() )
+        for( int i = 0; i < children.length; i++ )
         {
-            final Configuration element = (Configuration)elements.next();
+            final Configuration element = children[ i ];
             final String name = element.getName();
 
             //handle individual elements
@@ -152,7 +152,7 @@ public class DefaultProjectBuilder
             else if( name.equals( "property" ) ) buildImplicitTask( project, element );
             else
             {
-                throw new AntException( "Unknown top-level element " + name + 
+                throw new AntException( "Unknown top-level element " + name +
                                         " at " + element.getLocation() );
             }
         }
@@ -173,16 +173,16 @@ public class DefaultProjectBuilder
 
         if( null == name )
         {
-            throw new AntException( "Discovered un-named target at " + 
+            throw new AntException( "Discovered un-named target at " +
                                     target.getLocation() );
-        } 
+        }
 
         getLogger().debug( "Parsing target: " + name );
 
         if( null != ifCondition && null != unlessCondition )
         {
             throw new AntException( "Discovered invalid target that has both a if and " +
-                                    "unless condition at " + target.getLocation() );    
+                                    "unless condition at " + target.getLocation() );
         }
 
         Condition condition = null;
@@ -203,7 +203,7 @@ public class DefaultProjectBuilder
         //apply depends attribute
         if( null != depends )
         {
-            final String[] elements = StringUtil.splitString( depends, "," );
+            final String[] elements = ExceptionUtil.splitString( depends, "," );
 
             for( int i = 0; i < elements.length; i++ )
             {
@@ -211,22 +211,21 @@ public class DefaultProjectBuilder
 
                 if( 0 == dependency.length() )
                 {
-                    throw new AntException( "Discovered empty dependency in target " + 
-                                            target.getName() + " at " + target.getLocation() ); 
+                    throw new AntException( "Discovered empty dependency in target " +
+                                            target.getName() + " at " + target.getLocation() );
                 }
 
                 getLogger().debug( "Target dependency: " + dependency );
                 defaultTarget.addDependency( dependency );
-            }    
+            }
         }
 
         //add all the targets from element
-        final Iterator tasks = target.getChildren();
-        while( tasks.hasNext() )
+        final Configuration[] tasks = target.getChildren();
+        for( int i = 0; i < tasks.length; i++ )
         {
-            final Configuration task = (Configuration)tasks.next();
-            getLogger().debug( "Parsed task: " + task.getName() );
-            defaultTarget.addTask( task );
+            getLogger().debug( "Parsed task: " + tasks[ i ].getName() );
+            defaultTarget.addTask( tasks[ i ] );
         }
 
         //add target to project
@@ -240,9 +239,9 @@ public class DefaultProjectBuilder
      * @param task the configuration
      */
     protected void buildImplicitTask( final DefaultProject project, final Configuration task )
-    {       
+    {
         DefaultTarget target = (DefaultTarget)project.getImplicitTarget();
-        
+
         if( null == target )
         {
             target = new DefaultTarget();

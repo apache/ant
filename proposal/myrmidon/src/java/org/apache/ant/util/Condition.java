@@ -8,10 +8,11 @@
 package org.apache.ant.util;
 
 import org.apache.ant.AntException;
-import org.apache.avalon.Component;
-import org.apache.avalon.Context;
-import org.apache.avalon.util.PropertyException;
-import org.apache.avalon.util.PropertyUtil;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.excalibur.property.PropertyException;
+import org.apache.avalon.excalibur.property.PropertyUtil;
 
 /**
  * Class representing a condition.
@@ -21,8 +22,8 @@ import org.apache.avalon.util.PropertyUtil;
 public class Condition
     implements Component
 {
-    protected String            m_condition;
-    protected boolean           m_isIfCondition; 
+    private String            m_condition;
+    private boolean           m_isIfCondition; 
 
     public Condition( final boolean isIfCondition, final String condition )
     {
@@ -42,29 +43,37 @@ public class Condition
     
     public boolean evaluate( final Context context )
     {
+        boolean result = false;
+
         try
         {
             final Object resolved = 
-                PropertyUtil.resolveProperty( m_condition, context, false ); 
-
-            boolean result = false;
+                PropertyUtil.resolveProperty( getCondition(), context, false ); 
 
             if( null != resolved ) 
             {
-                result = ( null != context.get( resolved ) );
+                final Object object = context.get( resolved );
+                //TODO: Do more than just check for presence????????????
+                
+                //true as object present
+                result = true;
             }
-
-            if( !m_isIfCondition )
-            {
-                result = !result;
-            }
-
-            return result;
+        }
+        catch( final ContextException ce )
+        {
+            result = false;
         }
         catch( final PropertyException pe )
         {
             throw new AntException( "Error resolving " + m_condition, pe );
         }
+
+        if( !m_isIfCondition )
+        {
+            result = !result;
+        }
+
+        return result;
     }
 }
 

@@ -10,7 +10,7 @@ package org.apache.ant.project;
 import org.apache.ant.AntException;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
-import org.apache.avalon.Component;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * This is the interface between ProjectEngine and rest of the system.

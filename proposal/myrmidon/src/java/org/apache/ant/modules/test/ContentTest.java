@@ -30,7 +30,7 @@ public class ContentTest
       }
     */
 
-    public void run()
+    public void execute()
         throws AntException
     {
     }

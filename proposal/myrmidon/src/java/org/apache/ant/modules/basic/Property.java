@@ -9,8 +9,6 @@ package org.apache.ant.modules.basic;
 
 import java.util.Iterator;
 import org.apache.ant.AntException;
-import org.apache.ant.configuration.Configurable;
-import org.apache.ant.configuration.Configuration;
 import org.apache.ant.configuration.Configurer;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.tasklet.DataType;
@@ -18,11 +16,13 @@ import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.Resolvable;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.context.Resolvable;
 
 /**
  * This is the property "task" to declare a binding of a datatype to a name.
@@ -31,7 +31,7 @@ import org.apache.avalon.Resolvable;
  */
 public class Property 
     extends AbstractTasklet
-    implements Configurable, Composer
+    implements Configurable, Composable
 {
     protected String              m_name;
     protected Object              m_value;
@@ -41,7 +41,7 @@ public class Property
     protected Configurer          m_configurer;
     
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
         m_configurer = (Configurer)componentManager.
             lookup( "org.apache.ant.configuration.Configurer" );
@@ -55,11 +55,11 @@ public class Property
     public void configure( final Configuration configuration )
         throws ConfigurationException
     {
-        final Iterator attributes = configuration.getAttributeNames();
+        final String[] attributes = configuration.getAttributeNames();
 
-        while( attributes.hasNext() )
+        for( int i = 0; i < attributes.length; i++ )
         {
-            final String name = (String)attributes.next();
+            final String name = attributes[ i ];
             final String value = configuration.getAttribute( name );
 
             final Object object = getContext().resolveValue( value );
@@ -105,10 +105,11 @@ public class Property
             }
         }
 
-        final Iterator children = configuration.getChildren();
-        while( children.hasNext() )
+        final Configuration[] children = configuration.getChildren();
+
+        for( int i = 0; i < children.length; i++ )
         {
-            final Configuration child = (Configuration)children.next();
+            final Configuration child = children[ i ];
 
             try
             {
@@ -144,7 +145,7 @@ public class Property
         m_localScope = localScope;
     }
 
-    public void run()
+    public void execute()
         throws AntException
     {
         if( null == m_name )

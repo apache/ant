@@ -8,9 +8,9 @@
 package org.apache.ant.tasklet.engine;
 
 import java.net.URL;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.camelot.Deployer;
-import org.apache.avalon.camelot.DeploymentException;
+import org.apache.avalon.framework.logger.Loggable;
+import org.apache.avalon.framework.camelot.Deployer;
+import org.apache.avalon.framework.camelot.DeploymentException;
 import org.apache.log.Logger;
 
 /**

@@ -15,12 +15,12 @@ import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.engine.TaskletEngine;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.camelot.DefaultLocator;
-import org.apache.avalon.camelot.DeploymentException;
-import org.apache.avalon.camelot.RegistryException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.camelot.DefaultLocator;
+import org.apache.avalon.framework.camelot.DeploymentException;
+import org.apache.avalon.framework.camelot.RegistryException;
 
 /**
  * Method to register a single converter.
@@ -29,7 +29,7 @@ import org.apache.avalon.camelot.RegistryException;
  */
 public class RegisterConverter 
     extends AbstractTasklet
-    implements Composer
+    implements Composable
 {
     protected String              m_sourceType;
     protected String              m_destinationType;
@@ -38,7 +38,7 @@ public class RegisterConverter
     protected TaskletEngine       m_engine;
     
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
         m_engine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
@@ -64,7 +64,7 @@ public class RegisterConverter
         m_destinationType = destinationType;
     }
     
-    public void run()
+    public void execute()
         throws AntException
     {
         if( null == m_classname )

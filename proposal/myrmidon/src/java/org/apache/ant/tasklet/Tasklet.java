@@ -7,16 +7,14 @@
  */
 package org.apache.ant.tasklet;
 
-import org.apache.avalon.Component;
-import org.apache.avalon.Contextualizable;
-import org.apache.avalon.Loggable;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * This represents the individual tasks.
  * Particular instances can also implement Initializable
  * and/or Disposable, in which case init()/dispose() will 
  * be called at appropriate time.
- * The task can also implement Composer in which case required 
+ * The task can also implement Composable in which case required 
  * facilities will be passed via a ComponentManager. The actual
  * facilties is determined by particular task engine but will usually
  * include ProjectEngine and TaskEngine.
@@ -24,6 +22,8 @@ import org.apache.avalon.Loggable;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Tasklet
-    extends Component, Loggable, Contextualizable, Runnable 
+    extends Component 
 {
+    void execute()
+        throws Exception;
 }

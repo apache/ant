@@ -7,7 +7,7 @@
  */
 package org.apache.ant.tasklet;
 
-import org.apache.avalon.Component;
+import org.apache.avalon.framework.component.Component;
 
 /**
  * Base class for those classes that can appear inside the build file

@@ -9,8 +9,8 @@ package org.apache.ant.project;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.ant.configuration.Configuration;
 import org.apache.ant.util.Condition;
+import org.apache.avalon.framework.configuration.Configuration;
 
 /**
  * Default implementation of target.
@@ -41,7 +41,7 @@ public class DefaultTarget
     {
         this( null );
     }
-    
+
     /**
      * Get condition under which target is executed.
      *

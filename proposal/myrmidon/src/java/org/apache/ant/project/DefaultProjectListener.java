@@ -7,7 +7,7 @@
  */
 package org.apache.ant.project;
 
-import org.apache.avalon.util.StringUtil;
+import org.apache.avalon.framework.ExceptionUtil;
 
 /**
  * Default listener that emulates the old ant listener notifications.
@@ -89,7 +89,7 @@ public class DefaultProjectListener
      */
     public void log( String message, Throwable throwable )
     {
-        output( message + "\n" + StringUtil.printStackTrace( throwable, 5, true ) );
+        output( message + "\n" + ExceptionUtil.printStackTrace( throwable, 5, true ) );
     }
 
     /**

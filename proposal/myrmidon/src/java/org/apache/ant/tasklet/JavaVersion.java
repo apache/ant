@@ -7,7 +7,7 @@
  */
 package org.apache.ant.tasklet;
 
-import org.apache.avalon.util.ValuedEnum;
+import org.apache.avalon.framework.ValuedEnum;
 
 /**
  * Type safe wrapper class for Java Version enums.

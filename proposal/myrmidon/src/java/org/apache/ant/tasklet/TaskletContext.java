@@ -8,9 +8,9 @@
 package org.apache.ant.tasklet;
 
 import java.io.File;
-import org.apache.avalon.Context;
-import org.apache.avalon.util.Enum;
-import org.apache.avalon.util.ValuedEnum;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.Enum;
+import org.apache.avalon.framework.ValuedEnum;
 
 /**
  * This represents the *Context* in which a task can be executed.

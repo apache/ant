@@ -8,10 +8,10 @@
 package org.apache.ant.modules.test;
 
 import org.apache.ant.AntException;
-import org.apache.ant.configuration.Configurable;
-import org.apache.ant.configuration.Configuration;
 import org.apache.ant.tasklet.AbstractTasklet;
-import org.apache.avalon.ConfigurationException;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.ConfigurationException;
 
 /**
  * This is to test self interpretation of configuration.
@@ -22,7 +22,7 @@ public class ConfigurationTest
     extends AbstractTasklet
     implements Configurable
 {
-    protected String              m_message;
+    private String              m_message;
 
     public void configure( final Configuration configuration )
         throws ConfigurationException
@@ -39,7 +39,7 @@ public class ConfigurationTest
         }
     }
 
-    public void run()
+    public void execute()
         throws AntException
     {
         getLogger().warn( m_message );

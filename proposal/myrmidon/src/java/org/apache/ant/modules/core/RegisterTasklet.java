@@ -9,9 +9,9 @@ package org.apache.ant.modules.core;
 
 import java.net.URL;
 import org.apache.ant.AntException;
-import org.apache.avalon.camelot.DefaultLocator;
-import org.apache.avalon.camelot.DeploymentException;
-import org.apache.avalon.camelot.RegistryException;
+import org.apache.avalon.framework.camelot.DefaultLocator;
+import org.apache.avalon.framework.camelot.DeploymentException;
+import org.apache.avalon.framework.camelot.RegistryException;
 
 /**
  * Method to register a single tasklet.

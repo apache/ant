@@ -13,32 +13,34 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.convert.ConverterException;
-import org.apache.avalon.AbstractLoggable;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.ConfigurationException;
-import org.apache.avalon.Context;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.util.PropertyException;
-import org.apache.avalon.util.PropertyUtil;
+import org.apache.avalon.excalibur.property.PropertyException;
+import org.apache.avalon.excalibur.property.PropertyUtil;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.Configurable;
+import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
 
 /**
  * Class used to configure tasks.
- * 
+ *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultConfigurer
     extends AbstractLoggable
-    implements Configurer, Composer, Loggable
+    implements Configurer, Composable, Loggable
 {
-    protected final static String  RESERVED_ATTRIBUTES[] = 
+    protected final static String  RESERVED_ATTRIBUTES[] =
     {
         "id"
     };
 
-    protected final static String  RESERVED_ELEMENTS[] = 
+    protected final static String  RESERVED_ELEMENTS[] =
     {
         "content"
     };
@@ -47,16 +49,16 @@ public class DefaultConfigurer
     protected Converter            m_converter;
 
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
         m_converter = (Converter)componentManager.lookup( "org.apache.ant.convert.Converter" );
     }
-    
+
     /**
      * Configure a task based on a configuration in a particular context.
-     * This configuring can be done in different ways for different 
-     * configurers. 
-     * This one does it by first checking if object implements Configurable 
+     * This configuring can be done in different ways for different
+     * configurers.
+     * This one does it by first checking if object implements Configurable
      * and if it does will pass the task the configuration - else it will use
      * ants rules to map configuration to types
      *
@@ -65,59 +67,59 @@ public class DefaultConfigurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    public void configure( final Object object, 
+    public void configure( final Object object,
                            final Configuration configuration,
                            final Context context )
         throws ConfigurationException
     {
         if( DEBUG )
         {
-            m_logger.debug( "Configuring " + object );
+            getLogger().debug( "Configuring " + object );
         }
 
         if( object instanceof Configurable )
         {
-            if( DEBUG ) 
+            if( DEBUG )
             {
-                m_logger.debug( "Configuring object via Configurable interface" );
+                getLogger().debug( "Configuring object via Configurable interface" );
             }
 
             ((Configurable)object).configure( configuration );
         }
         else
         {
-            if( DEBUG ) 
+            if( DEBUG )
             {
-                m_logger.debug( "Configuring object via Configurable reflection" );
+                getLogger().debug( "Configuring object via Configurable reflection" );
             }
 
-            final Iterator attributes = configuration.getAttributeNames();
-            while( attributes.hasNext() )
+            final String[] attributes = configuration.getAttributeNames();
+            for( int i = 0; i < attributes.length; i++ )
             {
-                final String name = (String)attributes.next();
+                final String name = attributes[ i ];
                 final String value = configuration.getAttribute( name );
-             
-                if( DEBUG ) 
+
+                if( DEBUG )
                 {
-                    m_logger.debug( "Configuring attribute name=" + name +
+                    getLogger().debug( "Configuring attribute name=" + name +
                                     " value=" + value );
                 }
-                
+
                 configureAttribute( object, name, value, context );
             }
 
-            final Iterator elements = configuration.getChildren();
-            
-            while( elements.hasNext() )
+            final Configuration[] children = configuration.getChildren();
+
+            for( int i = 0; i < children.length; i++ )
             {
-                final Configuration element = (Configuration)elements.next();
-                
-                if( DEBUG ) 
+                final Configuration child = children[ i ];
+
+                if( DEBUG )
                 {
-                    m_logger.debug( "Configuring subelement name=" + element.getName() );
+                    getLogger().debug( "Configuring subelement name=" + child.getName() );
                 }
-                
-                configureElement( object, element, context );
+
+                configureElement( object, child, context );
             }
 
             final String content = configuration.getValue( null );
@@ -126,11 +128,11 @@ public class DefaultConfigurer
             {
                 if( !content.trim().equals( "" ) )
                 {
-                    if( DEBUG ) 
+                    if( DEBUG )
                     {
-                        m_logger.debug( "Configuring content " + content );
+                        getLogger().debug( "Configuring content " + content );
                     }
-                    
+
                     configureContent( object, content, context );
                 }
             }
@@ -145,7 +147,7 @@ public class DefaultConfigurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    protected void configureContent( final Object object, 
+    protected void configureContent( final Object object,
                                      final String content,
                                      final Context context )
         throws ConfigurationException
@@ -153,8 +155,8 @@ public class DefaultConfigurer
         setValue( object, "addContent", content, context );
     }
 
-    protected void configureAttribute( final Object object, 
-                                       final String name, 
+    protected void configureAttribute( final Object object,
+                                       final String name,
                                        final String value,
                                        final Context context )
         throws ConfigurationException
@@ -168,7 +170,7 @@ public class DefaultConfigurer
         setValue( object, methodName, value, context );
     }
 
-    protected void setValue( final Object object, 
+    protected void setValue( final Object object,
                              final String methodName,
                              final String value,
                              final Context context )
@@ -182,8 +184,8 @@ public class DefaultConfigurer
 
         if( 0 == methods.length )
         {
-            throw new ConfigurationException( "Unable to set attribute via " + methodName + 
-                                              " due to not finding any appropriate " + 
+            throw new ConfigurationException( "Unable to set attribute via " + methodName +
+                                              " due to not finding any appropriate " +
                                               "accessor method" );
         }
 
@@ -198,7 +200,7 @@ public class DefaultConfigurer
     {
         try
         {
-            final Object objectValue = 
+            final Object objectValue =
                 PropertyUtil.resolveProperty( value, context, false );
 
             setValue( object, objectValue, methods, context );
@@ -210,8 +212,8 @@ public class DefaultConfigurer
         }
     }
 
-    protected void setValue( final Object object, 
-                             Object value, 
+    protected void setValue( final Object object,
+                             Object value,
                              final Method methods[],
                              final Context context )
         throws ConfigurationException
@@ -226,14 +228,14 @@ public class DefaultConfigurer
                 return;
             }
         }
-        
-        throw new ConfigurationException( "Unable to set attribute via " + 
-                                          methods[ 0 ].getName() + " as could not convert " + 
+
+        throw new ConfigurationException( "Unable to set attribute via " +
+                                          methods[ 0 ].getName() + " as could not convert " +
                                           source + " to a matching type" );
     }
 
-    protected boolean setValue( final Object object, 
-                                Object value, 
+    protected boolean setValue( final Object object,
+                                Object value,
                                 final Method method,
                                 final Class sourceClass,
                                 final String source,
@@ -245,7 +247,7 @@ public class DefaultConfigurer
         {
             parameterType = getComplexTypeFor( parameterType );
         }
-        
+
         try
         {
             value = m_converter.convert( parameterType, value, context );
@@ -254,18 +256,18 @@ public class DefaultConfigurer
         {
             if( DEBUG )
             {
-                m_logger.debug( "Failed to find converter ", ce );
+                getLogger().debug( "Failed to find converter ", ce );
             }
 
             return false;
         }
         catch( final Exception e )
         {
-            throw new ConfigurationException( "Error converting attribute for " + 
+            throw new ConfigurationException( "Error converting attribute for " +
                                               method.getName(),
                                               e );
         }
-        
+
         try
         {
             method.invoke( object, new Object[] { value } );
@@ -273,13 +275,13 @@ public class DefaultConfigurer
         catch( final IllegalAccessException iae )
         {
             //should never happen ....
-            throw new ConfigurationException( "Error retrieving methods with " + 
+            throw new ConfigurationException( "Error retrieving methods with " +
                                               "correct access specifiers",
                                               iae );
         }
         catch( final InvocationTargetException ite )
         {
-            throw new ConfigurationException( "Error calling method attribute " + 
+            throw new ConfigurationException( "Error calling method attribute " +
                                               method.getName(),
                                               ite );
         }
@@ -308,11 +310,11 @@ public class DefaultConfigurer
     {
         final Method methods[] = clazz.getMethods();
         final ArrayList matches = new ArrayList();
-        
+
         for( int i = 0; i < methods.length; i++ )
         {
             final Method method = methods[ i ];
-            if( methodName.equals( method.getName() ) && 
+            if( methodName.equals( method.getName() ) &&
                 Method.PUBLIC == (method.getModifiers() & Method.PUBLIC) )
             {
                 if( method.getReturnType().equals( Void.TYPE ) )
@@ -333,11 +335,11 @@ public class DefaultConfigurer
     {
         final Method methods[] = clazz.getMethods();
         final ArrayList matches = new ArrayList();
-        
+
         for( int i = 0; i < methods.length; i++ )
         {
             final Method method = methods[ i ];
-            if( methodName.equals( method.getName() ) && 
+            if( methodName.equals( method.getName() ) &&
                 Method.PUBLIC == (method.getModifiers() & Method.PUBLIC) )
             {
                 final Class returnType = method.getReturnType();
@@ -352,7 +354,7 @@ public class DefaultConfigurer
                 }
             }
         }
-        
+
         return (Method[])matches.toArray( new Method[0] );
     }
 
@@ -364,10 +366,10 @@ public class DefaultConfigurer
     protected String getJavaNameFor( final String name )
     {
         final StringBuffer sb = new StringBuffer();
-        
+
         int index = name.indexOf( '-' );
         int last = 0;
-        
+
         while( -1 != index )
         {
             final String word = name.substring( last, index ).toLowerCase();
@@ -376,16 +378,16 @@ public class DefaultConfigurer
             last = index + 1;
             index = name.indexOf( '-', last );
         }
-        
+
         index = name.length();
         final String word = name.substring( last, index ).toLowerCase();
         sb.append( Character.toUpperCase( word.charAt( 0 ) ) );
         sb.append( word.substring( 1, word.length() ) );
-        
-        return sb.toString();
-    }    
 
-    protected void configureElement( final Object object, 
+        return sb.toString();
+    }
+
+    protected void configureElement( final Object object,
                                      final Configuration configuration,
                                      final Context context )
         throws ConfigurationException
@@ -403,7 +405,7 @@ public class DefaultConfigurer
         // slow. Need to cache results per class etc.
         final Class clazz = object.getClass();
         Method methods[] = getMethodsFor( clazz, "add" + javaName );
-        
+
         if( 0 != methods.length )
         {
             //guess it is first method ????
@@ -415,8 +417,8 @@ public class DefaultConfigurer
 
             if( 0 == methods.length )
             {
-                throw new ConfigurationException( "Unable to set attribute " + javaName + 
-                                                  " due to not finding any appropriate " + 
+                throw new ConfigurationException( "Unable to set attribute " + javaName +
+                                                  " due to not finding any appropriate " +
                                                   "accessor method" );
             }
 
@@ -425,7 +427,7 @@ public class DefaultConfigurer
         }
     }
 
-    protected void createElement( final Object object, 
+    protected void createElement( final Object object,
                                   final Method method,
                                   final Configuration configuration,
                                   final Context context )
@@ -446,7 +448,7 @@ public class DefaultConfigurer
         }
     }
 
-    protected void addElement( final Object object, 
+    protected void addElement( final Object object,
                                final Method method,
                                final Configuration configuration,
                                final Context context )

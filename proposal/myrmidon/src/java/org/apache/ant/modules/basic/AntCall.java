@@ -14,10 +14,10 @@ import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.DefaultTaskletContext;
 import org.apache.ant.tasklet.TaskletContext;
-import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentManagerException;
-import org.apache.avalon.Composer;
-import org.apache.avalon.Context;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.avalon.framework.context.Context;
 
 /**
  * This is abstract base class for tasklets.
@@ -26,7 +26,7 @@ import org.apache.avalon.Context;
  */
 public class AntCall 
     extends AbstractTasklet
-    implements Composer
+    implements Composable
 {
     protected ProjectEngine         m_projectEngine;
     protected Project               m_project;
@@ -42,7 +42,7 @@ public class AntCall
     } 
 
     public void compose( final ComponentManager componentManager )
-        throws ComponentManagerException
+        throws ComponentException
     {
         m_componentManager = componentManager;
         m_projectEngine = (ProjectEngine)componentManager.
@@ -66,7 +66,7 @@ public class AntCall
         return property;
     }
 
-    public void run()
+    public void execute()
         throws AntException
     {
         if( null == m_target )
@@ -78,7 +78,7 @@ public class AntCall
         for( int i = 0; i < size; i++ )
         {
             final Property property = (Property)m_properties.get( i );
-            property.run();
+            property.execute();
         }
 
         getLogger().info( "Calling target " + m_target );
