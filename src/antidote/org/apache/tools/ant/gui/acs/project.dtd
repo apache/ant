@@ -20,7 +20,6 @@
 -->
 <!-- project DTD for Ant -->
 <!-- 2000-04-03 -->
-
 <!ENTITY % ext-file SYSTEM "file:/project-ext.dtd">
 %ext-file;
 
