@@ -21,6 +21,8 @@ Fixed bugs:
 
 * macrodef @@ escaping was broken.  Bugzilla Report 27069.
 
+* replacestring tokenfilter only replaced the first occurrence.
+
 Other changes:
 --------------
 

@@ -82,6 +82,10 @@ public class TokenFilterTest extends BuildFileTest {
             "this is the moon");
     }
 
+    public void testReplaceStrings() throws IOException {
+        expectLogContaining("replacestrings", "bar bar bar");
+    }
+
     public void testContainsString() throws IOException {
         String contents = getFileString(
             "containsstring", "result/containsstring");
@@ -137,6 +141,10 @@ public class TokenFilterTest extends BuildFileTest {
         String contents = getFileString(
             "filterreplacestring", "result/filterreplacestring");
         assertStringContains(contents, "This is the moon");
+    }
+
+    public void testFilterReplaceStrings() throws IOException {
+        expectLogContaining("filterreplacestrings", "bar bar bar");
     }
 
     public void testContainsRegex() throws IOException {

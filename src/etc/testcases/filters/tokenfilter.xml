@@ -67,6 +67,15 @@
     </concat>
   </target>
 
+  <target name="filterreplacestrings">
+    <concat>
+      foo foo foo
+      <filterchain>
+        <replacestring from="foo" to="bar"/>
+      </filterchain>
+    </concat>
+  </target>
+
   <target name="stringtokenizer">
     <concat destfile="result/input">
       This is a number
@@ -129,6 +138,17 @@
       <filterchain>
         <tokenfilter>
             <replacestring from="sun" to="moon"/>
+        </tokenfilter>
+      </filterchain>
+    </concat>
+  </target>
+
+  <target name="replacestrings">
+    <concat>
+      foo foo foo
+      <filterchain>
+        <tokenfilter>
+          <replacestring from="foo" to="bar"/>
         </tokenfilter>
       </filterchain>
     </concat>
