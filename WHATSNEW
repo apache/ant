@@ -37,9 +37,6 @@ Fixed bugs:
   <replace> can now handle files as long as there is enough disk space
   available.
 
-* bad link in docs to the enhancement page in bugzilla.
-  Bugzilla report 33252.
-
 Other changes:
 --------------
 
