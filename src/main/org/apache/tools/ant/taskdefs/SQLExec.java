@@ -80,6 +80,7 @@ import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.Properties;
+import java.util.Hashtable;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -108,9 +109,19 @@ public class SQLExec extends Task {
             return new String[] {NORMAL, ROW};
         }
     }
-    
-    
-    private int goodSql = 0, totalSql = 0;
+
+    /**
+     * Used for caching loaders / driver. This is to avoid
+     * getting an OutOfMemoryError when calling this task
+     * multiple times in a row.
+     */
+    private static Hashtable loaderMap = new Hashtable(3);
+
+    public boolean caching = true;
+
+    private int goodSql = 0;
+
+    private int totalSql = 0;
 
     private Path classpath;
 
@@ -213,6 +224,11 @@ public class SQLExec extends Task {
      * Encoding to use when reading SQL statements from a file
      */
     private String encoding = null;
+
+
+    public void setCaching(boolean value){
+        caching = value;
+    }
 
     /**
      * Set the classpath for loading the driver.
@@ -428,14 +444,30 @@ public class SQLExec extends Task {
             throw new BuildException("Source file does not exist!", location);
         }
         Driver driverInstance = null;
-        // Load the driver using the 
         try {
             Class dc;
             if (classpath != null) {
-                log( "Loading " + driver + " using AntClassLoader with classpath " + classpath, 
-                     Project.MSG_VERBOSE );
-
-                loader = new AntClassLoader(project, classpath);
+                // check first that it is not already loaded otherwise
+                // consecutive runs seems to end into an OutOfMemoryError
+                // or it fails when there is a native library to load
+                // several times.
+                // this is far from being perfect but should work in most cases.
+                synchronized (loaderMap){
+                    if (caching){
+                        loader = (AntClassLoader)loaderMap.get(driver);
+                    }
+                    if (loader == null){
+                        log( "Loading " + driver + " using AntClassLoader with classpath " + classpath,
+                             Project.MSG_VERBOSE );
+                        loader = new AntClassLoader(project, classpath);
+                        if (caching){
+                            loaderMap.put(driver, loader);
+                        }
+                    } else {
+                        log("Loading " + driver + " using a cached AntClassLoader.",
+                                Project.MSG_VERBOSE);
+                    }
+                }
                 dc = loader.loadClass(driver);
             }
             else {
@@ -734,6 +766,14 @@ public class SQLExec extends Task {
                 reader.close();
             }
         }
+    }
+
+    protected Hashtable getLoaderMap(){
+        return loaderMap;
+    }
+
+    protected AntClassLoader getLoader(){
+        return loader;
     }
 
 }
