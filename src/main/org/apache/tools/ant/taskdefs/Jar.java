@@ -114,7 +114,7 @@ public class Jar extends Zip {
 
     public void addConfiguredManifest(Manifest newManifest) throws ManifestException {
         if (manifest == null) {
-            manifest = getDefaultManifest();
+            manifest = Manifest.getDefaultManifest();
         }
         manifest.merge(newManifest);
         buildFileManifest = true;
@@ -133,7 +133,7 @@ public class Jar extends Zip {
             r = new FileReader(manifestFile);
             Manifest newManifest = new Manifest(r);
             if (manifest == null) {
-                manifest = getDefaultManifest();
+                manifest = Manifest.getDefaultManifest();
             }
             manifest.merge(newManifest);
         }
@@ -166,7 +166,7 @@ public class Jar extends Zip {
         throws IOException, BuildException
     {
         try {
-            execManifest = getDefaultManifest();
+            execManifest = Manifest.getDefaultManifest();
 
             if (manifest != null) {
                 execManifest.merge(manifest);
@@ -252,29 +252,6 @@ public class Jar extends Zip {
 
 
 
-    private Manifest getDefaultManifest() {
-        try {
-            String s = "/org/apache/tools/ant/defaultManifest.mf";
-            InputStream in = this.getClass().getResourceAsStream(s);
-            if (in == null) {
-                throw new BuildException("Could not find default manifest: " + s);
-            }
-            try {
-                return new Manifest(new InputStreamReader(in, "ASCII"));
-            } catch (UnsupportedEncodingException e) {
-                // impossible with ASCII encoding
-                log("ASCII encoding not supported by JVM", Project.MSG_ERR);
-                return new Manifest(new InputStreamReader(in));
-            }
-        }
-        catch (ManifestException e) {
-            throw new BuildException("Default manifest is invalid !!");
-        }
-        catch (IOException e) {
-            throw new BuildException("Unable to read default manifest", e);
-        }
-    }   
-    
     /**
      * Handle situation when we encounter a manifest file
      *
@@ -352,7 +329,7 @@ public class Jar extends Zip {
                 }
                 Manifest currentManifest = new Manifest(new InputStreamReader(theZipFile.getInputStream(entry)));
                 if (manifest == null) {
-                    manifest = getDefaultManifest();
+                    manifest = Manifest.getDefaultManifest();
                 }
                 if (!currentManifest.equals(manifest)) {
                     log("Updating jar since jar manifest has changed", Project.MSG_VERBOSE);

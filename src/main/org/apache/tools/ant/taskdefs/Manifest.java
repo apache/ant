@@ -57,20 +57,29 @@ package org.apache.tools.ant.taskdefs;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Class to manage Manifest information
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-public class Manifest {
+public class Manifest extends Task {
     /** The standard manifest version header */
     public final static String ATTRIBUTE_MANIFEST_VERSION = "Manifest-Version";
 
@@ -91,6 +100,15 @@ public class Manifest {
 
     /** The max length of a line in a Manifest */
     public final static int MAX_LINE_LENGTH = 70;
+
+    /**
+     * Helper class for Manifest's mode attribute.
+     */
+    public static class Mode extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"update", "replace"};
+        }
+    }
 
     /**
      * Class to hold manifest attributes
@@ -498,8 +516,34 @@ public class Manifest {
     /** The named sections of this manifest */
     private Hashtable sections = new Hashtable();
 
+    /**
+     * Construct a manifest from Ant's default manifest file.
+     */
+    public static Manifest getDefaultManifest() throws BuildException {
+        try {
+            String s = "/org/apache/tools/ant/defaultManifest.mf";
+            InputStream in = Manifest.class.getResourceAsStream(s);
+            if (in == null) {
+                throw new BuildException("Could not find default manifest: " + s);
+            }
+            try {
+                return new Manifest(new InputStreamReader(in, "ASCII"));
+            } catch (UnsupportedEncodingException e) {
+                return new Manifest(new InputStreamReader(in));
+            }
+        }
+        catch (ManifestException e) {
+            throw new BuildException("Default manifest is invalid !!");
+        }
+        catch (IOException e) {
+            throw new BuildException("Unable to read default manifest", e);
+        }
+    }
+
     /** Construct an empty manifest */
     public Manifest() {
+        mode = new Mode();
+        mode.setValue("replace");
     }
 
     /**
@@ -681,4 +725,73 @@ public class Manifest {
 
         return true;
     }
+
+    private File manifestFile;
+
+    /**
+     * The name of the manifest file to write (if used as a task).
+     */
+    public void setFile(File f) {
+        manifestFile = f;
+    }
+
+    private Mode mode;
+
+    /**
+     * Shall we update or replace an existing manifest?
+     */
+    public void setMode(Mode m) {
+        mode = m;
+    }
+
+    /**
+     * Create or update the Manifest when used as a task.
+     */
+    public void execute() throws BuildException {
+        if (manifestFile == null) {
+            throw new BuildException("the file attribute is required");
+        }
+
+        Manifest toWrite = getDefaultManifest();
+
+        if (mode.getValue().equals("update") && manifestFile.exists()) {
+            FileReader f = null;
+            try {
+                f = new FileReader(manifestFile);
+                toWrite.merge(new Manifest(f));
+            } catch (ManifestException m) {
+                throw new BuildException("Existing manifest "+manifestFile
+                                         + " is invalid", m, location);
+            } catch (IOException e) {
+                throw new BuildException("Failed to read "+manifestFile,
+                                         e, location);
+            } finally {
+                if (f != null) {
+                    try {
+                        f.close();
+                    } catch (IOException e) {}
+                }
+            }
+        }
+        
+        try {
+            toWrite.merge(this);
+        } catch (ManifestException m) {
+            throw new BuildException("Manifest is invalid", m, location);
+        }
+
+        PrintWriter w = null;
+        try {
+            w = new PrintWriter(new FileWriter(manifestFile));
+            toWrite.write(w);
+        } catch (IOException e) {
+            throw new BuildException("Failed to write "+manifestFile,
+                                     e, location);
+        } finally {
+            if (w != null) {
+                w.close();
+            }
+        }
+    }
+
 }

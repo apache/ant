@@ -1,0 +1,78 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Manifest Task</title>
+</head>
+
+<body>
+
+<h2><a name="manifest">Manifest</a></h2>
+<h3>Description</h3>
+<p>Creates a manifest file.</p>
+
+<p>This task can be used to write a Manifest file, optionally
+replacing or updating an existing file.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">file</td>
+    <td valign="top">the manifest-file to create/update.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">mode</td>
+    <td valign="top">One of "update" or "replace", default is "update".</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
+<h3>Nested elements</h3>
+<h4><a name="attribute">attribute</h4></h4>
+<p>One attribute for the manifest file.  Those attributes that are
+not nested into a section will be added to the "Main" section.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the attribute.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">the name of the attribute.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+
+
+<h4>section</h4>
+<p>A manifest section - you can nest <a
+href="#attribute">attribute</a> elements into sections.</p>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">the name of the section.</td>
+    <td valign="top" align="center">No, if ommitted it will be assumed
+       to be the main section.</td>
+  </tr>
+</table>
+</body>
+</html>
+
