@@ -951,6 +951,122 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         the front of the PATH fixes the problem.</p>
       </answer>
     </faq>
+
+    <faq id="delegating-classloader">
+      <question>&lt;style&gt; or &lt;junit&gt; ignores my
+      &lt;classpath&gt;</question>
+      
+      <answer>
+        <p>These tasks don&apos;t ignore your classpath setting, you
+        are facing a common problem with delegating classloaders.</p>
+
+        <p>First of all let&apos;s state that Ant adds all
+        <code>.jar</code> files from <code>ANT_HOME/lib</code> to
+        <code>CLASSPATH</code>, therefore &quot;in
+        <code>CLASSPATH</code>&quot; shall mean &quot;either in your
+        <code>CLASSPATH</code> environment variable or
+        <code>ANT_HOME/lib</code>&quot; for the rest of this
+        answer.</p>
+
+        <p>This question collects a common type of problem: A task
+        needs an external library and it has a nested classpath
+        element so that you can point it to this external library, but
+        that doesn&apos;t work unless you put the external library into the
+        <code>CLASSPATH</code>.</p>
+
+        <p>The root of the problem is that the class that needs the
+        external library is on the <code>CLASSPATH</code>.</p>
+
+        <p>When you specify a nested <code>&lt;classpath&gt;</code> in
+        Ant, Ant creates a new class loader that uses the path you
+        have specified.  It then tries to load additional classes from
+        this classloader.</p>
+
+        <p>In most cases - for example the two cases above - Ant
+        doesn&apos;t load the external library directly, it is the loaded
+        class that does so.</p>
+
+        <p>In the case of <code>&lt;junit&gt;</code> it is the task
+        implementation itself and in the case of
+        <code>&lt;style&gt;</code> it is the implementation of the
+        <code>org.apache.tools.ant.taskdefs.XSLTLiaison</code>
+        class.</p>
+
+        <p>Ant&apos;s class loader implementation uses Java&apos;s
+        delegation model, see <a
+        href="http://java.sun.com/products/jdk/1.2/docs/api/java/lang/ClassLoader.html">http://java.sun.com/products/jdk/1.2/docs/api/java/lang/ClassLoader.html</a>
+        the paragraph</p>
+
+        <blockquote>The <code>ClassLoader</code> class uses a
+        delegation model to search for classes and resources. Each
+        instance of <code>ClassLoader</code> has an associated parent
+        class loader.  When called upon to find a class or resource, a
+        <code>ClassLoader</code> instance will delegate the search for
+        the class or resource to its parent class loader before
+        attempting to find the class or resource itself. The virtual
+        machine&apos;s built-in class loader, called the bootstrap
+        class loader, does not itself have a parent but may serve as
+        the parent of a <code>ClassLoader</code>
+        instance.</blockquote>
+
+        <p>This means, Ant&apos;s class loader will consult the
+        bootstrap class loader first, which tries to load classes from
+        <code>CLASSPATH</code>.  The bootstrap class loader
+        doesn&apos;t know anything about Ant&apos;s class loader or
+        even the path you have specified.</p>
+
+        <p>If the bootstrap class loader can load the class Ant has
+        asked it to load, this class will try to load the external
+        library from <code>CLASSPATH</code> as well - it doesn&apos;t
+        know anything else - and will not find it unless the library
+        is in <code>CLASSPATH</code> as well.</p>
+
+        <p>To solve this, you have two major options:</p>
+
+        <ol>
+          <li>put all external libaries you need in
+          <code>CLASSPATH</code> as well this is not what you want,
+          otherwise you wouldn&apos;t have found this FAQ entry.</li>
+
+          <li>remove the class that loads the external library from
+          the <code>CLASSPATH</code>.</li>
+        </ol>
+
+        <p>The easiest way to do this is to remove
+        <code>optional.jar</code> from <code>ANT_HOME/lib</code>.  If
+        you do so, you will have to <code>&lt;taskdef&gt;</code> all
+        optional tasks and use nested <code>&lt;classpath&gt;</code>
+        elements in the <code>&lt;taskdef&gt;</code> tasks that point
+        to the new location of <code>optional.jar</code>.  Also,
+        don&apos;t forget to add the new location of
+        <code>optional.jar</code> to the
+        <code>&lt;classpath&gt;</code> of your
+        <code>&lt;style&gt;</code> or <code>&lt;junit&gt;</code>
+        task.</p>
+
+        <p>If you want to avoid to <code>&lt;taskdef&gt;</code> all
+        optional tasks you need, the only other option is to remove
+        the classes that should not be loaded via the bootstrap class
+        loader from <code>optional.jar</code> and put them into a
+        separate archive. Add this separate archive to the
+        <code>&lt;classpath&gt;</code> of your
+        <code>&lt;style&gt;</code> or <code>&lt;junit&gt;</code> task
+        - and make sure the separate archive is not in
+        <code>CLASSPATH</code>.</p>
+
+        <p>In the case of <code>&lt;junit&gt;</code> you&apos;d have
+        to remove all classes that are in the
+        <code>org/apache/tools/ant/taskdefs/optional/junit</code>
+        directory, in the <code>&lt;style&gt;</code> case it is one of
+        the <code>*Liaison</code> classes in
+        <code>org/apache/tools/ant/taskdefs/optional</code>.</p>
+
+        <p>If you use the option to break up <code>optional.jar</code>
+        for <code>&lt;junit&gt;</code>, you still have to use a
+        <code>&lt;taskdef&gt;</code> with a nested
+        <code>&lt;classpath&gt;</code> to define the junit task.</p>
+      </answer>
+    </faq>
   </faqsection>
 
 </document>
