@@ -54,7 +54,7 @@
 
   <property name="manifest" value="src/etc/manifest"/>
   
-  <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico"/>
+  <property name="unfiltered.files" value="**/*.gif,**/*.jpg,**/*.ico,**/*.pdf"/>
 
 
   <!--
