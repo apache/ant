@@ -769,12 +769,12 @@ public class Project {
                         value = (String) tokens.get(token);
                         log("Replacing: " + TOKEN_START + token + TOKEN_END + " -> " + value, MSG_VERBOSE);
                         b.append(value);
+                        i = index + TOKEN_START.length() + token.length() + TOKEN_END.length();
                     } else {
+                        // just append TOKEN_START and search further
                         b.append(TOKEN_START);
-                        b.append(token);
-                        b.append(TOKEN_END);
+                        i = index + TOKEN_START.length();
                     }
-                    i = index + TOKEN_START.length() + token.length() + TOKEN_END.length();
                 } while ((index = s.indexOf(TOKEN_START, i)) > -1);
 
                 b.append(s.substring(i));
