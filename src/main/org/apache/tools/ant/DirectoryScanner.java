@@ -190,8 +190,9 @@ public class DirectoryScanner
     /** Selectors that will filter which files are in our candidate list. */
     protected FileSelector[] selectors = null;
 
-    /** The files which matched at least one include and no excludes
-     *  and were selected.
+    /**
+     * The files which matched at least one include and no excludes
+     * and were selected.
      */
     protected Vector filesIncluded;
 
@@ -204,8 +205,9 @@ public class DirectoryScanner
      */
     protected Vector filesExcluded;
 
-    /** The directories which matched at least one include and no excludes
-     *  and were selected.
+    /**
+     * The directories which matched at least one include and no excludes
+     * and were selected.
      */
     protected Vector dirsIncluded;
 
@@ -218,13 +220,15 @@ public class DirectoryScanner
      */
     protected Vector dirsExcluded;
 
-    /** The files which matched at least one include and no excludes and
-     *  which a selector discarded.
+    /**
+     * The files which matched at least one include and no excludes and
+     * which a selector discarded.
      */
     protected Vector filesDeselected;
 
-    /** The directories which matched at least one include and no excludes
-     *  but which a selector discarded.
+    /**
+     * The directories which matched at least one include and no excludes
+     * but which a selector discarded.
      */
     protected Vector dirsDeselected;
 
@@ -346,6 +350,7 @@ public class DirectoryScanner
     protected static boolean matchPatternStart(String pattern, String str) {
         return SelectorUtils.matchPatternStart(pattern, str);
     }
+
     /**
      * Tests whether or not a given path matches the start of a given
      * pattern up to the first "**".
@@ -462,9 +467,8 @@ public class DirectoryScanner
      * default exclude.
      *
      * @param s   A string to add as an exclude pattern.
-     * @return    <code>true</code> if the string was added
-     *            <code>false</code> if it already
-     *            existed.
+     * @return    <code>true</code> if the string was added;
+     *            <code>false</code> if it already existed.
      *
      * @since Ant 1.6
      */
@@ -481,9 +485,9 @@ public class DirectoryScanner
      *
      * @param s   The string to attempt to remove.
      * @return    <code>true</code> if <code>s</code> was a default
-     *            exclude (and thus was removed),
+     *            exclude (and thus was removed);
      *            <code>false</code> if <code>s</code> was not
-     *            in the default excludes list to begin with
+     *            in the default excludes list to begin with.
      *
      * @since Ant 1.6
      */
@@ -492,13 +496,12 @@ public class DirectoryScanner
     }
 
     /**
-     *  Go back to the hard wired default exclude patterns
+     *  Go back to the hardwired default exclude patterns.
      *
      * @since Ant 1.6
      */
     public static void resetDefaultExcludes() {
         defaultExcludes = new Vector();
-
         for (int i = 0; i < DEFAULTEXCLUDES.length; i++) {
             defaultExcludes.add(DEFAULTEXCLUDES[i]);
         }
@@ -530,7 +533,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Returns the base directory to be scanned.
+     * Return the base directory to be scanned.
      * This is the directory which is scanned recursively.
      *
      * @return the base directory to be scanned
@@ -541,46 +544,46 @@ public class DirectoryScanner
 
     /**
      * Find out whether include exclude patterns are matched in a
-     * case sensitive way
-     * @return whether or not the scanning is case sensitive
-     * @since ant 1.6
+     * case sensitive way.
+     * @return whether or not the scanning is case sensitive.
+     * @since Ant 1.6
      */
     public boolean isCaseSensitive() {
         return isCaseSensitive;
     }
     /**
-     * Sets whether or not include and exclude patterns are matched
-     * in a case sensitive way
+     * Set whether or not include and exclude patterns are matched
+     * in a case sensitive way.
      *
      * @param isCaseSensitive whether or not the file system should be
-     *                        regarded as a case sensitive one
+     *                        regarded as a case sensitive one.
      */
     public void setCaseSensitive(boolean isCaseSensitive) {
         this.isCaseSensitive = isCaseSensitive;
     }
 
     /**
-     * gets whether or not a DirectoryScanner follows symbolic links
+     * Get whether or not a DirectoryScanner follows symbolic links.
      *
-     * @return flag indicating whether symbolic links should be followed
+     * @return flag indicating whether symbolic links should be followed.
      *
-     * @since ant 1.6
+     * @since Ant 1.6
      */
     public boolean isFollowSymlinks() {
         return followSymlinks;
     }
 
     /**
-     * Sets whether or not symbolic links should be followed.
+     * Set whether or not symbolic links should be followed.
      *
-     * @param followSymlinks whether or not symbolic links should be followed
+     * @param followSymlinks whether or not symbolic links should be followed.
      */
     public void setFollowSymlinks(boolean followSymlinks) {
         this.followSymlinks = followSymlinks;
     }
 
     /**
-     * Sets the list of include patterns to use. All '/' and '\' characters
+     * Set the list of include patterns to use. All '/' and '\' characters
      * are replaced by <code>File.separatorChar</code>, so the separator used
      * need not match <code>File.separatorChar</code>.
      * <p>
@@ -590,7 +593,7 @@ public class DirectoryScanner
      *                 May be <code>null</code>, indicating that all files
      *                 should be included. If a non-<code>null</code>
      *                 list is given, all elements must be
-     * non-<code>null</code>.
+     *                 non-<code>null</code>.
      */
     public void setIncludes(String[] includes) {
         if (includes == null) {
@@ -603,9 +606,8 @@ public class DirectoryScanner
         }
     }
 
-
     /**
-     * Sets the list of exclude patterns to use. All '/' and '\' characters
+     * Set the list of exclude patterns to use. All '/' and '\' characters
      * are replaced by <code>File.separatorChar</code>, so the separator used
      * need not match <code>File.separatorChar</code>.
      * <p>
@@ -628,10 +630,9 @@ public class DirectoryScanner
     }
 
     /**
-     * Adds to the list of exclude patterns to use. All '/' and '\'
+     * Add to the list of exclude patterns to use. All '/' and '\'
      * characters are replaced by <code>File.separatorChar</code>, so
-     * the separator used need not match
-     * <code>File.separatorChar</code>.
+     * the separator used need not match <code>File.separatorChar</code>.
      * <p>
      * When a pattern ends with a '/' or '\', "**" is appended.
      *
@@ -678,17 +679,16 @@ public class DirectoryScanner
     }
 
     /**
-     * Sets the selectors that will select the filelist.
+     * Set the selectors that will select the filelist.
      *
-     * @param selectors specifies the selectors to be invoked on a scan
+     * @param selectors specifies the selectors to be invoked on a scan.
      */
     public void setSelectors(FileSelector[] selectors) {
         this.selectors = selectors;
     }
 
-
     /**
-     * Returns whether or not the scanner has included all the files or
+     * Return whether or not the scanner has included all the files or
      * directories it has come across so far.
      *
      * @return <code>true</code> if all files and directories which have
@@ -699,7 +699,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Scans the base directory for files which match at least one include
+     * Scan the base directory for files which match at least one include
      * pattern and don't match any exclude patterns. If there are selectors
      * then the files must pass muster there, as well.
      *
@@ -756,9 +756,9 @@ public class DirectoryScanner
     }
 
     /**
-     * this routine is actually checking all the include patterns in
-     * order to avoid scanning everything under base dir
-     * @since ant1.6
+     * This routine is actually checking all the include patterns in
+     * order to avoid scanning everything under base dir.
+     * @since Ant 1.6
      */
     private void checkIncludePatterns() {
         Hashtable newroots = new Hashtable();
@@ -994,6 +994,7 @@ public class DirectoryScanner
             }
         }
     }
+
     /**
      * Process included file.
      * @param name  path of the file relative to the directory of the FileSet.
@@ -1053,8 +1054,9 @@ public class DirectoryScanner
             }
         }
     }
+
     /**
-     * Tests whether or not a name matches against at least one include
+     * Test whether or not a name matches against at least one include
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.
@@ -1080,7 +1082,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Tests whether or not a name matches the start of at least one include
+     * Test whether or not a name matches the start of at least one include
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.
@@ -1099,20 +1101,20 @@ public class DirectoryScanner
     }
 
     /**
-     *  find out whether one particular include pattern is more powerful
-     *  than all the excludes
-     *  note : the power comparison is based on the length of the include pattern
-     *  and of the exclude patterns without the wildcards
-     *  ideally the comparison should be done based on the depth
-     *  of the match, that is to say how many file separators have been matched
-     *  before the first ** or the end of the pattern
+     *  Find out whether one particular include pattern is more powerful
+     *  than all the excludes.
+     *  Note:  the power comparison is based on the length of the include pattern
+     *  and of the exclude patterns without the wildcards.
+     *  Ideally the comparison should be done based on the depth
+     *  of the match; that is to say how many file separators have been matched
+     *  before the first ** or the end of the pattern.
      *
-     *  IMPORTANT : this function should return false "with care"
+     *  IMPORTANT : this function should return false "with care".
      *
-     *  @param name the relative path that one want to test
-     *  @param includepattern  one include pattern
-     *  @return true if there is no exclude pattern more powerful than this include pattern
-     *  @since ant1.6
+     *  @param name the relative path to test.
+     *  @param includepattern one include pattern.
+     *  @return true if there is no exclude pattern more powerful than this include pattern.
+     *  @since Ant 1.6
      */
     private boolean isMorePowerfulThanExcludes(String name, String includepattern) {
         String soughtexclude = name + File.separator + "**";
@@ -1123,8 +1125,9 @@ public class DirectoryScanner
         }
         return true;
     }
+
     /**
-     * Tests whether or not a name matches against at least one exclude
+     * Test whether or not a name matches against at least one exclude
      * pattern.
      *
      * @param name The name to match. Must not be <code>null</code>.
@@ -1150,10 +1153,10 @@ public class DirectoryScanner
     }
 
     /**
-     * Tests whether a name should be selected.
+     * Test whether a file should be selected.
      *
-     * @param name the filename to check for selecting
-     * @param file the java.io.File object for this filename
+     * @param name the filename to check for selecting.
+     * @param file the java.io.File object for this filename.
      * @return <code>false</code> when the selectors says that the file
      *         should not be selected, <code>true</code> otherwise.
      */
@@ -1169,7 +1172,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Returns the names of the files which matched at least one of the
+     * Return the names of the files which matched at least one of the
      * include patterns and none of the exclude patterns.
      * The names are relative to the base directory.
      *
@@ -1188,7 +1191,7 @@ public class DirectoryScanner
 
     /**
      * Return the count of included files.
-     * @return <CODE>int</CODE>.
+     * @return <code>int</code>.
      * @since Ant 1.6.3
      */
     public int getIncludedFilesCount() {
@@ -1199,7 +1202,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Returns the names of the files which matched none of the include
+     * Return the names of the files which matched none of the include
      * patterns. The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
      *
@@ -1216,7 +1219,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Returns the names of the files which matched at least one of the
+     * Return the names of the files which matched at least one of the
      * include patterns and at least one of the exclude patterns.
      * The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
@@ -1234,7 +1237,7 @@ public class DirectoryScanner
     }
 
     /**
-     * <p>Returns the names of the files which were selected out and
+     * <p>Return the names of the files which were selected out and
      * therefore not ultimately included.</p>
      *
      * <p>The names are relative to the base directory. This involves
@@ -1252,7 +1255,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Returns the names of the directories which matched at least one of the
+     * Return the names of the directories which matched at least one of the
      * include patterns and none of the exclude patterns.
      * The names are relative to the base directory.
      *
@@ -1271,7 +1274,7 @@ public class DirectoryScanner
 
     /**
      * Return the count of included directories.
-     * @return <CODE>int</CODE>.
+     * @return <code>int</code>.
      * @since Ant 1.6.3
      */
     public int getIncludedDirsCount() {
@@ -1282,7 +1285,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Returns the names of the directories which matched none of the include
+     * Return the names of the directories which matched none of the include
      * patterns. The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
      *
@@ -1299,7 +1302,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Returns the names of the directories which matched at least one of the
+     * Return the names of the directories which matched at least one of the
      * include patterns and at least one of the exclude patterns.
      * The names are relative to the base directory. This involves
      * performing a slow scan if one has not already been completed.
@@ -1317,7 +1320,7 @@ public class DirectoryScanner
     }
 
     /**
-     * <p>Returns the names of the directories which were selected out and
+     * <p>Return the names of the directories which were selected out and
      * therefore not ultimately included.</p>
      *
      * <p>The names are relative to the base directory. This involves
@@ -1335,7 +1338,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Adds default exclusions to the current exclusions set.
+     * Add default exclusions to the current exclusions set.
      */
     public void addDefaultExcludes() {
         int excludesLength = excludes == null ? 0 : excludes.length;
@@ -1354,7 +1357,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Get the named resource
+     * Get the named resource.
      * @param name path name of the file relative to the dir attribute.
      *
      * @return the resource with the given name.
@@ -1367,7 +1370,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Returns a cached result of list performed on file, if
+     * Return a cached result of list performed on file, if
      * available.  Invokes the method and caches the result otherwise.
      *
      * @since Ant 1.6
@@ -1558,7 +1561,7 @@ public class DirectoryScanner
     }
 
     /**
-     * Adds all patterns that are not real patterns (do not contain
+     * Add all patterns that are not real patterns (do not contain
      * wildcards) to the set and returns the real patterns.
      *
      * @since Ant 1.7
