@@ -33,6 +33,8 @@ Fixed bugs:
 * regression from ant 1.5, exec task outputted two redundant trailing newlines.
   Bugzilla Report 27546.
 
+* NPE when running commons listener. Bugzilla Report 27373.
+
 Other changes:
 --------------
 
