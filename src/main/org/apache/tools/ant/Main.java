@@ -413,14 +413,6 @@ public class Main {
             PrintStream err = System.err;
             PrintStream out = System.out;
             SecurityManager oldsm = System.getSecurityManager();
-            System.setSecurityManager(new SecurityManager() {
-                                        public void checkExit(int status) {
-                                            throw new ExitException(status);
-                                        }
-                                        
-                                        public void checkPermission(java.security.Permission p) {
-                                        }
-                                    });
 
             try {
                 System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
@@ -464,7 +456,6 @@ public class Main {
             finally {
                 System.setOut(out);
                 System.setErr(err);
-                System.setSecurityManager(oldsm);
             }
             if (projectHelp) {
                     printTargets(project);
