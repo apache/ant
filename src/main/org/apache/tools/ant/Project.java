@@ -698,6 +698,8 @@ public class Project {
      * specifying if token filtering must be used.
      *
      * @throws IOException
+     *
+     * @deprecated
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering)
         throws IOException {
@@ -710,6 +712,8 @@ public class Project {
      * source files may overwrite newer destination files.
      *
      * @throws IOException 
+     *
+     * @deprecated
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite) throws IOException {
@@ -724,6 +728,8 @@ public class Project {
      * to the last modified time of <code>sourceFile</code>.
      *
      * @throws IOException 
+     *
+     * @deprecated
      */
     public void copyFile(String sourceFile, String destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
@@ -737,6 +743,8 @@ public class Project {
      * No filtering is performed.
      *
      * @throws IOException
+     *
+     * @deprecated
      */
     public void copyFile(File sourceFile, File destFile) throws IOException {
         FileUtils.copyFile(sourceFile, destFile);
@@ -747,6 +755,8 @@ public class Project {
      * specifying if token filtering must be used.
      *
      * @throws IOException
+     *
+     * @deprecated
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering)
         throws IOException {
@@ -759,6 +769,8 @@ public class Project {
      * source files may overwrite newer destination files.
      *
      * @throws IOException 
+     *
+     * @deprecated
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite) throws IOException {
@@ -773,6 +785,8 @@ public class Project {
      * to the last modified time of <code>sourceFile</code>.
      *
      * @throws IOException 
+     *
+     * @deprecated
      */
     public void copyFile(File sourceFile, File destFile, boolean filtering,
                          boolean overwrite, boolean preserveLastModified)
@@ -783,6 +797,8 @@ public class Project {
 
     /**
      * Calls File.setLastModified(long time) in a Java 1.1 compatible way.
+     *
+     * @deprecated
      */
     public void setFileLastModified(File file, long time) throws BuildException {
         if (getJavaVersion() == JAVA_1_1) {

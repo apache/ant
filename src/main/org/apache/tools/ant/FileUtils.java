@@ -187,7 +187,7 @@ public class FileUtils {
                 parent.mkdirs();
             }
 
-            if (filterSet != null) {
+            if (filterSet != null && filterSet.hasFilters()) {
                 BufferedReader in = new BufferedReader(new FileReader(sourceFile));
                 BufferedWriter out = new BufferedWriter(new FileWriter(destFile));
 

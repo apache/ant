@@ -240,16 +240,18 @@
       </fileset>
     </copy>
 
-    <filter token="VERSION" value="${version}" />
-    <filter token="DATE" value="${TODAY}" />
-    <filter token="TIME" value="${TSTAMP}" />
     <copy    todir="${build.classes}" 
-             overwrite="true"
-             filtering="on">
+             overwrite="true">
       <fileset dir="${java.dir}">
         <include name="**/version.txt" />
         <include name="**/defaultManifest.mf" />
       </fileset>
+      <filterset>
+        <filter token="VERSION" value="${version}" />
+        <filter token="DATE" value="${TODAY}" />
+        <filter token="TIME" value="${TSTAMP}" />
+      </filterset>
+      
     </copy>
 
     <copy todir="${build.classes}/${optional.package}/junit">
@@ -308,6 +310,7 @@
       <fileset dir="${script.dir}/" />
     </copy>
 
+    <!--
     <fixcrlf srcdir="${dist.bin}" eol="crlf" includes="*.bat" />
     <fixcrlf srcdir="${dist.bin}" eol="lf">
       <include name="ant" />
@@ -324,7 +327,8 @@
          <include name="**/runant.pl" />
        </fileset>
     </chmod>
-
+    --> 
+    
   </target>
 
  <!--
