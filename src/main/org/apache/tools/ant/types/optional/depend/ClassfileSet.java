@@ -53,13 +53,11 @@
  */
 package org.apache.tools.ant.types.optional.depend;
 
-
-
 import java.util.Vector;
+import java.util.Enumeration;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
-
 
 /**
  * A ClassfileSet is a FileSet, that enlists all classes that depend on a
@@ -79,6 +77,11 @@ public class ClassfileSet extends FileSet {
      */
     private Vector rootClasses = new Vector();
 
+    /**
+     * The list of filesets which contain root classes
+     */
+    private Vector rootFileSets = new Vector();
+    
     /**
      * Inner class used to contain info about root classes
      */
@@ -104,11 +107,22 @@ public class ClassfileSet extends FileSet {
             return rootClass;
         }
     }
-    
+
     /**
      * Default constructor
      */
     public ClassfileSet() {
+    }
+    
+    /**
+     * Add a fileset to which contains a collection of root classes used to 
+     * drive the search from classes 
+     *
+     * @param rootFileSet a root file set to be used to search for dependent
+     * classes
+     */
+    public void addRootFileset(FileSet rootFileSet) {
+        rootFileSets.addElement(rootFileSet);
     }
     
     /**
@@ -142,10 +156,28 @@ public class ClassfileSet extends FileSet {
             return getRef(p).getDirectoryScanner(p);
         }
 
+        Vector allRootClasses = (Vector)rootClasses.clone();
+        for (Enumeration e = rootFileSets.elements(); e.hasMoreElements();) {
+            FileSet additionalRootSet = (FileSet)e.nextElement();
+            DirectoryScanner additionalScanner
+                = additionalRootSet.getDirectoryScanner(p);
+            String[] files = additionalScanner.getIncludedFiles();
+            for (int i = 0; i < files.length; ++i) {
+                if (files[i].endsWith(".class")) {
+                    String classFilePath 
+                        = files[i].substring(0, files[i].length() - 6);
+                    String className 
+                        = classFilePath.replace('/', '.').replace('\\', '.');
+                    allRootClasses.addElement(className);
+                }
+            }
+        }    
+                
+        
         DirectoryScanner parentScanner = super.getDirectoryScanner(p);
         DependScanner scanner = new DependScanner(parentScanner);
         scanner.setBasedir(getDir(p));
-        scanner.setRootClasses(rootClasses);
+        scanner.setRootClasses(allRootClasses);
         scanner.scan();
         return scanner;
     } 

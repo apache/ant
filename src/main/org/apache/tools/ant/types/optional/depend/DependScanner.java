@@ -99,6 +99,13 @@ public class DependScanner extends DirectoryScanner {
      */
     private DirectoryScanner parentScanner;
     
+    /**
+     * Create a DependScanner, using the given scanner to provide the basic 
+     * set of files from which class files come.
+     *
+     * @param parentScanner the DirectoryScanner which returns the files from 
+     *        which class files must come.
+     */
     public DependScanner(DirectoryScanner parentScanner) {
         this.parentScanner = parentScanner;
     }
@@ -161,7 +168,7 @@ public class DependScanner extends DirectoryScanner {
         }
         analyzer.addClassPath(new Path(null, basedir.getPath()));
         
-        for (Enumeration e = rootClasses.elements(); e.hasMoreElements(); ) {
+        for (Enumeration e = rootClasses.elements(); e.hasMoreElements();) {
             String rootClass = (String)e.nextElement();
             analyzer.addRootClass(rootClass);
         }

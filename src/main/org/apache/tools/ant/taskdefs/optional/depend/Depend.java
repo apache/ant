@@ -86,16 +86,16 @@ public class Depend extends MatchingTask {
      */
     private static class ClassFileInfo {
         /** The file where the class file is stored in the file system */
-        public File absoluteFile;
+        private File absoluteFile;
 
         /**
          * The location of the file relative to its base directory - the
          * root of the package namespace
          */
-        public String relativeName;
+        private String relativeName;
 
         /** The Java class name of this class */
-        public String className;
+        private String className;
     }
 
     /** The path where source files exist */
@@ -142,9 +142,9 @@ public class Depend extends MatchingTask {
     private Path dependClasspath;
 
     /** constants used with the cache file */
-    private final static String CACHE_FILE_NAME = "dependencies.txt";
+    private static final String CACHE_FILE_NAME = "dependencies.txt";
     /** String Used to separate classnames in the dependency file */
-    private final static String CLASSNAME_PREPEND = "||:";
+    private static final String CLASSNAME_PREPEND = "||:";
 
     /**
      * Set the classpath to be used for this dependency check.
@@ -292,7 +292,7 @@ public class Depend extends MatchingTask {
             depCacheFileExists = depCacheFile.exists();
             depCacheFileLastModified = depCacheFile.lastModified();
         }
-        for (Enumeration e = getClassFiles(destPath).elements(); e.hasMoreElements(); ) {
+        for (Enumeration e = getClassFiles(destPath).elements(); e.hasMoreElements();) {
             ClassFileInfo info = (ClassFileInfo)e.nextElement();
             log("Adding class info for " + info.className, Project.MSG_DEBUG);
             classFileInfoMap.put(info.className, info);
@@ -300,8 +300,10 @@ public class Depend extends MatchingTask {
             Vector dependencyList = null;
 
             if (cache != null) {
-                // try to read the dependency info from the map if it is not out of date
-                if (depCacheFileExists && depCacheFileLastModified > info.absoluteFile.lastModified()) {
+                // try to read the dependency info from the map if it is 
+                // not out of date
+                if (depCacheFileExists 
+                    && depCacheFileLastModified > info.absoluteFile.lastModified()) {
                     // depFile exists and is newer than the class file
                     // need to get dependency list from the map.
                     dependencyList = (Vector)dependencyMap.get(info.className);
@@ -333,7 +335,8 @@ public class Depend extends MatchingTask {
             for (Enumeration depEnum = dependencyList.elements(); depEnum.hasMoreElements(); ) {
                 String dependentClass = (String)depEnum.nextElement();
 
-                Hashtable affectedClasses = (Hashtable)affectedClassMap.get(dependentClass);
+                Hashtable affectedClasses 
+                    = (Hashtable)affectedClassMap.get(dependentClass);
                 if (affectedClasses == null) {
                     affectedClasses = new Hashtable();
                     affectedClassMap.put(dependentClass, affectedClasses);
@@ -347,22 +350,25 @@ public class Depend extends MatchingTask {
         if (dependClasspath != null) {
             // now determine which jars each class depends upon
             classpathDependencies = new Hashtable();
-            AntClassLoader loader = new AntClassLoader(getProject(), dependClasspath);
+            AntClassLoader loader 
+                = new AntClassLoader(getProject(), dependClasspath);
 
             Hashtable classpathFileCache = new Hashtable();
             Object nullFileMarker = new Object();
-            for (Enumeration e = dependencyMap.keys(); e.hasMoreElements(); ) {
+            for (Enumeration e = dependencyMap.keys(); e.hasMoreElements();) {
                 String className = (String)e.nextElement();
                 Vector dependencyList = (Vector)dependencyMap.get(className);
                 Hashtable dependencies = new Hashtable();
                 classpathDependencies.put(className, dependencies);
-                for (Enumeration e2 = dependencyList.elements(); e2.hasMoreElements(); ) {
+                for (Enumeration e2 = dependencyList.elements(); e2.hasMoreElements();) {
                     String dependency = (String)e2.nextElement();
-                    Object classpathFileObject = classpathFileCache.get(dependency);
+                    Object classpathFileObject 
+                        = classpathFileCache.get(dependency);
                     if (classpathFileObject == null) {
                         classpathFileObject = nullFileMarker;
 
-                        if (!dependency.startsWith("java.") && !dependency.startsWith("javax.")) {
+                        if (!dependency.startsWith("java.") 
+                            && !dependency.startsWith("javax.")) {
                             URL classURL = loader.getResource(dependency.replace('.', '/') + ".class");
                             if (classURL != null) {
                                 if (classURL.getProtocol().equals("jar")) {
@@ -406,10 +412,11 @@ public class Depend extends MatchingTask {
      */
     private int deleteAllAffectedFiles() {
         int count = 0;
-        for (Enumeration e = outOfDateClasses.elements(); e.hasMoreElements(); ) {
+        for (Enumeration e = outOfDateClasses.elements(); e.hasMoreElements();) {
             String className = (String)e.nextElement();
             count += deleteAffectedFiles(className);
-            ClassFileInfo classInfo = (ClassFileInfo)classFileInfoMap.get(className);
+            ClassFileInfo classInfo 
+                = (ClassFileInfo)classFileInfoMap.get(className);
             if (classInfo != null && classInfo.absoluteFile.exists()) {
                 classInfo.absoluteFile.delete();
                 count++;
@@ -430,7 +437,7 @@ public class Depend extends MatchingTask {
 
         Hashtable affectedClasses = (Hashtable)affectedClassMap.get(className);
         if (affectedClasses != null) {
-            for (Enumeration e = affectedClasses.keys(); e.hasMoreElements(); ) {
+            for (Enumeration e = affectedClasses.keys(); e.hasMoreElements();) {
                 String affectedClassName = (String)e.nextElement();
                 ClassFileInfo affectedClassInfo = (ClassFileInfo)affectedClasses.get(affectedClassName);
                 if (affectedClassInfo.absoluteFile.exists()) {
@@ -479,7 +486,8 @@ public class Depend extends MatchingTask {
             long start = System.currentTimeMillis();
             String[] srcPathList = srcPath.list();
             if (srcPathList.length == 0) {
-                throw new BuildException("srcdir attribute must be set!", location);
+                throw new BuildException("srcdir attribute must be set!", 
+                    location);
             }
 
             if (destPath == null) {
@@ -487,7 +495,8 @@ public class Depend extends MatchingTask {
             }
 
             if (cache != null && cache.exists() && !cache.isDirectory()) {
-                throw new BuildException("The cache, if specified, must point to a directory");
+                throw new BuildException("The cache, if specified, must " 
+                    + "point to a directory");
             }
 
             if (cache != null && !cache.exists()) {
@@ -499,11 +508,11 @@ public class Depend extends MatchingTask {
             if (dump) {
                 log("Reverse Dependency Dump for " + affectedClassMap.size() +
                     " classes:", Project.MSG_DEBUG);
-                for (Enumeration e = affectedClassMap.keys(); e.hasMoreElements(); ) {
+                for (Enumeration e = affectedClassMap.keys(); e.hasMoreElements();) {
                     String className = (String)e.nextElement();
                     log(" Class " + className + " affects:", Project.MSG_DEBUG);
                     Hashtable affectedClasses = (Hashtable)affectedClassMap.get(className);
-                    for (Enumeration e2 = affectedClasses.keys(); e2.hasMoreElements(); ) {
+                    for (Enumeration e2 = affectedClasses.keys(); e2.hasMoreElements();) {
                         String affectedClass = (String)e2.nextElement();
                         ClassFileInfo info = (ClassFileInfo)affectedClasses.get(affectedClass);
                         log("    " + affectedClass + " in " + info.absoluteFile.getPath(), Project.MSG_DEBUG);
@@ -525,7 +534,8 @@ public class Depend extends MatchingTask {
             }
 
             // we now need to scan for out of date files. When we have the list
-            // we go through and delete all class files which are affected by these files.
+            // we go through and delete all class files which are affected by 
+            // these files.
             outOfDateClasses = new Hashtable();
             for (int i = 0; i < srcPathList.length; i++) {
                 File srcDir = (File)project.resolveFile(srcPathList[i]);
@@ -538,7 +548,7 @@ public class Depend extends MatchingTask {
 
             // now check classpath file dependencies
             if (classpathDependencies != null) {
-                for (Enumeration e = classpathDependencies.keys(); e.hasMoreElements(); ) {
+                for (Enumeration e = classpathDependencies.keys(); e.hasMoreElements();) {
                     String className = (String)e.nextElement();
                     if (!outOfDateClasses.containsKey(className)) {
                         ClassFileInfo info = (ClassFileInfo)classFileInfoMap.get(className);

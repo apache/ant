@@ -60,6 +60,14 @@ may be used
   </tr>
 </table>
 
+<h4>RootFileSet</h4>
+<p>
+A root fileset is used to add a set of root classes from a fileset. In this case the entries in 
+the fileset are expected to be Java class files. The name of the Java class is determined by the 
+relative location of the classfile in the fileset. So, the file 
+<code>org/apache/tools/ant/Project.class</code> corresponds to the Java class
+<code>org.apache.tools.ant.Project</code>.</p>
+
 <h4>Examples</h4>
 <blockquote><pre>
 &lt;classfileset id=&quot;reqdClasses" dir=&quot;${classes.dir}&quot;&gt;
@@ -77,6 +85,15 @@ then be used to create a jar.
   &lt;fileset refid=&quot;reqdClasses&quot;/&gt;
 &lt;/jar&gt;
 </pre></blockquote>
+
+<blockquote><pre>
+&lt;classfileset id=&quot;reqdClasses&quot; dir=&quot;${classes.dir}&quot;&gt;
+  &lt;rootfileset dir=&quot;${classes.dir}&quot; includes=&quot;org/apache/tools/ant/Project*.class&quot; /&gt;
+&lt;/classfileset&gt;
+</pre></blockquote>
+
+<p>This example constructs the classfileset using all the class with names starting with Project 
+in the org.apache.tools.ant package</p> 
 
 <hr>
 <p align="center">Copyright &copy; 2002 Apache Software Foundation. All rights
