@@ -114,7 +114,7 @@ public class Filter extends Task {
 
             Project proj = getProject();
 
-            Enumeration enum = props.propertyNames();		
+            Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
                 String strPropName = (String)enum.nextElement();
                 String strValue = props.getProperty(strPropName);

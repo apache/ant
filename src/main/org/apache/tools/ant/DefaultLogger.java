@@ -68,7 +68,7 @@ public class DefaultLogger implements BuildLogger {
     protected PrintStream err;
     protected int msgOutputLevel;
     private long startTime = System.currentTimeMillis();
-	
+
     protected static String lSep = System.getProperty("line.separator");
 
     protected boolean emacsMode = false;

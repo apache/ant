@@ -1,11 +1,11 @@
-/* -*-Java-*-
+/*
 *******************************************************************
 *
 * File:         Csharp.java
 * RCS:          $Header$
 * Author:       Steve Loughran
 * Created:      July 21,  2000
-* Modified:		$Modtime: 00-11-01 10:25 $
+* Modified:                $Modtime: 00-11-01 10:25 $
 * Language:     Java
 * Status:       Experimental 
 *
@@ -85,12 +85,12 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 // imports
 // ====================================================================
 
+import java.io.*;
+import java.text.*;
+import java.util.*;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.taskdefs.*;
 import org.apache.tools.ant.types.*;
-import java.io.*;
-import java.util.*;
-import java.text.*;
 
 /**
    Task to assemble .net 'Intermediate Language' files.
@@ -213,7 +213,7 @@ import java.text.*;
 public class Ilasm
     extends org.apache.tools.ant.taskdefs.MatchingTask {
 
-    //=============================================================================	
+    //=============================================================================        
     /** constructor inits everything and set up the search pattern
      */
 
@@ -241,7 +241,7 @@ public class Ilasm
      */
     protected static final String exe_title="ilasm";
 
-    //=============================================================================	
+    //=============================================================================        
     /** reset all contents. 
      */
     public void Clear() {
@@ -257,7 +257,7 @@ public class Ilasm
         _owner=null;
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** source directory upon which the search pattern is applied
      */
     private File _srcDir;
@@ -270,7 +270,7 @@ public class Ilasm
     }
 
 
-    //=============================================================================	
+    //=============================================================================        
     /** type of target. Should be one of exe|library|module|winexe|(null)
         default is exe; the actual value (if not null) is fed to the command line.
         <br>See /target
@@ -286,7 +286,7 @@ public class Ilasm
         throws  BuildException {
         targetType=targetType.toLowerCase();
         if(targetType.equals("exe") || targetType.equals("library")) {
-            _targetType=targetType;	
+            _targetType=targetType;        
         }
         else 
             throw new BuildException("targetType " +targetType+" is not a valid type");
@@ -294,7 +294,7 @@ public class Ilasm
 
     public String getTargetType() { 
         return _targetType;
-    } 	
+    }         
 
     /** get the argument or null for no argument needed
      */
@@ -309,9 +309,9 @@ public class Ilasm
                 return "/dll";
             else
                 return null;
-    }	
-	
-    //=============================================================================	
+    }        
+        
+    //=============================================================================        
     /** owner string is a slightly trivial barrier to disassembly
      */
 
@@ -328,7 +328,7 @@ public class Ilasm
             return null;
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** test for a string containing something useful
      * @param string to test
      * @returns true if the argument is not null or empty
@@ -336,7 +336,7 @@ public class Ilasm
     protected boolean notEmpty(String s)
     {return s!=null && s.length()!=0;}
 
-    //=============================================================================	
+    //=============================================================================        
     /** verbose flag
      */
      
@@ -350,7 +350,7 @@ public class Ilasm
         return _verbose?null:"/quiet";
     }   
 
-    //=============================================================================	
+    //=============================================================================        
     /** listing flag
      */
      
@@ -364,7 +364,7 @@ public class Ilasm
         return _listing?"/listing":"/nolisting";
     }
    
-    //=============================================================================	
+    //=============================================================================        
     /** output file. If not supplied this is derived from the
      *  source file
      */
@@ -388,7 +388,7 @@ public class Ilasm
         return "/output="+f.toString();
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** resource file (.res format) to include in the app. 
      */
  
@@ -406,7 +406,7 @@ public class Ilasm
             return null;
     }
    
-    //=============================================================================	
+    //=============================================================================        
     /** flag to control action on execution trouble
      */
 
@@ -424,7 +424,7 @@ public class Ilasm
         return _failOnError;
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** debug flag. Controls generation of debug information. 
      */
  
@@ -436,7 +436,7 @@ public class Ilasm
  
     public void setDebug(boolean f)
     {_debug=f;}
-	
+        
     /** query the debug flag
      * @return true if debug is turned on
      */
@@ -449,9 +449,9 @@ public class Ilasm
      */
     protected String getDebugParameter() {
         return _debug?"/debug":null;
-    }	
+    }        
    
-    //=============================================================================	
+    //=============================================================================        
     /** This is the execution entry point. Build a list of files and
      *  call ilasm on each of them.
      */
@@ -475,7 +475,7 @@ public class Ilasm
     
     } // end execute
 
-    //=============================================================================	
+    //=============================================================================        
     /** do the work by building the command line and then calling it
      */
 
@@ -504,7 +504,4 @@ public class Ilasm
         //now run the command of exe + settings + file
         command.runCommand();
     } // end executeOneFile
-
-
-
 } //class

@@ -54,12 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.net;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+import com.oroinc.net.ftp.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import com.oroinc.net.ftp.*;
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 
 /**
  * Basic FTP client that performs the following actions:
@@ -79,7 +79,7 @@ public class FTP
 {
     protected final static int SEND_FILES   = 0;
     protected final static int GET_FILES    = 1;
-    protected final static int DEL_FILES    = 2;	
+    protected final static int DEL_FILES    = 2;        
     protected final static int LIST_FILES   = 3;
     
     private String remotedir;
@@ -110,11 +110,11 @@ public class FTP
         "retrieved",
         "deleted",
         "listed"
-    };		
-	
+    };                
+        
     protected class FTPDirectoryScanner extends DirectoryScanner {
         protected FTPClient ftp = null;
-	
+        
         public FTPDirectoryScanner(FTPClient ftp) {
             super();
             this.ftp = ftp;
@@ -197,7 +197,7 @@ public class FTP
                 throw new BuildException("Error while communicating with FTP server: ", e);
             }
         }
-    }	
+    }        
 
     /**
      * Sets the remote directory where files will be placed.  This may
@@ -343,7 +343,7 @@ public class FTP
      */
     public void setListing(File listing) throws BuildException {
         this.listing = listing;
-    }	
+    }        
     
 
     /**
@@ -385,8 +385,8 @@ public class FTP
             ds = new FTPDirectoryScanner(ftp);
             fs.setupDirectoryScanner(ds, project);
             ds.scan();
-        }			
-				
+        }                        
+                                
         String[] dsfiles = ds.getIncludedFiles();
         String dir = null;
         if ((ds.getBasedir() == null) && ((action == SEND_FILES) || (action == GET_FILES))) {
@@ -410,29 +410,29 @@ public class FTP
         for (int i = 0; i < dsfiles.length; i++)
         {
             switch (action) {
-                case SEND_FILES: {
-                    sendFile(ftp, dir, dsfiles[i]);
-                    break;
-                }
+            case SEND_FILES: {
+                sendFile(ftp, dir, dsfiles[i]);
+                break;
+            }
 
-                case GET_FILES: {
-                    getFile(ftp, dir, dsfiles[i]);
-                    break;
-                }
+            case GET_FILES: {
+                getFile(ftp, dir, dsfiles[i]);
+                break;
+            }
 
-                case DEL_FILES: {
-                    delFile(ftp, dsfiles[i]);
-                    break;
-                }
+            case DEL_FILES: {
+                delFile(ftp, dsfiles[i]);
+                break;
+            }
 
-                case LIST_FILES: {
-                    listFile(ftp, bw, dsfiles[i]);
-                    break;
-                }
+            case LIST_FILES: {
+                listFile(ftp, bw, dsfiles[i]);
+                break;
+            }
 
-                default: {
-                    throw new BuildException("unknown ftp action " + action );
-                }
+            default: {
+                throw new BuildException("unknown ftp action " + action );
+            }
             }
         }
 
@@ -516,8 +516,8 @@ public class FTP
                     (ftp.getReplyCode() != 550))
                 {
                     throw new BuildException(
-                        "could not create directory: " +
-                        ftp.getReplyString());
+                                             "could not create directory: " +
+                                             ftp.getReplyString());
                 }
                 dirCache.addElement(dir);
             }
@@ -537,8 +537,8 @@ public class FTP
         if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
         {
             throw new BuildException(
-                "could not date test remote file: " +
-                ftp.getReplyString());
+                                     "could not date test remote file: " +
+                                     ftp.getReplyString());
         }
 
         if (files == null)
@@ -590,8 +590,8 @@ public class FTP
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
             {
                 throw new BuildException(
-                    "could not transfer file: " +
-                    ftp.getReplyString());
+                                         "could not transfer file: " +
+                                         ftp.getReplyString());
             }
             
             log("File " + file.getAbsolutePath() + " copied to " + server,
@@ -619,7 +619,7 @@ public class FTP
      * Delete a file from the remote host.
      */
     protected void delFile(FTPClient ftp, String filename)
-            throws IOException, BuildException {
+        throws IOException, BuildException {
         if (verbose) {
             log("deleting " + filename);
         }
@@ -657,23 +657,23 @@ public class FTP
                 log("transferring " + filename + " to " + file.getAbsolutePath());
             }
 
-			
-            File pdir = new File(file.getParent());	// stay 1.1 compatible
+                        
+            File pdir = new File(file.getParent());        // stay 1.1 compatible
             if (!pdir.exists()) {
                 pdir.mkdirs();
-            }		
+            }                
             outstream = new BufferedOutputStream(new FileOutputStream(file));
             ftp.retrieveFile(resolveFile(filename), outstream);
-			
+                        
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
             {
                 throw new BuildException(
-"could not transfer file: " +
- ftp.getReplyString());
+                                         "could not transfer file: " +
+                                         ftp.getReplyString());
             }
-			
+                        
             log("File " + file.getAbsolutePath() + " copied from " + server,
- Project.MSG_VERBOSE);
+                Project.MSG_VERBOSE);
 
             transferred++;
         }
@@ -753,8 +753,8 @@ public class FTP
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
                 {
                     throw new BuildException(
-                        "could not set transfer type: " +
-                        ftp.getReplyString());
+                                             "could not set transfer type: " +
+                                             ftp.getReplyString());
                 }
             }
             
@@ -765,8 +765,8 @@ public class FTP
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
                 {
                     throw new BuildException(
-                        "could not enter into passive mode: " +
-                        ftp.getReplyString());
+                                             "could not enter into passive mode: " +
+                                             ftp.getReplyString());
                 }
             }
 
@@ -777,8 +777,8 @@ public class FTP
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()))
                 {
                     throw new BuildException(
-                        "could not change remote directory: " +
-                        ftp.getReplyString());
+                                             "could not change remote directory: " +
+                                             ftp.getReplyString());
                 }
             }
 
@@ -793,18 +793,18 @@ public class FTP
         finally
         {
             /*
-            if (ftp != null && ftp.isConnected())
-            {
-                try
-                {
-                    // this hangs - I don't know why.
-                    ftp.disconnect();
-                }
-                catch(IOException ex)
-                {
-                    // ignore it
-                }
-            }
+              if (ftp != null && ftp.isConnected())
+              {
+              try
+              {
+              // this hangs - I don't know why.
+              ftp.disconnect();
+              }
+              catch(IOException ex)
+              {
+              // ignore it
+              }
+              }
             */
         }
     }

@@ -1,4 +1,4 @@
-/* -*-Java-*-
+/*
 *******************************************************************
 *
 * File:         Csharp.java
@@ -85,12 +85,12 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 // imports
 // ====================================================================
 
+import java.io.*;
+import java.text.*;
+import java.util.*;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.taskdefs.*;
 import org.apache.tools.ant.types.*;
-import java.io.*;
-import java.util.*;
-import java.text.*;
 
 
 // ====================================================================
@@ -232,23 +232,23 @@ The first pass is just a proof of concept; enough to test.
 <p>
 TODO
 <ol>
-	<li>get PATH incorporated into reference/module lookup
-	<li>is Win32Icon broken?
-	<li>all the missing options
+    <li>get PATH incorporated into reference/module lookup
+    <li>is Win32Icon broken?
+    <li>all the missing options
 </ol>
 <p>
 History
-	<Table>
-	<tr><td>0.2</td>
-		<td> Slightly different</td>
-		<td> Split command execution to a separate class; 
-	</tr>
-	<tr><td>0.1</td>
-		<td> "I can't believe it's so rudimentary"</td>
-		<td>  First pass; minimal builds only support; 
-	</tr>
+        <Table>
+        <tr><td>0.2</td>
+                <td> Slightly different</td>
+                <td> Split command execution to a separate class; 
+        </tr>
+        <tr><td>0.1</td>
+                <td> "I can't believe it's so rudimentary"</td>
+                <td>  First pass; minimal builds only support; 
+        </tr>
 
-	</table>
+        </table>
 @version 0.2
 @author Steve Loughran steve_l@iseran.com
 
@@ -258,7 +258,7 @@ History
 public class CSharp 
     extends org.apache.tools.ant.taskdefs.MatchingTask {
 
-    //=============================================================================	
+    //=============================================================================        
     /** constructor inits everything and set up the search pattern
      */
 
@@ -283,7 +283,7 @@ public class CSharp
     protected static final String csc_file_pattern="*."+csc_file_ext;
 
 
-    //=============================================================================	
+    //=============================================================================        
     /** list of reference classes. (pretty much a classpath equivalent)
      */
 
@@ -335,14 +335,14 @@ public class CSharp
        //bail on no references listed
        if (refpath.length()==0)
        return null;
-	
+        
        StringBuffer s=new StringBuffer("/reference:");
        s.append(refpath);
        return new String(s);
-       }	
+       }        
     */
 
-    //=============================================================================	
+    //=============================================================================        
     /* optimise flag
      */
  
@@ -366,9 +366,9 @@ public class CSharp
      */
     protected String getOptimizeParameter() {
         return "/optimize"+(_optimize?"+":"-");
-    }	
-	
-    //=============================================================================	
+    }        
+        
+    //=============================================================================        
     /** incremental build flag */
     protected boolean _incremental;
 
@@ -390,9 +390,9 @@ public class CSharp
      */
     protected String getIncrementalParameter() {
         return "/incremental"+(_incremental?"+":"-");
-    }	
+    }        
 
-    //=============================================================================	
+    //=============================================================================        
     /** debug flag. Controls generation of debug information. 
      */
  
@@ -404,7 +404,7 @@ public class CSharp
  
     public void setDebug(boolean f)
     {_debug=f;}
-	
+        
     /** query the debug flag
      * @return true if debug is turned on
      */
@@ -417,15 +417,15 @@ public class CSharp
      */
     protected String getDebugParameter() {
         return "/debug"+(_debug?"+":"-");
-    }	
+    }        
 
 
-    //=============================================================================	
+    //=============================================================================        
     /** output XML documentation flag
-     */	
-	
+     */        
+        
     protected File _docFile;
-	
+        
     /** file for generated XML documentation
      * @param output file
      */
@@ -443,9 +443,9 @@ public class CSharp
             return "/doc:"+_docFile.toString();
         else
             return null;
-    }	
-	
-    //=============================================================================	
+    }        
+        
+    //=============================================================================        
     /** warning level: 0-4, with 4 being most verbose
      */
     private int _warnLevel;
@@ -466,9 +466,9 @@ public class CSharp
      */
     protected String getWarnLevelParameter() {
         return "/warn:"+_warnLevel;
-    }	
+    }        
 
-    //=============================================================================	
+    //=============================================================================        
     /** enable unsafe code flag. Clearly set to false by default
      */
 
@@ -484,9 +484,9 @@ public class CSharp
      */
     protected String getUnsafeParameter(){
         return _unsafe?"/unsafe":null;
-    }	
-	
-    //=============================================================================	
+    }        
+        
+    //=============================================================================        
     /** main class (or null for automatic choice)
      */
     protected String _mainClass;
@@ -504,9 +504,9 @@ public class CSharp
             return "/main:"+_mainClass;
         else
             return null;
-    }	
+    }        
 
-    //=============================================================================	
+    //=============================================================================        
     /** source directory upon which the search pattern is applied
      */
     private File _srcDir;
@@ -518,7 +518,7 @@ public class CSharp
         _srcDir = project.resolveFile(srcDirName);
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** destination directory (null means use the source directory)
      */
     private File _destDir;
@@ -529,9 +529,9 @@ public class CSharp
     public void setDestDir(String dirName) {
         _destDir = project.resolveFile(dirName);
     }
-	
+        
 
-    //=============================================================================	
+    //=============================================================================        
     /** type of target. Should be one of exe|library|module|winexe|(null)
         default is exe; the actual value (if not null) is fed to the command line.
         <br>See /target
@@ -548,7 +548,7 @@ public class CSharp
         targetType=targetType.toLowerCase();
         if(targetType.equals("exe") || targetType.equals("library") ||
            targetType.equals("module") ||targetType.equals("winexe") ) {
-            _targetType=targetType;	
+            _targetType=targetType;        
         }
         else 
             throw new BuildException("targetType " +targetType+" is not a valid type");
@@ -556,7 +556,7 @@ public class CSharp
 
     public String getTargetType() { 
         return _targetType;
-    } 	
+    }         
 
     /** get the argument or null for no argument needed
      */
@@ -565,14 +565,14 @@ public class CSharp
             return "/target:"+_targetType;
         else
             return null;
-    }	
+    }        
 
 
-    //=============================================================================	
+    //=============================================================================        
     /* icon for incorporation into apps
      */
  
-    protected File _win32icon;	
+    protected File _win32icon;        
 
     /**
      * Set the win32 icon 
@@ -591,7 +591,7 @@ public class CSharp
             return null;
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** defines list 'RELEASE;WIN32;NO_SANITY_CHECKS;;SOMETHING_ELSE'
      *
      */
@@ -614,7 +614,7 @@ public class CSharp
         else return "/DEFINE:"+_definitions;
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** list of extra modules to refer to 
      *
      */
@@ -637,7 +637,7 @@ public class CSharp
         else return "/addmodule:"+_additionalModules;
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** output file. If not supplied this is derived from the
      *  source file
      */
@@ -661,7 +661,7 @@ public class CSharp
         return "/out:"+f.toString();
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** flag to control action on execution trouble
      */
 
@@ -679,7 +679,7 @@ public class CSharp
         return _failOnError;
     }
 
-    //=============================================================================	
+    //=============================================================================        
     /** reset all contents. 
      */
     public void Clear() {
@@ -701,7 +701,7 @@ public class CSharp
     }
 
 
-    //=============================================================================	
+    //=============================================================================        
     /** do the work by building the command line and then calling it
      */
 

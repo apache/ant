@@ -110,58 +110,57 @@ public class Expand extends MatchingTask {
 
     private void expandFile(Touch touch, File srcF, File dir) {
         ZipInputStream zis = null;
-	try {
-	    
-	    log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
-	    // code from WarExpand
-	    zis = new ZipInputStream(new FileInputStream(srcF));
-	    ZipEntry ze = null;
-	    
-	    while ((ze = zis.getNextEntry()) != null) {
-		File f = new File(dir, project.translatePath(ze.getName()));
-		try {
-		    log("expand-file " + ze.getName() , Project.MSG_VERBOSE );
-		    // create intermediary directories - sometimes zip don't add them
-		    File dirF=new File(f.getParent());
-		    dirF.mkdirs();
-		    
-		    if (ze.isDirectory()) {
-			f.mkdirs(); 
-		    } else {
-			byte[] buffer = new byte[1024];
-			int length = 0;
-			FileOutputStream fos = new FileOutputStream(f);
-			
-			while ((length = zis.read(buffer)) >= 0) {
-			    fos.write(buffer, 0, length);
-			}
-			
-			fos.close();
-		    }
+        try {
+            log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
+            // code from WarExpand
+            zis = new ZipInputStream(new FileInputStream(srcF));
+            ZipEntry ze = null;
 
+            while ((ze = zis.getNextEntry()) != null) {
+                File f = new File(dir, project.translatePath(ze.getName()));
+                try {
+                    log("expand-file " + ze.getName() , Project.MSG_VERBOSE );
+                    // create intermediary directories - sometimes zip don't add them
+                    File dirF=new File(f.getParent());
+                    dirF.mkdirs();
+                    
+                    if (ze.isDirectory()) {
+                        f.mkdirs(); 
+                    } else {
+                        byte[] buffer = new byte[1024];
+                        int length = 0;
+                        FileOutputStream fos = new FileOutputStream(f);
+                        
+                        while ((length = zis.read(buffer)) >= 0) {
+                            fos.write(buffer, 0, length);
+                        }
+                        
+                        fos.close();
+                    }
+                    
                     if (project.getJavaVersion() != Project.JAVA_1_1) {
                         touch.setFile(f);
                         touch.setMillis(ze.getTime());
                         touch.touch();
                     }
-
-		} catch( FileNotFoundException ex ) {
-		    log("Unable to expand to file " + f.getPath(), Project.MSG_WARN);
-		}
-	    }
-	    log("expand complete", Project.MSG_VERBOSE );
-	} catch (IOException ioe) {
-	    throw new BuildException("Error while expanding " + srcF.getPath(), ioe);
-	} finally {
-	    if (zis != null) {
-	        try {
-	            zis.close();
-	        }
-	        catch (IOException e) {}
-	    }
-	}
+                    
+                } catch( FileNotFoundException ex ) {
+                    log("Unable to expand to file " + f.getPath(), Project.MSG_WARN);
+                }
+            }
+            log("expand complete", Project.MSG_VERBOSE );
+        } catch (IOException ioe) {
+            throw new BuildException("Error while expanding " + srcF.getPath(), ioe);
+        } finally {
+            if (zis != null) {
+                try {
+                    zis.close();
+                }
+                catch (IOException e) {}
+            }
+        }
     }
-
+    
     /**
      * Set the destination directory. File will be unzipped into the
      * destination directory.
@@ -169,7 +168,7 @@ public class Expand extends MatchingTask {
      * @param d Path to the directory.
      */
     public void setDest(File d) {
-	this.dest=d;
+        this.dest=d;
     }
 
     /**
@@ -178,6 +177,6 @@ public class Expand extends MatchingTask {
      * @param s Path to zip-file.
      */
     public void setSrc(File s) {
-	this.source = s;
+        this.source = s;
     }
 }

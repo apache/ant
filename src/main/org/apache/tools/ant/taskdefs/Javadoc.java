@@ -51,9 +51,10 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.taskdefs;
 
+import java.io.*;
+import java.util.*;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -61,9 +62,6 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-
-import java.io.*;
-import java.util.*;
 
 /**
  * This task makes it easy to generate Javadoc documentation for a collection
@@ -407,7 +405,7 @@ public class Javadoc extends Task {
             LinkArgument le = createLink();
             le.setOffline(true);
             String linkOfflineError = "The linkoffline attribute must include a URL and " + 
-                                      "a package-list file location separated by a space";
+                "a package-list file location separated by a space";
             if (src.trim().length() == 0) {
                 throw new BuildException(linkOfflineError);
             }                
@@ -582,7 +580,7 @@ public class Javadoc extends Task {
         } else {
             toExecute.createArgument().setValue("-classpath");
             toExecute.createArgument().setValue(sourcePath.toString() +
-                System.getProperty("path.separator") + classpath.toString());
+                                                System.getProperty("path.separator") + classpath.toString());
         }
 
         if (version && doclet == null)
@@ -672,15 +670,15 @@ public class Javadoc extends Task {
             if (group != null) {
                 StringTokenizer tok = new StringTokenizer(group, ",", false);
                 while (tok.hasMoreTokens()) {
-                  String grp = tok.nextToken().trim();
-                  int space = grp.indexOf(" ");
-                  if (space > 0){
-                    String name = grp.substring(0, space);
-                    String pkgList = grp.substring(space + 1);
-                    toExecute.createArgument().setValue("-group");
-                    toExecute.createArgument().setValue(name);
-                    toExecute.createArgument().setValue(pkgList);
-                  }
+                    String grp = tok.nextToken().trim();
+                    int space = grp.indexOf(" ");
+                    if (space > 0){
+                        String name = grp.substring(0, space);
+                        String pkgList = grp.substring(space + 1);
+                        toExecute.createArgument().setValue("-group");
+                        toExecute.createArgument().setValue(name);
+                        toExecute.createArgument().setValue(pkgList);
+                    }
                 }
             }
             
@@ -724,7 +722,7 @@ public class Javadoc extends Task {
             }
         }
 
-         if (packageList != null) {
+        if (packageList != null) {
             toExecute.createArgument().setValue("@" + packageList);
         }
         log("Javadoc args: " + toExecute, Project.MSG_VERBOSE);
@@ -835,48 +833,48 @@ public class Javadoc extends Task {
     }
 
     protected Vector findPackages(File srcDir) {
-    	Vector foundPkgs = new Vector();
-    	
-    	if ((srcDir != null) && (srcDir.isDirectory())) {
-    		scan(srcDir, "", foundPkgs);
-    	}
-    	
-    	return foundPkgs;
+        Vector foundPkgs = new Vector();
+
+        if ((srcDir != null) && (srcDir.isDirectory())) {
+            scan(srcDir, "", foundPkgs);
+        }
+
+        return foundPkgs;
     }
 
     protected void scan(File srcDir, String vpath, Vector pkgs) {
-    	foundJavaFile = false;
-    	File dir = new File(srcDir, vpath);
-    	
-    	if (!dir.isDirectory()) {
-    		return;
-    	}
+        foundJavaFile = false;
+        File dir = new File(srcDir, vpath);
+
+        if (!dir.isDirectory()) {
+            return;
+        }
     
-    	String[] files = dir.list(new FilenameFilter () {
-    			public boolean accept(File dir1, String name) {
-    				if (name.endsWith(".java")) {
-    					foundJavaFile = true;
-    					return false;
-    				}
-    				File d = new File(dir1, name);
-    				if (d.isDirectory() 
-                                    && d.getName().indexOf("-") == -1) {
-    					return true;
-    				}
-    				return false;
-    			}
-    		});
-    
-    	if (foundJavaFile && vpath.length() > 0) {
-    		String newPkg = vpath.substring(1).replace(File.separatorChar, '.');
-    		if (!pkgs.contains(newPkg)) {
-    			pkgs.addElement(newPkg);
-    		}
-    	}
-    	
-    	for (int i=0; i<files.length; i++) {
-    		scan(srcDir, vpath + File.separator + files[i], pkgs);
-    	}
-    	return;
+        String[] files = dir.list(new FilenameFilter () {
+            public boolean accept(File dir1, String name) {
+                if (name.endsWith(".java")) {
+                    foundJavaFile = true;
+                    return false;
+                }
+                File d = new File(dir1, name);
+                if (d.isDirectory() 
+                    && d.getName().indexOf("-") == -1) {
+                        return true;
+                    }
+                return false;
+            }
+        });
+        
+        if (foundJavaFile && vpath.length() > 0) {
+            String newPkg = vpath.substring(1).replace(File.separatorChar, '.');
+            if (!pkgs.contains(newPkg)) {
+                pkgs.addElement(newPkg);
+            }
+        }
+
+        for (int i=0; i<files.length; i++) {
+            scan(srcDir, vpath + File.separator + files[i], pkgs);
+        }
+        return;
     }
 }

@@ -124,14 +124,14 @@ public class Tar extends MatchingTask {
         } catch (IOException ioe) {
             String msg = "Problem creating TAR: " + ioe.getMessage();
             throw new BuildException(msg, ioe, location);
-	} finally {
-	    if (tOut != null) {
-	        try {
+        } finally {
+            if (tOut != null) {
+                try {
                     // close up
-	            tOut.close();
-	        }
-	        catch (IOException e) {}
-	    }
+                    tOut.close();
+                }
+                catch (IOException e) {}
+            }
         }
     }
 

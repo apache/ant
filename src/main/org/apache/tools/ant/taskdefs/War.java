@@ -77,12 +77,12 @@ public class War extends Jar {
 
     public War() {
         super();
-	archiveType = "war";
+        archiveType = "war";
         emptyBehavior = "create";
     }
 
     public void setWarfile(File warFile) {
-	super.setZipfile(warFile);
+        super.setZipfile(warFile);
     }
     
     public void setWebxml(File descr) {
@@ -124,16 +124,16 @@ public class War extends Jar {
      * special way of nested lib, classes or webinf filesets.  
      */
     protected void initZipOutputStream(ZipOutputStream zOut)
-	throws IOException, BuildException
+        throws IOException, BuildException
     {
-	// add deployment descriptor first
-	if (deploymentDescriptor != null) {
+        // add deployment descriptor first
+        if (deploymentDescriptor != null) {
             zipDir(new File(deploymentDescriptor.getParent()), zOut, 
                    "WEB-INF/");
-	    super.zipFile(deploymentDescriptor, zOut, "WEB-INF/web.xml");
-	} else {
+            super.zipFile(deploymentDescriptor, zOut, "WEB-INF/web.xml");
+        } else {
             throw new BuildException("webxml attribute is required", location);
- 	}
+        }
 
         addFiles(libFileSets, zOut, "WEB-INF/lib/");
         addFiles(classesFileSets, zOut, "WEB-INF/classes/");

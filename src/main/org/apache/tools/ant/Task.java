@@ -160,11 +160,11 @@ public abstract class Task {
      *  what we are doing.
      */
     public void setDescription( String desc ) {
-	description=desc;
+        description=desc;
     }
 
     public String getDescription() {
-	return description;
+        return description;
     }
 
     /**

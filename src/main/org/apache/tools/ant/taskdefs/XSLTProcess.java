@@ -54,13 +54,13 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.*;
 
 import java.io.*;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import org.apache.tools.ant.*;
 
 
 /**
@@ -100,7 +100,7 @@ public class XSLTProcess extends MatchingTask {
 
     /**
      * Creates a new XSLTProcess Task.
-    **/
+     **/
     public XSLTProcess() {
     } //-- XSLTProcess
 
@@ -109,35 +109,35 @@ public class XSLTProcess extends MatchingTask {
      */
 
     public void execute() throws BuildException {
-	DirectoryScanner scanner;
-	String[]         list;
-	String[]         dirs;
+        DirectoryScanner scanner;
+        String[]         list;
+        String[]         dirs;
 
-	if (baseDir == null)
-	    baseDir = project.resolveFile(".");
+        if (baseDir == null)
+            baseDir = project.resolveFile(".");
         //-- make sure Source directory exists...
-	if (destDir == null ) {
-	    String msg = "destdir attributes must be set!";
-	    throw new BuildException(msg);
-	}
-	scanner = getDirectoryScanner(baseDir);
-	log("Transforming into "+destDir, Project.MSG_INFO);
+        if (destDir == null ) {
+            String msg = "destdir attributes must be set!";
+            throw new BuildException(msg);
+        }
+        scanner = getDirectoryScanner(baseDir);
+        log("Transforming into "+destDir, Project.MSG_INFO);
 
         // if processor wasn't specified, default it to xslp or xalan,
         // depending on which is in the classpath
         if (liaison == null) {
-           try {
-               setProcessor("xslp");
-           } catch (Throwable e1) {
-               try {
-                   setProcessor("xalan");
-               } catch (Throwable e2) {
-                   throw new BuildException(e2);
-               }
-           }
+            try {
+                setProcessor("xslp");
+            } catch (Throwable e1) {
+                try {
+                    setProcessor("xalan");
+                } catch (Throwable e2) {
+                    throw new BuildException(e2);
+                }
+            }
         }
 
-	log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
+        log("Using "+liaison.getClass().toString(), Project.MSG_VERBOSE);
 
         long styleSheetLastModified = 0;
         if (xslFile != null) {
@@ -153,24 +153,24 @@ public class XSLTProcess extends MatchingTask {
             }
         }
 
-	// Process all the files marked for styling
-	list = scanner.getIncludedFiles();
-	for (int i = 0;i < list.length; ++i) {
+        // Process all the files marked for styling
+        list = scanner.getIncludedFiles();
+        for (int i = 0;i < list.length; ++i) {
             process( baseDir, list[i], destDir, styleSheetLastModified );
-	}
+        }
         
-	// Process all the directoried marked for styling
-	dirs = scanner.getIncludedDirectories();
-	for (int j = 0;j < dirs.length;++j){
-	    list=new File(baseDir,dirs[j]).list();
-	    for (int i = 0;i < list.length;++i)
+        // Process all the directoried marked for styling
+        dirs = scanner.getIncludedDirectories();
+        for (int j = 0;j < dirs.length;++j){
+            list=new File(baseDir,dirs[j]).list();
+            for (int i = 0;i < list.length;++i)
                 process( baseDir, list[i], destDir, styleSheetLastModified );
-	}
+        }
     } //-- execute
 
     /**
      * Set the base directory.
-    **/
+     **/
     public void setBasedir(File dir) {
         baseDir = dir;
     } //-- setSourceDir
@@ -179,7 +179,7 @@ public class XSLTProcess extends MatchingTask {
      * Set the destination directory into which the XSL result
      * files should be copied to
      * @param dirName the name of the destination directory
-    **/
+     **/
     public void setDestdir(File dir) {
         destDir = dir;
     } //-- setDestDir
@@ -187,16 +187,16 @@ public class XSLTProcess extends MatchingTask {
     /**
      * Set the desired file extension to be used for the target
      * @param name the extension to use
-    **/
+     **/
     public void setExtension(String name) {
-	    targetExtension = name;
+            targetExtension = name;
     } //-- setDestDir
 
     /**
      * Sets the file to use for styling relative to the base directory.
      */
     public void setStyle(String xslFile) {
-	this.xslFile = new File(xslFile);
+        this.xslFile = new File(xslFile);
     }
 
     /**
@@ -204,10 +204,14 @@ public class XSLTProcess extends MatchingTask {
      */
     public void setProcessor(String processor) throws Exception {
 
-	if (processor.equals("xslp")) {
-            liaison = (XSLTLiaison) Class.forName("org.apache.tools.ant.taskdefs.optional.XslpLiaison").newInstance();
-	} else if (processor.equals("xalan")) {
-            liaison = (XSLTLiaison) Class.forName("org.apache.tools.ant.taskdefs.optional.XalanLiaison").newInstance();
+        if (processor.equals("xslp")) {
+            final Class clazz = 
+                Class.forName("org.apache.tools.ant.taskdefs.optional.XslpLiaison");
+            liaison = (XSLTLiaison) clazz.newInstance();
+        } else if (processor.equals("xalan")) {
+            final Class clazz = 
+                Class.forName("org.apache.tools.ant.taskdefs.optional.XalanLiaison");
+            liaison = (XSLTLiaison)clazz.newInstance();
         } else {
             liaison = (XSLTLiaison) Class.forName(processor).newInstance();
         }
@@ -215,103 +219,103 @@ public class XSLTProcess extends MatchingTask {
     }
 
     /*
-    private void process(File sourceDir, File destDir)
-        throws BuildException
-    {
+      private void process(File sourceDir, File destDir)
+      throws BuildException
+      {
 
         
-        if (!sourceDir.isDirectory()) {
-            throw new BuildException(sourceDir.getName() +
-                " is not a directory!");
-        }
-        else if (!destDir.isDirectory()) {
-            throw new BuildException(destDir.getName() +
-                " is not a directory!");
-        }
+      if (!sourceDir.isDirectory()) {
+      throw new BuildException(sourceDir.getName() +
+      " is not a directory!");
+      }
+      else if (!destDir.isDirectory()) {
+      throw new BuildException(destDir.getName() +
+      " is not a directory!");
+      }
 
-	    String[] list = sourceDir.list(new DesirableFilter());
+      String[] list = sourceDir.list(new DesirableFilter());
 
-	    if (list == null) {
-	        return;  //-- nothing to do
-	    }
+      if (list == null) {
+      return;  //-- nothing to do
+      }
 
-	    for (int i = 0; i < list.length; i++) {
+      for (int i = 0; i < list.length; i++) {
 
-    	    String filename = list[i];
+      String filename = list[i];
 
-    	    File inFile  = new File(sourceDir, filename);
+      File inFile  = new File(sourceDir, filename);
 
-	        //-- if inFile is a directory, recursively process it
-    	    if (inFile.isDirectory()) {
-		if (!excluded(filename)) {
-		new File(destDir, filename).mkdir();
-		process(inFile, new File(destDir, filename));
-		}
-	    }
-	    //-- process XML files
-	    else if (hasXMLFileExtension(filename) && ! excluded(filename)) {
+      //-- if inFile is a directory, recursively process it
+      if (inFile.isDirectory()) {
+      if (!excluded(filename)) {
+      new File(destDir, filename).mkdir();
+      process(inFile, new File(destDir, filename));
+      }
+      }
+      //-- process XML files
+      else if (hasXMLFileExtension(filename) && ! excluded(filename)) {
 
-	            //-- replace extension with the target extension
-	            int idx = filename.lastIndexOf('.');
+      //-- replace extension with the target extension
+      int idx = filename.lastIndexOf('.');
 
-		        File outFile = new File(destDir,
-		            filename.substring(0,idx) + targetExt);
+      File outFile = new File(destDir,
+      filename.substring(0,idx) + targetExt);
 
-		        if ((inFile.lastModified() > outFile.lastModified()) ||
-			    (xslFile != null && xslFile.lastModified() > outFile.lastModified()))
-		        {
-			    processXML(inFile, outFile);
-		        }
-		    }
-		    else {
-		        File outFile = new File(destDir, filename);
-		        if (inFile.lastModified() > outFile.lastModified()) {
-		            try {
-		                copyFile(inFile, outFile);
-		            }
-		            catch(java.io.IOException ex) {
-		                String err = "error copying file: ";
-		                err += inFile.getAbsolutePath();
-		                err += "; " + ex.getMessage();
-		                throw new BuildException(err, ex);
-		            }
-			        //filecopyList.put(srcFile.getAbsolutePath(),
-					    //destFile.getAbsolutePath());
-		        }
-		    }
-		} //-- </for>
-    } //-- process(File, File)
+      if ((inFile.lastModified() > outFile.lastModified()) ||
+      (xslFile != null && xslFile.lastModified() > outFile.lastModified()))
+      {
+      processXML(inFile, outFile);
+      }
+      }
+      else {
+      File outFile = new File(destDir, filename);
+      if (inFile.lastModified() > outFile.lastModified()) {
+      try {
+      copyFile(inFile, outFile);
+      }
+      catch(java.io.IOException ex) {
+      String err = "error copying file: ";
+      err += inFile.getAbsolutePath();
+      err += "; " + ex.getMessage();
+      throw new BuildException(err, ex);
+      }
+      //filecopyList.put(srcFile.getAbsolutePath(),
+      //destFile.getAbsolutePath());
+      }
+      }
+      } //-- </for>
+      } //-- process(File, File)
     */
 
     /**
      * Processes the given input XML file and stores the result
      * in the given resultFile.
-    **/
+     **/
     private void process(File baseDir, String xmlFile, File destDir, 
                          long styleSheetLastModified)
         throws BuildException {
 
-	String fileExt=targetExtension;
-	File   outFile=null;
-	File   inFile=null;
+        String fileExt=targetExtension;
+        File   outFile=null;
+        File   inFile=null;
 
-	try {
-	    inFile = new File(baseDir,xmlFile);
-	    outFile = new File(destDir,xmlFile.substring(0,xmlFile.lastIndexOf('.'))+fileExt);
-	    if (inFile.lastModified() > outFile.lastModified() ||
+        try {
+            inFile = new File(baseDir,xmlFile);
+            outFile = new File(destDir,xmlFile.substring(0,xmlFile.lastIndexOf('.'))+fileExt);
+            if (inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor( outFile );
-		//-- command line status
-		log("Processing " + xmlFile + " to " + outFile, Project.MSG_VERBOSE);
+                //-- command line status
+                log("Processing " + xmlFile + " to " + outFile, Project.MSG_VERBOSE);
 
-		liaison.transform(inFile.toString(), outFile.toString());
-	    }
+                liaison.transform(inFile.toString(), outFile.toString());
+            }
         }
         catch (Exception ex) {
-	    // If failed to process document, must delete target document,
-	    // or it will not attempt to process it the second time
-	    log("Failed to process " + inFile, Project.MSG_INFO);
-	    outFile.delete();
+            // If failed to process document, must delete target document,
+            // or it will not attempt to process it the second time
+            log("Failed to process " + inFile, Project.MSG_INFO);
+            outFile.delete();
             throw new BuildException(ex);
         }
 

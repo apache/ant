@@ -119,7 +119,7 @@ public abstract class MatchingTask extends Task {
             "Please use the includes attribute.",
             Project.MSG_WARN);
         if (itemString == null || itemString.equals("*") 
-				               || itemString.equals(".")) {
+            || itemString.equals(".")) {
             createInclude().setName("**");
         } else {
             StringTokenizer tok = new StringTokenizer(itemString, ", ");

@@ -51,12 +51,7 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.taskdefs;
-
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.util.*;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -65,6 +60,9 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.*;
+import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.util.*;
 
 /**
  * Create a ZIP archive.
@@ -73,7 +71,6 @@ import java.util.zip.*;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
 public class Zip extends MatchingTask {
 
     private File zipFile;
@@ -135,7 +132,8 @@ public class Zip extends MatchingTask {
 
     public void execute() throws BuildException {
         if (baseDir == null && filesets.size() == 0 && "zip".equals(archiveType))
-            throw new BuildException("basedir attribute must be set, or at least one fileset must be given!");
+            throw new BuildException( "basedir attribute must be set, or at least " + 
+                                      "one fileset must be given!" );
 
         if (zipFile == null) {
             throw new BuildException("You must specify the " + archiveType + " file to create!");
@@ -157,29 +155,29 @@ public class Zip extends MatchingTask {
 
         log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
 
-	try {
-	    ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
-	    try {
-		if (doCompress) {
-		    zOut.setMethod(ZipOutputStream.DEFLATED);
-		} else {
-		    zOut.setMethod(ZipOutputStream.STORED);
-		}
-		initZipOutputStream(zOut);
+        try {
+            ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
+            try {
+                if (doCompress) {
+                    zOut.setMethod(ZipOutputStream.DEFLATED);
+                } else {
+                    zOut.setMethod(ZipOutputStream.STORED);
+                }
+                initZipOutputStream(zOut);
                                 
                 for (int j = 0; j < scanners.length; j++) {
                     addFiles(scanners[j], zOut, "");
                 }
-	    } finally {
-		zOut.close ();
-	    }
-	} catch (IOException ioe) {
-	    String msg = "Problem creating " + archiveType + ": " + ioe.getMessage();
+            } finally {
+                zOut.close ();
+            }
+        } catch (IOException ioe) {
+            String msg = "Problem creating " + archiveType + ": " + ioe.getMessage();
 
             // delete a bogus ZIP file
-	    if (!zipFile.delete()) {
-		msg += " (and the archive is probably corrupt but I could not delete it)";
-	    }
+            if (!zipFile.delete()) {
+                msg += " (and the archive is probably corrupt but I could not delete it)";
+            }
 
             throw new BuildException(msg, ioe, location);
         }
@@ -317,13 +315,13 @@ public class Zip extends MatchingTask {
         }
         addedDirs.put(vPath, vPath);
         
-	ZipEntry ze = new ZipEntry (vPath);
-	if (dir != null) ze.setTime (dir.lastModified ());
-	ze.setSize (0);
-	ze.setMethod (ZipEntry.STORED);
-	// This is faintly ridiculous:
-	ze.setCrc (emptyCrc);
-	zOut.putNextEntry (ze);
+        ZipEntry ze = new ZipEntry (vPath);
+        if (dir != null) ze.setTime (dir.lastModified ());
+        ze.setSize (0);
+        ze.setMethod (ZipEntry.STORED);
+        // This is faintly ridiculous:
+        ze.setCrc (emptyCrc);
+        zOut.putNextEntry (ze);
     }
 
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,

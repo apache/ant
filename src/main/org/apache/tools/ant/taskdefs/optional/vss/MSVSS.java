@@ -54,12 +54,12 @@
 
 package org.apache.tools.ant.taskdefs.optional.vss;
 
+
+import java.io.File;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-
-import java.io.File;
 
 /**
  * A base class for creating tasks for executing commands on Visual SourceSafe.
@@ -149,7 +149,6 @@ public abstract class MSVSS extends Task {
         return m_vssPath;
     }
 
-
     protected int run(Commandline cmd) {
         try {
             Execute exe = new Execute(new LogStreamHandler(this, 
@@ -168,7 +167,7 @@ public abstract class MSVSS extends Task {
      * Constant for the thing to execute
      */
     private static final String SS_EXE = "ss";
-	/** */
+    /** */
     public static final String PROJECT_PREFIX = "$";
 
     /**
@@ -188,25 +187,25 @@ public abstract class MSVSS extends Task {
      */
     public static final String COMMAND_HISTORY = "History";
 
-	/** */
+    /** */
     public static final String FLAG_LOGIN = "-Y";
-	/** */
+    /** */
     public static final String FLAG_OVERRIDE_WORKING_DIR = "-GL";
-	/** */
+    /** */
     public static final String FLAG_AUTORESPONSE = "-I";
-	/** */
+    /** */
     public static final String FLAG_RECURSION = "-R";
-	/** */
+    /** */
     public static final String FLAG_VERSION = "-V";
-	/** */
+    /** */
     public static final String FLAG_VERSION_DATE = "-Vd";
-	/** */
+    /** */
     public static final String FLAG_VERSION_LABEL = "-VL";
-	/** */
+    /** */
     public static final String FLAG_WRITABLE = "-W";
-	/** */
+    /** */
     public static final String VALUE_NO = "-N";
-	/** */
+    /** */
     public static final String VALUE_YES = "-Y";
 }
 

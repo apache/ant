@@ -54,10 +54,10 @@
 
 package org.apache.tools.ant.types;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 
 import java.util.Stack;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * Base class for those classes that can appear inside the build file
@@ -95,14 +95,14 @@ public abstract class DataType {
      * in commenting what we are doing.  
      */
     public void setDescription( String desc ) {
-	description=desc;
+        description=desc;
     }
 
     /**
      * Return the description for the current data type.
      */
     public String getDescription() {
-	return description;
+        return description;
     }
 
     /**
@@ -166,7 +166,8 @@ public abstract class DataType {
      * only attribute if it is set.  
      */
     protected BuildException tooManyAttributes() {
-        return new BuildException("You must not specify more than one attribute when using refid");
+        return new BuildException( "You must not specify more than one attribute" +
+                                   " when using refid" );
     }
 
     /**

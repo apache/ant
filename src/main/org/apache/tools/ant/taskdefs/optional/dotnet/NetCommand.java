@@ -1,4 +1,4 @@
-/* -*-Java-*-
+/*
  *******************************************************************
  *
  * File:         CSharp.java
@@ -78,12 +78,12 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 // imports
 
+import java.io.*;
+import java.text.*;
+import java.util.*;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.taskdefs.*;
 import org.apache.tools.ant.types.*;
-import java.io.*;
-import java.util.*;
-import java.text.*;
 
 
 
@@ -232,6 +232,4 @@ public class NetCommand {
             throw new BuildException(_title+" failed: " + e, e, _owner.getLocation());
         }
     }
-
-
 } //class

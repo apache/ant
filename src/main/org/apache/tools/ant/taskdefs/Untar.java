@@ -136,7 +136,7 @@ public class Untar extends Task {
                 }
             }
         } catch (IOException ioe) {
-	    throw new BuildException("Error while expanding " + srcF.getPath(),
+            throw new BuildException("Error while expanding " + srcF.getPath(),
                                      ioe, location);
 	} finally {
 	    if (tis != null) {

@@ -57,8 +57,8 @@ public class JikesOutputParser implements ExecuteStreamHandler {
      * @param task - task in whichs context we are called
      */
     protected JikesOutputParser(Task task, boolean emacsMode) {
-	super();
-	this.task = task;
+        super();
+        this.task = task;
         this.emacsMode = emacsMode;
     }
 
@@ -74,24 +74,24 @@ public class JikesOutputParser implements ExecuteStreamHandler {
     }
 
     private void parseStandardOutput(BufferedReader reader) throws IOException {
-	String line;
-	String lower;
-	// We assume, that every output, jike does, stands for an error/warning
-	// XXX 
-	// Is this correct?
-
+        String line;
+        String lower;
+        // We assume, that every output, jike does, stands for an error/warning
+        // XXX 
+        // Is this correct?
+        
         // TODO:
         // A warning line, that shows code, which contains a variable
         // error will cause some trouble. The parser should definitely
         // be much better.
 
-	while ((line = reader.readLine()) != null) {
-	    lower = line.toLowerCase();
-	    if (line.trim().equals(""))
-		continue;
-	    if (lower.indexOf("error") != -1)
-		setError(true);
-	    else if (lower.indexOf("warning") != -1)
+        while ((line = reader.readLine()) != null) {
+            lower = line.toLowerCase();
+            if (line.trim().equals(""))
+                continue;
+            if (lower.indexOf("error") != -1)
+                setError(true);
+            else if (lower.indexOf("warning") != -1)
                 setError(false);
             else {
                 // If we don't know the type of the line
@@ -104,7 +104,7 @@ public class JikesOutputParser implements ExecuteStreamHandler {
                     setError(true);
             }
             log(line);
-	}
+        }
     }
 
     private void parseEmacsOutput(BufferedReader reader) throws IOException {
@@ -130,6 +130,6 @@ public class JikesOutputParser implements ExecuteStreamHandler {
      * @return if errors ocured
      */
     protected boolean getErrorFlag() {
-	return errorFlag;
+        return errorFlag;
     }
 }

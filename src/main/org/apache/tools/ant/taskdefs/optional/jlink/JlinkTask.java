@@ -177,7 +177,7 @@ public class JlinkTask extends MatchingTask {
             throw new BuildException( ex, location );
         }
     }
-	
+
     private boolean haveAddFiles(){
         return haveEntries(addfiles);
     }
@@ -185,7 +185,7 @@ public class JlinkTask extends MatchingTask {
     private boolean haveMergeFiles(){
         return haveEntries(mergefiles);
     }
-	
+
     private boolean haveEntries(Path p){
         if (p == null){
             return false;

@@ -51,7 +51,6 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant;
 
 import java.util.EventObject;
@@ -64,7 +63,6 @@ public class BuildEvent extends EventObject {
     private int priority = Project.MSG_VERBOSE;
     private Throwable exception;
 
-    
     /**
      * Construct a BuildEvent for a project level event
      *

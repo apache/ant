@@ -325,12 +325,14 @@ public class SQLExec extends Task {
         try {
             Class dc;
             if (classpath != null) {
-		log("Loading " + driver + " using AntClassLoader with classpath " + classpath, Project.MSG_VERBOSE);
+                log( "Loading " + driver + " using AntClassLoader with classpath " + classpath, 
+                     Project.MSG_VERBOSE );
+
                 loader = new AntClassLoader(project, classpath, false);
                 dc = loader.loadClass(driver);
             }
             else {
-		log("Loading " + driver + " using system loader.", Project.MSG_VERBOSE);
+                log("Loading " + driver + " using system loader.", Project.MSG_VERBOSE);
                 dc = Class.forName(driver);
             }
             driverInstance = (Driver) dc.newInstance();
@@ -364,7 +366,7 @@ public class SQLExec extends Task {
             PrintStream out = System.out;
             try {
                 if (output != null) {
-        	    log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
+                    log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
                     out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
                 }
                         

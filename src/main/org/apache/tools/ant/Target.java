@@ -139,9 +139,9 @@ public class Target {
                 try {
                     project.fireTaskStarted(task);
                     task.maybeConfigure();
-               	    task.execute();
+                    task.execute();
                     project.fireTaskFinished(task, null);
-		}
+                }
                 catch(RuntimeException exc) {
                     if (exc instanceof BuildException) {
                         BuildException be = (BuildException) exc;

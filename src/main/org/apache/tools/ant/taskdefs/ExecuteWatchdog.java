@@ -116,25 +116,25 @@ public class ExecuteWatchdog implements Runnable {
      * Watches the process and terminates it, if it runs for to long.
      */
     public synchronized void run() {
-	try {
-	    // This isn't a Task, don't have a Project object to log.
-	    // project.log("ExecuteWatchdog: timeout = "+timeout+" msec",  Project.MSG_VERBOSE);
-	    final long until = System.currentTimeMillis() + timeout;
-	    long now;
-	    while (watch && until > (now = System.currentTimeMillis())) {
-		try {
-		    wait(until - now);
-		} catch (InterruptedException e) {}
-	    }
-	    if (watch) {
-		process.destroy();
-	    }
-	    stop();
-	} catch(Exception e) {
+        try {
+            // This isn't a Task, don't have a Project object to log.
+            // project.log("ExecuteWatchdog: timeout = "+timeout+" msec",  Project.MSG_VERBOSE);
+            final long until = System.currentTimeMillis() + timeout;
+            long now;
+            while (watch && until > (now = System.currentTimeMillis())) {
+                try {
+                    wait(until - now);
+                } catch (InterruptedException e) {}
+            }
+            if (watch) {
+                process.destroy();
+            }
+            stop();
+        } catch(Exception e) {
             caught = e;
         }
     }
-
+    
     public void checkException() throws BuildException {
         if (caught != null) {
             throw new BuildException("Exception in ExecuteWatchdog.run: "

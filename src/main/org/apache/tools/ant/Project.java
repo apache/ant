@@ -316,7 +316,7 @@ public class Project {
 
     public void setBaseDir(File baseDir) {
         this.baseDir = baseDir;
-	setProperty( "basedir", baseDir.getAbsolutePath());
+        setProperty( "basedir", baseDir.getAbsolutePath());
         String msg = "Project base dir set to: " + baseDir;
         log(msg, MSG_VERBOSE);
     }
@@ -429,7 +429,7 @@ public class Project {
     public Task createTask(String taskType) throws BuildException {
         Class c = (Class) taskClassDefinitions.get(taskType);
 
-	if (c == null)
+        if (c == null)
             return null;
         try {
             Object o = c.newInstance();
@@ -462,7 +462,7 @@ public class Project {
     public Object createDataType(String typeName) throws BuildException {
         Class c = (Class) dataClassDefinitions.get(typeName);
 
-	if (c == null)
+        if (c == null)
             return null;
 
         try {

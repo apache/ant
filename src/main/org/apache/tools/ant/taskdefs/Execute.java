@@ -221,10 +221,10 @@ public class Execute {
      * @param wd the working directory of the process.
      */
     public void setWorkingDirectory(File wd) {
-	if (wd == null || wd.getAbsolutePath().equals(antWorkingDirectory))
-	    workingDirectory = null;
-	else
-	    workingDirectory = wd;
+        if (wd == null || wd.getAbsolutePath().equals(antWorkingDirectory))
+            workingDirectory = null;
+        else
+            workingDirectory = wd;
     }
 
     /**
@@ -383,11 +383,12 @@ public class Execute {
          * Launches the given command in a new process, in the given working
          * directory
          */
-        public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
+        public Process exec(Project project, String[] cmd, String[] env, File workingDir) 
+            throws IOException
         {
- 	    try {
-		Object[] arguments = { cmd, env, workingDir };
-		return (Process)_execWithCWD.invoke(Runtime.getRuntime(), arguments);
+            try {
+                Object[] arguments = { cmd, env, workingDir };
+                return (Process)_execWithCWD.invoke(Runtime.getRuntime(), arguments);
             } 
             catch ( InvocationTargetException exc ) {
                 Throwable realexc = exc.getTargetException();
@@ -400,16 +401,16 @@ public class Execute {
                 else {
                     throw new IOException(realexc.getMessage());
                 }
-	    } 
+            } 
             catch ( Exception exc ) {
-		// IllegalAccess, IllegalArgument, ClassCast
-		throw new IOException(exc.getMessage());
-	    }
+                // IllegalAccess, IllegalArgument, ClassCast
+                throw new IOException(exc.getMessage());
+            }
         }
-
+        
         private Method _execWithCWD;
     }
-
+    
     /**
      * A command launcher that proxies another command launcher.  
      *
@@ -458,13 +459,13 @@ public class Execute {
 
             // Use cmd.exe to change to the specified directory before running
             // the command
-	    String[] newcmd = new String[cmd.length+5];
-	    newcmd[0] = "cmd";
-	    newcmd[1] = "/c";
-	    newcmd[2] = "cd";
-	    newcmd[3] = workingDir.getAbsolutePath();
-	    newcmd[4] = "&&";
-	    System.arraycopy(cmd, 0, newcmd, 5, cmd.length);
+            String[] newcmd = new String[cmd.length+5];
+            newcmd[0] = "cmd";
+            newcmd[1] = "/c";
+            newcmd[2] = "cd";
+            newcmd[3] = workingDir.getAbsolutePath();
+            newcmd[4] = "&&";
+            System.arraycopy(cmd, 0, newcmd, 5, cmd.length);
             return exec(project, newcmd, env);
         }
     }
@@ -490,13 +491,13 @@ public class Execute {
                 return exec(project, cmd, env);
             }
 
-	    System.getProperties().put("user.dir", workingDir.getAbsolutePath());
-	    try {
-		return exec(project, cmd, env);
-	    } 
+            System.getProperties().put("user.dir", workingDir.getAbsolutePath());
+            try {
+                return exec(project, cmd, env);
+            } 
             finally {
                 System.getProperties().put("user.dir", antWorkingDirectory);
-	    }
+            }
         }
     }
 
@@ -533,11 +534,11 @@ public class Execute {
             String antRun = project.resolveFile(antHome + File.separator + _script).toString();
 
             // Build the command
-	    String[] newcmd = new String[cmd.length + 2];
-	    newcmd[0] = antRun;
-	    newcmd[1] = workingDir.getAbsolutePath();
-	    System.arraycopy(cmd, 0, newcmd, 2, cmd.length);
-
+            String[] newcmd = new String[cmd.length + 2];
+            newcmd[0] = antRun;
+            newcmd[1] = workingDir.getAbsolutePath();
+            System.arraycopy(cmd, 0, newcmd, 2, cmd.length);
+            
             return exec(project, newcmd, env);
         }
 

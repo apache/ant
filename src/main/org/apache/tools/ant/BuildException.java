@@ -51,7 +51,6 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant;
 
 /**
@@ -59,7 +58,6 @@ package org.apache.tools.ant;
  *
  * @author James Duncan Davidson
  */
-
 public class BuildException extends RuntimeException {
 
     /** Exception that might have caused this one. */
@@ -71,18 +69,16 @@ public class BuildException extends RuntimeException {
     /**
      * Constructs a build exception with no descriptive information.
      */
-
     public BuildException() {
-	super();
+        super();
     }
 
     /**
      * Constructs an exception with the given descriptive message.
      * @param msg Description of or information about the exception.
      */
-
     public BuildException(String msg) {
-	super(msg);
+        super(msg);
     }
 
     /**
@@ -91,10 +87,9 @@ public class BuildException extends RuntimeException {
      * @param msg Description of or information about the exception.
      * @param cause Throwable that might have cause this one.
      */
-
     public BuildException(String msg, Throwable cause) {
-	super(msg);
-	this.cause = cause;
+        super(msg);
+        this.cause = cause;
     }
 
     /**
@@ -104,20 +99,18 @@ public class BuildException extends RuntimeException {
      * @param cause Exception that might have cause this one.
      * @param location Location in the project file where the error occured.
      */
-
     public BuildException(String msg, Throwable cause, Location location) {
         this(msg, cause);
-	this.location = location;
+        this.location = location;
     }
 
     /**
      * Constructs an exception with the given exception as a root cause.
      * @param cause Exception that might have caused this one.
      */
-
     public BuildException(Throwable cause) {
-	super(cause.toString());
-	this.cause = cause;
+        super(cause.toString());
+        this.cause = cause;
     }
 
     /**
@@ -126,10 +119,9 @@ public class BuildException extends RuntimeException {
      * @param msg Description of or information about the exception.
      * @param location Location in the project file where the error occured.
      */
-
     public BuildException(String msg, Location location) {
-	super(msg);
-	this.location = location;
+        super(msg);
+        this.location = location;
     }
 
     /**
@@ -138,10 +130,9 @@ public class BuildException extends RuntimeException {
      * @param cause Exception that might have cause this one.
      * @param location Location in the project file where the error occured.
      */
-
     public BuildException(Throwable cause, Location location) {
         this(cause);
-	this.location = location;
+        this.location = location;
     }
 
     /**

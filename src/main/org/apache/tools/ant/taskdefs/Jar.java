@@ -71,39 +71,39 @@ public class Jar extends Zip {
     
     public Jar() {
         super();
-	archiveType = "jar";
+        archiveType = "jar";
         emptyBehavior = "create";
     }
 
     public void setJarfile(File jarFile) {
-	super.setZipfile(jarFile);
+        super.setZipfile(jarFile);
     }
     
     public void setManifest(File manifestFile) {
-	manifest = manifestFile;
+        manifest = manifestFile;
     }
 
     protected void initZipOutputStream(ZipOutputStream zOut)
-	throws IOException, BuildException
+        throws IOException, BuildException
     {
-	// add manifest first
-	if (manifest != null) {
+        // add manifest first
+        if (manifest != null) {
             zipDir(new File(manifest.getParent()), zOut, "META-INF/");
-	    super.zipFile(manifest, zOut, "META-INF/MANIFEST.MF");
-	} else {
-	    String s = "/org/apache/tools/ant/defaultManifest.mf";
-	    InputStream in = this.getClass().getResourceAsStream(s);
+            super.zipFile(manifest, zOut, "META-INF/MANIFEST.MF");
+        } else {
+            String s = "/org/apache/tools/ant/defaultManifest.mf";
+            InputStream in = this.getClass().getResourceAsStream(s);
             if ( in == null )
-		throw new BuildException ( "Could not find: " + s );
-	    zipDir(null, zOut, "META-INF/");
-	    zipFile(in, zOut, "META-INF/MANIFEST.MF", System.currentTimeMillis());
- 	}
-     }
+                throw new BuildException ( "Could not find: " + s );
+            zipDir(null, zOut, "META-INF/");
+            zipFile(in, zOut, "META-INF/MANIFEST.MF", System.currentTimeMillis());
+        }
+    }
 
     protected boolean isUpToDate(FileScanner[] scanners, File zipFile) throws BuildException
     {
         File[] files = grabFiles(scanners);
-
+        
         if (manifest != null) {
             // just add the manifest file to the mix
 

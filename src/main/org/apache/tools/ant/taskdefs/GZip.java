@@ -103,17 +103,17 @@ public class GZip extends Task {
         } catch (IOException ioe) {
             String msg = "Problem creating gzip " + ioe.getMessage();
             throw new BuildException(msg, ioe, location);
-	} finally {
-	    if (zOut != null) {
-	        try {
+        } finally {
+            if (zOut != null) {
+                try {
                     // close up
-	            zOut.close();
-	        }
-	        catch (IOException e) {}
-	    }
+                    zOut.close();
+                }
+                catch (IOException e) {}
+            }
         }
     }
-
+    
     private void zipFile(InputStream in, GZIPOutputStream zOut)
         throws IOException
     {        

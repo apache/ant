@@ -51,7 +51,6 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.*;
@@ -345,9 +344,9 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             
             // now the vendor specific files, if any             
             addVendorFiles(ejbFiles, baseName);
-			
-		    // add any inherited files
-		    checkAndAddInherited(ejbFiles);
+
+            // add any inherited files
+            checkAndAddInherited(ejbFiles);
 
             // Lastly create File object for the Jar files. If we are using
             // a flat destination dir, then we need to redefine baseName!

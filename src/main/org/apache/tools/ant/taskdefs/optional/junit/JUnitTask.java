@@ -137,11 +137,11 @@ public class JUnitTask extends Task {
     }
 
     public void setJvm(String value) {
-	commandline.setVm(value);
+        commandline.setVm(value);
     }
 
     public Commandline.Argument createJvmarg() {
-	return commandline.createVmArgument();
+        return commandline.createVmArgument();
     }
 
     public Path createClasspath() {
