@@ -453,6 +453,7 @@ but excludes all &quot;*.gif&quot; files from the copy.</p>
   <li><a href="#expand">Expand</a></li>
   <li><a href="#filter">Filter</a></li>
   <li><a href="#get">Get</a></li>
+  <li><a href="#gunzip">GUnzip</a></li>
   <li><a href="#gzip">GZip</a></li>
   <li><a href="#fixcrlf">FixCRLF</a></li>
   <li><a href="#jar">Jar</a></li>
@@ -468,6 +469,7 @@ but excludes all &quot;*.gif&quot; files from the copy.</p>
   <li><a href="#tar">Tar</a></li>
   <li><a href="#taskdef">Taskdef</a></li>
   <li><a href="#tstamp">Tstamp</a></li>
+  <li><a href="#untar">Untar</a></li>
   <li><a href="#zip">Zip</a></li>
 </ul>
 <hr>
@@ -942,6 +944,50 @@ archive with http/ftp.</p>
 <h3>Examples</h3>
 <pre>  &lt;get src=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot; /&gt;</pre>
 <p>gets the index page of http://jakarta.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
+<hr>
+<h2><a name="gunzip">GUnzip</a></h2>
+<h3>Description</h3>
+<p>Expands a GZip file.</p>
+
+<p>If <i>dest</i> is a directory the name of the destination file is
+the same as <i>src</i> (with the &quot;.gz&quot; extension removed if
+present). If <i>dest</i> is ommited, the parent dir of <i>src</i> is
+taken. The file is only expanded if the source file is newer than the
+destination file, or when the destination file does not exist.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the file to expand.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the destination file or directory.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot;/&gt;</code></p>
+</blockquote>
+<p>expands <i>test.tar.gz</i> to <i>test.tar</i></p>
+<blockquote>
+  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;test2.tar&quot;/&gt;</code></p>
+</blockquote>
+<p>expands <i>test.tar.gz</i> to <i>test2.tar</i></p>
+<blockquote>
+  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;subdir&quot;/&gt;</code></p>
+</blockquote>
+<p>expands <i>test.tar.gz</i> to <i>subdir/test.tar</i> (assuming
+subdir is a directory).</p>
+
 <hr>
 <h2><a name="gzip">GZip</a></h2>
 <h3>Description</h3>
@@ -2001,6 +2047,35 @@ initialization target.</p>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;tstamp/&gt;</pre>
+<hr>
+<h2><a name="untar">Untar</a></h2>
+<h3>Description</h3>
+<p>Untars a tarfile.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">tarfile to expand.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">directory where to store the expanded files.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>
+&lt;gunzip src=&quot;tools.tar.gz&quot;/&gt;<br>
+&lt;untar src=&quot;tools.tar&quot; dest=&quot;${tools.home}&quot;/&gt;
+</code></p>
+</blockquote>
 <hr>
 <h2><a name="zip">Zip</a></h2>
 <h3>Description</h3>
