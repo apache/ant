@@ -55,7 +55,6 @@
  -->
 
 <xsl:output method="html" indent="yes"  encoding="US-ASCII"/>
-<xsl:decimal-format decimal-separator="." grouping-separator="," />
 
 <xsl:template match="JDepend">
 	<html>
@@ -166,9 +165,9 @@
 				<td align="right"><xsl:value-of select="Stats/ConcreteClasses"/></td>
 				<td align="right"><xsl:value-of select="Stats/Ca"/></td>
 				<td align="right"><xsl:value-of select="Stats/Ce"/></td>
-				<td align="right"><xsl:value-of select="format-number(Stats/A, '0%')"/></td>
-				<td align="right"><xsl:value-of select="format-number(Stats/I, '0%')"/></td>
-				<td align="right"><xsl:value-of select="format-number(Stats/D, '0%')"/></td>
+				<td align="right"><xsl:value-of select="Stats/A"/></td>
+				<td align="right"><xsl:value-of select="Stats/I"/></td>
+				<td align="right"><xsl:value-of select="Stats/D"/></td>
 				
 
 			</tr>
@@ -203,9 +202,9 @@
 			<table width="100%"><tr>
 				<td><a href="#EXafferent">Afferent Couplings</a>: <xsl:value-of select="Stats/Ca"/></td>
 				<td><a href="#EXefferent">Efferent Couplings</a>: <xsl:value-of select="Stats/Ce"/></td>
-				<td><a href="#EXabstractness">Abstractness</a>: <xsl:value-of select="format-number(Stats/A, '0%')"/></td>
-				<td><a href="#EXinstability">Instability</a>: <xsl:value-of select="format-number(Stats/I, '0%')"/></td>
-				<td><a href="#EXdistance">Distance</a>: <xsl:value-of select="format-number(Stats/D, '0%')"/></td>
+				<td><a href="#EXabstractness">Abstractness</a>: <xsl:value-of select="Stats/A"/></td>
+				<td><a href="#EXinstability">Instability</a>: <xsl:value-of select="Stats/I"/></td>
+				<td><a href="#EXdistance">Distance</a>: <xsl:value-of select="Stats/D"/></td>
 			</tr></table>
 			
 			<table width="100%" class="details">

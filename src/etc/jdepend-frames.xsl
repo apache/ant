@@ -3,7 +3,6 @@
   xmlns:redirect="org.apache.xalan.xslt.extensions.Redirect"
   extension-element-prefixes="redirect">
 <xsl:output method="html" indent="yes" encoding="US-ASCII"/>
-<xsl:decimal-format decimal-separator="." grouping-separator=","/>
 <!--
  The Apache Software License, Version 1.1
 
@@ -230,9 +229,9 @@
                      <td align="right"><xsl:value-of select="Stats/ConcreteClasses"/></td>
                      <td align="right"><xsl:value-of select="Stats/Ca"/></td>
                      <td align="right"><xsl:value-of select="Stats/Ce"/></td>
-                     <td align="right"><xsl:value-of select="format-number(Stats/A, '0%')"/></td>
-                     <td align="right"><xsl:value-of select="format-number(Stats/I, '0%')"/></td>
-                     <td align="right"><xsl:value-of select="format-number(Stats/D, '0%')"/></td>
+                     <td align="right"><xsl:value-of select="Stats/A"/></td>
+                     <td align="right"><xsl:value-of select="Stats/I"/></td>
+                     <td align="right"><xsl:value-of select="Stats/D"/></td>
                   </tr>
                </xsl:if>
             </xsl:for-each>
@@ -274,9 +273,9 @@
       <table width="100%"><tr>
         <td><a href="overview-explanations.html#EXafferent">Afferent Couplings</a>: <xsl:value-of select="Stats/Ca"/></td>
         <td><a href="overview-explanations.html#EXefferent">Efferent Couplings</a>: <xsl:value-of select="Stats/Ce"/></td>
-        <td><a href="overview-explanations.html#EXabstractness">Abstractness</a>: <xsl:value-of select="format-number(Stats/A, '0%')"/></td>
-        <td><a href="overview-explanations.html#EXinstability">Instability</a>: <xsl:value-of select="format-number(Stats/I, '0%')"/></td>
-        <td><a href="overview-explanations.html#EXdistance">Distance</a>: <xsl:value-of select="format-number(Stats/D, '0%')"/></td>
+        <td><a href="overview-explanations.html#EXabstractness">Abstractness</a>: <xsl:value-of select="Stats/A"/></td>
+        <td><a href="overview-explanations.html#EXinstability">Instability</a>: <xsl:value-of select="Stats/I"/></td>
+        <td><a href="overview-explanations.html#EXdistance">Distance</a>: <xsl:value-of select="Stats/D"/></td>
       </tr></table>
       
       <table width="100%" class="details">
