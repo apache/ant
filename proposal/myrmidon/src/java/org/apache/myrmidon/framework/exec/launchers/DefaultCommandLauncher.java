@@ -14,8 +14,6 @@ import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.exec.CommandLauncher;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Commandline;
 
 /**
  * A command launcher for a particular JVM/OS platform. This class is a
