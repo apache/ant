@@ -38,12 +38,19 @@
     -->
   </target>
   
+  <target name="test_single_file_fileset">
+    <copy tofile="copytest_single_file_fileset.tmp">
+      <fileset dir="." includes="copy.xml"/>
+    </copy>
+  </target>
+  
   <target name="cleanup"> 
     <delete file="copytest1.tmp"/>
     <delete file="copytest3.tmp"/>
     <delete file="copytest3a.tmp"/>
     <delete file="copytest3b.tmp"/>
     <delete file="copytest3c.tmp"/>
+    <delete file="copytest_single_file_fileset.tmp"/>
     <delete dir="copytest1dir"/>
   </target>
 

@@ -326,7 +326,7 @@ public class Copy extends Task {
 
                 if (srcFiles.length > 0) {
                     if (file == null) {
-                        file = new File(srcFiles[0]);
+                        file = new File(ds.getBasedir(), srcFiles[0]);
                         filesets.removeElementAt(0);
                     } else {
                         throw new BuildException(
