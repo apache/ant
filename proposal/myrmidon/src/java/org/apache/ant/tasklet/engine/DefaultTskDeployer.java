@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import org.apache.ant.datatypes.DataTypeEngine;
 import org.apache.ant.convert.ConverterEngine;
 import org.apache.ant.convert.ConverterRegistry;
 import org.apache.ant.convert.DefaultConverterInfo;
@@ -82,7 +81,7 @@ public class DefaultTskDeployer
         m_converterRegistry = converterEngine.getRegistry();
 
         final DataTypeEngine dataTypeEngine = (DataTypeEngine)componentManager.
-            lookup( "org.apache.ant.datatypes.DataTypeEngine" );
+            lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
         
         m_dataTypeRegistry = dataTypeEngine.getRegistry();
     }

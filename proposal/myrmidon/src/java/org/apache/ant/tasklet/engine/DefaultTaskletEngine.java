@@ -14,7 +14,6 @@ import org.apache.ant.configuration.Configuration;
 import org.apache.ant.configuration.Configurer;
 import org.apache.ant.configuration.DefaultConfigurer;
 import org.apache.ant.convert.ConverterEngine;
-import org.apache.ant.datatypes.DataTypeEngine;
 import org.apache.ant.tasklet.Tasklet;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.AbstractLoggable;
@@ -89,14 +88,14 @@ public class DefaultTaskletEngine
         m_componentManager = componentManager;
 
         m_factory = (Factory)componentManager.lookup( "org.apache.avalon.camelot.Factory" );
-        m_tskDeployer = 
-            (TskDeployer)componentManager.lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
-        m_configurer = 
-            (Configurer)componentManager.lookup( "org.apache.ant.configuration.Configurer" );
-        m_dataTypeEngine =
-            (DataTypeEngine)componentManager.lookup( "org.apache.ant.datatypes.DataTypeEngine" );
-        m_converterEngine =
-            (ConverterEngine)componentManager.lookup( "org.apache.ant.convert.ConverterEngine" );
+        m_tskDeployer = (TskDeployer)componentManager.
+            lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
+        m_configurer = (Configurer)componentManager.
+            lookup( "org.apache.ant.configuration.Configurer" );
+        m_dataTypeEngine = (DataTypeEngine)componentManager.
+            lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
+        m_converterEngine = (ConverterEngine)componentManager.
+            lookup( "org.apache.ant.convert.ConverterEngine" );
     }
 
     public void execute( final Configuration task, 
