@@ -1,168 +1,187 @@
 <?xml version="1.0"?>
 <document>
 
-  <properties>
-    <title>On Librarys in Ant2</title>
-    <author email="peter@apache.org">Peter Donald</author>
-  </properties>
+    <properties>
+        <title>On Librarys in Ant2</title>
+        <author email="peter@apache.org">Peter Donald</author>
+    </properties>
 
-<body>
+    <body>
 
-<section name="Library Management">
+        <section name="Library Management">
 
-<p>Long ago there was identified the need for librarys that contain
-tasks and other elements present in the build file. This document
-attempts to describe the mechanism via which these libraries will be
-defined and used in Ant2. The librarys (also referred to as
-deployments) will be termed antlibs.</p>
+            <p>Long ago there was identified the need for librarys that contain
+            tasks and other elements present in the build file. This document
+            attempts to describe the mechanism via which these libraries will be
+            defined and used in Ant2. The librarys (also referred to as
+            deployments) will be termed antlibs.</p>
 
-<p>Ant librarys can be packaged and signed into a ANt Type Library
-format (.atl) using the standard Java Archive tools. (For details on
-the .jar file format see the
-<a href="http://java.sun.com/j2se/1.3/docs/guide/jar/index.html">
-Jar Specification</a>.</p>
+            <p>Ant librarys can be packaged and signed into a ANt Type Library
+            format (.atl) using the standard Java Archive tools. (For details on
+            the .jar file format see the
 
-<p>When packaged into such a form the META-INF/ directory contains
-ant specific descriptors in addition to the standard Jar manifest
-and other descriptor files. The archive will also contain the
-<code>.class</code> files for all the tasks and other types the
-library defines. It may also contain additional resources that can
-be referenced in the build file (an example being DTDs).</p>
+                <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/index.html">
+                           Jar Specification</a>.
+            </p>
 
-<p>The library may also need access to other librarys or resources
-to perform its job. For instance, if the task loaded an XML document
-and then processed said document using the <em>Trax API</em> then
-the Ant library needs to have access to the <em>Trax API</em> and an
-implementation of the API. The Antlib mechanism thus uses the standard
-"Optional Package" Specification to declare dependencies on other
-libraries.</p>
+            <p>When packaged into such a form the META-INF/ directory contains
+            ant specific descriptors in addition to the standard Jar manifest
+            and other descriptor files. The archive will also contain the
 
-<p>The libraries will usually be installed in standard locations that
-make it possible for the Ant container to automatically locate and scan
-the libraries. It will also be possible for the users to specify
-additional search locations or even the specific location of ant
-libraries.</p>
+                <code>.class</code> files for all the tasks and other types the
+            library defines. It may also contain additional resources that can
+            be referenced in the build file (an example being DTDs).
+            </p>
 
-<p>The following sections will describe each of these different facets
-in greater detail.</p>
+            <p>The library may also need access to other librarys or resources
+            to perform its job. For instance, if the task loaded an XML document
+            and then processed said document using the
+                <em>Trax API</em> then
+            the Ant library needs to have access to the
+                <em>Trax API</em> and an
+            implementation of the API. The Antlib mechanism thus uses the standard
+            "Optional Package" Specification to declare dependencies on other
+            libraries.
+            </p>
 
-<subsection name="Descriptors">
+            <p>The libraries will usually be installed in standard locations that
+            make it possible for the Ant container to automatically locate and scan
+            the libraries. It will also be possible for the users to specify
+            additional search locations or even the specific location of ant
+            libraries.</p>
 
-<p>FIXME: Import this part from other doco</p>
+            <p>The following sections will describe each of these different facets
+            in greater detail.</p>
 
-</subsection>
+            <subsection name="Descriptors">
 
-<subsection name="Class and Resource Files">
+                <p>FIXME: Import this part from other doco</p>
 
-<p>The class and resources files should be stored as in standard jars. The
-root directory being the base via which code and resources are loaded. So
-the <code>.class</code> file for the Java class <code>com.biz.tasks.Mytask</code>
-would be stored in <code>/com/biz/tasks/Mytask.class</code></p>
+            </subsection>
 
-</subsection>
+            <subsection name="Class and Resource Files">
 
-<subsection name="Dependencies">
+                <p>The class and resources files should be stored as in standard jars. The
+                root directory being the base via which code and resources are loaded. So
+                the
+                    <code>.class</code> file for the Java class
+                    <code>com.biz.tasks.Mytask</code>
+                would be stored in
+                    <code>/com/biz/tasks/Mytask.class</code>
+                </p>
 
-<p>It is often the case that a library will need external resources. The
-example given above described dependence on an external XML library. The
-ant library thus needs a mechanism via which to declare dependencies on
-external libraries.</p>
+            </subsection>
 
-<p>Ant2 uses the "Optional Package" mechanism. Prior to JDK1.3, an "Optional
-Package" was known as an <em>Extension</em>. The specification for this
-mechanism is available in the JDK1.3 documentation in the directory
-<code>$JDK_HOME/docs/guide/extensions/versioning.html</code>. Alternatively
-it is available online at
-<a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html">
-http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.</p>
+            <subsection name="Dependencies">
 
-<p>This mechanism was adopted as it is an established standard. The standard
-is also begining to be adopted by other specifications such as the <em>Servlet
-2.3 API</em>. Thus we are likely to see an increase of jars using this mechanism
-to specify dependencies.</p>
+                <p>It is often the case that a library will need external resources. The
+                example given above described dependence on an external XML library. The
+                ant library thus needs a mechanism via which to declare dependencies on
+                external libraries.</p>
 
-<p>The "Optional Package" mechanism allows jars to specify dependencies on other
-jars that implement a particular specification at particular version levels. For
-example you could specify a dependency on the Trax 1.1 API by adding the following
-to the manifest of your jar.</p>
+                <p>Ant2 uses the "Optional Package" mechanism. Prior to JDK1.3, an "Optional
+                Package" was known as an
+                    <em>Extension</em>. The specification for this
+                mechanism is available in the JDK1.3 documentation in the directory
 
-<source>
-Extension-List: trax
-trax-Extension-Name: Java API for XML Parsing
-trax-Specification-Version: 1.1
-</source>
+                    <code>$JDK_HOME/docs/guide/extensions/versioning.html</code>. Alternatively
+                it is available online at
 
-<p>In some cases you may also wish to specify a dependency on a specific vendors
-implementation. For instance you may need to use xalan due to it implementing a
-particular extension you need. In that case you manifest may contain;</p>
+                    <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html">
+                                   http://java.sun.com/j2se/1.3/docs/guide/extensions/versioning.html</a>.
+                </p>
 
-<source>
-Extension-List: trax
-trax-Extension-Name: Java API for XML Parsing
-trax-Specification-Version: 1.1
-trax-Implementation-Title: org.apache.xalan.xslt
-trax-Implementation-Version: 2.1.0
-trax-Implementation-Vendor: Apache Software Foundation
-</source>
+                <p>This mechanism was adopted as it is an established standard. The standard
+                is also begining to be adopted by other specifications such as the
+                    <em>Servlet
+                                   2.3 API</em>. Thus we are likely to see an increase of jars using this mechanism
+                to specify dependencies.
+                </p>
 
-<p>In many cases there will be no distinction between the specification and
-the implementation of a library. For instance the Velocity project only has
-one implementation and one specification. In which case it is sufficient to
-just declare a dependency on the Velocity "Specification". A library that uses
-both the Trax API and the Velocity project may look like;</p>
+                <p>The "Optional Package" mechanism allows jars to specify dependencies on other
+                jars that implement a particular specification at particular version levels. For
+                example you could specify a dependency on the Trax 1.1 API by adding the following
+                to the manifest of your jar.</p>
 
-<source>
-Extension-List: trax velocity
-velocity-Extension-Name: org.apache.velocity
-velocity-Specification-Version: 1.0
-trax-Extension-Name: Java API for XML Parsing
-trax-Specification-Version: 1.1
-trax-Implementation-Title: org.apache.xalan.xslt
-trax-Implementation-Version: 2.1.0
-trax-Implementation-Vendor: Apache Software Foundation
-</source>
+                <source>
+                Extension-List: trax
+                trax-Extension-Name: Java API for XML Parsing
+                trax-Specification-Version: 1.1
+                </source>
 
-<p>To make other jars available to Ant librarys as "Optional Packages"
-or Extensions then you need to add a few lines to the manifest of the
-other jar. The minimal manifest is the following;</p>
+                <p>In some cases you may also wish to specify a dependency on a specific vendors
+                implementation. For instance you may need to use xalan due to it implementing a
+                particular extension you need. In that case you manifest may contain;</p>
 
-<source>
-Extension-Name: org.realityforge.dve
-Specification-Vendor: Peter Donald
-Specification-Version: 1.0
-</source>
+                <source>
+                Extension-List: trax
+                trax-Extension-Name: Java API for XML Parsing
+                trax-Specification-Version: 1.1
+                trax-Implementation-Title: org.apache.xalan.xslt
+                trax-Implementation-Version: 2.1.0
+                trax-Implementation-Vendor: Apache Software Foundation
+                </source>
 
-<p>It is important to note that looking for dependencies is recursive. For example,
-if the ant library depends upon jar A and and A depends on B then both A and B will
-need to be loaded by the container.</p>
+                <p>In many cases there will be no distinction between the specification and
+                the implementation of a library. For instance the Velocity project only has
+                one implementation and one specification. In which case it is sufficient to
+                just declare a dependency on the Velocity "Specification". A library that uses
+                both the Trax API and the Velocity project may look like;</p>
 
-</subsection>
+                <source>
+                Extension-List: trax velocity
+                velocity-Extension-Name: org.apache.velocity
+                velocity-Specification-Version: 1.0
+                trax-Extension-Name: Java API for XML Parsing
+                trax-Specification-Version: 1.1
+                trax-Implementation-Title: org.apache.xalan.xslt
+                trax-Implementation-Version: 2.1.0
+                trax-Implementation-Vendor: Apache Software Foundation
+                </source>
 
-<subsection name="Implementation Notes">
+                <p>To make other jars available to Ant librarys as "Optional Packages"
+                or Extensions then you need to add a few lines to the manifest of the
+                other jar. The minimal manifest is the following;</p>
 
-<p>So far there has been no mention of implementation strategies for
-managing ClassLoaders and other details about where the "Optional Packages"
-are stored. This section will outline such details but they could change
-in the future. The above specification will still be accurate but the approach
-to implementing specification will be different.</p>
+                <source>
+                Extension-Name: org.realityforge.dve
+                Specification-Vendor: Peter Donald
+                Specification-Version: 1.0
+                </source>
 
-<p>In the current architecture all of the "Optional Packages" are assumed to
-be stored in the <code>$ANT_HOME/ext</code> directory. The runtime will scan
-this directory for jars and add all the "optional Packages" found into a
-registry. This registry will be used by the library loading mechanism to locate
-all the "Optional Packages". The user is able to specify an alternative directory
-or add a new directory to search on the commandline.</p>
+                <p>It is important to note that looking for dependencies is recursive. For example,
+                if the ant library depends upon jar A and and A depends on B then both A and B will
+                need to be loaded by the container.</p>
 
-<p>When the container attempts to load an ant library it will also try to load
-any needed dependencies. First it will check the parent ClassLoaders to see if any
-of them contain the required dependencies. If not then it will search the
-"Optional Packages" registry. If the dependency is not found then a error will be
-signaled. If the dependency is found in the "Optional Packages" registry then it is
-loaded by the same ClassLoader that is used to load the Ant library.</p>
+            </subsection>
 
-</subsection>
+            <subsection name="Implementation Notes">
 
-</section>
+                <p>So far there has been no mention of implementation strategies for
+                managing ClassLoaders and other details about where the "Optional Packages"
+                are stored. This section will outline such details but they could change
+                in the future. The above specification will still be accurate but the approach
+                to implementing specification will be different.</p>
 
-</body>
+                <p>In the current architecture all of the "Optional Packages" are assumed to
+                be stored in the
+                    <code>$ANT_HOME/ext</code> directory. The runtime will scan
+                this directory for jars and add all the "optional Packages" found into a
+                registry. This registry will be used by the library loading mechanism to locate
+                all the "Optional Packages". The user is able to specify an alternative directory
+                or add a new directory to search on the commandline.
+                </p>
+
+                <p>When the container attempts to load an ant library it will also try to load
+                any needed dependencies. First it will check the parent ClassLoaders to see if any
+                of them contain the required dependencies. If not then it will search the
+                "Optional Packages" registry. If the dependency is not found then a error will be
+                signaled. If the dependency is found in the "Optional Packages" registry then it is
+                loaded by the same ClassLoader that is used to load the Ant library.</p>
+
+            </subsection>
+
+        </section>
+
+    </body>
 </document>
