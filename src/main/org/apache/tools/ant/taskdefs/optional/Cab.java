@@ -266,9 +266,6 @@ public class Cab extends MatchingTask {
                                            new String[] {"listcab"}, null,
                                            baseDir, true);
                 OutputStream out = p.getOutputStream();
-                out.write(sb.toString().getBytes());
-                out.flush();
-                out.close();
 
                 // Create the stream pumpers to forward listcab's stdout and stderr to the log
                 // note: listcab is an interactive program, and issues prompts for every new line.
@@ -281,6 +278,10 @@ public class Cab extends MatchingTask {
                 // Pump streams asynchronously
                 (new Thread(outPump)).start();
                 (new Thread(errPump)).start();
+
+                out.write(sb.toString().getBytes());
+                out.flush();
+                out.close();
 
                 int result = -99; // A wild default for when the thread is interrupted
 

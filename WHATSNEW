@@ -28,6 +28,8 @@ Fixed bugs:
 * The "plain" <junit> <formatter> could throw a NullPointerException
   if an error occured in setUp.
 
+* <cab> could hang listcab on large <fileset>s.
+
 Other changes:
 --------------
 
