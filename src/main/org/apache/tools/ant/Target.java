@@ -219,14 +219,9 @@ public class Target implements TaskContainer {
      * @since Ant 1.6
      */
     public boolean dependsOn(String other) {
-        if (getProject() != null) {
-            List l = getProject().topoSort(getName(),
-                                           getProject().getTargets());
-            int myIdx = l.indexOf(this);
-            int otherIdx = l.indexOf(getProject().getTargets().get(other));
-            return myIdx >= otherIdx;
-        }
-        return false;
+        Project p = getProject();
+        Hashtable t = (p == null) ? null : p.getTargets();
+        return (p != null && p.topoSort(getName(), t, false).contains(t.get(other)));
     }
 
     /**

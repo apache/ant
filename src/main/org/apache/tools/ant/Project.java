@@ -1181,14 +1181,11 @@ public class Project {
             throw new BuildException(msg);
         }
 
-        // Sort the dependency tree, and run everything from the
-        // beginning until we hit our targetName.
+        // Sort and run the dependency tree.
         // Sorting checks if all the targets (and dependencies)
         // exist, and if there is any cycle in the dependency
         // graph.
-        Vector sortedTargets = topoSort(targetName, targets);
-        sortedTargets.setSize(sortedTargets.indexOf(targets.get(targetName)) + 1);
-        executeSortedTargets(sortedTargets);
+        executeSortedTargets(topoSort(targetName, targets, false));
     }
 
     /**
@@ -1557,38 +1554,65 @@ public class Project {
     }
 
     /**
-     * Topologically sorts a set of targets.
+     * Topologically sorts a set of targets.  Equivalent to calling
+     * <CODE>topoSort(new String[] {root}, targets, true)</CODE>.
      *
      * @param root The name of the root target. The sort is created in such
      *             a way that the sequence of Targets up to the root
      *             target is the minimum possible such sequence.
      *             Must not be <code>null</code>.
-     * @param targets A map of names to targets (String to Target).
+     * @param targets A Hashtable mapping names to Targets.
      *                Must not be <code>null</code>.
-     * @return a vector of Target objects in sorted order.
+     * @return a Vector of ALL Target objects in sorted order.
      * @exception BuildException if there is a cyclic dependency among the
      *                           targets, or if a named target does not exist.
      */
     public final Vector topoSort(String root, Hashtable targets)
         throws BuildException {
-        return topoSort(new String[] {root}, targets);
+        return topoSort(new String[] {root}, targets, true);
+    }
+
+    /**
+     * Topologically sorts a set of targets.  Equivalent to calling
+     * <CODE>topoSort(new String[] {root}, targets, returnAll)</CODE>.
+     *
+     * @param root The name of the root target. The sort is created in such
+     *             a way that the sequence of Targets up to the root
+     *             target is the minimum possible such sequence.
+     *             Must not be <code>null</code>.
+     * @param targets A Hashtable mapping names to Targets.
+     *                Must not be <code>null</code>.
+     * @param returnAll <CODE>boolean</CODE> indicating whether to return all
+     *                  targets, or the execution sequence only.
+     * @return a Vector of Target objects in sorted order.
+     * @exception BuildException if there is a cyclic dependency among the
+     *                           targets, or if a named target does not exist.
+     * @since Ant 1.6.3
+     */
+    public final Vector topoSort(String root, Hashtable targets,
+                                 boolean returnAll) throws BuildException {
+        return topoSort(new String[] {root}, targets, returnAll);
     }
 
     /**
      * Topologically sorts a set of targets.
      *
      * @param root <CODE>String[]</CODE> containing the names of the root targets.
-     *             The sort is created in such a way that the sequence of Targets
-     *             up to the root target is the minimum possible such sequence.
+     *             The sort is created in such a way that the ordered sequence of
+     *             Targets is the minimum possible such sequence to the specified
+     *             root targets.
      *             Must not be <code>null</code>.
      * @param targets A map of names to targets (String to Target).
      *                Must not be <code>null</code>.
-     * @return a vector of Target objects in sorted order.
+     * @param returnAll <CODE>boolean</CODE> indicating whether to return all
+     *                  targets, or the execution sequence only.
+     * @return a Vector of Target objects in sorted order.
      * @exception BuildException if there is a cyclic dependency among the
      *                           targets, or if a named target does not exist.
+     * @since Ant 1.6.3
      */
-    public final Vector topoSort(String[] root, Hashtable targets)
-        throws BuildException {
+    public final Vector topoSort(String[] root, Hashtable targets,
+                                 boolean returnAll) throws BuildException {
         Vector ret = new Vector();
         Hashtable state = new Hashtable();
         Stack visiting = new Stack();
@@ -1602,7 +1626,13 @@ public class Project {
         // build Target.
 
         for (int i = 0; i < root.length; i++) {
-            tsort(root[i], targets, state, visiting, ret);
+            String st = (String)(state.get(root[i]));
+            if (st == null) {
+                tsort(root[i], targets, state, visiting, ret);
+            } else if (st == VISITING) {
+                throw new RuntimeException("Unexpected node in visiting state: "
+                    + root[i]);
+            }
         }
         StringBuffer buf = new StringBuffer("Build sequence for target(s)");
 
@@ -1612,17 +1642,18 @@ public class Project {
         buf.append(" is " + ret);
         log(buf.toString(), MSG_VERBOSE);
 
+        Vector complete = (returnAll) ? ret : new Vector(ret);
         for (Enumeration en = targets.keys(); en.hasMoreElements();) {
             String curTarget = (String) en.nextElement();
             String st = (String) state.get(curTarget);
             if (st == null) {
-                tsort(curTarget, targets, state, visiting, ret);
+                tsort(curTarget, targets, state, visiting, complete);
             } else if (st == VISITING) {
                 throw new RuntimeException("Unexpected node in visiting state: "
                     + curTarget);
             }
         }
-        log("Complete build sequence is " + ret, MSG_VERBOSE);
+        log("Complete build sequence is " + complete, MSG_VERBOSE);
         return ret;
     }
 

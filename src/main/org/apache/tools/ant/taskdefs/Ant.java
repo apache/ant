@@ -397,12 +397,9 @@ public class Ant extends Task {
                     String[] nameArray =
                         (String[])(locals.toArray(new String[locals.size()]));
 
-                    Hashtable targets = newProject.getTargets();
-                    Vector sortedTargets = newProject.topoSort(nameArray, targets);
+                    newProject.executeSortedTargets(newProject.topoSort(
+                        nameArray, newProject.getTargets(), false));
 
-                    sortedTargets.setSize(sortedTargets.indexOf(targets.get(
-                        locals.lastElement())) + 1);
-                    newProject.executeSortedTargets(sortedTargets);
                 } catch (BuildException ex) {
                     t = ProjectHelper
                         .addLocationToBuildException(ex, getLocation());

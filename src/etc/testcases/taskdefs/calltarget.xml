@@ -65,6 +65,13 @@
         </antcall>
     </target>
 
+    <target name="multiple-targets-2">
+      <ant antfile="ant.xml">
+        <target name="tb" />
+        <target name="da" />
+      </ant>
+    </target>
+
     <target name="ta"><echo>ta</echo></target>
     <target name="tb" depends="da,dc"><echo>tb</echo></target>
     <target name="tc" depends="db,dc"><echo>tc</echo></target>

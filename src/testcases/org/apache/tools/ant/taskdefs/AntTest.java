@@ -303,6 +303,10 @@ public class AntTest extends BuildFileTest {
         expectLog("multiple-targets", "tadadctbdbtc");
     }
 
+    public void testMultipleTargets2() {
+        expectLog("multiple-targets-2", "dadctb");
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;

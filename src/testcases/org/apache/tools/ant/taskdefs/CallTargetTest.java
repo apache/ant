@@ -63,6 +63,10 @@ public class CallTargetTest extends BuildFileTest {
         expectLog("multiple-targets", "tadadctbdbtc");
     }
 
+    public void testMultipleTargets2() {
+        expectLog("multiple-targets-2", "dadctb");
+    }
+
     public void tearDown() {
         project.executeTarget("cleanup");
     }
