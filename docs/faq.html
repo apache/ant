@@ -895,12 +895,16 @@ shell-prompt&gt; cat &lt; foo
     </td></tr>
     <tr><td>
       <blockquote>
-                              <p>Execute the command shell instead, then pass the batch file or
-           shell script as a single command, using the <code>/c</code> or
+                              <p>On native Unix systems, you should be able to run shell scripts
+           directly. On systems running a Unix-type shell (for example, Cygwin
+           on Windows) execute the (command) shell instead - <code>cmd</code>
+           for batch files, <code>sh</code> for shell scripts - then pass the
+           batch file or shell script (plus any arguments to the script)
+           as a single command, using the <code>/c</code> or
            <code>-c</code> switch, respectively. See
            <a href="#shell-redirect-2">the above section</a>
            for example <code>&lt;exec&gt;</code> tasks
-           executing <code>sh</code>. On Windows, use something like:</p>
+           executing <code>sh</code>. For batch files, use something like:</p>
                                           <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
       <tr>
@@ -911,7 +915,7 @@ shell-prompt&gt; cat &lt; foo
       <tr>
         <td bgcolor="#023264" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
         <td bgcolor="#ffffff"><pre>
-&lt;exec dir=&quot;.&quot; executable=&quot;cmd.exe&quot; os=&quot;Windows NT&quot;&gt;
+&lt;exec dir=&quot;.&quot; executable=&quot;cmd&quot; os=&quot;Windows NT&quot;&gt;
   &lt;arg line=&quot;/c test.bat&quot;/&gt;
 &lt;/exec&gt;
 </pre></td>

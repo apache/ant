@@ -330,14 +330,18 @@ shell-prompt> cat < foo
       <question>How do I execute a batch file or shell script from Ant?</question>
       <answer>
 
-        <p>Execute the command shell instead, then pass the batch file or
-           shell script as a single command, using the <code>/c</code> or
+        <p>On native Unix systems, you should be able to run shell scripts
+           directly. On systems running a Unix-type shell (for example, Cygwin
+           on Windows) execute the (command) shell instead - <code>cmd</code>
+           for batch files, <code>sh</code> for shell scripts - then pass the
+           batch file or shell script (plus any arguments to the script)
+           as a single command, using the <code>/c</code> or
            <code>-c</code> switch, respectively. See
            <a href="#shell-redirect-2">the above section</a>
            for example <code>&lt;exec&gt;</code> tasks
-           executing <code>sh</code>. On Windows, use something like:</p>
+           executing <code>sh</code>. For batch files, use something like:</p>
         <source><![CDATA[
-<exec dir="." executable="cmd.exe" os="Windows NT">
+<exec dir="." executable="cmd" os="Windows NT">
   <arg line="/c test.bat"/>
 </exec>
 ]]></source>
