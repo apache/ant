@@ -66,7 +66,8 @@ public class FileUtils {
             + Runtime.getRuntime().freeMemory());
 
     private static boolean onNetWare = Os.isFamily("netware");
-    
+    private static boolean onDos = Os.isFamily("dos");
+
     private static final int BUF_SIZE = 8192;
 
     // for toURI
@@ -641,7 +642,7 @@ public class FileUtils {
                     in = new FileInputStream(sourceFile);
                     out = new FileOutputStream(destFile);
 
-                    byte[] buffer = new byte[8 * 1024];
+                    byte[] buffer = new byte[BUF_SIZE];
                     int count = 0;
                     do {
                         out.write(buffer, 0, count);
@@ -698,22 +699,8 @@ public class FileUtils {
             .replace('\\', File.separatorChar);
 
         // deal with absolute files
-        if (!onNetWare) {
-            if (filename.startsWith(File.separator)
-                || (filename.length() >= 2
-                    && Character.isLetter(filename.charAt(0))
-                    && filename.charAt(1) == ':')) {
-                return normalize(filename);
-            }
-        } else {
-            // the assumption that the : will appear as the second character in
-            // the path name breaks down when NetWare is a supported platform.
-            // Netware volumes are of the pattern: "data:\"
-            int colon = filename.indexOf(":");
-            if (filename.startsWith(File.separator)
-                || (colon > -1)) {
-                return normalize(filename);
-            }
+        if (isAbsolutePath(filename)) {
+            return normalize(filename);
         }
 
         if (file == null) {
@@ -740,6 +727,30 @@ public class FileUtils {
         }
 
         return new File(helpFile.getAbsolutePath());
+    }
+
+    /**
+     * Verifies if the filename represents is an absolute path.
+     * @param filename the file name to be checked for being an absolute path
+     * @return true if the filename represents an absolute path.
+     */
+    private static boolean isAbsolutePath(String filename) {
+        if (filename.startsWith(File.separator)) {
+            // common for all os
+            return true;
+        } else if (onDos
+                && filename.length() >= 2
+                && Character.isLetter(filename.charAt(0))
+                && filename.charAt(1) == ':') {
+            // Actually on windows the : must be followed by a \ for
+            // the path to be absolute, else the path is relative
+            // to the current working directory on that drive.
+            // (Every drive may have another current working directory)
+            return true;
+        } else if (onNetWare && filename.indexOf(":") > -1) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -771,26 +782,15 @@ public class FileUtils {
         // make sure we are dealing with an absolute path
         int colon = path.indexOf(":");
 
-        if (!onNetWare) {
-            if (!path.startsWith(File.separator)
-                && !(path.length() >= 2
-                    && Character.isLetter(path.charAt(0))
-                    && colon == 1)) {
-                String msg = path + " is not an absolute path";
-                throw new BuildException(msg);
-            }
-        } else {
-            if (!path.startsWith(File.separator)
-                && (colon == -1)) {
-                String msg = path + " is not an absolute path";
-                throw new BuildException(msg);
-            }
+        if (!isAbsolutePath(path)) {
+            String msg = path + " is not an absolute path";
+            throw new BuildException(msg);
         }
 
         boolean dosWithDrive = false;
         String root = null;
         // Eliminate consecutive slashes after the drive spec
-        if ((!onNetWare && path.length() >= 2
+        if ((onDos && path.length() >= 2
                 && Character.isLetter(path.charAt(0))
                 && path.charAt(1) == ':')
             || (onNetWare && colon > -1)) {
@@ -1267,12 +1267,12 @@ public class FileUtils {
      * <code>from</code>, which involves deleting <code>from</code> as
      * well.</p>
      *
+     * @param from the file to move
+     * @param to the new file name
+     *
      * @throws IOException if anything bad happens during this
      * process.  Note that <code>to</code> may have been deleted
      * already when this happens.
-     *
-     * @param from the file to move
-     * @param to the new file name
      *
      * @since Ant 1.6
      */
@@ -1304,7 +1304,7 @@ public class FileUtils {
      * in order for the two files to be given a creation order.
      */
     public long getFileTimestampGranularity() {
-        if (Os.isFamily("dos")) {
+        if (onDos) {
             return FAT_FILE_TIMESTAMP_GRANULARITY;
         } else {
             return UNIX_FILE_TIMESTAMP_GRANULARITY;
