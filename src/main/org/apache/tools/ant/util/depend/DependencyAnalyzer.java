@@ -68,7 +68,6 @@ import org.apache.tools.ant.types.Path;
  * generic configure method
  *
  * @author Conor MacNeill
- * @created 13 March 2002
  */
 public interface DependencyAnalyzer {
     /**

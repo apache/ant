@@ -61,7 +61,6 @@ import java.io.StringReader;
  * Wrap a String as an InputStream
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
- * @created 20 February 2002
  */
 public class StringInputStream
     extends InputStream

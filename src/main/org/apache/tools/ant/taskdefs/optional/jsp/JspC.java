@@ -330,7 +330,7 @@ public class JspC extends MatchingTask
     }
     
     /**
-     *  web apps param. only one is allowed.
+     * Web apps parameter. Only one is allowed.
      *
      * @param  fs  add a web app fileset
      */
@@ -350,7 +350,7 @@ public class JspC extends MatchingTask
     }
 
     /**
-     *  set the compiler. optional: default=jasper
+     * Sets the compiler to use. Optional: default=jasper
      */
     public void setCompiler(String compiler) {
         this.compilerName=compiler;
@@ -512,7 +512,8 @@ public class JspC extends MatchingTask
     }
 
     /**
-     * test for compilation needed. true means yes, false means
+     * Test whether or not compilation is needed. A return value of 
+     * <code>true<code> means yes, <code>false</code> means
      * our tests do not indicate this, but as the TLDs are
      * not used for dependency checking this is not guaranteed.
      * The current tests are

@@ -56,12 +56,12 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * this is a class derived from the Jasper code to map from a JSP filename
- * to a valid java classname.
+ * This is a class derived from the Jasper code 
+ * (org.apache.jasper.compiler.CommandLineCompiler) to map from a JSP filename
+ * to a valid Java classname.
  *
  * @author Steve Loughran
  * @author Danno Ferrin
- * @see org.apache.jasper.compiler.CommandLineCompiler;
  */
 public class JspNameMangler implements JspMangler {
 

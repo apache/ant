@@ -171,7 +171,7 @@ public class MSVSSCREATE extends MSVSS {
     }
 
     /**
-     * Set the comment to apply in SourceSafe
+     * Sets the comment to apply in SourceSafe.
      * <p>
      * If this is null or empty, it will be replaced with "-" which
      * is what SourceSafe uses for an empty comment.

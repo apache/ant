@@ -67,7 +67,6 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  *
  * @author Conor MacNeill
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
- * @created 13 March 2002
  */
 public class FullAnalyzer extends AbstractAnalyzer {
     /**

@@ -107,8 +107,8 @@ public class Manifest extends Task {
     public static final int MAX_LINE_LENGTH = 72;
     
     /** 
-     * Max length of a line section which is continued. need to allow 
-     * for the CRLF
+     * Max length of a line section which is continued. Need to allow 
+     * for the CRLF.
      */
     public static final int MAX_SECTION_LENGTH = MAX_LINE_LENGTH - 2;
 

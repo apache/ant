@@ -66,7 +66,6 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  * dependencies.
  *
  * @author Conor MacNeill
- * @created 13 March 2002
  */
 public class AncestorAnalyzer extends AbstractAnalyzer {
     /**

@@ -62,7 +62,6 @@ import org.apache.tools.ant.BuildException;
  * ClassLoader utility methods
  *
  * @author Conor MacNeill
- * @created 11 March 2002
  */
 public class LoaderUtils {
     /** The getContextClassLoader method */

@@ -70,7 +70,7 @@ import org.apache.tools.ant.util.LoaderUtils;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * This data type provides a catalog of DTD locations
+ * This data type provides a catalog of DTD locations.
  * <p>
  * <code>
  * &lt;catalog&gt;<br>

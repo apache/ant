@@ -68,7 +68,6 @@ import org.apache.bcel.classfile.Method;
  *
  * @author Conor MacNeill
  * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
- * @created 15 March 2002
  */
 public class DependencyVisitor extends EmptyVisitor {
     /** The collectd dependencies */
@@ -171,7 +170,8 @@ public class DependencyVisitor extends EmptyVisitor {
     }
 
     /**
-     * Add a class name in slash format (e.g. org/apache/tools/ant/...)
+     * Adds a class name in slash format 
+     * (for example org/apache/tools/ant/Main).
      *
      * @param classname the class name in slash format
      */

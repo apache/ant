@@ -74,7 +74,6 @@ import java.util.Vector;
  * Process a FilterReader chain.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
- * @created 23 February 2002
  */
 public final class ChainReaderHelper {
 
