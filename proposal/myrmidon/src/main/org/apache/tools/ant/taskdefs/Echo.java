@@ -11,32 +11,29 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Log
  *
  * @author costin@dnt.ro
  */
-public class Echo extends Task
+public class Echo
+    extends Task
 {
-    protected String message = "";// required
-    protected File file = null;
-    protected boolean append = false;
-
-    // by default, messages are always displayed
-    protected int logLevel = Project.MSG_WARN;
+    private String m_message = "";// required
+    private File m_file;
+    private boolean m_append;
+    private EchoLevel m_echoLevel;
 
     /**
      * Shall we append to an existing file?
      *
      * @param append The new Append value
      */
-    public void setAppend( boolean append )
+    public void setAppend( final boolean append )
     {
-        this.append = append;
+        m_append = append;
     }
 
     /**
@@ -44,9 +41,9 @@ public class Echo extends Task
      *
      * @param file The new File value
      */
-    public void setFile( File file )
+    public void setFile( final File file )
     {
-        this.file = file;
+        m_file = file;
     }
 
     /**
@@ -64,30 +61,9 @@ public class Echo extends Task
      *
      * @param echoLevel The new Level value
      */
-    public void setLevel( EchoLevel echoLevel )
+    public void setLevel( final EchoLevel echoLevel )
     {
-        String option = echoLevel.getValue();
-        if( option.equals( "error" ) )
-        {
-            logLevel = Project.MSG_ERR;
-        }
-        else if( option.equals( "warning" ) )
-        {
-            logLevel = Project.MSG_WARN;
-        }
-        else if( option.equals( "info" ) )
-        {
-            logLevel = Project.MSG_INFO;
-        }
-        else if( option.equals( "verbose" ) )
-        {
-            logLevel = Project.MSG_VERBOSE;
-        }
-        else
-        {
-            // must be "debug"
-            logLevel = Project.MSG_DEBUG;
-        }
+        m_echoLevel = echoLevel;
     }
 
     /**
@@ -95,9 +71,9 @@ public class Echo extends Task
      *
      * @param msg Sets the value for the message variable.
      */
-    public void setMessage( String msg )
+    public void setMessage( final String message )
     {
-        this.message = msg;
+        m_message = message;
     }
 
     /**
@@ -105,10 +81,10 @@ public class Echo extends Task
      *
      * @param msg The feature to be added to the Text attribute
      */
-    public void addText( String msg )
+    public void addText( final String message )
         throws TaskException
     {
-        message += getProject().replaceProperties( msg );
+        m_message += getProject().replaceProperties( message );
     }
 
     /**
@@ -119,17 +95,17 @@ public class Echo extends Task
     public void execute()
         throws TaskException
     {
-        if( file == null )
+        if( m_file == null )
         {
-            log( message, logLevel );
+            doLog();
         }
         else
         {
             FileWriter out = null;
             try
             {
-                out = new FileWriter( file.getAbsolutePath(), append );
-                out.write( message, 0, message.length() );
+                out = new FileWriter( m_file.getAbsolutePath(), m_append );
+                out.write( m_message, 0, m_message.length() );
             }
             catch( IOException ioe )
             {
@@ -151,11 +127,24 @@ public class Echo extends Task
         }
     }
 
-    public static class EchoLevel extends EnumeratedAttribute
+    private void doLog()
     {
-        public String[] getValues()
+        final String option = m_echoLevel.getValue();
+        if( option.equals( "error" ) )
         {
-            return new String[]{"error", "warning", "info", "verbose", "debug"};
+            getLogger().error( m_message );
+        }
+        else if( option.equals( "warning" ) )
+        {
+            getLogger().warn( m_message );
+        }
+        else if( option.equals( "info" ) )
+        {
+            getLogger().info( m_message );
+        }
+        else
+        {
+            getLogger().debug( m_message );
         }
     }
 }
