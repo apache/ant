@@ -106,6 +106,9 @@ Other changes:
 
 * Shipped XML parser is now Xerces 2.2.1
 
+* <style> has a new attribute reuseloadedstylesheet to work around a
+  bug in widespread Xalan versions.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 

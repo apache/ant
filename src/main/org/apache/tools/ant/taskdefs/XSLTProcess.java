@@ -158,6 +158,12 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private Factory factory = null;
 
     /**
+     * whether to reuse Transformer if transforming multiple files.
+     * @since 1.6
+     */
+    private boolean reuseLoadedStylesheet = true;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -173,6 +179,19 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void setScanIncludedDirectories(boolean b) {
         performDirectoryScan = b;
+    }
+
+    /**
+     * Whether to reuse the transformer instance when transforming
+     * multiple files.
+     *
+     * <p>Setting this to false may get around a bug in certain
+     * Xalan-J version, default is true.</p>
+     *
+     * @since Ant 1.6
+     */
+    public void setReuseLoadedStylesheet(boolean b) {
+        reuseLoadedStylesheet = b;
     }
 
     /**
@@ -713,7 +732,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @exception BuildException if the stylesheet cannot be loaded.
      */
     protected void configureLiaison(File stylesheet) throws BuildException {
-        if (stylesheetLoaded) {
+        if (stylesheetLoaded && reuseLoadedStylesheet) {
             return;
         }
         stylesheetLoaded = true;
