@@ -58,6 +58,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 /**
  * An AntFileReader is a wrapper class that encloses the classname
@@ -65,24 +66,18 @@ import org.apache.tools.ant.BuildException;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-public final class AntFilterReader {
+public final class AntFilterReader
+    extends DataType
+    implements Cloneable {
 
     private String className;
 
     private final Vector parameters = new Vector();
 
+    private Path classpath;
+
     public final void setClassName(final String className) {
-        try {
-            final Class c = Class.forName(className);
-            if (FilterReader.class.isAssignableFrom(c)) {
-                this.className = className;
-            } else {
-                throw new BuildException(className +
-                    " does not extend java.io.FilterReader");
-            }
-        } catch (final ClassNotFoundException cnfe) {
-            throw new BuildException(cnfe);
-        }
+        this.className = className;
     }
 
     public final String getClassName() {
@@ -91,6 +86,51 @@ public final class AntFilterReader {
 
     public final void addParam(final Parameter param) {
         parameters.addElement(param);
+    }
+
+    /**
+     * Set the classpath to load the FilterReader through (attribute).
+     */
+    public final void setClasspath(Path classpath) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        if (this.classpath == null) {
+            this.classpath = classpath;
+        } else {
+            this.classpath.append(classpath);
+        }
+    }
+
+    /**
+     * Set the classpath to load the FilterReader through (nested element).
+     */
+    public final Path createClasspath() {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        if (this.classpath == null) {
+            this.classpath = new Path(getProject());
+        }
+        return this.classpath.createPath();
+    }
+
+    /**
+     * Get the classpath
+     */
+    public final Path getClasspath() {
+        return classpath;
+    }
+
+    /**
+     * Set the classpath to load the FilterReader through via
+     * reference (attribute).
+     */
+    public void setClasspathRef(Reference r) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
+        createClasspath().setRefid(r);
     }
 
     public final Parameter[] getParams() {
