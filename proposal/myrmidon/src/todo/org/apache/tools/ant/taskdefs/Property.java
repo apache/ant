@@ -11,15 +11,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
-import java.util.ArrayList;
-import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.exec.Environment;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
@@ -210,25 +209,34 @@ public class Property extends Task
     protected void loadEnvironment( String prefix )
         throws TaskException
     {
-        Properties props = new Properties();
+        final Properties props = new Properties();
         if( !prefix.endsWith( "." ) )
             prefix += ".";
-        log( "Loading Environment " + prefix, Project.MSG_VERBOSE );
-        ArrayList osEnv = Execute.getProcEnvironment();
-        for( Iterator e = osEnv.iterator(); e.hasNext(); )
+
+        log( "Loading EnvironmentData " + prefix, Project.MSG_VERBOSE );
+        try
         {
-            String entry = (String)e.next();
-            int pos = entry.indexOf( '=' );
-            if( pos == -1 )
+            final Properties environment = Environment.getNativeEnvironment();
+            for( Iterator e = environment.keySet().iterator(); e.hasNext(); )
             {
-                log( "Ignoring: " + entry, Project.MSG_WARN );
-            }
-            else
-            {
-                props.put( prefix + entry.substring( 0, pos ),
-                           entry.substring( pos + 1 ) );
+                final String key = (String)e.next();
+                final String value = environment.getProperty( key );
+
+                if( value.equals( "" ) )
+                {
+                    log( "Ignoring: " + key, Project.MSG_WARN );
+                }
+                else
+                {
+                    props.put( prefix + key, value );
+                }
             }
         }
+        catch( final IOException ioe )
+        {
+            throw new TaskException( ioe.getMessage(), ioe );
+        }
+
         addProperties( props );
     }
 
