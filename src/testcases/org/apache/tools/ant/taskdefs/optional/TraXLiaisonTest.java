@@ -118,6 +118,18 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest
         }
     }
 
+    public void testSystemId(){
+        File file = null;
+        if ( File.separatorChar == '\\' ){
+            file = new File("d:\\jdk");
+        } else {
+            file = new File("/user/local/bin");
+        }
+        String systemid = ((TraXLiaison)liaison).getSystemId(file);
+        assertTrue("SystemIDs should start by file:///", systemid.startsWith("file:///"));
+        assertTrue("SystemIDs should not start with file:////", !systemid.startsWith("file:////"));
+    }
+
     public void log(String message) {
         throw new AssertionFailedError("Liaison sent message: "+message);
     }

@@ -107,7 +107,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     private Transformer transformer = null;
 
     private XSLTLogger logger;
-    
+
     /** possible resolver for publicIds */
     private EntityResolver entityResolver;
 
@@ -273,4 +273,12 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         uriResolver = aResolver;
     }
     
+    // kept for backwards compatibility
+    /**
+     * @deprecated use org.apache.tools.ant.util.JAXPUtils#getSystemId instead
+     */
+    protected String getSystemId(File file) {
+        return JAXPUtils.getSystemId(file);
+    }
+
 } //-- TraXLiaison
