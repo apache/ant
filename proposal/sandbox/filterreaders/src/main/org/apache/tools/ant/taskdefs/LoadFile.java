@@ -183,9 +183,6 @@ public final class LoadFile extends Task {
             final long len = srcFile.length();
             log("file size = "+len,Project.MSG_DEBUG);
             //discard most of really big files
-            if (len > Integer.MAX_VALUE) {
-                log("this file is far to big to load completely");
-            }
             final int size=(int) len;
             //open up the file
             fis = new FileInputStream(srcFile);
@@ -290,8 +287,18 @@ public final class LoadFile extends Task {
             }
         }
 
-        final int bufferLength = instream.read(buffer);
-        final String text = new String(buffer, 0, bufferLength);
+        int bufferLength = 0;
+        String text = null;
+        while (bufferLength != -1) {
+            bufferLength = instream.read(buffer);
+            if (bufferLength != -1) {
+                if (text == null) {
+                    text = new String(buffer, 0, bufferLength);
+                } else {
+                    text += new String(buffer, 0, bufferLength);
+                }
+            }
+        }
         return text;
     }
 
