@@ -253,13 +253,7 @@ public class SubAnt
         }
 
         ant = createAntTask(directory);
-        String antfilename = null;
-        try {
-            antfilename = file.getCanonicalPath();
-        } catch (IOException e) {
-            throw new BuildException(e);
-        }
-
+        String antfilename = file.getAbsolutePath()
         ant.setAntfile(antfilename);
         try {
             ant.execute();
