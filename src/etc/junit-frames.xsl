@@ -393,6 +393,7 @@ h6 {
 			</xsl:call-template>
 		</head>
 		<body>
+		<xsl:attribute name="onload">open('allclasses-frame.html','classListFrame')</xsl:attribute>
 		<xsl:call-template name="pageHeader"/>
 		<h2>Summary</h2>
 		<xsl:variable name="testCount" select="sum(testsuite/@tests)"/>
