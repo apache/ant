@@ -16,6 +16,9 @@ Legal:
 
 <project name="MySample" default="main" basedir=".">
 
+  <projectref name="prim" location="primitive-tests.ant" />
+  <import library="core.atl" />
+
   <property name="year" value="2000"/>
 
   <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test" />
@@ -23,7 +26,7 @@ Legal:
   <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test" />
 
 <!--    
-    <register-tasklib lib="../../dist/lib/core.tsk" />
+    <register-tasklib lib="../../dist/lib/core.atl" />
 -->
 
   <target name="property-test">
@@ -37,7 +40,7 @@ Legal:
     <typedef name="echo2" 
              type="task" 
              classname="org.apache.ant.modules.basic.Echo" 
-             lib="../../dist/lib/core.tsk" />
+             lib="../../dist/lib/core.atl" />
 
     <echo2 message="Luke to Echo base. Can you hear me?"/>
   </target>
@@ -46,7 +49,7 @@ Legal:
     <converterdef classname="org.apache.ant.modules.basic.StringToClassConverter"
                   source-type="java.lang.String"
                   destination-type="java.lang.Class"
-                  lib="../../dist/lib/core.tsk" />
+                  lib="../../dist/lib/core.atl" />
   </target> 
 
   <target name="ant-call-test">

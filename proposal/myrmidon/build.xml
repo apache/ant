@@ -123,14 +123,14 @@ Legal:
 
     </jar>
 
-    <jar jarfile="${build.lib}/core.tsk" basedir="${build.classes}">
+    <jar jarfile="${build.lib}/core.atl" basedir="${build.classes}">
       <include name="org/apache/ant/modules/**" />
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="core-ant-descriptor.xml"/>
       </zipfileset>
     </jar>
 
-    <jar jarfile="${build.lib}/runtime.tsk" basedir="${build.classes}">
+    <jar jarfile="${build.lib}/runtime.atl" basedir="${build.classes}">
       <include name="org/apache/myrmidon/libs/runtime/**"/>
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="runtime-ant-descriptor.xml"/>
