@@ -21,11 +21,11 @@
     This task can:
 </p>
     <ol>
-    <li>Download publicly published JAR files by version.</li>
+    <li>Download publicly published JAR files by version</li>
     <li>Download JAR files from private file: or http: repositories</li>
     <li>Cache the JAR files in a directory tree</li>
     <li>Check for updates on a regular schedule</li>
-    <li>Build paths for compilation/execution.</li>
+    <li>Build paths for compilation/execution</li>
     <li>Fail the build if needed libraries are missing</li>
     <li>Force an update of all libraries</li>
     <li>Skip all downloading when offline
@@ -90,7 +90,7 @@ property <code>ant.maven.repository.dir</code> to a new location.
 
 
 <h4>library</h4>
-This is the core of the system; a library to (potentially) download.
+This is the core of the system:  a library to (potentially) download.
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -140,8 +140,8 @@ This is the core of the system; a library to (potentially) download.
 
 <h4>Repository</h4>
 <p>
-A repository is Ant datatype that extends the <code>Repository</code> type.
-Ant only ships with one: the mavenrepository. If no repository is
+A repository is an Ant datatype that extends the <code>Repository</code>
+type.  Ant only ships with one: the mavenrepository. If no repository is
 declared inline, and no repositoryref attribute set, the task
 will default to the maven repository.
 </p>
@@ -241,9 +241,8 @@ situation is left to the experimentor, though reading the source will help.
 </P>
 
 <p>
-Developers may add new polices (such
-as signing incoming files) by adding new datatypes extending the
-<code>LibraryPolicy</code> class. </P>
+Developers may add new policies (such as signing incoming files) by adding
+new datatypes extending the <code>LibraryPolicy</code> class. </P>
 
 <h4>noupdate</h4>
 
@@ -253,7 +252,7 @@ equivalent of the offline flag.</P>
 
 <p>Example:</p>
 <pre>
-    &lt;noupdate  /&gt;
+    &lt;noupdate /&gt;
 </pre> 
 
 <h4>forceupdate</h4>
@@ -262,7 +261,7 @@ equivalent of the offline flag.</P>
 the build will halt.</P>
 <p>Example:</p>
 <pre>
-    &lt;forceupdate  /&gt;
+    &lt;forceupdate /&gt;
 </pre> 
 
 <h4>timestamp</h4>
@@ -273,7 +272,7 @@ It is equivalent to setting the <code>useTimestamp</code> flag. </P>
 
 <p>Example:</p>
 <pre>
-    &lt;timestamp  /&gt;
+    &lt;timestamp /&gt;
 </pre> 
 
 <h4>scheduledupdate</h4>
@@ -322,7 +321,7 @@ passed, or the set of files to check has to have changed.
 
 <p>Example:</p>
 <pre>
-    &lt;scheduledupdate days="1" hours="3" minutes="17"  /&gt;
+    &lt;scheduledupdate days="1" hours="3" minutes="17" /&gt;
 </pre> 
 
 <P>Check for an update every 27 hours, 17 minutes. </P>
@@ -357,7 +356,7 @@ expected.</P>
 
 <p>Example:</p>
 <pre>
-    &lt;assertdownloaded cound="4"  /&gt;
+    &lt;assertdownloaded count="4" /&gt;
 </pre> 
 
 <h3>Examples</h3>
@@ -391,8 +390,7 @@ over hard coding versions in a build file.
       &lt;library project="doomed" archive="dead-code"
         suffix=".war"
         destinationName="product.war"
-        version="LATEST" 
-        /&gt;
+        version="LATEST" /&gt;
       &lt;scheduledupdate markerfile="build/lib/marker.properties"
         hours="11" /&gt;
     &lt;/libraries&gt;
