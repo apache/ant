@@ -489,8 +489,8 @@ public final class IntrospectionHelper implements BuildListener {
             = (AttributeSetter) attributeSetters.get(
                 attributeName.toLowerCase(Locale.US));
         if (as == null) {
-            if (element instanceof DynamicConfiguratorNS) {
-                DynamicConfiguratorNS dc = (DynamicConfiguratorNS) element;
+            if (element instanceof DynamicAttributeNS) {
+                DynamicAttributeNS dc = (DynamicAttributeNS) element;
                 String uriPlusPrefix =
                     ProjectHelper.extractUriFromComponentName(attributeName);
                 String uri =
@@ -502,8 +502,8 @@ public final class IntrospectionHelper implements BuildListener {
 
                 dc.setDynamicAttribute(uri, localName, qName, value);
                 return;
-            } else if (element instanceof DynamicConfigurator) {
-                DynamicConfigurator dc = (DynamicConfigurator) element;
+            } else if (element instanceof DynamicAttribute) {
+                DynamicAttribute dc = (DynamicAttribute) element;
                 dc.setDynamicAttribute(attributeName.toLowerCase(Locale.US), value);
                 return;
             } else {
@@ -611,8 +611,8 @@ public final class IntrospectionHelper implements BuildListener {
         if (nc == null) {
             nc = createAddTypeCreator(project, parent, elementName);
         }
-        if (nc == null && parent instanceof DynamicConfiguratorNS) {
-            DynamicConfiguratorNS dc = (DynamicConfiguratorNS) parent;
+        if (nc == null && parent instanceof DynamicElementNS) {
+            DynamicElementNS dc = (DynamicElementNS) parent;
             String qName = (child == null ? name : child.getQName());
             final Object nestedElement =
                 dc.createDynamicElement(
@@ -640,8 +640,8 @@ public final class IntrospectionHelper implements BuildListener {
                 };
             }
         }
-        if (nc == null && parent instanceof DynamicConfigurator) {
-            DynamicConfigurator dc = (DynamicConfigurator) parent;
+        if (nc == null && parent instanceof DynamicElement) {
+            DynamicElement dc = (DynamicElement) parent;
             final Object nestedElement =
                 dc.createDynamicElement(name.toLowerCase(Locale.US));
             if (nestedElement != null) {
@@ -749,8 +749,8 @@ public final class IntrospectionHelper implements BuildListener {
      */
     public boolean supportsNestedElement(String elementName) {
         return nestedCreators.containsKey(elementName.toLowerCase(Locale.US))
-            || DynamicConfigurator.class.isAssignableFrom(bean)
-            || DynamicConfiguratorNS.class.isAssignableFrom(bean)
+            || DynamicElement.class.isAssignableFrom(bean)
+            || DynamicElementNS.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;
     }
 
@@ -776,8 +776,8 @@ public final class IntrospectionHelper implements BuildListener {
         return (
             nestedCreators.containsKey(name.toLowerCase(Locale.US))
             && (uri.equals(parentUri))) // || uri.equals("")))
-            || DynamicConfigurator.class.isAssignableFrom(bean)
-            || DynamicConfiguratorNS.class.isAssignableFrom(bean)
+            || DynamicElement.class.isAssignableFrom(bean)
+            || DynamicElementNS.class.isAssignableFrom(bean)
             || addTypeMethods.size() != 0;
     }
 

@@ -132,6 +132,17 @@
         <td valign="top" align="center">No</td>
       </tr>
       <tr>
+        <td valign="top">implicit</td>
+        <td valign="top">
+          If true this nested element is implicit. This means that
+          any nested elements of the macrodef instance will be placed
+          in the element indicated by the name of this element.
+          There can only be one element if an element is implicit.
+          The default value is false. <em>since ant 1.6.2</em>
+        </td>
+        <td valign="top" align="center">No</td>
+      </tr>
+      <tr>
         <td valign="top">description</td>
         <td valign="top">
           This contains a description
@@ -253,6 +264,45 @@
       &lt;fileset dir="${gen.dir}" includes = "*.cpp"/&gt;
       &lt;linker refid="linker-libs"/&gt;
    &lt;/cc-elements&gt;
+&lt;/call-cc&gt;
+</pre>
+    </blockquote>
+    <p>
+      The following fragment shows &lt;call-cc&gt;, but this time
+      using an implicit element and with the link and target.dir arguments
+      having default values.
+    </p>
+    <blockquote>
+<pre class="code">
+&lt;macrodef name="call-cc"&gt;
+   &lt;attribute name="target"/&gt;
+   &lt;attribute name="link" default="executable"/&gt;
+   &lt;attribute name="target.dir" default="${build.bin.dir}"/&gt;
+   &lt;element name="cc-elements" implicit="yes"/&gt;
+   &lt;sequential&gt;
+      &lt;mkdir dir="${obj.dir}/@{target}"/&gt;
+      &lt;mkdir dir="@{target.dir}"/&gt;
+         &lt;cc link="@{link}" objdir="${obj.dir}/@{target}"
+             outfile="@{target.dir}/@{target}"&gt;
+            &lt;compiler refid="compiler.options"/&gt;
+            &lt;cc-elements/&gt;
+         &lt;/cc&gt;
+      &lt;/sequential&gt;
+&lt;/macrodef&gt;
+</pre>
+    </blockquote>
+    <p>
+      This then can be used as follows, note that &lt;cc-elements&gt;
+      is not specified.
+    </p>
+    <blockquote>
+<pre class="code">
+&lt;call-cc target="unittests"/&gt;
+   &lt;includepath location="${gen.dir}"/&gt;
+   &lt;includepath location="test"/&gt;
+   &lt;fileset dir="test/unittest" includes = "**/*.cpp"/&gt;
+   &lt;fileset dir="${gen.dir}" includes = "*.cpp"/&gt;
+   &lt;linker refid="linker-libs"/&gt;
 &lt;/call-cc&gt;
 </pre>
     </blockquote>

@@ -72,6 +72,13 @@ public class UnknownElement extends Task {
     }
 
     /**
+     * @return the list of nested UnknownElements for this UnknownElement.
+     */
+    public List getChildren() {
+        return children;
+    }
+
+    /**
      * Returns the name of the XML element which generated this unknown
      * element.
      *

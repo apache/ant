@@ -46,6 +46,7 @@ public class MacroDef extends AntlibDefinition  {
     private Map        elements   = new HashMap();
     private String     textName   = null;
     private Text       text       = null;
+    private boolean    hasImplicitElement = false;
 
     /**
      * Name of the definition
@@ -254,6 +255,12 @@ public class MacroDef extends AntlibDefinition  {
                 "the element " + element.getName()
                 + " has already been specified");
         }
+        if (hasImplicitElement
+            || (element.isImplicit() && elements.size() != 0)) {
+            throw new BuildException(
+                "Only one element allowed when using implicit elements");
+        }
+        hasImplicitElement = element.isImplicit();
         elements.put(element.getName(), element);
     }
 
@@ -507,6 +514,7 @@ public class MacroDef extends AntlibDefinition  {
     public static class TemplateElement {
         private String name;
         private boolean optional = false;
+        private boolean implicit = false;
         private String description;
 
         /**
@@ -547,6 +555,23 @@ public class MacroDef extends AntlibDefinition  {
         }
 
         /**
+         * is this element implicit ?
+         *
+         * @param implicit if true this element may be left out, default
+         *                 is false.
+         */
+        public void setImplicit(boolean implicit) {
+            this.implicit = implicit;
+        }
+
+        /**
+         * @return the implicit attribute
+         */
+        public boolean isImplicit() {
+            return implicit;
+        }
+
+        /**
          * @param desc Description of the element.
          * @since ant 1.6.1
          */
@@ -584,14 +609,15 @@ public class MacroDef extends AntlibDefinition  {
             } else if (!name.equals(other.name)) {
                 return false;
             }
-            return optional == other.optional;
+            return optional == other.optional && implicit == other.implicit;
         }
 
         /**
          * @return a hash code value for this object.
          */
         public int hashCode() {
-            return objectHashCode(name) + (optional ? 1 : 0);
+            return objectHashCode(name)
+                + (optional ? 1 : 0) + (implicit ? 1 : 0);
         }
     }
 
