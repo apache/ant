@@ -87,15 +87,14 @@ public class JakartaRegexpRegexpTest extends RegexpTest {
         }
     }
 
+    /**
+     * Fails for the same reason as "default" mode in doEndTest2.
+     */
     public void testUnixLineSeparator() throws IOException {
-        if ( Os.isFamily("windows") ){
-            try {
-                super.testUnixLineSeparator();
-                fail("Windows issue. Should trigger once this bug is fixed. {@since 1.2}");
-            } catch (AssertionFailedError e){
-            }
-        } else {
+        try {
             super.testUnixLineSeparator();
+            fail("Should trigger once this bug is fixed. {@since 1.2}");
+        } catch (AssertionFailedError e){
         }
     }
 

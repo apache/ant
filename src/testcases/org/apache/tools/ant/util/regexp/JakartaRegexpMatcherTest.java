@@ -76,26 +76,21 @@ public class JakartaRegexpMatcherTest extends RegexpMatcherTest {
     }
 
     public void testWindowsLineSeparator2() throws IOException {
-        if ( Os.isFamily("windows") ) {
-            try {
-                super.testWindowsLineSeparator2();
-                fail("Windows issue. Should trigger when this bug is fixed. {@since 1.2}");
-            } catch (AssertionFailedError e){
-            }
-        } else {
+        try {
             super.testWindowsLineSeparator2();
+            fail("Should trigger when this bug is fixed. {@since 1.2}");
+        } catch (AssertionFailedError e) {
         }
     }
 
+    /**
+     * Fails for the same reason as "default" mode in doEndTest2.
+     */
     public void testUnixLineSeparator() throws IOException {
-        if ( Os.isFamily("windows") ){
-            try {
-                super.testUnixLineSeparator();
-                fail("Windows issue. Should trigger once this bug is fixed. {@since 1.2}");
-            } catch (AssertionFailedError e){
-            }
-        } else {
+        try {
             super.testUnixLineSeparator();
+            fail("Should trigger once this bug is fixed. {@since 1.2}");
+        } catch (AssertionFailedError e) {
         }
     }
 
