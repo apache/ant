@@ -283,7 +283,7 @@ public class XMLReport {
             Element methodNode = (Element) methodNodeList.get(methodSig);
             if (methodNode != null &&
                     Utils.isAbstract(method.getAccessFlags())) {
-                log("\tRemoving method " + methodSig);
+                log("\tRemoving abstract method " + methodSig);
                 classNode.removeChild(methodNode);
             }
         }
@@ -400,8 +400,8 @@ public class XMLReport {
     }
 
     protected Vector getFilteredMethods(ClassFile classFile) {
-        Vector methods = new Vector();
         MethodInfo[] methodlist = classFile.getMethods();
+        Vector methods = new Vector(methodlist.length);
         for (int i = 0; i < methodlist.length; i++) {
             MethodInfo method = methodlist[i];
             String signature = getMethodSignature(classFile, method);
@@ -454,7 +454,7 @@ public class XMLReport {
                     pkg_hit_lines += Integer.parseInt(covdata.getAttribute("hit_lines"));
                     pkg_total_lines += Integer.parseInt(covdata.getAttribute("total_lines"));
                 } catch (NumberFormatException e) {
-                    System.err.println("Error parsing '" + classname + "' (" + j + "/" + classes.length + ") in package '" + pkgname + "'");
+                    log("Error parsing '" + classname + "' (" + j + "/" + classes.length + ") in package '" + pkgname + "'");
                     throw e;
                 }
             }
