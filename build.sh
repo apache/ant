@@ -16,4 +16,4 @@ export CLASSPATH
 
 echo Building with classpath $CLASSPATH
 
-java org.apache.tools.ant.Main $*
+java org.apache.tools.ant.Main -Dant.home=$ANT_HOME $*
