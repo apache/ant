@@ -54,7 +54,6 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 
 import org.apache.xalan.xslt.XSLTProcessorFactory;
