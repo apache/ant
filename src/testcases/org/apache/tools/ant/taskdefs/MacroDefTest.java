@@ -78,6 +78,18 @@ public class MacroDefTest extends BuildFileTest {
         expectLog("text", "Inner Text");
     }
 
+    public void testDuplicateAttribute() {
+        expectBuildException(
+            "duplicate.attribute",
+            "the attribute text has already been specified");
+    }
+    
+    public void testDuplicateElement() {
+        expectBuildException(
+            "duplicate.element",
+            "the element text has already been specified");
+    }
+    
     public void testUri() {
         expectLog("uri", "Hello World");
     }

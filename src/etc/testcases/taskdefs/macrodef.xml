@@ -20,6 +20,26 @@
     <my.echo text="Inner Text"/>
   </target>
 
+  <target name="duplicate.attribute">
+    <macrodef name="my.echo">
+      <attribute name="text"/>
+      <attribute name="text"/>
+      <sequential>
+        <echo>${text}</echo>
+      </sequential>
+    </macrodef>
+  </target>
+
+  <target name="duplicate.element">
+    <macrodef name="my.echo">
+      <element name="text"/>
+      <element name="text"/>
+      <sequential>
+        <text/>
+      </sequential>
+    </macrodef>
+  </target>
+
   <target name="uri">
     <macrodef name="echo" uri="abc">
       <attribute name="text"/>
