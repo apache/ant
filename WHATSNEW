@@ -32,6 +32,9 @@ Fixed bugs:
 * junitreport was failing for long string litterals
   Bugzilla Report 19301.
 
+* <splash> used to break the build on non-GUI environments.  Bugzilla
+  report 11482.
+
 Other changes:
 --------------
 
