@@ -6,11 +6,32 @@
     <property name="ftp.port" value="21" />
     <property name="ftp.password" value="sunshine" />
     <property name="tmp.dir" location="tmp"/>
+    <property name="tmp.get.dir" location="tmp.get"/>
     <property name="ftp.filesep" value="/"/>
+    <fileset dir="${tmp.get.dir}" id="fileset-destination-with-selector">
+        <include name="alpha/**"/>
+        <filename name="**/alpha.xml" />
+    </fileset>
+    <fileset dir="${tmp.dir}" id="fileset-source-without-selector">
+        <include name="alpha/**"/>
+    </fileset>
+    <fileset dir="${tmp.get.dir}" id="fileset-destination-without-selector">
+        <include name="alpha/**"/>
+    </fileset>
     <target name="setup">
+        <mkdir dir="${tmp.get.dir}"/>
         <mkdir dir="${tmp.dir}/alpha/beta/gamma"/>
         <touch file="${tmp.dir}/alpha/beta/gamma/gamma.xml"/>
         <touch file="${tmp.dir}/alpha/beta/beta.xml"/>
+    </target>
+    <target name="ftp-get-with-selector">
+        <ftp action="get"
+            server="${ftp.host}"
+            userid="${ftp.user}"
+            password="${ftp.password}"
+            remotedir="${tmp.dir}">
+            <fileset refid="fileset-destination-with-selector"/>
+        </ftp>
     </target>
     <target name="children-of-excluded-dir-setup" depends="setup">
         <mkdir dir="${tmp.dir}/delta"/>
@@ -18,6 +39,7 @@
     </target>
     <target name="cleanup">
         <delete dir="${tmp.dir}" quiet="true"/>
+        <delete dir="${tmp.get.dir}" quiet="true"/>
     </target>
     <target name="symlink-setup" depends="setup">
         <mkdir dir="${tmp.dir}/epsilon/gamma"/>

@@ -54,14 +54,16 @@
 package org.apache.tools.ant.taskdefs.optional.net;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.taskdefs.optional.net.FTP;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.TreeSet;
-import java.util.Iterator;
+import java.util.Arrays;
+
 import org.apache.commons.net.ftp.FTPClient;
 
 public class FTPTest extends BuildFileTest{
@@ -203,7 +205,27 @@ public class FTPTest extends BuildFileTest{
             }
         }
     }
-
+    public void testGetWithSelector() {
+        expectLogContaining("ftp-get-with-selector",
+            "selectors are not supported in remote filesets");
+        FileSet fsDestination = (FileSet) getProject().getReference("fileset-destination-without-selector");
+        DirectoryScanner dsDestination = fsDestination.getDirectoryScanner(getProject());
+        dsDestination.scan();
+        String [] sortedDestinationDirectories = dsDestination.getIncludedDirectories();
+        String [] sortedDestinationFiles = dsDestination.getIncludedFiles();
+        for (int counter = 0; counter < sortedDestinationDirectories.length; counter++) {
+            sortedDestinationDirectories[counter] =
+                sortedDestinationDirectories[counter].replace(File.separatorChar, '/');
+        }
+        for (int counter = 0; counter < sortedDestinationFiles.length; counter++) {
+            sortedDestinationFiles[counter] =
+                sortedDestinationFiles[counter].replace(File.separatorChar, '/');
+        }
+        FileSet fsSource =  (FileSet) getProject().getReference("fileset-source-without-selector");
+        DirectoryScanner dsSource = fsSource.getDirectoryScanner(getProject());
+        dsSource.scan();
+        compareFiles(dsSource, sortedDestinationFiles, sortedDestinationDirectories);
+    }
     public void testAllowSymlinks() {
         if (!supportsSymlinks) {
             return;
@@ -501,7 +523,7 @@ public class FTPTest extends BuildFileTest{
 
     }
 
-    private void compareFiles(FTP.FTPDirectoryScanner ds, String[] expectedFiles,
+    private void compareFiles(DirectoryScanner ds, String[] expectedFiles,
                               String[] expectedDirectories) {
         String includedFiles[] = ds.getIncludedFiles();
         String includedDirectories[] = ds.getIncludedDirectories();
@@ -510,30 +532,20 @@ public class FTPTest extends BuildFileTest{
         assertEquals("directories present: ", expectedDirectories.length,
                      includedDirectories.length);
 
-        TreeSet files = new TreeSet();
         for (int counter=0; counter < includedFiles.length; counter++) {
-            files.add(includedFiles[counter].replace(File.separatorChar, '/'));
+            includedFiles[counter] = includedFiles[counter].replace(File.separatorChar, '/');
         }
-        TreeSet directories = new TreeSet();
+        Arrays.sort(includedFiles);
         for (int counter=0; counter < includedDirectories.length; counter++) {
-            directories.add(includedDirectories[counter]
-                            .replace(File.separatorChar, '/'));
+            includedDirectories[counter] = includedDirectories[counter]
+                            .replace(File.separatorChar, '/');
         }
-
-        String currentfile;
-        Iterator i = files.iterator();
-        int counter = 0;
-        while (i.hasNext()) {
-            currentfile = (String) i.next();
-            assertEquals(expectedFiles[counter], currentfile);
-            counter++;
+        Arrays.sort(includedDirectories);
+        for (int counter=0; counter < includedFiles.length; counter++) {
+            assertEquals(expectedFiles[counter], includedFiles[counter]);
         }
-        String currentdirectory;
-        Iterator dirit = directories.iterator();
-        counter = 0;
-        while (dirit.hasNext()) {
-            currentdirectory = (String) dirit.next();
-            assertEquals(expectedDirectories[counter], currentdirectory);
+        for (int counter=0; counter < includedDirectories.length; counter++) {
+            assertEquals(expectedDirectories[counter], includedDirectories[counter]);
             counter++;
         }
     }

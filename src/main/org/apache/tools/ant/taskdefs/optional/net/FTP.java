@@ -667,6 +667,11 @@ public class FTP
         if (action == SEND_FILES) {
             ds = fs.getDirectoryScanner(getProject());
         } else {
+            // warn that selectors are not supported
+            if (fs.getSelectors(getProject()).length != 0) {
+                getProject().log("selectors are not supported in remote filesets",
+                    Project.MSG_WARN);
+            }
             ds = new FTPDirectoryScanner(ftp);
             fs.setupDirectoryScanner(ds, getProject());
             ds.scan();
