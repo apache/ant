@@ -65,8 +65,8 @@ import java.awt.image.renderable.ParameterBlock;
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Scale extends TransformOperation implements DrawOperation {
-    private String width_str = null;
-    private String height_str = null;
+    private String width_str = "100%";
+    private String height_str = "100%";
     private boolean x_percent = true;
     private boolean y_percent = true;
     private boolean keep_proportions = false;
@@ -74,11 +74,16 @@ public class Scale extends TransformOperation implements DrawOperation {
     public void setKeepproportions(boolean props) {
         keep_proportions = props;
     }
-
+    /**
+     *  Sets the width of the image, either as an integer or a %.  Defaults to 100%.
+     */
     public void setWidth(String width) {
         width_str = width;
     }
 
+    /**
+     *  Sets the height of the image, either as an integer or a %.  Defaults to 100%.
+     */
     public void setHeight(String height) {
         height_str = height;
     }

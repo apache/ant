@@ -57,6 +57,7 @@ import com.sun.media.jai.codec.FileSeekableStream;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.optional.image.Draw;
 import org.apache.tools.ant.types.optional.image.ImageOperation;
 import org.apache.tools.ant.types.optional.image.Rotate;
@@ -69,6 +70,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * A MatchingTask which relies on <A HREF="http://java.sun.com/products/java-media/jai">JAI (Java Advanced Imaging)</A>
@@ -81,16 +84,34 @@ import java.util.Vector;
  * @see org.apache.tools.ant.types.optional.image.ImageOperation
  * @see org.apache.tools.ant.types.DataType
  * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
+ * @author <a href="mailto:dep4b@yahoo.com">Eric Pugh</a>
  */
 public class Image extends MatchingTask {
     protected Vector instructions = new Vector();
     protected String str_encoding = "JPEG";
     protected boolean overwrite = false;
     protected boolean garbage_collect = false;
+    private boolean failonerror = true;
+    protected Vector filesets = new Vector();
+
 
     protected File srcDir = null;
     protected File destDir = null;
 
+   /**
+     * Adds a set of files to be deleted.
+     */
+    public void addFileset(FileSet set) {
+        filesets.addElement(set);
+    }
+
+    /**
+     * If false, note errors to the output but keep going.
+     * @param failonerror true or false
+     */
+     public void setFailOnError(boolean failonerror) {
+         this.failonerror = failonerror;
+     }
 
     /**
      * Set the source dir to find the image files.
@@ -109,19 +130,15 @@ public class Image extends MatchingTask {
     /**
      *  Sets whether or not to overwrite a file if there is a naming conflict.
      */
-    public void setOverwrite(String ovr) {
-        if (ovr.toLowerCase().equals("true") || ovr.toLowerCase().equals("yes")) {
-            overwrite = true;
-        }
+    public void setOverwrite(boolean overwrite) {
+            this.overwrite = overwrite;
     }
 
     /**
      *  Enables Garbage Collection after each image processed.  Defaults to false.
      */
-    public void setGc(String gc) {
-        if (gc.toLowerCase().equals("true") || gc.toLowerCase().equals("yes")) {
-            garbage_collect = true;
-        }
+    public void setGc(boolean gc) {
+            garbage_collect = gc;
     }
 
 
@@ -129,7 +146,7 @@ public class Image extends MatchingTask {
      * Sets the destination directory for manipulated images.
      * @param destination The destination directory
      */
-    public void setDest(String destination) {
+    public void setDestDir(String destination) {
         destDir = new File(destination);
     }
 
@@ -189,53 +206,121 @@ public class Image extends MatchingTask {
                 }
             }
             input.close();
-            FileOutputStream stream = new FileOutputStream(file);
+
+
             log("Encoding As " + str_encoding);
 
-            String file_ext = str_encoding.toLowerCase();
             if (str_encoding.toLowerCase().equals("jpg")) {
                 str_encoding = "JPEG";
-                file_ext = "jpg";
             } else if (str_encoding.toLowerCase().equals("tif")) {
                 str_encoding = "TIFF";
-                file_ext = "tif";
             }
+
+            if (destDir == null){
+              destDir = srcDir;
+            }
+
+            File new_file = new File(destDir.getAbsolutePath() + File.separator + file.getName());
+
+            if ((overwrite && new_file.exists()) && (!new_file.equals(file))) {
+                new_file.delete();
+            }
+            else if (!overwrite && new_file.exists()){
+              return;
+            }
+
+            FileOutputStream stream = new FileOutputStream(new_file);
 
             JAI.create("encode", image, stream, str_encoding.toUpperCase(), null);
             stream.flush();
             stream.close();
 
-            String old_name = file.getAbsolutePath();
-            int t_loc = old_name.lastIndexOf(".");
-            String t_name = old_name.substring(0, t_loc + 1) + file_ext;
-            File new_file = new File(t_name);
-            if ((overwrite && new_file.exists()) && (!new_file.equals(file))) {
-                new_file.delete();
-            }
-            file.renameTo(new_file);
+
         } catch (IOException err) {
-            log("Error processing file:  " + err);
+           if (!failonerror) {
+             log("Error processing file:  " + err);
+           } else {
+             throw new BuildException(err);
+           }
         }
+
+        catch (java.lang.RuntimeException rerr) {
+           if (!failonerror) {
+             log("Error processing file:  " + rerr);
+           } else {
+             throw new BuildException(rerr);
+           }
+        }
+
     }
 
     /**
      * Executes the Task
      */
     public void execute() {
-        try {
-            DirectoryScanner ds = super.getDirectoryScanner(srcDir);
-            String[] files = ds.getIncludedFiles();
 
-            for (int i = 0; i < files.length; i++) {
-                processFile(new File(srcDir.getAbsolutePath() + File.separator + files[i]));
-                if (garbage_collect) {
-                    System.gc();
+        validateAttributes();
+
+        try {
+            DirectoryScanner ds = null;
+            String [] files =null;
+            ArrayList filesList = new ArrayList();
+
+
+            // deal with specified srcDir
+            if (srcDir != null){
+              ds = super.getDirectoryScanner(srcDir);
+
+              files = ds.getIncludedFiles();
+              for (int i = 0; i < files.length; i++){
+                filesList.add(new File(srcDir.getAbsolutePath() + File.separator + files[i]));
+              }
+            }
+            // deal with the filesets
+            for (int i = 0; i < filesets.size(); i++) {
+                FileSet fs = (FileSet) filesets.elementAt(i);
+                ds = fs.getDirectoryScanner(getProject());
+                files =ds.getIncludedFiles();
+                File fromDir = fs.getDir(getProject());
+                for (int j = 0; j < files.length; j++){
+                  filesList.add(new File(fromDir.getAbsolutePath() + File.separator + files[j]));
                 }
             }
+            // iterator through all the files and process them.
+            for (Iterator i = filesList.iterator();i.hasNext();){
+              File file = (File)i.next();
+
+              processFile(file);
+              if (garbage_collect) {
+                  System.gc();
+              }
+            }
+
+
         } catch (Exception err) {
             err.printStackTrace();
             throw new BuildException(err.getMessage());
         }
     }
+
+
+    /**
+     * Ensure we have a consistent and legal set of attributes, and set
+     * any internal flags necessary based on different combinations
+     * of attributes.
+     */
+    protected void validateAttributes() throws BuildException {
+        if (srcDir == null && filesets.size() == 0) {
+            throw new BuildException("Specify at least one source "
+                                     + "- a srcDir or a fileset.");
+        }
+
+        if (srcDir == null && destDir == null) {
+            throw new BuildException("Specify the destDir, or the srcDir.");
+        }
+
+
+    }
+
 }
 
