@@ -60,6 +60,8 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.DirSet;
+import org.apache.tools.ant.types.FileList;
 
 import java.util.Vector;
 import java.io.File;
@@ -79,7 +81,7 @@ public class PathConvert extends Task {
 
     /**
      * Helper class, holds the nested <map> values.  Elements will look like this:
-     * &lt;map from="d:" to="/foo"/>
+     * &lt;map from="d:" to="/foo"/&gt;
      * <p>
      * When running on windows, the prefix comparison will be case insensitive.
      */
@@ -226,7 +228,7 @@ public class PathConvert extends Task {
      */
     public void execute() throws BuildException {
 
-        // If we are a reference, the create a Path from the reference
+        // If we are a reference, create a Path from the reference
         if( isReference() ) {
             path = new Path(getProject()).createPath();
 
@@ -237,8 +239,15 @@ public class PathConvert extends Task {
             } else if( obj instanceof FileSet ) {
                 FileSet fs = (FileSet)obj;
                 path.addFileset( fs );
+            } else if( obj instanceof DirSet ) {
+                DirSet ds = (DirSet)obj;
+                path.addDirset( ds );
+            } else if( obj instanceof FileList ) {
+                FileList fl = (FileList)obj;
+                path.addFilelist( fl );
+                
             } else {
-                throw new BuildException( "'refid' does not refer to a path or fileset" );
+                throw new BuildException( "'refid' does not refer to a path, fileset, dirset, or filelist." );
             }
         }
 

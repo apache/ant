@@ -199,6 +199,28 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
+     * Adds a nested <code>&lt;filelist&gt;</code> element.
+     */
+    public void addFilelist(FileList fl) throws BuildException {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        elements.addElement(fl);
+        checked = false;
+    }
+
+    /**
+     * Adds a nested <code>&lt;dirset&gt;</code> element.
+     */
+    public void addDirset(DirSet dset) throws BuildException {
+        if (isReference()) {
+            throw noChildrenAllowed();
+        }
+        elements.addElement(dset);
+        checked = false;
+    }
+
+    /**
      * Creates a nested <code>&lt;path&gt;</code> element.
      */
     public Path createPath() throws BuildException {
@@ -305,6 +327,25 @@ public class Path extends DataType implements Cloneable {
                 for (int j=0; j<s.length; j++) {
                     File f = new File(dir, s[j]);
                     String absolutePath = f.getAbsolutePath();
+                    addUnlessPresent(result, translateFile(absolutePath));
+                } 
+            } else if (o instanceof DirSet) {
+                DirSet dset = (DirSet) o;
+                DirectoryScanner ds = dset.getDirectoryScanner(getProject());
+                String[] s = ds.getIncludedDirectories();
+                File dir = dset.getDir(getProject());
+                for (int j=0; j<s.length; j++) {
+                    File d = new File(dir, s[j]);
+                    String absolutePath = d.getAbsolutePath();
+                    addUnlessPresent(result, translateFile(absolutePath));
+                } 
+            } else if (o instanceof FileList) {
+                FileList fl = (FileList) o;
+                String[] s = fl.getFiles(getProject());
+                File dir = fl.getDir(getProject());
+                for (int j=0; j<s.length; j++) {
+                    File d = new File(dir, s[j]);
+                    String absolutePath = d.getAbsolutePath();
                     addUnlessPresent(result, translateFile(absolutePath));
                 } 
             }
