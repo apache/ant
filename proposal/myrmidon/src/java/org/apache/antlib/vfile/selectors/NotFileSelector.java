@@ -11,6 +11,8 @@ import org.apache.antlib.vfile.FileSelector;
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * A file selector that negates a nested file selector.
@@ -18,12 +20,14 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="not-selector"
  * @ant:type type="v-file-selector" name="not"
  */
 public class NotFileSelector
     implements FileSelector
 {
+    private final static Resources REZ
+        = ResourceManager.getPackageResources( NotFileSelector.class );
+
     private FileSelector m_selector;
 
     /**
@@ -44,7 +48,8 @@ public class NotFileSelector
     {
         if( m_selector == null )
         {
-            throw new TaskException( "notfileselector.no-selector.error" );
+            final String message = REZ.getString( "notfileselector.no-selector.error" );
+            throw new TaskException( message );
         }
         return !m_selector.accept( file, path, context );
     }

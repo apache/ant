@@ -31,7 +31,7 @@ public class FilteredFileList
     /**
      * Sets the selector to use to filter with.
      */
-    public void setCondition( final AndFileSelector selector )
+    public void setFilter( final AndFileSelector selector )
     {
         m_selector = selector;
     }

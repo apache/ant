@@ -167,7 +167,7 @@
 
                 <p>Selects files that exist.</p>
 
-                <h3><code>&lt;is-empty&gt;</code></h3>
+                <h3><code>&lt;is-empty-folder&gt;</code></h3>
 
                 <p>Selects empty folders, that is, folders that have no children.</p>
 

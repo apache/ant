@@ -133,5 +133,6 @@ public abstract class AbstractNameFileSelector
      * Returns the name to match against.
      */
     protected abstract String getNameForMatch( final String path,
-                                               final FileObject file );
+                                               final FileObject file )
+        throws TaskException;
 }

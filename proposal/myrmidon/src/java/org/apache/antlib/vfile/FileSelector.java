@@ -21,7 +21,6 @@ import org.apache.myrmidon.framework.DataType;
  * @ant:role shorthand="v-file-selector"
  */
 public interface FileSelector
-    extends DataType
 {
     /**
      * Accepts a file.

@@ -7,23 +7,34 @@
  */
 package org.apache.antlib.vfile.selectors;
 
-import org.apache.antlib.vfile.FileSelector;
-import org.apache.aut.vfs.FileObject;
-import org.apache.aut.vfs.FileSystemException;
+import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.framework.conditions.AndCondition;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.antlib.vfile.FileSelector;
+import org.apache.aut.vfs.FileObject;
 
 /**
- * A file selector that only selects files that exist.
+ * A file selector that evaluates a set of nested {@link Condition} elements.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:type type="v-file-selector" name="exists"
+ * @ant:type type="v-file-selector" name="condition"
  */
-public class ExistenceFileSelector
+public class ConditionSelector
     implements FileSelector
 {
+    private AndCondition m_condition = new AndCondition();
+
+    /**
+     * Adds a condition.
+     */
+    public void add( final Condition condition )
+    {
+        m_condition.add( condition );
+    }
+
     /**
      * Accepts a file.
      */
@@ -32,13 +43,6 @@ public class ExistenceFileSelector
                            final TaskContext context )
         throws TaskException
     {
-        try
-        {
-            return file.exists();
-        }
-        catch( FileSystemException e )
-        {
-            throw new TaskException( e.getMessage(), e );
-        }
+        return m_condition.evaluate( context );
     }
 }

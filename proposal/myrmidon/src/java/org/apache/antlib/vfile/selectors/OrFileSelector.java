@@ -20,7 +20,6 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="or-selector"
  * @ant:type type="v-file-selector" name="or"
  */
 public class OrFileSelector

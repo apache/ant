@@ -15,7 +15,6 @@ import org.apache.aut.vfs.FileObject;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:data-type name="basename-selector"
  * @ant:type type="v-file-selector" name="basename"
  */
 public class BaseNameFileSelector
