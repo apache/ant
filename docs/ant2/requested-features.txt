@@ -26,6 +26,11 @@ enhancements of existing tasks.
 * Add a JavaApply task that executes a given class with files from a
   fileset as arguments - similar to <apply>.
 
+* Include some more sophisticated loggers with the Ant distribution -
+  especially for sending emails. 
+
+  Could be part of the same module task would be developed in?
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
@@ -218,4 +223,6 @@ V. Things we probably don't agree on.
 * a built-in mechanism to include build-file fragments - something
   that doesn't use SYSTEM entities at all and therefore is XSchema
   friendly, allows for property expansions ...
+
+* Make loggers configurable via build.xml.
 
