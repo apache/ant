@@ -123,7 +123,7 @@ public class StarTeamLabel extends StarTeamTask {
     }
 
     /**
-     * Optional description of the label to be stored in the StarTeam project.
+     * Description of the label to be stored in the StarTeam project.
      */
     public void setDescription(String description) {
         this.description = description;
