@@ -20,6 +20,11 @@ Other changes:
 
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
+  
+* <nice> task lets you set the priority of the current thread; non-forking 
+<java> code will inherit this priority in their main thread. 
+
+* <touch> has filelist support. 
 
 Changes from Ant 1.5.4 to Ant 1.6
 =================================
