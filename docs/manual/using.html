@@ -107,6 +107,14 @@ example, if the <code>module-A-present</code> property is set
 </p>
 <p>If no <code>if</code> and no <code>unless</code> attribute is present,
 the target will always be executed.</p>
+
+<p>
+<b>Important:</b> the <code>if</code> and <code>unless</code> attributes only 
+enable or disable the target to which they are attached. They do not control
+whether or not targets that a conditional target depends upon get executed. 
+In fact, they do not even get evaluated until the target is about to be executed,
+and all its predecessors have already run.
+
 <p>The optional <code>description</code> attribute can be used to provide a one-line description of this target, which is printed by the
 <nobr><code>-projecthelp</code></nobr> command-line option. Targets
 without such a description are deemed internal and will not be listed,
