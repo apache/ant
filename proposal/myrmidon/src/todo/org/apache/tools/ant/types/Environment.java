@@ -17,7 +17,6 @@ import org.apache.myrmidon.api.TaskException;
  */
 public class Environment
 {
-
     protected Vector variables;
 
     public Environment()

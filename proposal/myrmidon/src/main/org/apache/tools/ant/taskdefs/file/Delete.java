@@ -33,7 +33,8 @@ import org.apache.tools.ant.types.PatternSet;
  *      </a>
  * @author Jon S. Stevens <a href="mailto:jon@latchkey.com">jon@latchkey.com</a>
  */
-public class Delete extends MatchingTask
+public class Delete
+    extends MatchingTask
 {
     protected File file = null;
     protected File dir = null;
