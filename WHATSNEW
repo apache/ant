@@ -45,6 +45,8 @@ Fixed bugs:
 
 * Ant's default logger could swallow empty lines.
 
+* ejbjar's iPlanet nested element now can process multiple descriptors.
+
 Other changes:
 --------------
 
