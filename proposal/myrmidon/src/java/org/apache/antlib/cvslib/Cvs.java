@@ -9,12 +9,11 @@ package org.apache.antlib.cvslib;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.EnvironmentData;
-import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -145,7 +144,7 @@ public class Cvs
         throws TaskException
     {
         final Commandline command = buildCommandline();
-        final EnvironmentData env = buildEnvironment();
+        final Properties env = buildEnvironment();
 
         final Execute2 exe = new Execute2();
         setupLogger( exe );
@@ -153,7 +152,7 @@ public class Cvs
         exe.setWorkingDirectory( m_dest );
 
         exe.setCommandline( command.getCommandline() );
-        exe.setEnvironment( env.getVariables() );
+        exe.setEnvironment( env );
         try
         {
             final int retCode = exe.execute();
@@ -169,31 +168,22 @@ public class Cvs
         }
     }
 
-    private EnvironmentData buildEnvironment()
+    private Properties buildEnvironment()
     {
-        final EnvironmentData env = new EnvironmentData();
+        final Properties env = new Properties();
         if( 0 < m_port )
         {
-            final EnvironmentVariable var = new EnvironmentVariable();
-            var.setKey( "CVS_CLIENT_PORT" );
-            var.setValue( String.valueOf( m_port ) );
-            env.addVariable( var );
+            env.setProperty( "CVS_CLIENT_PORT", String.valueOf( m_port ) );
         }
 
         if( null != m_passwordFile )
         {
-            final EnvironmentVariable var = new EnvironmentVariable();
-            var.setKey( "CVS_PASSFILE" );
-            var.setValue( String.valueOf( m_passwordFile ) );
-            env.addVariable( var );
+            env.setProperty( "CVS_PASSFILE", String.valueOf( m_passwordFile ) );
         }
 
         if( null != m_cvsRsh )
         {
-            final EnvironmentVariable var = new EnvironmentVariable();
-            var.setKey( "CVS_RSH" );
-            var.setValue( String.valueOf( m_cvsRsh ) );
-            env.addVariable( var );
+            env.setProperty( "CVS_RSH", String.valueOf( m_cvsRsh ) );
         }
         return env;
     }
