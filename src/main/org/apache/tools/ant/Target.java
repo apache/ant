@@ -88,7 +88,7 @@ public class Target implements TaskContainer {
                 String token = tok.nextToken().trim();
 
                 //Make sure the dependency is not empty string
-                if (token.equals("")) {
+                if (token.equals("") || token.equals(",")) {
                     throw new BuildException( "Syntax Error: Depend attribute " +
                                               "for target \"" + getName() + 
                                               "\" has an empty string for dependency." );
@@ -99,8 +99,8 @@ public class Target implements TaskContainer {
                 //Make sure that depends attribute does not
                 //end in a ,
                 if (tok.hasMoreTokens()) {
-                    tok.nextToken();
-                    if (!tok.hasMoreTokens()) {
+                    token = tok.nextToken();
+                    if (!tok.hasMoreTokens() || !token.equals(",")) {
                         throw new BuildException( "Syntax Error: Depend attribute " +
                                                   "for target \"" + getName() + 
                                                   "\" ends with a , character" );
