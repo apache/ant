@@ -391,15 +391,28 @@ public class ExecTask extends Task {
 
         // couldn't find it - must be on path
         if (searchPath) {
+            Path p = null;
+            String[] environment = env.getVariables();
+            if (environment != null) {
+                for (int i = 0; i < environment.length; i++) {
+                    if (isPath(environment[i])) {
+                        p = new Path(getProject(), 
+                                     environment[i].substring(5));
+                        break;
+                    }
+                }
+            }
+
+            if (p == null) {
             Vector env = Execute.getProcEnvironment();
             Enumeration e = env.elements();
-            Path p = null;
             while (e.hasMoreElements()) {
                 String line = (String) e.nextElement();
-                if (line.startsWith("PATH=") || line.startsWith("Path=")) {
+                if (isPath(line)) {
                     p = new Path(getProject(), line.substring(5));
                     break;
                 }
+            }
             }
 
             if (p != null) {
@@ -645,6 +658,10 @@ public class ExecTask extends Task {
      * Flush the output stream - if there is one.
      */
     protected void logFlush() {
+    }
+
+    private boolean isPath(String line) {
+        return line.startsWith("PATH=") || line.startsWith("Path=");
     }
 
 }
