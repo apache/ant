@@ -361,6 +361,7 @@ public class CommandlineJava implements Cloneable {
         if (haveBootclasspath(true)) {
             listIterator.add("-Xbootclasspath:" + bootclasspath.toString());
         }
+
         //main classpath
         if (haveClasspath()) {
             listIterator.add("-classpath");
@@ -370,7 +371,7 @@ public class CommandlineJava implements Cloneable {
 
         //now any assertions are added
         if (getAssertions() != null) {
-            getAssertions().applyAssertions(this);
+            getAssertions().applyAssertions(listIterator);
         }
 
         // JDK usage command line says that -jar must be the first option, as there is
@@ -429,7 +430,7 @@ public class CommandlineJava implements Cloneable {
      * Get the VM command parameters, including memory settings
      * @return the VM command parameters
      */
-    private Commandline getActualVMCommand() {
+    protected Commandline getActualVMCommand() {
         Commandline actualVMCommand = (Commandline) vmCommand.clone();
         if (maxMemory != null) {
             if (vmVersion.startsWith("1.1")) {
@@ -449,7 +450,8 @@ public class CommandlineJava implements Cloneable {
      * @deprecated please dont use this -it effectively creates the entire command.
      */
     public int size() {
-        int size = getActualVMCommand().size() + javaCommand.size() + sysProperties.size();
+        int size = getActualVMCommand().size() + javaCommand.size() 
+            + sysProperties.size();
         // classpath is "-classpath <classpath>" -> 2 args
         if (haveClasspath()) {
             size += 2;
@@ -564,7 +566,7 @@ public class CommandlineJava implements Cloneable {
      *
      * @since Ant 1.6
      */
-    private boolean haveClasspath() {
+    protected boolean haveClasspath() {
         Path fullClasspath = classpath != null
             ? classpath.concatSystemClasspath("ignore") : null;
         return fullClasspath != null
@@ -581,7 +583,7 @@ public class CommandlineJava implements Cloneable {
      *
      * @since Ant 1.6
      */
-    private boolean haveBootclasspath(boolean log) {
+    protected boolean haveBootclasspath(boolean log) {
         if (bootclasspath != null
             && bootclasspath.toString().trim().length() > 0) {
 

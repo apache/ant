@@ -49,6 +49,8 @@ Fixed bugs:
 * <zip> and friends would delete the original file when trying to update
   a read-only archive.  Bugzilla Report 28419.
 
+* <junit> and <assertions> are working together. Bugzilla report 27218
+
 Other changes:
 --------------
 

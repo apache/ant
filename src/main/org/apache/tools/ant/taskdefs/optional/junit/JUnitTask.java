@@ -277,7 +277,7 @@ public class JUnitTask extends Task {
     }
 
     /**
-     * Set the bahvior when {@link #setFork fork} fork has been enabled.
+     * Set the behavior when {@link #setFork fork} fork has been enabled.
      *
      * <p>Possible values are "once", "perTest" and "perBatch".  If
      * set to "once", only a single Java VM will be forked for all
@@ -595,6 +595,12 @@ public class JUnitTask extends Task {
      * @since Ant 1.6
      */
     public void setTempdir(File tmpDir) {
+        if (tmpDir!=null) {
+            if (!tmpDir.exists() || !tmpDir.isDirectory()) {
+                throw new BuildException(tmpDir.toString()
+                                         +" is not a valid temp directory");
+            }
+        }
         this.tmpDir = tmpDir;
     }
 
@@ -686,11 +692,7 @@ public class JUnitTask extends Task {
         JUnitTest test = null;
         // Create a temporary file to pass the test cases to run to 
         // the runner (one test case per line)
-        File casesFile = 
-            FileUtils.newFileUtils().createTempFile("junittestcases", 
-                                                    ".properties",
-                                                    getProject().getBaseDir());
-        casesFile.deleteOnExit();
+        File casesFile = createTempPropertiesFile("junittestcases");
         PrintWriter writer = null;
         try {
             writer = 
@@ -821,12 +823,8 @@ public class JUnitTask extends Task {
             }
         }
 
-        // Create a temporary file to pass the Ant properties to the
-        // forked test
-        File propsFile =
-            FileUtils.newFileUtils().createTempFile("junit", ".properties",
-                tmpDir != null ? tmpDir : getProject().getBaseDir());
-        propsFile.deleteOnExit();
+
+        File propsFile = createTempPropertiesFile("junit");
         cmd.createArgument().setValue("propsfile="
                                       + propsFile.getAbsolutePath());
         Hashtable p = getProject().getProperties();
@@ -883,6 +881,22 @@ public class JUnitTask extends Task {
         }
 
         return retVal;
+    }
+
+    /**
+     * Create a temporary file to pass the properties to a new process.
+     * Will auto-delete on (graceful) exit.
+     * The file will be in the project basedir unless tmpDir declares
+     * something else.
+     * @param prefix
+     * @return
+     */
+    private File createTempPropertiesFile(String prefix) {
+        File propsFile =
+            FileUtils.newFileUtils().createTempFile(prefix, ".properties",
+                tmpDir != null ? tmpDir : getProject().getBaseDir());
+        propsFile.deleteOnExit();
+        return propsFile;
     }
 
 
@@ -1067,7 +1081,7 @@ public class JUnitTask extends Task {
         if (timeout == null) {
             return null;
         }
-        return new ExecuteWatchdog(timeout.intValue());
+        return new ExecuteWatchdog((long) timeout.intValue());
     }
 
     /**
@@ -1216,6 +1230,10 @@ public class JUnitTask extends Task {
                             OutputStream out) {
         formatter.setOutput(out);
         formatter.startTestSuite(test);
+
+        //the trick to integrating test output to the formatter, is to
+        //create a special test class that asserts a timout occurred,
+        //and tell the formatter that it raised.  
         Test t = new Test() {
             public int countTestCases() { return 1; }
             public void run(TestResult r) {
@@ -1268,6 +1286,7 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * Forked test support
      * @since Ant 1.6.2
      */
     private final class ForkedTestConfiguration {
@@ -1276,6 +1295,15 @@ public class JUnitTask extends Task {
         private boolean haltOnFailure;
         private String errorProperty;
         private String failureProperty;
+
+        /**
+         * constructor for forked test configuration
+         * @param filterTrace
+         * @param haltOnError
+         * @param haltOnFailure
+         * @param errorProperty
+         * @param failureProperty
+         */
         ForkedTestConfiguration(boolean filterTrace, boolean haltOnError,
                                 boolean haltOnFailure, String errorProperty,
                                 String failureProperty) {
@@ -1286,6 +1314,23 @@ public class JUnitTask extends Task {
             this.failureProperty = failureProperty;
         }
 
+        /**
+         * configure from a test; sets member variables to attributes of the test
+         * @param test
+         */
+        ForkedTestConfiguration(JUnitTest test) {
+            this(test.getFiltertrace(),
+                    test.getHaltonerror(),
+                    test.getHaltonfailure(),
+                    test.getErrorProperty(),
+                    test.getFailureProperty());
+        }
+
+        /**
+         * equality test checks all the member variables
+         * @param other
+         * @return true if everything is equal
+         */
         public boolean equals(Object other) {
             if (other == null 
                 || other.getClass() != ForkedTestConfiguration.class) {
@@ -1305,6 +1350,11 @@ public class JUnitTask extends Task {
                      && failureProperty.equals(o.failureProperty)));
         }
 
+        /**
+         * hashcode is based only on the boolean members, and returns a value
+         * in the range 0-7.
+         * @return
+         */
         public int hashCode() {
             return (filterTrace ? 1 : 0) 
                 + (haltOnError ? 2 : 0)
@@ -1313,11 +1363,22 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * These are the different forking options
      * @since 1.6.2
      */
     public static final class ForkStyle extends EnumeratedAttribute {
+
+        /**
+         * fork once only
+         */
         public static final String ONCE = "once";
+        /**
+         * fork once per test class
+         */
         public static final String PER_TEST = "perTest";
+        /**
+         * fork once per batch of tests
+         */
         public static final String PER_BATCH = "perBatch";
 
         public ForkStyle() {
@@ -1352,11 +1413,7 @@ public class JUnitTask extends Task {
                     execute(test);
                 } else {
                     ForkedTestConfiguration c =
-                        new ForkedTestConfiguration(test.getFiltertrace(),
-                                                    test.getHaltonerror(),
-                                                    test.getHaltonfailure(),
-                                                    test.getErrorProperty(),
-                                                    test.getFailureProperty());
+                        new ForkedTestConfiguration(test);
                     List l = (List) testConfigurations.get(c);
                     if (l == null) {
                         l = new ArrayList();
