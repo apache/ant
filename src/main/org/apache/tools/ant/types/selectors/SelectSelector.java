@@ -161,7 +161,7 @@ public class SelectSelector extends AndSelector {
     public void verifySettings() {
         if (selectorCount() != 1) {
             setError("One and only one selector is allowed within the " +
-                    "<select> tag");
+                    "<selector> tag");
         }
     }
 
