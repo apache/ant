@@ -1,17 +1,5 @@
-Changes from Ant 1.6.2beta1 to current Ant 1.6 CVS version
-==========================================================
-
-Changes that could break older environments:
---------------------------------------------
-
-Fixed bugs:
------------
-
-Other changes:
---------------
-
-Changes from Ant 1.6.1 to Ant 1.6.2beta1
-========================================
+Changes from Ant 1.6.1 to Ant 1.6.2
+===================================
 
 Changes that could break older environments:
 --------------------------------------------
