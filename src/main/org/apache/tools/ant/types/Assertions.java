@@ -277,7 +277,7 @@ public class Assertions extends DataType implements Cloneable {
         /**
          * create a full command string from this class
          * @throws BuildException in case of trouble
-         * @return
+         * @return The command string
          */
         public String toCommand() {
             //catch invalidness

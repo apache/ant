@@ -62,10 +62,10 @@ public class DotnetDefine {
     }
 
     /**
-     * get the value of this definition. Will be null if a condition
+     * This method gets the value of this definition. Will be null if a condition
      * was declared and not met
      * @param owner owning task
-     * @return
+     * @return The value of the definition.
      * @throws BuildException
      */
     public String getValue(Task owner) throws BuildException {

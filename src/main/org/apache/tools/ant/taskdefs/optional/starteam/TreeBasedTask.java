@@ -482,7 +482,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     /**
      * returns the label being used
      *
-     * @return
+     * @return the label being used
      */
     protected Label getLabelInUse() {
         return this.labelInUse;

@@ -78,7 +78,7 @@ public class ClasspathUtils {
      *
      * @param p
      * @param ref
-     * @return
+     * @return The class loader
      */
     public static ClassLoader getClassLoaderForPath(
         Project p, Reference ref) {
@@ -98,7 +98,7 @@ public class ClasspathUtils {
      * @param reverseLoader if set to true this new loader will take
      * precedence over it's parent (which is contra the regular
      * classloader behaviour)
-     * @return
+     * @return The class loader
      */
     public static ClassLoader getClassLoaderForPath(
         Project p, Reference ref, boolean reverseLoader) {
@@ -123,7 +123,7 @@ public class ClasspathUtils {
      *
      * @param path
      * @param loaderId
-     * @return
+     * @return The class loader
      */
     public static ClassLoader getClassLoaderForPath(
         Project p, Path path, String loaderId) {
@@ -140,7 +140,7 @@ public class ClasspathUtils {
      *
      * @param path
      * @param loaderId
-     * @return
+     * @return The class loader
      */
     public static ClassLoader getClassLoaderForPath(
         Project p, Path path, String loaderId, boolean reverseLoader) {
@@ -199,7 +199,7 @@ public class ClasspathUtils {
      * property and should be used with caution.</p>
      * @param path the classpath for this loader
      * @param reverseLoader
-     * @return
+     * @return The fresh, different, not used before class loader.
      */
     public static ClassLoader getUniqueClassLoaderForPath(
         Project p,
@@ -225,7 +225,7 @@ public class ClasspathUtils {
      *
      * @param className the full qualified class name to load.
      * @param userDefinedLoader the classloader to use.
-     * @return
+     * @return The fresh object instance
      * @throws BuildException when loading or instantiation failed.
      */
     public static Object newInstance(
@@ -312,7 +312,7 @@ public class ClasspathUtils {
         }
 
         /**
-         * Delegate method handling the @classpath attribute
+         * This method is a Delegate method handling the @classpath attribute.
          *
          * <p>This attribute can set a path to add to the classpath</p>
          *
@@ -332,7 +332,7 @@ public class ClasspathUtils {
          * <p>This nested path-like structure can set a path to add to the
          * classpath</p>
          *
-         * @return
+         * @return the created path
          */
         public Path createClasspath() {
             if (this.classpath == null) {
@@ -396,7 +396,7 @@ public class ClasspathUtils {
 
         /**
          * Finds or creates the classloader for this
-         * @return
+         * @return The class loader
          */
         public ClassLoader getClassLoader() {
             ClassLoader cl;

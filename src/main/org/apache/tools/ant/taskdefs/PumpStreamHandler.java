@@ -41,7 +41,7 @@ public class PumpStreamHandler implements ExecuteStreamHandler {
      * Construct a new <CODE>PumpStreamHandler</CODE>.
      * @param out the output <CODE>OutputStream</CODE>.
      * @param err the error <CODE>OutputStream</CODE>.
-     * @param in the input <CODE>InputStream</CODE>.
+     * @param input the input <CODE>InputStream</CODE>.
      */
     public PumpStreamHandler(OutputStream out, OutputStream err,
                              InputStream input) {

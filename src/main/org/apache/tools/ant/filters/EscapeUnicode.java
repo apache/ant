@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * Converts non latin characters to unicode escapes
+ * This method converts non-latin characters to unicode escapes.
  * Useful to load properties containing non latin
  * Example:
  *

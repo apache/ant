@@ -27,8 +27,8 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
- *  Syncs an existing Perforce label against the Perforce client
- *  or against a set of files/revisions
+ *  This method syncs an existing Perforce label against the Perforce client
+ *  or against a set of files/revisions.
  *
  *
  * Example Usage:

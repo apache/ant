@@ -599,7 +599,7 @@ public abstract class AbstractCvsTask extends Task {
     }
 
     /**
-     * add a command line argument to an external command
+     * This method adds a command line argument to an external command.
      *
      * I do not understand what this method does in this class ???
      * particularly not why it is public ????

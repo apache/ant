@@ -169,9 +169,9 @@ public class PropertyHelper {
     /** Get a property. If all hooks return null, the default
      * tables will be used.
      *
-     * @param ns
-     * @param name
-     * @return
+     * @param ns namespace of the sought property
+     * @param name name of the sought property
+     * @return The property, if returned by a hook, or null if none.
      */
     public Object getPropertyHook(String ns, String name, boolean user) {
         if (getNext() != null) {

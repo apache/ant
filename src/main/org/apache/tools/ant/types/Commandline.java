@@ -452,8 +452,8 @@ public class Commandline implements Cloneable {
     }
 
     /**
-     * a deep clone of the contained object.
-     * @return
+     * Generate a deep clone of the contained object.
+     * @return a clone of the contained object
      */
     public Object clone() {
         try {

@@ -360,7 +360,7 @@ public class Redirector {
     /**
      * Set the input <CODE>FilterChain</CODE>s.
      *
-     * @param <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     * @param inputFilterChains <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
      */
     public synchronized void setInputFilterChains(Vector inputFilterChains) {
         this.inputFilterChains = inputFilterChains;
@@ -369,7 +369,7 @@ public class Redirector {
     /**
      * Set the output <CODE>FilterChain</CODE>s.
      *
-     * @param <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     * @param outputFilterChains <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
      */
     public void setOutputFilterChains(Vector outputFilterChains) {
         this.outputFilterChains = outputFilterChains;
@@ -378,7 +378,7 @@ public class Redirector {
     /**
      * Set the error <CODE>FilterChain</CODE>s.
      *
-     * @param <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     * @param errorFilterChains <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
      */
     public void setErrorFilterChains(Vector errorFilterChains) {
         this.errorFilterChains = errorFilterChains;

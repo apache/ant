@@ -317,8 +317,8 @@ public class ProjectHelper2 extends ProjectHelper {
         }
 
         /**
-         * Called when this element and all elements nested into it have been
-         * handled (i.e. at the </end_tag_of_the_element> ).
+         * This method is called when this element and all elements nested into it have been
+         * handled. I.e., this happens at the &lt;/end_tag_of_the_element&gt;.
          * @param uri the namespace uri for this element
          * @param tag the element name
          * @param context the current context
