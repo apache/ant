@@ -223,6 +223,23 @@
   </faqsection>
 
   <faqsection title="How do I ...">
+    <faq id="implement-os-specific-configuration">
+      <question>How do I realize os--specific configurations?</question>
+      <answer>
+        <p>The core idea is using property files which name accords to the
+        os-name. Then simply use the build-in property <tt>os.name</tt>.</p>
+        <p>For better use you should also provide a file with defaul values.
+        But be careful with the correct os-names. For test simply &lt;echo&gt;
+        the ${os.name} on all machines and you can be sure to use the right
+        file names.</p>
+        <source><![CDATA[
+          <property file="${os.name}.properties"/>
+          <property file="default.properties"/>
+]]></source>
+      </answer>
+    </faq>
+
+
     <faq id="adding-external-tasks">
       <question>How do I add an external task that I&apos;ve written to the
       page &quot;External Tools and Task&quot;?</question>
@@ -252,8 +269,12 @@
         href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/external.xml">this</a>
         document.</p>
 
+        <p>If you have written something bigger than a 'simple plugin' to Ant it
+        may be better to add the link to <a href="projects.html">projects.html</a>.
+        The procedure to add it is the same. The file to patch is <a
+        href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/projects.xml">this</a>
+        document. The syntax of that file is the same.</p>
       </answer>
-
     </faq>
 
     <faq id="passing-cli-args">

@@ -206,6 +206,9 @@
             </ul>
                 <h4 class="toc">How do I ...</h4>
         <ul>
+                <li><a href="#implement-os-specific-configuration">
+  How do I realize os--specific configurations?
+      </a></li>
                 <li><a href="#adding-external-tasks">
   How do I add an external task that I've written to the
       page "External Tools and Task"?
@@ -589,6 +592,20 @@
         or use the zip archive instead (you can extract it using
         <code>jar xf</code>).</p>
                                 <p class="faq">
+      <a name="implement-os-specific-configuration"></a>
+      How do I realize os--specific configurations?
+    </p>
+                  <p>The core idea is using property files which name accords to the
+        os-name. Then simply use the build-in property <tt>os.name</tt>.</p>
+                        <p>For better use you should also provide a file with defaul values.
+        But be careful with the correct os-names. For test simply &lt;echo&gt;
+        the ${os.name} on all machines and you can be sure to use the right
+        file names.</p>
+                        <pre class="code">
+          &lt;property file=&quot;${os.name}.properties&quot;/&gt;
+          &lt;property file=&quot;default.properties&quot;/&gt;
+</pre>
+                    <p class="faq">
       <a name="adding-external-tasks"></a>
       How do I add an external task that I've written to the
       page "External Tools and Task"?
@@ -613,6 +630,10 @@
         </ul>
                         <p>The preferred format for this information is a patch to <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/external.xml">this</a>
         document.</p>
+                        <p>If you have written something bigger than a 'simple plugin' to Ant it
+        may be better to add the link to <a href="projects.html">projects.html</a>.
+        The procedure to add it is the same. The file to patch is <a href="http://cvs.apache.org/viewcvs.cgi/~checkout~/ant/xdocs/projects.xml">this</a>
+        document. The syntax of that file is the same.</p>
                     <p class="faq">
       <a name="passing-cli-args"></a>
       How do I pass parameters from the command line to my
