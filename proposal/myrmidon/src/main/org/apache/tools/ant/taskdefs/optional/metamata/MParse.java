@@ -289,7 +289,6 @@ public class MParse
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute2 exe = new Execute2( execManager );
-        setupLogger( exe );
         getLogger().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );

@@ -174,7 +174,6 @@ public class Exec
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute2 exe = new Execute2( execManager );
-        setupLogger( exe );
         exe.setTimeout( m_timeout );
         exe.setWorkingDirectory( m_dir );
         exe.setNewenvironment( m_newEnvironment );

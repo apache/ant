@@ -207,7 +207,6 @@ public abstract class MSVSS extends Task
         {
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute2 exe = new Execute2( execManager );
-            setupLogger( exe );
 
             // If location of ss.ini is specified we need to set the
             // environment-variable SSDIR to this value

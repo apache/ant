@@ -117,7 +117,6 @@ public class CovMerge extends Task
 
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute2 exe = new Execute2( execManager );
-            setupLogger( exe );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl );
 

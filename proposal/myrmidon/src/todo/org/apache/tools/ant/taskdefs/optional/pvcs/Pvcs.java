@@ -193,7 +193,6 @@ public class Pvcs
         {
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute2 exe = new Execute2( execManager );
-            setupLogger( exe );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd );
             result = exe.execute();
@@ -275,7 +274,6 @@ public class Pvcs
 
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute2 exe = new Execute2( execManager );
-            setupLogger( exe );
             exe.setExecOutputHandler( this );
             m_output = new FileOutputStream( tmp );
             exe.setWorkingDirectory( getBaseDirectory() );

@@ -92,7 +92,6 @@ public class Rpm
         final Commandline cmd = createCommand();
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute2 exe = new Execute2( execManager );
-        setupLogger( exe );
 
         if( m_topDir == null )
         {

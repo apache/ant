@@ -229,8 +229,6 @@ public class ANTLR extends Task
     {
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute2 exe = new Execute2( execManager );
-        setupLogger( exe );
-
         if( workingdir != null )
         {
             exe.setWorkingDirectory( workingdir );
@@ -257,7 +255,6 @@ public class ANTLR extends Task
         // if no output directory is specified, used the target's directory
         if( outputDirectory == null )
         {
-            String fileName = target.toString();
             setOutputdirectory( new File( target.getParent() ) );
         }
         if( !outputDirectory.isDirectory() )

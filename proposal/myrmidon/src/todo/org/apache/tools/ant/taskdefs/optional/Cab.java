@@ -137,7 +137,6 @@ public class Cab
                 File listFile = createListFile( files );
                 final ExecManager execManager = (ExecManager)getService( ExecManager.class );
                 Execute2 exe = new Execute2( execManager );
-                setupLogger( exe );
                 exe.setWorkingDirectory( m_baseDir );
                 final Commandline cmd = createCommand( listFile );
                 exe.setCommandline( cmd );

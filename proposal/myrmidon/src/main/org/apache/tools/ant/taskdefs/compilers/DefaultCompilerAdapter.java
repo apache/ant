@@ -363,7 +363,6 @@ public abstract class DefaultCompilerAdapter
             {
                 final ExecManager execManager = (ExecManager)m_attributes.getService( ExecManager.class );
                 final Execute2 exe = new Execute2( execManager );
-                setupLogger( exe );
                 exe.setWorkingDirectory( m_baseDir );
                 final String[] commandline = commandArray;
                 exe.setCommandline( new Commandline( commandline ) );

@@ -199,8 +199,6 @@ public class Coverage
 
     /**
      * the jvm arguments
-     *
-     * @return Description of the Returned Value
      */
     public void addJvmarg( final Argument argument )
     {
@@ -253,7 +251,6 @@ public class Coverage
             // use the custom handler for stdin issues
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute2 exe = new Execute2( execManager );
-            setupLogger( exe );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl );
             int exitValue = exe.execute();

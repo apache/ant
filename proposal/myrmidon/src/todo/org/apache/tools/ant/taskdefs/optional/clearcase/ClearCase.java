@@ -110,7 +110,6 @@ public abstract class ClearCase extends Task
         {
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute2 exe = new Execute2( execManager );
-            setupLogger( exe );
             exe.setWorkingDirectory( getBaseDirectory() );
             exe.setCommandline( cmd );
             return exe.execute();

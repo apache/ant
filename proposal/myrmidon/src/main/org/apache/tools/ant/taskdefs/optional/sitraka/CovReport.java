@@ -249,7 +249,6 @@ public class CovReport extends Task
             // use the custom handler for stdin issues
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute2 exe = new Execute2( execManager );
-            setupLogger( exe );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl );
             int exitValue = exe.execute();

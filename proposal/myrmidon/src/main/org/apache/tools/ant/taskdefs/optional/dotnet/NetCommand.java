@@ -202,7 +202,6 @@ public class NetCommand
         File dir = _owner.getBaseDirectory();
         final ExecManager execManager = (ExecManager)_owner.getService( ExecManager.class );
         _exe = new Execute2( execManager );
-        setupLogger( _exe );
         _exe.setWorkingDirectory( dir );
     }
 }

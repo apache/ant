@@ -150,7 +150,6 @@ public class Cvs
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute2 exe = new Execute2( execManager );
-        setupLogger( exe );
         if( m_dest == null )
         {
             m_dest = getBaseDirectory();

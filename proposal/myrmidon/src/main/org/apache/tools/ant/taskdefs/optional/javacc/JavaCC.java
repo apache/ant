@@ -244,7 +244,6 @@ public class JavaCC extends Task
             getLogger().debug( cmdline.toString() );
             final ExecManager execManager = (ExecManager)getService( ExecManager.class );
             final Execute2 exe = new Execute2( execManager );
-            setupLogger( exe );
             final String[] commandline = cmdline.getCommandline();
             exe.setCommandline( new Commandline( commandline ) );
             int retval = exe.execute();
