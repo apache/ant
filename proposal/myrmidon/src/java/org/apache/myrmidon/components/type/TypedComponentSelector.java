@@ -21,13 +21,25 @@ import org.apache.avalon.framework.component.ComponentException;
 public class TypedComponentSelector
     implements ComponentSelector
 {
-    private final HashMap  m_factorys = new HashMap();
+    ///Parent Selector
+    private final TypedComponentSelector  m_parent;
 
-    private final Class    m_type;
+    ///Map of name->factory list
+    private final HashMap                 m_factorys = new HashMap();
+
+    ///Type expected to be created from factorys
+    private final Class                   m_type;
 
     public TypedComponentSelector( final Class type )
     {
         m_type = type;
+        m_parent = null;
+    }
+
+    public TypedComponentSelector( final TypedComponentSelector parent )
+    {
+        m_type = parent.getType();
+        m_parent = parent;
     }
 
     /**
@@ -46,14 +58,15 @@ public class TypedComponentSelector
             throw new ComponentException( "Invalid hint, expected a string not a " + 
                                           hint.getClass().getName() );
         }
-        
-        final Component component = createComponent( (String)hint );
+
+        final String name = (String)hint;
+        final Component component = createComponent( name );
 
         if( null != component )
         {
             if( m_type.isInstance( component ) )
             {
-                throw new ComponentException( "Implementation of " + hint + " is not of " +
+                throw new ComponentException( "Implementation of " + name + " is not of " +
                                               "correct type (" + m_type.getClass().getName() + ")" );
             }
 
@@ -61,7 +74,7 @@ public class TypedComponentSelector
         }
         else
         {
-            throw new ComponentException( "Unable to provide implementation for " + hint );
+            throw new ComponentException( "Unable to provide implementation for " + name );
         }
     }
 
@@ -77,9 +90,20 @@ public class TypedComponentSelector
     /**
      * Populate the ComponentSelector.
      */
-    public void put( final String name, final ComponentFactory factory )
+    public void register( final String name, final ComponentFactory factory )
     {
         m_factorys.put( name, factory );
+    }
+
+    /**
+     * Retrieve type managed by selector.
+     * Used by other instances of TypedComponentSelector.
+     *
+     * @return the type class
+     */
+    protected final Class getType()
+    {
+        return m_type;
     }
 
     /**
