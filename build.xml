@@ -322,19 +322,6 @@
         </fileset>
       </batchtest>
     </junit>
-    <taskdef name="a" classname="A">
-      <classpath>
-        <pathelement location="${lib.dir}/${name}.jar" />
-        <pathelement location="${build.tests}" />
-        <path refid="classpath" />
-        <pathelement path="${java.class.path}" />
-        <path location="/tmp" />
-      </classpath>
-    </taskdef>
-    <a test="set">
-Bla
-      <c test="1" />
-    </a>
   </target>
 
 </project>
