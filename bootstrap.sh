@@ -1,6 +1,6 @@
 #!/bin/sh
 
-#   Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+#   Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
 #   reserved.
 
 # OS specific support.  $var _must_ be set to either true or false.
