@@ -627,7 +627,7 @@ public class Execute {
         public Process exec(Project project, String[] cmd, String[] env, File workingDir) throws IOException
         {
             File commandDir = workingDir;
-            if ( workingDir == null ) {
+            if ( workingDir == null && project != null ) {
                 commandDir = project.getBaseDir();
             }
 
@@ -712,7 +712,7 @@ public class Execute {
 
             // Build the command
             File commandDir = workingDir;
-            if ( workingDir == null ) {
+            if ( workingDir == null && project != null ) {
                 commandDir = project.getBaseDir();
             }
 

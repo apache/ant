@@ -488,9 +488,9 @@ public class JUnitTask extends Task {
 
         Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), watchdog);
         execute.setCommandline(cmd.getCommandline());
+        execute.setAntRun(project);
         if (dir != null) {
             execute.setWorkingDirectory(dir);
-            execute.setAntRun(project);
         }
 
         log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
