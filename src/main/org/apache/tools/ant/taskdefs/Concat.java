@@ -797,7 +797,6 @@ public class Concat extends Task {
                     }
                     continue;
                 }
-
                 int nRead = getReader().read(cbuf, off, len);
                 if (nRead == -1 || nRead == 0) {
                     reader.close();
@@ -816,7 +815,7 @@ public class Concat extends Task {
                             if (i < 0) {
                                 break;
                             }
-                            addLastChar(cbuf[off + i]);
+                            addLastChar(cbuf[off + i - 1]);
                         }
                     }
                     len -= nRead;
