@@ -11,13 +11,8 @@ import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
 import org.apache.avalon.framework.ExceptionUtil;
-import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
-import org.apache.log.Hierarchy;
-import org.apache.log.LogTarget;
-import org.apache.log.Priority;
-import org.apache.log.format.PatternFormatter;
-import org.apache.log.output.io.StreamTarget;
+import org.apache.myrmidon.frontends.BasicLogger;
 
 /**
  * A base class for Myrmidon tests.  Provides utility methods for locating
@@ -30,8 +25,7 @@ public abstract class AbstractMyrmidonTest
 {
     private final File m_testBaseDir;
     private final File m_baseDir;
-
-    private final static String PATTERN = "[%8.8{category}] %{message}\\n%{throwable}";
+    private Logger m_logger;
 
     public AbstractMyrmidonTest( String name )
     {
@@ -50,9 +44,38 @@ public abstract class AbstractMyrmidonTest
      */
     protected File getTestResource( final String name )
     {
+        return getTestResource( name, true );
+    }
+
+    /**
+     * Locates a test resource.
+     */
+    protected File getTestResource( final String name, final boolean mustExist )
+    {
         File file = new File( m_testBaseDir, name );
         file = getCanonicalFile( file );
-        assertTrue( "Test file \"" + file + "\" does not exist.", file.exists() );
+        if( mustExist )
+        {
+            assertTrue( "Test file \"" + file + "\" does not exist.", file.exists() );
+        }
+        else
+        {
+            assertTrue( "Test file \"" + file + "\" should not exist.", !file.exists() );
+        }
+
+        return file;
+    }
+
+    /**
+     * Locates a test directory, creating it if it does not exist.
+     */
+    protected File getTestDirectory( final String name )
+    {
+        File file = new File( m_testBaseDir, name );
+        file = getCanonicalFile( file );
+
+        assertTrue( "Test directory \"" + file + "\" does not exist or is not a directory.",
+                    file.isDirectory() || file.mkdirs() );
         return file;
     }
 
@@ -83,18 +106,13 @@ public abstract class AbstractMyrmidonTest
     /**
      * Creates a logger.
      */
-    protected Logger createLogger()
+    protected Logger getLogger()
     {
-        // Setup a logger
-        final Priority priority = Priority.WARN;
-        final org.apache.log.Logger targetLogger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
-
-        final PatternFormatter formatter = new PatternFormatter( PATTERN );
-        final StreamTarget target = new StreamTarget( System.out, formatter );
-        targetLogger.setLogTargets( new LogTarget[]{target} );
-        targetLogger.setPriority( priority );
-
-        return new LogKitLogger( targetLogger );
+        if( m_logger == null )
+        {
+            m_logger = new BasicLogger( "[test]", BasicLogger.LEVEL_WARN );
+        }
+        return m_logger;
     }
 
     /**
@@ -105,6 +123,12 @@ public abstract class AbstractMyrmidonTest
      */
     protected void assertSameMessage( final String[] messages, final Throwable throwable )
     {
+        //System.out.println( "exception:" );
+        //for( Throwable t = throwable; t != null; t = ExceptionUtil.getCause( t, true ) )
+        //{
+        //    System.out.println( "  " + t.getMessage() );
+        //}
+
         Throwable current = throwable;
         for( int i = 0; i < messages.length; i++ )
         {
@@ -125,7 +149,7 @@ public abstract class AbstractMyrmidonTest
      */
     protected void assertSameMessage( final String message, final Throwable throwable )
     {
-        assertEquals( message, throwable.getMessage() );
+        assertSameMessage( new String[] { message }, throwable );
     }
 
     /**

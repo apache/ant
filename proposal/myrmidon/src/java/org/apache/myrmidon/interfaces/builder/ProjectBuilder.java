@@ -23,7 +23,7 @@ public interface ProjectBuilder
     /**
      * build a project from source.
      *
-     * @param source the source
+     * @param source the project file path.
      * @return the constructed Project
      * @exception ProjectException if an error occurs
      */

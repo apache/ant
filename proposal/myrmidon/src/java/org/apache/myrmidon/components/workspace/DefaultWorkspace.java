@@ -26,12 +26,12 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.conditions.Condition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.interfaces.model.Dependency;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
@@ -123,9 +123,7 @@ public class DefaultWorkspace
 
         m_listenerSupport.projectStarted( project.getProjectName() );
 
-        executeTarget( project, "<init>", project.getImplicitTarget(), entry.getFrame() );
-
-        execute( project, target, entry );
+        executeTarget( entry, target );
 
         m_listenerSupport.projectFinished( project.getProjectName() );
     }
@@ -307,105 +305,130 @@ public class DefaultWorkspace
     /**
      * Helper method to execute a target.
      *
-     * @param project the Project
-     * @param targetName the name of the target
-     * @param entry the context
+     * @param entry the project to execute
+     * @param targetName the name of the target to execute
      * @exception TaskException if an error occurs
      */
-    private void execute( final Project project,
-                          final String targetName,
-                          final ProjectEntry entry )
+    private void executeTarget( final ProjectEntry entry,
+                          final String targetName )
         throws TaskException
     {
-        final int index = targetName.indexOf( "->" );
-        if( -1 != index )
-        {
-            final String name = targetName.substring( 0, index );
-            final String otherTargetName = targetName.substring( index + 2 );
-
-            final Project otherProject = getProject( name, project );
-            final ProjectEntry otherEntry = getProjectEntry( otherProject );
-
-            //Execute target in referenced project
-            execute( otherProject, otherTargetName, otherEntry );
-            return;
-        }
-
-        final Target target = project.getTarget( targetName );
+        // Locate the target
+        final Target target = entry.getProject().getTarget( targetName );
         if( null == target )
         {
             final String message = REZ.getString( "no-target.error", targetName );
             throw new TaskException( message );
         }
 
-        //add target to list of targets executed
-        entry.completeTarget( targetName );
-
-        //execute all dependencies
-        final String[] dependencies = target.getDependencies();
-        for( int i = 0; i < dependencies.length; i++ )
-        {
-            if( !entry.isTargetCompleted( dependencies[ i ] ) )
-            {
-                execute( project, dependencies[ i ], entry );
-            }
-        }
-
-        executeTarget( project, targetName, target, entry.getFrame() );
+        executeTarget( entry, targetName, target );
     }
 
     /**
-     * Method to execute a particular target instance.
+     * Executes a target.  Does not execute the target if it has already been
+     * executed.  Executes the dependencies of the target, before executing
+     * the target itself.
      *
      * @param name the name of target
      * @param target the target
-     * @param frame the frame in which to execute
+     * @param entry the project in which to execute
      * @exception TaskException if an error occurs
      */
-    private void executeTarget( final Project project,
+    private void executeTarget( final ProjectEntry entry,
                                 final String name,
-                                final Target target,
-                                final ExecutionFrame frame )
+                                final Target target )
         throws TaskException
     {
-        //notify listeners
-        m_listenerSupport.targetStarted( project.getProjectName(), name );
+        final Project project = entry.getProject();
 
-        //check the condition associated with target.
-        //if it is not satisfied then skip target
-        final Condition condition = target.getCondition();
-        if( null != condition )
+        // Check target state, to see if it has already been executed, and
+        // to check for dependency cycles
+        final TargetState state = entry.getTargetState( target );
+        if( state == TargetState.FINISHED )
         {
-            try
+            // Target has been executed
+            return;
+        }
+        if( state == TargetState.TRAVERSING )
+        {
+            // Cycle in target dependencies
+            final String message = REZ.getString( "target-dependency-cycle.error", name );
+            throw new TaskException( message );
+        }
+
+        // Set state to indicate this target has been started
+        entry.setTargetState( target, TargetState.TRAVERSING );
+
+        // Execute the target's dependencies
+
+        // Implicit target first
+        if( target != project.getImplicitTarget() )
+        {
+            executeTarget( entry, "<init>", project.getImplicitTarget() );
+        }
+
+        // Named dependencies
+        final Dependency[] dependencies = target.getDependencies();
+        for( int i = 0; i < dependencies.length; i++ )
+        {
+            final Dependency dependency = dependencies[ i ];
+            final String otherProjectName = dependency.getProjectName();
+            if( otherProjectName != null )
             {
-                final boolean result = condition.evaluate( frame.getContext() );
-                if( !result )
-                {
-                    final String message = REZ.getString( "skip-target.notice", name );
-                    getLogger().debug( message );
-                    return;
-                }
+                // Dependency in a referenced project
+                final Project otherProject = getProject( otherProjectName, project );
+                final ProjectEntry otherEntry = getProjectEntry( otherProject );
+                executeTarget( otherEntry, dependency.getTargetName() );
             }
-            catch( final TaskException te )
+            else
             {
-                final String message = REZ.getString( "condition-eval.error", name );
-                throw new TaskException( message, te );
+                // Dependency in this project
+                executeTarget( entry, dependency.getTargetName() );
             }
         }
 
-        final String message = REZ.getString( "exec-target.notice", name );
-        getLogger().debug( message );
+        // Now execute the target itself
+        executeTargetNoDeps( entry, name, target );
+
+        // Mark target as complete
+        entry.setTargetState( target, TargetState.FINISHED );
+    }
+
+    /**
+     * Executes a target.  Does not check whether the target has been
+     * executed already, and does not check that its dependencies have been
+     * executed.
+     *
+     * @param entry the project to execute the target in.
+     * @param name the name of the target.
+     * @param target the target itself
+     */
+    private void executeTargetNoDeps( final ProjectEntry entry,
+                                      final String name,
+                                      final Target target )
+        throws TaskException
+    {
+        final Project project = entry.getProject();
+
+        // Notify listeners
+        m_listenerSupport.targetStarted( project.getProjectName(), name );
+
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = REZ.getString( "exec-target.notice", project.getProjectName(), name );
+            getLogger().debug( message );
+        }
 
         //frame.getContext().setProperty( Project.TARGET, target );
 
-        //execute all tasks assciated with target
+        // Execute all tasks assciated with target
         final Configuration[] tasks = target.getTasks();
         for( int i = 0; i < tasks.length; i++ )
         {
-            executeTask( tasks[ i ], frame );
+            executeTask( tasks[ i ], entry.getFrame() );
         }
 
-        //notify listeners
+        // Notify listeners
         m_listenerSupport.targetFinished();
     }
 
@@ -421,8 +444,11 @@ public class DefaultWorkspace
     {
         final String name = task.getName();
 
-        final String message = REZ.getString( "exec-task.notice", name );
-        getLogger().debug( message );
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = REZ.getString( "exec-task.notice", name );
+            getLogger().debug( message );
+        }
 
         //is setting name even necessary ???
         frame.getContext().setProperty( TaskContext.NAME, name );

@@ -44,11 +44,9 @@ public class InstantiatingServiceManagerTest
     protected void setUp()
         throws Exception
     {
-        super.setUp();
-
         // Set-up the service manager
         m_serviceManager = new InstantiatingServiceManager();
-        m_serviceManager.enableLogging( createLogger() );
+        m_serviceManager.enableLogging( getLogger() );
         m_serviceManager.service( getServiceManager() );
         m_serviceManager.parameterize( m_parameters );
     }

@@ -90,6 +90,14 @@ public abstract class AbstractFileSystemTest
     }
 
     /**
+     * Cleans-up test.
+     */
+    protected void tearDown() throws Exception
+    {
+        m_manager.close();
+    }
+
+    /**
      * Tests resolution of absolute URI.
      */
     public void testAbsoluteURI() throws Exception

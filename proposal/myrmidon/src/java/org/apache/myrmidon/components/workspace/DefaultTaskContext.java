@@ -15,9 +15,9 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
@@ -60,7 +60,6 @@ public class DefaultTaskContext
         m_parent = parent;
         m_serviceManager = serviceManager;
         m_logger = logger;
-        //m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
     }
 
     /**

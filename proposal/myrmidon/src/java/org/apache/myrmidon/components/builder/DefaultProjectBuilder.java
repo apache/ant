@@ -8,8 +8,6 @@
 package org.apache.myrmidon.components.builder;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.xml.parsers.SAXParser;
@@ -23,13 +21,10 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.SAXConfigurationHandler;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.myrmidon.framework.conditions.AndCondition;
-import org.apache.myrmidon.framework.conditions.Condition;
-import org.apache.myrmidon.framework.conditions.IsSetCondition;
-import org.apache.myrmidon.framework.conditions.NotCondition;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
 import org.apache.myrmidon.interfaces.builder.ProjectException;
 import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
+import org.apache.myrmidon.interfaces.model.Dependency;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
@@ -78,31 +73,39 @@ public class DefaultProjectBuilder
     private Project build( final File file, final HashMap projects )
         throws ProjectException
     {
-        final URL systemID = extractURL( file );
-        final Project result = (Project)projects.get( systemID.toString() );
-        if( null != result )
+        try
         {
-            return result;
+            // Check for cached project
+            final String systemID = extractURL( file );
+            final Project result = (Project)projects.get( systemID );
+            if( null != result )
+            {
+                return result;
+            }
+
+            // Parse the project file
+            final Configuration configuration = parseProject( systemID );
+
+            // Build the project model and add to cache
+            final DefaultProject project = buildProject( file, configuration );
+            projects.put( systemID, project );
+
+            // Build using all top-level attributes
+            buildTopLevelProject( project, configuration, projects );
+
+            return project;
         }
-
-        // Parse the project file
-        final Configuration configuration = parseProject( systemID );
-
-        // Build the project model
-        final DefaultProject project = buildProject( file, configuration );
-
-        projects.put( systemID.toString(), project );
-
-        //build using all top-level attributes
-        buildTopLevelProject( project, configuration, projects );
-
-        return project;
+        catch( Exception e )
+        {
+            final String message = REZ.getString( "ant.project-build.error", file.getAbsolutePath() );
+            throw new ProjectException( message, e );
+        }
     }
 
     /**
      * Parses the project.
      */
-    private Configuration parseProject( final URL systemID )
+    private Configuration parseProject( final String systemID )
         throws ProjectException
     {
         try
@@ -117,13 +120,13 @@ public class DefaultProjectBuilder
 
             parser.setContentHandler( handler );
             parser.setErrorHandler( handler );
-            parser.parse( systemID.toString() );
+            parser.parse( systemID );
 
             return handler.getConfiguration();
         }
         catch( Exception e )
         {
-            String message = REZ.getString( "ant.project-parse.error" );
+            final String message = REZ.getString( "ant.project-parse.error" );
             throw new ProjectException( message, e );
         }
     }
@@ -164,7 +167,7 @@ public class DefaultProjectBuilder
         File baseDirectory = file.getParentFile();
         if( baseDirectoryName != null )
         {
-            baseDirectory = new File( baseDirectory, baseDirectoryName );
+            baseDirectory = FileUtil.resolveFile( baseDirectory, baseDirectoryName );
         }
         baseDirectory = baseDirectory.getAbsoluteFile();
 
@@ -257,7 +260,7 @@ public class DefaultProjectBuilder
         {
             final String message =
                 REZ.getString( "ant.malformed.version", versionString );
-            throw new ProjectException( message, e );
+            throw new ProjectException( message );
         }
     }
 
@@ -338,7 +341,7 @@ public class DefaultProjectBuilder
         final Configuration[] implicitTasks =
             (Configuration[])implicitTaskList.toArray( new Configuration[ 0 ] );
 
-        final Target implicitTarget = new Target( null, implicitTasks, null );
+        final Target implicitTarget = new Target( implicitTasks, null );
         project.setImplicitTarget( implicitTarget );
     }
 
@@ -378,26 +381,30 @@ public class DefaultProjectBuilder
         // Build the URL of the referenced projects
         final File baseDirectory = project.getBaseDirectory();
         final File file = FileUtil.resolveFile( baseDirectory, location );
-        final String systemID = extractURL( file ).toString();
 
         // Locate the referenced project, building it if necessary
-        Project other = (Project)projects.get( systemID );
-        if( null == other )
-        {
-            other = build( file, projects );
-        }
+        final Project other = build( file, projects );
 
         // Add the reference
         project.addProject( name, other );
     }
 
-    private URL extractURL( final File file ) throws ProjectException
+    /**
+     * Validates a project file name, and builds the canonical URL for it.
+     */
+    private String extractURL( final File file ) throws ProjectException
     {
+        if( ! file.isFile() )
+        {
+            final String message = REZ.getString( "ant.no-project-file.error" );
+            throw new ProjectException( message );
+        }
+
         try
         {
-            return file.toURL();
+            return file.getCanonicalFile().toURL().toString();
         }
-        catch( MalformedURLException e )
+        catch( Exception e )
         {
             final String message = REZ.getString( "ant.project-unexpected.error" );
             throw new ProjectException( message, e );
@@ -443,8 +450,6 @@ public class DefaultProjectBuilder
     {
         final String name = target.getAttribute( "name", null );
         final String depends = target.getAttribute( "depends", null );
-        final String ifCondition = target.getAttribute( "if", null );
-        final String unlessCondition = target.getAttribute( "unless", null );
 
         verifyTargetName( name, target );
 
@@ -454,10 +459,8 @@ public class DefaultProjectBuilder
             getLogger().debug( message );
         }
 
-        final String[] dependencies = buildDependsList( depends, target );
-        final Condition condition = buildCondition( ifCondition, unlessCondition );
-        final Target defaultTarget =
-            new Target( condition, target.getChildren(), dependencies );
+        final Dependency[] dependencies = buildDependsList( depends, target );
+        final Target defaultTarget = new Target( target.getChildren(), dependencies );
 
         //add target to project
         project.addTarget( name, defaultTarget );
@@ -485,70 +488,54 @@ public class DefaultProjectBuilder
         }
     }
 
-    private String[] buildDependsList( final String depends, final Configuration target )
+    private Dependency[] buildDependsList( final String depends, final Configuration target )
         throws ProjectException
     {
-        String[] dependencies = null;
-
         //apply depends attribute
-        if( null != depends )
+        if( null == depends )
         {
-            final String[] elements = StringUtil.split( depends, "," );
-            final ArrayList dependsList = new ArrayList();
-
-            for( int i = 0; i < elements.length; i++ )
-            {
-                final String dependency = elements[ i ].trim();
-
-                if( 0 == dependency.length() )
-                {
-                    final String message = REZ.getString( "ant.target-bad-dependency.error",
-                                                          target.getName(),
-                                                          target.getLocation() );
-                    throw new ProjectException( message );
-                }
-
-                if( getLogger().isDebugEnabled() )
-                {
-                    final String message = REZ.getString( "ant.target-dependency.notice", dependency );
-                    getLogger().debug( message );
-                }
-
-                dependsList.add( dependency );
-            }
-
-            dependencies = (String[])dependsList.toArray( new String[ 0 ] );
+            return null;
         }
-        return dependencies;
-    }
 
-    private Condition buildCondition( final String ifCondition,
-                                      final String unlessCondition )
-    {
-        final AndCondition condition = new AndCondition();
+        final String[] elements = StringUtil.split( depends, "," );
+        final ArrayList dependsList = new ArrayList();
 
-        // Add the 'if' condition
-        if( null != ifCondition )
+        for( int i = 0; i < elements.length; i++ )
         {
+            final String dependency = elements[ i ].trim();
+
             if( getLogger().isDebugEnabled() )
             {
-                final String message = REZ.getString( "ant.target-if.notice", ifCondition );
+                final String message = REZ.getString( "ant.target-dependency.notice", dependency );
                 getLogger().debug( message );
             }
-            condition.add( new IsSetCondition( ifCondition ) );
-        }
 
-        // Add the 'unless' condition
-        if( null != unlessCondition )
-        {
-            if( getLogger().isDebugEnabled() )
+            // Split project->target dependencies
+            final int sep = dependency.indexOf( "->" );
+            final String projectName;
+            final String targetName;
+            if( sep != -1 )
             {
-                final String message = REZ.getString( "ant.target-unless.notice", unlessCondition );
-                getLogger().debug( message );
+                projectName = dependency.substring( 0, sep );
+                targetName = dependency.substring( sep + 2 );
             }
-            condition.add( new NotCondition( new IsSetCondition( unlessCondition ) ) );
+            else
+            {
+                projectName = null;
+                targetName = dependency;
+            }
+
+            if( targetName.length() == 0 || ( projectName != null && projectName.length() == 0 ) )
+            {
+                final String message = REZ.getString( "ant.target-bad-dependency.error",
+                                                      target.getName(),
+                                                      target.getLocation() );
+                throw new ProjectException( message );
+            }
+
+            dependsList.add( new Dependency( projectName, targetName ) );
         }
 
-        return condition;
+        return (Dependency[])dependsList.toArray( new Dependency[dependsList.size() ] );
     }
 }

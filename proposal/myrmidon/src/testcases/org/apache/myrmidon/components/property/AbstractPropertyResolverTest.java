@@ -5,53 +5,51 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.components.workspace;
+package org.apache.myrmidon.components.property;
 
 import java.io.File;
 import java.util.Date;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
+import org.apache.myrmidon.AbstractMyrmidonTest;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.components.AbstractComponentTest;
-import org.apache.myrmidon.components.property.DefaultPropertyResolver;
+import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
 /**
- * Functional tests for {@link DefaultPropertyResolver}.
+ * General-purpose property resolver test cases.
  *
- * @author <a href="mailto:darrell@apache.org">Darrell DeBoer</a>
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public class DefaultPropertyResolverTest
-    extends AbstractComponentTest
+public abstract class AbstractPropertyResolverTest
+    extends AbstractMyrmidonTest
 {
     protected final static Resources REZ
-        = ResourceManager.getPackageResources( DefaultPropertyResolver.class );
+        = ResourceManager.getPackageResources( AbstractPropertyResolverTest.class );
 
     protected PropertyResolver m_resolver;
     protected DefaultTaskContext m_context;
 
-    public DefaultPropertyResolverTest( String name )
+    public AbstractPropertyResolverTest( String name )
     {
         super( name );
     }
 
     protected void setUp() throws Exception
     {
-        super.setUp();
-
         m_resolver = createResolver();
 
-        m_context = new DefaultTaskContext( null, getServiceManager(), getLogger() );
+        m_context = new DefaultTaskContext( null, null, getLogger() );
         m_context.setProperty( "intProp", new Integer( 333 ) );
         m_context.setProperty( "stringProp", "String property" );
     }
 
-    protected PropertyResolver createResolver()
-    {
-        return new DefaultPropertyResolver();
-    }
+    /**
+     * Creates the resolver to test.
+     */
+    protected abstract PropertyResolver createResolver();
 
     /**
      * Test property resolution with various different typed properties.
@@ -73,7 +71,7 @@ public class DefaultPropertyResolverTest
         throws Exception
     {
         m_context.setProperty( "typedProp", propObject );
-        String propString = propObject.toString();
+        final String propString = propObject.toString();
 
         doTestResolution( "${typedProp}", propObject, m_context );
         doTestResolution( "${typedProp} with following text",
@@ -96,23 +94,6 @@ public class DefaultPropertyResolverTest
         doTestResolution( "before ${prop2} between ${prop1} after",
                           "before value2 between value1 after", m_context );
         doTestResolution( "${prop1}-${int1}-${prop2}", "value1-123-value2", m_context );
-
-    }
-
-    /**
-     * Tests handing undefined property.
-     */
-    public void testUndefinedProp() throws Exception
-    {
-        String undefinedProp = "undefinedProperty";
-        doTestFailure( "${" + undefinedProp + "}",
-                       REZ.getString( "prop.missing-value.error", undefinedProp ),
-                       m_context );
-
-        //TODO - "" should be disallowed as a property name
-        doTestFailure( "${}",
-                       REZ.getString( "prop.missing-value.error", "" ),
-                       m_context );
     }
 
     /**
@@ -131,18 +112,17 @@ public class DefaultPropertyResolverTest
         /* TODO - need to handle these cases. */
         //        testFailure( "${bad${}", "", m_context );
         //        testFailure( "${ }", "", m_context );
-
     }
 
     /**
      * Resolves the property using the supplied context, and checks the result.
      */
-    protected void doTestResolution( String value,
-                                     Object expected,
-                                     Context context )
+    protected void doTestResolution( final String value,
+                                     final Object expected,
+                                     final Context context )
         throws Exception
     {
-        Object resolved = m_resolver.resolveProperties( value, context );
+        final Object resolved = m_resolver.resolveProperties( value, context );
 
         assertEquals( expected, resolved );
     }
@@ -151,9 +131,9 @@ public class DefaultPropertyResolverTest
      * Attempts to resolve the value using the supplied context, expecting to
      * fail with the supplied error message.
      */
-    protected void doTestFailure( String value,
-                                  String expectedErrorMessage,
-                                  Context context )
+    protected void doTestFailure( final String value,
+                                  final String expectedErrorMessage,
+                                  final Context context )
     {
         try
         {

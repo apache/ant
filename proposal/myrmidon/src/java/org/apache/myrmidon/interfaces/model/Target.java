@@ -9,7 +9,6 @@ package org.apache.myrmidon.interfaces.model;
 
 import java.util.ArrayList;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.myrmidon.framework.conditions.Condition;
 
 /**
  * Targets in build file.
@@ -21,19 +20,13 @@ public class Target
 {
     private final ArrayList m_dependencies = new ArrayList();
     private final ArrayList m_tasks = new ArrayList();
-    private final Condition m_condition;
 
     /**
-     * Constructor taking condition for target.
-     *
-     * @param condition the condition
+     * Constructs a target.
      */
-    public Target( final Condition condition,
-                   final Configuration[] tasks,
-                   final String[] dependencies )
+    public Target( final Configuration[] tasks,
+                   final Dependency[] dependencies )
     {
-        m_condition = condition;
-
         for( int i = 0; i < tasks.length; i++ )
         {
             m_tasks.add( tasks[ i ] );
@@ -49,23 +42,13 @@ public class Target
     }
 
     /**
-     * Get condition under which target is executed.
-     *
-     * @return the condition for target or null
-     */
-    public final Condition getCondition()
-    {
-        return m_condition;
-    }
-
-    /**
      * Get dependencies of target
      *
      * @return the dependency list
      */
-    public final String[] getDependencies()
+    public final Dependency[] getDependencies()
     {
-        return (String[])m_dependencies.toArray( new String[ 0 ] );
+        return (Dependency[])m_dependencies.toArray( new Dependency[ 0 ] );
     }
 
     /**

@@ -7,12 +7,15 @@
  */
 package org.apache.myrmidon.components.workspace;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.model.Project;
+import org.apache.myrmidon.interfaces.model.Target;
 
 /**
- * This contains detaisl for each project that is managed by ProjectManager.
+ * This contains details for each project that is being executed by a
+ * DefaultWorkspace.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
@@ -21,7 +24,9 @@ final class ProjectEntry
 {
     private final Project m_project;
     private final ExecutionFrame m_frame;
-    private final ArrayList m_targetsCompleted = new ArrayList();
+
+    /** Map from Target -> TargetState for that target. */
+    private final Map m_targetState = new HashMap();
 
     public ProjectEntry( final Project project,
                          final ExecutionFrame frame )
@@ -40,13 +45,18 @@ final class ProjectEntry
         return m_frame;
     }
 
-    public boolean isTargetCompleted( final String target )
+    public TargetState getTargetState( final Target target )
     {
-        return m_targetsCompleted.contains( target );
+        TargetState state = (TargetState)m_targetState.get( target );
+        if( state == null )
+        {
+            state = TargetState.NOT_STARTED;
+        }
+        return state;
     }
 
-    public void completeTarget( final String target )
+    public void setTargetState( final Target target, final TargetState state )
     {
-        m_targetsCompleted.add( target );
+        m_targetState.put( target, state );
     }
 }

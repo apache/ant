@@ -1,0 +1,3 @@
+<!-- Project with a non-default base directory -->
+<project version="2.0" basedir="other-base-dir">
+</project>
