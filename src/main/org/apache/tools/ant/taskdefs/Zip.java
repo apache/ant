@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.util.*;
 
 import java.io.*;
 import java.util.Enumeration;
@@ -70,6 +71,7 @@ import java.util.zip.*;
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class Zip extends MatchingTask {
@@ -96,15 +98,15 @@ public class Zip extends MatchingTask {
      * This is the base directory to look in for 
      * things to zip.
      */
-    public void setBasedir(String baseDirname) {
-        baseDir = project.resolveFile(baseDirname);
+    public void setBasedir(File baseDir) {
+        this.baseDir = baseDir;
     }
 
     /**
      * Sets whether we want to compress the files or only store them.
      */
-    public void setCompress(String compress) {
-        doCompress = Project.toBoolean(compress);
+    public void setCompress(boolean c) {
+        doCompress = c;
     }
 
     /**
@@ -228,7 +230,8 @@ public class Zip extends MatchingTask {
      */
     protected boolean isUpToDate(FileScanner[] scanners, File zipFile) throws BuildException
     {
-        File[] files = grabFiles(scanners);
+        String[][] fileNames = grabFileNames(scanners);
+        File[] files = grabFiles(scanners, fileNames);
         if (files.length == 0) {
             if (emptyBehavior.equals("skip")) {
                 log("Warning: skipping "+archiveType+" archive " + zipFile +
@@ -264,10 +267,14 @@ public class Zip extends MatchingTask {
                 return true;
             }
         } else {
-            // Probably unnecessary but just for clarity:
             if (!zipFile.exists()) return false;
-            for (int i=0; i<files.length; i++) {
-                if (files[i].lastModified() > zipFile.lastModified()) {
+
+            SourceFileScanner sfs = new SourceFileScanner(this);
+            MergingMapper mm = new MergingMapper();
+            mm.setTo(zipFile.getAbsolutePath());
+            for (int i=0; i<scanners.length; i++) {
+                if (sfs.restrict(fileNames[i], scanners[i].getBasedir(), null,
+                                 mm).length > 0) {
                     return false;
                 }
             }
@@ -276,16 +283,28 @@ public class Zip extends MatchingTask {
     }
 
     protected static File[] grabFiles(FileScanner[] scanners) {
-        Vector files = new Vector ();
-        for (int i = 0; i < scanners.length; i++) {
+        return grabFiles(scanners, grabFileNames(scanners));
+    }
+
+    protected static File[] grabFiles(FileScanner[] scanners, 
+                                      String[][] fileNames) {
+        Vector files = new Vector();
+        for (int i = 0; i < fileNames.length; i++) {
             File thisBaseDir = scanners[i].getBasedir();
-            String[] ifiles = scanners[i].getIncludedFiles();
-            for (int j = 0; j < ifiles.length; j++)
-                files.addElement(new File(thisBaseDir, ifiles[j]));
+            for (int j = 0; j < fileNames[i].length; j++)
+                files.addElement(new File(thisBaseDir, fileNames[i][j]));
         }
         File[] toret = new File[files.size()];
         files.copyInto(toret);
         return toret;
+    }
+
+    protected static String[][] grabFileNames(FileScanner[] scanners) {
+        String[][] result = new String[scanners.length][];
+        for (int i=0; i<scanners.length; i++) {
+            result[i] = scanners[i].getIncludedFiles();
+        }
+        return result;
     }
 
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)

@@ -87,7 +87,8 @@ public class SourceFileScanner {
      *
      * @param files   the original set of files
      * @param srcDir  all files are relative to this directory
-     * @param destDir target files live here
+     * @param destDir target files live here. if null file names
+     *                returned by the mapper are assumed to be absolute.
      * @param mapper  knows how to construct a target file names from
      *                source file names.
      */
@@ -116,7 +117,13 @@ public class SourceFileScanner {
             boolean added = false;
             targetList.setLength(0);
             for (int j=0; !added && j<targets.length; j++) {
-                File dest = new File(destDir, targets[j]);
+                File dest = null;
+                if (destDir == null) {
+                    dest = new File(targets[j]);
+                } else {
+                    dest = new File(destDir, targets[j]);
+                }
+                
                 if (!dest.exists()) {
                     task.log(files[i]+" added as "+dest.getAbsolutePath()+" doesn\'t exist.",
                              Project.MSG_VERBOSE);

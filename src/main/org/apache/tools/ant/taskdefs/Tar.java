@@ -56,12 +56,14 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.*;
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.util.*;
 import org.apache.tools.tar.*;
 
 /**
  * Creates a TAR archive.
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class Tar extends MatchingTask {
@@ -72,15 +74,15 @@ public class Tar extends MatchingTask {
     /**
      * This is the name/location of where to create the tar file.
      */
-    public void setTarfile(String tarFilename) {
-        tarFile = project.resolveFile(tarFilename);
+    public void setTarfile(File tarFile) {
+        this.tarFile = tarFile;
     }
     
     /**
      * This is the base directory to look in for things to tar.
      */
-    public void setBasedir(String baseDirname) {
-        baseDir = project.resolveFile(baseDirname);
+    public void setBasedir(File baseDir) {
+        this.baseDir = baseDir;
     }
 
     public void execute() throws BuildException {
@@ -97,11 +99,17 @@ public class Tar extends MatchingTask {
             throw new BuildException("basedir does not exist!", location);
         }
 
-        log("Building tar: "+ tarFile.getAbsolutePath());
-
         DirectoryScanner ds = super.getDirectoryScanner(baseDir);
 
         String[] files = ds.getIncludedFiles();
+
+        if (archiveIsUpToDate(files)) {
+            log("Nothing to do: "+tarFile.getAbsolutePath()+" is up to date.",
+                Project.MSG_INFO);
+            return;
+        }
+
+        log("Building tar: "+ tarFile.getAbsolutePath(), Project.MSG_INFO);
 
         TarOutputStream tOut = null;
         try {
@@ -149,5 +157,12 @@ public class Tar extends MatchingTask {
         } finally {
             fIn.close();
         }
+    }
+
+    protected boolean archiveIsUpToDate(String[] files) {
+        SourceFileScanner sfs = new SourceFileScanner(this);
+        MergingMapper mm = new MergingMapper();
+        mm.setTo(tarFile.getAbsolutePath());
+        return sfs.restrict(files, baseDir, null, mm).length == 0;
     }
 }

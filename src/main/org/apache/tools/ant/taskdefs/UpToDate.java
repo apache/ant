@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.util.*;
 import java.io.*;
 import java.util.Enumeration;
 import java.util.Date;
@@ -67,7 +68,7 @@ import java.util.Vector;
  *
  * @author William Ferguson <a href="mailto:williamf@mincom.com">williamf@mincom.com</a> 
  * @author Hiroaki Nakamura <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class UpToDate extends MatchingTask {
@@ -137,26 +138,9 @@ public class UpToDate extends MatchingTask {
     }
 
     protected boolean scanDir(File srcDir, File destFile, String files[]) {
-        long destLastModified = destFile.lastModified();
-        long now = (new Date()).getTime();
-        if (destLastModified > now) {
-            log("Warning: destfile modified in the future: " +
-                destFile.getPath(), Project.MSG_WARN);
-        }
-
-        for (int i = 0; i < files.length; i++) {
-            File srcFile = new File(srcDir, files[i]);
-
-            long srcLastModified = srcFile.lastModified();
-            if (srcLastModified > now) {
-                log("Warning: file modified in the future: " +
-                    files[i], Project.MSG_WARN);
-            }
-
-            if (srcLastModified > destLastModified) {
-                return false;
-            }
-        }
-        return true;
+        SourceFileScanner sfs = new SourceFileScanner(this);
+        MergingMapper mm = new MergingMapper();
+        mm.setTo(destFile.getAbsolutePath());
+        return sfs.restrict(files, srcDir, null, mm).length == 0;
     }
 }
