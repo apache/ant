@@ -9,7 +9,7 @@ package org.apache.antlib.archive;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import org.apache.avalon.excalibur.bzip2.CBZip2OutputStream;
+import org.apache.excalibur.bzip2.CBZip2OutputStream;
 import org.apache.myrmidon.api.TaskException;
 
 /**

@@ -11,8 +11,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import org.apache.avalon.excalibur.io.IOUtil;
-import org.apache.avalon.excalibur.tar.TarEntry;
-import org.apache.avalon.excalibur.tar.TarInputStream;
+import org.apache.excalibur.tar.TarEntry;
+import org.apache.excalibur.tar.TarInputStream;
 import org.apache.myrmidon.api.TaskException;
 
 /**

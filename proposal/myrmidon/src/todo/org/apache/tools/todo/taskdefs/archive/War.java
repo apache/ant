@@ -10,7 +10,7 @@ package org.apache.tools.todo.taskdefs.archive;
 import java.io.File;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.avalon.excalibur.zip.ZipOutputStream;
+import org.apache.excalibur.zip.ZipOutputStream;
 
 /**
  * Creates a WAR archive.

@@ -24,7 +24,7 @@ import org.apache.tools.todo.taskdefs.manifest.Manifest;
 import org.apache.tools.todo.taskdefs.manifest.ManifestException;
 import org.apache.tools.todo.taskdefs.manifest.ManifestUtil;
 import org.apache.tools.todo.types.FileScanner;
-import org.apache.avalon.excalibur.zip.ZipOutputStream;
+import org.apache.excalibur.zip.ZipOutputStream;
 
 /**
  * Creates a JAR archive.
