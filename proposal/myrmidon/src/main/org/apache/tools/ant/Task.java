@@ -26,18 +26,6 @@ public abstract class Task
     {
     }
 
-    /**
-     * Log a mesage with the give priority.
-     *
-     * @param msgLevel the message priority at which this message is to be
-     *      logged.
-     * @param msg Description of Parameter
-     */
-    public void log( String msg, int msgLevel )
-    {
-        project.log( this, msg, msgLevel );
-    }
-
     protected void handleErrorOutput( String line )
     {
         log( line, Project.MSG_ERR );
