@@ -136,6 +136,7 @@ public class Javac extends MatchingTask {
     private Vector implementationSpecificArgs = new Vector();
 
     protected boolean failOnError = true;
+    protected boolean listFiles = false;
     protected File[] compileList = new File[0];
 
     private String source;
@@ -368,6 +369,18 @@ public class Javac extends MatchingTask {
             extdirs = new Path(project);
         }
         return extdirs.createPath();
+    }
+
+    /**
+     * List the source files being handed off to the compiler
+     */
+    public void setListfiles(boolean list) {
+        listFiles = list;
+    }
+
+    /** Get the listfiles flag. */
+    public boolean getListfiles() {
+        return listFiles;
     }
 
     /**
@@ -805,6 +818,14 @@ public class Javac extends MatchingTask {
                 " source file"
                 + (compileList.length == 1 ? "" : "s")
                 + (destDir != null ? " to " + destDir : ""));
+
+            if (listFiles) {
+                for (int i=0 ; i < compileList.length ; i++)
+                {
+                  String filename = compileList[i].getAbsolutePath();
+                  log(filename) ;
+                }
+            }
 
             CompilerAdapter adapter = 
                 CompilerAdapterFactory.getCompiler(compilerImpl, this);

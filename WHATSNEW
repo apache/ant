@@ -176,6 +176,9 @@ Other changes:
 
 * you can now specify the -sourcepath for <javac> explicitly.
 
+* <javac> now supports a new "listfiles" attribute to list the source
+  files it's handing off to the compiler.
+
 * The compiler implementation for javac can now be chosen on a task by
   task basis.  Use the new compiler attribute of <javac> to override
   the build.compiler property.
