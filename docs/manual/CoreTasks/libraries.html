@@ -1,0 +1,391 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Libraries Task</title>
+</head>
+
+<body>
+
+<h2><a name="echo">Libraries</a></h2>
+<h3>Description</h3>
+<p>
+
+    Extensible library download mechanism, integrated with the
+    <a href="http://maven.apache.org/">Maven</a> repository hosted
+    at ibiblio.org.
+   
+</p>
+
+<p>
+    This task can:
+</p>
+    <ol>
+    <li>Download publicly published JAR files by version.</li>
+    <li>Download JAR files from private file: or http: repositories</li>
+    <li>Cache the JAR files in a directory tree</li>
+    <li>Check for updates on a regular schedule</li>
+    <li>Build paths for compilation/execution.</li>
+    <li>Fail the build if needed libraries are missing</li>
+    <li>Force an update of all libraries</li>
+    <li>Skip all downloading when offline
+    </ol>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">destDir</td>
+    <td valign="top">Destination directory for all downloads
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">offline</td>
+    <td valign="top">Flag to indicate that the system is offline, and that
+    no downloads should take place.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">flatten</td>
+    <td valign="top">flag to indicate that files should be flattened when downloaded
+    </td>
+    <td valign="top" align="center">No -default false</td>
+  </tr>
+  <tr>
+    <td valign="top">pathID</td>
+    <td valign="top">Name of a path to create containing all
+    libraries in this declaration.
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">repositoryRef</td>
+    <td valign="top">Reference to a predefined repository
+    </td>
+    <td valign="top" align="center">Only if no repository is defined inline</td>
+  </tr>
+</table>
+
+ 
+</table>
+<h3>Nested Elements</h3>
+
+
+<h4>library</h4>
+This is the core of the system; a library to (potentially) download.
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">project</td>
+    <td valign="top">Name of the project
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">version</td>
+    <td valign="top">
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">archive</td>
+    <td valign="top">Name of the archive 
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">destinationName</td>
+    <td valign="top">Filename of downloaded file
+    </td>
+    <td valign="top" align="center">No, default remote name</td>
+  </tr>
+
+  <tr>
+    <td valign="top">suffix</td>
+    <td valign="top">Suffix of the archive
+    </td>
+    <td valign="top" align="center">No -default ".jar"</td>
+  </tr>  
+  <tr>
+    <td valign="top">enabled</td>
+    <td valign="top">flag to turn on or off specific download/use
+    of an archive
+    </td>
+    <td valign="top" align="center">No -default "true"</td>
+  </tr>
+</table>
+
+<h4>Repository</h4>
+
+A repository is Ant datatype that extends the <code>Repository</code> type.
+Ant only ships with one: the mavenrepository;  
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">url</td>
+    <td valign="top">URL of the repository
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top"></td>
+    <td valign="top">
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+  
+<p>Example:</p>
+<pre>
+    &lt;repository ref=&quot;predefined.repository&quot; /&gt;
+</pre>    
+
+<h4>mavenrepository</h4>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">url</td>
+    <td valign="top">URL of the repository
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">checkMD5</td>
+    <td valign="top">Flag to turn on MD5 checking
+    (unimplemented)
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">HTTP authentication username
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>  
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">HTTP authentication password
+    </td>
+    <td valign="top" align="center">Only if username is set</td>
+  </tr>  
+</table>
+
+<h3>UpdatePolicies</h3>
+
+<P>Update policies are an (extensible) means of tuning the download, running
+code before and possibly after a download. They can enable or disable
+checks for individual files, skip the download process, or perform some
+post-download validation. 
+</P>
+
+<P>All policies have at least the common set of attributes; some may have more,
+in which case an updated attribute list is shown. </P>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">enabled</td>
+    <td valign="top">Enabled flag
+    </td>
+    <td valign="top" align="center">No -default "true"</td>
+  </tr>
+</table>
+
+<P>Policies can be chained by listing them in order. Before an update/download 
+takes place, all policies will be executed in order. After the download, the
+policies will be invoked in reverse order. The compound policy in such a
+situation is left to the experimentor, though reading the source will help.
+</P>
+
+<p>
+Developers may add new polices (such
+as signing incoming files) by adding new datatypes extending the
+<code>LibraryPolicy</code> class. </P>
+
+<h4>noupdate</h4>
+
+<P>This policy will disable remote downloads when enabled. It is the policy
+equivalent of the offline flag.</P>
+
+
+<p>Example:</p>
+<pre>
+    &lt;noupdate  /&gt;
+</pre> 
+
+<h4>forceupdate</h4>
+
+<P>This policy forces all libraries to be downloaded. If any download failed,
+the build will halt.</P>
+<p>Example:</p>
+<pre>
+    &lt;forceupdate  /&gt;
+</pre> 
+
+<h4>timestamp</h4>
+
+<P>This policy tells Ant to check the repository to see if the files have changed
+using timestamp checks. Any files which are up to date will not be downloaded again. </P>
+
+<p>Example:</p>
+<pre>
+    &lt;timestamp  /&gt;
+</pre> 
+
+<h4>scheduledupdate</h4>
+
+This policy tells Ant to check the repository to see if the files have changed,
+but only intermittently. An interval of the size of the schedule has to have
+passed, or the set of files to check has to have changed. 
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">enabled</td>
+    <td valign="top">Enabled flag
+    </td>
+    <td valign="top" align="center">No -default "true"</td>
+  </tr>
+  <tr>
+    <td valign="top">markerFile</td>
+    <td valign="top">Name of a file to cache download history
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">Days</td>
+    <td valign="top">number of days between update checks
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">Hours</td>
+    <td valign="top">number of hours between update checks
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">Minutes</td>
+    <td valign="top">number of minutes between update checks
+    </td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+
+<p>Example:</p>
+<pre>
+    &lt;scheduledupdate days="1" hours="3" minutes="17"  /&gt;
+</pre> 
+
+<P>Check for an update every 27 hours, 17 minutes. </P>
+
+
+<h4>assertdownloaded</h4>
+
+<P>This policy is really for testing the library. It does not
+alter the download policy, but after any download has taken place,
+it verifies that the number of files downloaded matches the number
+expected.</P>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">count</td>
+    <td valign="top">number of downloaded files expected.
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>  
+  <tr>
+    <td valign="top">enabled</td>
+    <td valign="top">Enabled flag
+    </td>
+    <td valign="top" align="center">No -default "true"</td>
+  </tr>
+</table>
+
+<p>Example:</p>
+<pre>
+    &lt;assertdownloaded cound="4"  /&gt;
+</pre> 
+
+<h3>Examples</h3>
+<pre>
+    &lt;!--
+    versions.properties says
+    xdoclet.version=2.0
+    commons-logging.version=1.0.3
+    commons-collections.version=3.1
+    --&gt;
+    &lt;property file="versions.properties" /&gt;
+    
+    &lt;libraries destDir="${lib.dir}" pathid="xdoclet.lib" &gt;
+      &lt;mavenrepository /&gt;
+      &lt;library project="xdoclet" 
+        version="${xdoclet.version}" /&gt;
+      &lt;library project="commons-logging"  
+        version="${commons-logging.version}" /&gt;
+      &lt;library project="commons-collections"  
+        version="${commons-collections.version}" /&gt;
+    &lt;/libraries&gt;
+</pre>
+
+<P>Load in versions from a file, then download the relevant archives. No
+update schedule is defined, but a path is created for insertion into a
+classpath. This property file driven dependency model is what we recommend
+over hard coding versions in a build file. 
+</P>
+ <PRE>   &lt;libraries destDir="build/lib" offline="${offline}" flatten="true"&gt;
+      &lt;mavenrepository url="${private.server}"/&gt;
+      &lt;library project="doomed" archive="dead-code"
+        suffix=".war"
+        destinationName="product.war"
+        version="LATEST" 
+        /&gt;
+      &lt;scheduledupdate markerfile="build/lib/marker.properties"
+        hours="11" /&gt;
+    &lt;/libraries&gt;
+</PRE>
+
+<P>Download doomed/dead-code.LATEST.war from a private repository, save it to
+build/lib/product.war with an update schedule of every eleven hours. 
+</P>
+
+<p align="center">Copyright &copy; 2005 The Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+
