@@ -129,7 +129,7 @@ public class CVSPass extends Task {
             reader.close();
             }
 
-	    String pwdfile = buf.toString() + cvsRoot + " A" + mangle(password);
+            String pwdfile = buf.toString() + cvsRoot + " A" + mangle(password);
 
             log("Writing -> " + pwdfile , project.MSG_DEBUG);
 
