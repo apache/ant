@@ -267,7 +267,7 @@
                unless="jdk1.4+" />
       <exclude name="${ant.package}/AntSecurityManager.java"
                unless="jdk1.2+" />
-      <exclude name="${ant.package}/NoExitSecurityManager.java"
+      <exclude name="${ant.package}/util/optional/NoExitSecurityManager.java"
                unless="jdk1.2+" />
       <exclude name="${ant.package}/listener/Log4jListener.java"
                unless="log4j.present" />
