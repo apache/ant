@@ -16,8 +16,6 @@
  */
 package org.apache.tools.ant.taskdefs.repository;
 
-import org.apache.tools.ant.taskdefs.optional.repository.GetLibraries;
-
 import java.util.ListIterator;
 
 /**
@@ -38,7 +36,7 @@ public class TimestampPolicy extends BaseLibraryPolicy {
      * @throws org.apache.tools.ant.BuildException
      *          if needed
      */
-    public boolean beforeConnect(GetLibraries owner, ListIterator libraries) {
+    public boolean beforeConnect(Libraries owner, ListIterator libraries) {
         owner.markAllLibrariesForFetch(true);
         owner._setUseTimestamp(true);
         return true;

@@ -14,19 +14,11 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.repository;
+package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.repository.AbsentFilesPolicy;
-import org.apache.tools.ant.taskdefs.repository.AssertDownloaded;
-import org.apache.tools.ant.taskdefs.repository.EnabledLibraryElementList;
-import org.apache.tools.ant.taskdefs.repository.ForceUpdatePolicy;
-import org.apache.tools.ant.taskdefs.repository.LibraryPolicy;
-import org.apache.tools.ant.taskdefs.repository.NoUpdatePolicy;
-import org.apache.tools.ant.taskdefs.repository.ScheduledUpdatePolicy;
-import org.apache.tools.ant.taskdefs.repository.TimestampPolicy;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
@@ -38,15 +30,17 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * This task will retrieve one or more libraries from a repository. <ol>
+ * This task will retrieve one or more libraries from a repository.
+ * <ol>
  * <li>Users must declare a repository, either inline or by reference</li>
  * <li>Dependency checking is used (timestamps) unless forceDownload=true</li>
  * <li>It is an error if, at the end of the task, a library is missing.
+ * </ol>
  *
  * @ant.task
  * @since Ant 1.7
  */
-public final class GetLibraries extends Task {
+public final class Libraries extends Task {
 
     /**
      * destination

@@ -18,9 +18,6 @@ package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.optional.repository.GetLibraries;
-import org.apache.tools.ant.taskdefs.optional.repository.Library;
-import org.apache.tools.ant.taskdefs.optional.repository.Repository;
 import org.apache.tools.ant.util.FileUtils;
 
 import java.io.BufferedInputStream;
@@ -118,7 +115,7 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      * @throws org.apache.tools.ant.BuildException
      *          if needed
      */
-    public boolean beforeConnect(GetLibraries owner, ListIterator libraries) {
+    public boolean beforeConnect(Libraries owner, ListIterator libraries) {
 
         Repository repository=owner.getRepository();
         if(markerFile==null) {
@@ -161,7 +158,7 @@ public class ScheduledUpdatePolicy extends BaseLibraryPolicy  {
      * @param owner
      * @param libraries
      */
-    public void afterFetched(GetLibraries owner, ListIterator libraries) {
+    public void afterFetched(Libraries owner, ListIterator libraries) {
 
         if(markerFileToSave!=null) {
             //if we get here, we need to save the file

@@ -14,25 +14,26 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.repository;
+package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.taskdefs.repository.AssertDownloaded;
+import org.apache.tools.ant.taskdefs.repository.Libraries;
 
 /**
  * test the test libraries stuff.
  * skip all the tests if we are offline
  */
-public class GetLibrariesTest extends BuildFileTest {
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
+public class LibrariesTest extends BuildFileTest {
+    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/";
 
 
-    public GetLibrariesTest(String name) {
+    public LibrariesTest(String name) {
         super(name);
     }
 
     public void setUp() {
-        configureProject(TASKDEFS_DIR + "getlibraries.xml");
+        configureProject(TASKDEFS_DIR + "libraries.xml");
     }
 
 
@@ -45,19 +46,19 @@ public class GetLibrariesTest extends BuildFileTest {
     }
 
     public void testEmpty() {
-        expectBuildException("testEmpty",GetLibraries.ERROR_NO_DEST_DIR);
+        expectBuildException("testEmpty",Libraries.ERROR_NO_DEST_DIR);
     }
 
     public void testEmpty2() {
-        expectBuildException("testEmpty2", GetLibraries.ERROR_NO_REPOSITORY);
+        expectBuildException("testEmpty2", Libraries.ERROR_NO_REPOSITORY);
     }
 
     public void testEmpty3() {
-        expectBuildException("testEmpty3", GetLibraries.ERROR_NO_LIBRARIES);
+        expectBuildException("testEmpty3", Libraries.ERROR_NO_LIBRARIES);
     }
 
     public void testNoRepo() {
-        expectBuildException("testNoRepo", GetLibraries.ERROR_NO_REPOSITORY);
+        expectBuildException("testNoRepo", Libraries.ERROR_NO_REPOSITORY);
     }
 
     public void testUnknownReference() {
@@ -89,13 +90,13 @@ public class GetLibrariesTest extends BuildFileTest {
 
     public void testTwoRepositories() {
         expectBuildException("testTwoRepositories",
-                GetLibraries.ERROR_ONE_REPOSITORY_ONLY);
+                Libraries.ERROR_ONE_REPOSITORY_ONLY);
     }
 
     public void testMavenInlineBadURL() {
         expectExceptionIfOnline("testMavenInlineBadURL",
                 "testMavenInlineBadURL",
-                GetLibraries.ERROR_INCOMPLETE_RETRIEVAL);
+                Libraries.ERROR_INCOMPLETE_RETRIEVAL);
     }
 
     /**
@@ -160,7 +161,7 @@ public class GetLibrariesTest extends BuildFileTest {
     public void testNoUpdate() {
         expectExceptionIfOnline("testNoUpdate",
                 "update disabled; dest file missing",
-                GetLibraries.ERROR_INCOMPLETE_RETRIEVAL);
+                Libraries.ERROR_INCOMPLETE_RETRIEVAL);
     }
 
     public void testTimestamp() {

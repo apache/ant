@@ -17,8 +17,6 @@
 package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.repository.GetLibraries;
-import org.apache.tools.ant.taskdefs.optional.repository.Library;
 
 import java.util.Iterator;
 import java.util.ListIterator;
@@ -47,7 +45,7 @@ public class ForceUpdatePolicy extends BaseLibraryPolicy {
      * @throws org.apache.tools.ant.BuildException
      *          if needed
      */
-    public boolean beforeConnect(GetLibraries owner, ListIterator libraries) {
+    public boolean beforeConnect(Libraries owner, ListIterator libraries) {
         owner.markAllLibrariesForFetch(true);
         owner._setUseTimestamp(false);
         return true;
@@ -62,7 +60,7 @@ public class ForceUpdatePolicy extends BaseLibraryPolicy {
      * @throws org.apache.tools.ant.BuildException
      *
      */
-    public void afterFetched(GetLibraries owner, ListIterator libraries) {
+    public void afterFetched(Libraries owner, ListIterator libraries) {
         //here verify that everything came in
         Iterator downloaded = owner.enabledLibrariesIterator();
         while (downloaded.hasNext()) {

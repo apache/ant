@@ -17,7 +17,6 @@
 package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.repository.GetLibraries;
 
 import java.util.ListIterator;
 
@@ -54,7 +53,7 @@ public class AssertDownloaded extends BaseLibraryPolicy {
      * @throws org.apache.tools.ant.BuildException
      *          if needed
      */
-    public boolean beforeConnect(GetLibraries owner, ListIterator libraries) {
+    public boolean beforeConnect(Libraries owner, ListIterator libraries) {
         if(count==null) {
             throw new BuildException(ERROR_NO_COUNT);
         }
@@ -70,7 +69,7 @@ public class AssertDownloaded extends BaseLibraryPolicy {
      * @throws org.apache.tools.ant.BuildException
      *
      */
-    public void afterFetched(GetLibraries owner, ListIterator libraries) {
+    public void afterFetched(Libraries owner, ListIterator libraries) {
         int fetched=owner.calculateDownloadedCount();
         if(fetched!=count.intValue()) {
             throw new BuildException(ERROR_DOWNLOAD_FAILURE

@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.tools.ant.taskdefs.optional.repository;
+package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.DataType;
@@ -28,7 +28,7 @@ import java.io.IOException;
  * that ships with Ant, or one you implement and declare yourself.
  * <p/>
  * The &lt;getlibraries&gt; task lets you supply a repository by reference
- * inline {@link GetLibraries#add(Repository)} or on the command line {@link
+ * inline {@link Libraries#add(Repository)} or on the command line {@link
  * GetLibraries#setRepositoryRef(org.apache.tools.ant.types.Reference)}
  *
  * @since Ant1.7
@@ -67,7 +67,7 @@ public abstract class Repository extends DataType {
      *
      * @throws BuildException
      */
-    public void connect(GetLibraries owner) {
+    public void connect(Libraries owner) {
 
     }
 

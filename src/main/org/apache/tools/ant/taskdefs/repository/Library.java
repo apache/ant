@@ -15,10 +15,9 @@
  *
  */
 
-package org.apache.tools.ant.taskdefs.optional.repository;
+package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.repository.EnabledLibraryElement;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 

@@ -13,8 +13,8 @@
       value="${commons.logging.project}/jars/${commons.logging.project}-1.0.1.jar"/>
 
     <presetdef name="gl1">
-      <getlibraries destDir="${lib.dir}">
-      </getlibraries>
+      <libraries destDir="${lib.dir}">
+      </libraries>
     </presetdef>
 
     <presetdef name="getlib">
@@ -56,19 +56,19 @@
   <target name="teardown"  depends="cleanup"/>
   
   <target name="testEmpty" depends="init">
-    <getlibraries/>
+    <libraries/>
   </target>
 
   <target name="testEmpty2" depends="init">
-    <getlibraries destDir="${lib.dir}">
+    <libraries destDir="${lib.dir}">
 
-    </getlibraries>
+    </libraries>
   </target>
 
   <target name="testEmpty3" depends="init">
-    <getlibraries destDir="${lib.dir}">
+    <libraries destDir="${lib.dir}">
       <repository/>
-    </getlibraries>
+    </libraries>
   </target>
 
   <target name="testNoRepo" depends="init">

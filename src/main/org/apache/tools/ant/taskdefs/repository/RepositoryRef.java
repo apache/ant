@@ -14,7 +14,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.repository;
+package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;

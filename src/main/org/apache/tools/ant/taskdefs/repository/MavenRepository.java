@@ -15,7 +15,7 @@
  *
  */
 
-package org.apache.tools.ant.taskdefs.optional.repository;
+package org.apache.tools.ant.taskdefs.repository;
 
 import org.apache.tools.ant.util.FileUtils;
 

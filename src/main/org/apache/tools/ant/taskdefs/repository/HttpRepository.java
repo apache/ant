@@ -14,7 +14,7 @@
  *  limitations under the License.
  *
  */
-package org.apache.tools.ant.taskdefs.optional.repository;
+package org.apache.tools.ant.taskdefs.repository;
 
 
 import org.apache.tools.ant.BuildException;
@@ -62,7 +62,7 @@ public abstract class HttpRepository extends Repository {
     /**
      * owner class
      */
-    private GetLibraries owner;
+    private Libraries owner;
 
     /**
      * retry logic
@@ -133,7 +133,7 @@ public abstract class HttpRepository extends Repository {
         }
     }*/
 
-    public GetLibraries getOwner() {
+    public Libraries getOwner() {
         return owner;
     }
 
@@ -161,7 +161,7 @@ public abstract class HttpRepository extends Repository {
      * @throws org.apache.tools.ant.BuildException
      *
      */
-    public void connect(GetLibraries newOwner) {
+    public void connect(Libraries newOwner) {
         this.owner = newOwner;
         if (!url.endsWith("/")) {
             url = url + '/';
@@ -189,7 +189,7 @@ public abstract class HttpRepository extends Repository {
 
     /**
      * Test for a repository being reachable. This method is called after {@link
-     * #connect(org.apache.tools.ant.taskdefs.optional.repository.GetLibraries)}
+     * #connect(org.apache.tools.ant.taskdefs.repository.GetLibraries)}
      * is called, before any files are to be retrieved.
      * <p/>
      * If it returns false the repository considers itself offline. Similarly,
