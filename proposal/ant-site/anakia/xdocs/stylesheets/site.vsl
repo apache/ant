@@ -58,8 +58,6 @@
     #set ($blue3 = "#294563")
     #set ($blue2 = "#4C6C8F")
     #set ($blue1 = "#CFDCED")
-    #set ($tablethbg = "#039acc")
-    #set ($tabletdbg = "#a0ddf0")
     #set ($sourceborder = "#023264")
     #set ($pound = "#" )
 ## start the processing

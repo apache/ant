@@ -51,7 +51,7 @@
 ## This is where the common macro's live
 
 #macro ( table $table)
-  <table>
+  <table class="ForrestTable" cellspacing="1" cellpadding="4">
   #foreach ( $items in $table.getChildren() )
     #if ($items.getName().equals("tr"))
       #tr ($items)
@@ -79,15 +79,13 @@
   #if ($value.getAttributeValue("rowspan"))
     #set ($rowspan = $value.getAttributeValue("rowspan"))
   #end
-  <td bgcolor="$tabletdbg" colspan="$!colspan" rowspan="$!rowspan"
+  <td colspan="$!colspan" rowspan="$!rowspan"
       valign="top" align="left">
-    <font color="$darkfg" size="-1" face="arial,helvetica,sanserif">
     #if ($value.getText().length() != 0 || $value.hasChildren())
       $xmlout.outputString($value, true)
     #else
       &nbsp;
     #end
-    </font>
   </td>
 #end
 
@@ -98,16 +96,14 @@
   #if ($value.getAttributeValue("rowspan"))
     #set ($rowspan = $value.getAttributeValue("rowspan"))
   #end
-  <td bgcolor="$tablethbg" colspan="$!colspan" rowspan="$!rowspan"
+  <th colspan="$!colspan" rowspan="$!rowspan"
       valign="top" align="left">
-    <font color="$darkfg" size="-1" face="arial,helvetica,sanserif">
     #if ($value.getText().length() != 0 || $value.hasChildren())
       $xmlout.outputString($value, true)
     #else
       &nbsp;
     #end
-    </font>
-  </td>
+  </th>
 #end
 
 #macro ( projectanchor $name $value )
@@ -140,25 +136,7 @@
 #end
 
 #macro ( source $value)
-  <div align="left">
-    <table cellspacing="4" cellpadding="0" border="0">
-      <tr>
-        <td bgcolor="$sourceborder" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td bgcolor="$sourceborder" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td bgcolor="$sourceborder" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td bgcolor="$sourceborder" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td bgcolor="$lightbg"><pre>$escape.getText($value.getText())</pre></td>
-        <td bgcolor="$sourceborder" width="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-      <tr>
-        <td bgcolor="$sourceborder" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td bgcolor="$sourceborder" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-        <td bgcolor="$sourceborder" width="1" height="1"><img src="/images/void.gif" width="1" height="1" vspace="0" hspace="0" border="0"/></td>
-      </tr>
-    </table>
-  </div>
+<pre class="code">$escape.getText($value.getText())</pre>
 #end
 
 #macro ( makeProject )
