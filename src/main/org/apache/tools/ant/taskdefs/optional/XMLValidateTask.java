@@ -58,9 +58,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Vector;
+
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -89,10 +88,11 @@ import org.xml.sax.helpers.ParserAdapter;
  * (probably the one that is used by Ant itself), but one can specify any
  * SAX1/2 parser if needed
  * @author Raphael Pierquin <a href="mailto:raphael.pierquin@agisphere.com">raphael.pierquin@agisphere.com</a>
+ * @author Nick Pellow <a href="mailto:nick@svana.org">nick@svana.org</a>
  */
 public class XMLValidateTask extends Task {
 
-    protected static String INIT_FAILED_MSG = 
+    protected static String INIT_FAILED_MSG =
         "Could not start xml validation: ";
 
     // ant task properties
@@ -116,15 +116,18 @@ public class XMLValidateTask extends Task {
     protected XMLReader xmlReader = null; // XMLReader used to validation process
     protected ValidatorErrorHandler errorHandler
         = new ValidatorErrorHandler(); // to report sax parsing errors
-    protected Hashtable features = new Hashtable();
+
+    /** The vector to store all attributes (features) to be set on the parser. **/
+    private Vector attributeList = new Vector();
+
 
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
     /**
-     * Specify how parser error are to be handled. 
+     * Specify how parser error are to be handled.
      * Optional, default is <code>true</code>.
      * <p>
-     * If set to <code>true</code> (default), throw a buildException if the 
+     * If set to <code>true</code> (default), throw a buildException if the
      * parser yields an error.
      */
     public void setFailOnError(boolean fail) {
@@ -194,7 +197,7 @@ public class XMLValidateTask extends Task {
     }
 
     /**
-     * Where to find the parser class; optional. 
+     * Where to find the parser class; optional.
      * @see #setClasspath
      */
     public void setClasspathRef(Reference r) {
@@ -220,6 +223,19 @@ public class XMLValidateTask extends Task {
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
+    }
+
+    /**
+     * Add an attribute nested element. This is used for setting arbitrary
+     * features of the SAX parser.
+     * Valid attributes
+     * <a href=http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include</a>
+     * @since ant1.6
+     */
+    public Attribute createAttribute() {
+        final Attribute feature = new Attribute();
+        attributeList.addElement(feature);
+        return feature;
     }
 
     public void init() throws BuildException {
@@ -294,7 +310,7 @@ public class XMLValidateTask extends Task {
                 reader = JAXPUtils.getParser();
             }
         } else {
-        
+
             Class readerClass = null;
             try {
                 // load the parser class
@@ -318,15 +334,15 @@ public class XMLValidateTask extends Task {
 
         // then check it implements XMLReader
         if (reader instanceof XMLReader) {
-            xmlReader = (XMLReader) reader; 
-            log("Using SAX2 reader " + reader.getClass().getName(), 
+            xmlReader = (XMLReader) reader;
+            log("Using SAX2 reader " + reader.getClass().getName(),
                 Project.MSG_VERBOSE);
         } else {
 
             // see if it is a SAX1 Parser
             if (reader instanceof Parser) {
                 xmlReader = new ParserAdapter((Parser) reader);
-                log("Using SAX1 parser " + reader.getClass().getName(), 
+                log("Using SAX1 parser " + reader.getClass().getName(),
                     Project.MSG_VERBOSE);
             }  else {
                 throw new BuildException(INIT_FAILED_MSG + readerClassName
@@ -347,18 +363,23 @@ public class XMLValidateTask extends Task {
                                              + " doesn't provide validation");
                 }
             }
-            // set other features
-            Enumeration enum = features.keys();
-            while (enum.hasMoreElements()) {
-                String featureId = (String) enum.nextElement();
-                setFeature(featureId, ((Boolean) features.get(featureId)).booleanValue(), true);
+            // set the feature from the attribute list
+            for (int i = 0; i < attributeList.size(); i++) {
+                Attribute feature = (Attribute) attributeList.elementAt(i);
+                setFeature(feature.getName(),
+                           feature.getValue(),
+                           true);
+
             }
         }
     }
 
     /**
-     * set a feature on the parser.
-     * @todo find a way to set any feature from build.xml
+     * Set a feature on the parser.
+     * @param feature the name of the feature to set
+     * @param value the value of the feature
+     * @param warn whether to war if the parser does not support the feature
+
      */
     private boolean setFeature(String feature, boolean value, boolean warn) {
 
@@ -370,20 +391,22 @@ public class XMLValidateTask extends Task {
             if (warn) {
                 log("Could not set feature '"
                     + feature
-                    + "' because the parser doesn't recognize it",
+                    + "' because the '" +
+                       readerClassName + "' parser doesn't recognize it",
                     Project.MSG_WARN);
             }
         } catch (SAXNotSupportedException  e) {
             if (warn) {
                 log("Could not set feature '"
                     + feature
-                    + "' because the parser doesn't support it",
+                    + "' because the '" +
+                        readerClassName + "' parser doesn't support it",
                     Project.MSG_WARN);
             }
         }
         return toReturn;
     }
-    
+
     /**
      * parse the file
      */
@@ -395,18 +418,18 @@ public class XMLValidateTask extends Task {
             String uri = "file:" + afile.getAbsolutePath().replace('\\', '/');
             for (int index = uri.indexOf('#'); index != -1;
                  index = uri.indexOf('#')) {
-                uri = uri.substring(0, index) + "%23" 
+                uri = uri.substring(0, index) + "%23"
                     + uri.substring(index + 1);
             }
             is.setSystemId(uri);
             xmlReader.parse(is);
         } catch (SAXException ex) {
             if (failOnError) {
-                throw new BuildException("Could not validate document " 
+                throw new BuildException("Could not validate document "
                     + afile);
             }
         } catch (IOException ex) {
-            throw new BuildException("Could not validate document " + afile, 
+            throw new BuildException("Could not validate document " + afile,
                 ex);
         }
 
@@ -480,6 +503,55 @@ public class XMLValidateTask extends Task {
                 }
             }
             return e.getMessage();
+        }
+    }
+
+    /**
+     * The class to create to set a feature of the parser.
+     * @since ant1.6
+     * @author <a href="mailto:nick@svana.org">Nick Pellow</a>
+     */
+    public class Attribute {
+        /** The name of the attribute to set.
+         *
+         * Valid attributes <a href=http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description">include.</a>
+         */
+        private String attributeName = null;
+
+        /**
+         * The value of the feature.
+         **/
+        private boolean attributeValue;
+
+        /**
+         * Set the feature name.
+         * @param name the name to set
+         */
+        public void setName(String name) {
+            attributeName = name;
+        }
+        /**
+         * Set the feature value to true or false.
+         * @param value
+         */
+        public void setValue(boolean value) {
+            attributeValue = value;
+        }
+
+        /**
+         * Gets the attribute name.
+         * @return the feature name
+         */
+        public String getName() {
+            return attributeName;
+        }
+
+        /**
+         * Gets the attribute value.
+         * @return the featuree value
+         */
+        public boolean getValue() {
+            return attributeValue;
         }
     }
 }

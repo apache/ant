@@ -38,25 +38,29 @@
       </xmlcatalog>
     </xmlvalidate>
   </target>
+
   
-<!--   <target name="testSchemaGood">
-    <xmlvalidate warn="false">
-      <fileset dir="xml" includes="endpiece.xml"/>  
-      <feature name="http://xml.org/sax/features/validation" value="true"/>
-      <feature name="http://apache.org/xml/features/validation/schema"  value="true"/>
-        <xmlcatalog >
-          <entity publicID = "nap:Massive+Attack+Mezzanine"
-            location = "xml/doc.xsd"/>
-        </xmlcatalog> 
+  <target name="testSchemaGood">
+    <xmlvalidate warn="false" lenient="no" >
+      <fileset dir="xml" includes="endpiece.xml"/>
+
+        <attribute name="http://xml.org/sax/features/validation"
+                   value="false"/>
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="false"/>
+
     </xmlvalidate>
   </target>
-   -->
-<!--   <target name="testSchGemaBad">
+
+  <target name="testSchemaBad">
     <xmlvalidate warn="false">
-      <fileset dir="xml" includes="endpiece2.xml"/>  
-      <feature name="http://xml.org/sax/features/validation" value="true"/>
-      <feature name="http://apache.org/xml/features/validation/schema"  value="true"/>
+      <fileset dir="xml" includes="endpiece2.xml"/>
+      
+        <attribute name="http://xml.org/sax/features/validation"
+                   value="true"/>
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
     </xmlvalidate>
-  </target> -->
+  </target>
     
 </project>

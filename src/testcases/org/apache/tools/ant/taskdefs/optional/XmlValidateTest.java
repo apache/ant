@@ -94,6 +94,7 @@ public class XmlValidateTest extends BuildFileTest {
      * The teardown method for JUnit
      */
     public void tearDown() {
+
     }
 
 
@@ -124,5 +125,21 @@ public class XmlValidateTest extends BuildFileTest {
      */
     public void testXmlCatalogNested() {
         executeTarget("xmlcatalognested");
+    }
+
+    /**
+     * Test xml schema validation
+     */
+    public void testXmlSchemaGood() {
+        executeTarget("testSchemaGood");
+    }
+    /**
+     * Test xml schema validation
+     */
+    public void testXmlSchemaBad() {
+        expectBuildExceptionContaining(
+                "testSchemaBad",
+                "Bad Schema Validation", "not a valid XML document");
+
     }
 }
