@@ -229,7 +229,7 @@ class ProcessMonitor
      */
     private void processStandardError()
     {
-        final InputStream input = m_process.getInputStream();
+        final InputStream input = m_process.getErrorStream();
         copy( input, m_error );
     }
 
