@@ -165,10 +165,8 @@ Legal:
 -->
 
     <mkdir dir="${build.classes}/TASK-LIB"/>
-    <copy file="${build.src}/org/apache/ant/tasks/core/taskdefs.properties" 
-          todir="${build.classes}/TASK-LIB"/>
-    <copy file="${build.src}/org/apache/ant/convert/core/converters.properties" 
-          todir="${build.classes}/TASK-LIB"/>
+    <copy file="${manifest.dir}/taskdefs.xml" todir="${build.classes}/TASK-LIB"/>
+
   </target>
 
   <!--

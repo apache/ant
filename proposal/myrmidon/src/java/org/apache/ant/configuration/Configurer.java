@@ -5,10 +5,8 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.tasklet.engine;
+package org.apache.ant.configuration;
 
-import org.apache.ant.configuration.Configuration;
-import org.apache.ant.tasklet.Tasklet;
 import org.apache.avalon.Component;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Context;
@@ -18,19 +16,19 @@ import org.apache.avalon.Context;
  * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public interface TaskletConfigurer
+public interface Configurer
     extends Component
 {
     /**
-     * Configure a task based on a configuration in a particular context.
+     * Configure an object based on a configuration in a particular context.
      * This configuring can be done in different ways for different 
      * configurers.
      *
-     * @param tasklet the tasklet
+     * @param object the object
      * @param configuration the configuration
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    void configure( Tasklet tasklet, Configuration configuration, Context context )
+    void configure( Object object, Configuration configuration, Context context )
         throws ConfigurationException;
 }

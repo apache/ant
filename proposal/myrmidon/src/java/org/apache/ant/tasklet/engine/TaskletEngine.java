@@ -12,7 +12,9 @@ import org.apache.ant.configuration.Configuration;
 import org.apache.ant.convert.ConverterEngine;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.Component;
+import org.apache.avalon.Loggable;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.camelot.LocatorRegistry;
 import org.apache.log.Logger;
  
 /**
@@ -21,10 +23,8 @@ import org.apache.log.Logger;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface TaskletEngine
-    extends Component
+    extends Component, Loggable
 {
-    void setLogger( Logger logger );
-
     /**
      * Retrieve deployer for engine.
      *
@@ -33,11 +33,11 @@ public interface TaskletEngine
     TskDeployer getTskDeployer();
     
     /**
-     * Retrieve tasklet registry associated with engine.
+     * Retrieve locator registry associated with engine.
      *
-     * @return the TaskletRegistry
+     * @return the LocatorRegistry
      */
-    TaskletRegistry getTaskletRegistry();
+    LocatorRegistry getLocatorRegistry();
 
     /**
      * Retrieve converter engine.

@@ -12,7 +12,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.ant.AntException;
 import org.apache.ant.tasklet.AbstractTasklet;
-import org.apache.ant.tasklet.engine.DefaultTaskletInfo;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentNotAccessibleException;

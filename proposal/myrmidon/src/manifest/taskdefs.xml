@@ -1,0 +1,36 @@
+<tasklib>
+  <task name="echo" classname="org.apache.ant.tasks.core.Echo" />
+  <task name="prim-test" classname="org.apache.ant.tasks.core.PrimitiveTypesTest" />
+  <task name="sub-elements-test" classname="org.apache.ant.tasks.core.SubElementTest" />
+  <task name="conf-test" classname="org.apache.ant.tasks.core.ConfigurationTest" />
+  <task name="content-test" classname="org.apache.ant.tasks.core.ContentTest" />
+  <task name="property" classname="org.apache.ant.tasks.core.Property" />
+  <task name="register-tasklet" classname="org.apache.ant.tasks.core.RegisterTasklet" />
+  <task name="register-converter" classname="org.apache.ant.tasks.core.RegisterConverter" />
+  <task name="ant-call" classname="org.apache.ant.tasks.core.AntCall" />
+
+  <converter classname="org.apache.ant.convert.core.StringToLongConverter" 
+             source="java.lang.String" 
+             destination="java.lang.Long" />
+  <converter classname="org.apache.ant.convert.core.StringToIntegerConverter" 
+             source="java.lang.String" 
+             destination="java.lang.Integer" />
+  <converter classname="org.apache.ant.convert.core.StringToShortConverter" 
+             source="java.lang.String" 
+             destination="java.lang.Short" />
+  <converter classname="org.apache.ant.convert.core.StringToByteConverter" 
+             source="java.lang.String" 
+             destination="java.lang.Byte" />
+  <converter classname="org.apache.ant.convert.core.StringToDoubleConverter" 
+             source="java.lang.String" 
+             destination="java.lang.Double" />
+  <converter classname="org.apache.ant.convert.core.StringToFloatConverter" 
+             source="java.lang.String" 
+             destination="java.lang.Float" />
+  <converter classname="org.apache.ant.convert.core.StringToClassConverter" 
+             source="java.lang.String" 
+             destination="java.lang.Class" />
+  <converter classname="org.apache.ant.convert.core.StringToURLConverter" 
+             source="java.lang.String" 
+             destination="java.net.URL" />
+</tasklib>

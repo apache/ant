@@ -7,7 +7,6 @@
  */
 package org.apache.ant.convert;
 
-import java.net.URL;
 import org.apache.avalon.camelot.Info;
 
 /**
@@ -33,19 +32,4 @@ public interface ConverterInfo
      * @return the classname of the produced object
      */
     String getDestination();
-
-    /**
-     * Retrieve classname for concerter.
-     *
-     * @return the taskname
-     */
-    String getClassname();
-
-    /**
-     * Retrieve location of task library where task is contained.
-     *
-     * @return the location of task library
-     */
-    URL getLocation();
 }
-

@@ -30,11 +30,11 @@ public class DefaultConverterRegistry
      * @param destination the destination classname
      * @return the converter-info or null if none available
      */
-    public ConverterInfo getConverterInfo( final String source, final String destination )
+    public String getConverterInfoName( final String source, final String destination )
     {
         final HashMap map = (HashMap)m_mapping.get( source );
         if( null == map ) return null;
-        return (ConverterInfo)map.get( destination );
+        return (String)map.get( destination );
     }
 
     protected void checkInfo( final String name, final Info info )
@@ -53,7 +53,7 @@ public class DefaultConverterRegistry
             m_mapping.put( source, map );
         }
         
-        map.put( destination, info );        
+        map.put( destination, name );        
     }
 
     protected Class getInfoClass()

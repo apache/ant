@@ -8,13 +8,13 @@
 package org.apache.ant.convert;
 
 import org.apache.avalon.Component;
+import org.apache.avalon.Loggable;
+import org.apache.avalon.camelot.LocatorRegistry;
 import org.apache.log.Logger;
 
 public interface ConverterEngine
-    extends Component, Converter
+    extends Component, Converter, Loggable
 {
-    void setLogger( Logger logger );
-
+    LocatorRegistry getLocatorRegistry();
     ConverterRegistry getConverterRegistry();
-    ConverterFactory getConverterFactory();
 }

@@ -11,19 +11,25 @@ import java.util.HashMap;
 import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configurable;
 import org.apache.ant.configuration.Configuration;
+import org.apache.ant.configuration.Configurer;
+import org.apache.ant.configuration.DefaultConfigurer;
 import org.apache.ant.convert.ConverterEngine;
-import org.apache.ant.convert.ConverterFactory;
 import org.apache.ant.tasklet.Tasklet;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.Component;
-import org.apache.avalon.Composer;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.Composer;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
 import org.apache.avalon.DefaultComponentManager;
 import org.apache.avalon.Disposable;
+import org.apache.avalon.Loggable;
 import org.apache.avalon.Initializable;
+import org.apache.avalon.camelot.DefaultFactory;
 import org.apache.avalon.camelot.FactoryException;
+import org.apache.avalon.camelot.LocatorRegistry;
+import org.apache.avalon.camelot.Locator;
+import org.apache.avalon.camelot.DefaultLocatorRegistry;
 import org.apache.avalon.camelot.RegistryException;
 import org.apache.log.Logger;
 
@@ -31,9 +37,9 @@ public class DefaultTaskletEngine
     implements TaskletEngine, Initializable
 {
     protected TskDeployer          m_tskDeployer;
-    protected TaskletFactory       m_taskletFactory;
-    protected TaskletRegistry      m_taskletRegistry;
-    protected TaskletConfigurer    m_configurer;
+    protected DefaultFactory       m_factory;
+    protected LocatorRegistry      m_locatorRegistry;
+    protected Configurer           m_configurer;
     protected Logger               m_logger;
     protected ConverterEngine      m_converterEngine;
 
@@ -52,22 +58,23 @@ public class DefaultTaskletEngine
         return m_converterEngine;
     }
 
-    public TaskletRegistry getTaskletRegistry()
+    public LocatorRegistry getLocatorRegistry()
     {
-        return m_taskletRegistry;
+        return m_locatorRegistry;
     }
 
     public void init()
         throws Exception
     {
-        m_taskletRegistry = createTaskletRegistry();
-        m_taskletFactory = createTaskletFactory();
+        m_locatorRegistry = createLocatorRegistry();
+        m_factory = createFactory();
+        setupSubComponent( m_factory );
 
         m_converterEngine = createConverterEngine();
         m_converterEngine.setLogger( m_logger );
         setupSubComponent( m_converterEngine );
 
-        m_configurer = createTaskletConfigurer();
+        m_configurer = createConfigurer();
         setupSubComponent( m_configurer );
 
         m_tskDeployer = createTskDeployer();
@@ -78,6 +85,11 @@ public class DefaultTaskletEngine
     protected void setupSubComponent( final Component component )
         throws Exception
     {
+        if( component instanceof Loggable )
+        {
+            ((Loggable)component).setLogger( m_logger );
+        }
+
         if( component instanceof Composer )
         {
             final DefaultComponentManager componentManager = new DefaultComponentManager();
@@ -90,7 +102,7 @@ public class DefaultTaskletEngine
 
             ((Composer)component).compose( componentManager );
         }
-        
+
         if( component instanceof Initializable )
         {
             ((Initializable)component).init();
@@ -102,19 +114,19 @@ public class DefaultTaskletEngine
         return new DefaultTskDeployer();
     }
 
-    protected TaskletConfigurer createTaskletConfigurer()
+    protected Configurer createConfigurer()
     {
-        return new DefaultTaskletConfigurer();
+        return new DefaultConfigurer();
     }
     
-    protected TaskletRegistry createTaskletRegistry()
+    protected LocatorRegistry createLocatorRegistry()
     {
-        return new DefaultTaskletRegistry();
+        return new DefaultLocatorRegistry();
     }
     
-    protected TaskletFactory createTaskletFactory()
+    protected DefaultFactory createFactory()
     {
-        return new DefaultTaskletFactory();
+        return new DefaultFactory();
     }
     
     protected ConverterEngine createConverterEngine()
@@ -122,7 +134,7 @@ public class DefaultTaskletEngine
         //this is done so that the loaders are shared
         //which results in much less overhead
         final TaskletConverterEngine engine = new TaskletConverterEngine();
-        engine.setConverterFactory( (ConverterFactory)m_taskletFactory );
+        engine.setFactory( m_factory );
         return engine;
     }
 
@@ -236,21 +248,18 @@ public class DefaultTaskletEngine
         throws AntException
     {
         final String name = configuration.getName();
-        TaskletInfo info = null;
-
-        try { info = (TaskletInfo)m_taskletRegistry.getInfo( name ); }
+        try
+        {
+            final Locator locator = m_locatorRegistry.getLocator( name );
+            return (Tasklet)m_factory.create( locator, Tasklet.class );
+        }
         catch( final RegistryException re )
         {
             throw new AntException( "Unable to locate task " + name, re );
         }
-
-        try { return m_taskletFactory.createTasklet( info ); }
         catch( final FactoryException fe )
         {
-            throw new AntException( "Unable to create task " + name + 
-                                    " (of type " + info.getClassname() + " from " +
-                                    info.getLocation() + ")",
-                                    fe );
+            throw new AntException( "Unable to create task " + name, fe );
         }
     }
 }

@@ -7,8 +7,6 @@
  */
 package org.apache.ant.convert;
 
-import java.net.URL;
-
 /**
  * This info represents meta-information about a converter.
  *
@@ -19,18 +17,11 @@ public class DefaultConverterInfo
 {
     protected final String            m_source;
     protected final String            m_destination;
-    protected final String            m_classname;
-    protected final URL               m_location;
 
-    public DefaultConverterInfo( final String source, 
-                                 final String destination,
-                                 final String classname,
-                                 final URL location )
+    public DefaultConverterInfo( final String source, final String destination )
     {
         m_source = source;
         m_destination = destination;
-        m_classname = classname;
-        m_location = location;
     } 
 
     /**
@@ -53,26 +44,6 @@ public class DefaultConverterInfo
     public String getDestination()
     {
         return m_destination;
-    }
-    
-    /**
-     * Retrieve classname for concerter.
-     *
-     * @return the taskname
-     */
-    public String getClassname()
-    {
-        return m_classname;
-    }
-
-    /**
-     * Retrieve location of task library where task is contained.
-     *
-     * @return the location of task library
-     */
-    public URL getLocation()
-    {
-        return m_location;
     }
 }
 

@@ -9,7 +9,7 @@ package org.apache.ant.tasks.core;
 
 import java.net.URL;
 import org.apache.ant.AntException;
-import org.apache.ant.tasklet.engine.DefaultTaskletInfo;
+import org.apache.avalon.camelot.DefaultLocator;
 import org.apache.avalon.camelot.DeploymentException;
 import org.apache.avalon.camelot.RegistryException;
 
@@ -36,8 +36,8 @@ public class RegisterTasklet
         }
         else
         {
-            final DefaultTaskletInfo info = new DefaultTaskletInfo( classname, url );
-            m_engine.getTaskletRegistry().register( name, info ); 
+            final DefaultLocator locator = new DefaultLocator( classname, url );
+            m_engine.getLocatorRegistry().register( name, locator ); 
         }
     }
 }

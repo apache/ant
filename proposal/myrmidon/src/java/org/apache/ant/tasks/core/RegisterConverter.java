@@ -11,8 +11,9 @@ import java.io.File;
 import java.net.URL;
 import java.net.MalformedURLException;
 import org.apache.ant.AntException;
-import org.apache.ant.convert.DefaultConverterInfo;
+import org.apache.avalon.camelot.DefaultLocator;
 import org.apache.ant.convert.ConverterEngine;
+import org.apache.ant.convert.DefaultConverterInfo;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.ComponentManager;
@@ -106,12 +107,15 @@ public class RegisterConverter
         else
         {
             final DefaultConverterInfo info = 
-                new DefaultConverterInfo( m_sourceType, m_destinationType, m_classname, url );
+                new DefaultConverterInfo( m_sourceType, m_destinationType );
+            final DefaultLocator locator = new DefaultLocator( m_classname, url );
 
             try
             {
                 m_engine.getConverterEngine().
                     getConverterRegistry().register( m_classname, info ); 
+                m_engine.getConverterEngine().
+                    getLocatorRegistry().register( m_classname, locator ); 
             }
             catch( final RegistryException re )
             {

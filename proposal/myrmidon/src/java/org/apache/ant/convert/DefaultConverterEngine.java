@@ -10,12 +10,17 @@ package org.apache.ant.convert;
 import org.apache.ant.AntException;
 import org.apache.avalon.Component;
 import org.apache.avalon.Initializable;
+import org.apache.avalon.camelot.DefaultFactory;
+import org.apache.avalon.camelot.DefaultLocatorRegistry;
+import org.apache.avalon.camelot.Locator;
+import org.apache.avalon.camelot.LocatorRegistry;
 import org.apache.log.Logger;
 
 public class DefaultConverterEngine
     implements ConverterEngine, Initializable
 {
-    protected ConverterFactory     m_converterFactory;
+    protected DefaultFactory       m_factory;
+    protected LocatorRegistry      m_locatorRegistry;
     protected ConverterRegistry    m_converterRegistry;
     protected Logger               m_logger;
 
@@ -24,21 +29,22 @@ public class DefaultConverterEngine
         m_logger = logger;
     }
 
+    public LocatorRegistry getLocatorRegistry()
+    {
+        return m_locatorRegistry;
+    }
+
     public ConverterRegistry getConverterRegistry()
     {
         return m_converterRegistry;
-    }
-
-    public ConverterFactory getConverterFactory()
-    {
-        return m_converterFactory;
     }
 
     public void init()
         throws Exception
     {
         m_converterRegistry = createConverterRegistry();
-        m_converterFactory =  createConverterFactory();
+        m_locatorRegistry = createLocatorRegistry();
+        m_factory =  createFactory();
     }
     
     protected ConverterRegistry createConverterRegistry()
@@ -46,26 +52,32 @@ public class DefaultConverterEngine
         return new DefaultConverterRegistry();
     }
 
-    protected ConverterFactory createConverterFactory()
+    protected LocatorRegistry createLocatorRegistry()
     {
-        return new DefaultConverterFactory();
+        return new DefaultLocatorRegistry();
+    }
+
+    protected DefaultFactory createFactory()
+    {
+        return new DefaultFactory();
     }
 
     public Object convert( Class destination, final Object original )
         throws Exception
     {
-        final ConverterInfo info = 
-            m_converterRegistry.getConverterInfo( original.getClass().getName(), 
-                                                  destination.getName() );
+        final String name = 
+            m_converterRegistry.getConverterInfoName( original.getClass().getName(), 
+                                                      destination.getName() );
             
-        if( null == info ) 
+        if( null == name ) 
         {
             throw new ConverterException( "Unable to find converter for " + 
                                           original.getClass() + " to " + destination + 
                                           " conversion" );
         }
 
-        final Converter converter = m_converterFactory.createConverter( info );
+        final Locator locator = m_locatorRegistry.getLocator( name );
+        final Converter converter = (Converter)m_factory.create( locator, Converter.class );
         return converter.convert( destination, original );
     }
 }

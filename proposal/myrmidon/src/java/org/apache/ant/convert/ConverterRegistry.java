@@ -17,11 +17,12 @@ public interface ConverterRegistry
     extends Registry
 {
     /**
-     * Retrieve ConverterInfo that describes converter that converts from source to destination.
+     * Retrieve name of ConverterInfo that describes converter that converts 
+     * from source to destination.
      *
      * @param source the source classname
      * @param destination the destination classname
      * @return the converter-info or null if none available
      */
-    ConverterInfo getConverterInfo( String source, String destination );
+    String getConverterInfoName( String source, String destination );
 }

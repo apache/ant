@@ -5,17 +5,14 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.tasklet.engine;
+package org.apache.ant.configuration;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.ant.configuration.Configurable;
-import org.apache.ant.configuration.Configuration;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.convert.ConverterException;
-import org.apache.ant.tasklet.Tasklet;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentNotAccessibleException;
 import org.apache.avalon.ComponentNotFoundException;
@@ -30,8 +27,8 @@ import org.apache.avalon.util.PropertyUtil;
  * 
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class DefaultTaskletConfigurer
-    implements TaskletConfigurer, Composer
+public class DefaultConfigurer
+    implements Configurer, Composer
 {
     protected final static String  RESERVED_ATTRIBUTES[] = 
     {
@@ -51,27 +48,6 @@ public class DefaultTaskletConfigurer
         m_converter = (Converter)componentManager.lookup( "org.apache.ant.convert.Converter" );
     }
     
-    /**
-     * Configure a task based on a configuration in a particular context.
-     * This configuring can be done in different ways for different 
-     * configurers. 
-     * This one does it by first checking if object implements Configurable 
-     * and if it does will pass the task the configuration - else it will use
-     * ants rules to map configuration to types
-     *
-     * @param tasklet the tasklet
-     * @param configuration the configuration
-     * @param context the Context
-     * @exception ConfigurationException if an error occurs
-     */
-    public void configure( final Tasklet tasklet, 
-                           final Configuration configuration,
-                           final Context context )
-        throws ConfigurationException
-    {
-        configure( (Object)tasklet, configuration, context );
-    }
-
     /**
      * Configure a task based on a configuration in a particular context.
      * This configuring can be done in different ways for different 

@@ -8,6 +8,7 @@
 package org.apache.ant.tasklet.engine;
 
 import java.net.URL;
+import org.apache.avalon.Loggable;
 import org.apache.avalon.camelot.Deployer;
 import org.apache.avalon.camelot.DeploymentException;
 import org.apache.log.Logger;
@@ -18,13 +19,12 @@ import org.apache.log.Logger;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface TskDeployer
-    extends Deployer
+    extends Deployer, Loggable
 {
-    void setLogger( Logger logger );
-
     void deployConverter( String name, String location, URL url )
         throws DeploymentException;
     
     void deployTasklet( String name, String location, URL url )
         throws DeploymentException;
 }
+

@@ -7,8 +7,8 @@
  */
 package org.apache.ant.tasklet.engine;
 
-import org.apache.ant.convert.ConverterFactory;
 import org.apache.ant.convert.DefaultConverterEngine;
+import org.apache.avalon.camelot.DefaultFactory;
 
 public class TaskletConverterEngine
     extends DefaultConverterEngine
@@ -17,13 +17,13 @@ public class TaskletConverterEngine
      * Set the ConverterFactory.
      * Package access intended.
      */
-    void setConverterFactory( final ConverterFactory converterFactory )
+    void setFactory( final DefaultFactory factory )
     {
-        m_converterFactory = converterFactory;
+        m_factory = factory;
     }
 
-    protected ConverterFactory createConverterFactory()
+    protected DefaultFactory createFactory()
     {
-        return m_converterFactory;
+        return m_factory;
     }
 }
