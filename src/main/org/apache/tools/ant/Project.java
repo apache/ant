@@ -102,7 +102,6 @@ public class Project {
     private Hashtable taskClassDefinitions = new Hashtable();
     private Hashtable targets = new Hashtable();
     private Hashtable filters = new Hashtable();
-    private boolean filtering = false;
     private File baseDir;
 
     public Project(PrintStream out, int msgOutputLevel) {
@@ -223,7 +222,6 @@ public class Project {
         log("Setting token to filter: " + token + " -> "
             + value, MSG_VERBOSE);
         this.filters.put(token, value);
-        this.filtering = true;
     }
 
     public Hashtable getFilters() {
@@ -505,15 +503,13 @@ public class Project {
     }
 
     /**
-     * Convienence method to copy a file from a source to a destination
-     * using token filtering.
+     * Convienence method to copy a file from a source to a destination.
+     * No filtering is performed.
      *
      * @throws IOException
      */
-    public void copyFile(String sourceFile, String destFile)
-        throws IOException
-    {
-        copyFile(new File(sourceFile), new File(destFile));
+    public void copyFile(String sourceFile, String destFile) throws IOException {
+        copyFile(new File(sourceFile), new File(destFile), false);
     }
 
     /**
@@ -522,7 +518,29 @@ public class Project {
      *
      * @throws IOException
      */
-    public void copyFile(File sourceFile, File destFile)
+    public void copyFile(String sourceFile, String destFile, boolean filtering)
+        throws IOException
+    {
+        copyFile(new File(sourceFile), new File(destFile), filtering);
+    }
+
+    /**
+     * Convienence method to copy a file from a source to a destination.
+     * No filtering is performed.
+     *
+     * @throws IOException
+     */
+    public void copyFile(File sourceFile, File destFile) throws IOException {
+        copyFile(sourceFile, destFile, false);
+    }
+
+    /**
+     * Convienence method to copy a file from a source to a destination
+     * specifying if token filtering must be used.
+     *
+     * @throws IOException
+     */
+    public void copyFile(File sourceFile, File destFile, boolean filtering)
         throws IOException
     {
 

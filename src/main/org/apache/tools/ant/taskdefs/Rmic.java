@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights 
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -50,7 +50,7 @@
  * individuals on behalf of the Apache Software Foundation.  For more
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
- */ 
+ */
 
 package org.apache.tools.ant.taskdefs;
 
@@ -82,21 +82,26 @@ public class Rmic extends Task {
     private String sourceBase;
     private String stubVersion;
     private String compileClasspath;
+    private boolean filtering = false;
 
     public void setBase(String base) {
-	this.base = base;
+        this.base = base;
     }
 
     public void setClass(String classname) {
-	this.classname = classname;
+        this.classname = classname;
     }
 
     public void setSourceBase(String sourceBase) {
-    	this.sourceBase = sourceBase;
+        this.sourceBase = sourceBase;
     }
 
     public void setStubVersion(String stubVersion) {
-    	this.stubVersion = stubVersion;
+        this.stubVersion = stubVersion;
+    }
+
+    public void setFiltering(String filter) {
+        filtering = Project.toBoolean(filter);
     }
 
     /**
@@ -107,16 +112,16 @@ public class Rmic extends Task {
     }
 
     public void execute() throws BuildException {
-	File baseFile = project.resolveFile(base);
+        File baseFile = project.resolveFile(base);
         File sourceBaseFile = null;
         if (null != sourceBase)
             sourceBaseFile = project.resolveFile(sourceBase);
         String classpath = getCompileClasspath(baseFile);
-	// XXX
-	// need to provide an input stream that we read in from!
+        // XXX
+        // need to provide an input stream that we read in from!
 
-	sun.rmi.rmic.Main compiler = new sun.rmi.rmic.Main(System.out, "rmic");
-  	    int argCount = 5;
+        sun.rmi.rmic.Main compiler = new sun.rmi.rmic.Main(System.out, "rmic");
+            int argCount = 5;
         int i = 0;
         if (null != stubVersion) argCount++;
         if (null != sourceBase) argCount++;
@@ -140,14 +145,14 @@ public class Rmic extends Task {
 
         // Move the generated source file to the base directory
         if (null != sourceBase) {
-        	String stubFileName = classname.replace('.', '/') + "_Stub.java";
+                String stubFileName = classname.replace('.', '/') + "_Stub.java";
             File oldStubFile = new File(baseFile, stubFileName);
             File newStubFile = new File(sourceBaseFile, stubFileName);
             try {
-                project.copyFile(oldStubFile, newStubFile);
+                project.copyFile(oldStubFile, newStubFile, filtering);
                 oldStubFile.delete();
             } catch (IOException ioe) {
-                String msg = "Failed to copy " + oldStubFile + " to " + 
+                String msg = "Failed to copy " + oldStubFile + " to " +
                              newStubFile + " due to " + ioe.getMessage();
                 throw new BuildException(msg);
             }
@@ -156,10 +161,10 @@ public class Rmic extends Task {
                 File oldSkelFile = new File(baseFile, skelFileName);
                 File newSkelFile = new File(sourceBaseFile, skelFileName);
                 try {
-            	    project.copyFile(oldSkelFile, newSkelFile);
-            	    oldSkelFile.delete();
+                    project.copyFile(oldSkelFile, newSkelFile, filtering);
+                    oldSkelFile.delete();
                 } catch (IOException ioe) {
-                    String msg = "Failed to copy " + oldSkelFile + " to " + 
+                    String msg = "Failed to copy " + oldSkelFile + " to " +
                                   newSkelFile + " due to " + ioe.getMessage();
                     throw new BuildException(msg);
                 }
@@ -175,19 +180,19 @@ public class Rmic extends Task {
     // we need a way to not use the current classpath.
 
     private String getCompileClasspath(File baseFile) {
-	StringBuffer classpath = new StringBuffer();
+        StringBuffer classpath = new StringBuffer();
 
-	// add dest dir to classpath so that previously compiled and
-	// untouched classes are on classpath
-	classpath.append(baseFile.getAbsolutePath());
+        // add dest dir to classpath so that previously compiled and
+        // untouched classes are on classpath
+        classpath.append(baseFile.getAbsolutePath());
 
-	// add our classpath to the mix
+        // add our classpath to the mix
 
-	if (compileClasspath != null) {
+        if (compileClasspath != null) {
             addExistingToClasspath(classpath,compileClasspath);
-	}
+        }
 
-	// add the system classpath
+        // add the system classpath
 
         addExistingToClasspath(classpath,System.getProperty("java.class.path"));
         // in jdk 1.2, the system classes are not on the visible classpath.
@@ -195,10 +200,10 @@ public class Rmic extends Task {
         if (Project.getJavaVersion().startsWith("1.2")) {
             String bootcp = System.getProperty("sun.boot.class.path");
             if (bootcp != null) {
-            	addExistingToClasspath(classpath, bootcp);
+                addExistingToClasspath(classpath, bootcp);
             }
         }
-	return classpath.toString();
+        return classpath.toString();
     }
 
      /**

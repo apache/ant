@@ -67,8 +67,9 @@ import java.util.*;
 
 public class Copyfile extends Task {
 
-    public File srcFile;
-    public File destFile;
+    private File srcFile;
+    private File destFile;
+    private boolean filtering = false;
 
     public void setSrc(String src) {
         srcFile = project.resolveFile(src);
@@ -78,10 +79,14 @@ public class Copyfile extends Task {
         destFile = project.resolveFile(dest);
     }
 
+    public void setFiltering(String filter) {
+        filtering = Project.toBoolean(filter);
+    }
+
     public void execute() throws BuildException {
         if (srcFile.lastModified() > destFile.lastModified()) {
             try {
-                project.copyFile(srcFile, destFile);
+                project.copyFile(srcFile, destFile, filtering);
             } catch (IOException ioe) {
                 String msg = "Error copying file: " + srcFile.getAbsolutePath()
                     + " due to " + ioe.getMessage();

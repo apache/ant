@@ -92,6 +92,7 @@ public class Javac extends MatchingTask {
     private boolean debug = false;
     private boolean optimize = false;
     private boolean deprecation = false;
+    private boolean filtering = false;
     private String target;
     private String bootclasspath;
     private String extdirs;
@@ -167,6 +168,13 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Set the filtering flag.
+     */
+    public void setFiltering(String filter) {
+        filtering = Project.toBoolean(filter);
+    }
+
+    /**
      * Executes the task.
      */
     public void execute() throws BuildException {
@@ -225,10 +233,10 @@ public class Javac extends MatchingTask {
                         " support files to " + destDir.getAbsolutePath());
             Enumeration enum = filecopyList.keys();
             while (enum.hasMoreElements()) {
-                String fromFile = (String)enum.nextElement();
-                String toFile = (String)filecopyList.get(fromFile);
+                String fromFile = (String) enum.nextElement();
+                String toFile = (String) filecopyList.get(fromFile);
                 try {
-                    project.copyFile(fromFile, toFile);
+                    project.copyFile(fromFile, toFile, filtering);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();

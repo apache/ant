@@ -69,6 +69,7 @@ public class Copydir extends MatchingTask {
 
     private File srcDir;
     private File destDir;
+    private boolean filtering = false;
     private Hashtable filecopyList = new Hashtable();
 
     public void setSrc(String src) {
@@ -79,15 +80,19 @@ public class Copydir extends MatchingTask {
         destDir = project.resolveFile(dest);
     }
 
+    public void setFiltering(String filter) {
+        filtering = Project.toBoolean(filter);
+    }
+
     public void execute() throws BuildException {
         if (srcDir == null) {
             throw new BuildException("srcdir attribute must be set!");
         }
-        
+
         if (!srcDir.exists()) {
             throw new BuildException("srcdir does not exist!");
         }
-        
+
         DirectoryScanner ds = super.getDirectoryScanner(srcDir);
 
         String[] files = ds.getIncludedFiles();
@@ -100,7 +105,7 @@ public class Copydir extends MatchingTask {
                 String fromFile = (String) enum.nextElement();
                 String toFile = (String) filecopyList.get(fromFile);
                 try {
-                    project.copyFile(fromFile, toFile);
+                    project.copyFile(fromFile, toFile, filtering);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
