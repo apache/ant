@@ -75,7 +75,7 @@ public abstract class EnumeratedAttribute {
     /**
      * the index of the selected value in the array.
      */
-    protected int index;
+    private int index = -1;
 
     /**
      * This is the only method a subclass needs to implement.
@@ -130,9 +130,17 @@ public abstract class EnumeratedAttribute {
     }
 
     /**
-     * Retrieves the value.
+     * @return the selected value.
      */
     public final String getValue() {
         return value;
+    }
+
+    /**
+     * @return the index of the selected value in the array.
+     * @see #getValues()
+     */
+    public final int getIndex() {
+        return index;
     }
 }
