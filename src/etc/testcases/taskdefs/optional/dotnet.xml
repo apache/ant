@@ -223,7 +223,9 @@
     </csc>
     <available property="refapp.created" file="${testCscReferences.exe}"/>
     <fail unless="refapp.created">No app ${testCscReferences.exe} created</fail>
-    <exec executable="${testCscReferences.exe}" failonerror="true" />
+    <exec executable="mono" failonerror="true">
+      <arg value="${testCscReferences.exe}"/>
+    </exec> 
   </target>
 
   <target name="testILASM"  depends="init">
@@ -231,7 +233,7 @@
       location="${build.dir}/ExampleIlasm.exe" />
     <ilasm 
       destFile="${testILASM.exe}"
-      targetType="exe" 
+      targetType="exe"
       >
       <src dir="${src.dir}" includes="**/*.il"/>
     </ilasm>
