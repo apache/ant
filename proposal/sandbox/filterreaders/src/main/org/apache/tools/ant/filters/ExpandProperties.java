@@ -59,18 +59,16 @@ import java.io.Reader;
 import org.apache.tools.ant.Project;
 
 /**
- * Attach a prefix to every line
+ * Expand Ant properties, if any, in the data.
  *
  * Example:
  * =======
  *
- * &lt;prefixlines prefix=&quot;Foo&quot;/&gt;
+ * &lt;expandproperties/&gt;
  *
  * Or:
  *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.PrefixLines&quot;&gt;
- *    &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
- * &lt;/filterreader&gt;
+ * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
