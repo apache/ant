@@ -59,6 +59,8 @@ Legal:
   <property name="dist.lib" value="${dist.dir}/lib"/>
   <property name="dist.ext" value="${dist.dir}/ext"/>
 
+  <property name="gen.dir" value="${build.dir}/gen"/>
+
   <property name="test.dir" value="${build.dir}/test"/>
   <property name="test.working.dir" value="${test.dir}/testcases"/>
   <property name="test.classes" value="${test.dir}/classes"/>

@@ -24,7 +24,7 @@ Legal:
   <property name="lib.dir" value="lib"/>
 
   <!-- directory where you place generated code -->
-  <property name="gen.dir" value="gen"/>
+  <property name="gen.dir" value="${build.dir}/gen"/>
 
   <property name="antlib.name" value="NONAME"/>
   <property name="antlib.include" value="org/apache/antlib/${antlib.name}/**"/>
@@ -66,7 +66,7 @@ Legal:
   <target name="jar" depends="xdoclet">
     <jar jarfile="${build.lib}/${antlib.name}.atl" basedir="${build.classes}">
       <include name="${antlib.include}" />
-      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+      <zipfileset dir="${gen.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="${antlib.descriptor}"/>
       </zipfileset>
     </jar>
