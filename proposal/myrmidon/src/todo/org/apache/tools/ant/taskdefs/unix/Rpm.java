@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.tools.ant.taskdefs.unix;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
