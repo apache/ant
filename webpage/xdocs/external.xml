@@ -156,7 +156,32 @@
     </section>
 
     <section name="Other">
-      <p>Not available</p>
+      <subsection name="CruiseControl">
+        <p>CruiseControl is a tool for setting up a continuous build
+        process.  CruiseControl provides an Ant wrapper and a set of
+        tasks to automate the checkout/build/test cycle. CruiseControl
+        also comes bundled with a servlet for viewing the status of
+        the current build, as well as previous build results.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.2 and 1.3</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://cruisecontrol.sourceforge.net/">http://cruisecontrol.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href ='http://cruisecontrol.sourceforge.net/contact.html'>Project Mailing Lists and Administrators</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License</td>
+          </tr>
+        </table>
+      </subsection>
     </section>
 
   </body>
