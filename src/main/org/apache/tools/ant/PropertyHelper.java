@@ -477,19 +477,9 @@ public class PropertyHelper {
      *         (including user properties).
      */
     public Hashtable getProperties() {
-        Hashtable propertiesCopy = new Hashtable();
-
-        Enumeration e = properties.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            Object value = properties.get(name);
-            propertiesCopy.put(name, value);
-        }
-
+        return new Hashtable(properties);
         // There is a better way to save the context. This shouldn't
         // delegate to next, it's for backward compatibility only.
-
-        return propertiesCopy;
     }
 
     /**
@@ -497,16 +487,7 @@ public class PropertyHelper {
      * @return a hashtable containing just the user properties
      */
     public Hashtable getUserProperties() {
-        Hashtable propertiesCopy = new Hashtable();
-
-        Enumeration e = userProperties.keys();
-        while (e.hasMoreElements()) {
-            Object name = e.nextElement();
-            Object value = properties.get(name);
-            propertiesCopy.put(name, value);
-        }
-
-        return propertiesCopy;
+        return new Hashtable(userProperties);
     }
 
     /**
