@@ -606,7 +606,7 @@ public class JUnitTask extends AbstractTask
         try
         {
             final FileOutputStream outstream = new FileOutputStream( propsFile );
-            props.save( outstream, "Ant JUnitTask generated properties file" );
+            props.store( outstream, "Ant JUnitTask generated properties file" );
             outstream.close();
         }
         catch( IOException ioe )
