@@ -11,6 +11,10 @@ Changes that could break older environments:
 
 * <csc>'s executable attribute defaults to mcs on non-Windows platforms.
 
+* Attempts to read input in <java> and <exec> tasks will now receive an EOF
+  rather than blocking. If you run such a process and rely on it blocking, as
+  it would do in Ant 1.5, you may have problem.
+
 Fixed bugs:
 -----------
 * the <java> task checks that the Main method of the class to be executed is static,
@@ -140,9 +144,9 @@ Fixed bugs:
 * make <input/> be skipped when a property is already set
   Bugzilla Report 19967.
 
-* improved cleanup of temporary files 
+* improved cleanup of temporary files
   this concerns <javadoc/>, <replace/>, <zip/>, <javac/>, <cvstagdiff/>, <cab/>,
-  <replaceregexp/>, <junit/>, metamata tasks, sitraka tasks, <symlink/> 
+  <replaceregexp/>, <junit/>, metamata tasks, sitraka tasks, <symlink/>
   temporary files are now marked with deleteOnExit
   Bugzilla Report 17512.
 
@@ -152,10 +156,10 @@ Fixed bugs:
 
 * Comparison of TemplateElement(s) and Attribute(s) fixed inside macrodef.
 
-* Don't silently swallow exceptions when something is wrong with adding or removing 
+* Don't silently swallow exceptions when something is wrong with adding or removing
   shutdown hooks , Bugzilla Report 23609.
 
-* noinform attribute for Websphere element of <ejbjar/> 
+* noinform attribute for Websphere element of <ejbjar/>
   Bugzilla Report 23535.
 
 * <junit/> (JunitTestRunner)
@@ -443,7 +447,7 @@ Fixed bugs:
 
 * <xmlcatalog>s only worked when defined inside of tasks.  Bugzilla
   Report 20965.
-  
+
 * <csc> and siblings (<vbc> <jsharpc>) handle large filesets by
 automatic use of response files.  Bugzilla report #19630
 
@@ -827,13 +831,13 @@ Other changes:
   and disable Java1.4 assertions on a package or class basis. These
   only work when fork=true, currently.
 
-* .NET tasks expanded with VB support <vbc> and J#, via <jsharp>, 
-  <importtypelib> and <ilasm>. <csc> supports nested <src> types, 
+* .NET tasks expanded with VB support <vbc> and J#, via <jsharp>,
+  <importtypelib> and <ilasm>. <csc> supports nested <src> types,
   <defines> for (potentially conditional) definitions, <reference>
   filesets for references. The executable attribute lets you switch to
   mono or other implementations -<csc> has been tested with Mono on
   Linux and OSX.
-    
+
 
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================
