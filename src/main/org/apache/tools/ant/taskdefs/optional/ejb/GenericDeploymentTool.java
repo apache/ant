@@ -280,6 +280,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             // a flat destination dir, then we need to redefine baseName!
             if (flatDestDir && baseName.length() != 0) {
                 int startName = baseName.lastIndexOf(File.separator);
+                if (startName == -1) {
+                    startName = 0;
+                }
+                
                 int endName   = baseName.length();
                 baseName = baseName.substring(startName, endName);
             }

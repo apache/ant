@@ -72,7 +72,7 @@ public class WLRun extends Task {
     static private final String defaultPolicyFile = "weblogic.policy";
 
     /**
-     * The classpath to be used in the weblogic ejbc calls. It must contain the weblogic
+     * The classpath to be used when running the Java VM. It must contain the weblogic
      * classes <b>and</b> the implementation classes of the home and remote interfaces.
      */
     private Path classpath;
