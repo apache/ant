@@ -258,7 +258,7 @@ public final class Diagnostics {
             out.println("Download it at http://xml.apache.org/commons/");
         } catch (InvocationTargetException e) {
             error = e.getTargetException() == null ? e : e.getTargetException();
-        } catch (Exception e) {
+        } catch (Throwable e) {
             error = e;
         }
         // report error if something weird happens...this is diagnostic.
@@ -274,11 +274,11 @@ public final class Diagnostics {
      * because Ant requires multiple libraries to compile and one of them
      * was missing when compiling Ant.
      * @param out the stream to print the tasks report to
-     * @param is the stream defining the mapping task name/classname, can be
      * <tt>null</tt> for a missing stream (ie mapping).
      */
     private static void doReportTasksAvailability(PrintStream out){
-        InputStream is = Main.class.getResourceAsStream("/org/apache/tools/ant/taskdefs/defaults.properties");
+        InputStream is = Main.class.getResourceAsStream(
+                "/org/apache/tools/ant/taskdefs/defaults.properties");
         if (is == null) {
             out.println("None available");
         } else {
@@ -293,6 +293,11 @@ public final class Diagnostics {
                         props.remove(key);
                     } catch (ClassNotFoundException e){
                         out.println(key + " : Not Available");
+                    } catch (NoClassDefFoundError e) {
+                        String pkg = e.getMessage().replace('/', '.');
+                        out.println(key + " : Missing dependency " + pkg );
+                    } catch (Error e) {
+                        out.println(key + " : Initialization error");
                     }
                 }
                 if (props.size() == 0){
