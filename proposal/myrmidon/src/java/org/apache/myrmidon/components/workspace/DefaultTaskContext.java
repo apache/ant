@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.api;
+package org.apache.myrmidon.components.workspace;
 
 import java.io.File;
 import java.util.Map;
@@ -14,6 +14,9 @@ import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
+import org.apache.myrmidon.api.JavaVersion;
+import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Default implementation of TaskContext.
