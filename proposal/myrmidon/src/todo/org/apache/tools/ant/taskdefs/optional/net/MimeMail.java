@@ -6,15 +6,16 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.net;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;// Standard SDK imports
+import java.io.IOException;
 import java.util.Properties;
-import java.util.Vector;//imported for data source and handler
+import java.util.Vector;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.mail.Message;
-import javax.mail.MessagingException;//imported for the mail api
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
@@ -22,12 +23,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;// Ant imports
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-
 
 /**
  * A task to send SMTP email. This version has near identical syntax to the
@@ -102,16 +102,17 @@ public class MimeMail extends Task
     /**
      * Creates new instance
      */
-    public MimeMail() { }
-
+    public MimeMail()
+    {
+    }
 
     // helper method to add recipients
     private static void addRecipients( MimeMessage msg,
                                        Message.RecipientType recipType,
                                        String addrUserName,
                                        String addrList
-                                        )
-        throws MessagingException, BuildException
+                                       )
+        throws MessagingException, TaskException
     {
         if( ( null == addrList ) || ( addrList.trim().length() <= 0 ) )
             return;
@@ -121,13 +122,13 @@ public class MimeMail extends Task
             InternetAddress[] addrArray = InternetAddress.parse( addrList );
 
             if( ( null == addrArray ) || ( 0 == addrArray.length ) )
-                throw new BuildException( "Empty " + addrUserName + " recipients list was specified" );
+                throw new TaskException( "Empty " + addrUserName + " recipients list was specified" );
 
             msg.setRecipients( recipType, addrArray );
         }
         catch( AddressException ae )
         {
-            throw new BuildException( "Invalid " + addrUserName + " recipient list" );
+            throw new TaskException( "Invalid " + addrUserName + " recipient list" );
         }
     }
 
@@ -151,7 +152,6 @@ public class MimeMail extends Task
         this.ccList = ccList;
     }
 
-
     /**
      * Sets the FailOnError attribute of the MimeMail object
      *
@@ -161,7 +161,6 @@ public class MimeMail extends Task
     {
         this.failOnError = failOnError;
     }
-
 
     /**
      * Sets the "from" parameter of this build task.
@@ -173,7 +172,6 @@ public class MimeMail extends Task
         this.from = from;
     }
 
-
     /**
      * Sets the mailhost parameter of this build task.
      *
@@ -183,7 +181,6 @@ public class MimeMail extends Task
     {
         this.mailhost = mailhost;
     }
-
 
     /**
      * Sets the message parameter of this build task.
@@ -199,7 +196,6 @@ public class MimeMail extends Task
     {
         this.messageFile = messageFile;
     }
-
 
     /**
      * set type of the text message, plaintext by default but text/html or
@@ -247,10 +243,10 @@ public class MimeMail extends Task
      *
      * @exception MessagingException Description of Exception
      * @exception AddressException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void doMail()
-        throws MessagingException, AddressException, BuildException
+        throws MessagingException, AddressException, TaskException
     {
         Properties props = new Properties();
         props.put( "mail.smtp.host", mailhost );
@@ -284,8 +280,8 @@ public class MimeMail extends Task
         //first a message
         if( messageFile != null )
         {
-            int size = ( int )messageFile.length();
-            byte data[] = new byte[size];
+            int size = (int)messageFile.length();
+            byte data[] = new byte[ size ];
 
             try
             {
@@ -296,7 +292,7 @@ public class MimeMail extends Task
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
 
@@ -309,7 +305,7 @@ public class MimeMail extends Task
 
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.elementAt( i );
             if( fs != null )
             {
                 DirectoryScanner ds = fs.getDirectoryScanner( project );
@@ -318,16 +314,16 @@ public class MimeMail extends Task
 
                 for( int j = 0; j < dsfiles.length; j++ )
                 {
-                    File file = new File( baseDir, dsfiles[j] );
+                    File file = new File( baseDir, dsfiles[ j ] );
                     MimeBodyPart body;
                     body = new MimeBodyPart();
                     if( !file.exists() || !file.canRead() )
                     {
-                        throw new BuildException( "File \"" + file.getAbsolutePath()
-                             + "\" does not exist or is not readable." );
+                        throw new TaskException( "File \"" + file.getAbsolutePath()
+                                                 + "\" does not exist or is not readable." );
                     }
                     log( "Attaching " + file.toString() + " - " + file.length() + " bytes",
-                        Project.MSG_VERBOSE );
+                         Project.MSG_VERBOSE );
                     FileDataSource fileData = new FileDataSource( file );
                     DataHandler fileDataHandler = new DataHandler( fileData );
                     body.setDataHandler( fileDataHandler );
@@ -342,15 +338,14 @@ public class MimeMail extends Task
         Transport.send( msg );
     }
 
-
     /**
-     * Executes this build task. throws org.apache.tools.ant.BuildException if
+     * Executes this build task. throws org.apache.tools.ant.TaskException if
      * there is an error during task execution.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -361,7 +356,7 @@ public class MimeMail extends Task
         {
             if( failOnError )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
             else
             {
@@ -371,32 +366,31 @@ public class MimeMail extends Task
         }
     }
 
-
     /**
      * verify parameters
      *
-     * @throws BuildException if something is invalid
+     * @throws TaskException if something is invalid
      */
     public void validate()
     {
         if( from == null )
         {
-            throw new BuildException( "Attribute \"from\" is required." );
+            throw new TaskException( "Attribute \"from\" is required." );
         }
 
         if( ( toList == null ) && ( ccList == null ) && ( bccList == null ) )
         {
-            throw new BuildException( "Attribute \"toList\", \"ccList\" or \"bccList\" is required." );
+            throw new TaskException( "Attribute \"toList\", \"ccList\" or \"bccList\" is required." );
         }
 
         if( message == null && filesets.isEmpty() && messageFile == null )
         {
-            throw new BuildException( "FileSet, \"message\", or \"messageFile\" is required." );
+            throw new TaskException( "FileSet, \"message\", or \"messageFile\" is required." );
         }
 
         if( message != null && messageFile != null )
         {
-            throw new BuildException( "Only one of \"message\" or \"messageFile\" may be specified." );
+            throw new TaskException( "Only one of \"message\" or \"messageFile\" may be specified." );
         }
     }
 }

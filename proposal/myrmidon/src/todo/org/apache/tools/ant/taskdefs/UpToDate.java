@@ -6,10 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.condition.Condition;
@@ -87,14 +88,14 @@ public class UpToDate extends MatchingTask implements Condition
      * Defines the FileNameMapper to use (nested mapper element).
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Mapper createMapper()
-        throws BuildException
+        throws TaskException
     {
         if( mapperElement != null )
         {
-            throw new BuildException( "Cannot define more than one mapper"  );
+            throw new TaskException( "Cannot define more than one mapper" );
         }
         mapperElement = new Mapper( project );
         return mapperElement;
@@ -109,12 +110,12 @@ public class UpToDate extends MatchingTask implements Condition
     {
         if( sourceFileSets.size() == 0 )
         {
-            throw new BuildException( "At least one <srcfiles> element must be set" );
+            throw new TaskException( "At least one <srcfiles> element must be set" );
         }
 
         if( _targetFile == null && mapperElement == null )
         {
-            throw new BuildException( "The targetfile attribute or a nested mapper element must be set" );
+            throw new TaskException( "The targetfile attribute or a nested mapper element must be set" );
         }
 
         // if not there then it can't be up to date
@@ -125,23 +126,22 @@ public class UpToDate extends MatchingTask implements Condition
         boolean upToDate = true;
         while( upToDate && enum.hasMoreElements() )
         {
-            FileSet fs = ( FileSet )enum.nextElement();
+            FileSet fs = (FileSet)enum.nextElement();
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             upToDate = upToDate && scanDir( fs.getDir( project ),
-                ds.getIncludedFiles() );
+                                            ds.getIncludedFiles() );
         }
         return upToDate;
     }
-
 
     /**
      * Sets property to true if target files have a more recent timestamp than
      * each of the corresponding source files.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         boolean upToDate = eval();
         if( upToDate )
@@ -150,12 +150,12 @@ public class UpToDate extends MatchingTask implements Condition
             if( mapperElement == null )
             {
                 log( "File \"" + _targetFile.getAbsolutePath() + "\" is up to date.",
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
             }
             else
             {
                 log( "All target files have been up to date.",
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
             }
         }
     }

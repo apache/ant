@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,7 +17,7 @@ import java.util.Date;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
@@ -93,25 +94,25 @@ public class Expand extends MatchingTask
     /**
      * Do the work.
      *
-     * @exception BuildException Thrown in unrecoverable error.
+     * @exception TaskException Thrown in unrecoverable error.
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( source == null && filesets.size() == 0 )
         {
-            throw new BuildException( "src attribute and/or filesets must be specified" );
+            throw new TaskException( "src attribute and/or filesets must be specified" );
         }
 
         if( dest == null )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "Dest attribute must be specified" );
         }
 
         if( dest.exists() && !dest.isDirectory() )
         {
-            throw new BuildException( "Dest must be a directory." );
+            throw new TaskException( "Dest must be a directory." );
         }
 
         FileUtils fileUtils = FileUtils.newFileUtils();
@@ -120,8 +121,8 @@ public class Expand extends MatchingTask
         {
             if( source.isDirectory() )
             {
-                throw new BuildException( "Src must not be a directory." +
-                    " Use nested filesets instead." );
+                throw new TaskException( "Src must not be a directory." +
+                                         " Use nested filesets instead." );
             }
             else
             {
@@ -132,14 +133,14 @@ public class Expand extends MatchingTask
         {
             for( int j = 0; j < filesets.size(); j++ )
             {
-                FileSet fs = ( FileSet )filesets.elementAt( j );
+                FileSet fs = (FileSet)filesets.elementAt( j );
                 DirectoryScanner ds = fs.getDirectoryScanner( project );
                 File fromDir = fs.getDir( project );
 
                 String[] files = ds.getIncludedFiles();
                 for( int i = 0; i < files.length; ++i )
                 {
-                    File file = new File( fromDir, files[i] );
+                    File file = new File( fromDir, files[ i ] );
                     expandFile( fileUtils, file, dest );
                 }
             }
@@ -161,16 +162,16 @@ public class Expand extends MatchingTask
             while( ( ze = zis.getNextEntry() ) != null )
             {
                 extractFile( fileUtils, srcF, dir, zis,
-                    ze.getName(),
-                    new Date( ze.getTime() ),
-                    ze.isDirectory() );
+                             ze.getName(),
+                             new Date( ze.getTime() ),
+                             ze.isDirectory() );
             }
 
             log( "expand complete", Project.MSG_VERBOSE );
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "Error while expanding " + srcF.getPath(), ioe );
+            throw new TaskException( "Error while expanding " + srcF.getPath(), ioe );
         }
         finally
         {
@@ -181,7 +182,8 @@ public class Expand extends MatchingTask
                     zis.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }
@@ -199,13 +201,13 @@ public class Expand extends MatchingTask
             boolean included = false;
             for( int v = 0; v < patternsets.size(); v++ )
             {
-                PatternSet p = ( PatternSet )patternsets.elementAt( v );
+                PatternSet p = (PatternSet)patternsets.elementAt( v );
                 String[] incls = p.getIncludePatterns( project );
                 if( incls != null )
                 {
                     for( int w = 0; w < incls.length; w++ )
                     {
-                        boolean isIncl = DirectoryScanner.match( incls[w], name );
+                        boolean isIncl = DirectoryScanner.match( incls[ w ], name );
                         if( isIncl )
                         {
                             included = true;
@@ -218,7 +220,7 @@ public class Expand extends MatchingTask
                 {
                     for( int w = 0; w < excls.length; w++ )
                     {
-                        boolean isExcl = DirectoryScanner.match( excls[w], name );
+                        boolean isExcl = DirectoryScanner.match( excls[ w ], name );
                         if( isExcl )
                         {
                             included = false;
@@ -238,15 +240,15 @@ public class Expand extends MatchingTask
         try
         {
             if( !overwrite && f.exists()
-                 && f.lastModified() >= entryDate.getTime() )
+                && f.lastModified() >= entryDate.getTime() )
             {
                 log( "Skipping " + f + " as it is up-to-date",
-                    Project.MSG_DEBUG );
+                     Project.MSG_DEBUG );
                 return;
             }
 
             log( "expanding " + entryName + " to " + f,
-                Project.MSG_VERBOSE );
+                 Project.MSG_VERBOSE );
             // create intermediary directories - sometimes zip don't add them
             File dirF = fileUtils.getParentFile( f );
             dirF.mkdirs();
@@ -257,7 +259,7 @@ public class Expand extends MatchingTask
             }
             else
             {
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[ 1024 ];
                 int length = 0;
                 FileOutputStream fos = null;
                 try
@@ -282,7 +284,8 @@ public class Expand extends MatchingTask
                             fos.close();
                         }
                         catch( IOException e )
-                        {}
+                        {
+                        }
                     }
                 }
             }

@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util;
+
 import java.io.File;
 import java.util.Vector;
+import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.myrmidon.framework.Os;
 
 /**
  * Utility class that collects the functionality of the various scanDir methods
@@ -74,40 +75,40 @@ public class SourceFileScanner
         for( int i = 0; i < files.length; i++ )
         {
 
-            String[] targets = mapper.mapFileName( files[i] );
+            String[] targets = mapper.mapFileName( files[ i ] );
             if( targets == null || targets.length == 0 )
             {
-                task.log( files[i] + " skipped - don\'t know how to handle it",
-                    Project.MSG_VERBOSE );
+                task.log( files[ i ] + " skipped - don\'t know how to handle it",
+                          Project.MSG_VERBOSE );
                 continue;
             }
 
-            File src = fileUtils.resolveFile( srcDir, files[i] );
+            File src = fileUtils.resolveFile( srcDir, files[ i ] );
 
             if( src.lastModified() > now )
             {
-                task.log( "Warning: " + files[i] + " modified in the future.",
-                    Project.MSG_WARN );
+                task.log( "Warning: " + files[ i ] + " modified in the future.",
+                          Project.MSG_WARN );
             }
 
             boolean added = false;
             targetList.setLength( 0 );
             for( int j = 0; !added && j < targets.length; j++ )
             {
-                File dest = fileUtils.resolveFile( destDir, targets[j] );
+                File dest = fileUtils.resolveFile( destDir, targets[ j ] );
 
                 if( !dest.exists() )
                 {
-                    task.log( files[i] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.",
-                        Project.MSG_VERBOSE );
-                    v.addElement( files[i] );
+                    task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " doesn\'t exist.",
+                              Project.MSG_VERBOSE );
+                    v.addElement( files[ i ] );
                     added = true;
                 }
                 else if( src.lastModified() > dest.lastModified() )
                 {
-                    task.log( files[i] + " added as " + dest.getAbsolutePath() + " is outdated.",
-                        Project.MSG_VERBOSE );
-                    v.addElement( files[i] );
+                    task.log( files[ i ] + " added as " + dest.getAbsolutePath() + " is outdated.",
+                              Project.MSG_VERBOSE );
+                    v.addElement( files[ i ] );
                     added = true;
                 }
                 else
@@ -122,13 +123,13 @@ public class SourceFileScanner
 
             if( !added )
             {
-                task.log( files[i] + " omitted as " + targetList.toString()
-                     + ( targets.length == 1 ? " is" : " are " )
-                     + " up to date.", Project.MSG_VERBOSE );
+                task.log( files[ i ] + " omitted as " + targetList.toString()
+                          + ( targets.length == 1 ? " is" : " are " )
+                          + " up to date.", Project.MSG_VERBOSE );
             }
 
         }
-        String[] result = new String[v.size()];
+        String[] result = new String[ v.size() ];
         v.copyInto( result );
         return result;
     }
@@ -147,10 +148,10 @@ public class SourceFileScanner
                                    FileNameMapper mapper )
     {
         String[] res = restrict( files, srcDir, destDir, mapper );
-        File[] result = new File[res.length];
+        File[] result = new File[ res.length ];
         for( int i = 0; i < res.length; i++ )
         {
-            result[i] = new File( srcDir, res[i] );
+            result[ i ] = new File( srcDir, res[ i ] );
         }
         return result;
     }

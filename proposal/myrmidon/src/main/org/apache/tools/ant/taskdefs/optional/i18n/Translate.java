@@ -18,7 +18,7 @@ import java.io.OutputStreamWriter;
 import java.util.Hashtable;
 import java.util.Locale;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -234,35 +234,35 @@ public class Translate extends MatchingTask
     /**
      * Check attributes values, load resource map and translate
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( bundle == null )
         {
-            throw new BuildException( "The bundle attribute must be set." );
+            throw new TaskException( "The bundle attribute must be set." );
         }
 
         if( startToken == null )
         {
-            throw new BuildException( "The starttoken attribute must be set." );
+            throw new TaskException( "The starttoken attribute must be set." );
         }
 
         if( startToken.length() != 1 )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "The starttoken attribute must be a single character." );
         }
 
         if( endToken == null )
         {
-            throw new BuildException( "The endtoken attribute must be set." );
+            throw new TaskException( "The endtoken attribute must be set." );
         }
 
         if( endToken.length() != 1 )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "The endtoken attribute must be a single character." );
         }
 
@@ -287,7 +287,7 @@ public class Translate extends MatchingTask
 
         if( toDir == null )
         {
-            throw new BuildException( "The todir attribute must be set." );
+            throw new TaskException( "The todir attribute must be set." );
         }
 
         if( !toDir.exists() )
@@ -298,7 +298,7 @@ public class Translate extends MatchingTask
         {
             if( toDir.isFile() )
             {
-                throw new BuildException( toDir + " is not a directory" );
+                throw new TaskException( toDir + " is not a directory" );
             }
         }
 
@@ -327,10 +327,10 @@ public class Translate extends MatchingTask
      * overwritten. Bundle's encoding scheme is used.
      *
      * @param ins Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void loadResourceMap( FileInputStream ins )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -397,7 +397,7 @@ public class Translate extends MatchingTask
         }
         catch( IOException ioe )
         {
-            throw new BuildException( ioe.getMessage() );
+            throw new TaskException( ioe.getMessage() );
         }
     }
 
@@ -415,10 +415,10 @@ public class Translate extends MatchingTask
      * located, it is treated just like a properties file but with bundle
      * encoding also considered while loading.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void loadResourceMaps()
-        throws BuildException
+        throws TaskException
     {
         Locale locale = new Locale( bundleLanguage,
                                     bundleCountry,
@@ -475,11 +475,11 @@ public class Translate extends MatchingTask
      * @param bundleFile Description of Parameter
      * @param i Description of Parameter
      * @param checkLoaded Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void processBundle( String bundleFile, int i,
                                 boolean checkLoaded )
-        throws BuildException
+        throws TaskException
     {
         bundleFile += ".properties";
         FileInputStream ins = null;
@@ -499,7 +499,7 @@ public class Translate extends MatchingTask
             //find a single resrouce file, throw exception
             if( !loaded && checkLoaded )
             {
-                throw new BuildException( ioe.getMessage() );
+                throw new TaskException( ioe.getMessage() );
             }
         }
     }
@@ -514,10 +514,10 @@ public class Translate extends MatchingTask
      * if the source file or any associated bundle resource file is newer than
      * the destination file.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void translate()
-        throws BuildException
+        throws TaskException
     {
         for( int i = 0; i < filesets.size(); i++ )
         {
@@ -643,7 +643,7 @@ public class Translate extends MatchingTask
                 }
                 catch( IOException ioe )
                 {
-                    throw new BuildException( ioe.getMessage() );
+                    throw new TaskException( ioe.getMessage() );
                 }
             }
         }

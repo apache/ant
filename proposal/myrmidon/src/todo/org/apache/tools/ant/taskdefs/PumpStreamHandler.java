@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -41,27 +42,25 @@ public class PumpStreamHandler implements ExecuteStreamHandler
         this( System.out, System.err );
     }
 
-
     public void setProcessErrorStream( InputStream is )
     {
         createProcessErrorPump( is, err );
     }
 
-
-    public void setProcessInputStream( OutputStream os ) { }
+    public void setProcessInputStream( OutputStream os )
+    {
+    }
 
     public void setProcessOutputStream( InputStream is )
     {
         createProcessOutputPump( is, out );
     }
 
-
     public void start()
     {
         inputThread.start();
         errorThread.start();
     }
-
 
     public void stop()
     {
@@ -70,25 +69,29 @@ public class PumpStreamHandler implements ExecuteStreamHandler
             inputThread.join();
         }
         catch( InterruptedException e )
-        {}
+        {
+        }
         try
         {
             errorThread.join();
         }
         catch( InterruptedException e )
-        {}
+        {
+        }
         try
         {
             err.flush();
         }
         catch( IOException e )
-        {}
+        {
+        }
         try
         {
             out.flush();
         }
         catch( IOException e )
-        {}
+        {
+        }
     }
 
     protected OutputStream getErr()
@@ -110,7 +113,6 @@ public class PumpStreamHandler implements ExecuteStreamHandler
     {
         inputThread = createPump( is, os );
     }
-
 
     /**
      * Creates a stream pumper to copy the given input stream to the given

@@ -24,14 +24,18 @@ public class FlatFileNameMapper implements FileNameMapper
      *
      * @param from The new From value
      */
-    public void setFrom( String from ) { }
+    public void setFrom( String from )
+    {
+    }
 
     /**
      * Ignored.
      *
      * @param to The new To value
      */
-    public void setTo( String to ) { }
+    public void setTo( String to )
+    {
+    }
 
     /**
      * Returns an one-element array containing the source file name without any

@@ -6,18 +6,18 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.Javac;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
 
@@ -140,7 +140,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
             if( !attributes.isForkedJavac() )
             {
                 attributes.log( "Since fork is false, ignoring memoryInitialSize setting.",
-                    Project.MSG_WARN );
+                                Project.MSG_WARN );
             }
             else
             {
@@ -153,7 +153,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
             if( !attributes.isForkedJavac() )
             {
                 attributes.log( "Since fork is false, ignoring memoryMaximumSize setting.",
-                    Project.MSG_WARN );
+                                Project.MSG_WARN );
             }
             else
             {
@@ -229,8 +229,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
         if( debug )
         {
             if( useDebugLevel
-                 && Project.getJavaVersion() != Project.JAVA_1_0
-                 && Project.getJavaVersion() != Project.JAVA_1_1 )
+                && Project.getJavaVersion() != Project.JAVA_1_0
+                && Project.getJavaVersion() != Project.JAVA_1_1 )
             {
 
                 String debugLevel = attributes.getDebugLevel();
@@ -271,7 +271,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
             else
             {
                 attributes.log( "depend attribute is not supported by the modern compiler",
-                    Project.MSG_WARN );
+                                Project.MSG_WARN );
             }
         }
 
@@ -405,16 +405,16 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
                     out = new PrintWriter( new FileWriter( tmpFile ) );
                     for( int i = firstFileName; i < args.length; i++ )
                     {
-                        out.println( args[i] );
+                        out.println( args[ i ] );
                     }
                     out.flush();
-                    commandArray = new String[firstFileName + 1];
+                    commandArray = new String[ firstFileName + 1 ];
                     System.arraycopy( args, 0, commandArray, 0, firstFileName );
-                    commandArray[firstFileName] = "@" + tmpFile.getAbsolutePath();
+                    commandArray[ firstFileName ] = "@" + tmpFile.getAbsolutePath();
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( "Error creating temporary file", e );
+                    throw new TaskException( "Error creating temporary file", e );
                 }
                 finally
                 {
@@ -425,7 +425,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
                             out.close();
                         }
                         catch( Throwable t )
-                        {}
+                        {
+                        }
                     }
                 }
             }
@@ -437,8 +438,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
             try
             {
                 Execute exe = new Execute( new LogStreamHandler( attributes,
-                    Project.MSG_INFO,
-                    Project.MSG_WARN ) );
+                                                                 Project.MSG_INFO,
+                                                                 Project.MSG_WARN ) );
                 exe.setAntRun( project );
                 exe.setWorkingDirectory( project.getBaseDir() );
                 exe.setCommandline( commandArray );
@@ -447,8 +448,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error running " + args[0]
-                     + " compiler", e );
+                throw new TaskException( "Error running " + args[ 0 ]
+                                         + " compiler", e );
             }
         }
         finally
@@ -469,7 +470,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
     protected void logAndAddFilesToCompile( Commandline cmd )
     {
         attributes.log( "Compilation args: " + cmd.toString(),
-            Project.MSG_VERBOSE );
+                        Project.MSG_VERBOSE );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( compileList.length != 1 )
@@ -482,7 +483,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter
 
         for( int i = 0; i < compileList.length; i++ )
         {
-            String arg = compileList[i].getAbsolutePath();
+            String arg = compileList[ i ].getAbsolutePath();
             cmd.createArgument().setValue( arg );
             niceSourceList.append( "    " + arg + lSep );
         }

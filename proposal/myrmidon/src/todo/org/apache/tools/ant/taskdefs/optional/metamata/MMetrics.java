@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
@@ -117,7 +118,6 @@ public class MMetrics extends AbstractMetamataTask
         return path;
     }
 
-
     protected Vector getOptions()
     {
         Vector options = new Vector( 512 );
@@ -158,7 +158,7 @@ public class MMetrics extends AbstractMetamataTask
         String[] dirs = path.list();
         for( int i = 0; i < dirs.length; i++ )
         {
-            options.addElement( dirs[i] );
+            options.addElement( dirs[ i ] );
         }
         // files next.
         addAllVector( options, includedFiles.keys() );
@@ -170,38 +170,37 @@ public class MMetrics extends AbstractMetamataTask
 
     // check for existing options and outfile, all other are optional
     protected void checkOptions()
-        throws BuildException
+        throws TaskException
     {
         super.checkOptions();
 
         if( !"files".equals( granularity ) && !"methods".equals( granularity )
-             && !"types".equals( granularity ) )
+            && !"types".equals( granularity ) )
         {
-            throw new BuildException( "Metrics reporting granularity is invalid. Must be one of 'files', 'methods', 'types'" );
+            throw new TaskException( "Metrics reporting granularity is invalid. Must be one of 'files', 'methods', 'types'" );
         }
         if( outFile == null )
         {
-            throw new BuildException( "Output XML file must be set via 'tofile' attribute." );
+            throw new TaskException( "Output XML file must be set via 'tofile' attribute." );
         }
         if( path == null && fileSets.size() == 0 )
         {
-            throw new BuildException( "Must set either paths (path element) or files (fileset element)" );
+            throw new TaskException( "Must set either paths (path element) or files (fileset element)" );
         }
         // I don't accept dirs and files at the same time, I cannot recognize the semantic in the result
         if( path != null && fileSets.size() > 0 )
         {
-            throw new BuildException( "Cannot set paths (path element) and files (fileset element) at the same time" );
+            throw new TaskException( "Cannot set paths (path element) and files (fileset element) at the same time" );
         }
     }
-
 
     /**
      * cleanup the temporary txt report
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void cleanUp()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -232,7 +231,7 @@ public class MMetrics extends AbstractMetamataTask
     }
 
     protected void execute0( ExecuteStreamHandler handler )
-        throws BuildException
+        throws TaskException
     {
         super.execute0( handler );
         transformFile();
@@ -243,11 +242,11 @@ public class MMetrics extends AbstractMetamataTask
      * called if the result is written to the output file via -output or we
      * could use the handler directly on stdout if not.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @see #createStreamHandler()
      */
     protected void transformFile()
-        throws BuildException
+        throws TaskException
     {
         FileInputStream tmpStream = null;
         try
@@ -256,7 +255,7 @@ public class MMetrics extends AbstractMetamataTask
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error reading temporary file: " + tmpFile, e );
+            throw new TaskException( "Error reading temporary file: " + tmpFile, e );
         }
         FileOutputStream xmlStream = null;
         try
@@ -269,7 +268,7 @@ public class MMetrics extends AbstractMetamataTask
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error creating output file: " + outFile, e );
+            throw new TaskException( "Error creating output file: " + outFile, e );
         }
         finally
         {
@@ -280,7 +279,8 @@ public class MMetrics extends AbstractMetamataTask
                     xmlStream.close();
                 }
                 catch( IOException ignored )
-                {}
+                {
+                }
             }
             if( tmpStream != null )
             {
@@ -289,7 +289,8 @@ public class MMetrics extends AbstractMetamataTask
                     tmpStream.close();
                 }
                 catch( IOException ignored )
-                {}
+                {
+                }
             }
         }
     }

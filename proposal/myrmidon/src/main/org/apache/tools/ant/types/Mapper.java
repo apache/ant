@@ -9,10 +9,10 @@ package org.apache.tools.ant.types;
 
 import java.util.Properties;
 import java.util.Stack;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileNameMapper;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Element to define a FileNameMapper.
@@ -43,6 +43,7 @@ public class Mapper extends DataType implements Cloneable
      * @param classname The new Classname value
      */
     public void setClassname( String classname )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -57,6 +58,7 @@ public class Mapper extends DataType implements Cloneable
      * @param classpath The new Classpath value
      */
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -79,6 +81,7 @@ public class Mapper extends DataType implements Cloneable
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -93,6 +96,7 @@ public class Mapper extends DataType implements Cloneable
      * @param from The new From value
      */
     public void setFrom( String from )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -125,6 +129,7 @@ public class Mapper extends DataType implements Cloneable
      * @param to The new To value
      */
     public void setTo( String to )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -139,6 +144,7 @@ public class Mapper extends DataType implements Cloneable
      * @param type The new Type value
      */
     public void setType( MapperType type )
+        throws TaskException
     {
         if( isReference() )
         {
@@ -219,6 +225,7 @@ public class Mapper extends DataType implements Cloneable
      * @return Description of the Returned Value
      */
     public Path createClasspath()
+        throws TaskException
     {
         if( isReference() )
         {
@@ -238,6 +245,7 @@ public class Mapper extends DataType implements Cloneable
      * @return The Ref value
      */
     protected Mapper getRef()
+        throws TaskException
     {
         if( !checked )
         {

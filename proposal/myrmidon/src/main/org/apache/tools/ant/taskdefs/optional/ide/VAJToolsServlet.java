@@ -6,14 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
@@ -63,7 +62,7 @@ public abstract class VAJToolsServlet extends HttpServlet
             initRequest();
             executeRequest();
         }
-        catch( BuildException e )
+        catch( TaskException e )
         {
             util.log( "Error occured: " + e.getMessage(), VAJUtil.MSG_ERR );
         }
@@ -71,11 +70,11 @@ public abstract class VAJToolsServlet extends HttpServlet
         {
             try
             {
-                if( !( e instanceof BuildException ) )
+                if( !( e instanceof TaskException ) )
                 {
                     String trace = StringUtils.getStackTrace( e );
                     util.log( "Program error in " + this.getClass().getName()
-                         + ":\n" + trace, VAJUtil.MSG_ERR );
+                              + ":\n" + trace, VAJUtil.MSG_ERR );
                 }
             }
             catch( Throwable t )
@@ -84,7 +83,7 @@ public abstract class VAJToolsServlet extends HttpServlet
             }
             finally
             {
-                if( !( e instanceof BuildException ) )
+                if( !( e instanceof TaskException ) )
                 {
                     throw new ServletException( e.getMessage() );
                 }
@@ -137,7 +136,7 @@ public abstract class VAJToolsServlet extends HttpServlet
         {
             return null;
         }
-        return paramValuesArray[0];
+        return paramValuesArray[ 0 ];
     }
 
     /**
@@ -150,7 +149,6 @@ public abstract class VAJToolsServlet extends HttpServlet
     {
         return request.getParameterValues( param );
     }
-
 
     /**
      * Execute the request by calling the appropriate VAJ tool API methods. This
@@ -219,15 +217,15 @@ public abstract class VAJToolsServlet extends HttpServlet
                             nlPos = msg.length();
                         }
                         response.getWriter().println( Integer.toString( level )
-                             + " " + msg.substring( i, nlPos ) );
+                                                      + " " + msg.substring( i, nlPos ) );
                         i = nlPos + 1;
                     }
                 }
             }
             catch( IOException e )
             {
-                throw new BuildException( "logging failed. msg was: "
-                     + e.getMessage() );
+                throw new TaskException( "logging failed. msg was: "
+                                         + e.getMessage() );
             }
         }
     }

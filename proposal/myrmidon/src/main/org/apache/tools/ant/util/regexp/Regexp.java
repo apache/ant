@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Interface which represents a regular expression, and the operations that can
@@ -35,8 +36,8 @@ public interface Regexp extends RegexpMatcher
      * @param options The list of options for the match and replace. See the
      *      MATCH_ and REPLACE_ constants above.
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     String substitute( String input, String argument, int options )
-        throws BuildException;
+        throws TaskException;
 }

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Enumeration;
@@ -150,13 +151,13 @@ public class XMLReport
         Enumeration enum = cpl.loaders();
         while( enum.hasMoreElements() )
         {
-            ClassPathLoader.FileLoader fl = ( ClassPathLoader.FileLoader )enum.nextElement();
+            ClassPathLoader.FileLoader fl = (ClassPathLoader.FileLoader)enum.nextElement();
             ClassFile[] classes = fl.getClasses();
             log( "Processing " + classes.length + " classes in " + fl.getFile() );
             // process all classes
             for( int i = 0; i < classes.length; i++ )
             {
-                classFiles.put( classes[i].getFullName(), classes[i] );
+                classFiles.put( classes[ i ].getFullName(), classes[ i ] );
             }
         }
 
@@ -178,7 +179,7 @@ public class XMLReport
         Enumeration classes = classFiles.elements();
         while( classes.hasMoreElements() )
         {
-            ClassFile cf = ( ClassFile )classes.nextElement();
+            ClassFile cf = (ClassFile)classes.nextElement();
             serializeClass( cf );
         }
         // update the document with the stats
@@ -208,14 +209,14 @@ public class XMLReport
             Node child = children.item( i );
             if( child.getNodeType() == Node.ELEMENT_NODE )
             {
-                Element elem = ( Element )child;
+                Element elem = (Element)child;
                 if( "class".equals( elem.getNodeName() ) )
                 {
                     v.addElement( elem );
                 }
             }
         }
-        Element[] elems = new Element[v.size()];
+        Element[] elems = new Element[ v.size() ];
         v.copyInto( elems );
         return elems;
     }
@@ -229,7 +230,7 @@ public class XMLReport
             Node child = children.item( i );
             if( child.getNodeType() == Node.ELEMENT_NODE )
             {
-                Element elem = ( Element )child;
+                Element elem = (Element)child;
                 if( "cov.data".equals( elem.getNodeName() ) )
                 {
                     return elem;
@@ -245,7 +246,7 @@ public class XMLReport
         Vector methods = new Vector( methodlist.length );
         for( int i = 0; i < methodlist.length; i++ )
         {
-            MethodInfo method = methodlist[i];
+            MethodInfo method = methodlist[ i ];
             String signature = getMethodSignature( classFile, method );
             if( filters.accept( signature ) )
             {
@@ -254,7 +255,7 @@ public class XMLReport
             }
             else
             {
-//              log("discarding " + signature);
+                //              log("discarding " + signature);
             }
         }
         return methods;
@@ -274,17 +275,17 @@ public class XMLReport
         String[] params = method.getParametersType();
         for( int i = 0; i < params.length; i++ )
         {
-            String type = params[i];
+            String type = params[ i ];
             int pos = type.lastIndexOf( '.' );
             if( pos != -1 )
             {
                 String pkg = type.substring( 0, pos );
                 if( "java.lang".equals( pkg ) )
                 {
-                    params[i] = type.substring( pos + 1 );
+                    params[ i ] = type.substring( pos + 1 );
                 }
             }
-            buf.append( params[i] );
+            buf.append( params[ i ] );
             if( i != params.length - 1 )
             {
                 buf.append( ", " );
@@ -321,7 +322,7 @@ public class XMLReport
             Node child = children.item( i );
             if( child.getNodeType() == Node.ELEMENT_NODE )
             {
-                Element elem = ( Element )child;
+                Element elem = (Element)child;
                 if( "method".equals( elem.getNodeName() ) )
                 {
                     String name = elem.getAttribute( "name" );
@@ -342,14 +343,14 @@ public class XMLReport
             Node child = children.item( i );
             if( child.getNodeType() == Node.ELEMENT_NODE )
             {
-                Element elem = ( Element )child;
+                Element elem = (Element)child;
                 if( "package".equals( elem.getNodeName() ) )
                 {
                     v.addElement( elem );
                 }
             }
         }
-        Element[] elems = new Element[v.size()];
+        Element[] elems = new Element[ v.size() ];
         v.copyInto( elems );
         return elems;
     }
@@ -402,7 +403,6 @@ public class XMLReport
         return methodElem;
     }
 
-
     /**
      * create node maps so that we can access node faster by their name
      */
@@ -417,7 +417,7 @@ public class XMLReport
         log( "Indexing " + pkglen + " packages" );
         for( int i = pkglen - 1; i > -1; i-- )
         {
-            Element pkg = ( Element )packages.item( i );
+            Element pkg = (Element)packages.item( i );
             String pkgname = pkg.getAttribute( "name" );
 
             int nbclasses = 0;
@@ -428,7 +428,7 @@ public class XMLReport
             log( "Indexing " + classlen + " classes in package " + pkgname );
             for( int j = classlen - 1; j > -1; j-- )
             {
-                Element clazz = ( Element )classes.item( j );
+                Element clazz = (Element)classes.item( j );
                 String classname = clazz.getAttribute( "name" );
                 if( pkgname != null && pkgname.length() != 0 )
                 {
@@ -440,7 +440,7 @@ public class XMLReport
                 final int methodlen = methods.getLength();
                 for( int k = methodlen - 1; k > -1; k-- )
                 {
-                    Element meth = ( Element )methods.item( k );
+                    Element meth = (Element)methods.item( k );
                     StringBuffer methodname = new StringBuffer( meth.getAttribute( "name" ) );
                     methodname.delete( methodname.toString().indexOf( "(" ), methodname.toString().length() );
                     String signature = classname + "." + methodname + "()";
@@ -516,9 +516,9 @@ public class XMLReport
         final int size = methods.length;
         for( int i = 0; i < size; i++ )
         {
-            MethodInfo method = methods[i];
+            MethodInfo method = methods[ i ];
             String methodSig = getMethodSignature( method );
-            Element methodNode = ( Element )methodNodeList.get( methodSig );
+            Element methodNode = (Element)methodNodeList.get( methodSig );
             if( methodNode != null &&
                 Utils.isAbstract( method.getAccessFlags() ) )
             {
@@ -538,7 +538,7 @@ public class XMLReport
         // the class already is reported so ignore it
         String fullclassname = classFile.getFullName();
         log( "Looking for '" + fullclassname + "'" );
-        Element clazz = ( Element )classMap.get( fullclassname );
+        Element clazz = (Element)classMap.get( fullclassname );
 
         // ignore classes that are already reported, all the information is
         // already there.
@@ -564,7 +564,7 @@ public class XMLReport
 
         String pkgname = classFile.getPackage();
         // System.out.println("Looking for package " + pkgname);
-        Element pkgElem = ( Element )pkgMap.get( pkgname );
+        Element pkgElem = (Element)pkgMap.get( pkgname );
         if( pkgElem == null )
         {
             pkgElem = createPackageElement( pkgname );
@@ -582,7 +582,7 @@ public class XMLReport
         for( int i = 0; i < methods.size(); i++ )
         {
             // create the method element
-            MethodInfo method = ( MethodInfo )methods.elementAt( i );
+            MethodInfo method = (MethodInfo)methods.elementAt( i );
             if( Utils.isAbstract( method.getAccessFlags() ) )
             {
                 continue;// no need to report abstract methods
@@ -601,7 +601,6 @@ public class XMLReport
         classMap.put( fullclassname, classElem );
     }
 
-
     /**
      * update the count of the XML, that is accumulate the stats on methods,
      * classes and package so that the numbers are valid according to the info
@@ -619,7 +618,7 @@ public class XMLReport
         Enumeration enum = pkgMap.elements();
         while( enum.hasMoreElements() )
         {
-            Element pkgElem = ( Element )enum.nextElement();
+            Element pkgElem = (Element)enum.nextElement();
             String pkgname = pkgElem.getAttribute( "name" );
             Element[] classes = getClasses( pkgElem );
             int pkg_calls = 0;
@@ -630,7 +629,7 @@ public class XMLReport
             //System.out.println("Processing package '" + pkgname + "': " + classes.length + " classes");
             for( int j = 0; j < classes.length; j++ )
             {
-                Element clazz = classes[j];
+                Element clazz = classes[ j ];
                 String classname = clazz.getAttribute( "name" );
                 if( pkgname != null && pkgname.length() != 0 )
                 {

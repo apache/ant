@@ -27,7 +27,6 @@ import org.apache.bcel.*;
 import org.apache.bcel.classfile.*;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
@@ -279,7 +278,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                 + "'. This probably indicates badly-formed XML."
                 + "  Details: "
                 + se.getMessage();
-            throw new BuildException( msg, se );
+            throw new TaskException( msg, se );
         }
         catch( IOException ioe )
         {
@@ -288,23 +287,23 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                 + "'.  This probably indicates that the descriptor"
                 + " doesn't exist. Details: "
                 + ioe.getMessage();
-            throw new BuildException( msg, ioe );
+            throw new TaskException( msg, ioe );
         }
     }
 
     /**
      * Called to validate that the tool parameters have been configured.
      *
-     * @throws BuildException If the Deployment Tool's configuration isn't valid
+     * @throws TaskException If the Deployment Tool's configuration isn't valid
      */
     public void validateConfigured()
-        throws BuildException
+        throws TaskException
     {
         if( ( destDir == null ) || ( !destDir.isDirectory() ) )
         {
             String msg = "A valid destination directory must be specified "
                 + "using the \"destdir\" attribute.";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
     }
 
@@ -499,12 +498,12 @@ public class GenericDeploymentTool implements EJBDeploymentTool
      * @param logicalFilename A String representing the name, including all
      *      relevant path information, that should be stored for the entry being
      *      added.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void addFileToJar( JarOutputStream jStream,
                                  File inputFile,
                                  String logicalFilename )
-        throws BuildException
+        throws TaskException
     {
         FileInputStream iStream = null;
         try
@@ -593,10 +592,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool
      *
      * @param checkEntries files, that are extracted from the deployment
      *      descriptor
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void checkAndAddDependants( Hashtable checkEntries )
-        throws BuildException
+        throws TaskException
     {
         Dependencies visitor = new Dependencies();
         Set set = new TreeSet();
@@ -659,22 +658,22 @@ public class GenericDeploymentTool implements EJBDeploymentTool
      * This method is called as the first step in the processDescriptor method
      * to allow vendor-specific subclasses to validate the task configuration
      * prior to processing the descriptor. If the configuration is invalid, a
-     * BuildException should be thrown.
+     * TaskException should be thrown.
      *
      * @param descriptorFileName String representing the file name of an EJB
      *      descriptor to be processed
      * @param saxParser SAXParser which may be used to parse the XML descriptor
-     * @exception BuildException Description of Exception
-     * @thows BuildException Thrown if the configuration is invalid
+     * @exception TaskException Description of Exception
+     * @thows TaskException Thrown if the configuration is invalid
      */
     protected void checkConfiguration( String descriptorFileName,
                                        SAXParser saxParser )
-        throws BuildException
+        throws TaskException
     {
 
         /*
          * For the GenericDeploymentTool, do nothing.  Vendor specific
-         * subclasses should throw a BuildException if the configuration is
+         * subclasses should throw a TaskException if the configuration is
          * invalid for their server.
          */
     }
@@ -816,11 +815,11 @@ public class GenericDeploymentTool implements EJBDeploymentTool
      * @param jarfile Description of Parameter
      * @param files Description of Parameter
      * @param publicId Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void writeJar( String baseName, File jarfile, Hashtable files,
                              String publicId )
-        throws BuildException
+        throws TaskException
     {
 
         JarOutputStream jarStream = null;
@@ -856,7 +855,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                     in = new FileInputStream( config.manifest );
                     if( in == null )
                     {
-                        throw new BuildException( "Could not find manifest file: " + config.manifest );
+                        throw new TaskException( "Could not find manifest file: " + config.manifest );
                     }
                 }
                 else
@@ -865,7 +864,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                     in = this.getClass().getResourceAsStream( defaultManifest );
                     if( in == null )
                     {
-                        throw new BuildException( "Could not find default manifest: " + defaultManifest );
+                        throw new TaskException( "Could not find default manifest: " + defaultManifest );
                     }
                 }
 
@@ -873,7 +872,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
             }
             catch( IOException e )
             {
-                throw new BuildException( "Unable to read manifest", e );
+                throw new TaskException( "Unable to read manifest", e );
             }
             finally
             {
@@ -933,7 +932,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool
                 + jarfile.toString()
                 + "'. Details: "
                 + ioe.getMessage();
-            throw new BuildException( msg, ioe );
+            throw new TaskException( msg, ioe );
         }
         finally
         {

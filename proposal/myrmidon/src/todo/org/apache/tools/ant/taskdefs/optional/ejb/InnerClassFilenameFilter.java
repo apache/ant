@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
 import java.io.FilenameFilter;
 
@@ -26,7 +27,7 @@ public class InnerClassFilenameFilter implements FilenameFilter
     public boolean accept( File Dir, String filename )
     {
         if( ( filename.lastIndexOf( "." ) != filename.lastIndexOf( ".class" ) )
-             || ( filename.indexOf( baseClassName + "$" ) != 0 ) )
+            || ( filename.indexOf( baseClassName + "$" ) != 0 ) )
         {
             return false;
         }

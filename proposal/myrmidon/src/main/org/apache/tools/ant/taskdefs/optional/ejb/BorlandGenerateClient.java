@@ -6,15 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
-
 
 /**
  * BorlandGenerateClient is dedicated to the Borland Application Server 4.5 This
@@ -100,20 +100,19 @@ public class BorlandGenerateClient extends Task
         return this.classpath.createPath();
     }
 
-
     /**
      * Do the work. The work is actually done by creating a separate JVM to run
      * a java task.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception TaskException if someting goes wrong with the build
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( ejbjarfile == null ||
             ejbjarfile.isDirectory() )
         {
-            throw new BuildException( "invalid ejb jar file." );
+            throw new TaskException( "invalid ejb jar file." );
         }// end of if ()
 
         if( clientjarfile == null ||
@@ -149,17 +148,17 @@ public class BorlandGenerateClient extends Task
     /**
      * launch the generate client using system api
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void executeFork()
-        throws BuildException
+        throws TaskException
     {
         try
         {
             log( "mode : fork" );
 
             org.apache.tools.ant.taskdefs.ExecTask execTask = null;
-            execTask = ( ExecTask )getProject().createTask( "exec" );
+            execTask = (ExecTask)getProject().createTask( "exec" );
 
             execTask.setDir( new File( "." ) );
             execTask.setExecutable( "iastool" );
@@ -186,7 +185,7 @@ public class BorlandGenerateClient extends Task
         {
             // Have to catch this because of the semantics of calling main()
             String msg = "Exception while calling generateclient Details: " + e.toString();
-            throw new BuildException( msg, e );
+            throw new TaskException( msg, e );
         }
 
     }
@@ -194,17 +193,17 @@ public class BorlandGenerateClient extends Task
     /**
      * launch the generate client using java api
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void executeJava()
-        throws BuildException
+        throws TaskException
     {
         try
         {
             log( "mode : java" );
 
             org.apache.tools.ant.taskdefs.Java execTask = null;
-            execTask = ( Java )getProject().createTask( "java" );
+            execTask = (Java)getProject().createTask( "java" );
 
             execTask.setDir( new File( "." ) );
             execTask.setClassname( "com.inprise.server.commandline.EJBUtilities" );
@@ -238,7 +237,7 @@ public class BorlandGenerateClient extends Task
         {
             // Have to catch this because of the semantics of calling main()
             String msg = "Exception while calling generateclient Details: " + e.toString();
-            throw new BuildException( msg, e );
+            throw new TaskException( msg, e );
         }
     }
 }

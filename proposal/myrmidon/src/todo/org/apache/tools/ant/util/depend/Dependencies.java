@@ -6,11 +6,16 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.depend;
-import java.io.*;
-import java.util.*;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
 import org.apache.bcel.*;
 import org.apache.bcel.classfile.*;
-
 
 public class Dependencies implements Visitor
 {
@@ -44,9 +49,9 @@ public class Dependencies implements Visitor
 
             int o = 0;
             String arg = null;
-            if( "-base".equals( args[0] ) )
+            if( "-base".equals( args[ 0 ] ) )
             {
-                arg = args[1];
+                arg = args[ 1 ];
                 if( !arg.endsWith( File.separator ) )
                 {
                     arg = arg + File.separator;
@@ -57,7 +62,7 @@ public class Dependencies implements Visitor
 
             for( int i = o; i < args.length; i++ )
             {
-                String fileName = args[i].substring( 0, args[i].length() - ".class".length() );
+                String fileName = args[ i ].substring( 0, args[ i ].length() - ".class".length() );
                 if( base != null && fileName.startsWith( base ) )
                     fileName = fileName.substring( base.length() );
                 newSet.add( fileName );
@@ -84,19 +89,19 @@ public class Dependencies implements Visitor
                 visitor.clearDependencies();
 
                 applyFilter( newSet,
-                    new Filter()
-                    {
-                        public boolean accept( Object object )
-                        {
-                            String fileName = object + ".class";
-                            if( base != null )
-                                fileName = base + fileName;
-                            return new File( fileName ).exists();
-                        }
-                    } );
+                             new Filter()
+                             {
+                                 public boolean accept( Object object )
+                                 {
+                                     String fileName = object + ".class";
+                                     if( base != null )
+                                         fileName = base + fileName;
+                                     return new File( fileName ).exists();
+                                 }
+                             } );
                 newSet.removeAll( set );
                 set.addAll( newSet );
-            }while ( newSet.size() > 0 );
+            } while( newSet.size() > 0 );
 
             Iterator i = set.iterator();
             while( i.hasNext() )
@@ -121,9 +126,13 @@ public class Dependencies implements Visitor
         dependencies.clear();
     }
 
-    public void visitCode( Code obj ) { }
+    public void visitCode( Code obj )
+    {
+    }
 
-    public void visitCodeException( CodeException obj ) { }
+    public void visitCodeException( CodeException obj )
+    {
+    }
 
     public void visitConstantClass( ConstantClass obj )
     {
@@ -135,21 +144,37 @@ public class Dependencies implements Visitor
         dependencies.add( "" + obj.getConstantValue( constantPool ) );
     }
 
-    public void visitConstantDouble( ConstantDouble obj ) { }
+    public void visitConstantDouble( ConstantDouble obj )
+    {
+    }
 
-    public void visitConstantFieldref( ConstantFieldref obj ) { }
+    public void visitConstantFieldref( ConstantFieldref obj )
+    {
+    }
 
-    public void visitConstantFloat( ConstantFloat obj ) { }
+    public void visitConstantFloat( ConstantFloat obj )
+    {
+    }
 
-    public void visitConstantInteger( ConstantInteger obj ) { }
+    public void visitConstantInteger( ConstantInteger obj )
+    {
+    }
 
-    public void visitConstantInterfaceMethodref( ConstantInterfaceMethodref obj ) { }
+    public void visitConstantInterfaceMethodref( ConstantInterfaceMethodref obj )
+    {
+    }
 
-    public void visitConstantLong( ConstantLong obj ) { }
+    public void visitConstantLong( ConstantLong obj )
+    {
+    }
 
-    public void visitConstantMethodref( ConstantMethodref obj ) { }
+    public void visitConstantMethodref( ConstantMethodref obj )
+    {
+    }
 
-    public void visitConstantNameAndType( ConstantNameAndType obj ) { }
+    public void visitConstantNameAndType( ConstantNameAndType obj )
+    {
+    }
 
     public void visitConstantPool( ConstantPool obj )
     {
@@ -168,15 +193,25 @@ public class Dependencies implements Visitor
         }
     }
 
-    public void visitConstantString( ConstantString obj ) { }
+    public void visitConstantString( ConstantString obj )
+    {
+    }
 
-    public void visitConstantUtf8( ConstantUtf8 obj ) { }
+    public void visitConstantUtf8( ConstantUtf8 obj )
+    {
+    }
 
-    public void visitConstantValue( ConstantValue obj ) { }
+    public void visitConstantValue( ConstantValue obj )
+    {
+    }
 
-    public void visitDeprecated( Deprecated obj ) { }
+    public void visitDeprecated( Deprecated obj )
+    {
+    }
 
-    public void visitExceptionTable( ExceptionTable obj ) { }
+    public void visitExceptionTable( ExceptionTable obj )
+    {
+    }
 
     public void visitField( Field obj )
     {
@@ -188,9 +223,13 @@ public class Dependencies implements Visitor
         addClasses( obj.getSignature() );
     }
 
-    public void visitInnerClass( InnerClass obj ) { }
+    public void visitInnerClass( InnerClass obj )
+    {
+    }
 
-    public void visitInnerClasses( InnerClasses obj ) { }
+    public void visitInnerClasses( InnerClasses obj )
+    {
+    }
 
     public void visitJavaClass( JavaClass obj )
     {
@@ -209,24 +248,32 @@ public class Dependencies implements Visitor
         Field[] fields = obj.getFields();
         for( int i = 0; i < fields.length; i++ )
         {
-            fields[i].accept( this );
+            fields[ i ].accept( this );
         }
 
         // visit methods
         Method[] methods = obj.getMethods();
         for( int i = 0; i < methods.length; i++ )
         {
-            methods[i].accept( this );
+            methods[ i ].accept( this );
         }
     }
 
-    public void visitLineNumber( LineNumber obj ) { }
+    public void visitLineNumber( LineNumber obj )
+    {
+    }
 
-    public void visitLineNumberTable( LineNumberTable obj ) { }
+    public void visitLineNumberTable( LineNumberTable obj )
+    {
+    }
 
-    public void visitLocalVariable( LocalVariable obj ) { }
+    public void visitLocalVariable( LocalVariable obj )
+    {
+    }
 
-    public void visitLocalVariableTable( LocalVariableTable obj ) { }
+    public void visitLocalVariableTable( LocalVariableTable obj )
+    {
+    }
 
     public void visitMethod( Method obj )
     {
@@ -241,15 +288,25 @@ public class Dependencies implements Visitor
         addClasses( signature.substring( pos + 1 ) );
     }
 
-    public void visitSourceFile( SourceFile obj ) { }
+    public void visitSourceFile( SourceFile obj )
+    {
+    }
 
-    public void visitStackMap( StackMap obj ) { }
+    public void visitStackMap( StackMap obj )
+    {
+    }
 
-    public void visitStackMapEntry( StackMapEntry obj ) { }
+    public void visitStackMapEntry( StackMapEntry obj )
+    {
+    }
 
-    public void visitSynthetic( Synthetic obj ) { }
+    public void visitSynthetic( Synthetic obj )
+    {
+    }
 
-    public void visitUnknown( Unknown obj ) { }
+    public void visitUnknown( Unknown obj )
+    {
+    }
 
     void addClass( String string )
     {

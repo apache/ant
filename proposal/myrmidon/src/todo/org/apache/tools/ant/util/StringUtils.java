@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 

@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
+
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Trigger information. It will return as a command line argument by calling the
@@ -44,7 +45,9 @@ public class Triggers
         eventMap.put( "exit", "X" );
     }
 
-    public Triggers() { }
+    public Triggers()
+    {
+    }
 
     public void addMethod( Method method )
     {
@@ -67,7 +70,6 @@ public class Triggers
         return buf.toString();
     }
 
-
     public static class Method
     {
         protected String action;
@@ -76,11 +78,11 @@ public class Triggers
         protected String param;
 
         public void setAction( String value )
-            throws BuildException
+            throws TaskException
         {
             if( actionMap.get( value ) == null )
             {
-                throw new BuildException( "Invalid action, must be one of " + actionMap );
+                throw new TaskException( "Invalid action, must be one of " + actionMap );
             }
             action = value;
         }
@@ -89,7 +91,7 @@ public class Triggers
         {
             if( eventMap.get( value ) == null )
             {
-                throw new BuildException( "Invalid event, must be one of " + eventMap );
+                throw new TaskException( "Invalid event, must be one of " + eventMap );
             }
             event = value;
         }

@@ -6,10 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FilterSet;
@@ -53,7 +54,7 @@ public class Move extends Copy
 
         for( int i = 0; i < list.length; i++ )
         {
-            String s = list[i];
+            String s = list[ i ];
             File f = new File( d, s );
             if( f.isDirectory() )
             {
@@ -61,19 +62,19 @@ public class Move extends Copy
             }
             else
             {
-                throw new BuildException( "UNEXPECTED ERROR - The file " + f.getAbsolutePath() + " should not exist!" );
+                throw new TaskException( "UNEXPECTED ERROR - The file " + f.getAbsolutePath() + " should not exist!" );
             }
         }
         log( "Deleting directory " + d.getAbsolutePath(), verbosity );
         if( !d.delete() )
         {
-            throw new BuildException( "Unable to delete directory " + d.getAbsolutePath() );
+            throw new TaskException( "Unable to delete directory " + d.getAbsolutePath() );
         }
     }
 
-//************************************************************************
-//  protected and private methods
-//************************************************************************
+    //************************************************************************
+    //  protected and private methods
+    //************************************************************************
 
     protected void doFileOperations()
     {
@@ -83,33 +84,33 @@ public class Move extends Copy
             Enumeration e = completeDirMap.keys();
             while( e.hasMoreElements() )
             {
-                File fromDir = ( File )e.nextElement();
-                File toDir = ( File )completeDirMap.get( fromDir );
+                File fromDir = (File)e.nextElement();
+                File toDir = (File)completeDirMap.get( fromDir );
                 try
                 {
                     log( "Attempting to rename dir: " + fromDir +
-                        " to " + toDir, verbosity );
+                         " to " + toDir, verbosity );
                     renameFile( fromDir, toDir, filtering, forceOverwrite );
                 }
                 catch( IOException ioe )
                 {
                     String msg = "Failed to rename dir " + fromDir
-                         + " to " + toDir
-                         + " due to " + ioe.getMessage();
-                    throw new BuildException( msg, ioe );
+                        + " to " + toDir
+                        + " due to " + ioe.getMessage();
+                    throw new TaskException( msg, ioe );
                 }
             }
         }
         if( fileCopyMap.size() > 0 )
         {// files to move
             log( "Moving " + fileCopyMap.size() + " files to " +
-                destDir.getAbsolutePath() );
+                 destDir.getAbsolutePath() );
 
             Enumeration e = fileCopyMap.keys();
             while( e.hasMoreElements() )
             {
-                String fromFile = ( String )e.nextElement();
-                String toFile = ( String )fileCopyMap.get( fromFile );
+                String fromFile = (String)e.nextElement();
+                String toFile = (String)fileCopyMap.get( fromFile );
 
                 if( fromFile.equals( toFile ) )
                 {
@@ -127,15 +128,15 @@ public class Move extends Copy
                     try
                     {
                         log( "Attempting to rename: " + fromFile +
-                            " to " + toFile, verbosity );
+                             " to " + toFile, verbosity );
                         moved = renameFile( f, d, filtering, forceOverwrite );
                     }
                     catch( IOException ioe )
                     {
                         String msg = "Failed to rename " + fromFile
-                             + " to " + toFile
-                             + " due to " + ioe.getMessage();
-                        throw new BuildException( msg, ioe );
+                            + " to " + toFile
+                            + " due to " + ioe.getMessage();
+                        throw new TaskException( msg, ioe );
                     }
 
                     if( !moved )
@@ -149,26 +150,26 @@ public class Move extends Copy
                             {
                                 executionFilters.addFilterSet( project.getGlobalFilterSet() );
                             }
-                            for( Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();  )
+                            for( Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements(); )
                             {
-                                executionFilters.addFilterSet( ( FilterSet )filterEnum.nextElement() );
+                                executionFilters.addFilterSet( (FilterSet)filterEnum.nextElement() );
                             }
                             getFileUtils().copyFile( f, d, executionFilters,
-                                forceOverwrite );
+                                                     forceOverwrite );
 
                             f = new File( fromFile );
                             if( !f.delete() )
                             {
-                                throw new BuildException( "Unable to delete file "
-                                     + f.getAbsolutePath() );
+                                throw new TaskException( "Unable to delete file "
+                                                         + f.getAbsolutePath() );
                             }
                         }
                         catch( IOException ioe )
                         {
                             String msg = "Failed to copy " + fromFile + " to "
-                                 + toFile
-                                 + " due to " + ioe.getMessage();
-                            throw new BuildException( msg, ioe );
+                                + toFile
+                                + " due to " + ioe.getMessage();
+                            throw new TaskException( msg, ioe );
                         }
                     }
                 }
@@ -181,7 +182,7 @@ public class Move extends Copy
             int count = 0;
             while( e.hasMoreElements() )
             {
-                File d = new File( ( String )e.nextElement() );
+                File d = new File( (String)e.nextElement() );
                 if( !d.exists() )
                 {
                     if( !d.mkdirs() )
@@ -206,7 +207,7 @@ public class Move extends Copy
             Enumeration e = filesets.elements();
             while( e.hasMoreElements() )
             {
-                FileSet fs = ( FileSet )e.nextElement();
+                FileSet fs = (FileSet)e.nextElement();
                 File dir = fs.getDir( project );
 
                 if( okToDelete( dir ) )
@@ -231,7 +232,7 @@ public class Move extends Copy
 
         for( int i = 0; i < list.length; i++ )
         {
-            String s = list[i];
+            String s = list[ i ];
             File f = new File( d, s );
             if( f.isDirectory() )
             {
@@ -260,12 +261,12 @@ public class Move extends Copy
      * @param filtering Description of Parameter
      * @param overwrite Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @throws IOException
      */
     protected boolean renameFile( File sourceFile, File destFile,
                                   boolean filtering, boolean overwrite )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
 
         boolean renamed = true;
@@ -287,8 +288,8 @@ public class Move extends Copy
             {
                 if( !destFile.delete() )
                 {
-                    throw new BuildException( "Unable to remove existing file "
-                         + destFile );
+                    throw new TaskException( "Unable to remove existing file "
+                                             + destFile );
                 }
             }
             renamed = sourceFile.renameTo( destFile );

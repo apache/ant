@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.io.File;
 import org.apache.tools.ant.DirectoryScanner;
 
@@ -46,7 +47,7 @@ public class ZipScanner extends DirectoryScanner
      */
     public String[] getIncludedDirectories()
     {
-        return new String[0];
+        return new String[ 0 ];
     }
 
     /**
@@ -58,8 +59,8 @@ public class ZipScanner extends DirectoryScanner
      */
     public String[] getIncludedFiles()
     {
-        String[] result = new String[1];
-        result[0] = srcFile.getAbsolutePath();
+        String[] result = new String[ 1 ];
+        result[ 0 ] = srcFile.getAbsolutePath();
         return result;
     }
 
@@ -71,12 +72,12 @@ public class ZipScanner extends DirectoryScanner
         if( includes == null )
         {
             // No includes supplied, so set it to 'matches all'
-            includes = new String[1];
-            includes[0] = "**";
+            includes = new String[ 1 ];
+            includes[ 0 ] = "**";
         }
         if( excludes == null )
         {
-            excludes = new String[0];
+            excludes = new String[ 0 ];
         }
     }
 

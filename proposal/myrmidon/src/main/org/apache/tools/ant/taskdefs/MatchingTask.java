@@ -6,11 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
-import java.util.StringTokenizer;
-import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
@@ -145,6 +144,7 @@ public abstract class MatchingTask extends Task
      * @return The DirectoryScanner value
      */
     protected DirectoryScanner getDirectoryScanner( File baseDir )
+        throws TaskException
     {
         fileset.setDir( baseDir );
         fileset.setDefaultexcludes( useDefaultExcludes );

@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.Stack;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
@@ -185,6 +184,7 @@ public class FileSet extends DataType implements Cloneable
     }
 
     public void setupDirectoryScanner( FileScanner ds, Project p )
+        throws TaskException
     {
         if( ds == null )
         {

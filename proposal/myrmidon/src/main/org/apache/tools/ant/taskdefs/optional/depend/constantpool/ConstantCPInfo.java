@@ -7,7 +7,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
 
-
 /**
  * A Constant Pool entry which represents a constant value.
  *

@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -102,7 +103,7 @@ public class Rpm extends Task
     {
         if( ( sf == null ) || ( sf.trim().equals( "" ) ) )
         {
-            throw new BuildException( "You must specify a spec file" );
+            throw new TaskException( "You must specify a spec file" );
         }
         this.specFile = sf;
     }
@@ -113,7 +114,7 @@ public class Rpm extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         Commandline toExecute = new Commandline();
@@ -148,7 +149,7 @@ public class Rpm extends Task
         if( error == null && output == null )
         {
             streamhandler = new LogStreamHandler( this, Project.MSG_INFO,
-                Project.MSG_WARN );
+                                                  Project.MSG_WARN );
         }
         else
         {
@@ -160,7 +161,7 @@ public class Rpm extends Task
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( "Error", e );
+                    throw new TaskException( "Error", e );
                 }
             }
             else
@@ -175,7 +176,7 @@ public class Rpm extends Task
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( "Error", e );
+                    throw new TaskException( "Error", e );
                 }
             }
             else
@@ -200,7 +201,7 @@ public class Rpm extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
         finally
         {
@@ -211,7 +212,8 @@ public class Rpm extends Task
                     outputstream.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
             if( error != null )
             {
@@ -220,7 +222,8 @@ public class Rpm extends Task
                     errorstream.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }

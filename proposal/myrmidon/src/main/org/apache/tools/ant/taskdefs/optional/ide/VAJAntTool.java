@@ -6,10 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import com.ibm.ivj.util.base.Project;
 import com.ibm.ivj.util.base.ToolData;
-import org.apache.tools.ant.BuildException;
-
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This class is the equivalent to org.apache.tools.ant.Main for the VAJ tool
@@ -23,7 +23,6 @@ import org.apache.tools.ant.BuildException;
 public class VAJAntTool
 {
     private final static String TOOL_DATA_KEY = "AntTool";
-
 
     /**
      * Loads the BuildInfo for the specified VAJ project from the tool data for
@@ -43,7 +42,7 @@ public class VAJAntTool
             if( project.testToolRepositoryData( TOOL_DATA_KEY ) )
             {
                 ToolData td = project.getToolRepositoryData( TOOL_DATA_KEY );
-                String data = ( String )td.getData();
+                String data = (String)td.getData();
                 result = VAJBuildInfo.parse( data );
             }
             else
@@ -54,12 +53,11 @@ public class VAJAntTool
         }
         catch( Throwable t )
         {
-            throw new BuildException( "BuildInfo for Project "
-                 + projectName + " could not be loaded" + t );
+            throw new TaskException( "BuildInfo for Project "
+                                     + projectName + " could not be loaded" + t );
         }
         return result;
     }
-
 
     /**
      * Starts the application.
@@ -73,9 +71,9 @@ public class VAJAntTool
         try
         {
             VAJBuildInfo info;
-            if( args.length >= 2 && args[1] instanceof String )
+            if( args.length >= 2 && args[ 1 ] instanceof String )
             {
-                String projectName = ( String )args[1];
+                String projectName = (String)args[ 1 ];
                 info = loadBuildData( projectName );
             }
             else
@@ -94,7 +92,6 @@ public class VAJAntTool
         }
     }
 
-
     /**
      * Saves the BuildInfo for a project in the VAJ repository.
      *
@@ -111,8 +108,8 @@ public class VAJAntTool
         }
         catch( Throwable t )
         {
-            throw new BuildException( "BuildInfo for Project "
-                 + info.getVAJProjectName() + " could not be saved", t );
+            throw new TaskException( "BuildInfo for Project "
+                                     + info.getVAJProjectName() + " could not be saved", t );
         }
     }
 }

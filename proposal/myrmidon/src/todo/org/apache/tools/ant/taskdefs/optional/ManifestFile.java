@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -17,9 +18,8 @@ import java.util.Enumeration;
 import java.util.ListIterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-
 
 /**
  * Task for creating a manifest file for a jar archiv. use: <pre>
@@ -86,10 +86,10 @@ public class ManifestFile extends Task
     /**
      * execute task
      *
-     * @exception BuildException : Failure in building
+     * @exception TaskException : Failure in building
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         checkParameters();
         if( isUpdate( currentMethod ) )
@@ -111,7 +111,6 @@ public class ManifestFile extends Task
         return method.equals( REPLACEALL_.toUpperCase() );
     }
 
-
     private boolean isUpdate( String method )
     {
         return method.equals( UPDATE_.toUpperCase() );
@@ -125,7 +124,6 @@ public class ManifestFile extends Task
         entry.addTo( container );
     }
 
-
     private StringBuffer buildBuffer()
     {
         StringBuffer buffer = new StringBuffer();
@@ -134,10 +132,10 @@ public class ManifestFile extends Task
 
         while( iterator.hasNext() )
         {
-            Entry entry = ( Entry )iterator.next();
+            Entry entry = (Entry)iterator.next();
 
-            String key = ( String )entry.getKey();
-            String value = ( String )entry.getValue();
+            String key = (String)entry.getKey();
+            String value = (String)entry.getValue();
             String entry_string = key + keyValueSeparator + value;
 
             buffer.append( entry_string + this.newLine );
@@ -157,33 +155,33 @@ public class ManifestFile extends Task
     }
 
     private void checkParameters()
-        throws BuildException
+        throws TaskException
     {
         if( !checkParam( manifestFile ) )
         {
-            throw new BuildException( "file token must not be null." );
+            throw new TaskException( "file token must not be null." );
         }
     }
 
     /**
      * adding entries to a container
      *
-     * @exception BuildException
+     * @exception TaskException
      */
     private void executeOperation()
-        throws BuildException
+        throws TaskException
     {
         Enumeration enum = entries.elements();
 
         while( enum.hasMoreElements() )
         {
-            Entry entry = ( Entry )enum.nextElement();
+            Entry entry = (Entry)enum.nextElement();
             entry.addTo( container );
         }
     }
 
     private void readFile()
-        throws BuildException
+        throws TaskException
     {
 
         if( manifestFile.exists() )
@@ -207,32 +205,31 @@ public class ManifestFile extends Task
                             stop = true;
                         }
                         else
-                            buffer.append( ( char )c );
+                            buffer.append( (char)c );
                     }
                     fis.close();
                     StringTokenizer lineTokens = getLineTokens( buffer );
                     while( lineTokens.hasMoreElements() )
                     {
-                        String currentLine = ( String )lineTokens.nextElement();
+                        String currentLine = (String)lineTokens.nextElement();
                         addLine( currentLine );
                     }
                 }
                 catch( FileNotFoundException fnfe )
                 {
-                    throw new BuildException( "File not found exception " + fnfe.toString() );
+                    throw new TaskException( "File not found exception " + fnfe.toString() );
                 }
                 catch( IOException ioe )
                 {
-                    throw new BuildException( "Unknown input/output exception " + ioe.toString() );
+                    throw new TaskException( "Unknown input/output exception " + ioe.toString() );
                 }
             }
         }
 
     }
 
-
     private void writeFile()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -248,7 +245,7 @@ public class ManifestFile extends Task
 
                 for( int i = 0; i < size; i++ )
                 {
-                    fos.write( ( char )buffer.charAt( i ) );
+                    fos.write( (char)buffer.charAt( i ) );
                 }
 
                 fos.flush();
@@ -256,13 +253,13 @@ public class ManifestFile extends Task
             }
             else
             {
-                throw new BuildException( "Can't create manifest file" );
+                throw new TaskException( "Can't create manifest file" );
             }
 
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "An input/ouput error occured" + ioe.toString() );
+            throw new TaskException( "An input/ouput error occured" + ioe.toString() );
         }
     }
 
@@ -275,7 +272,9 @@ public class ManifestFile extends Task
         private String val = null;
         private String key = null;
 
-        public Entry() { }
+        public Entry()
+        {
+        }
 
         public void setValue( String value )
         {
@@ -298,8 +297,8 @@ public class ManifestFile extends Task
 
             try
             {
-                Entry e1 = ( Entry )o1;
-                Entry e2 = ( Entry )o2;
+                Entry e1 = (Entry)o1;
+                Entry e2 = (Entry)o2;
 
                 String key_1 = e1.getKey();
                 String key_2 = e2.getKey();
@@ -313,21 +312,19 @@ public class ManifestFile extends Task
             return result;
         }
 
-
         public boolean equals( Object obj )
         {
             Entry ent = new Entry();
             boolean result = false;
-            int res = ent.compare( this, ( Entry )obj );
+            int res = ent.compare( this, (Entry)obj );
             if( res == 0 )
                 result = true;
 
             return result;
         }
 
-
         protected void addTo( EntryContainer container )
-            throws BuildException
+            throws TaskException
         {
             checkFormat();
             split();
@@ -335,12 +332,12 @@ public class ManifestFile extends Task
         }
 
         private void checkFormat()
-            throws BuildException
+            throws TaskException
         {
 
             if( value == null )
             {
-                throw new BuildException( "no argument for value" );
+                throw new TaskException( "no argument for value" );
             }
 
             StringTokenizer st = new StringTokenizer( value, ManifestFile.keyValueSeparator );
@@ -348,15 +345,15 @@ public class ManifestFile extends Task
 
             if( size < 2 )
             {
-                throw new BuildException( "value has not the format of a manifest entry" );
+                throw new TaskException( "value has not the format of a manifest entry" );
             }
         }
 
         private void split()
         {
             StringTokenizer st = new StringTokenizer( value, ManifestFile.keyValueSeparator );
-            key = ( String )st.nextElement();
-            val = ( String )st.nextElement();
+            key = (String)st.nextElement();
+            val = (String)st.nextElement();
         }
 
     }

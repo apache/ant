@@ -6,11 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.Pack;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.bzip2.CBZip2OutputStream;
 
 /**
@@ -37,7 +37,7 @@ public class BZip2 extends Pack
         catch( IOException ioe )
         {
             String msg = "Problem creating bzip2 " + ioe.getMessage();
-            throw new BuildException( msg, ioe );
+            throw new TaskException( msg, ioe );
         }
         finally
         {
@@ -49,7 +49,8 @@ public class BZip2 extends Pack
                     zOut.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }

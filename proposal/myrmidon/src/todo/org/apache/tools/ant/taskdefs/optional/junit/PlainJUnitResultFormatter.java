@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -15,7 +16,7 @@ import java.util.Hashtable;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Prints plain text output of the test to a specified Writer.
@@ -111,7 +112,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter
      */
     public void addFailure( Test test, AssertionFailedError t )
     {
-        addFailure( test, ( Throwable )t );
+        addFailure( test, (Throwable)t );
     }
 
     /**
@@ -126,16 +127,16 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter
         synchronized( wri )
         {
             wri.print( "Testcase: "
-                 + JUnitVersionHelper.getTestCaseName( test ) );
+                       + JUnitVersionHelper.getTestCaseName( test ) );
             if( Boolean.TRUE.equals( failed.get( test ) ) )
             {
                 return;
             }
-            Long l = ( Long )testStarts.get( test );
+            Long l = (Long)testStarts.get( test );
             wri.println( " took "
-                 + nf.format( ( System.currentTimeMillis() - l.longValue() )
-                 / 1000.0 )
-                 + " sec" );
+                         + nf.format( ( System.currentTimeMillis() - l.longValue() )
+                                      / 1000.0 )
+                         + " sec" );
         }
     }
 
@@ -143,10 +144,10 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter
      * The whole testsuite ended.
      *
      * @param suite Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void endTestSuite( JUnitTest suite )
-        throws BuildException
+        throws TaskException
     {
         String newLine = System.getProperty( "line.separator" );
         StringBuffer sb = new StringBuffer( "Testsuite: " );
@@ -195,7 +196,7 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter
             }
             catch( IOException ioex )
             {
-                throw new BuildException( "Unable to write output", ioex );
+                throw new TaskException( "Unable to write output", ioex );
             }
             finally
             {
@@ -206,7 +207,8 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter
                         out.close();
                     }
                     catch( IOException e )
-                    {}
+                    {
+                    }
                 }
             }
         }
@@ -230,7 +232,9 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter
      *
      * @param suite Description of Parameter
      */
-    public void startTestSuite( JUnitTest suite ) { }
+    public void startTestSuite( JUnitTest suite )
+    {
+    }
 
     private void formatError( String type, Test test, Throwable t )
     {

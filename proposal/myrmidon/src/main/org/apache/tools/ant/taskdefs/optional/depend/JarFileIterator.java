@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,7 +79,7 @@ public class JarFileIterator implements ClassFileIterator
     private byte[] getEntryBytes( InputStream stream )
         throws IOException
     {
-        byte[] buffer = new byte[8192];
+        byte[] buffer = new byte[ 8192 ];
         ByteArrayOutputStream baos = new ByteArrayOutputStream( 2048 );
         int n;
 

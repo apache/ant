@@ -6,15 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.dotnet;
-import java.io.File;// ====================================================================
-// imports
-// ====================================================================
-import org.apache.tools.ant.BuildException;
+
+import java.io.File;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 
-
 // ====================================================================
+
 /**
  * This task compiles CSharp source into executables or modules. The task will
  * only work on win2K until other platforms support csc.exe or an equivalent.
@@ -95,7 +94,7 @@ import org.apache.tools.ant.types.Path;
  */
 
 public class CSharp
-     extends org.apache.tools.ant.taskdefs.MatchingTask
+    extends org.apache.tools.ant.taskdefs.MatchingTask
 {
 
     /**
@@ -449,11 +448,11 @@ public class CSharp
      * define the target
      *
      * @param targetType The new TargetType value
-     * @exception BuildException if target is not one of
+     * @exception TaskException if target is not one of
      *      exe|library|module|winexe
      */
     public void setTargetType( String targetType )
-        throws BuildException
+        throws TaskException
     {
         targetType = targetType.toLowerCase();
         if( targetType.equals( "exe" ) || targetType.equals( "library" ) ||
@@ -462,7 +461,7 @@ public class CSharp
             _targetType = targetType;
         }
         else
-            throw new BuildException( "targetType " + targetType + " is not a valid type" );
+            throw new TaskException( "targetType " + targetType + " is not a valid type" );
     }
 
     /**
@@ -643,10 +642,10 @@ public class CSharp
     /**
      * do the work by building the command line and then calling it
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( _srcDir == null )
             _srcDir = resolveFile( "." );
@@ -686,7 +685,7 @@ public class CSharp
         //add to the command
         for( int i = 0; i < dependencies.length; i++ )
         {
-            String targetFile = dependencies[i];
+            String targetFile = dependencies[ i ];
             targetFile = baseDir + File.separator + targetFile;
             command.addArgument( targetFile );
         }
@@ -722,7 +721,6 @@ public class CSharp
     {
         return "/debug" + ( _debug ? "+" : "-" );
     }
-
 
     /**
      * get default reference list

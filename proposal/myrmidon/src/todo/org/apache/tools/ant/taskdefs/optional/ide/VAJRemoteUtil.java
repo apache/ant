@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,12 +16,12 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
 /**
  * Helper class for VAJ tasks. Holds Workspace singleton and wraps IvjExceptions
- * into BuildExceptions
+ * into TaskExceptions
  *
  * @author Wolf Siberski, TUI Infotec GmbH
  */
@@ -59,17 +60,17 @@ class VAJRemoteUtil implements VAJUtil
         try
         {
             String request = "http://" + remoteServer + "/servlet/vajexport?"
-                 + VAJExportServlet.WITH_DEBUG_INFO + "=" + exportDebugInfo + "&"
-                 + VAJExportServlet.OVERWRITE_PARAM + "=" + overwrite + "&"
-                 + assembleImportExportParams( destDir,
-                includePatterns, excludePatterns,
-                exportClasses, exportResources,
-                exportSources, useDefaultExcludes );
+                + VAJExportServlet.WITH_DEBUG_INFO + "=" + exportDebugInfo + "&"
+                + VAJExportServlet.OVERWRITE_PARAM + "=" + overwrite + "&"
+                + assembleImportExportParams( destDir,
+                                              includePatterns, excludePatterns,
+                                              exportClasses, exportResources,
+                                              exportSources, useDefaultExcludes );
             sendRequest( request );
         }
         catch( Exception ex )
         {
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
     }
 
@@ -86,25 +87,25 @@ class VAJRemoteUtil implements VAJUtil
      * @param useDefaultExcludes Description of Parameter
      */
     public void importFiles(
-                             String importProject, File srcDir,
-                             String[] includePatterns, String[] excludePatterns,
-                             boolean importClasses, boolean importResources,
-                             boolean importSources, boolean useDefaultExcludes )
+        String importProject, File srcDir,
+        String[] includePatterns, String[] excludePatterns,
+        boolean importClasses, boolean importResources,
+        boolean importSources, boolean useDefaultExcludes )
     {
         try
         {
             String request = "http://" + remoteServer + "/servlet/vajimport?"
-                 + VAJImportServlet.PROJECT_NAME_PARAM + "="
-                 + importProject + "&"
-                 + assembleImportExportParams( srcDir,
-                includePatterns, excludePatterns,
-                importClasses, importResources,
-                importSources, useDefaultExcludes );
+                + VAJImportServlet.PROJECT_NAME_PARAM + "="
+                + importProject + "&"
+                + assembleImportExportParams( srcDir,
+                                              includePatterns, excludePatterns,
+                                              importClasses, importResources,
+                                              importSources, useDefaultExcludes );
             sendRequest( request );
         }
         catch( Exception ex )
         {
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
 
     }
@@ -120,14 +121,14 @@ class VAJRemoteUtil implements VAJUtil
         {
             String request = "http://" + remoteServer + "/servlet/vajload?";
             String delimiter = "";
-            for( Enumeration e = projectDescriptions.elements(); e.hasMoreElements();  )
+            for( Enumeration e = projectDescriptions.elements(); e.hasMoreElements(); )
             {
-                VAJProjectDescription pd = ( VAJProjectDescription )e.nextElement();
+                VAJProjectDescription pd = (VAJProjectDescription)e.nextElement();
                 request = request
-                     + delimiter + VAJLoadServlet.PROJECT_NAME_PARAM
-                     + "=" + pd.getName().replace( ' ', '+' )
-                     + "&" + VAJLoadServlet.VERSION_PARAM
-                     + "=" + pd.getVersion().replace( ' ', '+' );
+                    + delimiter + VAJLoadServlet.PROJECT_NAME_PARAM
+                    + "=" + pd.getName().replace( ' ', '+' )
+                    + "&" + VAJLoadServlet.VERSION_PARAM
+                    + "=" + pd.getVersion().replace( ' ', '+' );
                 //the first param needs no delimiter, but all other
                 delimiter = "&";
             }
@@ -135,7 +136,7 @@ class VAJRemoteUtil implements VAJUtil
         }
         catch( Exception ex )
         {
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
     }
 
@@ -164,25 +165,25 @@ class VAJRemoteUtil implements VAJUtil
      * @return Description of the Returned Value
      */
     private String assembleImportExportParams(
-                                               File dir,
-                                               String[] includePatterns, String[] excludePatterns,
-                                               boolean includeClasses, boolean includeResources,
-                                               boolean includeSources, boolean useDefaultExcludes )
+        File dir,
+        String[] includePatterns, String[] excludePatterns,
+        boolean includeClasses, boolean includeResources,
+        boolean includeSources, boolean useDefaultExcludes )
     {
         String result =
             VAJToolsServlet.DIR_PARAM + "="
-             + dir.getAbsolutePath().replace( '\\', '/' ) + "&"
-             + VAJToolsServlet.CLASSES_PARAM + "=" + includeClasses + "&"
-             + VAJToolsServlet.RESOURCES_PARAM + "=" + includeResources + "&"
-             + VAJToolsServlet.SOURCES_PARAM + "=" + includeSources + "&"
-             + VAJToolsServlet.DEFAULT_EXCLUDES_PARAM + "=" + useDefaultExcludes;
+            + dir.getAbsolutePath().replace( '\\', '/' ) + "&"
+            + VAJToolsServlet.CLASSES_PARAM + "=" + includeClasses + "&"
+            + VAJToolsServlet.RESOURCES_PARAM + "=" + includeResources + "&"
+            + VAJToolsServlet.SOURCES_PARAM + "=" + includeSources + "&"
+            + VAJToolsServlet.DEFAULT_EXCLUDES_PARAM + "=" + useDefaultExcludes;
 
         if( includePatterns != null )
         {
             for( int i = 0; i < includePatterns.length; i++ )
             {
                 result = result + "&" + VAJExportServlet.INCLUDE_PARAM + "="
-                     + includePatterns[i].replace( ' ', '+' ).replace( '\\', '/' );
+                    + includePatterns[ i ].replace( ' ', '+' ).replace( '\\', '/' );
             }
         }
         if( excludePatterns != null )
@@ -190,7 +191,7 @@ class VAJRemoteUtil implements VAJUtil
             for( int i = 0; i < excludePatterns.length; i++ )
             {
                 result = result + "&" + VAJExportServlet.EXCLUDE_PARAM + "="
-                     + excludePatterns[i].replace( ' ', '+' ).replace( '\\', '/' );
+                    + excludePatterns[ i ].replace( ' ', '+' ).replace( '\\', '/' );
             }
         }
 
@@ -212,7 +213,7 @@ class VAJRemoteUtil implements VAJUtil
             //must be HTTP connection
             URL requestUrl = new URL( request );
             HttpURLConnection connection =
-                ( HttpURLConnection )requestUrl.openConnection();
+                (HttpURLConnection)requestUrl.openConnection();
 
             InputStream is = null;
             // retry three times
@@ -230,7 +231,7 @@ class VAJRemoteUtil implements VAJUtil
             if( is == null )
             {
                 log( "Can't get " + request, MSG_ERR );
-                throw new BuildException( "Couldn't execute " + request );
+                throw new TaskException( "Couldn't execute " + request );
             }
 
             // log the response
@@ -260,11 +261,11 @@ class VAJRemoteUtil implements VAJUtil
         catch( IOException ex )
         {
             log( "Error sending tool request to VAJ" + ex, MSG_ERR );
-            throw new BuildException( "Couldn't execute " + request );
+            throw new TaskException( "Couldn't execute " + request );
         }
         if( requestFailed )
         {
-            throw new BuildException( "VAJ tool request failed" );
+            throw new TaskException( "VAJ tool request failed" );
         }
     }
 }

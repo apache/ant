@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -25,7 +26,7 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.Properties;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -178,7 +179,7 @@ public class PropertyFile extends Task
      * Methods
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         checkParameters();
         readFile();
@@ -200,26 +201,26 @@ public class PropertyFile extends Task
     }
 
     private void checkParameters()
-        throws BuildException
+        throws TaskException
     {
         if( !checkParam( m_propertyfile ) )
         {
-            throw new BuildException( "file token must not be null." );
+            throw new TaskException( "file token must not be null." );
         }
     }
 
     private void executeOperation()
-        throws BuildException
+        throws TaskException
     {
-        for( Enumeration e = entries.elements(); e.hasMoreElements();  )
+        for( Enumeration e = entries.elements(); e.hasMoreElements(); )
         {
-            Entry entry = ( Entry )e.nextElement();
+            Entry entry = (Entry)e.nextElement();
             entry.executeOn( m_properties );
         }
     }
 
     private void readFile()
-        throws BuildException
+        throws TaskException
     {
         // Create the PropertyFile
         m_properties = new Properties();
@@ -246,7 +247,7 @@ public class PropertyFile extends Task
             else
             {
                 log( "Creating new property file: " +
-                    m_propertyfile.getAbsolutePath() );
+                     m_propertyfile.getAbsolutePath() );
                 FileOutputStream out = null;
                 try
                 {
@@ -264,12 +265,12 @@ public class PropertyFile extends Task
         }
         catch( IOException ioe )
         {
-            throw new BuildException( ioe.toString() );
+            throw new TaskException( ioe.toString() );
         }
     }
 
     private void writeFile()
-        throws BuildException
+        throws TaskException
     {
         BufferedOutputStream bos = null;
         try
@@ -279,10 +280,10 @@ public class PropertyFile extends Task
             // Properties.store is not available in JDK 1.1
             Method m =
                 Properties.class.getMethod( "store",
-                new Class[]{
-                OutputStream.class,
-                String.class}
-                 );
+                                            new Class[]{
+                                                OutputStream.class,
+                                                String.class}
+                );
             m.invoke( m_properties, new Object[]{bos, m_comment} );
 
         }
@@ -293,16 +294,16 @@ public class PropertyFile extends Task
         catch( InvocationTargetException ite )
         {
             Throwable t = ite.getTargetException();
-            throw new BuildException( "Error", t );
+            throw new TaskException( "Error", t );
         }
         catch( IllegalAccessException iae )
         {
             // impossible
-            throw new BuildException( "Error", iae );
+            throw new TaskException( "Error", iae );
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "Error", ioe );
+            throw new TaskException( "Error", ioe );
         }
         finally
         {
@@ -313,7 +314,8 @@ public class PropertyFile extends Task
                     bos.close();
                 }
                 catch( IOException ioex )
-                {}
+                {
+                }
             }
         }
     }
@@ -385,7 +387,7 @@ public class PropertyFile extends Task
         }
 
         protected void executeOn( Properties props )
-            throws BuildException
+            throws TaskException
         {
             checkParameters();
 
@@ -394,19 +396,19 @@ public class PropertyFile extends Task
             {
                 if( m_type == Type.INTEGER_TYPE )
                 {
-                    executeInteger( ( String )props.get( m_key ) );
+                    executeInteger( (String)props.get( m_key ) );
                 }
                 else if( m_type == Type.DATE_TYPE )
                 {
-                    executeDate( ( String )props.get( m_key ) );
+                    executeDate( (String)props.get( m_key ) );
                 }
                 else if( m_type == Type.STRING_TYPE )
                 {
-                    executeString( ( String )props.get( m_key ) );
+                    executeString( (String)props.get( m_key ) );
                 }
                 else
                 {
-                    throw new BuildException( "Unknown operation type: " + m_type + "" );
+                    throw new TaskException( "Unknown operation type: " + m_type + "" );
                 }
             }
             catch( NullPointerException npe )
@@ -423,28 +425,28 @@ public class PropertyFile extends Task
         /**
          * Check if parameter combinations can be supported
          *
-         * @exception BuildException Description of Exception
+         * @exception TaskException Description of Exception
          */
         private void checkParameters()
-            throws BuildException
+            throws TaskException
         {
             if( m_type == Type.STRING_TYPE &&
                 m_operation == Operation.DECREMENT_OPER )
             {
-                throw new BuildException( "- is not suported for string properties (key:" + m_key + ")" );
+                throw new TaskException( "- is not suported for string properties (key:" + m_key + ")" );
             }
             if( m_value == null && m_default == null )
             {
-                throw new BuildException( "value and/or default must be specified (key:" + m_key + ")" );
+                throw new TaskException( "value and/or default must be specified (key:" + m_key + ")" );
             }
             if( m_key == null )
             {
-                throw new BuildException( "key is mandatory" );
+                throw new TaskException( "key is mandatory" );
             }
             if( m_type == Type.STRING_TYPE &&
                 m_pattern != null )
             {
-                throw new BuildException( "pattern is not suported for string properties (key:" + m_key + ")" );
+                throw new TaskException( "pattern is not suported for string properties (key:" + m_key + ")" );
             }
         }
 
@@ -454,10 +456,10 @@ public class PropertyFile extends Task
          * @param oldValue the current value read from the property file or
          *      <code>null</code> if the <code>key</code> was not contained in
          *      the property file.
-         * @exception BuildException Description of Exception
+         * @exception TaskException Description of Exception
          */
         private void executeDate( String oldValue )
-            throws BuildException
+            throws TaskException
         {
             GregorianCalendar value = new GregorianCalendar();
             GregorianCalendar newValue = new GregorianCalendar();
@@ -577,23 +579,22 @@ public class PropertyFile extends Task
             }
         }
 
-
         /**
          * Handle operations for type <code>int</code>.
          *
          * @param oldValue the current value read from the property file or
          *      <code>null</code> if the <code>key</code> was not contained in
          *      the property file.
-         * @exception BuildException Description of Exception
+         * @exception TaskException Description of Exception
          */
         private void executeInteger( String oldValue )
-            throws BuildException
+            throws TaskException
         {
             int value = 0;
             int newValue = 0;
 
             DecimalFormat fmt = ( m_pattern != null ) ? new DecimalFormat( m_pattern )
-                 : new DecimalFormat();
+                : new DecimalFormat();
 
             if( oldValue != null )
             {
@@ -674,10 +675,10 @@ public class PropertyFile extends Task
          * @param oldValue the current value read from the property file or
          *      <code>null</code> if the <code>key</code> was not contained in
          *      the property file.
-         * @exception BuildException Description of Exception
+         * @exception TaskException Description of Exception
          */
         private void executeString( String oldValue )
-            throws BuildException
+            throws TaskException
         {
             String value = "";
             String newValue = "";

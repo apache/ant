@@ -6,10 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.tools.ant.BuildException;
-
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Regular expression implementation using the JDK 1.4 regular expression
@@ -27,7 +27,7 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp
     }
 
     public String substitute( String input, String argument, int options )
-        throws BuildException
+        throws TaskException
     {
         // translate \1 to $(1) so that the Matcher will work
         StringBuffer subst = new StringBuffer();

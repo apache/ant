@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -16,7 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.IntrospectionHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
@@ -31,7 +32,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 
 public class AntStructure extends Task
 {
-
     private final String lSep = System.getProperty( "line.separator" );
 
     private final String BOOLEAN = "%boolean;";
@@ -53,12 +53,12 @@ public class AntStructure extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         if( output == null )
         {
-            throw new BuildException( "output attribute is required" );
+            throw new TaskException( "output attribute is required" );
         }
 
         PrintWriter out = null;
@@ -80,24 +80,24 @@ public class AntStructure extends Task
             }
 
             printHead( out, project.getTaskDefinitions().keys(),
-                project.getDataTypeDefinitions().keys() );
+                       project.getDataTypeDefinitions().keys() );
 
             printTargetDecl( out );
 
             Enumeration dataTypes = project.getDataTypeDefinitions().keys();
             while( dataTypes.hasMoreElements() )
             {
-                String typeName = ( String )dataTypes.nextElement();
+                String typeName = (String)dataTypes.nextElement();
                 printElementDecl( out, typeName,
-                    ( Class )project.getDataTypeDefinitions().get( typeName ) );
+                                  (Class)project.getDataTypeDefinitions().get( typeName ) );
             }
 
             Enumeration tasks = project.getTaskDefinitions().keys();
             while( tasks.hasMoreElements() )
             {
-                String taskName = ( String )tasks.nextElement();
+                String taskName = (String)tasks.nextElement();
                 printElementDecl( out, taskName,
-                    ( Class )project.getTaskDefinitions().get( taskName ) );
+                                  (Class)project.getTaskDefinitions().get( taskName ) );
             }
 
             printTail( out );
@@ -105,8 +105,8 @@ public class AntStructure extends Task
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "Error writing " + output.getAbsolutePath(),
-                ioe );
+            throw new TaskException( "Error writing " + output.getAbsolutePath(),
+                                     ioe );
         }
         finally
         {
@@ -152,7 +152,7 @@ public class AntStructure extends Task
     {
         for( int i = 0; i < s.length; i++ )
         {
-            if( !isNmtoken( s[i] ) )
+            if( !isNmtoken( s[ i ] ) )
             {
                 return false;
             }
@@ -161,7 +161,7 @@ public class AntStructure extends Task
     }
 
     private void printElementDecl( PrintWriter out, String name, Class element )
-        throws BuildException
+        throws TaskException
     {
 
         if( visited.containsKey( name ) )
@@ -213,7 +213,7 @@ public class AntStructure extends Task
         Enumeration enum = ih.getNestedElements();
         while( enum.hasMoreElements() )
         {
-            v.addElement( ( String )enum.nextElement() );
+            v.addElement( (String)enum.nextElement() );
         }
 
         if( v.isEmpty() )
@@ -247,7 +247,7 @@ public class AntStructure extends Task
         enum = ih.getAttributes();
         while( enum.hasMoreElements() )
         {
-            String attrName = ( String )enum.nextElement();
+            String attrName = (String)enum.nextElement();
             if( "id".equals( attrName ) )
                 continue;
 
@@ -267,11 +267,11 @@ public class AntStructure extends Task
                 try
                 {
                     EnumeratedAttribute ea =
-                        ( EnumeratedAttribute )type.newInstance();
+                        (EnumeratedAttribute)type.newInstance();
                     String[] values = ea.getValues();
                     if( values == null
-                         || values.length == 0
-                         || !areNmtokens( values ) )
+                        || values.length == 0
+                        || !areNmtokens( values ) )
                     {
                         sb.append( "CDATA " );
                     }
@@ -284,7 +284,7 @@ public class AntStructure extends Task
                             {
                                 sb.append( " | " );
                             }
-                            sb.append( values[i] );
+                            sb.append( values[ i ] );
                         }
                         sb.append( ") " );
                     }
@@ -309,11 +309,11 @@ public class AntStructure extends Task
 
         for( int i = 0; i < v.size(); i++ )
         {
-            String nestedName = ( String )v.elementAt( i );
+            String nestedName = (String)v.elementAt( i );
             if( !"#PCDATA".equals( nestedName ) &&
                 !TASKS.equals( nestedName ) &&
                 !TYPES.equals( nestedName )
-                 )
+            )
             {
                 printElementDecl( out, nestedName, ih.getElementType( nestedName ) );
             }
@@ -329,7 +329,7 @@ public class AntStructure extends Task
         boolean first = true;
         while( tasks.hasMoreElements() )
         {
-            String taskName = ( String )tasks.nextElement();
+            String taskName = (String)tasks.nextElement();
             if( !first )
             {
                 out.print( " | " );
@@ -345,7 +345,7 @@ public class AntStructure extends Task
         first = true;
         while( types.hasMoreElements() )
         {
-            String typeName = ( String )types.nextElement();
+            String typeName = (String)types.nextElement();
             if( !first )
             {
                 out.print( " | " );
@@ -370,7 +370,9 @@ public class AntStructure extends Task
         out.println( "" );
     }
 
-    private void printTail( PrintWriter out ) { }
+    private void printTail( PrintWriter out )
+    {
+    }
 
     private void printTargetDecl( PrintWriter out )
     {

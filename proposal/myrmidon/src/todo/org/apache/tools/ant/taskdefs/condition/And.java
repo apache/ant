@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.condition;
+
 import java.util.Enumeration;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * &lt;and&gt; condition container. <p>
@@ -22,12 +23,12 @@ public class And extends ConditionBase implements Condition
 {
 
     public boolean eval()
-        throws BuildException
+        throws TaskException
     {
         Enumeration enum = getConditions();
         while( enum.hasMoreElements() )
         {
-            Condition c = ( Condition )enum.nextElement();
+            Condition c = (Condition)enum.nextElement();
             if( !c.eval() )
             {
                 return false;

@@ -6,10 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import java.lang.reflect.Field;
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 
@@ -172,7 +173,6 @@ public class VAJImport extends VAJTask
         this.importSources = importSources;
     }
 
-
     /**
      * The VisualAge for Java Project name to import into.
      *
@@ -196,24 +196,24 @@ public class VAJImport extends VAJTask
     /**
      * Do the import.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( filesets.size() == 0 )
         {
-            throw new BuildException( "At least one fileset is required!" );
+            throw new TaskException( "At least one fileset is required!" );
         }
 
         if( importProject == null || "".equals( importProject ) )
         {
-            throw new BuildException( "The VisualAge for Java Project name is required!" );
+            throw new TaskException( "The VisualAge for Java Project name is required!" );
         }
 
-        for( Enumeration e = filesets.elements(); e.hasMoreElements();  )
+        for( Enumeration e = filesets.elements(); e.hasMoreElements(); )
         {
-            importFileset( ( FileSet )e.nextElement() );
+            importFileset( (FileSet)e.nextElement() );
         }
     }
 
@@ -243,26 +243,26 @@ public class VAJImport extends VAJTask
 
             Field includesField = directoryScanner.getDeclaredField( "includes" );
             includesField.setAccessible( true );
-            includes = ( String[] )includesField.get( ds );
+            includes = (String[])includesField.get( ds );
 
             Field excludesField = directoryScanner.getDeclaredField( "excludes" );
             excludesField.setAccessible( true );
-            excludes = ( String[] )excludesField.get( ds );
+            excludes = (String[])excludesField.get( ds );
         }
         catch( NoSuchFieldException nsfe )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "DirectoryScanner.includes or .excludes missing" + nsfe.getMessage() );
         }
         catch( IllegalAccessException iae )
         {
-            throw new BuildException(
+            throw new TaskException(
                 "Access to DirectoryScanner.includes or .excludes not allowed" );
         }
 
         getUtil().importFiles( importProject, ds.getBasedir(),
-            includes, excludes,
-            importClasses, importResources, importSources,
-            useDefaultExcludes );
+                               includes, excludes,
+                               importClasses, importResources, importSources,
+                               useDefaultExcludes );
     }
 }

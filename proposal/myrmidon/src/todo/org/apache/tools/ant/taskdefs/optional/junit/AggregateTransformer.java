@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,16 +15,13 @@ import java.io.InputStream;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.FileUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
-
-
 
 /**
  * Transform a JUnit xml report. The default transformation generates an html
@@ -121,7 +119,7 @@ public class AggregateTransformer
     }
 
     public void transform()
-        throws BuildException
+        throws TaskException
     {
         checkOptions();
         final long t0 = System.currentTimeMillis();
@@ -133,7 +131,7 @@ public class AggregateTransformer
         }
         catch( Exception e )
         {
-            throw new BuildException( "Errors while applying transformations", e );
+            throw new TaskException( "Errors while applying transformations", e );
         }
         final long dt = System.currentTimeMillis() - t0;
         task.log( "Transform time: " + dt + "ms" );
@@ -144,10 +142,10 @@ public class AggregateTransformer
      * file directly. Much more for testing purposes.
      *
      * @param xmlfile xml file to be processed
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void setXmlfile( File xmlfile )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -165,7 +163,7 @@ public class AggregateTransformer
         }
         catch( Exception e )
         {
-            throw new BuildException( "Error while parsing document: " + xmlfile, e );
+            throw new TaskException( "Error while parsing document: " + xmlfile, e );
         }
     }
 
@@ -209,10 +207,10 @@ public class AggregateTransformer
     /**
      * check for invalid options
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void checkOptions()
-        throws BuildException
+        throws TaskException
     {
         // set the destination directory relative from the project if needed.
         if( toDir == null )

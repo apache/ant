@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.condition;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.ProjectComponent;
 
 /**
@@ -25,11 +26,11 @@ public class IsSet extends ProjectComponent implements Condition
     }
 
     public boolean eval()
-        throws BuildException
+        throws TaskException
     {
         if( property == null )
         {
-            throw new BuildException( "No property specified for isset condition" );
+            throw new TaskException( "No property specified for isset condition" );
         }
 
         return getProject().getProperty( property ) != null;

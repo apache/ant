@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.xml.sax.SAXException;
@@ -183,10 +184,10 @@ public class IPlanetEjbcTask extends Task
     /**
      * Does the work.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         checkConfiguration();
 
@@ -213,10 +214,10 @@ public class IPlanetEjbcTask extends Task
      * Returns a SAXParser that may be used to process the XML descriptors.
      *
      * @return Parser which may be used to process the EJB descriptors.
-     * @throws BuildException If the parser cannot be created or configured.
+     * @throws TaskException If the parser cannot be created or configured.
      */
     private SAXParser getParser()
-        throws BuildException
+        throws TaskException
     {
 
         SAXParser saxParser = null;
@@ -229,12 +230,12 @@ public class IPlanetEjbcTask extends Task
         catch( SAXException e )
         {
             String msg = "Unable to create a SAXParser: " + e.getMessage();
-            throw new BuildException( msg, e );
+            throw new TaskException( msg, e );
         }
         catch( ParserConfigurationException e )
         {
             String msg = "Unable to create a SAXParser: " + e.getMessage();
-            throw new BuildException( msg, e );
+            throw new TaskException( msg, e );
         }
 
         return saxParser;
@@ -243,56 +244,56 @@ public class IPlanetEjbcTask extends Task
     /**
      * Verifies that the user selections are valid.
      *
-     * @throws BuildException If the user selections are invalid.
+     * @throws TaskException If the user selections are invalid.
      */
     private void checkConfiguration()
-        throws BuildException
+        throws TaskException
     {
 
         if( ejbdescriptor == null )
         {
             String msg = "The standard EJB descriptor must be specified using "
-                 + "the \"ejbdescriptor\" attribute.";
-            throw new BuildException( msg );
+                + "the \"ejbdescriptor\" attribute.";
+            throw new TaskException( msg );
         }
         if( ( !ejbdescriptor.exists() ) || ( !ejbdescriptor.isFile() ) )
         {
             String msg = "The standard EJB descriptor (" + ejbdescriptor
-                 + ") was not found or isn't a file.";
-            throw new BuildException( msg );
+                + ") was not found or isn't a file.";
+            throw new TaskException( msg );
         }
 
         if( iasdescriptor == null )
         {
             String msg = "The iAS-speific XML descriptor must be specified using"
-                 + " the \"iasdescriptor\" attribute.";
-            throw new BuildException( msg );
+                + " the \"iasdescriptor\" attribute.";
+            throw new TaskException( msg );
         }
         if( ( !iasdescriptor.exists() ) || ( !iasdescriptor.isFile() ) )
         {
             String msg = "The iAS-specific XML descriptor (" + iasdescriptor
-                 + ") was not found or isn't a file.";
-            throw new BuildException( msg );
+                + ") was not found or isn't a file.";
+            throw new TaskException( msg );
         }
 
         if( dest == null )
         {
             String msg = "The destination directory must be specified using "
-                 + "the \"dest\" attribute.";
-            throw new BuildException( msg );
+                + "the \"dest\" attribute.";
+            throw new TaskException( msg );
         }
         if( ( !dest.exists() ) || ( !dest.isDirectory() ) )
         {
             String msg = "The destination directory (" + dest + ") was not "
-                 + "found or isn't a directory.";
-            throw new BuildException( msg );
+                + "found or isn't a directory.";
+            throw new TaskException( msg );
         }
 
         if( ( iashome != null ) && ( !iashome.isDirectory() ) )
         {
             String msg = "If \"iashome\" is specified, it must be a valid "
-                 + "directory (it was set to " + iashome + ").";
-            throw new BuildException( msg );
+                + "directory (it was set to " + iashome + ").";
+            throw new TaskException( msg );
         }
     }
 
@@ -301,17 +302,17 @@ public class IPlanetEjbcTask extends Task
      *
      * @param saxParser SAXParser that may be used to process the EJB
      *      descriptors
-     * @throws BuildException If there is an error reading or parsing the XML
+     * @throws TaskException If there is an error reading or parsing the XML
      *      descriptors
      */
     private void executeEjbc( SAXParser saxParser )
-        throws BuildException
+        throws TaskException
     {
         IPlanetEjbc ejbc = new IPlanetEjbc( ejbdescriptor,
-            iasdescriptor,
-            dest,
-            getClasspath().toString(),
-            saxParser );
+                                            iasdescriptor,
+                                            dest,
+                                            getClasspath().toString(),
+                                            saxParser );
         ejbc.setRetainSource( keepgenerated );
         ejbc.setDebugOutput( debug );
         if( iashome != null )
@@ -326,20 +327,20 @@ public class IPlanetEjbcTask extends Task
         catch( IOException e )
         {
             String msg = "An IOException occurred while trying to read the XML "
-                 + "descriptor file: " + e.getMessage();
-            throw new BuildException( msg, e );
+                + "descriptor file: " + e.getMessage();
+            throw new TaskException( msg, e );
         }
         catch( SAXException e )
         {
             String msg = "A SAXException occurred while trying to read the XML "
-                 + "descriptor file: " + e.getMessage();
-            throw new BuildException( msg, e );
+                + "descriptor file: " + e.getMessage();
+            throw new TaskException( msg, e );
         }
         catch( IPlanetEjbc.EjbcException e )
         {
             String msg = "An exception occurred while trying to run the ejbc "
-                 + "utility: " + e.getMessage();
-            throw new BuildException( msg, e );
+                + "utility: " + e.getMessage();
+            throw new TaskException( msg, e );
         }
     }
 }

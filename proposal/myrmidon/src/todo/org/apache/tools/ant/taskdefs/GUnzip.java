@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Expands a file that has been compressed with the GZIP algorithm. Normally
@@ -45,18 +46,18 @@ public class GUnzip extends Unpack
                 out = new FileOutputStream( dest );
                 fis = new FileInputStream( source );
                 zIn = new GZIPInputStream( fis );
-                byte[] buffer = new byte[8 * 1024];
+                byte[] buffer = new byte[ 8 * 1024 ];
                 int count = 0;
                 do
                 {
                     out.write( buffer, 0, count );
                     count = zIn.read( buffer, 0, buffer.length );
-                }while ( count != -1 );
+                } while( count != -1 );
             }
             catch( IOException ioe )
             {
                 String msg = "Problem expanding gzip " + ioe.getMessage();
-                throw new BuildException( msg, ioe );
+                throw new TaskException( msg, ioe );
             }
             finally
             {
@@ -67,7 +68,8 @@ public class GUnzip extends Unpack
                         fis.close();
                     }
                     catch( IOException ioex )
-                    {}
+                    {
+                    }
                 }
                 if( out != null )
                 {
@@ -76,7 +78,8 @@ public class GUnzip extends Unpack
                         out.close();
                     }
                     catch( IOException ioex )
-                    {}
+                    {
+                    }
                 }
                 if( zIn != null )
                 {
@@ -85,7 +88,8 @@ public class GUnzip extends Unpack
                         zIn.close();
                     }
                     catch( IOException ioex )
-                    {}
+                    {
+                    }
                 }
             }
         }

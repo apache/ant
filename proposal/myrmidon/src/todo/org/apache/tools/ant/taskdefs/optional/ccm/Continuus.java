@@ -6,14 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ccm;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-
 
 /**
  * A base class for creating tasks for executing commands on Continuus 5.1 <p>
@@ -57,7 +57,6 @@ public abstract class Continuus extends Task
 
     private String _ccmDir = "";
     private String _ccmAction = "";
-
 
     /**
      * Set the directory where the ccm executable is located
@@ -107,7 +106,6 @@ public abstract class Continuus extends Task
         return toReturn;
     }
 
-
     protected int run( Commandline cmd, ExecuteStreamHandler handler )
     {
         try
@@ -120,7 +118,7 @@ public abstract class Continuus extends Task
         }
         catch( java.io.IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.File;
 import java.util.Vector;
 

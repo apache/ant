@@ -12,7 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -43,14 +43,14 @@ public class Java extends Task
      * Set the class name.
      *
      * @param s The new Classname value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setClassname( String s )
-        throws BuildException
+        throws TaskException
     {
         if( cmdl.getJar() != null )
         {
-            throw new BuildException( "Cannot use 'jar' and 'classname' attributes in same command" );
+            throw new TaskException( "Cannot use 'jar' and 'classname' attributes in same command" );
         }
         cmdl.setClassname( s );
     }
@@ -86,7 +86,7 @@ public class Java extends Task
     }
 
     /**
-     * Throw a BuildException if process returns non 0.
+     * Throw a TaskException if process returns non 0.
      *
      * @param fail The new Failonerror value
      */
@@ -114,14 +114,14 @@ public class Java extends Task
      * set the jar name...
      *
      * @param jarfile The new Jar value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setJar( File jarfile )
-        throws BuildException
+        throws TaskException
     {
         if( cmdl.getClassname() != null )
         {
-            throw new BuildException( "Cannot use 'jar' and 'classname' attributes in same command." );
+            throw new TaskException( "Cannot use 'jar' and 'classname' attributes in same command." );
         }
         cmdl.setJar( jarfile.getAbsolutePath() );
     }
@@ -207,17 +207,17 @@ public class Java extends Task
     /**
      * Do the execution.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         int err = -1;
         if( ( err = executeJava() ) != 0 )
         {
             if( failOnError )
             {
-                throw new BuildException( "Java returned: " + err );
+                throw new TaskException( "Java returned: " + err );
             }
             else
             {
@@ -231,19 +231,19 @@ public class Java extends Task
      *
      * @return the return code from the execute java class if it was executed in
      *      a separate VM (fork = "yes").
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public int executeJava()
-        throws BuildException
+        throws TaskException
     {
         String classname = cmdl.getClassname();
         if( classname == null && cmdl.getJar() == null )
         {
-            throw new BuildException( "Classname must not be null." );
+            throw new TaskException( "Classname must not be null." );
         }
         if( !fork && cmdl.getJar() != null )
         {
-            throw new BuildException( "Cannot execute a jar in non-forked mode. Please set fork='true'. " );
+            throw new TaskException( "Cannot execute a jar in non-forked mode. Please set fork='true'. " );
         }
 
         if( fork )
@@ -300,10 +300,10 @@ public class Java extends Task
      *
      * @param classname Description of Parameter
      * @param args Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void run( String classname, Vector args )
-        throws BuildException
+        throws TaskException
     {
         CommandlineJava cmdj = new CommandlineJava();
         cmdj.setClassname( classname );
@@ -319,10 +319,10 @@ public class Java extends Task
      * line application.
      *
      * @param command Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void run( CommandlineJava command )
-        throws BuildException
+        throws TaskException
     {
         ExecuteJava exe = new ExecuteJava();
         exe.setJavaCommand( command.getJavaCommand() );
@@ -337,7 +337,7 @@ public class Java extends Task
             }
             catch( IOException io )
             {
-                throw new BuildException( "Error", io );
+                throw new TaskException( "Error", io );
             }
             finally
             {
@@ -358,10 +358,10 @@ public class Java extends Task
      *
      * @param command Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private int run( String[] command )
-        throws BuildException
+        throws TaskException
     {
         FileOutputStream fos = null;
         try
@@ -387,7 +387,7 @@ public class Java extends Task
             }
             else if( !dir.exists() || !dir.isDirectory() )
             {
-                throw new BuildException( dir.getAbsolutePath() + " is not a valid directory");
+                throw new TaskException( dir.getAbsolutePath() + " is not a valid directory" );
             }
 
             exe.setWorkingDirectory( dir );
@@ -399,12 +399,12 @@ public class Java extends Task
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
         catch( IOException io )
         {
-            throw new BuildException( "Error", io );
+            throw new TaskException( "Error", io );
         }
         finally
         {

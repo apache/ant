@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.SequenceInputStream;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 public abstract class P4HandlerAdapter implements P4Handler
 {
@@ -49,9 +50,8 @@ public abstract class P4HandlerAdapter implements P4Handler
 
     public abstract void process( String line );
 
-
     public void start()
-        throws BuildException
+        throws TaskException
     {
 
         try
@@ -68,7 +68,7 @@ public abstract class P4HandlerAdapter implements P4Handler
 
             BufferedReader input = new BufferedReader(
                 new InputStreamReader(
-                new SequenceInputStream( is, es ) ) );
+                    new SequenceInputStream( is, es ) ) );
 
             String line;
             while( ( line = input.readLine() ) != null )
@@ -81,9 +81,11 @@ public abstract class P4HandlerAdapter implements P4Handler
         }
         catch( Exception e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 
-    public void stop() { }
+    public void stop()
+    {
+    }
 }

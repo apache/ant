@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.rmic;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
@@ -21,7 +22,7 @@ public class KaffeRmic extends DefaultRmicAdapter
 {
 
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         getRmic().log( "Using Kaffe rmic", Project.MSG_VERBOSE );
         Commandline cmd = setupRmicCommand();
@@ -34,25 +35,25 @@ public class KaffeRmic extends DefaultRmicAdapter
             Object rmic = cons.newInstance( new Object[]{cmd.getArguments()} );
             Method doRmic = c.getMethod( "run", null );
             String str[] = cmd.getArguments();
-            Boolean ok = ( Boolean )doRmic.invoke( rmic, null );
+            Boolean ok = (Boolean)doRmic.invoke( rmic, null );
 
             return ok.booleanValue();
         }
         catch( ClassNotFoundException ex )
         {
-            throw new BuildException( "Cannot use Kaffe rmic, as it is not available" +
-                " A common solution is to set the environment variable" +
-                " JAVA_HOME or CLASSPATH." );
+            throw new TaskException( "Cannot use Kaffe rmic, as it is not available" +
+                                     " A common solution is to set the environment variable" +
+                                     " JAVA_HOME or CLASSPATH." );
         }
         catch( Exception ex )
         {
-            if( ex instanceof BuildException )
+            if( ex instanceof TaskException )
             {
-                throw ( BuildException )ex;
+                throw (TaskException)ex;
             }
             else
             {
-                throw new BuildException( "Error starting Kaffe rmic: ", ex );
+                throw new TaskException( "Error starting Kaffe rmic: ", ex );
             }
         }
     }

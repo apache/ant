@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.util.Hashtable;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -96,20 +97,20 @@ public class WaitFor extends ConditionBase
      * Check repeatedly for the specified conditions until they become true or
      * the timeout expires.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( countConditions() > 1 )
         {
-            throw new BuildException( "You must not nest more than one condition into <waitfor>" );
+            throw new TaskException( "You must not nest more than one condition into <waitfor>" );
         }
         if( countConditions() < 1 )
         {
-            throw new BuildException( "You must nest a condition into <waitfor>" );
+            throw new TaskException( "You must nest a condition into <waitfor>" );
         }
-        Condition c = ( Condition )getConditions().nextElement();
+        Condition c = (Condition)getConditions().nextElement();
 
         maxWaitMillis *= maxWaitMultiplier;
         checkEveryMillis *= checkEveryMultiplier;
@@ -149,7 +150,7 @@ public class WaitFor extends ConditionBase
 
         private final static String[] units = {
             MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK
-            };
+        };
 
         private Hashtable timeTable = new Hashtable();
 
@@ -166,7 +167,7 @@ public class WaitFor extends ConditionBase
         public long getMultiplier()
         {
             String key = getValue().toLowerCase();
-            Long l = ( Long )timeTable.get( key );
+            Long l = (Long)timeTable.get( key );
             return l.longValue();
         }
 

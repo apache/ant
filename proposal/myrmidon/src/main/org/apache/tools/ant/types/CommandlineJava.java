@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
+import org.apache.tools.ant.Project;
 
 /**
  * A representation of a Java command line that is nothing more than a composite
@@ -76,7 +77,7 @@ public class CommandlineJava implements Cloneable
     }
 
     public void setSystemProperties()
-        throws BuildException
+        throws TaskException
     {
         sysProperties.setSystem();
     }
@@ -116,17 +117,18 @@ public class CommandlineJava implements Cloneable
      * @return the list of all arguments necessary to run the vm.
      */
     public String[] getCommandline()
+        throws TaskException
     {
-        String[] result = new String[size()];
+        String[] result = new String[ size() ];
         int pos = 0;
         String[] vmArgs = getActualVMCommand().getCommandline();
         // first argument is the java.exe path...
-        result[pos++] = vmArgs[0];
+        result[ pos++ ] = vmArgs[ 0 ];
 
         // -jar must be the first option in the command line.
         if( executeJar )
         {
-            result[pos++] = "-jar";
+            result[ pos++ ] = "-jar";
         }
         // next follows the vm options
         System.arraycopy( vmArgs, 1, result, pos, vmArgs.length - 1 );
@@ -135,20 +137,20 @@ public class CommandlineJava implements Cloneable
         if( sysProperties.size() > 0 )
         {
             System.arraycopy( sysProperties.getVariables(), 0,
-                result, pos, sysProperties.size() );
+                              result, pos, sysProperties.size() );
             pos += sysProperties.size();
         }
         // classpath is a vm option too..
         Path fullClasspath = classpath != null ? classpath.concatSystemClasspath( "ignore" ) : null;
         if( fullClasspath != null && fullClasspath.toString().trim().length() > 0 )
         {
-            result[pos++] = "-classpath";
-            result[pos++] = fullClasspath.toString();
+            result[ pos++ ] = "-classpath";
+            result[ pos++ ] = fullClasspath.toString();
         }
         // this is the classname to run as well as its arguments.
         // in case of 'executeJar', the executable is a jar file.
         System.arraycopy( javaCommand.getCommandline(), 0,
-            result, pos, javaCommand.size() );
+                          result, pos, javaCommand.size() );
         return result;
     }
 
@@ -202,13 +204,13 @@ public class CommandlineJava implements Cloneable
     public Object clone()
     {
         CommandlineJava c = new CommandlineJava();
-        c.vmCommand = ( Commandline )vmCommand.clone();
-        c.javaCommand = ( Commandline )javaCommand.clone();
-        c.sysProperties = ( SysProperties )sysProperties.clone();
+        c.vmCommand = (Commandline)vmCommand.clone();
+        c.javaCommand = (Commandline)javaCommand.clone();
+        c.sysProperties = (SysProperties)sysProperties.clone();
         c.maxMemory = maxMemory;
         if( classpath != null )
         {
-            c.classpath = ( Path )classpath.clone();
+            c.classpath = (Path)classpath.clone();
         }
         c.vmVersion = vmVersion;
         c.executeJar = executeJar;
@@ -235,7 +237,7 @@ public class CommandlineJava implements Cloneable
     }
 
     public void restoreSystemProperties()
-        throws BuildException
+        throws TaskException
     {
         sysProperties.restoreSystem();
     }
@@ -247,6 +249,7 @@ public class CommandlineJava implements Cloneable
      * @see #getCommandline()
      */
     public int size()
+        throws TaskException
     {
         int size = getActualVMCommand().size() + javaCommand.size() + sysProperties.size();
         // classpath is "-classpath <classpath>" -> 2 args
@@ -263,15 +266,21 @@ public class CommandlineJava implements Cloneable
         return size;
     }
 
-
     public String toString()
     {
-        return Commandline.toString( getCommandline() );
+        try
+        {
+            return Commandline.toString( getCommandline() );
+        }
+        catch( TaskException e )
+        {
+            return e.toString();
+        }
     }
 
     private Commandline getActualVMCommand()
     {
-        Commandline actualVMCommand = ( Commandline )vmCommand.clone();
+        Commandline actualVMCommand = (Commandline)vmCommand.clone();
         if( maxMemory != null )
         {
             if( vmVersion.startsWith( "1.1" ) )
@@ -298,7 +307,7 @@ public class CommandlineJava implements Cloneable
         // PATH.
         java.io.File jExecutable =
             new java.io.File( System.getProperty( "java.home" ) +
-            "/../bin/java" + extension );
+                              "/../bin/java" + extension );
 
         if( jExecutable.exists() && !Os.isFamily( "netware" ) )
         {
@@ -323,27 +332,27 @@ public class CommandlineJava implements Cloneable
         Properties sys = null;
 
         public void setSystem()
-            throws BuildException
+            throws TaskException
         {
             try
             {
                 Properties p = new Properties( sys = System.getProperties() );
 
-                for( Enumeration e = variables.elements(); e.hasMoreElements();  )
+                for( Enumeration e = variables.elements(); e.hasMoreElements(); )
                 {
-                    Environment.Variable v = ( Environment.Variable )e.nextElement();
+                    Environment.Variable v = (Environment.Variable)e.nextElement();
                     p.put( v.getKey(), v.getValue() );
                 }
                 System.setProperties( p );
             }
             catch( SecurityException e )
             {
-                throw new BuildException( "Cannot modify system properties", e );
+                throw new TaskException( "Cannot modify system properties", e );
             }
         }
 
         public String[] getVariables()
-            throws BuildException
+            throws TaskException
         {
             String props[] = super.getVariables();
 
@@ -352,7 +361,7 @@ public class CommandlineJava implements Cloneable
 
             for( int i = 0; i < props.length; i++ )
             {
-                props[i] = "-D" + props[i];
+                props[ i ] = "-D" + props[ i ];
             }
             return props;
         }
@@ -361,8 +370,8 @@ public class CommandlineJava implements Cloneable
         {
             try
             {
-                SysProperties c = ( SysProperties )super.clone();
-                c.variables = ( Vector )variables.clone();
+                SysProperties c = (SysProperties)super.clone();
+                c.variables = (Vector)variables.clone();
                 return c;
             }
             catch( CloneNotSupportedException e )
@@ -372,10 +381,10 @@ public class CommandlineJava implements Cloneable
         }
 
         public void restoreSystem()
-            throws BuildException
+            throws TaskException
         {
             if( sys == null )
-                throw new BuildException( "Unbalanced nesting of SysProperties" );
+                throw new TaskException( "Unbalanced nesting of SysProperties" );
 
             try
             {
@@ -384,7 +393,7 @@ public class CommandlineJava implements Cloneable
             }
             catch( SecurityException e )
             {
-                throw new BuildException( "Cannot modify system properties", e );
+                throw new TaskException( "Cannot modify system properties", e );
             }
         }
 

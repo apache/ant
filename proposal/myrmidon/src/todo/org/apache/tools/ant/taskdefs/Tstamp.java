@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -54,7 +55,7 @@ public class Tstamp extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -72,14 +73,14 @@ public class Tstamp extends Task
             Enumeration i = customFormats.elements();
             while( i.hasMoreElements() )
             {
-                CustomFormat cts = ( CustomFormat )i.nextElement();
+                CustomFormat cts = (CustomFormat)i.nextElement();
                 cts.execute( project, d, location );
             }
 
         }
         catch( Exception e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 
@@ -104,14 +105,14 @@ public class Tstamp extends Task
             WEEK,
             MONTH,
             YEAR
-            };
+        };
 
         private Hashtable calendarFields = new Hashtable();
 
         public Unit()
         {
             calendarFields.put( MILLISECOND,
-                new Integer( Calendar.MILLISECOND ) );
+                                new Integer( Calendar.MILLISECOND ) );
             calendarFields.put( SECOND, new Integer( Calendar.SECOND ) );
             calendarFields.put( MINUTE, new Integer( Calendar.MINUTE ) );
             calendarFields.put( HOUR, new Integer( Calendar.HOUR_OF_DAY ) );
@@ -124,7 +125,7 @@ public class Tstamp extends Task
         public int getCalendarField()
         {
             String key = getValue().toLowerCase();
-            Integer i = ( Integer )calendarFields.get( key );
+            Integer i = (Integer)calendarFields.get( key );
             return i.intValue();
         }
 
@@ -165,7 +166,7 @@ public class Tstamp extends Task
                         country = st.nextToken();
                         if( st.hasMoreElements() )
                         {
-                            throw new BuildException( "bad locale format" );
+                            throw new TaskException( "bad locale format" );
                         }
                     }
                 }
@@ -176,7 +177,7 @@ public class Tstamp extends Task
             }
             catch( NoSuchElementException e )
             {
-                throw new BuildException( "bad locale format", e );
+                throw new TaskException( "bad locale format", e );
             }
         }
 
@@ -209,12 +210,12 @@ public class Tstamp extends Task
         {
             if( propertyName == null )
             {
-                throw new BuildException( "property attribute must be provided" );
+                throw new TaskException( "property attribute must be provided" );
             }
 
             if( pattern == null )
             {
-                throw new BuildException( "pattern attribute must be provided" );
+                throw new TaskException( "pattern attribute must be provided" );
             }
 
             SimpleDateFormat sdf;

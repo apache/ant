@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -86,22 +87,22 @@ public class DDCreator extends MatchingTask
      * interfaces to be available in the classpath, this also avoids having to
      * start ant with the class path of the project it is building.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception TaskException if someting goes wrong with the build
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( descriptorDirectory == null ||
             !descriptorDirectory.isDirectory() )
         {
-            throw new BuildException( "descriptors directory " + descriptorDirectory.getPath() +
-                " is not valid" );
+            throw new TaskException( "descriptors directory " + descriptorDirectory.getPath() +
+                                     " is not valid" );
         }
         if( generatedFilesDirectory == null ||
             !generatedFilesDirectory.isDirectory() )
         {
-            throw new BuildException( "dest directory " + generatedFilesDirectory.getPath() +
-                " is not valid" );
+            throw new TaskException( "dest directory " + generatedFilesDirectory.getPath() +
+                                     " is not valid" );
         }
 
         String args = descriptorDirectory + " " + generatedFilesDirectory;
@@ -113,12 +114,12 @@ public class DDCreator extends MatchingTask
 
         for( int i = 0; i < files.length; ++i )
         {
-            args += " " + files[i];
+            args += " " + files[ i ];
         }
 
         String systemClassPath = System.getProperty( "java.class.path" );
         String execClassPath = project.translatePath( systemClassPath + ":" + classpath );
-        Java ddCreatorTask = ( Java )project.createTask( "java" );
+        Java ddCreatorTask = (Java)project.createTask( "java" );
         ddCreatorTask.setTaskName( getTaskName() );
         ddCreatorTask.setFork( true );
         ddCreatorTask.setClassname( "org.apache.tools.ant.taskdefs.optional.ejb.DDCreatorHelper" );
@@ -127,7 +128,7 @@ public class DDCreator extends MatchingTask
         ddCreatorTask.setClasspath( new Path( project, execClassPath ) );
         if( ddCreatorTask.executeJava() != 0 )
         {
-            throw new BuildException( "Execution of ddcreator helper failed" );
+            throw new TaskException( "Execution of ddcreator helper failed" );
         }
     }
 }

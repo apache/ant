@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -229,32 +230,32 @@ public class Javah extends Task
     /**
      * Executes the task.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         // first off, make sure that we've got a srcdir
 
         if( ( cls == null ) && ( classes.size() == 0 ) )
         {
-            throw new BuildException( "class attribute must be set!" );
+            throw new TaskException( "class attribute must be set!" );
         }
 
         if( ( cls != null ) && ( classes.size() > 0 ) )
         {
-            throw new BuildException( "set class attribute or class element, not both." );
+            throw new TaskException( "set class attribute or class element, not both." );
         }
 
         if( destDir != null )
         {
             if( !destDir.isDirectory() )
             {
-                throw new BuildException( "destination directory \"" + destDir + "\" does not exist or is not a directory" );
+                throw new TaskException( "destination directory \"" + destDir + "\" does not exist or is not a directory" );
             }
             if( outputFile != null )
             {
-                throw new BuildException( "destdir and outputFile are mutually exclusive");
+                throw new TaskException( "destdir and outputFile are mutually exclusive" );
             }
         }
 
@@ -290,7 +291,7 @@ public class Javah extends Task
     {
         int n = 0;
         log( "Compilation args: " + cmd.toString(),
-            Project.MSG_VERBOSE );
+             Project.MSG_VERBOSE );
 
         StringBuffer niceClassList = new StringBuffer();
         if( cls != null )
@@ -308,7 +309,7 @@ public class Javah extends Task
         Enumeration enum = classes.elements();
         while( enum.hasMoreElements() )
         {
-            ClassArgument arg = ( ClassArgument )enum.nextElement();
+            ClassArgument arg = (ClassArgument)enum.nextElement();
             String aClass = arg.getName();
             cmd.createArgument().setValue( aClass );
             niceClassList.append( "    " + aClass + lSep );
@@ -381,7 +382,7 @@ public class Javah extends Task
         {
             if( !old )
             {
-                throw new BuildException( "stubs only available in old mode." );
+                throw new TaskException( "stubs only available in old mode." );
             }
             cmd.createArgument().setValue( "-stubs" );
         }
@@ -402,11 +403,11 @@ public class Javah extends Task
      * Peforms a compile using the classic compiler that shipped with JDK 1.1
      * and 1.2.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
 
     private void doClassicCompile()
-        throws BuildException
+        throws TaskException
     {
         Commandline cmd = setupJavahCommand();
 
@@ -416,7 +417,7 @@ public class Javah extends Task
          * sun.tools.javac.Main compiler =
          * new sun.tools.javac.Main(new LogOutputStream(this, Project.MSG_WARN), "javac");
          * if (!compiler.compile(cmd.getArguments())) {
-         * throw new BuildException("Compile failed");
+         * throw new TaskException("Compile failed");
          * }
          */
         try
@@ -429,20 +430,20 @@ public class Javah extends Task
             com.sun.tools.javah.Main main = new com.sun.tools.javah.Main( cmd.getArguments() );
             main.run();
         }
-        //catch (ClassNotFoundException ex) {
-        //    throw new BuildException("Cannot use javah because it is not available"+
-        //                             " A common solution is to set the environment variable"+
-        //                             " JAVA_HOME to your jdk directory.", location);
-        //}
+            //catch (ClassNotFoundException ex) {
+            //    throw new TaskException("Cannot use javah because it is not available"+
+            //                             " A common solution is to set the environment variable"+
+            //                             " JAVA_HOME to your jdk directory.", location);
+            //}
         catch( Exception ex )
         {
-            if( ex instanceof BuildException )
+            if( ex instanceof TaskException )
             {
-                throw ( BuildException )ex;
+                throw (TaskException)ex;
             }
             else
             {
-                throw new BuildException( "Error starting javah: ", ex );
+                throw new TaskException( "Error starting javah: ", ex );
             }
         }
     }
@@ -451,7 +452,9 @@ public class Javah extends Task
     {
         private String name;
 
-        public ClassArgument() { }
+        public ClassArgument()
+        {
+        }
 
         public void setName( String name )
         {

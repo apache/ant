@@ -6,12 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
-
 
 /**
  * Implements a single threaded task execution. <p>
@@ -21,7 +21,7 @@ import org.apache.tools.ant.TaskContainer;
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  */
 public class Sequential extends Task
-     implements TaskContainer
+    implements TaskContainer
 {
 
     /**
@@ -46,14 +46,14 @@ public class Sequential extends Task
     /**
      * Execute all nestedTasks.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
-        for( Enumeration e = nestedTasks.elements(); e.hasMoreElements();  )
+        for( Enumeration e = nestedTasks.elements(); e.hasMoreElements(); )
         {
-            Task nestedTask = ( Task )e.nextElement();
+            Task nestedTask = (Task)e.nextElement();
             nestedTask.perform();
         }
     }

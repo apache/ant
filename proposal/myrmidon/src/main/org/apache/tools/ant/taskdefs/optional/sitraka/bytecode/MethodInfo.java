@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
@@ -24,7 +25,9 @@ public final class MethodInfo
     private String descriptor;
     private String name;
 
-    public MethodInfo() { }
+    public MethodInfo()
+    {
+    }
 
     public String getAccess()
     {
@@ -73,7 +76,7 @@ public final class MethodInfo
         String[] params = getParametersType();
         for( int i = 0; i < params.length; i++ )
         {
-            buf.append( params[i] );
+            buf.append( params[ i ] );
             if( i != params.length - 1 )
             {
                 buf.append( ", " );

@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 
+import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.Task;
 
 /**
  * Creates the necessary compiler adapter, given basic criteria.
@@ -22,7 +22,9 @@ public class CompilerAdapterFactory
     /**
      * This is a singlton -- can't create instances!!
      */
-    private CompilerAdapterFactory() { }
+    private CompilerAdapterFactory()
+    {
+    }
 
     /**
      * Based on the parameter passed in, this method creates the necessary
@@ -39,11 +41,11 @@ public class CompilerAdapterFactory
      *      classname of the compiler's adapter.
      * @param task a task to log through.
      * @return The Compiler value
-     * @throws BuildException if the compiler type could not be resolved into a
+     * @throws TaskException if the compiler type could not be resolved into a
      *      compiler adapter.
      */
     public static CompilerAdapter getCompiler( String compilerType, Task task )
-        throws BuildException
+        throws TaskException
     {
         /*
          * If I've done things right, this should be the extent of the
@@ -62,32 +64,32 @@ public class CompilerAdapterFactory
      *
      * @param className The fully qualified classname to be created.
      * @return Description of the Returned Value
-     * @throws BuildException This is the fit that is thrown if className isn't
+     * @throws TaskException This is the fit that is thrown if className isn't
      *      an instance of CompilerAdapter.
      */
     private static CompilerAdapter resolveClassName( String className )
-        throws BuildException
+        throws TaskException
     {
         try
         {
             Class c = Class.forName( className );
             Object o = c.newInstance();
-            return ( CompilerAdapter )o;
+            return (CompilerAdapter)o;
         }
         catch( ClassNotFoundException cnfe )
         {
-            throw new BuildException( className + " can\'t be found.", cnfe );
+            throw new TaskException( className + " can\'t be found.", cnfe );
         }
         catch( ClassCastException cce )
         {
-            throw new BuildException( className + " isn\'t the classname of "
-                 + "a compiler adapter.", cce );
+            throw new TaskException( className + " isn\'t the classname of "
+                                     + "a compiler adapter.", cce );
         }
         catch( Throwable t )
         {
             // for all other possibilities
-            throw new BuildException( className + " caused an interesting "
-                 + "exception.", t );
+            throw new TaskException( className + " caused an interesting "
+                                     + "exception.", t );
         }
     }
 

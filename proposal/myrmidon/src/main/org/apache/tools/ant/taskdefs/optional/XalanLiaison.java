@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.xalan.xslt.XSLTInputSource;
 import org.apache.xalan.xslt.XSLTProcessor;
@@ -39,7 +40,7 @@ public class XalanLiaison implements XSLTLiaison
         throws Exception
     {
         if( !type.equals( "xml" ) )
-            throw new BuildException( "Unsupported output type: " + type );
+            throw new TaskException( "Unsupported output type: " + type );
     }
 
     public void setStylesheet( File stylesheet )
@@ -86,7 +87,8 @@ public class XalanLiaison implements XSLTLiaison
                 }
             }
             catch( IOException ignored )
-            {}
+            {
+            }
             try
             {
                 if( fis != null )
@@ -95,7 +97,8 @@ public class XalanLiaison implements XSLTLiaison
                 }
             }
             catch( IOException ignored )
-            {}
+            {
+            }
             try
             {
                 if( fos != null )
@@ -104,7 +107,8 @@ public class XalanLiaison implements XSLTLiaison
                 }
             }
             catch( IOException ignored )
-            {}
+            {
+            }
         }
     }
 }//-- XalanLiaison

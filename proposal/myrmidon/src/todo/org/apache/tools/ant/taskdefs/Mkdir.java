@@ -6,10 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
-import java.io.File;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 
+import java.io.File;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.Task;
 
 /**
  * Creates a given directory.
@@ -28,16 +28,16 @@ public class Mkdir extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( dir == null )
         {
-            throw new BuildException( "dir attribute is required" );
+            throw new TaskException( "dir attribute is required" );
         }
 
         if( dir.isFile() )
         {
-            throw new BuildException( "Unable to create directory as a file already exists with that name: " + dir.getAbsolutePath() );
+            throw new TaskException( "Unable to create directory as a file already exists with that name: " + dir.getAbsolutePath() );
         }
 
         if( !dir.exists() )
@@ -47,7 +47,7 @@ public class Mkdir extends Task
             {
                 String msg = "Directory " + dir.getAbsolutePath() + " creation was not " +
                     "successful for an unknown reason";
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
             log( "Created dir: " + dir.getAbsolutePath() );
         }

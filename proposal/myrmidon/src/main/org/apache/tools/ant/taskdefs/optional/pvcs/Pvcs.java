@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.pvcs;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -19,7 +20,7 @@ import java.text.ParseException;
 import java.util.Enumeration;
 import java.util.Random;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
@@ -314,17 +315,17 @@ public class Pvcs extends org.apache.tools.ant.Task
     }
 
     /**
-     * @exception org.apache.tools.ant.BuildException Something is stopping the
+     * @exception org.apache.tools.ant.TaskException Something is stopping the
      *      build...
      */
     public void execute()
-        throws org.apache.tools.ant.BuildException
+        throws org.apache.tools.ant.TaskException
     {
         Project aProj = getProject();
         int result = 0;
 
         if( repository == null || repository.trim().equals( "" ) )
-            throw new BuildException( "Required argument repository not specified" );
+            throw new TaskException( "Required argument repository not specified" );
 
         // Check workspace exists
         // Launch PCLI listversionedfiles -z -aw
@@ -351,9 +352,9 @@ public class Pvcs extends org.apache.tools.ant.Task
             Enumeration e = getPvcsprojects().elements();
             while( e.hasMoreElements() )
             {
-                String projectName = ( ( PvcsProject )e.nextElement() ).getName();
+                String projectName = ( (PvcsProject)e.nextElement() ).getName();
                 if( projectName == null || ( projectName.trim() ).equals( "" ) )
-                    throw new BuildException( "name is a required attribute of pvcsproject" );
+                    throw new TaskException( "name is a required attribute of pvcsproject" );
                 commandLine.createArgument().setValue( projectName );
             }
         }
@@ -370,11 +371,11 @@ public class Pvcs extends org.apache.tools.ant.Task
             if( result != 0 && !ignorerc )
             {
                 String msg = "Failed executing: " + commandLine.toString();
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
 
             if( !tmp.exists() )
-                throw new BuildException( "Communication between ant and pvcs failed. No output generated from executing PVCS commandline interface \"pcli\" and \"get\"" );
+                throw new TaskException( "Communication between ant and pvcs failed. No output generated from executing PVCS commandline interface \"pcli\" and \"get\"" );
 
             // Create folders in workspace
             log( "Creating folders", Project.MSG_INFO );
@@ -412,24 +413,24 @@ public class Pvcs extends org.apache.tools.ant.Task
             if( result != 0 && !ignorerc )
             {
                 String msg = "Failed executing: " + commandLine.toString() + ". Return code was " + result;
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
 
         }
         catch( FileNotFoundException e )
         {
             String msg = "Failed executing: " + commandLine.toString() + ". Exception: " + e.getMessage();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         catch( IOException e )
         {
             String msg = "Failed executing: " + commandLine.toString() + ". Exception: " + e.getMessage();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         catch( ParseException e )
         {
             String msg = "Failed executing: " + commandLine.toString() + ". Exception: " + e.getMessage();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         finally
         {
@@ -443,7 +444,6 @@ public class Pvcs extends org.apache.tools.ant.Task
             }
         }
     }
-
 
     protected int runCmd( Commandline cmd, ExecuteStreamHandler out )
     {
@@ -459,7 +459,7 @@ public class Pvcs extends org.apache.tools.ant.Task
         catch( java.io.IOException e )
         {
             String msg = "Failed executing: " + cmd.toString() + ". Exception: " + e.getMessage();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
     }
 
@@ -495,7 +495,7 @@ public class Pvcs extends org.apache.tools.ant.Task
                 line.startsWith( getLineStart() ) )
             {
                 Object[] objs = mf.parse( line );
-                String f = ( String )objs[1];
+                String f = (String)objs[ 1 ];
                 // Extract the name of the directory from the filename
                 int index = f.lastIndexOf( File.separator );
                 if( index > -1 )
@@ -521,7 +521,7 @@ public class Pvcs extends org.apache.tools.ant.Task
                 else
                 {
                     log( "File separator problem with " + line,
-                        Project.MSG_WARN );
+                         Project.MSG_WARN );
                 }
             }
             else

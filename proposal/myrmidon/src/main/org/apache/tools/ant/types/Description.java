@@ -7,7 +7,6 @@
  */
 package org.apache.tools.ant.types;
 
-
 /**
  * Description is used to provide a project-wide description element (that is, a
  * description that applies to a buildfile as a whole). If present, the

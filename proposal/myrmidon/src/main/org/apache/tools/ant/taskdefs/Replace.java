@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -21,7 +22,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Properties;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
@@ -59,7 +60,6 @@ public class Replace extends MatchingTask
     private int fileCount;
     private int replaceCount;
 
-
     /**
      * Set the source files path when using matching tasks.
      *
@@ -79,7 +79,6 @@ public class Replace extends MatchingTask
     {
         this.encoding = encoding;
     }
-
 
     /**
      * Set the source file.
@@ -133,7 +132,7 @@ public class Replace extends MatchingTask
     }
 
     public Properties getProperties( File propertyFile )
-        throws BuildException
+        throws TaskException
     {
         Properties properties = new Properties();
 
@@ -144,12 +143,12 @@ public class Replace extends MatchingTask
         catch( FileNotFoundException e )
         {
             String message = "Property file (" + propertyFile.getPath() + ") not found.";
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
         catch( IOException e )
         {
             String message = "Property file (" + propertyFile.getPath() + ") cannot be loaded.";
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
 
         return properties;
@@ -194,10 +193,10 @@ public class Replace extends MatchingTask
     /**
      * Do the execution.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         validateAttributes();
 
@@ -222,7 +221,7 @@ public class Replace extends MatchingTask
 
             for( int i = 0; i < srcs.length; i++ )
             {
-                File file = new File( dir, srcs[i] );
+                File file = new File( dir, srcs[ i ] );
                 processFile( file );
             }
         }
@@ -236,47 +235,47 @@ public class Replace extends MatchingTask
     /**
      * Validate attributes provided for this task in .xml build file.
      *
-     * @exception BuildException if any supplied attribute is invalid or any
+     * @exception TaskException if any supplied attribute is invalid or any
      *      mandatory attribute is missing
      */
     public void validateAttributes()
-        throws BuildException
+        throws TaskException
     {
         if( src == null && dir == null )
         {
             String message = "Either the file or the dir attribute " + "must be specified";
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
         if( propertyFile != null && !propertyFile.exists() )
         {
             String message = "Property file " + propertyFile.getPath() + " does not exist.";
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
         if( token == null && replacefilters.size() == 0 )
         {
             String message = "Either token or a nested replacefilter "
-                 + "must be specified";
-            throw new BuildException( message);
+                + "must be specified";
+            throw new TaskException( message );
         }
         if( token != null && "".equals( token.getText() ) )
         {
             String message = "The token attribute must not be an empty string.";
-            throw new BuildException( message );
+            throw new TaskException( message );
         }
     }
 
     /**
      * Validate nested elements.
      *
-     * @exception BuildException if any supplied attribute is invalid or any
+     * @exception TaskException if any supplied attribute is invalid or any
      *      mandatory attribute is missing
      */
     public void validateReplacefilters()
-        throws BuildException
+        throws TaskException
     {
         for( int i = 0; i < replacefilters.size(); i++ )
         {
-            Replacefilter element = ( Replacefilter )replacefilters.elementAt( i );
+            Replacefilter element = (Replacefilter)replacefilters.elementAt( i );
             element.validate();
         }
     }
@@ -286,27 +285,27 @@ public class Replace extends MatchingTask
      * on a temporary file which then replaces the original file.
      *
      * @param src the source file
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void processFile( File src )
-        throws BuildException
+        throws TaskException
     {
         if( !src.exists() )
         {
-            throw new BuildException( "Replace: source file " + src.getPath() + " doesn't exist" );
+            throw new TaskException( "Replace: source file " + src.getPath() + " doesn't exist" );
         }
 
         File temp = fileUtils.createTempFile( "rep", ".tmp",
-            fileUtils.getParentFile( src ) );
+                                              fileUtils.getParentFile( src ) );
 
         Reader reader = null;
         Writer writer = null;
         try
         {
             reader = encoding == null ? new FileReader( src )
-                 : new InputStreamReader( new FileInputStream( src ), encoding );
+                : new InputStreamReader( new FileInputStream( src ), encoding );
             writer = encoding == null ? new FileWriter( temp )
-                 : new OutputStreamWriter( new FileOutputStream( temp ), encoding );
+                : new OutputStreamWriter( new FileOutputStream( temp ), encoding );
 
             BufferedReader br = new BufferedReader( reader );
             BufferedWriter bw = new BufferedWriter( writer );
@@ -316,7 +315,7 @@ public class Replace extends MatchingTask
             //   when multibyte characters exist in the source file
             //   but then again, it might be smaller than needed on
             //   platforms like Windows where length can't be trusted
-            int fileLengthInBytes = ( int )( src.length() );
+            int fileLengthInBytes = (int)( src.length() );
             StringBuffer tmpBuf = new StringBuffer( fileLengthInBytes );
             int readChar = 0;
             int totread = 0;
@@ -327,7 +326,7 @@ public class Replace extends MatchingTask
                 {
                     break;
                 }
-                tmpBuf.append( ( char )readChar );
+                tmpBuf.append( (char)readChar );
                 totread++;
             }
 
@@ -381,8 +380,8 @@ public class Replace extends MatchingTask
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "IOException in " + src + " - " +
-                ioe.getClass().getName() + ":" + ioe.getMessage(), ioe );
+            throw new TaskException( "IOException in " + src + " - " +
+                                     ioe.getClass().getName() + ":" + ioe.getMessage(), ioe );
         }
         finally
         {
@@ -393,7 +392,8 @@ public class Replace extends MatchingTask
                     reader.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
             if( writer != null )
             {
@@ -402,7 +402,8 @@ public class Replace extends MatchingTask
                     writer.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
             if( temp != null )
             {
@@ -418,7 +419,7 @@ public class Replace extends MatchingTask
 
         for( int i = 0; i < replacefilters.size(); i++ )
         {
-            Replacefilter filter = ( Replacefilter )replacefilters.elementAt( i );
+            Replacefilter filter = (Replacefilter)replacefilters.elementAt( i );
 
             //for each found token, replace with value
             log( "Replacing in " + filename + ": " + filter.getToken() + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE );
@@ -518,7 +519,7 @@ public class Replace extends MatchingTask
         {
             if( property != null )
             {
-                return ( String )properties.getProperty( property );
+                return (String)properties.getProperty( property );
             }
             else if( value != null )
             {
@@ -546,26 +547,26 @@ public class Replace extends MatchingTask
         }
 
         public void validate()
-            throws BuildException
+            throws TaskException
         {
             //Validate mandatory attributes
             if( token == null )
             {
                 String message = "token is a mandatory attribute " + "of replacefilter.";
-                throw new BuildException( message );
+                throw new TaskException( message );
             }
 
             if( "".equals( token ) )
             {
                 String message = "The token attribute must not be an empty string.";
-                throw new BuildException( message );
+                throw new TaskException( message );
             }
 
             //value and property are mutually exclusive attributes
             if( ( value != null ) && ( property != null ) )
             {
                 String message = "Either value or property " + "can be specified, but a replacefilter " + "element cannot have both.";
-                throw new BuildException( message );
+                throw new TaskException( message );
             }
 
             if( ( property != null ) )
@@ -574,7 +575,7 @@ public class Replace extends MatchingTask
                 if( propertyFile == null )
                 {
                     String message = "The replacefilter's property attribute " + "can only be used with the replacetask's " + "propertyFile attribute.";
-                    throw new BuildException( message );
+                    throw new TaskException( message );
                 }
 
                 //Make sure property exists in property file
@@ -582,7 +583,7 @@ public class Replace extends MatchingTask
                     properties.getProperty( property ) == null )
                 {
                     String message = "property \"" + property + "\" was not found in " + propertyFile.getPath();
-                    throw new BuildException( message );
+                    throw new TaskException( message );
                 }
             }
         }

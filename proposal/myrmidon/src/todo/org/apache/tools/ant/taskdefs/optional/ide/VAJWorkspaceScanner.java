@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import com.ibm.ivj.util.base.IvjException;
 import com.ibm.ivj.util.base.Package;
 import com.ibm.ivj.util.base.Project;
@@ -45,11 +46,11 @@ class VAJWorkspaceScanner extends DirectoryScanner
     // Patterns that should be excluded by default.
     private final static String[] DEFAULTEXCLUDES =
         {
-        "IBM*/**",
-        "Java class libraries/**",
-        "Sun class libraries*/**",
-        "JSP Page Compile Generated Code/**",
-        "VisualAge*/**",
+            "IBM*/**",
+            "Java class libraries/**",
+            "Sun class libraries*/**",
+            "JSP Page Compile Generated Code/**",
+            "VisualAge*/**",
         };
 
     // The packages that where found and matched at least
@@ -80,10 +81,10 @@ class VAJWorkspaceScanner extends DirectoryScanner
     public Package[] getIncludedPackages()
     {
         int count = packagesIncluded.size();
-        Package[] packages = new Package[count];
+        Package[] packages = new Package[ count ];
         for( int i = 0; i < count; i++ )
         {
-            packages[i] = ( Package )packagesIncluded.elementAt( i );
+            packages[ i ] = (Package)packagesIncluded.elementAt( i );
         }
         return packages;
     }
@@ -95,14 +96,14 @@ class VAJWorkspaceScanner extends DirectoryScanner
     {
         int excludesLength = excludes == null ? 0 : excludes.length;
         String[] newExcludes;
-        newExcludes = new String[excludesLength + DEFAULTEXCLUDES.length];
+        newExcludes = new String[ excludesLength + DEFAULTEXCLUDES.length ];
         if( excludesLength > 0 )
         {
             System.arraycopy( excludes, 0, newExcludes, 0, excludesLength );
         }
         for( int i = 0; i < DEFAULTEXCLUDES.length; i++ )
         {
-            newExcludes[i + excludesLength] = DEFAULTEXCLUDES[i].
+            newExcludes[ i + excludesLength ] = DEFAULTEXCLUDES[ i ].
                 replace( '/', File.separatorChar ).
                 replace( '\\', File.separatorChar );
         }
@@ -123,11 +124,11 @@ class VAJWorkspaceScanner extends DirectoryScanner
         boolean allProjectsMatch = false;
         for( int i = 0; i < projects.length; i++ )
         {
-            Project project = projects[i];
+            Project project = projects[ i ];
             for( int j = 0; j < includes.length && !allProjectsMatch; j++ )
             {
                 StringTokenizer tok =
-                    new StringTokenizer( includes[j], File.separator );
+                    new StringTokenizer( includes[ j ], File.separator );
                 String projectNamePattern = tok.nextToken();
                 if( projectNamePattern.equals( "**" ) )
                 {
@@ -135,8 +136,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
                     // all projects match
                     allProjectsMatch = true;
                 }
-                else
-                    if( match( projectNamePattern, project.getName() ) )
+                else if( match( projectNamePattern, project.getName() ) )
                 {
                     matchingProjects.addElement( project );
                     break;
@@ -149,7 +149,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
             matchingProjects = new Vector();
             for( int i = 0; i < projects.length; i++ )
             {
-                matchingProjects.addElement( projects[i] );
+                matchingProjects.addElement( projects[ i ] );
             }
         }
 
@@ -165,19 +165,19 @@ class VAJWorkspaceScanner extends DirectoryScanner
         if( includes == null )
         {
             // No includes supplied, so set it to 'matches all'
-            includes = new String[1];
-            includes[0] = "**";
+            includes = new String[ 1 ];
+            includes[ 0 ] = "**";
         }
         if( excludes == null )
         {
-            excludes = new String[0];
+            excludes = new String[ 0 ];
         }
 
         // only scan projects which are included in at least one include pattern
         Vector matchingProjects = findMatchingProjects();
-        for( Enumeration e = matchingProjects.elements(); e.hasMoreElements();  )
+        for( Enumeration e = matchingProjects.elements(); e.hasMoreElements(); )
         {
-            Project project = ( Project )e.nextElement();
+            Project project = (Project)e.nextElement();
             scanProject( project );
         }
     }
@@ -197,14 +197,14 @@ class VAJWorkspaceScanner extends DirectoryScanner
             {
                 for( int i = 0; i < packages.length; i++ )
                 {
-                    Package item = packages[i];
+                    Package item = packages[ i ];
                     // replace '.' by file seperator because the patterns are
                     // using file seperator syntax (and we can use the match
                     // methods this way).
                     String name =
                         project.getName()
-                         + File.separator
-                         + item.getName().replace( '.', File.separatorChar );
+                        + File.separator
+                        + item.getName().replace( '.', File.separatorChar );
                     if( isIncluded( name ) && !isExcluded( name ) )
                     {
                         packagesIncluded.addElement( item );
@@ -214,7 +214,7 @@ class VAJWorkspaceScanner extends DirectoryScanner
         }
         catch( IvjException e )
         {
-            throw VAJLocalUtil.createBuildException( "VA Exception occured: ", e );
+            throw VAJLocalUtil.createTaskException( "VA Exception occured: ", e );
         }
     }
 }

@@ -6,12 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -113,10 +113,10 @@ public class Echo extends Task
     /**
      * Does the work.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception TaskException if someting goes wrong with the build
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( file == null )
         {
@@ -132,7 +132,7 @@ public class Echo extends Task
             }
             catch( IOException ioe )
             {
-                throw new BuildException( "Error", ioe);
+                throw new TaskException( "Error", ioe );
             }
             finally
             {
@@ -143,7 +143,8 @@ public class Echo extends Task
                         out.close();
                     }
                     catch( IOException ioex )
-                    {}
+                    {
+                    }
                 }
             }
         }

@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * P4Delete - checkout file(s) for delete. Example Usage:<br>
@@ -30,12 +31,12 @@ public class P4Delete extends P4Base
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( change != null )
             P4CmdOpts = "-c " + change;
         if( P4View == null )
-            throw new BuildException( "No view specified to delete" );
+            throw new TaskException( "No view specified to delete" );
         execP4Command( "-s delete " + P4CmdOpts + " " + P4View, new SimpleP4OutputHandler( this ) );
     }
 }

@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -189,7 +188,6 @@ public class Cvs extends Task
     public void execute()
         throws TaskException
     {
-
         // XXX: we should use JCVS (www.ice.com/JCVS) instead of command line
         // execution so that we don't rely on having native CVS stuff around (SM)
 

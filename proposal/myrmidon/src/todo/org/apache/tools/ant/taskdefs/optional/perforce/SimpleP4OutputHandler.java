@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 public class SimpleP4OutputHandler extends P4HandlerAdapter
@@ -20,7 +21,7 @@ public class SimpleP4OutputHandler extends P4HandlerAdapter
     }
 
     public void process( String line )
-        throws BuildException
+        throws TaskException
     {
         if( parent.util.match( "/^exit/", line ) )
             return;
@@ -37,7 +38,7 @@ public class SimpleP4OutputHandler extends P4HandlerAdapter
 
         if( parent.util.match( "/error:/", line ) && !parent.util.match( "/up-to-date/", line ) )
         {
-            throw new BuildException( line );
+            throw new TaskException( line );
         }
 
         parent.log( parent.util.substitute( "s/^.*: //", line ), Project.MSG_INFO );

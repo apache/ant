@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * P4Edit - checkout file(s) for edit. Example Usage:<br>
@@ -27,12 +28,12 @@ public class P4Edit extends P4Base
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( change != null )
             P4CmdOpts = "-c " + change;
         if( P4View == null )
-            throw new BuildException( "No view specified to edit" );
+            throw new TaskException( "No view specified to edit" );
         execP4Command( "-s edit " + P4CmdOpts + " " + P4View, new SimpleP4OutputHandler( this ) );
     }
 }

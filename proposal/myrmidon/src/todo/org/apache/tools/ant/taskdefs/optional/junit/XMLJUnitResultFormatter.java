@@ -6,11 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -20,7 +19,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -58,7 +57,9 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     private Element rootElement;
 
-    public XMLJUnitResultFormatter() { }
+    public XMLJUnitResultFormatter()
+    {
+    }
 
     private static DocumentBuilder getDocumentBuilder()
     {
@@ -123,7 +124,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     public void addFailure( Test test, AssertionFailedError t )
     {
-        addFailure( test, ( Throwable )t );
+        addFailure( test, (Throwable)t );
     }
 
     /**
@@ -135,21 +136,21 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
      */
     public void endTest( Test test )
     {
-        Element currentTest = ( Element )testElements.get( test );
-        Long l = ( Long )testStarts.get( test );
+        Element currentTest = (Element)testElements.get( test );
+        Long l = (Long)testStarts.get( test );
         currentTest.setAttribute( ATTR_TIME,
-            "" + ( ( System.currentTimeMillis() - l.longValue() )
-             / 1000.0 ) );
+                                  "" + ( ( System.currentTimeMillis() - l.longValue() )
+                                         / 1000.0 ) );
     }
 
     /**
      * The whole testsuite ended.
      *
      * @param suite Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void endTestSuite( JUnitTest suite )
-        throws BuildException
+        throws TaskException
     {
         rootElement.setAttribute( ATTR_TESTS, "" + suite.runCount() );
         rootElement.setAttribute( ATTR_FAILURES, "" + suite.failureCount() );
@@ -167,7 +168,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
             }
             catch( IOException exc )
             {
-                throw new BuildException( "Unable to write log file", exc );
+                throw new TaskException( "Unable to write log file", exc );
             }
             finally
             {
@@ -180,7 +181,8 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
                             wri.close();
                         }
                         catch( IOException e )
-                        {}
+                        {
+                        }
                     }
                 }
             }
@@ -200,7 +202,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
 
         Element currentTest = doc.createElement( TESTCASE );
         currentTest.setAttribute( ATTR_NAME,
-            JUnitVersionHelper.getTestCaseName( t ) );
+                                  JUnitVersionHelper.getTestCaseName( t ) );
         rootElement.appendChild( currentTest );
         testElements.put( t, currentTest );
     }
@@ -225,7 +227,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
             Enumeration e = props.propertyNames();
             while( e.hasMoreElements() )
             {
-                String name = ( String )e.nextElement();
+                String name = (String)e.nextElement();
                 Element propElement = doc.createElement( PROPERTY );
                 propElement.setAttribute( ATTR_NAME, name );
                 propElement.setAttribute( ATTR_VALUE, props.getProperty( name ) );
@@ -245,7 +247,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         Element currentTest = null;
         if( test != null )
         {
-            currentTest = ( Element )testElements.get( test );
+            currentTest = (Element)testElements.get( test );
         }
         else
         {

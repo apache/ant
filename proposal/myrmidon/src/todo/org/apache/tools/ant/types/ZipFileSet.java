@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 
@@ -39,14 +40,14 @@ public class ZipFileSet extends FileSet
      * being specified.
      *
      * @param dir The new Dir value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setDir( File dir )
-        throws BuildException
+        throws TaskException
     {
         if( srcFile != null )
         {
-            throw new BuildException( "Cannot set both dir and src attributes" );
+            throw new TaskException( "Cannot set both dir and src attributes" );
         }
         else
         {
@@ -86,7 +87,7 @@ public class ZipFileSet extends FileSet
     {
         if( hasDir )
         {
-            throw new BuildException( "Cannot set both dir and src attributes" );
+            throw new TaskException( "Cannot set both dir and src attributes" );
         }
         this.srcFile = srcFile;
     }
@@ -100,6 +101,7 @@ public class ZipFileSet extends FileSet
      * @return The DirectoryScanner value
      */
     public DirectoryScanner getDirectoryScanner( Project p )
+        throws TaskException
     {
         if( isReference() )
         {

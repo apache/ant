@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
@@ -16,7 +17,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -25,7 +26,6 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.w3c.dom.Document;
-
 
 /**
  * Convenient task to run the snapshot merge utility for JProbe Coverage 3.0.
@@ -118,8 +118,9 @@ public class CovReport extends Task
      */
     private Reference reference = null;
 
-
-    public CovReport() { }
+    public CovReport()
+    {
+    }
 
     /**
      * set the filters
@@ -140,7 +141,6 @@ public class CovReport extends Task
     {
         this.format = value.getValue();
     }
-
 
     /**
      * Set the coverage home. it must point to JProbe coverage directories where
@@ -227,7 +227,7 @@ public class CovReport extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         checkOptions();
         try
@@ -238,7 +238,7 @@ public class CovReport extends Task
             String[] params = getParameters();
             for( int i = 0; i < params.length; i++ )
             {
-                cmdl.createArgument().setValue( params[i] );
+                cmdl.createArgument().setValue( params[ i ] );
             }
 
             // use the custom handler for stdin issues
@@ -249,7 +249,7 @@ public class CovReport extends Task
             int exitValue = exec.execute();
             if( exitValue != 0 )
             {
-                throw new BuildException( "JProbe Coverage Report failed (" + exitValue + ")" );
+                throw new TaskException( "JProbe Coverage Report failed (" + exitValue + ")" );
             }
             log( "coveragePath: " + coveragePath, Project.MSG_VERBOSE );
             log( "format: " + format, Project.MSG_VERBOSE );
@@ -261,12 +261,12 @@ public class CovReport extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Failed to execute JProbe Coverage Report.", e );
+            throw new TaskException( "Failed to execute JProbe Coverage Report.", e );
         }
     }
 
-
     protected String[] getParameters()
+        throws TaskException
     {
         Vector v = new Vector();
         if( format != null )
@@ -300,7 +300,7 @@ public class CovReport extends Task
             v.addElement( "-inc_src_text=" + ( includeSource ? "on" : "off" ) );
         }
 
-        String[] params = new String[v.size()];
+        String[] params = new String[ v.size() ];
         v.copyInto( params );
         return params;
     }
@@ -308,28 +308,28 @@ public class CovReport extends Task
     /**
      * check for mandatory options
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void checkOptions()
-        throws BuildException
+        throws TaskException
     {
         if( tofile == null )
         {
-            throw new BuildException( "'tofile' attribute must be set." );
+            throw new TaskException( "'tofile' attribute must be set." );
         }
         if( snapshot == null )
         {
-            throw new BuildException( "'snapshot' attribute must be set." );
+            throw new TaskException( "'snapshot' attribute must be set." );
         }
         if( home == null )
         {
-            throw new BuildException( "'home' attribute must be set to JProbe home directory" );
+            throw new TaskException( "'home' attribute must be set to JProbe home directory" );
         }
         home = new File( home, "coverage" );
         File jar = new File( home, "coverage.jar" );
         if( !jar.exists() )
         {
-            throw new BuildException( "Cannot find Coverage directory: " + home );
+            throw new TaskException( "Cannot find Coverage directory: " + home );
         }
         if( reference != null && !"xml".equals( format ) )
         {
@@ -355,7 +355,6 @@ public class CovReport extends Task
         }
     }
 
-
     public class Reference
     {
         protected Path classPath;
@@ -380,18 +379,18 @@ public class CovReport extends Task
         }
 
         protected void createEnhancedXMLReport()
-            throws BuildException
+            throws TaskException
         {
             // we need a classpath element
             if( classPath == null )
             {
-                throw new BuildException( "Need a 'classpath' element." );
+                throw new TaskException( "Need a 'classpath' element." );
             }
             // and a valid one...
             String[] paths = classPath.list();
             if( paths.length == 0 )
             {
-                throw new BuildException( "Coverage path is invalid. It does not contain any existing path." );
+                throw new TaskException( "Coverage path is invalid. It does not contain any existing path." );
             }
             // and we need at least one filter include/exclude.
             if( filters == null || filters.size() == 0 )
@@ -418,7 +417,7 @@ public class CovReport extends Task
             }
             catch( Exception e )
             {
-                throw new BuildException( "Error while performing enhanced XML report from file " + tofile, e );
+                throw new TaskException( "Error while performing enhanced XML report from file " + tofile, e );
             }
         }
     }

@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
 /**
@@ -23,17 +24,19 @@ public abstract class Unpack extends Task
     protected File source;
 
     public void setDest( String dest )
+        throws TaskException
     {
         this.dest = resolveFile( dest );
     }
 
     public void setSrc( String src )
+        throws TaskException
     {
         source = resolveFile( src );
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         validate();
         extract();
@@ -48,11 +51,11 @@ public abstract class Unpack extends Task
         String sourceName = source.getName();
         int len = sourceName.length();
         if( defaultExtension != null
-             && len > defaultExtension.length()
-             && defaultExtension.equalsIgnoreCase( sourceName.substring( len - defaultExtension.length() ) ) )
+            && len > defaultExtension.length()
+            && defaultExtension.equalsIgnoreCase( sourceName.substring( len - defaultExtension.length() ) ) )
         {
             dest = new File( dest, sourceName.substring( 0,
-                len - defaultExtension.length() ) );
+                                                         len - defaultExtension.length() ) );
         }
         else
         {
@@ -61,21 +64,21 @@ public abstract class Unpack extends Task
     }
 
     private void validate()
-        throws BuildException
+        throws TaskException
     {
         if( source == null )
         {
-            throw new BuildException( "No Src for gunzip specified" );
+            throw new TaskException( "No Src for gunzip specified" );
         }
 
         if( !source.exists() )
         {
-            throw new BuildException( "Src doesn't exist" );
+            throw new TaskException( "Src doesn't exist" );
         }
 
         if( source.isDirectory() )
         {
-            throw new BuildException( "Cannot expand a directory" );
+            throw new TaskException( "Cannot expand a directory" );
         }
 
         if( dest == null )

@@ -6,11 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.clearcase;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-
-
 
 /**
  * Task to perform Checkout command to ClearCase. <p>
@@ -408,10 +407,10 @@ public class CCCheckout extends ClearCase
      * Builds a command line to execute cleartool and then calls Exec's run
      * method to execute the command line.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
@@ -435,7 +434,7 @@ public class CCCheckout extends ClearCase
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
     }
 
@@ -458,7 +457,6 @@ public class CCCheckout extends ClearCase
             cmd.createArgument().setValue( getBranch() );
         }
     }
-
 
     /**
      * Get the 'comment' command
@@ -519,7 +517,6 @@ public class CCCheckout extends ClearCase
             cmd.createArgument().setValue( getOut() );
         }
     }
-
 
     /**
      * Check the command line options.

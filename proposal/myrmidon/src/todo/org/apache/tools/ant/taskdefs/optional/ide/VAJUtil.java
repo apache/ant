@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import java.io.File;
 import java.util.Vector;
 
@@ -38,11 +39,11 @@ interface VAJUtil
      * @param overwrite Description of Parameter
      */
     void exportPackages(
-                         File dest,
-                         String[] includePatterns, String[] excludePatterns,
-                         boolean exportClasses, boolean exportDebugInfo,
-                         boolean exportResources, boolean exportSources,
-                         boolean useDefaultExcludes, boolean overwrite );
+        File dest,
+        String[] includePatterns, String[] excludePatterns,
+        boolean exportClasses, boolean exportDebugInfo,
+        boolean exportResources, boolean exportSources,
+        boolean useDefaultExcludes, boolean overwrite );
 
     /**
      * Do the import.
@@ -57,10 +58,10 @@ interface VAJUtil
      * @param useDefaultExcludes Description of Parameter
      */
     void importFiles(
-                      String importProject, File srcDir,
-                      String[] includePatterns, String[] excludePatterns,
-                      boolean importClasses, boolean importResources,
-                      boolean importSources, boolean useDefaultExcludes );
+        String importProject, File srcDir,
+        String[] includePatterns, String[] excludePatterns,
+        boolean importClasses, boolean importResources,
+        boolean importSources, boolean useDefaultExcludes );
 
     /**
      * Load specified projects.

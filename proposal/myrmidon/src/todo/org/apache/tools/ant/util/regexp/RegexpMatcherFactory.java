@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -22,16 +23,18 @@ import org.apache.tools.ant.Project;
 public class RegexpMatcherFactory
 {
 
-    public RegexpMatcherFactory() { }
+    public RegexpMatcherFactory()
+    {
+    }
 
     /**
      * Create a new regular expression instance.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public RegexpMatcher newRegexpMatcher()
-        throws BuildException
+        throws TaskException
     {
         return newRegexpMatcher( null );
     }
@@ -41,10 +44,10 @@ public class RegexpMatcherFactory
      *
      * @param p Project whose ant.regexp.regexpimpl property will be used.
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public RegexpMatcher newRegexpMatcher( Project p )
-        throws BuildException
+        throws TaskException
     {
         String systemDefault = null;
         if( p == null )
@@ -53,7 +56,7 @@ public class RegexpMatcherFactory
         }
         else
         {
-            systemDefault = ( String )p.getProperties().get( "ant.regexp.regexpimpl" );
+            systemDefault = (String)p.getProperties().get( "ant.regexp.regexpimpl" );
         }
 
         if( systemDefault != null )
@@ -67,37 +70,40 @@ public class RegexpMatcherFactory
         {
             return createInstance( "org.apache.tools.ant.util.regexp.Jdk14RegexpMatcher" );
         }
-        catch( BuildException be )
-        {}
+        catch( TaskException be )
+        {
+        }
 
         try
         {
             return createInstance( "org.apache.tools.ant.util.regexp.JakartaOroMatcher" );
         }
-        catch( BuildException be )
-        {}
+        catch( TaskException be )
+        {
+        }
 
         try
         {
             return createInstance( "org.apache.tools.ant.util.regexp.JakartaRegexpMatcher" );
         }
-        catch( BuildException be )
-        {}
+        catch( TaskException be )
+        {
+        }
 
-        throw new BuildException( "No supported regular expression matcher found" );
+        throw new TaskException( "No supported regular expression matcher found" );
     }
 
     protected RegexpMatcher createInstance( String className )
-        throws BuildException
+        throws TaskException
     {
         try
         {
             Class implClass = Class.forName( className );
-            return ( RegexpMatcher )implClass.newInstance();
+            return (RegexpMatcher)implClass.newInstance();
         }
         catch( Throwable t )
         {
-            throw new BuildException( "Error", t );
+            throw new TaskException( "Error", t );
         }
     }
 }

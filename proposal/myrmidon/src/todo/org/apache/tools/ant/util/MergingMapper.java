@@ -24,7 +24,9 @@ public class MergingMapper implements FileNameMapper
      *
      * @param from The new From value
      */
-    public void setFrom( String from ) { }
+    public void setFrom( String from )
+    {
+    }
 
     /**
      * Sets the name of the merged file.

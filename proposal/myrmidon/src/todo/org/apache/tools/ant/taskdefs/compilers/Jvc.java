@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
@@ -25,7 +26,7 @@ public class Jvc extends DefaultCompilerAdapter
 {
 
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         attributes.log( "Using jvc compiler", Project.MSG_VERBOSE );
 

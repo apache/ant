@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-
 
 /**
  * A NameAndType CP Info
@@ -65,8 +65,8 @@ public class NameAndTypeCPInfo extends ConstantPoolEntry
      */
     public void resolve( ConstantPool constantPool )
     {
-        name = ( ( Utf8CPInfo )constantPool.getEntry( nameIndex ) ).getValue();
-        type = ( ( Utf8CPInfo )constantPool.getEntry( descriptorIndex ) ).getValue();
+        name = ( (Utf8CPInfo)constantPool.getEntry( nameIndex ) ).getValue();
+        type = ( (Utf8CPInfo)constantPool.getEntry( descriptorIndex ) ).getValue();
 
         super.resolve( constantPool );
     }

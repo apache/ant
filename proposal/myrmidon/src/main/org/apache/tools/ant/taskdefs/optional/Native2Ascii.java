@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -33,7 +34,6 @@ public class Native2Ascii extends MatchingTask
     private String extension = null;// Extension of output files if different
 
     private Mapper mapper;
-
 
     /**
      * Set the destination dirctory to place converted files into.
@@ -93,21 +93,21 @@ public class Native2Ascii extends MatchingTask
      * Defines the FileNameMapper to use (nested mapper element).
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Mapper createMapper()
-        throws BuildException
+        throws TaskException
     {
         if( mapper != null )
         {
-            throw new BuildException( "Cannot define more than one mapper" );
+            throw new TaskException( "Cannot define more than one mapper" );
         }
         mapper = new Mapper( project );
         return mapper;
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         Commandline baseCmd = null;// the common portion of our cmd line
@@ -123,7 +123,7 @@ public class Native2Ascii extends MatchingTask
         // Require destDir
         if( destDir == null )
         {
-            throw new BuildException( "The dest attribute must be set." );
+            throw new TaskException( "The dest attribute must be set." );
         }
 
         // if src and dest dirs are the same, require the extension
@@ -131,8 +131,8 @@ public class Native2Ascii extends MatchingTask
         // include a file with the same extension, but ....
         if( srcDir.equals( destDir ) && extension == null && mapper == null )
         {
-            throw new BuildException( "The ext attribute or a mapper must be set if"
-                 + " src and dest dirs are the same." );
+            throw new TaskException( "The ext attribute or a mapper must be set if"
+                                     + " src and dest dirs are the same." );
         }
 
         FileNameMapper m = null;
@@ -162,11 +162,11 @@ public class Native2Ascii extends MatchingTask
             return;
         }
         String message = "Converting " + count + " file"
-             + ( count != 1 ? "s" : "" ) + " from ";
+            + ( count != 1 ? "s" : "" ) + " from ";
         log( message + srcDir + " to " + destDir );
         for( int i = 0; i < files.length; i++ )
         {
-            convert( files[i], m.mapFileName( files[i] )[0] );
+            convert( files[ i ], m.mapFileName( files[ i ] )[ 0 ] );
         }
     }
 
@@ -175,10 +175,10 @@ public class Native2Ascii extends MatchingTask
      *
      * @param srcName Description of Parameter
      * @param destName Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void convert( String srcName, String destName )
-        throws BuildException
+        throws TaskException
     {
 
         Commandline cmd = new Commandline();// Command line to run
@@ -207,8 +207,8 @@ public class Native2Ascii extends MatchingTask
         // Make sure we're not about to clobber something
         if( srcFile.equals( destFile ) )
         {
-            throw new BuildException( "file " + srcFile
-                 + " would overwrite its self" );
+            throw new TaskException( "file " + srcFile
+                                     + " would overwrite its self" );
         }
 
         // Make intermediate directories if needed
@@ -220,26 +220,30 @@ public class Native2Ascii extends MatchingTask
 
             if( ( !parentFile.exists() ) && ( !parentFile.mkdirs() ) )
             {
-                throw new BuildException( "cannot create parent directory "
-                     + parentName );
+                throw new TaskException( "cannot create parent directory "
+                                         + parentName );
             }
         }
 
         log( "converting " + srcName, Project.MSG_VERBOSE );
         sun.tools.native2ascii.Main n2a
-             = new sun.tools.native2ascii.Main();
+            = new sun.tools.native2ascii.Main();
         if( !n2a.convert( cmd.getArguments() ) )
         {
-            throw new BuildException( "conversion failed" );
+            throw new TaskException( "conversion failed" );
         }
     }
 
     private class ExtMapper implements FileNameMapper
     {
 
-        public void setFrom( String s ) { }
+        public void setFrom( String s )
+        {
+        }
 
-        public void setTo( String s ) { }
+        public void setTo( String s )
+        {
+        }
 
         public String[] mapFileName( String fileName )
         {

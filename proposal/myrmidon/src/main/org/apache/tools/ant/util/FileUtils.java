@@ -65,7 +65,7 @@ public class FileUtils
      *
      * @param file The new FileLastModified value
      * @param time The new FileLastModified value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setFileLastModified( File file, long time )
         throws TaskException

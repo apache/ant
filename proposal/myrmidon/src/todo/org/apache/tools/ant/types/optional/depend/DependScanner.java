@@ -6,8 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types.optional.depend;
-import java.io.*;
-import java.util.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import org.apache.bcel.*;
 import org.apache.bcel.classfile.*;
 import org.apache.tools.ant.DirectoryScanner;
@@ -50,11 +57,17 @@ public class DependScanner extends DirectoryScanner
         this.basedir = basedir;
     }
 
-    public void setCaseSensitive( boolean isCaseSensitive ) { }
+    public void setCaseSensitive( boolean isCaseSensitive )
+    {
+    }
 
-    public void setExcludes( String[] excludes ) { }
+    public void setExcludes( String[] excludes )
+    {
+    }
 
-    public void setIncludes( String[] includes ) { }
+    public void setIncludes( String[] includes )
+    {
+    }
 
     /**
      * Sets the domain, where dependant classes are searched
@@ -88,7 +101,7 @@ public class DependScanner extends DirectoryScanner
 
     public String[] getIncludedDirectories()
     {
-        return new String[0];
+        return new String[ 0 ];
     }
 
     /**
@@ -99,10 +112,10 @@ public class DependScanner extends DirectoryScanner
     public String[] getIncludedFiles()
     {
         int count = included.size();
-        String[] files = new String[count];
+        String[] files = new String[ count ];
         for( int i = 0; i < count; i++ )
         {
-            files[i] = included.get( i ) + ".class";
+            files[ i ] = included.get( i ) + ".class";
             //System.err.println("  " + files[i]);
         }
         return files;
@@ -118,7 +131,9 @@ public class DependScanner extends DirectoryScanner
         return null;
     }
 
-    public void addDefaultExcludes() { }
+    public void addDefaultExcludes()
+    {
+    }
 
     /**
      * Scans the base directory for files that baseClass depends on
@@ -140,10 +155,10 @@ public class DependScanner extends DirectoryScanner
             throw new IllegalArgumentException( e.getMessage() );
         }
 
-        for( Iterator rootClassIterator = rootClasses.iterator(); rootClassIterator.hasNext();  )
+        for( Iterator rootClassIterator = rootClasses.iterator(); rootClassIterator.hasNext(); )
         {
             Set newSet = new HashSet();
-            String start = ( String )rootClassIterator.next();
+            String start = (String)rootClassIterator.next();
             start = start.replace( '.', '/' );
 
             newSet.add( start );
@@ -154,7 +169,7 @@ public class DependScanner extends DirectoryScanner
                 Iterator i = newSet.iterator();
                 while( i.hasNext() )
                 {
-                    String fileName = base + ( ( String )i.next() ).replace( '/', File.separatorChar ) + ".class";
+                    String fileName = base + ( (String)i.next() ).replace( '/', File.separatorChar ) + ".class";
 
                     try
                     {
@@ -171,17 +186,17 @@ public class DependScanner extends DirectoryScanner
                 visitor.clearDependencies();
 
                 Dependencies.applyFilter( newSet,
-                    new Filter()
-                    {
-                        public boolean accept( Object object )
-                        {
-                            String fileName = base + ( ( String )object ).replace( '/', File.separatorChar ) + ".class";
-                            return new File( fileName ).exists();
-                        }
-                    } );
+                                          new Filter()
+                                          {
+                                              public boolean accept( Object object )
+                                              {
+                                                  String fileName = base + ( (String)object ).replace( '/', File.separatorChar ) + ".class";
+                                                  return new File( fileName ).exists();
+                                              }
+                                          } );
                 newSet.removeAll( set );
                 set.addAll( newSet );
-            }while ( newSet.size() > 0 );
+            } while( newSet.size() > 0 );
         }
 
         included.clear();

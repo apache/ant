@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import com.ibm.bsf.BSFException;
 import com.ibm.bsf.BSFManager;
 import java.io.File;
@@ -13,7 +14,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
 /**
@@ -46,10 +47,10 @@ public class Script extends Task
     {
         File file = new File( fileName );
         if( !file.exists() )
-            throw new BuildException( "file " + fileName + " not found." );
+            throw new TaskException( "file " + fileName + " not found." );
 
-        int count = ( int )file.length();
-        byte data[] = new byte[count];
+        int count = (int)file.length();
+        byte data[] = new byte[ count ];
 
         try
         {
@@ -59,7 +60,7 @@ public class Script extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
 
         script += new String( data );
@@ -78,10 +79,10 @@ public class Script extends Task
     /**
      * Do the work.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception TaskException if someting goes wrong with the build
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -96,9 +97,9 @@ public class Script extends Task
 
             BSFManager manager = new BSFManager();
 
-            for( Enumeration e = beans.keys(); e.hasMoreElements();  )
+            for( Enumeration e = beans.keys(); e.hasMoreElements(); )
             {
-                String key = ( String )e.nextElement();
+                String key = (String)e.nextElement();
                 Object value = beans.get( key );
                 manager.declareBean( key, value, value.getClass() );
             }
@@ -112,16 +113,16 @@ public class Script extends Task
             Throwable te = be.getTargetException();
             if( te != null )
             {
-                if( te instanceof BuildException )
+                if( te instanceof TaskException )
                 {
-                    throw ( BuildException )te;
+                    throw (TaskException)te;
                 }
                 else
                 {
                     t = te;
                 }
             }
-            throw new BuildException( "Error", t );
+            throw new TaskException( "Error", t );
         }
     }
 
@@ -132,9 +133,9 @@ public class Script extends Task
      */
     private void addBeans( Hashtable dictionary )
     {
-        for( Enumeration e = dictionary.keys(); e.hasMoreElements();  )
+        for( Enumeration e = dictionary.keys(); e.hasMoreElements(); )
         {
-            String key = ( String )e.nextElement();
+            String key = (String)e.nextElement();
 
             boolean isValid = key.length() > 0 &&
                 Character.isJavaIdentifierStart( key.charAt( 0 ) );

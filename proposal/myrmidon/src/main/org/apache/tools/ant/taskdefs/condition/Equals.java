@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.condition;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Simple String comparison condition.
@@ -30,11 +31,11 @@ public class Equals implements Condition
     }
 
     public boolean eval()
-        throws BuildException
+        throws TaskException
     {
         if( arg1 == null || arg2 == null )
         {
-            throw new BuildException( "both arg1 and arg2 are required in equals" );
+            throw new TaskException( "both arg1 and arg2 are required in equals" );
         }
         return arg1.equals( arg2 );
     }

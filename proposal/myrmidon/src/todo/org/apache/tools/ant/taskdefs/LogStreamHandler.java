@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
 /**
@@ -28,7 +29,7 @@ public class LogStreamHandler extends PumpStreamHandler
     public LogStreamHandler( Task task, int outlevel, int errlevel )
     {
         super( new LogOutputStream( task, outlevel ),
-            new LogOutputStream( task, errlevel ) );
+               new LogOutputStream( task, errlevel ) );
     }
 
     public void stop()
@@ -42,7 +43,7 @@ public class LogStreamHandler extends PumpStreamHandler
         catch( IOException e )
         {
             // plain impossible
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 }

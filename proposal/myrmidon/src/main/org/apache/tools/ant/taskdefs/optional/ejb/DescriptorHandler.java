@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -164,7 +165,6 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
         currentText += new String( ch, start, length );
     }
 
-
     /**
      * SAX parser call-back method that is invoked when an element is exited.
      * Used to blank out (set to the empty string, not nullify) the name of the
@@ -255,7 +255,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
     {
         this.publicId = publicId;
 
-        File dtdFile = ( File )fileDTDs.get( publicId );
+        File dtdFile = (File)fileDTDs.get( publicId );
         if( dtdFile != null )
         {
             try
@@ -269,7 +269,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
             }
         }
 
-        String dtdResourceName = ( String )resourceDTDs.get( publicId );
+        String dtdResourceName = (String)resourceDTDs.get( publicId );
         if( dtdResourceName != null )
         {
             InputStream is = this.getClass().getResourceAsStream( dtdResourceName );
@@ -280,7 +280,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
             }
         }
 
-        URL dtdUrl = ( URL )urlDTDs.get( publicId );
+        URL dtdUrl = (URL)urlDTDs.get( publicId );
         if( dtdUrl != null )
         {
             try
@@ -296,7 +296,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
         }
 
         owningTask.log( "Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity",
-            Project.MSG_INFO );
+                        Project.MSG_INFO );
 
         return null;
     }
@@ -314,7 +314,6 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
         this.currentElement = null;
         inEJBRef = false;
     }
-
 
     /**
      * SAX parser call-back method that is invoked when a new element is entered
@@ -355,7 +354,6 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase
             parseState = STATE_IN_MESSAGE;
         }
     }
-
 
     protected void processElement()
     {

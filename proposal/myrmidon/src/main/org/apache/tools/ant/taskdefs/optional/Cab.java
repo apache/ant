@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,16 +14,15 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ExecTask;
 import org.apache.tools.ant.taskdefs.MatchingTask;
-import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
-
 
 /**
  * Create a CAB archive.
@@ -106,7 +106,7 @@ public class Cab extends MatchingTask
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         checkConfiguration();
@@ -144,7 +144,7 @@ public class Cab extends MatchingTask
             catch( IOException ex )
             {
                 String msg = "Problem creating " + cabFile + " " + ex.getMessage();
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
         }
         else
@@ -178,7 +178,7 @@ public class Cab extends MatchingTask
             catch( IOException ioe )
             {
                 String msg = "Problem creating " + cabFile + " " + ioe.getMessage();
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
         }
     }
@@ -189,10 +189,10 @@ public class Cab extends MatchingTask
      * traditional include parameters.
      *
      * @return The FileList value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected Vector getFileList()
-        throws BuildException
+        throws TaskException
     {
         Vector files = new Vector();
 
@@ -206,7 +206,7 @@ public class Cab extends MatchingTask
             // get files from filesets
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = ( FileSet )filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.elementAt( i );
                 if( fs != null )
                 {
                     appendFiles( files, fs.getDirectoryScanner( project ) );
@@ -248,7 +248,7 @@ public class Cab extends MatchingTask
 
         for( int i = 0; i < dsfiles.length; i++ )
         {
-            files.addElement( dsfiles[i] );
+            files.addElement( dsfiles[ i ] );
         }
     }
 
@@ -258,19 +258,19 @@ public class Cab extends MatchingTask
      * for side-effects to me...
      */
     protected void checkConfiguration()
-        throws BuildException
+        throws TaskException
     {
         if( baseDir == null )
         {
-            throw new BuildException( "basedir attribute must be set!" );
+            throw new TaskException( "basedir attribute must be set!" );
         }
         if( !baseDir.exists() )
         {
-            throw new BuildException( "basedir does not exist!" );
+            throw new TaskException( "basedir does not exist!" );
         }
         if( cabFile == null )
         {
-            throw new BuildException( "cabfile attribute must be set!" );
+            throw new TaskException( "cabfile attribute must be set!" );
         }
     }
 
@@ -281,6 +281,7 @@ public class Cab extends MatchingTask
      * @return Description of the Returned Value
      */
     protected Commandline createCommand( File listFile )
+        throws TaskException
     {
         Commandline command = new Commandline();
         command.setExecutable( "cabarc" );
@@ -310,12 +311,12 @@ public class Cab extends MatchingTask
      * appears in the logs to be the same task as this one.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected ExecTask createExec()
-        throws BuildException
+        throws TaskException
     {
-        ExecTask exec = ( ExecTask )project.createTask( "exec" );
+        ExecTask exec = (ExecTask)project.createTask( "exec" );
         exec.setOwningTarget( this.getOwningTarget() );
         exec.setTaskName( this.getTaskName() );
         exec.setDescription( this.getDescription() );

@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-
 
 /**
  * A FieldRef CP Info
@@ -70,13 +70,13 @@ public class FieldRefCPInfo extends ConstantPoolEntry
      */
     public void resolve( ConstantPool constantPool )
     {
-        ClassCPInfo fieldClass = ( ClassCPInfo )constantPool.getEntry( classIndex );
+        ClassCPInfo fieldClass = (ClassCPInfo)constantPool.getEntry( classIndex );
 
         fieldClass.resolve( constantPool );
 
         fieldClassName = fieldClass.getClassName();
 
-        NameAndTypeCPInfo nt = ( NameAndTypeCPInfo )constantPool.getEntry( nameAndTypeIndex );
+        NameAndTypeCPInfo nt = (NameAndTypeCPInfo)constantPool.getEntry( nameAndTypeIndex );
 
         nt.resolve( constantPool );
 

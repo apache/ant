@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +14,6 @@ import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ClassCPInfo;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.AttributeInfo;
-
 
 /**
  * Object representing a class. Information are kept to the strict minimum for
@@ -50,7 +50,7 @@ public final class ClassFile
         // class information
         access_flags = dis.readShort();
         int this_class = dis.readShort();
-        fullname = ( ( ClassCPInfo )constantPool.getEntry( this_class ) ).getClassName().replace( '/', '.' );
+        fullname = ( (ClassCPInfo)constantPool.getEntry( this_class ) ).getClassName().replace( '/', '.' );
         int super_class = dis.readShort();
 
         // skip interfaces...
@@ -75,11 +75,11 @@ public final class ClassFile
 
         // read methods
         int method_count = dis.readShort();
-        methods = new MethodInfo[method_count];
+        methods = new MethodInfo[ method_count ];
         for( int i = 0; i < method_count; i++ )
         {
-            methods[i] = new MethodInfo();
-            methods[i].read( constantPool, dis );
+            methods[ i ] = new MethodInfo();
+            methods[ i ].read( constantPool, dis );
         }
 
         // get interesting attributes.
@@ -92,7 +92,7 @@ public final class ClassFile
             if( AttributeInfo.SOURCE_FILE.equals( attr_name ) )
             {
                 int name_index = dis.readShort();
-                sourceFile = ( ( Utf8CPInfo )constantPool.getEntry( name_index ) ).getValue();
+                sourceFile = ( (Utf8CPInfo)constantPool.getEntry( name_index ) ).getValue();
             }
             else
             {

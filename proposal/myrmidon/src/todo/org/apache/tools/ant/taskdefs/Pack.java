@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
 /**
@@ -37,7 +38,7 @@ public abstract class Pack extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         validate();
         log( "Building: " + zipFile.getAbsolutePath() );
@@ -64,30 +65,30 @@ public abstract class Pack extends Task
     {
         if( zipFile == null )
         {
-            throw new BuildException( "zipfile attribute is required" );
+            throw new TaskException( "zipfile attribute is required" );
         }
 
         if( source == null )
         {
-            throw new BuildException( "src attribute is required" );
+            throw new TaskException( "src attribute is required" );
         }
 
         if( source.isDirectory() )
         {
-            throw new BuildException( "Src attribute must not " +
-                "represent a directory!" );
+            throw new TaskException( "Src attribute must not " +
+                                     "represent a directory!" );
         }
     }
 
     private void zipFile( InputStream in, OutputStream zOut )
         throws IOException
     {
-        byte[] buffer = new byte[8 * 1024];
+        byte[] buffer = new byte[ 8 * 1024 ];
         int count = 0;
         do
         {
             zOut.write( buffer, 0, count );
             count = in.read( buffer, 0, buffer.length );
-        }while ( count != -1 );
+        } while( count != -1 );
     }
 }

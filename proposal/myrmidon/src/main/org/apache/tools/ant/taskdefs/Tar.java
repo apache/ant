@@ -13,7 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -91,28 +91,28 @@ public class Tar extends MatchingTask
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( tarFile == null )
         {
-            throw new BuildException( "tarfile attribute must be set!" );
+            throw new TaskException( "tarfile attribute must be set!" );
         }
 
         if( tarFile.exists() && tarFile.isDirectory() )
         {
-            throw new BuildException( "tarfile is a directory!" );
+            throw new TaskException( "tarfile is a directory!" );
         }
 
         if( tarFile.exists() && !tarFile.canWrite() )
         {
-            throw new BuildException( "Can not write to the specified tarfile!" );
+            throw new TaskException( "Can not write to the specified tarfile!" );
         }
 
         if( baseDir != null )
         {
             if( !baseDir.exists() )
             {
-                throw new BuildException( "basedir does not exist!" );
+                throw new TaskException( "basedir does not exist!" );
             }
 
             // add the main fileset to the list of filesets to process.
@@ -123,7 +123,7 @@ public class Tar extends MatchingTask
 
         if( filesets.size() == 0 )
         {
-            throw new BuildException( "You must supply either a basdir attribute or some nested filesets." );
+            throw new TaskException( "You must supply either a basdir attribute or some nested filesets." );
         }
 
         // check if tr is out of date with respect to each
@@ -143,7 +143,7 @@ public class Tar extends MatchingTask
             {
                 if( tarFile.equals( new File( fs.getDir( project ), files[ i ] ) ) )
                 {
-                    throw new BuildException( "A tar file cannot include itself" );
+                    throw new TaskException( "A tar file cannot include itself" );
                 }
             }
         }
@@ -193,7 +193,7 @@ public class Tar extends MatchingTask
         catch( IOException ioe )
         {
             String msg = "Problem creating TAR: " + ioe.getMessage();
-            throw new BuildException( msg, ioe );
+            throw new TaskException( msg, ioe );
         }
         finally
         {
@@ -258,7 +258,7 @@ public class Tar extends MatchingTask
                 }
                 else if( longFileMode.isFailMode() )
                 {
-                    throw new BuildException(
+                    throw new TaskException(
                         "Entry: " + vPath + " longer than " +
                         TarConstants.NAMELEN + "characters." );
                 }

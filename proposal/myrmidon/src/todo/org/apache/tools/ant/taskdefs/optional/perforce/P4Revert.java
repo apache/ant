@@ -6,13 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /*
  * P4Revert - revert open files or files in a changelist
  *
  * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
+
 public class P4Revert extends P4Base
 {
 
@@ -20,10 +22,10 @@ public class P4Revert extends P4Base
     private boolean onlyUnchanged = false;
 
     public void setChange( String revertChange )
-        throws BuildException
+        throws TaskException
     {
         if( revertChange == null && !revertChange.equals( "" ) )
-            throw new BuildException( "P4Revert: change cannot be null or empty" );
+            throw new TaskException( "P4Revert: change cannot be null or empty" );
 
         this.revertChange = revertChange;
 
@@ -35,7 +37,7 @@ public class P4Revert extends P4Base
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         /*

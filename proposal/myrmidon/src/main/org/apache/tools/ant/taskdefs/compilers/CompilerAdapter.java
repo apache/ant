@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Javac;
 
 /**
@@ -36,8 +37,8 @@ public interface CompilerAdapter
      * Executes the task.
      *
      * @return has the compilation been successful
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     boolean execute()
-        throws BuildException;
+        throws TaskException;
 }

@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
@@ -70,7 +71,6 @@ public class WLStop extends Task
         this.classpath = path;
     }
 
-
     /**
      * Set the delay (in seconds) before shutting down the server.
      *
@@ -130,22 +130,22 @@ public class WLStop extends Task
      * the weblogic admin task This approach allows the classpath of the helper
      * task to be set.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception TaskException if someting goes wrong with the build
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( username == null || password == null )
         {
-            throw new BuildException( "weblogic username and password must both be set" );
+            throw new TaskException( "weblogic username and password must both be set" );
         }
 
         if( serverURL == null )
         {
-            throw new BuildException( "The url of the weblogic server must be provided." );
+            throw new TaskException( "The url of the weblogic server must be provided." );
         }
 
-        Java weblogicAdmin = ( Java )project.createTask( "java" );
+        Java weblogicAdmin = (Java)project.createTask( "java" );
         weblogicAdmin.setFork( true );
         weblogicAdmin.setClassname( "weblogic.Admin" );
         String args;

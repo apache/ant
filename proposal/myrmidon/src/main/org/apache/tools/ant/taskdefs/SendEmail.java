@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,7 +15,7 @@ import java.io.PrintStream;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.mail.MailMessage;
@@ -173,11 +174,12 @@ public class SendEmail extends Task
     private String subject;
     private String toList;
 
-
     /**
      * Creates new SendEmail
      */
-    public SendEmail() { }
+    public SendEmail()
+    {
+    }
 
     /**
      * Sets the FailOnError attribute of the MimeMail object
@@ -196,6 +198,7 @@ public class SendEmail extends Task
      * @param filenames Filenames to include as the message body of this email.
      */
     public void setFiles( String filenames )
+        throws TaskException
     {
         StringTokenizer t = new StringTokenizer( filenames, ", " );
 
@@ -279,10 +282,10 @@ public class SendEmail extends Task
     /**
      * Executes this build task.
      *
-     * @throws BuildException if there is an error during task execution.
+     * @throws TaskException if there is an error during task execution.
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -295,7 +298,7 @@ public class SendEmail extends Task
             }
             else
             {
-                throw new BuildException( "Attribute \"from\" is required." );
+                throw new TaskException( "Attribute \"from\" is required." );
             }
 
             if( toList != null )
@@ -309,7 +312,7 @@ public class SendEmail extends Task
             }
             else
             {
-                throw new BuildException( "Attribute \"toList\" is required." );
+                throw new TaskException( "Attribute \"toList\" is required." );
             }
 
             if( subject != null )
@@ -321,15 +324,15 @@ public class SendEmail extends Task
             {
                 PrintStream out = mailMessage.getPrintStream();
 
-                for( Enumeration e = files.elements(); e.hasMoreElements();  )
+                for( Enumeration e = files.elements(); e.hasMoreElements(); )
                 {
-                    File file = ( File )e.nextElement();
+                    File file = (File)e.nextElement();
 
                     if( file.exists() && file.canRead() )
                     {
                         int bufsize = 1024;
                         int length;
-                        byte[] buf = new byte[bufsize];
+                        byte[] buf = new byte[ bufsize ];
                         if( includefilenames )
                         {
                             String filename = file.getName();
@@ -364,15 +367,16 @@ public class SendEmail extends Task
                                     in.close();
                                 }
                                 catch( IOException ioe )
-                                {}
+                                {
+                                }
                             }
                         }
 
                     }
                     else
                     {
-                        throw new BuildException( "File \"" + file.getName()
-                             + "\" does not exist or is not readable." );
+                        throw new TaskException( "File \"" + file.getName()
+                                                 + "\" does not exist or is not readable." );
                     }
                 }
             }
@@ -383,7 +387,7 @@ public class SendEmail extends Task
             }
             else
             {
-                throw new BuildException( "Attribute \"file\" or \"message\" is required." );
+                throw new TaskException( "Attribute \"file\" or \"message\" is required." );
             }
 
             log( "Sending email" );
@@ -394,7 +398,7 @@ public class SendEmail extends Task
             String err = "IO error sending mail " + ioe.toString();
             if( failOnError )
             {
-                throw new BuildException( err, ioe );
+                throw new TaskException( err, ioe );
             }
             else
             {

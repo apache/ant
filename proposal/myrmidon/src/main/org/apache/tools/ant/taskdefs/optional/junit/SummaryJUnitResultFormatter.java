@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.NumberFormat;
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Prints short summary output of the test to Ant's logging system.
@@ -38,7 +39,9 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
     /**
      * Empty
      */
-    public SummaryJUnitResultFormatter() { }
+    public SummaryJUnitResultFormatter()
+    {
+    }
 
     public void setOutput( OutputStream out )
     {
@@ -71,7 +74,9 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
      * @param test The feature to be added to the Error attribute
      * @param t The feature to be added to the Error attribute
      */
-    public void addError( Test test, Throwable t ) { }
+    public void addError( Test test, Throwable t )
+    {
+    }
 
     /**
      * Empty
@@ -79,7 +84,9 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
      * @param test The feature to be added to the Failure attribute
      * @param t The feature to be added to the Failure attribute
      */
-    public void addFailure( Test test, Throwable t ) { }
+    public void addFailure( Test test, Throwable t )
+    {
+    }
 
     /**
      * Interface TestListener for JUnit &gt; 3.4. <p>
@@ -91,7 +98,7 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
      */
     public void addFailure( Test test, AssertionFailedError t )
     {
-        addFailure( test, ( Throwable )t );
+        addFailure( test, (Throwable)t );
     }
 
     /**
@@ -99,16 +106,18 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
      *
      * @param test Description of Parameter
      */
-    public void endTest( Test test ) { }
+    public void endTest( Test test )
+    {
+    }
 
     /**
      * The whole testsuite ended.
      *
      * @param suite Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void endTestSuite( JUnitTest suite )
-        throws BuildException
+        throws TaskException
     {
         String newLine = System.getProperty( "line.separator" );
         StringBuffer sb = new StringBuffer( "Tests run: " );
@@ -144,7 +153,7 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
         }
         catch( IOException ioex )
         {
-            throw new BuildException( "Unable to write summary output", ioex );
+            throw new TaskException( "Unable to write summary output", ioex );
         }
         finally
         {
@@ -155,7 +164,8 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
                     out.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }
@@ -165,12 +175,16 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter
      *
      * @param t Description of Parameter
      */
-    public void startTest( Test t ) { }
+    public void startTest( Test t )
+    {
+    }
 
     /**
      * Empty
      *
      * @param suite Description of Parameter
      */
-    public void startTestSuite( JUnitTest suite ) { }
+    public void startTestSuite( JUnitTest suite )
+    {
+    }
 }

@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import javax.xml.parsers.SAXParser;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.xml.sax.SAXException;
 
@@ -122,7 +123,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
         log( "Since a generic JAR file is not created during processing, the "
              + "iPlanet Deployment Tool does not support the "
              + "\"genericjarsuffix\" attribute.  It will be ignored.",
-            Project.MSG_WARN );
+             Project.MSG_WARN );
     }
 
     /**
@@ -194,7 +195,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
     protected void addVendorFiles( Hashtable ejbFiles, String ddPrefix )
     {
         ejbFiles.put( META_DIR + IAS_DD, new File( getConfig().descriptorDir,
-            getIasDescriptorName() ) );
+                                                   getIasDescriptorName() ) );
     }
 
     /**
@@ -203,11 +204,11 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
      * @param descriptorFileName String representing the file name of an EJB
      *      descriptor to be processed
      * @param saxParser SAXParser which may be used to parse the XML descriptor
-     * @throws BuildException If the user selections are invalid.
+     * @throws TaskException If the user selections are invalid.
      */
     protected void checkConfiguration( String descriptorFileName,
                                        SAXParser saxParser )
-        throws BuildException
+        throws TaskException
     {
 
         int startOfName = descriptorFileName.lastIndexOf( File.separatorChar ) + 1;
@@ -215,26 +216,26 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
         if( stdXml.equals( EJB_DD ) && ( getConfig().baseJarName == null ) )
         {
             String msg = "No name specified for the completed JAR file.  The EJB"
-                 + " descriptor should be prepended with the JAR "
-                 + "name or it should be specified using the "
-                 + "attribute \"basejarname\" in the \"ejbjar\" task.";
-            throw new BuildException( msg );
+                + " descriptor should be prepended with the JAR "
+                + "name or it should be specified using the "
+                + "attribute \"basejarname\" in the \"ejbjar\" task.";
+            throw new TaskException( msg );
         }
 
         File iasDescriptor = new File( getConfig().descriptorDir,
-            getIasDescriptorName() );
+                                       getIasDescriptorName() );
         if( ( !iasDescriptor.exists() ) || ( !iasDescriptor.isFile() ) )
         {
             String msg = "The iAS-specific EJB descriptor ("
-                 + iasDescriptor + ") was not found.";
-            throw new BuildException( msg );
+                + iasDescriptor + ") was not found.";
+            throw new TaskException( msg );
         }
 
         if( ( iashome != null ) && ( !iashome.isDirectory() ) )
         {
             String msg = "If \"iashome\" is specified, it must be a valid "
-                 + "directory (it was set to " + iashome + ").";
-            throw new BuildException( msg );
+                + "directory (it was set to " + iashome + ").";
+            throw new TaskException( msg );
         }
     }
 
@@ -264,9 +265,9 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
          */
         IPlanetEjbc ejbc = new IPlanetEjbc(
             new File( getConfig().descriptorDir,
-            descriptorFileName ),
+                      descriptorFileName ),
             new File( getConfig().descriptorDir,
-            getIasDescriptorName() ),
+                      getIasDescriptorName() ),
             getConfig().srcDir,
             getCombinedClasspath().toString(),
             saxParser );
@@ -286,8 +287,8 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
         }
         catch( IPlanetEjbc.EjbcException e )
         {
-            throw new BuildException( "An error has occurred while trying to "
-                 + "execute the iAS ejbc utility", e );
+            throw new TaskException( "An error has occurred while trying to "
+                                     + "execute the iAS ejbc utility", e );
         }
 
         displayName = ejbc.getDisplayName();
@@ -306,16 +307,16 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
 
             for( int i = 0; i < cmpDescriptors.length; i++ )
             {
-                int endOfCmp = cmpDescriptors[i].lastIndexOf( '/' );
-                String cmpDescriptor = cmpDescriptors[i].substring( endOfCmp + 1 );
+                int endOfCmp = cmpDescriptors[ i ].lastIndexOf( '/' );
+                String cmpDescriptor = cmpDescriptors[ i ].substring( endOfCmp + 1 );
 
                 File cmpFile = new File( baseDir, relativePath + cmpDescriptor );
                 if( !cmpFile.exists() )
                 {
-                    throw new BuildException( "The CMP descriptor file ("
-                         + cmpFile + ") could not be found." );
+                    throw new TaskException( "The CMP descriptor file ("
+                                             + cmpFile + ") could not be found." );
                 }
-                files.put( cmpDescriptors[i], cmpFile );
+                files.put( cmpDescriptors[ i ], cmpFile );
             }
         }
 
@@ -398,7 +399,7 @@ public class IPlanetDeploymentTool extends GenericDeploymentTool
             }
 
             basename = descriptorName.substring( startOfFileName + 1,
-                endOfBaseName + 1 );
+                                                 endOfBaseName + 1 );
             remainder = descriptorName.substring( endOfBaseName + 1 );
         }
 

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,8 +69,8 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
     protected final static String METHOD = "method";
 
     protected final static String[] ATTRIBUTES = {"name", "vg", "loc",
-        "dit", "noa", "nrm", "nlm", "wmc", "rfc", "dac", "fanout", "cbo", "lcom", "nocl"
-        };
+                                                  "dit", "noa", "nrm", "nlm", "wmc", "rfc", "dac", "fanout", "cbo", "lcom", "nocl"
+    };
 
     /**
      * the stack where are stored the metrics element so that they we can know
@@ -117,7 +118,9 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
      * @exception IOException Description of Exception
      */
     public void setProcessErrorStream( InputStream p1 )
-        throws IOException { }
+        throws IOException
+    {
+    }
 
     /**
      * Ignore.
@@ -126,7 +129,9 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
      * @exception IOException Description of Exception
      */
     public void setProcessInputStream( OutputStream p1 )
-        throws IOException { }
+        throws IOException
+    {
+    }
 
     /**
      * Set the inputstream
@@ -152,7 +157,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
         }
         try
         {
-            metricsHandler = ( ( SAXTransformerFactory )factory ).newTransformerHandler();
+            metricsHandler = ( (SAXTransformerFactory)factory ).newTransformerHandler();
             metricsHandler.setResult( new StreamResult( new OutputStreamWriter( xmlOutputStream, "UTF-8" ) ) );
             Transformer transformer = metricsHandler.getTransformer();
             transformer.setOutputProperty( OutputKeys.INDENT, "yes" );
@@ -185,7 +190,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
             // closed yet.
             while( stack.size() > 0 )
             {
-                ElementEntry elem = ( ElementEntry )stack.pop();
+                ElementEntry elem = (ElementEntry)stack.pop();
                 metricsHandler.endElement( "", elem.getType(), elem.getType() );
             }
             // close the root
@@ -231,7 +236,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
 
         // ok, this is now black magic time, we will guess the type based on
         // the previous type and its indent...
-        final ElementEntry previous = ( ElementEntry )stack.peek();
+        final ElementEntry previous = (ElementEntry)stack.peek();
         final String prevType = previous.getType();
         final int prevIndent = previous.getIndent();
         final int indent = elem.getIndent();
@@ -252,7 +257,6 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
         return PACKAGE;
     }
 
-
     /**
      * Create all attributes of a MetricsElement skipping those who have an
      * empty string
@@ -264,15 +268,15 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
     {
         AttributesImpl impl = new AttributesImpl();
         int i = 0;
-        String name = ATTRIBUTES[i++];
+        String name = ATTRIBUTES[ i++ ];
         impl.addAttribute( "", name, name, "CDATA", elem.getName() );
         Enumeration metrics = elem.getMetrics();
         for( ; metrics.hasMoreElements(); i++ )
         {
-            String value = ( String )metrics.nextElement();
+            String value = (String)metrics.nextElement();
             if( value.length() > 0 )
             {
-                name = ATTRIBUTES[i];
+                name = ATTRIBUTES[ i ];
                 impl.addAttribute( "", name, name, "CDATA", value );
             }
         }
@@ -339,7 +343,7 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
         int indent = elem.getIndent();
         if( stack.size() > 0 )
         {
-            ElementEntry previous = ( ElementEntry )stack.peek();
+            ElementEntry previous = (ElementEntry)stack.peek();
             // close nodes until you got the parent.
             try
             {
@@ -347,11 +351,12 @@ public class MMetricsStreamHandler implements ExecuteStreamHandler
                 {
                     stack.pop();
                     metricsHandler.endElement( "", previous.getType(), previous.getType() );
-                    previous = ( ElementEntry )stack.peek();
+                    previous = (ElementEntry)stack.peek();
                 }
             }
             catch( EmptyStackException ignored )
-            {}
+            {
+            }
         }
 
         // ok, now start the new construct
@@ -404,6 +409,7 @@ class MetricsElement
     private int indent;
 
     private Vector metrics;
+
     static
     {
         METAMATA_NF = NumberFormat.getInstance();
@@ -411,7 +417,7 @@ class MetricsElement
         NEUTRAL_NF = NumberFormat.getInstance();
         if( NEUTRAL_NF instanceof DecimalFormat )
         {
-            ( ( DecimalFormat )NEUTRAL_NF ).applyPattern( "###0.###;-###0.###" );
+            ( (DecimalFormat)NEUTRAL_NF ).applyPattern( "###0.###;-###0.###" );
         }
         NEUTRAL_NF.setMaximumFractionDigits( 1 );
     }
@@ -456,7 +462,7 @@ class MetricsElement
         // construct name, we'll need all this to figure out what type of
         // construct it is since we lost all semantics :(
         // (#indent[/]*)(#construct.*)
-        String name = ( String )metrics.elementAt( 0 );
+        String name = (String)metrics.elementAt( 0 );
         metrics.removeElementAt( 0 );
         int indent = 0;
         pos = name.lastIndexOf( '/' );

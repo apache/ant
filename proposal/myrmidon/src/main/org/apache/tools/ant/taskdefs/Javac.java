@@ -10,8 +10,8 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.compilers.CompilerAdapter;
@@ -221,7 +221,7 @@ public class Javac extends MatchingTask
     }
 
     /**
-     * Throw a BuildException if compilation fails
+     * Throw a TaskException if compilation fails
      *
      * @param fail The new Failonerror value
      */
@@ -715,26 +715,26 @@ public class Javac extends MatchingTask
     /**
      * Executes the task.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         // first off, make sure that we've got a srcdir
 
         if( src == null )
         {
-            throw new BuildException( "srcdir attribute must be set!" );
+            throw new TaskException( "srcdir attribute must be set!" );
         }
         String[] list = src.list();
         if( list.length == 0 )
         {
-            throw new BuildException( "srcdir attribute must be set!" );
+            throw new TaskException( "srcdir attribute must be set!" );
         }
 
         if( destDir != null && !destDir.isDirectory() )
         {
-            throw new BuildException( "destination directory \"" + destDir + "\" does not exist or is not a directory" );
+            throw new TaskException( "destination directory \"" + destDir + "\" does not exist or is not a directory" );
         }
 
         // scan source directories and dest directory to build up
@@ -745,7 +745,7 @@ public class Javac extends MatchingTask
             File srcDir = (File)resolveFile( list[ i ] );
             if( !srcDir.exists() )
             {
-                throw new BuildException( "srcdir \"" + srcDir.getPath() + "\" does not exist!" );
+                throw new TaskException( "srcdir \"" + srcDir.getPath() + "\" does not exist!" );
             }
 
             DirectoryScanner ds = this.getDirectoryScanner( srcDir );
@@ -777,7 +777,7 @@ public class Javac extends MatchingTask
             {
                 if( failOnError )
                 {
-                    throw new BuildException( FAIL_MSG );
+                    throw new TaskException( FAIL_MSG );
                 }
                 else
                 {

@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -32,51 +33,50 @@ public class P4Change extends P4Base
         this.description = desc;
     }
 
-
     public String getEmptyChangeList()
-        throws BuildException
+        throws TaskException
     {
         final StringBuffer stringbuf = new StringBuffer();
 
         execP4Command( "change -o",
-            new P4HandlerAdapter()
-            {
-                public void process( String line )
-                {
-                    if( !util.match( "/^#/", line ) )
-                    {
-                        if( util.match( "/error/", line ) )
-                        {
+                       new P4HandlerAdapter()
+                       {
+                           public void process( String line )
+                           {
+                               if( !util.match( "/^#/", line ) )
+                               {
+                                   if( util.match( "/error/", line ) )
+                                   {
 
-                            log( "Client Error", Project.MSG_VERBOSE );
-                            throw new BuildException( "Perforce Error, check client settings and/or server" );
-                        }
-                        else if( util.match( "/<enter description here>/", line ) )
-                        {
+                                       log( "Client Error", Project.MSG_VERBOSE );
+                                       throw new TaskException( "Perforce Error, check client settings and/or server" );
+                                   }
+                                   else if( util.match( "/<enter description here>/", line ) )
+                                   {
 
-                            // we need to escape the description in case there are /
-                            description = backslash( description );
-                            line = util.substitute( "s/<enter description here>/" + description + "/", line );
+                                       // we need to escape the description in case there are /
+                                       description = backslash( description );
+                                       line = util.substitute( "s/<enter description here>/" + description + "/", line );
 
-                        }
-                        else if( util.match( "/\\/\\//", line ) )
-                        {
-                            //Match "//" for begining of depot filespec
-                            return;
-                        }
+                                   }
+                                   else if( util.match( "/\\/\\//", line ) )
+                                   {
+                                       //Match "//" for begining of depot filespec
+                                       return;
+                                   }
 
-                        stringbuf.append( line );
-                        stringbuf.append( "\n" );
+                                   stringbuf.append( line );
+                                   stringbuf.append( "\n" );
 
-                    }
-                }
-            } );
+                               }
+                           }
+                       } );
 
         return stringbuf.toString();
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         if( emptyChangeList == null )
@@ -101,7 +101,7 @@ public class P4Change extends P4Base
                     }
                     else if( util.match( "/error/", line ) )
                     {
-                        throw new BuildException( "Perforce Error, check client settings and/or server" );
+                        throw new TaskException( "Perforce Error, check client settings and/or server" );
                     }
 
                 }

@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.javacc;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -57,7 +58,6 @@ public class JJTree extends Task
         cmdl.setVm( "java" );
         cmdl.setClassname( "COM.sun.labs.jjtree.Main" );
     }
-
 
     public void setBuildnodefiles( boolean buildNodeFiles )
     {
@@ -130,21 +130,21 @@ public class JJTree extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         // load command line with optional attributes
         Enumeration iter = optionalAttrs.keys();
         while( iter.hasMoreElements() )
         {
-            String name = ( String )iter.nextElement();
+            String name = (String)iter.nextElement();
             Object value = optionalAttrs.get( name );
             cmdl.createArgument().setValue( "-" + name + ":" + value.toString() );
         }
 
         if( target == null || !target.isFile() )
         {
-            throw new BuildException( "Invalid target: " + target );
+            throw new TaskException( "Invalid target: " + target );
         }
 
         // use the directory containing the target as the output directory
@@ -154,7 +154,7 @@ public class JJTree extends Task
         }
         if( !outputDirectory.isDirectory() )
         {
-            throw new BuildException( "'outputdirectory' " + outputDirectory + " is not a directory." );
+            throw new TaskException( "'outputdirectory' " + outputDirectory + " is not a directory." );
         }
         // convert backslashes to slashes, otherwise jjtree will put this as
         // comments and this seems to confuse javacc
@@ -163,7 +163,7 @@ public class JJTree extends Task
 
         String targetName = target.getName();
         final File javaFile = new File( outputDirectory,
-            targetName.substring( 0, targetName.indexOf( ".jjt" ) ) + ".jj" );
+                                        targetName.substring( 0, targetName.indexOf( ".jjt" ) ) + ".jj" );
         if( javaFile.exists() && target.lastModified() < javaFile.lastModified() )
         {
             project.log( "Target is already built - skipping (" + target + ")" );
@@ -173,11 +173,11 @@ public class JJTree extends Task
 
         if( javaccHome == null || !javaccHome.isDirectory() )
         {
-            throw new BuildException( "Javacchome not set." );
+            throw new TaskException( "Javacchome not set." );
         }
         final Path classpath = cmdl.createClasspath( project );
         classpath.createPathElement().setPath( javaccHome.getAbsolutePath() +
-            "/JavaCC.zip" );
+                                               "/JavaCC.zip" );
         classpath.addJavaRuntime();
 
         final Commandline.Argument arg = cmdl.createVmArgument();
@@ -186,9 +186,9 @@ public class JJTree extends Task
 
         final Execute process =
             new Execute( new LogStreamHandler( this,
-            Project.MSG_INFO,
-            Project.MSG_INFO ),
-            null );
+                                               Project.MSG_INFO,
+                                               Project.MSG_INFO ),
+                         null );
         log( cmdl.toString(), Project.MSG_VERBOSE );
         process.setCommandline( cmdl.getCommandline() );
 
@@ -196,12 +196,12 @@ public class JJTree extends Task
         {
             if( process.execute() != 0 )
             {
-                throw new BuildException( "JJTree failed." );
+                throw new TaskException( "JJTree failed." );
             }
         }
         catch( IOException e )
         {
-            throw new BuildException( "Failed to launch JJTree: " + e );
+            throw new TaskException( "Failed to launch JJTree: " + e );
         }
     }
 }

@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
@@ -138,19 +139,19 @@ public class JlinkTask extends MatchingTask
     /**
      * Does the adding and merging.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         //Be sure everything has been set.
         if( outfile == null )
         {
-            throw new BuildException( "outfile attribute is required! Please set." );
+            throw new TaskException( "outfile attribute is required! Please set." );
         }
         if( !haveAddFiles() && !haveMergeFiles() )
         {
-            throw new BuildException( "addfiles or mergefiles required! Please set." );
+            throw new TaskException( "addfiles or mergefiles required! Please set." );
         }
         log( "linking:     " + outfile.getPath() );
         log( "compression: " + compress, Project.MSG_VERBOSE );
@@ -173,7 +174,7 @@ public class JlinkTask extends MatchingTask
         }
         catch( Exception ex )
         {
-            throw new BuildException( "Error", ex);
+            throw new TaskException( "Error", ex );
         }
     }
 

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,8 +17,8 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Random;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -149,7 +150,7 @@ public class JUnitTask extends Task
         Enumeration enum = allTests();
         while( enum.hasMoreElements() )
         {
-            BaseTest test = ( BaseTest )enum.nextElement();
+            BaseTest test = (BaseTest)enum.nextElement();
             test.setErrorProperty( propertyName );
         }
     }
@@ -167,7 +168,7 @@ public class JUnitTask extends Task
         Enumeration enum = allTests();
         while( enum.hasMoreElements() )
         {
-            BaseTest test = ( BaseTest )enum.nextElement();
+            BaseTest test = (BaseTest)enum.nextElement();
             test.setFailureProperty( propertyName );
         }
     }
@@ -186,7 +187,7 @@ public class JUnitTask extends Task
         Enumeration enum = allTests();
         while( enum.hasMoreElements() )
         {
-            BaseTest test = ( BaseTest )enum.nextElement();
+            BaseTest test = (BaseTest)enum.nextElement();
             test.setFiltertrace( value );
         }
     }
@@ -206,7 +207,7 @@ public class JUnitTask extends Task
         Enumeration enum = allTests();
         while( enum.hasMoreElements() )
         {
-            BaseTest test = ( BaseTest )enum.nextElement();
+            BaseTest test = (BaseTest)enum.nextElement();
             test.setFork( value );
         }
     }
@@ -223,7 +224,7 @@ public class JUnitTask extends Task
         Enumeration enum = allTests();
         while( enum.hasMoreElements() )
         {
-            BaseTest test = ( BaseTest )enum.nextElement();
+            BaseTest test = (BaseTest)enum.nextElement();
             test.setHaltonerror( value );
         }
     }
@@ -240,7 +241,7 @@ public class JUnitTask extends Task
         Enumeration enum = allTests();
         while( enum.hasMoreElements() )
         {
-            BaseTest test = ( BaseTest )enum.nextElement();
+            BaseTest test = (BaseTest)enum.nextElement();
             test.setHaltonfailure( value );
         }
     }
@@ -373,15 +374,15 @@ public class JUnitTask extends Task
     /**
      * Runs the testcase.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Enumeration list = getIndividualTests();
         while( list.hasMoreElements() )
         {
-            JUnitTest test = ( JUnitTest )list.nextElement();
+            JUnitTest test = (JUnitTest)list.nextElement();
             if( test.shouldRun( project ) )
             {
                 execute( test );
@@ -419,13 +420,13 @@ public class JUnitTask extends Task
      */
     protected Enumeration getIndividualTests()
     {
-        Enumeration[] enums = new Enumeration[batchTests.size() + 1];
+        Enumeration[] enums = new Enumeration[ batchTests.size() + 1 ];
         for( int i = 0; i < batchTests.size(); i++ )
         {
-            BatchTest batchtest = ( BatchTest )batchTests.elementAt( i );
-            enums[i] = batchtest.elements();
+            BatchTest batchtest = (BatchTest)batchTests.elementAt( i );
+            enums[ i ] = batchtest.elements();
         }
-        enums[enums.length - 1] = tests.elements();
+        enums[ enums.length - 1 ] = tests.elements();
         return Enumerations.fromCompound( enums );
     }
 
@@ -437,6 +438,7 @@ public class JUnitTask extends Task
      * @return The Output value
      */
     protected File getOutput( FormatterElement fe, JUnitTest test )
+        throws TaskException
     {
         if( fe.getUseFile() )
         {
@@ -468,7 +470,7 @@ public class JUnitTask extends Task
                 int pling = u.indexOf( "!" );
                 String jarName = u.substring( 9, pling );
                 log( "Implicitly adding " + jarName + " to classpath",
-                    Project.MSG_DEBUG );
+                     Project.MSG_DEBUG );
                 createClasspath().setLocation( new File( ( new File( jarName ) ).getAbsolutePath() ) );
             }
             else if( u.startsWith( "file:" ) )
@@ -476,13 +478,13 @@ public class JUnitTask extends Task
                 int tail = u.indexOf( resource );
                 String dirName = u.substring( 5, tail );
                 log( "Implicitly adding " + dirName + " to classpath",
-                    Project.MSG_DEBUG );
+                     Project.MSG_DEBUG );
                 createClasspath().setLocation( new File( ( new File( dirName ) ).getAbsolutePath() ) );
             }
             else
             {
                 log( "Don\'t know how to handle resource URL " + u,
-                    Project.MSG_DEBUG );
+                     Project.MSG_DEBUG );
             }
         }
         else
@@ -500,10 +502,10 @@ public class JUnitTask extends Task
     /**
      * @return <tt>null</tt> if there is a timeout value, otherwise the watchdog
      *      instance.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected ExecuteWatchdog createWatchdog()
-        throws BuildException
+        throws TaskException
     {
         if( timeout == null )
         {
@@ -516,10 +518,10 @@ public class JUnitTask extends Task
      * Run the tests.
      *
      * @param test Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void execute( JUnitTest test )
-        throws BuildException
+        throws TaskException
     {
         // set the default values if not specified
         //@todo should be moved to the test class instead.
@@ -558,10 +560,10 @@ public class JUnitTask extends Task
         if( errorOccurredHere || failureOccurredHere )
         {
             if( errorOccurredHere && test.getHaltonerror()
-                 || failureOccurredHere && test.getHaltonfailure() )
+                || failureOccurredHere && test.getHaltonfailure() )
             {
-                throw new BuildException( "Test " + test.getName() + " failed"
-                     + ( wasKilled ? " (timeout)" : "" )  );
+                throw new TaskException( "Test " + test.getName() + " failed"
+                                         + ( wasKilled ? " (timeout)" : "" ) );
             }
             else
             {
@@ -618,12 +620,12 @@ public class JUnitTask extends Task
      *      exceeds a certain amount of time. Can be <tt>null</tt> , in this
      *      case the test could probably hang forever.
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private int executeAsForked( JUnitTest test, ExecuteWatchdog watchdog )
-        throws BuildException
+        throws TaskException
     {
-        CommandlineJava cmd = ( CommandlineJava )commandline.clone();
+        CommandlineJava cmd = (CommandlineJava)commandline.clone();
 
         cmd.setClassname( "org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" );
         cmd.createArgument().setValue( test.getName() );
@@ -640,7 +642,7 @@ public class JUnitTask extends Task
         final FormatterElement[] feArray = mergeFormatters( test );
         for( int i = 0; i < feArray.length; i++ )
         {
-            FormatterElement fe = feArray[i];
+            FormatterElement fe = feArray[ i ];
             formatterArg.append( "formatter=" );
             formatterArg.append( fe.getClassname() );
             File outFile = getOutput( fe, test );
@@ -658,7 +660,7 @@ public class JUnitTask extends Task
         cmd.createArgument().setValue( "propsfile=" + propsFile.getAbsolutePath() );
         Hashtable p = project.getProperties();
         Properties props = new Properties();
-        for( Enumeration enum = p.keys(); enum.hasMoreElements();  )
+        for( Enumeration enum = p.keys(); enum.hasMoreElements(); )
         {
             Object key = enum.nextElement();
             props.put( key, p.get( key ) );
@@ -671,7 +673,7 @@ public class JUnitTask extends Task
         }
         catch( java.io.IOException e )
         {
-            throw new BuildException( "Error creating temporary properties file.", e );
+            throw new TaskException( "Error creating temporary properties file.", e );
         }
 
         Execute execute = new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ), watchdog );
@@ -690,12 +692,12 @@ public class JUnitTask extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Process fork failed.", e );
+            throw new TaskException( "Process fork failed.", e );
         }
         finally
         {
             if( !propsFile.delete() )
-                throw new BuildException( "Could not delete temporary properties file." );
+                throw new TaskException( "Could not delete temporary properties file." );
         }
 
         return retVal;
@@ -706,10 +708,10 @@ public class JUnitTask extends Task
      *
      * @param test Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private int executeInVM( JUnitTest test )
-        throws BuildException
+        throws TaskException
     {
         test.setProperties( project.getProperties() );
         if( dir != null )
@@ -752,7 +754,7 @@ public class JUnitTask extends Task
             final FormatterElement[] feArray = mergeFormatters( test );
             for( int i = 0; i < feArray.length; i++ )
             {
-                FormatterElement fe = feArray[i];
+                FormatterElement fe = feArray[ i ];
                 File outFile = getOutput( fe, test );
                 if( outFile != null )
                 {
@@ -779,9 +781,9 @@ public class JUnitTask extends Task
 
     private FormatterElement[] mergeFormatters( JUnitTest test )
     {
-        Vector feVector = ( Vector )formatters.clone();
+        Vector feVector = (Vector)formatters.clone();
         test.addFormattersTo( feVector );
-        FormatterElement[] feArray = new FormatterElement[feVector.size()];
+        FormatterElement[] feArray = new FormatterElement[ feVector.size() ];
         feVector.copyInto( feArray );
         return feArray;
     }
@@ -796,15 +798,15 @@ public class JUnitTask extends Task
         public String[] getValues()
         {
             return new String[]{"true", "yes", "false", "no",
-                "on", "off", "withOutAndErr"};
+                                "on", "off", "withOutAndErr"};
         }
 
         public boolean asBoolean()
         {
             return "true".equals( value )
-                 || "on".equals( value )
-                 || "yes".equals( value )
-                 || "withOutAndErr".equals( value );
+                || "on".equals( value )
+                || "yes".equals( value )
+                || "withOutAndErr".equals( value );
         }
     }
 

@@ -6,14 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.condition;
+
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 import java.util.Vector;
+import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.Available;
 import org.apache.tools.ant.taskdefs.Checksum;
 import org.apache.tools.ant.taskdefs.UpToDate;
-import org.apache.myrmidon.framework.Os;
 
 /**
  * Baseclass for the &lt;condition&gt; task as well as several conditions -
@@ -201,7 +202,7 @@ public abstract class ConditionBase extends ProjectComponent
 
             if( o instanceof ProjectComponent )
             {
-                ( ( ProjectComponent )o ).setProject( getProject() );
+                ( (ProjectComponent)o ).setProject( getProject() );
             }
             return o;
         }

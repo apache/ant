@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -178,14 +179,13 @@ public class MParse extends Task
         return sourcepath;
     }
 
-
     /**
      * execute the command line
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -202,10 +202,10 @@ public class MParse extends Task
     /**
      * check the options and build the command line
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void setUp()
-        throws BuildException
+        throws TaskException
     {
         checkOptions();
 
@@ -214,7 +214,7 @@ public class MParse extends Task
         final Path classPath = cmdl.createClasspath( project );
         for( int i = 0; i < jars.length; i++ )
         {
-            classPath.createPathElement().setLocation( jars[i] );
+            classPath.createPathElement().setLocation( jars[ i ] );
         }
 
         // set the metamata.home property
@@ -242,7 +242,7 @@ public class MParse extends Task
         files.addElement( new File( metahome, "lib/metamata.jar" ) );
         files.addElement( new File( metahome, "bin/lib/JavaCC.zip" ) );
 
-        File[] array = new File[files.size()];
+        File[] array = new File[ files.size() ];
         files.copyInto( array );
         return array;
     }
@@ -279,20 +279,19 @@ public class MParse extends Task
         }
         options.addElement( target.getAbsolutePath() );
 
-        String[] array = new String[options.size()];
+        String[] array = new String[ options.size() ];
         options.copyInto( array );
         return array;
     }
-
 
     /**
      * execute the process with a specific handler
      *
      * @param handler Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void _execute( ExecuteStreamHandler handler )
-        throws BuildException
+        throws TaskException
     {
         // target has been checked as a .jj, see if there is a matching
         // java file and if it is needed to run to process the grammar
@@ -313,28 +312,27 @@ public class MParse extends Task
         {
             if( process.execute() != 0 )
             {
-                throw new BuildException( "Metamata task failed." );
+                throw new TaskException( "Metamata task failed." );
             }
         }
         catch( IOException e )
         {
-            throw new BuildException( "Failed to launch Metamata task: " + e );
+            throw new TaskException( "Failed to launch Metamata task: " + e );
         }
     }
-
 
     /**
      * validate options set and resolve files and paths
      *
-     * @throws BuildException thrown if an option has an incorrect state.
+     * @throws TaskException thrown if an option has an incorrect state.
      */
     protected void checkOptions()
-        throws BuildException
+        throws TaskException
     {
         // check that the home is ok.
         if( metahome == null || !metahome.exists() )
         {
-            throw new BuildException( "'metamatahome' must point to Metamata home directory." );
+            throw new TaskException( "'metamatahome' must point to Metamata home directory." );
         }
         metahome = resolveFile( metahome.getPath() );
 
@@ -342,16 +340,16 @@ public class MParse extends Task
         File[] jars = getMetamataLibs();
         for( int i = 0; i < jars.length; i++ )
         {
-            if( !jars[i].exists() )
+            if( !jars[ i ].exists() )
             {
-                throw new BuildException( jars[i] + " does not exist. Check your metamata installation." );
+                throw new TaskException( jars[ i ] + " does not exist. Check your metamata installation." );
             }
         }
 
         // check that the target is ok and resolve it.
         if( target == null || !target.isFile() || !target.getName().endsWith( ".jj" ) )
         {
-            throw new BuildException( "Invalid target: " + target );
+            throw new TaskException( "Invalid target: " + target );
         }
         target = resolveFile( target.getPath() );
     }
@@ -395,11 +393,11 @@ public class MParse extends Task
      *
      * @param tofile the file to write the options to.
      * @param options the array of options element to write to the file.
-     * @throws BuildException thrown if there is a problem while writing to the
+     * @throws TaskException thrown if there is a problem while writing to the
      *      file.
      */
     protected void generateOptionsFile( File tofile, String[] options )
-        throws BuildException
+        throws TaskException
     {
         FileWriter fw = null;
         try
@@ -408,13 +406,13 @@ public class MParse extends Task
             PrintWriter pw = new PrintWriter( fw );
             for( int i = 0; i < options.length; i++ )
             {
-                pw.println( options[i] );
+                pw.println( options[ i ] );
             }
             pw.flush();
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error while writing options file " + tofile, e );
+            throw new TaskException( "Error while writing options file " + tofile, e );
         }
         finally
         {
@@ -425,7 +423,8 @@ public class MParse extends Task
                     fw.close();
                 }
                 catch( IOException ignored )
-                {}
+                {
+                }
             }
         }
     }

@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.vss;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -316,10 +317,10 @@ public class MSVSSLABEL extends MSVSS
      * Builds a command line to execute ss and then calls Exec's run method to
      * execute the command line.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Commandline commandLine = new Commandline();
         int result = 0;
@@ -328,12 +329,12 @@ public class MSVSSLABEL extends MSVSS
         if( getVsspath() == null )
         {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         if( getLabel() == null )
         {
             String msg = "label attribute must be set!";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
 
         // now look for illegal combinations of things ...
@@ -368,7 +369,7 @@ public class MSVSSLABEL extends MSVSS
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
 
     }

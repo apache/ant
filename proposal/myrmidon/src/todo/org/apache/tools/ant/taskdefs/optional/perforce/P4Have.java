@@ -6,8 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
 
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * P4Have - lists files currently on client. P4Have simply dumps the current
@@ -19,7 +19,7 @@ public class P4Have extends P4Base
 {
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         execP4Command( "have " + P4CmdOpts + " " + P4View, new SimpleP4OutputHandler( this ) );
     }

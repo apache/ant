@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -13,7 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -83,7 +84,7 @@ public class ExecTask extends Task
     }
 
     /**
-     * Throw a BuildException if process returns non 0.
+     * Throw a TaskException if process returns non 0.
      *
      * @param fail The new Failonerror value
      */
@@ -189,10 +190,10 @@ public class ExecTask extends Task
     /**
      * Do the work.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         checkConfiguration();
         if( isValidOs() )
@@ -243,7 +244,7 @@ public class ExecTask extends Task
         {
             if( failOnError )
             {
-                throw new BuildException( taskType + " returned: " + err );
+                throw new TaskException( taskType + " returned: " + err );
             }
             else
             {
@@ -271,22 +272,22 @@ public class ExecTask extends Task
     /**
      * Has the user set all necessary attributes?
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void checkConfiguration()
-        throws BuildException
+        throws TaskException
     {
         if( cmdl.getExecutable() == null )
         {
-            throw new BuildException( "no executable specified" );
+            throw new TaskException( "no executable specified" );
         }
         if( dir != null && !dir.exists() )
         {
-            throw new BuildException( "The directory you specified does not exist" );
+            throw new TaskException( "The directory you specified does not exist" );
         }
         if( dir != null && !dir.isDirectory() )
         {
-            throw new BuildException( "The directory you specified is not a directory" );
+            throw new TaskException( "The directory you specified is not a directory" );
         }
     }
 
@@ -294,10 +295,10 @@ public class ExecTask extends Task
      * Create the StreamHandler to use with our Execute instance.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected ExecuteStreamHandler createHandler()
-        throws BuildException
+        throws TaskException
     {
         if( out != null )
         {
@@ -309,11 +310,11 @@ public class ExecTask extends Task
             }
             catch( FileNotFoundException fne )
             {
-                throw new BuildException( "Cannot write to " + out, fne );
+                throw new TaskException( "Cannot write to " + out, fne );
             }
             catch( IOException ioe )
             {
-                throw new BuildException( "Cannot write to " + out, ioe );
+                throw new TaskException( "Cannot write to " + out, ioe );
             }
         }
         else if( outputprop != null )
@@ -325,7 +326,7 @@ public class ExecTask extends Task
         else
         {
             return new LogStreamHandler( this,
-                Project.MSG_INFO, Project.MSG_WARN );
+                                         Project.MSG_INFO, Project.MSG_WARN );
         }
     }
 
@@ -333,10 +334,10 @@ public class ExecTask extends Task
      * Create the Watchdog to kill a runaway process.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected ExecuteWatchdog createWatchdog()
-        throws BuildException
+        throws TaskException
     {
         if( timeout == null )
             return null;
@@ -356,7 +357,8 @@ public class ExecTask extends Task
                 baos.close();
         }
         catch( IOException io )
-        {}
+        {
+        }
     }
 
     /**
@@ -378,10 +380,10 @@ public class ExecTask extends Task
      * Create an Execute instance with the correct working directory set.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected Execute prepareExec()
-        throws BuildException
+        throws TaskException
     {
         // default directory to the project's base directory
         if( dir == null )
@@ -398,8 +400,8 @@ public class ExecTask extends Task
         {
             for( int i = 0; i < environment.length; i++ )
             {
-                log( "Setting environment variable: " + environment[i],
-                    Project.MSG_VERBOSE );
+                log( "Setting environment variable: " + environment[ i ],
+                     Project.MSG_VERBOSE );
             }
         }
         exe.setNewenvironment( newEnvironment );
@@ -412,10 +414,10 @@ public class ExecTask extends Task
      * by subclasses
      *
      * @param exe Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void runExec( Execute exe )
-        throws BuildException
+        throws TaskException
     {
         exe.setCommandline( cmdl.getCommandline() );
         try
@@ -426,7 +428,7 @@ public class ExecTask extends Task
         {
             if( failIfExecFails )
             {
-                throw new BuildException( "Execute failed: " + e.toString(), e );
+                throw new TaskException( "Execute failed: " + e.toString(), e );
             }
             else
             {

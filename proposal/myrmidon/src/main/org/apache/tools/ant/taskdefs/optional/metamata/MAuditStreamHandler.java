@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,7 +26,6 @@ import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-
 
 /**
  * This is a very bad stream handler for the MAudit task. All report to stdout
@@ -99,14 +99,18 @@ class MAuditStreamHandler implements ExecuteStreamHandler
      *
      * @param is The new ProcessErrorStream value
      */
-    public void setProcessErrorStream( InputStream is ) { }
+    public void setProcessErrorStream( InputStream is )
+    {
+    }
 
     /**
      * Ignore.
      *
      * @param os The new ProcessInputStream value
      */
-    public void setProcessInputStream( OutputStream os ) { }
+    public void setProcessInputStream( OutputStream os )
+    {
+    }
 
     /**
      * Set the inputstream
@@ -148,9 +152,9 @@ class MAuditStreamHandler implements ExecuteStreamHandler
         int errors = 0;
         while( keys.hasMoreElements() )
         {
-            String filepath = ( String )keys.nextElement();
-            Vector v = ( Vector )auditedFiles.get( filepath );
-            String fullclassname = ( String )filemapping.get( filepath );
+            String filepath = (String)keys.nextElement();
+            Vector v = (Vector)auditedFiles.get( filepath );
+            String fullclassname = (String)filemapping.get( filepath );
             if( fullclassname == null )
             {
                 task.getProject().log( "Could not find class mapping for " + filepath, Project.MSG_WARN );
@@ -166,7 +170,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler
             errors += v.size();
             for( int i = 0; i < v.size(); i++ )
             {
-                MAudit.Violation violation = ( MAudit.Violation )v.elementAt( i );
+                MAudit.Violation violation = (MAudit.Violation)v.elementAt( i );
                 Element error = doc.createElement( "violation" );
                 error.setAttribute( "line", String.valueOf( violation.line ) );
                 error.setAttribute( "message", violation.error );
@@ -202,7 +206,8 @@ class MAuditStreamHandler implements ExecuteStreamHandler
                             wri.close();
                         }
                         catch( IOException e )
-                        {}
+                        {
+                        }
                     }
                 }
             }
@@ -218,7 +223,7 @@ class MAuditStreamHandler implements ExecuteStreamHandler
      */
     protected void addViolationEntry( String file, MAudit.Violation entry )
     {
-        Vector violations = ( Vector )auditedFiles.get( file );
+        Vector violations = (Vector)auditedFiles.get( file );
         // if there is no decl for this file yet, create it.
         if( violations == null )
         {
@@ -251,9 +256,9 @@ class MAuditStreamHandler implements ExecuteStreamHandler
         Vector matches = matcher.getGroups( line );
         if( matches != null )
         {
-            String file = ( String )matches.elementAt( 1 );
-            int lineNum = Integer.parseInt( ( String )matches.elementAt( 2 ) );
-            String msg = ( String )matches.elementAt( 3 );
+            String file = (String)matches.elementAt( 1 );
+            int lineNum = Integer.parseInt( (String)matches.elementAt( 2 ) );
+            String msg = (String)matches.elementAt( 3 );
             addViolationEntry( file, MAudit.createViolation( lineNum, msg ) );
         }
         else

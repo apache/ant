@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.OutputStream;
 import junit.framework.TestListener;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This Interface describes classes that format the results of a JUnit testrun.
@@ -21,19 +22,19 @@ public interface JUnitResultFormatter extends TestListener
      * The whole testsuite started.
      *
      * @param suite Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     void startTestSuite( JUnitTest suite )
-        throws BuildException;
+        throws TaskException;
 
     /**
      * The whole testsuite ended.
      *
      * @param suite Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     void endTestSuite( JUnitTest suite )
-        throws BuildException;
+        throws TaskException;
 
     /**
      * Sets the stream the formatter is supposed to write its results to.

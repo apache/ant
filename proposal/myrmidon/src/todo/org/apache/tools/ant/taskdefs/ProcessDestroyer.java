@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -16,7 +17,7 @@ import java.util.Vector;
  * @author <a href="mailto:mnewcomb@tacintel.com">Michael Newcomb</a>
  */
 class ProcessDestroyer
-     extends Thread
+    extends Thread
 {
 
     private Vector processes = new Vector();
@@ -83,7 +84,7 @@ class ProcessDestroyer
             Enumeration e = processes.elements();
             while( e.hasMoreElements() )
             {
-                ( ( Process )e.nextElement() ).destroy();
+                ( (Process)e.nextElement() ).destroy();
             }
         }
     }

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
+
 import java.util.Vector;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
@@ -28,7 +29,9 @@ public class ReportFilters
      */
     protected Vector matchers = null;
 
-    public ReportFilters() { }
+    public ReportFilters()
+    {
+    }
 
     /**
      * Check whether a given &lt;classname&gt;&lt;method&gt;() is accepted by
@@ -51,8 +54,8 @@ public class ReportFilters
         final int size = filters.size();
         for( int i = 0; i < size; i++ )
         {
-            FilterElement filter = ( FilterElement )filters.elementAt( i );
-            RegexpMatcher matcher = ( RegexpMatcher )matchers.elementAt( i );
+            FilterElement filter = (FilterElement)filters.elementAt( i );
+            RegexpMatcher matcher = (RegexpMatcher)matchers.elementAt( i );
             if( filter instanceof Include )
             {
                 result = result || matcher.matches( methodname );
@@ -95,7 +98,7 @@ public class ReportFilters
         matchers = new Vector();
         for( int i = 0; i < size; i++ )
         {
-            FilterElement filter = ( FilterElement )filters.elementAt( i );
+            FilterElement filter = (FilterElement)filters.elementAt( i );
             RegexpMatcher matcher = factory.newRegexpMatcher();
             String pattern = filter.getAsPattern();
             matcher.setPattern( pattern );
@@ -111,7 +114,6 @@ public class ReportFilters
     public static class Exclude extends FilterElement
     {
     }
-
 
     /**
      * default abstract filter element class

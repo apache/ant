@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
@@ -22,10 +23,10 @@ public class JavacExternal extends DefaultCompilerAdapter
      * Performs a compile using the Javac externally.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         attributes.log( "Using external javac compiler", Project.MSG_VERBOSE );
 

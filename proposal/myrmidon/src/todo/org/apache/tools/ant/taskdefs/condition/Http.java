@@ -6,12 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.condition;
-import java.io.IOException;
+
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 
@@ -31,11 +31,11 @@ public class Http extends ProjectComponent implements Condition
     }
 
     public boolean eval()
-        throws BuildException
+        throws TaskException
     {
         if( spec == null )
         {
-            throw new BuildException( "No url specified in HTTP task" );
+            throw new TaskException( "No url specified in HTTP task" );
         }
         log( "Checking for " + spec, Project.MSG_VERBOSE );
         try
@@ -46,7 +46,7 @@ public class Http extends ProjectComponent implements Condition
                 URLConnection conn = url.openConnection();
                 if( conn instanceof HttpURLConnection )
                 {
-                    HttpURLConnection http = ( HttpURLConnection )conn;
+                    HttpURLConnection http = (HttpURLConnection)conn;
                     int code = http.getResponseCode();
                     log( "Result code for " + spec + " was " + code, Project.MSG_VERBOSE );
                     if( code > 0 && code < 500 )
@@ -66,7 +66,7 @@ public class Http extends ProjectComponent implements Condition
         }
         catch( MalformedURLException e )
         {
-            throw new BuildException( "Badly formed URL: " + spec, e );
+            throw new TaskException( "Badly formed URL: " + spec, e );
         }
         return true;
     }

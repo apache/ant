@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sound;
+
 import java.io.File;
 import java.io.IOException;
 import javax.sound.sampled.AudioFormat;
@@ -14,16 +15,13 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
-import javax.sound.sampled.LineEvent;// imports for all the sound classes required
-// note: comes with jmf or jdk1.3 +
-// these can be obtained from http://java.sun.com/products/java-media/sound/
+import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
-import org.apache.tools.ant.BuildEvent;// ant includes
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
-
 
 /**
  * This class is designed to be used by any AntTask that requires audio output.
@@ -47,8 +45,9 @@ public class AntSoundPlayer implements LineListener, BuildListener
     private int loopsFail = 0;
     private Long durationFail = null;
 
-    public AntSoundPlayer() { }
-
+    public AntSoundPlayer()
+    {
+    }
 
     /**
      * @param fileFail The feature to be added to the BuildFailedSound attribute
@@ -98,13 +97,14 @@ public class AntSoundPlayer implements LineListener, BuildListener
         }
     }
 
-
     /**
      * Fired before any targets are started.
      *
      * @param event Description of Parameter
      */
-    public void buildStarted( BuildEvent event ) { }
+    public void buildStarted( BuildEvent event )
+    {
+    }
 
     /**
      * Fired whenever a message is logged.
@@ -113,7 +113,9 @@ public class AntSoundPlayer implements LineListener, BuildListener
      * @see BuildEvent#getMessage()
      * @see BuildEvent#getPriority()
      */
-    public void messageLogged( BuildEvent event ) { }
+    public void messageLogged( BuildEvent event )
+    {
+    }
 
     /**
      * Fired when a target has finished. This event will still be thrown if an
@@ -122,7 +124,9 @@ public class AntSoundPlayer implements LineListener, BuildListener
      * @param event Description of Parameter
      * @see BuildEvent#getException()
      */
-    public void targetFinished( BuildEvent event ) { }
+    public void targetFinished( BuildEvent event )
+    {
+    }
 
     /**
      * Fired when a target is started.
@@ -130,7 +134,9 @@ public class AntSoundPlayer implements LineListener, BuildListener
      * @param event Description of Parameter
      * @see BuildEvent#getTarget()
      */
-    public void targetStarted( BuildEvent event ) { }
+    public void targetStarted( BuildEvent event )
+    {
+    }
 
     /**
      * Fired when a task has finished. This event will still be throw if an
@@ -139,7 +145,9 @@ public class AntSoundPlayer implements LineListener, BuildListener
      * @param event Description of Parameter
      * @see BuildEvent#getException()
      */
-    public void taskFinished( BuildEvent event ) { }
+    public void taskFinished( BuildEvent event )
+    {
+    }
 
     /**
      * Fired when a task is started.
@@ -147,7 +155,9 @@ public class AntSoundPlayer implements LineListener, BuildListener
      * @param event Description of Parameter
      * @see BuildEvent#getTask()
      */
-    public void taskStarted( BuildEvent event ) { }
+    public void taskStarted( BuildEvent event )
+    {
+    }
 
     /**
      * This is implemented to listen for any line events and closes the clip if
@@ -205,10 +215,10 @@ public class AntSoundPlayer implements LineListener, BuildListener
         {
             AudioFormat format = audioInputStream.getFormat();
             DataLine.Info info = new DataLine.Info( Clip.class, format,
-                AudioSystem.NOT_SPECIFIED );
+                                                    AudioSystem.NOT_SPECIFIED );
             try
             {
-                audioClip = ( Clip )AudioSystem.getLine( info );
+                audioClip = (Clip)AudioSystem.getLine( info );
                 audioClip.addLineListener( this );
                 audioClip.open( audioInputStream );
             }

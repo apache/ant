@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.vss;
+
 import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -13,7 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -160,7 +161,7 @@ public class MSVSSHISTORY extends MSVSS
         }
         else
         {
-            throw new BuildException( "Style " + attr + " unknown." );
+            throw new TaskException( "Style " + attr + " unknown." );
         }
     }
 
@@ -214,10 +215,10 @@ public class MSVSSHISTORY extends MSVSS
      * Builds a command line to execute ss and then calls Exec's run method to
      * execute the command line.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Commandline commandLine = new Commandline();
         int result = 0;
@@ -226,7 +227,7 @@ public class MSVSSHISTORY extends MSVSS
         if( getVsspath() == null )
         {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
 
         // now look for illegal combinations of things ...
@@ -272,7 +273,7 @@ public class MSVSSHISTORY extends MSVSS
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
 
     }
@@ -322,10 +323,10 @@ public class MSVSSHISTORY extends MSVSS
      * Builds the version date command.
      *
      * @param cmd the commandline the command is to be added to
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void getVersionDateCommand( Commandline cmd )
-        throws BuildException
+        throws TaskException
     {
         if( m_FromDate == null && m_ToDate == null && m_NumDays == Integer.MIN_VALUE )
         {
@@ -346,7 +347,7 @@ public class MSVSSHISTORY extends MSVSS
             catch( ParseException ex )
             {
                 String msg = "Error parsing date: " + m_ToDate;
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
             cmd.createArgument().setValue( FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + startDate );
         }
@@ -360,7 +361,7 @@ public class MSVSSHISTORY extends MSVSS
             catch( ParseException ex )
             {
                 String msg = "Error parsing date: " + m_FromDate;
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
             cmd.createArgument().setValue( FLAG_VERSION_DATE + endDate + VALUE_FROMDATE + m_FromDate );
         }
@@ -381,10 +382,10 @@ public class MSVSSHISTORY extends MSVSS
      * Builds the version date command.
      *
      * @param cmd the commandline the command is to be added to
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void getVersionLabelCommand( Commandline cmd )
-        throws BuildException
+        throws TaskException
     {
         if( m_FromLabel == null && m_ToLabel == null )
         {

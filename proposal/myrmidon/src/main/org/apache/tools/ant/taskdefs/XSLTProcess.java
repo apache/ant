@@ -10,8 +10,8 @@ package org.apache.tools.ant.taskdefs;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
@@ -209,11 +209,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
     /**
      * Executes the task.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         DirectoryScanner scanner;
         String[] list;
@@ -221,7 +221,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
 
         if( xslFile == null )
         {
-            throw new BuildException( "no stylesheet specified" );
+            throw new TaskException( "no stylesheet specified" );
         }
 
         if( baseDir == null )
@@ -256,7 +256,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
         if( destDir == null )
         {
             String msg = "destdir attributes must be set!";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         scanner = getDirectoryScanner( baseDir );
         log( "Transforming into " + destDir, Project.MSG_INFO );
@@ -292,7 +292,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
                 }
                 catch( Exception e )
                 {
-                    throw new BuildException( "Error", e );
+                    throw new TaskException( "Error", e );
                 }
             }
             else
@@ -324,7 +324,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
                                 e4.printStackTrace();
                                 e3.printStackTrace();
                                 e2.printStackTrace();
-                                throw new BuildException( "Error", e1 );
+                                throw new TaskException( "Error", e1 );
                             }
                         }
                     }
@@ -338,10 +338,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
      * Loads the stylesheet and set xsl:param parameters.
      *
      * @param stylesheet Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void configureLiaison( File stylesheet )
-        throws BuildException
+        throws TaskException
     {
         if( stylesheetLoaded )
         {
@@ -362,20 +362,20 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
         catch( Exception ex )
         {
             log( "Failed to read stylesheet " + stylesheet, Project.MSG_INFO );
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
     }
 
     private void ensureDirectoryFor( File targetFile )
-        throws BuildException
+        throws TaskException
     {
         File directory = new File( targetFile.getParent() );
         if( !directory.exists() )
         {
             if( !directory.mkdirs() )
             {
-                throw new BuildException( "Unable to create directory: "
-                                          + directory.getAbsolutePath() );
+                throw new TaskException( "Unable to create directory: "
+                                         + directory.getAbsolutePath() );
             }
         }
     }
@@ -412,11 +412,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
      * @param xmlFile Description of Parameter
      * @param destDir Description of Parameter
      * @param stylesheet Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void process( File baseDir, String xmlFile, File destDir,
                           File stylesheet )
-        throws BuildException
+        throws TaskException
     {
 
         String fileExt = targetExtension;
@@ -457,13 +457,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
                 outFile.delete();
             }
 
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
 
     }//-- processXML
 
     private void process( File inFile, File outFile, File stylesheet )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -486,7 +486,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
             log( "Failed to process " + inFile, Project.MSG_INFO );
             if( outFile != null )
                 outFile.delete();
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
     }
 
@@ -534,18 +534,18 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
         }
 
         public String getExpression()
-            throws BuildException
+            throws TaskException
         {
             if( expression == null )
-                throw new BuildException( "Expression attribute is missing." );
+                throw new TaskException( "Expression attribute is missing." );
             return expression;
         }
 
         public String getName()
-            throws BuildException
+            throws TaskException
         {
             if( name == null )
-                throw new BuildException( "Name attribute is missing." );
+                throw new TaskException( "Name attribute is missing." );
             return name;
         }
     }

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -15,14 +16,13 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-
 
 /**
  * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5 and
@@ -60,13 +60,13 @@ import org.apache.tools.ant.types.Path;
 public class BorlandDeploymentTool extends GenericDeploymentTool implements ExecuteStreamHandler
 {
     public final static String PUBLICID_BORLAND_EJB
-         = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
+        = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
 
     protected final static String DEFAULT_BAS45_EJB11_DTD_LOCATION
-         = "/com/inprise/j2ee/xml/dtds/ejb-jar.dtd";
+        = "/com/inprise/j2ee/xml/dtds/ejb-jar.dtd";
 
     protected final static String DEFAULT_BAS_DTD_LOCATION
-         = "/com/inprise/j2ee/xml/dtds/ejb-inprise.dtd";
+        = "/com/inprise/j2ee/xml/dtds/ejb-inprise.dtd";
 
     protected final static String BAS_DD = "ejb-inprise.xml";
 
@@ -130,7 +130,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         this.java2iiopdebug = debug;
     }
 
-
     /**
      * setter used to store whether the task will include the generate client
      * task. (see : BorlandGenerateClient task)
@@ -158,7 +157,9 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
     }
 
     public void setProcessInputStream( OutputStream param1 )
-        throws IOException { }
+        throws IOException
+    {
+    }
 
     /**
      * @param is
@@ -188,10 +189,9 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         catch( Exception e )
         {
             String msg = "Exception while parsing  java2iiop output. Details: " + e.toString();
-            throw new BuildException( msg, e );
+            throw new TaskException( msg, e );
         }
     }
-
 
     /**
      * Setter used to store the suffix for the generated borland jar file.
@@ -213,7 +213,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         this.verify = verify;
     }
 
-
     /**
      * sets some additional args to send to verify command
      *
@@ -227,10 +226,13 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
     // implementation of org.apache.tools.ant.taskdefs.ExecuteStreamHandler interface
 
     public void start()
-        throws IOException { }
+        throws IOException
+    {
+    }
 
-    public void stop() { }
-
+    public void stop()
+    {
+    }
 
     protected DescriptorHandler getBorlandDescriptorHandler( final File srcDir )
     {
@@ -245,7 +247,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
                         String fileNameWithMETA = currentText;
                         //trim the META_INF\ off of the file name
                         String fileName = fileNameWithMETA.substring( META_DIR.length(),
-                            fileNameWithMETA.length() );
+                                                                      fileNameWithMETA.length() );
                         File descriptorFile = new File( srcDir, fileName );
 
                         ejbFiles.put( fileNameWithMETA, descriptorFile );
@@ -253,11 +255,11 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
                 }
             };
         handler.registerDTD( PUBLICID_BORLAND_EJB,
-            borlandDTD == null ? DEFAULT_BAS_DTD_LOCATION : borlandDTD );
+                             borlandDTD == null ? DEFAULT_BAS_DTD_LOCATION : borlandDTD );
 
-        for( Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();  )
+        for( Iterator i = getConfig().dtdLocations.iterator(); i.hasNext(); )
         {
-            EjbJar.DTDLocation dtdLocation = ( EjbJar.DTDLocation )i.next();
+            EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
             handler.registerDTD( dtdLocation.getPublicId(), dtdLocation.getLocation() );
         }
         return handler;
@@ -281,7 +283,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         else
         {
             log( "Unable to locate borland deployment descriptor. It was expected to be in " +
-                borlandDD.getPath(), Project.MSG_WARN );
+                 borlandDD.getPath(), Project.MSG_WARN );
             return;
         }
     }
@@ -295,17 +297,17 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
      * @param jarFile Description of Parameter
      * @param files Description of Parameter
      * @param publicId Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void writeJar( String baseName, File jarFile, Hashtable files, String publicId )
-        throws BuildException
+        throws TaskException
     {
         //build the home classes list.
         Vector homes = new Vector();
         Iterator it = files.keySet().iterator();
         while( it.hasNext() )
         {
-            String clazz = ( String )it.next();
+            String clazz = (String)it.next();
             if( clazz.endsWith( "Home.class" ) )
             {
                 //remove .class extension
@@ -396,13 +398,13 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
             if( result != 0 )
             {
                 String msg = "Failed executing java2iiop (ret code is " + result + ")";
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
         }
         catch( java.io.IOException e )
         {
             log( "java2iiop exception :" + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 
@@ -415,7 +417,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
     private void generateClient( File sourceJar )
     {
         getTask().getProject().addTaskDefinition( "internal_bas_generateclient",
-            org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient.class );
+                                                  org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient.class );
 
         org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient gentask = null;
         log( "generate client for " + sourceJar, Project.MSG_INFO );
@@ -424,7 +426,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
             String args = verifyArgs;
             args += " " + sourceJar.getPath();
 
-            gentask = ( BorlandGenerateClient )getTask().getProject().createTask( "internal_bas_generateclient" );
+            gentask = (BorlandGenerateClient)getTask().getProject().createTask( "internal_bas_generateclient" );
             gentask.setEjbjar( sourceJar );
             gentask.setDebug( java2iiopdebug );
             Path classpath = getCombinedClasspath();
@@ -439,7 +441,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         {
             //TO DO : delete the file if it is not a valid file.
             String msg = "Exception while calling " + VERIFY + " Details: " + e.toString();
-            throw new BuildException( msg, e );
+            throw new TaskException( msg, e );
         }
     }
 
@@ -487,7 +489,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
             String args = verifyArgs;
             args += " " + sourceJar.getPath();
 
-            javaTask = ( Java )getTask().getProject().createTask( "java" );
+            javaTask = (Java)getTask().getProject().createTask( "java" );
             javaTask.setTaskName( "verify" );
             javaTask.setClassname( VERIFY );
             Commandline.Argument arguments = javaTask.createArg();
@@ -506,7 +508,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
         {
             //TO DO : delete the file if it is not a valid file.
             String msg = "Exception while calling " + VERIFY + " Details: " + e.toString();
-            throw new BuildException( msg, e );
+            throw new TaskException( msg, e );
         }
     }
 

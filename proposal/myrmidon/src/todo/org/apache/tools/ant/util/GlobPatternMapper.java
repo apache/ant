@@ -103,14 +103,14 @@ public class GlobPatternMapper implements FileNameMapper
     public String[] mapFileName( String sourceFileName )
     {
         if( fromPrefix == null
-             || !sourceFileName.startsWith( fromPrefix )
-             || !sourceFileName.endsWith( fromPostfix ) )
+            || !sourceFileName.startsWith( fromPrefix )
+            || !sourceFileName.endsWith( fromPostfix ) )
         {
             return null;
         }
         return new String[]{toPrefix
-             + extractVariablePart( sourceFileName )
-             + toPostfix};
+            + extractVariablePart( sourceFileName )
+            + toPostfix};
     }
 
     /**
@@ -123,6 +123,6 @@ public class GlobPatternMapper implements FileNameMapper
     protected String extractVariablePart( String name )
     {
         return name.substring( prefixLength,
-            name.length() - postfixLength );
+                               name.length() - postfixLength );
     }
 }

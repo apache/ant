@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.bzip2.CBZip2InputStream;
 
 /**
@@ -49,26 +50,26 @@ public class BUnzip2 extends Unpack
                 int b = bis.read();
                 if( b != 'B' )
                 {
-                    throw new BuildException( "Invalid bz2 file." );
+                    throw new TaskException( "Invalid bz2 file." );
                 }
                 b = bis.read();
                 if( b != 'Z' )
                 {
-                    throw new BuildException( "Invalid bz2 file." );
+                    throw new TaskException( "Invalid bz2 file." );
                 }
                 zIn = new CBZip2InputStream( bis );
-                byte[] buffer = new byte[8 * 1024];
+                byte[] buffer = new byte[ 8 * 1024 ];
                 int count = 0;
                 do
                 {
                     out.write( buffer, 0, count );
                     count = zIn.read( buffer, 0, buffer.length );
-                }while ( count != -1 );
+                } while( count != -1 );
             }
             catch( IOException ioe )
             {
                 String msg = "Problem expanding bzip2 " + ioe.getMessage();
-                throw new BuildException( msg, ioe );
+                throw new TaskException( msg, ioe );
             }
             finally
             {
@@ -79,7 +80,8 @@ public class BUnzip2 extends Unpack
                         bis.close();
                     }
                     catch( IOException ioex )
-                    {}
+                    {
+                    }
                 }
                 if( fis != null )
                 {
@@ -88,7 +90,8 @@ public class BUnzip2 extends Unpack
                         fis.close();
                     }
                     catch( IOException ioex )
-                    {}
+                    {
+                    }
                 }
                 if( out != null )
                 {
@@ -97,7 +100,8 @@ public class BUnzip2 extends Unpack
                         out.close();
                     }
                     catch( IOException ioex )
-                    {}
+                    {
+                    }
                 }
                 if( zIn != null )
                 {
@@ -106,7 +110,8 @@ public class BUnzip2 extends Unpack
                         zIn.close();
                     }
                     catch( IOException ioex )
-                    {}
+                    {
+                    }
                 }
             }
         }

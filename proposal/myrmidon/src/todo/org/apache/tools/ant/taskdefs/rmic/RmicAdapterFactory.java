@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.rmic;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 
+import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.Task;
 
 /**
  * Creates the necessary rmic adapter, given basic criteria.
@@ -22,7 +22,9 @@ public class RmicAdapterFactory
     /**
      * This is a singlton -- can't create instances!!
      */
-    private RmicAdapterFactory() { }
+    private RmicAdapterFactory()
+    {
+    }
 
     /**
      * Based on the parameter passed in, this method creates the necessary
@@ -39,11 +41,11 @@ public class RmicAdapterFactory
      *      classname of the rmic's adapter.
      * @param task a task to log through.
      * @return The Rmic value
-     * @throws BuildException if the rmic type could not be resolved into a rmic
+     * @throws TaskException if the rmic type could not be resolved into a rmic
      *      adapter.
      */
     public static RmicAdapter getRmic( String rmicType, Task task )
-        throws BuildException
+        throws TaskException
     {
         if( rmicType == null )
         {
@@ -66,7 +68,7 @@ public class RmicAdapterFactory
                 }
                 catch( ClassNotFoundException cnfk )
                 {
-                    throw new BuildException( "Couldn\'t guess rmic implementation" );
+                    throw new TaskException( "Couldn\'t guess rmic implementation" );
                 }
             }
         }
@@ -92,32 +94,32 @@ public class RmicAdapterFactory
      *
      * @param className The fully qualified classname to be created.
      * @return Description of the Returned Value
-     * @throws BuildException This is the fit that is thrown if className isn't
+     * @throws TaskException This is the fit that is thrown if className isn't
      *      an instance of RmicAdapter.
      */
     private static RmicAdapter resolveClassName( String className )
-        throws BuildException
+        throws TaskException
     {
         try
         {
             Class c = Class.forName( className );
             Object o = c.newInstance();
-            return ( RmicAdapter )o;
+            return (RmicAdapter)o;
         }
         catch( ClassNotFoundException cnfe )
         {
-            throw new BuildException( className + " can\'t be found.", cnfe );
+            throw new TaskException( className + " can\'t be found.", cnfe );
         }
         catch( ClassCastException cce )
         {
-            throw new BuildException( className + " isn\'t the classname of "
-                 + "a rmic adapter.", cce );
+            throw new TaskException( className + " isn\'t the classname of "
+                                     + "a rmic adapter.", cce );
         }
         catch( Throwable t )
         {
             // for all other possibilities
-            throw new BuildException( className + " caused an interesting "
-                 + "exception.", t );
+            throw new TaskException( className + " caused an interesting "
+                                     + "exception.", t );
         }
     }
 }

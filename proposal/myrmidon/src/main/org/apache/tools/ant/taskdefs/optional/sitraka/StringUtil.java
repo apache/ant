@@ -17,7 +17,9 @@ public final class StringUtil
     /**
      * private constructor, it's a utility class
      */
-    private StringUtil() { }
+    private StringUtil()
+    {
+    }
 
     /**
      * Replaces all occurences of <tt>find</tt> with <tt>replacement</tt> in the

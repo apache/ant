@@ -6,10 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.util.Stack;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.DataType;
 
 /**
  * A regular expression substitution datatype. It is an expression that is meant
@@ -72,11 +72,11 @@ public class Substitution extends DataType
         if( !( o instanceof Substitution ) )
         {
             String msg = ref.getRefId() + " doesn\'t denote a substitution";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         else
         {
-            return ( Substitution )o;
+            return (Substitution)o;
         }
     }
 

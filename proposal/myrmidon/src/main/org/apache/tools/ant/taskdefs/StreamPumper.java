@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -26,7 +27,6 @@ public class StreamPumper implements Runnable
     private InputStream is;
     private OutputStream os;
 
-
     /**
      * Create a new stream pumper.
      *
@@ -39,14 +39,13 @@ public class StreamPumper implements Runnable
         this.os = os;
     }
 
-
     /**
      * Copies data from the input stream to the output stream. Terminates as
      * soon as the input stream is closed or an error occurs.
      */
     public void run()
     {
-        final byte[] buf = new byte[SIZE];
+        final byte[] buf = new byte[ SIZE ];
 
         int length;
         try
@@ -59,10 +58,12 @@ public class StreamPumper implements Runnable
                     Thread.sleep( SLEEP );
                 }
                 catch( InterruptedException e )
-                {}
+                {
+                }
             }
         }
         catch( IOException e )
-        {}
+        {
+        }
     }
 }

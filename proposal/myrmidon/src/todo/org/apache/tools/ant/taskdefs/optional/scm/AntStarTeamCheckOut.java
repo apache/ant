@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.scm;
+
 import com.starbase.starteam.Folder;
 import com.starbase.starteam.Item;
 import com.starbase.starteam.Property;
@@ -15,9 +16,8 @@ import com.starbase.starteam.Type;
 import com.starbase.starteam.View;
 import com.starbase.util.Platform;
 import java.util.StringTokenizer;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 
 /**
  * Checks out files from a specific StarTeam server, project, view, and folder.
@@ -44,7 +44,7 @@ import org.apache.tools.ant.Project;
  * You can set AntStarTeamCheckOut to verbose or quiet mode. Also, it has a
  * safeguard against overwriting the files on your computer: If the target
  * directory you specify already exists, the program will throw a
- * BuildException. To override the exception, set <CODE>force</CODE> to true.
+ * TaskException. To override the exception, set <CODE>force</CODE> to true.
  * <BR>
  * <BR>
  * <B>This program makes use of functions from the StarTeam API. As a result
@@ -187,20 +187,19 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      */
     private boolean targetFolderAbsolute = false;
 
-
     /**
      * convenient method to check for conditions
      *
      * @param value Description of Parameter
      * @param msg Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private static void assertTrue( boolean value, String msg )
-        throws BuildException
+        throws TaskException
     {
         if( !value )
         {
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
     }
 
@@ -549,7 +548,6 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         return targetFolder;
     }
 
-
     /**
      * returns whether the StarTeam default path is factored into calculated
      * target path locations (false) or whether targetFolder is an absolute
@@ -600,10 +598,10 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     /**
      * Do the execution.
      *
-     * @exception BuildException
+     * @exception TaskException
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         // Connect to the StarTeam server, and log on.
         Server s = getServer();
@@ -638,7 +636,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         Property[] properties = t.getProperties();
         for( int i = 0; i < properties.length; i++ )
         {
-            Property p = properties[i];
+            Property p = properties[ i ];
             if( p.isPrimaryDescriptor() )
             {
                 return p;
@@ -660,7 +658,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         Property[] properties = t.getProperties();
         for( int i = 0; i < properties.length; i++ )
         {
-            Property p = properties[i];
+            Property p = properties[ i ];
             if( p.isDescriptor() && !p.isPrimaryDescriptor() )
             {
                 return p;
@@ -689,7 +687,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
     }
 
     protected void checkParameters()
-        throws BuildException
+        throws TaskException
     {
         // Check all of the properties that are required.
         assertTrue( getServerName() != null, "ServerName must be set." );
@@ -713,8 +711,8 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         java.io.File dirExist = new java.io.File( getTargetFolder() );
         if( dirExist.isDirectory() && !getForce() )
         {
-            throw new BuildException( "Target directory exists. Set \"force\" to \"true\" " +
-                "to continue anyway." );
+            throw new TaskException( "Target directory exists. Set \"force\" to \"true\" " +
+                                     "to continue anyway." );
         }
     }
 
@@ -741,7 +739,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         {
             if( p.getTypeCode() == Property.Types.ENUMERATED )
             {
-                return "\"" + p.getEnumDisplayName( ( ( Integer )value ).intValue() ) + "\"";
+                return "\"" + p.getEnumDisplayName( ( (Integer)value ).intValue() ) + "\"";
             }
             else
             {
@@ -797,7 +795,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         Item[] items = f.getItems( t.getName() );
         for( int i = 0; i < items.length; i++ )
         {
-            runItem( s, p, v, t, f, items[i], tgt );
+            runItem( s, p, v, t, f, items[ i ], tgt );
         }
 
         // Process all subfolders recursively if recursion is on.
@@ -806,7 +804,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             Folder[] subfolders = f.getSubFolders();
             for( int i = 0; i < subfolders.length; i++ )
             {
-                runFolder( s, p, v, t, subfolders[i], new java.io.File( tgt, subfolders[i].getName() ) );
+                runFolder( s, p, v, t, subfolders[ i ], new java.io.File( tgt, subfolders[ i ].getName() ) );
             }
         }
     }
@@ -835,7 +833,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         Property p1 = getPrimaryDescriptor( t );
         Property p2 = getSecondaryDescriptor( t );
 
-        String pName = ( String )item.get( p1.getName() );
+        String pName = (String)item.get( p1.getName() );
         if( !shouldCheckout( pName ) )
         {
             return;
@@ -905,11 +903,11 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         // Check it out; also ugly.
 
         // Change the item to be checked out to a StarTeam File.
-        com.starbase.starteam.File remote = ( com.starbase.starteam.File )item;
+        com.starbase.starteam.File remote = (com.starbase.starteam.File)item;
 
         // The local file name is simply the local target path (tgt) which has
         // been passed recursively down from the top of the tree, with the item's name appended.
-        java.io.File local = new java.io.File( tgt, ( String )item.get( p1.getName() ) );
+        java.io.File local = new java.io.File( tgt, (String)item.get( p1.getName() ) );
 
         try
         {
@@ -918,7 +916,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         }
         catch( Exception e )
         {
-            throw new BuildException( "Failed to checkout '" + local + "'", e );
+            throw new TaskException( "Failed to checkout '" + local + "'", e );
         }
     }
 
@@ -933,14 +931,14 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         View[] views = p.getViews();
         for( int i = 0; i < views.length; i++ )
         {
-            View v = views[i];
+            View v = views[ i ];
             if( v.getName().equals( getViewName() ) )
             {
                 if( getVerbose() )
                 {
                     log( "Found " + getProjectName() + delim + getViewName() + delim );
                 }
-                runType( s, p, v, s.typeForName( ( String )s.getTypeNames().FILE ) );
+                runType( s, p, v, s.typeForName( (String)s.getTypeNames().FILE ) );
                 break;
             }
         }
@@ -956,7 +954,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         com.starbase.starteam.Project[] projects = s.getProjects();
         for( int i = 0; i < projects.length; i++ )
         {
-            com.starbase.starteam.Project p = projects[i];
+            com.starbase.starteam.Project p = projects[ i ];
 
             if( p.getName().equals( getProjectName() ) )
             {
@@ -992,15 +990,15 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             {
                 f = StarTeamFinder.findFolder( v.getRootFolder(), getFolderName() );
                 assertTrue( null != f, "ERROR: " + getProjectName() + delim + getViewName() + delim +
-                    v.getRootFolder() + delim + getFolderName() + delim +
-                    " does not exist." );
+                                       v.getRootFolder() + delim + getFolderName() + delim +
+                                       " does not exist." );
             }
         }
 
         if( getVerbose() && getFolderName() != null )
         {
             log( "Found " + getProjectName() + delim + getViewName() +
-                delim + getFolderName() + delim + "\n" );
+                 delim + getFolderName() + delim + "\n" );
         }
 
         // For performance reasons, it is important to pre-fetch all the
@@ -1021,13 +1019,13 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         }
 
         // Now, build an array of the property names.
-        String[] strNames = new String[nProperties];
+        String[] strNames = new String[ nProperties ];
         int iProperty = 0;
-        strNames[iProperty++] = s.getPropertyNames().OBJECT_ID;
-        strNames[iProperty++] = p1.getName();
+        strNames[ iProperty++ ] = s.getPropertyNames().OBJECT_ID;
+        strNames[ iProperty++ ] = p1.getName();
         if( p2 != null )
         {
-            strNames[iProperty++] = p2.getName();
+            strNames[ iProperty++ ] = p2.getName();
         }
 
         // Pre-fetch the item properties and cache them.

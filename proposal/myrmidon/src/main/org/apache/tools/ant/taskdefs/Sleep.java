@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -41,12 +42,12 @@ public class Sleep extends Task
      */
     private int milliseconds = 0;
 
-
     /**
      * Creates new instance
      */
-    public Sleep() { }
-
+    public Sleep()
+    {
+    }
 
     /**
      * Sets the FailOnError attribute of the MimeMail object
@@ -58,7 +59,6 @@ public class Sleep extends Task
         this.failOnError = failOnError;
     }
 
-
     /**
      * Sets the Hours attribute of the Sleep object
      *
@@ -68,7 +68,6 @@ public class Sleep extends Task
     {
         this.hours = hours;
     }
-
 
     /**
      * Sets the Milliseconds attribute of the Sleep object
@@ -80,7 +79,6 @@ public class Sleep extends Task
         this.milliseconds = milliseconds;
     }
 
-
     /**
      * Sets the Minutes attribute of the Sleep object
      *
@@ -91,7 +89,6 @@ public class Sleep extends Task
         this.minutes = minutes;
     }
 
-
     /**
      * Sets the Seconds attribute of the Sleep object
      *
@@ -101,7 +98,6 @@ public class Sleep extends Task
     {
         this.seconds = seconds;
     }
-
 
     /**
      * sleep for a period of time
@@ -119,29 +115,28 @@ public class Sleep extends Task
         }
     }
 
-
     /**
-     * Executes this build task. throws org.apache.tools.ant.BuildException if
+     * Executes this build task. throws org.apache.tools.ant.TaskException if
      * there is an error during task execution.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         try
         {
             validate();
             long sleepTime = getSleepTime();
             log( "sleeping for " + sleepTime + " milliseconds",
-                Project.MSG_VERBOSE );
+                 Project.MSG_VERBOSE );
             doSleep( sleepTime );
         }
         catch( Exception e )
         {
             if( failOnError )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
             else
             {
@@ -151,22 +146,20 @@ public class Sleep extends Task
         }
     }
 
-
     /**
      * verify parameters
      *
-     * @throws BuildException if something is invalid
+     * @throws TaskException if something is invalid
      */
     public void validate()
-        throws BuildException
+        throws TaskException
     {
         long sleepTime = getSleepTime();
         if( getSleepTime() < 0 )
         {
-            throw new BuildException( "Negative sleep periods are not supported" );
+            throw new TaskException( "Negative sleep periods are not supported" );
         }
     }
-
 
     /**
      * return time to sleep
@@ -176,7 +169,7 @@ public class Sleep extends Task
 
     private long getSleepTime()
     {
-        return ( ( ( ( long )hours * 60 ) + minutes ) * 60 + seconds ) * 1000 + milliseconds;
+        return ( ( ( (long)hours * 60 ) + minutes ) * 60 + seconds ) * 1000 + milliseconds;
     }
 
 }

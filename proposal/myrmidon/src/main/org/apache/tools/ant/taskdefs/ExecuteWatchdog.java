@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Destroys a process running for too long. For example: <pre>
@@ -84,16 +85,16 @@ public class ExecuteWatchdog implements Runnable
      * been terminated either by 'error', timeout or manual intervention.
      * Information will be discarded once a new process is ran.
      *
-     * @throws BuildException a wrapped exception over the one that was silently
+     * @throws TaskException a wrapped exception over the one that was silently
      *      swallowed and stored during the process run.
      */
     public void checkException()
-        throws BuildException
+        throws TaskException
     {
         if( caught != null )
         {
-            throw new BuildException( "Exception in ExecuteWatchdog.run: "
-                 + caught.getMessage(), caught );
+            throw new TaskException( "Exception in ExecuteWatchdog.run: "
+                                     + caught.getMessage(), caught );
         }
     }
 
@@ -107,7 +108,6 @@ public class ExecuteWatchdog implements Runnable
     {
         return killedProcess;
     }
-
 
     /**
      * Watches the process and terminates it, if it runs for to long.
@@ -127,7 +127,8 @@ public class ExecuteWatchdog implements Runnable
                     wait( until - now );
                 }
                 catch( InterruptedException e )
-                {}
+                {
+                }
             }
 
             // if we are here, either someone stopped the watchdog,

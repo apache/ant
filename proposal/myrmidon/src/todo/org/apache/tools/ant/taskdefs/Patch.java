@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -70,7 +71,7 @@ public class Patch extends Task
     {
         if( !file.exists() )
         {
-            throw new BuildException( "patchfile " + file + " doesn\'t exist" );
+            throw new TaskException( "patchfile " + file + " doesn\'t exist" );
         }
         cmd.createArgument().setValue( "-i" );
         cmd.createArgument().setFile( file );
@@ -110,27 +111,27 @@ public class Patch extends Task
      * patch's <i>-p</i> option.
      *
      * @param num The new Strip value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setStrip( int num )
-        throws BuildException
+        throws TaskException
     {
         if( num < 0 )
         {
-            throw new BuildException( "strip has to be >= 0" );
+            throw new TaskException( "strip has to be >= 0" );
         }
         cmd.createArgument().setValue( "-p" + num );
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( !havePatchfile )
         {
-            throw new BuildException( "patchfile argument is required" );
+            throw new TaskException( "patchfile argument is required" );
         }
 
-        Commandline toExecute = ( Commandline )cmd.clone();
+        Commandline toExecute = (Commandline)cmd.clone();
         toExecute.setExecutable( "patch" );
 
         if( originalFile != null )
@@ -139,8 +140,8 @@ public class Patch extends Task
         }
 
         Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
-            Project.MSG_WARN ),
-            null );
+                                                         Project.MSG_WARN ),
+                                   null );
         exe.setCommandline( toExecute.getCommandline() );
         try
         {
@@ -148,7 +149,7 @@ public class Patch extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 

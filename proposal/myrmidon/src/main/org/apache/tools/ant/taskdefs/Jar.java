@@ -6,10 +6,19 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
-import java.io.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.Enumeration;
-import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
@@ -67,7 +76,7 @@ public class Jar extends Zip
     {
         if( !manifestFile.exists() )
         {
-            throw new BuildException( "Manifest file: " + manifestFile + " does not exist." );
+            throw new TaskException( "Manifest file: " + manifestFile + " does not exist." );
         }
 
         this.manifestFile = manifestFile;
@@ -86,11 +95,11 @@ public class Jar extends Zip
         catch( ManifestException e )
         {
             log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( "Invalid Manifest: " + manifestFile, e );
+            throw new TaskException( "Invalid Manifest: " + manifestFile, e );
         }
         catch( IOException e )
         {
-            throw new BuildException( "Unable to read manifest file: " + manifestFile, e );
+            throw new TaskException( "Unable to read manifest file: " + manifestFile, e );
         }
         finally
         {
@@ -111,7 +120,7 @@ public class Jar extends Zip
     public void setWhenempty( WhenEmpty we )
     {
         log( "JARs are never empty, they contain at least a manifest file",
-            Project.MSG_WARN );
+             Project.MSG_WARN );
     }
 
     public void addConfiguredManifest( Manifest newManifest )
@@ -139,10 +148,10 @@ public class Jar extends Zip
      * @param zipFile intended archive file (may or may not exist)
      * @return true if nothing need be done (may have done something already);
      *      false if archive creation should proceed
-     * @exception BuildException if it likes
+     * @exception TaskException if it likes
      */
     protected boolean isUpToDate( FileScanner[] scanners, File zipFile )
-        throws BuildException
+        throws TaskException
     {
         // need to handle manifest as a special check
         if( buildFileManifest || manifestFile == null )
@@ -172,7 +181,7 @@ public class Jar extends Zip
             {
                 // any problems and we will rebuild
                 log( "Updating jar since cannot read current jar manifest: " + e.getClass().getName() + e.getMessage(),
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
                 return false;
             }
             finally
@@ -213,7 +222,7 @@ public class Jar extends Zip
     }
 
     protected void finalizeZipOutputStream( ZipOutputStream zOut )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         if( index )
         {
@@ -222,7 +231,7 @@ public class Jar extends Zip
     }
 
     protected void initZipOutputStream( ZipOutputStream zOut )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         try
         {
@@ -232,9 +241,9 @@ public class Jar extends Zip
             {
                 execManifest.merge( manifest );
             }
-            for( Enumeration e = execManifest.getWarnings(); e.hasMoreElements();  )
+            for( Enumeration e = execManifest.getWarnings(); e.hasMoreElements(); )
             {
-                log( "Manifest warning: " + ( String )e.nextElement(), Project.MSG_WARN );
+                log( "Manifest warning: " + (String)e.nextElement(), Project.MSG_WARN );
             }
 
             zipDir( null, zOut, "META-INF/" );
@@ -251,7 +260,7 @@ public class Jar extends Zip
         catch( ManifestException e )
         {
             log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( "Invalid Manifest", e );
+            throw new TaskException( "Invalid Manifest", e );
         }
     }
 
@@ -265,7 +274,7 @@ public class Jar extends Zip
         if( vPath.equalsIgnoreCase( "META-INF/MANIFEST.MF" ) )
         {
             log( "Warning: selected " + archiveType + " files include a META-INF/MANIFEST.MF which will be ignored " +
-                "(please use manifest attribute to " + archiveType + " task)", Project.MSG_WARN );
+                 "(please use manifest attribute to " + archiveType + " task)", Project.MSG_WARN );
         }
         else
         {
@@ -287,7 +296,7 @@ public class Jar extends Zip
             }
             catch( IOException e )
             {
-                throw new BuildException( "Unable to read manifest file: ", e );
+                throw new TaskException( "Unable to read manifest file: ", e );
             }
         }
         else
@@ -325,7 +334,7 @@ public class Jar extends Zip
         Enumeration enum = addedDirs.keys();
         while( enum.hasMoreElements() )
         {
-            String dir = ( String )enum.nextElement();
+            String dir = (String)enum.nextElement();
 
             // try to be smart, not to be fooled by a weird directory name
             // @fixme do we need to check for directories starting by ./ ?
@@ -351,8 +360,6 @@ public class Jar extends Zip
         ByteArrayInputStream bais = new ByteArrayInputStream( baos.toByteArray() );
         super.zipFile( bais, zOut, INDEX_NAME, System.currentTimeMillis() );
     }
-
-
 
     /**
      * Handle situation when we encounter a manifest file If we haven't been
@@ -380,7 +387,7 @@ public class Jar extends Zip
         catch( ManifestException e )
         {
             log( "Manifest is invalid: " + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( "Invalid Manifest", e );
+            throw new TaskException( "Invalid Manifest", e );
         }
     }
 }

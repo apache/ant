@@ -6,11 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.Pack;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Compresses a file with the GZIP algorithm. Normally used to compress
@@ -34,7 +34,7 @@ public class GZip extends Pack
         catch( IOException ioe )
         {
             String msg = "Problem creating gzip " + ioe.getMessage();
-            throw new BuildException( msg, ioe );
+            throw new TaskException( msg, ioe );
         }
         finally
         {
@@ -46,7 +46,8 @@ public class GZip extends Pack
                     zOut.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }

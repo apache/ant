@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ccm;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
@@ -88,7 +89,6 @@ public class CCMCheck extends Continuus
         return _file;
     }
 
-
     /**
      * Get the value of task.
      *
@@ -99,17 +99,16 @@ public class CCMCheck extends Continuus
         return _task;
     }
 
-
     /**
      * Executes the task. <p>
      *
      * Builds a command line to execute ccm and then calls Exec's run method to
      * execute the command line. </p>
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
@@ -127,10 +126,9 @@ public class CCMCheck extends Continuus
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
     }
-
 
     /**
      * Check the command line options.

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
+
 import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.Project;
@@ -19,7 +20,7 @@ import org.apache.tools.ant.types.Commandline;
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
 public abstract class DefaultCompilerAdapter
-     implements CompilerAdapter
+    implements CompilerAdapter
 {
     /*
      * ------------------------------------------------------------
@@ -69,7 +70,7 @@ public abstract class DefaultCompilerAdapter
         Enumeration enum = compileList.elements();
         while( enum.hasMoreElements() )
         {
-            String arg = ( String )enum.nextElement();
+            String arg = (String)enum.nextElement();
             cmd.createArgument().setValue( arg );
             niceSourceList.append( "    " + arg + lSep );
         }

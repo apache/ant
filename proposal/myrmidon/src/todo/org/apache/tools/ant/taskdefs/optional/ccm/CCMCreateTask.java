@@ -6,16 +6,16 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ccm;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-
 
 /**
  * Task allows to create new ccm task and set it as the default
@@ -108,7 +108,9 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      * @exception IOException Description of Exception
      */
     public void setProcessInputStream( OutputStream param1 )
-        throws IOException { }
+        throws IOException
+    {
+    }
 
     /**
      * read the output stream to retrieve the new task number.
@@ -138,12 +140,12 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         {
             log( "error procession stream , null pointer exception", Project.MSG_ERR );
             npe.printStackTrace();
-            throw new BuildException( npe.getClass().getName() );
+            throw new TaskException( npe.getClass().getName() );
         }// end of catch
         catch( Exception e )
         {
             log( "error procession stream " + e.getMessage(), Project.MSG_ERR );
-            throw new BuildException( e.getMessage() );
+            throw new TaskException( e.getMessage() );
         }// end of try-catch
 
     }
@@ -188,7 +190,6 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         this.task = v;
     }
 
-
     /**
      * Get the value of comment.
      *
@@ -198,7 +199,6 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
     {
         return comment;
     }
-
 
     /**
      * Get the value of platform.
@@ -210,7 +210,6 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         return platform;
     }
 
-
     /**
      * Get the value of release.
      *
@@ -220,7 +219,6 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
     {
         return release;
     }
-
 
     /**
      * Get the value of resolver.
@@ -242,7 +240,6 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         return subSystem;
     }
 
-
     /**
      * Get the value of task.
      *
@@ -253,17 +250,16 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         return task;
     }
 
-
     /**
      * Executes the task. <p>
      *
      * Builds a command line to execute ccm and then calls Exec's run method to
      * execute the command line. </p>
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
@@ -280,7 +276,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
 
         //create task ok, set this task as the default one
@@ -295,7 +291,7 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine2.toString();
-            throw new BuildException( msg);
+            throw new TaskException( msg );
         }
 
     }
@@ -307,12 +303,15 @@ public class CCMCreateTask extends Continuus implements ExecuteStreamHandler
      * @exception IOException Description of Exception
      */
     public void start()
-        throws IOException { }
+        throws IOException
+    {
+    }
 
     /**
      */
-    public void stop() { }
-
+    public void stop()
+    {
+    }
 
     /**
      * Check the command line options.

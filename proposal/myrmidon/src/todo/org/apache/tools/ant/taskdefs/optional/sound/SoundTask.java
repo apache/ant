@@ -6,10 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sound;
+
 import java.io.File;
 import java.util.Random;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -33,7 +34,9 @@ public class SoundTask extends Task
     private BuildAlert success = null;
     private BuildAlert fail = null;
 
-    public SoundTask() { }
+    public SoundTask()
+    {
+    }
 
     public BuildAlert createFail()
     {
@@ -59,7 +62,7 @@ public class SoundTask extends Task
         else
         {
             soundPlayer.addBuildSuccessfulSound( success.getSource(),
-                success.getLoops(), success.getDuration() );
+                                                 success.getLoops(), success.getDuration() );
         }
 
         if( fail == null )
@@ -69,14 +72,16 @@ public class SoundTask extends Task
         else
         {
             soundPlayer.addBuildFailedSound( fail.getSource(),
-                fail.getLoops(), fail.getDuration() );
+                                             fail.getLoops(), fail.getDuration() );
         }
 
         getProject().addBuildListener( soundPlayer );
 
     }
 
-    public void init() { }
+    public void init()
+    {
+    }
 
     /**
      * A class to be extended by any BuildAlert's that require the output of
@@ -158,7 +163,7 @@ public class SoundTask extends Task
                     Vector files = new Vector();
                     for( int i = 0; i < entries.length; i++ )
                     {
-                        File f = new File( source, entries[i] );
+                        File f = new File( source, entries[ i ] );
                         if( f.isFile() )
                         {
                             files.addElement( f );
@@ -166,14 +171,14 @@ public class SoundTask extends Task
                     }
                     if( files.size() < 1 )
                     {
-                        throw new BuildException( "No files found in directory " + source );
+                        throw new TaskException( "No files found in directory " + source );
                     }
                     int numfiles = files.size();
                     // get a random number between 0 and the number of files
                     Random rn = new Random();
                     int x = rn.nextInt( numfiles );
                     // set the source to the file at that location
-                    this.source = ( File )files.elementAt( x );
+                    this.source = (File)files.elementAt( x );
                 }
             }
             else

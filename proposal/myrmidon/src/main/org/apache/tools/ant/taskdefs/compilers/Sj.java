@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
@@ -23,11 +24,11 @@ public class Sj extends DefaultCompilerAdapter
      * Performs a compile using the sj compiler from Symantec.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @author don@bea.com
      */
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         attributes.log( "Using symantec java compiler", Project.MSG_VERBOSE );
 

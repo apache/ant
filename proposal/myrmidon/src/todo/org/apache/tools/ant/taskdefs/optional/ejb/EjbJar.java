@@ -6,14 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;// Standard java imports
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;// XML imports
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;// Apache/Ant imports
-import org.apache.tools.ant.BuildException;
+import javax.xml.parsers.SAXParserFactory;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -94,8 +95,8 @@ public class EjbJar extends MatchingTask
         }
         else if( !config.namingScheme.getValue().equals( NamingScheme.BASEJARNAME ) )
         {
-            throw new BuildException( "The basejarname attribute is not compatible with the " +
-                config.namingScheme.getValue() + " naming scheme" );
+            throw new TaskException( "The basejarname attribute is not compatible with the " +
+                                     config.namingScheme.getValue() + " naming scheme" );
         }
     }
 
@@ -136,7 +137,6 @@ public class EjbJar extends MatchingTask
     {
         config.descriptorDir = inDir;
     }
-
 
     /**
      * Set the destination directory. The EJB jar files will be written into
@@ -183,7 +183,6 @@ public class EjbJar extends MatchingTask
         this.genericJarSuffix = inString;
     }
 
-
     /**
      * Set the Manifest file to use when jarring. As of EJB 1.1, manifest files
      * are no longer used to configure the EJB. However, they still have a vital
@@ -212,8 +211,8 @@ public class EjbJar extends MatchingTask
         if( !config.namingScheme.getValue().equals( NamingScheme.BASEJARNAME ) &&
             config.baseJarName != null )
         {
-            throw new BuildException( "The basejarname attribute is not compatible with the " +
-                config.namingScheme.getValue() + " naming scheme" );
+            throw new TaskException( "The basejarname attribute is not compatible with the " +
+                                     config.namingScheme.getValue() + " naming scheme" );
         }
     }
 
@@ -368,12 +367,12 @@ public class EjbJar extends MatchingTask
      * configured and then each descriptor found is passed to all the deployment
      * tool elements for processing.
      *
-     * @exception BuildException thrown whenever a problem is encountered that
+     * @exception TaskException thrown whenever a problem is encountered that
      *      cannot be recovered from, to signal to ant that a major problem
      *      occurred within this task.
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         validateConfig();
 
@@ -386,9 +385,9 @@ public class EjbJar extends MatchingTask
             deploymentTools.add( genericTool );
         }
 
-        for( Iterator i = deploymentTools.iterator(); i.hasNext();  )
+        for( Iterator i = deploymentTools.iterator(); i.hasNext(); )
         {
-            EJBDeploymentTool tool = ( EJBDeploymentTool )i.next();
+            EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
             tool.configure( config );
             tool.validateConfigured();
         }
@@ -405,32 +404,32 @@ public class EjbJar extends MatchingTask
             String[] files = ds.getIncludedFiles();
 
             log( files.length + " deployment descriptors located.",
-                Project.MSG_VERBOSE );
+                 Project.MSG_VERBOSE );
 
             // Loop through the files. Each file represents one deployment
             // descriptor, and hence one bean in our model.
             for( int index = 0; index < files.length; ++index )
             {
                 // process the deployment descriptor in each tool
-                for( Iterator i = deploymentTools.iterator(); i.hasNext();  )
+                for( Iterator i = deploymentTools.iterator(); i.hasNext(); )
                 {
-                    EJBDeploymentTool tool = ( EJBDeploymentTool )i.next();
-                    tool.processDescriptor( files[index], saxParser );
+                    EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
+                    tool.processDescriptor( files[ index ], saxParser );
                 }
             }
         }
         catch( SAXException se )
         {
             String msg = "SAXException while creating parser."
-                 + "  Details: "
-                 + se.getMessage();
-            throw new BuildException( msg, se );
+                + "  Details: "
+                + se.getMessage();
+            throw new TaskException( msg, se );
         }
         catch( ParserConfigurationException pce )
         {
             String msg = "ParserConfigurationException while creating parser. "
-                 + "Details: " + pce.getMessage();
-            throw new BuildException( msg, pce );
+                + "Details: " + pce.getMessage();
+            throw new TaskException( msg, pce );
         }
     }
 
@@ -438,7 +437,7 @@ public class EjbJar extends MatchingTask
     {
         if( config.srcDir == null )
         {
-            throw new BuildException( "The srcDir attribute must be specified" );
+            throw new TaskException( "The srcDir attribute must be specified" );
         }
 
         if( config.descriptorDir == null )
@@ -454,8 +453,8 @@ public class EjbJar extends MatchingTask
         else if( config.namingScheme.getValue().equals( NamingScheme.BASEJARNAME ) &&
             config.baseJarName == null )
         {
-            throw new BuildException( "The basejarname attribute must be specified " +
-                "with the basejarname naming scheme" );
+            throw new TaskException( "The basejarname attribute must be specified " +
+                                     "with the basejarname naming scheme" );
         }
     }
 

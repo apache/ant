@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 
 /**
@@ -19,8 +20,8 @@ public interface P4Handler extends ExecuteStreamHandler
 {
 
     public void process( String line )
-        throws BuildException;
+        throws TaskException;
 
     public void setOutput( String line )
-        throws BuildException;
+        throws TaskException;
 }

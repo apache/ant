@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -16,11 +17,11 @@ import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import netrexx.lang.Rexx;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Task to compile NetRexx source files. This task can take the following
@@ -112,7 +113,6 @@ public class NetRexxC extends MatchingTask
     private boolean symbols;
     private boolean time;
     private boolean utf8;
-
 
     /**
      * Set whether literals are treated as binary, rather than NetRexx types
@@ -263,7 +263,6 @@ public class NetRexxC extends MatchingTask
         this.java = java;
     }
 
-
     /**
      * Sets whether the generated java source file should be kept after
      * compilation. The generated files will have an extension of .java.keep,
@@ -392,7 +391,6 @@ public class NetRexxC extends MatchingTask
         this.strictprops = strictprops;
     }
 
-
     /**
      * Whether the compiler should force catching of exceptions by explicitly
      * named types
@@ -438,15 +436,15 @@ public class NetRexxC extends MatchingTask
     public void setTrace( String trace )
     {
         if( trace.equalsIgnoreCase( "trace" )
-             || trace.equalsIgnoreCase( "trace1" )
-             || trace.equalsIgnoreCase( "trace2" )
-             || trace.equalsIgnoreCase( "notrace" ) )
+            || trace.equalsIgnoreCase( "trace1" )
+            || trace.equalsIgnoreCase( "trace2" )
+            || trace.equalsIgnoreCase( "notrace" ) )
         {
             this.trace = trace;
         }
         else
         {
-            throw new BuildException( "Unknown trace value specified: '" + trace + "'" );
+            throw new TaskException( "Unknown trace value specified: '" + trace + "'" );
         }
     }
 
@@ -475,16 +473,16 @@ public class NetRexxC extends MatchingTask
     /**
      * Executes the task, i.e. does the actual compiler call
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         // first off, make sure that we've got a srcdir and destdir
         if( srcDir == null || destDir == null )
         {
-            throw new BuildException( "srcDir and destDir attributes must be set!" );
+            throw new TaskException( "srcDir and destDir attributes must be set!" );
         }
 
         // scan source and dest dirs to build up both copy lists and
@@ -515,6 +513,7 @@ public class NetRexxC extends MatchingTask
      * @return The CompileClasspath value
      */
     private String getCompileClasspath()
+        throws TaskException
     {
         StringBuffer classpath = new StringBuffer();
 
@@ -567,7 +566,7 @@ public class NetRexxC extends MatchingTask
         options.addElement( "-" + trace );
         options.addElement( utf8 ? "-utf8" : "-noutf8" );
         options.addElement( "-" + verbose );
-        String[] results = new String[options.size()];
+        String[] results = new String[ options.size() ];
         options.copyInto( results );
         return results;
     }
@@ -582,9 +581,10 @@ public class NetRexxC extends MatchingTask
      * @param source - source classpath to get file objects.
      */
     private void addExistingToClasspath( StringBuffer target, String source )
+        throws TaskException
     {
         StringTokenizer tok = new StringTokenizer( source,
-            System.getProperty( "path.separator" ), false );
+                                                   System.getProperty( "path.separator" ), false );
         while( tok.hasMoreTokens() )
         {
             File f = resolveFile( tok.nextToken() );
@@ -597,7 +597,7 @@ public class NetRexxC extends MatchingTask
             else
             {
                 log( "Dropping from classpath: " +
-                    f.getAbsolutePath(), Project.MSG_VERBOSE );
+                     f.getAbsolutePath(), Project.MSG_VERBOSE );
             }
         }
 
@@ -616,8 +616,8 @@ public class NetRexxC extends MatchingTask
             Enumeration enum = filecopyList.keys();
             while( enum.hasMoreElements() )
             {
-                String fromFile = ( String )enum.nextElement();
-                String toFile = ( String )filecopyList.get( fromFile );
+                String fromFile = (String)enum.nextElement();
+                String toFile = (String)filecopyList.get( fromFile );
                 try
                 {
                     FileUtils.newFileUtils().copyFile( fromFile, toFile );
@@ -625,8 +625,8 @@ public class NetRexxC extends MatchingTask
                 catch( IOException ioe )
                 {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
-                         + " due to " + ioe.getMessage();
-                    throw new BuildException( msg, ioe );
+                        + " due to " + ioe.getMessage();
+                    throw new TaskException( msg, ioe );
                 }
             }
         }
@@ -635,10 +635,10 @@ public class NetRexxC extends MatchingTask
     /**
      * Peforms a copmile using the NetRexx 1.1.x compiler
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void doNetRexxCompile()
-        throws BuildException
+        throws TaskException
     {
         log( "Using NetRexx compiler", Project.MSG_VERBOSE );
         String classpath = getCompileClasspath();
@@ -648,30 +648,30 @@ public class NetRexxC extends MatchingTask
         // create an array of strings for input to the compiler: one array
         // comes from the compile options, the other from the compileList
         String[] compileOptionsArray = getCompileOptionsAsArray();
-        String[] fileListArray = new String[compileList.size()];
+        String[] fileListArray = new String[ compileList.size() ];
         Enumeration e = compileList.elements();
         int j = 0;
         while( e.hasMoreElements() )
         {
-            fileListArray[j] = ( String )e.nextElement();
+            fileListArray[ j ] = (String)e.nextElement();
             j++;
         }
         // create a single array of arguments for the compiler
-        String compileArgs[] = new String[compileOptionsArray.length + fileListArray.length];
+        String compileArgs[] = new String[ compileOptionsArray.length + fileListArray.length ];
         for( int i = 0; i < compileOptionsArray.length; i++ )
         {
-            compileArgs[i] = compileOptionsArray[i];
+            compileArgs[ i ] = compileOptionsArray[ i ];
         }
         for( int i = 0; i < fileListArray.length; i++ )
         {
-            compileArgs[i + compileOptionsArray.length] = fileListArray[i];
+            compileArgs[ i + compileOptionsArray.length ] = fileListArray[ i ];
         }
 
         // print nice output about what we are doing for the log
         compileOptions.append( "Compilation args: " );
         for( int i = 0; i < compileOptionsArray.length; i++ )
         {
-            compileOptions.append( compileOptionsArray[i] );
+            compileOptions.append( compileOptionsArray[ i ] );
             compileOptions.append( " " );
         }
         log( compileOptions.toString(), Project.MSG_VERBOSE );
@@ -704,7 +704,7 @@ public class NetRexxC extends MatchingTask
             {// 1 is warnings from real NetRexxC
                 log( out.toString(), Project.MSG_ERR );
                 String msg = "Compile failed, messages should have been provided.";
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
             else if( rc == 1 )
             {
@@ -736,9 +736,9 @@ public class NetRexxC extends MatchingTask
     {
         for( int i = 0; i < files.length; i++ )
         {
-            File srcFile = new File( srcDir, files[i] );
-            File destFile = new File( destDir, files[i] );
-            String filename = files[i];
+            File srcFile = new File( srcDir, files[ i ] );
+            File destFile = new File( destDir, files[ i ] );
+            String filename = files[ i ];
             // if it's a non source file, copy it if a later date than the
             // dest
             // if it's a source file, see if the destination class file
@@ -747,7 +747,7 @@ public class NetRexxC extends MatchingTask
             {
                 File classFile =
                     new File( destDir,
-                    filename.substring( 0, filename.lastIndexOf( '.' ) ) + ".class" );
+                              filename.substring( 0, filename.lastIndexOf( '.' ) ) + ".class" );
 
                 if( !compile || srcFile.lastModified() > classFile.lastModified() )
                 {

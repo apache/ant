@@ -6,11 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
-import java.io.PrintStream;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -20,6 +20,7 @@ import org.apache.tools.ant.types.Path;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
+
 public class ExecuteJava
 {
 
@@ -43,7 +44,7 @@ public class ExecuteJava
     }
 
     public void execute( Project project )
-        throws BuildException
+        throws TaskException
     {
         final String classname = javaCommand.getExecutable();
         final Object[] argument = {javaCommand.getArguments()};
@@ -75,27 +76,27 @@ public class ExecuteJava
         }
         catch( NullPointerException e )
         {
-            throw new BuildException( "Could not find main() method in " + classname );
+            throw new TaskException( "Could not find main() method in " + classname );
         }
         catch( ClassNotFoundException e )
         {
-            throw new BuildException( "Could not find " + classname + ". Make sure you have it in your classpath" );
+            throw new TaskException( "Could not find " + classname + ". Make sure you have it in your classpath" );
         }
         catch( InvocationTargetException e )
         {
             Throwable t = e.getTargetException();
             if( !( t instanceof SecurityException ) )
             {
-                throw new BuildException( "Error", t );
+                throw new TaskException( "Error", t );
             }
             else
             {
-                throw ( SecurityException )t;
+                throw (SecurityException)t;
             }
         }
         catch( Exception e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
         finally
         {

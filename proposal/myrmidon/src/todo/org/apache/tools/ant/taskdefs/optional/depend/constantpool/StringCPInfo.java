@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-
 
 /**
  * A String Constant Pool Entry. The String info contains an index into the
@@ -54,7 +54,7 @@ public class StringCPInfo extends ConstantCPInfo
      */
     public void resolve( ConstantPool constantPool )
     {
-        setValue( ( ( Utf8CPInfo )constantPool.getEntry( index ) ).getValue() );
+        setValue( ( (Utf8CPInfo)constantPool.getEntry( index ) ).getValue() );
         super.resolve( constantPool );
     }
 

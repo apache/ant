@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Prints plain text output of the test to a specified Writer. Inspired by the
@@ -117,7 +118,7 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter
      */
     public void addFailure( Test test, AssertionFailedError t )
     {
-        addFailure( test, ( Throwable )t );
+        addFailure( test, (Throwable)t );
     }
 
     /**
@@ -125,16 +126,18 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter
      *
      * @param test Description of Parameter
      */
-    public void endTest( Test test ) { }
+    public void endTest( Test test )
+    {
+    }
 
     /**
      * The whole testsuite ended.
      *
      * @param suite Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void endTestSuite( JUnitTest suite )
-        throws BuildException
+        throws TaskException
     {
         String newLine = System.getProperty( "line.separator" );
         StringBuffer sb = new StringBuffer( "Testsuite: " );
@@ -182,15 +185,16 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter
             }
             finally
             {
-                if( m_out != ( Object )System.out &&
-                    m_out != ( Object )System.err )
+                if( m_out != (Object)System.out &&
+                    m_out != (Object)System.err )
                 {
                     try
                     {
                         m_out.close();
                     }
                     catch( java.io.IOException e )
-                    {}
+                    {
+                    }
                 }
             }
         }
@@ -201,16 +205,20 @@ public class BriefJUnitResultFormatter implements JUnitResultFormatter
      *
      * @param test Description of Parameter
      */
-    public void startTest( Test test ) { }
+    public void startTest( Test test )
+    {
+    }
 
     /**
      * The whole testsuite started.
      *
      * @param suite Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void startTestSuite( JUnitTest suite )
-        throws BuildException { }
+        throws TaskException
+    {
+    }
 
     /**
      * Format an error and print it.

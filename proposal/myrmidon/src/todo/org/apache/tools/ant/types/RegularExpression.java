@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.util.Stack;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.regexp.Regexp;
 import org.apache.tools.ant.util.regexp.RegexpFactory;
@@ -51,11 +52,13 @@ public class RegularExpression extends DataType
     private Regexp regexp;
 
     public RegularExpression()
+        throws TaskException
     {
         this.regexp = factory.newRegexp();
     }
 
     public void setPattern( String pattern )
+        throws TaskException
     {
         this.regexp.setPattern( pattern );
     }
@@ -67,6 +70,7 @@ public class RegularExpression extends DataType
      * @return The Pattern value
      */
     public String getPattern( Project p )
+        throws TaskException
     {
         if( isReference() )
             return getRef( p ).getPattern( p );
@@ -82,6 +86,7 @@ public class RegularExpression extends DataType
      * @return The Ref value
      */
     public RegularExpression getRef( Project p )
+        throws TaskException
     {
         if( !checked )
         {
@@ -94,11 +99,11 @@ public class RegularExpression extends DataType
         if( !( o instanceof RegularExpression ) )
         {
             String msg = ref.getRefId() + " doesn\'t denote a regularexpression";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         else
         {
-            return ( RegularExpression )o;
+            return (RegularExpression)o;
         }
     }
 

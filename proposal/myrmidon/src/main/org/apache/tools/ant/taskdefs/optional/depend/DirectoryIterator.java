@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -101,7 +102,7 @@ public class DirectoryIterator implements ClassFileIterator
             {
                 if( currentEnum.hasMoreElements() )
                 {
-                    File element = ( File )currentEnum.nextElement();
+                    File element = (File)currentEnum.nextElement();
 
                     if( element.isDirectory() )
                     {
@@ -141,7 +142,7 @@ public class DirectoryIterator implements ClassFileIterator
                     }
                     else
                     {
-                        currentEnum = ( Enumeration )enumStack.pop();
+                        currentEnum = (Enumeration)enumStack.pop();
                     }
                 }
             }
@@ -174,7 +175,7 @@ public class DirectoryIterator implements ClassFileIterator
 
             for( int i = 0; i < length; ++i )
             {
-                files.addElement( new File( directory, filesInDir[i] ) );
+                files.addElement( new File( directory, filesInDir[ i ] ) );
             }
         }
 

@@ -6,12 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-
 
 /**
  * Logs each line written to this stream to the log system of ant. Tries to be
@@ -47,7 +47,6 @@ public class LogOutputStream extends OutputStream
         return level;
     }
 
-
     /**
      * Writes all remaining
      *
@@ -61,7 +60,6 @@ public class LogOutputStream extends OutputStream
         super.close();
     }
 
-
     /**
      * Write the data to the buffer and flush the buffer, if a line separator is
      * detected.
@@ -72,7 +70,7 @@ public class LogOutputStream extends OutputStream
     public void write( int cc )
         throws IOException
     {
-        final byte c = ( byte )cc;
+        final byte c = (byte)cc;
         if( ( c == '\n' ) || ( c == '\r' ) )
         {
             if( !skip )
@@ -82,7 +80,6 @@ public class LogOutputStream extends OutputStream
             buffer.write( cc );
         skip = ( c == '\r' );
     }
-
 
     /**
      * Converts the buffer to a string and sends it to <code>processLine</code>

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.net;
+
 import com.oroinc.net.telnet.TelnetClient;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +14,7 @@ import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -136,7 +137,7 @@ public class TelnetTask extends Task
 
     public TelnetSubTask createRead()
     {
-        TelnetSubTask task = ( TelnetSubTask )new TelnetRead();
+        TelnetSubTask task = (TelnetSubTask)new TelnetRead();
         telnetTasks.addElement( task );
         return task;
     }
@@ -149,7 +150,7 @@ public class TelnetTask extends Task
      */
     public TelnetSubTask createWrite()
     {
-        TelnetSubTask task = ( TelnetSubTask )new TelnetWrite();
+        TelnetSubTask task = (TelnetSubTask)new TelnetWrite();
         telnetTasks.addElement( task );
         return task;
     }
@@ -158,24 +159,24 @@ public class TelnetTask extends Task
      * Verify that all parameters are included. Connect and possibly login
      * Iterate through the list of Reads and writes
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         /**
          * A server name is required to continue
          */
         if( server == null )
-            throw new BuildException( "No Server Specified" );
+            throw new TaskException( "No Server Specified" );
         /**
          * A userid and password must appear together if they appear. They are
          * not required.
          */
         if( userid == null && password != null )
-            throw new BuildException( "No Userid Specified" );
+            throw new TaskException( "No Userid Specified" );
         if( password == null && userid != null )
-            throw new BuildException( "No Password Specified" );
+            throw new TaskException( "No Password Specified" );
 
         /**
          * Create the telnet client object
@@ -187,7 +188,7 @@ public class TelnetTask extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Can't connect to " + server );
+            throw new TaskException( "Can't connect to " + server );
         }
         /**
          * Login if userid and password were specified
@@ -200,9 +201,9 @@ public class TelnetTask extends Task
         Enumeration tasksToRun = telnetTasks.elements();
         while( tasksToRun != null && tasksToRun.hasMoreElements() )
         {
-            TelnetSubTask task = ( TelnetSubTask )tasksToRun.nextElement();
+            TelnetSubTask task = (TelnetSubTask)tasksToRun.nextElement();
             if( task instanceof TelnetRead && defaultTimeout != null )
-                ( ( TelnetRead )task ).setDefaultTimeout( defaultTimeout );
+                ( (TelnetRead)task ).setDefaultTimeout( defaultTimeout );
             task.execute( telnet );
         }
     }
@@ -249,7 +250,7 @@ public class TelnetTask extends Task
             }
             catch( Exception e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
 
@@ -284,7 +285,7 @@ public class TelnetTask extends Task
                 {
                     while( sb.toString().indexOf( s ) == -1 )
                     {
-                        sb.append( ( char )is.read() );
+                        sb.append( (char)is.read() );
                     }
                 }
                 else
@@ -299,19 +300,19 @@ public class TelnetTask extends Task
                             Thread.sleep( 250 );
                         }
                         if( is.available() == 0 )
-                            throw new BuildException( "Response Timed-Out" );
-                        sb.append( ( char )is.read() );
+                            throw new TaskException( "Response Timed-Out" );
+                        sb.append( (char)is.read() );
                     }
                 }
                 log( sb.toString(), Project.MSG_INFO );
             }
-            catch( BuildException be )
+            catch( TaskException be )
             {
                 throw be;
             }
             catch( Exception e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
     }
@@ -348,7 +349,7 @@ public class TelnetTask extends Task
         }
 
         public void execute( AntTelnetClient telnet )
-            throws BuildException
+            throws TaskException
         {
             telnet.waitForString( taskString, timeout );
         }
@@ -375,9 +376,9 @@ public class TelnetTask extends Task
         }
 
         public void execute( AntTelnetClient telnet )
-            throws BuildException
+            throws TaskException
         {
-            throw new BuildException( "Shouldn't be able instantiate a SubTask directly" );
+            throw new TaskException( "Shouldn't be able instantiate a SubTask directly" );
         }
     }
 
@@ -396,7 +397,7 @@ public class TelnetTask extends Task
         }
 
         public void execute( AntTelnetClient telnet )
-            throws BuildException
+            throws TaskException
         {
             telnet.sendString( taskString, echoString );
         }

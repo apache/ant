@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -15,7 +16,6 @@ import java.io.PrintWriter;
 import java.util.Vector;
 import javax.ejb.deployment.DeploymentDescriptor;
 import javax.ejb.deployment.EntityDescriptor;
-
 
 /**
  * A helper class which performs the actual work of the ejbc task. This class is
@@ -72,16 +72,16 @@ public class EjbcHelper
     private EjbcHelper( String[] args )
     {
         int index = 0;
-        descriptorDirectory = new File( args[index++] );
-        generatedFilesDirectory = new File( args[index++] );
-        sourceDirectory = new File( args[index++] );
-        manifestFile = new File( args[index++] );
-        keepGenerated = Boolean.valueOf( args[index++] ).booleanValue();
+        descriptorDirectory = new File( args[ index++ ] );
+        generatedFilesDirectory = new File( args[ index++ ] );
+        sourceDirectory = new File( args[ index++ ] );
+        manifestFile = new File( args[ index++ ] );
+        keepGenerated = Boolean.valueOf( args[ index++ ] ).booleanValue();
 
-        descriptors = new String[args.length - index];
+        descriptors = new String[ args.length - index ];
         for( int i = 0; index < args.length; ++i )
         {
-            descriptors[i] = args[index++];
+            descriptors[ i ] = args[ index++ ];
         }
     }
 
@@ -113,7 +113,7 @@ public class EjbcHelper
         v.addElement( generatedFilesDirectory.getPath() );
         v.addElement( descriptorFile.getPath() );
 
-        String[] args = new String[v.size()];
+        String[] args = new String[ v.size() ];
         v.copyInto( args );
         return args;
     }
@@ -142,7 +142,7 @@ public class EjbcHelper
         {
             fis = new FileInputStream( descriptorFile );
             ObjectInputStream ois = new ObjectInputStream( fis );
-            DeploymentDescriptor dd = ( DeploymentDescriptor )ois.readObject();
+            DeploymentDescriptor dd = (DeploymentDescriptor)ois.readObject();
             fis.close();
 
             String homeInterfacePath = dd.getHomeInterfaceClassName().replace( '.', '/' ) + ".java";
@@ -150,7 +150,7 @@ public class EjbcHelper
             String primaryKeyClassPath = null;
             if( dd instanceof EntityDescriptor )
             {
-                primaryKeyClassPath = ( ( EntityDescriptor )dd ).getPrimaryKeyClassName().replace( '.', '/' ) + ".java";
+                primaryKeyClassPath = ( (EntityDescriptor)dd ).getPrimaryKeyClassName().replace( '.', '/' ) + ".java";
                 ;
             }
 
@@ -167,11 +167,11 @@ public class EjbcHelper
             // of the above or the .ser file itself.
             String beanClassBase = dd.getEnterpriseBeanClassName().replace( '.', '/' );
             File ejbImplentationClass
-                 = new File( generatedFilesDirectory, beanClassBase + "EOImpl.class" );
+                = new File( generatedFilesDirectory, beanClassBase + "EOImpl.class" );
             File homeImplementationClass
-                 = new File( generatedFilesDirectory, beanClassBase + "HomeImpl.class" );
+                = new File( generatedFilesDirectory, beanClassBase + "HomeImpl.class" );
             File beanStubClass
-                 = new File( generatedFilesDirectory, beanClassBase + "EOImpl_WLStub.class" );
+                = new File( generatedFilesDirectory, beanClassBase + "EOImpl_WLStub.class" );
 
             // if the implementation classes don;t exist regenerate
             if( !ejbImplentationClass.exists() || !homeImplementationClass.exists() ||
@@ -234,7 +234,7 @@ public class EjbcHelper
         String manifest = "Manifest-Version: 1.0\n\n";
         for( int i = 0; i < descriptors.length; ++i )
         {
-            String descriptorName = descriptors[i];
+            String descriptorName = descriptors[ i ];
             File descriptorFile = new File( descriptorDirectory, descriptorName );
 
             if( isRegenRequired( descriptorFile ) )

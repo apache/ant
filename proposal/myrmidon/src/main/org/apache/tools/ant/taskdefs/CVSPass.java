@@ -6,15 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.Task;
 
 /**
  * CVSLogin Adds an new entry to a CVS password file
@@ -100,10 +100,10 @@ public class CVSPass extends Task
     /**
      * Does the work.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception TaskException if someting goes wrong with the build
      */
     public final void execute()
-        throws BuildException
+        throws TaskException
     {
         if( cvsRoot == null )
             throw new TaskException( "cvsroot is required" );
@@ -148,7 +148,7 @@ public class CVSPass extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
 
     }
@@ -158,7 +158,7 @@ public class CVSPass extends Task
         StringBuffer buf = new StringBuffer();
         for( int i = 0; i < password.length(); i++ )
         {
-            buf.append( shifts[password.charAt( i )] );
+            buf.append( shifts[ password.charAt( i ) ] );
         }
         return buf.toString();
     }

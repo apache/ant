@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
@@ -48,13 +49,13 @@ public class DDCreatorHelper
     private DDCreatorHelper( String[] args )
     {
         int index = 0;
-        descriptorDirectory = new File( args[index++] );
-        generatedFilesDirectory = new File( args[index++] );
+        descriptorDirectory = new File( args[ index++ ] );
+        generatedFilesDirectory = new File( args[ index++ ] );
 
-        descriptors = new String[args.length - index];
+        descriptors = new String[ args.length - index ];
         for( int i = 0; index < args.length; ++i )
         {
-            descriptors[i] = args[index++];
+            descriptors[ i ] = args[ index++ ];
         }
     }
 
@@ -85,7 +86,7 @@ public class DDCreatorHelper
     {
         for( int i = 0; i < descriptors.length; ++i )
         {
-            String descriptorName = descriptors[i];
+            String descriptorName = descriptors[ i ];
             File descriptorFile = new File( descriptorDirectory, descriptorName );
 
             int extIndex = descriptorName.lastIndexOf( "." );
@@ -102,13 +103,13 @@ public class DDCreatorHelper
 
             // do we need to regenerate the file
             if( !serFile.exists() || serFile.lastModified() < descriptorFile.lastModified()
-                 || regenerateSerializedFile( serFile ) )
+                || regenerateSerializedFile( serFile ) )
             {
 
                 String[] args = {"-noexit",
-                    "-d", serFile.getParent(),
-                    "-outputfile", serFile.getName(),
-                    descriptorFile.getPath()};
+                                 "-d", serFile.getParent(),
+                                 "-outputfile", serFile.getName(),
+                                 descriptorFile.getPath()};
                 try
                 {
                     weblogic.ejb.utils.DDCreator.main( args );
@@ -117,8 +118,8 @@ public class DDCreatorHelper
                 {
                     // there was an exception - run with no exit to get proper error
                     String[] newArgs = {"-d", generatedFilesDirectory.getPath(),
-                        "-outputfile", serFile.getName(),
-                        descriptorFile.getPath()};
+                                        "-outputfile", serFile.getName(),
+                                        descriptorFile.getPath()};
                     weblogic.ejb.utils.DDCreator.main( newArgs );
                 }
             }
@@ -141,7 +142,7 @@ public class DDCreatorHelper
 
             FileInputStream fis = new FileInputStream( serFile );
             ObjectInputStream ois = new ObjectInputStream( fis );
-            DeploymentDescriptor dd = ( DeploymentDescriptor )ois.readObject();
+            DeploymentDescriptor dd = (DeploymentDescriptor)ois.readObject();
             fis.close();
 
             // Since the descriptor read properly, everything should be o.k.

@@ -6,11 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
-
 
 /**
  * P4Label - create a Perforce Label. P4Label inserts a label into perforce
@@ -44,7 +44,7 @@ public class P4Label extends P4Base
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         log( "P4Label exec:", Project.MSG_INFO );
 
@@ -94,13 +94,13 @@ public class P4Label extends P4Base
         execP4Command( "label -i", handler );
 
         execP4Command( "labelsync -l " + name,
-            new P4HandlerAdapter()
-            {
-                public void process( String line )
-                {
-                    log( line, Project.MSG_VERBOSE );
-                }
-            } );
+                       new P4HandlerAdapter()
+                       {
+                           public void process( String line )
+                           {
+                               log( line, Project.MSG_VERBOSE );
+                           }
+                       } );
 
         log( "Created Label " + name + " (" + desc + ")", Project.MSG_INFO );
 
@@ -131,7 +131,6 @@ public class P4Label extends P4Base
                         labelSpec.append( line + "\n" );
                     }
                 };
-
 
             execP4Command( "label -o " + name, handler );
             log( labelSpec.toString(), Project.MSG_DEBUG );

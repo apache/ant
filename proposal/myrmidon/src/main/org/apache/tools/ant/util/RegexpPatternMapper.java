@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util;
+
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.util.regexp.RegexpMatcher;
 import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 
@@ -23,7 +24,7 @@ public class RegexpPatternMapper implements FileNameMapper
     protected StringBuffer result = new StringBuffer();
 
     public RegexpPatternMapper()
-        throws BuildException
+        throws TaskException
     {
         reg = ( new RegexpMatcherFactory() ).newRegexpMatcher();
     }
@@ -32,10 +33,10 @@ public class RegexpPatternMapper implements FileNameMapper
      * Sets the &quot;from&quot; pattern. Required.
      *
      * @param from The new From value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setFrom( String from )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -45,8 +46,8 @@ public class RegexpPatternMapper implements FileNameMapper
         {
             // depending on the implementation the actual RE won't
             // get instantiated in the constructor.
-            throw new BuildException( "Cannot load regular expression matcher",
-                e );
+            throw new TaskException( "Cannot load regular expression matcher",
+                                     e );
         }
     }
 
@@ -70,7 +71,7 @@ public class RegexpPatternMapper implements FileNameMapper
     public String[] mapFileName( String sourceFileName )
     {
         if( reg == null || to == null
-             || !reg.matches( sourceFileName ) )
+            || !reg.matches( sourceFileName ) )
         {
             return null;
         }
@@ -91,18 +92,18 @@ public class RegexpPatternMapper implements FileNameMapper
         result.setLength( 0 );
         for( int i = 0; i < to.length; i++ )
         {
-            if( to[i] == '\\' )
+            if( to[ i ] == '\\' )
             {
                 if( ++i < to.length )
                 {
-                    int value = Character.digit( to[i], 10 );
+                    int value = Character.digit( to[ i ], 10 );
                     if( value > -1 )
                     {
-                        result.append( ( String )v.elementAt( value ) );
+                        result.append( (String)v.elementAt( value ) );
                     }
                     else
                     {
-                        result.append( to[i] );
+                        result.append( to[ i ] );
                     }
                 }
                 else
@@ -113,7 +114,7 @@ public class RegexpPatternMapper implements FileNameMapper
             }
             else
             {
-                result.append( to[i] );
+                result.append( to[ i ] );
             }
         }
         return result.toString();

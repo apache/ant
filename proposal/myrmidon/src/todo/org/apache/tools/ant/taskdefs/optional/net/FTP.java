@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.net;
+
 import com.oroinc.net.ftp.FTPClient;
 import com.oroinc.net.ftp.FTPFile;
 import com.oroinc.net.ftp.FTPReply;
@@ -21,7 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
@@ -52,7 +53,7 @@ import org.apache.tools.ant.types.FileSet;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class FTP
-     extends Task
+    extends Task
 {
     protected final static int SEND_FILES = 0;
     protected final static int GET_FILES = 1;
@@ -66,7 +67,7 @@ public class FTP
         "deleting",
         "listing",
         "making directory"
-        };
+    };
 
     protected final static String[] COMPLETED_ACTION_STRS = {
         "sent",
@@ -74,7 +75,7 @@ public class FTP
         "deleted",
         "listed",
         "created directory"
-        };
+    };
     private boolean binary = true;
     private boolean passive = false;
     private boolean verbose = false;
@@ -100,10 +101,10 @@ public class FTP
      * "mkdir" and "list".
      *
      * @param action The new Action value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setAction( Action action )
-        throws BuildException
+        throws TaskException
     {
         this.action = action.getAction();
     }
@@ -146,10 +147,10 @@ public class FTP
      * other actions.
      *
      * @param listing The new Listing value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setListing( File listing )
-        throws BuildException
+        throws TaskException
     {
         this.listing = listing;
     }
@@ -232,7 +233,6 @@ public class FTP
         this.server = server;
     }
 
-
     /**
      * set the failed transfer flag
      *
@@ -276,10 +276,10 @@ public class FTP
     /**
      * Runs the task.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         checkConfiguration();
 
@@ -294,7 +294,7 @@ public class FTP
             ftp.connect( server, port );
             if( !FTPReply.isPositiveCompletion( ftp.getReplyCode() ) )
             {
-                throw new BuildException( "FTP connection failed: " + ftp.getReplyString() );
+                throw new TaskException( "FTP connection failed: " + ftp.getReplyString() );
             }
 
             log( "connected", Project.MSG_VERBOSE );
@@ -302,7 +302,7 @@ public class FTP
 
             if( !ftp.login( userid, password ) )
             {
-                throw new BuildException( "Could not login to FTP server" );
+                throw new TaskException( "Could not login to FTP server" );
             }
 
             log( "login succeeded", Project.MSG_VERBOSE );
@@ -312,7 +312,7 @@ public class FTP
                 ftp.setFileType( com.oroinc.net.ftp.FTP.IMAGE_FILE_TYPE );
                 if( !FTPReply.isPositiveCompletion( ftp.getReplyCode() ) )
                 {
-                    throw new BuildException(
+                    throw new TaskException(
                         "could not set transfer type: " +
                         ftp.getReplyString() );
                 }
@@ -324,7 +324,7 @@ public class FTP
                 ftp.enterLocalPassiveMode();
                 if( !FTPReply.isPositiveCompletion( ftp.getReplyCode() ) )
                 {
-                    throw new BuildException(
+                    throw new TaskException(
                         "could not enter into passive mode: " +
                         ftp.getReplyString() );
                 }
@@ -347,19 +347,19 @@ public class FTP
                     ftp.changeWorkingDirectory( remotedir );
                     if( !FTPReply.isPositiveCompletion( ftp.getReplyCode() ) )
                     {
-                        throw new BuildException(
+                        throw new TaskException(
                             "could not change remote directory: " +
                             ftp.getReplyString() );
                     }
                 }
-                log( ACTION_STRS[action] + " files" );
+                log( ACTION_STRS[ action ] + " files" );
                 transferFiles( ftp );
             }
 
         }
         catch( IOException ex )
         {
-            throw new BuildException( "error during FTP transfer: " + ex );
+            throw new TaskException( "error during FTP transfer: " + ex );
         }
         finally
         {
@@ -390,10 +390,10 @@ public class FTP
      * @param dir Description of Parameter
      * @param filename Description of Parameter
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void getFile( FTPClient ftp, String dir, String filename )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         OutputStream outstream = null;
         try
@@ -426,14 +426,14 @@ public class FTP
                 }
                 else
                 {
-                    throw new BuildException( s );
+                    throw new TaskException( s );
                 }
 
             }
             else
             {
                 log( "File " + file.getAbsolutePath() + " copied from " + server,
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
                 transferred++;
             }
         }
@@ -462,10 +462,10 @@ public class FTP
      * @param remoteFile Description of Parameter
      * @return The UpToDate value
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected boolean isUpToDate( FTPClient ftp, File localFile, String remoteFile )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         log( "checking date for " + remoteFile, Project.MSG_VERBOSE );
 
@@ -486,12 +486,12 @@ public class FTP
             }
             else
             {
-                throw new BuildException( "could not date test remote file: " +
-                    ftp.getReplyString() );
+                throw new TaskException( "could not date test remote file: " +
+                                         ftp.getReplyString() );
             }
         }
 
-        long remoteTimestamp = files[0].getTimestamp().getTime().getTime();
+        long remoteTimestamp = files[ 0 ].getTimestamp().getTime().getTime();
         long localTimestamp = localFile.lastModified();
         if( this.action == SEND_FILES )
         {
@@ -506,32 +506,32 @@ public class FTP
     /**
      * Checks to see that all required parameters are set.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void checkConfiguration()
-        throws BuildException
+        throws TaskException
     {
         if( server == null )
         {
-            throw new BuildException( "server attribute must be set!" );
+            throw new TaskException( "server attribute must be set!" );
         }
         if( userid == null )
         {
-            throw new BuildException( "userid attribute must be set!" );
+            throw new TaskException( "userid attribute must be set!" );
         }
         if( password == null )
         {
-            throw new BuildException( "password attribute must be set!" );
+            throw new TaskException( "password attribute must be set!" );
         }
 
         if( ( action == LIST_FILES ) && ( listing == null ) )
         {
-            throw new BuildException( "listing attribute must be set for list action!" );
+            throw new TaskException( "listing attribute must be set for list action!" );
         }
 
         if( action == MK_DIR && remotedir == null )
         {
-            throw new BuildException( "remotedir attribute must be set for mkdir action!" );
+            throw new TaskException( "remotedir attribute must be set for mkdir action!" );
         }
     }
 
@@ -542,10 +542,10 @@ public class FTP
      * @param ftp Description of Parameter
      * @param filename Description of Parameter
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void createParents( FTPClient ftp, String filename )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         Vector parents = new Vector();
         File dir = new File( filename );
@@ -559,11 +559,11 @@ public class FTP
 
         for( int i = parents.size() - 1; i >= 0; i-- )
         {
-            dir = ( File )parents.elementAt( i );
+            dir = (File)parents.elementAt( i );
             if( !dirCache.contains( dir ) )
             {
                 log( "creating remote directory " + resolveFile( dir.getPath() ),
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
                 ftp.makeDirectory( resolveFile( dir.getPath() ) );
                 // Both codes 550 and 553 can be produced by FTP Servers
                 //  to indicate that an attempt to create a directory has
@@ -573,7 +573,7 @@ public class FTP
                     ( result != 550 ) && ( result != 553 ) &&
                     !ignoreNoncriticalErrors )
                 {
-                    throw new BuildException(
+                    throw new TaskException(
                         "could not create directory: " +
                         ftp.getReplyString() );
                 }
@@ -588,10 +588,10 @@ public class FTP
      * @param ftp Description of Parameter
      * @param filename Description of Parameter
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void delFile( FTPClient ftp, String filename )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         if( verbose )
         {
@@ -608,7 +608,7 @@ public class FTP
             }
             else
             {
-                throw new BuildException( s );
+                throw new TaskException( s );
             }
         }
         else
@@ -629,17 +629,17 @@ public class FTP
      * @param bw Description of Parameter
      * @param filename Description of Parameter
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void listFile( FTPClient ftp, BufferedWriter bw, String filename )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         if( verbose )
         {
             log( "listing " + filename );
         }
 
-        FTPFile ftpfile = ftp.listFiles( resolveFile( filename ) )[0];
+        FTPFile ftpfile = ftp.listFiles( resolveFile( filename ) )[ 0 ];
         bw.write( ftpfile.toString() );
         bw.newLine();
 
@@ -652,10 +652,10 @@ public class FTP
      * @param ftp The FTP client connection
      * @param dir The directory to create (format must be correct for host type)
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void makeRemoteDir( FTPClient ftp, String dir )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         if( verbose )
         {
@@ -671,8 +671,8 @@ public class FTP
             int rc = ftp.getReplyCode();
             if( !( ignoreNoncriticalErrors && ( rc == 550 || rc == 553 || rc == 521 ) ) )
             {
-                throw new BuildException( "could not create directory: " +
-                    ftp.getReplyString() );
+                throw new TaskException( "could not create directory: " +
+                                         ftp.getReplyString() );
             }
 
             if( verbose )
@@ -702,7 +702,7 @@ public class FTP
     protected String resolveFile( String file )
     {
         return file.replace( System.getProperty( "file.separator" ).charAt( 0 ),
-            remoteFileSep.charAt( 0 ) );
+                             remoteFileSep.charAt( 0 ) );
     }
 
     /**
@@ -718,10 +718,10 @@ public class FTP
      * @param dir Description of Parameter
      * @param filename Description of Parameter
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void sendFile( FTPClient ftp, String dir, String filename )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         InputStream instream = null;
         try
@@ -752,7 +752,7 @@ public class FTP
                 }
                 else
                 {
-                    throw new BuildException( s );
+                    throw new TaskException( s );
                 }
 
             }
@@ -760,8 +760,8 @@ public class FTP
             {
 
                 log( "File " + file.getAbsolutePath() +
-                    " copied to " + server,
-                    Project.MSG_VERBOSE );
+                     " copied to " + server,
+                     Project.MSG_VERBOSE );
                 transferred++;
             }
         }
@@ -789,10 +789,10 @@ public class FTP
      * @param fs Description of Parameter
      * @return Description of the Returned Value
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected int transferFiles( FTPClient ftp, FileSet fs )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         FileScanner ds;
 
@@ -811,7 +811,7 @@ public class FTP
         String dir = null;
         if( ( ds.getBasedir() == null ) && ( ( action == SEND_FILES ) || ( action == GET_FILES ) ) )
         {
-            throw new BuildException( "the dir attribute must be set for send and get actions" );
+            throw new TaskException( "the dir attribute must be set for send and get actions" );
         }
         else
         {
@@ -835,36 +835,36 @@ public class FTP
 
         for( int i = 0; i < dsfiles.length; i++ )
         {
-            switch ( action )
+            switch( action )
             {
-            case SEND_FILES:
-            {
-                sendFile( ftp, dir, dsfiles[i] );
-                break;
-            }
+                case SEND_FILES:
+                    {
+                        sendFile( ftp, dir, dsfiles[ i ] );
+                        break;
+                    }
 
-            case GET_FILES:
-            {
-                getFile( ftp, dir, dsfiles[i] );
-                break;
-            }
+                case GET_FILES:
+                    {
+                        getFile( ftp, dir, dsfiles[ i ] );
+                        break;
+                    }
 
-            case DEL_FILES:
-            {
-                delFile( ftp, dsfiles[i] );
-                break;
-            }
+                case DEL_FILES:
+                    {
+                        delFile( ftp, dsfiles[ i ] );
+                        break;
+                    }
 
-            case LIST_FILES:
-            {
-                listFile( ftp, bw, dsfiles[i] );
-                break;
-            }
+                case LIST_FILES:
+                    {
+                        listFile( ftp, bw, dsfiles[ i ] );
+                        break;
+                    }
 
-            default:
-            {
-                throw new BuildException( "unknown ftp action " + action );
-            }
+                default:
+                    {
+                        throw new TaskException( "unknown ftp action " + action );
+                    }
             }
         }
 
@@ -882,24 +882,24 @@ public class FTP
      *
      * @param ftp Description of Parameter
      * @exception IOException Description of Exception
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void transferFiles( FTPClient ftp )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         transferred = 0;
         skipped = 0;
 
         if( filesets.size() == 0 )
         {
-            throw new BuildException( "at least one fileset must be specified." );
+            throw new TaskException( "at least one fileset must be specified." );
         }
         else
         {
             // get files from filesets
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = ( FileSet )filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.elementAt( i );
                 if( fs != null )
                 {
                     transferFiles( ftp, fs );
@@ -907,10 +907,10 @@ public class FTP
             }
         }
 
-        log( transferred + " files " + COMPLETED_ACTION_STRS[action] );
+        log( transferred + " files " + COMPLETED_ACTION_STRS[ action ] );
         if( skipped != 0 )
         {
-            log( skipped + " files were not successfully " + COMPLETED_ACTION_STRS[action] );
+            log( skipped + " files were not successfully " + COMPLETED_ACTION_STRS[ action ] );
         }
     }
 
@@ -919,7 +919,7 @@ public class FTP
 
         private final static String[] validActions = {
             "send", "put", "recv", "get", "del", "delete", "list", "mkdir"
-            };
+        };
 
         public int getAction()
         {
@@ -971,12 +971,12 @@ public class FTP
             if( includes == null )
             {
                 // No includes supplied, so set it to 'matches all'
-                includes = new String[1];
-                includes[0] = "**";
+                includes = new String[ 1 ];
+                includes[ 0 ] = "**";
             }
             if( excludes == null )
             {
-                excludes = new String[0];
+                excludes = new String[ 0 ];
             }
 
             filesIncluded = new Vector();
@@ -994,7 +994,7 @@ public class FTP
             }
             catch( IOException e )
             {
-                throw new BuildException( "Unable to scan FTP server: ", e );
+                throw new TaskException( "Unable to scan FTP server: ", e );
             }
         }
 
@@ -1016,7 +1016,7 @@ public class FTP
 
                 for( int i = 0; i < newfiles.length; i++ )
                 {
-                    FTPFile file = newfiles[i];
+                    FTPFile file = newfiles[ i ];
                     if( !file.getName().equals( "." ) && !file.getName().equals( ".." ) )
                     {
                         if( file.isDirectory() )
@@ -1078,7 +1078,7 @@ public class FTP
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error while communicating with FTP server: ", e );
+                throw new TaskException( "Error while communicating with FTP server: ", e );
             }
         }
     }

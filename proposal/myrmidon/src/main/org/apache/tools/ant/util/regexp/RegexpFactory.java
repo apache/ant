@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -20,18 +21,20 @@ import org.apache.tools.ant.Project;
  */
 public class RegexpFactory extends RegexpMatcherFactory
 {
-    public RegexpFactory() { }
+    public RegexpFactory()
+    {
+    }
 
     /**
      * Create a new regular expression matcher instance.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Regexp newRegexp()
-        throws BuildException
+        throws TaskException
     {
-        return ( Regexp )newRegexp( null );
+        return (Regexp)newRegexp( null );
     }
 
     /**
@@ -39,10 +42,10 @@ public class RegexpFactory extends RegexpMatcherFactory
      *
      * @param p Project whose ant.regexp.regexpimpl property will be used.
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Regexp newRegexp( Project p )
-        throws BuildException
+        throws TaskException
     {
         String systemDefault = null;
         if( p == null )
@@ -51,7 +54,7 @@ public class RegexpFactory extends RegexpMatcherFactory
         }
         else
         {
-            systemDefault = ( String )p.getProperties().get( "ant.regexp.regexpimpl" );
+            systemDefault = (String)p.getProperties().get( "ant.regexp.regexpimpl" );
         }
 
         if( systemDefault != null )
@@ -65,24 +68,27 @@ public class RegexpFactory extends RegexpMatcherFactory
         {
             return createRegexpInstance( "org.apache.tools.ant.util.regexp.Jdk14RegexpRegexp" );
         }
-        catch( BuildException be )
-        {}
+        catch( TaskException be )
+        {
+        }
 
         try
         {
             return createRegexpInstance( "org.apache.tools.ant.util.regexp.JakartaOroRegexp" );
         }
-        catch( BuildException be )
-        {}
+        catch( TaskException be )
+        {
+        }
 
         try
         {
             return createRegexpInstance( "org.apache.tools.ant.util.regexp.JakartaRegexpRegexp" );
         }
-        catch( BuildException be )
-        {}
+        catch( TaskException be )
+        {
+        }
 
-        throw new BuildException( "No supported regular expression matcher found" );
+        throw new TaskException( "No supported regular expression matcher found" );
     }
 
     /**
@@ -91,21 +97,21 @@ public class RegexpFactory extends RegexpMatcherFactory
      *
      * @param classname Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @since 1.3
      */
     protected Regexp createRegexpInstance( String classname )
-        throws BuildException
+        throws TaskException
     {
 
         RegexpMatcher m = createInstance( classname );
         if( m instanceof Regexp )
         {
-            return ( Regexp )m;
+            return (Regexp)m;
         }
         else
         {
-            throw new BuildException( classname + " doesn't implement the Regexp interface" );
+            throw new TaskException( classname + " doesn't implement the Regexp interface" );
         }
     }
 

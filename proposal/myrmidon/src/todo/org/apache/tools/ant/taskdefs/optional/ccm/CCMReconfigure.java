@@ -6,10 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ccm;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-
 
 /**
  * Task allows to reconfigure a project, recurcively or not
@@ -84,7 +84,6 @@ public class CCMReconfigure extends Continuus
         return project;
     }
 
-
     /**
      * Get the value of recurse.
      *
@@ -94,7 +93,6 @@ public class CCMReconfigure extends Continuus
     {
         return recurse;
     }
-
 
     /**
      * Get the value of verbose.
@@ -106,17 +104,16 @@ public class CCMReconfigure extends Continuus
         return verbose;
     }
 
-
     /**
      * Executes the task. <p>
      *
      * Builds a command line to execute ccm and then calls Exec's run method to
      * execute the command line. </p>
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Commandline commandLine = new Commandline();
         Project aProj = getProject();
@@ -133,10 +130,9 @@ public class CCMReconfigure extends Continuus
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
     }
-
 
     /**
      * Check the command line options.

@@ -7,7 +7,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional.pvcs;
 
-
 /**
  * class to handle &lt;pvcsprojec&gt; elements
  *

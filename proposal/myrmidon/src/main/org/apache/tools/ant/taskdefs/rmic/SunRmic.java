@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.rmic;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
@@ -24,7 +25,7 @@ public class SunRmic extends DefaultRmicAdapter
 {
 
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         getRmic().log( "Using SUN rmic compiler", Project.MSG_VERBOSE );
         Commandline cmd = setupRmicCommand();
@@ -37,30 +38,30 @@ public class SunRmic extends DefaultRmicAdapter
         {
             Class c = Class.forName( "sun.rmi.rmic.Main" );
             Constructor cons = c.getConstructor( new Class[]
-                {OutputStream.class, String.class} );
+            {OutputStream.class, String.class} );
             Object rmic = cons.newInstance( new Object[]{logstr, "rmic"} );
 
             Method doRmic = c.getMethod( "compile",
-                new Class[]{String[].class} );
-            Boolean ok = ( Boolean )doRmic.invoke( rmic,
-                ( new Object[]{cmd.getArguments()} ) );
+                                         new Class[]{String[].class} );
+            Boolean ok = (Boolean)doRmic.invoke( rmic,
+                                                 ( new Object[]{cmd.getArguments()} ) );
             return ok.booleanValue();
         }
         catch( ClassNotFoundException ex )
         {
-            throw new BuildException( "Cannot use SUN rmic, as it is not available" +
-                " A common solution is to set the environment variable" +
-                " JAVA_HOME or CLASSPATH." );
+            throw new TaskException( "Cannot use SUN rmic, as it is not available" +
+                                     " A common solution is to set the environment variable" +
+                                     " JAVA_HOME or CLASSPATH." );
         }
         catch( Exception ex )
         {
-            if( ex instanceof BuildException )
+            if( ex instanceof TaskException )
             {
-                throw ( BuildException )ex;
+                throw (TaskException)ex;
             }
             else
             {
-                throw new BuildException( "Error starting SUN rmic: ", ex );
+                throw new TaskException( "Error starting SUN rmic: ", ex );
             }
         }
         finally
@@ -71,7 +72,7 @@ public class SunRmic extends DefaultRmicAdapter
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
     }

@@ -6,29 +6,28 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.DOMElementWriter;
-import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-
 
 /**
  * <p>
@@ -132,7 +131,6 @@ public class XMLResultAggregator extends Task implements XMLConstants
         filesets.addElement( fs );
     }
 
-
     public AggregateTransformer createReport()
     {
         AggregateTransformer transformer = new AggregateTransformer( this );
@@ -144,11 +142,11 @@ public class XMLResultAggregator extends Task implements XMLConstants
      * Aggregate all testsuites into a single document and write it to the
      * specified directory and file.
      *
-     * @throws BuildException thrown if there is a serious error while writing
+     * @throws TaskException thrown if there is a serious error while writing
      *      the document.
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Element rootElement = createDocument();
         File destFile = getDestinationFile();
@@ -159,14 +157,14 @@ public class XMLResultAggregator extends Task implements XMLConstants
         }
         catch( IOException e )
         {
-            throw new BuildException( "Unable to write test aggregate to '" + destFile + "'", e );
+            throw new TaskException( "Unable to write test aggregate to '" + destFile + "'", e );
         }
         // apply transformation
         Enumeration enum = transformers.elements();
         while( enum.hasMoreElements() )
         {
             AggregateTransformer transformer =
-                ( AggregateTransformer )enum.nextElement();
+                (AggregateTransformer)enum.nextElement();
             transformer.setXmlDocument( rootElement.getOwnerDocument() );
             transformer.transform();
         }
@@ -202,13 +200,13 @@ public class XMLResultAggregator extends Task implements XMLConstants
         final int size = filesets.size();
         for( int i = 0; i < size; i++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.elementAt( i );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             ds.scan();
             String[] f = ds.getIncludedFiles();
             for( int j = 0; j < f.length; j++ )
             {
-                String pathname = f[j];
+                String pathname = f[ j ];
                 if( pathname.endsWith( ".xml" ) )
                 {
                     File file = new File( ds.getBasedir(), pathname );
@@ -219,7 +217,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
             }
         }
 
-        File[] files = new File[v.size()];
+        File[] files = new File[ v.size() ];
         v.copyInto( files );
         return files;
     }
@@ -247,7 +245,7 @@ public class XMLResultAggregator extends Task implements XMLConstants
         // a missing . might imply no package at all. Don't get fooled.
         String pkgName = ( pos == -1 ) ? "" : fullclassname.substring( 0, pos );
         String classname = ( pos == -1 ) ? fullclassname : fullclassname.substring( pos + 1 );
-        Element copy = ( Element )DOMUtil.importNode( root, testsuite );
+        Element copy = (Element)DOMUtil.importNode( root, testsuite );
 
         // modify the name attribute and set the package
         copy.setAttribute( ATTR_NAME, classname );
@@ -276,11 +274,11 @@ public class XMLResultAggregator extends Task implements XMLConstants
         {
             try
             {
-                log( "Parsing file: '" + files[i] + "'", Project.MSG_VERBOSE );
+                log( "Parsing file: '" + files[ i ] + "'", Project.MSG_VERBOSE );
                 //XXX there seems to be a bug in xerces 1.3.0 that doesn't like file object
                 // will investigate later. It does not use the given directory but
                 // the vm dir instead ? Works fine with crimson.
-                Document testsuiteDoc = builder.parse( "file:///" + files[i].getAbsolutePath() );
+                Document testsuiteDoc = builder.parse( "file:///" + files[ i ].getAbsolutePath() );
                 Element elem = testsuiteDoc.getDocumentElement();
                 // make sure that this is REALLY a testsuite.
                 if( TESTSUITE.equals( elem.getNodeName() ) )
@@ -290,19 +288,19 @@ public class XMLResultAggregator extends Task implements XMLConstants
                 else
                 {
                     // issue a warning.
-                    log( "the file " + files[i] + " is not a valid testsuite XML document", Project.MSG_WARN );
+                    log( "the file " + files[ i ] + " is not a valid testsuite XML document", Project.MSG_WARN );
                 }
             }
             catch( SAXException e )
             {
                 // a testcase might have failed and write a zero-length document,
                 // It has already failed, but hey.... mm. just put a warning
-                log( "The file " + files[i] + " is not a valid XML document. It is possibly corrupted.", Project.MSG_WARN );
+                log( "The file " + files[ i ] + " is not a valid XML document. It is possibly corrupted.", Project.MSG_WARN );
                 log( StringUtils.getStackTrace( e ), Project.MSG_DEBUG );
             }
             catch( IOException e )
             {
-                log( "Error while accessing file " + files[i] + ": " + e.getMessage(), Project.MSG_ERR );
+                log( "Error while accessing file " + files[ i ] + ": " + e.getMessage(), Project.MSG_ERR );
             }
         }
         return rootElement;

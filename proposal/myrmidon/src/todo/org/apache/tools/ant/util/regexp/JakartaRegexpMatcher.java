@@ -6,10 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
+
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.regexp.RE;
 import org.apache.regexp.RESyntaxException;
-import org.apache.tools.ant.BuildException;
 
 /**
  * Implementation of RegexpMatcher for Jakarta-Regexp.
@@ -41,16 +42,16 @@ public class JakartaRegexpMatcher implements RegexpMatcher
      *
      * @param argument Description of Parameter
      * @return The Groups value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Vector getGroups( String argument )
-        throws BuildException
+        throws TaskException
     {
         return getGroups( argument, MATCH_DEFAULT );
     }
 
     public Vector getGroups( String input, int options )
-        throws BuildException
+        throws TaskException
     {
         RE reg = getCompiledPattern( options );
         if( !matches( input, reg ) )
@@ -81,10 +82,10 @@ public class JakartaRegexpMatcher implements RegexpMatcher
      *
      * @param argument Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public boolean matches( String argument )
-        throws BuildException
+        throws TaskException
     {
         return matches( argument, MATCH_DEFAULT );
     }
@@ -95,16 +96,16 @@ public class JakartaRegexpMatcher implements RegexpMatcher
      * @param input Description of Parameter
      * @param options Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public boolean matches( String input, int options )
-        throws BuildException
+        throws TaskException
     {
         return matches( input, getCompiledPattern( options ) );
     }
 
     protected RE getCompiledPattern( int options )
-        throws BuildException
+        throws TaskException
     {
         int cOptions = getCompilerOptions( options );
         try
@@ -115,7 +116,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher
         }
         catch( RESyntaxException e )
         {
-            throw new BuildException( e );
+            throw new TaskException( e );
         }
     }
 

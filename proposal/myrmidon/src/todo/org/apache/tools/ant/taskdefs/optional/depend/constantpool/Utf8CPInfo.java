@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-
 
 /**
  * A UTF8 Constant Pool Entry.

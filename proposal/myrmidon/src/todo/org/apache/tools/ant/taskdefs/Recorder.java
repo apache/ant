@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Hashtable;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -133,16 +134,16 @@ public class Recorder extends Task
     /**
      * The main execution.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( filename == null )
-            throw new BuildException( "No filename specified" );
+            throw new TaskException( "No filename specified" );
 
         getProject().log( "setting a recorder for name " + filename,
-            Project.MSG_DEBUG );
+                          Project.MSG_DEBUG );
 
         // get the recorder entry
         RecorderEntry recorder = getRecorder( filename, getProject() );
@@ -158,10 +159,10 @@ public class Recorder extends Task
      * @param name Description of Parameter
      * @param proj Description of Parameter
      * @return The Recorder value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected RecorderEntry getRecorder( String name, Project proj )
-        throws BuildException
+        throws TaskException
     {
         Object o = recorderEntries.get( name );
         RecorderEntry entry;
@@ -187,15 +188,15 @@ public class Recorder extends Task
             }
             catch( IOException ioe )
             {
-                throw new BuildException( "Problems creating a recorder entry",
-                    ioe );
+                throw new TaskException( "Problems creating a recorder entry",
+                                         ioe );
             }
             proj.addBuildListener( entry );
             recorderEntries.put( name, entry );
         }
         else
         {
-            entry = ( RecorderEntry )o;
+            entry = (RecorderEntry)o;
         }
         return entry;
     }
@@ -228,7 +229,7 @@ public class Recorder extends Task
     public static class VerbosityLevelChoices extends EnumeratedAttribute
     {
         private final static String[] values = {"error", "warn", "info",
-            "verbose", "debug"};
+                                                "verbose", "debug"};
 
         public String[] getValues()
         {

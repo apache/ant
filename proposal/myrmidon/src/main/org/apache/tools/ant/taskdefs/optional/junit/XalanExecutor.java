@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Command class that encapsulate specific behavior for each Xalan version. The
@@ -34,11 +35,11 @@ abstract class XalanExecutor
      *
      * @param caller object containing the transformation information.
      * @return Description of the Returned Value
-     * @throws BuildException thrown if it could not find a valid xalan
+     * @throws TaskException thrown if it could not find a valid xalan
      *      executor.
      */
     static XalanExecutor newInstance( AggregateTransformer caller )
-        throws BuildException
+        throws TaskException
     {
         Class procVersion = null;
         XalanExecutor executor = null;
@@ -52,12 +53,12 @@ abstract class XalanExecutor
             try
             {
                 procVersion = Class.forName( "org.apache.xalan.xslt.XSLProcessorVersion" );
-                executor = ( XalanExecutor )Class.forName(
+                executor = (XalanExecutor)Class.forName(
                     "org.apache.tools.ant.taskdefs.optional.junit.Xalan1Executor" ).newInstance();
             }
             catch( Exception xalan1missing )
             {
-                throw new BuildException( "Could not find xalan2 nor xalan1 in the classpath. Check http://xml.apache.org/xalan-j" );
+                throw new TaskException( "Could not find xalan2 nor xalan1 in the classpath. Check http://xml.apache.org/xalan-j" );
             }
         }
         String version = getXalanVersion( procVersion );

@@ -13,7 +13,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -195,14 +194,14 @@ public class Copy extends Task
      * Defines the FileNameMapper to use (nested mapper element).
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Mapper createMapper()
-        throws BuildException
+        throws TaskException
     {
         if( mapperElement != null )
         {
-            throw new BuildException( "Cannot define more than one mapper" );
+            throw new TaskException( "Cannot define more than one mapper" );
         }
         mapperElement = new Mapper( project );
         return mapperElement;
@@ -211,7 +210,7 @@ public class Copy extends Task
     /**
      * Performs the copy operation.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
         throws TaskException
@@ -369,7 +368,7 @@ public class Copy extends Task
                 {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();
-                    throw new BuildException( msg, ioe );
+                    throw new TaskException( msg, ioe );
                 }
             }
         }
@@ -445,7 +444,7 @@ public class Copy extends Task
      * Ensure we have a consistent and legal set of attributes, and set any
      * internal flags necessary based on different combinations of attributes.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void validateAttributes()
         throws TaskException

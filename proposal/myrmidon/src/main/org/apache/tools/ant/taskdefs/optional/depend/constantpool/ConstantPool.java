@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -67,7 +68,7 @@ public class ConstantPool
 
             if( element instanceof ClassCPInfo )
             {
-                ClassCPInfo classinfo = ( ClassCPInfo )element;
+                ClassCPInfo classinfo = (ClassCPInfo)element;
 
                 if( classinfo.getClassName().equals( className ) )
                 {
@@ -96,7 +97,7 @@ public class ConstantPool
 
             if( element instanceof ConstantCPInfo )
             {
-                ConstantCPInfo constantEntry = ( ConstantCPInfo )element;
+                ConstantCPInfo constantEntry = (ConstantCPInfo)element;
 
                 if( constantEntry.getValue().equals( constantValue ) )
                 {
@@ -108,7 +109,6 @@ public class ConstantPool
         return index;
     }
 
-
     /**
      * Get an constant pool entry at a particular index.
      *
@@ -117,7 +117,7 @@ public class ConstantPool
      */
     public ConstantPoolEntry getEntry( int index )
     {
-        return ( ConstantPoolEntry )entries.elementAt( index );
+        return (ConstantPoolEntry)entries.elementAt( index );
     }
 
     /**
@@ -140,10 +140,10 @@ public class ConstantPool
 
             if( element instanceof FieldRefCPInfo )
             {
-                FieldRefCPInfo fieldRefEntry = ( FieldRefCPInfo )element;
+                FieldRefCPInfo fieldRefEntry = (FieldRefCPInfo)element;
 
                 if( fieldRefEntry.getFieldClassName().equals( fieldClassName ) && fieldRefEntry.getFieldName().equals( fieldName )
-                     && fieldRefEntry.getFieldType().equals( fieldType ) )
+                    && fieldRefEntry.getFieldType().equals( fieldType ) )
                 {
                     index = i;
                 }
@@ -175,11 +175,11 @@ public class ConstantPool
 
             if( element instanceof InterfaceMethodRefCPInfo )
             {
-                InterfaceMethodRefCPInfo interfaceMethodRefEntry = ( InterfaceMethodRefCPInfo )element;
+                InterfaceMethodRefCPInfo interfaceMethodRefEntry = (InterfaceMethodRefCPInfo)element;
 
                 if( interfaceMethodRefEntry.getInterfaceMethodClassName().equals( interfaceMethodClassName )
-                     && interfaceMethodRefEntry.getInterfaceMethodName().equals( interfaceMethodName )
-                     && interfaceMethodRefEntry.getInterfaceMethodType().equals( interfaceMethodType ) )
+                    && interfaceMethodRefEntry.getInterfaceMethodName().equals( interfaceMethodName )
+                    && interfaceMethodRefEntry.getInterfaceMethodType().equals( interfaceMethodType ) )
                 {
                     index = i;
                 }
@@ -209,10 +209,10 @@ public class ConstantPool
 
             if( element instanceof MethodRefCPInfo )
             {
-                MethodRefCPInfo methodRefEntry = ( MethodRefCPInfo )element;
+                MethodRefCPInfo methodRefEntry = (MethodRefCPInfo)element;
 
                 if( methodRefEntry.getMethodClassName().equals( methodClassName )
-                     && methodRefEntry.getMethodName().equals( methodName ) && methodRefEntry.getMethodType().equals( methodType ) )
+                    && methodRefEntry.getMethodName().equals( methodName ) && methodRefEntry.getMethodType().equals( methodType ) )
                 {
                     index = i;
                 }
@@ -240,7 +240,7 @@ public class ConstantPool
 
             if( element instanceof NameAndTypeCPInfo )
             {
-                NameAndTypeCPInfo nameAndTypeEntry = ( NameAndTypeCPInfo )element;
+                NameAndTypeCPInfo nameAndTypeEntry = (NameAndTypeCPInfo)element;
 
                 if( nameAndTypeEntry.getName().equals( name ) && nameAndTypeEntry.getType().equals( type ) )
                 {
@@ -262,7 +262,7 @@ public class ConstantPool
     public int getUTF8Entry( String value )
     {
         int index = -1;
-        Integer indexInteger = ( Integer )utf8Indexes.get( value );
+        Integer indexInteger = (Integer)utf8Indexes.get( value );
 
         if( indexInteger != null )
         {
@@ -294,7 +294,7 @@ public class ConstantPool
 
         if( entry instanceof Utf8CPInfo )
         {
-            Utf8CPInfo utf8Info = ( Utf8CPInfo )entry;
+            Utf8CPInfo utf8Info = (Utf8CPInfo)entry;
 
             utf8Indexes.put( utf8Info.getValue(), new Integer( index ) );
         }
@@ -314,7 +314,7 @@ public class ConstantPool
     {
         int numEntries = classStream.readUnsignedShort();
 
-        for( int i = 1; i < numEntries;  )
+        for( int i = 1; i < numEntries; )
         {
             ConstantPoolEntry nextEntry = ConstantPoolEntry.readEntry( classStream );
 
@@ -331,9 +331,9 @@ public class ConstantPool
      */
     public void resolve()
     {
-        for( Enumeration i = entries.elements(); i.hasMoreElements();  )
+        for( Enumeration i = entries.elements(); i.hasMoreElements(); )
         {
-            ConstantPoolEntry poolInfo = ( ConstantPoolEntry )i.nextElement();
+            ConstantPoolEntry poolInfo = (ConstantPoolEntry)i.nextElement();
 
             if( poolInfo != null && !poolInfo.isResolved() )
             {

@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-
 
 /**
  * The constant pool entry which stores class information.
@@ -70,7 +70,7 @@ public class ClassCPInfo extends ConstantPoolEntry
      */
     public void resolve( ConstantPool constantPool )
     {
-        className = ( ( Utf8CPInfo )constantPool.getEntry( index ) ).getValue();
+        className = ( (Utf8CPInfo)constantPool.getEntry( index ) ).getValue();
 
         super.resolve( constantPool );
     }

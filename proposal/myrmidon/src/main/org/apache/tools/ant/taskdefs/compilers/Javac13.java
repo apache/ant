@@ -6,11 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
+
 import java.lang.reflect.Method;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
-
 
 /**
  * The implementation of the javac compiler for JDK 1.3 This is primarily a
@@ -31,7 +31,7 @@ public class Javac13 extends DefaultCompilerAdapter
     private final static int MODERN_COMPILER_SUCCESS = 0;
 
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         attributes.log( "Using modern compiler", Project.MSG_VERBOSE );
         Commandline cmd = setupModernJavacCommand();
@@ -42,20 +42,20 @@ public class Javac13 extends DefaultCompilerAdapter
             Class c = Class.forName( "com.sun.tools.javac.Main" );
             Object compiler = c.newInstance();
             Method compile = c.getMethod( "compile",
-                new Class[]{( new String[]{} ).getClass()} );
-            int result = ( ( Integer )compile.invoke
+                                          new Class[]{( new String[]{} ).getClass()} );
+            int result = ( (Integer)compile.invoke
                 ( compiler, new Object[]{cmd.getArguments()} ) ).intValue();
             return ( result == MODERN_COMPILER_SUCCESS );
         }
         catch( Exception ex )
         {
-            if( ex instanceof BuildException )
+            if( ex instanceof TaskException )
             {
-                throw ( BuildException )ex;
+                throw (TaskException)ex;
             }
             else
             {
-                throw new BuildException( "Error starting modern compiler", ex );
+                throw new TaskException( "Error starting modern compiler", ex );
             }
         }
     }

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -100,7 +101,6 @@ public class Get extends Task
         }
     }
 
-
     /**
      * Username for basic auth.
      *
@@ -121,33 +121,32 @@ public class Get extends Task
         verbose = v;
     }
 
-
     /**
      * Does the work.
      *
-     * @exception BuildException Thrown in unrecoverable error.
+     * @exception TaskException Thrown in unrecoverable error.
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( source == null )
         {
-            throw new BuildException( "src attribute is required" );
+            throw new TaskException( "src attribute is required" );
         }
 
         if( dest == null )
         {
-            throw new BuildException( "dest attribute is required" );
+            throw new TaskException( "dest attribute is required" );
         }
 
         if( dest.exists() && dest.isDirectory() )
         {
-            throw new BuildException( "The specified destination is a directory" );
+            throw new TaskException( "The specified destination is a directory" );
         }
 
         if( dest.exists() && !dest.canWrite() )
         {
-            throw new BuildException( "Can't write to " + dest.getAbsolutePath() );
+            throw new TaskException( "Can't write to " + dest.getAbsolutePath() );
         }
 
         try
@@ -187,7 +186,7 @@ public class Get extends Task
                 try
                 {
                     sun.misc.BASE64Encoder encoder =
-                        ( sun.misc.BASE64Encoder )Class.forName( "sun.misc.BASE64Encoder" ).newInstance();
+                        (sun.misc.BASE64Encoder)Class.forName( "sun.misc.BASE64Encoder" ).newInstance();
                     encoding = encoder.encode( up.getBytes() );
 
                 }
@@ -204,7 +203,7 @@ public class Get extends Task
             //next test for a 304 result (HTTP only)
             if( connection instanceof HttpURLConnection )
             {
-                HttpURLConnection httpConnection = ( HttpURLConnection )connection;
+                HttpURLConnection httpConnection = (HttpURLConnection)connection;
                 if( httpConnection.getResponseCode() == HttpURLConnection.HTTP_NOT_MODIFIED )
                 {
                     //not modified so no file download. just return instead
@@ -246,10 +245,10 @@ public class Get extends Task
                 log( "Can't get " + source + " to " + dest );
                 if( ignoreErrors )
                     return;
-                throw new BuildException( "Can't get " + source + " to " + dest );
+                throw new TaskException( "Can't get " + source + " to " + dest );
             }
 
-            byte[] buffer = new byte[100 * 1024];
+            byte[] buffer = new byte[ 100 * 1024 ];
             int length;
 
             while( ( length = is.read( buffer ) ) >= 0 )
@@ -283,7 +282,7 @@ public class Get extends Task
             log( "Error getting " + source + " to " + dest );
             if( ignoreErrors )
                 return;
-            throw new BuildException( "Error", ioe);
+            throw new TaskException( "Error", ioe );
         }
     }
 
@@ -294,16 +293,16 @@ public class Get extends Task
      * @param timemillis Description of Parameter
      * @return true if it succeeded. False means that this is a java1.1 system
      *      and that file times can not be set
-     * @exception BuildException Thrown in unrecoverable error. Likely this
+     * @exception TaskException Thrown in unrecoverable error. Likely this
      *      comes from file access failures.
      */
     protected boolean touchFile( File file, long timemillis )
-        throws BuildException
+        throws TaskException
     {
 
         if( project.getJavaVersion() != Project.JAVA_1_1 )
         {
-            Touch touch = ( Touch )project.createTask( "touch" );
+            Touch touch = (Touch)project.createTask( "touch" );
             touch.setOwningTarget( target );
             touch.setTaskName( getTaskName() );
             touch.setLocation( getLocation() );
@@ -330,14 +329,13 @@ public class Get extends Task
 
         public final char[] alphabet = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', //  0 to  7
-        'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', //  8 to 15
-        'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', // 16 to 23
-        'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', // 24 to 31
-        'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', // 32 to 39
-        'o', 'p', 'q', 'r', 's', 't', 'u', 'v', // 40 to 47
-        'w', 'x', 'y', 'z', '0', '1', '2', '3', // 48 to 55
-        '4', '5', '6', '7', '8', '9', '+', '/'};// 56 to 63
-
+            'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', //  8 to 15
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', // 16 to 23
+            'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', // 24 to 31
+            'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', // 32 to 39
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', // 40 to 47
+            'w', 'x', 'y', 'z', '0', '1', '2', '3', // 48 to 55
+            '4', '5', '6', '7', '8', '9', '+', '/'};// 56 to 63
 
         public String encode( String s )
         {
@@ -350,7 +348,7 @@ public class Get extends Task
             int bits6;
 
             char[] out
-                 = new char[( ( octetString.length - 1 ) / 3 + 1 ) * 4];
+                = new char[ ( ( octetString.length - 1 ) / 3 + 1 ) * 4 ];
 
             int outIndex = 0;
             int i = 0;
@@ -358,46 +356,46 @@ public class Get extends Task
             while( ( i + 3 ) <= octetString.length )
             {
                 // store the octets
-                bits24 = ( octetString[i++] & 0xFF ) << 16;
-                bits24 |= ( octetString[i++] & 0xFF ) << 8;
+                bits24 = ( octetString[ i++ ] & 0xFF ) << 16;
+                bits24 |= ( octetString[ i++ ] & 0xFF ) << 8;
 
                 bits6 = ( bits24 & 0x00FC0000 ) >> 18;
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
                 bits6 = ( bits24 & 0x0003F000 ) >> 12;
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
                 bits6 = ( bits24 & 0x00000FC0 ) >> 6;
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
                 bits6 = ( bits24 & 0x0000003F );
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
             }
 
             if( octetString.length - i == 2 )
             {
                 // store the octets
-                bits24 = ( octetString[i] & 0xFF ) << 16;
-                bits24 |= ( octetString[i + 1] & 0xFF ) << 8;
+                bits24 = ( octetString[ i ] & 0xFF ) << 16;
+                bits24 |= ( octetString[ i + 1 ] & 0xFF ) << 8;
                 bits6 = ( bits24 & 0x00FC0000 ) >> 18;
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
                 bits6 = ( bits24 & 0x0003F000 ) >> 12;
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
                 bits6 = ( bits24 & 0x00000FC0 ) >> 6;
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
 
                 // padding
-                out[outIndex++] = '=';
+                out[ outIndex++ ] = '=';
             }
             else if( octetString.length - i == 1 )
             {
                 // store the octets
-                bits24 = ( octetString[i] & 0xFF ) << 16;
+                bits24 = ( octetString[ i ] & 0xFF ) << 16;
                 bits6 = ( bits24 & 0x00FC0000 ) >> 18;
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
                 bits6 = ( bits24 & 0x0003F000 ) >> 12;
-                out[outIndex++] = alphabet[bits6];
+                out[ outIndex++ ] = alphabet[ bits6 ];
 
                 // padding
-                out[outIndex++] = '=';
-                out[outIndex++] = '=';
+                out[ outIndex++ ] = '=';
+                out[ outIndex++ ] = '=';
             }
 
             return new String( out );

@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
+
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Implementation of RegexpMatcher for the built-in regexp matcher of JDK 1.4.
@@ -24,7 +25,9 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
 
     private String pattern;
 
-    public Jdk14RegexpMatcher() { }
+    public Jdk14RegexpMatcher()
+    {
+    }
 
     /**
      * Set the regexp pattern from the String description.
@@ -44,10 +47,10 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
      *
      * @param argument Description of Parameter
      * @return The Groups value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Vector getGroups( String argument )
-        throws BuildException
+        throws TaskException
     {
         return getGroups( argument, MATCH_DEFAULT );
     }
@@ -61,10 +64,10 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
      * @param input Description of Parameter
      * @param options Description of Parameter
      * @return The Groups value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Vector getGroups( String input, int options )
-        throws BuildException
+        throws TaskException
     {
         Pattern p = getCompiledPattern( options );
         Matcher matcher = p.matcher( input );
@@ -96,10 +99,10 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
      *
      * @param argument Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public boolean matches( String argument )
-        throws BuildException
+        throws TaskException
     {
         return matches( argument, MATCH_DEFAULT );
     }
@@ -110,10 +113,10 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
      * @param input Description of Parameter
      * @param options Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public boolean matches( String input, int options )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -122,12 +125,12 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
         }
         catch( Exception e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 
     protected Pattern getCompiledPattern( int options )
-        throws BuildException
+        throws TaskException
     {
         int cOptions = getCompilerOptions( options );
         try
@@ -137,7 +140,7 @@ public class Jdk14RegexpMatcher implements RegexpMatcher
         }
         catch( PatternSyntaxException e )
         {
-            throw new BuildException( e );
+            throw new TaskException( e );
         }
     }
 

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.lang.reflect.Method;
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -21,21 +22,23 @@ public class JUnitVersionHelper
 {
 
     private static Method testCaseName = null;
+
     static
     {
         try
         {
-            testCaseName = TestCase.class.getMethod( "getName", new Class[0] );
+            testCaseName = TestCase.class.getMethod( "getName", new Class[ 0 ] );
         }
         catch( NoSuchMethodException e )
         {
             // pre JUnit 3.7
             try
             {
-                testCaseName = TestCase.class.getMethod( "name", new Class[0] );
+                testCaseName = TestCase.class.getMethod( "name", new Class[ 0 ] );
             }
             catch( NoSuchMethodException e2 )
-            {}
+            {
+            }
         }
     }
 
@@ -54,10 +57,11 @@ public class JUnitVersionHelper
         {
             try
             {
-                return ( String )testCaseName.invoke( t, new Object[0] );
+                return (String)testCaseName.invoke( t, new Object[ 0 ] );
             }
             catch( Throwable e )
-            {}
+            {
+            }
         }
         return "unknown";
     }

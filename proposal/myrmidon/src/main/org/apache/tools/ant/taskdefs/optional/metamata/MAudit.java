@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
@@ -160,7 +161,7 @@ public class MAudit extends AbstractMetamataTask
         }
         // suppress copyright msg when running, we will let it so that this
         // will be the only output to the console if in xml mode
-//      options.addElement("-quiet");
+        //      options.addElement("-quiet");
         if( fix )
         {
             options.addElement( "-fix" );
@@ -190,12 +191,12 @@ public class MAudit extends AbstractMetamataTask
     }
 
     protected void checkOptions()
-        throws BuildException
+        throws TaskException
     {
         super.checkOptions();
         if( unused && searchPath == null )
         {
-            throw new BuildException( "'searchpath' element must be set when looking for 'unused' declarations." );
+            throw new TaskException( "'searchpath' element must be set when looking for 'unused' declarations." );
         }
         if( !unused && searchPath != null )
         {
@@ -204,7 +205,7 @@ public class MAudit extends AbstractMetamataTask
     }
 
     protected void cleanUp()
-        throws BuildException
+        throws TaskException
     {
         super.cleanUp();
         // at this point if -list is used, we should move
@@ -220,7 +221,7 @@ public class MAudit extends AbstractMetamataTask
     }
 
     protected ExecuteStreamHandler createStreamHandler()
-        throws BuildException
+        throws TaskException
     {
         ExecuteStreamHandler handler = null;
         // if we didn't specify a file, then use a screen report
@@ -238,7 +239,7 @@ public class MAudit extends AbstractMetamataTask
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
         return handler;

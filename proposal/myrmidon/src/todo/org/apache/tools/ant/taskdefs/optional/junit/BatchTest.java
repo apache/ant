@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
@@ -103,7 +104,7 @@ public final class BatchTest extends BaseTest
         v.ensureCapacity( v.size() + tests.length );
         for( int i = 0; i < tests.length; i++ )
         {
-            v.addElement( tests[i] );
+            v.addElement( tests[ i ] );
         }
     }
 
@@ -125,13 +126,13 @@ public final class BatchTest extends BaseTest
         final int size = this.filesets.size();
         for( int j = 0; j < size; j++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( j );
+            FileSet fs = (FileSet)filesets.elementAt( j );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             ds.scan();
             String[] f = ds.getIncludedFiles();
             for( int k = 0; k < f.length; k++ )
             {
-                String pathname = f[k];
+                String pathname = f[ k ];
                 if( pathname.endsWith( ".java" ) )
                 {
                     v.addElement( pathname.substring( 0, pathname.length() - ".java".length() ) );
@@ -143,7 +144,7 @@ public final class BatchTest extends BaseTest
             }
         }
 
-        String[] files = new String[v.size()];
+        String[] files = new String[ v.size() ];
         v.copyInto( files );
         return files;
     }
@@ -157,11 +158,11 @@ public final class BatchTest extends BaseTest
     private JUnitTest[] createAllJUnitTest()
     {
         String[] filenames = getFilenames();
-        JUnitTest[] tests = new JUnitTest[filenames.length];
+        JUnitTest[] tests = new JUnitTest[ filenames.length ];
         for( int i = 0; i < tests.length; i++ )
         {
-            String classname = javaToClass( filenames[i] );
-            tests[i] = createJUnitTest( classname );
+            String classname = javaToClass( filenames[ i ] );
+            tests[ i ] = createJUnitTest( classname );
         }
         return tests;
     }
@@ -190,7 +191,7 @@ public final class BatchTest extends BaseTest
         Enumeration list = this.formatters.elements();
         while( list.hasMoreElements() )
         {
-            test.addFormatter( ( FormatterElement )list.nextElement() );
+            test.addFormatter( (FormatterElement)list.nextElement() );
         }
         return test;
     }

@@ -6,10 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * &lt;condition&gt; task as a generalization of &lt;available&gt; and
@@ -54,7 +54,7 @@ public class ConditionTask extends ConditionBase
     /**
      * See whether our nested condition holds and set the property.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @since 1.1
      */
     public void execute()
@@ -68,7 +68,7 @@ public class ConditionTask extends ConditionBase
         {
             throw new TaskException( "You must nest a condition into <condition>" );
         }
-        Condition c = ( Condition )getConditions().nextElement();
+        Condition c = (Condition)getConditions().nextElement();
         if( c.eval() )
         {
             getProject().setNewProperty( property, value );

@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
-
 
 /**
  * Chmod equivalent for unix-like environments.
@@ -40,7 +40,7 @@ public class Chmod extends ExecuteOn
 
     public void setCommand( String e )
     {
-        throw new BuildException( taskType + " doesn\'t support the command attribute" );
+        throw new TaskException( taskType + " doesn\'t support the command attribute" );
     }
 
     /**
@@ -72,10 +72,9 @@ public class Chmod extends ExecuteOn
         defaultSet.setExcludes( excludes );
     }
 
-
     public void setExecutable( String e )
     {
-        throw new BuildException( taskType + " doesn\'t support the executable attribute" );
+        throw new TaskException( taskType + " doesn\'t support the executable attribute" );
     }
 
     public void setFile( File src )
@@ -106,7 +105,7 @@ public class Chmod extends ExecuteOn
 
     public void setSkipEmptyFilesets( boolean skip )
     {
-        throw new BuildException( taskType + " doesn\'t support the skipemptyfileset attribute" );
+        throw new TaskException( taskType + " doesn\'t support the skipemptyfileset attribute" );
     }
 
     /**
@@ -143,7 +142,7 @@ public class Chmod extends ExecuteOn
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( defaultSetDefined || defaultSet.getDir( project ) == null )
         {
@@ -161,7 +160,7 @@ public class Chmod extends ExecuteOn
             }
             catch( IOException e )
             {
-                throw new BuildException( "Execute failed: " + e, e );
+                throw new TaskException( "Execute failed: " + e, e );
             }
             finally
             {
@@ -180,7 +179,7 @@ public class Chmod extends ExecuteOn
     {
         if( !havePerm )
         {
-            throw new BuildException( "Required attribute perm not set in chmod" );
+            throw new TaskException( "Required attribute perm not set in chmod" );
         }
 
         if( defaultSetDefined && defaultSet.getDir( project ) != null )

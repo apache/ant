@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
@@ -48,7 +49,9 @@ public class JUnitTest extends BaseTest
     // and deal with it. (SB)
     private long runs, failures, errors;
 
-    public JUnitTest() { }
+    public JUnitTest()
+    {
+    }
 
     public JUnitTest( String name )
     {
@@ -93,7 +96,7 @@ public class JUnitTest extends BaseTest
     public void setProperties( Hashtable p )
     {
         props = new Properties();
-        for( Enumeration enum = p.keys(); enum.hasMoreElements();  )
+        for( Enumeration enum = p.keys(); enum.hasMoreElements(); )
         {
             Object key = enum.nextElement();
             props.put( key, p.get( key ) );
@@ -107,7 +110,7 @@ public class JUnitTest extends BaseTest
 
     public FormatterElement[] getFormatters()
     {
-        FormatterElement[] fes = new FormatterElement[formatters.size()];
+        FormatterElement[] fes = new FormatterElement[ formatters.size() ];
         formatters.copyInto( fes );
         return fes;
     }

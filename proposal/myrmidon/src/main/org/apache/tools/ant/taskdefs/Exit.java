@@ -6,8 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.ProjectHelper;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 
 /**
@@ -46,17 +46,17 @@ public class Exit extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( testIfCondition() && testUnlessCondition() )
         {
             if( message != null && message.length() > 0 )
             {
-                throw new BuildException( message );
+                throw new TaskException( message );
             }
             else
             {
-                throw new BuildException( "No message" );
+                throw new TaskException( "No message" );
             }
         }
     }

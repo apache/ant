@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.clearcase;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-
 
 /**
  * A base class for creating tasks for executing commands on ClearCase. <p>
@@ -102,7 +102,6 @@ public abstract class ClearCase extends Task
         return toReturn;
     }
 
-
     protected int run( Commandline cmd )
     {
         try
@@ -116,7 +115,7 @@ public abstract class ClearCase extends Task
         }
         catch( java.io.IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 

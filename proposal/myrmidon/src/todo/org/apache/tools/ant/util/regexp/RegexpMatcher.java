@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
+
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Interface describing a regular expression matcher.
@@ -39,34 +40,33 @@ public interface RegexpMatcher
      */
     int MATCH_SINGLELINE = 0x00010000;
 
-
     /**
      * Set the regexp pattern from the String description.
      *
      * @param pattern The new Pattern value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     void setPattern( String pattern )
-        throws BuildException;
+        throws TaskException;
 
     /**
      * Get a String representation of the regexp pattern
      *
      * @return The Pattern value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     String getPattern()
-        throws BuildException;
+        throws TaskException;
 
     /**
      * Does the given argument match the pattern?
      *
      * @param argument Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     boolean matches( String argument )
-        throws BuildException;
+        throws TaskException;
 
     /**
      * Returns a Vector of matched groups found in the argument. <p>
@@ -76,10 +76,10 @@ public interface RegexpMatcher
      *
      * @param argument Description of Parameter
      * @return The Groups value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     Vector getGroups( String argument )
-        throws BuildException;
+        throws TaskException;
 
     /**
      * Does this regular expression match the input, given certain options
@@ -88,10 +88,10 @@ public interface RegexpMatcher
      * @param options The list of options for the match. See the MATCH_
      *      constants above.
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     boolean matches( String input, int options )
-        throws BuildException;
+        throws TaskException;
 
     /**
      * Get the match groups from this regular expression. The return type of the
@@ -101,9 +101,9 @@ public interface RegexpMatcher
      * @param options The list of options for the match. See the MATCH_
      *      constants above.
      * @return The Groups value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     Vector getGroups( String input, int options )
-        throws BuildException;
+        throws TaskException;
 
 }

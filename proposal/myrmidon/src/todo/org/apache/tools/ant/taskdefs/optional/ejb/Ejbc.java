@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -132,40 +133,40 @@ public class Ejbc extends MatchingTask
      * avoids having to start ant with the class path of the project it is
      * building.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception TaskException if someting goes wrong with the build
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( descriptorDirectory == null ||
             !descriptorDirectory.isDirectory() )
         {
-            throw new BuildException( "descriptors directory " + descriptorDirectory.getPath() +
-                " is not valid" );
+            throw new TaskException( "descriptors directory " + descriptorDirectory.getPath() +
+                                     " is not valid" );
         }
         if( generatedFilesDirectory == null ||
             !generatedFilesDirectory.isDirectory() )
         {
-            throw new BuildException( "dest directory " + generatedFilesDirectory.getPath() +
-                " is not valid" );
+            throw new TaskException( "dest directory " + generatedFilesDirectory.getPath() +
+                                     " is not valid" );
         }
 
         if( sourceDirectory == null ||
             !sourceDirectory.isDirectory() )
         {
-            throw new BuildException( "src directory " + sourceDirectory.getPath() +
-                " is not valid" );
+            throw new TaskException( "src directory " + sourceDirectory.getPath() +
+                                     " is not valid" );
         }
 
         String systemClassPath = System.getProperty( "java.class.path" );
         String execClassPath = project.translatePath( systemClassPath + ":" + classpath +
-            ":" + generatedFilesDirectory );
+                                                      ":" + generatedFilesDirectory );
         // get all the files in the descriptor directory
         DirectoryScanner ds = super.getDirectoryScanner( descriptorDirectory );
 
         String[] files = ds.getIncludedFiles();
 
-        Java helperTask = ( Java )project.createTask( "java" );
+        Java helperTask = (Java)project.createTask( "java" );
         helperTask.setTaskName( getTaskName() );
         helperTask.setFork( true );
         helperTask.setClassname( "org.apache.tools.ant.taskdefs.optional.ejb.EjbcHelper" );
@@ -178,7 +179,7 @@ public class Ejbc extends MatchingTask
 
         for( int i = 0; i < files.length; ++i )
         {
-            args += " " + files[i];
+            args += " " + files[ i ];
         }
 
         Commandline.Argument arguments = helperTask.createArg();
@@ -186,7 +187,7 @@ public class Ejbc extends MatchingTask
         helperTask.setClasspath( new Path( project, execClassPath ) );
         if( helperTask.executeJava() != 0 )
         {
-            throw new BuildException( "Execution of ejbc helper failed" );
+            throw new TaskException( "Execution of ejbc helper failed" );
         }
     }
 }

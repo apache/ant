@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import org.apache.tools.ant.*;
-
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 
 /**
  * Ant task to read input line from console.
@@ -29,7 +30,9 @@ public class Input extends Task
     /**
      * No arg constructor.
      */
-    public Input() { }
+    public Input()
+    {
+    }
 
     /**
      * Defines the name of a property to be created from input. Behaviour is
@@ -90,10 +93,10 @@ public class Input extends Task
     /**
      * Actual test method executed by jakarta-ant.
      *
-     * @exception BuildException
+     * @exception TaskException
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Vector accept = null;
         if( validargs != null )
@@ -123,7 +126,7 @@ public class Input extends Task
             }
             catch( IOException e )
             {
-                throw new BuildException( "Failed to read input from Console.", e );
+                throw new TaskException( "Failed to read input from Console.", e );
             }
         }
         // not quite the original intention of this task but for the sake
@@ -132,7 +135,7 @@ public class Input extends Task
         {
             if( accept != null && ( !accept.contains( input ) ) )
             {
-                throw new BuildException( "Invalid input please reenter." );
+                throw new TaskException( "Invalid input please reenter." );
             }
         }
         // adopted from org.apache.tools.ant.taskdefs.Property

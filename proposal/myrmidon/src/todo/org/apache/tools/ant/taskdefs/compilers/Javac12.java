@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
@@ -29,7 +30,7 @@ public class Javac12 extends DefaultCompilerAdapter
 {
 
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         attributes.log( "Using classic compiler", Project.MSG_VERBOSE );
         Commandline cmd = setupJavacCommand( true );
@@ -45,24 +46,24 @@ public class Javac12 extends DefaultCompilerAdapter
 
             // Call the compile() method
             Method compile = c.getMethod( "compile", new Class[]{String[].class} );
-            Boolean ok = ( Boolean )compile.invoke( compiler, new Object[]{cmd.getArguments()} );
+            Boolean ok = (Boolean)compile.invoke( compiler, new Object[]{cmd.getArguments()} );
             return ok.booleanValue();
         }
         catch( ClassNotFoundException ex )
         {
-            throw new BuildException( "Cannot use classic compiler, as it is not available" +
-                " A common solution is to set the environment variable" +
-                " JAVA_HOME to your jdk directory." );
+            throw new TaskException( "Cannot use classic compiler, as it is not available" +
+                                     " A common solution is to set the environment variable" +
+                                     " JAVA_HOME to your jdk directory." );
         }
         catch( Exception ex )
         {
-            if( ex instanceof BuildException )
+            if( ex instanceof TaskException )
             {
-                throw ( BuildException )ex;
+                throw (TaskException)ex;
             }
             else
             {
-                throw new BuildException( "Error starting classic compiler: ", ex );
+                throw new TaskException( "Error starting classic compiler: ", ex );
             }
         }
         finally
@@ -74,7 +75,7 @@ public class Javac12 extends DefaultCompilerAdapter
             catch( IOException e )
             {
                 // plain impossible
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
     }

@@ -11,7 +11,6 @@ import java.io.File;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.BuildException;
 
 /**
  * Commandline objects help handling command lines specifying processes to
@@ -40,6 +39,7 @@ public class Commandline implements Cloneable
     private String executable = null;
 
     public Commandline( String to_process )
+        throws TaskException
     {
         super();
         String[] tmp = translateCommandline( to_process );
@@ -75,7 +75,7 @@ public class Commandline implements Cloneable
         {
             if( argument.indexOf( "\'" ) > -1 )
             {
-                throw new BuildException( "Can\'t handle single and double quotes in same argument" );
+                throw new TaskException( "Can\'t handle single and double quotes in same argument" );
             }
             else
             {
@@ -120,6 +120,7 @@ public class Commandline implements Cloneable
     }
 
     public static String[] translateCommandline( String to_process )
+        throws TaskException
     {
         if( to_process == null || to_process.length() == 0 )
         {
@@ -193,7 +194,7 @@ public class Commandline implements Cloneable
 
         if( state == inQuote || state == inDoubleQuote )
         {
-            throw new BuildException( "unbalanced quotes in " + to_process );
+            throw new TaskException( "unbalanced quotes in " + to_process );
         }
 
         String[] args = new String[ v.size() ];
@@ -356,6 +357,7 @@ public class Commandline implements Cloneable
          * @param line line to split into several commandline arguments
          */
         public void setLine( String line )
+            throws TaskException
         {
             parts = translateCommandline( line );
         }

@@ -6,14 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 /**
  * Super class for all VAJ tasks. Contains common attributes (remoteServer) and
  * util methods
  *
  * @author: Wolf Siberski
  */
-import org.apache.tools.ant.Task;
 
+import org.apache.tools.ant.Task;
 
 public class VAJTask extends Task
 {
@@ -33,7 +34,6 @@ public class VAJTask extends Task
     {
         this.remoteServer = remoteServer;
     }
-
 
     /**
      * returns the VAJUtil implementation

@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Helper class for attributes that can only take one of a fixed list of values.
@@ -21,21 +22,23 @@ public abstract class EnumeratedAttribute
 
     protected String value;
 
-    public EnumeratedAttribute() { }
+    public EnumeratedAttribute()
+    {
+    }
 
     /**
      * Invoked by {@link org.apache.tools.ant.IntrospectionHelper
      * IntrospectionHelper}.
      *
      * @param value The new Value value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public final void setValue( String value )
-        throws BuildException
+        throws TaskException
     {
         if( !containsValue( value ) )
         {
-            throw new BuildException( value + " is not a legal value for this attribute" );
+            throw new TaskException( value + " is not a legal value for this attribute" );
         }
         this.value = value;
     }
@@ -73,7 +76,7 @@ public abstract class EnumeratedAttribute
 
         for( int i = 0; i < values.length; i++ )
         {
-            if( value.equals( values[i] ) )
+            if( value.equals( values[ i ] ) )
             {
                 return true;
             }

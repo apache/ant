@@ -6,10 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.jsp;
+
 import java.io.File;
 import java.util.Date;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
@@ -63,7 +64,7 @@ public class JspC extends MatchingTask
 {
 
     private final static String FAIL_MSG
-         = "Compile failed, messages should have been provided.";
+        = "Compile failed, messages should have been provided.";
     private int verbose = 0;
     protected Vector compileList = new Vector();
     protected boolean failOnError = true;
@@ -135,7 +136,7 @@ public class JspC extends MatchingTask
      * ------------------------------------------------------------
      */
     /**
-     * Throw a BuildException if compilation fails
+     * Throw a TaskException if compilation fails
      *
      * @param fail The new Failonerror value
      */
@@ -318,24 +319,24 @@ public class JspC extends MatchingTask
      * ------------------------------------------------------------
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         // first off, make sure that we've got a srcdir
         if( src == null )
         {
-            throw new BuildException( "srcdir attribute must be set!" );
+            throw new TaskException( "srcdir attribute must be set!" );
         }
         String[] list = src.list();
         if( list.length == 0 )
         {
-            throw new BuildException( "srcdir attribute must be set!" );
+            throw new TaskException( "srcdir attribute must be set!" );
         }
 
         if( destDir != null && !destDir.isDirectory() )
         {
             throw new
-                BuildException( "destination directory \"" + destDir +
-                "\" does not exist or is not a directory" );
+                TaskException( "destination directory \"" + destDir +
+                               "\" does not exist or is not a directory" );
         }
 
         // calculate where the files will end up:
@@ -355,11 +356,11 @@ public class JspC extends MatchingTask
         int filecount = 0;
         for( int i = 0; i < list.length; i++ )
         {
-            File srcDir = ( File )resolveFile( list[i] );
+            File srcDir = (File)resolveFile( list[ i ] );
             if( !srcDir.exists() )
             {
-                throw new BuildException( "srcdir \"" + srcDir.getPath() +
-                    "\" does not exist!" );
+                throw new TaskException( "srcdir \"" + srcDir.getPath() +
+                                         "\" does not exist!" );
             }
 
             DirectoryScanner ds = this.getDirectoryScanner( srcDir );
@@ -384,7 +385,7 @@ public class JspC extends MatchingTask
             CompilerAdapter adapter =
                 CompilerAdapterFactory.getCompiler( compiler, this );
             log( "Compiling " + compileList.size() +
-                " source file"
+                 " source file"
                  + ( compileList.size() == 1 ? "" : "s" )
                  + ( destDir != null ? " to " + destDir : "" ) );
 
@@ -396,7 +397,7 @@ public class JspC extends MatchingTask
             {
                 if( failOnError )
                 {
-                    throw new BuildException( FAIL_MSG );
+                    throw new TaskException( FAIL_MSG );
                 }
                 else
                 {
@@ -446,19 +447,19 @@ public class JspC extends MatchingTask
 
         for( int i = 0; i < files.length; i++ )
         {
-            File srcFile = new File( srcDir, files[i] );
-            if( files[i].endsWith( ".jsp" ) )
+            File srcFile = new File( srcDir, files[ i ] );
+            if( files[ i ].endsWith( ".jsp" ) )
             {
                 // drop leading path (if any)
                 int fileStart =
-                    files[i].lastIndexOf( File.separatorChar ) + 1;
-                File javaFile = new File( destDir, files[i].substring( fileStart,
-                    files[i].indexOf( ".jsp" ) ) + ".java" );
+                    files[ i ].lastIndexOf( File.separatorChar ) + 1;
+                File javaFile = new File( destDir, files[ i ].substring( fileStart,
+                                                                         files[ i ].indexOf( ".jsp" ) ) + ".java" );
 
                 if( srcFile.lastModified() > now )
                 {
                     log( "Warning: file modified in the future: " +
-                        files[i], Project.MSG_WARN );
+                         files[ i ], Project.MSG_WARN );
                 }
 
                 if( !javaFile.exists() ||
@@ -467,14 +468,14 @@ public class JspC extends MatchingTask
                     if( !javaFile.exists() )
                     {
                         log( "Compiling " + srcFile.getPath() +
-                            " because java file "
+                             " because java file "
                              + javaFile.getPath() + " does not exist",
-                            Project.MSG_DEBUG );
+                             Project.MSG_DEBUG );
                     }
                     else
                     {
                         log( "Compiling " + srcFile.getPath() +
-                            " because it is out of date with respect to "
+                             " because it is out of date with respect to "
                              + javaFile.getPath(), Project.MSG_DEBUG );
                     }
                     compileList.addElement( srcFile.getAbsolutePath() );

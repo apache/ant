@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import java.util.Vector;
 
 /**
@@ -73,8 +74,8 @@ public class VAJLoadServlet extends VAJToolsServlet
         for( int i = 0; i < projectNames.length && i < versionNames.length; i++ )
         {
             VAJProjectDescription desc = new VAJProjectDescription();
-            desc.setName( projectNames[i] );
-            desc.setVersion( versionNames[i] );
+            desc.setName( projectNames[ i ] );
+            desc.setVersion( versionNames[ i ] );
             projectDescriptions.addElement( desc );
         }
 

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -145,13 +146,13 @@ public class IPlanetEjbc
         if( classpath != null )
         {
             StringTokenizer st = new StringTokenizer( classpath,
-                File.pathSeparator );
+                                                      File.pathSeparator );
             while( st.hasMoreTokens() )
             {
                 elements.add( st.nextToken() );
             }
             classpathElements
-                 = ( String[] )elements.toArray( new String[elements.size()] );
+                = (String[])elements.toArray( new String[ elements.size() ] );
         }
     }
 
@@ -179,24 +180,24 @@ public class IPlanetEjbc
             return;
         }
 
-        stdDescriptor = new File( args[args.length - 2] );
-        iasDescriptor = new File( args[args.length - 1] );
+        stdDescriptor = new File( args[ args.length - 2 ] );
+        iasDescriptor = new File( args[ args.length - 1 ] );
 
         for( int i = 0; i < args.length - 2; i++ )
         {
-            if( args[i].equals( "-classpath" ) )
+            if( args[ i ].equals( "-classpath" ) )
             {
-                classpath = args[++i];
+                classpath = args[ ++i ];
             }
-            else if( args[i].equals( "-d" ) )
+            else if( args[ i ].equals( "-d" ) )
             {
-                destDirectory = new File( args[++i] );
+                destDirectory = new File( args[ ++i ] );
             }
-            else if( args[i].equals( "-debug" ) )
+            else if( args[ i ].equals( "-debug" ) )
             {
                 debug = true;
             }
-            else if( args[i].equals( "-keepsource" ) )
+            else if( args[ i ].equals( "-keepsource" ) )
             {
                 retainSource = true;
             }
@@ -248,7 +249,7 @@ public class IPlanetEjbc
          * Build and populate an instance of the ejbc utility
          */
         ejbc = new IPlanetEjbc( stdDescriptor, iasDescriptor, destDirectory,
-            classpath, parser );
+                                classpath, parser );
         ejbc.setDebugOutput( debug );
         ejbc.setRetainSource( retainSource );
 
@@ -262,19 +263,19 @@ public class IPlanetEjbc
         catch( IOException e )
         {
             System.out.println( "An IOException has occurred while reading the "
-                 + "XML descriptors (" + e.getMessage() + ")." );
+                                + "XML descriptors (" + e.getMessage() + ")." );
             return;
         }
         catch( SAXException e )
         {
             System.out.println( "A SAXException has occurred while reading the "
-                 + "XML descriptors (" + e.getMessage() + ")." );
+                                + "XML descriptors (" + e.getMessage() + ")." );
             return;
         }
         catch( IPlanetEjbc.EjbcException e )
         {
             System.out.println( "An error has occurred while executing the ejbc "
-                 + "utility (" + e.getMessage() + ")." );
+                                + "utility (" + e.getMessage() + ")." );
             return;
         }
     }
@@ -353,11 +354,11 @@ public class IPlanetEjbc
 
         for( int i = 0; i < ejbs.length; i++ )
         {
-            List descriptors = ( List )ejbs[i].getCmpDescriptors();
+            List descriptors = (List)ejbs[ i ].getCmpDescriptors();
             returnList.addAll( descriptors );
         }
 
-        return ( String[] )returnList.toArray( new String[returnList.size()] );
+        return (String[])returnList.toArray( new String[ returnList.size() ] );
     }
 
     /**
@@ -407,12 +408,12 @@ public class IPlanetEjbc
         for( int i = 0; i < ejbs.length; i++ )
         {
             log( "EJBInfo..." );
-            log( ejbs[i].toString() );
+            log( ejbs[ i ].toString() );
         }
 
         for( int i = 0; i < ejbs.length; i++ )
         {
-            EjbInfo ejb = ejbs[i];
+            EjbInfo ejb = ejbs[ i ];
 
             ejb.checkConfiguration( destDirectory );// Throws EjbcException
 
@@ -588,7 +589,7 @@ public class IPlanetEjbc
         /*
          * Convert the List into an Array and return it
          */
-        return ( String[] )arguments.toArray( new String[arguments.size()] );
+        return (String[])arguments.toArray( new String[ arguments.size() ] );
     }
 
     /**
@@ -605,7 +606,7 @@ public class IPlanetEjbc
         StringBuffer args = new StringBuffer();
         for( int i = 0; i < arguments.length; i++ )
         {
-            args.append( arguments[i] ).append( " " );
+            args.append( arguments[ i ] ).append( " " );
         }
 
         /*
@@ -619,7 +620,7 @@ public class IPlanetEjbc
         else
         {
             command = iasHomeDir.toString() + File.separator + "bin"
-                 + File.separator;
+                + File.separator;
         }
         command += "ejbc ";
 
@@ -745,7 +746,7 @@ public class IPlanetEjbc
         public File getClassFile( File directory )
         {
             String pathToFile = qualifiedName.replace( '.', File.separatorChar )
-                 + ".class";
+                + ".class";
             return new File( directory, pathToFile );
         }
 
@@ -804,7 +805,6 @@ public class IPlanetEjbc
             return getQualifiedClassName();
         }
     }// End of EjbcHandler inner class
-
 
     /**
      * This inner class represents an EJB that will be compiled using ejbc.
@@ -1005,13 +1005,13 @@ public class IPlanetEjbc
         public String toString()
         {
             String s = "EJB name: " + name
-                 + "\n\r              home:      " + home
-                 + "\n\r              remote:    " + remote
-                 + "\n\r              impl:      " + implementation
-                 + "\n\r              beantype:  " + beantype
-                 + "\n\r              cmp:       " + cmp
-                 + "\n\r              iiop:      " + iiop
-                 + "\n\r              hasession: " + hasession;
+                + "\n\r              home:      " + home
+                + "\n\r              remote:    " + remote
+                + "\n\r              impl:      " + implementation
+                + "\n\r              beantype:  " + beantype
+                + "\n\r              cmp:       " + cmp
+                + "\n\r              iiop:      " + iiop
+                + "\n\r              hasession: " + hasession;
 
             Iterator i = cmpDescriptors.iterator();
             while( i.hasNext() )
@@ -1040,40 +1040,40 @@ public class IPlanetEjbc
             if( home == null )
             {
                 throw new EjbcException( "A home interface was not found "
-                     + "for the " + name + " EJB." );
+                                         + "for the " + name + " EJB." );
             }
             if( remote == null )
             {
                 throw new EjbcException( "A remote interface was not found "
-                     + "for the " + name + " EJB." );
+                                         + "for the " + name + " EJB." );
             }
             if( implementation == null )
             {
                 throw new EjbcException( "An EJB implementation class was not "
-                     + "found for the " + name + " EJB." );
+                                         + "found for the " + name + " EJB." );
             }
 
             if( ( !beantype.equals( ENTITY_BEAN ) )
-                 && ( !beantype.equals( STATELESS_SESSION ) )
-                 && ( !beantype.equals( STATEFUL_SESSION ) ) )
+                && ( !beantype.equals( STATELESS_SESSION ) )
+                && ( !beantype.equals( STATEFUL_SESSION ) ) )
             {
                 throw new EjbcException( "The beantype found (" + beantype + ") "
-                     + "isn't valid in the " + name + " EJB." );
+                                         + "isn't valid in the " + name + " EJB." );
             }
 
             if( cmp && ( !beantype.equals( ENTITY_BEAN ) ) )
             {
                 System.out.println( "CMP stubs and skeletons may not be generated"
-                     + " for a Session Bean -- the \"cmp\" attribute will be"
-                     + " ignoredfor the " + name + " EJB." );
+                                    + " for a Session Bean -- the \"cmp\" attribute will be"
+                                    + " ignoredfor the " + name + " EJB." );
             }
 
             if( hasession && ( !beantype.equals( STATEFUL_SESSION ) ) )
             {
                 System.out.println( "Highly available stubs and skeletons may "
-                     + "only be generated for a Stateful Session Bean -- the "
-                     + "\"hasession\" attribute will be ignored for the "
-                     + name + " EJB." );
+                                    + "only be generated for a Stateful Session Bean -- the "
+                                    + "\"hasession\" attribute will be ignored for the "
+                                    + name + " EJB." );
             }
 
             /*
@@ -1082,20 +1082,20 @@ public class IPlanetEjbc
             if( !remote.getClassFile( buildDir ).exists() )
             {
                 throw new EjbcException( "The remote interface "
-                     + remote.getQualifiedClassName() + " could not be "
-                     + "found." );
+                                         + remote.getQualifiedClassName() + " could not be "
+                                         + "found." );
             }
             if( !home.getClassFile( buildDir ).exists() )
             {
                 throw new EjbcException( "The home interface "
-                     + home.getQualifiedClassName() + " could not be "
-                     + "found." );
+                                         + home.getQualifiedClassName() + " could not be "
+                                         + "found." );
             }
             if( !implementation.getClassFile( buildDir ).exists() )
             {
                 throw new EjbcException( "The EJB implementation class "
-                     + implementation.getQualifiedClassName() + " could "
-                     + "not be found." );
+                                         + implementation.getQualifiedClassName() + " could "
+                                         + "not be found." );
             }
         }
 
@@ -1111,7 +1111,7 @@ public class IPlanetEjbc
          */
         private String[] classesToGenerate()
         {
-            String[] classnames = ( iiop ) ? new String[15] : new String[9];
+            String[] classnames = ( iiop ) ? new String[ 15 ] : new String[ 9 ];
 
             final String remotePkg = remote.getPackageName() + ".";
             final String remoteClass = remote.getClassName();
@@ -1123,30 +1123,30 @@ public class IPlanetEjbc
 
             String fullPath;
 
-            classnames[index++] = implPkg + "ejb_fac_" + implFullClass;
-            classnames[index++] = implPkg + "ejb_home_" + implFullClass;
-            classnames[index++] = implPkg + "ejb_skel_" + implFullClass;
-            classnames[index++] = remotePkg + "ejb_kcp_skel_" + remoteClass;
-            classnames[index++] = homePkg + "ejb_kcp_skel_" + homeClass;
-            classnames[index++] = remotePkg + "ejb_kcp_stub_" + remoteClass;
-            classnames[index++] = homePkg + "ejb_kcp_stub_" + homeClass;
-            classnames[index++] = remotePkg + "ejb_stub_" + remoteClass;
-            classnames[index++] = homePkg + "ejb_stub_" + homeClass;
+            classnames[ index++ ] = implPkg + "ejb_fac_" + implFullClass;
+            classnames[ index++ ] = implPkg + "ejb_home_" + implFullClass;
+            classnames[ index++ ] = implPkg + "ejb_skel_" + implFullClass;
+            classnames[ index++ ] = remotePkg + "ejb_kcp_skel_" + remoteClass;
+            classnames[ index++ ] = homePkg + "ejb_kcp_skel_" + homeClass;
+            classnames[ index++ ] = remotePkg + "ejb_kcp_stub_" + remoteClass;
+            classnames[ index++ ] = homePkg + "ejb_kcp_stub_" + homeClass;
+            classnames[ index++ ] = remotePkg + "ejb_stub_" + remoteClass;
+            classnames[ index++ ] = homePkg + "ejb_stub_" + homeClass;
 
             if( !iiop )
             {
                 return classnames;
             }
 
-            classnames[index++] = remotePkg + "_" + remoteClass + "_Stub";
-            classnames[index++] = homePkg + "_" + homeClass + "_Stub";
-            classnames[index++] = remotePkg + "_ejb_RmiCorbaBridge_"
-                 + remoteClass + "_Tie";
-            classnames[index++] = homePkg + "_ejb_RmiCorbaBridge_" + homeClass
-                 + "_Tie";
-            classnames[index++] = remotePkg + "ejb_RmiCorbaBridge_"
-                 + remoteClass;
-            classnames[index++] = homePkg + "ejb_RmiCorbaBridge_" + homeClass;
+            classnames[ index++ ] = remotePkg + "_" + remoteClass + "_Stub";
+            classnames[ index++ ] = homePkg + "_" + homeClass + "_Stub";
+            classnames[ index++ ] = remotePkg + "_ejb_RmiCorbaBridge_"
+                + remoteClass + "_Tie";
+            classnames[ index++ ] = homePkg + "_ejb_RmiCorbaBridge_" + homeClass
+                + "_Tie";
+            classnames[ index++ ] = remotePkg + "ejb_RmiCorbaBridge_"
+                + remoteClass;
+            classnames[ index++ ] = homePkg + "ejb_RmiCorbaBridge_" + homeClass;
 
             return classnames;
         }
@@ -1161,7 +1161,7 @@ public class IPlanetEjbc
          * @return The modification timestamp for the "oldest" EJB stub or
          *      skeleton. If one of the classes cannot be found, <code>-1
          *         </code> is returned.
-         * @throws BuildException If the canonical path of the destination
+         * @throws TaskException If the canonical path of the destination
          *      directory cannot be found.
          */
         private long destClassesModified( File destDir )
@@ -1178,7 +1178,7 @@ public class IPlanetEjbc
             {
 
                 String pathToClass =
-                    classnames[i].replace( '.', File.separatorChar ) + ".class";
+                    classnames[ i ].replace( '.', File.separatorChar ) + ".class";
                 File classFile = new File( destDir, pathToClass );
 
                 /*
@@ -1210,7 +1210,7 @@ public class IPlanetEjbc
          *
          * @param buildDir Description of Parameter
          * @return The modification timestamp for the "oldest" EJB source class.
-         * @throws BuildException If one of the EJB source classes cannot be
+         * @throws TaskException If one of the EJB source classes cannot be
          *      found on the classpath.
          */
         private long sourceClassesModified( File buildDir )
@@ -1229,8 +1229,8 @@ public class IPlanetEjbc
             if( modified == -1 )
             {
                 System.out.println( "The class "
-                     + remote.getQualifiedClassName() + " couldn't "
-                     + "be found on the classpath" );
+                                    + remote.getQualifiedClassName() + " couldn't "
+                                    + "be found on the classpath" );
                 return -1;
             }
             latestModified = modified;
@@ -1243,8 +1243,8 @@ public class IPlanetEjbc
             if( modified == -1 )
             {
                 System.out.println( "The class "
-                     + home.getQualifiedClassName() + " couldn't be "
-                     + "found on the classpath" );
+                                    + home.getQualifiedClassName() + " couldn't be "
+                                    + "found on the classpath" );
                 return -1;
             }
             latestModified = Math.max( latestModified, modified );
@@ -1264,8 +1264,8 @@ public class IPlanetEjbc
             if( modified == -1 )
             {
                 System.out.println( "The class "
-                     + implementation.getQualifiedClassName()
-                     + " couldn't be found on the classpath" );
+                                    + implementation.getQualifiedClassName()
+                                    + " couldn't be found on the classpath" );
                 return -1;
             }
 
@@ -1285,7 +1285,6 @@ public class IPlanetEjbc
         }
 
     }// End of EjbcException inner class
-
 
     /**
      * This inner class is an XML document handler that can be used to parse EJB
@@ -1358,7 +1357,7 @@ public class IPlanetEjbc
          */
         public EjbInfo[] getEjbs()
         {
-            return ( EjbInfo[] )ejbs.values().toArray( new EjbInfo[ejbs.size()] );
+            return (EjbInfo[])ejbs.values().toArray( new EjbInfo[ ejbs.size() ] );
         }
 
         /**
@@ -1471,15 +1470,15 @@ public class IPlanetEjbc
                 /*
                  * Search the resource Map and (if not found) file Map
                  */
-                String location = ( String )resourceDtds.get( publicId );
+                String location = (String)resourceDtds.get( publicId );
                 if( location != null )
                 {
                     inputStream
-                         = ClassLoader.getSystemResource( location ).openStream();
+                        = ClassLoader.getSystemResource( location ).openStream();
                 }
                 else
                 {
-                    location = ( String )fileDtds.get( publicId );
+                    location = (String)fileDtds.get( publicId );
                     if( location != null )
                     {
                         inputStream = new FileInputStream( location );
@@ -1555,7 +1554,7 @@ public class IPlanetEjbc
 
             if( currentLoc.equals( base + "\\ejb-name" ) )
             {
-                currentEjb = ( EjbInfo )ejbs.get( value );
+                currentEjb = (EjbInfo)ejbs.get( value );
                 if( currentEjb == null )
                 {
                     currentEjb = new EjbInfo( value );
@@ -1571,7 +1570,7 @@ public class IPlanetEjbc
                 currentEjb.setHasession( value );
             }
             else if( currentLoc.equals( base + "\\persistence-manager"
-                 + "\\properties-file-location" ) )
+                                        + "\\properties-file-location" ) )
             {
                 currentEjb.addCmpDescriptor( value );
             }
@@ -1598,7 +1597,7 @@ public class IPlanetEjbc
 
             if( currentLoc.equals( base + "\\ejb-name" ) )
             {
-                currentEjb = ( EjbInfo )ejbs.get( value );
+                currentEjb = (EjbInfo)ejbs.get( value );
                 if( currentEjb == null )
                 {
                     currentEjb = new EjbInfo( value );
@@ -1627,7 +1626,6 @@ public class IPlanetEjbc
             }
         }
     }// End of Classname inner class
-
 
     /**
      * Thread class used to redirect output from an <code>InputStream</code> to

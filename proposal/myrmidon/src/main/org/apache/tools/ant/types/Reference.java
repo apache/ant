@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -41,17 +42,17 @@ public class Reference
     }
 
     public Object getReferencedObject( Project project )
-        throws BuildException
+        throws TaskException
     {
         if( refid == null )
         {
-            throw new BuildException( "No reference specified" );
+            throw new TaskException( "No reference specified" );
         }
 
         Object o = project.getReference( refid );
         if( o == null )
         {
-            throw new BuildException( "Reference " + refid + " not found." );
+            throw new TaskException( "Reference " + refid + " not found." );
         }
         return o;
     }

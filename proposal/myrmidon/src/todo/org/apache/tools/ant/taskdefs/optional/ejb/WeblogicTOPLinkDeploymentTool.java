@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
 import java.util.Hashtable;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool
@@ -46,15 +47,15 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool
     /**
      * Called to validate that the tool parameters have been configured.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void validateConfigured()
-        throws BuildException
+        throws TaskException
     {
         super.validateConfigured();
         if( toplinkDescriptor == null )
         {
-            throw new BuildException( "The toplinkdescriptor attribute must be specified" );
+            throw new TaskException( "The toplinkdescriptor attribute must be specified" );
         }
     }
 
@@ -64,12 +65,12 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool
         if( toplinkDTD != null )
         {
             handler.registerDTD( "-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
-                toplinkDTD );
+                                 toplinkDTD );
         }
         else
         {
             handler.registerDTD( "-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
-                TL_DTD_LOC );
+                                 TL_DTD_LOC );
         }
         return handler;
     }
@@ -93,12 +94,12 @@ public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool
         if( toplinkDD.exists() )
         {
             ejbFiles.put( META_DIR + toplinkDescriptor,
-                toplinkDD );
+                          toplinkDD );
         }
         else
         {
             log( "Unable to locate toplink deployment descriptor. It was expected to be in " +
-                toplinkDD.getPath(), Project.MSG_WARN );
+                 toplinkDD.getPath(), Project.MSG_WARN );
         }
     }
 }

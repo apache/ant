@@ -9,7 +9,6 @@ package org.apache.tools.ant.types;
 
 import java.util.Stack;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 
@@ -135,9 +134,9 @@ public abstract class DataType
      *
      * @return Description of the Returned Value
      */
-    protected BuildException circularReference()
+    protected TaskException circularReference()
     {
-        return new BuildException( "This data type contains a circular reference." );
+        return new TaskException( "This data type contains a circular reference." );
     }
 
     /**
@@ -145,7 +144,7 @@ public abstract class DataType
      * the Stack (which holds all DataType instances that directly or indirectly
      * reference this instance, including this instance itself). <p>
      *
-     * If one is included, throw a BuildException created by {@link
+     * If one is included, throw a TaskException created by {@link
      * #circularReference circularReference}.</p> <p>
      *
      * This implementation is appropriate only for a DataType that cannot hold
@@ -157,10 +156,10 @@ public abstract class DataType
      *
      * @param stk Description of Parameter
      * @param p Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void dieOnCircularReference( Stack stk, Project p )
-        throws BuildException
+        throws TaskException
     {
 
         if( checked || !isReference() )
@@ -191,9 +190,9 @@ public abstract class DataType
      *
      * @return Description of the Returned Value
      */
-    protected BuildException noChildrenAllowed()
+    protected TaskException noChildrenAllowed()
     {
-        return new BuildException( "You must not specify nested elements when using refid" );
+        return new TaskException( "You must not specify nested elements when using refid" );
     }
 
     /**
@@ -202,9 +201,9 @@ public abstract class DataType
      *
      * @return Description of the Returned Value
      */
-    protected BuildException tooManyAttributes()
+    protected TaskException tooManyAttributes()
     {
-        return new BuildException( "You must not specify more than one attribute" +
-                                   " when using refid" );
+        return new TaskException( "You must not specify more than one attribute" +
+                                  " when using refid" );
     }
 }

@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -73,7 +73,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware
         transformer.setOutputProperty( OutputKeys.METHOD, type );
     }
 
-//------------------- IMPORTANT
+    //------------------- IMPORTANT
     // 1) Don't use the StreamSource(File) ctor. It won't work with
     // xalan prior to 2.2 because of systemid bugs.
 
@@ -141,7 +141,8 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware
                 }
             }
             catch( IOException ignored )
-            {}
+            {
+            }
             try
             {
                 if( fis != null )
@@ -150,7 +151,8 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware
                 }
             }
             catch( IOException ignored )
-            {}
+            {
+            }
             try
             {
                 if( fos != null )
@@ -159,7 +161,8 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware
                 }
             }
             catch( IOException ignored )
-            {}
+            {
+            }
         }
     }
 

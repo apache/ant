@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
+
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.regexp.RE;
-import org.apache.tools.ant.BuildException;
 
 /**
  * Regular expression implementation using the Jakarta Regexp package
@@ -25,7 +26,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
     }
 
     public String substitute( String input, String argument, int options )
-        throws BuildException
+        throws TaskException
     {
         Vector v = getGroups( input, options );
 
@@ -42,7 +43,7 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher implements Regexp
                     int value = Character.digit( c, 10 );
                     if( value > -1 )
                     {
-                        result.append( ( String )v.elementAt( value ) );
+                        result.append( (String)v.elementAt( value ) );
                     }
                     else
                     {

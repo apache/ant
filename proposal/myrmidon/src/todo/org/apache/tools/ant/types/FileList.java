@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.io.File;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -41,7 +42,7 @@ public class FileList extends DataType
     }
 
     public void setDir( File dir )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -74,10 +75,10 @@ public class FileList extends DataType
      * if you make it a reference.</p>
      *
      * @param r The new Refid value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setRefid( Reference r )
-        throws BuildException
+        throws TaskException
     {
         if( ( dir != null ) || ( filenames.size() != 0 ) )
         {
@@ -110,15 +111,15 @@ public class FileList extends DataType
 
         if( dir == null )
         {
-            throw new BuildException( "No directory specified for filelist." );
+            throw new TaskException( "No directory specified for filelist." );
         }
 
         if( filenames.size() == 0 )
         {
-            throw new BuildException( "No files specified for filelist." );
+            throw new TaskException( "No files specified for filelist." );
         }
 
-        String result[] = new String[filenames.size()];
+        String result[] = new String[ filenames.size() ];
         filenames.copyInto( result );
         return result;
     }
@@ -143,11 +144,11 @@ public class FileList extends DataType
         if( !( o instanceof FileList ) )
         {
             String msg = ref.getRefId() + " doesn\'t denote a filelist";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
         else
         {
-            return ( FileList )o;
+            return (FileList)o;
         }
     }
 

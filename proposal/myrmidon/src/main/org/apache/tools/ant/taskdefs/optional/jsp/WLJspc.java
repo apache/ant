@@ -6,14 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.jsp;//java imports
+
 import java.io.File;
 import java.util.Date;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Java;//apache/ant imports
+import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 
@@ -66,7 +67,6 @@ public class WLJspc extends MatchingTask
     private File destinationDirectory;// root of source files tree
     private String destinationPackage;//root of compiled files tree
     private File sourceDirectory;
-
 
     /**
      * Set the classpath to be used for this compilation.
@@ -133,23 +133,23 @@ public class WLJspc extends MatchingTask
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( !destinationDirectory.isDirectory() )
         {
-            throw new BuildException( "destination directory " + destinationDirectory.getPath() +
-                " is not valid" );
+            throw new TaskException( "destination directory " + destinationDirectory.getPath() +
+                                     " is not valid" );
         }
 
         if( !sourceDirectory.isDirectory() )
         {
-            throw new BuildException( "src directory " + sourceDirectory.getPath() +
-                " is not valid" );
+            throw new TaskException( "src directory " + sourceDirectory.getPath() +
+                                     " is not valid" );
         }
 
         if( destinationPackage == null )
         {
-            throw new BuildException( "package attribute must be present." );
+            throw new TaskException( "package attribute must be present." );
         }
 
         String systemClassPath = System.getProperty( "java.class.path" );
@@ -171,31 +171,31 @@ public class WLJspc extends MatchingTask
         // Therefore, takes loads of time
         // Can pass directories at a time (*.jsp) but easily runs out of memory on hefty dirs
         // (even on  a Sun)
-        Java helperTask = ( Java )project.createTask( "java" );
+        Java helperTask = (Java)project.createTask( "java" );
         helperTask.setFork( true );
         helperTask.setClassname( "weblogic.jspc" );
         helperTask.setTaskName( getTaskName() );
-        String[] args = new String[12];
+        String[] args = new String[ 12 ];
 
         File jspFile = null;
         String parents = "";
         String arg = "";
         int j = 0;
         //XXX  this array stuff is a remnant of prev trials.. gotta remove.
-        args[j++] = "-d";
-        args[j++] = destinationDirectory.getAbsolutePath().trim();
-        args[j++] = "-docroot";
-        args[j++] = sourceDirectory.getAbsolutePath().trim();
-        args[j++] = "-keepgenerated";//TODO: Parameterise ??
+        args[ j++ ] = "-d";
+        args[ j++ ] = destinationDirectory.getAbsolutePath().trim();
+        args[ j++ ] = "-docroot";
+        args[ j++ ] = sourceDirectory.getAbsolutePath().trim();
+        args[ j++ ] = "-keepgenerated";//TODO: Parameterise ??
         //Call compiler as class... dont want to fork again
         //Use classic compiler -- can be parameterised?
-        args[j++] = "-compilerclass";
-        args[j++] = "sun.tools.javac.Main";
+        args[ j++ ] = "-compilerclass";
+        args[ j++ ] = "sun.tools.javac.Main";
         //Weblogic jspc does not seem to work unless u explicitly set this...
         // Does not take the classpath from the env....
         // Am i missing something about the Java task??
-        args[j++] = "-classpath";
-        args[j++] = compileClasspath.toString();
+        args[ j++ ] = "-classpath";
+        args[ j++ ] = compileClasspath.toString();
 
         this.scanDir( files );
         log( "Compiling " + filesToDo.size() + " JSP files" );
@@ -206,25 +206,25 @@ public class WLJspc extends MatchingTask
             // All this to get package according to weblogic standards
             // Can be written better... this is too hacky!
             // Careful.. similar code in scanDir , but slightly different!!
-            jspFile = new File( ( String )filesToDo.elementAt( i ) );
-            args[j] = "-package";
+            jspFile = new File( (String)filesToDo.elementAt( i ) );
+            args[ j ] = "-package";
             parents = jspFile.getParent();
             if( ( parents != null ) && ( !( "" ).equals( parents ) ) )
             {
                 parents = this.replaceString( parents, File.separator, "_." );
-                args[j + 1] = destinationPackage + "." + "_" + parents;
+                args[ j + 1 ] = destinationPackage + "." + "_" + parents;
             }
             else
             {
-                args[j + 1] = destinationPackage;
+                args[ j + 1 ] = destinationPackage;
             }
 
-            args[j + 2] = sourceDirectory + File.separator + ( String )filesToDo.elementAt( i );
+            args[ j + 2 ] = sourceDirectory + File.separator + (String)filesToDo.elementAt( i );
             arg = "";
 
             for( int x = 0; x < 12; x++ )
             {
-                arg += " " + args[x];
+                arg += " " + args[ x ];
             }
 
             System.out.println( "arg = " + arg );
@@ -234,11 +234,10 @@ public class WLJspc extends MatchingTask
             helperTask.setClasspath( compileClasspath );
             if( helperTask.executeJava() != 0 )
             {
-                log( files[i] + " failed to compile", Project.MSG_WARN );
+                log( files[ i ] + " failed to compile", Project.MSG_WARN );
             }
         }
     }
-
 
     protected String replaceString( String inpString, String escapeChars, String replaceChars )
     {
@@ -255,7 +254,6 @@ public class WLJspc extends MatchingTask
         return localString;
     }
 
-
     protected void scanDir( String files[] )
     {
 
@@ -265,11 +263,11 @@ public class WLJspc extends MatchingTask
         String pack = "";
         for( int i = 0; i < files.length; i++ )
         {
-            File srcFile = new File( this.sourceDirectory, files[i] );
+            File srcFile = new File( this.sourceDirectory, files[ i ] );
             //XXX
             // All this to convert source to destination directory according to weblogic standards
             // Can be written better... this is too hacky!
-            jspFile = new File( files[i] );
+            jspFile = new File( files[ i ] );
             parents = jspFile.getParent();
             int loc = 0;
 
@@ -285,27 +283,27 @@ public class WLJspc extends MatchingTask
 
             String filePath = pack + File.separator + "_";
             int startingIndex
-                 = files[i].lastIndexOf( File.separator ) != -1 ? files[i].lastIndexOf( File.separator ) + 1 : 0;
-            int endingIndex = files[i].indexOf( ".jsp" );
+                = files[ i ].lastIndexOf( File.separator ) != -1 ? files[ i ].lastIndexOf( File.separator ) + 1 : 0;
+            int endingIndex = files[ i ].indexOf( ".jsp" );
             if( endingIndex == -1 )
             {
                 break;
             }
 
-            filePath += files[i].substring( startingIndex, endingIndex );
+            filePath += files[ i ].substring( startingIndex, endingIndex );
             filePath += ".class";
             File classFile = new File( this.destinationDirectory, filePath );
 
             if( srcFile.lastModified() > now )
             {
                 log( "Warning: file modified in the future: " +
-                    files[i], Project.MSG_WARN );
+                     files[ i ], Project.MSG_WARN );
             }
             if( srcFile.lastModified() > classFile.lastModified() )
             {
                 //log("Files are" + srcFile.getAbsolutePath()+" " +classFile.getAbsolutePath());
-                filesToDo.addElement( files[i] );
-                log( "Recompiling File " + files[i], Project.MSG_VERBOSE );
+                filesToDo.addElement( files[ i ] );
+                log( "Recompiling File " + files[ i ], Project.MSG_VERBOSE );
             }
         }
     }

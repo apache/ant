@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.PatternSet;
 
 /**
@@ -160,24 +161,24 @@ public class VAJExport extends VAJTask
     /**
      * do the export
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         // first off, make sure that we've got a destdir
         if( destDir == null )
         {
-            throw new BuildException( "destdir attribute must be set!" );
+            throw new TaskException( "destdir attribute must be set!" );
         }
 
         // delegate the export to the VAJUtil object.
         getUtil().exportPackages( destDir,
-            patternSet.getIncludePatterns( getProject() ),
-            patternSet.getExcludePatterns( getProject() ),
-            exportClasses, exportDebugInfo,
-            exportResources, exportSources,
-            useDefaultExcludes, overwrite );
+                                  patternSet.getIncludePatterns( getProject() ),
+                                  patternSet.getExcludePatterns( getProject() ),
+                                  exportClasses, exportDebugInfo,
+                                  exportResources, exportSources,
+                                  useDefaultExcludes, overwrite );
     }
 
 }

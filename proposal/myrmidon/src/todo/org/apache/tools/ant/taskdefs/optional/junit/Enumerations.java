@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
 
@@ -18,7 +19,9 @@ import java.util.NoSuchElementException;
 public final class Enumerations
 {
 
-    private Enumerations() { }
+    private Enumerations()
+    {
+    }
 
     /**
      * creates an enumeration from an array of objects.
@@ -45,7 +48,6 @@ public final class Enumerations
     }
 
 }
-
 
 /**
  * Convenient enumeration over an array of objects.
@@ -99,7 +101,7 @@ class ArrayEnumeration implements Enumeration
     {
         if( hasMoreElements() )
         {
-            Object o = array[pos];
+            Object o = array[ pos ];
             pos++;
             return o;
         }
@@ -162,7 +164,7 @@ class CompoundEnumeration implements Enumeration
     {
         while( index < enumArray.length )
         {
-            if( enumArray[index] != null && enumArray[index].hasMoreElements() )
+            if( enumArray[ index ] != null && enumArray[ index ].hasMoreElements() )
             {
                 return true;
             }
@@ -183,7 +185,7 @@ class CompoundEnumeration implements Enumeration
     {
         if( hasMoreElements() )
         {
-            return enumArray[index].nextElement();
+            return enumArray[ index ].nextElement();
         }
         throw new NoSuchElementException();
     }

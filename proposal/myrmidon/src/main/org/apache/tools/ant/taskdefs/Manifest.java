@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -20,7 +21,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
@@ -134,7 +135,7 @@ public class Manifest extends Task
                 if( !sectionName.getName().equalsIgnoreCase( ATTRIBUTE_NAME ) )
                 {
                     throw new ManifestException( "Manifest sections should start with a \"" + ATTRIBUTE_NAME +
-                        "\" attribute and not \"" + sectionName.getName() + "\"" );
+                                                 "\" attribute and not \"" + sectionName.getName() + "\"" );
                 }
                 nextSectionName = sectionName.getValue();
             }
@@ -157,10 +158,10 @@ public class Manifest extends Task
      * Construct a manifest from Ant's default manifest file.
      *
      * @return The DefaultManifest value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public static Manifest getDefaultManifest()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -168,7 +169,7 @@ public class Manifest extends Task
             InputStream in = Manifest.class.getResourceAsStream( s );
             if( in == null )
             {
-                throw new BuildException( "Could not find default manifest: " + s );
+                throw new TaskException( "Could not find default manifest: " + s );
             }
             try
             {
@@ -181,11 +182,11 @@ public class Manifest extends Task
         }
         catch( ManifestException e )
         {
-            throw new BuildException( "Default manifest is invalid !!" );
+            throw new TaskException( "Default manifest is invalid !!" );
         }
         catch( IOException e )
         {
-            throw new BuildException( "Unable to read default manifest", e );
+            throw new TaskException( "Unable to read default manifest", e );
         }
     }
 
@@ -218,16 +219,16 @@ public class Manifest extends Task
     {
         Vector warnings = new Vector();
 
-        for( Enumeration e2 = mainSection.getWarnings(); e2.hasMoreElements();  )
+        for( Enumeration e2 = mainSection.getWarnings(); e2.hasMoreElements(); )
         {
             warnings.addElement( e2.nextElement() );
         }
 
         // create a vector and add in the warnings for all the sections
-        for( Enumeration e = sections.elements(); e.hasMoreElements();  )
+        for( Enumeration e = sections.elements(); e.hasMoreElements(); )
         {
-            Section section = ( Section )e.nextElement();
-            for( Enumeration e2 = section.getWarnings(); e2.hasMoreElements();  )
+            Section section = (Section)e.nextElement();
+            for( Enumeration e2 = section.getWarnings(); e2.hasMoreElements(); )
             {
                 warnings.addElement( e2.nextElement() );
             }
@@ -247,7 +248,7 @@ public class Manifest extends Task
     {
         if( section.getName() == null )
         {
-            throw new BuildException( "Sections must have a name" );
+            throw new TaskException( "Sections must have a name" );
         }
         sections.put( section.getName().toLowerCase(), section );
     }
@@ -259,7 +260,7 @@ public class Manifest extends Task
             return false;
         }
 
-        Manifest rhsManifest = ( Manifest )rhs;
+        Manifest rhsManifest = (Manifest)rhs;
         if( manifestVersion == null )
         {
             if( rhsManifest.manifestVersion != null )
@@ -281,10 +282,10 @@ public class Manifest extends Task
             return false;
         }
 
-        for( Enumeration e = sections.elements(); e.hasMoreElements();  )
+        for( Enumeration e = sections.elements(); e.hasMoreElements(); )
         {
-            Section section = ( Section )e.nextElement();
-            Section rhsSection = ( Section )rhsManifest.sections.get( section.getName().toLowerCase() );
+            Section section = (Section)e.nextElement();
+            Section rhsSection = (Section)rhsManifest.sections.get( section.getName().toLowerCase() );
             if( !section.equals( rhsSection ) )
             {
                 return false;
@@ -297,14 +298,14 @@ public class Manifest extends Task
     /**
      * Create or update the Manifest when used as a task.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( manifestFile == null )
         {
-            throw new BuildException( "the file attribute is required" );
+            throw new TaskException( "the file attribute is required" );
         }
 
         Manifest toWrite = getDefaultManifest();
@@ -319,13 +320,13 @@ public class Manifest extends Task
             }
             catch( ManifestException m )
             {
-                throw new BuildException( "Existing manifest " + manifestFile
-                     + " is invalid", m );
+                throw new TaskException( "Existing manifest " + manifestFile
+                                         + " is invalid", m );
             }
             catch( IOException e )
             {
                 throw new
-                    BuildException( "Failed to read " + manifestFile, e );
+                    TaskException( "Failed to read " + manifestFile, e );
             }
             finally
             {
@@ -336,7 +337,8 @@ public class Manifest extends Task
                         f.close();
                     }
                     catch( IOException e )
-                    {}
+                    {
+                    }
                 }
             }
         }
@@ -347,7 +349,7 @@ public class Manifest extends Task
         }
         catch( ManifestException m )
         {
-            throw new BuildException( "Manifest is invalid", m );
+            throw new TaskException( "Manifest is invalid", m );
         }
 
         PrintWriter w = null;
@@ -358,7 +360,8 @@ public class Manifest extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Failed to write " + manifestFile e );
+            throw new TaskException( "Failed to write " + manifestFile
+            e );
         }
         finally
         {
@@ -384,11 +387,11 @@ public class Manifest extends Task
             manifestVersion = other.manifestVersion;
         }
         mainSection.merge( other.mainSection );
-        for( Enumeration e = other.sections.keys(); e.hasMoreElements();  )
+        for( Enumeration e = other.sections.keys(); e.hasMoreElements(); )
         {
-            String sectionName = ( String )e.nextElement();
-            Section ourSection = ( Section )sections.get( sectionName );
-            Section otherSection = ( Section )other.sections.get( sectionName );
+            String sectionName = (String)e.nextElement();
+            Section ourSection = (Section)sections.get( sectionName );
+            Section otherSection = (Section)other.sections.get( sectionName );
             if( ourSection == null )
             {
                 sections.put( sectionName.toLowerCase(), otherSection );
@@ -450,9 +453,9 @@ public class Manifest extends Task
             }
         }
 
-        for( Enumeration e = sections.elements(); e.hasMoreElements();  )
+        for( Enumeration e = sections.elements(); e.hasMoreElements(); )
         {
-            Section section = ( Section )e.nextElement();
+            Section section = (Section)e.nextElement();
             section.write( writer );
         }
     }
@@ -477,7 +480,9 @@ public class Manifest extends Task
         /**
          * Construct an empty attribute
          */
-        public Attribute() { }
+        public Attribute()
+        {
+        }
 
         /**
          * Construct an attribute by parsing a line from the Manifest
@@ -564,7 +569,7 @@ public class Manifest extends Task
                 return false;
             }
 
-            Attribute rhsAttribute = ( Attribute )rhs;
+            Attribute rhsAttribute = (Attribute)rhs;
             return ( name != null && rhsAttribute.name != null &&
                 name.toLowerCase().equals( rhsAttribute.name.toLowerCase() ) &&
                 value != null && value.equals( rhsAttribute.value ) );
@@ -584,7 +589,7 @@ public class Manifest extends Task
             if( index == -1 )
             {
                 throw new ManifestException( "Manifest line \"" + line + "\" is not valid as it does not " +
-                    "contain a name and a value separated by ': ' " );
+                                             "contain a name and a value separated by ': ' " );
             }
             name = line.substring( 0, index );
             value = line.substring( index + 2 );
@@ -681,14 +686,14 @@ public class Manifest extends Task
             }
             if( attribute instanceof Attribute )
             {
-                return ( ( Attribute )attribute ).getValue();
+                return ( (Attribute)attribute ).getValue();
             }
             else
             {
                 String value = "";
-                for( Enumeration e = ( ( Vector )attribute ).elements(); e.hasMoreElements();  )
+                for( Enumeration e = ( (Vector)attribute ).elements(); e.hasMoreElements(); )
                 {
-                    Attribute classpathAttribute = ( Attribute )e.nextElement();
+                    Attribute classpathAttribute = (Attribute)e.nextElement();
                     value += classpathAttribute.getValue() + " ";
                 }
                 return value.trim();
@@ -724,20 +729,20 @@ public class Manifest extends Task
         {
             if( attribute.getName() == null || attribute.getValue() == null )
             {
-                throw new BuildException( "Attributes must have name and value" );
+                throw new TaskException( "Attributes must have name and value" );
             }
             if( attribute.getName().equalsIgnoreCase( ATTRIBUTE_NAME ) )
             {
                 warnings.addElement( "\"" + ATTRIBUTE_NAME + "\" attributes should not occur in the " +
-                    "main section and must be the first element in all " +
-                    "other sections: \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
+                                     "main section and must be the first element in all " +
+                                     "other sections: \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
                 return attribute.getValue();
             }
 
             if( attribute.getName().toLowerCase().startsWith( ATTRIBUTE_FROM.toLowerCase() ) )
             {
                 warnings.addElement( "Manifest attributes should not start with \"" +
-                    ATTRIBUTE_FROM + "\" in \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
+                                     ATTRIBUTE_FROM + "\" in \"" + attribute.getName() + ": " + attribute.getValue() + "\"" );
             }
             else
             {
@@ -745,7 +750,7 @@ public class Manifest extends Task
                 String attributeName = attribute.getName().toLowerCase();
                 if( attributeName.equals( ATTRIBUTE_CLASSPATH ) )
                 {
-                    Vector classpathAttrs = ( Vector )attributes.get( attributeName );
+                    Vector classpathAttrs = (Vector)attributes.get( attributeName );
                     if( classpathAttrs == null )
                     {
                         classpathAttrs = new Vector();
@@ -756,7 +761,7 @@ public class Manifest extends Task
                 else if( attributes.containsKey( attributeName ) )
                 {
                     throw new ManifestException( "The attribute \"" + attribute.getName() + "\" may not " +
-                        "occur more than once in the same section" );
+                                                 "occur more than once in the same section" );
                 }
                 else
                 {
@@ -772,8 +777,8 @@ public class Manifest extends Task
             String check = addAttributeAndCheck( attribute );
             if( check != null )
             {
-                throw new BuildException( "Specify the section name using the \"name\" attribute of the <section> element rather " +
-                    "than using a \"Name\" manifest attribute" );
+                throw new TaskException( "Specify the section name using the \"name\" attribute of the <section> element rather " +
+                                         "than using a \"Name\" manifest attribute" );
             }
         }
 
@@ -784,16 +789,16 @@ public class Manifest extends Task
                 return false;
             }
 
-            Section rhsSection = ( Section )rhs;
+            Section rhsSection = (Section)rhs;
             if( attributes.size() != rhsSection.attributes.size() )
             {
                 return false;
             }
 
-            for( Enumeration e = attributes.elements(); e.hasMoreElements();  )
+            for( Enumeration e = attributes.elements(); e.hasMoreElements(); )
             {
-                Attribute attribute = ( Attribute )e.nextElement();
-                Attribute rshAttribute = ( Attribute )rhsSection.attributes.get( attribute.getName().toLowerCase() );
+                Attribute attribute = (Attribute)e.nextElement();
+                Attribute rshAttribute = (Attribute)rhsSection.attributes.get( attribute.getName().toLowerCase() );
                 if( !attribute.equals( rshAttribute ) )
                 {
                     return false;
@@ -818,16 +823,16 @@ public class Manifest extends Task
                 throw new ManifestException( "Unable to merge sections with different names" );
             }
 
-            for( Enumeration e = section.attributes.keys(); e.hasMoreElements();  )
+            for( Enumeration e = section.attributes.keys(); e.hasMoreElements(); )
             {
-                String attributeName = ( String )e.nextElement();
+                String attributeName = (String)e.nextElement();
                 if( attributeName.equals( ATTRIBUTE_CLASSPATH ) &&
                     attributes.containsKey( attributeName ) )
                 {
                     // classpath entries are vetors which are merged
-                    Vector classpathAttrs = ( Vector )section.attributes.get( attributeName );
-                    Vector ourClasspathAttrs = ( Vector )attributes.get( attributeName );
-                    for( Enumeration e2 = classpathAttrs.elements(); e2.hasMoreElements();  )
+                    Vector classpathAttrs = (Vector)section.attributes.get( attributeName );
+                    Vector ourClasspathAttrs = (Vector)attributes.get( attributeName );
+                    for( Enumeration e2 = classpathAttrs.elements(); e2.hasMoreElements(); )
                     {
                         ourClasspathAttrs.addElement( e2.nextElement() );
                     }
@@ -840,7 +845,7 @@ public class Manifest extends Task
             }
 
             // add in the warnings
-            for( Enumeration e = section.warnings.elements(); e.hasMoreElements();  )
+            for( Enumeration e = section.warnings.elements(); e.hasMoreElements(); )
             {
                 warnings.addElement( e.nextElement() );
             }
@@ -924,20 +929,20 @@ public class Manifest extends Task
                 Attribute nameAttr = new Attribute( ATTRIBUTE_NAME, name );
                 nameAttr.write( writer );
             }
-            for( Enumeration e = attributes.elements(); e.hasMoreElements();  )
+            for( Enumeration e = attributes.elements(); e.hasMoreElements(); )
             {
                 Object object = e.nextElement();
                 if( object instanceof Attribute )
                 {
-                    Attribute attribute = ( Attribute )object;
+                    Attribute attribute = (Attribute)object;
                     attribute.write( writer );
                 }
                 else
                 {
-                    Vector attrList = ( Vector )object;
-                    for( Enumeration e2 = attrList.elements(); e2.hasMoreElements();  )
+                    Vector attrList = (Vector)object;
+                    for( Enumeration e2 = attrList.elements(); e2.hasMoreElements(); )
                     {
-                        Attribute attribute = ( Attribute )e2.nextElement();
+                        Attribute attribute = (Attribute)e2.nextElement();
                         attribute.write( writer );
                     }
                 }

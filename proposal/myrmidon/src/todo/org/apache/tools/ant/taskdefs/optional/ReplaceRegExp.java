@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,9 +15,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
-import java.util.Random;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -117,18 +117,20 @@ public class ReplaceRegExp extends Task
     }
 
     public void setMatch( String match )
+        throws TaskException
     {
         if( regex != null )
-            throw new BuildException( "Only one regular expression is allowed" );
+            throw new TaskException( "Only one regular expression is allowed" );
 
         regex = new RegularExpression();
         regex.setPattern( match );
     }
 
     public void setReplace( String replace )
+        throws TaskException
     {
         if( subs != null )
-            throw new BuildException( "Only one substitution expression is allowed" );
+            throw new TaskException( "Only one substitution expression is allowed" );
 
         subs = new Substitution();
         subs.setExpression( replace );
@@ -140,33 +142,35 @@ public class ReplaceRegExp extends Task
     }
 
     public RegularExpression createRegularExpression()
+        throws TaskException
     {
         if( regex != null )
-            throw new BuildException( "Only one regular expression is allowed." );
+            throw new TaskException( "Only one regular expression is allowed." );
 
         regex = new RegularExpression();
         return regex;
     }
 
     public Substitution createSubstitution()
+        throws TaskException
     {
         if( subs != null )
-            throw new BuildException( "Only one substitution expression is allowed" );
+            throw new TaskException( "Only one substitution expression is allowed" );
 
         subs = new Substitution();
         return subs;
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( regex == null )
-            throw new BuildException( "No expression to match." );
+            throw new TaskException( "No expression to match." );
         if( subs == null )
-            throw new BuildException( "Nothing to replace expression with." );
+            throw new TaskException( "Nothing to replace expression with." );
 
         if( file != null && filesets.size() > 0 )
-            throw new BuildException( "You cannot supply the 'file' attribute and filesets at the same time." );
+            throw new TaskException( "You cannot supply the 'file' attribute and filesets at the same time." );
 
         int options = 0;
 
@@ -191,25 +195,25 @@ public class ReplaceRegExp extends Task
             catch( IOException e )
             {
                 log( "An error occurred processing file: '" + file.getAbsolutePath() + "': " + e.toString(),
-                    Project.MSG_ERR );
+                     Project.MSG_ERR );
             }
         }
         else if( file != null )
         {
             log( "The following file is missing: '" + file.getAbsolutePath() + "'",
-                Project.MSG_ERR );
+                 Project.MSG_ERR );
         }
 
         int sz = filesets.size();
         for( int i = 0; i < sz; i++ )
         {
-            FileSet fs = ( FileSet )( filesets.elementAt( i ) );
+            FileSet fs = (FileSet)( filesets.elementAt( i ) );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
 
             String files[] = ds.getIncludedFiles();
             for( int j = 0; j < files.length; j++ )
             {
-                File f = new File( files[j] );
+                File f = new File( files[ j ] );
                 if( f.exists() )
                 {
                     try
@@ -219,18 +223,17 @@ public class ReplaceRegExp extends Task
                     catch( Exception e )
                     {
                         log( "An error occurred processing file: '" + f.getAbsolutePath() + "': " + e.toString(),
-                            Project.MSG_ERR );
+                             Project.MSG_ERR );
                     }
                 }
                 else
                 {
                     log( "The following file is missing: '" + file.getAbsolutePath() + "'",
-                        Project.MSG_ERR );
+                         Project.MSG_ERR );
                 }
             }
         }
     }
-
 
     protected String doReplace( RegularExpression r,
                                 Substitution s,
@@ -276,11 +279,11 @@ public class ReplaceRegExp extends Task
             boolean changes = false;
 
             log( "Replacing pattern '" + regex.getPattern( project ) + "' with '" + subs.getExpression( project ) +
-                "' in '" + f.getPath() + "'" +
-                ( byline ? " by line" : "" ) +
-                ( flags.length() > 0 ? " with flags: '" + flags + "'" : "" ) +
-                ".",
-                Project.MSG_WARN );
+                 "' in '" + f.getPath() + "'" +
+                 ( byline ? " by line" : "" ) +
+                 ( flags.length() > 0 ? " with flags: '" + flags + "'" : "" ) +
+                 ".",
+                 Project.MSG_WARN );
 
             if( byline )
             {
@@ -299,8 +302,8 @@ public class ReplaceRegExp extends Task
             }
             else
             {
-                int flen = ( int )( f.length() );
-                char tmpBuf[] = new char[flen];
+                int flen = (int)( f.length() );
+                char tmpBuf[] = new char[ flen ];
                 int numread = 0;
                 int totread = 0;
                 while( numread != -1 && totread < flen )
@@ -342,7 +345,8 @@ public class ReplaceRegExp extends Task
                     r.close();
             }
             catch( Exception e )
-            {}
+            {
+            }
             ;
 
             try
@@ -351,7 +355,8 @@ public class ReplaceRegExp extends Task
                     r.close();
             }
             catch( Exception e )
-            {}
+            {
+            }
             ;
         }
     }

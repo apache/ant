@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
@@ -44,14 +45,14 @@ public class Filter extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         boolean isFiltersFromFile = filtersFile != null && token == null && value == null;
         boolean isSingleFilter = filtersFile == null && token != null && value != null;
 
         if( !isFiltersFromFile && !isSingleFilter )
         {
-            throw new BuildException( "both token and value parameters, or only a filtersFile parameter is required" );
+            throw new TaskException( "both token and value parameters, or only a filtersFile parameter is required" );
         }
 
         if( isSingleFilter )
@@ -66,7 +67,7 @@ public class Filter extends Task
     }
 
     protected void readFilters()
-        throws BuildException
+        throws TaskException
     {
         log( "Reading filters from " + filtersFile, Project.MSG_VERBOSE );
         project.getGlobalFilterSet().readFiltersFromFile( filtersFile );

@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-
 
 /**
  * An entry in the constant pool. This class contains a represenation of the
@@ -126,55 +126,55 @@ public abstract class ConstantPoolEntry
         ConstantPoolEntry cpInfo = null;
         int cpTag = cpStream.readUnsignedByte();
 
-        switch ( cpTag )
+        switch( cpTag )
         {
 
-        case CONSTANT_Utf8:
-            cpInfo = new Utf8CPInfo();
+            case CONSTANT_Utf8:
+                cpInfo = new Utf8CPInfo();
 
-            break;
-        case CONSTANT_Integer:
-            cpInfo = new IntegerCPInfo();
+                break;
+            case CONSTANT_Integer:
+                cpInfo = new IntegerCPInfo();
 
-            break;
-        case CONSTANT_Float:
-            cpInfo = new FloatCPInfo();
+                break;
+            case CONSTANT_Float:
+                cpInfo = new FloatCPInfo();
 
-            break;
-        case CONSTANT_Long:
-            cpInfo = new LongCPInfo();
+                break;
+            case CONSTANT_Long:
+                cpInfo = new LongCPInfo();
 
-            break;
-        case CONSTANT_Double:
-            cpInfo = new DoubleCPInfo();
+                break;
+            case CONSTANT_Double:
+                cpInfo = new DoubleCPInfo();
 
-            break;
-        case CONSTANT_Class:
-            cpInfo = new ClassCPInfo();
+                break;
+            case CONSTANT_Class:
+                cpInfo = new ClassCPInfo();
 
-            break;
-        case CONSTANT_String:
-            cpInfo = new StringCPInfo();
+                break;
+            case CONSTANT_String:
+                cpInfo = new StringCPInfo();
 
-            break;
-        case CONSTANT_FieldRef:
-            cpInfo = new FieldRefCPInfo();
+                break;
+            case CONSTANT_FieldRef:
+                cpInfo = new FieldRefCPInfo();
 
-            break;
-        case CONSTANT_MethodRef:
-            cpInfo = new MethodRefCPInfo();
+                break;
+            case CONSTANT_MethodRef:
+                cpInfo = new MethodRefCPInfo();
 
-            break;
-        case CONSTANT_InterfaceMethodRef:
-            cpInfo = new InterfaceMethodRefCPInfo();
+                break;
+            case CONSTANT_InterfaceMethodRef:
+                cpInfo = new InterfaceMethodRefCPInfo();
 
-            break;
-        case CONSTANT_NameAndType:
-            cpInfo = new NameAndTypeCPInfo();
+                break;
+            case CONSTANT_NameAndType:
+                cpInfo = new NameAndTypeCPInfo();
 
-            break;
-        default:
-            throw new ClassFormatError( "Invalid Constant Pool entry Type " + cpTag );
+                break;
+            default:
+                throw new ClassFormatError( "Invalid Constant Pool entry Type " + cpTag );
         }
 
         cpInfo.read( cpStream );

@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
+
 import java.io.IOException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.oro.text.perl.Perl5Util;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
-
 
 /**
  * Base class for Perforce (P4) ANT tasks. See individual task for example
@@ -110,7 +110,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task
     }
 
     protected void execP4Command( String command )
-        throws BuildException
+        throws TaskException
     {
         execP4Command( command, null );
     }
@@ -120,10 +120,10 @@ public abstract class P4Base extends org.apache.tools.ant.Task
      *
      * @param command The command to run
      * @param handler A P4Handler to process any input and output
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void execP4Command( String command, P4Handler handler )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -150,7 +150,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task
             String cmdl = "";
             for( int i = 0; i < cmdline.length; i++ )
             {
-                cmdl += cmdline[i] + " ";
+                cmdl += cmdline[ i ] + " ";
             }
 
             log( "Execing " + cmdl, Project.MSG_VERBOSE );
@@ -170,7 +170,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
             finally
             {
@@ -179,14 +179,14 @@ public abstract class P4Base extends org.apache.tools.ant.Task
                     handler.stop();
                 }
                 catch( Exception e )
-                {}
+                {
+                }
             }
-
 
         }
         catch( Exception e )
         {
-            throw new BuildException( "Problem exec'ing P4 command: " + e.getMessage() );
+            throw new TaskException( "Problem exec'ing P4 command: " + e.getMessage() );
         }
     }
 }

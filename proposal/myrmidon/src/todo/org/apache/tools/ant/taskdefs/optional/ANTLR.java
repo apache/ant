@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -110,7 +110,7 @@ public class ANTLR extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         validateAttributes();
 
@@ -127,7 +127,7 @@ public class ANTLR extends Task
                 int err = run( commandline.getCommandline() );
                 if( err == 1 )
                 {
-                    throw new BuildException( "ANTLR returned: " + err );
+                    throw new TaskException( "ANTLR returned: " + err );
                 }
             }
             else
@@ -144,10 +144,10 @@ public class ANTLR extends Task
      * Adds the jars or directories containing Antlr this should make the forked
      * JVM work without having to specify it directly.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void init()
-        throws BuildException
+        throws TaskException
     {
         addClasspathEntry( "/antlr/Tool.class" );
     }
@@ -196,7 +196,7 @@ public class ANTLR extends Task
     }
 
     private File getGeneratedFile()
-        throws BuildException
+        throws TaskException
     {
         String generatedFileName = null;
         try
@@ -216,11 +216,11 @@ public class ANTLR extends Task
         }
         catch( Exception e )
         {
-            throw new BuildException( "Unable to determine generated class", e );
+            throw new TaskException( "Unable to determine generated class", e );
         }
         if( generatedFileName == null )
         {
-            throw new BuildException( "Unable to determine generated class" );
+            throw new TaskException( "Unable to determine generated class" );
         }
         return new File( outputDirectory, generatedFileName + ".java" );
     }
@@ -230,10 +230,10 @@ public class ANTLR extends Task
      *
      * @param command Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private int run( String[] command )
-        throws BuildException
+        throws TaskException
     {
         Execute exe = new Execute( new LogStreamHandler( this, Project.MSG_INFO,
                                                          Project.MSG_WARN ), null );
@@ -249,16 +249,16 @@ public class ANTLR extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 
     private void validateAttributes()
-        throws BuildException
+        throws TaskException
     {
         if( target == null || !target.isFile() )
         {
-            throw new BuildException( "Invalid target: " + target );
+            throw new TaskException( "Invalid target: " + target );
         }
 
         // if no output directory is specified, used the target's directory
@@ -269,7 +269,7 @@ public class ANTLR extends Task
         }
         if( !outputDirectory.isDirectory() )
         {
-            throw new BuildException( "Invalid output directory: " + outputDirectory );
+            throw new TaskException( "Invalid output directory: " + outputDirectory );
         }
     }
 }

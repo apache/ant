@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.rmic;
+
 import java.io.File;
 import java.util.Random;
 import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileNameMapper;
 
@@ -35,7 +35,9 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
     private Rmic attributes;
     private FileNameMapper mapper;
 
-    public DefaultRmicAdapter() { }
+    public DefaultRmicAdapter()
+    {
+    }
 
     public void setRmic( Rmic attributes )
     {
@@ -93,7 +95,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
         {
             for( int i = 0; i < options.length; i++ )
             {
-                cmd.createArgument().setValue( options[i] );
+                cmd.createArgument().setValue( options[ i ] );
             }
         }
 
@@ -144,7 +146,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
             if( attributes.getIiopopts() != null )
             {
                 attributes.log( "IIOP Options: " + attributes.getIiopopts(),
-                    Project.MSG_INFO );
+                                Project.MSG_INFO );
                 cmd.createArgument().setValue( attributes.getIiopopts() );
             }
         }
@@ -157,7 +159,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
             {
                 cmd.createArgument().setValue( attributes.getIdlopts() );
                 attributes.log( "IDL Options: " + attributes.getIdlopts(),
-                    Project.MSG_INFO );
+                                Project.MSG_INFO );
             }
         }
 
@@ -237,7 +239,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
         Vector compileList = attributes.getCompileList();
 
         attributes.log( "Compilation args: " + cmd.toString(),
-            Project.MSG_VERBOSE );
+                        Project.MSG_VERBOSE );
 
         StringBuffer niceSourceList = new StringBuffer( "File" );
         if( compileList.size() != 1 )
@@ -248,7 +250,7 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
 
         for( int i = 0; i < compileList.size(); i++ )
         {
-            String arg = ( String )compileList.elementAt( i );
+            String arg = (String)compileList.elementAt( i );
             cmd.createArgument().setValue( arg );
             niceSourceList.append( "    " + arg );
         }
@@ -264,29 +266,35 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
     private class RmicFileNameMapper implements FileNameMapper
     {
 
-        RmicFileNameMapper() { }
+        RmicFileNameMapper()
+        {
+        }
 
         /**
          * Empty implementation.
          *
          * @param s The new From value
          */
-        public void setFrom( String s ) { }
+        public void setFrom( String s )
+        {
+        }
 
         /**
          * Empty implementation.
          *
          * @param s The new To value
          */
-        public void setTo( String s ) { }
+        public void setTo( String s )
+        {
+        }
 
         public String[] mapFileName( String name )
         {
             if( name == null
-                 || !name.endsWith( ".class" )
-                 || name.endsWith( getStubClassSuffix() + ".class" )
-                 || name.endsWith( getSkelClassSuffix() + ".class" )
-                 || name.endsWith( getTieClassSuffix() + ".class" ) )
+                || !name.endsWith( ".class" )
+                || name.endsWith( getStubClassSuffix() + ".class" )
+                || name.endsWith( getSkelClassSuffix() + ".class" )
+                || name.endsWith( getTieClassSuffix() + ".class" ) )
             {
                 // Not a .class file or the one we'd generate
                 return null;
@@ -317,14 +325,14 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
                 {
                     target = new String[]{
                         base + getStubClassSuffix() + ".class"
-                        };
+                    };
                 }
                 else
                 {
                     target = new String[]{
                         base + getStubClassSuffix() + ".class",
                         base + getSkelClassSuffix() + ".class",
-                        };
+                    };
                 }
             }
             else if( !attributes.getIdl() )
@@ -358,8 +366,8 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
                         // only stub, no tie
                         target = new String[]{
                             dirname + "_" + filename + getStubClassSuffix()
-                             + ".class"
-                            };
+                            + ".class"
+                        };
                     }
                     else
                     {
@@ -386,28 +394,28 @@ public abstract class DefaultRmicAdapter implements RmicAdapter
 
                         target = new String[]{
                             dirname + "_" + filename + getTieClassSuffix()
-                             + ".class",
+                            + ".class",
                             iDir + "_" + iName.substring( iIndex )
-                             + getStubClassSuffix() + ".class"
-                            };
+                            + getStubClassSuffix() + ".class"
+                        };
                     }
                 }
                 catch( ClassNotFoundException e )
                 {
                     attributes.log( "Unable to verify class " + classname
-                         + ". It could not be found.",
-                        Project.MSG_WARN );
+                                    + ". It could not be found.",
+                                    Project.MSG_WARN );
                 }
                 catch( NoClassDefFoundError e )
                 {
                     attributes.log( "Unable to verify class " + classname
-                         + ". It is not defined.", Project.MSG_WARN );
+                                    + ". It is not defined.", Project.MSG_WARN );
                 }
                 catch( Throwable t )
                 {
                     attributes.log( "Unable to verify class " + classname
-                         + ". Loading caused Exception: "
-                         + t.getMessage(), Project.MSG_WARN );
+                                    + ". Loading caused Exception: "
+                                    + t.getMessage(), Project.MSG_WARN );
                 }
             }
             return target;

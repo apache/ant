@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types;
+
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Wrapper for environment variables.
@@ -25,16 +26,16 @@ public class Environment
     }
 
     public String[] getVariables()
-        throws BuildException
+        throws TaskException
     {
         if( variables.size() == 0 )
         {
             return null;
         }
-        String[] result = new String[variables.size()];
+        String[] result = new String[ variables.size() ];
         for( int i = 0; i < result.length; i++ )
         {
-            result[i] = ( ( Variable )variables.elementAt( i ) ).getContent();
+            result[ i ] = ( (Variable)variables.elementAt( i ) ).getContent();
         }
         return result;
     }
@@ -74,11 +75,11 @@ public class Environment
         }
 
         public String getContent()
-            throws BuildException
+            throws TaskException
         {
             if( key == null || value == null )
             {
-                throw new BuildException( "key and value must be specified for environment variables." );
+                throw new TaskException( "key and value must be specified for environment variables." );
             }
             StringBuffer sb = new StringBuffer( key.trim() );
             sb.append( "=" ).append( value.trim() );

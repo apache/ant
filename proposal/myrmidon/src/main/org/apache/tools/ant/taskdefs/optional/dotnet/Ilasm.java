@@ -5,14 +5,12 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs.optional.dotnet;// ====================================================================
-// imports
-// ====================================================================
+package org.apache.tools.ant.taskdefs.optional.dotnet;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-
 
 /**
  * Task to assemble .net 'Intermediate Language' files. The task will only work
@@ -39,7 +37,7 @@ import org.apache.tools.ant.Project;
  */
 
 public class Ilasm
-     extends org.apache.tools.ant.taskdefs.MatchingTask
+    extends org.apache.tools.ant.taskdefs.MatchingTask
 {
 
     /**
@@ -181,7 +179,6 @@ public class Ilasm
         _outputFile = params;
     }
 
-
     /**
      * Sets the Owner attribute
      *
@@ -217,12 +214,12 @@ public class Ilasm
      * define the target
      *
      * @param targetType one of exe|library|
-     * @exception BuildException if target is not one of
+     * @exception TaskException if target is not one of
      *      exe|library|module|winexe
      */
 
     public void setTargetType( String targetType )
-        throws BuildException
+        throws TaskException
     {
         targetType = targetType.toLowerCase();
         if( targetType.equals( "exe" ) || targetType.equals( "library" ) )
@@ -230,7 +227,7 @@ public class Ilasm
             _targetType = targetType;
         }
         else
-            throw new BuildException( "targetType " + targetType + " is not a valid type" );
+            throw new TaskException( "targetType " + targetType + " is not a valid type" );
     }
 
     /**
@@ -299,15 +296,14 @@ public class Ilasm
         _extraOptions = null;
     }
 
-
     /**
      * This is the execution entry point. Build a list of files and call ilasm
      * on each of them.
      *
-     * @throws BuildException if the assembly failed and FailOnError is true
+     * @throws TaskException if the assembly failed and FailOnError is true
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( _srcDir == null )
             _srcDir = resolveFile( "." );
@@ -320,22 +316,21 @@ public class Ilasm
         //add to the command
         for( int i = 0; i < dependencies.length; i++ )
         {
-            String targetFile = dependencies[i];
+            String targetFile = dependencies[ i ];
             targetFile = baseDir + File.separator + targetFile;
             executeOneFile( targetFile );
         }
 
     }// end execute
 
-
     /**
      * do the work for one file by building the command line then calling it
      *
      * @param targetFile name of the the file to assemble
-     * @throws BuildException if the assembly failed and FailOnError is true
+     * @throws TaskException if the assembly failed and FailOnError is true
      */
     public void executeOneFile( String targetFile )
-        throws BuildException
+        throws TaskException
     {
         NetCommand command = new NetCommand( this, exe_title, exe_name );
         command.setFailOnError( getFailFailOnError() );
@@ -444,8 +439,7 @@ public class Ilasm
             return null;
         if( _targetType.equals( "exe" ) )
             return "/exe";
-        else
-            if( _targetType.equals( "library" ) )
+        else if( _targetType.equals( "library" ) )
             return "/dll";
         else
             return null;

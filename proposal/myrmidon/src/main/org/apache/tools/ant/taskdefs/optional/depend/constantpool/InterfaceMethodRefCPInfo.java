@@ -6,9 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend.constantpool;
+
 import java.io.DataInputStream;
 import java.io.IOException;
-
 
 /**
  * A InterfaceMethodRef CP Info
@@ -70,13 +70,13 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry
      */
     public void resolve( ConstantPool constantPool )
     {
-        ClassCPInfo interfaceMethodClass = ( ClassCPInfo )constantPool.getEntry( classIndex );
+        ClassCPInfo interfaceMethodClass = (ClassCPInfo)constantPool.getEntry( classIndex );
 
         interfaceMethodClass.resolve( constantPool );
 
         interfaceMethodClassName = interfaceMethodClass.getClassName();
 
-        NameAndTypeCPInfo nt = ( NameAndTypeCPInfo )constantPool.getEntry( nameAndTypeIndex );
+        NameAndTypeCPInfo nt = (NameAndTypeCPInfo)constantPool.getEntry( nameAndTypeIndex );
 
         nt.resolve( constantPool );
 
@@ -98,7 +98,7 @@ public class InterfaceMethodRefCPInfo extends ConstantPoolEntry
         if( isResolved() )
         {
             value = "InterfaceMethod : Class = " + interfaceMethodClassName + ", name = " + interfaceMethodName + ", type = "
-                 + interfaceMethodType;
+                + interfaceMethodType;
         }
         else
         {

@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
-
 
 /**
  * Creates a WAR archive.
@@ -36,7 +36,7 @@ public class War extends Jar
     {
         deploymentDescriptor = descr;
         if( !deploymentDescriptor.exists() )
-            throw new BuildException( "Deployment descriptor: " + deploymentDescriptor + " does not exist." );
+            throw new TaskException( "Deployment descriptor: " + deploymentDescriptor + " does not exist." );
 
         // Create a ZipFileSet for this file, and pass it up.
         ZipFileSet fs = new ZipFileSet();
@@ -78,12 +78,12 @@ public class War extends Jar
     }
 
     protected void initZipOutputStream( ZipOutputStream zOut )
-        throws IOException, BuildException
+        throws IOException, TaskException
     {
         // If no webxml file is specified, it's an error.
         if( deploymentDescriptor == null && !isInUpdateMode() )
         {
-            throw new BuildException( "webxml attribute is required" );
+            throw new TaskException( "webxml attribute is required" );
         }
 
         super.initZipOutputStream( zOut );
@@ -101,7 +101,7 @@ public class War extends Jar
             if( deploymentDescriptor == null || !deploymentDescriptor.equals( file ) || descriptorAdded )
             {
                 log( "Warning: selected " + archiveType + " files include a WEB-INF/web.xml which will be ignored " +
-                    "(please use webxml attribute to " + archiveType + " task)", Project.MSG_WARN );
+                     "(please use webxml attribute to " + archiveType + " task)", Project.MSG_WARN );
             }
             else
             {

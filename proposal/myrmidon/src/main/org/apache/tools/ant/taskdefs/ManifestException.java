@@ -7,8 +7,6 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-
-
 /**
  * Exception thrown indicating problems in a JAR Manifest
  *

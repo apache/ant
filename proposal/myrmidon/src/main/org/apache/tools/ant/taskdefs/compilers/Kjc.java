@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
+
 import java.lang.reflect.Method;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
@@ -22,7 +23,7 @@ public class Kjc extends DefaultCompilerAdapter
 {
 
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         attributes.log( "Using kjc compiler", Project.MSG_VERBOSE );
         Commandline cmd = setupKjcCommand();
@@ -33,26 +34,26 @@ public class Kjc extends DefaultCompilerAdapter
 
             // Call the compile() method
             Method compile = c.getMethod( "compile",
-                new Class[]{String[].class} );
-            Boolean ok = ( Boolean )compile.invoke( null,
-                new Object[]{cmd.getArguments()} );
+                                          new Class[]{String[].class} );
+            Boolean ok = (Boolean)compile.invoke( null,
+                                                  new Object[]{cmd.getArguments()} );
             return ok.booleanValue();
         }
         catch( ClassNotFoundException ex )
         {
-            throw new BuildException( "Cannot use kjc compiler, as it is not available" +
-                " A common solution is to set the environment variable" +
-                " CLASSPATH to your kjc archive (kjc.jar)." );
+            throw new TaskException( "Cannot use kjc compiler, as it is not available" +
+                                     " A common solution is to set the environment variable" +
+                                     " CLASSPATH to your kjc archive (kjc.jar)." );
         }
         catch( Exception ex )
         {
-            if( ex instanceof BuildException )
+            if( ex instanceof TaskException )
             {
-                throw ( BuildException )ex;
+                throw (TaskException)ex;
             }
             else
             {
-                throw new BuildException( "Error starting kjc compiler: ", ex );
+                throw new TaskException( "Error starting kjc compiler: ", ex );
             }
         }
     }

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,8 +14,8 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Date;
 import java.util.Properties;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -682,10 +683,10 @@ public class IContract extends MatchingTask
     /**
      * Executes the task
      *
-     * @exception BuildException if the instrumentation fails
+     * @exception TaskException if the instrumentation fails
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         preconditions();
         scan();
@@ -720,7 +721,7 @@ public class IContract extends MatchingTask
             // Prepare the directories for iContract. iContract will make them if they
             // don't exist, but for some reason I don't know, it will complain about the REP files
             // afterwards
-            Mkdir mkdir = ( Mkdir )project.createTask( "mkdir" );
+            Mkdir mkdir = (Mkdir)project.createTask( "mkdir" );
             mkdir.setDir( instrumentDir );
             mkdir.execute();
             mkdir.setDir( buildDir );
@@ -737,25 +738,25 @@ public class IContract extends MatchingTask
             classpathHelper.modify( baseClasspath );
 
             // Create the classpath required to compile the sourcefiles BEFORE instrumentation
-            Path beforeInstrumentationClasspath = ( ( Path )baseClasspath.clone() );
+            Path beforeInstrumentationClasspath = ( (Path)baseClasspath.clone() );
             beforeInstrumentationClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
 
             // Create the classpath required to compile the sourcefiles AFTER instrumentation
-            Path afterInstrumentationClasspath = ( ( Path )baseClasspath.clone() );
+            Path afterInstrumentationClasspath = ( (Path)baseClasspath.clone() );
             afterInstrumentationClasspath.append( new Path( getProject(), instrumentDir.getAbsolutePath() ) );
             afterInstrumentationClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
             afterInstrumentationClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
             afterInstrumentationClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
 
             // Create the classpath required to automatically compile the repository files
-            Path repositoryClasspath = ( ( Path )baseClasspath.clone() );
+            Path repositoryClasspath = ( (Path)baseClasspath.clone() );
             repositoryClasspath.append( new Path( getProject(), instrumentDir.getAbsolutePath() ) );
             repositoryClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
             repositoryClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
             repositoryClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
 
             // Create the classpath required for iContract itself
-            Path iContractClasspath = ( ( Path )baseClasspath.clone() );
+            Path iContractClasspath = ( (Path)baseClasspath.clone() );
             iContractClasspath.append( new Path( getProject(), System.getProperty( "java.home" ) + File.separator + ".." + File.separator + "lib" + File.separator + "tools.jar" ) );
             iContractClasspath.append( new Path( getProject(), srcDir.getAbsolutePath() ) );
             iContractClasspath.append( new Path( getProject(), repositoryDir.getAbsolutePath() ) );
@@ -763,7 +764,7 @@ public class IContract extends MatchingTask
             iContractClasspath.append( new Path( getProject(), buildDir.getAbsolutePath() ) );
 
             // Create a forked java process
-            Java iContract = ( Java )project.createTask( "java" );
+            Java iContract = (Java)project.createTask( "java" );
             iContract.setTaskName( getTaskName() );
             iContract.setFork( true );
             iContract.setClassname( "com.reliablesystems.iContract.Tool" );
@@ -784,7 +785,7 @@ public class IContract extends MatchingTask
             args.append( "@" ).append( targets.getAbsolutePath() );
             iContract.createArg().setLine( args.toString() );
 
-//System.out.println( "JAVA -classpath " + iContractClasspath + " com.reliablesystems.iContract.Tool " + args.toString() );
+            //System.out.println( "JAVA -classpath " + iContractClasspath + " com.reliablesystems.iContract.Tool " + args.toString() );
 
             // update iControlProperties if it's set.
             if( updateIcontrol )
@@ -825,7 +826,7 @@ public class IContract extends MatchingTask
                     log( classpath.toString() );
                     log( "If you don't have the iContract jar, go get it at http://www.reliable-systems.com/tools/" );
                 }
-                throw new BuildException( "iContract instrumentation failed. Code=" + result );
+                throw new TaskException( "iContract instrumentation failed. Code=" + result );
             }
 
         }
@@ -834,7 +835,6 @@ public class IContract extends MatchingTask
             //log( "Nothing to do. Everything up to date." );
         }
     }
-
 
     /**
      * Creates the -m option based on the values of controlFile, pre, post and
@@ -890,34 +890,34 @@ public class IContract extends MatchingTask
     /**
      * Checks that the required attributes are set.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void preconditions()
-        throws BuildException
+        throws TaskException
     {
         if( srcDir == null )
         {
-            throw new BuildException( "srcdir attribute must be set!" );
+            throw new TaskException( "srcdir attribute must be set!" );
         }
         if( !srcDir.exists() )
         {
-            throw new BuildException( "srcdir \"" + srcDir.getPath() + "\" does not exist!");
+            throw new TaskException( "srcdir \"" + srcDir.getPath() + "\" does not exist!" );
         }
         if( instrumentDir == null )
         {
-            throw new BuildException( "instrumentdir attribute must be set!");
+            throw new TaskException( "instrumentdir attribute must be set!" );
         }
         if( repositoryDir == null )
         {
-            throw new BuildException( "repositorydir attribute must be set!" );
+            throw new TaskException( "repositorydir attribute must be set!" );
         }
         if( updateIcontrol == true && classDir == null )
         {
-            throw new BuildException( "classdir attribute must be specified when updateicontrol=true!" );
+            throw new TaskException( "classdir attribute must be specified when updateicontrol=true!" );
         }
         if( updateIcontrol == true && controlFile == null )
         {
-            throw new BuildException( "controlfile attribute must be specified when updateicontrol=true!" );
+            throw new TaskException( "controlfile attribute must be specified when updateicontrol=true!" );
         }
     }
 
@@ -929,10 +929,10 @@ public class IContract extends MatchingTask
      * Also creates a temporary file with a list of the source files, that will
      * be deleted upon exit.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void scan()
-        throws BuildException
+        throws TaskException
     {
         long now = ( new Date() ).getTime();
 
@@ -965,20 +965,20 @@ public class IContract extends MatchingTask
             }
             for( int i = 0; i < files.length; i++ )
             {
-                File srcFile = new File( srcDir, files[i] );
-                if( files[i].endsWith( ".java" ) )
+                File srcFile = new File( srcDir, files[ i ] );
+                if( files[ i ].endsWith( ".java" ) )
                 {
                     // print the target, while we're at here. (Only if generatetarget=true).
                     if( targetPrinter != null )
                     {
                         targetPrinter.println( srcFile.getAbsolutePath() );
                     }
-                    File classFile = new File( buildDir, files[i].substring( 0, files[i].indexOf( ".java" ) ) + ".class" );
+                    File classFile = new File( buildDir, files[ i ].substring( 0, files[ i ].indexOf( ".java" ) ) + ".class" );
 
                     if( srcFile.lastModified() > now )
                     {
                         log( "Warning: file modified in the future: " +
-                            files[i], Project.MSG_WARN );
+                             files[ i ], Project.MSG_WARN );
                     }
 
                     if( !classFile.exists() || srcFile.lastModified() > classFile.lastModified() )
@@ -996,7 +996,7 @@ public class IContract extends MatchingTask
         }
         catch( IOException e )
         {
-            throw new BuildException( "Could not create target file:" + e.getMessage() );
+            throw new TaskException( "Could not create target file:" + e.getMessage() );
         }
 
         // also, check controlFile timestamp
@@ -1012,8 +1012,8 @@ public class IContract extends MatchingTask
                     files = ds.getIncludedFiles();
                     for( int i = 0; i < files.length; i++ )
                     {
-                        File srcFile = new File( srcDir, files[i] );
-                        if( files[i].endsWith( ".class" ) )
+                        File srcFile = new File( srcDir, files[ i ] );
+                        if( files[ i ].endsWith( ".class" ) )
                         {
                             if( controlFileTime > srcFile.lastModified() )
                             {
@@ -1031,7 +1031,7 @@ public class IContract extends MatchingTask
         }
         catch( Throwable t )
         {
-            throw new BuildException( "Got an interesting exception:" + t.getMessage() );
+            throw new TaskException( "Got an interesting exception:" + t.getMessage() );
         }
     }
 
@@ -1053,7 +1053,9 @@ public class IContract extends MatchingTask
         }
 
         // dummy implementation. Never called
-        public void setJavac( Javac javac ) { }
+        public void setJavac( Javac javac )
+        {
+        }
 
         public boolean execute()
         {
@@ -1082,9 +1084,13 @@ public class IContract extends MatchingTask
      */
     private class IContractPresenceDetector implements BuildListener
     {
-        public void buildFinished( BuildEvent event ) { }
+        public void buildFinished( BuildEvent event )
+        {
+        }
 
-        public void buildStarted( BuildEvent event ) { }
+        public void buildStarted( BuildEvent event )
+        {
+        }
 
         public void messageLogged( BuildEvent event )
         {
@@ -1094,12 +1100,20 @@ public class IContract extends MatchingTask
             }
         }
 
-        public void targetFinished( BuildEvent event ) { }
+        public void targetFinished( BuildEvent event )
+        {
+        }
 
-        public void targetStarted( BuildEvent event ) { }
+        public void targetStarted( BuildEvent event )
+        {
+        }
 
-        public void taskFinished( BuildEvent event ) { }
+        public void taskFinished( BuildEvent event )
+        {
+        }
 
-        public void taskStarted( BuildEvent event ) { }
+        public void taskStarted( BuildEvent event )
+        {
+        }
     }
 }

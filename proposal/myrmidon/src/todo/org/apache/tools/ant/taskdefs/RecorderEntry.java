@@ -6,12 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.PrintStream;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
-
 
 /**
  * This is a class that represents a recorder. This is the listener to the build
@@ -66,14 +66,14 @@ public class RecorderEntry implements BuildLogger
         if( minutes > 0 )
         {
             return Long.toString( minutes ) + " minute"
-                 + ( minutes == 1 ? " " : "s " )
-                 + Long.toString( seconds % 60 ) + " second"
-                 + ( seconds % 60 == 1 ? "" : "s" );
+                + ( minutes == 1 ? " " : "s " )
+                + Long.toString( seconds % 60 ) + " second"
+                + ( seconds % 60 == 1 ? "" : "s" );
         }
         else
         {
             return Long.toString( seconds ) + " second"
-                 + ( seconds % 60 == 1 ? "" : "s" );
+                + ( seconds % 60 == 1 ? "" : "s" );
         }
 
     }

@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
@@ -24,7 +25,7 @@ public class JasperC extends DefaultCompilerAdapter
      * ------------------------------------------------------------
      */
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         getJspc().log( "Using jasper compiler", Project.MSG_VERBOSE );
         Commandline cmd = setupJasperCommand();
@@ -33,27 +34,27 @@ public class JasperC extends DefaultCompilerAdapter
         {
             // Create an instance of the compiler, redirecting output to
             // the project log
-            Java java = ( Java )( getJspc().getProject() ).createTask( "java" );
+            Java java = (Java)( getJspc().getProject() ).createTask( "java" );
             if( getJspc().getClasspath() != null )
                 java.setClasspath( getJspc().getClasspath() );
             java.setClassname( "org.apache.jasper.JspC" );
             String args[] = cmd.getArguments();
             for( int i = 0; i < args.length; i++ )
-                java.createArg().setValue( args[i] );
+                java.createArg().setValue( args[ i ] );
             java.setFailonerror( true );
             java.execute();
             return true;
         }
         catch( Exception ex )
         {
-            if( ex instanceof BuildException )
+            if( ex instanceof TaskException )
             {
-                throw ( BuildException )ex;
+                throw (TaskException)ex;
             }
             else
             {
-                throw new BuildException( "Error running jsp compiler: ",
-                    ex );
+                throw new TaskException( "Error running jsp compiler: ",
+                                         ex );
             }
         }
     }

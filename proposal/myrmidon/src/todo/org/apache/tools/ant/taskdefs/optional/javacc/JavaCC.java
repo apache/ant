@@ -6,10 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.javacc;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -130,7 +131,6 @@ public class JavaCC extends Task
         optionalAttrs.put( JAVA_UNICODE_ESCAPE, new Boolean( javaUnicodeEscape ) );
     }
 
-
     public void setLookahead( int lookahead )
     {
         optionalAttrs.put( LOOKAHEAD, new Integer( lookahead ) );
@@ -182,14 +182,14 @@ public class JavaCC extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         // load command line with optional attributes
         Enumeration iter = optionalAttrs.keys();
         while( iter.hasMoreElements() )
         {
-            String name = ( String )iter.nextElement();
+            String name = (String)iter.nextElement();
             Object value = optionalAttrs.get( name );
             cmdl.createArgument().setValue( "-" + name + ":" + value.toString() );
         }
@@ -197,7 +197,7 @@ public class JavaCC extends Task
         // check the target is a file
         if( target == null || !target.isFile() )
         {
-            throw new BuildException( "Invalid target: " + target );
+            throw new TaskException( "Invalid target: " + target );
         }
 
         // use the directory containing the target as the output directory
@@ -207,7 +207,7 @@ public class JavaCC extends Task
         }
         else if( !outputDirectory.isDirectory() )
         {
-            throw new BuildException( "Outputdir not a directory." );
+            throw new TaskException( "Outputdir not a directory." );
         }
         cmdl.createArgument().setValue(
             "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath() );
@@ -223,11 +223,11 @@ public class JavaCC extends Task
 
         if( javaccHome == null || !javaccHome.isDirectory() )
         {
-            throw new BuildException( "Javacchome not set." );
+            throw new TaskException( "Javacchome not set." );
         }
         final Path classpath = cmdl.createClasspath( project );
         classpath.createPathElement().setPath( javaccHome.getAbsolutePath() +
-            "/JavaCC.zip" );
+                                               "/JavaCC.zip" );
         classpath.addJavaRuntime();
 
         final Commandline.Argument arg = cmdl.createVmArgument();

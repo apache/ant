@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import com.ibm.ivj.util.base.ExportCodeSpec;
 import com.ibm.ivj.util.base.ImportCodeSpec;
 import com.ibm.ivj.util.base.IvjException;
@@ -18,13 +19,12 @@ import com.ibm.ivj.util.base.Workspace;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-
 
 /**
  * Helper class for VAJ tasks. Holds Workspace singleton and wraps IvjExceptions
- * into BuildExceptions
+ * into TaskExceptions
  *
  * @author Wolf Siberski, TUI Infotec GmbH
  */
@@ -46,7 +46,7 @@ abstract class VAJLocalUtil implements VAJUtil
 
         for( int i = 0; i < currentProjects.length; i++ )
         {
-            Project p = currentProjects[i];
+            Project p = currentProjects[ i ];
             if( p.getName().equals( importProject ) )
             {
                 found = p;
@@ -62,8 +62,8 @@ abstract class VAJLocalUtil implements VAJUtil
             }
             catch( IvjException e )
             {
-                throw createBuildException( "Error while creating Project "
-                     + importProject + ": ", e );
+                throw createTaskException( "Error while creating Project "
+                                           + importProject + ": ", e );
             }
         }
 
@@ -82,9 +82,9 @@ abstract class VAJLocalUtil implements VAJUtil
             workspace = ToolEnv.connectToWorkspace();
             if( workspace == null )
             {
-                throw new BuildException(
+                throw new TaskException(
                     "Unable to connect to Workspace! "
-                     + "Make sure you are running in VisualAge for Java." );
+                    + "Make sure you are running in VisualAge for Java." );
             }
         }
 
@@ -92,14 +92,14 @@ abstract class VAJLocalUtil implements VAJUtil
     }
 
     /**
-     * Wraps IvjException into a BuildException
+     * Wraps IvjException into a TaskException
      *
      * @param errMsg Additional error message
      * @param e IvjException which is wrapped
-     * @return org.apache.tools.ant.BuildException
+     * @return org.apache.tools.ant.TaskException
      */
-    static BuildException createBuildException(
-                                                String errMsg, IvjException e )
+    static TaskException createTaskException(
+        String errMsg, IvjException e )
     {
         errMsg = errMsg + "\n" + e.getMessage();
         String[] errors = e.getErrors();
@@ -107,10 +107,10 @@ abstract class VAJLocalUtil implements VAJUtil
         {
             for( int i = 0; i < errors.length; i++ )
             {
-                errMsg = errMsg + "\n" + errors[i];
+                errMsg = errMsg + "\n" + errors[ i ];
             }
         }
-        return new BuildException( errMsg, e );
+        return new TaskException( errMsg, e );
     }
 
 
@@ -132,11 +132,11 @@ abstract class VAJLocalUtil implements VAJUtil
      * @param overwrite Description of Parameter
      */
     public void exportPackages(
-                                File dest,
-                                String[] includePatterns, String[] excludePatterns,
-                                boolean exportClasses, boolean exportDebugInfo,
-                                boolean exportResources, boolean exportSources,
-                                boolean useDefaultExcludes, boolean overwrite )
+        File dest,
+        String[] includePatterns, String[] excludePatterns,
+        boolean exportClasses, boolean exportDebugInfo,
+        boolean exportResources, boolean exportSources,
+        boolean useDefaultExcludes, boolean overwrite )
     {
         if( includePatterns == null || includePatterns.length == 0 )
         {
@@ -162,7 +162,7 @@ abstract class VAJLocalUtil implements VAJUtil
                      + dest, MSG_INFO );
                 for( int i = 0; i < packages.length; i++ )
                 {
-                    log( "    " + packages[i].getName(), MSG_VERBOSE );
+                    log( "    " + packages[ i ].getName(), MSG_VERBOSE );
                 }
 
                 ExportCodeSpec exportSpec = new ExportCodeSpec();
@@ -179,7 +179,7 @@ abstract class VAJLocalUtil implements VAJUtil
             }
             catch( IvjException ex )
             {
-                throw createBuildException( "Exporting failed!", ex );
+                throw createTaskException( "Exporting failed!", ex );
             }
         }
     }
@@ -201,20 +201,20 @@ abstract class VAJLocalUtil implements VAJUtil
      * @param importResources Description of Parameter
      * @param importSources Description of Parameter
      * @param useDefaultExcludes Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void importFiles(
-                             String importProject, File srcDir,
-                             String[] includePatterns, String[] excludePatterns,
-                             boolean importClasses, boolean importResources,
-                             boolean importSources, boolean useDefaultExcludes )
-        throws BuildException
+        String importProject, File srcDir,
+        String[] includePatterns, String[] excludePatterns,
+        boolean importClasses, boolean importResources,
+        boolean importSources, boolean useDefaultExcludes )
+        throws TaskException
     {
 
         if( importProject == null || "".equals( importProject ) )
         {
-            throw new BuildException( "The VisualAge for Java project "
-                 + "name is required!" );
+            throw new TaskException( "The VisualAge for Java project "
+                                     + "name is required!" );
         }
 
         ImportCodeSpec importSpec = new ImportCodeSpec();
@@ -253,24 +253,24 @@ abstract class VAJLocalUtil implements VAJUtil
             Type[] importedTypes = getWorkspace().importData( importSpec );
             if( importedTypes == null )
             {
-                throw new BuildException( "Unable to import into Workspace!" );
+                throw new TaskException( "Unable to import into Workspace!" );
             }
             else
             {
                 log( importedTypes.length + " types imported", MSG_DEBUG );
                 for( int i = 0; i < importedTypes.length; i++ )
                 {
-                    log( importedTypes[i].getPackage().getName()
-                         + "." + importedTypes[i].getName()
-                         + " into " + importedTypes[i].getProject().getName(),
-                        MSG_DEBUG );
+                    log( importedTypes[ i ].getPackage().getName()
+                         + "." + importedTypes[ i ].getName()
+                         + " into " + importedTypes[ i ].getProject().getName(),
+                         MSG_DEBUG );
                 }
             }
         }
         catch( IvjException ivje )
         {
-            throw createBuildException( "Error while importing into workspace: ",
-                ivje );
+            throw createTaskException( "Error while importing into workspace: ",
+                                       ivje );
         }
     }
 
@@ -289,9 +289,9 @@ abstract class VAJLocalUtil implements VAJUtil
         Vector expandedDescs = getExpandedDescriptions( projectDescriptions );
 
         // output warnings for projects not found
-        for( Enumeration e = projectDescriptions.elements(); e.hasMoreElements();  )
+        for( Enumeration e = projectDescriptions.elements(); e.hasMoreElements(); )
         {
-            VAJProjectDescription d = ( VAJProjectDescription )e.nextElement();
+            VAJProjectDescription d = (VAJProjectDescription)e.nextElement();
             if( !d.projectFound() )
             {
                 log( "No Projects match the name " + d.getName(), MSG_WARN );
@@ -302,9 +302,9 @@ abstract class VAJLocalUtil implements VAJUtil
              + " project(s) into workspace", MSG_INFO );
 
         for( Enumeration e = expandedDescs.elements();
-            e.hasMoreElements();  )
+             e.hasMoreElements(); )
         {
-            VAJProjectDescription d = ( VAJProjectDescription )e.nextElement();
+            VAJProjectDescription d = (VAJProjectDescription)e.nextElement();
 
             ProjectEdition pe = findProjectEdition( d.getName(), d.getVersion() );
             try
@@ -315,12 +315,11 @@ abstract class VAJLocalUtil implements VAJUtil
             }
             catch( IvjException ex )
             {
-                throw createBuildException( "Project '" + d.getName()
-                     + "' could not be loaded.", ex );
+                throw createTaskException( "Project '" + d.getName()
+                                           + "' could not be loaded.", ex );
             }
         }
     }
-
 
     /**
      * return project descriptions containing full project names instead of
@@ -339,15 +338,15 @@ abstract class VAJLocalUtil implements VAJUtil
             for( int i = 0; i < projectNames.length; i++ )
             {
                 for( Enumeration e = projectDescs.elements();
-                    e.hasMoreElements();  )
+                     e.hasMoreElements(); )
                 {
-                    VAJProjectDescription d = ( VAJProjectDescription )e.nextElement();
+                    VAJProjectDescription d = (VAJProjectDescription)e.nextElement();
                     String pattern = d.getName();
-                    if( VAJWorkspaceScanner.match( pattern, projectNames[i] ) )
+                    if( VAJWorkspaceScanner.match( pattern, projectNames[ i ] ) )
                     {
                         d.setProjectFound();
                         expandedDescs.addElement( new VAJProjectDescription(
-                            projectNames[i], d.getVersion() ) );
+                            projectNames[ i ], d.getVersion() ) );
                         break;
                     }
                 }
@@ -355,7 +354,7 @@ abstract class VAJLocalUtil implements VAJUtil
         }
         catch( IvjException e )
         {
-            throw createBuildException( "VA Exception occured: ", e );
+            throw createTaskException( "VA Exception occured: ", e );
         }
 
         return expandedDescs;
@@ -371,14 +370,14 @@ abstract class VAJLocalUtil implements VAJUtil
      * @param summaryLog buffer for logging
      */
     private void addFilesToImport(
-                                   ImportCodeSpec spec, boolean doImport,
-                                   Vector files, String fileType,
-                                   StringBuffer summaryLog )
+        ImportCodeSpec spec, boolean doImport,
+        Vector files, String fileType,
+        StringBuffer summaryLog )
     {
 
         if( doImport )
         {
-            String[] fileArr = new String[files.size()];
+            String[] fileArr = new String[ files.size() ];
             files.copyInto( fileArr );
             try
             {
@@ -392,7 +391,7 @@ abstract class VAJLocalUtil implements VAJUtil
             }
             catch( Exception e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
             if( files.size() > 0 )
             {
@@ -419,15 +418,15 @@ abstract class VAJLocalUtil implements VAJUtil
         }
         catch( IvjException e )
         {
-            throw createBuildException( "VA Exception occured: ", e );
+            throw createTaskException( "VA Exception occured: ", e );
         }
 
         Vector matchingProjects = new Vector();
         for( int i = 0; i < projectNames.length; i++ )
         {
-            if( VAJWorkspaceScanner.match( pattern, projectNames[i] ) )
+            if( VAJWorkspaceScanner.match( pattern, projectNames[ i ] ) )
             {
-                matchingProjects.addElement( projectNames[i] );
+                matchingProjects.addElement( projectNames[ i ] );
             }
         }
 
@@ -442,7 +441,7 @@ abstract class VAJLocalUtil implements VAJUtil
      * @return com.ibm.ivj.util.base.ProjectEdition the specified edition
      */
     private ProjectEdition findProjectEdition(
-                                               String name, String versionName )
+        String name, String versionName )
     {
         try
         {
@@ -451,27 +450,27 @@ abstract class VAJLocalUtil implements VAJUtil
 
             if( editions == null )
             {
-                throw new BuildException( "Project " + name + " doesn't exist" );
+                throw new TaskException( "Project " + name + " doesn't exist" );
             }
 
             ProjectEdition pe = null;
             for( int i = 0; i < editions.length && pe == null; i++ )
             {
-                if( versionName.equals( editions[i].getVersionName() ) )
+                if( versionName.equals( editions[ i ].getVersionName() ) )
                 {
-                    pe = editions[i];
+                    pe = editions[ i ];
                 }
             }
             if( pe == null )
             {
-                throw new BuildException( "Version " + versionName
-                     + " of Project " + name + " doesn't exist" );
+                throw new TaskException( "Version " + versionName
+                                         + " of Project " + name + " doesn't exist" );
             }
             return pe;
         }
         catch( IvjException e )
         {
-            throw createBuildException( "VA Exception occured: ", e );
+            throw createTaskException( "VA Exception occured: ", e );
         }
 
     }
@@ -485,12 +484,11 @@ abstract class VAJLocalUtil implements VAJUtil
     private void logFiles( Vector fileNames, String fileType )
     {
         log( fileType + " files found for import:", MSG_VERBOSE );
-        for( Enumeration e = fileNames.elements(); e.hasMoreElements();  )
+        for( Enumeration e = fileNames.elements(); e.hasMoreElements(); )
         {
             log( "    " + e.nextElement(), MSG_VERBOSE );
         }
     }
-
 
     /**
      * Sort the files into classes, sources, and resources.
@@ -502,28 +500,27 @@ abstract class VAJLocalUtil implements VAJUtil
      * @param resources Description of Parameter
      */
     private void scanForImport(
-                                File dir,
-                                String[] files,
-                                Vector classes,
-                                Vector sources,
-                                Vector resources )
+        File dir,
+        String[] files,
+        Vector classes,
+        Vector sources,
+        Vector resources )
     {
         for( int i = 0; i < files.length; i++ )
         {
-            String file = ( new File( dir, files[i] ) ).getAbsolutePath();
+            String file = ( new File( dir, files[ i ] ) ).getAbsolutePath();
             if( file.endsWith( ".java" ) || file.endsWith( ".JAVA" ) )
             {
                 sources.addElement( file );
             }
-            else
-                if( file.endsWith( ".class" ) || file.endsWith( ".CLASS" ) )
+            else if( file.endsWith( ".class" ) || file.endsWith( ".CLASS" ) )
             {
                 classes.addElement( file );
             }
             else
             {
                 // for resources VA expects the path relative to the resource path
-                resources.addElement( files[i] );
+                resources.addElement( files[ i ] );
             }
         }
     }

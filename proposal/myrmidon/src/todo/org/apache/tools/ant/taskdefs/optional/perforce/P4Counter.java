@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -46,17 +47,17 @@ public class P4Counter extends P4Base
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         if( ( counter == null ) || counter.length() == 0 )
         {
-            throw new BuildException( "No counter specified to retrieve" );
+            throw new TaskException( "No counter specified to retrieve" );
         }
 
         if( shouldSetValue && shouldSetProperty )
         {
-            throw new BuildException( "Cannot both set the value of the property and retrieve the value of the property." );
+            throw new TaskException( "Cannot both set the value of the property and retrieve the value of the property." );
         }
 
         String command = "counter " + P4CmdOpts + " " + counter;
@@ -90,7 +91,7 @@ public class P4Counter extends P4Base
                         }
                         catch( NumberFormatException nfe )
                         {
-                            throw new BuildException( "Perforce error. Could not retrieve counter value." );
+                            throw new TaskException( "Perforce error. Could not retrieve counter value." );
                         }
                     }
                 };

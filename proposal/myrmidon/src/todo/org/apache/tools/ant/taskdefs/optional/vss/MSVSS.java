@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.vss;
-import org.apache.tools.ant.BuildException;
+
+import java.io.IOException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-import java.io.IOException;
 
 /**
  * A base class for creating tasks for executing commands on Visual SourceSafe.
@@ -203,8 +204,8 @@ public abstract class MSVSS extends Task
         try
         {
             Execute exe = new Execute( new LogStreamHandler( this,
-                Project.MSG_INFO,
-                Project.MSG_WARN ) );
+                                                             Project.MSG_INFO,
+                                                             Project.MSG_WARN ) );
 
             // If location of ss.ini is specified we need to set the
             // environment-variable SSDIR to this value
@@ -213,14 +214,14 @@ public abstract class MSVSS extends Task
                 String[] env = exe.getEnvironment();
                 if( env == null )
                 {
-                    env = new String[0];
+                    env = new String[ 0 ];
                 }
-                String[] newEnv = new String[env.length + 1];
+                String[] newEnv = new String[ env.length + 1 ];
                 for( int i = 0; i < env.length; i++ )
                 {
-                    newEnv[i] = env[i];
+                    newEnv[ i ] = env[ i ];
                 }
-                newEnv[env.length] = "SSDIR=" + m_serverPath;
+                newEnv[ env.length ] = "SSDIR=" + m_serverPath;
 
                 exe.setEnvironment( newEnv );
             }
@@ -232,7 +233,7 @@ public abstract class MSVSS extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 }

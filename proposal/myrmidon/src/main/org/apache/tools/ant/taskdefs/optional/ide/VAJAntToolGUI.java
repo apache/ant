@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Choice;
@@ -36,11 +37,9 @@ import java.awt.event.TextListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.beans.PropertyChangeListener;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.StringUtils;
@@ -182,14 +181,14 @@ public class VAJAntToolGUI extends Frame
         if( minutes > 0 )
         {
             return Long.toString( minutes ) + " minute"
-                 + ( minutes == 1 ? " " : "s " )
-                 + Long.toString( seconds % 60 ) + " second"
-                 + ( seconds % 60 == 1 ? "" : "s" );
+                + ( minutes == 1 ? " " : "s " )
+                + Long.toString( seconds % 60 ) + " second"
+                + ( seconds % 60 == 1 ? "" : "s" );
         }
         else
         {
             return Long.toString( seconds ) + " second"
-                 + ( seconds % 60 == 1 ? "" : "s" );
+                + ( seconds % 60 == 1 ? "" : "s" );
         }
     }
 
@@ -1617,9 +1616,13 @@ public class VAJAntToolGUI extends Frame
                 connectTextFieldToBuildFileName();
         }
 
-        public void windowActivated( WindowEvent e ) { }
+        public void windowActivated( WindowEvent e )
+        {
+        }
 
-        public void windowClosed( WindowEvent e ) { }
+        public void windowClosed( WindowEvent e )
+        {
+        }
 
         /**
          * WindowListener methods
@@ -1646,13 +1649,21 @@ public class VAJAntToolGUI extends Frame
             }
         }
 
-        public void windowDeactivated( WindowEvent e ) { }
+        public void windowDeactivated( WindowEvent e )
+        {
+        }
 
-        public void windowDeiconified( WindowEvent e ) { }
+        public void windowDeiconified( WindowEvent e )
+        {
+        }
 
-        public void windowIconified( WindowEvent e ) { }
+        public void windowIconified( WindowEvent e )
+        {
+        }
 
-        public void windowOpened( WindowEvent e ) { }
+        public void windowOpened( WindowEvent e )
+        {
+        }
     }
 
     /**
@@ -1716,7 +1727,6 @@ public class VAJAntToolGUI extends Frame
             getMessageTextArea().append( lineSeparator );
         }
 
-
         /**
          * Outputs an exception.
          *
@@ -1726,11 +1736,11 @@ public class VAJAntToolGUI extends Frame
         {
             getMessageTextArea().append( lineSeparator + "BUILD FAILED" + lineSeparator );
 
-            if( error instanceof BuildException )
+            if( error instanceof TaskException )
             {
                 getMessageTextArea().append( error.toString() );
 
-                Throwable nested = ( ( BuildException )error ).getCause();
+                Throwable nested = ( (TaskException)error ).getCause();
                 if( nested != null )
                 {
                     nested.printStackTrace( System.err );
@@ -1767,7 +1777,9 @@ public class VAJAntToolGUI extends Frame
          * @param event Description of Parameter
          * @see BuildEvent#getException()
          */
-        public void targetFinished( BuildEvent event ) { }
+        public void targetFinished( BuildEvent event )
+        {
+        }
 
         /**
          * Fired when a target is started.
@@ -1790,7 +1802,9 @@ public class VAJAntToolGUI extends Frame
          * @param event Description of Parameter
          * @see BuildEvent#getException()
          */
-        public void taskFinished( BuildEvent event ) { }
+        public void taskFinished( BuildEvent event )
+        {
+        }
 
         /**
          * Fired when a task is started.
@@ -1798,6 +1812,8 @@ public class VAJAntToolGUI extends Frame
          * @param event Description of Parameter
          * @see BuildEvent#getTask()
          */
-        public void taskStarted( BuildEvent event ) { }
+        public void taskStarted( BuildEvent event )
+        {
+        }
     }
 }

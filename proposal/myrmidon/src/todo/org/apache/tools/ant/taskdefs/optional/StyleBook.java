@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.Java;
 
 /**
@@ -18,7 +19,7 @@ import org.apache.tools.ant.taskdefs.Java;
  *      B&ouml;rger</a>
  */
 public class StyleBook
-     extends Java
+    extends Java
 {
     protected File m_book;
     protected String m_loaderConfig;
@@ -53,22 +54,22 @@ public class StyleBook
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         if( null == m_targetDirectory )
         {
-            throw new BuildException( "TargetDirectory attribute not set." );
+            throw new TaskException( "TargetDirectory attribute not set." );
         }
 
         if( null == m_skinDirectory )
         {
-            throw new BuildException( "SkinDirectory attribute not set." );
+            throw new TaskException( "SkinDirectory attribute not set." );
         }
 
         if( null == m_book )
         {
-            throw new BuildException( "book attribute not set." );
+            throw new TaskException( "book attribute not set." );
         }
 
         createArg().setValue( "targetDirectory=" + m_targetDirectory );

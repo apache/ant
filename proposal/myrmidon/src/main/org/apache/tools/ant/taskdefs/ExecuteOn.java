@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
@@ -54,7 +55,6 @@ public class ExecuteOn extends ExecTask
     {
         this.destDir = destDir;
     }
-
 
     /**
      * Shall the command work on all specified files in parallel?
@@ -110,14 +110,14 @@ public class ExecuteOn extends ExecTask
      * Defines the FileNameMapper to use (nested mapper element).
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Mapper createMapper()
-        throws BuildException
+        throws TaskException
     {
         if( mapperElement != null )
         {
-            throw new BuildException( "Cannot define more than one mapper" );
+            throw new TaskException( "Cannot define more than one mapper" );
         }
         mapperElement = new Mapper( project );
         return mapperElement;
@@ -133,7 +133,7 @@ public class ExecuteOn extends ExecTask
     {
         if( srcFilePos != null )
         {
-            throw new BuildException( taskType + " doesn\'t support multiple srcfile elements." );
+            throw new TaskException( taskType + " doesn\'t support multiple srcfile elements." );
         }
         srcFilePos = cmdl.createMarker();
         return srcFilePos;
@@ -149,7 +149,7 @@ public class ExecuteOn extends ExecTask
     {
         if( targetFilePos != null )
         {
-            throw new BuildException( taskType + " doesn\'t support multiple targetfile elements." );
+            throw new TaskException( taskType + " doesn\'t support multiple targetfile elements." );
         }
         targetFilePos = cmdl.createMarker();
         srcIsFirst = ( srcFilePos != null );
@@ -171,7 +171,7 @@ public class ExecuteOn extends ExecTask
             Hashtable addedFiles = new Hashtable();
             for( int i = 0; i < srcFiles.length; i++ )
             {
-                String[] subTargets = mapper.mapFileName( srcFiles[i] );
+                String[] subTargets = mapper.mapFileName( srcFiles[ i ] );
                 if( subTargets != null )
                 {
                     for( int j = 0; j < subTargets.length; j++ )
@@ -180,11 +180,11 @@ public class ExecuteOn extends ExecTask
                         if( !relative )
                         {
                             name =
-                                ( new File( destDir, subTargets[j] ) ).getAbsolutePath();
+                                ( new File( destDir, subTargets[ j ] ) ).getAbsolutePath();
                         }
                         else
                         {
-                            name = subTargets[j];
+                            name = subTargets[ j ];
                         }
                         if( !addedFiles.contains( name ) )
                         {
@@ -195,11 +195,11 @@ public class ExecuteOn extends ExecTask
                 }
             }
         }
-        String[] targetFiles = new String[targets.size()];
+        String[] targetFiles = new String[ targets.size() ];
         targets.copyInto( targetFiles );
 
         String[] orig = cmdl.getCommandline();
-        String[] result = new String[orig.length + srcFiles.length + targetFiles.length];
+        String[] result = new String[ orig.length + srcFiles.length + targetFiles.length ];
 
         int srcIndex = orig.length;
         if( srcFilePos != null )
@@ -212,7 +212,7 @@ public class ExecuteOn extends ExecTask
             int targetIndex = targetFilePos.getPosition();
 
             if( srcIndex < targetIndex
-                 || ( srcIndex == targetIndex && srcIsFirst ) )
+                || ( srcIndex == targetIndex && srcIsFirst ) )
             {
 
                 // 0 --> srcIndex
@@ -220,18 +220,18 @@ public class ExecuteOn extends ExecTask
 
                 // srcIndex --> targetIndex
                 System.arraycopy( orig, srcIndex, result,
-                    srcIndex + srcFiles.length,
-                    targetIndex - srcIndex );
+                                  srcIndex + srcFiles.length,
+                                  targetIndex - srcIndex );
 
                 // targets are already absolute file names
                 System.arraycopy( targetFiles, 0, result,
-                    targetIndex + srcFiles.length,
-                    targetFiles.length );
+                                  targetIndex + srcFiles.length,
+                                  targetFiles.length );
 
                 // targetIndex --> end
                 System.arraycopy( orig, targetIndex, result,
-                    targetIndex + srcFiles.length + targetFiles.length,
-                    orig.length - targetIndex );
+                                  targetIndex + srcFiles.length + targetFiles.length,
+                                  orig.length - targetIndex );
             }
             else
             {
@@ -240,18 +240,18 @@ public class ExecuteOn extends ExecTask
 
                 // targets are already absolute file names
                 System.arraycopy( targetFiles, 0, result,
-                    targetIndex,
-                    targetFiles.length );
+                                  targetIndex,
+                                  targetFiles.length );
 
                 // targetIndex --> srcIndex
                 System.arraycopy( orig, targetIndex, result,
-                    targetIndex + targetFiles.length,
-                    srcIndex - targetIndex );
+                                  targetIndex + targetFiles.length,
+                                  srcIndex - targetIndex );
 
                 // srcIndex --> end
                 System.arraycopy( orig, srcIndex, result,
-                    srcIndex + srcFiles.length + targetFiles.length,
-                    orig.length - srcIndex );
+                                  srcIndex + srcFiles.length + targetFiles.length,
+                                  orig.length - srcIndex );
                 srcIndex += targetFiles.length;
             }
 
@@ -263,8 +263,8 @@ public class ExecuteOn extends ExecTask
             System.arraycopy( orig, 0, result, 0, srcIndex );
             // srcIndex --> end
             System.arraycopy( orig, srcIndex, result,
-                srcIndex + srcFiles.length,
-                orig.length - srcIndex );
+                              srcIndex + srcFiles.length,
+                              orig.length - srcIndex );
 
         }
 
@@ -273,12 +273,12 @@ public class ExecuteOn extends ExecTask
         {
             if( !relative )
             {
-                result[srcIndex + i] =
-                    ( new File( baseDirs[i], srcFiles[i] ) ).getAbsolutePath();
+                result[ srcIndex + i ] =
+                    ( new File( baseDirs[ i ], srcFiles[ i ] ) ).getAbsolutePath();
             }
             else
             {
-                result[srcIndex + i] = srcFiles[i];
+                result[ srcIndex + i ] = srcFiles[ i ];
             }
         }
         return result;
@@ -310,7 +310,7 @@ public class ExecuteOn extends ExecTask
         {
             SourceFileScanner sfs = new SourceFileScanner( this );
             return sfs.restrict( ds.getIncludedDirectories(), baseDir, destDir,
-                mapper );
+                                 mapper );
         }
         else
         {
@@ -332,7 +332,7 @@ public class ExecuteOn extends ExecTask
         {
             SourceFileScanner sfs = new SourceFileScanner( this );
             return sfs.restrict( ds.getIncludedFiles(), baseDir, destDir,
-                mapper );
+                                 mapper );
         }
         else
         {
@@ -345,27 +345,27 @@ public class ExecuteOn extends ExecTask
         super.checkConfiguration();
         if( filesets.size() == 0 )
         {
-            throw new BuildException( "no filesets specified" );
+            throw new TaskException( "no filesets specified" );
         }
 
         if( targetFilePos != null || mapperElement != null
-             || destDir != null )
+            || destDir != null )
         {
 
             if( mapperElement == null )
             {
-                throw new BuildException( "no mapper specified" );
+                throw new TaskException( "no mapper specified" );
             }
             if( mapperElement == null )
             {
-                throw new BuildException( "no dest attribute specified" );
+                throw new TaskException( "no dest attribute specified" );
             }
             mapper = mapperElement.getImplementation();
         }
     }
 
     protected void runExec( Execute exe )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -374,7 +374,7 @@ public class ExecuteOn extends ExecTask
             Vector baseDirs = new Vector();
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = ( FileSet )filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.elementAt( i );
                 File base = fs.getDir( project );
                 DirectoryScanner ds = fs.getDirectoryScanner( project );
 
@@ -383,7 +383,7 @@ public class ExecuteOn extends ExecTask
                     String[] s = getFiles( base, ds );
                     for( int j = 0; j < s.length; j++ )
                     {
-                        fileNames.addElement( s[j] );
+                        fileNames.addElement( s[ j ] );
                         baseDirs.addElement( base );
                     }
                 }
@@ -394,7 +394,7 @@ public class ExecuteOn extends ExecTask
                     ;
                     for( int j = 0; j < s.length; j++ )
                     {
-                        fileNames.addElement( s[j] );
+                        fileNames.addElement( s[ j ] );
                         baseDirs.addElement( base );
                     }
                 }
@@ -408,13 +408,13 @@ public class ExecuteOn extends ExecTask
 
                 if( !parallel )
                 {
-                    String[] s = new String[fileNames.size()];
+                    String[] s = new String[ fileNames.size() ];
                     fileNames.copyInto( s );
                     for( int j = 0; j < s.length; j++ )
                     {
-                        String[] command = getCommandline( s[j], base );
+                        String[] command = getCommandline( s[ j ], base );
                         log( "Executing " + Commandline.toString( command ),
-                            Project.MSG_VERBOSE );
+                             Project.MSG_VERBOSE );
                         exe.setCommandline( command );
                         runExecute( exe );
                     }
@@ -425,13 +425,13 @@ public class ExecuteOn extends ExecTask
 
             if( parallel && ( fileNames.size() > 0 || !skipEmpty ) )
             {
-                String[] s = new String[fileNames.size()];
+                String[] s = new String[ fileNames.size() ];
                 fileNames.copyInto( s );
-                File[] b = new File[baseDirs.size()];
+                File[] b = new File[ baseDirs.size() ];
                 baseDirs.copyInto( b );
                 String[] command = getCommandline( s, b );
                 log( "Executing " + Commandline.toString( command ),
-                    Project.MSG_VERBOSE );
+                     Project.MSG_VERBOSE );
                 exe.setCommandline( command );
                 runExecute( exe );
             }
@@ -439,7 +439,7 @@ public class ExecuteOn extends ExecTask
         }
         catch( IOException e )
         {
-            throw new BuildException( "Execute failed: " + e, e );
+            throw new TaskException( "Execute failed: " + e, e );
         }
         finally
         {

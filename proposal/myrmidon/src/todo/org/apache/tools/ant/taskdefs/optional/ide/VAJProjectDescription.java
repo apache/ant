@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Type class. Holds information about a project edition.
@@ -20,7 +21,9 @@ public class VAJProjectDescription
     private boolean projectFound;
     private String version;
 
-    public VAJProjectDescription() { }
+    public VAJProjectDescription()
+    {
+    }
 
     public VAJProjectDescription( String n, String v )
     {
@@ -32,7 +35,7 @@ public class VAJProjectDescription
     {
         if( newName == null || newName.equals( "" ) )
         {
-            throw new BuildException( "name attribute must be set" );
+            throw new TaskException( "name attribute must be set" );
         }
         name = newName;
     }
@@ -46,7 +49,7 @@ public class VAJProjectDescription
     {
         if( newVersion == null || newVersion.equals( "" ) )
         {
-            throw new BuildException( "version attribute must be set" );
+            throw new TaskException( "version attribute must be set" );
         }
         version = newVersion;
     }

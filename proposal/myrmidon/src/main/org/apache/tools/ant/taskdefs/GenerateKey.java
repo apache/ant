@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
@@ -51,8 +52,8 @@ public class GenerateKey extends Task
     {
         if( null != expandedDname )
         {
-            throw new BuildException( "It is not possible to specify dname both " +
-                "as attribute and element." );
+            throw new TaskException( "It is not possible to specify dname both " +
+                                     "as attribute and element." );
         }
         this.dname = dname;
     }
@@ -68,7 +69,7 @@ public class GenerateKey extends Task
     }
 
     public void setKeysize( final String keysize )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -76,7 +77,7 @@ public class GenerateKey extends Task
         }
         catch( final NumberFormatException nfe )
         {
-            throw new BuildException( "KeySize attribute should be a integer" );
+            throw new TaskException( "KeySize attribute should be a integer" );
         }
     }
 
@@ -101,7 +102,7 @@ public class GenerateKey extends Task
     }
 
     public void setValidity( final String validity )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -109,7 +110,7 @@ public class GenerateKey extends Task
         }
         catch( final NumberFormatException nfe )
         {
-            throw new BuildException( "Validity attribute should be a integer" );
+            throw new TaskException( "Validity attribute should be a integer" );
         }
     }
 
@@ -119,43 +120,43 @@ public class GenerateKey extends Task
     }
 
     public DistinguishedName createDname()
-        throws BuildException
+        throws TaskException
     {
         if( null != expandedDname )
         {
-            throw new BuildException( "DName sub-element can only be specified once." );
+            throw new TaskException( "DName sub-element can only be specified once." );
         }
         if( null != dname )
         {
-            throw new BuildException( "It is not possible to specify dname both " +
-                "as attribute and element." );
+            throw new TaskException( "It is not possible to specify dname both " +
+                                     "as attribute and element." );
         }
         expandedDname = new DistinguishedName();
         return expandedDname;
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( project.getJavaVersion().equals( Project.JAVA_1_1 ) )
         {
-            throw new BuildException( "The genkey task is only available on JDK" +
-                " versions 1.2 or greater" );
+            throw new TaskException( "The genkey task is only available on JDK" +
+                                     " versions 1.2 or greater" );
         }
 
         if( null == alias )
         {
-            throw new BuildException( "alias attribute must be set" );
+            throw new TaskException( "alias attribute must be set" );
         }
 
         if( null == storepass )
         {
-            throw new BuildException( "storepass attribute must be set" );
+            throw new TaskException( "storepass attribute must be set" );
         }
 
         if( null == dname && null == expandedDname )
         {
-            throw new BuildException( "dname must be set" );
+            throw new TaskException( "dname must be set" );
         }
 
         final StringBuffer sb = new StringBuffer();
@@ -246,7 +247,7 @@ public class GenerateKey extends Task
         }
 
         log( "Generating Key for " + alias );
-        final ExecTask cmd = ( ExecTask )project.createTask( "exec" );
+        final ExecTask cmd = (ExecTask)project.createTask( "exec" );
         cmd.setCommand( new Commandline( sb.toString() ) );
         cmd.setFailonerror( true );
         cmd.setTaskName( getTaskName() );
@@ -311,7 +312,7 @@ public class GenerateKey extends Task
                 }
                 firstPass = false;
 
-                final DnameParam param = ( DnameParam )params.elementAt( i );
+                final DnameParam param = (DnameParam)params.elementAt( i );
                 sb.append( encode( param.getName() ) );
                 sb.append( '=' );
                 sb.append( encode( param.getValue() ) );

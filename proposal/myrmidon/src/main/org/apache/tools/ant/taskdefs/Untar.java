@@ -6,11 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Date;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.tar.TarEntry;
@@ -38,15 +38,15 @@ public class Untar extends Expand
             while( ( te = tis.getNextEntry() ) != null )
             {
                 extractFile( fileUtils, srcF, dir, tis,
-                    te.getName(),
-                    te.getModTime(), te.isDirectory() );
+                             te.getName(),
+                             te.getModTime(), te.isDirectory() );
             }
             log( "expand complete", Project.MSG_VERBOSE );
 
         }
         catch( IOException ioe )
         {
-            throw new BuildException( "Error while expanding " + srcF.getPath(), ioe );
+            throw new TaskException( "Error while expanding " + srcF.getPath(), ioe );
         }
         finally
         {
@@ -57,7 +57,8 @@ public class Untar extends Expand
                     tis.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }

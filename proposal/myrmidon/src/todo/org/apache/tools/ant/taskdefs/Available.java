@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
@@ -16,7 +17,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * Will set the given property if the requested resource is available at
@@ -80,8 +80,7 @@ public class Available
         this.resource = resource;
     }
 
-
-   public void setType( FileDir type )
+    public void setType( FileDir type )
     {
         this.type = type;
     }
@@ -114,7 +113,7 @@ public class Available
     {
         if( classname == null && file == null && resource == null )
         {
-            throw new BuildException( "At least one of (classname|file|resource) is required" );
+            throw new TaskException( "At least one of (classname|file|resource) is required" );
         }
 
         if( type != null )
@@ -169,7 +168,7 @@ public class Available
     {
         if( property == null )
         {
-            throw new BuildException( "property attribute is required");
+            throw new TaskException( "property attribute is required" );
         }
 
         if( eval() )
@@ -218,6 +217,7 @@ public class Available
     }
 
     private boolean checkFile()
+        throws TaskException
     {
         if( filepath == null )
         {
@@ -228,7 +228,7 @@ public class Available
             String[] paths = filepath.list();
             for( int i = 0; i < paths.length; ++i )
             {
-                log( "Searching " + paths[i], Project.MSG_DEBUG );
+                log( "Searching " + paths[ i ], Project.MSG_DEBUG );
                 /*
                  * filepath can be a list of directory and/or
                  * file names (gen'd via <fileset>)
@@ -242,11 +242,11 @@ public class Available
                  * simple name specified   == parent of parent dir + name
                  *
                  */
-                File path = new File( paths[i] );
+                File path = new File( paths[ i ] );
 
                 // **   full-pathname specified == path in list
                 // **   simple name specified   == path in list
-                if( path.exists() && file.equals( paths[i] ) )
+                if( path.exists() && file.equals( paths[ i ] ) )
                 {
                     if( type == null )
                     {
@@ -254,13 +254,13 @@ public class Available
                         return true;
                     }
                     else if( type.isDir()
-                         && path.isDirectory() )
+                        && path.isDirectory() )
                     {
                         log( "Found directory: " + path, Project.MSG_VERBOSE );
                         return true;
                     }
                     else if( type.isFile()
-                         && path.isFile() )
+                        && path.isFile() )
                     {
                         log( "Found file: " + path, Project.MSG_VERBOSE );
                         return true;
@@ -273,7 +273,7 @@ public class Available
                 File parent = fileUtils.getParentFile( path );
                 // **   full-pathname specified == parent dir of path in list
                 if( parent != null && parent.exists()
-                     && file.equals( parent.getAbsolutePath() ) )
+                    && file.equals( parent.getAbsolutePath() ) )
                 {
                     if( type == null )
                     {
@@ -293,7 +293,7 @@ public class Available
                 if( path.exists() && path.isDirectory() )
                 {
                     if( checkFile( new File( path, file ),
-                        file + " in " + path ) )
+                                   file + " in " + path ) )
                     {
                         return true;
                     }
@@ -303,7 +303,7 @@ public class Available
                 if( parent != null && parent.exists() )
                 {
                     if( checkFile( new File( parent, file ),
-                        file + " in " + parent ) )
+                                   file + " in " + parent ) )
                     {
                         return true;
                     }
@@ -316,7 +316,7 @@ public class Available
                     if( grandParent != null && grandParent.exists() )
                     {
                         if( checkFile( new File( grandParent, file ),
-                            file + " in " + grandParent ) )
+                                       file + " in " + grandParent ) )
                         {
                             return true;
                         }

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util;
+
 import java.io.IOException;
 import java.io.Writer;
 import org.w3c.dom.Attr;
@@ -81,7 +82,7 @@ public class DOMElementWriter
         String name = ent.substring( 1, ent.length() - 1 );
         for( int i = 0; i < knownEntities.length; i++ )
         {
-            if( name.equals( knownEntities[i] ) )
+            if( name.equals( knownEntities[ i ] ) )
             {
                 return true;
             }
@@ -101,35 +102,35 @@ public class DOMElementWriter
         for( int i = 0; i < value.length(); i++ )
         {
             char c = value.charAt( i );
-            switch ( c )
+            switch( c )
             {
-            case '<':
-                sb.append( "&lt;" );
-                break;
-            case '>':
-                sb.append( "&gt;" );
-                break;
-            case '\'':
-                sb.append( "&apos;" );
-                break;
-            case '\"':
-                sb.append( "&quot;" );
-                break;
-            case '&':
-                int nextSemi = value.indexOf( ";", i );
-                if( nextSemi < 0
-                     || !isReference( value.substring( i, nextSemi + 1 ) ) )
-                {
-                    sb.append( "&amp;" );
-                }
-                else
-                {
-                    sb.append( '&' );
-                }
-                break;
-            default:
-                sb.append( c );
-                break;
+                case '<':
+                    sb.append( "&lt;" );
+                    break;
+                case '>':
+                    sb.append( "&gt;" );
+                    break;
+                case '\'':
+                    sb.append( "&apos;" );
+                    break;
+                case '\"':
+                    sb.append( "&quot;" );
+                    break;
+                case '&':
+                    int nextSemi = value.indexOf( ";", i );
+                    if( nextSemi < 0
+                        || !isReference( value.substring( i, nextSemi + 1 ) ) )
+                    {
+                        sb.append( "&amp;" );
+                    }
+                    else
+                    {
+                        sb.append( '&' );
+                    }
+                    break;
+                default:
+                    sb.append( c );
+                    break;
             }
         }
         return sb.toString();
@@ -164,7 +165,7 @@ public class DOMElementWriter
         NamedNodeMap attrs = element.getAttributes();
         for( int i = 0; i < attrs.getLength(); i++ )
         {
-            Attr attr = ( Attr )attrs.item( i );
+            Attr attr = (Attr)attrs.item( i );
             out.write( " " );
             out.write( attr.getName() );
             out.write( "=\"" );
@@ -180,41 +181,41 @@ public class DOMElementWriter
         {
             Node child = children.item( i );
 
-            switch ( child.getNodeType() )
+            switch( child.getNodeType() )
             {
 
-            case Node.ELEMENT_NODE:
-                if( !hasChildren )
-                {
-                    out.write( lSep );
-                    hasChildren = true;
-                }
-                write( ( Element )child, out, indent + 1, indentWith );
-                break;
-            case Node.TEXT_NODE:
-                out.write( encode( child.getNodeValue() ) );
-                break;
-            case Node.CDATA_SECTION_NODE:
-                out.write( "<![CDATA[" );
-                out.write( ( ( Text )child ).getData() );
-                out.write( "]]>" );
-                break;
-            case Node.ENTITY_REFERENCE_NODE:
-                out.write( '&' );
-                out.write( child.getNodeName() );
-                out.write( ';' );
-                break;
-            case Node.PROCESSING_INSTRUCTION_NODE:
-                out.write( "<?" );
-                out.write( child.getNodeName() );
-                String data = child.getNodeValue();
-                if( data != null && data.length() > 0 )
-                {
-                    out.write( ' ' );
-                    out.write( data );
-                }
-                out.write( "?>" );
-                break;
+                case Node.ELEMENT_NODE:
+                    if( !hasChildren )
+                    {
+                        out.write( lSep );
+                        hasChildren = true;
+                    }
+                    write( (Element)child, out, indent + 1, indentWith );
+                    break;
+                case Node.TEXT_NODE:
+                    out.write( encode( child.getNodeValue() ) );
+                    break;
+                case Node.CDATA_SECTION_NODE:
+                    out.write( "<![CDATA[" );
+                    out.write( ( (Text)child ).getData() );
+                    out.write( "]]>" );
+                    break;
+                case Node.ENTITY_REFERENCE_NODE:
+                    out.write( '&' );
+                    out.write( child.getNodeName() );
+                    out.write( ';' );
+                    break;
+                case Node.PROCESSING_INSTRUCTION_NODE:
+                    out.write( "<?" );
+                    out.write( child.getNodeName() );
+                    String data = child.getNodeValue();
+                    if( data != null && data.length() > 0 )
+                    {
+                        out.write( ' ' );
+                        out.write( data );
+                    }
+                    out.write( "?>" );
+                    break;
             }
         }
 

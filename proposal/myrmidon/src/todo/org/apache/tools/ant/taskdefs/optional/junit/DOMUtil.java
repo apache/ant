@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.util.Vector;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -30,8 +31,9 @@ public final class DOMUtil
     /**
      * unused constructor
      */
-    private DOMUtil() { }
-
+    private DOMUtil()
+    {
+    }
 
     /**
      * Iterate over the children of a given node and return the first node that
@@ -58,7 +60,7 @@ public final class DOMUtil
             if( child != null && child.getNodeType() == Node.ELEMENT_NODE &&
                 child.getNodeName().equals( tagname ) )
             {
-                return ( Element )child;
+                return (Element)child;
             }
         }
         return null;
@@ -77,7 +79,7 @@ public final class DOMUtil
     {
         if( node instanceof Element )
         {
-            Element element = ( Element )node;
+            Element element = (Element)node;
             return element.getAttribute( name );
         }
         return null;
@@ -101,44 +103,44 @@ public final class DOMUtil
         Node copy = null;
         final Document doc = parent.getOwnerDocument();
 
-        switch ( child.getNodeType() )
+        switch( child.getNodeType() )
         {
-        case Node.CDATA_SECTION_NODE:
-            copy = doc.createCDATASection( ( ( CDATASection )child ).getData() );
-            break;
-        case Node.COMMENT_NODE:
-            copy = doc.createComment( ( ( Comment )child ).getData() );
-            break;
-        case Node.DOCUMENT_FRAGMENT_NODE:
-            copy = doc.createDocumentFragment();
-            break;
-        case Node.ELEMENT_NODE:
-            final Element elem = doc.createElement( ( ( Element )child ).getTagName() );
-            copy = elem;
-            final NamedNodeMap attributes = child.getAttributes();
-            if( attributes != null )
-            {
-                final int size = attributes.getLength();
-                for( int i = 0; i < size; i++ )
+            case Node.CDATA_SECTION_NODE:
+                copy = doc.createCDATASection( ( (CDATASection)child ).getData() );
+                break;
+            case Node.COMMENT_NODE:
+                copy = doc.createComment( ( (Comment)child ).getData() );
+                break;
+            case Node.DOCUMENT_FRAGMENT_NODE:
+                copy = doc.createDocumentFragment();
+                break;
+            case Node.ELEMENT_NODE:
+                final Element elem = doc.createElement( ( (Element)child ).getTagName() );
+                copy = elem;
+                final NamedNodeMap attributes = child.getAttributes();
+                if( attributes != null )
                 {
-                    final Attr attr = ( Attr )attributes.item( i );
-                    elem.setAttribute( attr.getName(), attr.getValue() );
+                    final int size = attributes.getLength();
+                    for( int i = 0; i < size; i++ )
+                    {
+                        final Attr attr = (Attr)attributes.item( i );
+                        elem.setAttribute( attr.getName(), attr.getValue() );
+                    }
                 }
-            }
-            break;
-        case Node.ENTITY_REFERENCE_NODE:
-            copy = doc.createEntityReference( child.getNodeName() );
-            break;
-        case Node.PROCESSING_INSTRUCTION_NODE:
-            final ProcessingInstruction pi = ( ProcessingInstruction )child;
-            copy = doc.createProcessingInstruction( pi.getTarget(), pi.getData() );
-            break;
-        case Node.TEXT_NODE:
-            copy = doc.createTextNode( ( ( Text )child ).getData() );
-            break;
-        default:
-            // this should never happen
-            throw new IllegalStateException( "Invalid node type: " + child.getNodeType() );
+                break;
+            case Node.ENTITY_REFERENCE_NODE:
+                copy = doc.createEntityReference( child.getNodeName() );
+                break;
+            case Node.PROCESSING_INSTRUCTION_NODE:
+                final ProcessingInstruction pi = (ProcessingInstruction)child;
+                copy = doc.createProcessingInstruction( pi.getTarget(), pi.getData() );
+                break;
+            case Node.TEXT_NODE:
+                copy = doc.createTextNode( ( (Text)child ).getData() );
+                break;
+            default:
+                // this should never happen
+                throw new IllegalStateException( "Invalid node type: " + child.getNodeType() );
         }
 
         // okay we have a copy of the child, now the child becomes the parent
@@ -238,7 +240,7 @@ public final class DOMUtil
         {
             try
             {
-                return ( Node )elementAt( i );
+                return (Node)elementAt( i );
             }
             catch( ArrayIndexOutOfBoundsException e )
             {

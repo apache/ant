@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
+
 import java.io.File;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
@@ -86,19 +87,19 @@ public class P4Add extends P4Base
     private int m_changelist;
 
     public void setChangelist( int changelist )
-        throws BuildException
+        throws TaskException
     {
         if( changelist <= 0 )
-            throw new BuildException( "P4Add: Changelist# should be a positive number" );
+            throw new TaskException( "P4Add: Changelist# should be a positive number" );
 
         this.m_changelist = changelist;
     }
 
     public void setCommandlength( int len )
-        throws BuildException
+        throws TaskException
     {
         if( len <= 0 )
-            throw new BuildException( "P4Add: Commandlength should be a positive number" );
+            throw new TaskException( "P4Add: Commandlength should be a positive number" );
         this.m_cmdLength = len;
     }
 
@@ -108,7 +109,7 @@ public class P4Add extends P4Base
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         if( P4View != null )
@@ -122,7 +123,7 @@ public class P4Add extends P4Base
 
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.elementAt( i );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             //File fromDir = fs.getDir(project);
 
@@ -131,7 +132,7 @@ public class P4Add extends P4Base
             {
                 for( int j = 0; j < srcFiles.length; j++ )
                 {
-                    File f = new File( ds.getBasedir(), srcFiles[j] );
+                    File f = new File( ds.getBasedir(), srcFiles[ j ] );
                     filelist.append( " " ).append( '"' ).append( f.getAbsolutePath() ).append( '"' );
                     if( filelist.length() > m_cmdLength )
                     {

@@ -6,10 +6,11 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.junit;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -171,11 +172,11 @@ public class FormatterElement
     }
 
     JUnitResultFormatter createFormatter()
-        throws BuildException
+        throws TaskException
     {
         if( classname == null )
         {
-            throw new BuildException( "you must specify type or classname" );
+            throw new TaskException( "you must specify type or classname" );
         }
 
         Class f = null;
@@ -185,7 +186,7 @@ public class FormatterElement
         }
         catch( ClassNotFoundException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
 
         Object o = null;
@@ -195,19 +196,19 @@ public class FormatterElement
         }
         catch( InstantiationException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
         catch( IllegalAccessException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
 
         if( !( o instanceof JUnitResultFormatter ) )
         {
-            throw new BuildException( classname + " is not a JUnitResultFormatter" );
+            throw new TaskException( classname + " is not a JUnitResultFormatter" );
         }
 
-        JUnitResultFormatter r = ( JUnitResultFormatter )o;
+        JUnitResultFormatter r = (JUnitResultFormatter)o;
 
         if( useFile && outFile != null )
         {
@@ -217,7 +218,7 @@ public class FormatterElement
             }
             catch( java.io.IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
         r.setOutput( out );

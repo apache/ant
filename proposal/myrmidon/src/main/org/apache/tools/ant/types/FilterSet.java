@@ -15,7 +15,6 @@ import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -105,10 +104,10 @@ public class FilterSet extends DataType implements Cloneable
      *
      * @param filtersFile sets the filter fil to read filters for this filter
      *      set from.
-     * @exception BuildException if there is a problem reading the filters
+     * @exception TaskException if there is a problem reading the filters
      */
     public void setFiltersfile( File filtersFile )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -253,11 +252,11 @@ public class FilterSet extends DataType implements Cloneable
      * Read the filters from the given file.
      *
      * @param filtersFile the file from which filters are read
-     * @exception BuildException Throw a build exception when unable to read the
+     * @exception TaskException Throw a build exception when unable to read the
      *      file.
      */
     public void readFiltersFromFile( File filtersFile )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -285,7 +284,7 @@ public class FilterSet extends DataType implements Cloneable
             }
             catch( Exception e )
             {
-                throw new BuildException( "Could not read filters from file: " + filtersFile );
+                throw new TaskException( "Could not read filters from file: " + filtersFile );
             }
             finally
             {
@@ -303,7 +302,7 @@ public class FilterSet extends DataType implements Cloneable
         }
         else
         {
-            throw new BuildException( "Must specify a file not a directory in the filtersfile attribute:" + filtersFile );
+            throw new TaskException( "Must specify a file not a directory in the filtersfile attribute:" + filtersFile );
         }
     }
 

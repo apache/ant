@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.util.Locale;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -89,39 +90,39 @@ public class Touch extends Task
     /**
      * Execute the touch operation.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( file == null && filesets.size() == 0 )
         {
             throw
-                new BuildException( "Specify at least one source - a file or a fileset." );
+                new TaskException( "Specify at least one source - a file or a fileset." );
         }
 
         if( file != null && file.exists() && file.isDirectory() )
         {
-            throw new BuildException( "Use a fileset to touch directories." );
+            throw new TaskException( "Use a fileset to touch directories." );
         }
 
         if( dateTime != null )
         {
             DateFormat df = DateFormat.getDateTimeInstance( DateFormat.SHORT,
-                DateFormat.SHORT,
-                Locale.US );
+                                                            DateFormat.SHORT,
+                                                            Locale.US );
             try
             {
                 setMillis( df.parse( dateTime ).getTime() );
                 if( millis < 0 )
                 {
-                    throw new BuildException( "Date of " + dateTime
-                         + " results in negative milliseconds value relative to epoch (January 1, 1970, 00:00:00 GMT)." );
+                    throw new TaskException( "Date of " + dateTime
+                                             + " results in negative milliseconds value relative to epoch (January 1, 1970, 00:00:00 GMT)." );
                 }
             }
             catch( ParseException pe )
             {
-                throw new BuildException( pe.getMessage(), pe );
+                throw new TaskException( pe.getMessage(), pe );
             }
         }
 
@@ -131,10 +132,10 @@ public class Touch extends Task
     /**
      * Does the actual work. Entry point for Untar and Expand as well.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void touch()
-        throws BuildException
+        throws TaskException
     {
         if( file != null )
         {
@@ -144,12 +145,12 @@ public class Touch extends Task
                 try
                 {
                     FileOutputStream fos = new FileOutputStream( file );
-                    fos.write( new byte[0] );
+                    fos.write( new byte[ 0 ] );
                     fos.close();
                 }
                 catch( IOException ioe )
                 {
-                    throw new BuildException( "Could not create " + file, ioe );
+                    throw new TaskException( "Could not create " + file, ioe );
                 }
             }
         }
@@ -157,7 +158,7 @@ public class Touch extends Task
         if( millis >= 0 && project.getJavaVersion() == Project.JAVA_1_1 )
         {
             log( "modification time of files cannot be set in JDK 1.1",
-                Project.MSG_WARN );
+                 Project.MSG_WARN );
             return;
         }
 
@@ -176,7 +177,7 @@ public class Touch extends Task
         // deal with the filesets
         for( int i = 0; i < filesets.size(); i++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.elementAt( i );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             File fromDir = fs.getDir( project );
 
@@ -185,12 +186,12 @@ public class Touch extends Task
 
             for( int j = 0; j < srcFiles.length; j++ )
             {
-                touch( new File( fromDir, srcFiles[j] ) );
+                touch( new File( fromDir, srcFiles[ j ] ) );
             }
 
             for( int j = 0; j < srcDirs.length; j++ )
             {
-                touch( new File( fromDir, srcDirs[j] ) );
+                touch( new File( fromDir, srcDirs[ j ] ) );
             }
         }
 
@@ -201,11 +202,11 @@ public class Touch extends Task
     }
 
     protected void touch( File file )
-        throws BuildException
+        throws TaskException
     {
         if( !file.canWrite() )
         {
-            throw new BuildException( "Can not change modification date of read-only file " + file );
+            throw new TaskException( "Can not change modification date of read-only file " + file );
         }
 
         if( project.getJavaVersion() == Project.JAVA_1_1 )

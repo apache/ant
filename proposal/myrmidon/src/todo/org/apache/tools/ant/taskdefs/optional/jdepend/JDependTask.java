@@ -6,11 +6,12 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.jdepend;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -62,7 +63,9 @@ public class JDependTask extends Task
     // required attributes
     private Path _sourcesPath;
 
-    public JDependTask() { }
+    public JDependTask()
+    {
+    }
 
     /**
      * Set the classpath to be used for this compilation.
@@ -112,7 +115,6 @@ public class JDependTask extends Task
     {
         _fork = value;
     }
-
 
     public void setFormat( FormatAttribute ea )
     {
@@ -237,22 +239,21 @@ public class JDependTask extends Task
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         CommandlineJava commandline = new CommandlineJava();
 
         if( "text".equals( format ) )
             commandline.setClassname( "jdepend.textui.JDepend" );
-        else
-            if( "xml".equals( format ) )
+        else if( "xml".equals( format ) )
             commandline.setClassname( "jdepend.xmlui.JDepend" );
 
         if( _jvm != null )
             commandline.setVm( _jvm );
 
         if( getSourcespath() == null )
-            throw new BuildException( "Missing Sourcepath required argument" );
+            throw new TaskException( "Missing Sourcepath required argument" );
 
         // execute the test and get the return code
         int exitValue = JDependTask.ERRORS;
@@ -280,7 +281,7 @@ public class JDependTask extends Task
         if( errorOccurred )
         {
             if( getHaltonerror() )
-                throw new BuildException( "JDepend failed" );
+                throw new TaskException( "JDepend failed" );
             else
                 log( "JDepend FAILED", Project.MSG_ERR );
         }
@@ -297,11 +298,11 @@ public class JDependTask extends Task
      *      case the test could probably hang forever.
      * @param commandline Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     // JL: comment extracted from JUnitTask (and slightly modified)
     public int executeAsForked( CommandlineJava commandline, ExecuteWatchdog watchdog )
-        throws BuildException
+        throws TaskException
     {
         // if not set, auto-create the ClassPath from the project
         createClasspath();
@@ -330,7 +331,7 @@ public class JDependTask extends Task
 
             // not necessary as JDepend would fail, but why loose some time?
             if( !f.exists() || !f.isDirectory() )
-                throw new BuildException( "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail." );
+                throw new TaskException( "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail." );
             commandline.createArgument().setValue( f.getPath() );
         }
 
@@ -351,7 +352,7 @@ public class JDependTask extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Process fork failed.", e );
+            throw new TaskException( "Process fork failed.", e );
         }
     }
 
@@ -366,10 +367,10 @@ public class JDependTask extends Task
      *
      * @param commandline Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public int executeInVM( CommandlineJava commandline )
-        throws BuildException
+        throws TaskException
     {
         jdepend.textui.JDepend jdepend;
 
@@ -389,7 +390,7 @@ public class JDependTask extends Task
             {
                 String msg = "JDepend Failed when creating the output file: " + e.getMessage();
                 log( msg );
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
             jdepend.setWriter( new PrintWriter( fw ) );
             log( "Output to be stored in " + getOutputFile().getPath() );
@@ -405,7 +406,7 @@ public class JDependTask extends Task
             {
                 String msg = "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail.";
                 log( msg );
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
             try
             {
@@ -415,7 +416,7 @@ public class JDependTask extends Task
             {
                 String msg = "JDepend Failed when adding a source directory: " + e.getMessage();
                 log( msg );
-                throw new BuildException( msg );
+                throw new TaskException( msg );
             }
         }
         jdepend.analyze();
@@ -425,10 +426,10 @@ public class JDependTask extends Task
     /**
      * @return <tt>null</tt> if there is a timeout value, otherwise the watchdog
      *      instance.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected ExecuteWatchdog createWatchdog()
-        throws BuildException
+        throws TaskException
     {
 
         return null;

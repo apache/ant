@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
+
 import java.util.Vector;
 
 /**
@@ -31,7 +32,9 @@ public class Filters
      */
     protected Vector filters = new Vector();
 
-    public Filters() { }
+    public Filters()
+    {
+    }
 
     public void setDefaultExclude( boolean value )
     {

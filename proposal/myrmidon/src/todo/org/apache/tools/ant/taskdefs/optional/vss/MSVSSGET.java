@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.vss;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 
@@ -369,6 +370,7 @@ public class MSVSSGET extends MSVSS
      * @param cmd Description of Parameter
      */
     public void getLocalpathCommand( Commandline cmd )
+        throws TaskException
     {
         if( m_LocalPath == null )
         {
@@ -385,7 +387,7 @@ public class MSVSSGET extends MSVSS
                 {
                     String msg = "Directory " + m_LocalPath + " creation was not " +
                         "successful for an unknown reason";
-                    throw new BuildException( msg );
+                    throw new TaskException( msg );
                 }
                 project.log( "Created dir: " + dir.getAbsolutePath() );
             }
@@ -461,10 +463,10 @@ public class MSVSSGET extends MSVSS
      * Builds a command line to execute ss and then calls Exec's run method to
      * execute the command line.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Commandline commandLine = new Commandline();
         int result = 0;
@@ -473,7 +475,7 @@ public class MSVSSGET extends MSVSS
         if( getVsspath() == null )
         {
             String msg = "vsspath attribute must be set!";
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
 
         // now look for illegal combinations of things ...
@@ -505,7 +507,7 @@ public class MSVSSGET extends MSVSS
         if( result != 0 )
         {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException( msg );
+            throw new TaskException( msg );
         }
     }
 

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.jlink;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,7 +33,7 @@ public class jlink extends Object
 
     private boolean compression = false;
 
-    byte[] buffer = new byte[8192];
+    byte[] buffer = new byte[ 8192 ];
 
     public static void main( String[] args )
     {
@@ -43,11 +44,11 @@ public class jlink extends Object
             System.exit( 1 );
         }
         jlink linker = new jlink();
-        linker.setOutfile( args[0] );
+        linker.setOutfile( args[ 0 ] );
         //To maintain compatibility with the command-line version, we will only add files to be merged.
         for( int i = 1; i < args.length; i++ )
         {
-            linker.addMergeFile( args[i] );
+            linker.addMergeFile( args[ i ] );
         }
         try
         {
@@ -110,7 +111,7 @@ public class jlink extends Object
         }
         for( int i = 0; i < addfiles.length; i++ )
         {
-            addAddFile( addfiles[i] );
+            addAddFile( addfiles[ i ] );
         }
     }
 
@@ -141,7 +142,7 @@ public class jlink extends Object
         }
         for( int i = 0; i < mergefiles.length; i++ )
         {
-            addMergeFile( mergefiles[i] );
+            addMergeFile( mergefiles[ i ] );
         }
     }
 
@@ -174,7 +175,7 @@ public class jlink extends Object
         Enumeration merges = mergefiles.elements();
         while( merges.hasMoreElements() )
         {
-            String path = ( String )merges.nextElement();
+            String path = (String)merges.nextElement();
             File f = new File( path );
             if( f.getName().endsWith( ".jar" ) || f.getName().endsWith( ".zip" ) )
             {
@@ -191,7 +192,7 @@ public class jlink extends Object
         Enumeration adds = addfiles.elements();
         while( adds.hasMoreElements() )
         {
-            String name = ( String )adds.nextElement();
+            String name = (String)adds.nextElement();
             File f = new File( name );
             if( f.isDirectory() )
             {
@@ -210,7 +211,8 @@ public class jlink extends Object
                 output.close();
             }
             catch( IOException ioe )
-            {}
+            {
+            }
         }
     }
 
@@ -236,7 +238,8 @@ public class jlink extends Object
                 }
             }
             catch( IOException ioe )
-            {}
+            {
+            }
         }
         System.out.println( "From " + file.getPath() + " and prefix " + prefix + ", creating entry " + prefix + name );
         return ( prefix + name );
@@ -251,7 +254,7 @@ public class jlink extends Object
         String[] contents = dir.list();
         for( int i = 0; i < contents.length; ++i )
         {
-            String name = contents[i];
+            String name = contents[ i ];
             File file = new File( dir, name );
             if( file.isDirectory() )
             {
@@ -359,7 +362,7 @@ public class jlink extends Object
         Enumeration entries = zipf.entries();
         while( entries.hasMoreElements() )
         {
-            ZipEntry inputEntry = ( ZipEntry )entries.nextElement();
+            ZipEntry inputEntry = (ZipEntry)entries.nextElement();
             //Ignore manifest entries.  They're bound to cause conflicts between
             //files that are being merged.  User should supply their own
             //manifest file when doing the merge.
@@ -439,7 +442,8 @@ public class jlink extends Object
                 }
             }
             catch( IOException ioe )
-            {}
+            {
+            }
         }
         ZipEntry outputEntry = new ZipEntry( name );
         outputEntry.setTime( inputEntry.getTime() );

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.depend;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +41,6 @@ public class ClassFile
      */
     private ConstantPool constantPool;
 
-
     /**
      * Get the classes which this class references.
      *
@@ -57,7 +57,7 @@ public class ClassFile
 
             if( entry != null && entry.getTag() == ConstantPoolEntry.CONSTANT_Class )
             {
-                ClassCPInfo classEntry = ( ClassCPInfo )entry;
+                ClassCPInfo classEntry = (ClassCPInfo)entry;
 
                 if( !classEntry.getClassName().equals( className ) )
                 {
@@ -112,7 +112,7 @@ public class ClassFile
         int accessFlags = classStream.readUnsignedShort();
         int thisClassIndex = classStream.readUnsignedShort();
         int superClassIndex = classStream.readUnsignedShort();
-        className = ( ( ClassCPInfo )constantPool.getEntry( thisClassIndex ) ).getClassName();
+        className = ( (ClassCPInfo)constantPool.getEntry( thisClassIndex ) ).getClassName();
     }
 }
 

@@ -6,16 +6,16 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.dotnet;// imports
+
 import java.io.File;
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
-
 
 /**
  * This is a helper class to spawn net commands out. In its initial form it
@@ -133,12 +133,12 @@ public class NetCommand
     /**
      * Run the command using the given Execute instance.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @throws an exception of something goes wrong and the failOnError flag is
      *      true
      */
     public void runCommand()
-        throws BuildException
+        throws TaskException
     {
         int err = -1;// assume the worst
         try
@@ -158,7 +158,7 @@ public class NetCommand
             {
                 if( _failOnError )
                 {
-                    throw new BuildException( _title + " returned: " + err );
+                    throw new TaskException( _title + " returned: " + err );
                 }
                 else
                 {
@@ -168,10 +168,9 @@ public class NetCommand
         }
         catch( IOException e )
         {
-            throw new BuildException( _title + " failed: " + e, e );
+            throw new TaskException( _title + " failed: " + e, e );
         }
     }
-
 
     /**
      * error text log
@@ -201,7 +200,7 @@ public class NetCommand
         // default directory to the project's base directory
         File dir = _owner.getProject().getBaseDir();
         ExecuteStreamHandler handler = new LogStreamHandler( _owner,
-            Project.MSG_INFO, Project.MSG_WARN );
+                                                             Project.MSG_INFO, Project.MSG_WARN );
         _exe = new Execute( handler, null );
         _exe.setAntRun( _owner.getProject() );
         _exe.setWorkingDirectory( dir );

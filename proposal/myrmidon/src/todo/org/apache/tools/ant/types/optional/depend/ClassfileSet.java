@@ -6,15 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.types.optional.depend;
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.depend.Dependencies;
 
 /**
  * A DepSet is a FileSet, that enlists all classes that depend on a certain
@@ -35,7 +33,7 @@ public class ClassfileSet extends FileSet
     }
 
     public void setRootClass( String rootClass )
-        throws BuildException
+        throws TaskException
     {
         rootClasses.add( rootClass );
     }
@@ -64,7 +62,7 @@ public class ClassfileSet extends FileSet
     {
         if( isReference() )
         {
-            return new ClassfileSet( ( ClassfileSet )getRef( getProject() ) );
+            return new ClassfileSet( (ClassfileSet)getRef( getProject() ) );
         }
         else
         {

@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -30,26 +31,26 @@ public class P4Submit extends P4Base
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( change != null )
         {
             execP4Command( "submit -c " + change,
-                new P4HandlerAdapter()
-                {
-                    public void process( String line )
-                    {
-                        log( line, Project.MSG_VERBOSE );
-                    }
-                }
-                 );
+                           new P4HandlerAdapter()
+                           {
+                               public void process( String line )
+                               {
+                                   log( line, Project.MSG_VERBOSE );
+                               }
+                           }
+            );
 
         }
         else
         {
             //here we'd parse the output from change -o into submit -i
             //in order to support default change.
-            throw new BuildException( "No change specified (no support for default change yet...." );
+            throw new TaskException( "No change specified (no support for default change yet...." );
         }
     }
 

@@ -6,10 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
-import javax.xml.parsers.SAXParser;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
 
+import javax.xml.parsers.SAXParser;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.Task;
 
 public interface EJBDeploymentTool
 {
@@ -20,18 +20,18 @@ public interface EJBDeploymentTool
      * @param descriptorFilename the name of the deployment descriptor
      * @param saxParser a SAX parser which can be used to parse the deployment
      *      descriptor.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     void processDescriptor( String descriptorFilename, SAXParser saxParser )
-        throws BuildException;
+        throws TaskException;
 
     /**
      * Called to validate that the tool parameters have been configured.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     void validateConfigured()
-        throws BuildException;
+        throws TaskException;
 
     /**
      * Set the task which owns this tool

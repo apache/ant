@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Interface for p4 job output stream handler. Classes implementing this
@@ -18,5 +19,5 @@ public interface P4OutputHandler
 {
 
     public void process( String line )
-        throws BuildException;
+        throws TaskException;
 }

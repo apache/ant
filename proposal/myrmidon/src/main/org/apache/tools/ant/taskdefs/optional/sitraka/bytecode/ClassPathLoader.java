@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -52,7 +53,7 @@ public class ClassPathLoader
             File file = new File( st.nextToken() );
             entries.addElement( file );
         }
-        files = new File[entries.size()];
+        files = new File[ entries.size() ];
         entries.copyInto( files );
     }
 
@@ -63,10 +64,10 @@ public class ClassPathLoader
      */
     public ClassPathLoader( String[] entries )
     {
-        files = new File[entries.length];
+        files = new File[ entries.length ];
         for( int i = 0; i < entries.length; i++ )
         {
-            files[i] = new File( entries[i] );
+            files[ i ] = new File( entries[ i ] );
         }
     }
 
@@ -93,7 +94,7 @@ public class ClassPathLoader
         throws IOException
     {
         is = new BufferedInputStream( is );
-        byte[] buffer = new byte[8192];
+        byte[] buffer = new byte[ 8192 ];
         ByteArrayOutputStream baos = new ByteArrayOutputStream( 2048 );
         int n;
         baos.reset();
@@ -124,7 +125,7 @@ public class ClassPathLoader
         Enumeration enum = loaders();
         while( enum.hasMoreElements() )
         {
-            FileLoader loader = ( FileLoader )enum.nextElement();
+            FileLoader loader = (FileLoader)enum.nextElement();
             System.out.println( "Processing " + loader.getFile() );
             long t0 = System.currentTimeMillis();
             ClassFile[] classes = loader.getClasses();
@@ -132,12 +133,12 @@ public class ClassPathLoader
             System.out.println( "" + classes.length + " classes loaded in " + dt + "ms" );
             for( int j = 0; j < classes.length; j++ )
             {
-                String name = classes[j].getFullName();
+                String name = classes[ j ].getFullName();
                 // do not allow duplicates entries to preserve 'classpath' behavior
                 // first class in wins
                 if( !map.containsKey( name ) )
                 {
-                    map.put( name, classes[j] );
+                    map.put( name, classes[ j ] );
                 }
             }
         }
@@ -197,7 +198,7 @@ public class ClassPathLoader
             {
                 throw new NoSuchElementException();
             }
-            File file = files[index++];
+            File file = files[ index++ ];
             if( !file.exists() )
             {
                 return new NullLoader( file );
@@ -240,7 +241,7 @@ class NullLoader implements ClassPathLoader.FileLoader
     public ClassFile[] getClasses()
         throws IOException
     {
-        return new ClassFile[0];
+        return new ClassFile[ 0 ];
     }
 
     public File getFile()
@@ -273,7 +274,7 @@ class JarLoader implements ClassPathLoader.FileLoader
         Enumeration entries = zipFile.entries();
         while( entries.hasMoreElements() )
         {
-            ZipEntry entry = ( ZipEntry )entries.nextElement();
+            ZipEntry entry = (ZipEntry)entries.nextElement();
             if( entry.getName().endsWith( ".class" ) )
             {
                 InputStream is = ClassPathLoader.getCachedStream( zipFile.getInputStream( entry ) );
@@ -282,7 +283,7 @@ class JarLoader implements ClassPathLoader.FileLoader
                 v.addElement( classFile );
             }
         }
-        ClassFile[] classes = new ClassFile[v.size()];
+        ClassFile[] classes = new ClassFile[ v.size() ];
         v.copyInto( classes );
         return classes;
     }
@@ -346,7 +347,7 @@ class DirectoryLoader implements ClassPathLoader.FileLoader
         String[] files = directory.list( filter );
         for( int i = 0; i < files.length; i++ )
         {
-            list.addElement( new File( directory, files[i] ) );
+            list.addElement( new File( directory, files[ i ] ) );
         }
         files = null;// we don't need it anymore
         if( recurse )
@@ -354,7 +355,7 @@ class DirectoryLoader implements ClassPathLoader.FileLoader
             String[] subdirs = directory.list( new DirectoryFilter() );
             for( int i = 0; i < subdirs.length; i++ )
             {
-                listFilesTo( list, new File( directory, subdirs[i] ), filter, recurse );
+                listFilesTo( list, new File( directory, subdirs[ i ] ), filter, recurse );
             }
         }
         return list;
@@ -367,7 +368,7 @@ class DirectoryLoader implements ClassPathLoader.FileLoader
         Vector files = listFiles( directory, new ClassFilter(), true );
         for( int i = 0; i < files.size(); i++ )
         {
-            File file = ( File )files.elementAt( i );
+            File file = (File)files.elementAt( i );
             InputStream is = null;
             try
             {
@@ -386,11 +387,12 @@ class DirectoryLoader implements ClassPathLoader.FileLoader
                         is.close();
                     }
                     catch( IOException ignored )
-                    {}
+                    {
+                    }
                 }
             }
         }
-        ClassFile[] classes = new ClassFile[v.size()];
+        ClassFile[] classes = new ClassFile[ v.size() ];
         v.copyInto( classes );
         return classes;
     }

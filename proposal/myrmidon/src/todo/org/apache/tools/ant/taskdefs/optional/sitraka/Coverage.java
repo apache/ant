@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Random;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Execute;
@@ -85,7 +86,9 @@ public class Coverage extends Task
 
     //---------------- the tedious job begins here
 
-    public Coverage() { }
+    public Coverage()
+    {
+    }
 
     /**
      * default to false unless file is htm or html
@@ -267,10 +270,10 @@ public class Coverage extends Task
     /**
      * execute the jplauncher by providing a parameter file
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         File paramfile = null;
         // if an input file is used, all other options are ignored...
@@ -297,12 +300,12 @@ public class Coverage extends Task
             int exitValue = exec.execute();
             if( exitValue != 0 )
             {
-                throw new BuildException( "JProbe Coverage failed (" + exitValue + ")" );
+                throw new TaskException( "JProbe Coverage failed (" + exitValue + ")" );
             }
         }
         catch( IOException e )
         {
-            throw new BuildException( "Failed to execute JProbe Coverage.", e );
+            throw new TaskException( "Failed to execute JProbe Coverage.", e );
         }
         finally
         {
@@ -322,6 +325,7 @@ public class Coverage extends Task
      * @return The Parameters value
      */
     protected String[] getParameters()
+        throws TaskException
     {
         Vector params = new Vector();
         params.addElement( "-jp_function=" + function );
@@ -358,7 +362,7 @@ public class Coverage extends Task
         String[] vmargs = cmdlJava.getVmCommand().getArguments();
         for( int i = 0; i < vmargs.length; i++ )
         {
-            params.addElement( vmargs[i] );
+            params.addElement( vmargs[ i ] );
         }
         // classpath
         Path classpath = cmdlJava.getClasspath();
@@ -375,10 +379,10 @@ public class Coverage extends Task
         String[] args = cmdlJava.getJavaCommand().getArguments();
         for( int i = 0; i < args.length; i++ )
         {
-            params.addElement( args[i] );
+            params.addElement( args[ i ] );
         }
 
-        String[] array = new String[params.size()];
+        String[] array = new String[ params.size() ];
         params.copyInto( array );
         return array;
     }
@@ -386,21 +390,21 @@ public class Coverage extends Task
     /**
      * wheck what is necessary to check, Coverage will do the job for us
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void checkOptions()
-        throws BuildException
+        throws TaskException
     {
         // check coverage home
         if( home == null || !home.isDirectory() )
         {
-            throw new BuildException( "Invalid home directory. Must point to JProbe home directory" );
+            throw new TaskException( "Invalid home directory. Must point to JProbe home directory" );
         }
         home = new File( home, "coverage" );
         File jar = new File( home, "coverage.jar" );
         if( !jar.exists() )
         {
-            throw new BuildException( "Cannot find Coverage directory: " + home );
+            throw new TaskException( "Cannot find Coverage directory: " + home );
         }
 
         // make sure snapshot dir exists and is resolved
@@ -411,7 +415,7 @@ public class Coverage extends Task
         snapshotDir = resolveFile( snapshotDir.getPath() );
         if( !snapshotDir.isDirectory() || !snapshotDir.exists() )
         {
-            throw new BuildException( "Snapshot directory does not exists :" + snapshotDir );
+            throw new TaskException( "Snapshot directory does not exists :" + snapshotDir );
         }
         if( workingDir == null )
         {
@@ -440,18 +444,17 @@ public class Coverage extends Task
         }
     }
 
-
     /**
      * create the parameter file from the given options. The file is created
      * with a random name in the current directory.
      *
      * @return the file object where are written the configuration to run JProbe
      *      Coverage
-     * @throws BuildException thrown if something bad happens while writing the
+     * @throws TaskException thrown if something bad happens while writing the
      *      arguments to the file.
      */
     protected File createParamFile()
-        throws BuildException
+        throws TaskException
     {
         //@todo change this when switching to JDK 1.2 and use File.createTmpFile()
         File file = createTmpFile();
@@ -464,7 +467,7 @@ public class Coverage extends Task
         String[] params = getParameters();
         for( int i = 0; i < params.length; i++ )
         {
-            pw.println( params[i] );
+            pw.println( params[ i ] );
         }
         pw.flush();
         log( "JProbe Coverage parameters:\n" + sw.toString(), Project.MSG_VERBOSE );
@@ -479,7 +482,7 @@ public class Coverage extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Could not write parameter file " + file, e );
+            throw new TaskException( "Could not write parameter file " + file, e );
         }
         finally
         {

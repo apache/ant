@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
@@ -24,11 +25,11 @@ public class Gcj extends DefaultCompilerAdapter
      * Performs a compile using the gcj compiler.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @author tora@debian.org
      */
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         Commandline cmd;
         attributes.log( "Using gcj compiler", Project.MSG_VERBOSE );
@@ -76,7 +77,7 @@ public class Gcj extends DefaultCompilerAdapter
 
             if( destDir.mkdirs() )
             {
-                throw new BuildException( "Can't make output directories. Maybe permission is wrong. " );
+                throw new TaskException( "Can't make output directories. Maybe permission is wrong. " );
             }
             ;
         }

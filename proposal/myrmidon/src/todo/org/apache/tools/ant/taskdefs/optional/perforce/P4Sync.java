@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 
 /**
@@ -88,27 +89,26 @@ public class P4Sync extends P4Base
 
     String label;
 
-
     public void setForce( String force )
-        throws BuildException
+        throws TaskException
     {
         if( force == null && !label.equals( "" ) )
-            throw new BuildException( "P4Sync: If you want to force, set force to non-null string!" );
+            throw new TaskException( "P4Sync: If you want to force, set force to non-null string!" );
         P4CmdOpts = "-f";
     }
 
     public void setLabel( String label )
-        throws BuildException
+        throws TaskException
     {
         if( label == null && !label.equals( "" ) )
-            throw new BuildException( "P4Sync: Labels cannot be Null or Empty" );
+            throw new TaskException( "P4Sync: Labels cannot be Null or Empty" );
 
         this.label = label;
 
     }
 
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         if( P4View != null )

@@ -6,13 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.util.Enumeration;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
-
 
 /**
  * Implements a multi threaded task execution. <p>
@@ -23,7 +23,7 @@ import org.apache.tools.ant.TaskContainer;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill </a>
  */
 public class Parallel extends Task
-     implements TaskContainer
+    implements TaskContainer
 {
 
     /**
@@ -31,17 +31,16 @@ public class Parallel extends Task
      */
     private Vector nestedTasks = new Vector();
 
-
     /**
      * Add a nested task to execute parallel (asynchron). <p>
      *
      *
      *
      * @param nestedTask Nested task to be executed in parallel
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void addTask( Task nestedTask )
-        throws BuildException
+        throws TaskException
     {
         nestedTasks.addElement( nestedTask );
     }
@@ -50,23 +49,23 @@ public class Parallel extends Task
      * Block execution until the specified time or for a specified amount of
      * milliseconds and if defined, execute the wait status.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
-        TaskThread[] threads = new TaskThread[nestedTasks.size()];
+        TaskThread[] threads = new TaskThread[ nestedTasks.size() ];
         int threadNumber = 0;
         for( Enumeration e = nestedTasks.elements(); e.hasMoreElements(); threadNumber++ )
         {
-            Task nestedTask = ( Task )e.nextElement();
-            threads[threadNumber] = new TaskThread( threadNumber, nestedTask );
+            Task nestedTask = (Task)e.nextElement();
+            threads[ threadNumber ] = new TaskThread( threadNumber, nestedTask );
         }
 
         // now start all threads
         for( int i = 0; i < threads.length; ++i )
         {
-            threads[i].start();
+            threads[ i ].start();
         }
 
         // now join to all the threads
@@ -74,7 +73,7 @@ public class Parallel extends Task
         {
             try
             {
-                threads[i].join();
+                threads[ i ].join();
             }
             catch( InterruptedException ie )
             {
@@ -91,7 +90,7 @@ public class Parallel extends Task
         ;
         for( int i = 0; i < threads.length; ++i )
         {
-            Throwable t = threads[i].getException();
+            Throwable t = threads[ i ].getException();
             if( t != null )
             {
                 numExceptions++;
@@ -99,10 +98,10 @@ public class Parallel extends Task
                 {
                     firstException = t;
                 }
-                if( t instanceof BuildException &&
+                if( t instanceof TaskException &&
                     firstLocation == Location.UNKNOWN_LOCATION )
                 {
-                    firstLocation = ( ( BuildException )t ).getLocation();
+                    firstLocation = ( (TaskException)t ).getLocation();
                 }
                 exceptionMessage.append( lSep );
                 exceptionMessage.append( t.getMessage() );
@@ -111,18 +110,18 @@ public class Parallel extends Task
 
         if( numExceptions == 1 )
         {
-            if( firstException instanceof BuildException )
+            if( firstException instanceof TaskException )
             {
-                throw ( BuildException )firstException;
+                throw (TaskException)firstException;
             }
             else
             {
-                throw new BuildException( "Error", firstException );
+                throw new TaskException( "Error", firstException );
             }
         }
         else if( numExceptions > 1 )
         {
-            throw new BuildException( exceptionMessage.toString() );
+            throw new TaskException( exceptionMessage.toString() );
         }
     }
 

@@ -6,9 +6,10 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
@@ -96,7 +97,7 @@ public class PathConvert extends Task
         if( !targetOS.equals( "windows" ) && !target.equals( "unix" ) &&
             !targetOS.equals( "netware" ) )
         {
-            throw new BuildException( "targetos must be one of 'unix', 'netware', or 'windows'" );
+            throw new TaskException( "targetos must be one of 'unix', 'netware', or 'windows'" );
         }
 
         // Currently, we deal with only two path formats: Unix and Windows
@@ -153,10 +154,10 @@ public class PathConvert extends Task
     /**
      * Do the execution.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
 
         // If we are a reference, the create a Path from the reference
@@ -172,12 +173,12 @@ public class PathConvert extends Task
             }
             else if( obj instanceof FileSet )
             {
-                FileSet fs = ( FileSet )obj;
+                FileSet fs = (FileSet)obj;
                 path.addFileset( fs );
             }
             else
             {
-                throw new BuildException( "'refid' does not refer to a path or fileset" );
+                throw new TaskException( "'refid' does not refer to a path or fileset" );
             }
         }
 
@@ -206,7 +207,7 @@ public class PathConvert extends Task
 
         for( int i = 0; i < elems.length; i++ )
         {
-            String elem = elems[i];
+            String elem = elems[ i ];
 
             elem = mapElement( elem );// Apply the path prefix map
 
@@ -249,7 +250,7 @@ public class PathConvert extends Task
 
             for( int i = 0; i < size; i++ )
             {
-                MapEntry entry = ( MapEntry )prefixMap.elementAt( i );
+                MapEntry entry = (MapEntry)prefixMap.elementAt( i );
                 String newElem = entry.apply( elem );
 
                 // Note I'm using "!=" to see if we got a new object back from
@@ -272,30 +273,30 @@ public class PathConvert extends Task
      *
      * @return Description of the Returned Value
      */
-    private BuildException noChildrenAllowed()
+    private TaskException noChildrenAllowed()
     {
-        return new BuildException( "You must not specify nested PATH elements when using refid" );
+        return new TaskException( "You must not specify nested PATH elements when using refid" );
     }
 
     /**
      * Validate that all our parameters have been properly initialized.
      *
-     * @throws BuildException if something is not setup properly
+     * @throws TaskException if something is not setup properly
      */
     private void validateSetup()
-        throws BuildException
+        throws TaskException
     {
 
         if( path == null )
-            throw new BuildException( "You must specify a path to convert" );
+            throw new TaskException( "You must specify a path to convert" );
 
         if( property == null )
-            throw new BuildException( "You must specify a property" );
+            throw new TaskException( "You must specify a property" );
 
         // Must either have a target OS or both a dirSep and pathSep
 
         if( targetOS == null && pathSep == null && dirSep == null )
-            throw new BuildException( "You must specify at least one of targetOS, dirSep, or pathSep" );
+            throw new TaskException( "You must specify at least one of targetOS, dirSep, or pathSep" );
 
         // Determine the separator strings.  The dirsep and pathsep attributes
         // override the targetOS settings.
@@ -367,7 +368,7 @@ public class PathConvert extends Task
         {
             if( from == null || to == null )
             {
-                throw new BuildException( "Both 'from' and 'to' must be set in a map entry" );
+                throw new TaskException( "Both 'from' and 'to' must be set in a map entry" );
             }
 
             // If we're on windows, then do the comparison ignoring case

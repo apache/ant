@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.compilers;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
@@ -32,11 +33,11 @@ public class Jikes extends DefaultCompilerAdapter
      * been successfully tested with jikes >1.10
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      * @author skanthak@muehlheim.de
      */
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         attributes.log( "Using jikes compiler", Project.MSG_VERBOSE );
 

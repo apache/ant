@@ -6,7 +6,8 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.condition;
-import org.apache.tools.ant.BuildException;
+
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * &lt;not&gt; condition. Evaluates to true if the single condition nested into
@@ -19,17 +20,17 @@ public class Not extends ConditionBase implements Condition
 {
 
     public boolean eval()
-        throws BuildException
+        throws TaskException
     {
         if( countConditions() > 1 )
         {
-            throw new BuildException( "You must not nest more than one condition into <not>" );
+            throw new TaskException( "You must not nest more than one condition into <not>" );
         }
         if( countConditions() < 1 )
         {
-            throw new BuildException( "You must nest a condition into <not>" );
+            throw new TaskException( "You must nest a condition into <not>" );
         }
-        return !( ( Condition )getConditions().nextElement() ).eval();
+        return !( (Condition)getConditions().nextElement() ).eval();
     }
 
 }

@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.rmic;
+
 import java.lang.reflect.Method;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 
@@ -40,7 +41,7 @@ public class WLRmic extends DefaultRmicAdapter
     }
 
     public boolean execute()
-        throws BuildException
+        throws TaskException
     {
         getRmic().log( "Using WebLogic rmic", Project.MSG_VERBOSE );
         Commandline cmd = setupRmicCommand( new String[]{"-noexit"} );
@@ -50,25 +51,25 @@ public class WLRmic extends DefaultRmicAdapter
             // Create an instance of the rmic
             Class c = Class.forName( "weblogic.rmic" );
             Method doRmic = c.getMethod( "main",
-                new Class[]{String[].class} );
+                                         new Class[]{String[].class} );
             doRmic.invoke( null, new Object[]{cmd.getArguments()} );
             return true;
         }
         catch( ClassNotFoundException ex )
         {
-            throw new BuildException( "Cannot use WebLogic rmic, as it is not available" +
-                " A common solution is to set the environment variable" +
-                " CLASSPATH." );
+            throw new TaskException( "Cannot use WebLogic rmic, as it is not available" +
+                                     " A common solution is to set the environment variable" +
+                                     " CLASSPATH." );
         }
         catch( Exception ex )
         {
-            if( ex instanceof BuildException )
+            if( ex instanceof TaskException )
             {
-                throw ( BuildException )ex;
+                throw (TaskException)ex;
             }
             else
             {
-                throw new BuildException( "Error starting WebLogic rmic: ", ex );
+                throw new TaskException( "Error starting WebLogic rmic: ", ex );
             }
         }
     }

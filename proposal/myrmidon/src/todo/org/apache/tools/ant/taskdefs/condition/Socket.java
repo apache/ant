@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.condition;
+
 import java.io.IOException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 
@@ -33,15 +34,15 @@ public class Socket extends ProjectComponent implements Condition
     }
 
     public boolean eval()
-        throws BuildException
+        throws TaskException
     {
         if( server == null )
         {
-            throw new BuildException( "No server specified in Socket task" );
+            throw new TaskException( "No server specified in Socket task" );
         }
         if( port == 0 )
         {
-            throw new BuildException( "No port specified in Socket task" );
+            throw new TaskException( "No port specified in Socket task" );
         }
         log( "Checking for listener at " + server + ":" + port, Project.MSG_VERBOSE );
         try

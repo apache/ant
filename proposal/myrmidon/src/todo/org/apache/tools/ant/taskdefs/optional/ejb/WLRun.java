@@ -6,8 +6,9 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ejb;
+
 import java.io.File;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
@@ -109,7 +110,6 @@ public class WLRun extends Task
         this.beaHome = beaHome;
     }
 
-
     /**
      * Set the classpath to be used for this execution.
      *
@@ -171,7 +171,6 @@ public class WLRun extends Task
         this.pkPassword = pkpassword;
     }
 
-
     /**
      * Set the management password of the server
      *
@@ -212,7 +211,6 @@ public class WLRun extends Task
     {
         this.managementUsername = username;
     }
-
 
     public void setWeblogicMainClass( String c )
     {
@@ -266,19 +264,19 @@ public class WLRun extends Task
      * avoids having to start ant with the class path of the project it is
      * building.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception TaskException if someting goes wrong with the build
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( weblogicSystemHome == null )
         {
-            throw new BuildException( "weblogic home must be set" );
+            throw new TaskException( "weblogic home must be set" );
         }
         if( !weblogicSystemHome.isDirectory() )
         {
-            throw new BuildException( "weblogic home directory " + weblogicSystemHome.getPath() +
-                " is not valid" );
+            throw new TaskException( "weblogic home directory " + weblogicSystemHome.getPath() +
+                                     " is not valid" );
         }
 
         if( beaHome != null )
@@ -292,6 +290,7 @@ public class WLRun extends Task
     }
 
     private void executeWLS()
+        throws TaskException
     {
         File securityPolicyFile = findSecurityPolicyFile( DEFAULT_WL51_POLICY_FILE );
         File propertiesFile = null;
@@ -307,13 +306,13 @@ public class WLRun extends Task
             propertiesFile = resolveFile( weblogicPropertiesFile );
             if( !propertiesFile.exists() )
             {
-                throw new BuildException( "Properties file " + weblogicPropertiesFile +
-                    " not found in weblogic home " + weblogicSystemHome +
-                    " or as absolute file" );
+                throw new TaskException( "Properties file " + weblogicPropertiesFile +
+                                         " not found in weblogic home " + weblogicSystemHome +
+                                         " or as absolute file" );
             }
         }
 
-        Java weblogicServer = ( Java )project.createTask( "java" );
+        Java weblogicServer = (Java)project.createTask( "java" );
         weblogicServer.setTaskName( getTaskName() );
         weblogicServer.setFork( true );
         weblogicServer.setClassname( weblogicMainClass );
@@ -339,7 +338,7 @@ public class WLRun extends Task
         }
         if( weblogicServer.executeJava() != 0 )
         {
-            throw new BuildException( "Execution of weblogic server failed" );
+            throw new TaskException( "Execution of weblogic server failed" );
         }
     }
 
@@ -348,22 +347,22 @@ public class WLRun extends Task
         File securityPolicyFile = findSecurityPolicyFile( DEFAULT_WL60_POLICY_FILE );
         if( !beaHome.isDirectory() )
         {
-            throw new BuildException( "BEA home " + beaHome.getPath() +
-                " is not valid" );
+            throw new TaskException( "BEA home " + beaHome.getPath() +
+                                     " is not valid" );
         }
 
         File configFile = new File( weblogicSystemHome, "config/" + weblogicDomainName + "/config.xml" );
         if( !configFile.exists() )
         {
-            throw new BuildException( "Server config file " + configFile + " not found." );
+            throw new TaskException( "Server config file " + configFile + " not found." );
         }
 
         if( managementPassword == null )
         {
-            throw new BuildException( "You must supply a management password to start the server" );
+            throw new TaskException( "You must supply a management password to start the server" );
         }
 
-        Java weblogicServer = ( Java )project.createTask( "java" );
+        Java weblogicServer = (Java)project.createTask( "java" );
         weblogicServer.setTaskName( getTaskName() );
         weblogicServer.setFork( true );
         weblogicServer.setDir( weblogicSystemHome );
@@ -395,7 +394,7 @@ public class WLRun extends Task
 
         if( weblogicServer.executeJava() != 0 )
         {
-            throw new BuildException( "Execution of weblogic server failed" );
+            throw new TaskException( "Execution of weblogic server failed" );
         }
     }
 
@@ -416,8 +415,8 @@ public class WLRun extends Task
         // If we still can't find it, complain
         if( !securityPolicyFile.exists() )
         {
-            throw new BuildException( "Security policy " + securityPolicy +
-                " was not found." );
+            throw new TaskException( "Security policy " + securityPolicy +
+                                     " was not found." );
         }
         return securityPolicyFile;
     }

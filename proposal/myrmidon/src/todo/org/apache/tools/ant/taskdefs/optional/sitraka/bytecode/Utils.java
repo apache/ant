@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka.bytecode;
+
 import java.util.Vector;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPool;
 import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;
@@ -73,7 +74,9 @@ public class Utils
     /**
      * private constructor
      */
-    private Utils() { }
+    private Utils()
+    {
+    }
 
     /**
      * return the class access flag as java modifiers
@@ -231,7 +234,7 @@ public class Utils
                 break;
             }
         }
-        String[] array = new String[params.size()];
+        String[] array = new String[ params.size() ];
         params.copyInto( array );
         return array;
     }
@@ -260,7 +263,7 @@ public class Utils
      */
     public static String getUTF8Value( ConstantPool pool, int index )
     {
-        return ( ( Utf8CPInfo )pool.getEntry( index ) ).getValue();
+        return ( (Utf8CPInfo)pool.getEntry( index ) ).getValue();
     }
 
     /**
@@ -434,49 +437,49 @@ public class Utils
             dim.append( "[]" );
         }
         // now get the type
-        switch ( descriptor.charAt( i ) )
+        switch( descriptor.charAt( i ) )
         {
-        case 'B':
-            sb.append( "byte" );
-            break;
-        case 'C':
-            sb.append( "char" );
-            break;
-        case 'D':
-            sb.append( "double" );
-            break;
-        case 'F':
-            sb.append( "float" );
-            break;
-        case 'I':
-            sb.append( "int" );
-            break;
-        case 'J':
-            sb.append( "long" );
-            break;
-        case 'S':
-            sb.append( "short" );
-            break;
-        case 'Z':
-            sb.append( "boolean" );
-            break;
-        case 'V':
-            sb.append( "void" );
-            break;
-        case 'L':
-            // it is a class
-            int pos = descriptor.indexOf( ';', i + 1 );
-            String classname = descriptor.substring( i + 1, pos ).replace( '/', '.' );
-            sb.append( classname );
-            i = pos;
-            break;
-        default:
-        //@todo, yeah this happens because I got things like:
-        // ()Ljava/lang/Object; and it will return and ) will be here
-        // think about it.
+            case 'B':
+                sb.append( "byte" );
+                break;
+            case 'C':
+                sb.append( "char" );
+                break;
+            case 'D':
+                sb.append( "double" );
+                break;
+            case 'F':
+                sb.append( "float" );
+                break;
+            case 'I':
+                sb.append( "int" );
+                break;
+            case 'J':
+                sb.append( "long" );
+                break;
+            case 'S':
+                sb.append( "short" );
+                break;
+            case 'Z':
+                sb.append( "boolean" );
+                break;
+            case 'V':
+                sb.append( "void" );
+                break;
+            case 'L':
+                // it is a class
+                int pos = descriptor.indexOf( ';', i + 1 );
+                String classname = descriptor.substring( i + 1, pos ).replace( '/', '.' );
+                sb.append( classname );
+                i = pos;
+                break;
+            default:
+                //@todo, yeah this happens because I got things like:
+                // ()Ljava/lang/Object; and it will return and ) will be here
+                // think about it.
 
-        //ooooops should never happen
-        //throw new IllegalArgumentException("Invalid descriptor symbol: '" + i + "' in '" + descriptor + "'");
+                //ooooops should never happen
+                //throw new IllegalArgumentException("Invalid descriptor symbol: '" + i + "' in '" + descriptor + "'");
         }
         sb.append( dim.toString() );
         return ++i;

@@ -6,12 +6,13 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.util.regexp;
+
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.oro.text.regex.MatchResult;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.tools.ant.BuildException;
 
 /**
  * Implementation of RegexpMatcher for Jakarta-ORO.
@@ -26,7 +27,9 @@ public class JakartaOroMatcher implements RegexpMatcher
 
     private String pattern;
 
-    public JakartaOroMatcher() { }
+    public JakartaOroMatcher()
+    {
+    }
 
     /**
      * Set the regexp pattern from the String description.
@@ -46,10 +49,10 @@ public class JakartaOroMatcher implements RegexpMatcher
      *
      * @param argument Description of Parameter
      * @return The Groups value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Vector getGroups( String argument )
-        throws BuildException
+        throws TaskException
     {
         return getGroups( argument, MATCH_DEFAULT );
     }
@@ -63,10 +66,10 @@ public class JakartaOroMatcher implements RegexpMatcher
      * @param input Description of Parameter
      * @param options Description of Parameter
      * @return The Groups value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Vector getGroups( String input, int options )
-        throws BuildException
+        throws TaskException
     {
         if( !matches( input, options ) )
         {
@@ -97,10 +100,10 @@ public class JakartaOroMatcher implements RegexpMatcher
      *
      * @param argument Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public boolean matches( String argument )
-        throws BuildException
+        throws TaskException
     {
         return matches( argument, MATCH_DEFAULT );
     }
@@ -111,10 +114,10 @@ public class JakartaOroMatcher implements RegexpMatcher
      * @param input Description of Parameter
      * @param options Description of Parameter
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public boolean matches( String input, int options )
-        throws BuildException
+        throws TaskException
     {
         Pattern p = getCompiledPattern( options );
         return matcher.contains( input, p );
@@ -125,10 +128,10 @@ public class JakartaOroMatcher implements RegexpMatcher
      *
      * @param options Description of Parameter
      * @return The CompiledPattern value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected Pattern getCompiledPattern( int options )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -138,7 +141,7 @@ public class JakartaOroMatcher implements RegexpMatcher
         }
         catch( Exception e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
     }
 

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,7 +21,7 @@ import java.io.Reader;
 import java.io.Writer;
 import java.util.Enumeration;
 import java.util.NoSuchElementException;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -192,7 +193,6 @@ public class FixCRLF extends MatchingTask
         }
     }
 
-
     /**
      * Specify how EndOfLine characters are to be handled
      *
@@ -270,14 +270,14 @@ public class FixCRLF extends MatchingTask
      * Specify tab length in characters
      *
      * @param tlength specify the length of tab in spaces,
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setTablength( int tlength )
-        throws BuildException
+        throws TaskException
     {
         if( tlength < 2 || tlength > 80 )
         {
-            throw new BuildException( "tablength must be between 2 and 80" );
+            throw new TaskException( "tablength must be between 2 and 80" );
         }
         tablength = tlength;
         StringBuffer sp = new StringBuffer();
@@ -291,53 +291,53 @@ public class FixCRLF extends MatchingTask
     /**
      * Executes the task.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         // first off, make sure that we've got a srcdir and destdir
 
         if( srcDir == null )
         {
-            throw new BuildException( "srcdir attribute must be set!" );
+            throw new TaskException( "srcdir attribute must be set!" );
         }
         if( !srcDir.exists() )
         {
-            throw new BuildException( "srcdir does not exist!" );
+            throw new TaskException( "srcdir does not exist!" );
         }
         if( !srcDir.isDirectory() )
         {
-            throw new BuildException( "srcdir is not a directory!" );
+            throw new TaskException( "srcdir is not a directory!" );
         }
         if( destDir != null )
         {
             if( !destDir.exists() )
             {
-                throw new BuildException( "destdir does not exist!" );
+                throw new TaskException( "destdir does not exist!" );
             }
             if( !destDir.isDirectory() )
             {
-                throw new BuildException( "destdir is not a directory!" );
+                throw new TaskException( "destdir is not a directory!" );
             }
         }
 
         // log options used
         log( "options:" +
-            " eol=" +
-            ( eol == ASIS ? "asis" : eol == CR ? "cr" : eol == LF ? "lf" : "crlf" ) +
-            " tab=" + ( tabs == TABS ? "add" : tabs == ASIS ? "asis" : "remove" ) +
-            " eof=" + ( ctrlz == ADD ? "add" : ctrlz == ASIS ? "asis" : "remove" ) +
-            " tablength=" + tablength +
-            " encoding=" + ( encoding == null ? "default" : encoding ),
-            Project.MSG_VERBOSE );
+             " eol=" +
+             ( eol == ASIS ? "asis" : eol == CR ? "cr" : eol == LF ? "lf" : "crlf" ) +
+             " tab=" + ( tabs == TABS ? "add" : tabs == ASIS ? "asis" : "remove" ) +
+             " eof=" + ( ctrlz == ADD ? "add" : ctrlz == ASIS ? "asis" : "remove" ) +
+             " tablength=" + tablength +
+             " encoding=" + ( encoding == null ? "default" : encoding ),
+             Project.MSG_VERBOSE );
 
         DirectoryScanner ds = super.getDirectoryScanner( srcDir );
         String[] files = ds.getIncludedFiles();
 
         for( int i = 0; i < files.length; i++ )
         {
-            processFile( files[i] );
+            processFile( files[ i ] );
         }
     }
 
@@ -353,9 +353,8 @@ public class FixCRLF extends MatchingTask
         throws IOException
     {
         return ( encoding == null ) ? new FileReader( f )
-             : new InputStreamReader( new FileInputStream( f ), encoding );
+            : new InputStreamReader( new FileInputStream( f ), encoding );
     }
-
 
     /**
      * Scan a BufferLine forward from the 'next' pointer for the end of a
@@ -364,10 +363,10 @@ public class FixCRLF extends MatchingTask
      *
      * @param bufline Description of Parameter
      * @param terminator Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void endOfCharConst( OneLiner.BufferLine bufline, char terminator )
-        throws BuildException
+        throws TaskException
     {
         int ptr = bufline.getNext();
         int eol = bufline.length();
@@ -389,7 +388,7 @@ public class FixCRLF extends MatchingTask
             }
         }// end of while (ptr < eol)
         // Must have fallen through to the end of the line
-        throw new BuildException( "endOfCharConst: unterminated char constant" );
+        throw new TaskException( "endOfCharConst: unterminated char constant" );
     }
 
     /**
@@ -400,10 +399,10 @@ public class FixCRLF extends MatchingTask
      * next eol character.
      *
      * @param bufline Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void nextStateChange( OneLiner.BufferLine bufline )
-        throws BuildException
+        throws TaskException
     {
         int eol = bufline.length();
         int ptr = bufline.getNext();
@@ -411,40 +410,39 @@ public class FixCRLF extends MatchingTask
         //  Look for next single or double quote, double slash or slash star
         while( ptr < eol )
         {
-            switch ( bufline.getChar( ptr++ ) )
+            switch( bufline.getChar( ptr++ ) )
             {
-            case '\'':
-                bufline.setState( IN_CHAR_CONST );
-                bufline.setLookahead( --ptr );
-                return;
-            case '\"':
-                bufline.setState( IN_STR_CONST );
-                bufline.setLookahead( --ptr );
-                return;
-            case '/':
-                if( ptr < eol )
-                {
-                    if( bufline.getChar( ptr ) == '*' )
+                case '\'':
+                    bufline.setState( IN_CHAR_CONST );
+                    bufline.setLookahead( --ptr );
+                    return;
+                case '\"':
+                    bufline.setState( IN_STR_CONST );
+                    bufline.setLookahead( --ptr );
+                    return;
+                case '/':
+                    if( ptr < eol )
                     {
-                        bufline.setState( IN_MULTI_COMMENT );
-                        bufline.setLookahead( --ptr );
-                        return;
+                        if( bufline.getChar( ptr ) == '*' )
+                        {
+                            bufline.setState( IN_MULTI_COMMENT );
+                            bufline.setLookahead( --ptr );
+                            return;
+                        }
+                        else if( bufline.getChar( ptr ) == '/' )
+                        {
+                            bufline.setState( IN_SINGLE_COMMENT );
+                            bufline.setLookahead( --ptr );
+                            return;
+                        }
                     }
-                    else if( bufline.getChar( ptr ) == '/' )
-                    {
-                        bufline.setState( IN_SINGLE_COMMENT );
-                        bufline.setLookahead( --ptr );
-                        return;
-                    }
-                }
-                break;
+                    break;
             }// end of switch (bufline.getChar(ptr++))
 
         }// end of while (ptr < eol)
         // Eol is the next token
         bufline.setLookahead( ptr );
     }
-
 
     /**
      * Process a BufferLine string which is not part of of a string constant.
@@ -472,7 +470,7 @@ public class FixCRLF extends MatchingTask
         // process sequences of white space
         // first convert all tabs to spaces
         linebuf.setLength( 0 );
-        while( ( nextTab = line.indexOf( ( int )'\t', place ) ) >= 0 )
+        while( ( nextTab = line.indexOf( (int)'\t', place ) ) >= 0 )
         {
             linebuf.append( line.substring( place, nextTab ) );// copy to the TAB
             col += nextTab - place;
@@ -492,7 +490,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }// end of try-catch
         }
         else
@@ -519,9 +517,9 @@ public class FixCRLF extends MatchingTask
                 ; nextStop += tablength )
             {
                 for( tabCol = nextStop;
-                    --tabCol - placediff >= place
-                     && linestring.charAt( tabCol - placediff ) == ' '
-                    ;  )
+                     --tabCol - placediff >= place
+                    && linestring.charAt( tabCol - placediff ) == ' '
+                    ; )
                 {
                     ;// Loop for the side-effects
                 }
@@ -551,7 +549,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }// end of try-catch
 
         }// end of else tabs == ADD
@@ -562,9 +560,8 @@ public class FixCRLF extends MatchingTask
 
     }
 
-
     private void processFile( String file )
-        throws BuildException
+        throws TaskException
     {
         File srcFile = new File( srcDir, file );
         File destD = destDir == null ? srcDir : destDir;
@@ -582,12 +579,12 @@ public class FixCRLF extends MatchingTask
             {
                 tmpFile = fileUtils.createTempFile( "fixcrlf", "", destD );
                 Writer writer = ( encoding == null ) ? new FileWriter( tmpFile )
-                     : new OutputStreamWriter( new FileOutputStream( tmpFile ), encoding );
+                    : new OutputStreamWriter( new FileOutputStream( tmpFile ), encoding );
                 outWriter = new BufferedWriter( writer );
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
 
             while( lines.hasMoreElements() )
@@ -597,11 +594,11 @@ public class FixCRLF extends MatchingTask
 
                 try
                 {
-                    line = ( OneLiner.BufferLine )lines.nextElement();
+                    line = (OneLiner.BufferLine)lines.nextElement();
                 }
                 catch( NoSuchElementException e )
                 {
-                    throw new BuildException( "Error", e );
+                    throw new TaskException( "Error", e );
                 }
 
                 String lineString = line.getLineString();
@@ -619,7 +616,7 @@ public class FixCRLF extends MatchingTask
                     }
                     catch( IOException e )
                     {
-                        throw new BuildException( "Error", e );
+                        throw new TaskException( "Error", e );
                     }// end of try-catch
 
                 }
@@ -630,78 +627,78 @@ public class FixCRLF extends MatchingTask
                     while( ( ptr = line.getNext() ) < linelen )
                     {
 
-                        switch ( lines.getState() )
+                        switch( lines.getState() )
                         {
 
-                        case NOTJAVA:
-                            notInConstant( line, line.length(), outWriter );
-                            break;
-                        case IN_MULTI_COMMENT:
-                            if( ( endComment =
-                                lineString.indexOf( "*/", line.getNext() )
-                                 ) >= 0 )
-                            {
-                                // End of multiLineComment on this line
-                                endComment += 2;// Include the end token
-                                lines.setState( LOOKING );
-                            }
-                            else
-                            {
-                                endComment = linelen;
-                            }
-
-                            notInConstant( line, endComment, outWriter );
-                            break;
-                        case IN_SINGLE_COMMENT:
-                            notInConstant( line, line.length(), outWriter );
-                            lines.setState( LOOKING );
-                            break;
-                        case IN_CHAR_CONST:
-                        case IN_STR_CONST:
-                            // Got here from LOOKING by finding an opening "\'"
-                            // next points to that quote character.
-                            // Find the end of the constant.  Watch out for
-                            // backslashes.  Literal tabs are left unchanged, and
-                            // the column is adjusted accordingly.
-
-                            int begin = line.getNext();
-                            char terminator = ( lines.getState() == IN_STR_CONST
-                                 ? '\"'
-                                 : '\'' );
-                            endOfCharConst( line, terminator );
-                            while( line.getNext() < line.getLookahead() )
-                            {
-                                if( line.getNextCharInc() == '\t' )
+                            case NOTJAVA:
+                                notInConstant( line, line.length(), outWriter );
+                                break;
+                            case IN_MULTI_COMMENT:
+                                if( ( endComment =
+                                    lineString.indexOf( "*/", line.getNext() )
+                                    ) >= 0 )
                                 {
-                                    line.setColumn(
-                                        line.getColumn() +
-                                        tablength -
-                                        line.getColumn() % tablength );
+                                    // End of multiLineComment on this line
+                                    endComment += 2;// Include the end token
+                                    lines.setState( LOOKING );
                                 }
                                 else
                                 {
-                                    line.incColumn();
+                                    endComment = linelen;
                                 }
-                            }
 
-                            // Now output the substring
-                            try
-                            {
-                                outWriter.write( line.substring( begin, line.getNext() ) );
-                            }
-                            catch( IOException e )
-                            {
-                                throw new BuildException( "Error", e );
-                            }
+                                notInConstant( line, endComment, outWriter );
+                                break;
+                            case IN_SINGLE_COMMENT:
+                                notInConstant( line, line.length(), outWriter );
+                                lines.setState( LOOKING );
+                                break;
+                            case IN_CHAR_CONST:
+                            case IN_STR_CONST:
+                                // Got here from LOOKING by finding an opening "\'"
+                                // next points to that quote character.
+                                // Find the end of the constant.  Watch out for
+                                // backslashes.  Literal tabs are left unchanged, and
+                                // the column is adjusted accordingly.
 
-                            lines.setState( LOOKING );
+                                int begin = line.getNext();
+                                char terminator = ( lines.getState() == IN_STR_CONST
+                                    ? '\"'
+                                    : '\'' );
+                                endOfCharConst( line, terminator );
+                                while( line.getNext() < line.getLookahead() )
+                                {
+                                    if( line.getNextCharInc() == '\t' )
+                                    {
+                                        line.setColumn(
+                                            line.getColumn() +
+                                            tablength -
+                                            line.getColumn() % tablength );
+                                    }
+                                    else
+                                    {
+                                        line.incColumn();
+                                    }
+                                }
 
-                            break;
+                                // Now output the substring
+                                try
+                                {
+                                    outWriter.write( line.substring( begin, line.getNext() ) );
+                                }
+                                catch( IOException e )
+                                {
+                                    throw new TaskException( "Error", e );
+                                }
 
-                        case LOOKING:
-                            nextStateChange( line );
-                            notInConstant( line, line.getLookahead(), outWriter );
-                            break;
+                                lines.setState( LOOKING );
+
+                                break;
+
+                            case LOOKING:
+                                nextStateChange( line );
+                                notInConstant( line, line.getLookahead(), outWriter );
+                                break;
                         }// end of switch (state)
 
                     }// end of while (line.getNext() < linelen)
@@ -714,7 +711,7 @@ public class FixCRLF extends MatchingTask
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( "Error", e );
+                    throw new TaskException( "Error", e );
                 }// end of try-catch
 
             }// end of while (lines.hasNext())
@@ -733,7 +730,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
             finally
             {
@@ -743,7 +740,7 @@ public class FixCRLF extends MatchingTask
                 }
                 catch( IOException e )
                 {
-                    throw new BuildException( "Error", e );
+                    throw new TaskException( "Error", e );
                 }
             }
 
@@ -756,7 +753,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( "Unable to close source file " + srcFile );
+                throw new TaskException( "Unable to close source file " + srcFile );
             }
 
             if( destFile.exists() )
@@ -768,28 +765,28 @@ public class FixCRLF extends MatchingTask
                     log( destFile + " is being written", Project.MSG_DEBUG );
                     if( !destFile.delete() )
                     {
-                        throw new BuildException( "Unable to delete "
-                             + destFile );
+                        throw new TaskException( "Unable to delete "
+                                                 + destFile );
                     }
                     if( !tmpFile.renameTo( destFile ) )
                     {
-                        throw new BuildException(
+                        throw new TaskException(
                             "Failed to transform " + srcFile
-                             + " to " + destFile
-                             + ". Couldn't rename temporary file: "
-                             + tmpFile );
+                            + " to " + destFile
+                            + ". Couldn't rename temporary file: "
+                            + tmpFile );
                     }
 
                 }
                 else
                 {// destination is equal to temp file
                     log( destFile +
-                        " is not written, as the contents are identical",
-                        Project.MSG_DEBUG );
+                         " is not written, as the contents are identical",
+                         Project.MSG_DEBUG );
                     if( !tmpFile.delete() )
                     {
-                        throw new BuildException( "Unable to delete "
-                             + tmpFile );
+                        throw new TaskException( "Unable to delete "
+                                                 + tmpFile );
                     }
                 }
             }
@@ -798,11 +795,11 @@ public class FixCRLF extends MatchingTask
                 log( "destFile does not exist", Project.MSG_DEBUG );
                 if( !tmpFile.renameTo( destFile ) )
                 {
-                    throw new BuildException(
+                    throw new TaskException(
                         "Failed to transform " + srcFile
-                         + " to " + destFile
-                         + ". Couldn't rename temporary file: "
-                         + tmpFile );
+                        + " to " + destFile
+                        + ". Couldn't rename temporary file: "
+                        + tmpFile );
                 }
             }
 
@@ -811,7 +808,7 @@ public class FixCRLF extends MatchingTask
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
         finally
         {
@@ -860,7 +857,6 @@ public class FixCRLF extends MatchingTask
         }
     }
 
-
     class OneLiner implements Enumeration
     {
 
@@ -874,7 +870,7 @@ public class FixCRLF extends MatchingTask
         private BufferedReader reader;
 
         public OneLiner( File srcFile )
-            throws BuildException
+            throws TaskException
         {
             try
             {
@@ -884,7 +880,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
 
@@ -931,7 +927,7 @@ public class FixCRLF extends MatchingTask
         }
 
         protected void nextLine()
-            throws BuildException
+            throws TaskException
         {
             int ch = -1;
             int eolcount = 0;
@@ -944,7 +940,7 @@ public class FixCRLF extends MatchingTask
                 ch = reader.read();
                 while( ch != -1 && ch != '\r' && ch != '\n' )
                 {
-                    line.append( ( char )ch );
+                    line.append( (char)ch );
                     ch = reader.read();
                 }
 
@@ -955,32 +951,32 @@ public class FixCRLF extends MatchingTask
                     return;
                 }
 
-                switch ( ( char )ch )
+                switch( (char)ch )
                 {
-                case '\r':
-                    // Check for \r, \r\n and \r\r\n
-                    // Regard \r\r not followed by \n as two lines
-                    ++eolcount;
-                    eolStr.append( '\r' );
-                    switch ( ( char )( ch = reader.read() ) )
-                    {
                     case '\r':
-                        if( ( char )( ch = reader.read() ) == '\n' )
+                        // Check for \r, \r\n and \r\r\n
+                        // Regard \r\r not followed by \n as two lines
+                        ++eolcount;
+                        eolStr.append( '\r' );
+                        switch( (char)( ch = reader.read() ) )
                         {
-                            eolcount += 2;
-                            eolStr.append( "\r\n" );
-                        }
+                            case '\r':
+                                if( (char)( ch = reader.read() ) == '\n' )
+                                {
+                                    eolcount += 2;
+                                    eolStr.append( "\r\n" );
+                                }
+                                break;
+                            case '\n':
+                                ++eolcount;
+                                eolStr.append( '\n' );
+                                break;
+                        }// end of switch ((char)(ch = reader.read()))
                         break;
                     case '\n':
                         ++eolcount;
                         eolStr.append( '\n' );
                         break;
-                    }// end of switch ((char)(ch = reader.read()))
-                    break;
-                case '\n':
-                    ++eolcount;
-                    eolStr.append( '\n' );
-                    break;
                 }// end of switch ((char) ch)
 
                 // if at eolcount == 0 and trailing characters of string
@@ -1013,7 +1009,7 @@ public class FixCRLF extends MatchingTask
             }
             catch( IOException e )
             {
-                throw new BuildException( "Error", e );
+                throw new TaskException( "Error", e );
             }
         }
 
@@ -1026,7 +1022,7 @@ public class FixCRLF extends MatchingTask
             private String line;
 
             public BufferLine( String line, String eolStr )
-                throws BuildException
+                throws TaskException
             {
                 next = 0;
                 column = 0;

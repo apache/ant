@@ -13,7 +13,6 @@ import java.util.Locale;
 import java.util.Stack;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
@@ -193,6 +192,7 @@ public class Path
      * @return Description of the Returned Value
      */
     private static String resolveFile( Project project, String relativeName )
+        throws TaskException
     {
         if( project != null )
         {
@@ -208,10 +208,10 @@ public class Path
      *
      * @param location the location of the element to add (must not be <code>null</code>
      *      nor empty.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setLocation( File location )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -224,10 +224,10 @@ public class Path
      * Parses a path definition and creates single PathElements.
      *
      * @param path the path definition.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setPath( String path )
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -243,7 +243,7 @@ public class Path
      * if you make it a reference.</p>
      *
      * @param r The new Refid value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setRefid( Reference r )
         throws TaskException
@@ -326,7 +326,7 @@ public class Path
      * Adds a nested <code>&lt;fileset&gt;</code> element.
      *
      * @param fs The feature to be added to the Fileset attribute
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void addFileset( FileSet fs )
         throws TaskException
@@ -427,9 +427,17 @@ public class Path
      */
     public Object clone()
     {
-        Path p = new Path( getProject() );
-        p.append( this );
-        return p;
+        try
+        {
+            Path p = new Path( getProject() );
+            p.append( this );
+            return p;
+        }
+        catch( TaskException e )
+        {
+            throw new IllegalStateException( e.getMessage() );
+        }
+
     }
 
     /**
@@ -439,6 +447,7 @@ public class Path
      * @return Description of the Returned Value
      */
     public Path concatSystemClasspath()
+        throws TaskException
     {
         return concatSystemClasspath( "last" );
     }
@@ -505,10 +514,10 @@ public class Path
      * Creates a nested <code>&lt;path&gt;</code> element.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public Path createPath()
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -524,10 +533,10 @@ public class Path
      * Creates the nested <code>&lt;pathelement&gt;</code> element.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public PathElement createPathElement()
-        throws BuildException
+        throws TaskException
     {
         if( isReference() )
         {
@@ -668,10 +677,10 @@ public class Path
      *
      * @param stk Description of Parameter
      * @param p Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void dieOnCircularReference( Stack stk, Project p )
-        throws BuildException
+        throws TaskException
     {
 
         if( checked )

@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -133,13 +134,12 @@ public class SignJar extends Task
         filesets.addElement( set );
     }
 
-
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         if( null == jar && null == filesets )
         {
-            throw new BuildException( "jar must be set through jar attribute or nested filesets" );
+            throw new TaskException( "jar must be set through jar attribute or nested filesets" );
         }
         if( null != jar )
         {
@@ -153,12 +153,12 @@ public class SignJar extends Task
             // deal with the filesets
             for( int i = 0; i < filesets.size(); i++ )
             {
-                FileSet fs = ( FileSet )filesets.elementAt( i );
+                FileSet fs = (FileSet)filesets.elementAt( i );
                 DirectoryScanner ds = fs.getDirectoryScanner( project );
                 String[] jarFiles = ds.getIncludedFiles();
                 for( int j = 0; j < jarFiles.length; j++ )
                 {
-                    doOneJar( new File( fs.getDir( project ), jarFiles[j] ), null );
+                    doOneJar( new File( fs.getDir( project ), jarFiles[ j ] ), null );
                 }
             }
         }
@@ -182,7 +182,7 @@ public class SignJar extends Task
                 Enumeration entries = jarFile.entries();
                 while( entries.hasMoreElements() )
                 {
-                    String name = ( ( ZipEntry )entries.nextElement() ).getName();
+                    String name = ( (ZipEntry)entries.nextElement() ).getName();
                     if( name.startsWith( SIG_START ) && name.endsWith( SIG_END ) )
                     {
                         return true;
@@ -193,7 +193,7 @@ public class SignJar extends Task
             else
             {
                 return jarFile.getEntry( SIG_START + alias.toUpperCase() +
-                    SIG_END ) != null;
+                                         SIG_END ) != null;
             }
         }
         catch( IOException e )
@@ -209,7 +209,8 @@ public class SignJar extends Task
                     jarFile.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
     }
@@ -245,21 +246,21 @@ public class SignJar extends Task
     }
 
     private void doOneJar( File jarSource, File jarTarget )
-        throws BuildException
+        throws TaskException
     {
         if( project.getJavaVersion().equals( Project.JAVA_1_1 ) )
         {
-            throw new BuildException( "The signjar task is only available on JDK versions 1.2 or greater" );
+            throw new TaskException( "The signjar task is only available on JDK versions 1.2 or greater" );
         }
 
         if( null == alias )
         {
-            throw new BuildException( "alias attribute must be set" );
+            throw new TaskException( "alias attribute must be set" );
         }
 
         if( null == storepass )
         {
-            throw new BuildException( "storepass attribute must be set" );
+            throw new TaskException( "storepass attribute must be set" );
         }
 
         if( isUpToDate( jarSource, jarTarget ) )
@@ -267,7 +268,7 @@ public class SignJar extends Task
 
         final StringBuffer sb = new StringBuffer();
 
-        final ExecTask cmd = ( ExecTask )project.createTask( "exec" );
+        final ExecTask cmd = (ExecTask)project.createTask( "exec" );
         cmd.setExecutable( "jarsigner" );
 
         if( null != keystore )

@@ -6,13 +6,14 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Random;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -48,7 +49,9 @@ public class CovMerge extends Task
 
     //---------------- the tedious job begins here
 
-    public CovMerge() { }
+    public CovMerge()
+    {
+    }
 
     /**
      * set the coverage home. it must point to JProbe coverage directories where
@@ -94,10 +97,10 @@ public class CovMerge extends Task
     /**
      * execute the jpcovmerge by providing a parameter file
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         checkOptions();
 
@@ -122,12 +125,12 @@ public class CovMerge extends Task
             int exitValue = exec.execute();
             if( exitValue != 0 )
             {
-                throw new BuildException( "JProbe Coverage Merging failed (" + exitValue + ")" );
+                throw new TaskException( "JProbe Coverage Merging failed (" + exitValue + ")" );
             }
         }
         catch( IOException e )
         {
-            throw new BuildException( "Failed to run JProbe Coverage Merge: " + e );
+            throw new TaskException( "Failed to run JProbe Coverage Merge: " + e );
         }
         finally
         {
@@ -142,25 +145,26 @@ public class CovMerge extends Task
      * @return The Snapshots value
      */
     protected File[] getSnapshots()
+        throws TaskException
     {
         Vector v = new Vector();
         final int size = filesets.size();
         for( int i = 0; i < size; i++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.elementAt( i );
             DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
             ds.scan();
             String[] f = ds.getIncludedFiles();
             for( int j = 0; j < f.length; j++ )
             {
-                String pathname = f[j];
+                String pathname = f[ j ];
                 File file = new File( ds.getBasedir(), pathname );
                 file = resolveFile( file.getPath() );
                 v.addElement( file );
             }
         }
 
-        File[] files = new File[v.size()];
+        File[] files = new File[ v.size() ];
         v.copyInto( files );
         return files;
     }
@@ -168,39 +172,38 @@ public class CovMerge extends Task
     /**
      * check for mandatory options
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void checkOptions()
-        throws BuildException
+        throws TaskException
     {
         if( tofile == null )
         {
-            throw new BuildException( "'tofile' attribute must be set." );
+            throw new TaskException( "'tofile' attribute must be set." );
         }
 
         // check coverage home
         if( home == null || !home.isDirectory() )
         {
-            throw new BuildException( "Invalid home directory. Must point to JProbe home directory" );
+            throw new TaskException( "Invalid home directory. Must point to JProbe home directory" );
         }
         home = new File( home, "coverage" );
         File jar = new File( home, "coverage.jar" );
         if( !jar.exists() )
         {
-            throw new BuildException( "Cannot find Coverage directory: " + home );
+            throw new TaskException( "Cannot find Coverage directory: " + home );
         }
     }
-
 
     /**
      * create the parameters file that contains all file to merge and the output
      * filename.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected File createParamFile()
-        throws BuildException
+        throws TaskException
     {
         File[] snapshots = getSnapshots();
         File file = createTmpFile();
@@ -211,7 +214,7 @@ public class CovMerge extends Task
             PrintWriter pw = new PrintWriter( fw );
             for( int i = 0; i < snapshots.length; i++ )
             {
-                pw.println( snapshots[i].getAbsolutePath() );
+                pw.println( snapshots[ i ].getAbsolutePath() );
             }
             // last file is the output snapshot
             pw.println( resolveFile( tofile.getPath() ) );
@@ -219,7 +222,7 @@ public class CovMerge extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "I/O error while writing to " + file, e );
+            throw new TaskException( "I/O error while writing to " + file, e );
         }
         finally
         {

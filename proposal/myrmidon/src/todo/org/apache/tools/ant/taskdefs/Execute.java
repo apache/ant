@@ -18,11 +18,10 @@ import java.util.Locale;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Os;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Runs an external program.
@@ -245,10 +244,10 @@ public class Execute
      *
      * @param task The task that the command is part of. Used for logging
      * @param cmdline The command to execute.
-     * @throws BuildException if the command does not return 0.
+     * @throws TaskException if the command does not return 0.
      */
     public static void runCommand( Task task, String[] cmdline )
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -261,12 +260,12 @@ public class Execute
             int retval = exe.execute();
             if( retval != 0 )
             {
-                throw new BuildException( cmdline[ 0 ] + " failed with return code " + retval );
+                throw new TaskException( cmdline[ 0 ] + " failed with return code " + retval );
             }
         }
         catch( java.io.IOException exc )
         {
-            throw new BuildException( "Could not launch " + cmdline[ 0 ] + ": " + exc );
+            throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + exc );
         }
     }
 
@@ -322,10 +321,10 @@ public class Execute
      * Set the name of the antRun script using the project's value.
      *
      * @param project the current project.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void setAntRun( Project project )
-        throws BuildException
+        throws TaskException
     {
         this.project = project;
     }
@@ -707,13 +706,13 @@ public class Execute
                 }
                 else
                 {
-                    throw new BuildException( "Unable to execute command", realexc );
+                    throw new TaskException( "Unable to execute command", realexc );
                 }
             }
             catch( Exception exc )
             {
                 // IllegalAccess, IllegalArgument, ClassCast
-                throw new BuildException( "Unable to execute command", exc );
+                throw new TaskException( "Unable to execute command", exc );
             }
         }
     }

@@ -6,14 +6,15 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.ide;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.StringTokenizer;
 import java.util.Vector;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
@@ -106,7 +107,7 @@ class VAJBuildInfo implements Runnable
         int res = names.size();
         for( int i = 0; i < names.size() && res == names.size(); i++ )
         {
-            if( name.compareTo( ( String )names.elementAt( i ) ) < 0 )
+            if( name.compareTo( (String)names.elementAt( i ) ) < 0 )
             {
                 res = i;
             }
@@ -137,7 +138,7 @@ class VAJBuildInfo implements Runnable
         int oldValue = outputMessageLevel;
         outputMessageLevel = newOutputMessageLevel;
         firePropertyChange( "outputMessageLevel",
-            new Integer( oldValue ), new Integer( outputMessageLevel ) );
+                            new Integer( oldValue ), new Integer( outputMessageLevel ) );
     }
 
     /**
@@ -225,7 +226,6 @@ class VAJBuildInfo implements Runnable
         return projectInitialized;
     }
 
-
     /**
      * The addPropertyChangeListener method was generated to support the
      * propertyChange field.
@@ -247,16 +247,15 @@ class VAJBuildInfo implements Runnable
     public String asDataString()
     {
         String result = getOutputMessageLevel() + "|" + getBuildFileName()
-             + "|" + getTarget();
+            + "|" + getTarget();
         for( Enumeration e = getProjectTargets().elements();
-            e.hasMoreElements();  )
+             e.hasMoreElements(); )
         {
             result = result + "|" + e.nextElement();
         }
 
         return result;
     }
-
 
     /**
      * cancels a build.
@@ -368,7 +367,7 @@ class VAJBuildInfo implements Runnable
         Enumeration ptargets = project.getTargets().elements();
         while( ptargets.hasMoreElements() )
         {
-            Target currentTarget = ( Target )ptargets.nextElement();
+            Target currentTarget = (Target)ptargets.nextElement();
             if( currentTarget.getDescription() != null )
             {
                 String targetName = currentTarget.getName();
@@ -460,7 +459,7 @@ class VAJBuildInfo implements Runnable
      *
      * @author RT
      */
-    public static class BuildInterruptedException extends BuildException
+    public static class BuildInterruptedException extends TaskException
     {
         public String toString()
         {

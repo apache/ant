@@ -21,7 +21,7 @@ public interface Condition
      * Is this condition true?
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     boolean eval()
         throws TaskException;

@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,13 +20,11 @@ import java.security.NoSuchProviderException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.myrmidon.api.TaskException;
 
 /**
  * This task can be used to create checksums for files. It can also be used to
@@ -169,10 +168,10 @@ public class Checksum extends MatchingTask implements Condition
      *
      * @return Returns true if the checksum verification test passed, false
      *      otherwise.
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public boolean eval()
-        throws BuildException
+        throws TaskException
     {
         isCondition = true;
         return validateAndExecute();
@@ -181,16 +180,16 @@ public class Checksum extends MatchingTask implements Condition
     /**
      * Calculate the checksum(s).
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         boolean value = validateAndExecute();
         if( verifyProperty != null )
         {
             project.setNewProperty( verifyProperty,
-                new Boolean( value ).toString() );
+                                    new Boolean( value ).toString() );
         }
     }
 
@@ -198,10 +197,10 @@ public class Checksum extends MatchingTask implements Condition
      * Add key-value pair to the hashtable upon which to later operate upon.
      *
      * @param file The feature to be added to the ToIncludeFileMap attribute
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private void addToIncludeFileMap( File file )
-        throws BuildException
+        throws TaskException
     {
         if( file != null )
         {
@@ -218,7 +217,7 @@ public class Checksum extends MatchingTask implements Condition
                     else
                     {
                         log( file + " omitted as " + dest + " is up to date.",
-                            Project.MSG_VERBOSE );
+                             Project.MSG_VERBOSE );
                     }
                 }
                 else
@@ -229,10 +228,10 @@ public class Checksum extends MatchingTask implements Condition
             else
             {
                 String message = "Could not find file "
-                     + file.getAbsolutePath()
-                     + " to generate checksum for.";
+                    + file.getAbsolutePath()
+                    + " to generate checksum for.";
                 log( message );
-                throw new BuildException( message );
+                throw new TaskException( message );
             }
         }
     }
@@ -241,27 +240,27 @@ public class Checksum extends MatchingTask implements Condition
      * Generate checksum(s) using the message digest created earlier.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private boolean generateChecksums()
-        throws BuildException
+        throws TaskException
     {
         boolean checksumMatches = true;
         FileInputStream fis = null;
         FileOutputStream fos = null;
         try
         {
-            for( Enumeration e = includeFileMap.keys(); e.hasMoreElements();  )
+            for( Enumeration e = includeFileMap.keys(); e.hasMoreElements(); )
             {
                 messageDigest.reset();
-                File src = ( File )e.nextElement();
+                File src = (File)e.nextElement();
                 if( !isCondition )
                 {
                     log( "Calculating " + algorithm + " checksum for " + src );
                 }
                 fis = new FileInputStream( src );
                 DigestInputStream dis = new DigestInputStream( fis,
-                    messageDigest );
+                                                               messageDigest );
                 while( dis.read() != -1 )
                     ;
                 dis.close();
@@ -271,7 +270,7 @@ public class Checksum extends MatchingTask implements Condition
                 String checksum = "";
                 for( int i = 0; i < fileDigest.length; i++ )
                 {
-                    String hexStr = Integer.toHexString( 0x00ff & fileDigest[i] );
+                    String hexStr = Integer.toHexString( 0x00ff & fileDigest[ i ] );
                     if( hexStr.length() < 2 )
                     {
                         checksum += "0";
@@ -282,7 +281,7 @@ public class Checksum extends MatchingTask implements Condition
                 Object destination = includeFileMap.get( src );
                 if( destination instanceof java.lang.String )
                 {
-                    String prop = ( String )destination;
+                    String prop = (String)destination;
                     if( isCondition )
                     {
                         checksumMatches = checksum.equals( property );
@@ -296,7 +295,7 @@ public class Checksum extends MatchingTask implements Condition
                 {
                     if( isCondition )
                     {
-                        File existingFile = ( File )destination;
+                        File existingFile = (File)destination;
                         if( existingFile.exists() &&
                             existingFile.length() == checksum.length() )
                         {
@@ -318,7 +317,7 @@ public class Checksum extends MatchingTask implements Condition
                     }
                     else
                     {
-                        File dest = ( File )destination;
+                        File dest = (File)destination;
                         fos = new FileOutputStream( dest );
                         fos.write( checksum.getBytes() );
                         fos.close();
@@ -329,7 +328,7 @@ public class Checksum extends MatchingTask implements Condition
         }
         catch( Exception e )
         {
-            throw new BuildException( "Error", e );
+            throw new TaskException( "Error", e );
         }
         finally
         {
@@ -340,7 +339,8 @@ public class Checksum extends MatchingTask implements Condition
                     fis.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
             if( fos != null )
             {
@@ -349,7 +349,8 @@ public class Checksum extends MatchingTask implements Condition
                     fos.close();
                 }
                 catch( IOException e )
-                {}
+                {
+                }
             }
         }
         return checksumMatches;
@@ -359,10 +360,10 @@ public class Checksum extends MatchingTask implements Condition
      * Validate attributes and get down to business.
      *
      * @return Description of the Returned Value
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     private boolean validateAndExecute()
-        throws BuildException
+        throws TaskException
     {
 
         if( file == null && filesets.size() == 0 )
@@ -466,7 +467,7 @@ public class Checksum extends MatchingTask implements Condition
 
         if( messageDigest == null )
         {
-            throw new BuildException( "Unable to create Message Digest" );
+            throw new TaskException( "Unable to create Message Digest" );
         }
 
         addToIncludeFileMap( file );
@@ -474,12 +475,12 @@ public class Checksum extends MatchingTask implements Condition
         int sizeofFileSet = filesets.size();
         for( int i = 0; i < sizeofFileSet; i++ )
         {
-            FileSet fs = ( FileSet )filesets.elementAt( i );
+            FileSet fs = (FileSet)filesets.elementAt( i );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             String[] srcFiles = ds.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )
             {
-                File src = new File( fs.getDir( project ), srcFiles[j] );
+                File src = new File( fs.getDir( project ), srcFiles[ j ] );
                 addToIncludeFileMap( src );
             }
         }

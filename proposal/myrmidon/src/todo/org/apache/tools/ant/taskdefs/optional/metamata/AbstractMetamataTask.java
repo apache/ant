@@ -6,6 +6,7 @@
  * the LICENSE file.
  */
 package org.apache.tools.ant.taskdefs.optional.metamata;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Vector;
-import org.apache.tools.ant.BuildException;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -75,7 +76,9 @@ public abstract class AbstractMetamataTask extends Task
     // be set when calling scanFileSets();
     protected Hashtable includedFiles = null;
 
-    public AbstractMetamataTask() { }
+    public AbstractMetamataTask()
+    {
+    }
 
     /**
      * initialize the task with the classname of the task to run
@@ -137,7 +140,6 @@ public abstract class AbstractMetamataTask extends Task
         this.metamataHome = metamataHome;
     }
 
-
     /**
      * The java files or directory to be audited
      *
@@ -189,10 +191,10 @@ public abstract class AbstractMetamataTask extends Task
     /**
      * execute the command line
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         try
         {
@@ -211,10 +213,10 @@ public abstract class AbstractMetamataTask extends Task
     /**
      * check the options and build the command line
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void setUp()
-        throws BuildException
+        throws TaskException
     {
         checkOptions();
 
@@ -250,7 +252,6 @@ public abstract class AbstractMetamataTask extends Task
         return new File( new File( home.getAbsolutePath() ), "lib/metamata.jar" );
     }
 
-
     protected Hashtable getFileMapping()
     {
         return includedFiles;
@@ -266,21 +267,21 @@ public abstract class AbstractMetamataTask extends Task
     /**
      * validate options set
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void checkOptions()
-        throws BuildException
+        throws TaskException
     {
         // do some validation first
         if( metamataHome == null || !metamataHome.exists() )
         {
-            throw new BuildException( "'metamatahome' must point to Metamata home directory." );
+            throw new TaskException( "'metamatahome' must point to Metamata home directory." );
         }
         metamataHome = resolveFile( metamataHome.getPath() );
         File jar = getMetamataJar( metamataHome );
         if( !jar.exists() )
         {
-            throw new BuildException( jar + " does not exist. Check your metamata installation." );
+            throw new TaskException( jar + " does not exist. Check your metamata installation." );
         }
     }
 
@@ -304,15 +305,14 @@ public abstract class AbstractMetamataTask extends Task
      */
     protected abstract ExecuteStreamHandler createStreamHandler();
 
-
     /**
      * execute the process with a specific handler
      *
      * @param handler Description of Parameter
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     protected void execute0( ExecuteStreamHandler handler )
-        throws BuildException
+        throws TaskException
     {
         final Execute process = new Execute( handler );
         log( cmdl.toString(), Project.MSG_VERBOSE );
@@ -321,18 +321,17 @@ public abstract class AbstractMetamataTask extends Task
         {
             if( process.execute() != 0 )
             {
-                throw new BuildException( "Metamata task failed." );
+                throw new TaskException( "Metamata task failed." );
             }
         }
         catch( IOException e )
         {
-            throw new BuildException( "Failed to launch Metamata task: " + e );
+            throw new TaskException( "Failed to launch Metamata task: " + e );
         }
     }
 
-
     protected void generateOptionsFile( File tofile, Vector options )
-        throws BuildException
+        throws TaskException
     {
         FileWriter fw = null;
         try
@@ -348,7 +347,7 @@ public abstract class AbstractMetamataTask extends Task
         }
         catch( IOException e )
         {
-            throw new BuildException( "Error while writing options file " + tofile, e );
+            throw new TaskException( "Error while writing options file " + tofile, e );
         }
         finally
         {
@@ -359,7 +358,8 @@ public abstract class AbstractMetamataTask extends Task
                     fw.close();
                 }
                 catch( IOException ignored )
-                {}
+                {
+                }
             }
         }
     }
@@ -373,18 +373,18 @@ public abstract class AbstractMetamataTask extends Task
         Hashtable files = new Hashtable();
         for( int i = 0; i < fileSets.size(); i++ )
         {
-            FileSet fs = ( FileSet )fileSets.elementAt( i );
+            FileSet fs = (FileSet)fileSets.elementAt( i );
             DirectoryScanner ds = fs.getDirectoryScanner( project );
             ds.scan();
             String[] f = ds.getIncludedFiles();
             log( i + ") Adding " + f.length + " files from directory " + ds.getBasedir(), Project.MSG_VERBOSE );
             for( int j = 0; j < f.length; j++ )
             {
-                String pathname = f[j];
+                String pathname = f[ j ];
                 if( pathname.endsWith( ".java" ) )
                 {
                     File file = new File( ds.getBasedir(), pathname );
-//                  file = project.resolveFile(file.getAbsolutePath());
+                    //                  file = project.resolveFile(file.getAbsolutePath());
                     String classname = pathname.substring( 0, pathname.length() - ".java".length() );
                     classname = classname.replace( File.separatorChar, '.' );
                     files.put( file.getAbsolutePath(), classname );// it's a java file, add it.
