@@ -14,6 +14,7 @@ import java.util.Locale;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.file.Path;
+import org.apache.aut.nativelib.Os;
 
 /**
  * Utilities for operating on Path objects.
@@ -105,28 +106,23 @@ public class PathUtil
             kaffeJarFiles.setIncludes( "*.jar" );
             path.addFileset( kaffeJarFiles );
         }
+        else if( Os.isFamily( Os.OS_FAMILY_OSX ) )
+        {
+            // MacOS X
+            final String classDir = System.getProperty( "java.home" ) +
+                File.separator + ".." + File.separator + "Classes";
+            final File classes = new File( classDir, "classes.jar" );
+            path.addLocation( classes );
+            final File ui = new File( classDir, "ui.jar" );
+            path.addLocation( ui );
+        }
         else
         {
-            // JDK > 1.1 seems to set java.home to the JRE directory.
+            // JDK > 1.1 sets java.home to the JRE directory.
             final String rt = System.getProperty( "java.home" ) +
                 File.separator + "lib" + File.separator + "rt.jar";
-            path.addLocation( new File( rt ) );
-            // Just keep the old version as well and let addExisting
-            // sort it out.
-            final String rt2 = System.getProperty( "java.home" ) +
-                File.separator + "jre" + File.separator + "lib" +
-                File.separator + "rt.jar";
-            path.addLocation( new File( rt2 ) );
-
-            // Added for MacOS X
-            final String classes = System.getProperty( "java.home" ) +
-                File.separator + ".." + File.separator + "Classes" +
-                File.separator + "classes.jar";
-            path.addLocation( new File( classes ) );
-            final String ui = System.getProperty( "java.home" ) +
-                File.separator + ".." + File.separator + "Classes" +
-                File.separator + "ui.jar";
-            path.addLocation( new File( ui ) );
+            final File rtJar = new File( rt );
+            path.addLocation( rtJar );
         }
     }
 
