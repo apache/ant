@@ -3,7 +3,7 @@
 <!--
  The Apache Software License, Version 1.1
 
- Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  reserved.
 
  Redistribution and use in source and binary forms, with or without
@@ -199,10 +199,10 @@
     </tr>
   </table>
   <table border="1" cellspacing="2" cellpadding="3" width="100%" style="font-size:80%">
-    <tr class="a"><td width="1">ant.file</td><td><xsl:value-of select="substring-after(message[contains(text(),'ant.file')], '->')"/></td></tr>
-    <tr class="b"><td width="1">ant.version</td><td><xsl:value-of select="substring-after(message[contains(text(),'ant.version')], '->')"/></td></tr>
-    <tr class="a"><td width="1">java.version</td><td><xsl:value-of select="substring-after(message[contains(text(),'java.vm.version')], '->')"/></td></tr>
-    <tr class="b"><td width="1">os.name</td><td><xsl:value-of select="substring-after(message[contains(text(),'os.name')], '->')"/></td></tr>
+    <tr class="a"><td width="1">ant.file</td><td><xsl:value-of select="substring-after(//message[contains(text(),'ant.file')], '->')"/></td></tr>
+    <tr class="b"><td width="1">ant.version</td><td><xsl:value-of select="substring-after(//message[contains(text(),'ant.version')], '->')"/></td></tr>
+    <tr class="a"><td width="1">java.version</td><td><xsl:value-of select="substring-after(//message[contains(text(),'java.vm.version')], '->')"/></td></tr>
+    <tr class="b"><td width="1">os.name</td><td><xsl:value-of select="substring-after(//message[contains(text(),'os.name')], '->')"/></td></tr>
   </table>
   <!-- build information -->
   <h3>Build events</h3>
