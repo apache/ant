@@ -12,8 +12,7 @@ import java.io.IOException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -44,7 +43,7 @@ public class NetCommand
     /**
      * executabe
      */
-    protected Execute _exe;
+    protected Execute2 _exe;
 
     /**
      * flag to control action on execution trouble
@@ -200,9 +199,8 @@ public class NetCommand
     {
         // default directory to the project's base directory
         File dir = _owner.getBaseDirectory();
-        _exe = new Execute();
-        _exe.setOutput( new LogOutputStream( _owner.hackGetLogger(), false ) );
-        _exe.setError( new LogOutputStream( _owner.hackGetLogger(), true ) );
+        _exe = new Execute2();
+        setupLogger( _exe );
         _exe.setWorkingDirectory( dir );
     }
 }

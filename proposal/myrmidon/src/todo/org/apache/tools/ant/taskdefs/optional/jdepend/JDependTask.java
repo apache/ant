@@ -14,8 +14,7 @@ import java.io.PrintWriter;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -326,9 +325,8 @@ public class JDependTask extends Task
             commandline.createArgument().setValue( f.getPath() );
         }
 
-        final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( getLogger(), false ) );
-        exe.setError( new LogOutputStream( getLogger(), true ) );
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
 
         exe.setCommandline( commandline.getCommandline() );
         if( getDir() != null )

@@ -13,8 +13,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -174,7 +173,7 @@ public class JJTree extends Task
         {
             throw new TaskException( "Javacchome not set." );
         }
-        final Path classpath = cmdl.createClasspath( getProject() );
+        final Path classpath = cmdl.createClasspath();
         classpath.createPathElement().setPath( javaccHome.getAbsolutePath() +
                                                "/JavaCC.zip" );
         classpath.addJavaRuntime();
@@ -183,9 +182,8 @@ public class JJTree extends Task
         arg.setValue( "-mx140M" );
         arg.setValue( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
-        final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( getLogger(), false ) );
-        exe.setError( new LogOutputStream( getLogger(), false ) );
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
 
         getLogger().debug( cmdl.toString() );
         exe.setCommandline( cmdl.getCommandline() );
