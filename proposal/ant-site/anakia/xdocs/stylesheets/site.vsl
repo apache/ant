@@ -143,7 +143,7 @@
 
 #macro (faq $faq)
   #set ($id = $faq.getAttributeValue("id"))
-      <a name="$id">
+      <a name="$id"></a>
       <table border="0" cellspacing="0" cellpadding="2" width="100%">
         <tr><td bgcolor="$blue2">
           <font color="$lightfg" face="arial,helvetica,sanserif">
@@ -153,7 +153,6 @@
           </font>
         </td></tr>
       </table>
-      <p>
     #foreach ($item in $faq.getChild("answer").getChildren())
       #if ($item.getName().equals("img"))
         #image ($item)
@@ -165,8 +164,6 @@
         $xmlout.outputString($item)
       #end
     #end
-      </p>
-      </a>
 #end
 
 #macro (document)
