@@ -191,7 +191,8 @@ public class WLJspc extends MatchingTask {
             // All this to get package according to weblogic standards
             // Can be written better... this is too hacky! 
             // Careful.. similar code in scanDir , but slightly different!!
-            jspFile = new File((String) filesToDo.elementAt(i));
+            String filename = (String) filesToDo.elementAt(i);
+            jspFile = new File(filename);
             args[j] = "-package";
             parents = jspFile.getParent();
             if ((parents != null)  && (!("").equals(parents))) {
@@ -202,21 +203,16 @@ public class WLJspc extends MatchingTask {
             }
             
             
-            args[j + 2] =  sourceDirectory + File.separator 
-                + (String) filesToDo.elementAt(i);
-            arg = "";
+            args[j + 2] =  sourceDirectory + File.separator + filename;
+            helperTask.clearArgs();
             
-            for (int x = 0; x < 12; x++) {
-                arg += " " + args[x];
+            for (int x = 0; x < j + 3; x++) {
+                helperTask.createArg().setValue(args[x]);
             }
             
-            System.out.println("arg = " + arg);
-            
-            helperTask.clearArgs();
-            helperTask.setArgs(arg);
             helperTask.setClasspath(compileClasspath);
             if (helperTask.executeJava() != 0) {                         
-                log(files[i] + " failed to compile", Project.MSG_WARN);
+                log(filename + " failed to compile", Project.MSG_WARN);
             }
         }
     }
