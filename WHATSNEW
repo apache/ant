@@ -13,6 +13,9 @@ Fixed bugs:
 Other changes:
 --------------
 
+* <echoproperties> now (alphanumerically) sorts the property list
+  before echoing, when you request XML output (format="xml"). 
+
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
 
