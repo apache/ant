@@ -116,4 +116,16 @@ public class PropertyTest extends BuildFileTest {
         fail("Did not throw exception on invalid use of prefix");
     }
 
+    public void testCircularReference() {
+        try {
+            executeTarget("testCircularReference");
+        } catch (BuildException e) {
+            assertEquals("Circular definition not detected - ", true,
+                         e.getMessage().indexOf("was circularly defined") 
+                         != -1);
+            return;
+        }
+        fail("Did not throw exception on circular exception");
+    }
+
 }

@@ -573,6 +573,8 @@ public class Property extends Task {
             String value = props.getProperty(name);
 
             boolean resolved = false;
+            Vector expandedReferences = new Vector();
+            expandedReferences.addElement(name);
             while (!resolved) {
                 Vector fragments = new Vector();
                 Vector propertyRefs = new Vector();
@@ -588,11 +590,12 @@ public class Property extends Task {
                         String fragment = (String) i.nextElement();
                         if (fragment == null) {
                             String propertyName = (String) j.nextElement();
-                            if (propertyName.equals(name)) {
+                            if (expandedReferences.contains(propertyName)) {
                                 throw new BuildException("Property " + name
                                                          + " was circularly "
                                                          + "defined.");
                             }
+                            expandedReferences.addElement(propertyName);
                             fragment = getProject().getProperty(propertyName);
                             if (fragment == null) {
                                 if (props.containsKey(propertyName)) {

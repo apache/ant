@@ -36,4 +36,9 @@
     <property name="someprop" value="value" prefix="prefix"/>
   </target>
 
+  <!-- caused an endless loop, PR 21825 -->
+  <target name="testCircularReference">
+    <property file="property4.properties"/>
+  </target>
+
 </project>
