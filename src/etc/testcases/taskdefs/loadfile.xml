@@ -53,12 +53,39 @@
       file="loadfile1.tmp"
       />
     <loadfile property="testEvalProps"
-        srcFile="loadfile1.tmp"
-        evaluateProperties="true"
-        />
-    <echo>${testLoadAFile}</echo>
+        srcFile="loadfile1.tmp">
+        <filterchain>
+          <expandproperties/>
+        </filterchain>
+    </loadfile>
+    <echo>${testEvalProps}</echo>
   </target>
 
+  <target name="testFilterChain"
+    depends="init">
+      <echo file="loadfile1.tmp">#Line 1
+REM Line 2
+--Line 3
+Line 4
+Hello World!</echo>
+      <loadfile srcFile="loadfile1.tmp" 
+        property="testFilterChain">
+        <filterchain>
+          <headfilter lines="5"/>
+          <striplinecomments>
+            <comment value="--"/>
+            <comment value="REM "/>
+            <comment value="#"/>
+          </striplinecomments>
+          <filterreader classname="org.apache.tools.ant.filters.TailFilter">
+            <param name="lines" value="1"/>
+          </filterreader>
+          <linecontains>
+            <contains value="World!"/>
+          </linecontains>
+        </filterchain>
+      </loadfile>
+  </target>
 
   <target name="testOneLine"
     depends="init">
@@ -67,10 +94,12 @@
       file="loadfile1.tmp"
       />
     <loadfile property="testOneLine"
-        srcFile="loadfile1.tmp"
-        makeOneLine="true"
-        />
-    <echo>${testLoadAFile}</echo>
+        srcFile="loadfile1.tmp">
+      <filterchain>
+        <striplinebreaks/>
+      </filterchain>
+    </loadfile>
+    <echo>${testOneLine}</echo>
   </target>
 
 

@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ *  Copyright (c) 2002 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -57,71 +57,31 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.FilterChain;
+import org.apache.tools.ant.filters.StringInputStream;
 import org.apache.tools.ant.filters.util.ChainReaderHelper;
 
 import java.io.*;
+import java.util.Enumeration;
+import java.util.Properties;
 import java.util.Vector;
 
 /**
- * Load a file into a property
+ * Load a file's contents as Ant Properties.
  *
- * @author Steve Loughran
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
- * @created 10 December 2001
+ * @created 20 February 2002
  */
-public final class LoadFile extends Task {
+public final class LoadProperties extends Task {
 
     /**
-     * source file, usually null
+     * Source file
      */
     private File srcFile = null;
 
     /**
-     * what to do when it goes pear-shaped
-     */
-    private boolean failOnError = true;
-
-    /**
-     * Encoding to use for filenames, defaults to the platform's default
-     * encoding.
-     */
-    private String encoding = null;
-
-    /**
-     * name of property
-     */
-    private String property = null;
-
-    /**
-     * Holds FilterChains
+     * Holds filterchains
      */
     private final Vector filterChains = new Vector();
-
-    /**
-     * Encoding to use for filenames, defaults to the platform's default
-     * encoding. <p>
-     *
-     * For a list of possible values see <a href="http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html">
-     * http://java.sun.com/products/jdk/1.2/docs/guide/internat/encoding.doc.html
-     * </a>.</p>
-     *
-     * @param encoding The new Encoding value
-     */
-
-    public final void setEncoding(final String encoding) {
-        this.encoding = encoding;
-    }
-
-
-    /**
-     * Sets the Property attribute of the LoadFile object
-     *
-     * @param property The new Property value
-     */
-    public final void setProperty(final String property) {
-        this.property = property;
-    }
-
 
     /**
      * Sets the srcfile attribute.
@@ -132,49 +92,37 @@ public final class LoadFile extends Task {
         this.srcFile = srcFile;
     }
 
-
     /**
-     * Sets the Failonerror attribute of the LoadFile object
-     *
-     * @param fail The new Failonerror value
-     */
-    public final void setFailonerror(final boolean fail) {
-        failOnError = fail;
-    }
-
-
-    /**
-     * read in a source file to a property
+     * read in a source file's contents and load them up as Ant properties
      *
      * @exception BuildException if something goes wrong with the build
      */
-    public final void execute()
-        throws BuildException {
+    public final void execute() throws BuildException {
         //validation
         if (srcFile == null) {
-            throw new BuildException("source file not defined");
+            throw new BuildException("Source file not defined.");
         }
-        if (property == null) {
-            throw new BuildException("output property not defined");
+
+        if (!srcFile.exists()) {
+            throw new BuildException("Source file does not exist.");
         }
+
+        if (!srcFile.isFile()) {
+            throw new BuildException("Source file is not a file.");
+        }
+
         FileInputStream fis = null;
         BufferedInputStream bis = null;
         Reader instream = null;
-        log("loading "+srcFile+" into property "+property,Project.MSG_VERBOSE);
+
         try {
             final long len = srcFile.length();
-            log("file size = "+len,Project.MSG_DEBUG);
-            //discard most of really big files
             final int size=(int) len;
+
             //open up the file
             fis = new FileInputStream(srcFile);
             bis = new BufferedInputStream(fis);
-            if (encoding == null) {
-                instream = new InputStreamReader(bis);
-            }
-            else {
-                instream = new InputStreamReader(bis, encoding);
-            }
+            instream = new InputStreamReader(bis);
 
             ChainReaderHelper crh = new ChainReaderHelper();
             crh.setBufferSize(size);
@@ -186,26 +134,30 @@ public final class LoadFile extends Task {
             String text = crh.readFully(instream);
 
             if (text != null) {
-                project.setNewProperty(property, text);
-                log("loaded " + text.length() + " characters",Project.MSG_VERBOSE);
-                log(property+" := "+text,Project.MSG_DEBUG);
+                if (!text.endsWith("\n")) {
+                    text = text + "\n";
+                }
+
+                final StringInputStream sis = new StringInputStream(text);
+                final Properties props = new Properties();
+                props.load(sis);
+                final Enumeration e = props.keys();
+                while (e.hasMoreElements()) {
+                    final String key = (String) e.nextElement();
+                    final String value = props.getProperty(key);
+                    if (key != null && value != null
+                            && value.trim().length() > 0) {
+                        project.setNewProperty(key, value);
+                    }
+                }
+                sis.close();
             }
 
         } catch (final IOException ioe) {
             final String message = "Unable to load file: " + ioe.toString();
-            if (failOnError) {
-                throw new BuildException(message, ioe, location);
-            }
-            else {
-                log(message, Project.MSG_ERR);
-            }
+            throw new BuildException(message, ioe, location);
         } catch (final BuildException be) {
-            if (failOnError) {
-                throw be;
-            }
-            else {
-                log(be.getMessage(), Project.MSG_ERR);
-            }
+            throw be;
         } finally {
             try {
                 if (fis != null) {

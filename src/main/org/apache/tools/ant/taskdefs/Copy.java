@@ -60,6 +60,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Mapper;
+import org.apache.tools.ant.types.FilterChain;
 import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
@@ -91,7 +92,7 @@ import java.util.Enumeration;
  *
  * @version $Revision$
  *
- * @ant.task category="filesystem"
+ * @ant:task category="filesystem"
  */
 public class Copy extends Task {
     protected File file = null;     // the source file
@@ -111,6 +112,7 @@ public class Copy extends Task {
     protected Hashtable completeDirMap = new Hashtable();
 
     protected Mapper mapperElement = null;
+    private Vector filterChains = new Vector();
     private Vector filterSets = new Vector();
     private FileUtils fileUtils;
     private String encoding = null;
@@ -140,6 +142,15 @@ public class Copy extends Task {
      */
     public void setTodir(File destDir) {
         this.destDir = destDir;
+    }
+
+    /**
+     * Create a nested filterchain
+     */
+    public FilterChain createFilterChain() {
+        FilterChain filterChain = new FilterChain();
+        filterChains.addElement(filterChain);
+        return filterChain;
     }
 
     /**
@@ -185,6 +196,15 @@ public class Copy extends Task {
      */
     protected Vector getFilterSets() {
         return filterSets;
+    }
+
+    /**
+     * Get the filterchains being applied to this operation.
+     *
+     * @return a vector of FilterChain objects
+     */
+    protected Vector getFilterChains() {
+        return filterChains;
     }
 
     /**
@@ -457,9 +477,9 @@ public class Copy extends Task {
                     for (Enumeration filterEnum = filterSets.elements(); filterEnum.hasMoreElements();) {
                         executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
                     }
-                    fileUtils.copyFile(fromFile, toFile, executionFilters,
+                    fileUtils.copyFile(fromFile, toFile, executionFilters, filterChains,
                                        forceOverwrite, preserveLastModified,
-                                       encoding);
+                                       encoding, project);
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();

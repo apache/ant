@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,6 +83,15 @@ public class MoveTest extends BuildFileTest {
         executeTarget("testFilterSet");
         FileUtils fileUtils = FileUtils.newFileUtils();
         File tmp  = new File(getProjectDir(), "move.filterset.tmp");
+        File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
+        assertTrue(tmp.exists());
+        assertTrue(fileUtils.contentEquals(tmp, check));
+    }
+
+    public void testFilterChain() throws IOException {
+        executeTarget("testFilterChain");
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        File tmp  = new File(getProjectDir(), "move.filterchain.tmp");
         File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
         assertTrue(tmp.exists());
         assertTrue(fileUtils.contentEquals(tmp, check));

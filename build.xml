@@ -208,6 +208,8 @@
              unless="jakarta.oro.present"/>
   </patternset>
   <patternset id="needs.jakarta.bcel">
+    <exclude name="${ant.package}/filters/util/JavaClassHelper.java" 
+             unless="bcel.present" />
     <exclude name="${optional.type.package}/depend/*.java" 
              unless="bcel.present" />
     <exclude name="${util.package}/depend/*.java"

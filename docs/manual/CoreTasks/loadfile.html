@@ -10,10 +10,7 @@
 <h3>Description</h3>
 <p>
  Load a text file into a single property. Unless an encoding is specified,
- the encoding of the current locale is used. There is no explicit limit
- upon the size of the file which can be loaded, but loading very large
- files is not something anyone has yet explored. Because the file is
- converted to text
+ the encoding of the current locale is used.
 
 </p>
 
@@ -44,40 +41,21 @@
     <td valign="top">Whether to halt the build on failure</td>
     <td align="center" valign="top">No, default "true"</td>
   </tr>
-  <tr>
-    <td valign="top">evaluateProperties</td>
-    <td valign="top">flag to enable property evalation in the file</td>
-    <td align="center" valign="top">No, default "false"</td>
-  </tr>
-  <tr>
-    <td valign="top">makeOneLine</td>
-    <td valign="top">flag to strip out newlines (but not spaces or
-        tabs) from the file</td>
-    <td align="center" valign="top">No, default "false"</td>
-  </tr>
 </table>
 <p>
-The <tt>makeOneLine</tt> parameter enables you to use a file as an
-input to task parameters which expect single line input. It flattens
-the file by removing all carriage return and line feed characters,
-so that the file
-<pre>a
-b
-c
-</pre>would become "abc": you need spaces or
-commas at the end/start of line to stop alphanumeric characters
-being merged together.
+The LoadFile task supports nested <a href="../CoreTypes/filterchain.html">
+FilterChain</a>s.
 
 <h3>Examples</h3>
 <pre>    &lt;loadfile property="message"
-      srcFile="message.txt" / &gt;
+      srcFile="message.txt" /&gt;
 </pre>
 Load file message.txt into property "message"; an <tt>&lt;echo&gt;</tt>
 can print this.
 
 <pre>    &lt;loadfile property="encoded-file"
       srcFile="loadfile.xml"
-      encoding="ISO-8859-1" / &gt;
+      encoding="ISO-8859-1" /&gt;
 </pre>
 Load a file using the latin-1 encoding
 
@@ -90,20 +68,22 @@ Load a file, don't fail if it is missing (a message is printed, though)
 
 <pre>    &lt;loadfile
       property="mail.recipients"
-      srcFile="recipientlist.txt"
-      makeOneLine="true" /&gt;
+      srcFile="recipientlist.txt"&gt;
+      &lt;filterchain&gt;
+        &lt;<a href="../CoreTypes/filterchain.html#striplinebreaks">striplinebreaks</a>/&gt;
+      &lt;/filterchaint&gt;
+    &lt;/loadfile&gt;
 </pre>
-
-load a property which can be used as a parameter for another task (in this case mail),
+Load a property which can be used as a parameter for another task (in this case mail),
 merging lines to ensure this happens.
 
 <pre>    &lt;loadfile
       property="system.configuration.xml"
-      srcFile="configuration.xml"
-      evaluateProperties="true" /&gt;
+      srcFile="configuration.xml"&gt;
+        &lt;<a href="../CoreTypes/filterchain.html#expandproperties">expandproperties</a>/&gt;
+    &lt;/loadfile&gt;
 </pre>
-
-load an XML file into a property, expanding all properties declared
+Load an XML file into a property, expanding all properties declared
 in the file in the process.
 
 

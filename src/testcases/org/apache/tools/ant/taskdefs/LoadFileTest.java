@@ -151,7 +151,7 @@ public class LoadFileTest extends BuildFileTest {
         }
     }
 
-        /**
+    /**
      * A unit test for JUnit
      */
     public void testEvalProps()
@@ -162,7 +162,19 @@ public class LoadFileTest extends BuildFileTest {
         }
     }
 
-        /**
+    /**
+     * A unit test for JUnit
+     */
+    public void testFilterChain()
+            throws BuildException {
+        executeTarget("testFilterChain");
+        if(project.getProperty("testFilterChain").indexOf("World!")<0) {
+            fail("Filter Chain broken");
+        }
+    }
+
+
+    /**
      * A unit test for JUnit
      */
     public void testOneLine()
@@ -171,5 +183,3 @@ public class LoadFileTest extends BuildFileTest {
 
     }
 }
-
-

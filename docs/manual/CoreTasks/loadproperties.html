@@ -1,0 +1,59 @@
+<html>
+<head>
+<title>LoadProperties Task</title>
+</head>
+
+<body>
+
+
+<h2><a name="loadproperties">LoadProperties</a></h2>
+<h3>Description</h3>
+<p>
+Load a file's contents as Ant properties.  This is equivalent
+to &lt;property file=&quot;...&quot;/&gt; except that it
+supports nested &lt;filterchain&gt; elements and it cannot be
+specified outside a target.
+
+</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">srcFile</td>
+    <td valign="top">source file</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<p>
+The LoadProperties task supports nested <a href="../CoreTypes/filterchain.html">
+FilterChain</a>s.
+
+<h3>Examples</h3>
+<pre>    &lt;loadproperties srcFile="file.properties" /&gt;
+</pre>
+Load contents of file.properties as Ant properties.
+
+<pre>    &lt;loadproperties srcFile="file.properties"&gt;
+      &lt;filterchain&gt;
+        &lt;<a href="../CoreTypes/filterchain.html#linecontains">linecontains</a>&gt;
+          &lt;contains value="import.&quot;/&gt;
+        &lt;linecontains/&gt;
+      &lt;/filterchaint&gt;
+    &lt;/loadproperties&gt;
+</pre>
+Read the lines that contain the string &quot;import.&quot;
+from the file &quot;file.properties&quot; and load them as
+Ant properties.
+<hr>
+
+<p align="center">Copyright &copy; 2002 Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

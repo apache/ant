@@ -57,7 +57,6 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -126,20 +125,28 @@ public class CopyTest extends BuildFileTest {
 
     }
 
+    public void testFilterSet() throws IOException {
+        executeTarget("testFilterSet");
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        File tmp  = new File(getProjectDir(), "copy.filterset.tmp");
+        File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
+        assertTrue(tmp.exists());
+        assertTrue(fileUtils.contentEquals(tmp, check));
+    }
+
+    public void testFilterChain() throws IOException {
+        executeTarget("testFilterChain");
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        File tmp  = new File(getProjectDir(), "copy.filterchain.tmp");
+        File check  = new File(getProjectDir(), "expected/copy.filterset.filtered");
+        assertTrue(tmp.exists());
+        assertTrue(fileUtils.contentEquals(tmp, check));
+    }
+
     public void testSingleFileFileset() {
         executeTarget("test_single_file_fileset");
         File file  = new File(getProjectDir(),
                                         "copytest_single_file_fileset.tmp");
         assertTrue(file.exists());
-    }
-
-    public void testFilterSet() throws IOException {
-        executeTarget("testFilterSet");
-        FileUtils fileUtils = FileUtils.newFileUtils();
-        File tmp  = new File(getProjectDir(), "copy.filterset.tmp");
-        File check  = new File(getProjectDir(),
-                        "expected/copy.filterset.filtered");
-        assertTrue(tmp.exists());
-        assertTrue(fileUtils.contentEquals(tmp, check));
     }
 }

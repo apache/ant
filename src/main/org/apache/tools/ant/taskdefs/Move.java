@@ -84,11 +84,12 @@ import java.util.Vector;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  * @version $Revision$
  *
- * @ant.task category="filesystem"
+ * @ant:task category="filesystem"
  */
 public class Move extends Copy {
 
     private Vector filterSets = null;
+    private Vector filterChains = null;
 
     public Move() {
         super();
@@ -101,6 +102,7 @@ public class Move extends Copy {
 
     protected void doFileOperations() {
         filterSets = getFilterSets();
+        filterChains = getFilterChains();
 
         //Attempt complete directory renames, if any, first.
         if (completeDirMap.size() > 0) {
@@ -162,10 +164,10 @@ public class Move extends Copy {
                             for (Enumeration filterEnum = getFilterSets().elements(); filterEnum.hasMoreElements();) {
                                 executionFilters.addFilterSet((FilterSet)filterEnum.nextElement());
                             }
-                            getFileUtils().copyFile(f, d, executionFilters,
+                            getFileUtils().copyFile(f, d, executionFilters, filterChains,
                                                     forceOverwrite,
                                                     getPreserveLastModified(),
-                                                    getEncoding());
+                                                    getEncoding(), project);
 
                             f = new File(fromFile);
                             if (!f.delete()) {
@@ -279,7 +281,8 @@ public class Move extends Copy {
         throws IOException, BuildException {
 
         boolean renamed = true;
-        if (filterSets != null && filterSets.size() > 0) {
+        if ((filterSets != null && filterSets.size() > 0) ||
+            (filterChains != null && filterChains.size() > 0)) {
             renamed = false;
         } else {
             if (!filtering) {

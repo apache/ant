@@ -11,8 +11,20 @@
     </move>
   </target>
 
+  <target name="testFilterChain">
+    <copy file="copy.filterset" tofile="move.filterchain"/>
+    <move file="move.filterchain" tofile="move.filterchain.tmp">
+      <filterchain>
+        <replacetokens>
+          <token key="TITLE" value="Apache Ant Project"/>
+        </replacetokens>
+      </filterchain>
+    </move>
+  </target>
+
   <target name="cleanup"> 
     <delete file="move.filterset.tmp"/>
+    <delete file="move.filterchain.tmp"/>
   </target>
 
 </project>

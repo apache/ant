@@ -77,6 +77,16 @@ Fixed bugs:
 
 Other changes:
 --------------
+* New filter readers: ClassConstants, ExpandProperties, HeadFilter, 
+  LineContains, LineContainsRegExp, PrefixLines, ReplaceTokens, 
+  StripJavaComments, StripLineBreaks, StripLineComments, TabsToSpaces, 
+  TailFilter.
+
+* <copy>, <loadfile>, <loadproperties>, <move> support FilterChains 
+  of FilterReaders.
+  
+* New task <loadproperties> to load contents of file as Ant properties.
+  
 * Users can control what <zip> and <jar> must do when duplicate files 
   are found.  A new element <zipgroupfileset> allows for multiple zip 
   files to be merged into the archive.  In addition, <jar> also has 
