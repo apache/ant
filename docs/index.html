@@ -21,9 +21,10 @@
   <li>Conor MacNeill (<a href="mailto:conor@cortexebusiness.com.au">conor@cortexebusiness.com.au</a>)</li>
   <li>Stefano Mazzocchi (<a href="mailto:stefano@apache.org">stefano@apache.org</a>)</li>
   <li>Sam Ruby (<a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
+  <li>Dave Walend (<a href="mailto:dwalend@cs.tufts.edu">dwalend@cs.tufts.edu</a>)</li>
 </ul>
 
-<p>Version 1.2 - 2000/07/26</p>
+<p>Version 1.2 - 2000/07/27</p>
 
 <hr>
 <h2>Table of Contents</h2>
@@ -350,6 +351,45 @@ task attributes. This is done by placing the property name between
 <p>If there is a property called &quot;builddir&quot; with the value
 &quot;build&quot;, then this could be used in an attribute like this: &quot;${builddir}/classes&quot;.
 This is resolved as &quot;build/classes&quot;.</p>
+<h3>Example</h3>
+<blockquote>
+  <pre>
+&lt;project name=&quot;MyProject&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
+
+  &lt;!-- set global properties for this build --&gt;
+  &lt;property name=&quot;src&quot; value=&quot;.&quot; /&gt;
+  &lt;property name=&quot;build&quot; value=&quot;build&quot; /&gt;
+  &lt;property name=&quot;dist&quot;  value=&quot;dist&quot; /&gt;
+
+  &lt;target name=&quot;prepare&quot;&gt;
+    &lt;!-- Create the time stamp --&gt;
+    &lt;tstamp/&gt;
+    &lt;!-- Create the build directory structure used by compile --&gt;
+    &lt;mkdir dir=&quot;${build}&quot; /&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;compile&quot; depends=&quot;prepare&quot;&gt;
+    &lt;!-- Compile the java code from ${src} into ${build} --&gt;
+    &lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot; /&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;dist&quot; depends=&quot;compile&quot;&gt;
+    &lt;!-- Create the ${dist}/lib directory --&gt;
+    &lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;
+
+    &lt;!-- Put everything in ${build} into the MyProject-${DSTAMP}.jar file --&gt;
+    &lt;jar jarfile=&quot;${dist}/lib/MyProject-${DSTAMP}.jar&quot; basedir=&quot;${build}&quot; /&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;clean&quot;&gt;
+    &lt;!-- Delete the ${build} and ${dist} directory trees --&gt;
+    &lt;deltree dir=&quot;${build}&quot; /&gt;
+    &lt;deltree dir=&quot;${dist}&quot; /&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
+  </pre>
+</blockquote>
+
 <h3>Token Filters</h3>
 <p>A project can have a set of tokens that might be automatically expanded if
 found when a file is copied, when the filtering-copy behavior is selected in the
@@ -364,38 +404,6 @@ programming and scripting languages, as well with documentation systems.</p>
 filter is associated with that token, no changes take place. So, no escaping
 method is present, but as long as you choose appropriate names for your tokens,
 this should not cause problems.</p>
-<h3>Examples</h3>
-<blockquote>
-  <pre>&lt;project name=&quot;foo&quot; default=&quot;dist&quot; basedir=&quot;.&quot;&gt;
-  &lt;target name=&quot;init&quot;&gt;
-    &lt;tstamp/&gt;
-    &lt;property name=&quot;build&quot; value=&quot;build&quot; /&gt;
-    &lt;property name=&quot;dist&quot;  value=&quot;dist&quot; /&gt;
-    &lt;filter token=&quot;version&quot; value=&quot;1.0.3&quot; /&gt;
-    &lt;filter token=&quot;year&quot; value=&quot;2000&quot; /&gt;
-  &lt;/target&gt;
-
-  &lt;target name=&quot;prepare&quot; depends=&quot;init&quot;&gt;
-    &lt;mkdir dir=&quot;${build}&quot; /&gt;
-  &lt;/target&gt;
-
-  &lt;target name=&quot;compile&quot; depends=&quot;prepare&quot;&gt;
-    &lt;javac srcdir=&quot;${src}&quot; destdir=&quot;${build}&quot; filtering=&quot;on&quot;/&gt;
-  &lt;/target&gt;
-
-  &lt;target name=&quot;dist&quot; depends=&quot;compile&quot;&gt;
-    &lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;
-    &lt;jar jarfile=&quot;${dist}/lib/foo${DSTAMP}.jar&quot;
-     basedir=&quot;${build}&quot; items=&quot;com&quot;/&gt;
-  &lt;/target&gt;
-
-  &lt;target name=&quot;clean&quot; depends=&quot;init&quot;&gt;
-    &lt;deltree dir=&quot;${build}&quot; /&gt;
-    &lt;deltree dir=&quot;${dist}&quot; /&gt;
-  &lt;/target&gt;
-&lt;/project&gt;
-</pre>
-</blockquote>
 
 <h3><a name="path">PATH like structures</a></h3>
 <p>You can specify PATH and CLASSPATH variables using both
