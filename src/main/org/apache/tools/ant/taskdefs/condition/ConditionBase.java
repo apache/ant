@@ -29,7 +29,6 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  * conditions - ensures that the types of conditions inside the task
  * and the "container" conditions are in sync.
  *
- * @author Stefan Bodewig
  * @since Ant 1.4
  * @version $Revision$
  */
@@ -217,7 +216,7 @@ public abstract class ConditionBase extends ProjectComponent {
 
     /**
      * Add an &lt;typefound&gt; condition.
-     * @param test
+     * @param test a TypeFound condition
      */
     public void addTypeFound(TypeFound test) {
         conditions.addElement(test);
