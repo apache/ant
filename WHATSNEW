@@ -80,6 +80,8 @@ Other changes:
 
 * provide stack for errors using import, ant, antcall, subant and macros
 
+* ignore attributes from different URIS
+
 Changes from Ant 1.6.B1 to Ant 1.6.B2
 =====================================
 
