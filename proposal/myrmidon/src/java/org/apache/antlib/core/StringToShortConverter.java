@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.libs.core;
+package org.apache.antlib.core;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -14,28 +14,28 @@ import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to byte converter
+ * String to short converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class StringToByteConverter
+public class StringToShortConverter
     extends AbstractConverter
 {
     private static final Resources REZ =
-        ResourceManager.getPackageResources( StringToByteConverter.class );
+        ResourceManager.getPackageResources( StringToShortConverter.class );
 
-    public StringToByteConverter()
+    public StringToShortConverter()
     {
-        super( String.class, Byte.class );
+        super( String.class, Short.class );
     }
 
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Byte( (String)object ); }
+        try { return new Short( (String)object ); }
         catch( final NumberFormatException nfe )
         {
-            final String message = REZ.getString( "convert.bad-byte.error", object );
+            final String message = REZ.getString( "convert.bad-short.error", object );
             throw new ConverterException( message, nfe );
         }
     }

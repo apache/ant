@@ -5,45 +5,39 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.libs.core;
+package org.apache.antlib.core;
 
-import java.io.File;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
-import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to file converter
+ * String to class converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class StringToFileConverter
+public class StringToClassConverter
     extends AbstractConverter
 {
     private static final Resources REZ =
-        ResourceManager.getPackageResources( StringToFileConverter.class );
+        ResourceManager.getPackageResources( StringToClassConverter.class );
 
-    public StringToFileConverter()
+    public StringToClassConverter()
     {
-        super( String.class, File.class );
+        super( String.class, Class.class );
     }
 
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try
+        //TODO: Should we use ContextClassLoader here???
+        try { return Class.forName( (String)object ); }
+        catch( final Exception e )
         {
-            final TaskContext taskContext = (TaskContext)context;
-            return taskContext.resolveFile( (String)object );
-        }
-        catch( final TaskException te )
-        {
-            final String message = REZ.getString( "convert.bad-file.error", object );
-            throw new ConverterException( message, te );
+            final String message = REZ.getString( "convert.bad-class.error", object );
+            throw new ConverterException( message, e );
         }
     }
 }

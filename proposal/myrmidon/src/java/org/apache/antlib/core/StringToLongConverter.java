@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.libs.core;
+package org.apache.antlib.core;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -14,28 +14,28 @@ import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to integer converter.
+ * String to long converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class StringToIntegerConverter
+public class StringToLongConverter
     extends AbstractConverter
 {
     private static final Resources REZ =
-        ResourceManager.getPackageResources( StringToFloatConverter.class );
+        ResourceManager.getPackageResources( StringToLongConverter.class );
 
-    public StringToIntegerConverter()
+    public StringToLongConverter()
     {
-        super( String.class, Integer.class );
+        super( String.class, Long.class );
     }
 
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Integer( (String)object ); }
+        try { return new Long( (String)object ); }
         catch( final NumberFormatException nfe )
         {
-            final String message = REZ.getString( "convert.bad-integer.error", object );
+            final String message = REZ.getString( "convert.bad-long.error", object );
             throw new ConverterException( message, nfe );
         }
     }

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.libs.core;
+package org.apache.antlib.core;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
@@ -14,30 +14,29 @@ import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to class converter
+ * String to double converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class StringToClassConverter
+public class StringToDoubleConverter
     extends AbstractConverter
 {
     private static final Resources REZ =
-        ResourceManager.getPackageResources( StringToClassConverter.class );
+        ResourceManager.getPackageResources( StringToDoubleConverter.class );
 
-    public StringToClassConverter()
+    public StringToDoubleConverter()
     {
-        super( String.class, Class.class );
+        super( String.class, Double.class );
     }
 
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        //TODO: Should we use ContextClassLoader here???
-        try { return Class.forName( (String)object ); }
-        catch( final Exception e )
+        try { return new Double( (String)object ); }
+        catch( final NumberFormatException nfe )
         {
-            final String message = REZ.getString( "convert.bad-class.error", object );
-            throw new ConverterException( message, e );
+            final String message = REZ.getString( "convert.bad-double.error", object );
+            throw new ConverterException( message, nfe );
         }
     }
 }

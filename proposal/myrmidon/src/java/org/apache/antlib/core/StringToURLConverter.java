@@ -5,8 +5,10 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.myrmidon.libs.core;
+package org.apache.antlib.core;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.context.Context;
@@ -14,30 +16,31 @@ import org.apache.myrmidon.converter.AbstractConverter;
 import org.apache.myrmidon.converter.ConverterException;
 
 /**
- * String to double converter
+ * String to url converter
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
-public class StringToDoubleConverter
+public class StringToURLConverter
     extends AbstractConverter
 {
     private static final Resources REZ =
-        ResourceManager.getPackageResources( StringToDoubleConverter.class );
+        ResourceManager.getPackageResources( StringToURLConverter.class );
 
-    public StringToDoubleConverter()
+    public StringToURLConverter()
     {
-        super( String.class, Double.class );
+        super( String.class, URL.class );
     }
 
     public Object convert( final Object object, final Context context )
         throws ConverterException
     {
-        try { return new Double( (String)object ); }
-        catch( final NumberFormatException nfe )
+        try { return new URL( (String)object ); }
+        catch( final MalformedURLException mue )
         {
-            final String message = REZ.getString( "convert.bad-double.error", object );
-            throw new ConverterException( message, nfe );
+            final String message = REZ.getString( "convert.bad-url.error", object );
+            throw new ConverterException( message, mue );
         }
+
     }
 }
 
