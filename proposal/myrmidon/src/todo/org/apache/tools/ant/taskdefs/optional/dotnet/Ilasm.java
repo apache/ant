@@ -8,7 +8,11 @@
 package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 
 /**
@@ -34,85 +38,76 @@ import org.apache.tools.ant.types.DirectoryScanner;
  * @author Steve Loughran steve_l@iseran.com
  * @version 0.2
  */
-
 public class Ilasm
-    extends org.apache.tools.ant.taskdefs.MatchingTask
+    extends MatchingTask
 {
-
     /**
      * name of the executable. the .exe suffix is deliberately not included in
      * anticipation of the unix version
      */
-    protected final static String exe_name = "ilasm";
+    private final static String EXE_NAME = "ilasm";
 
     /**
      * what is the file extension we search on?
      */
-    protected final static String file_ext = "il";
+    private final static String FILE_EXT = "il";
 
     /**
      * and now derive the search pattern from the extension
      */
-    protected final static String file_pattern = "**/*." + file_ext;
+    private final static String FILE_PATTERN = "**/*." + FILE_EXT;
 
     /**
      * title of task for external presentation
      */
-    protected final static String exe_title = "ilasm";
+    private final static String EXE_TITLE = "ilasm";
 
     /**
      * debug flag. Controls generation of debug information.
      */
-    protected boolean _debug;
+    private boolean m_debug;
 
     /**
      * any extra command options?
      */
-    protected String _extraOptions;
-
-    /**
-     * flag to control action on execution trouble
-     */
-    protected boolean _failOnError;
+    private String m_extraOptions;
 
     /**
      * listing flag
      */
-
-    protected boolean _listing;
+    private boolean m_listing;
 
     /**
      * output file. If not supplied this is derived from the source file
      */
-    protected File _outputFile;
+    private File m_outputFile;
 
     /**
      * resource file (.res format) to include in the app.
      */
-    protected File _resourceFile;
+    private File m_resourceFile;
 
     /**
      * type of target. Should be one of exe|library|module|winexe|(null) default
      * is exe; the actual value (if not null) is fed to the command line. <br>
      * See /target
      */
-    protected String _targetType;
+    private String m_targetType;
 
     /**
      * verbose flag
      */
-    protected boolean _verbose;
+    private boolean m_verbose;
 
     /**
      * file containing private key
      */
-
-    private File _keyfile;
+    private File m_keyfile;
 
     /**
      * source directory upon which the search pattern is applied
      */
-    private File _srcDir;
+    private File m_srcDir;
 
     /**
      * constructor inits everything and set up the search pattern
@@ -120,18 +115,18 @@ public class Ilasm
     public Ilasm()
         throws TaskException
     {
-        Clear();
-        setIncludes( file_pattern );
+        setIncludes( FILE_PATTERN );
+        m_debug = true;
     }
 
     /**
      * set the debug flag on or off
      *
-     * @param f on/off flag
+     * @param debug on/off flag
      */
-    public void setDebug( boolean f )
+    public void setDebug( final boolean debug )
     {
-        _debug = f;
+        m_debug = debug;
     }
 
     /**
@@ -139,75 +134,50 @@ public class Ilasm
      *
      * @param extraOptions The new ExtraOptions value
      */
-    public void setExtraOptions( String extraOptions )
+    public void setExtraOptions( final String extraOptions )
     {
-        this._extraOptions = extraOptions;
+        m_extraOptions = extraOptions;
     }
 
-    /**
-     * set fail on error flag
-     *
-     * @param b The new FailOnError value
-     */
-    public void setFailOnError( boolean b )
+    public void setKeyfile( final File keyfile )
     {
-        _failOnError = b;
-    }
-
-    public void setKeyfile( File keyfile )
-    {
-        this._keyfile = keyfile;
+        m_keyfile = keyfile;
     }
 
     /**
      * enable/disable listing
      *
-     * @param b flag set to true for listing on
+     * @param listing flag set to true for listing on
      */
-    public void setListing( boolean b )
+    public void setListing( final boolean listing )
     {
-        _listing = b;
+        m_listing = listing;
     }
 
     /**
      * Set the definitions
-     *
-     * @param params The new OutputFile value
      */
-    public void setOutputFile( File params )
+    public void setOutputFile( final File outputFile )
     {
-        _outputFile = params;
-    }
-
-    /**
-     * Sets the Owner attribute
-     *
-     * @param s The new Owner value
-     */
-
-    public void setOwner( String s )
-    {
-        getLogger().warn( "This option is not supported by ILASM as of Beta-2, and will be ignored" );
+        m_outputFile = outputFile;
     }
 
     /**
      * Set the resource file
      *
-     * @param fileName path to the file. Can be relative, absolute, whatever.
+     * @param resourceFile path to the file. Can be relative, absolute, whatever.
      */
-    public void setResourceFile( File fileName )
+    public void setResourceFile( final File resourceFile )
     {
-        _resourceFile = fileName;
+        m_resourceFile = resourceFile;
     }
 
     /**
      * Set the source dir to find the files to be compiled
-     *
-     * @param srcDirName The new SrcDir value
      */
-    public void setSrcDir( File srcDirName )
+    public void setSrcDir( final File srcDir )
     {
-        _srcDir = srcDirName;
+        m_srcDir = srcDir;
     }
 
     /**
@@ -218,114 +188,61 @@ public class Ilasm
      *      exe|library|module|winexe
      */
 
-    public void setTargetType( String targetType )
+    public void setTargetType( final String targetType )
         throws TaskException
     {
-        targetType = targetType.toLowerCase();
-        if( targetType.equals( "exe" ) || targetType.equals( "library" ) )
+        final String type = targetType.toLowerCase();
+        if( type.equals( "exe" ) || type.equals( "library" ) )
         {
-            _targetType = targetType;
+            m_targetType = type;
         }
         else
         {
-            throw new TaskException( "targetType " + targetType + " is not a valid type" );
+            final String message = "targetType " + targetType + " is not a valid type";
+            throw new TaskException( message );
         }
     }
 
     /**
      * enable/disable verbose ILASM output
      *
-     * @param b flag set to true for verbose on
+     * @param verbose flag set to true for verbose on
      */
-    public void setVerbose( boolean b )
+    public void setVerbose( final boolean verbose )
     {
-        _verbose = b;
-    }
-
-    /**
-     * query the debug flag
-     *
-     * @return true if debug is turned on
-     */
-    public boolean getDebug()
-    {
-        return _debug;
-    }
-
-    /**
-     * Gets the ExtraOptions attribute
-     *
-     * @return The ExtraOptions value
-     */
-    public String getExtraOptions()
-    {
-        return this._extraOptions;
-    }
-
-    /**
-     * query fail on error flag
-     *
-     * @return The FailFailOnError value
-     */
-    public boolean getFailFailOnError()
-    {
-        return _failOnError;
-    }
-
-    /**
-     * accessor method for target type
-     *
-     * @return the current target option
-     */
-    public String getTargetType()
-    {
-        return _targetType;
-    }
-
-    /**
-     * reset all contents.
-     */
-    public void Clear()
-    {
-        _targetType = null;
-        _srcDir = null;
-        _listing = false;
-        _verbose = false;
-        _debug = true;
-        _outputFile = null;
-        _failOnError = true;
-        _resourceFile = null;
-        _extraOptions = null;
+        m_verbose = verbose;
     }
 
     /**
      * This is the execution entry point. Build a list of files and call ilasm
      * on each of them.
      *
-     * @throws TaskException if the assembly failed and FailOnError is true
+     * @throws TaskException if the assembly failed
      */
     public void execute()
         throws TaskException
     {
-        if( _srcDir == null )
+        if( null == m_srcDir )
         {
-            _srcDir = getBaseDirectory();
+            m_srcDir = getBaseDirectory();
         }
 
         //get dependencies list.
-        DirectoryScanner scanner = super.getDirectoryScanner( _srcDir );
-        String[] dependencies = scanner.getIncludedFiles();
-        getLogger().info( "assembling " + dependencies.length + " file" + ( ( dependencies.length == 1 ) ? "" : "s" ) );
-        String baseDir = scanner.getBasedir().toString();
+        final DirectoryScanner scanner = super.getDirectoryScanner( m_srcDir );
+        final String[] dependencies = scanner.getIncludedFiles();
+        final String baseDir = scanner.getBasedir().toString();
+
+        final String message = "assembling " + dependencies.length + " file" +
+            ( ( dependencies.length == 1 ) ? "" : "s" );
+        getLogger().info( message );
+
         //add to the command
         for( int i = 0; i < dependencies.length; i++ )
         {
-            String targetFile = dependencies[ i ];
-            targetFile = baseDir + File.separator + targetFile;
+            final String targetFile = baseDir + File.separator + dependencies[ i ];
             executeOneFile( targetFile );
         }
-
-    }// end execute
+    }
 
     /**
      * do the work for one file by building the command line then calling it
@@ -333,31 +250,33 @@ public class Ilasm
      * @param targetFile name of the the file to assemble
      * @throws TaskException if the assembly failed and FailOnError is true
      */
-    public void executeOneFile( String targetFile )
+    public void executeOneFile( final String targetFile )
         throws TaskException
     {
-        NetCommand command = new NetCommand( this, exe_title, exe_name );
-        command.setFailOnError( getFailFailOnError() );
-        //DEBUG helper
-        command.setTraceCommandLine( true );
-        //fill in args
-        command.addArgument( getDebugParameter() );
-        command.addArgument( getTargetTypeParameter() );
-        command.addArgument( getListingParameter() );
-        command.addArgument( getOutputFileParameter() );
-        command.addArgument( getResourceFileParameter() );
-        command.addArgument( getVerboseParameter() );
-        command.addArgument( getKeyfileParameter() );
-        command.addArgument( getExtraOptionsParameter() );
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute exe = new Execute( execManager );
+        exe.setReturnCode( 0 );
 
-        /*
-         * space for more argumentativeness
-         * command.addArgument();
-         * command.addArgument();
-         */
-        command.addArgument( targetFile );
-        //now run the command of exe + settings + file
-        command.runCommand();
+        final Commandline cmd = exe.getCommandline();
+        cmd.setExecutable( EXE_NAME );
+        addArgument( cmd, getDebugParameter() );
+        addArgument( cmd, getTargetTypeParameter() );
+        addArgument( cmd, getListingParameter() );
+        addArgument( cmd, getOutputFileParameter() );
+        addArgument( cmd, getResourceFileParameter() );
+        addArgument( cmd, getVerboseParameter() );
+        addArgument( cmd, getKeyfileParameter() );
+        addArgument( cmd, getExtraOptionsParameter() );
+        addArgument( cmd, targetFile );
+        exe.execute();
+    }
+
+    private void addArgument( final Commandline cmd, final String argument )
+    {
+        if( null != argument && 0 != argument.length() )
+        {
+            cmd.addArgument( argument );
+        }
     }
 
     /**
@@ -365,9 +284,9 @@ public class Ilasm
      *
      * @return The DebugParameter value
      */
-    protected String getDebugParameter()
+    private String getDebugParameter()
     {
-        return _debug ? "/debug" : null;
+        return m_debug ? "/debug" : null;
     }
 
     /**
@@ -375,11 +294,11 @@ public class Ilasm
      *
      * @return The ExtraOptions Parameter to CSC
      */
-    protected String getExtraOptionsParameter()
+    private String getExtraOptionsParameter()
     {
-        if( _extraOptions != null && _extraOptions.length() != 0 )
+        if( m_extraOptions != null && m_extraOptions.length() != 0 )
         {
-            return _extraOptions;
+            return m_extraOptions;
         }
         else
         {
@@ -389,14 +308,12 @@ public class Ilasm
 
     /**
      * get the argument or null for no argument needed
-     *
-     * @return The KeyfileParameter value
      */
-    protected String getKeyfileParameter()
+    private String getKeyfileParameter()
     {
-        if( _keyfile != null )
+        if( m_keyfile != null )
         {
-            return "/keyfile:" + _keyfile.toString();
+            return "/keyfile:" + m_keyfile.toString();
         }
         else
         {
@@ -409,9 +326,9 @@ public class Ilasm
      *
      * @return the appropriate string from the state of the listing flag
      */
-    protected String getListingParameter()
+    private String getListingParameter()
     {
-        return _listing ? "/listing" : "/nolisting";
+        return m_listing ? "/listing" : "/nolisting";
     }
 
     /**
@@ -419,21 +336,20 @@ public class Ilasm
      *
      * @return the argument string or null for no argument
      */
-    protected String getOutputFileParameter()
+    private String getOutputFileParameter()
     {
-        if( _outputFile == null || _outputFile.length() == 0 )
+        if( null == m_outputFile || 0 == m_outputFile.length() )
         {
             return null;
         }
-        File f = _outputFile;
-        return "/output=" + f.toString();
+        return "/output=" + m_outputFile.toString();
     }
 
-    protected String getResourceFileParameter()
+    private String getResourceFileParameter()
     {
-        if( _resourceFile != null )
+        if( null != m_resourceFile )
         {
-            return "/resource=" + _resourceFile.toString();
+            return "/resource=" + m_resourceFile.toString();
         }
         else
         {
@@ -447,17 +363,17 @@ public class Ilasm
      * @return The TargetTypeParameter value
      */
 
-    protected String getTargetTypeParameter()
+    private String getTargetTypeParameter()
     {
-        if( !notEmpty( _targetType ) )
+        if( !notEmpty( m_targetType ) )
         {
             return null;
         }
-        if( _targetType.equals( "exe" ) )
+        if( m_targetType.equals( "exe" ) )
         {
             return "/exe";
         }
-        else if( _targetType.equals( "library" ) )
+        else if( m_targetType.equals( "library" ) )
         {
             return "/dll";
         }
@@ -472,20 +388,18 @@ public class Ilasm
      *
      * @return null or the appropriate command line string
      */
-    protected String getVerboseParameter()
+    private String getVerboseParameter()
     {
-        return _verbose ? null : "/quiet";
+        return m_verbose ? null : "/quiet";
     }
 
     /**
      * test for a string containing something useful
      *
-     * @param s Description of Parameter
-     * @return Description of the Returned Value
      * @returns true if the argument is not null or empty
      */
-    protected boolean notEmpty( String s )
+    private boolean notEmpty( final String string )
     {
-        return s != null && s.length() != 0;
-    }// end executeOneFile
-}//class
+        return string != null && string.length() != 0;
+    }
+}

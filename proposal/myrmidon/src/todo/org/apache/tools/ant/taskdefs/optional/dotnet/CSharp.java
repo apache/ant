@@ -8,8 +8,11 @@
 package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 import java.io.File;
+import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.Path;
 
@@ -100,17 +103,17 @@ public class CSharp
      * name of the executable. the .exe suffix is deliberately not included in
      * anticipation of the unix version
      */
-    protected final static String csc_exe_name = "csc";
+    private final static String EXE_NAME = "csc";
 
     /**
      * what is the file extension we search on?
      */
-    protected final static String csc_file_ext = "cs";
+    private final static String FILE_EXT = "cs";
 
     /**
      * derive the search pattern from the extension
      */
-    protected final static String csc_file_pattern = "**/*." + csc_file_ext;
+    private final static String FILE_PATTERN = "**/*." + FILE_EXT;
 
     /**
      * Fix C# reference inclusion. C# is really dumb in how it handles
@@ -125,7 +128,7 @@ public class CSharp
      * system <i>exactly</i> so may work on a unix box too.
      */
 
-    protected final static String DEFAULT_REFERENCE_LIST =
+    private final static String DEFAULT_REFERENCE_LIST =
         "Accessibility.dll;" +
         "cscompmgd.dll;" +
         "CustomMarshalers.dll;" +
@@ -162,117 +165,108 @@ public class CSharp
     /**
      * utf out flag
      */
+    private boolean m_utf8output;
 
-    protected boolean _utf8output = false;
-
-    protected boolean _noconfig = false;
-
-    // /fullpaths
-    protected boolean _fullpaths = false;
+    private boolean m_fullpaths = true;
 
     /**
      * debug flag. Controls generation of debug information.
      */
-    protected boolean _debug;
+    private boolean m_debug = true;
 
     /**
      * output XML documentation flag
      */
-    protected File _docFile;
+    private File m_docFile;
 
     /**
      * any extra command options?
      */
-    protected String _extraOptions;
-
-    /**
-     * flag to control action on execution trouble
-     */
-    protected boolean _failOnError;
+    private String m_extraOptions;
 
     /**
      * flag to enable automatic reference inclusion
      */
-    protected boolean _includeDefaultReferences;
+    private boolean m_includeDefaultReferences = true;
 
     /**
      * incremental build flag
      */
-    protected boolean _incremental;
+    private boolean m_incremental;
 
     /**
      * main class (or null for automatic choice)
      */
-    protected String _mainClass;
+    private String m_mainClass;
 
     /**
      * optimise flag
      */
-    protected boolean _optimize;
+    private boolean m_optimize;
 
     /**
      * output file. If not supplied this is derived from the source file
      */
-    protected File _outputFile;
+    private File m_outputFile;
 
     /**
      * using the path approach didnt work as it could not handle the implicit
      * execution path. Perhaps that could be extracted from the runtime and then
      * the path approach would be viable
      */
-    protected Path _referenceFiles;
+    private Path m_referenceFiles;
 
     /**
      * list of reference classes. (pretty much a classpath equivalent)
      */
-    protected String _references;
+    private String m_references;
 
     /**
      * type of target. Should be one of exe|library|module|winexe|(null) default
      * is exe; the actual value (if not null) is fed to the command line. <br>
      * See /target
      */
-    protected String _targetType;
+    private String m_targetType;
 
     /**
      * enable unsafe code flag. Clearly set to false by default
      */
-    protected boolean _unsafe;
+    private boolean m_unsafe;
 
     /**
      * icon for incorporation into apps
      */
-    protected File _win32icon;
+    private File m_win32icon;
     /**
      * icon for incorporation into apps
      */
-    protected File _win32res;
+    private File m_win32res;
 
     /**
      * list of extra modules to refer to
      */
-    String _additionalModules;
+    private String m_additionalModules;
 
     /**
      * defines list something like 'RELEASE;WIN32;NO_SANITY_CHECKS;;SOMETHING_ELSE'
      */
-    String _definitions;
+    private String m_definitions;
 
     /**
      * destination directory (null means use the source directory) NB: this is
      * currently not used
      */
-    private File _destDir;
+    private File m_destDir;
 
     /**
      * source directory upon which the search pattern is applied
      */
-    private File _srcDir;
+    private File m_srcDir;
 
     /**
      * warning level: 0-4, with 4 being most verbose
      */
-    private int _warnLevel;
+    private int m_warnLevel = 3;
 
     /**
      * constructor inits everything and set up the search pattern
@@ -281,104 +275,87 @@ public class CSharp
     public CSharp()
         throws TaskException
     {
-        Clear();
-        setIncludes( csc_file_pattern );
+        setIncludes( FILE_PATTERN );
     }
 
     /**
      * Set the definitions
-     *
-     * @param params The new AdditionalModules value
      */
-    public void setAdditionalModules( String params )
+    public void setAdditionalModules( final String additionalModules )
     {
-        _additionalModules = params;
+        m_additionalModules = additionalModules;
     }
 
     /**
      * set the debug flag on or off
      *
-     * @param f on/off flag
+     * @param debug on/off flag
      */
-    public void setDebug( boolean f )
+    public void setDebug( final boolean debug )
     {
-        _debug = f;
+        m_debug = debug;
     }
 
     /**
      * Set the definitions
-     *
-     * @param params The new Definitions value
      */
-    public void setDefinitions( String params )
+    public void setDefinitions( final String definitions )
     {
-        _definitions = params;
+        m_definitions = definitions;
     }
 
     /**
      * Set the destination dir to find the files to be compiled
      *
-     * @param dirName The new DestDir value
+     * @param destDir The new DestDir value
      */
-    public void setDestDir( File dirName )
+    public void setDestDir( final File destDir )
     {
-        _destDir = dirName;
+        m_destDir = destDir;
     }
 
     /**
      * file for generated XML documentation
      *
-     * @param f output file
+     * @param docFile output file
      */
-    public void setDocFile( File f )
+    public void setDocFile( final File docFile )
     {
-        _docFile = f;
+        m_docFile = docFile;
     }
 
     /**
      * Sets the ExtraOptions attribute
-     *
-     * @param extraOptions The new ExtraOptions value
      */
-    public void setExtraOptions( String extraOptions )
+    public void setExtraOptions( final String extraOptions )
     {
-        this._extraOptions = extraOptions;
+        m_extraOptions = extraOptions;
     }
 
-    /**
-     * set fail on error flag
-     *
-     * @param b The new FailOnError value
-     */
-    public void setFailOnError( boolean b )
+    public void setFullPaths( final boolean fullpaths )
     {
-        _failOnError = b;
-    }
-
-    public void setFullPaths( boolean enabled )
-    {
-        _fullpaths = enabled;
+        m_fullpaths = fullpaths;
     }
 
     /**
      * set the automatic reference inclusion flag on or off this flag controls
      * the string of references and the /nostdlib option in CSC
      *
-     * @param f on/off flag
+     * @param includeDefaultReferences on/off flag
      */
-    public void setIncludeDefaultReferences( boolean f )
+    public void setIncludeDefaultReferences( final boolean includeDefaultReferences )
     {
-        _includeDefaultReferences = f;
+        m_includeDefaultReferences = includeDefaultReferences;
     }
 
     /**
      * set the incremental compilation flag on or off
      *
-     * @param f on/off flag
+     * @param incremental on/off flag
      */
-    public void setIncremental( boolean f )
+    public void setIncremental( final boolean incremental )
     {
-        _incremental = f;
+        m_incremental = incremental;
     }
 
     /**
@@ -386,29 +363,27 @@ public class CSharp
      *
      * @param mainClass The new MainClass value
      */
-    public void setMainClass( String mainClass )
+    public void setMainClass( final String mainClass )
     {
-        this._mainClass = mainClass;
+        m_mainClass = mainClass;
     }
 
     /**
      * set the optimise flag on or off
      *
-     * @param f on/off flag
+     * @param optimize on/off flag
      */
-    public void setOptimize( boolean f )
+    public void setOptimize( final boolean optimize )
     {
-        _optimize = f;
+        m_optimize = optimize;
     }
 
     /**
      * Set the definitions
-     *
-     * @param params The new OutputFile value
      */
-    public void setOutputFile( File params )
+    public void setOutputFile( final File outputFile )
     {
-        _outputFile = params;
+        m_outputFile = outputFile;
     }
 
     /**
@@ -416,35 +391,35 @@ public class CSharp
      *
      * @param path another path to append
      */
-    public void setReferenceFiles( Path path )
+    public void setReferenceFiles( final Path path )
         throws TaskException
     {
         //demand create pathlist
-        if( _referenceFiles == null )
+        if( null == m_referenceFiles )
         {
-            _referenceFiles = new Path();
+            m_referenceFiles = new Path();
         }
-        _referenceFiles.append( path );
+        m_referenceFiles.append( path );
     }
 
     /**
      * Set the reference list to be used for this compilation.
      *
-     * @param s The new References value
+     * @param references The new References value
      */
-    public void setReferences( String s )
+    public void setReferences( final String references )
     {
-        _references = s;
+        m_references = references;
     }
 
     /**
      * Set the source dir to find the files to be compiled
      *
-     * @param srcDirName The new SrcDir value
+     * @param srcDir The new SrcDir value
      */
-    public void setSrcDir( File srcDirName )
+    public void setSrcDir( final File srcDir )
     {
-        _srcDir = srcDirName;
+        m_srcDir = srcDir;
     }
 
     /**
@@ -454,18 +429,19 @@ public class CSharp
      * @exception TaskException if target is not one of
      *      exe|library|module|winexe
      */
-    public void setTargetType( String targetType )
+    public void setTargetType( final String targetType )
         throws TaskException
     {
-        targetType = targetType.toLowerCase();
-        if( targetType.equals( "exe" ) || targetType.equals( "library" ) ||
-            targetType.equals( "module" ) || targetType.equals( "winexe" ) )
+        final String type = targetType.toLowerCase();
+        if( type.equals( "exe" ) || type.equals( "library" ) ||
+            type.equals( "module" ) || type.equals( "winexe" ) )
         {
-            _targetType = targetType;
+            m_targetType = type;
         }
         else
         {
-            throw new TaskException( "targetType " + targetType + " is not a valid type" );
+            final String message = "targetType " + type + " is not a valid type";
+            throw new TaskException( message );
         }
     }
 
@@ -474,9 +450,9 @@ public class CSharp
      *
      * @param unsafe The new Unsafe value
      */
-    public void setUnsafe( boolean unsafe )
+    public void setUnsafe( final boolean unsafe )
     {
-        this._unsafe = unsafe;
+        m_unsafe = unsafe;
     }
 
     /**
@@ -484,9 +460,9 @@ public class CSharp
      *
      * @param enabled The new Utf8Output value
      */
-    public void setUtf8Output( boolean enabled )
+    public void setUtf8Output( final boolean enabled )
     {
-        _utf8output = enabled;
+        m_utf8output = enabled;
     }
 
     /**
@@ -494,9 +470,9 @@ public class CSharp
      *
      * @param warnLevel warn level -see .net docs for valid range (probably 0-4)
      */
-    public void setWarnLevel( int warnLevel )
+    public void setWarnLevel( final int warnLevel )
     {
-        this._warnLevel = warnLevel;
+        m_warnLevel = warnLevel;
     }
 
     /**
@@ -504,206 +480,84 @@ public class CSharp
      *
      * @param fileName path to the file. Can be relative, absolute, whatever.
      */
-    public void setWin32Icon( File fileName )
+    public void setWin32Icon( final File fileName )
     {
-        _win32icon = fileName;
+        m_win32icon = fileName;
     }
 
     /**
      * Set the win32 icon
      *
-     * @param fileName path to the file. Can be relative, absolute, whatever.
+     * @param win32res path to the file. Can be relative, absolute, whatever.
      */
-    public void setWin32Res( File fileName )
+    public void setWin32Res( final File win32res )
     {
-        _win32res = fileName;
-    }
-
-    /**
-     * query the debug flag
-     *
-     * @return true if debug is turned on
-     */
-    public boolean getDebug()
-    {
-        return _debug;
-    }
-
-    /**
-     * Gets the ExtraOptions attribute
-     *
-     * @return The ExtraOptions value
-     */
-    public String getExtraOptions()
-    {
-        return this._extraOptions;
-    }
-
-    /**
-     * query fail on error flag
-     *
-     * @return The FailFailOnError value
-     */
-    public boolean getFailFailOnError()
-    {
-        return _failOnError;
-    }
-
-    /**
-     * query the optimise flag
-     *
-     * @return true if optimise is turned on
-     */
-    public boolean getIncludeDefaultReferences()
-    {
-        return _includeDefaultReferences;
-    }
-
-    /**
-     * query the incrementalflag
-     *
-     * @return true iff incremental compilation is turned on
-     */
-    public boolean getIncremental()
-    {
-        return _incremental;
-    }
-
-    /**
-     * Gets the MainClass attribute
-     *
-     * @return The MainClass value
-     */
-    public String getMainClass()
-    {
-        return this._mainClass;
-    }
-
-    /**
-     * query the optimise flag
-     *
-     * @return true if optimise is turned on
-     */
-    public boolean getOptimize()
-    {
-        return _optimize;
-    }
-
-    /**
-     * Gets the TargetType attribute
-     *
-     * @return The TargetType value
-     */
-    public String getTargetType()
-    {
-        return _targetType;
-    }
-
-    /**
-     * query the Unsafe attribute
-     *
-     * @return The Unsafe value
-     */
-    public boolean getUnsafe()
-    {
-        return this._unsafe;
-    }
-
-    /**
-     * query warn level
-     *
-     * @return current value
-     */
-    public int getWarnLevel()
-    {
-        return _warnLevel;
-    }
-
-    /**
-     * reset all contents.
-     */
-    public void Clear()
-    {
-        _targetType = null;
-        _win32icon = null;
-        _srcDir = null;
-        _destDir = null;
-        _mainClass = null;
-        _unsafe = false;
-        _warnLevel = 3;
-        _docFile = null;
-        _incremental = false;
-        _optimize = false;
-        _debug = true;
-        _references = null;
-        _failOnError = true;
-        _definitions = null;
-        _additionalModules = null;
-        _includeDefaultReferences = true;
-        _extraOptions = null;
-        _fullpaths = true;
+        m_win32res = win32res;
     }
 
     /**
      * do the work by building the command line and then calling it
-     *
-     * @exception TaskException Description of Exception
      */
     public void execute()
         throws TaskException
     {
-        if( _srcDir == null )
+        if( null == m_srcDir )
         {
-            _srcDir = getBaseDirectory();
+            m_srcDir = getBaseDirectory();
         }
 
-        NetCommand command = new NetCommand( this, "CSC", csc_exe_name );
-        command.setFailOnError( getFailFailOnError() );
-        //DEBUG helper
-        command.setTraceCommandLine( true );
-        //fill in args
-        command.addArgument( "/nologo" );
-        command.addArgument( getAdditionalModulesParameter() );
-        command.addArgument( getDefinitionsParameter() );
-        command.addArgument( getDebugParameter() );
-        command.addArgument( getDocFileParameter() );
-        command.addArgument( getIncrementalParameter() );
-        command.addArgument( getMainClassParameter() );
-        command.addArgument( getOptimizeParameter() );
-        command.addArgument( getReferencesParameter() );
-        command.addArgument( getTargetTypeParameter() );
-        command.addArgument( getUnsafeParameter() );
-        command.addArgument( getWarnLevelParameter() );
-        command.addArgument( getWin32IconParameter() );
-        command.addArgument( getOutputFileParameter() );
-        command.addArgument( getIncludeDefaultReferencesParameter() );
-        command.addArgument( getDefaultReferenceParameter() );
-        command.addArgument( getWin32ResParameter() );
-        command.addArgument( getUtf8OutpuParameter() );
-        command.addArgument( getNoConfigParameter() );
-        command.addArgument( getFullPathsParameter() );
-        command.addArgument( getExtraOptionsParameter() );
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute exe = new Execute( execManager );
+        exe.setReturnCode( 0 );
+
+        final Commandline cmd = exe.getCommandline();
+        cmd.setExecutable( EXE_NAME );
+
+        addArgument( cmd, "/nologo" );
+        addArgument( cmd, getAdditionalModulesParameter() );
+        addArgument( cmd, getDefinitionsParameter() );
+        addArgument( cmd, getDebugParameter() );
+        addArgument( cmd, getDocFileParameter() );
+        addArgument( cmd, getIncrementalParameter() );
+        addArgument( cmd, getMainClassParameter() );
+        addArgument( cmd, getOptimizeParameter() );
+        addArgument( cmd, getReferencesParameter() );
+        addArgument( cmd, getTargetTypeParameter() );
+        addArgument( cmd, getUnsafeParameter() );
+        addArgument( cmd, getWarnLevelParameter() );
+        addArgument( cmd, getWin32IconParameter() );
+        addArgument( cmd, getOutputFileParameter() );
+        addArgument( cmd, getIncludeDefaultReferencesParameter() );
+        addArgument( cmd, getDefaultReferenceParameter() );
+        addArgument( cmd, getWin32ResParameter() );
+        addArgument( cmd, getUtf8OutpuParameter() );
+        addArgument( cmd, getFullPathsParameter() );
+        addArgument( cmd, getExtraOptionsParameter() );
 
         //get dependencies list.
-        DirectoryScanner scanner = super.getDirectoryScanner( _srcDir );
-        String[] dependencies = scanner.getIncludedFiles();
-        getLogger().info( "compiling " + dependencies.length + " file" + ( ( dependencies.length == 1 ) ? "" : "s" ) );
-        String baseDir = scanner.getBasedir().toString();
+        final DirectoryScanner scanner = super.getDirectoryScanner( m_srcDir );
+        final String[] dependencies = scanner.getIncludedFiles();
+        final String message = "compiling " + dependencies.length + " file" +
+            ( ( dependencies.length == 1 ) ? "" : "s" );
+        getLogger().info( message );
+        final String baseDir = scanner.getBasedir().toString();
         //add to the command
         for( int i = 0; i < dependencies.length; i++ )
         {
-            String targetFile = dependencies[ i ];
-            targetFile = baseDir + File.separator + targetFile;
-            command.addArgument( targetFile );
+            final String targetFile = baseDir + File.separator + dependencies[ i ];
+            addArgument( cmd, targetFile );
         }
 
         //now run the command of exe + settings + files
-        command.runCommand();
+        exe.execute();
     }
 
-    protected void setNoConfig( boolean enabled )
+    private void addArgument( final Commandline cmd, final String argument )
     {
-        _noconfig = enabled;
+        if( null != argument && 0 != argument.length() )
+        {
+            cmd.addArgument( argument );
+        }
     }
 
     /**
@@ -711,11 +565,11 @@ public class CSharp
      *
      * @return The AdditionalModules Parameter to CSC
      */
-    protected String getAdditionalModulesParameter()
+    private String getAdditionalModulesParameter()
     {
-        if( notEmpty( _additionalModules ) )
+        if( notEmpty( m_additionalModules ) )
         {
-            return "/addmodule:" + _additionalModules;
+            return "/addmodule:" + m_additionalModules;
         }
         else
         {
@@ -728,9 +582,9 @@ public class CSharp
      *
      * @return The Debug Parameter to CSC
      */
-    protected String getDebugParameter()
+    private String getDebugParameter()
     {
-        return "/debug" + ( _debug ? "+" : "-" );
+        return "/debug" + ( m_debug ? "+" : "-" );
     }
 
     /**
@@ -738,9 +592,9 @@ public class CSharp
      *
      * @return null or a string of references.
      */
-    protected String getDefaultReferenceParameter()
+    private String getDefaultReferenceParameter()
     {
-        if( _includeDefaultReferences )
+        if( m_includeDefaultReferences )
         {
             StringBuffer s = new StringBuffer( "/reference:" );
             s.append( DEFAULT_REFERENCE_LIST );
@@ -757,11 +611,11 @@ public class CSharp
      *
      * @return The Definitions Parameter to CSC
      */
-    protected String getDefinitionsParameter()
+    private String getDefinitionsParameter()
     {
-        if( notEmpty( _definitions ) )
+        if( notEmpty( m_definitions ) )
         {
-            return "/define:" + _definitions;
+            return "/define:" + m_definitions;
         }
         else
         {
@@ -774,11 +628,11 @@ public class CSharp
      *
      * @return The DocFile Parameter to CSC
      */
-    protected String getDocFileParameter()
+    private String getDocFileParameter()
     {
-        if( _docFile != null )
+        if( m_docFile != null )
         {
-            return "/doc:" + _docFile.toString();
+            return "/doc:" + m_docFile.toString();
         }
         else
         {
@@ -791,11 +645,11 @@ public class CSharp
      *
      * @return The ExtraOptions Parameter to CSC
      */
-    protected String getExtraOptionsParameter()
+    private String getExtraOptionsParameter()
     {
-        if( _extraOptions != null && _extraOptions.length() != 0 )
+        if( m_extraOptions != null && m_extraOptions.length() != 0 )
         {
-            return _extraOptions;
+            return m_extraOptions;
         }
         else
         {
@@ -803,9 +657,9 @@ public class CSharp
         }
     }
 
-    protected String getFullPathsParameter()
+    private String getFullPathsParameter()
     {
-        return _fullpaths ? "/fullpaths" : null;
+        return m_fullpaths ? "/fullpaths" : null;
     }
 
     /**
@@ -813,9 +667,9 @@ public class CSharp
      *
      * @return The Parameter to CSC
      */
-    protected String getIncludeDefaultReferencesParameter()
+    private String getIncludeDefaultReferencesParameter()
     {
-        return "/nostdlib" + ( _includeDefaultReferences ? "-" : "+" );
+        return "/nostdlib" + ( m_includeDefaultReferences ? "-" : "+" );
     }
 
     /**
@@ -823,9 +677,9 @@ public class CSharp
      *
      * @return The Incremental Parameter to CSC
      */
-    protected String getIncrementalParameter()
+    private String getIncrementalParameter()
     {
-        return "/incremental" + ( _incremental ? "+" : "-" );
+        return "/incremental" + ( m_incremental ? "+" : "-" );
     }
 
     /**
@@ -833,11 +687,11 @@ public class CSharp
      *
      * @return The MainClass Parameter to CSC
      */
-    protected String getMainClassParameter()
+    private String getMainClassParameter()
     {
-        if( _mainClass != null && _mainClass.length() != 0 )
+        if( m_mainClass != null && m_mainClass.length() != 0 )
         {
-            return "/main:" + _mainClass;
+            return "/main:" + m_mainClass;
         }
         else
         {
@@ -845,19 +699,14 @@ public class CSharp
         }
     }
 
-    protected String getNoConfigParameter()
-    {
-        return _noconfig ? "/noconfig" : null;
-    }
-
     /**
      * get the optimise flag or null for no argument needed
      *
      * @return The Optimize Parameter to CSC
      */
-    protected String getOptimizeParameter()
+    private String getOptimizeParameter()
     {
-        return "/optimize" + ( _optimize ? "+" : "-" );
+        return "/optimize" + ( m_optimize ? "+" : "-" );
     }
 
     /**
@@ -865,11 +714,11 @@ public class CSharp
      *
      * @return The OutputFile Parameter to CSC
      */
-    protected String getOutputFileParameter()
+    private String getOutputFileParameter()
     {
-        if( _outputFile != null )
+        if( m_outputFile != null )
         {
-            File f = _outputFile;
+            File f = m_outputFile;
             return "/out:" + f.toString();
         }
         else
@@ -879,44 +728,16 @@ public class CSharp
     }
 
     /**
-     * turn the path list into a list of files and a /references argument
-     *
-     * @return null or a string of references.
-     */
-    protected String getReferenceFilesParameter()
-    {
-        //bail on no references
-        if( _references == null )
-        {
-            return null;
-        }
-        //iterate through the ref list & generate an entry for each
-        //or just rely on the fact that the toString operator does this, but
-        //noting that the separator is ';' on windows, ':' on unix
-        String refpath = _references.toString();
-
-        //bail on no references listed
-        if( refpath.length() == 0 )
-        {
-            return null;
-        }
-
-        StringBuffer s = new StringBuffer( "/reference:" );
-        s.append( refpath );
-        return new String( s );
-    }
-
-    /**
      * get the reference string or null for no argument needed
      *
      * @return The References Parameter to CSC
      */
-    protected String getReferencesParameter()
+    private String getReferencesParameter()
     {
         //bail on no references
-        if( notEmpty( _references ) )
+        if( notEmpty( m_references ) )
         {
-            return "/reference:" + _references;
+            return "/reference:" + m_references;
         }
         else
         {
@@ -929,11 +750,11 @@ public class CSharp
      *
      * @return The TargetType Parameter to CSC
      */
-    protected String getTargetTypeParameter()
+    private String getTargetTypeParameter()
     {
-        if( notEmpty( _targetType ) )
+        if( notEmpty( m_targetType ) )
         {
-            return "/target:" + _targetType;
+            return "/target:" + m_targetType;
         }
         else
         {
@@ -946,14 +767,14 @@ public class CSharp
      *
      * @return The Unsafe Parameter to CSC
      */
-    protected String getUnsafeParameter()
+    private String getUnsafeParameter()
     {
-        return _unsafe ? "/unsafe" : null;
+        return m_unsafe ? "/unsafe" : null;
     }
 
-    protected String getUtf8OutpuParameter()
+    private String getUtf8OutpuParameter()
     {
-        return _utf8output ? "/utf8output" : null;
+        return m_utf8output ? "/utf8output" : null;
     }
 
     /**
@@ -961,9 +782,9 @@ public class CSharp
      *
      * @return The WarnLevel Parameter to CSC
      */
-    protected String getWarnLevelParameter()
+    private String getWarnLevelParameter()
     {
-        return "/warn:" + _warnLevel;
+        return "/warn:" + m_warnLevel;
     }
 
     /**
@@ -971,11 +792,11 @@ public class CSharp
      *
      * @return The Win32Icon Parameter to CSC
      */
-    protected String getWin32IconParameter()
+    private String getWin32IconParameter()
     {
-        if( _win32icon != null )
+        if( m_win32icon != null )
         {
-            return "/win32icon:" + _win32icon.toString();
+            return "/win32icon:" + m_win32icon.toString();
         }
         else
         {
@@ -988,11 +809,11 @@ public class CSharp
      *
      * @return The Win32Icon Parameter to CSC
      */
-    protected String getWin32ResParameter()
+    private String getWin32ResParameter()
     {
-        if( _win32res != null )
+        if( m_win32res != null )
         {
-            return "/win32res:" + _win32res.toString();
+            return "/win32res:" + m_win32res.toString();
         }
         else
         {
@@ -1003,11 +824,11 @@ public class CSharp
     /**
      * test for a string containing something useful
      *
-     * @param s string in
+     * @param string string in
      * @return true if the argument is not null or empty
      */
-    protected boolean notEmpty( String s )
+    private boolean notEmpty( final String string )
     {
-        return s != null && s.length() != 0;
+        return string != null && string.length() != 0;
     }
 }
