@@ -279,6 +279,7 @@
     <fixcrlf srcdir="${dist.bin}" cr="add" includes="*.bat" />
     <fixcrlf srcdir="${dist.bin}" cr="remove" includes="*.sh" />
     <fixcrlf srcdir="${dist.bin}" cr="remove" includes="ant" />
+    <fixcrlf srcdir="${dist.bin}" cr="remove" includes="antRun" />
   </target>
 
  <!--
@@ -380,6 +381,8 @@
     </copy>
 
     <fixcrlf srcdir="${src.dist.dir}" includes="*.sh" cr="remove"/>
+    <fixcrlf srcdir="${src.dist.dir}" includes="ant" cr="remove"/>
+    <fixcrlf srcdir="${src.dist.dir}" includes="antRun" cr="remove"/>
     <fixcrlf srcdir="${src.dist.dir}" includes="*.bat" cr="add"/>
     <chmod perm="+x">
       <fileset dir="${src.dist.dir}">
