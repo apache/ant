@@ -270,6 +270,9 @@ Fixed bugs:
 * Improved handling of paths on cygwin
   Bugzilla Report 31245
 
+* TarInputStream#read() wasn't implemented correctly.  Bugzilla Report
+  34097.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
