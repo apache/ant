@@ -169,8 +169,8 @@ public class JUnitTest extends BaseTest implements Cloneable {
 
     public void setProperties(Hashtable p) {
         props = new Properties();
-        for (Enumeration enum = p.keys(); enum.hasMoreElements();) {
-            Object key = enum.nextElement();
+        for (Enumeration e = p.keys(); e.hasMoreElements();) {
+            Object key = e.nextElement();
             props.put(key, p.get(key));
         }
     }
