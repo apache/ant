@@ -30,6 +30,11 @@ The following parameters, having to do with making the connection to a StarTeam 
 
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
     <td valign="top">username</td>
     <td valign="top">The username of the account used to log in to the StarTeam server.</td>
     <td align="center" valign="top">yes</td>
@@ -84,6 +89,11 @@ other tasks in Ant. Inclusion/exclusion by folder is NOT supported.
 <h3>Parameters</h3>
 See also <A href="#common-params">the required common StarTeam parameters</A>.<br></br>
 <table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
 
   <tr>
     <td valign="top">rootstarteamfolder</td>
@@ -273,6 +283,11 @@ other tasks in Ant. Inclusion/exclusion by folder is NOT supported.
 See also <A href="#common-params">the required common StarTeam parameters</A>.<br></br>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
     <td valign="top">rootstarteamfolder</td>
     <td valign="top">The root of the subtree in the StarTeam repository into which to 
     files will be checked.  Defaults to the root folder of the view ('/'). </td>
@@ -309,7 +324,7 @@ added to the repository.  Defaults to "false".</td>
   </tr>
   <tr>
     <td valign="top">recursive</td>
-    <td valign="top">Indicates if subfolders should be searched for files to check in.  Defaults to "true".</td>
+    <td valign="top">Indicates if subfolders should be searched for files to check in.  Defaults to "false".</td>
     <td align="center" valign="top">no</td>
   </tr>
   <tr>
@@ -473,6 +488,11 @@ Creates a view label in StarTeam at the specified view.  The label will be class
 <h3>Parameters</h3>
 See also <A href="#common-params">the required common StarTeam parameters</A>.<br></br>
 <table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
 
   <tr>
     <td valign="top">label</td>
@@ -486,7 +506,7 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
   </tr>
   <tr>
     <td valign="top">description</td>
-    <td valign="top">A description of the view to be stored in the StarTeam project.</td>
+    <td valign="top">A description of the label to be stored in the StarTeam project.</td>
     <td align="center" valign="top">no</td>
   </tr>
 </table>
@@ -504,7 +524,7 @@ This example shows the use of this tag.  It will create a label named <i>Version
               password="secret"
               label="Version 6.2"
               lastbuild="${nowstamp}"
-              description-"Thorough description"
+              description="Thorough description"
   /&gt;
 </pre>
 
@@ -519,6 +539,11 @@ Produces a listing of the contents of the StarTeam repository at the specified v
 <h3>Parameters</h3>
 See also <A href="#common-params">the required common StarTeam parameters</A>.<br></br>
 <table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
 
   <tr>
     <td valign="top">rootstarteamfolder</td>
