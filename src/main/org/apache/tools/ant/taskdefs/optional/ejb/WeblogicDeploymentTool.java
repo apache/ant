@@ -521,9 +521,12 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                             }
                             else
                             {
-                                //File other then class changed   rebuild
-                                log("Non class file " + genericEntry.getName() + " has changed",Project.MSG_VERBOSE);
-                                rebuild = true;
+                                // is it the manifest. If so ignore it
+                                if (!genericEntry.getName().equals("META-INF/MANIFEST.MF")) {
+                                    //File other then class changed   rebuild
+                                    log("Non class file " + genericEntry.getName() + " has changed",Project.MSG_VERBOSE);
+                                    rebuild = true;
+                                }
                                 break;
                             }
                         }
