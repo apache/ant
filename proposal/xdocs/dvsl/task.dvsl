@@ -105,6 +105,9 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
           <!-- Applying task/long-description -->
 #*        *#$context.applyTemplates("long-description")
 #*      *##end
+#*     *#$context.applyTemplates("short-description")
+#*     *#$context.applyTemplates("attribute/description")
+#*     *#$context.applyTemplates("element/description")
 #*     *#$context.applyTemplates("structure/attribute-groups")
 #*     *#$context.applyTemplates("structure/elements")
 #*     *#$context.applyTemplates("external/section")
@@ -203,6 +206,28 @@ $word.substring(0,1).toUpperCase()$word.substring(1)
     </table>
     <!-- End Description -->
 #end
+
+#*
+    Process javadoc short description section
+*#
+#match( "short-description" )
+ <!-- Ignore -->
+#end
+
+#*
+    Process javadoc attribute/description section
+*#
+#match( "attribute/description" )
+ <!-- Ignore -->
+#end
+
+#*
+    Process javadoc element/description section
+*#
+#match( "element/description" )
+ <!-- Ignore -->
+#end
+
 
 #*
     Process external desciption
