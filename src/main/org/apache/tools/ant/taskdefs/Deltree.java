@@ -76,8 +76,7 @@ public class Deltree extends Task {
 
 	if (dir.exists()) {
 	    if (!dir.isDirectory()) {
-		dir.delete();
-		if (dir.exists()) {
+		if (!dir.delete()) {
         	    throw new BuildException("Unable to delete file " + dir.getAbsolutePath());
 	        }
 		return;
@@ -110,14 +109,12 @@ public class Deltree extends Task {
 	    if (f.isDirectory()) {
 		removeDir(f);
 	    } else {
-		f.delete();
-		if (f.exists()) {
+		if (!f.delete()) {
         	    throw new BuildException("Unable to delete file " + f.getAbsolutePath());
 	        }
 	    }
 	}
-        dir.delete();
-	if (dir.exists()) {
+        if (!dir.delete()) {
 	    throw new BuildException("Unable to delete directory " + dir.getAbsolutePath());
 	}
     }
