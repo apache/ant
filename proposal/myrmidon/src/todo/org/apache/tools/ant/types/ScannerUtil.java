@@ -14,6 +14,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.PatternUtil;
 import org.apache.myrmidon.framework.PatternSet;
+import org.apache.tools.ant.taskdefs.TarFileSet;
 
 /**
  *
@@ -606,5 +607,24 @@ public class ScannerUtil
         {
             return getDirectoryScanner( set );
         }
+    }
+
+    /**
+     * Get a list of files and directories specified in the fileset.
+     *
+     * @return a list of file and directory names, relative to the baseDir
+     *      for the project.
+     */
+    public static String[] getFiles( final TarFileSet set )
+        throws TaskException
+    {
+        final DirectoryScanner scanner = getDirectoryScanner( set );
+        final String[] directories = scanner.getIncludedDirectories();
+        final String[] filesPerSe = scanner.getIncludedFiles();
+        final String[] files = new String[ directories.length + filesPerSe.length ];
+        System.arraycopy( directories, 0, files, 0, directories.length );
+        System.arraycopy( filesPerSe, 0, files, directories.length,
+                          filesPerSe.length );
+        return files;
     }
 }

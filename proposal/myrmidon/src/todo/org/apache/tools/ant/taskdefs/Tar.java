@@ -18,6 +18,7 @@ import org.apache.aut.tar.TarOutputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.types.ScannerUtil;
 import org.apache.tools.ant.util.mappers.MergingMapper;
 
 /**
@@ -140,7 +141,7 @@ public class Tar
         for( Iterator e = filesets.iterator(); e.hasNext(); )
         {
             TarFileSet fs = (TarFileSet)e.next();
-            String[] files = fs.getFiles();
+            String[] files = ScannerUtil.getFiles( fs );
 
             if( !archiveIsUpToDate( files ) )
             {
@@ -188,7 +189,7 @@ public class Tar
             for( Iterator e = filesets.iterator(); e.hasNext(); )
             {
                 TarFileSet fs = (TarFileSet)e.next();
-                String[] files = fs.getFiles();
+                String[] files = ScannerUtil.getFiles( fs );
                 for( int i = 0; i < files.length; i++ )
                 {
                     File f = new File( fs.getDir(), files[ i ] );

@@ -8,16 +8,11 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.DirectoryScanner;
-import org.apache.tools.ant.types.ScannerUtil;
-import org.apache.myrmidon.api.TaskException;
 
 public class TarFileSet
     extends FileSet
 {
-    private String[] m_files;
     private int m_mode = 0100644;
-
     private String m_userName = "";
     private String m_groupName = "";
 
@@ -34,29 +29,6 @@ public class TarFileSet
     public void setUserName( final String userName )
     {
         m_userName = userName;
-    }
-
-    /**
-     * Get a list of files and directories specified in the fileset.
-     *
-     * @return a list of file and directory names, relative to the baseDir
-     *      for the project.
-     */
-    protected String[] getFiles()
-        throws TaskException
-    {
-        if( m_files == null )
-        {
-            final DirectoryScanner scanner = ScannerUtil.getDirectoryScanner( this );
-            final String[] directories = scanner.getIncludedDirectories();
-            final String[] filesPerSe = scanner.getIncludedFiles();
-            m_files = new String[ directories.length + filesPerSe.length ];
-            System.arraycopy( directories, 0, m_files, 0, directories.length );
-            System.arraycopy( filesPerSe, 0, m_files, directories.length,
-                              filesPerSe.length );
-        }
-
-        return m_files;
     }
 
     protected String getGroup()
