@@ -53,13 +53,12 @@
  */
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import junit.framework.TestCase;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassFile;
 import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfo;
-import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.LineNumberTable;
 
 /**
  * Nothing special about this testcase...
@@ -72,7 +71,7 @@ public class ClassFileTest extends TestCase {
     }
 
     public void testVector() throws IOException {
-        String classname = ClassTest.class.getName().replace('.','/') + ".class";
+        String classname = ClassTest.class.getName().replace('.', '/') + ".class";
         InputStream is = ClassLoader.getSystemResourceAsStream(classname);
         ClassFile clazzfile = new ClassFile(is);
         assertEquals("ClassTest", clazzfile.getName());
@@ -84,11 +83,11 @@ public class ClassFileTest extends TestCase {
         assertHasMethod("void testOneLine()", 3, methods);
     }
 
-    protected void assertHasMethod(String methodsig, int line, MethodInfo[] methods){
+    protected void assertHasMethod(String methodsig, int line, MethodInfo[] methods) {
         boolean found = false;
         for (int i = 0; i < methods.length; i++) {
             MethodInfo method = methods[i];
-            if ( methodsig.equals(method.getFullSignature()) ){
+            if (methodsig.equals(method.getFullSignature())) {
                 assertEquals(methodsig, line, method.getNumberOfLines());
                 return;
             }
@@ -100,19 +99,19 @@ public class ClassFileTest extends TestCase {
 class ClassTest {
 
     // 2 lines
-    public ClassTest(){
+            public ClassTest() {
     }
 
     // 2 lines
-    public void testTwoLines(){
+            public void testTwoLines() {
         System.out.println("This is 1 line");
     }
 
     // 1 line
-    public void testOneLine() {
+            public void testOneLine() {
         try {
             throw new Exception();
-        } catch (Exception e){
+        } catch (Exception e) {
         }
     }
 }
