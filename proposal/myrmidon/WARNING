@@ -1,0 +1,28 @@
+*****************************  W A R N I N G  **********************************
+
+  All user accessible points in this software package are to be considered
+  "alpha". This means that the developer team is not investing _any_ effort
+  in providing back compatibility between alpha releases.
+  
+  This software will continue to be released as "alpha" until both code, 
+  schemas and APIs will be considered stable.
+  
+  Until then, there will be no warranty that newer versions will maintain back
+  compatibility even in the most simple cases.
+  
+  On the other hand, once "beta" status is reached, back incompatible changes
+  will be made only if absolutely necessary to reach "final" status.
+  
+  The Ant development team understands the importance of reliable
+  software as well as the importance of protecting user investiments by the
+  creation of a solid development platform that doesn't change.
+
+  On the other hand, being the Ant project a pioneer in many fields, this
+  cannot be guaranteed before a final status is reached for the software.
+  
+  Until then, no effort will be provided to guarantee back compatibility.
+  
+  You have been warned.
+
+*****************************  W A R N I N G  **********************************
+
