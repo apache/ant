@@ -38,14 +38,14 @@ public class DefaultTypeManager
                               final TypeFactory factory ) 
         throws TypeException
     {
-        final MultiSourceTypeFactory msFactory = createFactory( role + "Selector" );
+        final MultiSourceTypeFactory msFactory = createFactory( role );
         msFactory.register( shorthandName, factory );
     }
 
     public TypeFactory getFactory( final String role )
         throws TypeException
     {
-        return createFactory( role + "Selector" );
+        return createFactory( role );
     }
 
     protected final MultiSourceTypeFactory lookupFactory( final String role )
@@ -79,14 +79,10 @@ public class DefaultTypeManager
         ///If we haven't goa factory try to create a new one
         if( null == factory )
         {
-            //Precondition that role.endsWith( "Factory" )
-            final int length = role.length() - 8;
-            final String workInterface = role.substring( 0, length );
-
             try
             {
                 //TODO: Should we use ContextClassLoader here ??? Or perhaps try that on failure??
-                final Class clazz = Class.forName( workInterface );
+                final Class clazz = Class.forName( role );
                 factory = new MultiSourceTypeFactory( clazz );
             }
             catch( final Exception e )
