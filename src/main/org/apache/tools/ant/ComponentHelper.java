@@ -109,29 +109,54 @@ public class ComponentHelper  {
     protected Project project;
 
     /**
+     * find a project component for a specific project, creating
+     * it if it does not exist
+     * @param project the project
+     * @return the project component for a specific project
      */
     public static ComponentHelper getComponentHelper(Project project) {
         // Singleton for now, it may change ( per/classloader )
-        ComponentHelper ph=(ComponentHelper)project.getReference( "ant.ComponentHelper" );
-        if( ph!=null ) return ph;
-        ph=new ComponentHelper();
-        ph.setProject( project );
+        ComponentHelper ph = (ComponentHelper) project.getReference(
+            "ant.ComponentHelper");
+        if (ph != null) {
+            return ph;
+        }
+        ph = new ComponentHelper();
+        ph.setProject(project);
 
-        project.addReference( "ant.ComponentHelper",ph );
+        project.addReference("ant.ComponentHelper", ph);
         return ph;
     }
 
+    /**
+     * Creates a new ComponentHelper instance.
+     */
     protected ComponentHelper() {
     }
 
-    public void setNext( ComponentHelper next ) {
-        this.next=next;
+    /**
+     * Set the next chained component helper
+     *
+     * @param next the next chained component helper
+     */
+    public void setNext(ComponentHelper next) {
+        this.next = next;
     }
 
+    /**
+     * Get the next chained component helper
+     *
+     * @return the next chained component helper
+     */
     public ComponentHelper getNext() {
         return next;
     }
 
+    /**
+     * Sets the project for this component helper
+     *
+     * @param project the project for this helper
+     */
     public void setProject(Project project) {
         this.project = project;
         antTypeTable = new AntTypeTable(project);
@@ -141,6 +166,7 @@ public class ComponentHelper  {
      * Used with creating child projects. Each child
      * project inherites the component definitions
      * from its parent.
+     * @param helper the component helper of the parent project
      */
     public void initSubProject(ComponentHelper helper) {
         // add the types of the parent project
@@ -158,14 +184,13 @@ public class ComponentHelper  {
      * @param ue The component helper has access via ue to the entire XML tree.
      * @param ns Namespace. Also available as ue.getNamespace()
      * @param taskName The element name. Also available as ue.getTag()
-     * @return
-     * @throws BuildException
+     * @return the created component
+     * @throws BuildException if an error occuries
      */
-    public Object createComponent( UnknownElement ue,
-                                   String ns,
-                                   String taskName )
-            throws BuildException
-    {
+    public Object createComponent(UnknownElement ue,
+                                  String ns,
+                                  String taskName)
+        throws BuildException {
         Object component = createComponent(taskName);
         if (component == null) {
             return null;
@@ -189,9 +214,7 @@ public class ComponentHelper  {
      *                      name is prefixed withe the namespace uri and ":"
      * @return the class if found or null if not.
      */
-   public Object createComponent(String componentName)
-            throws BuildException
-    {
+    public Object createComponent(String componentName) {
         return antTypeTable.create(componentName);
     }
 
@@ -209,18 +232,19 @@ public class ComponentHelper  {
 
     /**
      * Return the antTypeDefinition for a componentName
+     * @param componentName the name of the component
+     * @return the ant definition or null if not present
      */
     public AntTypeDefinition getDefinition(String componentName) {
         return antTypeTable.getDefinition(componentName);
     }
 
-    /** Initialization code - implementing the original ant component
+    /**
+     * Initialization code - implementing the original ant component
      * loading from /org/apache/tools/ant/taskdefs/default.properties
      * and .../types/default.properties
-     *
-     * @throws BuildException
      */
-    public void initDefaultDefinitions() throws BuildException {
+    public void initDefaultDefinitions() {
         initTasks();
         initTypes();
     }
@@ -303,13 +327,12 @@ public class ComponentHelper  {
      *         (String to Class).
      */
     public Hashtable getTaskDefinitions() {
-        synchronized(taskClassDefinitions) {
+        synchronized (taskClassDefinitions) {
             synchronized (antTypeTable) {
                 if (rebuildTaskClassDefinitions) {
                     taskClassDefinitions.clear();
                     for (Iterator i = antTypeTable.keySet().iterator();
-                         i.hasNext();)
-                    {
+                         i.hasNext();) {
                         String name = (String) i.next();
                         Class clazz =
                             (Class) antTypeTable.getExposedClass(name);
@@ -337,20 +360,19 @@ public class ComponentHelper  {
      *         (String to Class).
      */
     public Hashtable getDataTypeDefinitions() {
-        synchronized(typeClassDefinitions) {
+        synchronized (typeClassDefinitions) {
             synchronized (antTypeTable) {
                 if (rebuildTypeClassDefinitions) {
                     typeClassDefinitions.clear();
                     for (Iterator i = antTypeTable.keySet().iterator();
-                         i.hasNext();)
-                    {
+                         i.hasNext();) {
                         String name = (String) i.next();
                         Class clazz =
                             (Class) antTypeTable.getExposedClass(name);
                         if (clazz == null) {
                             continue;
                         }
-                        if (! Task.class.isAssignableFrom(clazz)) {
+                        if (!(Task.class.isAssignableFrom(clazz))) {
                             typeClassDefinitions.put(
                                 name, antTypeTable.getTypeClass(name));
                         }
@@ -423,7 +445,7 @@ public class ComponentHelper  {
      *                           creation fails.
      */
     public Task createTask(String taskType) throws BuildException {
-        Task task=createNewTask(taskType);
+        Task task = createNewTask(taskType);
         if (task == null && taskType.equals("property")) {
             // quick fix for Ant.java use of property before
             // initializeing the project
@@ -457,7 +479,7 @@ public class ComponentHelper  {
             return null;
         }
 
-        if (! Task.class.isAssignableFrom(c)) {
+        if (!(Task.class.isAssignableFrom(c))) {
             return null;
         }
         Task task = (Task) antTypeTable.create(taskType);
@@ -508,11 +530,11 @@ public class ComponentHelper  {
             if (v != null) {
                 Enumeration enum = v.elements();
                 while (enum.hasMoreElements()) {
-                    WeakishReference ref=
+                    WeakishReference ref =
                             (WeakishReference) enum.nextElement();
                     Task t = (Task) ref.get();
                     //being a weak ref, it may be null by this point
-                    if(t!=null) {
+                    if (t != null) {
                         t.markInvalid();
                     }
                 }
@@ -568,11 +590,11 @@ public class ComponentHelper  {
     /** return true if the two definitions are the same */
     private boolean sameDefinition(
         AntTypeDefinition def, AntTypeDefinition old) {
-        if (! (old.getTypeClass(project).equals(def.getTypeClass(project)))) {
+        if (!(old.getTypeClass(project).equals(def.getTypeClass(project)))) {
             return false;
         }
-        if (! (old.getExposedClass(project).equals(
-                   def.getExposedClass(project)))) {
+        if (!(old.getExposedClass(project).equals(
+                  def.getExposedClass(project)))) {
             return false;
         }
         return true;
@@ -595,18 +617,18 @@ public class ComponentHelper  {
                 Class oldClass = antTypeTable.getExposedClass(name);
                 if (Task.class.isAssignableFrom(oldClass)) {
                     int logLevel = Project.MSG_WARN;
-                    if (def.getClassName().equals(old.getClassName()) &&
-                        def.getClassLoader() == old.getClassLoader()) {
+                    if (def.getClassName().equals(old.getClassName())
+                        && def.getClassLoader() == old.getClassLoader()) {
                         logLevel = Project.MSG_VERBOSE;
                     }
                     project.log(
-                        "Trying to override old definition of task " +
-                        name, logLevel);
+                        "Trying to override old definition of task "
+                        + name, logLevel);
                     invalidateCreatedTasks(name);
                 } else {
                     project.log(
-                        "Trying to override old definition of datatype " +
-                        name, Project.MSG_WARN);
+                        "Trying to override old definition of datatype "
+                        + name, Project.MSG_WARN);
                 }
             }
             project.log(" +Datatype " + name + " " + def.getClassName(),
@@ -620,8 +642,8 @@ public class ComponentHelper  {
      */
     private void initTasks() {
         ClassLoader classLoader = null;
-        if (project.getCoreLoader() != null &&
-            ! ("only".equals(project.getProperty("build.sysclasspath")))) {
+        if (project.getCoreLoader() != null
+            && !("only".equals(project.getProperty("build.sysclasspath")))) {
             classLoader = project.getCoreLoader();
         }
         String dataDefs = "/org/apache/tools/ant/taskdefs/defaults.properties";
@@ -649,10 +671,13 @@ public class ComponentHelper  {
             }
         } catch (IOException ex) {
             throw new BuildException("Can't load default type list");
-        }
-        finally {
+        } finally {
             if (in != null) {
-                try {in.close();} catch (Exception ignore) {}
+                try {
+                    in.close();
+                } catch (Exception ignore) {
+                    // Ignore
+                }
             }
         }
     }
@@ -662,8 +687,8 @@ public class ComponentHelper  {
      */
     private void initTypes() {
         ClassLoader classLoader = null;
-        if (project.getCoreLoader() != null &&
-            ! ("only".equals(project.getProperty("build.sysclasspath")))) {
+        if (project.getCoreLoader() != null
+            && !("only".equals(project.getProperty("build.sysclasspath")))) {
             classLoader = project.getCoreLoader();
         }
         String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
@@ -689,10 +714,13 @@ public class ComponentHelper  {
             }
         } catch (IOException ex) {
             throw new BuildException("Can't load default type list");
-        }
-        finally {
+        } finally {
             if (in != null) {
-                try {in.close();} catch (Exception ignore) {}
+                try {
+                    in.close();
+                } catch (Exception ignore) {
+                    // ignore
+                }
             }
         }
     }
@@ -701,7 +729,7 @@ public class ComponentHelper  {
      * map that contains the component definitions
      */
     private static class AntTypeTable extends Hashtable {
-        Project project;
+        private Project project;
 
         public AntTypeTable(Project project) {
             this.project = project;
@@ -745,8 +773,9 @@ public class ComponentHelper  {
             for (Iterator i = values().iterator(); i.hasNext();) {
                 AntTypeDefinition def = (AntTypeDefinition) i.next();
                 Class c = def.getExposedClass(project);
-                if (c == clazz)
+                if (c == clazz) {
                     return true;
+                }
             }
             return false;
         }
