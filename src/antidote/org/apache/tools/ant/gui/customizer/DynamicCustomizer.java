@@ -259,7 +259,7 @@ public class DynamicCustomizer extends JPanel {
         return retval;
     }
 
-    /** Class for receiving change events from teh PropertyEditor objects. */
+    /** Class for receiving change events from the PropertyEditor objects. */
     private class EditorChangeListener implements PropertyChangeListener {
         public void propertyChange(PropertyChangeEvent e) {
             PropertyEditor editor = (PropertyEditor) e.getSource();
@@ -270,6 +270,7 @@ public class DynamicCustomizer extends JPanel {
                 try {
                     Object[] params = { editor.getValue() };
                     writer.invoke(_value, params);
+                    setObject(_value);
                     //firePropertyChange(
                     //prop.getName(), null, editor.getValue());
                 }

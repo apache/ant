@@ -15,12 +15,12 @@
   <property name="src.etc.dir" value="etc"/>
   <property name="src.dir" value="."/>
   <property name="docs.dir" value="docs"/>
-  <property name="build.dir" value="../../../build/ant"/>
-  <property name="lib.dir" value="${build.dir}/lib"/>
-  <property name="bin.dir" value="${build.dir}/bin"/>
+  <property name="build.dir" value="../../../build/antidote"/>
+  <property name="ant.build.dir" value="../../../build/ant"/>
+  <property name="lib.dir" value="${ant.build.dir}/lib"/>
+  <property name="bin.dir" value="${ant.build.dir}/bin"/>
   <property name="build.classes" value="${build.dir}/classes"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
-  <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="ant.dist.dir" value="../../../dist/ant"/>
 
   <path id="classpath">
@@ -48,6 +48,7 @@
   <!-- =================================================================== -->
   <target name="prepare">
     <mkdir dir="${build.dir}"/>
+    <mkdir dir="${ant.build.dir}"/>
     <tstamp />
   </target>
 

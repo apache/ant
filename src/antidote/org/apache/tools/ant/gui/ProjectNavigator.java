@@ -87,7 +87,7 @@ class ProjectNavigator extends AntEditor {
         add(scroller);
 
         setPreferredSize(new Dimension(150, 100));
-
+        setMinimumSize(new Dimension(150, 100));
 	}
 
     /** Class for handling project events. */

@@ -52,60 +52,57 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
-
-import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
-import org.apache.tools.ant.gui.acs.*;
 import org.apache.tools.ant.gui.event.*;
+import org.apache.tools.ant.gui.acs.ACSTargetElement;
 import javax.swing.*;
-import java.util.*;
-import java.io.StringReader;
-import java.io.IOException;
+import javax.swing.plaf.ComponentUI;
+import javax.swing.text.Document;
 import java.awt.BorderLayout;
+import java.awt.Insets;
+import java.awt.Dimension;
+import java.util.EventObject;
 
 /**
- * Stub for a property editor.
- *
+ * A widget for displaying the currently selected targets.
+ * 
  * @version $Revision$ 
- * @author Simeon H.K. Fitch 
+ * @author Simeon Fitch 
  */
-class PropertyEditor extends AntEditor {
+public class TargetMonitor extends AntEditor {
+        
+    /** Place to display selected targets. */
+    private JLabel _text = null;
 
-    /** The property sheet. */
-    private DynamicCustomizer _customizer = null;
-    /** Container for the customizer. */
-    private JPanel _container = null;
+    /** Default text. */
+    private String _defText = null;
 
 	/** 
 	 * Standard ctor.
 	 * 
-	 * @param context Application context. 
+	 * @param context Application context;
 	 */
-	public PropertyEditor(AppContext context) {
+    public TargetMonitor(AppContext context) {
         super(context);
-        context.getEventBus().addMember(EventBus.MONITORING, new Handler());
+        context.getEventBus().addMember(EventBus.RESPONDING, new Handler());
+
         setLayout(new BorderLayout());
-        _container = new JPanel(new BorderLayout());
-        add(new JScrollPane(_container));
-	}
+
+        _text = new JLabel();
+        _text.setForeground(UIManager.getColor("TextField.foreground"));
+        add(BorderLayout.NORTH, _text);
+
+
+        _defText = context.getResources().getString(getClass(), "defText");
+        setText(_defText);
+    }
 
 	/** 
-	 * Update the display for the current items. 
+	 * Set the displayed text. 
 	 * 
-	 * @param items Current items to display.
+	 * @param text Text to display.
 	 */
-    private void updateDisplay(ACSElement[] items) {
-        if(_customizer != null) {
-            _container.remove(_customizer);
-            _customizer = null;
-        }
-
-        if(items != null && items.length == 1) {
-            _customizer = new DynamicCustomizer(items[0].getClass());
-            _customizer.setObject(items[0]);
-            _container.add(BorderLayout.CENTER, _customizer);
-        }
-
-        validate();
+    private void setText(String text) {
+        _text.setText("<html>&nbsp;&nbsp;" + text + "</html>");
     }
 
 
@@ -122,19 +119,36 @@ class PropertyEditor extends AntEditor {
         public BusFilter getBusFilter() {
             return _filter;
         }
-
+        
         /** 
-         * Called when an event is to be posted to the member.
+         * Called when an event is to be posed to the member.
          * 
          * @param event Event to post.
          */
         public void eventPosted(EventObject event) {
             ElementSelectionEvent e = (ElementSelectionEvent) event;
-            ACSElement[] elements = e.getSelectedElements();
-            updateDisplay(elements);
-        }
+            String text = _defText;
 
+            ProjectProxy p =  getAppContext().getProject();
+            if(p != null) {
+                ElementSelectionModel selections = p.getTreeSelectionModel();
+                ACSTargetElement[] targets = selections.getSelectedTargets();
+                if(targets != null && targets.length > 0) {
+                    StringBuffer buf = new StringBuffer();
+                    for(int i = 0; i < targets.length; i++) {
+                        buf.append(targets[i].getName());
+                        if(i < targets.length - 1) {
+                            buf.append(", ");
+                        }
+                    }
+                    text = buf.toString();
+                }
+            }
+
+            setText(text);
+        }
     }
+
     /** Class providing filtering for project events. */
     private static class Filter implements BusFilter {
         /** 
@@ -147,4 +161,5 @@ class PropertyEditor extends AntEditor {
             return event instanceof ElementSelectionEvent;
         }
     }
+
 }

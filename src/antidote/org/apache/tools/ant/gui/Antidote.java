@@ -97,6 +97,9 @@ public class Antidote extends JPanel {
 
         add(BorderLayout.CENTER, splitter2);
         splitter2.resetToPreferredSizes();
+
+        add(BorderLayout.NORTH, populateEditors("top"));
+
         setPreferredSize(new Dimension(640, 480));
     }
 

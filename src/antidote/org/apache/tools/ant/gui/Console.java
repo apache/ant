@@ -117,24 +117,37 @@ public class Console extends AntEditor {
         }
         
         /** 
+         * Clear the contents of the console.
+         * 
+         */
+        private void clearDisplay() {
+            Document doc = _text.getDocument();
+            try {
+                doc.remove(0, doc.getLength());
+                
+            }
+            catch(Exception ex) {
+                // Intentionally ignored.
+            }
+        }
+
+        /** 
          * Called when an event is to be posed to the member.
          * 
          * @param event Event to post.
          */
         public void eventPosted(EventObject event) {
+            if(event instanceof NewProjectEvent) {
+                clearDisplay();
+                return;
+            }
+
             AntBuildEvent buildEvent = (AntBuildEvent) event;
             String text = null;
 
-            Document doc = _text.getDocument();
-
             switch(buildEvent.getType().getValue()) {
               case BuildEventType.BUILD_STARTED_VAL:
-                  try {
-                      doc.remove(0, doc.getLength());
-                  }
-                  catch(Exception ex) {
-                      // Intentionally ignored.
-                  }
+                  clearDisplay();
                   break;
               case BuildEventType.TARGET_STARTED_VAL:
                   text = buildEvent.getEvent().getTarget().getName() + ":";
@@ -154,6 +167,7 @@ public class Console extends AntEditor {
 
             if(text != null) {
                 try {
+                    Document doc = _text.getDocument();
                     doc.insertString(doc.getLength(), text, null);
                     doc.insertString(doc.getLength(), "\n", null);
                 }
@@ -173,7 +187,8 @@ public class Console extends AntEditor {
          * @return True if event should be given to BusMember, false otherwise.
          */
         public boolean accept(EventObject event) {
-            return event instanceof AntBuildEvent;
+            return event instanceof AntBuildEvent ||
+                event instanceof NewProjectEvent;
         }
     }
 

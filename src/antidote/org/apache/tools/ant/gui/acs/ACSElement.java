@@ -97,6 +97,21 @@ public abstract class ACSElement extends ElementNode {
     }
 
 	/** 
+	 * Set the given attribute.
+	 * 
+	 * @param name Name of the attribute.
+	 * @param value Value of the attribute.
+	 */
+    public void setAttribute(String name, String value) {
+        if(value == null || value.length() == 0) {
+            removeAttribute(name);
+        }
+        else {
+            super.setAttribute(name, value);
+        }
+    }
+
+	/** 
 	 * Add a change listener.
 	 * 
 	 * @param l Listener to add.
