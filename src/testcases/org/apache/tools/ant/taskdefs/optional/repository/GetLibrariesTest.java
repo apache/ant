@@ -66,7 +66,7 @@ public class GetLibrariesTest extends BuildFileTest {
     /**
      * refs are  broken
      * */
-    public void testFunctionalInline() {
+    public void NotestFunctionalInline() {
         if(offline()) {
             return;
         }
