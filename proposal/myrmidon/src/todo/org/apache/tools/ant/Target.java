@@ -121,25 +121,6 @@ public class Target
         return retval;
     }
 
-    public final void performTasks()
-    {
-        try
-        {
-            project.fireTargetStarted( this );
-            execute();
-            project.fireTargetFinished( this, null );
-        }
-        catch( final TaskException te )
-        {
-            project.fireTargetFinished( this, te );
-        }
-        catch( RuntimeException exc )
-        {
-            project.fireTargetFinished( this, exc );
-            throw exc;
-        }
-    }
-
     public void addDependency( String dependency )
     {
         dependencies.addElement( dependency );
@@ -148,29 +129,6 @@ public class Target
     public void addTask( Task task )
     {
         children.addElement( task );
-    }
-
-    public void execute()
-        throws TaskException
-    {
-        Enumeration enum = children.elements();
-        while( enum.hasMoreElements() )
-        {
-            Object o = enum.nextElement();
-            if( o instanceof Task )
-            {
-                Task task = (Task)o;
-                task.perform();
-            }
-            else
-            {
-            }
-        }
-    }
-
-    public String toString()
-    {
-        return name;
     }
 
     void replaceChild( Task el, Object o )

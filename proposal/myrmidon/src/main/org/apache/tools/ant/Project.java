@@ -884,48 +884,6 @@ public class Project
     public void executeTarget( String targetName )
         throws TaskException
     {
-
-        // sanity check ourselves, if we've been asked to build nothing
-        // then we should complain
-
-        if( targetName == null )
-        {
-            String msg = "No target specified";
-            throw new TaskException( msg );
-        }
-
-        // Sort the dependency tree, and run everything from the
-        // beginning until we hit our targetName.
-        // Sorting checks if all the targets (and dependencies)
-        // exist, and if there is any cycle in the dependency
-        // graph.
-        Vector sortedTargets = topoSort( targetName, targets );
-
-        int curidx = 0;
-        Target curtarget;
-
-        do
-        {
-            curtarget = (Target)sortedTargets.elementAt( curidx++ );
-            curtarget.performTasks();
-        } while( !curtarget.getName().equals( targetName ) );
-    }
-
-    /**
-     * execute the sequence of targets, and the targets they depend on
-     *
-     * @param targetNames Description of Parameter
-     * @throws TaskException if the build failed
-     */
-    public void executeTargets( Vector targetNames )
-        throws TaskException
-    {
-        Throwable error = null;
-
-        for( int i = 0; i < targetNames.size(); i++ )
-        {
-            executeTarget( (String)targetNames.elementAt( i ) );
-        }
     }
 
     /**
