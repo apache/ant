@@ -37,27 +37,54 @@
         </table>
       </subsection>
     </section>
-    
+
     <section name="Books">
       <p>Listed by descending publication date.</p>
       <!-- TODO: reorganize as a table? -->
+      <subsection name="Ant. Das Java-Build-Tool in der Praxis">
+        <p>A German language book on Ant that covers Ant 1.5.
+        This is the original description:</p>
+        <source>
+        Das Build-Tool Ant ist das Open-Source-Werkzeug, das den Entwicklungsprozess einer Java-
+        oder J2EE-Anwendung wesentlich vereinfacht. Gesteuert durch XML-basierte Skripte führt es
+        nahezu alle Aufgaben aus, die nach dem Kodieren einer Anwendung anfallen.</source>
+        <p>Some topics:</p>
+            <ul>
+                <li>creating archives (zip, jar)</li>
+                <li>call the java compiler</li>
+                <li>edit property files</li>
+                <li>file operation</li>
+                <li>source code control systems</li>
+            </ul>
+        <table>
+          <tr>
+            <th>Authors:</th>
+            <td>Bernd Matzke</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.addison-wesley.de/main/main.asp?page=home/bookdetails&amp;ProductID=13459">http://www.addison-wesley.de/main/main.asp?page=home/bookdetails&amp;ProductID=13459</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Java Development with Ant">
         <p>Covers Ant 1.5, including:</p>
             <ul>
                 <li>The new Ant 1.5 features</li>
-                <li>Ant's datatypes and property handling</li> 
-                <li>JUnit testing and reporting</li> 
-                <li>Continuous integration techniques</li> 
-                <li>XDoclet for attribute-oriented programming</li> 
-                <li>EJB generation, building, and packaging</li> 
-                <li>Writing and testing native code</li> 
-                <li>Building Web Services with Apache Axis</li> 
-                <li>Deploying your system to multiple remote servers</li> 
+                <li>Ant's datatypes and property handling</li>
+                <li>JUnit testing and reporting</li>
+                <li>Continuous integration techniques</li>
+                <li>XDoclet for attribute-oriented programming</li>
+                <li>EJB generation, building, and packaging</li>
+                <li>Writing and testing native code</li>
+                <li>Building Web Services with Apache Axis</li>
+                <li>Deploying your system to multiple remote servers</li>
                 <li>Using and writing
                     <ul>
                         <li>Loggers</li>
-                        <li>Listeners</li> 
-                        <li>Selectors</li> 
+                        <li>Listeners</li>
+                        <li>Selectors</li>
                         <li>Custom tasks</li>
                     </ul>
                 </li>
@@ -150,7 +177,7 @@
 
       <subsection name="Ant in Anger: Using Ant in a Production Development
       System">
-        <p>This document describes strategies and some basic examples of how to 
+        <p>This document describes strategies and some basic examples of how to
         use Ant in larger team development projects.</p>
 
         <table>
