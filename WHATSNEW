@@ -156,6 +156,9 @@ Fixed bugs:
 * The Visual Age for Java tasks didn't work (at least for versions 3.0
   and higher).  Bugzilla Report 10016.
 
+* VAJImport task failed with NullPointerException when using DirectoryScanner.
+  Bugzilla Report 22080.
+
 * URL-encoding in <vaj*port> didn't work properly.
 
 * VAJRemoteUtil called getAbsolutePath instead of getPath
