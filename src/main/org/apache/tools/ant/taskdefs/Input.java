@@ -77,6 +77,7 @@ public class Input extends Task {
     private String validargs = null;
     private String message = "";
     private String addproperty = null;
+    private String defaultvalue = null;
 
     /**
      * Defines valid input parameters as comma separated strings. If set, input
@@ -110,6 +111,17 @@ public class Input extends Task {
     }
 
     /**
+     * Defines the default value of the property to be created from input.
+     * Property value will be set to default if not input is received.
+     *
+     * @param defaultvalue Default value for the property if no input
+     * is received
+     */
+    public void setDefaultvalue (String defaultvalue) {
+        this.defaultvalue = defaultvalue;
+    }
+
+    /**
      * Set a multiline message.
      */
     public void addText(String msg) {
@@ -137,8 +149,13 @@ public class Input extends Task {
 
         getProject().getInputHandler().handleInput(request);
 
+        String value = request.getInput();
+        if ((value == null || value.trim().length() == 0) 
+            && defaultvalue != null) {
+            value = defaultvalue;
+        }
         if (addproperty != null) {
-            project.setNewProperty(addproperty, request.getInput());
+            project.setNewProperty(addproperty, value);
         }
     }
 

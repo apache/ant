@@ -11,6 +11,8 @@ properties files and output them instead of Ant's properties.
 
 * <filterset> will now resolve filters recursively.
 
+* <input> has a new attribute that allows you to specify a default value.
+
 Changes from Ant 1.4.1 to Ant 1.5
 =================================
 
