@@ -207,7 +207,7 @@ The syntax is filters is similar to a <a href="../CoreTypes/fileset.html">filese
 </tr>
   <tr>
     <td valign="top">defaultexclude</td> 
-    <td valign="top">As a default, the coverage exclude all classes and methods.
+    <td valign="top">As a default, the coverage excludes all classes and methods.
      Default filters are equivalent to
 <pre>
   &lt;filters&gt;
@@ -232,12 +232,17 @@ with a <tt>name</tt> attribute.
   <tr>
     <td valign="top">class</td> 
     <td valign="top">The class mask as a simple regular expression</td>
-    <td align="center">No, default to *</td>
+    <td align="center">No, defaults to "*"</td>
   </tr>
   <tr>
     <td valign="top">method</td> 
     <td valign="top">The method mask as a simple regular expression</td>
-    <td align="center">No, default to *</td>
+    <td align="center">No, defaults to "*"</td>
+  </tr>
+  <tr>
+    <td valign="top">enabled</td> 
+    <td valign="top">is the filter enabled?</td>
+    <td align="center">No, defaults to true</td>
   </tr>
 </table>
 </blockquote>
