@@ -673,6 +673,33 @@
         </table>
       </subsection>
 
+      <subsection name="Grand">
+        <p>Grand is a set of tools to create a visual representation of Ant target 
+          dependencies. It works by taking an Ant build file and creating a "dot" file. It 
+          differs from the existing tools by relying on the Ant API rather than XML parsing to 
+          get the dependencies. It includes many advanced features such as filtering or 
+          rendering depending on the target's nature. Also features a SWT based GUI.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.6 and later</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://www.ggtools.net/grand/">http://www.ggtools.net/grand/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td>Christophe Labouisse</td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>BSD License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Greebo">
 
         <p>Greebo is an Ant-task for downloading dependency files
