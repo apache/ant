@@ -67,7 +67,7 @@ import java.io.StringReader;
  */
 public final class StripJavaComments
     extends FilterReader
-    implements CloneableReader
+    implements ChainableReader
 {
     /**
      * This constructor is a dummy constructor and is
@@ -167,7 +167,7 @@ public final class StripJavaComments
         return n;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         StripJavaComments newFilter = new StripJavaComments(rdr);
         return newFilter;
     }

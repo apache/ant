@@ -75,7 +75,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class StripLineBreaks
     extends FilterReader
-    implements Parameterizable, CloneableReader
+    implements Parameterizable, ChainableReader
 {
     /**
      * Linebreaks. What do to on funny IBM mainframes with odd line endings?
@@ -177,7 +177,7 @@ public final class StripLineBreaks
         return initialized;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         StripLineBreaks newFilter = new StripLineBreaks(rdr);
         newFilter.setLineBreaks(getLineBreaks());
         newFilter.setInitialized(true);

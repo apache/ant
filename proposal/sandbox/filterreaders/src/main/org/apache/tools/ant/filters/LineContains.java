@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class LineContains
     extends FilterReader
-    implements Parameterizable, CloneableReader
+    implements Parameterizable, ChainableReader
 {
     private static final String CONTAINS_KEY = "contains";
 
@@ -160,7 +160,7 @@ public final class LineContains
         return initialized;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         LineContains newFilter = new LineContains(rdr);
         newFilter.setContains(getContains());
         newFilter.setInitialized(true);

@@ -84,7 +84,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class ReplaceTokens
     extends FilterReader
-    implements Parameterizable, CloneableReader
+    implements Parameterizable, ChainableReader
 {
     private static final char DEFAULT_BEGIN_TOKEN = '@';
 
@@ -237,7 +237,7 @@ public final class ReplaceTokens
         return initialized;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         ReplaceTokens newFilter = new ReplaceTokens(rdr);
         newFilter.setBeginToken(getBeginToken());
         newFilter.setEndToken(getEndToken());

@@ -56,7 +56,7 @@ package org.apache.tools.ant.util;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.filters.CloneableReader;
+import org.apache.tools.ant.filters.ChainableReader;
 import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterReaderSet;
 import org.apache.tools.ant.types.Path;
@@ -195,9 +195,9 @@ public final class ChainReaderHelper {
                             throw new BuildException(ite);
                         }
                     }
-                } else if (o instanceof CloneableReader &&
+                } else if (o instanceof ChainableReader &&
                            o instanceof Reader) {
-                    instream = ((CloneableReader) o).clone(instream);
+                    instream = ((ChainableReader) o).chain(instream);
                 }
             }
         }

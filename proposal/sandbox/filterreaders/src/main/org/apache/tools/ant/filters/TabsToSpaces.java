@@ -79,7 +79,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class TabsToSpaces
     extends FilterReader
-    implements Parameterizable, CloneableReader
+    implements Parameterizable, ChainableReader
 {
     private static final int DEFAULT_TAB_LENGTH = 8;
 
@@ -183,7 +183,7 @@ public final class TabsToSpaces
         return initialized;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         TabsToSpaces newFilter = new TabsToSpaces(rdr);
         newFilter.setTablength(getTablength());
         newFilter.setInitialized(true);

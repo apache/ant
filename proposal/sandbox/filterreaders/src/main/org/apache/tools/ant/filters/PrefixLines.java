@@ -26,7 +26,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class PrefixLines
     extends FilterReader
-    implements Parameterizable, CloneableReader
+    implements Parameterizable, ChainableReader
 {
     /**
      * prefix key
@@ -145,7 +145,7 @@ public final class PrefixLines
         return initialized;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         PrefixLines newFilter = new PrefixLines(rdr);
         newFilter.setPrefix(getPrefix());
         newFilter.setInitialized(true);

@@ -37,7 +37,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class StripLineComments
     extends FilterReader
-    implements Parameterizable, CloneableReader
+    implements Parameterizable, ChainableReader
 {
     private static final String COMMENTS_KEY = "comment";
 
@@ -161,7 +161,7 @@ public final class StripLineComments
         return initialized;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         StripLineComments newFilter = new StripLineComments(rdr);
         newFilter.setComments(getComments());
         newFilter.setInitialized(true);

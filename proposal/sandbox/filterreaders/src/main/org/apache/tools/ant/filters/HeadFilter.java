@@ -79,7 +79,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class HeadFilter
     extends FilterReader
-    implements Parameterizable, CloneableReader
+    implements Parameterizable, ChainableReader
 {
     private static final String LINES_KEY = "lines";
 
@@ -192,7 +192,7 @@ public final class HeadFilter
         return initialized;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         HeadFilter newFilter = new HeadFilter(rdr);
         newFilter.setLines(getLines());
         newFilter.setInitialized(true);

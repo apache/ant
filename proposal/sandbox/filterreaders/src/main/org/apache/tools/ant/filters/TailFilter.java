@@ -79,7 +79,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class TailFilter
     extends FilterReader
-    implements Parameterizable, CloneableReader
+    implements Parameterizable, ChainableReader
 {
     private static final String LINES_KEY = "lines";
 
@@ -237,7 +237,7 @@ public final class TailFilter
         return initialized;
     }
 
-    public final Reader clone(final Reader rdr) {
+    public final Reader chain(final Reader rdr) {
         TailFilter newFilter = new TailFilter(rdr);
         newFilter.setLines(getLines());
         newFilter.setInitialized(true);
