@@ -64,10 +64,6 @@ import java.net.URL;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Enumeration;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.FactoryConfigurationError;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -78,6 +74,7 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.types.DTDLocation;
+import org.apache.tools.ant.util.JAXPUtils;
 import org.xml.sax.XMLReader;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.Parser;
@@ -95,12 +92,6 @@ import org.xml.sax.helpers.ParserAdapter;
  * @author Raphael Pierquin <a href="mailto:raphael.pierquin@agisphere.com">raphael.pierquin@agisphere.com</a>
  */
 public class XMLValidateTask extends Task {
-
-    /**
-     * Parser factory to use to create parsers.
-     * @see #getParserFactory
-     */
-    private static SAXParserFactory parserFactory = null;
 
     protected static String INIT_FAILED_MSG = 
         "Could not start xml validation: ";
@@ -294,20 +285,10 @@ public class XMLValidateTask extends Task {
 
         Object reader = null;
         if (readerClassName == null) {
-            // use JAXP
             try {
-                SAXParser saxParser = getParserFactory().newSAXParser();
-                try {
-                    reader = saxParser.getXMLReader();
-                } catch (SAXException exc) {
-                    reader = saxParser.getParser();
-                }
-            } catch (ParserConfigurationException e) {
-                throw new BuildException(INIT_FAILED_MSG + e.getMessage(), 
-                                         e, getLocation());
-            } catch (SAXException e) {
-                throw new BuildException(INIT_FAILED_MSG + e.getMessage(), 
-                                         e, getLocation());
+                reader = JAXPUtils.getXMLReader();
+            } catch (BuildException exc) {
+                reader = JAXPUtils.getParser();
             }
         } else {
         
@@ -370,21 +351,6 @@ public class XMLValidateTask extends Task {
                 setFeature(featureId, ((Boolean) features.get(featureId)).booleanValue(), true);
             }
         }
-    }
-
-    /**
-     * Returns the parser factory to use. Only one parser
-     * factory is ever created by this method (multi-threading
-     * issues aside) and is then cached for future use.
-     *
-     * @return a SAXParserFactory to use within this class
-     */
-    private static SAXParserFactory getParserFactory() {
-        if (parserFactory == null) {
-            parserFactory = SAXParserFactory.newInstance();
-        }
-
-        return parserFactory;
     }
 
     /*

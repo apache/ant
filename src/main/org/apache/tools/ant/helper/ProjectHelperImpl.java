@@ -63,15 +63,11 @@ import java.util.Locale;
 import org.xml.sax.Locator;
 import org.xml.sax.InputSource;
 import org.xml.sax.HandlerBase;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.DocumentHandler;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.XMLReaderAdapter;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.FactoryConfigurationError;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.Project;
@@ -83,6 +79,7 @@ import org.apache.tools.ant.IntrospectionHelper;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.Location;
 import org.apache.tools.ant.TaskAdapter;
+import org.apache.tools.ant.util.JAXPUtils;
 
 /**
  * Original helper.
@@ -90,12 +87,6 @@ import org.apache.tools.ant.TaskAdapter;
  * @author duncan@x180.com
  */
 public class ProjectHelperImpl extends ProjectHelper {
-
-    /**
-     * Parser factory to use to create parsers.
-     * @see #getParserFactory
-     */
-    private static SAXParserFactory parserFactory = null;
 
     /**
      * SAX 1 style parser used to parse the given file. This may
@@ -139,11 +130,10 @@ public class ProjectHelperImpl extends ProjectHelper {
         buildFileParent = new File(this.buildFile.getParent());
 
         try {
-            SAXParser saxParser = getParserFactory().newSAXParser();
             try {
-                parser = saxParser.getParser();
-            } catch (SAXException exc) {
-                parser = new XMLReaderAdapter(saxParser.getXMLReader());
+                parser = JAXPUtils.getParser();
+            } catch (BuildException e) {
+                parser = new XMLReaderAdapter(JAXPUtils.getXMLReader());
             }
 
 
@@ -163,11 +153,6 @@ public class ProjectHelperImpl extends ProjectHelper {
             parser.setErrorHandler(hb);
             parser.setDTDHandler(hb);
             parser.parse(inputSource);
-        } catch (ParserConfigurationException exc) {
-            throw new BuildException("Parser has not been configured correctly", exc);
-        } catch (FactoryConfigurationError e) {
-            throw new BuildException("XML parser has not been configured " 
-                + "correctly: " + e.getMessage(), e);
         } catch (SAXParseException exc) {
             Location location =
                 new Location(buildFile.toString(), exc.getLineNumber(),
@@ -1149,21 +1134,6 @@ public class ProjectHelperImpl extends ProjectHelper {
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             new NestedElementHandler(helperImpl, this, element, wrapper, target).init(name, attrs);
         }
-    }
-
-    /**
-     * Returns the parser factory to use. Only one parser
-     * factory is ever created by this method (multi-threading
-     * issues aside) and is then cached for future use.
-     *
-     * @return a SAXParserFactory to use within this class
-     */
-    private static SAXParserFactory getParserFactory() {
-        if (parserFactory == null) {
-            parserFactory = SAXParserFactory.newInstance();
-        }
-
-        return parserFactory;
     }
 
     /**
