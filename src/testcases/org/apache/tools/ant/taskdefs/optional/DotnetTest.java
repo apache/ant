@@ -103,7 +103,23 @@ public class DotnetTest extends BuildFileTest {
      */
     public void testCSC() throws Exception {
         executeTarget("testCSC");
-    } 
+    }
+
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testCSCdll() throws Exception {
+        executeTarget("testCSCdll");
+    }
+
+    /**
+     * A unit test for JUnit
+     */
+    public void testCscReferences() throws Exception {
+        executeTarget("testCscReferences");
+    }
+
     /**
      * A unit test for JUnit
      */
