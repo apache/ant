@@ -26,7 +26,7 @@
   <target name="package-attribute">
     <mkdir dir="tmpdir" />
     <cvs cvsroot=":pserver:anoncvs@cvs.apache.org:/home/cvspublic"
-         package="jakarta-ant/build.xml"
+         package="ant/build.xml"
          dest="tmpdir"
          quiet="true" />
   </target>
@@ -34,12 +34,12 @@
   <target name="tag-attribute">
     <mkdir dir="tmpdir" />
     <cvs cvsroot=":pserver:anoncvs@cvs.apache.org:/home/cvspublic"
-         package="jakarta-ant/build.xml"
+         package="ant/build.xml"
          dest="tmpdir"
          quiet="true"
          tag="ANT_141" />
     <cvs cvsroot=":pserver:anoncvs@cvs.apache.org:/home/cvspublic"
-         package="jakarta-ant/build.xml"
+         package="ant/build.xml"
          dest="tmpdir"
          command="status"/>
   </target>
