@@ -1541,7 +1541,7 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         to use this task with JDK 1.5.</p>
 
         <p>Starting with Ant 1.6.2 <code>&lt;junitreport&gt;</code>
-        will support JDK 1.5.</p>
+        supports JDK 1.5.</p>
 
       </answer>
     </faq>
