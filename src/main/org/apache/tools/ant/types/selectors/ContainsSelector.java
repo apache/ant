@@ -75,7 +75,7 @@ public class ContainsSelector extends BaseExtendSelector {
 
     private String contains = null;
     private boolean casesensitive = true;
-    public final static String CONTAINS_KEY = "contains";
+    public final static String CONTAINS_KEY = "text";
     public final static String CASE_KEY = "casesensitive";
 
 
@@ -83,7 +83,7 @@ public class ContainsSelector extends BaseExtendSelector {
     }
 
     public String toString() {
-        StringBuffer buf = new StringBuffer("{containsselector contains: ");
+        StringBuffer buf = new StringBuffer("{containsselector text: ");
         buf.append(contains);
         buf.append(" casesensitive: ");
         if (casesensitive) {
@@ -100,7 +100,7 @@ public class ContainsSelector extends BaseExtendSelector {
      *
      * @param contains the string that a file must contain to be selected.
      */
-    public void setContains(String contains) {
+    public void setText(String contains) {
         this.contains = contains;
     }
 
@@ -125,7 +125,7 @@ public class ContainsSelector extends BaseExtendSelector {
             for (int i = 0; i < parameters.length; i++) {
                 String paramname = parameters[i].getName();
                 if (CONTAINS_KEY.equalsIgnoreCase(paramname)) {
-                    setContains(parameters[i].getValue());
+                    setText(parameters[i].getValue());
                 }
                 else if (CASE_KEY.equalsIgnoreCase(paramname)) {
                     setCasesensitive(Project.toBoolean(
@@ -145,7 +145,7 @@ public class ContainsSelector extends BaseExtendSelector {
      */
     public void verifySettings() {
         if (contains == null) {
-            setError("The contains attribute is required");
+            setError("The text attribute is required");
         }
     }
 
@@ -167,13 +167,20 @@ public class ContainsSelector extends BaseExtendSelector {
             return true;
         }
 
+        String userstr = contains;
+        if (!casesensitive) {
+            userstr = contains.toLowerCase();
+        }
         BufferedReader in = null;
         try {
             in = new BufferedReader(new InputStreamReader(
                     new FileInputStream(file)));
             String teststr = in.readLine();
             while (teststr != null) {
-                if (teststr.indexOf(contains) > -1) {
+                if (!casesensitive) {
+                    teststr = teststr.toLowerCase();
+                }
+                if (teststr.indexOf(userstr) > -1) {
                     return true;
                 }
                 teststr = in.readLine();
