@@ -1,24 +1,36 @@
-<project name="signjartest" default="help">
-  <property name="classes.dir" value="../../../../build/classes"/>
+<project name="signjartest" default="help" basedir="..">
+  <property name="classes.dir" value="../../../build/classes"/>
 
   <target name="basic">
     <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
-    <signjar jar="signtest.jar" alias="testonly" keystore="../testkeystore"
+    <signjar jar="signtest.jar" alias="testonly" keystore="testkeystore"
              storepass="apacheant"/>
   </target>
 
   <target name="sigfile">
     <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
-    <signjar jar="signtest.jar" alias="testonly" keystore="../testkeystore"
+    <signjar jar="signtest.jar" alias="testonly" keystore="testkeystore"
              storepass="apacheant" sigfile="TEST"/>
   </target>
 
   <target name="maxmemory">
     <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
-    <signjar jar="signtest.jar" alias="testonly" keystore="../testkeystore"
+    <signjar jar="signtest.jar" alias="testonly" keystore="testkeystore"
              storepass="apacheant" maxmemory="128m"/>
   </target>
 
+  <target name="urlKeystoreFile">
+    <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
+    <signjar jar="signtest.jar" alias="testonly" keystore="file://../testkeystore"
+             storepass="apacheant" maxmemory="128m"/>
+  </target>
+
+  <target name="urlKeystoreHTTP">
+    <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
+    <signjar jar="signtest.jar" alias="testonly"
+             keystore="http://cvs.apache.org/viewcvs.cgi/*checkout*/jakarta-ant/src/etc/testcases/testkeystore?rev=HEAD"
+             storepass="apacheant" maxmemory="128m"/>
+  </target>
 
   <target name="clean">
     <delete file="signtest.jar"/>

@@ -97,4 +97,11 @@ public class SignJarTest extends BuildFileTest {
         executeTarget("maxmemory");
     }
 
+    public void testURLKeystoreFile() {
+        executeTarget("urlKeystoreFile");
+    }
+
+    public void testURLKeystoreHTTP() {
+        executeTarget("urlKeystoreHTTP");
+    }
 }

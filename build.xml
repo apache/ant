@@ -289,6 +289,7 @@
   </selector>
   <patternset id="onlinetests">
     <exclude name="**/GetTest.java" if="offline"/>
+    <exclude name="**/SignJarTest.java" if="offline"/>
   </patternset>
   <patternset id="teststhatfail">
     <exclude name="${optional.package}/BeanShellScriptTest.java"/>
@@ -577,14 +578,14 @@
             <selector refid="needs.sun.tools" unless="sun.tools.present"/>
             <selector refid="needs.sun.uue" unless="sunuue.present"/>
             <selector refid="needs.sun.b64" unless="base64.present"/>
-  
+
             <selector refid="needs.trax" unless="trax.present"/>
             <selector refid="needs.xalan1" unless="xalan.present"/>
             <selector refid="needs.xalan2" unless="xalan2.present"/>
             <selector refid="needs.xslp" unless="xslp.present"/>
             <selector refid="needs.apache.resolver" unless="apache.resolver.present"/>
             <selector refid="needs.junit" unless="junit.present"/>
-            <selector refid="needs.jakarta.regexp" 
+            <selector refid="needs.jakarta.regexp"
                       unless="jakarta.regexp.present"/>
             <selector refid="needs.jakarta.oro" unless="jakarta.oro.present"/>
             <selector refid="needs.jakarta.bcel" unless="bcel.present"/>
@@ -597,7 +598,7 @@
             <selector refid="needs.icontract" unless="icontract.present"/>
             <selector refid="needs.netrexx" unless="netrexx.present"/>
             <selector refid="needs.weblogic.ejbc" unless="ejb.ejbc.present"/>
-            <selector refid="needs.weblogic.ddcreator" 
+            <selector refid="needs.weblogic.ddcreator"
                       unless="ejb.DDCreator.present"/>
             <selector refid="needs.weblogic.server" unless="ejb.wls.present"/>
             <selector refid="needs.netcomponents" unless="netcomp.present"/>
@@ -782,7 +783,7 @@
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
     </jar>
 
-    <jar destfile="${build.lib}/${optional.jars.prefix}-trax.jar" 
+    <jar destfile="${build.lib}/${optional.jars.prefix}-trax.jar"
          basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.trax"/>
@@ -818,7 +819,7 @@
       <selector refid="needs.junit"/>
     </jar>
 
-    <jar destfile="${build.lib}/${optional.jars.prefix}-jakarta-regexp.jar" 
+    <jar destfile="${build.lib}/${optional.jars.prefix}-jakarta-regexp.jar"
          basedir="${build.classes}" manifest="${manifest.tmp}">
       <selector refid="needs.jakarta.regexp"/>
     </jar>
@@ -829,7 +830,7 @@
       <selector refid="needs.jakarta.oro"/>
     </jar>
 
-    <jar destfile="${build.lib}/${optional.jars.prefix}-bcel.jar" 
+    <jar destfile="${build.lib}/${optional.jars.prefix}-bcel.jar"
          basedir="${build.classes}"
          manifest="${manifest.tmp}">
       <selector refid="needs.jakarta.bcel"/>
@@ -841,7 +842,7 @@
       <selector refid="needs.jakarta.log4j"/>
     </jar>
 
-    <jar destfile="${build.lib}/${optional.jars.prefix}-commons-logging.jar" 
+    <jar destfile="${build.lib}/${optional.jars.prefix}-commons-logging.jar"
          basedir="${build.classes}" manifest="${manifest.tmp}">
       <selector refid="needs.commons.logging"/>
     </jar>
@@ -1595,7 +1596,7 @@
   <target name="run-single-test" if="testcase" depends="compile-tests,run-single-test-only"
     description="--> runs the single unit test defined in the testcase property"/>
 
-  <target name="run-single-test-only" 
+  <target name="run-single-test-only"
     description="--> runs the single unit test defined in the testcase property">
 
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -97,7 +97,7 @@ public class SignJar extends Task {
     /**
      * The name of keystore file.
      */
-    protected File keystore;
+    private String keystore;
 
     protected String storepass;
     protected String storetype;
@@ -115,6 +115,7 @@ public class SignJar extends Task {
      * the filesets of the jars to sign
      */
     protected Vector filesets = new Vector();
+
     /**
      * Whether to assume a jar which has an appropriate .SF file in is already
      * signed.
@@ -149,7 +150,7 @@ public class SignJar extends Task {
     /**
      * keystore location; required
      */
-    public void setKeystore(final File keystore) {
+    public void setKeystore(final String keystore) {
         this.keystore = keystore;
     }
 
@@ -286,8 +287,16 @@ public class SignJar extends Task {
         }
 
         if (null != keystore) {
-            cmd.createArg().setValue("-keystore");
-            cmd.createArg().setValue(keystore.toString());
+            // is the keystore a file
+            File keystoreFile = getProject().resolveFile(keystore);
+            if (keystoreFile.exists()) {
+                cmd.createArg().setValue("-keystore");
+                cmd.createArg().setValue(keystoreFile.getPath());
+            } else {
+                // must be a URL - just pass as is
+                cmd.createArg().setValue("-keystore");
+                cmd.createArg().setValue(keystore);
+            }
         }
 
         if (null != storepass) {
