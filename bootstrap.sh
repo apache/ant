@@ -5,7 +5,7 @@ fi
 SRCDIR=src/main/org/apache/tools/ant
 CLASSDIR=classes
 CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/classes.zip:${JAVA_HOME}/lib/tools.jar
-CLASSPATH=${CLASSPATH}:lib/xml.jar:src:${CLASSDIR}
+CLASSPATH=${CLASSPATH}:lib/xml.jar:src/main:${CLASSDIR}
 
 mkdir -p ${CLASSDIR}
 

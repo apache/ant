@@ -334,13 +334,23 @@ public class Project {
 
     public Task createTask(String taskType) throws BuildException {
         Class c = (Class)taskClassDefinitions.get(taskType);
-
+	
         // XXX
         // check for nulls, other sanity
 
         try {
-            Task task = (Task)c.newInstance();
-            task.setProject(this);
+            Object o=c.newInstance();
+	    Task task = null;
+	    if( o instanceof Task ) {
+	       task=(Task)o;
+	    } else {
+		// "Generic" Bean - use the setter pattern
+		// and an Adapter
+		TaskAdapter taskA=new TaskAdapter();
+		taskA.setProxy( o );
+		task=taskA;
+	    }
+	    task.setProject(this);
             String msg = "   +Task: " + taskType;
             log (msg, MSG_VERBOSE);
             return task;

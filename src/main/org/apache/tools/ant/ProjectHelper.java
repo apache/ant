@@ -231,10 +231,14 @@ public class ProjectHelper {
     }
 
     private static void configureTask(Project project,
-				      Task task,
+				      Task taskInst,
 				      NamedNodeMap nodeMap)
 	throws BuildException
     {
+	Object task=taskInst;
+	if( task instanceof TaskAdapter )
+	    task=((TaskAdapter)task).getProxy();
+
 	// XXX
 	// instead of doing this introspection each time around, I
 	// should have a helper class to keep this info around for
