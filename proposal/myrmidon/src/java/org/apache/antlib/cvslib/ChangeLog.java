@@ -17,6 +17,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Properties;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Date;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.IOUtil;
@@ -74,6 +76,16 @@ public class ChangeLog
     private File m_destfile;
 
     /**
+     * The earliest date at which to start processing entrys.
+     */
+    private Date m_start;
+
+    /**
+     * The latest date at which to stop processing entrys.
+     */
+    private Date m_stop;
+
+    /**
      * Set the base dir for cvs.
      */
     public void setBasedir( final File basedir )
@@ -108,6 +120,26 @@ public class ChangeLog
     }
 
     /**
+     * Set the date at which the changelog should start.
+     *
+     * @param start The date at which the changelog should start.
+     */
+    public void setStart( final Date start )
+    {
+        m_start = start;
+    }
+
+    /**
+     * Set the date at which the changelog should stop.
+     *
+     * @param stop The date at which the changelog should stop.
+     */
+    public void setEnd( final Date stop )
+    {
+        m_stop = stop;
+    }
+
+    /**
      * Execute task
      */
     public void execute() throws TaskException
@@ -136,7 +168,9 @@ public class ChangeLog
         exe.setExecOutputHandler( parser );
         exe.execute( getContext() );
 
-        writeChangeLog( parser );
+        final CVSEntry[] entrySet = parser.getEntrySetAsArray();
+        final CVSEntry[] filteredEntrySet = filterEntrySet( entrySet );
+        writeChangeLog( filteredEntrySet );
     }
 
     /**
@@ -172,7 +206,7 @@ public class ChangeLog
     }
 
     /**
-     * Load the userlist from the userList file (if specified) and
+     * Load the userli4st from the userList file (if specified) and
      * add to list of users.
      *
      * @throws TaskException if file can not be loaded for some reason
@@ -194,11 +228,41 @@ public class ChangeLog
     }
 
     /**
+     * Filter the specified entrys accoridn to an appropriate
+     * rule.
+     *
+     * @param entrySet the entry set to filter
+     * @return the filtered entry set
+     */
+    private CVSEntry[] filterEntrySet( final CVSEntry[] entrySet )
+    {
+        final ArrayList results = new ArrayList();
+        for( int i = 0; i < entrySet.length; i++ )
+        {
+            final CVSEntry cvsEntry = entrySet[i ];
+            final Date date = cvsEntry.getDate();
+            if( null != m_start && m_start.after( date ) )
+            {
+                //Skip dates that are too early
+                continue;
+            }
+            if( null != m_stop && m_stop.before( date ) )
+            {
+                //Skip dates that are too late
+                continue;
+            }
+            results.add( cvsEntry );
+        }
+
+        return (CVSEntry[])results.toArray( new CVSEntry[results.size() ] );
+    }
+
+    /**
      * Print changelog to file specified in task.
      *
      * @throws TaskException if theres an error writing changelog
      */
-    private void writeChangeLog( final ChangeLogParser parser )
+    private void writeChangeLog( final CVSEntry[] entrySet )
         throws TaskException
     {
         FileOutputStream output = null;
@@ -208,7 +272,6 @@ public class ChangeLog
             final PrintWriter writer =
                 new PrintWriter( new OutputStreamWriter( output, "UTF-8" ) );
 
-            final CVSEntry[] entrySet = parser.getEntrySetAsArray();
             ChangeLogWriter serializer = new ChangeLogWriter();
             serializer.printChangeLog( writer, entrySet );
         }
