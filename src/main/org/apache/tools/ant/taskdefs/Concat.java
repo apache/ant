@@ -93,7 +93,7 @@ public class Concat extends Task {
 
     /** Stores the binary attribute */
     private boolean binary = false;
-    
+
     // Child elements.
 
     /**
@@ -237,7 +237,6 @@ public class Concat extends Task {
         textBuffer.append(text);
     }
 
-       
     /**
      * Add a header to the concatenated output
      * @param header the header
@@ -311,9 +310,9 @@ public class Concat extends Task {
     }
 
     /**
-     * This method performs the concatenation.
+     * This method checks the attributes and performs the concatenation.
      */
-    public void execute() {
+    private void checkAndExecute() {
 
         // treat empty nested text as no text
         sanitizeText();
@@ -423,6 +422,17 @@ public class Concat extends Task {
     }
 
     /**
+     * execute the concat task.
+     */
+    public void execute() {
+        try {
+            checkAndExecute();
+        } finally {
+            resetTask();
+        }
+    }
+
+    /**
      * Reset state to default.
      */
     public void reset() {
@@ -437,6 +447,14 @@ public class Concat extends Task {
         filterChains = null;
         footer = null;
         header = null;
+    }
+
+    /**
+     * reset the used variables to allow the same task
+     * instance to be used again.
+     */
+    private void resetTask() {
+        sourceFiles.clear();
     }
 
     private void checkAddFiles(File base, String[] filenames) {
@@ -471,7 +489,7 @@ public class Concat extends Task {
                     "Unable to open " + destinationFile
                     + " for writing", t);
             }
-            for (Iterator i = sourceFiles.iterator(); i.hasNext(); ) {
+            for (Iterator i = sourceFiles.iterator(); i.hasNext();) {
                 File sourceFile = (File) i.next();
                 try {
                     in = new FileInputStream(sourceFile);
