@@ -266,6 +266,9 @@ public class Concat extends Task {
                 // Concatenate the files.
                 if (srcFiles != null) {
                     catFiles(fileSetBase, srcFiles);
+                } else {
+                    log("Warning: Concat received empty fileset.", 
+                        Project.MSG_WARN);
                 }
             }
         } finally {
@@ -317,6 +320,12 @@ public class Concat extends Task {
         }
 
         final int len = inputFileNames.size();
+        if (len == 0) {
+            log("Warning: Could not find any of the files specified " +
+                "in concat task.", Project.MSG_WARN);
+            return;
+        }
+
         String[] input = new String[len];
         inputFileNames.copyInto(input);
 
