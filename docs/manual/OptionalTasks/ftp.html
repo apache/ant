@@ -106,6 +106,20 @@ write patterns.</p>
                      Required for the &quot;list&quot; action, ignored otherwise.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">ignoreNoncriticalErrors</td>
+    <td valign="top">flag which permits the task to ignore some non-fatal error
+      codes sent by some servers during directory creation: wu-ftp in particular.
+      Default: false</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">skipFailedTransfers</td>
+    <td valign="top">flag which enables unsuccessful file put, delete
+    and get operations to be skipped with a warning and the
+    remainder of the files still transferred. Default: false</td>
+    <td valign="top" align="center">No</td>
+  </tr>  
 </table>
 <h3>Sending Files</h3>
 <p>The easiest way to describe how to send files is with a couple of examples:</p>
