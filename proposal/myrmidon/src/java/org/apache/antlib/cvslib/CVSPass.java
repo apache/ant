@@ -110,7 +110,6 @@ public class CVSPass
     {
         validate();
 
-        final String key = "cvsRoot: ";
         notify( "root", m_cvsRoot );
         notify( "password", m_password );
         notify( "passFile", m_passwordFile );
