@@ -58,6 +58,8 @@ import java.io.Writer;
 import java.io.OutputStreamWriter;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Hashtable;
 import java.util.Stack;
 import javax.xml.parsers.DocumentBuilder;
@@ -96,6 +98,7 @@ public class XmlLogger implements BuildListener {
     private final static String PRIORITY_ATTR = "priority";
     private final static String LOCATION_ATTR = "location";
     private final static String ERROR_ATTR = "error";
+    private final static String STACKTRACE_TAG = "stacktrace";
 
     private Document doc;
     private Hashtable tasks = new Hashtable();
@@ -128,29 +131,42 @@ public class XmlLogger implements BuildListener {
 
         if (event.getException() != null) {
             buildElement.element.setAttribute(ERROR_ATTR, event.getException().toString());
+            // print the stacktrace in the build file it is always useful...
+            // better have too much info than not enough.
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PrintStream ps = new PrintStream(baos,true);
+            Throwable t = event.getException();
+            t.printStackTrace(ps);
+            ps.flush();
+            ps.close();
+            Text errText =  doc.createCDATASection(baos.toString());
+            Element stacktrace = doc.createElement(STACKTRACE_TAG);
+            stacktrace.appendChild(errText);
+            buildElement.element.appendChild(stacktrace);
         }
 
+       String outFilename = event.getProject().getProperty("XmlLogger.file");
+        if (outFilename == null) {
+            outFilename = "log.xml";
+        }
+        Writer out = null;
         try {
-            String outFilename = 
-                event.getProject().getProperty("XmlLogger.file");
-
-            if (outFilename == null) {
-                outFilename = "log.xml";
-            }
-
             // specify output in UTF8 otherwise accented characters will blow
             // up everything
-            Writer out =
-                new OutputStreamWriter(new FileOutputStream(outFilename),
-                                       "UTF8");
+            FileOutputStream fos = new FileOutputStream(outFilename);
+            out = new OutputStreamWriter(fos, "UTF8");
             out.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
             out.write("<?xml-stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
             (new DOMElementWriter()).write(buildElement.element, out, 0, "\t");
             out.flush();
-            out.close();
-            
         } catch(IOException exc) {
-            throw new BuildException("Unable to close log file", exc);
+            throw new BuildException("Unable to write log file", exc);
+        } finally {
+            if (out != null){
+                try {
+                    out.close();
+                } catch (IOException e){ }
+            }
         }
         buildElement = null;
     }
