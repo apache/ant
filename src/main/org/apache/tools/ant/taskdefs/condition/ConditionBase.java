@@ -101,7 +101,7 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;checksum&gt; condition.
      *
-     * @since 1.4
+     * @since 1.4, Ant 1.5
      */
     public void addChecksum(Checksum c) {conditions.addElement(c);}
 
@@ -150,30 +150,37 @@ public abstract class ConditionBase extends ProjectComponent {
     /**
      * Add an &lt;isset&gt; condition.
      *
-     * @since 1.1
+     * @since 1.2, Ant 1.5
      */
     public void addIsSet(IsSet i) {conditions.addElement(i);}
 
     /**
      * Add an &lt;http&gt; condition.
      *
-     * @since 1.7
+     * @since 1.7, Ant 1.5
      */
     public void addHttp(Http h) {conditions.addElement(h);}
 
     /**
      * Add a &lt;socket&gt; condition.
      *
-     * @since 1.7
+     * @since 1.7, Ant 1.5
      */
     public void addSocket(Socket s) {conditions.addElement(s);}
 
     /**
      * Add a &lt;filesmatch&gt; condition.
      *
-     * @since 1.8
+     * @since 1.8, Ant 1.5
      */
     public void addFilesMatch(FilesMatch test) {conditions.addElement(test);}
+    
+    /**
+     * Add a &lt;filesmatch&gt; condition.
+     *
+     * @since 1.10, Ant 1.5
+     */
+    public void addContains(Contains test) {conditions.addElement(test);}
     
     /**
      * Inner class that configures those conditions with a project
