@@ -90,7 +90,7 @@ public class CLIMain
     private ArrayList            m_targets     = new ArrayList();
 
     ///List of user supplied defines
-    private HashMap              m_defines     = new HashMap();
+    private Parameters           m_defines     = new Parameters();
 
     /**
      * Main entry point called to run standard Myrmidon.
@@ -240,7 +240,7 @@ public class CLIMain
             case LISTENER_OPT: m_parameters.setParameter( "listener", option.getArgument() ); break;
 
             case DEFINE_OPT:
-                m_defines.put( option.getArgument( 0 ), option.getArgument( 1 ) );
+                m_defines.setParameter( option.getArgument( 0 ), option.getArgument( 1 ) );
                 break;
 
             case 0: m_targets.add( option.getArgument() ); break;
@@ -308,13 +308,9 @@ public class CLIMain
         embeddor.initialize();
         embeddor.start();
 
-        final ProjectBuilder builder = embeddor.getProjectBuilder();
-
         //create the project
-        final Project project = builder.build( buildFile );
-
-        final ProjectManager manager = embeddor.getProjectManager();
-        manager.addProjectListener( listener );
+        final Project project = 
+            embeddor.createProject( buildFile.toString(), null, null );
 
         BufferedReader reader = null;
 
@@ -323,19 +319,11 @@ public class CLIMain
         while( true )
         {
             //actually do the build ...
-            final TaskContext context = new DefaultTaskContext();
+            final ProjectManager manager = 
+                embeddor.createProjectManager( project, m_defines );
+            manager.addProjectListener( listener );
 
-            //Add CLI m_defines
-            addToContext( context, m_defines );
-
-            //Add system properties second so that they overide user-defined properties
-            addToContext( context, System.getProperties() );
-
-            context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
-            context.setProperty( Project.PROJECT_FILE, buildFile );
-            //context.setProperty( Project.PROJECT, project.getName() );
-
-            doBuild( manager, project, context, m_targets );
+            doBuild( manager, project, m_targets );
 
             if( !incremental ) break;
 
@@ -365,7 +353,6 @@ public class CLIMain
      */
     private void doBuild( final ProjectManager manager,
                           final Project project,
-                          final TaskContext context,
                           final ArrayList targets )
     {
         try
@@ -375,13 +362,13 @@ public class CLIMain
             //if we didn't specify a target on CLI then choose default
             if( 0 == targetCount )
             {
-                manager.executeTarget( project, project.getDefaultTargetName(), context );
+                manager.executeProject( project, project.getDefaultTargetName() );
             }
             else
             {
                 for( int i = 0; i < targetCount; i++ )
                 {
-                    manager.executeTarget( project, (String)targets.get( i ), context );
+                    manager.executeProject( project, (String)targets.get( i ) );
                 }
             }
         }
