@@ -8,20 +8,24 @@ a:hover { color: #000066; }
 .menu { background-color: #4C6C8F; margin: 0px; padding: 3px 8px 5px 3px;  font-size : 90%;  }
 .menu a:link { color: #FFFFFF;  text-decoration : none;  }
 .menu a:visited { color: #FFFFFF; text-decoration : none; }
-/*.menu a:active { font-weight: bold }*/
 .menu a:hover { color: #FFCC00; text-decoration : none; }
 .menu ul { margin: 0px 0px 0px 20px; padding: 0px; }
 .menu li  { list-style-image: url('images/label.gif'); font-weight : bold; }
 .menu ul ul li .sel { list-style-image: url('images/current.gif'); font-weight : normal; }
 .menu ul ul li  { list-style-image: url('images/page.gif'); font-weight : normal; }
 
+.tab { font-size : 85%; border: 0 }
+.tab a:link {   text-decoration : none;  }
+.tab a:visited { text-decoration : none; color: #2A4A6D }
+.tab a:hover { color: #000066; }
+
 table .title { background-color: #FFFFFF; width:100%; border: 0px; }
-.dida { font-size: 60%; }
+.dida { font-size: 80%; }
 
 .pre { white-space: pre;}
 .nowrap { white-space: nowrap;}
 
-.content { padding: 5px 5px 5px 10px;  font : small;  font-size : 90%; }
+.content { padding: 5px 5px 5px 10px; font : small Verdana, Helvetica, sans-serif;  font-size : 90%; }
 .content .ForrestTable { width: 100%; background-color: #7099C5; color: #ffffff; font-size : 90%;}
 .content .ForrestTable caption { text-align: left; color: black; font-weight: bold; }
 .content .ForrestTable th { text-align: center; }
@@ -50,3 +54,9 @@ table .title { background-color: #FFFFFF; width:100%; border: 0px; }
 
 .dtdTag {    color: #990000; text-transform : uppercase;  font-style : normal;  font-size : 120%;  font-weight : bold; }
 
+
+@media print {
+   .menu {
+     display: none;
+   }
+}
