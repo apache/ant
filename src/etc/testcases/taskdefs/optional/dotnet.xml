@@ -9,10 +9,6 @@
   <property name="out.app" location="${classes.dir}/out.exe"/>
   <property name="out.type" value="exe"/>  
   
-  <target name="mark-mono-ok">
-    <property name="mono.ok" value="true"/>
-  </target>
-  
   <target name="probe_for_apps" >
    <condition property="ilasm.found">
       <or>
@@ -46,24 +42,19 @@
     </condition>
    <echo> mcs.found=${mcs.found}</echo>
 
-    <condition property="cs.found">
-      <or>
-        <isset property="csc.found"/>
-        <isset property="mcs.found"/>
-      </or>
+   <!-- Mono's ilasm -->
+   <condition property="mono.ilasm.found">
+      <available file="ilasm"     filepath="${env.PATH}" />
     </condition>
-   <echo> cs.found=${cs.found}</echo>
+   <echo> mono.ilasm.found=${mono.ilasm.found}</echo>
 
    <condition property="dotnetapps.found">
       <or>
         <and>
-          <isset property="cs.found"/>
-          <isset property="mono.ok"/>
+          <isset property="mcs.found"/>
+          <isset property="mono.ilasm.found"/>
         </and>
         <and>
-          <not>
-            <isset property="mono.ok"/>
-          </not>
           <isset property="csc.found"/>
 <!--         <isset property="vbc.found"/> -->
           <isset property="ilasm.found"/>
@@ -102,7 +93,7 @@
     <delete file="${testCSC.exe}"/>
   </target>
 
-  <target name="testCSC-Mono" depends="mark-mono-ok,init" if="mcs.found">
+  <target name="testCSC-Mono" depends="init" if="mcs.found">
     <property name="testCSC.exe" 
       location="${build.dir}/ExampleCsc.exe" />
     <csc 
@@ -112,7 +103,6 @@
       includedefaultreferences="false"
       standardlib="true"
       >
-      <reference dir="/usr/lib" includes="*.dll"/>
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
@@ -122,22 +112,47 @@
     <delete file="${testCSC.exe}"/>
   </target>
 
-    <target name="testCSCintrinsicFileset" depends="init">
-      <property name="testCSC.exe"
-        location="${build.dir}/ExampleCsc.exe"/>
-      <csc
-        destFile="${testCSC.exe}"
-        targetType="exe"
-        srcDir="."
-        >
-      </csc>
-      <available property="app.created" file="${testCSC.exe}"/>
-      <fail unless="app.created">No app ${testCSC.exe} created</fail>
-      <exec executable="${testCSC.exe}" failonerror="true"/>
-      <delete file="${testCSC.exe}"/>
-    </target>
+  <target name="testCSCintrinsicFileset" 
+          depends="testCSCintrinsicFileset-MS,testCSCintrinsicFileset-Mono"/>
 
-  <target name="testCSCdll" depends="init">
+  <target name="testCSCintrinsicFileset-MS" depends="init" if="csc.found">
+    <property name="testCSC.exe"
+      location="${build.dir}/ExampleCsc.exe"/>
+    <csc
+      destFile="${testCSC.exe}"
+      targetType="exe"
+      srcDir="."
+      >
+    </csc>
+    <available property="app.created" file="${testCSC.exe}"/>
+    <fail unless="app.created">No app ${testCSC.exe} created</fail>
+    <exec executable="${testCSC.exe}" failonerror="true" />
+    <delete file="${testCSC.exe}"/>
+  </target>
+
+  <target name="testCSCintrinsicFileset-Mono" depends="init" if="mcs.found">
+    <property name="testCSC.exe"
+      location="${build.dir}/ExampleCsc.exe"/>
+    <csc
+      destFile="${testCSC.exe}"
+      targetType="exe"
+      srcDir="."
+      executable="mcs"
+      includedefaultreferences="false"
+      standardlib="true"
+      >
+    </csc>
+    <available property="app.created" file="${testCSC.exe}"/>
+    <fail unless="app.created">No app ${testCSC.exe} created</fail>
+    <exec executable="mono" failonerror="true">
+      <arg value="${testCSC.exe}"/>
+    </exec> 
+    <delete file="${testCSC.exe}"/>
+  </target>
+
+  <target name="testCSCdll" depends="testCSCdll-MS,testCSCdll-Mono"/>
+
+  <target name="testCSCdll-MS" depends="init" if="csc.found">
     <property name="testCSC.dll"
       location="${build.dir}/Example2.dll" />
     <csc 
@@ -151,7 +166,27 @@
     <fail unless="dll.created">No file ${testCSC.dll} created</fail>
   </target>
   
-  <target name="testCscReferences" depends="init,testCSCdll">
+  <target name="testCSCdll-Mono" depends="init" if="mcs.found">
+    <property name="testCSC.dll"
+      location="${build.dir}/Example2.dll" />
+    <csc 
+      destFile="${testCSC.dll}"
+      targetType="library"
+      executable="mcs"
+      includedefaultreferences="false"
+      standardlib="true"
+      >
+      <src dir="${src.dir}" includes="example2.cs"/>
+    </csc>
+    <available property="dll.created" file="${testCSC.dll}"/>
+    <fail unless="dll.created">No file ${testCSC.dll} created</fail>
+  </target>
+  
+  <target name="testCscReferences"
+    depends="testCscReferences-MS,testCscReferences-Mono"/>
+
+  <target name="testCscReferences-MS" depends="init,testCSCdll-MS"
+          if="csc.found">
     <property name="testCscReferences.exe" 
       location="${build.dir}/ExampleCsc2.exe" />
     <csc 
@@ -169,7 +204,28 @@
     <exec executable="${testCscReferences.exe}" failonerror="true" />
   </target>
   
-  
+  <target name="testCscReferences-Mono" depends="init,testCSCdll-Mono"
+          if="mcs.found">
+    <property name="testCscReferences.exe" 
+      location="${build.dir}/ExampleCsc2.exe" />
+    <csc 
+      destFile="${testCscReferences.exe}"
+      targetType="exe" 
+      executable="mcs"
+      includedefaultreferences="false"
+      standardlib="true"
+      >
+      <src file="${src.dir}/example.cs"/>
+      <reference file="${testCSC.dll}" />
+      <define name="RELEASE" />
+      <define name="DEBUG" if="undefined.property"/>
+      <define name="def3" unless="undefined.property"/>
+    </csc>
+    <available property="refapp.created" file="${testCscReferences.exe}"/>
+    <fail unless="refapp.created">No app ${testCscReferences.exe} created</fail>
+    <exec executable="${testCscReferences.exe}" failonerror="true" />
+  </target>
+
   <target name="testILASM"  depends="init">
     <property name="testILASM.exe" 
       location="${build.dir}/ExampleIlasm.exe" />
