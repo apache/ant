@@ -202,6 +202,10 @@ class ProcessMonitor
             //stdin in another thread
             //copy( m_input, m_process.getOutputStream() );
 
+            //Should we shutdown the processes input stream ?
+            //Why not - at least for now
+            IOUtil.shutdownStream( m_process.getOutputStream() );
+
             IOUtil.shutdownStream( m_input );
             m_input = null;
         }
