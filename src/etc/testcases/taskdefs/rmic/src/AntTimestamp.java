@@ -31,7 +31,7 @@ public class AntTimestamp implements RemoteTimestamp {
     /**
      * return the phase of the moon.
      * Note the completely different semantics of the other implementation,
-     * which goes to show why signature is an inadeuqate way of verifying
+     * which goes to show why signature is an inadequate way of verifying
      * how well an interface is implemented.
      *
      * @return
