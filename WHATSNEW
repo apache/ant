@@ -13,8 +13,16 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* the <java> task checks that the Main method of the class to be executed is static,
+  and fails with a decent BuildException if it is not the case
+
+* a space at the end of the Ant-Version line of the default manifest has been removed
+
 * better debugging support for ApacheCatalogResolver
   Bugzilla Report 24070.
+
+* better report of exceptions in the renaming of the old file in <zip update="true"/>
+  and the derived classes <jar>, ...
 
 * use of <parallel> and xmlns:prefix="antlib:package"
 
@@ -58,8 +66,22 @@ Fixed bugs:
 * <scp> could corrupt files when transfering lots of files.
   Bugzilla Report 24449.
 
+* <jdepend>   Fix NPE
+  Bugzilla Report 24344.
+
+
 Other changes:
 --------------
+* Attributes in the template bodies of <macrodef> are now denoted by @{attribute} instead of ${attribute}
+
+* <concat> will expand properties entered in the text of the tag
+
+* <exec> resolution behavior (resolveexecutable attribute) has been improved
+
+* running.html has been augmented with a list of the magic properties
+
+* welcome.html documentation has been updated
+
 * Change default uri from ant:core to antlib:org.apache.tools.ant
 
 * upgrade to xml-apis.jar from Xerces-J 2.6.0.
@@ -87,8 +109,16 @@ Other changes:
 
 * provide stack for errors using import, ant, antcall, subant and macros
 
+* import task uses the FileUtils#resolveFile method to resolve the imported file,
+  in order to avoid trouble on Windows or Netware
+
 * ignore attributes from different URIS
 
+* <jdepend>
+  fix timeout attribute of jdepend
+  add unit tests
+  add includeruntime to allow unittests to run
+  checkstyle
 Changes from Ant 1.6.B1 to Ant 1.6.B2
 =====================================
 
