@@ -16,6 +16,10 @@ Changes from Ant 1.3 to Ant 1.4
 
 Changes that could break older environments:
 --------------------------------------------
+* JUnitReport now uses the xalan redirect extension for multi-output.
+  With Xalan 1.2.2 it forces the use of bsf.jar in the classpath.
+  (Available in the xalan distribution). It is recommended to switch
+  to Xalan 2.x that do not need it.
 
 * Zip.setWhenempty() has changed its signature.
 
@@ -72,12 +76,30 @@ Changes that could break older environments:
   been configured from the build file. Custom tasks supporting nested elements 
   starting with the name configured will no longer function.  
 
+* The environment variable JAVACMD that can be used to specify the
+  java executable to Ant's wrapper scripts must not contain additional
+  command line parameters any longer - please use the environment
+  variable ANT_OPTS for such parameters now.
+  
+* Ant's wrapper scripts now quote the CLASSPATH environment variable, thus
+  supporting classpaths which refer to directories containing spaces. This means
+  that the CLASSPATH environment variable cannot have quotes. Any quotes should
+  be removed. This will not affect the operation of the CLASSPATH environment
+  variable in other contexts.
+
+* A delete task like
+  <delete includeEmptyFilesets="true">
+    <fileset dir="somedir" />
+  </delete>
+  will now remove "somedir" as well, unless there are still files left
+  in it (matched by the default excludes).
+
 Other changes:
 --------------
 
 * New tasks: ear, p4counter, record, cvspass, vsscheckin, vsscheckout,
   typedef, sleep, mimemail, set of tasks for Continuus/Synergy, dependset,
-  condition
+  condition, maudit, mmetrics, jpcoverage, jpcovreport, jpcovmerge
 
 * Ant now uses JAXP 1.1
 
@@ -226,6 +248,12 @@ Other changes:
 
 * Introduced the concept of <filtersets> to allow for more control in which 
   filters get applied in a <copy> or <move> operation.       
+
+* Added nowarn attribute to javac and deprecated the Jikes-magic property
+  build.compiler.warnings.
+  
+* The <depend> task cache format has changed and all dependency information is
+  now stored in a single file.
 
 Fixed bugs:
 -----------
