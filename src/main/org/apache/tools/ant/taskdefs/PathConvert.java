@@ -70,35 +70,39 @@ import java.util.Vector;
 import java.io.File;
 
 /**
- * This task converts path and classpath information to a specific target OS format.
- * The resulting formatted path is placed into a specified property.
- * <p>
- * LIMITATION: Currently this implementation groups all machines into one of two
- * types: Unix or Windows.  Unix is defined as NOT windows.
+ * This task converts path and classpath information to a specific
+ * target OS format.  The resulting formatted path is placed into a
+ * specified property.
  *
  * @author Larry Streepy <a href="mailto:streepy@healthlanguage.com">streepy@healthlanguage.com</a>
+ *
+ * @since Ant 1.4
  *
  * @ant.task category="utility"
  */
 public class PathConvert extends Task {
 
+    public PathConvert() {
+        onWindows = Os.isFamily("dos");
+    }
+
     /**
-     * Helper class, holds the nested <map> values.  Elements will look like this:
-     * &lt;map from="d:" to="/foo"/&gt;
+     * Helper class, holds the nested <map> values.  Elements will
+     * look like this: &lt;map from=&quot;d:&quot; to=&quot;/foo&quot;/&gt;
      * <p>
      * When running on windows, the prefix comparison will be case insensitive.
      */
     public class MapEntry {
 
         /**
-         * Set the "from" attribute of the map entry
+         * Set the &quot;from&quot; attribute of the map entry
          */
         public void setFrom( String from ) {
             this.from = from;
         }
 
         /**
-         * Set the "to" attribute of the map entry
+         * Set the &quot;to&quot; attribute of the map entry
          */
         public void setTo( String to ) {
             this.to = to;
@@ -111,15 +115,16 @@ public class PathConvert extends Task {
          */
         public String apply( String elem ) {
             if( from == null || to == null ) {
-                throw new BuildException( "Both 'from' and 'to' must be set in a map entry" );
+                throw new BuildException( "Both 'from' and 'to' must be set "
+                                          + "in a map entry" );
             }
 
             // If we're on windows, then do the comparison ignoring case
             String cmpElem = onWindows ? elem.toLowerCase() : elem;
             String cmpFrom = onWindows ? from.toLowerCase() : from;
 
-            // If the element starts with the configured prefix, then convert the prefix
-            // to the configured 'to' value.
+            // If the element starts with the configured prefix, then
+            // convert the prefix to the configured 'to' value.
 
             if( cmpElem.startsWith( cmpFrom ) ) {
                 int len = from.length();
@@ -170,8 +175,21 @@ public class PathConvert extends Task {
         return entry;
     }
 
+
     /**
      * Set the value of the targetos attribute
+     * @deprecated use the method taking a TargetOs argument instead
+     * @see #setTargetos(TargetOs)
+     */
+    public void setTargetos( String target ) {
+        TargetOs to = new TargetOs();
+        to.setValue(target);
+        setTargetos(to);
+    }
+
+    /**
+     * Set the value of the targetos attribute
+     * @since Ant 1.5
      */
     public void setTargetos( TargetOs target ) {
 
@@ -180,7 +198,7 @@ public class PathConvert extends Task {
         // Currently, we deal with only two path formats: Unix and Windows
         // And Unix is everything that is not Windows
 
-        // for NetWare and os/2, piggy-back on Windows, since in the
+        // for NetWare and OS/2, piggy-back on Windows, since in the
         // validateSetup code, the same assumptions can be made as
         // with windows - that ; is the path separator
 
@@ -232,84 +250,94 @@ public class PathConvert extends Task {
      * Do the execution.
      */
     public void execute() throws BuildException {
+        Path savedPath = path;
+        String savedPathSep = pathSep; // may be altered in validateSetup
+        String savedDirSep = dirSep; // may be altered in validateSetup
 
-        // If we are a reference, create a Path from the reference
-        if( isReference() ) {
-            path = new Path(getProject()).createPath();
-
-            Object obj = refid.getReferencedObject(getProject());
-
-            if( obj instanceof Path ) {
-                path.setRefid(refid);
-            } else if( obj instanceof FileSet ) {
-                FileSet fs = (FileSet)obj;
-                path.addFileset( fs );
-            } else if( obj instanceof DirSet ) {
-                DirSet ds = (DirSet)obj;
-                path.addDirset( ds );
-            } else if( obj instanceof FileList ) {
-                FileList fl = (FileList)obj;
-                path.addFilelist( fl );
+        try {
+            // If we are a reference, create a Path from the reference
+            if( isReference() ) {
+                path = new Path(getProject()).createPath();
                 
-            } else {
-                throw new BuildException( "'refid' does not refer to a path, fileset, dirset, or filelist." );
-            }
-        }
-
-        validateSetup();                    // validate our setup
-
-        // Currently, we deal with only two path formats: Unix and Windows
-        // And Unix is everything that is not Windows
-        // (with the exception for NetWare below)
-
-        // for NetWare and OS/2, piggy-back on Windows, since here and
-        // in the apply code, the same assumptions can be made as with
-        // windows - that \\ is an OK separator, and do comparisons
-        // case-insensitive.
-        onWindows = Os.isFamily("dos");
-
-        String fromDirSep = onWindows ? "\\" : "/";
-
-        StringBuffer rslt = new StringBuffer( 100 );
-
-        // Get the list of path components in canonical form
-        String[] elems = path.list();
-
-        for( int i=0; i < elems.length; i++ ) {
-            String elem = elems[i];
-
-            elem = mapElement( elem );      // Apply the path prefix map
-
-
-            // Now convert the path and file separator characters from the
-            // current os to the target os.
-
-            if( i != 0 ) {
-                rslt.append( pathSep );
-            }
-
-            StringTokenizer stDirectory = 
-                new StringTokenizer(elem, fromDirSep, true);
-            String token = null;
-
-            while ( stDirectory.hasMoreTokens() ) {
-                token = stDirectory.nextToken();
-
-                if (fromDirSep.equals(token)) {
-                    rslt.append( dirSep ); 
-                }
-                else {
-                    rslt.append( token );
+                Object obj = refid.getReferencedObject(getProject());
+                
+                if( obj instanceof Path ) {
+                    path.setRefid(refid);
+                } else if( obj instanceof FileSet ) {
+                    FileSet fs = (FileSet)obj;
+                    path.addFileset( fs );
+                } else if( obj instanceof DirSet ) {
+                    DirSet ds = (DirSet)obj;
+                    path.addDirset( ds );
+                } else if( obj instanceof FileList ) {
+                    FileList fl = (FileList)obj;
+                    path.addFilelist( fl );
+                    
+                } else {
+                    throw new BuildException( "'refid' does not refer to a "
+                                              + "path, fileset, dirset, or "
+                                              + "filelist." );
                 }
             }
+            
+            validateSetup();                    // validate our setup
+            
+            // Currently, we deal with only two path formats: Unix and Windows
+            // And Unix is everything that is not Windows
+            // (with the exception for NetWare and OS/2 below)
+            
+            // for NetWare and OS/2, piggy-back on Windows, since here and
+            // in the apply code, the same assumptions can be made as with
+            // windows - that \\ is an OK separator, and do comparisons
+            // case-insensitive.
+            String fromDirSep = onWindows ? "\\" : "/";
+            
+            StringBuffer rslt = new StringBuffer( 100 );
+            
+            // Get the list of path components in canonical form
+            String[] elems = path.list();
+            
+            for( int i=0; i < elems.length; i++ ) {
+                String elem = elems[i];
+                
+                elem = mapElement( elem );      // Apply the path prefix map
+                
+                
+                // Now convert the path and file separator characters from the
+                // current os to the target os.
+                
+                if( i != 0 ) {
+                    rslt.append( pathSep );
+                }
+                
+                StringTokenizer stDirectory = 
+                    new StringTokenizer(elem, fromDirSep, true);
+                String token = null;
+                
+                while ( stDirectory.hasMoreTokens() ) {
+                    token = stDirectory.nextToken();
+                    
+                    if (fromDirSep.equals(token)) {
+                        rslt.append( dirSep ); 
+                    }
+                    else {
+                        rslt.append( token );
+                    }
+                }
+            }
+
+            // Place the result into the specified property
+            String value = rslt.toString();
+            
+            log( "Set property " + property + " = " + value, 
+                 Project.MSG_VERBOSE );
+            
+            getProject().setNewProperty( property, value );
+        } finally {
+            path = savedPath;
+            dirSep = savedDirSep;
+            pathSep = savedPathSep;
         }
-
-        // Place the result into the specified property
-        String value = rslt.toString();
-
-        log( "Set property " + property + " = " + value, Project.MSG_VERBOSE );
-
-        getProject().setNewProperty( property, value );
     }
 
     /**
@@ -363,7 +391,8 @@ public class PathConvert extends Task {
         // Must either have a target OS or both a dirSep and pathSep
 
         if( targetOS == null && pathSep == null && dirSep == null ) {
-            throw new BuildException( "You must specify at least one of targetOS, dirSep, or pathSep" );
+            throw new BuildException( "You must specify at least one of "
+                                      + "targetOS, dirSep, or pathSep" );
         }
 
         // Determine the separator strings.  The dirsep and pathsep attributes
@@ -393,19 +422,22 @@ public class PathConvert extends Task {
      * not have child elements if the refid attribute is set.  
      */
     private BuildException noChildrenAllowed() {
-        return new BuildException("You must not specify nested <path> elements when using the refid attribute.");
+        return new BuildException("You must not specify nested <path> "
+                                  + "elements when using the refid attribute.");
     }
 
-
     // Members
-    private Path path = null;               // Path to be converted
-    private Reference refid = null;         // Reference to path/fileset to convert
-    private String targetOS = null;         // The target OS type
-    private boolean targetWindows = false;  // Set when targetOS is set
-    private boolean onWindows = false;      // Set if we're running on windows
-    private String property = null;         // The property to receive the results
-    private Vector prefixMap = new Vector();  // Path prefix map
-    private String pathSep = null;          // User override on path sep char
-    private String dirSep = null;           // User override on directory sep char
+    private Path path = null;                // Path to be converted
+    private Reference refid = null;          // Reference to path/fileset to 
+                                             // convert
+    private String targetOS = null;          // The target OS type
+    private boolean targetWindows = false;   // Set when targetOS is set
+    private boolean onWindows = false;       // Set if we're running on windows
+    private String property = null;          // The property to receive the 
+                                             //results
+    private Vector prefixMap = new Vector(); // Path prefix map
+    private String pathSep = null;           // User override on path sep char
+    private String dirSep = null;            // User override on directory sep
+                                             // char
 
 }

@@ -70,6 +70,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.util.CollectionUtils;
@@ -80,6 +81,8 @@ import org.apache.tools.ant.util.CollectionUtils;
  * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
+ *
+ * @since Ant 1.4
  *
  * @ant.task category="java"
  */
@@ -553,7 +556,7 @@ public class Manifest extends Task {
             String check = addAttributeAndCheck(attribute);
             if (check != null) {
                 throw new BuildException("Specify the section name using " 
-                    + "the \"name\" attribute of the <section> element rather " 
+                    + "the \"name\" attribute of the <section> element rather "
                     + "than using a \"Name\" manifest attribute");
             }
         }
@@ -690,7 +693,6 @@ public class Manifest extends Task {
 
     /**
      * Construct a manifest from Ant's default manifest file.
-     *
      *
      * @return the default manifest.
      * @exception BuildException if there is a problem loading the 
@@ -1031,7 +1033,7 @@ public class Manifest extends Task {
     /**
      * Create or update the Manifest when used as a task.
      *
-     * @throws BuildException if the manifst cannot be written.
+     * @throws BuildException if the manifest cannot be written.
      */
     public void execute() throws BuildException {
         if (manifestFile == null) {
@@ -1049,10 +1051,10 @@ public class Manifest extends Task {
                 current = new Manifest(f);
             } catch (ManifestException m) {
                 error = new BuildException("Existing manifest " + manifestFile
-                                         + " is invalid", m, location);
+                                           + " is invalid", m, location);
             } catch (IOException e) {
                 error = new BuildException("Failed to read " + manifestFile,
-                                         e, location);
+                                           e, location);
             } finally {
                 if (f != null) {
                     try {
@@ -1078,7 +1080,8 @@ public class Manifest extends Task {
         }
 
         if (toWrite.equals(current)) {
-            log("Manifest has not changed, do not recreate", project.MSG_VERBOSE);
+            log("Manifest has not changed, do not recreate", 
+                Project.MSG_VERBOSE);
             return;
         }
 

@@ -57,6 +57,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Location;
+import org.apache.tools.ant.util.StringUtils;
 
 import java.util.Vector;
 import java.util.Enumeration;
@@ -68,6 +69,7 @@ import java.util.Enumeration;
  * <p>
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  * @author Conor MacNeill
+ * @since Ant 1.4
  *
  * @ant.task category="control"
  */
@@ -95,7 +97,8 @@ public class Parallel extends Task
     public void execute() throws BuildException {
         TaskThread[] threads = new TaskThread[nestedTasks.size()];
         int threadNumber = 0;
-        for (Enumeration e = nestedTasks.elements(); e.hasMoreElements(); threadNumber++) {
+        for (Enumeration e = nestedTasks.elements(); e.hasMoreElements(); 
+             threadNumber++) {
             Task nestedTask = (Task)e.nextElement();
             threads[threadNumber] = new TaskThread(threadNumber, nestedTask);
         }
@@ -117,7 +120,6 @@ public class Parallel extends Task
         
         // now did any of the threads throw an exception
         StringBuffer exceptionMessage = new StringBuffer();
-        String lSep = System.getProperty("line.separator");
         int numExceptions = 0;
         Throwable firstException = null;
         Location firstLocation = Location.UNKNOWN_LOCATION;;
@@ -132,7 +134,7 @@ public class Parallel extends Task
                         firstLocation == Location.UNKNOWN_LOCATION) {
                     firstLocation = ((BuildException)t).getLocation();
                 }
-                exceptionMessage.append(lSep);
+                exceptionMessage.append(StringUtils.LINE_SEP);
                 exceptionMessage.append(t.getMessage());
             }
         }
@@ -146,7 +148,8 @@ public class Parallel extends Task
             }
         }
         else if (numExceptions > 1) {
-            throw new BuildException(exceptionMessage.toString(), firstLocation);
+            throw new BuildException(exceptionMessage.toString(), 
+                                     firstLocation);
         }
     }
 
