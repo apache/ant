@@ -393,16 +393,16 @@ public class Translate extends MatchingTask {
      */
     private void processBundle(final String bundleFile, final int i,
                                final boolean checkLoaded) throws BuildException {
-        String l_BundleFile = bundleFile + ".properties";
+        final File propsFile = new File(bundleFile + ".properties");
         FileInputStream ins = null;
         try {
-            ins = new FileInputStream(l_BundleFile);
+            ins = new FileInputStream(propsFile);
             loaded = true;
-            bundleLastModified[i] = new File(l_BundleFile).lastModified();
-            log("Using " + l_BundleFile, Project.MSG_DEBUG);
+            bundleLastModified[i] = propsFile.lastModified();
+            log("Using " + propsFile, Project.MSG_DEBUG);
             loadResourceMap(ins);
         } catch (IOException ioe) {
-            log(l_BundleFile + " not found.", Project.MSG_DEBUG);
+            log(propsFile + " not found.", Project.MSG_DEBUG);
             //if all resource files associated with this bundle
             //have been scanned for and still not able to
             //find a single resrouce file, throw exception
