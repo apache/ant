@@ -83,7 +83,8 @@ public class TarInputStream extends FilterInputStream {
     protected byte[] readBuf;
     protected TarBuffer buffer;
     protected TarEntry currEntry;
-
+    private boolean v7Format;
+    
     public TarInputStream(InputStream is) {
         this(is, TarBuffer.DEFAULT_BLKSIZE, TarBuffer.DEFAULT_RCDSIZE);
     }
@@ -100,6 +101,7 @@ public class TarInputStream extends FilterInputStream {
         this.oneBuf = new byte[1];
         this.debug = false;
         this.hasHitEOF = false;
+        this.v7Format = false;
     }
 
     /**
@@ -248,31 +250,7 @@ public class TarInputStream extends FilterInputStream {
             if (!(headerBuf[257] == 'u' && headerBuf[258] == 's'
                     && headerBuf[259] == 't' && headerBuf[260] == 'a'
                     && headerBuf[261] == 'r')) {
-                this.entrySize = 0;
-                this.entryOffset = 0;
-                this.currEntry = null;
-
-                throw new IOException("bad header in block "
-                        + this.buffer.getCurrentBlockNum()
-                        + " record "
-                        + this.buffer.getCurrentRecordNum()
-                        + ", " +
-                        "header magic is not 'ustar', but '"
-                        + headerBuf[257]
-                        + headerBuf[258]
-                        + headerBuf[259]
-                        + headerBuf[260]
-                        + headerBuf[261]
-                        + "', or (dec) "
-                        + ((int) headerBuf[257])
-                        + ", "
-                        + ((int) headerBuf[258])
-                        + ", "
-                        + ((int) headerBuf[259])
-                        + ", "
-                        + ((int) headerBuf[260])
-                        + ", "
-                        + ((int) headerBuf[261]));
+                this.v7Format = true;
             }
 
             if (this.debug) {
