@@ -512,8 +512,11 @@ public class FTP
                 log("creating remote directory " + resolveFile(dir.getPath()),
                     Project.MSG_VERBOSE);
                 ftp.makeDirectory(resolveFile(dir.getPath()));
+                // Both codes 550 and 553 can be produced by FTP Servers
+                //  to indicate that an attempt to create a directory has
+                //  failed because the directory already exists.
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode()) &&
-                    (ftp.getReplyCode() != 550))
+                    (ftp.getReplyCode() != 550) && (ftp.getReplyCode() != 553))
                 {
                     throw new BuildException(
                                              "could not create directory: " +
