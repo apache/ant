@@ -1159,7 +1159,11 @@ public class JUnitTask extends Task {
      */
     protected File getOutput(FormatterElement fe, JUnitTest test) {
         if (fe.getUseFile()) {
-            String filename = test.getOutfile() + fe.getExtension();
+            String base = test.getOutfile();
+            if (base == null) {
+                base = JUnitTestRunner.IGNORED_FILE_NAME;
+            }
+            String filename = base + fe.getExtension();
             File destFile = new File(test.getTodir(), filename);
             String absFilename = destFile.getAbsolutePath();
             return getProject().resolveFile(absFilename);

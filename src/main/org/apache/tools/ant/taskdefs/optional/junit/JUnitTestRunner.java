@@ -79,6 +79,15 @@ public class JUnitTestRunner implements TestListener {
     public static final int ERRORS = 2;
 
     /**
+     * Used in formatter arguments as a placeholder for the basename
+     * of the output file (which gets replaced by a test specific
+     * output file name later).
+     *
+     * @since Ant 1.6.3
+     */
+    public static final String IGNORED_FILE_NAME = "IGNORETHIS";
+
+    /**
      * Holds the registered formatters.
      */
     private Vector formatters = new Vector();
@@ -594,6 +603,13 @@ public class JUnitTestRunner implements TestListener {
             fe.setUseFile(true);
             if (!multipleTests) {
                 fe.setOutfile(new File(line.substring(pos + 1)));
+            } else {
+                int fName = line.indexOf(IGNORED_FILE_NAME);
+                if (fName > -1) {
+                    fe.setExtension(line
+                                    .substring(fName
+                                               + IGNORED_FILE_NAME.length()));
+                }
             }
         }
         fromCmdLine.addElement(fe);
