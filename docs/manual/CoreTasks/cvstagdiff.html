@@ -1,12 +1,9 @@
 <html>
-
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <title>CvsTagDiff Task</title>
 </head>
-
 <body>
-
 <h2><a name="cvstagdiff">CvsTagDiff</a></h2>
 <h3>Description</h3>
 <p>Generates an XML-formatted report file of the changes between two tags or dates recorded in a
@@ -49,7 +46,7 @@
     <td valign="top">rootdir</td>
     <td valign="top">Root directory for the package, if different from the package name.</td>
     <td align="center" valign="top">No</td>
-  </tr>  
+  </tr>
 </table>
 
 <h3>Parameters inherited from the <code>cvs</code> task</h3>
@@ -114,6 +111,18 @@
 in the <code>jakarta-ant</code> module between the tags <code>ANT_14</code> and <code>ANT_141</code>.
 It writes these changes into the file <code>tagdiff.xml</code>.</p>
 
+<pre>  &lt;cvstagdiff
+                destfile=&quot;tagdiff.xml&quot;
+                package=&quot;jakarta-ant&quot;
+                startDate=&quot;2002-01-01&quot;
+                endDate=&quot;2002-31-01&quot;
+  /&gt;</pre>
+
+<p>Generates a tagdiff report for all the changes that have been made
+in the <code>jakarta-ant</code> module in january 2002. In this example <code>cvsRoot</code>
+has not been set. The current <code>cvsRoot</code> will be used (assuming the build is started
+from a folder stored in <code>cvs</code>.
+It writes these changes into the file <code>tagdiff.xml</code>.</p>
 
 <pre>  &lt;cvstagdiff
                 destfile=&quot;tagdiff.xml&quot;
