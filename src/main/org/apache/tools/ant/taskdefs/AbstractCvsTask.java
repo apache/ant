@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -276,24 +276,35 @@ public abstract class AbstractCvsTask extends Task {
          * Need a better cross platform integration with <cvspass>, so
          * use the same filename.
          */
-        if(passFile == null) {
+        if (passFile == null) {
 
             File defaultPassFile = new File(
                 System.getProperty("cygwin.user.home",
                     System.getProperty("user.home")) 
                 + File.separatorChar + ".cvspass");
 
-            if(defaultPassFile.exists())
+            if(defaultPassFile.exists()) {
                 this.setPassfile(defaultPassFile);
+            }
         }
 
         if (passFile != null) {
-            Environment.Variable var = new Environment.Variable();
-            var.setKey("CVS_PASSFILE");
-            var.setValue(String.valueOf(passFile));
-            env.addVariable(var);
-            log("Using cvs passfile: " + String.valueOf(passFile), 
-                Project.MSG_INFO);
+            if (passFile.isFile() && passFile.canRead()) {
+                Environment.Variable var = new Environment.Variable();
+                var.setKey("CVS_PASSFILE");
+                var.setValue(String.valueOf(passFile));
+                env.addVariable(var);
+                log("Using cvs passfile: " + String.valueOf(passFile), 
+                    Project.MSG_INFO);
+            } else if (!passFile.canRead()) {
+                log("cvs passfile: " + String.valueOf(passFile)
+                    + " ignored as it is not readable",
+                    Project.MSG_WARN);
+            } else {
+                log("cvs passfile: " + String.valueOf(passFile)
+                    + " ignored as it is not a file",
+                    Project.MSG_WARN);
+            }
         }
 
         if (cvsRsh != null) {
