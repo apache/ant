@@ -23,6 +23,8 @@ Fixed bugs:
 * fixed case handling of macrodef attributes and elements. Bugzilla
   Reports 25687 and 26225.
 
+* <java> ignored the append attribute, Bugzilla Report 26137.
+
 Other changes:
 --------------
 
