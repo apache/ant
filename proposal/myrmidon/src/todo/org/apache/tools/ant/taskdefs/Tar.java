@@ -32,7 +32,6 @@ import org.apache.avalon.excalibur.io.IOUtil;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
-
 public class Tar
     extends MatchingTask
 {
@@ -304,9 +303,7 @@ public class Tar
         }
         finally
         {
-            if( input != null ) {
-                input.close();
-            }
+            IOUtil.shutdownStream( input );
         }
     }
 }
