@@ -212,7 +212,10 @@
     <filename name="${optional.package}/StyleBook*"/>
   </selector>
   <selector id="needs.javamail">
-    <filename name="${ant.package}/taskdefs/email/MimeMailer*"/>
+    <or>
+      <filename name="${ant.package}/taskdefs/email/MimeMailer*"/>
+      <filename name="${ant.package}/listener/MailLogger*"/>
+    </or>
   </selector>
   <selector id="needs.icontract">
     <filename name="${optional.package}/IContract*"/>
