@@ -27,10 +27,17 @@ import org.apache.tools.ant.BuildException;
  */
 public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
 
+    /** Constructor for Jdk14RegexpRegexp */
     public Jdk14RegexpRegexp() {
         super();
     }
 
+    /**
+     * Convert ant regexp substitution option to jdk1.4 options.
+     *
+     * @param options the ant regexp options
+     * @return the jdk14 substition options
+     */
     protected int getSubsOptions(int options) {
         int subsOptions = REPLACE_FIRST;
         if (RegexpUtil.hasFlag(options, REPLACE_ALL)) {
@@ -39,6 +46,14 @@ public class Jdk14RegexpRegexp extends Jdk14RegexpMatcher implements Regexp {
         return subsOptions;
     }
 
+    /**
+     * Perform a substitution on the regular expression.
+     * @param input The string to substitute on
+     * @param argument The string which defines the substitution
+     * @param options The list of options for the match and replace.
+     * @return the result of the operation
+     * @throws BuildException on error
+     */
     public String substitute(String input, String argument, int options)
         throws BuildException {
         // translate \1 to $(1) so that the Matcher will work

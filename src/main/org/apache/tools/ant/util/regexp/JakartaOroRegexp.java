@@ -28,10 +28,19 @@ import org.apache.tools.ant.BuildException;
  */
 public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
 
+    /** Constructor for JakartaOroRegexp */
     public JakartaOroRegexp() {
         super();
     }
 
+    /**
+     * Perform a substitution on the regular expression.
+     * @param input The string to substitute on
+     * @param argument The string which defines the substitution
+     * @param options The list of options for the match and replace.
+     * @return the result of the operation
+     * @throws BuildException on error
+     */
     public String substitute(String input, String argument, int options)
         throws BuildException {
         // translate \1 to $1 so that the Perl5Substitution will work
@@ -71,6 +80,12 @@ public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
                                getSubsOptions(options));
     }
 
+    /**
+     * Convert ant regexp substitution option to oro options.
+     *
+     * @param options the ant regexp options
+     * @return the oro substition options
+     */
     protected int getSubsOptions(int options) {
         boolean replaceAll = RegexpUtil.hasFlag(options, REPLACE_ALL);
         int subsOptions = 1;

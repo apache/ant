@@ -27,10 +27,17 @@ import org.apache.tools.ant.BuildException;
 public class JakartaRegexpRegexp extends JakartaRegexpMatcher
     implements Regexp {
 
+    /** Constructor for JakartaRegexpRegexp */
     public JakartaRegexpRegexp() {
         super();
     }
 
+    /**
+     * Convert ant regexp substitution option to apache regex options.
+     *
+     * @param options the ant regexp options
+     * @return the apache regex substition options
+     */
     protected int getSubsOptions(int options) {
         int subsOptions = RE.REPLACE_FIRSTONLY;
         if (RegexpUtil.hasFlag(options, REPLACE_ALL)) {
@@ -39,6 +46,14 @@ public class JakartaRegexpRegexp extends JakartaRegexpMatcher
         return subsOptions;
     }
 
+    /**
+     * Perform a substitution on the regular expression.
+     * @param input The string to substitute on
+     * @param argument The string which defines the substitution
+     * @param options The list of options for the match and replace.
+     * @return the result of the operation
+     * @throws BuildException on error
+     */
     public String substitute(String input, String argument, int options)
         throws BuildException {
         Vector v = getGroups(input, options);
