@@ -468,8 +468,6 @@ public class PatternSet extends DataType
      * inner class to hold a name on list. "If" and "Unless" attributes may be
      * used to invalidate the entry based on the existence of a property
      * (typically set thru the use of the Available task).
-     *
-     * @author RT
      */
     public class NameEntry
     {

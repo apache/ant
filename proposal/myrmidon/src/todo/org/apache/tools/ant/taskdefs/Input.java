@@ -88,7 +88,7 @@ public class Input extends Task
     public void addContent( String msg )
         throws TaskException
     {
-        message += getProject().replaceProperties( msg );
+        message = msg;
     }
 
     /**

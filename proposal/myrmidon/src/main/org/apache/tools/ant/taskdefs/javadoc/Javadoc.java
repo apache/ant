@@ -571,22 +571,22 @@ public class Javadoc
         if( m_doctitle != null )
         {
             m_command.createArgument().setValue( "-doctitle" );
-            m_command.createArgument().setValue( expand( m_doctitle.getText() ) );
+            m_command.createArgument().setValue( m_doctitle.getText() );
         }
         if( m_header != null )
         {
             m_command.createArgument().setValue( "-header" );
-            m_command.createArgument().setValue( expand( m_header.getText() ) );
+            m_command.createArgument().setValue( m_header.getText() );
         }
         if( m_footer != null )
         {
             m_command.createArgument().setValue( "-footer" );
-            m_command.createArgument().setValue( expand( m_footer.getText() ) );
+            m_command.createArgument().setValue( m_footer.getText() );
         }
         if( m_bottom != null )
         {
             m_command.createArgument().setValue( "-bottom" );
-            m_command.createArgument().setValue( expand( m_bottom.getText() ) );
+            m_command.createArgument().setValue( m_bottom.getText() );
         }
 
         Commandline toExecute = (Commandline)m_command.clone();
@@ -739,7 +739,7 @@ public class Javadoc
                         throw new TaskException( "The title and packages must be specified for group elements." );
                     }
                     toExecute.createArgument().setValue( "-group" );
-                    toExecute.createArgument().setValue( expand( title ) );
+                    toExecute.createArgument().setValue( title );
                     toExecute.createArgument().setValue( packages );
                 }
             }
@@ -884,18 +884,6 @@ public class Javadoc
             {
             }
         }
-    }
-
-    /**
-     * Convenience method to expand properties.
-     *
-     * @param content Description of Parameter
-     * @return Description of the Returned Value
-     */
-    protected String expand( String content )
-        throws TaskException
-    {
-        return getProject().replaceProperties( content );
     }
 
     private String getJavadocExecutableName()
