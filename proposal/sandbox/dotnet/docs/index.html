@@ -1,0 +1,119 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Language" content="en-us"></meta>
+    <title>Dotnet Ant Library</title>
+  </head>
+
+  <body>
+    <h2>Introduction</h2>
+
+    <p>This is a library of Ant tasks that support using .NET
+    executables accross different platforms and in particular support
+    using common .NET development tools like <a
+    href="http://nant.sourceforge.net/">NAnt</a> from within Ant.</p>
+
+    <h2>Requirements</h2>
+
+    <p>The current version will only work for a CVS build of Ant
+    created from CVS HEAD (i.e. after Ant 1.6's feature freeze) of
+    2003-11-27 or later.  A version that can work with Ant 1.6 may be
+    provided at a later stage.  This task library is never going to
+    work with Ant &lt; 1.6.</p>
+
+    <h2>Installation</h2>
+
+    <p>If you are building this from sources, run the antlib target
+    and you'll get a file <code>dotnet.jar</code>.  If you've
+    downloaded <code>dotnet.jar</code>, you are already ready.</p>
+
+    <p>There are several ways to use the tasks:</p>
+
+    <ul>
+      <li>The traditional way:
+        <pre>
+          &lt;taskdef 
+            resource="org/apache/tools/ant/taskdefs/optional/dotnet/antlib.xml"&gt;
+            &lt;classpath&gt;
+              &lt;pathelement location="YOUR-PATH-TO/dotnet.jar"/&gt;
+            &lt;/classpath&gt;
+          &lt;/taskdef&gt;
+        </pre>
+
+        With this you can use the tasks like plain Ant tasks, they'll
+        live in the default namespace.  I.e. if you can run
+        &lt;exec&gt; without any namespace prefix, you can do so for
+        &lt;dotnetexec&gt; as well.
+      </li>
+
+      <li>Similar, but assigning a namespace URI
+        <pre>
+          &lt;taskdef 
+            uri="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+            resource="org/apache/tools/ant/taskdefs/optional/dotnet/antlib.xml"&gt;
+            &lt;classpath&gt;
+              &lt;pathelement location="YOUR-PATH-TO/dotnet.jar"/&gt;
+            &lt;/classpath&gt;
+          &lt;/taskdef&gt;
+        </pre>
+
+        This puts you task into a separate namespace than Ant's
+        namespace.  You would use the tasks like
+
+        <pre>
+          &lt;project
+            xmlns:dn="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+            xmlns="antlib:org.apache.tools.ant"&gt;
+            ...
+            &lt;dn:nant&gt;
+              &lt;dn:target name="my-target"/&gt;
+            &lt;/dn:nant&gt;
+        </pre>
+
+        or
+
+        <pre>
+          &lt;nant xmlns="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"&gt;
+            &lt;target name="my-target"/&gt;
+          &lt;/nant&gt;
+        </pre>
+
+        or a variation thereof.
+      </li>
+
+      <li>Using Ant's autodiscovery.  Place <code>dotnet.jar</code>
+      into a directory and use <code>ant -lib
+      DIR-CONTAINING-THE-JAR</code> or copy it into
+      <code>ANT_HOME/lib</code> - and then in your build file, simply
+      declare the namespace on the <code>project</code> tag:
+
+        <pre>
+          &lt;project
+            xmlns:dn="antlib:org.apache.tools.ant.taskdefs.optional.dotnet"
+            xmlns="antlib:org.apache.tools.ant"&gt;
+        </pre>
+
+        And all tasks of this library will automatically be available
+        in the <code>dn</code> namespace without any
+        <code>taskdef</code>.
+      </li>
+    </ul>
+
+    <h2>Tasks</h2>
+
+    <ul>
+      <li><a href="dotnetexec.html">dotnetexec</a> - run a .NET
+      assembly that's in your PATH.  You can chose the framework that
+      is going to be used - defaults to Mono on non-Windows platforms
+      and Microsoft's on Windows.</li>
+
+      <li><a href="nant.html">nant</a> - execute the NAnt build
+      tool.</li>
+
+      <li><a href="msbuild.html">msbuild</a> - execute the MSBuild build
+      tool, untested.</li>
+    </ul>
+
+    <hr/>
+      <p align="center">Copyright &copy; 2003 Apache Software Foundation. All rights Reserved.</p>
+  </body>
+</html>
