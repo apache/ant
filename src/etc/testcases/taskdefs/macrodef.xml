@@ -86,4 +86,19 @@
     <ignore myattribute="a"/>
     <ignore Myattribute="b"/>
   </target>
+
+  <target name="ignore-element-case">
+    <macrodef name="ignore">
+      <element name="MyElement"/>
+      <sequential>
+        <myElement/>
+        <MyElEmEnT/>
+      </sequential>
+    </macrodef>
+    <ignore>
+      <MYELEMENT>
+        <echo>nested element</echo>
+      </MYELEMENT>
+    </ignore>
+  </target>
 </project>
