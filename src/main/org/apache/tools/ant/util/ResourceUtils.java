@@ -89,7 +89,6 @@ public class ResourceUtils {
                                                     FileNameMapper mapper,
                                                     ResourceFactory targets) {
         long now = (new java.util.Date()).getTime();
-        StringBuffer targetList = new StringBuffer();
 
         /*
           If we're on Windows, we have to munge the time up to 2 secs to
@@ -116,7 +115,7 @@ public class ResourceUtils {
                                    .replace('/', File.separatorChar));
             if (targetnames != null) {
                 boolean added = false;
-                targetList.setLength(0);
+                StringBuffer targetList = new StringBuffer();
                 for (int ctarget = 0; !added && ctarget < targetnames.length; 
                      ctarget++) {
                     Resource atarget = 

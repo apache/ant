@@ -165,7 +165,7 @@ public class P4Fstat extends P4Base {
                     if (filelist.length() > cmdLength) {
 
                         execP4Fstat(filelist);
-                        filelist.setLength(0);
+                        filelist = new StringBuffer();
                     }
                 }
                 if (filelist.length() > 0) {

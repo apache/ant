@@ -397,7 +397,6 @@ public class Path extends DataType implements Cloneable {
         PathTokenizer tok = new PathTokenizer(source);
         StringBuffer element = new StringBuffer();
         while (tok.hasMoreTokens()) {
-            element.setLength(0);
             String pathElement = tok.nextToken();
             try {
                 element.append(resolveFile(project, pathElement));
@@ -410,6 +409,7 @@ public class Path extends DataType implements Cloneable {
                 translateFileSep(element, i);
             }
             result.addElement(element.toString());
+            element = new StringBuffer();
         }
         String[] res = new String[result.size()];
         result.copyInto(res);

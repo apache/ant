@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -294,8 +294,8 @@ public class AntStructure extends Task {
         sb.append(">");
         out.println(sb);
 
-        sb.setLength(0);
-        sb.append("<!ATTLIST ").append(name);
+        sb = new StringBuffer("<!ATTLIST ");
+        sb.append(name);
         sb.append(lSep).append("          id ID #IMPLIED");
 
         enum = ih.getAttributes();

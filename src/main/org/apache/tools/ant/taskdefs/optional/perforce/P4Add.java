@@ -145,7 +145,7 @@ public class P4Add extends P4Base {
                     filelist.append(" ").append('"').append(f.getAbsolutePath()).append('"');
                     if (filelist.length() > cmdLength) {
                         execP4Add(filelist);
-                        filelist.setLength(0);
+                        filelist = new StringBuffer();
                     }
                 }
                 if (filelist.length() > 0) {

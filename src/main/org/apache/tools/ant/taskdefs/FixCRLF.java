@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -720,7 +720,7 @@ public class FixCRLF extends MatchingTask {
 
         // process sequences of white space
         // first convert all tabs to spaces
-        linebuf.setLength(0);
+        linebuf = new StringBuffer();
         while ((nextTab = line.indexOf((int) '\t', place)) >= 0) {
             linebuf.append(line.substring(place, nextTab)); // copy to the TAB
             col += nextTab - place;
@@ -731,7 +731,7 @@ public class FixCRLF extends MatchingTask {
         } // end of while
         linebuf.append(line.substring(place, line.length()));
         // if converting to spaces, all finished
-        String linestring = new String(linebuf.toString());
+        String linestring = new String(linebuf.substring(0));
         if (tabs == REMOVE) {
             try {
                 outWriter.write(linestring);
@@ -740,7 +740,7 @@ public class FixCRLF extends MatchingTask {
             } // end of try-catch
         } else { // tabs == ADD
             int tabCol;
-            linebuf2.setLength(0);
+            linebuf2 = new StringBuffer();
             place = 0;
             col = bufline.getColumn();
             int placediff = col - 0;
@@ -782,7 +782,7 @@ public class FixCRLF extends MatchingTask {
             linebuf2.append(linestring.substring(place, linestring.length()));
 
             try {
-                outWriter.write(linebuf2.toString());
+                outWriter.write(linebuf2.substring(0));
             } catch (IOException e) {
                 throw new BuildException(e);
             } // end of try-catch
@@ -826,8 +826,8 @@ public class FixCRLF extends MatchingTask {
             int ch = -1;
             int eolcount = 0;
 
-            eolStr.setLength(0);
-            line.setLength(0);
+            eolStr = new StringBuffer();
+            line = new StringBuffer();
 
             try {
                 ch = reader.read();
@@ -907,7 +907,7 @@ public class FixCRLF extends MatchingTask {
         }
 
         public String getEofStr() {
-            return eofStr.toString();
+            return eofStr.substring(0);
         }
 
         public int getState() {
@@ -928,7 +928,7 @@ public class FixCRLF extends MatchingTask {
                 throw new NoSuchElementException("OneLiner");
             }
             BufferLine tmpLine =
-                    new BufferLine(line.toString(), eolStr.toString());
+                    new BufferLine(line.toString(), eolStr.substring(0));
             nextLine();
             return tmpLine;
         }

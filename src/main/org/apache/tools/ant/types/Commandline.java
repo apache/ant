@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -399,7 +399,7 @@ public class Commandline implements Cloneable {
                 } else if (" ".equals(nextTok)) {
                     if (lastTokenHasBeenQuoted || current.length() != 0) {
                         v.addElement(current.toString());
-                        current.setLength(0);
+                        current = new StringBuffer();
                     }
                 } else {
                     current.append(nextTok);

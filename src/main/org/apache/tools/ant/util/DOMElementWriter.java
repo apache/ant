@@ -80,7 +80,6 @@ import org.w3c.dom.Text;
 public class DOMElementWriter {
 
     private static String lSep = System.getProperty("line.separator");
-    private StringBuffer sb = new StringBuffer();
 
     /**
      * Don't try to be too smart but at least recognize the predefined
@@ -204,7 +203,7 @@ public class DOMElementWriter {
      * drop characters that are illegal in XML documents.
      */
     public String encode(String value) {
-        sb.setLength(0);
+        StringBuffer sb = new StringBuffer();
         int len = value.length();
         for (int i = 0; i < len; i++) {
             char c = value.charAt(i);
@@ -254,7 +253,7 @@ public class DOMElementWriter {
 
      */
     public String encodedata(final String value) {
-        sb.setLength(0);
+        StringBuffer sb = new StringBuffer();
         for (int i = 0; i < value.length(); ++i) {
             char c = value.charAt(i);
             if (isLegalCharacter(c)) {

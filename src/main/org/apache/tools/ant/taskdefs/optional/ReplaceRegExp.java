@@ -365,7 +365,7 @@ public class ReplaceRegExp extends Task {
                             pw.print(res);
                             pw.print('\r');
 
-                            linebuf.setLength(0);
+                            linebuf = new StringBuffer();
                             // hasCR is still true (for the second one)
                         } else {
                             // first CR in this line
@@ -388,7 +388,7 @@ public class ReplaceRegExp extends Task {
                         }
                         pw.print('\n');
 
-                        linebuf.setLength(0);
+                        linebuf = new StringBuffer();
                     } else { // any other char
                         if ((hasCR) || (c < 0)) {
                             // Mac-style linebreak or EOF (or both)
@@ -405,7 +405,7 @@ public class ReplaceRegExp extends Task {
                                 hasCR = false;
                             }
 
-                            linebuf.setLength(0);
+                            linebuf = new StringBuffer();
                         }
 
                         if (c >= 0) {

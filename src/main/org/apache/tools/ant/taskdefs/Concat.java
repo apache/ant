@@ -412,7 +412,7 @@ public class Concat extends Task {
 
             if (textBuffer != null) {
                 reader = new StringReader(
-                    getProject().replaceProperties(textBuffer.toString()));
+                    getProject().replaceProperties(textBuffer.substring(0)));
             } else {
                 reader =  new MultiReader();
             }
@@ -476,7 +476,7 @@ public class Concat extends Task {
      */
     private void sanitizeText() {
         if (textBuffer != null) {
-            if (textBuffer.toString().trim().length() == 0) {
+            if (textBuffer.substring(0).trim().length() == 0) {
                 textBuffer = null;
             }
         }

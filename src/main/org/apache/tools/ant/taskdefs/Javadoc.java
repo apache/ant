@@ -362,7 +362,7 @@ public class Javadoc extends Task {
          * @return the current text.
          */
         public String getText() {
-            return text.toString();
+            return text.substring(0);
         }
     }
 

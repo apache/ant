@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -122,8 +122,8 @@ public class Utils {
         StringBuffer param = new StringBuffer();
         i++;
         while ((i = descriptor2java(descriptor, i, param)) < descriptor.length()) {
-            params.add(param.toString());
-            param.setLength(0); // reset
+            params.add(param.substring(0));
+            param = new StringBuffer();
             if (descriptor.charAt(i) == ')') {
                 i++;
                 break;

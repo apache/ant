@@ -640,7 +640,7 @@ public class JUnitTask extends Task {
                 formatterArg.append(outFile);
             }
             cmd.createArgument().setValue(formatterArg.toString());
-            formatterArg.setLength(0);
+            formatterArg = new StringBuffer();
         }
 
         // Create a temporary file to pass the Ant properties to the

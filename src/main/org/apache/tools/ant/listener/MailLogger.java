@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -158,7 +158,7 @@ public class MailLogger extends DefaultLogger {
             String subject = getValue(properties, prefix + ".subject",
                     (success) ? "Build Success" : "Build Failure");
 
-            sendMail(mailhost, port, from, toList, subject, buffer.toString());
+            sendMail(mailhost, port, from, toList, subject, buffer.substring(0));
         } catch (Exception e) {
             System.out.println("MailLogger failed to send e-mail!");
             e.printStackTrace(System.err);

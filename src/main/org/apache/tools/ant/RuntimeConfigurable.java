@@ -324,7 +324,7 @@ public class RuntimeConfigurable implements Serializable {
         id = (String) attributeMap.get("id");
 
         if (characters.length() != 0) {
-            ProjectHelper.addText(p, wrappedObject, characters.toString());
+            ProjectHelper.addText(p, wrappedObject, characters.substring(0));
         }
 
         Enumeration enum = children.elements();

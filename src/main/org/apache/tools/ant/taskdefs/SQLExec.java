@@ -555,7 +555,7 @@ public class SQLExec extends JDBCTask {
                     }
                     line.append(md.getColumnName(columnCount));
                     out.println(line);
-                    line.setLength(0);
+                    line = new StringBuffer();
                 }
                 while (rs.next()) {
                     boolean first = true;
@@ -573,7 +573,7 @@ public class SQLExec extends JDBCTask {
                         line.append(columnValue);
                     }
                     out.println(line);
-                    line.setLength(0);
+                    line = new StringBuffer();
                 }
             }
         }
