@@ -482,6 +482,9 @@ public class SQLExec extends Task {
      * Exec the sql statement.
      */
     protected void execSQL(String sql) throws SQLException {
+        // Check and ignore empty statements
+        if ("".equals(sql.trim())) return;
+        
         try {  
             totalSql++;
             if (!statement.execute(sql)) {
@@ -585,13 +588,13 @@ public class SQLExec extends Task {
 
         private void runTransaction() throws IOException, SQLException {
             if (tSqlCommand.length() != 0) {
-                log("Executing commands", Project.MSG_VERBOSE);
+                log("Executing commands", Project.MSG_INFO);
                 runStatements(new StringReader(tSqlCommand));
             }
       
             if (tSrcFile != null) {
                 log("Executing file: " + tSrcFile.getAbsolutePath(), 
-                    Project.MSG_VERBOSE);
+                    Project.MSG_INFO);
                 runStatements(new FileReader(tSrcFile));
             }
         }
