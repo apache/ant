@@ -12,7 +12,6 @@ Prefix: /opt
 
 %description
 Platform-independent build tool for java.
-Used by tomcat/jakarta projects.
 
 %prep
 rm -rf ${RPM_BUILD_DIR}/jakarta-tools
