@@ -606,8 +606,6 @@ public class Main {
                 if (targets.size() == 0) {
                     if (project.getDefaultTarget() != null) {
                         targets.addElement(project.getDefaultTarget());
-                    } else {
-                        targets.addElement(""); // implicit target
                     }
                 }
 
