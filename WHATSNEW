@@ -134,6 +134,8 @@ Fixed bugs:
 * <genkey> no longer requires keytool to be in your PATH.  Bugzilla
   Report 29382.
 
+* <symlink> could create cyclic links.  Bugzilla Report 25181.
+
 Other changes:
 --------------
 * doc fix concerning the dependencies of the ftp task
