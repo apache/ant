@@ -17,6 +17,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.Project;
@@ -659,23 +660,23 @@ public class JUnitTask extends Task
         cmd.createArgument().setValue( "propsfile=" + propsFile.getAbsolutePath() );
         Hashtable p = getProject().getProperties();
         Properties props = new Properties();
-        for( Iterator enum = p.keys(); enum.hasNext(); )
+        for( Enumeration enum = p.keys(); enum.hasMoreElements(); )
         {
-            Object key = enum.next();
+            final Object key = enum.nextElement();
             props.put( key, p.get( key ) );
         }
         try
         {
-            FileOutputStream outstream = new FileOutputStream( propsFile );
+            final FileOutputStream outstream = new FileOutputStream( propsFile );
             props.save( outstream, "Ant JUnitTask generated properties file" );
             outstream.close();
         }
-        catch( java.io.IOException e )
+        catch( IOException ioe )
         {
-            throw new TaskException( "Error creating temporary properties file.", e );
+            throw new TaskException( "Error creating temporary properties file.", ioe );
         }
 
-        Execute execute = new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ), watchdog );
+        final Execute execute = new Execute( new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_WARN ), watchdog );
         execute.setCommandline( cmd.getCommandline() );
         if( dir != null )
         {
