@@ -48,11 +48,12 @@ import java.io.IOException;
 public class CallTarget extends Task {
 
     private Ant callee;
-    private String subTarget;
     // must match the default value of Ant#inheritAll
     private boolean inheritAll = true;
     // must match the default value of Ant#inheritRefs
     private boolean inheritRefs = false;
+
+    private boolean targetSet = false;
 
     /**
      * If true, pass all properties to the new Ant project.
@@ -93,13 +94,13 @@ public class CallTarget extends Task {
             init();
         }
 
-        if (subTarget == null) {
-            throw new BuildException("Attribute target is required.",
-                                     getLocation());
+        if (!targetSet) {
+            throw new BuildException(
+                "Attribute target or at least one nested target is required.",
+                 getLocation());
         }
 
         callee.setAntfile(getProject().getProperty("ant.file"));
-        callee.setTarget(subTarget);
         callee.setInheritAll(inheritAll);
         callee.setInheritRefs(inheritRefs);
         callee.execute();
@@ -143,7 +144,24 @@ public class CallTarget extends Task {
      * Target to execute, required.
      */
     public void setTarget(String target) {
-        subTarget = target;
+        if (callee == null) {
+            init();
+        }
+        callee.setTarget(target);
+        targetSet = true;
+    }
+
+    /**
+     * Target element identifying a data type to carry
+     * over to the invoked target.
+     * @since Ant 1.6.2
+     */
+    public void addConfiguredTarget(Ant.TargetElement t) {
+        if (callee == null) {
+            init();
+        }
+        callee.addConfiguredTarget(t);
+        targetSet = true;
     }
 
     /**

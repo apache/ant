@@ -21,6 +21,10 @@ Other changes:
 * A new base class DispatchTask has been added to facilitate elegant 
   creation of tasks with multiple actions.
 
+* Added <target> nested elements to <ant> and <antcall> to allow
+  specification of multiple sub-build targets, which are executed
+  with a single dependency analysis.
+
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =====================================================
 

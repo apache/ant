@@ -55,6 +55,14 @@ public class CallTargetTest extends BuildFileTest {
         assertLogContaining("multi is SETmulti is SET");
     }
 
+    public void testBlankTarget() {
+        expectBuildException("blank-target", "target name must not be empty");
+    }
+
+    public void testMultipleTargets() {
+        expectLog("multiple-targets", "tadadctbdbtc");
+    }
+
     public void tearDown() {
         project.executeTarget("cleanup");
     }

@@ -50,4 +50,27 @@
             <param name="multi" value="SET"/>
         </antcall>
     </target>
+
+    <target name="blank-target">
+        <antcall>
+            <target name="" />
+        </antcall>
+    </target>
+
+    <target name="multiple-targets">
+        <antcall>
+            <target name="ta" />
+            <target name="tb" />
+            <target name="tc" />
+        </antcall>
+    </target>
+
+    <target name="ta"><echo>ta</echo></target>
+    <target name="tb" depends="da,dc"><echo>tb</echo></target>
+    <target name="tc" depends="db,dc"><echo>tc</echo></target>
+
+    <target name="da"><echo>da</echo></target>
+    <target name="db"><echo>db</echo></target>
+    <target name="dc"><echo>dc</echo></target>
+
 </project>

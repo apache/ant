@@ -295,6 +295,14 @@ public class AntTest extends BuildFileTest {
         project.removeBuildListener(pcFoo);
     }
 
+    public void testBlankTarget() {
+        expectBuildException("blank-target", "target name must not be empty");
+    }
+
+    public void testMultipleTargets() {
+        expectLog("multiple-targets", "tadadctbdbtc");
+    }
+
     private class BasedirChecker implements BuildListener {
         private String[] expectedBasedirs;
         private int calls = 0;

@@ -1187,7 +1187,16 @@ public class Project {
         // exist, and if there is any cycle in the dependency
         // graph.
         Vector sortedTargets = topoSort(targetName, targets);
+        sortedTargets.setSize(sortedTargets.indexOf(targets.get(targetName)) + 1);
+        executeSortedTargets(sortedTargets);
+    }
 
+    /**
+     * Executes a <CODE>Vector</CODE> of sorted targets.
+     * @param sortedTargets   the aforementioned <CODE>Vector</CODE>.
+     */
+    public void executeSortedTargets(Vector sortedTargets)
+        throws BuildException {
         Set succeededTargets = new HashSet();
         BuildException buildException = null; // first build exception
         for (Enumeration iter = sortedTargets.elements();
@@ -1244,9 +1253,6 @@ public class Project {
                         }
                     }
                 }
-            }
-            if (curtarget.getName().equals(targetName)) { // old exit condition
-                break;
             }
         }
         if (buildException != null) {
@@ -1565,20 +1571,47 @@ public class Project {
      */
     public final Vector topoSort(String root, Hashtable targets)
         throws BuildException {
+        return topoSort(new String[] {root}, targets);
+    }
+
+    /**
+     * Topologically sorts a set of targets.
+     *
+     * @param root <CODE>String[]</CODE> containing the names of the root targets.
+     *             The sort is created in such a way that the sequence of Targets
+     *             up to the root target is the minimum possible such sequence.
+     *             Must not be <code>null</code>.
+     * @param targets A map of names to targets (String to Target).
+     *                Must not be <code>null</code>.
+     * @return a vector of Target objects in sorted order.
+     * @exception BuildException if there is a cyclic dependency among the
+     *                           targets, or if a named target does not exist.
+     */
+    public final Vector topoSort(String[] root, Hashtable targets)
+        throws BuildException {
         Vector ret = new Vector();
         Hashtable state = new Hashtable();
         Stack visiting = new Stack();
 
-        // We first run a DFS based sort using the root as the starting node.
-        // This creates the minimum sequence of Targets to the root node.
+        // We first run a DFS based sort using each root as a starting node.
+        // This creates the minimum sequence of Targets to the root node(s).
         // We then do a sort on any remaining unVISITED targets.
         // This is unnecessary for doing our build, but it catches
         // circular dependencies or missing Targets on the entire
         // dependency tree, not just on the Targets that depend on the
         // build Target.
 
-        tsort(root, targets, state, visiting, ret);
-        log("Build sequence for target `" + root + "' is " + ret, MSG_VERBOSE);
+        for (int i = 0; i < root.length; i++) {
+            tsort(root[i], targets, state, visiting, ret);
+        }
+        StringBuffer buf = new StringBuffer("Build sequence for target(s)");
+
+        for (int j = 0; j < root.length; j++) {
+            buf.append((j == 0) ? " `" : ", `").append(root[j]).append('\'');
+        }
+        buf.append(" is " + ret);
+        log(buf.toString(), MSG_VERBOSE);
+
         for (Enumeration en = targets.keys(); en.hasMoreElements();) {
             String curTarget = (String) en.nextElement();
             String st = (String) state.get(curTarget);

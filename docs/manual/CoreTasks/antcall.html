@@ -120,6 +120,26 @@ href="../CoreTypes/propertyset.html">propertyset</a>s.</p>
 
 <p><em>since Ant 1.6</em>.</p>
 
+<h4>target</h4>
+
+<p>You can specify multiple targets using nested &lt;target&gt; elements
+instead of using the target attribute.  These will be executed as if
+Ant had been invoked with a single target whose dependencies are the
+targets so specified, in the order specified.</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the called target.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<p><em>since Ant 1.6.2</em>.</p>
+
 <h3>Examples</h3>
 <pre>
   &lt;target name=&quot;default&quot;&gt;
