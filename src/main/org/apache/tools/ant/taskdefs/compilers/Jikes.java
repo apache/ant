@@ -195,12 +195,13 @@ public class Jikes extends DefaultCompilerAdapter {
         addCurrentCompilerArgs(cmd);
 
         int firstFileName = cmd.size();
-        logAndAddFilesToCompile(cmd);
 
         if (bootclasspath != null) {
             cmd.createArgument().setValue("-bootclasspath");
             cmd.createArgument().setPath(bootclasspath);
         }
+
+        logAndAddFilesToCompile(cmd);
 
         return
             executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
