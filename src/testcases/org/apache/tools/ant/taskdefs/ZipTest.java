@@ -144,4 +144,14 @@ public class ZipTest extends BuildFileTest {
         ZipEntry ze = zf.getEntry("test/");
         assertNotNull("test/ has been added", ze);
     }
+
+    // Bugzilla Report 19449
+    public void testFilesOnlyDoesntCauseRecreate() 
+        throws InterruptedException {
+        executeTarget("testFilesOnlyDoesntCauseRecreateSetup");
+        long l = getProject().resolveFile("test3.zip").lastModified();
+        Thread.currentThread().sleep(3000);
+        executeTarget("testFilesOnlyDoesntCauseRecreate");
+        assertEquals(l, getProject().resolveFile("test3.zip").lastModified());
+    }
 }

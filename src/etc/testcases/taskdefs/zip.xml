@@ -102,6 +102,20 @@
     </zip>
   </target>
 
+  <!-- Bugzilla Report 19449 -->
+  <target name="testFilesOnlyDoesntCauseRecreateSetup">
+    <mkdir dir="ziptest"/>
+    <touch file="ziptest/ziptest"/>
+    <zip destfile="test3.zip" basedir="."
+         includes="ziptest/**" filesonly="true"/>
+  </target>
+
+  <!-- Bugzilla Report 19449 -->
+  <target name="testFilesOnlyDoesntCauseRecreate">
+    <zip destfile="test3.zip" basedir="."
+         includes="ziptest/**" filesonly="true"/>
+  </target>
+
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>
@@ -113,5 +127,6 @@
     <delete file="asf-logo.gif.zip"/>
     <delete file="zipgroupfileset.zip"/>
     <delete file="../dummyfile" />
+    <delete dir="ziptest"/>
   </target>
 </project>
