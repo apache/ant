@@ -73,7 +73,8 @@ import org.apache.tools.ant.types.Parameter;
  *
  * Or:
  *
- * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineComments&quot;&gt;
+ * <pre>&lt;filterreader 
+ *      classname=&quot;org.apache.tools.ant.filters.StripLineComments&quot;&gt;
  *   &lt;param type=&quot;comment&quot; value="#&quot;/&gt;
  *   &lt;param type=&quot;comment&quot; value=&quot;--&quot;/&gt;
  *   &lt;param type=&quot;comment&quot; value=&quot;REM &quot;/&gt;

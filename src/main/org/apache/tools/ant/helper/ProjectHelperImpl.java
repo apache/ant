@@ -135,7 +135,8 @@ public class ProjectHelperImpl extends ProjectHelper {
      */
     public void parse(Project project, Object source) throws BuildException {
         if (!(source instanceof File)) {
-            throw new BuildException("Only File source supported by default plugin");
+            throw new BuildException("Only File source supported by " 
+                + "default plugin");
         }
         File buildFile = (File) source;
         FileInputStream inputStream = null;

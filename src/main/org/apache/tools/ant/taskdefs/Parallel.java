@@ -92,19 +92,19 @@ public class Parallel extends Task
     private final Object semaphore = new Object();
     
     /** Total number of threads to run */
-    int numThreads = 0;
+    private int numThreads = 0;
     
     /** Total number of threads per processor to run.  */
-    int numThreadsPerProcessor = 0;
+    private int numThreadsPerProcessor = 0;
     
     /** Interval (in ms) to poll for finished threads. */
-    int pollInterval = 1000; // default is once a second
+    private int pollInterval = 1000; // default is once a second
 
     /**
      * Add a nested task to execute in parallel.
      * @param nestedTask  Nested task to be executed in parallel
      */
-    public void addTask(Task nestedTask) throws BuildException {
+    public void addTask(Task nestedTask) {
         nestedTasks.addElement(nestedTask);
     }
     
@@ -128,7 +128,8 @@ public class Parallel extends Task
      * simultaneously.  If there are less tasks than threads then all will be 
      * executed at once, if there are more then only <code>threadCount</code> 
      * tasks will be executed at one time.  If <code>threadsPerProcessor</code> 
-     * is set and the JVM is at least a 1.4 VM then this value is ignormed.; optional
+     * is set and the JVM is at least a 1.4 VM then this value is 
+     * ignored.; optional
      *
      * @param numThreads total number of therads.
      *
@@ -147,6 +148,11 @@ public class Parallel extends Task
         this.pollInterval = pollInterval;
     }
     
+    /**
+     * Execute the parallel tasks
+     *
+     * @exception BuildException if any of the threads failed.
+     */
     public void execute() throws BuildException {
         updateThreadCounts();
         if (numThreads == 0) {
@@ -155,6 +161,9 @@ public class Parallel extends Task
         spinThreads();
     }
     
+    /**
+     * Determine the number of threads based on the number of processors
+     */
     private void updateThreadCounts() {
         if (numThreadsPerProcessor != 0) {
             int numProcessors = getNumProcessors();
@@ -165,7 +174,9 @@ public class Parallel extends Task
     }
         
     /**
-     * Spin up threadCount threads.
+     * Spin up required threads with a maximum number active at any given time.
+     *
+     * @exception BuildException if any of the threads failed.
      */
     private void spinThreads() throws BuildException {
         final int numTasks = nestedTasks.size();
@@ -189,12 +200,13 @@ public class Parallel extends Task
         // now run them in limited numbers...
         outer:
         while (threadNumber < numTasks) {
-            synchronized(semaphore) {
+            synchronized (semaphore) {
                 for (int i = 0; i < maxRunning; i++) {
                     if (running[i] == null || !running[i].isAlive()) {
                         running[i] = threads[threadNumber++];
                         running[i].start();
-                        // countinue on outer while loop in case we used our last thread
+                        // countinue on outer while loop in case we 
+                        // used our last thread
                         continue outer;
                     }
                 }
@@ -252,7 +264,12 @@ public class Parallel extends Task
                                      firstLocation);
         }
     }
-        
+     
+    /**
+     * Determine the number of processors. Only effective on later VMs
+     *
+     * @return the number of processors available or 0 if not determinable.
+     */
     private int getNumProcessors() {
         try {
             Class[] paramTypes = {};

@@ -436,8 +436,7 @@ public class IntrospectionHelper implements BuildListener {
                 DynamicConfigurator dc = (DynamicConfigurator) element;
                 dc.setDynamicAttribute(attributeName, value);
                 return;
-            }
-            else {
+            } else {
                 String msg = getElementName(p, element) +
                     " doesn't support the \"" + attributeName +
                     "\" attribute.";

@@ -133,6 +133,12 @@ public class RuntimeConfigurable implements Serializable {
         proxyConfigured = false;
     }
 
+    /**
+     * Get the object for which this RuntimeConfigurable holds the configuration
+     * information
+     *
+     * @return the object whose configure is held by this instance.
+     */
     public Object getProxy() {
         return wrappedObject;
     }
@@ -151,6 +157,12 @@ public class RuntimeConfigurable implements Serializable {
         }
     }
 
+    /**
+     * Set an attribute to a given value
+     *
+     * @param name the name of the attribute.
+     * @param value the attribute's value.
+     */
     public void setAttribute(String name, String value) {
         attributeNames.addElement(name);
         attributeMap.put(name, value);
@@ -357,6 +369,8 @@ public class RuntimeConfigurable implements Serializable {
     
     /**
      * Reconfigure the element, even if it has already been configured.
+     *
+     * @param p the project instance for this configuration.
      */
     public void reconfigure(Project p) {
         proxyConfigured = false;

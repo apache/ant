@@ -161,7 +161,8 @@ public final class ChainReaderHelper {
                 Object o = finalFilters.elementAt(i);
 
                 if (o instanceof AntFilterReader) {
-                    final AntFilterReader filter = (AntFilterReader) finalFilters.elementAt(i);
+                    final AntFilterReader filter 
+                        = (AntFilterReader) finalFilters.elementAt(i);
                     final String className = filter.getClassName();
                     final Path classpath = filter.getClasspath();
                     final Project project = filter.getProject();

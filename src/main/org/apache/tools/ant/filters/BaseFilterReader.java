@@ -143,7 +143,8 @@ public abstract class BaseFilterReader
      * @exception  IllegalArgumentException  If <code>n</code> is negative.
      * @exception  IOException  If an I/O error occurs
      */
-    public final long skip(final long n) throws IOException {
+    public final long skip(final long n) 
+        throws IOException, IllegalArgumentException {
         if (n < 0L) {
             throw new IllegalArgumentException("skip value is negative");
         }

@@ -903,8 +903,7 @@ public class Project {
                         && oldLoader instanceof AntClassLoader
                         && newLoader instanceof AntClassLoader
                         && ((AntClassLoader) oldLoader).getClasspath()
-                        .equals(((AntClassLoader) newLoader).getClasspath())
-                        ) {
+                        .equals(((AntClassLoader) newLoader).getClasspath())) {
                         // same classname loaded from the same
                         // classpath components
                         logLevel = MSG_VERBOSE;
@@ -2071,7 +2070,7 @@ public class Project {
                                         int priority) {
         event.setMessage(message, priority);
         Vector listeners = getBuildListeners();
-        synchronized(this) {
+        synchronized (this) {
             if (loggingMessage) {
                 throw new BuildException("Listener attempted to access " 
                     + (priority == MSG_ERR ? "System.err" : "System.out") 
@@ -2171,7 +2170,7 @@ public class Project {
     // Should move to a separate public class - and have API to add
     // listeners, etc.
     private static class AntRefTable extends Hashtable {
-        Project project;
+        private Project project;
         public AntRefTable(Project project) {
             super();
             this.project = project;
@@ -2212,9 +2211,9 @@ public class Project {
     }
 
     private static class AntTaskTable extends LazyHashtable {
-        Project project;
-        Properties props;
-        boolean tasks = false;
+        private Project project;
+        private Properties props;
+        private boolean tasks = false;
 
         public AntTaskTable(Project p, boolean tasks) {
             this.project = p;
@@ -2226,46 +2225,57 @@ public class Project {
         }
 
         protected void initAll() {
-            if (initAllDone ) return;
+            if (initAllDone) {
+                return;
+            }
             project.log("InitAll", Project.MSG_DEBUG);
-            if (props==null ) return;
+            if (props == null) {
+                return;
+            }
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
                 String key = (String) enum.nextElement();
-                Class taskClass=getTask( key );
-                if (taskClass!=null ) {
+                Class taskClass = getTask(key);
+                if (taskClass != null) {
                     // This will call a get() and a put()
-                    if (tasks )
+                    if (tasks) {
                         project.addTaskDefinition(key, taskClass);
-                    else
-                        project.addDataTypeDefinition(key, taskClass );
+                    } else {
+                        project.addDataTypeDefinition(key, taskClass);
+                    }
                 }
             }
-            initAllDone=true;
+            initAllDone = true;
         }
 
         protected Class getTask(String key) {
-            if (props==null ) return null; // for tasks loaded before init()
-            String value=props.getProperty(key);
-            if (value==null) {
-                //project.log( "No class name for " + key, Project.MSG_VERBOSE );
+            if (props == null) {
+                return null; // for tasks loaded before init()
+            }
+            String value = props.getProperty(key);
+            if (value == null) {
+                //project.log( "No class name for " + key, Project.MSG_VERBOSE);
                 return null;
             }
             try {
-                Class taskClass=null;
+                Class taskClass = null;
                 if (project.getCoreLoader() != null &&
                     !("only".equals(project.getProperty("build.sysclasspath")))) {
                     try {
-                        taskClass=project.getCoreLoader().loadClass(value);
-                        if (taskClass != null ) return taskClass;
-                    } catch( Exception ex ) {
+                        taskClass = project.getCoreLoader().loadClass(value);
+                        if (taskClass != null) {
+                            return taskClass;
+                        }
+                    } catch (Exception ex) {
+                        // ignore
                     }
                 }
                 taskClass = Class.forName(value);
                 return taskClass;
             } catch (NoClassDefFoundError ncdfe) {
                 project.log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for task " + key, Project.MSG_DEBUG);
+                        + ncdfe.getMessage() + ") for task " 
+                        + key, Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 project.log("Could not load class (" + value
                         + ") for task " + key, Project.MSG_DEBUG);
@@ -2274,20 +2284,25 @@ public class Project {
         }
 
         // Hashtable implementation
-        public Object get( Object key ) {
-            Object orig=super.get( key );
-            if (orig!= null ) return orig;
-            if (! (key instanceof String) ) return null;
-            project.log("Get task " + key, Project.MSG_DEBUG );
-            Object taskClass=getTask( (String) key);
-            if (taskClass != null)
-                super.put( key, taskClass );
+        public Object get(Object key) {
+            Object orig = super.get(key);
+            if (orig != null) {
+                return orig;
+            }
+            if (!(key instanceof String)) {
+                return null;
+            }
+            
+            project.log("Get task " + key, Project.MSG_DEBUG);
+            Object taskClass = getTask((String) key);
+            if (taskClass != null) {
+                super.put(key, taskClass);
+            }
             return taskClass;
         }
 
         public boolean containsKey(Object key) {
             return get(key) != null;
         }
-
     }
 }

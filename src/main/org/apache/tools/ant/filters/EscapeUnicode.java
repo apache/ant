@@ -66,8 +66,9 @@ import org.apache.tools.ant.types.Parameter;
  *
  * Or:
  *
- * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.EscapeUnicode&quot;/&gt;
-*  </pre>
+ * <pre>&lt;filterreader 
+        classname=&quot;org.apache.tools.ant.filters.EscapeUnicode&quot;/&gt;
+ *  </pre>
  *
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.6
@@ -107,7 +108,7 @@ public class EscapeUnicode
      * @return the next character in the resulting stream, or -1
      * if the end of the resulting stream has been reached
      *
-     * @exception java.io.IOException if the underlying stream throws
+     * @exception IOException if the underlying stream throws
      * an IOException during reading
      */
     public final int read() throws IOException {
@@ -116,7 +117,7 @@ public class EscapeUnicode
             setInitialized(true);
         }
 
-        int ch= - 1;
+        int ch = -1;
         if (unicodeBuf.length() == 0) {
             ch = in.read();
             if (ch != -1) {
@@ -130,7 +131,7 @@ public class EscapeUnicode
                                              - s.length() + i,
                                              s.charAt(i));
                     }
-                    ch='\\';
+                    ch = '\\';
                 }
             }
         } else {
