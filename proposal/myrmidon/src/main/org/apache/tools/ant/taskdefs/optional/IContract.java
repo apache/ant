@@ -19,7 +19,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
 import org.apache.myrmidon.listeners.LogEvent;
 import org.apache.tools.ant.taskdefs.Java;
-import org.apache.tools.ant.taskdefs.Javac;
+import org.apache.tools.ant.taskdefs.compilers.Javac;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.compilers.DefaultCompilerAdapter;
 import org.apache.tools.ant.types.DirectoryScanner;
