@@ -57,7 +57,6 @@ package org.apache.tools.ant;
 import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 import java.io.File;
-import java.util.*;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.DirectoryScanner
@@ -84,7 +83,7 @@ public class DirectoryScannerTest extends TestCase {
         for (int i=0; i<included.length; i++) {
             if (included[i].equals("zip")) {
                 haveZipPackage = true;
-            } else if (included[i].equals("ant/taskdefs")) {
+            } else if (included[i].equals("ant"+File.separator+"taskdefs")) {
                 haveTaskdefsPackage = true;
             }
         }
@@ -100,7 +99,7 @@ public class DirectoryScannerTest extends TestCase {
         for (int i=0; i<included.length; i++) {
             if (included[i].equals("zip")) {
                 haveZipPackage = true;
-            } else if (included[i].equals("ant/taskdefs")) {
+            } else if (included[i].equals("ant"+File.separator+"taskdefs")) {
                 haveTaskdefsPackage = true;
             }
         }
