@@ -38,7 +38,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.embeddor.Embeddor;
-import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
+import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
 import org.apache.myrmidon.components.manager.LogTargetToListenerAdapter;
 import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.model.Project;
@@ -302,7 +302,7 @@ public class CLIMain
         //getLogger().debug( "Ant Lib Directory: " + m_libDir );
         //getLogger().debug( "Ant Task Lib Directory: " + m_taskLibDir );
 
-        final Embeddor embeddor = new MyrmidonEmbeddor();
+        final Embeddor embeddor = new DefaultEmbeddor();
         setupLogger( embeddor );
         embeddor.parameterize( m_parameters );
         embeddor.initialize();
