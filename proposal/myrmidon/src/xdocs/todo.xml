@@ -14,6 +14,26 @@
             sections describe some of the many things which still need to be done to
             achieve that goal.  This list is currently under construction.</p>
 
+
+            <subsection name="Security Manager">
+                <p>Add the ability to run java programs that call System.exit() by adding a
+                security manager. Should look something like:</p>
+                <source>
+public class MyrmidonSecurityManager
+    extends SecurityManager
+{
+    public void checkExit( final int status )
+    {
+        throw new ExitException( status );
+    }
+
+    public void checkPermission( final Permission permission )
+    {
+    }
+}
+                </source>
+            </subsection>
+
             <subsection name="Self Hosting">
 
                 <p>Myrmidon must be able to build itself.  Currently, it is built using
