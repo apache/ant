@@ -15,6 +15,7 @@
     <li>Jon Skeet (<a href="mailto:jon.skeet@peramon.com">jon.skeet@peramon.com</a>)</li>
     <li>Nigel Magnay (<a href="mailto:nigel.magnay@parsec.co.uk">nigel.magnay@parsec.co.uk</a>)</li>
     <li>Gary S. Weaver</li>
+    <li>Jesse Stockall</li>
  </ul>
 <p>$Date$</p>
 <hr>
@@ -122,7 +123,7 @@ label only one will be used in the order version, date, label.</p>
   </tr>
   <tr>
      <td>writable</td>
-     <td>true or false<; default false/td>
+     <td>true or false; default false</td>
      <td>No</td>
   </tr>
   <tr>
@@ -158,6 +159,24 @@ label only one will be used in the order version, date, label.</p>
      <td>What to respond with (sets the -I option). By default, -I- is
      used; values of Y or N will be appended to this.</td>
      <td>No</td>
+  </tr>
+  <tr>
+    <td>writablefiles</td>
+    <td>Behavior when local files are writable. Valid options are: <code>replace</code>, 
+        <code>skip</code> and <code>fail</code>; Defaults to <code>fail</code>
+        <br><code>skip</code> implies <code>failonerror=false</code></td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>failonerror</td>
+    <td>Stop the buildprocess if ss.exe exits with a returncode of 100. Defaults to true</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>filetimestamp</td>
+    <td>Set the behavior for timestamps of local files. Valid options are <code>current</code>, 
+        <code>modified</code>, or <code>updated</code>. Defaults to <code>current</code>.</td> 
+    <td>No</td>
   </tr>
 </table>
 <p>Note that only one of version, date or label should be specified</p>
@@ -238,6 +257,11 @@ project.</p>
      <td>What to respond with (sets the -I option). By default, -I- is
      used; values of Y or N will be appended to this.</td>
      <td>No</td>
+  </tr>
+  <tr>
+    <td>failonerror</td>
+    <td>Stop the buildprocess if ss.exe exits with a returncode of 100. Defaults to true</td>
+    <td>No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -354,6 +378,11 @@ Task to perform HISTORY commands to Microsoft Visual SourceSafe.
     <td>Name the user whose changes we would like to see</td>
     <td>No</td>
   </tr>
+  <tr>
+    <td>failonerror</td>
+    <td>Stop the buildprocess if ss.exe exits with a returncode of 100. Defaults to true</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h4>Specifying the time-frame</h4>
@@ -463,6 +492,11 @@ Task to perform CHECKIN commands to Microsoft Visual SourceSafe.
      <td>'Y', 'N' or empty. Specify how to reply to questions from VSS.</td>
      <td>No</td>
   </tr>
+  <tr>
+    <td>failonerror</td>
+    <td>Stop the buildprocess if ss.exe exits with a returncode of 100. Defaults to true</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
@@ -544,6 +578,29 @@ label only one will be used in the order version, date, label.</p>
      <td>label</td>
      <td>a label to get for</td>
   </tr>
+  <tr>
+    <td>writablefiles</td>
+    <td>Behavior when local files are writable. Valid options are: <code>replace</code>, 
+        <code>skip</code> and <code>fail</code>; Defaults to <code>fail</code>
+        <br><code>skip</code> implies <code>failonerror=false</code></td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>failonerror</td>
+    <td>Stop the buildprocess if ss.exe exits with a returncode of 100. Defaults to true</td>
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>filetimestamp</td>
+    <td>Set the behavior for timestamps of local files. Valid options are <code>current</code>, 
+        <code>modified</code>, or <code>updated</code>. Defaults to <code>current</code>.</td> 
+    <td>No</td>
+  </tr>
+  <tr>
+    <td>getlocalcopy</td>
+    <td>Set the behavior to retrieve local copies of the files. Defaults to true.</td> 
+    <td>No</td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
@@ -615,6 +672,11 @@ Task to perform ADD commands to Microsoft Visual SourceSafe.
      <td>'Y', 'N' or empty. Specify how to reply to questions from VSS.</td>
      <td>No</td>
   </tr>
+  <tr>
+    <td>failonerror</td>
+    <td>Stop the buildprocess if ss.exe exits with a returncode of 100. Defaults to true</td>
+    <td>No</td>
+  </tr>
 </table>
 
 <h3>Examples</h3>
@@ -665,6 +727,11 @@ directory (see vsscp).</p>
      <td>serverPath</td>
      <td>directory where <code>srssafe.ini</code> resides.</td>
      <td>No</td>
+  </tr>
+  <tr>
+    <td>failonerror</td>
+    <td>Stop the buildprocess if ss.exe exits with a returncode of 100. Defaults to true</td>
+    <td>No</td>
   </tr>
 </table>
 
