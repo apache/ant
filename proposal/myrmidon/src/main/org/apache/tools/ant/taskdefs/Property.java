@@ -35,7 +35,7 @@ public class Property
     private String m_resource;
     private String m_value;
 
-    public void setClasspath( Path classpath )
+    public void addClasspath( Path classpath )
         throws TaskException
     {
         if( m_classpath == null )
@@ -44,7 +44,7 @@ public class Property
         }
         else
         {
-            m_classpath.append( classpath );
+            m_classpath.addPath( classpath );
         }
     }
 
@@ -66,19 +66,6 @@ public class Property
     public void setValue( String value )
     {
         m_value = value;
-    }
-
-    public Path createClasspath()
-        throws TaskException
-    {
-        if( m_classpath == null )
-        {
-            m_classpath = new Path();
-        }
-        Path path1 = m_classpath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
     }
 
     public void execute()

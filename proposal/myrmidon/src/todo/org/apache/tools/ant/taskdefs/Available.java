@@ -48,21 +48,25 @@ public class Available
         }
     }
 
-    public void setClasspath( Path classpath )
+    /**
+     * Adds a classpath element.
+     */
+    public void addClasspath( Path classpath )
         throws TaskException
     {
-        createClasspath().append( classpath );
+        if ( m_classpath == null )
+        {
+            m_classpath = classpath;
+        }
+        else
+        {
+            m_classpath.addPath(classpath);
+        }
     }
 
     public void setFile( String file )
     {
         m_file = file;
-    }
-
-    public void setFilepath( Path filepath )
-        throws TaskException
-    {
-        createFilepath().append( filepath );
     }
 
     public void setProperty( String property )
@@ -85,30 +89,20 @@ public class Available
         m_value = value;
     }
 
-    public Path createClasspath()
-        throws TaskException
-    {
-        if( m_classpath == null )
-        {
-            m_classpath = new Path();
-        }
-        Path path1 = m_classpath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
-    }
-
-    public Path createFilepath()
+    /**
+     * Adds a file search path element.
+     */
+    public void addFilepath( Path path )
         throws TaskException
     {
         if( m_filepath == null )
         {
-            m_filepath = new Path();
+            m_filepath = path;
         }
-        Path path1 = m_filepath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
+        else
+        {
+            m_filepath.addPath( path );
+        }
     }
 
     public boolean eval()

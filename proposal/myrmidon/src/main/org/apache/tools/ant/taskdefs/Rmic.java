@@ -102,11 +102,11 @@ public class Rmic extends MatchingTask
     }
 
     /**
-     * Set the classpath to be used for this compilation.
+     * Add an element to the classpath to be used for this compilation.
      *
      * @param classpath The new Classpath value
      */
-    public void setClasspath( Path classpath )
+    public void addClasspath( Path classpath )
         throws TaskException
     {
         if( compileClasspath == null )
@@ -115,7 +115,7 @@ public class Rmic extends MatchingTask
         }
         else
         {
-            compileClasspath.append( classpath );
+            compileClasspath.addPath( classpath );
         }
     }
 
@@ -130,11 +130,12 @@ public class Rmic extends MatchingTask
     }
 
     /**
-     * Sets the extension directories that will be used during the compilation.
+     * Adds an element to the extension directories that will be used during
+     * the compilation.
      *
      * @param extdirs The new Extdirs value
      */
-    public void setExtdirs( Path extdirs )
+    public void addExtdirs( Path extdirs )
         throws TaskException
     {
         if( this.extdirs == null )
@@ -143,7 +144,7 @@ public class Rmic extends MatchingTask
         }
         else
         {
-            this.extdirs.append( extdirs );
+            this.extdirs.addPath( extdirs );
         }
     }
 
@@ -457,42 +458,6 @@ public class Rmic extends MatchingTask
         }
         // we only get here if an exception has been thrown
         return false;
-    }
-
-    /**
-     * Creates a nested classpath element.
-     *
-     * @return Description of the Returned Value
-     */
-    public Path createClasspath()
-        throws TaskException
-    {
-        if( compileClasspath == null )
-        {
-            compileClasspath = new Path();
-        }
-        Path path1 = compileClasspath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
-    }
-
-    /**
-     * Maybe creates a nested extdirs element.
-     *
-     * @return Description of the Returned Value
-     */
-    public Path createExtdirs()
-        throws TaskException
-    {
-        if( extdirs == null )
-        {
-            extdirs = new Path();
-        }
-        Path path1 = extdirs;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
     }
 
     public void execute()

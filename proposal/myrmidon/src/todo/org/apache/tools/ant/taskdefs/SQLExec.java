@@ -162,11 +162,11 @@ public class SQLExec
     }
 
     /**
-     * Set the classpath for loading the driver.
+     * Adds an element to the classpath for loading the driver.
      *
      * @param classpath The new Classpath value
      */
-    public void setClasspath( Path classpath )
+    public void addClasspath( Path classpath )
         throws TaskException
     {
         if( this.classpath == null )
@@ -175,7 +175,7 @@ public class SQLExec
         }
         else
         {
-            this.classpath.append( classpath );
+            this.classpath.addPath( classpath );
         }
     }
 
@@ -343,24 +343,6 @@ public class SQLExec
     public void addContent( String sql )
     {
         this.sqlCommand += sql;
-    }
-
-    /**
-     * Create the classpath for loading the driver.
-     *
-     * @return Description of the Returned Value
-     */
-    public Path createClasspath()
-        throws TaskException
-    {
-        if( this.classpath == null )
-        {
-            this.classpath = new Path();
-        }
-        Path path1 = this.classpath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
     }
 
     /**

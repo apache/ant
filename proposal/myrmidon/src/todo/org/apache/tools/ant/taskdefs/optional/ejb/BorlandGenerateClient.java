@@ -215,7 +215,7 @@ public class BorlandGenerateClient extends Task
             //classpath
             //add at the end of the classpath
             //the system classpath in order to find the tools.jar file
-            execTask.setClasspath( classpath.concatSystemClasspath() );
+            execTask.addClasspath( classpath.concatSystemClasspath() );
 
             execTask.setFork( true );
             execTask.createArg().setValue( "generateclient" );

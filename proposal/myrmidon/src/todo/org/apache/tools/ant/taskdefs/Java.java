@@ -45,12 +45,12 @@ public class Java
     }
 
     /**
-     * Set the classpath to be used for this compilation.
+     * Add a classpath element.
      */
-    public void setClasspath( final Path classpath )
+    public void addClasspath( final Path classpath )
         throws TaskException
     {
-        createClasspath().append( classpath );
+        m_cmdl.createClasspath().addPath( classpath );
     }
 
     /**
@@ -109,18 +109,6 @@ public class Java
     public Argument createArg()
     {
         return m_cmdl.createArgument();
-    }
-
-    /**
-     * Creates a nested classpath element
-     */
-    public Path createClasspath()
-        throws TaskException
-    {
-        Path path1 = m_cmdl.createClasspath();
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
     }
 
     /**

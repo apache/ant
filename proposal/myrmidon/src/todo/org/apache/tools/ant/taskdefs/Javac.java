@@ -88,11 +88,12 @@ public class Javac extends MatchingTask
     private String target;
 
     /**
-     * Sets the bootclasspath that will be used to compile the classes against.
+     * Adds an element to the bootclasspath that will be used to compile the
+     * classes against.
      *
      * @param bootclasspath The new Bootclasspath value
      */
-    public void setBootclasspath( Path bootclasspath )
+    public void addBootclasspath( Path bootclasspath )
         throws TaskException
     {
         if( this.bootclasspath == null )
@@ -101,16 +102,16 @@ public class Javac extends MatchingTask
         }
         else
         {
-            this.bootclasspath.append( bootclasspath );
+            this.bootclasspath.addPath( bootclasspath );
         }
     }
 
     /**
-     * Set the classpath to be used for this compilation.
+     * Adds an element to the classpath to be used for this compilation.
      *
      * @param classpath The new Classpath value
      */
-    public void setClasspath( Path classpath )
+    public void addClasspath( Path classpath )
         throws TaskException
     {
         if( compileClasspath == null )
@@ -119,7 +120,7 @@ public class Javac extends MatchingTask
         }
         else
         {
-            compileClasspath.append( classpath );
+            compileClasspath.addPath( classpath );
         }
     }
 
@@ -185,11 +186,12 @@ public class Javac extends MatchingTask
     }
 
     /**
-     * Sets the extension directories that will be used during the compilation.
+     * Adds an element to the extension directories that will be used during
+     * the compilation.
      *
      * @param extdirs The new Extdirs value
      */
-    public void setExtdirs( Path extdirs )
+    public void addExtdirs( Path extdirs )
         throws TaskException
     {
         if( this.extdirs == null )
@@ -198,7 +200,7 @@ public class Javac extends MatchingTask
         }
         else
         {
-            this.extdirs.append( extdirs );
+            this.extdirs.addPath( extdirs );
         }
     }
 
@@ -322,11 +324,11 @@ public class Javac extends MatchingTask
     }
 
     /**
-     * Set the source dirs to find the source Java files.
+     * Adds an element to the source dirs to find the source Java files.
      *
      * @param srcDir The new Srcdir value
      */
-    public void setSrcdir( Path srcDir )
+    public void addSrcdir( Path srcDir )
         throws TaskException
     {
         if( src == null )
@@ -335,7 +337,7 @@ public class Javac extends MatchingTask
         }
         else
         {
-            src.append( srcDir );
+            src.addPath( srcDir );
         }
     }
 
@@ -631,42 +633,6 @@ public class Javac extends MatchingTask
     }
 
     /**
-     * Maybe creates a nested classpath element.
-     *
-     * @return Description of the Returned Value
-     */
-    public Path createBootclasspath()
-        throws TaskException
-    {
-        if( bootclasspath == null )
-        {
-            bootclasspath = new Path();
-        }
-        Path path1 = bootclasspath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
-    }
-
-    /**
-     * Maybe creates a nested classpath element.
-     *
-     * @return Description of the Returned Value
-     */
-    public Path createClasspath()
-        throws TaskException
-    {
-        if( compileClasspath == null )
-        {
-            compileClasspath = new Path();
-        }
-        Path path1 = compileClasspath;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
-    }
-
-    /**
      * Adds an implementation specific command line argument.
      *
      * @return Description of the Returned Value
@@ -677,42 +643,6 @@ public class Javac extends MatchingTask
             new ImplementationSpecificArgument();
         implementationSpecificArgs.add( arg );
         return arg;
-    }
-
-    /**
-     * Maybe creates a nested classpath element.
-     *
-     * @return Description of the Returned Value
-     */
-    public Path createExtdirs()
-        throws TaskException
-    {
-        if( extdirs == null )
-        {
-            extdirs = new Path();
-        }
-        Path path1 = extdirs;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
-    }
-
-    /**
-     * Create a nested src element for multiple source path support.
-     *
-     * @return a nested src element.
-     */
-    public Path createSrc()
-        throws TaskException
-    {
-        if( src == null )
-        {
-            src = new Path();
-        }
-        Path path1 = src;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
     }
 
     /**

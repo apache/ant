@@ -96,19 +96,19 @@ public class PathConvert extends Task
     }
 
     /**
-     * Create a nested PATH element
+     * Adds a PATH element
      */
-    public Path createPath()
+    public void addPath( Path path )
         throws TaskException
     {
         if( m_path == null )
         {
-            m_path = new Path();
+            m_path = path;
         }
-        Path path1 = m_path;
-        final Path path = new Path();
-        path1.addPath( path );
-        return path;
+        else
+        {
+            m_path.addPath( path );
+        }
     }
 
     public void execute()

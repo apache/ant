@@ -229,7 +229,7 @@ public class WLJspc extends MatchingTask
 
             //helperTask.clearArgs();
             helperTask.createArg().setValue( arg );
-            helperTask.setClasspath( compileClasspath );
+            helperTask.addClasspath( compileClasspath );
             if( helperTask.executeJava() != 0 )
             {
                 getLogger().warn( files[ i ] + " failed to compile" );
