@@ -194,13 +194,15 @@ public class PropertySet extends DataType {
     public Properties getProperties() {
         Vector names = null;
         Project prj = getProject();
+        Hashtable props = 
+            prj == null ? System.getProperties() : prj.getProperties();
 
         if (getDynamic() || cachedNames == null) {
             names = new Vector(); // :TODO: should be a Set!
             if (isReference()) {
-                getRef().addPropertyNames(names, prj.getProperties());
+                getRef().addPropertyNames(names, props);
             } else {
-                addPropertyNames(names, prj.getProperties());
+                addPropertyNames(names, props);
             }
 
             if (!getDynamic()) {
@@ -218,7 +220,7 @@ public class PropertySet extends DataType {
         Properties properties = new Properties();
         for (Enumeration e = names.elements(); e.hasMoreElements();) {
             String name = (String) e.nextElement();
-            String value = prj.getProperty(name);
+            String value = (String) props.get(name);
             if (mapper != null) {
                 String[] newname = mapper.mapFileName(name);
                 if (newname != null) {
@@ -243,7 +245,7 @@ public class PropertySet extends DataType {
         for (Enumeration e = ptyRefs.elements(); e.hasMoreElements();) {
             PropertyRef ref = (PropertyRef) e.nextElement();
             if (ref.name != null) {
-                if (prj.getProperty(ref.name) != null) {
+                if (prj != null && prj.getProperty(ref.name) != null) {
                     names.addElement(ref.name);
                 }
             } else if (ref.prefix != null) {

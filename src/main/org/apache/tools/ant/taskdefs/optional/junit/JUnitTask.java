@@ -588,6 +588,19 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * If set, system properties will be copied to the cloned VM - as
+     * well as the bootclasspath unless you have explicitly specified
+     * a bootclaspath.
+     *
+     * <p>Doesn't have any effect unless fork is true.</p>
+     *
+     * @since Ant 1.7
+     */
+    public void setCloneVm(boolean cloneVm) {
+        commandline.setCloneVm(cloneVm);
+    }
+
+    /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
      *
      * @throws Exception under ??? circumstances

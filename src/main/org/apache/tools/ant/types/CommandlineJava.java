@@ -105,6 +105,12 @@ public class CommandlineJava implements Cloneable {
      private boolean executeJar = false;
 
     /**
+     * Whether system properties and bootclasspath shall be cloned.
+     * @since Ant 1.7
+     */
+    private boolean cloneVm = false;
+
+    /**
      * Specialized Environment class for System properties
      */
     public static class SysProperties extends Environment implements Cloneable {
@@ -294,6 +300,15 @@ public class CommandlineJava implements Cloneable {
         vmVersion = value;
     }
 
+    /**
+     * If set, system properties will be copied to the cloned VM - as
+     * well as the bootclasspath unless you have explicitly specified
+     * a bootclaspath.
+     * @since Ant 1.7
+     */
+    public void setCloneVm(boolean cloneVm) {
+        this.cloneVm = cloneVm;
+    }
 
     /**
      * get the current assertions
@@ -397,10 +412,26 @@ public class CommandlineJava implements Cloneable {
         getActualVMCommand().addCommandToList(listIterator);
         // properties are part of the vm options...
         sysProperties.addDefinitionsToList(listIterator);
+
+        if (isCloneVm()) {
+            SysProperties clonedSysProperties = new SysProperties();
+            PropertySet ps = new PropertySet();
+            PropertySet.BuiltinPropertySetName sys =
+                new PropertySet.BuiltinPropertySetName();
+            sys.setValue("system");
+            ps.appendBuiltin(sys);
+            clonedSysProperties.addSyspropertyset(ps);
+            clonedSysProperties.addDefinitionsToList(listIterator);
+        }
+        
         //boot classpath
         if (haveBootclasspath(true)) {
             listIterator.add("-Xbootclasspath:" + bootclasspath.toString());
+        } else if (cloneBootclasspath()) {
+            listIterator.add("-Xbootclasspath:" + 
+                             Path.systemBootClasspath.toString());
         }
+        
         //main classpath
         if (haveClasspath()) {
             listIterator.add("-classpath");
@@ -489,13 +520,19 @@ public class CommandlineJava implements Cloneable {
      * @deprecated please dont use this -it effectively creates the entire command.
      */
     public int size() {
-        int size = getActualVMCommand().size() + javaCommand.size() + sysProperties.size();
+        int size = getActualVMCommand().size() + javaCommand.size() 
+            + sysProperties.size();
+        // cloned system properties
+        if (isCloneVm()) {
+            size += System.getProperties().size();
+        }
+        
         // classpath is "-classpath <classpath>" -> 2 args
         if (haveClasspath()) {
             size += 2;
         }
         // bootclasspath is "-Xbootclasspath:<classpath>" -> 1 arg
-        if (haveBootclasspath(true)) {
+        if (haveBootclasspath(true) || cloneBootclasspath()) {
             size++;
         }
         // jar execution requires an additional -jar option
@@ -648,4 +685,23 @@ public class CommandlineJava implements Cloneable {
         return false;
     }
 
+    /**
+     * Should a bootclasspath argument be created to clone the current
+     * VM settings?
+     *
+     * @since Ant 1.7
+     */
+    private boolean cloneBootclasspath() {
+        return isCloneVm() && !vmVersion.startsWith("1.1")
+            && Path.systemBootClasspath.size() > 0;
+    }
+        
+    /**
+     * Has the cloneVm attribute or the magic property build.clonevm been set?
+     *
+     * @since 1.7
+     */
+    private boolean isCloneVm() {
+        return cloneVm || "true".equals(System.getProperty("build.clonevm"));
+    }
 }

@@ -330,6 +330,19 @@ public class Java extends Task {
     }
 
     /**
+     * If set, system properties will be copied to the cloned VM - as
+     * well as the bootclasspath unless you have explicitly specified
+     * a bootclaspath.
+     *
+     * <p>Doesn't have any effect unless fork is true.</p>
+     *
+     * @since Ant 1.7
+     */
+    public void setCloneVm(boolean cloneVm) {
+        cmdl.setCloneVm(cloneVm);
+    }
+
+    /**
      * Adds a command-line argument.
      *
      * @return created argument
