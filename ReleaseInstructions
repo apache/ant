@@ -168,8 +168,8 @@ Note: This document was created in the context of releasing Ant 1.5.
       Also identify the webpages to which the announcements must go. ]]
 
     Apache mailing lists that should get the announcements:
-    announce@jakarta.apache.org, announce@xml.apache.org,
-    announce@apache.org, ant-dev and ant-user.
+    announcements@jakarta.apache.org, announcements@xml.apache.org,
+    announce@apache.org, dev@ant and user@ant.
 
     Announce release at freshmeat.net
     (Stefan Bodewig is the owner of Ant's project entry - bug him ;-).
