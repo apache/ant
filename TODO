@@ -23,10 +23,6 @@ remove items from this list once they are complete.
 
 * Fix or at least document support for tomcat 5.0 jsp
 
-* resolve the "convert RuntimeExceptions to BuildExceptions"
-  discussion and act on it [Stefan will kick of new thread and see
-  that we end up with a result, if necessary by voting]
-
 * gcj support in Path.addJavaRuntime [Stefan]
 
 * toFile attribute in scp [Stefan]
