@@ -36,7 +36,7 @@ public class MacCommandLauncher
         final File directory = metaData.getWorkingDirectory().getCanonicalFile();
         if( ExecUtil.isCwd( directory ) )
         {
-            final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+            final String[] env = ExecUtil.getEnvironmentSpec( metaData );
             return Runtime.getRuntime().exec( metaData.getCommand(), env );
         }
 
@@ -46,7 +46,7 @@ public class MacCommandLauncher
         try
         {
             System.setProperty( "user.dir", directory.toString() );
-            final String[] env = ExecUtil.toNativeEnvironment( metaData.getEnvironment() );
+            final String[] env = ExecUtil.getEnvironmentSpec( metaData );
             return Runtime.getRuntime().exec( metaData.getCommand(), env );
         }
         finally

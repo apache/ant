@@ -79,7 +79,7 @@ class ExecUtil
         return file.getCanonicalFile().equals( getCwd() );
     }
 
-    protected static String[] toNativeEnvironment( final Properties environment )
+    private static String[] toNativeEnvironment( final Properties environment )
         throws ExecException
     {
         if( null == environment )
