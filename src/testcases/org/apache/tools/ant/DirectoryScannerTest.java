@@ -347,6 +347,50 @@ public class DirectoryScannerTest extends BuildFileTest {
         }
     }
 
+    public void testExcludeHasPrecedence() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {
+            "alpha/**"
+        });
+        ds.setExcludes(new String[] {
+            "alpha/**"
+        });
+        ds.scan();
+        compareFiles(ds, new String[] {},
+                     new String[] {});
+
+    }
+    public void testAlternateIncludeExclude() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setIncludes(new String[] {
+            "alpha/**",
+            "alpha/beta/gamma/**"
+        });
+        ds.setExcludes(new String[] {
+            "alpha/beta/**"
+        });
+        ds.scan();
+        compareFiles(ds, new String[] {},
+                     new String[] {"alpha"});
+
+    }
+    public void testAlternateExcludeInclude() {
+        DirectoryScanner ds = new DirectoryScanner();
+        ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+        ds.setExcludes(new String[] {
+            "alpha/**",
+            "alpha/beta/gamma/**"
+        });
+        ds.setIncludes(new String[] {
+            "alpha/beta/**"
+        });
+        ds.scan();
+        compareFiles(ds, new String[] {},
+                     new String[] {});
+
+    }
     /**
      * Test inspired by Bug#1415.
      */
