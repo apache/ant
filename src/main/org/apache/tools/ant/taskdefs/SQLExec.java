@@ -495,7 +495,9 @@ public class SQLExec extends Task {
                 throw new SQLException("No suitable Driver for "+url);
             }
 
-            if (!isValidRdbms(conn)) return;
+            if (!isValidRdbms(conn)) {
+              return;
+            }
 
             conn.setAutoCommit(autocommit);
 
@@ -566,8 +568,12 @@ public class SQLExec extends Task {
             while ((line=in.readLine()) != null){
                 line = line.trim();
                 line = project.replaceProperties(line);
-                if (line.startsWith("//")) continue;
-                if (line.startsWith("--")) continue;
+                if (line.startsWith("//")) {
+                  continue;
+                }
+                if (line.startsWith("--")) {
+                  continue;
+                }
                 StringTokenizer st = new StringTokenizer(line);
                 if (st.hasMoreTokens()) {
                     String token = st.nextToken();
@@ -582,7 +588,9 @@ public class SQLExec extends Task {
                 // SQL defines "--" as a comment to EOL
                 // and in Oracle it may contain a hint
                 // so we cannot just remove it, instead we must end it
-                if (line.indexOf("--") >= 0) sql += "\n";
+                if (line.indexOf("--") >= 0) {
+                  sql += "\n";
+                }
 
                 if (delimiterType.equals(DelimiterType.NORMAL) && sql.endsWith(delimiter) ||
                     delimiterType.equals(DelimiterType.ROW) && line.equals(delimiter)) {
@@ -606,8 +614,9 @@ public class SQLExec extends Task {
      * Verify if connected to the correct RDBMS
      **/
     protected boolean isValidRdbms(Connection conn) {
-        if (rdbms == null && version == null)
+        if (rdbms == null && version == null) {
             return true;
+        }
         
         try {
             DatabaseMetaData dmd = conn.getMetaData();
@@ -648,7 +657,9 @@ public class SQLExec extends Task {
      */
     protected void execSQL(String sql, PrintStream out) throws SQLException {
         // Check and ignore empty statements
-        if ("".equals(sql.trim())) return;
+        if ("".equals(sql.trim())) {
+          return;
+        }
         
         try {  
             totalSql++;
@@ -672,7 +683,9 @@ public class SQLExec extends Task {
         }
         catch (SQLException e) {
             log("Failed to execute: " + sql, Project.MSG_ERR);
-            if (!onError.equals("continue")) throw e;
+            if (!onError.equals("continue")) {
+              throw e;
+            }
             log(e.toString(), Project.MSG_ERR);
         }
     }

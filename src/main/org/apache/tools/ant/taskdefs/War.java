@@ -92,8 +92,9 @@ public class War extends Jar {
      */
     public void setWebxml(File descr) {
         deploymentDescriptor = descr; 
-        if (!deploymentDescriptor.exists())
+        if (!deploymentDescriptor.exists()) {
             throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
+        }
 
         // Create a ZipFileSet for this file, and pass it up.
         ZipFileSet fs = new ZipFileSet();

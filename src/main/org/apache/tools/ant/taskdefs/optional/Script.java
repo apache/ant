@@ -83,10 +83,13 @@ public class Script extends Task {
             boolean isValid = key.length()>0 &&
                 Character.isJavaIdentifierStart(key.charAt(0));
 
-            for (int i=1; isValid && i<key.length(); i++)
+            for (int i=1; isValid && i<key.length(); i++) {
                 isValid = Character.isJavaIdentifierPart(key.charAt(i));
+            }
 
-            if (isValid) beans.put(key, dictionary.get(key));
+            if (isValid) {
+              beans.put(key, dictionary.get(key));
+            }
         }
     }
 
@@ -146,8 +149,9 @@ public class Script extends Task {
      */
     public void setSrc(String fileName) {
         File file = new File(fileName);
-        if (!file.exists()) 
+        if (!file.exists()) { 
             throw new BuildException("file " + fileName + " not found.");
+        }
 
         int count = (int)file.length();
         byte data[] = new byte[count];

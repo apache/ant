@@ -196,7 +196,9 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         if(e.getLocator() != null) {
             if(e.getLocator().getSystemId() != null) {
                 String url = e.getLocator().getSystemId();
-                if(url.startsWith("file:///")) url = url.substring(8);
+                if(url.startsWith("file:///")) {
+                  url = url.substring(8);
+                }
                 msg.append(url);
             } else {
                 msg.append("Unknown file");

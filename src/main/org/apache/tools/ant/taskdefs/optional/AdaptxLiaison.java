@@ -95,8 +95,9 @@ public class AdaptxLiaison implements XSLTLiaison {
     }
 
     public void setOutputtype(String type) throws Exception {
-        if (!type.equals("xml")) 
+        if (!type.equals("xml")) { 
             throw new BuildException("Unsupported output type: " + type);
+        }
     }
 
 } //-- AdaptxLiaison

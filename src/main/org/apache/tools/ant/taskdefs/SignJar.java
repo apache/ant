@@ -199,7 +199,9 @@ public class SignJar extends Task {
             throw new BuildException("storepass attribute must be set");
         }
 
-        if(isUpToDate(jarSource, jarTarget)) return;
+        if(isUpToDate(jarSource, jarTarget)) {
+          return;
+        }
 
         final StringBuffer sb = new StringBuffer();
 
@@ -265,11 +267,18 @@ public class SignJar extends Task {
 
         if( null != signedjarFile ) {
 
-            if(!jarFile.exists()) return false;
-            if(!signedjarFile.exists()) return false;
-            if(jarFile.equals(signedjarFile)) return false;
-            if(signedjarFile.lastModified() > jarFile.lastModified())
+            if(!jarFile.exists()) {
+              return false;
+            }
+            if(!signedjarFile.exists()) {
+              return false;
+            }
+            if(jarFile.equals(signedjarFile)) {
+              return false;
+            }
+            if(signedjarFile.lastModified() > jarFile.lastModified()) {
                 return true;
+            }
         } else {
             if( lazy ) {
                 return isSigned(jarFile);

@@ -194,8 +194,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         dirs = scanner.getIncludedDirectories();
         for (int j = 0;j < dirs.length;++j){
             list=new File(baseDir,dirs[j]).list();
-            for (int i = 0;i < list.length;++i)
+            for (int i = 0;i < list.length;++i) {
                 process( baseDir, list[i], destDir, stylesheet );
+            }
         }
     } //-- execute
 
@@ -386,7 +387,9 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
         }catch (Exception ex) {
             log("Failed to process " + inFile, Project.MSG_INFO);
-            if(outFile!=null)outFile.delete();
+            if(outFile!=null) {
+             outFile.delete();
+            }
             throw new BuildException(ex);
         }
     }
@@ -456,12 +459,16 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         }
 
         public String getName() throws BuildException{
-            if(name==null)throw new BuildException("Name attribute is missing.");
+            if(name==null) {
+             throw new BuildException("Name attribute is missing.");
+            }
             return name;
         }
 
         public String getExpression() throws BuildException{
-            if(expression==null)throw new BuildException("Expression attribute is missing.");
+            if(expression==null) {
+             throw new BuildException("Expression attribute is missing.");
+            }
             return expression;
         }
     }

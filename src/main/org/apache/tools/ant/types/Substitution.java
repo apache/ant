@@ -93,8 +93,9 @@ public class Substitution extends DataType
      */
     public String getExpression(Project p)
     {
-        if (isReference())
+        if (isReference()) {
             return getRef(p).getExpression(p);
+        }
 
         return expression;
     }

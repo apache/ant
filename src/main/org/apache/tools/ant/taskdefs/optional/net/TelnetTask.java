@@ -123,15 +123,18 @@ public class TelnetTask extends Task {
     public void execute() throws BuildException 
     {
        /**  A server name is required to continue */
-       if (server== null)
+       if (server== null) {
            throw new BuildException("No Server Specified");
+       }
        /**  A userid and password must appear together 
         *   if they appear.  They are not required.
         */
-       if (userid == null && password != null)
+       if (userid == null && password != null) {
            throw new BuildException("No Userid Specified");
-       if (password == null && userid != null)
+       }
+       if (password == null && userid != null) {
            throw new BuildException("No Password Specified");
+       }
 
        /**  Create the telnet client object */
        telnet = new AntTelnetClient();
@@ -141,15 +144,17 @@ public class TelnetTask extends Task {
            throw new BuildException("Can't connect to "+server);
        }
        /**  Login if userid and password were specified */
-       if (userid != null && password != null)
+       if (userid != null && password != null) {
           login();
+       }
        /**  Process each sub command */
        Enumeration tasksToRun = telnetTasks.elements();
        while (tasksToRun!=null && tasksToRun.hasMoreElements())
        {
            TelnetSubTask task = (TelnetSubTask) tasksToRun.nextElement();
-           if (task instanceof TelnetRead && defaultTimeout != null)
+           if (task instanceof TelnetRead && defaultTimeout != null) {
                ((TelnetRead)task).setDefaultTimeout(defaultTimeout);
+           }
            task.execute(telnet);
        }
     }
@@ -160,8 +165,9 @@ public class TelnetTask extends Task {
      */
     private void login()
     {
-       if (addCarriageReturn)
+       if (addCarriageReturn) {
           telnet.sendString("\n", true);
+       }
        telnet.waitForString("ogin:");
        telnet.sendString(userid, true);
        telnet.waitForString("assword:");
@@ -287,8 +293,9 @@ public class TelnetTask extends Task {
          */
         public void setDefaultTimeout(Integer defaultTimeout)
         {
-           if (timeout == null)
+           if (timeout == null) {
               timeout = defaultTimeout;
+           }
     }
     }
     /**
@@ -336,8 +343,9 @@ public class TelnetTask extends Task {
                          is.available() == 0) {
                       Thread.sleep(250);
                   }
-                  if (is.available() == 0)
+                  if (is.available() == 0) {
                       throw new BuildException("Response Timed-Out", getLocation());
+                  }
                   sb.append((char) is.read());
               }
           }
@@ -361,8 +369,9 @@ public class TelnetTask extends Task {
         OutputStream os =this.getOutputStream();
         try {
           os.write((s + "\n").getBytes());
-          if (echoString)
+          if (echoString) {
               log(s, Project.MSG_INFO);
+          }
           os.flush();
         } catch (Exception e)
         { 

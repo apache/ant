@@ -256,10 +256,11 @@ public class XMLValidateTask extends Task {
             }
             else {
                 String errorMsg = "File " + file + " cannot be read";
-                if (failOnError)
+                if (failOnError) {
                     throw new BuildException(errorMsg);
-                else
+                } else {
                     log(errorMsg, Project.MSG_ERR);
+                }
             }
         }
 
@@ -295,8 +296,9 @@ public class XMLValidateTask extends Task {
 //                loader.addSystemPackageRoot("org.xml"); // needed to avoid conflict
                 readerClass = loader.loadClass(readerClassName);
                 AntClassLoader.initializeClass(readerClass);
-            } else
+            } else {
                 readerClass = Class.forName(readerClassName);
+            }
 
             // then check it implements XMLReader
             if (XMLReader.class.isAssignableFrom(readerClass)) {
@@ -357,17 +359,19 @@ public class XMLValidateTask extends Task {
             xmlReader.setFeature(feature,value);
             toReturn = true;
         } catch (SAXNotRecognizedException e) {
-            if (warn)
+            if (warn) {
                 log("Could not set feature '"
                     + feature
                     + "' because the parser doesn't recognize it",
                     Project.MSG_WARN);
+            }
         } catch (SAXNotSupportedException  e) {
-            if (warn)
+            if (warn) {
                 log("Could not set feature '"
                     + feature
                     + "' because the parser doesn't support it",
                     Project.MSG_WARN);
+            }
         }
         return toReturn;
     }
@@ -387,17 +391,19 @@ public class XMLValidateTask extends Task {
             is.setSystemId(uri);
             xmlReader.parse(is);
         } catch (SAXException ex) {
-            if (failOnError)
+            if (failOnError) {
                 throw new BuildException("Could not validate document " + afile);
+            }
         } catch (IOException ex) {
             throw new BuildException("Could not validate document " + afile, ex);
         }
 
         if (errorHandler.getFailure()) {
-            if (failOnError)
+            if (failOnError) {
                 throw new BuildException(afile + " is not a valid XML document.");
-            else
+            } else {
                 log(afile + " is not a valid XML document",Project.MSG_ERR);
+            }
         }
     }
 
@@ -438,8 +444,9 @@ public class XMLValidateTask extends Task {
         public void warning(SAXParseException exception) {
             // depending on implementation, XMLReader can yield hips of warning,
             // only output then if user explicitely asked for it
-            if (warn)
+            if (warn) {
                 doLog(exception,Project.MSG_WARN);
+            }
         }
 
         private void doLog(SAXParseException e, int logLevel) {

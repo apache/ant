@@ -346,8 +346,9 @@ public class Zip extends MatchingTask {
                     // before we added any files, then we must swallow this exception. Otherwise,
                     // the error that's reported will be the close() error, which is not the real
                     // cause of the problem.
-                    if (success)
+                    if (success) {
                         throw ex;
+                    }
                 }
             }
         } catch (IOException ioe) {
@@ -395,15 +396,17 @@ public class Zip extends MatchingTask {
      */
     protected void addFiles(FileScanner scanner, ZipOutputStream zOut,
                             String prefix, String fullpath) throws IOException {
-        if (prefix.length() > 0 && fullpath.length() > 0)
+        if (prefix.length() > 0 && fullpath.length() > 0) {
             throw new BuildException("Both prefix and fullpath attributes may not be set on the same fileset.");
+        }
 
         File thisBaseDir = scanner.getBasedir();
 
         // directories that matched include patterns
         String[] dirs = scanner.getIncludedDirectories();
-        if (dirs.length > 0 && fullpath.length() > 0)
+        if (dirs.length > 0 && fullpath.length() > 0) {
             throw new BuildException("fullpath attribute may only be specified for filesets that specify a single file.");
+        }
         for (int i = 0; i < dirs.length; i++) {
             if ("".equals(dirs[i])) {
                 continue;
@@ -417,8 +420,9 @@ public class Zip extends MatchingTask {
 
         // files that matched include patterns
         String[] files = scanner.getIncludedFiles();
-        if (files.length > 1 && fullpath.length() > 0)
+        if (files.length > 1 && fullpath.length() > 0) {
             throw new BuildException("fullpath attribute may only be specified for filesets that specify a single file.");
+        }
         for (int i = 0; i < files.length; i++) {
             File f = new File(thisBaseDir, files[i]);
             if (fullpath.length() > 0)
@@ -441,8 +445,9 @@ public class Zip extends MatchingTask {
                                  ZipOutputStream zOut, String prefix, String fullpath)
         throws IOException
     {
-        if (prefix.length() > 0 && fullpath.length() > 0)
+        if (prefix.length() > 0 && fullpath.length() > 0) {
             throw new BuildException("Both prefix and fullpath attributes may not be set on the same fileset.");
+        }
 
         ZipScanner zipScanner = (ZipScanner) ds;
         File zipSrc = fs.getSrc();
@@ -547,7 +552,9 @@ public class Zip extends MatchingTask {
                 }
             }
 
-            if (!zipFile.exists()) return false;
+            if (!zipFile.exists()) {
+              return false;
+            }
 
             SourceFileScanner sfs = new SourceFileScanner(this);
             MergingMapper mm = new MergingMapper();
@@ -571,8 +578,9 @@ public class Zip extends MatchingTask {
         Vector files = new Vector();
         for (int i = 0; i < fileNames.length; i++) {
             File thisBaseDir = scanners[i].getBasedir();
-            for (int j = 0; j < fileNames[i].length; j++)
+            for (int j = 0; j < fileNames[i].length; j++) {
                 files.addElement(new File(thisBaseDir, fileNames[i][j]));
+            }
         }
         File[] toret = new File[files.size()];
         files.copyInto(toret);

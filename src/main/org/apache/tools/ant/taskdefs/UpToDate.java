@@ -155,7 +155,9 @@ public class UpToDate extends MatchingTask implements Condition {
         }
 
         // if not there then it can't be up to date
-        if (_targetFile != null && !_targetFile.exists()) return false; 
+        if (_targetFile != null && !_targetFile.exists()) {
+          return false;
+        } 
 
         Enumeration enum = sourceFileSets.elements();
         boolean upToDate = true;

@@ -173,7 +173,9 @@ public class Rpm extends Task {
         Execute exe = new Execute(streamhandler, null);
 
         exe.setAntRun(project);
-        if (topDir == null) topDir = project.getBaseDir();
+        if (topDir == null) {
+          topDir = project.getBaseDir();
+        }
         exe.setWorkingDirectory(topDir);
 
         exe.setCommandline(toExecute.getCommandline());

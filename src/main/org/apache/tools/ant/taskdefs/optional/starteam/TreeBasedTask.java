@@ -434,8 +434,9 @@ public abstract class TreeBasedTask extends StarTeamTask {
         if (null != this.label) {
             Label[] allLabels = v.getLabels();
             for (int i = 0; i < allLabels.length; i++) {
-                if (allLabels[i].getName().equals(this.label))
+                if (allLabels[i].getName().equals(this.label)) {
                     return allLabels[i].getID();
+                }
             }
             throw new BuildException("Error: label "
                     + this.label

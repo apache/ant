@@ -69,7 +69,9 @@ public class SimpleP4OutputHandler extends P4HandlerAdapter {
     }
 
     public void process(String line) throws BuildException {
-        if(parent.util.match("/^exit/",line)) return;
+        if(parent.util.match("/^exit/",line)) {
+          return;
+        }
 
         //Throw exception on errors (except up-to-date)
         //p4 -s is unpredicatable. For example a server down

@@ -333,8 +333,9 @@ public class Tar extends MatchingTask {
 
             tOut.closeEntry();
         } finally {
-            if (fIn != null)
+            if (fIn != null) {
                 fIn.close();
+            }
         }
     }
 

@@ -1036,9 +1036,10 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
 
 
 
-		if (getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0)
+		if (getCombinedClasspath() != null && getCombinedClasspath().toString().length() > 0) {
 
 		    args += " -cp " + getCombinedClasspath();
+                }
 
 
 
