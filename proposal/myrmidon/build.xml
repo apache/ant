@@ -223,7 +223,7 @@ Legal:
                debug="${debug}"
                deprecation="${deprecation}" >
             <classpath refid="project.class.path"/>
-            <src location="src/main"/>
+            <src location="src/todo"/>
             <src path="${java.dir}" />
             <!--
             <exclude name="${constants.file}"/>
@@ -274,7 +274,7 @@ Legal:
         </patternset>
 
         <property name="ant.package" value="org/apache/tools/todo"/>
-        <property name="taskdef.package" value="${ant.package}/taskdefs"/>
+        <property name="taskdefs.package" value="${ant.package}/taskdefs"/>
         <property name="antlib.package" value="org/apache/antlib"/>
         <property name="optional.type.package" value="${ant.package}/types/optional"/>
         <property name="util.package" value="${ant.package}/util"/>
@@ -307,41 +307,41 @@ Legal:
                      unless="xalan.present" />
             <exclude name="${taskdefs.package}/Javah.java"
                      unless="jdk1.2+" />
-            <exclude name="${taskdef.package}/junit/*"
+            <exclude name="${taskdefs.package}/junit/*"
                      unless="junit.present" />
-            <exclude name="${taskdef.package}/net/**.java"
+            <exclude name="${taskdefs.package}/net/**.java"
                      unless="netcomp.present" />
-            <exclude name="${taskdef.package}/net/MimeMail.java"
+            <exclude name="${taskdefs.package}/net/MimeMail.java"
                      unless="javamail.complete" />
-            <exclude name="${taskdef.package}/scm/AntStarTeam*.java"
+            <exclude name="${taskdefs.package}/scm/AntStarTeam*.java"
                      unless="starteam.present" />
             <exclude name="${taskdefs.package}/ANTLR.java"
                      unless="antlr.present" />
-            <exclude name="${taskdef.package}/perforce/*.java"
+            <exclude name="${taskdefs.package}/perforce/*.java"
                      unless="jakarta.oro.present" />
-            <exclude name="${taskdef.package}/junit/XMLResultAggregator.java"
+            <exclude name="${taskdefs.package}/junit/XMLResultAggregator.java"
                      unless="trax.present" />
-            <exclude name="${taskdef.package}/junit/AggregateTransformer.java"
+            <exclude name="${taskdefs.package}/junit/AggregateTransformer.java"
                      unless="trax.present" />
-            <exclude name="${taskdef.package}/junit/XMLResultAggregator.java"
+            <exclude name="${taskdefs.package}/junit/XMLResultAggregator.java"
                      unless="xalan2.present" />
-            <exclude name="${taskdef.package}/junit/AggregateTransformer.java"
+            <exclude name="${taskdefs.package}/junit/AggregateTransformer.java"
                      unless="xalan2.present" />
-            <exclude name="${taskdef.package}/junit/XalanExecutor.java"
+            <exclude name="${taskdefs.package}/junit/XalanExecutor.java"
                      unless="xalan2.present" />
-            <exclude name="${taskdef.package}/junit/Xalan2Executor.java"
+            <exclude name="${taskdefs.package}/junit/Xalan2Executor.java"
                      unless="xalan2.present" />
-            <exclude name="${taskdef.package}/junit/Xalan1Executor.java"
+            <exclude name="${taskdefs.package}/junit/Xalan1Executor.java"
                      unless="xalan.present" />
-            <exclude name="${taskdef.package}/jdepend/*"
+            <exclude name="${taskdefs.package}/jdepend/*"
                      unless="jdepend.present" />
-            <exclude name="${taskdef.package}/sitraka/**"
+            <exclude name="${taskdefs.package}/sitraka/**"
                      unless="some.regexp.support"/>
-            <exclude name="${taskdef.package}/metamata/MAudit*"
+            <exclude name="${taskdefs.package}/metamata/MAudit*"
                      unless="jakarta.oro.present"/>
-            <exclude name="${taskdef.package}/metamata/MMetrics*"
+            <exclude name="${taskdefs.package}/metamata/MMetrics*"
                      unless="trax.present"/>
-            <exclude name="${taskdef.package}/metamata/**"
+            <exclude name="${taskdefs.package}/metamata/**"
                      unless="jdk1.2+" />
             <exclude name="${optional.type.package}/depend/*.java"
                      unless="bcel.present" />

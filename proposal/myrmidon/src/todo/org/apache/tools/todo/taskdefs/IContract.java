@@ -15,14 +15,10 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.listeners.AbstractProjectListener;
 import org.apache.myrmidon.listeners.LogEvent;
-import org.apache.tools.todo.taskdefs.Java;
-import org.apache.tools.todo.taskdefs.javac.Javac;
-import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
+import org.apache.tools.todo.taskdefs.javac.Javac;
 import org.apache.tools.todo.types.DirectoryScanner;
 import org.apache.tools.todo.types.Path;
 
@@ -353,17 +349,8 @@ import org.apache.tools.todo.types.Path;
  */
 public class IContract extends MatchingTask
 {
-
     private final static String ICONTROL_PROPERTIES_HEADER =
         " You might want to set classRoot to point to your normal compilation class root directory.";
-
-    private final static String ICONTROL_PROPERTIES_MESSAGE =
-        "You should probably modify icontrol.properties' classRoot to where comiled (uninstrumented) classes go.";
-
-    /**
-     * \ on windows, / on linux/unix
-     */
-    private final static String ps = System.getProperty( "path.separator" );
 
     /**
      * compiler to use for instrumenation
@@ -430,11 +417,6 @@ public class IContract extends MatchingTask
      * The -q option
      */
     private boolean quiet = false;
-
-    /**
-     * Indicates whether or not to use internal compilation
-     */
-    private boolean internalcompilation = false;
 
     /**
      * The -m option
