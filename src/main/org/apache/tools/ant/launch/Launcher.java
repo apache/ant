@@ -130,12 +130,12 @@ public class Launcher {
                         libPathURLs.add(dirURLs[j]);
                     }
                 }
-                
+
                 libPathURLs.add(element.toURL());
             }
         }
 
-        URL[] libJars = (URL[])libPathURLs.toArray(new URL[0]);
+        URL[] libJars = (URL[]) libPathURLs.toArray(new URL[0]);
 
         // Now try and find JAVA_HOME
         File toolsJar = Locator.getToolsJar();
@@ -147,7 +147,7 @@ public class Launcher {
         if (antLibDirProperty != null) {
             antLibDir = new File(antLibDirProperty);
         }
-        if ((antLibDir == null) || ! antLibDir.exists()) {
+        if ((antLibDir == null) || !antLibDir.exists()) {
             antLibDir = jarDir;
             System.setProperty(ANTLIBDIR_PROPERTY, antLibDir.getAbsolutePath());
         }
