@@ -107,6 +107,13 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             project.addTaskDefinition( "import" , c );
             c=Class.forName("org.apache.tools.ant.taskdefs.Taskdef2");
             project.addTaskDefinition( "taskdef" , c );
+//              try {
+//                 Task t=new TaskDiscovery();
+//                 t.setProject(project);
+//                 t.execute();
+//             } catch( Exception ex ) {
+//                 System.out.println("Can't load TaskDiscovery " + ex );
+//             }
         } catch (Exception ex ) {
             ex.printStackTrace();
         }
@@ -135,7 +142,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         
         AntXmlContext context=handler.context;
 
-        System.out.println("Parsing with PH2: " + source );
+        System.err.println("Parsing with PH2: " + source );
         if(source instanceof File) {
             context.buildFile=(File)source;
 //         } else if( source instanceof InputStream ) {
@@ -300,6 +307,13 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 throw new SAXParseException("Unexpected text \"" + s + "\"", context.locator);
             }
         }
+
+        /** Will be called every time a namespace is reached.
+            It'll verify if the ns was processed, and if not load the task definitions.
+        */
+        protected void checkNamespace( String uri ) {
+            
+        }
     }
 
     /** Context information for the ant processing.
@@ -346,6 +360,8 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             objects. 
         */
         Vector wStack=new Vector();
+
+        public Hashtable namespaces=new Hashtable();
         
         // Import stuff
         public boolean ignoreProjectTag=false;
@@ -825,7 +841,10 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             RuntimeConfigurable2 parentWrapper=context.currentWrapper();
             RuntimeConfigurable2 wrapper=null;
             
-            if (context.getProject().getDataTypeDefinitions().get(qname) != null) {
+            if (false && context.getProject().getDataTypeDefinitions().get(qname) != null) {
+/*
+  UnknownElement should work for data types as well. 
+                // We should eliminate the special treatement of data type.
                 try {
                     Object element = context.getProject().createDataType(qname);
                     if (element == null) {
@@ -833,14 +852,19 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                         throw new BuildException("Unknown data type "+qname);
                     }
                 
-                    wrapper = new RuntimeConfigurable2(element, qname);
+                    wrapper = new RuntimeConfigurable2(context.getProject(), null, element, qname);
                     wrapper.setAttributes2(attrs);
                     context.currentTarget.addDataType(wrapper);
                 } catch (BuildException exc) {
                     throw new SAXParseException(exc.getMessage(), context.locator, exc);
                 }
+*/
             } else {
                 Task task=null;
+                /*
+                // Don't try to create the task now - for consistency and to
+                // simplify the model it is better to keep everything lazy
+
                 try {
                     task = context.getProject().createTask(qname);
                 } catch (BuildException e) {
@@ -848,16 +872,21 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                     // UnknownElement.maybeConfigure if the problem persists.
                 }
 
+                // The consequence of lazy eval - UnknownElement must deal with
+                // TaskContainer case.
+                */
+
                 if (task == null) {
-                    task = new UnknownElement(qname);
+                    task = new UnknownElement2(qname);
                     task.setProject(context.getProject());
                     //XXX task.setTaskType(qname);
                     task.setTaskName(qname);
                 }
 
-                task.setLocation(new Location(context.locator.getSystemId(),
-                                              context.locator.getLineNumber(),
-                                              context.locator.getColumnNumber()));
+                Location location=new Location(context.locator.getSystemId(),
+                                               context.locator.getLineNumber(),
+                                               context.locator.getColumnNumber());
+                task.setLocation(location);
                 context.configureId(task, attrs);
                 
                 task.setOwningTarget(context.currentTarget);
@@ -867,8 +896,12 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                     parent=parentWrapper.getProxy();
                 }
 
+                // With lazy eval, parent will also be UnknwonElement ( even if the task
+                // is a TaskContainer ). It is UnknownElement who must check this.
                 if( parent instanceof TaskContainer ) {
                     // Task included in a TaskContainer
+                    System.err.println("Shouldn't happen ");
+                    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
                     ((TaskContainer)parent).addTask( task );
                 } else {
                     // Task included in a target ( including the default one ).
@@ -877,7 +910,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 // container.addTask(task);
                 task.init();
 
-                wrapper=new RuntimeConfigurable2(task, task.getTaskName());
+                wrapper=new RuntimeConfigurable2(context.getProject(), location, task, task.getTaskName());
                 wrapper.setAttributes2(attrs);
 
                 if (parentWrapper != null) {
@@ -933,6 +966,9 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             Object element=wrapper.getProxy();
             if (element instanceof TaskContainer) {
                 // task can contain other tasks - no other nested elements possible
+                // This will be handled inside UE
+                System.err.println("Shouldn't happen - UE");
+                /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
                 return ProjectHelperImpl2.elementHandler;
             }
             else {
@@ -991,17 +1027,22 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             try {
                 Object element;
                 Object parent=parentWrapper.getProxy();
+
+                // Parent will allways be UnknownElement. 
                 if (parent instanceof TaskAdapter) {
+                    System.err.println("Shouldn't happen ");
+                    /*DEBUG*/ try {throw new Exception(); } catch(Exception ex) {ex.printStackTrace();}
                     parent = ((TaskAdapter) parent).getProxy();
                 }
                 
                 String elementName = qname.toLowerCase(Locale.US);
                 if (parent instanceof UnknownElement) {
-                    UnknownElement uc = new UnknownElement(elementName);
+                    UnknownElement uc = new UnknownElement2(elementName);
                     uc.setProject(context.getProject());
                     ((UnknownElement) parent).addChild(uc);
                     element = uc;
                 } else {
+                    // It may be a data type. Will be removed when we consolidate UE/RC
                     Class parentClass = parent.getClass();
                     IntrospectionHelper ih = 
                         IntrospectionHelper.getHelper(parentClass);
@@ -1010,7 +1051,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
 
                 context.configureId(element, attrs);
 
-                wrapper = new RuntimeConfigurable2(element, qname);
+                wrapper = new RuntimeConfigurable2(context.getProject(), null, element, qname);
                 wrapper.setAttributes2(attrs);
                 parentWrapper.addChild(wrapper);
             } catch (BuildException exc) {
