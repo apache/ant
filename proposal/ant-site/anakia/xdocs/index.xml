@@ -11,9 +11,10 @@
 
   <section name="Ant 1.5.1">
     <h3>Apache Ant 1.5.1 Released!</h3>
-    <p>Version 1.5.1 of Ant has been released. It is available for download 
-      <a href="http://www.apache.org/dist/ant/">here</a>.
-    </p>
+
+    <p>Version 1.5.1 of Ant has been released. It is available for
+    download as <a href="bindownload.cgi">binary</a> or as <a
+    href="srcdownload.cgi">source</a> distribution.</p>
   </section>
 
   <section name="Apache Ant">

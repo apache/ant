@@ -3,6 +3,7 @@
 
   <properties>
     <title>Downloading Ant - Source Distribution</title>
+    <base/>
   </properties>
 
 <body>

@@ -3,6 +3,7 @@
 
   <properties>
     <title>Downloading Ant - Binary Distribution</title>
+    <base/>
   </properties>
 
 <body>

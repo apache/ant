@@ -144,6 +144,15 @@
         #metaauthor ( $au.getText() $au.getAttributeValue("email") )
       #end
   
+      #if ($root.getChild("properties").getChild("base"))
+        #set ($url = $root.getChild("properties").getChild("base").getAttributeValue("href"))
+        #if ($url)
+          <base href="$url"/>
+        #else
+          <base href="$project.getAttributeValue("href")$relativePath"/>
+        #end
+      #end 
+
       <title>$project.getChild("title").getText() - $root.getChild("properties").getChild("title").getText()</title>
     </head>
   
