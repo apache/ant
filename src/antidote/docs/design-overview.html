@@ -8,7 +8,7 @@
 
     <H1>Antidote Design Overview</H1>
 
-    <P>Version 0.1 (2000/11/02)</P>
+    <P>Version 0.2 (2000/12/18)</P>
 
     <P>Authors: 
     <A HREF="mailto:simeon@fitch.net">Simeon H.K. Fitch</A>
@@ -39,7 +39,7 @@
     communications channel.</P>
     
     <P>To a large extent, the configuration of application modules is
-    driven by localized configuration files, allowing new editors or
+    driven by localized configuration files, allowing new modules or
     data views to be added, as well as providing multi-language
     support.</P>
 
@@ -53,7 +53,7 @@ Antidote Component Architecture
 
    +---------------+ +----------------+ +-------------+ +-------------+
    |               | |                | |             | |             |  
-   | ActionManager | | EventResponder | |  AntEditor  | |  AntEditor  |
+   | ActionManager | | EventResponder | |  AntModule  | |  AntModule  |
    |               | |                | |(ProjectNav) | |(SourceEdit) |  
    +---------------+ +----------------+ +-------------+ +-------------+
            |                  ^               ^               ^

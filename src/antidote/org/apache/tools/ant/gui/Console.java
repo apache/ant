@@ -68,7 +68,7 @@ import java.util.EventObject;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class Console extends AntEditor {
+public class Console extends AntModule {
     /** Area where messages are printed. */
     private JTextPane _text = null;
     /** Selection of logging levels. */
@@ -77,12 +77,19 @@ public class Console extends AntEditor {
     private ConsoleStyleContext _styles = null;
     
 	/** 
-	 * Standard ctor.
-	 * 
-	 * @param context Application context;
+	 * Default ctor.
 	 */
-    public Console(AppContext context) {
-        super(context);
+    public Console() {
+    }
+
+
+	/** 
+	 * Using the given AppContext, initialize the display.
+	 * 
+	 * @param context Application context.
+	 */
+    public void contextualize(AppContext context) {
+        setContext(context);
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
 
@@ -105,6 +112,7 @@ public class Console extends AntEditor {
         add(BorderLayout.NORTH, controls);
 
     }
+
 
     /** Class for handling project events. */
     private class Handler implements BusMember {

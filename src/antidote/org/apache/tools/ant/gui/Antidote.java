@@ -78,10 +78,10 @@ public class Antidote extends JPanel {
 
         _context = context;
 
-        // Add the various editors/views to the editing area.
+        // Add the various modules to the editing area.
         JSplitPane splitter = new JSplitPane();
-        splitter.add(JSplitPane.LEFT, populateEditors("left"));
-        splitter.add(JSplitPane.RIGHT, populateEditors("right"));
+        splitter.add(JSplitPane.LEFT, populateModules("left"));
+        splitter.add(JSplitPane.RIGHT, populateModules("right"));
         // This is necessary because, frankly, the JSplitPane widget
         // sucks, and doesn't provide enought (working) control over the
         // initial size of it's subcomponents. setDividerLocation(double)
@@ -93,38 +93,35 @@ public class Antidote extends JPanel {
         splitter2.setOneTouchExpandable(true);
 
         splitter2.add(JSplitPane.TOP, splitter);
-        splitter2.add(JSplitPane.BOTTOM, populateEditors("bottom"));
+        splitter2.add(JSplitPane.BOTTOM, populateModules("bottom"));
 
         add(BorderLayout.CENTER, splitter2);
         splitter2.resetToPreferredSizes();
 
-        add(BorderLayout.NORTH, populateEditors("top"));
+        add(BorderLayout.NORTH, populateModules("top"));
 
         setPreferredSize(new Dimension(640, 600));
     }
 
 
 	/** 
-	 * Instantiate the configured editors.
+	 * Instantiate the configured modules.
 	 * 
-     * @return Component containing the editor(s).
+     * @return Component containing the modules(s).
 	 */
-    private JComponent populateEditors(String prefix) {
+    private JComponent populateModules(String prefix) {
 
         String[] classNames = _context.getResources().
-            getStringArray(getClass(), prefix + ".editors");
+            getStringArray(getClass(), prefix + ".modules");
 
-        AntEditor[] editors = new AntEditor[classNames.length];
+        AntModule[] modules = new AntModule[classNames.length];
 
         for(int i = 0; i < classNames.length; i++) {
             try {
-                Class editorType = Class.forName(classNames[i]);
+                Class type = Class.forName(classNames[i]);
 
-                Constructor ctor = 
-                    editorType.getConstructor(AntEditor.CTOR_PARAMS);
-
-                editors[i] = 
-                    (AntEditor) ctor.newInstance(new Object[] { _context });
+                modules[i] = (AntModule) type.newInstance();
+                modules[i].contextualize(_context);
             }
             catch(Exception ex) {
                 // XXX log me.
@@ -132,14 +129,14 @@ public class Antidote extends JPanel {
             }
         }
 
-        if(editors.length == 1) {
-            return editors[0];
+        if(modules.length == 1) {
+            return modules[0];
         }
-        else if(editors.length > 1) {
+        else if(modules.length > 1) {
             JTabbedPane tabbed = new JTabbedPane(JTabbedPane.BOTTOM);
 
-            for(int i = 0; i < editors.length; i++) {
-                tabbed.addTab(editors[i].getName(), editors[i]);
+            for(int i = 0; i < modules.length; i++) {
+                tabbed.addTab(modules[i].getName(), modules[i]);
             }
             return tabbed;
         }

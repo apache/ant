@@ -68,7 +68,7 @@ import java.util.EventObject;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class TargetMonitor extends AntEditor {
+public class TargetMonitor extends AntModule {
         
     /** Place to display selected targets. */
     private JLabel _text = null;
@@ -77,12 +77,19 @@ public class TargetMonitor extends AntEditor {
     private String _defText = null;
 
 	/** 
-	 * Standard ctor.
+	 * Default ctor.
 	 * 
-	 * @param context Application context;
 	 */
-    public TargetMonitor(AppContext context) {
-        super(context);
+    public TargetMonitor() {
+    }
+
+	/** 
+	 * Using the given AppContext, initialize the display.
+	 * 
+	 * @param context Application context.
+	 */
+    public void contextualize(AppContext context) {
+        setContext(context);
         context.getEventBus().addMember(EventBus.RESPONDING, new Handler());
 
         setLayout(new BorderLayout());

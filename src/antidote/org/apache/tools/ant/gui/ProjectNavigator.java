@@ -66,18 +66,25 @@ import java.util.EventObject;
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-class ProjectNavigator extends AntEditor {
+class ProjectNavigator extends AntModule {
 
     /** Navigation via a tree widget. */
     private JTree _tree = null;
 
 	/** 
-	 * Standard ctor.
+	 * Default ctor.
+	 * 
+	 */
+	public ProjectNavigator() {
+    }
+
+	/** 
+	 * Using the given AppContext, initialize the display.
 	 * 
 	 * @param context Application context.
 	 */
-	public ProjectNavigator(AppContext context) {
-        super(context);
+    public void contextualize(AppContext context) {
+        setContext(context);
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
 
         setLayout(new GridLayout(1,1));

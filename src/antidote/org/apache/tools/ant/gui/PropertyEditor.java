@@ -71,7 +71,7 @@ import java.awt.Point;
  * @version $Revision$ 
  * @author Simeon H.K. Fitch 
  */
-class PropertyEditor extends AntEditor {
+public class PropertyEditor extends AntModule {
 
     /** The editor for current bean.*/
     private Customizer _customizer = null;
@@ -81,12 +81,19 @@ class PropertyEditor extends AntEditor {
     private JScrollPane _scroller = null;
 
 	/** 
-	 * Standard ctor.
+	 * Default ctor.
 	 * 
-	 * @param context Application context. 
 	 */
-	public PropertyEditor(AppContext context) {
-        super(context);
+	public PropertyEditor() {
+    }
+
+	/** 
+	 * Using the given AppContext, initialize the display.
+	 * 
+	 * @param context Application context.
+	 */
+    public void contextualize(AppContext context) {
+        setContext(context);
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
         _container = new JPanel(new BorderLayout());
