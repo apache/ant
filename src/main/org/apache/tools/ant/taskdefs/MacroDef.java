@@ -64,11 +64,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
-
-import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
  * Describe class <code>MacroDef</code> here.
@@ -76,8 +75,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author Peter Reilly
  * @since Ant 1.6
  */
-public class MacroDef extends AntlibDefinition implements TaskContainer {
-    private UnknownElement nestedTask;
+public class MacroDef extends AntlibDefinition  {
+    private NestedSequential nestedSequential;
     private String     name;
     private List       attributes = new ArrayList();
     private Map        elements = new HashMap();
@@ -91,26 +90,81 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
     }
 
     /**
-     * Add a nested task to ExtendType
-     * @param nestedTask  Nested task/type to extend
+     * This is the sequential nested element of the macrodef.
+     *
+     * @return a sequential element to be configured.
      */
-    public void addTask(Task nestedTask) {
-        if (this.nestedTask != null) {
+    public NestedSequential createSequential() {
+        if (this.nestedSequential != null) {
             throw new BuildException("Only one sequential allowed");
         }
-        UnknownElement ue = (UnknownElement) nestedTask;
-        if (!ue.getNamespace().equals("")
-            || !ue.getTag().equals("sequential")) {
-            throw new BuildException("Unsupported tag " + ue.getQName());
-        }
-        this.nestedTask = ue;
+        this.nestedSequential = new NestedSequential();
+        return this.nestedSequential;
     }
 
     /**
-     * @return the nested task
+     * The class corresponding to the sequential nested element.
+     * This is a simple task container.
+     */
+    public static class NestedSequential implements TaskContainer {
+        private List nested = new ArrayList();
+
+        /**
+         * Add a task or type to the container.
+         *
+         * @param task an unknown element.
+         */
+        public void addTask(Task task) {
+            nested.add(task);
+        }
+
+        /**
+         * @return the list of unknown elements
+         */
+        public List getNested() {
+            return nested;
+        }
+
+        /**
+         * A compare function to compare this with another
+         * NestedSequential.
+         * It calls similar on the nested unknown elements.
+         *
+         * @param other the nested sequential to compare with.
+         * @return true if they are similar, false otherwise
+         */
+        public boolean similar(NestedSequential other) {
+            if (nested.size() != other.nested.size()) {
+                return false;
+            }
+            for (int i = 0; i < nested.size(); ++i) {
+                UnknownElement me = (UnknownElement) nested.get(i);
+                UnknownElement o = (UnknownElement) other.nested.get(i);
+                if (!me.similar(o)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Convert the nested sequential to an unknown element
+     * @return the nested sequential as an unknown element.
      */
     public UnknownElement getNestedTask() {
-        return nestedTask;
+        UnknownElement ret = new UnknownElement("sequential");
+        ret.setTaskName("sequential");
+        ret.setNamespace("");
+        ret.setQName("sequential");
+        new RuntimeConfigurable(ret, "sequential");
+        for (int i = 0; i < nestedSequential.getNested().size(); ++i) {
+            UnknownElement e =
+                (UnknownElement) nestedSequential.getNested().get(i);
+            ret.addChild(e);
+            ret.getWrapper().addChild(e.getWrapper());
+        }
+        return ret;
     }
 
     /**
@@ -188,8 +242,8 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
      *
      */
     public void execute() {
-        if (nestedTask == null) {
-            throw new BuildException("Missing nested element");
+        if (nestedSequential == null) {
+            throw new BuildException("Missing sequential element");
         }
         if (name == null) {
             throw new BuildException("Name not specified");
@@ -387,7 +441,7 @@ public class MacroDef extends AntlibDefinition implements TaskContainer {
             }
         }
 
-        if (!nestedTask.similar(other.nestedTask)) {
+        if (!nestedSequential.similar(other.nestedSequential)) {
             return false;
         }
         if (!attributes.equals(other.attributes)) {
