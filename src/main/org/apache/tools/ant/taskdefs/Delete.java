@@ -270,6 +270,7 @@ public class Delete extends MatchingTask {
 
     protected void removeDir(File d) {
         String[] list = d.list();
+        if (list == null) list = new String[0];
         for (int i = 0; i < list.length; i++) {
             String s = list[i];
             File f = new File(d, s);
