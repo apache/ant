@@ -180,6 +180,13 @@ public class Java extends Task {
     }
 
     /**
+     * Set the command used to start the VM (only if fork==false).
+     */
+    public void setJvm(String s) {
+        cmdl.setVm(s);
+    }
+        
+    /**
      * Throw a BuildException if process returns non 0.
      */
     public void setFailonerror(boolean fail) {
