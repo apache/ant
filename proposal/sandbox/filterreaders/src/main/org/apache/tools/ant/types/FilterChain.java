@@ -55,7 +55,7 @@ package org.apache.tools.ant.types;
 
 import java.util.Vector;
 
-import org.apache.tools.ant.filters.ClassConstants;
+//import org.apache.tools.ant.filters.ClassConstants;
 import org.apache.tools.ant.filters.ExpandProperties;
 import org.apache.tools.ant.filters.HeadFilter;
 import org.apache.tools.ant.filters.LineContains;
@@ -85,9 +85,11 @@ public final class FilterChain {
         return filterReaders;
     }
 
+    /*
     public final void addClassConstants(final ClassConstants classConstants) {
         filterReaders.addElement(classConstants);
     }
+    */
 
     public final void addExpandProperties(final ExpandProperties expandProperties) {
         filterReaders.addElement(expandProperties);
