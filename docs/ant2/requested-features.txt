@@ -73,6 +73,8 @@ enhancements of existing tasks.
 
   Sounds like a candidate for a facade task.
 
+* URL-spider task that checks links for missing content or server errors
+
 II. Abstract goals that need to be abstract until we get into design
 decisions.
 ======================================================================
