@@ -152,6 +152,12 @@
     </or>
   </selector>
 
+  <selector id="needs.jdk1.5+">
+    <or>
+      <filename name="${ant.package}/taskdefs/condition/IsPingable*"/>
+    </or>
+  </selector>
+  
   <!-- classes that should be present in Sun based JVMs, but not in
        Kaffe for example -->
   <selector id="needs.sun.tools">
@@ -637,6 +643,7 @@
           <or>
             <selector refid="needs.jdk1.3+" unless="jdk1.3+"/>
             <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
+            <selector refid="needs.jdk1.5+" unless="jdk1.5+"/>
             <selector refid="needs.sun.tools" unless="sun.tools.present"/>
             <selector refid="needs.sun.uue" unless="sunuue.present"/>
             <selector refid="needs.sun.b64" unless="base64.present"/>
