@@ -12,17 +12,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
-import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.aut.nativelib.Os;
 import org.apache.aut.nativelib.CommandLauncher;
 import org.apache.aut.nativelib.ExecException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecMetaData;
 import org.apache.aut.nativelib.ExecOutputHandler;
+import org.apache.aut.nativelib.Os;
 import org.apache.aut.nativelib.launchers.DefaultCommandLauncher;
 import org.apache.aut.nativelib.launchers.MacCommandLauncher;
 import org.apache.aut.nativelib.launchers.ScriptCommandLauncher;
 import org.apache.aut.nativelib.launchers.WinNTCommandLauncher;
+import org.apache.avalon.excalibur.io.FileUtil;
 
 /**
  * Default implementation of <code>ExecManager</code>.
