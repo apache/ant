@@ -46,6 +46,10 @@ Other changes:
 
 * <pvcs> can now handle multiple projects.
 
+* <available> now has a "type" attribute you can use in conjunction
+  with the "file" attribute to specify whether the "file" you're
+  looking for is a file or a directory.
+
 Fixed bugs:
 -----------
 
