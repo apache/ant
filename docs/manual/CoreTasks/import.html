@@ -62,12 +62,6 @@ property of the main buildfile.<br />
 Note that &quot;builddocs&quot; is not the filename, but the name attribute
 present in the imported project tag.<br />
 <br />
-<b>Important</b>: We have not finalized how relative file references
-will be resolved in deep/complex build hierarchies -such as what
-happens when an imported file imports another file. Use absolute
-references for enhanced build file stability, especially in the
-imported files.<br />
-&nbsp;<br />
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
@@ -81,7 +75,9 @@ imported files.<br />
         file
       </td>
       <td valign="top">
-        The file to import.
+        The file to import. If this is a relative file name, the file name will be resolved
+        relative to the <i>importing</i> file. <b>Note</b>, this is unlike most other
+        ant file attributes, where relative files are resolved relative to ${basedir}.
       </td>
       <td valign="top" align="center">Yes</td>
     </tr>
@@ -90,7 +86,7 @@ imported files.<br />
         optional
       </td>
       <td valign="top">
-        if true, do not issue stop the build if the file does not exist,
+        If true, do not stop the build if the file does not exist,
         default is false.
       </td>
       <td valign="top" align="center">No</td>
