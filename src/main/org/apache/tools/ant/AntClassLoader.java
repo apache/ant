@@ -629,10 +629,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         return useParentFirst;
     }
 
-
-
-
-
     /**
      * Finds the resource with the given name. A resource is 
      * some data (images, audio, text, etc)
@@ -730,22 +726,18 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 }
             }
             else {
-                ZipFile zipFile = null;
-                try {
+                ZipFile zipFile = (ZipFile)zipFiles.get(file);
+                if (zipFile == null) {
                     zipFile = new ZipFile(file);
-
-                    ZipEntry entry = zipFile.getEntry(resourceName);
-                    if (entry != null) {
-                        try {
-                            return new URL("jar:file:"+file.toString()+"!/"+entry);
-                        } catch (MalformedURLException ex) {
-                            return null;
-                        }
-                    }
+                    zipFiles.put(file, zipFile);                    
                 }
-                finally {
-                    if (zipFile != null) {
-                        zipFile.close();
+
+                ZipEntry entry = zipFile.getEntry(resourceName);
+                if (entry != null) {
+                    try {
+                        return new URL("jar:file:"+file.toString()+"!/"+entry);
+                    } catch (MalformedURLException ex) {
+                        return null;
                     }
                 }
             }
@@ -937,10 +929,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         }
     }
 
-    public void buildStarted(BuildEvent event) {
-    }
-
-    public void buildFinished(BuildEvent event) {
+    public void cleanup() {
         pathComponents = null;
         project = null;
         for (Enumeration e = zipFiles.elements(); e.hasMoreElements(); ) {
@@ -952,6 +941,14 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 // ignore
             }
         }
+        zipFiles = new Hashtable();
+    }
+    
+    public void buildStarted(BuildEvent event) {
+    }
+
+    public void buildFinished(BuildEvent event) {
+        cleanup();
     }
 
     public void targetStarted(BuildEvent event) {

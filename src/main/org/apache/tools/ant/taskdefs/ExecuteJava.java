@@ -145,6 +145,7 @@ public class ExecuteJava {
         } finally {
             if (loader != null) {
                 loader.resetThreadContextLoader();
+                loader.cleanup();
             }
             if (sysProperties != null) {
                 sysProperties.restoreSystem();

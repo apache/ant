@@ -164,6 +164,9 @@ public class Available extends Task {
         }
 
         this.project.setProperty(property, value);
+        if (loader != null) {
+            loader.cleanup();
+        }
     }
 
     private boolean checkFile() {
