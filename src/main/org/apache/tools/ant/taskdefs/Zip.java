@@ -428,14 +428,14 @@ public class Zip extends MatchingTask {
                 entry = new ZipEntry(origEntry);
                 String vPath = entry.getName();
                 if (zipScanner.match(vPath)) {
-                    if (prefix.length() > 0) {
+                    if (fullpath.length() > 0) {
+                        addParentDirs(null, fullpath, zOut, "");
+                        zipFile(in, zOut, fullpath, entry.getTime());
+                    } else {
                         addParentDirs(null, vPath, zOut, prefix);
                         if (! entry.isDirectory()) {
                             zipFile(in, zOut, prefix+vPath, entry.getTime());
                         }
-                    }
-                    else if (fullpath.length() > 0) {
-                        zipFile(in, zOut, fullpath, entry.getTime());
                     }
                 }
             }
