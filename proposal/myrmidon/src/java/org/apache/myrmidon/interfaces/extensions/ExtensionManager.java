@@ -7,17 +7,25 @@
  */
 package org.apache.myrmidon.interfaces.extensions;
 
-import org.apache.avalon.excalibur.extension.PackageRepository;
+import org.apache.avalon.excalibur.extension.Extension;
+import org.apache.avalon.excalibur.extension.OptionalPackage;
 
 /**
- * PackageRepository
+ * Maintains a set of optional packages.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 public interface ExtensionManager
-    extends PackageRepository
 {
     /** Role name for this interface. */
     String ROLE = ExtensionManager.class.getName();
+
+    /**
+     * Locates the optional package which best matches a required extension.
+     *
+     * @param extension the extension to locate an optional package
+     * @return the optional package, or null if not found.
+     */
+    public OptionalPackage getOptionalPackage( Extension extension );
 }

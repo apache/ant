@@ -277,10 +277,10 @@ public class CLIMain
                     break;
 
                 case LISTENER_OPT:
-                    m_embedded.setListener( option.getArgument() );
+                    m_embedded.setProjectListener( option.getArgument() );
                     break;
                 case NO_PREFIX_OPT:
-                    m_embedded.setListener( "noprefix" );
+                    m_embedded.setProjectListener( "noprefix" );
                     break;
 
                 case DEFINE_OPT:
@@ -310,7 +310,7 @@ public class CLIMain
         try
         {
             // Set system properties set up by launcher
-            m_embedded.setEmbeddorProperty( "myrmidon.home", properties.get( "myrmidon.home" ) );
+            m_embedded.setHomeDirectory( (File)properties.get( "myrmidon.home" ) );
 
             // Command line
             if( !parseCommandLineOptions( args ) )

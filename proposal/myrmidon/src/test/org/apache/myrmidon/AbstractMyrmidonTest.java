@@ -29,28 +29,21 @@ public abstract class AbstractMyrmidonTest
     private final File m_baseDir;
     private Logger m_logger;
 
+    public AbstractMyrmidonTest( final String name )
+    {
+        super( name );
+        final String baseDirProp = System.getProperty( "test.basedir" );
+        m_baseDir = getCanonicalFile( new File( baseDirProp ) );
+        final String packagePath = getPackageName( getClass() ).replace( '.', File.separatorChar );
+        m_testBaseDir = getCanonicalFile( new File( m_baseDir, packagePath ) );
+    }
+
+    /**
+     * Locates the error message resources for a class.
+     */
     protected static final Resources getResourcesForTested( final Class clazz )
     {
-        final Package pkg = clazz.getPackage();
-
-        String baseName;
-        if( null == pkg )
-        {
-            final String name = clazz.getName();
-            if( -1 == name.lastIndexOf( "." ) )
-            {
-                baseName = "";
-            }
-            else
-            {
-                baseName = name.substring( 0, name.lastIndexOf( "." ) );
-            }
-        }
-        else
-        {
-            baseName = pkg.getName();
-        }
-
+        String baseName = getPackageName( clazz );
         if( baseName.endsWith( ".test" ) )
         {
             baseName = baseName.substring( 0, baseName.length() - 5 );
@@ -59,16 +52,29 @@ public abstract class AbstractMyrmidonTest
         return ResourceManager.getBaseResources( baseName + ".Resources", AbstractMyrmidonTest.class.getClassLoader() );
     }
 
-    public AbstractMyrmidonTest( String name )
+    /**
+     * Returns the name of the package containing a class.
+     *
+     * @return The . delimited package name, or an empty string if the class
+     *         is in the default package.
+     */
+    protected static String getPackageName( final Class clazz )
     {
-        super( name );
-        final String baseDirProp = System.getProperty( "test.basedir" );
-        m_baseDir = getCanonicalFile( new File( baseDirProp ) );
-        String packagePath = getClass().getName();
-        int idx = packagePath.lastIndexOf( '.' );
-        packagePath = packagePath.substring( 0, idx );
-        packagePath = packagePath.replace( '.', File.separatorChar );
-        m_testBaseDir = getCanonicalFile( new File( m_baseDir, packagePath ) );
+        final Package pkg = clazz.getPackage();
+        if( null != pkg )
+        {
+            return pkg.getName();
+        }
+
+        final String name = clazz.getName();
+        if( -1 == name.lastIndexOf( "." ) )
+        {
+            return "";
+        }
+        else
+        {
+            return name.substring( 0, name.lastIndexOf( "." ) );
+        }
     }
 
     /**

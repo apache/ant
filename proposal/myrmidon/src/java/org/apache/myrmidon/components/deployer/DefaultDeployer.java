@@ -108,7 +108,7 @@ public class DefaultDeployer
     {
         try
         {
-            final ClassLoader classLoader = m_classLoaderManager.createClassLoader( file );
+            final ClassLoader classLoader = m_classLoaderManager.getClassLoader( file );
             return createDeployment( classLoader, file.toURL() );
         }
         catch( final Exception e )

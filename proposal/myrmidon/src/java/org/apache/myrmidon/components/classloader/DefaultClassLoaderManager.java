@@ -8,19 +8,17 @@
 package org.apache.myrmidon.components.classloader;
 
 import java.io.File;
-import java.net.JarURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 import java.util.jar.Manifest;
+import java.util.jar.JarFile;
 import org.apache.avalon.excalibur.extension.Extension;
 import org.apache.avalon.excalibur.extension.OptionalPackage;
-import org.apache.avalon.excalibur.extension.PackageManager;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
@@ -28,8 +26,8 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.classloader.ClassLoaderException;
+import org.apache.myrmidon.interfaces.classloader.ClassLoaderManager;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
 import org.apache.tools.todo.types.PathUtil;
@@ -38,6 +36,7 @@ import org.apache.tools.todo.types.PathUtil;
  * A default implementation of a ClassLoader manager.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class DefaultClassLoaderManager
     extends AbstractLogEnabled
@@ -47,12 +46,21 @@ public class DefaultClassLoaderManager
         ResourceManager.getPackageResources( DefaultClassLoaderManager.class );
 
     /**
-     * Map from File to the ClassLoader for that file.
+     * Map from File/ArrayList to the ClassLoader for that file/files.
      */
-    private final Map m_fileDeployers = new HashMap();
+    private final Map m_classLoaders = new HashMap();
 
-    private PackageManager m_packageManager;
+    private ExtensionManager m_extensionManager;
     private ClassLoader m_commonClassLoader;
+
+    public DefaultClassLoaderManager()
+    {
+    }
+
+    public DefaultClassLoaderManager( final ClassLoader commonClassLoader )
+    {
+        m_commonClassLoader = commonClassLoader;
+    }
 
     public void initialize() throws Exception
     {
@@ -68,18 +76,7 @@ public class DefaultClassLoaderManager
     public void service( final ServiceManager serviceManager )
         throws ServiceException
     {
-        final ExtensionManager extensionManager =
-            (ExtensionManager)serviceManager.lookup( ExtensionManager.ROLE );
-        m_packageManager = new PackageManager( extensionManager );
-    }
-
-    /**
-     * Sets the ClassLoader to use as the parent for all classloaders
-     * created by this ClassLoader manager.
-     */
-    public void setCommonClassLoader( final ClassLoader classLoader )
-    {
-        m_commonClassLoader = classLoader;
+        m_extensionManager = (ExtensionManager)serviceManager.lookup( ExtensionManager.ROLE );
     }
 
     /**
@@ -94,9 +91,27 @@ public class DefaultClassLoaderManager
     /**
      * Creates a class loader for a Jar file.
      */
-    public ClassLoader createClassLoader( final File file ) throws ClassLoaderException
+    public ClassLoader getClassLoader( final File file ) throws ClassLoaderException
     {
-        return createClassLoader( new File[] { file } );
+        try
+        {
+            final File canonFile = file.getCanonicalFile();
+
+            // Check for cached classloader, creating it if required
+            ClassLoader loader = (ClassLoader)m_classLoaders.get( canonFile );
+            if( loader == null )
+            {
+                checkFile( canonFile );
+                final OptionalPackage optionalPackage = toOptionalPackage( canonFile );
+                loader = buildClassLoader( optionalPackage, new HashSet() );
+            }
+            return loader;
+        }
+        catch( final Exception e )
+        {
+            final String message = REZ.getString( "create-classloader-for-file.error", file );
+            throw new ClassLoaderException( message, e );
+        }
     }
 
     /**
@@ -106,113 +121,165 @@ public class DefaultClassLoaderManager
     {
         try
         {
-            // Build a list of canonical file names
-            final ArrayList canonFiles = new ArrayList( files.length );
-            for( int i = 0; i < files.length; i++ )
+            if( files == null || files.length == 0 )
             {
-                canonFiles.add( files[ i ].getCanonicalFile() );
+                return m_commonClassLoader;
             }
 
-            // Locate cached classloader, creating it if necessary
-            ClassLoader classLoader = (ClassLoader)m_fileDeployers.get( canonFiles );
-            if( classLoader == null )
+            // Build a list of optional packages for the files
+            final OptionalPackage[] packages = new OptionalPackage[ files.length ];
+            for( int i = 0; i < files.length; i++ )
             {
-                classLoader = buildClassLoader( canonFiles );
-                m_fileDeployers.put( canonFiles, classLoader );
+                final File canonFile = files[ i ].getCanonicalFile();
+                checkFile( canonFile );
+                packages[ i ] = toOptionalPackage( canonFile );
             }
-            return classLoader;
+
+            // Build the classloaders for the required extensions
+            final ClassLoader[] parentClassLoaders = buildParentClassLoaders( packages, new HashSet() );
+
+            // Build the classloader
+            final URL[] urls = buildClasspath( files );
+            return new MultiParentURLClassLoader( urls, parentClassLoaders );
         }
         catch( final Exception e )
         {
             final String fileNames = PathUtil.formatPath( files );
-            final String message = REZ.getString( "create-classloader-for-file.error", fileNames );
+            final String message = REZ.getString( "create-classloader-for-files.error", fileNames );
             throw new ClassLoaderException( message, e );
         }
     }
 
     /**
-     * Builds the classloader for a set of files.
+     * Builds the classloader for an optional package.
      */
-    private ClassLoader buildClassLoader( final ArrayList files )
+    private ClassLoader buildClassLoader( final OptionalPackage pkg,
+                                          final Set pending )
         throws Exception
     {
-        final ArrayList allFiles = new ArrayList( files );
-        final int count = files.size();
-        for( int i = 0; i < count; i++ )
+        final File jarFile = pkg.getFile();
+
+        // Check for cached classloader
+        ClassLoader classLoader = (ClassLoader)m_classLoaders.get( jarFile );
+        if( classLoader != null )
         {
-            final File file = (File)files.get(i );
-            checkFile( file );
-            getOptionalPackagesFor( file, allFiles );
+            return classLoader;
         }
 
-        final URL[] urls = buildClasspath( allFiles );
-        return new URLClassLoader( urls, m_commonClassLoader );
+        // Check for cyclic dependency
+        if( pending.contains( jarFile ) )
+        {
+            final String message = REZ.getString( "dependency-cycle.error", jarFile );
+            throw new Exception( message );
+        }
+        pending.add( jarFile );
+
+        // Build the classloaders for the extensions required by this optional
+        // package
+        final ClassLoader[] parentClassLoaders =
+            buildParentClassLoaders( new OptionalPackage[] { pkg }, pending );
+
+        // Create and cache the classloader
+        final URL[] urls = { jarFile.toURL() };
+        classLoader = new MultiParentURLClassLoader( urls, parentClassLoaders );
+        m_classLoaders.put( jarFile, classLoader );
+        pending.remove( jarFile );
+        return classLoader;
+    }
+
+    /**
+     * Builds the parent classloaders for a set of optional packages.  That is,
+     * the classloaders for all of the extensions required by the given set
+     * of optional packages.
+     */
+    private ClassLoader[] buildParentClassLoaders( final OptionalPackage[] packages,
+                                                   final Set pending )
+        throws Exception
+    {
+        final ArrayList classLoaders = new ArrayList();
+
+        // Include the common class loader
+        classLoaders.add( m_commonClassLoader );
+
+        // Build the classloader for each optional package, filtering out duplicates
+        for( int i = 0; i < packages.length; i++ )
+        {
+            final OptionalPackage optionalPackage = packages[ i ];
+
+            // Locate the dependencies for this jar file
+            final OptionalPackage[] requiredPackages = getOptionalPackagesFor( optionalPackage );
+
+            // Build the classloader for the package
+            for( int j = 0; j < requiredPackages.length; j++ )
+            {
+                final OptionalPackage requiredPackage = requiredPackages[j ];
+                final ClassLoader classLoader = buildClassLoader( requiredPackage, pending );
+                if( ! classLoaders.contains( classLoader ) )
+                {
+                    classLoaders.add( classLoader );
+                }
+            }
+        }
+
+        return (ClassLoader[])classLoaders.toArray( new ClassLoader[classLoaders.size() ] );
     }
 
     /**
      * Assembles a set of files into a URL classpath.
      */
-    private URL[] buildClasspath( final ArrayList files )
+    private URL[] buildClasspath( final File[] files )
         throws MalformedURLException
     {
-        final URL[] urls = new URL[ files.size() ];
-        final int count = files.size();
-        for( int i = 0; i < count; i++ )
+        final URL[] urls = new URL[ files.length ];
+        for( int i = 0; i < files.length; i++ )
         {
-            final File file = (File)files.get( i );
-            urls[ i ] = file.toURL();
+            urls[ i ]  = files[i ].toURL();
         }
 
         return urls;
     }
 
     /**
-     * Retrieve the files for the optional packages required by
-     * the specified typeLibrary jar.
+     * Builds an OptionalPackage for a Jar file.
      *
-     * @param jarFile the typeLibrary
-     * @param packages used to return the files that need to be added to ClassLoader.
+     * @param file the jar.
      */
-    private void getOptionalPackagesFor( final File jarFile, final List packages )
+    private OptionalPackage toOptionalPackage( final File file )
         throws Exception
     {
-        final URL url = new URL( "jar:" + jarFile.getCanonicalFile().toURL() + "!/" );
-        final JarURLConnection connection = (JarURLConnection)url.openConnection();
-        final Manifest manifest = connection.getManifest();
-        final Extension[] available = Extension.getAvailable( manifest );
+        // Determine the extensions required by this file
+        final JarFile jarFile = new JarFile( file );
+        final Manifest manifest = jarFile.getManifest();
         final Extension[] required = Extension.getRequired( manifest );
+        return new OptionalPackage( file, new Extension[0], required );
+    }
 
-        if( getLogger().isDebugEnabled() )
+    /**
+     * Locates the optional packages required by an optional package.
+     */
+    private OptionalPackage[] getOptionalPackagesFor( final OptionalPackage pkg )
+        throws Exception
+    {
+        // Locate the optional packages that provide the required extesions
+        final Extension[] required = pkg.getRequiredExtensions();
+        final ArrayList packages = new ArrayList();
+        for( int i = 0; i < required.length; i++ )
         {
-            final String message1 =
-                REZ.getString( "available-extensions.notice", Arrays.asList( available ) );
-            getLogger().debug( message1 );
-            final String message2 =
-                REZ.getString( "required-extensions.notice", Arrays.asList( required ) );
-            getLogger().debug( message2 );
+            final Extension extension = required[i ];
+            final OptionalPackage optionalPackage = m_extensionManager.getOptionalPackage( extension );
+            if( optionalPackage == null )
+            {
+                final String message =
+                    REZ.getString( "unsatisfied.extension.error",
+                                   pkg.getFile(),
+                                   extension.getExtensionName(),
+                                   extension.getSpecificationVersion() );
+                throw new Exception( message );
+            }
+            packages.add( optionalPackage );
         }
 
-        final ArrayList dependencies = new ArrayList();
-        final ArrayList unsatisfied = new ArrayList();
-
-        m_packageManager.scanDependencies( required,
-                                           available,
-                                           dependencies,
-                                           unsatisfied );
-
-        if( 0 != unsatisfied.size() )
-        {
-            final String message =
-                REZ.getString( "unsatisfied.extensions.error", new Integer( unsatisfied.size() ) );
-            throw new Exception( message );
-        }
-
-        final int count = dependencies.size();
-        for( int i = 0; i < count; i++ )
-        {
-            final OptionalPackage optionalPackage = (OptionalPackage)dependencies.get(i );
-            packages.add( optionalPackage.getFile() );
-        }
+        return (OptionalPackage[])packages.toArray( new OptionalPackage[packages.size() ] );
     }
 
     /**

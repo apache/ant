@@ -837,22 +837,11 @@ public class MyrmidonSecurityManager
                         <code>&lt;socket&gt;</code>
                     conditions to an antlib.  Need to resolve how these will be passed a logger.
                     </li>
-                    <li>Make the
-                        <code>&lt;uptodate&gt;</code> task a condition, and move to
-                    an antlib.
-                    </li>
-                    <li>Split up
-                        <code>&lt;is-set&gt;</code> condition into is-set and is-true conditions.
-                    </li>
                     <li>Allow the
                         <code>&lt;if&gt;</code> task to take any condition implementation.
                     </li>
                     <li>Add an else block to the
                         <code>&lt;if&gt;</code> task.
-                    </li>
-                    <li>Split the
-                        <code>&lt;available&gt;</code> condition into separate conditions
-                    that test for the availability of a class, or a resource.
                     </li>
                     <li>Move
                         <code>crimson.jar</code> to
@@ -863,6 +852,19 @@ public class MyrmidonSecurityManager
                     <li>Add a <code>--type</code> command-line option, to allow
                         the project builder to be manually selected.
                     </li>
+                    <li>Change <code>ProjectBuilder</code>
+                        and <code>Embeddor</code> to throw something more
+                        specialised than Exception.
+                    </li>
+                    <li>Change <code>DefaultClassLoaderManager</code> to handle
+                        directories as part of a library classpath.
+                    </li>
+                    <li><code>&lt;condition&gt;</code> should set the property
+                    value to <code>false</code> when the condition is false.</li>
+                    <li>Split the <code>&lt;uptodate&gt;</code> condition into
+                    a condition that checks against a single target file,
+                    and one which checks using a destdir/mapper.</li>
+                    <li>Add a task to unset a property.</li>
                     <li>Unit tests.</li>
                 </ul>
                     </blockquote>

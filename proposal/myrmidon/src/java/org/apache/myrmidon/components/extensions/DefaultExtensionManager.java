@@ -50,12 +50,16 @@ public class DefaultExtensionManager
         File.separator + "lib" + File.separator + "tools.jar";
 
     private Logger m_logger;
-
     private String m_path;
 
     public DefaultExtensionManager()
     {
         super( new File[ 0 ] );
+    }
+
+    public DefaultExtensionManager( final File[] path )
+    {
+        super( path );
     }
 
     public void enableLogging( final Logger logger )
@@ -66,16 +70,13 @@ public class DefaultExtensionManager
     public void parameterize( final Parameters parameters )
         throws ParameterException
     {
-        final String phoenixHome = parameters.getParameter( "myrmidon.home" );
-        final String defaultExtPath = phoenixHome + File.separator + "ext";
-        m_path = parameters.getParameter( "myrmidon.ext.path", defaultExtPath );
+        m_path = parameters.getParameter( "myrmidon.ext.path" );
     }
 
     public void initialize()
         throws Exception
     {
-        final String[] pathElements = StringUtil.split( m_path, "|" );
-
+        final String[] pathElements = StringUtil.split( m_path, File.pathSeparator );
         final File[] dirs = new File[ pathElements.length ];
         for( int i = 0; i < dirs.length; i++ )
         {
@@ -86,6 +87,7 @@ public class DefaultExtensionManager
 
         scanPath();
 
+        // Add the JVM's tools.jar as an extension
         final Extension extension = createToolsExtension();
         final File jar = getToolsJar();
         final Extension[] available = new Extension[]{extension};
@@ -97,6 +99,23 @@ public class DefaultExtensionManager
     public void dispose()
     {
         clearCache();
+    }
+
+    /**
+     * Locates the optional package which best matches a required extension.
+     *
+     * @param extension the extension to locate an optional package
+     * @return the optional package, or null if not found.
+     */
+    public OptionalPackage getOptionalPackage( final Extension extension )
+    {
+        final OptionalPackage[] packages = getOptionalPackages( extension );
+
+        if( null == packages || 0 == packages.length ) return null;
+
+        //TODO: Use heurisitic to find which is best package
+
+        return packages[ 0 ];
     }
 
     protected void debug( final String message )

@@ -8,12 +8,7 @@
 package org.apache.myrmidon;
 
 import java.io.File;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
-import org.apache.myrmidon.interfaces.embeddor.Embeddor;
-import org.apache.myrmidon.interfaces.model.Project;
-import org.apache.myrmidon.interfaces.workspace.Workspace;
+import org.apache.myrmidon.frontends.EmbeddedAnt;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -25,48 +20,9 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class AbstractProjectTest
     extends AbstractMyrmidonTest
 {
-    private DefaultEmbeddor m_embeddor;
-
     public AbstractProjectTest( final String name )
     {
         super( name );
-    }
-
-    /**
-     * Tear-down the test.
-     */
-    protected void tearDown() throws Exception
-    {
-        if( m_embeddor != null )
-        {
-            m_embeddor.dispose();
-            m_embeddor = null;
-        }
-    }
-
-    /**
-     * Returns an embeddor which can be used to build and execute projects.
-     */
-    protected Embeddor getEmbeddor() throws Exception
-    {
-        if( m_embeddor == null )
-        {
-            // Need to set the context classloader - The default embeddor uses it
-            Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
-
-            final Logger logger = getLogger();
-            m_embeddor = new DefaultEmbeddor();
-            m_embeddor.enableLogging( logger );
-
-            final Parameters params = new Parameters();
-            final File instDir = getInstallDirectory();
-            params.setParameter( "myrmidon.home", instDir.getAbsolutePath() );
-            m_embeddor.parameterize( params );
-            m_embeddor.initialize();
-            m_embeddor.start();
-        }
-
-        return m_embeddor;
     }
 
     /**
@@ -117,22 +73,27 @@ public class AbstractProjectTest
         throws Exception
     {
         // Create the project and workspace
-        final Embeddor embeddor = getEmbeddor();
-        final Project project = embeddor.createProject( projectFile.getAbsolutePath(), null, null );
-        final Workspace workspace = embeddor.createWorkspace( new Parameters() );
+        final EmbeddedAnt embeddor = new EmbeddedAnt();
+        embeddor.setHomeDirectory( getInstallDirectory() );
+        embeddor.enableLogging( getLogger() );
+        embeddor.setSharedClassLoader( getClass().getClassLoader() );
+        embeddor.setProjectFile( projectFile.getAbsolutePath() );
+        embeddor.setProjectListener( null );
 
         // Add a listener to make sure all is good
         final TrackingProjectListener tracker = new TrackingProjectListener();
-        workspace.addProjectListener( tracker );
+        embeddor.addProjectListener( tracker );
 
         // Add supplied listener
         if( listener != null )
         {
-            workspace.addProjectListener( listener );
+            embeddor.addProjectListener( listener );
         }
 
         // Now execute the target
-        workspace.executeProject( project, targetName );
+        embeddor.executeTargets( new String[] { targetName } );
+
+        embeddor.stop();
 
         // Make sure all expected events were delivered
         tracker.assertComplete();

@@ -9,8 +9,10 @@ package org.apache.myrmidon.components.embeddor.test;
 
 import java.io.File;
 import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.AbstractProjectTest;
 import org.apache.myrmidon.LogMessageTracker;
+import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
@@ -26,9 +28,48 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public class DefaultEmbeddorTest
     extends AbstractProjectTest
 {
+    private DefaultEmbeddor m_embeddor;
+
     public DefaultEmbeddorTest( String name )
     {
         super( name );
+    }
+
+    /**
+     * Tear-down the test.
+     */
+    protected void tearDown() throws Exception
+    {
+        if( m_embeddor != null )
+        {
+            m_embeddor.dispose();
+            m_embeddor = null;
+        }
+    }
+
+    /**
+     * Returns an embeddor which can be used to build and execute projects.
+     */
+    protected Embeddor getEmbeddor() throws Exception
+    {
+        if( m_embeddor == null )
+        {
+            // Need to set the context classloader - The default embeddor uses it
+            Thread.currentThread().setContextClassLoader( getClass().getClassLoader() );
+
+            final Logger logger = getLogger();
+            m_embeddor = new DefaultEmbeddor();
+            m_embeddor.enableLogging( logger );
+
+            final Parameters params = new Parameters();
+            final File instDir = getInstallDirectory();
+            params.setParameter( "myrmidon.home", instDir.getAbsolutePath() );
+            m_embeddor.parameterize( params );
+            m_embeddor.initialize();
+            m_embeddor.start();
+        }
+
+        return m_embeddor;
     }
 
     /**
@@ -63,6 +104,7 @@ public class DefaultEmbeddorTest
     public void testCreateListener() throws Exception
     {
         final ProjectListener listener = getEmbeddor().createListener( "default" );
+        assertNotNull( listener );
     }
 
     /**

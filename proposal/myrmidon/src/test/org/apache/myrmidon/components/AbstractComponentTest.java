@@ -10,12 +10,16 @@ package org.apache.myrmidon.components;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.io.File;
 import org.apache.aut.converter.Converter;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.avalon.framework.parameters.Parameterizable;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 import org.apache.myrmidon.components.classloader.DefaultClassLoaderManager;
 import org.apache.myrmidon.components.configurer.DefaultConfigurer;
@@ -93,10 +97,9 @@ public abstract class AbstractComponentTest
             m_serviceManager.put( Executor.ROLE, component );
             components.add( component );
 
-            final DefaultClassLoaderManager classLoaderMgr = new DefaultClassLoaderManager();
-            classLoaderMgr.setCommonClassLoader( getClass().getClassLoader() );
-            m_serviceManager.put( ClassLoaderManager.ROLE, classLoaderMgr );
-            components.add( classLoaderMgr );
+            component = createComponent( ClassLoaderManager.ROLE, DefaultClassLoaderManager.class );
+            m_serviceManager.put( ClassLoaderManager.ROLE, component );
+            components.add( component );
 
             component = createComponent( ExtensionManager.ROLE, DefaultExtensionManager.class );
             m_serviceManager.put( ExtensionManager.ROLE, component );
@@ -132,6 +135,29 @@ public abstract class AbstractComponentTest
                 }
             }
 
+            // Parameterise the components
+            final Parameters parameters = getParameters();
+            for( Iterator iterator = components.iterator(); iterator.hasNext(); )
+            {
+                Object obj = iterator.next();
+                if( obj instanceof Parameterizable )
+                {
+                    final Parameterizable parameterizable = (Parameterizable)obj;
+                    parameterizable.parameterize( parameters );
+                }
+            }
+
+            // Initialise the components
+            for( Iterator iterator = components.iterator(); iterator.hasNext(); )
+            {
+                Object obj = iterator.next();
+                if( obj instanceof Initializable )
+                {
+                    final Initializable initializable = (Initializable)obj;
+                    initializable.initialize();
+                }
+            }
+
             // Register some standard roles
             // Add some core roles
             final RoleManager roleManager = (RoleManager)getServiceManager().lookup( RoleManager.ROLE );
@@ -144,12 +170,29 @@ public abstract class AbstractComponentTest
     }
 
     /**
-     * Creates an instance of a component.  Sub-classes can override this
+     * Creates the parameters for the test.  Sub-classes can override this
+     * method to set-up the parameters.
+     */
+    protected Parameters getParameters()
+    {
+        final Parameters parameters = new Parameters();
+        final String homeDir = getInstallDirectory().getAbsolutePath();
+        parameters.setParameter( "myrmidon.home", homeDir );
+        parameters.setParameter( "myrmidon.ext.path", homeDir + File.separatorChar + "ext" );
+        return parameters;
+    }
+
+    /**
+     * Creates an instance of a test component.  Sub-classes can override this
      * method to add a particular implementation to the set of test components.
      */
     protected Object createComponent( final String role, final Class defaultImpl )
         throws Exception
     {
+        if( role.equals( ClassLoaderManager.ROLE ) )
+        {
+            return new DefaultClassLoaderManager( getClass().getClassLoader() );
+        }
         return defaultImpl.newInstance();
     }
 

@@ -8,8 +8,10 @@
 package org.apache.myrmidon.frontends;
 
 import java.io.File;
+import java.util.ArrayList;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
@@ -47,12 +49,25 @@ public class EmbeddedAnt
     private String m_projectFile = "build.ant";
     private Project m_project;
     private String m_listenerName = "default";
-    private ProjectListener m_listener;
+    private ArrayList m_listeners = new ArrayList();
     private Parameters m_workspaceProps = new Parameters();
     private Parameters m_builderProps = new Parameters();
     private Parameters m_embeddorParameters = new Parameters();
     private ClassLoader m_sharedClassLoader;
     private Embeddor m_embeddor;
+    private File m_homeDir;
+
+    /**
+     * Sets the Myrmidon home directory.  Default is to use the current
+     * directory.
+     * 
+     * @todo Autodetect myrmidon home, rather than using current directory 
+     *       as the default (which is a dud default).
+     */
+    public void setHomeDirectory( final File homeDir )
+    {
+        m_homeDir = homeDir.getAbsoluteFile();
+    }
 
     /**
      * Sets the project file to execute.  Default is 'build.ant'.
@@ -75,21 +90,20 @@ public class EmbeddedAnt
     }
 
     /**
-     * Sets the name of the project listener to use.
+     * Sets the name of the project listener to use.  Set to null to disable
+     * the project listener.
      */
-    public void setListener( final String listener )
+    public void setProjectListener( final String listener )
     {
         m_listenerName = listener;
-        m_listener = null;
     }
 
     /**
-     * Sets the project listener to use.
+     * Adds a project listener.
      */
-    public void setListener( final ProjectListener listener )
+    public void addProjectListener( final ProjectListener listener )
     {
-        m_listenerName = null;
-        m_listener = listener;
+        m_listeners.add( listener );
     }
 
     /**
@@ -99,7 +113,7 @@ public class EmbeddedAnt
     public void setWorkspaceProperty( final String name, final Object value )
     {
         // TODO - Make properties Objects, not Strings
-        m_workspaceProps.setParameter( name, (String)value );
+        m_workspaceProps.setParameter( name, value.toString() );
     }
 
     /**
@@ -109,7 +123,7 @@ public class EmbeddedAnt
     public void setBuilderProperty( final String name, final Object value )
     {
         // TODO - Make properties Objects, not Strings
-        m_builderProps.setParameter( name, (String)value );
+        m_builderProps.setParameter( name, value.toString() );
     }
 
     /**
@@ -145,14 +159,13 @@ public class EmbeddedAnt
 
         checkHomeDir();
 
-        // Prepare the embeddor, project listener and project model
+        // Prepare the embeddor, and project model
         final Embeddor embeddor = prepareEmbeddor();
-        final ProjectListener listener = prepareListener( embeddor );
         final Project project = prepareProjectModel( embeddor );
 
         // Create a new workspace
         final Workspace workspace = embeddor.createWorkspace( m_workspaceProps );
-        workspace.addProjectListener( listener );
+        prepareListeners( embeddor, workspace );
 
         //execute the project
         executeTargets( workspace, project, targets );
@@ -181,7 +194,7 @@ public class EmbeddedAnt
         {
             m_embeddor = null;
             m_project = null;
-            m_listener = null;
+            m_listeners.clear();
         }
     }
 
@@ -213,19 +226,26 @@ public class EmbeddedAnt
      */
     private void checkHomeDir() throws Exception
     {
-        final String home = m_embeddorParameters.getParameter( "myrmidon.home" );
-        final File homeDir = ( new File( home ) ).getAbsoluteFile();
-        if( !homeDir.isDirectory() )
+        if( m_homeDir == null )
         {
-            final String message = REZ.getString( "home-not-dir.error", homeDir );
-            throw new Exception( message );
+            m_homeDir = new File( "." ).getAbsoluteFile();
         }
+        checkDirectory( m_homeDir, "home-dir.name" );
+        m_embeddorParameters.setParameter( "myrmidon.home", m_homeDir.getAbsolutePath() );
 
         if( getLogger().isInfoEnabled() )
         {
-            final String message = REZ.getString( "homedir.notice", homeDir );
+            final String message = REZ.getString( "homedir.notice", m_homeDir );
             getLogger().info( message );
         }
+
+        String path = m_embeddorParameters.getParameter( "myrmidon.lib.path", "lib" );
+        File dir = resolveDirectory( m_homeDir, path, "task-lib-dir.name" );
+        m_embeddorParameters.setParameter( "myrmidon.lib.path", dir.getAbsolutePath() );
+
+        path = m_embeddorParameters.getParameter( "myrmidon.ext.path", "ext" );
+        dir = resolveDirectory( m_homeDir, path, "ext-dir.name" );
+        m_embeddorParameters.setParameter( "myrmidon.ext.path", dir.getAbsolutePath() );
     }
 
     /**
@@ -267,14 +287,21 @@ public class EmbeddedAnt
     /**
      * Prepares and returns the project listener to use.
      */
-    private ProjectListener prepareListener( final Embeddor embeddor )
+    private void prepareListeners( final Embeddor embeddor,
+                                   final Workspace workspace )
         throws Exception
     {
-        if( m_listener == null )
+        if( m_listenerName != null )
         {
-            m_listener = embeddor.createListener( m_listenerName );
+            final ProjectListener listener = embeddor.createListener( m_listenerName );
+            workspace.addProjectListener( listener );
         }
-        return m_listener;
+        final int count = m_listeners.size();
+        for( int i = 0; i < count; i++ )
+        {
+            final ProjectListener listener = (ProjectListener)m_listeners.get(i );
+            workspace.addProjectListener( listener );
+        }
     }
 
     /**
@@ -310,4 +337,36 @@ public class EmbeddedAnt
 
         return projectFile;
     }
+
+    /**
+     * Resolve a directory relative to another base directory.
+     */
+    private File resolveDirectory( final File baseDir, final String dir, final String name )
+        throws Exception
+    {
+        final File file = FileUtil.resolveFile( baseDir, dir );
+        checkDirectory( file, name );
+        return file;
+    }
+
+    /**
+     * Verify file is a directory else throw an exception.
+     */
+    private void checkDirectory( final File file, final String name )
+        throws Exception
+    {
+        if( !file.exists() )
+        {
+            final String nameStr = REZ.getString( name );
+            final String message = REZ.getString( "file-no-exist.error", nameStr, file );
+            throw new Exception( message );
+        }
+        else if( !file.isDirectory() )
+        {
+            final String nameStr = REZ.getString( name );
+            final String message = REZ.getString( "file-not-dir.error", nameStr, file );
+            throw new Exception( message );
+        }
+    }
+
 }

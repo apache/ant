@@ -71,10 +71,7 @@ public class DefaultEmbeddor
     private List m_components = new ArrayList();
     private DefaultServiceManager m_serviceManager = new DefaultServiceManager();
     private Parameters m_parameters;
-    private Parameters m_defaults;
 
-    private File m_homeDir;
-    private File m_taskLibDir;
     private static final String MYRMIDON_HOME = "myrmidon.home";
 
     /**
@@ -163,9 +160,6 @@ public class DefaultEmbeddor
     public void initialize()
         throws Exception
     {
-        // setup default properties
-        m_defaults = createDefaultParameters();
-
         // setup the root components
         setupComponents();
 
@@ -183,9 +177,6 @@ public class DefaultEmbeddor
         m_workspaceServiceManager = new MultiSourceServiceManager();
         m_workspaceServiceManager.add( projServiceManager );
         m_workspaceServiceManager.add( m_serviceManager );
-
-        // setup
-        setupFiles();
     }
 
     public void start()
@@ -198,7 +189,8 @@ public class DefaultEmbeddor
 
         // Deploy all type libraries in the lib directory
         final ExtensionFileFilter filter = new ExtensionFileFilter( ".atl" );
-        deployFromDirectory( m_deployer, m_taskLibDir, filter );
+        final File taskLibDir = new File( m_parameters.getParameter( "myrmidon.lib.path" ) );
+        deployFromDirectory( m_deployer, taskLibDir, filter );
     }
 
     /**
@@ -230,26 +222,6 @@ public class DefaultEmbeddor
         m_deployer = null;
         m_serviceManager = null;
         m_parameters = null;
-        m_defaults = null;
-        m_homeDir = null;
-        m_taskLibDir = null;
-    }
-
-    /**
-     * Create default properties which includes default names of all components.
-     * Overide this in sub-classes to change values.
-     *
-     * @return the Parameters
-     */
-    private Parameters createDefaultParameters()
-    {
-        final Parameters defaults = new Parameters();
-
-        //create all the default properties for files/directories
-        defaults.setParameter( "myrmidon.bin.path", "bin" );
-        defaults.setParameter( "myrmidon.lib.path", "lib" );
-
-        return defaults;
     }
 
     /**
@@ -294,80 +266,6 @@ public class DefaultEmbeddor
         m_serviceManager.put( roleType.getName(), component );
         m_components.add( component );
         return component;
-    }
-
-    /**
-     * Setup all the files attributes.
-     */
-    private void setupFiles()
-        throws Exception
-    {
-        String filepath = null;
-
-        filepath = getParameter( MYRMIDON_HOME );
-        m_homeDir = ( new File( filepath ) ).getAbsoluteFile();
-        checkDirectory( m_homeDir, "home-dir.name" );
-
-        filepath = getParameter( "myrmidon.lib.path" );
-        m_taskLibDir = resolveDirectory( filepath, "task-lib-dir.name" );
-    }
-
-    /**
-     * Retrieve value of named property.
-     * First access passed in properties and then the default properties.
-     *
-     * @param name the name of property
-     * @return the value of property or null
-     */
-    private String getParameter( final String name )
-    {
-        String value = m_parameters.getParameter( name, null );
-
-        if( null == value )
-        {
-            value = m_defaults.getParameter( name, null );
-        }
-
-        return value;
-    }
-
-    /**
-     * Resolve a directory relative to another base directory.
-     *
-     * @param dir the base directory
-     * @param name the relative directory
-     * @return the created File
-     * @exception Exception if an error occurs
-     */
-    private File resolveDirectory( final String dir, final String name )
-        throws Exception
-    {
-        final File file = FileUtil.resolveFile( m_homeDir, dir );
-        checkDirectory( file, name );
-        return file;
-    }
-
-    /**
-     * Verify file is a directory else throw an exception.
-     *
-     * @param file the File
-     * @param name the name of file type (used in error messages)
-     */
-    private void checkDirectory( final File file, final String name )
-        throws Exception
-    {
-        if( !file.exists() )
-        {
-            final String nameStr = REZ.getString( name );
-            final String message = REZ.getString( "file-no-exist.error", nameStr, file );
-            throw new Exception( message );
-        }
-        else if( !file.isDirectory() )
-        {
-            final String nameStr = REZ.getString( name );
-            final String message = REZ.getString( "file-not-dir.error", nameStr, file );
-            throw new Exception( message );
-        }
     }
 
     /**

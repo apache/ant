@@ -1,0 +1,10 @@
+Extension-Name: test.cycle2
+Specification-Title: Test Extension
+Specification-Version: 1.0.0
+Specification-Vendor: Jakarta Apache
+Implementation-Vendor-Id: org.apache.myrmidon
+Implementation-Vendor: Apache Myrmidon Project
+Implementation-Version: 1.709.2
+Extension-List: cycle1
+cycle1-Extension-Name: test.cycle1
+cycle1-Specification-Version: 1.0
