@@ -143,6 +143,7 @@ public class DirectoryScanner implements FileScanner {
     protected final static String[] DEFAULTEXCLUDES = {
         "**/*~",
         "**/#*#",
+        "**/.#*",
         "**/%*%",
         "**/CVS",
         "**/CVS/**",
