@@ -248,7 +248,7 @@ public class XmlLogger implements BuildListener {
         }
         messageElement.setAttribute(PRIORITY_ATTR, name);
 
-        Text messageText = doc.createTextNode(event.getMessage());
+        Text messageText = doc.createCDATASection(event.getMessage());
         messageElement.appendChild(messageText);
 
         TimedElement parentElement = null;

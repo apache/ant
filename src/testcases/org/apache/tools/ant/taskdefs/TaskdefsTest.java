@@ -66,6 +66,7 @@ public abstract class TaskdefsTest extends TestCase {
     protected Project project;
     
     private StringBuffer logBuffer;
+    private StringBuffer fullLogBuffer;
     private StringBuffer outBuffer;
     private StringBuffer errBuffer;
     private BuildException buildException;
@@ -77,6 +78,12 @@ public abstract class TaskdefsTest extends TestCase {
     protected String getLog() { 
         return logBuffer.toString();
     }
+
+    protected String getFullLog() { 
+        return fullLogBuffer.toString();
+    }
+
+    
 
     protected void expectBuildException(String taskname, String cause) { 
         expectSpecificBuildException(taskname, cause, null);
@@ -136,6 +143,7 @@ public abstract class TaskdefsTest extends TestCase {
     
     protected void configureProject(String filename) { 
         logBuffer = new StringBuffer();
+        fullLogBuffer = new StringBuffer();
         project = new Project();
         project.init();
         project.setUserProperty( "ant.file" , new File(filename).getAbsolutePath() );
@@ -156,6 +164,7 @@ public abstract class TaskdefsTest extends TestCase {
             PrintStream err = new PrintStream(new AntOutputStream());
             System.setErr(err);
             logBuffer = new StringBuffer();
+            fullLogBuffer = new StringBuffer();
             buildException = null;
             project.executeTarget(targetName);
         } finally { 
@@ -253,6 +262,8 @@ public abstract class TaskdefsTest extends TestCase {
             {
                 logBuffer.append(event.getMessage());
             }
+            fullLogBuffer.append(event.getMessage());
+            
         }
     }
 

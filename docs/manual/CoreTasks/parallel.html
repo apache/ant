@@ -22,7 +22,7 @@ harness is run in another thread.</li>
 <p>Care must be taken when using multithreading to ensure the tasks within the
 threads do not interact. For example, two javac compile tasks which write 
 classes into the same destination directory may interact where one tries to
-read a class for depenency information while the other task is writing the 
+read a class for dependency information while the other task is writing the 
 class file. Be sure to avoid these types of interactions within a 
 &lt;parallel&gt; task</p>
   
@@ -35,7 +35,7 @@ thread will be blocked waiting for all the child threads to complete.</p>
 
 <p>If any of the tasks within the &lt;parallel&gt; task fails, the remaining 
 tasks in other threads will continue to run until all threads have completed. 
-In this sitiuation, the parallel task will also fail.</p>
+In this situation, the parallel task will also fail.</p>
 
 <p>The parallel task may be combined with the <a href="sequential.html">
 sequential</a> task to define sequences of tasks to be executed on each thread
@@ -55,7 +55,7 @@ within the parallel block</p>
 <p>This example represents a typical pattern for testing a server application. 
 In one thread the server is started (the wlrun task). The other thread consists 
 of a three tasks which are performed in sequence. The sleep task is used to 
-give the server time to come up. Another task which is capabale of validating 
+give the server time to come up. Another task which is capable of validating 
 that the server is available could be used in place of the sleep task. The 
 test harness is then run. Once the tests are complete, the server is stopped 
 (using wlstop in this example), allowing both threads to complete. The 

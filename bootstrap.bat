@@ -4,7 +4,7 @@ REM You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
 set OLDJAVA=%JAVA%
 set OLDJAVAC=%JAVAC%
-set OLDCLASSPATH=%CLASSPATH%
+set BOOTOLDCLASSPATH=%CLASSPATH%
 set OLDANTHOME=%ANT_HOME%
 
 set ANT_HOME=.
@@ -23,8 +23,8 @@ if not "%OS%" == "Windows_NT" if exist bootstrap\nul deltree/y bootstrap
 if     "%OS%" == "Windows_NT" if exist build\classes\nul rmdir/s/q build\classes
 if not "%OS%" == "Windows_NT" if exist build\classes\nul deltree/y build\classes
 
-SET LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;lib\optional\junit.jar
-
+SET LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;
+for %%i in (lib\optional\*.jar) do call src\script\lcp.bat %%i
 if exist "%JAVA_HOME%\lib\tools.jar" call src\script\lcp.bat %JAVA_HOME%\lib\tools.jar
 if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat %JAVA_HOME%\lib\classes.zip
 
@@ -74,11 +74,11 @@ echo ... Done Bootstrapping Ant Distribution
 
 set JAVA=%OLDJAVA%
 set JAVAC=%OLDJAVAC%
-set CLASSPATH=%OLDCLASSPATH%
+set CLASSPATH=%BOOTOLDCLASSPATH%
 set ANT_HOME=%OLDANTHOME%
 set OLDJAVA=
 set OLDJAVAC=
-set OLDCLASSPATH=
+set BOOTOLDCLASSPATH=
 set LOCALCLASSPATH=
 set OLDANTHOME=
 set TOOLS=

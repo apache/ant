@@ -70,17 +70,16 @@ import org.apache.tools.ant.Project;
  * @version $Revision$ $Date$
  */
 public class Description extends DataType {
-   
-   private Project project;
-   
-   public Description(Project project) {
-      this.project = project;
-   }
 
     /**
      * Adds descriptive text to the project.
      */
-   public void addText(String text) {
-      project.setDescription(text);
-   }
+    public void addText(String text) {
+        String currentDescription = project.getDescription();
+        if (currentDescription == null) {
+            project.setDescription(text);
+        } else {
+            project.setDescription(currentDescription + text);
+        }
+    }
 }
