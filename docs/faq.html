@@ -1109,6 +1109,28 @@ while(&lt;STDIN&gt;) {
    &lt;!ENTITY include SYSTEM &quot;file:./header.xml&quot;&gt;
 ]&gt;
 </pre>
+                        <p>Starting with Ant 1.6, there is a new
+        <code>&lt;import&gt;</code> task that can (also) be used to
+        include build file fragments.  Unlike the snippets used with
+        entity includes, the referenced files have to be complete Ant
+        build files, though.</p>
+                        <p>The example above would become:</p>
+                        <pre class="code">
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;project name=&quot;test&quot; default=&quot;test&quot; basedir=&quot;.&quot;&gt;
+
+  &lt;target name=&quot;setup&quot;&gt;
+    ...
+  &lt;/target&gt;
+
+  &lt;import file=&quot;../common.xml&quot;/&gt;
+
+  ...
+
+&lt;/project&gt;
+</pre>
+                        <p>Unlike entity includes, <code>&lt;import&gt;</code> will
+        let you use Ant properties in the file name.</p>
                     <p class="faq">
       <a name="mail-logger"></a>
       How do I send an email with the result of my build
