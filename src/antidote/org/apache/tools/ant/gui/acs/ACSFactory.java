@@ -62,6 +62,7 @@ import com.sun.xml.tree.SimpleElementFactory;
 import com.sun.xml.tree.XmlDocument;
 import com.sun.xml.tree.XmlDocumentBuilder;
 import java.util.Properties;
+import java.util.Enumeration;
 import com.sun.xml.parser.Resolver;
 
 /**
@@ -79,10 +80,25 @@ public class ACSFactory {
 
     static {
         try {
+            // First we bootstrap our knowledge of the Ant tasks by reading
+            // in the taskdef definitions and assigning them the default
+            // task element class.
+            _elementMap.load(org.apache.tools.ant.taskdefs.Ant.class.
+                          getResourceAsStream("defaults.properties"));
+            Enumeration enum = _elementMap.propertyNames();
+            while(enum.hasMoreElements()) {
+                String name = (String) enum.nextElement();
+                // XXX the name of the class needs to be stored externally.
+                _elementMap.setProperty(
+                    name, "org.apache.tools.ant.gui.acs.ACSTaskElement");
+            }
+
+            // Then we add/override the local definitions.
             _elementMap.load(ACSFactory.class.
                              getResourceAsStream("acs-element.properties"));
         }
         catch(Throwable ex) {
+            // If something wrong happens here we can't do much more...
             ex.printStackTrace();
             System.exit(1);
         }

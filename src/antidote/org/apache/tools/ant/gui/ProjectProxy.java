@@ -85,7 +85,7 @@ public class ProjectProxy {
     /** The current thread executing a build. */
     private Thread _buildThread = null;
     /** The selection model for selected targets. */
-    private TargetSelectionModel _selections = null;
+    private ElementSelectionModel _selections = null;
 
 	/** 
 	 * File loading ctor.
@@ -104,7 +104,7 @@ public class ProjectProxy {
 	 */
     private void loadProject() throws IOException {
         _project = ACSFactory.getInstance().load(_file);
-        _selections = new TargetSelectionModel();
+        _selections = new ElementSelectionModel();
         _selections.addTreeSelectionListener(new SelectionForwarder());
     }
 
@@ -169,7 +169,7 @@ public class ProjectProxy {
 	 * 
 	 * @return Selection model.
 	 */
-    public TreeSelectionModel getTreeSelectionModel() {
+    public ElementSelectionModel getTreeSelectionModel() {
         return _selections;
     }
 
@@ -209,6 +209,10 @@ public class ProjectProxy {
             }
         }
 
+        /** 
+         * Run the build.
+         * 
+         */
         public void run() {
             // Add the build listener for
             // dispatching BuildEvent objects to the
@@ -255,8 +259,8 @@ public class ProjectProxy {
     /** Forwards selection events to the event bus. */
     private class SelectionForwarder implements TreeSelectionListener {
         public void valueChanged(TreeSelectionEvent e) {
-            _context.getEventBus().postEvent(new TargetSelectionEvent(
-                _context, _selections.getSelectedTargets()));
+            _context.getEventBus().postEvent(new ElementSelectionEvent(
+                _context, _selections.getSelectedElements()));
         }
     }
 

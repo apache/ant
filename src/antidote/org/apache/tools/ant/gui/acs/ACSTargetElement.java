@@ -64,28 +64,19 @@ import java.util.StringTokenizer;
  */
 public class ACSTargetElement extends ACSNamedElement {
 
+    /** Dependency property name. */
+    public static final String DEPENDS = "depends";
+    /** 'if' clause property name. */
+    public static final String IF = "if";
+    /** 'unless' clause property name. */
+    public static final String UNLESS = "unless";
+
 	/** 
 	 * Default ctor.
 	 * 
 	 */
     public ACSTargetElement() {
 
-    }
-
-	/** 
-	 * Set the set of dependency names. 
-	 * 
-	 * @return Dependency names.
-	 */
-    public String[] getDependencyNames() {
-        String depends = getAttribute("depends");
-        StringTokenizer tok = new StringTokenizer(depends,",");
-        String[] retval = new String[tok.countTokens()];
-        for(int i = 0; i < retval.length; i++) {
-            retval[i] = tok.nextToken();
-        }
-        
-        return retval;
     }
 
 	/** 
@@ -97,5 +88,77 @@ public class ACSTargetElement extends ACSNamedElement {
         return getTagName() + ": " + getName();
     }
 
+	/** 
+	 * Get the set of dependency names. 
+	 * 
+	 * @return Dependency names.
+	 */
+    public String[] getDepends() {
+        String depends = getAttribute(DEPENDS);
+        StringTokenizer tok = new StringTokenizer(depends,",");
+        String[] retval = new String[tok.countTokens()];
+        for(int i = 0; i < retval.length; i++) {
+            retval[i] = tok.nextToken().trim();
+        }
+        
+        return retval;
+    }
 
+	/** 
+	 * Set the list of dependency names.
+	 * 
+	 * @param depends Dependency names.
+	 */
+    public void setDepends(String[] depends) {
+        String old = getAttribute(DEPENDS);
+        StringBuffer buf = new StringBuffer();
+        for(int i = 0; depends != null && i < depends.length; i++) {
+            buf.append(depends[i]);
+            if(i < depends.length - 1) {
+                buf.append(", ");
+            }
+        }
+        setAttribute(DEPENDS, buf.toString());
+        firePropertyChange(DEPENDS, old, buf.toString());
+    }
+
+	/** 
+	 * Get the 'if' clause.
+	 * 
+	 * @return 'if' clause.
+	 */
+    public String getIf() {
+        return getAttribute(IF);
+    }
+    
+	/** 
+	 * Set the 'if' clause.
+	 * 
+	 * @param val 'if' clause value.
+	 */
+    public void setIf(String val) {
+        String old = getIf();
+        setAttribute(IF, val);
+        firePropertyChange(IF, old, val);
+    }
+
+	/** 
+	 * Get the 'unless' clause.
+	 * 
+	 * @return 'unless' clause.
+	 */
+    public String getUnless() {
+        return getAttribute(UNLESS);
+    }
+
+	/** 
+	 * Set the 'unless' clause.
+	 * 
+	 * @param val 'unless' clase value.
+	 */
+    public void setUnless(String val) {
+        String old = getUnless();
+        setAttribute(UNLESS, val);
+        firePropertyChange(UNLESS, old, val);
+    }
 }

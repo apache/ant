@@ -88,14 +88,36 @@ public class ACSTargetElementBeanInfo extends BaseBeanInfo {
 
         try {
             retval = new PropertyDescriptor[] {
-                new PropertyDescriptor(getResources().getString(
-                    getClass(),ACSTargetElement.NAME), 
+                new PropertyDescriptor(ACSTargetElement.NAME, 
                                        ACSTargetElement.class),
-                new PropertyDescriptor(getResources().getString(
-                    getClass(),ACSTargetElement.DESCRIPTION),
-                                       ACSTargetElement.class)
-
+                new PropertyDescriptor(ACSTargetElement.DESCRIPTION,
+                                       ACSTargetElement.class),
+                new PropertyDescriptor(ACSTargetElement.DEPENDS,
+                                       ACSTargetElement.class),
+                new PropertyDescriptor(ACSTargetElement.IF,
+                                       ACSTargetElement.class),
+                new PropertyDescriptor(ACSTargetElement.UNLESS,
+                                       ACSTargetElement.class),
+                new PropertyDescriptor(ACSTargetElement.XML_STRING, 
+                                       ACSTargetElement.class,
+                                       "getXMLString", null)
             };
+
+            // Set display names.
+            retval[0].setDisplayName(getResources().getString(
+                getClass(),ACSTargetElement.NAME));
+            retval[1].setDisplayName(getResources().getString(
+                getClass(),ACSTargetElement.DESCRIPTION));
+            retval[2].setDisplayName(getResources().getString(
+                getClass(),ACSTargetElement.DEPENDS));
+            retval[3].setDisplayName(getResources().getString(
+                getClass(),ACSTargetElement.IF));
+            retval[4].setDisplayName(getResources().getString(
+                getClass(),ACSTargetElement.UNLESS));
+            retval[5].setDisplayName(getResources().getString(
+                getClass(),ACSTargetElement.XML_STRING));
+
+            setSortingOrder(retval);
         }
         catch(IntrospectionException ex) {
             ex.printStackTrace();

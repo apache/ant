@@ -92,7 +92,7 @@ public class LabelFieldGBC extends GridBagConstraints {
 		// Set location to left side.
 		gridx = 0;
 		// Move it over to be as close to field as possible.
-		anchor = EAST;
+		anchor = NORTHEAST;
 		// Don't take up any extra.
 		weightx = 0.0;
 		return this;

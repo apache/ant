@@ -62,8 +62,17 @@ import com.sun.xml.tree.ElementNode;
  * @author Simeon Fitch 
  */
 public class ACSProjectElement extends ACSNamedElement {
-    public ACSProjectElement() {
+    /** The 'default' property name. */
+    public static final String DEFAULT = "default";
+    /** The 'basdir' property name. */
+    public static final String BASEDIR = "basedir";
 
+
+	/** 
+	 * Default ctor.
+	 * 
+	 */
+    public ACSProjectElement() {
     }
 
 	/** 
@@ -83,4 +92,45 @@ public class ACSProjectElement extends ACSNamedElement {
     public String getDisplayName() {
         return getTagName() + ": " + getName();
     }
+
+	/** 
+	 * Get the name of the default target.
+	 * 
+	 * @return Default target name.
+	 */
+    public String getDefault() {
+        return getAttribute(DEFAULT);
+    }
+
+	/** 
+	 * Set the name of the default target.
+	 * 
+	 * @param def Name of the default target.
+	 */
+    public void setDefault(String def) {
+        String old = getDefault();
+        setAttribute(DEFAULT, def);
+        firePropertyChange(DEFAULT, old, def);
+    }
+
+	/** 
+	 * Get the specified base directory for the build.
+	 * 
+	 * @return Base directory
+	 */
+    public String getBasedir() {
+        return getAttribute(BASEDIR);
+    }
+
+	/** 
+	 * Set the base directory for builds.
+	 * 
+	 * @param baseDir Build base directory.
+	 */
+    public void setBasedir(String baseDir) {
+        String old = getBasedir();
+        setAttribute(BASEDIR, baseDir);
+        firePropertyChange(BASEDIR, old, baseDir);
+    }
+
 }

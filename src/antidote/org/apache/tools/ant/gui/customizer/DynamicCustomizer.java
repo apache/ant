@@ -57,8 +57,7 @@ import org.apache.tools.ant.gui.LabelFieldGBC;
 import java.lang.reflect.*;
 import java.beans.*;
 import javax.swing.*;
-import java.util.Hashtable;
-import java.util.Enumeration;
+import java.util.*;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Component;
@@ -75,6 +74,8 @@ public class DynamicCustomizer extends JPanel {
 		PropertyEditorManager.registerEditor(
 			String.class, StringPropertyEditor.class);
 		PropertyEditorManager.registerEditor(
+			String[].class, StringArrayPropertyEditor.class);
+		PropertyEditorManager.registerEditor(
 			int.class, IntegerPropertyEditor.class);
 		PropertyEditorManager.registerEditor(
 			Integer.class, IntegerPropertyEditor.class);
@@ -84,14 +85,19 @@ public class DynamicCustomizer extends JPanel {
 			Double.class, DoublePropertyEditor.class);
 	}
 
+    /** Property name that PropertyDescriptors can save in their property
+     *  dictionaries for for specifiying a display sorting order. The value
+     *  sould be of type Integer. */
+    public static final String SORT_ORDER = "sortOrder";
+
 	/** The type that this editor instance can handle. */
 	private Class _type = null;
 	/** The value currently being edited. */
 	private Object _value = null;
 	/** Mapping from PropertyDescriptor to PropertyEditor. */
-	private Hashtable _prop2Editor = new Hashtable();
+	private Map _prop2Editor = new HashMap();
 	/** Mapping from PropertyEditor to field PropertyDescriptor. */
-	private Hashtable _editor2Prop = new Hashtable();
+	private Map _editor2Prop = new HashMap();
 	/** Listener for receiving change events from the editors. */
 	private EditorChangeListener _eListener = new EditorChangeListener();
     /** Read-only flag. */
@@ -121,11 +127,18 @@ public class DynamicCustomizer extends JPanel {
         LabelFieldGBC gbc = new LabelFieldGBC();
         try {
             BeanInfo info = Introspector.getBeanInfo(type);
+            // Set up pretty display stuff.
             setBorder(BorderFactory.createTitledBorder(
                 info.getBeanDescriptor().getDisplayName()));
+            setToolTipText(info.getBeanDescriptor().getShortDescription());
+
+            // Get the properties and sort them.
             PropertyDescriptor[] props = info.getPropertyDescriptors();
+            Arrays.sort(props, new PropertyComparator());
             for(int i = 0; i < props.length; i++) {
+                // Ignore the "class" property, if it is provided.
                 if(props[i].getName().equals("class")) continue;
+                // Create a label for the field.
                 JLabel label = new JLabel(props[i].getDisplayName() + ":");
                 
                 // Lookup the editor.
@@ -195,9 +208,9 @@ public class DynamicCustomizer extends JPanel {
         
         // Iterate over each property, doing a lookup on the associated editor
         // and setting the editor's value to the value of the property.
-        Enumeration enum = _prop2Editor.keys();
-        while(enum.hasMoreElements()) {
-            PropertyDescriptor desc = (PropertyDescriptor) enum.nextElement();
+        Iterator it = _prop2Editor.keySet().iterator();
+        while(it.hasNext()) {
+            PropertyDescriptor desc = (PropertyDescriptor) it.next();
             PropertyEditor editor = (PropertyEditor) _prop2Editor.get(desc);
             Method reader = desc.getReadMethod();
             if(reader != null) {
@@ -215,6 +228,12 @@ public class DynamicCustomizer extends JPanel {
         }
     }
 
+	/** 
+	 * Get the appropriate editor for the given property.
+	 * 
+	 * @param prop Property to get editor for.
+	 * @return Editor to use, or null if none found.
+	 */
     private PropertyEditor getEditorForProperty(PropertyDescriptor prop) {
         PropertyEditor retval = null;
         Class type = prop.getPropertyEditorClass();
@@ -231,7 +250,10 @@ public class DynamicCustomizer extends JPanel {
         // PropertyEditor manager for the editor registered for the
         // given property type.
         if(retval == null) {
-            retval = PropertyEditorManager.findEditor(prop.getPropertyType());
+            Class t = prop.getPropertyType();
+            if(t != null) {
+                retval = PropertyEditorManager.findEditor(t);
+            }
         }
 
         return retval;
@@ -261,6 +283,27 @@ public class DynamicCustomizer extends JPanel {
         }
     }
 
+
+    /** Comparator for sorting PropertyDescriptor values. */
+    private static class PropertyComparator implements Comparator {
+        public int compare(Object o1, Object o2) {
+            PropertyDescriptor p1 = (PropertyDescriptor)o1;
+            PropertyDescriptor p2 = (PropertyDescriptor)o2;
+
+            Integer i1 = (Integer) p1.getValue(SORT_ORDER);
+            Integer i2 = (Integer) p2.getValue(SORT_ORDER);
+            
+            if(i1 == null && i2 == null) {
+                return 0;
+            }
+            else if(i1 != null) {
+                return i1.compareTo(i2);
+            }
+            else {
+                return i2.compareTo(i1) * -1;
+            }
+        }
+    }
 
     /** 
      * Test code.

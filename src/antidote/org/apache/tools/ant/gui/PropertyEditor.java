@@ -72,6 +72,8 @@ class PropertyEditor extends AntEditor {
 
     /** The property sheet. */
     private DynamicCustomizer _customizer = null;
+    /** Container for the customizer. */
+    private JPanel _container = null;
 
 	/** 
 	 * Standard ctor.
@@ -82,23 +84,25 @@ class PropertyEditor extends AntEditor {
         super(context);
         context.getEventBus().addMember(EventBus.MONITORING, new Handler());
         setLayout(new BorderLayout());
+        _container = new JPanel(new BorderLayout());
+        add(new JScrollPane(_container));
 	}
 
 	/** 
-	 * Update the display for the current item. 
+	 * Update the display for the current items. 
 	 * 
-	 * @param item Current item.
+	 * @param items Current items to display.
 	 */
-    private void updateDisplay(ACSElement item) {
+    private void updateDisplay(ACSElement[] items) {
         if(_customizer != null) {
-            remove(_customizer);
+            _container.remove(_customizer);
             _customizer = null;
         }
 
-        if(item != null) {
-            _customizer = new DynamicCustomizer(item.getClass(), true);
-            _customizer.setObject(item);
-            add(BorderLayout.CENTER, _customizer);
+        if(items != null) {
+            _customizer = new DynamicCustomizer(items[0].getClass());
+            _customizer.setObject(items[0]);
+            _container.add(BorderLayout.CENTER, _customizer);
         }
         validate();
     }
@@ -124,9 +128,9 @@ class PropertyEditor extends AntEditor {
          * @param event Event to post.
          */
         public void eventPosted(EventObject event) {
-            TargetSelectionEvent e = (TargetSelectionEvent) event;
-            ACSTargetElement[] targets = e.getSelectedTargets();
-            updateDisplay(targets.length == 0 ? null : targets[0]);
+            ElementSelectionEvent e = (ElementSelectionEvent) event;
+            ACSElement[] elements = e.getSelectedElements();
+            updateDisplay(elements);
         }
 
     }
@@ -139,7 +143,7 @@ class PropertyEditor extends AntEditor {
          * @return True if event should be given to BusMember, false otherwise.
          */
         public boolean accept(EventObject event) {
-            return event instanceof TargetSelectionEvent;
+            return event instanceof ElementSelectionEvent;
         }
     }
 }

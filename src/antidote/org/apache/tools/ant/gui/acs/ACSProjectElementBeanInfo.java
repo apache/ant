@@ -56,7 +56,7 @@ package org.apache.tools.ant.gui.acs;
 import java.beans.*;
 
 /**
- * BeanInfo for the ACSTargetElement class.
+ * BeanInfo for the ACSProjectElement class.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
@@ -91,9 +91,23 @@ public class ACSProjectElementBeanInfo extends BaseBeanInfo {
                 new PropertyDescriptor(ACSProjectElement.NAME, 
                                        ACSProjectElement.class),
                 new PropertyDescriptor(ACSProjectElement.DESCRIPTION, 
+                                       ACSProjectElement.class),
+                new PropertyDescriptor(ACSProjectElement.DEFAULT, 
+                                       ACSProjectElement.class),
+                new PropertyDescriptor(ACSProjectElement.BASEDIR, 
                                        ACSProjectElement.class)
 
             };
+            retval[0].setDisplayName(getResources().getString(
+                getClass(),ACSProjectElement.NAME));
+            retval[1].setDisplayName(getResources().getString(
+                getClass(),ACSProjectElement.DESCRIPTION));
+            retval[2].setDisplayName(getResources().getString(
+                getClass(),ACSProjectElement.DEFAULT));
+            retval[3].setDisplayName(getResources().getString(
+                getClass(),ACSProjectElement.BASEDIR));
+
+            setSortingOrder(retval);
         }
         catch(IntrospectionException ex) {
             ex.printStackTrace();

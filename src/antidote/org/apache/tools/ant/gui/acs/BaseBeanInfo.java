@@ -54,6 +54,7 @@
 package org.apache.tools.ant.gui.acs;
 
 import org.apache.tools.ant.gui.ResourceManager;
+import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
 import java.beans.*;
 
 /**
@@ -63,10 +64,11 @@ import java.beans.*;
  * @author Simeon Fitch 
  */
 abstract class BaseBeanInfo extends SimpleBeanInfo {
+    /** Property name for specifiying a sorting order. */
+    public static final String SORT_ORDER = DynamicCustomizer.SORT_ORDER;
 
     /** Resource provider for bean info. */
-    private static ResourceManager _resources = new ResourceManager(
-        "org.apache.tools.ant.gui.acs.beaninfo");
+    private static ResourceManager _resources = new ResourceManager();
 
 	/** 
 	 * Default ctor.
@@ -91,6 +93,18 @@ abstract class BaseBeanInfo extends SimpleBeanInfo {
 	 */
     public BeanDescriptor getBeanDescriptor() {
         return new ACSBeanDescriptor(this);
+    }
+
+	/** 
+	 * Set the sorting order property of the given objects based
+     * on the order that they appear in the array. 
+	 * 
+	 * @param vals FeatureDescriptors to set sorting order property for.
+	 */
+    protected void setSortingOrder(FeatureDescriptor[] vals) {
+        for(int i = 0; i < vals.length; i++) {
+            vals[i].setValue(SORT_ORDER, new Integer(i));
+        }
     }
 
 	/** 

@@ -65,6 +65,8 @@ import java.beans.PropertyChangeSupport;
  * @version $Revision$ 
  * @author Simeon Fitch */
 public abstract class ACSElement extends ElementNode {
+    /** Name of the 'xmlString' property. */
+    public static final String XML_STRING = "xmlString";
 
     /** Event support. */
     private PropertyChangeSupport _propSupport = null;
@@ -74,7 +76,6 @@ public abstract class ACSElement extends ElementNode {
 	 * 
 	 */
     protected ACSElement() {
-
     }
 
 	/** 
@@ -84,6 +85,15 @@ public abstract class ACSElement extends ElementNode {
 	 */
     public String getDisplayName() {
         return getTagName();
+    }
+
+	/** 
+	 * Get the XML representation of this.
+	 * 
+	 * @return XML representation.
+	 */
+    public String getXMLString() {
+        return toString();
     }
 
 	/** 
