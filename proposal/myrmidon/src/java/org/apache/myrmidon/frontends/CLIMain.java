@@ -28,7 +28,8 @@ import org.apache.log.Hierarchy;
 import org.apache.log.LogTarget;
 import org.apache.log.Logger;
 import org.apache.log.Priority;
-import org.apache.log.output.DefaultOutputLogTarget;
+import org.apache.log.format.PatternFormatter;
+import org.apache.log.output.io.StreamTarget;
 import org.apache.myrmidon.Constants;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -51,6 +52,8 @@ public class CLIMain
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( CLIMain.class );
+
+    private static final String PATTERN = "[%8.8{category}] %{message}\\n%{throwable}";
 
     //defines for the Command Line options
     private static final int HELP_OPT = 'h';
@@ -457,8 +460,8 @@ public class CLIMain
 
         final Logger logger = Hierarchy.getDefaultHierarchy().getLoggerFor( "myrmidon" );
 
-        final DefaultOutputLogTarget target = new DefaultOutputLogTarget();
-        target.setFormat( "[%8.8{category}] %{message}\\n%{throwable}" );
+        final PatternFormatter formatter = new PatternFormatter( PATTERN );
+        final StreamTarget target = new StreamTarget( System.out, formatter );
         logger.setLogTargets( new LogTarget[]{target} );
 
         logger.setPriority( priority );
