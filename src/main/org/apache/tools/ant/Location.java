@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.io.Serializable;
+import org.apache.tools.ant.util.FileUtils;
 import org.xml.sax.Locator;
 
 /**
@@ -118,7 +119,11 @@ public class Location implements Serializable {
      * @param columnNumber Column number within the line.
      */
     public Location(String fileName, int lineNumber, int columnNumber) {
-        this.fileName = fileName;
+        if (fileName != null && fileName.startsWith("file:")) {
+            this.fileName = FileUtils.newFileUtils().fromURI(fileName);
+        } else {
+            this.fileName = fileName;
+        }        
         this.lineNumber = lineNumber;
         this.columnNumber = columnNumber;
     }
