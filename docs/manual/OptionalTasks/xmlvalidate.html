@@ -22,6 +22,7 @@ SAX1/2 parser if needed.</p>
       These can be any number of
       <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><tt>http://xml.org/sax/features/</tt></a>
       or other features that your parser may support.</li>
+  <li><tt>&lt;property&gt;</tt> elements, containing string properties
 </p>
 
 <h3>Parameters</h3>
@@ -93,11 +94,13 @@ SAX1/2 parser if needed.</p>
 <p>The <a href="../CoreTypes/xmlcatalog.html"><tt>&lt;xmlcatalog&gt;</tt></a>
 element is used to perform entity resolution.</p>
 <h4>attribute</h4>
-<p>The <tt>&lt;attribute&gt;</tt> element is used to set SAX Parser features.
-There can be any number of attributes set, as defined here:
- <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><tt>http://xml.org/sax/features/</tt></a>
-A feature essentialy changes the mode of the parser.
-</p>
+<p>The <tt>&lt;attribute&gt;</tt> element is used to set parser features.<br>
+Features usable with the xerces parser are defined here :
+ <a href="http://xml.apache.org/xerces-j/features.html">Setting features</a><br>
+
+SAX features are defined here:
+ <a href="http://www.saxproject.org/apidoc/org/xml/sax/package-summary.html#package_description"><tt>http://xml.org/sax/features/</tt></a><br>
+ </p>
 <table border="1" cellpadding="2" cellspacing="0">
 <tr>
   <td width="12%" valign="top"><b>Attribute</b></td>
@@ -112,6 +115,31 @@ A feature essentialy changes the mode of the parser.
   <tr>
     <td valign="top">value</td>
     <td valign="top">The boolean value of the feature</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+</p>
+
+<h4>property</h4>
+<p>The <tt>&lt;property&gt;</tt> element is used to set properties.
+These properties are defined here for the xerces XML parser implementation :
+ <a href="http://xml.apache.org/xerces-j/properties.html">XML Parser properties</a>
+Properties can be used to set the schema used to validate the XML file.
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+<tr>
+  <td width="12%" valign="top"><b>Attribute</b></td>
+  <td width="78%" valign="top"><b>Description</b></td>
+  <td width="10%" valign="top"><b>Required</b></td>
+</tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name of the feature</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">The string value of the property</td>
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
@@ -166,9 +194,33 @@ Scan all XML files in the project, using the catalog defined inline.
   &lt;fileset dir="xml" includes="**/*.xml"/&gt;
   &lt;attribute name="http://xml.org/sax/features/validation" value="true"/&gt;
   &lt;attribute name="http://apache.org/xml/features/validation/schema"  value="true"/&gt;
+  &lt;attribute name="http://xml.org/sax/features/namespaces" value="true"/&gt;
 &lt;/xmlvalidate&gt;
 </pre>
-Validate all .xml files in xml directory with the parser configured to perform schema validation. Note: The parser must support the <pre>http://apache.org/xml/features/validation/schema</pre> feature. 
+Validate all .xml files in xml directory with the parser configured to perform schema validation. Note: The parser must support the
+<pre>http://apache.org/xml/features/validation/schema</pre> feature.
+
+<br>
+<pre>
+<!-- Converts path to URL format -->
+&lt;pathconvert dirsep="/" property="xsd.file"&gt;
+&lt;path&gt;
+   &lt;pathelement location="xml/doc.xsd"/&gt;
+&lt;/path&gt;
+&lt;/pathconvert&gt;
+
+&lt;xmlvalidate file="xml/endpiece-noSchema.xml" lenient="false"
+  failonerror="true" warn="true"&gt;
+  &lt;attribute name="http://apache.org/xml/features/validation/schema"
+  value="true"/&gt;
+  &lt;attribute name="http://xml.org/sax/features/namespaces" value="true"/&gt;
+  &lt;property
+  name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+  value="${xsd.file}"/&gt;
+&lt;/xmlvalidate&gt;
+</pre>
+<br>
+Validate the file xml/endpiece-noSchema.xml against the schema xml/doc.xsd.
 <br>
 <hr>
 <p align="center">Copyright &copy; 2001-2002,2004 The Apache Software Foundation. All rights
