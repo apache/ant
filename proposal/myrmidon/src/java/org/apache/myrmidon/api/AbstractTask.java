@@ -20,7 +20,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
  */
 public abstract class AbstractTask
     extends AbstractLogEnabled
-    implements Task, Contextualizable
+    implements Task
 {
     ///Variable to hold context for use by sub-classes
     private TaskContext m_context;
@@ -30,9 +30,9 @@ public abstract class AbstractTask
      *
      * @param context the context
      */
-    public void contextualize( final Context context )
+    public void contextualize( final TaskContext context )
     {
-        m_context = (TaskContext)context;
+        m_context = context;
     }
 
     /**
@@ -62,8 +62,7 @@ public abstract class AbstractTask
         return getContext().get( key );
     }
 
-    //Will be made protected in the future
-    public final String getName()
+    protected final String getName()
     {
         return getContext().getName();
     }
