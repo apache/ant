@@ -76,28 +76,26 @@ public class CVSPass extends Task {
     private final String EOL = System.getProperty("line.separator");
 
     /** Array contain char conversion data */
-    char[] c=new char[128];
+   private final char shifts[] = {
+    0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15,
+   16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+  114,120, 53, 79, 96,109, 72,108, 70, 64, 76, 67,116, 74, 68, 87,
+  111, 52, 75,119, 49, 34, 82, 81, 95, 65,112, 86,118,110,122,105,
+   41, 57, 83, 43, 46,102, 40, 89, 38,103, 45, 50, 42,123, 91, 35,
+  125, 55, 54, 66,124,126, 59, 47, 92, 71,115, 78, 88,107,106, 56,
+   36,121,117,104,101,100, 69, 73, 99, 63, 94, 93, 39, 37, 61, 48,
+   58,113, 32, 90, 44, 98, 60, 51, 33, 97, 62, 77, 84, 80, 85,223,
+  225,216,187,166,229,189,222,188,141,249,148,200,184,136,248,190,
+  199,170,181,204,138,232,218,183,255,234,220,247,213,203,226,193,
+  174,172,228,252,217,201,131,230,197,211,145,238,161,179,160,212,
+  207,221,254,173,202,146,224,151,140,196,205,130,135,133,143,246,
+  192,159,244,239,185,168,215,144,139,165,180,157,147,186,214,176,
+  227,231,219,169,175,156,206,198,129,164,150,210,154,177,134,127,
+  182,128,158,208,162,132,167,209,149,241,153,251,237,236,171,195,
+  243,233,253,240,194,250,191,155,142,137,245,235,163,242,178,152 };
 
     public CVSPass(){
         passFile = new File(System.getProperty("user.home")+"/.cvspass");
-        // Create lookup for password mangling
-        c[32]='r'; c[33]='x'; c[34]='5'; c[35]='O'; c[37]='m';
-        c[38]='H'; c[39]='l'; c[40]='F'; c[42]='L'; c[43]='C';
-        c[44]='t'; c[45]='J'; c[46]='D'; c[47]='W'; c[48]='o';
-        c[49]='4'; c[50]='K'; c[51]='w'; c[52]='1'; c[53]='"';
-        c[54]='R'; c[55]='Q'; c[56]='_'; c[57]='A'; c[58]='p';
-        c[59]='V'; c[60]='v'; c[61]='n'; c[62]='z'; c[63]='i';
-        c[64]=')'; c[65]='9'; c[66]='S'; c[67]='+'; c[68]='.';
-        c[69]='f'; c[70]='('; c[71]='Y'; c[72]='&'; c[73]='g';
-        c[74]='-'; c[75]='2'; c[76]='*'; c[81]='7'; c[82]='6';
-        c[83]='B'; c[86]=';'; c[87]='/'; c[89]='G'; c[90]='s';
-        c[91]='N'; c[92]='X'; c[93]='k'; c[94]='j'; c[95]='%';
-        c[97]='y'; c[98]='u'; c[99]='h'; c[100]='e'; c[101]='d';
-        c[102]='E'; c[103]='I'; c[104]='c'; c[105]='?'; c[108]='\'';
-        c[109]='%'; c[110]='='; c[111]='0'; c[112]=':'; c[113]='q';
-        c[115]='Z'; c[116]=','; c[117]='b'; c[118]='<'; c[119]='3';
-        c[120]='!'; c[121]='a'; c[122]='>'; c[123]='M'; c[124]='T';
-        c[125]='P'; c[126]='U';
     }
 
     /**
@@ -131,15 +129,13 @@ public class CVSPass extends Task {
             reader.close();
             }
 
+	    String pwdfile = buf.toString() + cvsRoot + " A" + mangle(password);
+
+            log("Writing -> " + pwdfile , project.MSG_DEBUG);
+
             PrintWriter writer = new PrintWriter(new FileWriter(passFile));
 
-
-            writer.print(buf.toString());
-            writer.print(cvsRoot);
-            writer.print(" A");
-            writer.println(mangle(password));
-
-            log("Writing -> " + buf.toString() + cvsRoot + " A" + mangle(password), project.MSG_DEBUG);
+            writer.println( pwdfile );
 
             writer.close();
         }catch(IOException e){
@@ -150,8 +146,8 @@ public class CVSPass extends Task {
 
     private final String mangle(String password){
         StringBuffer buf = new StringBuffer();
-        for(int i=0;i<password.length();i++){
-            buf.append(c[password.charAt(i)]);
+        for(int i=0;i<password.length();i++) {
+            buf.append(shifts[password.charAt(i)]);
         }
         return buf.toString();
     }
