@@ -308,6 +308,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      *                           sensitive, "false"|"off"|"no" when not.
      */
     public void setCaseSensitive(boolean isCaseSensitive) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
         this.isCaseSensitive = isCaseSensitive;
     }
 
@@ -317,6 +320,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @param followSymlinks whether or not symbolic links should be followed
      */
     public void setFollowSymlinks(boolean followSymlinks) {
+        if (isReference()) {
+            throw tooManyAttributes();
+        }
         this.followSymlinks = followSymlinks;
     }
 
@@ -375,6 +381,11 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     public void setupDirectoryScanner(FileScanner ds, Project p) {
+        if (isReference()) {
+            getRef(p).setupDirectoryScanner(ds, p);
+            return;
+        }
+
         if (ds == null) {
             throw new IllegalArgumentException("ds cannot be null");
         }
@@ -432,6 +443,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return whether any selectors are in this container
      */
     public boolean hasSelectors() {
+        if (isReference() && getProject() != null) {
+            return getRef(getProject()).hasSelectors();
+        }
         return !(selectors.isEmpty());
     }
 
@@ -441,6 +455,10 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return whether any patterns are in this container
      */
     public boolean hasPatterns() {
+        if (isReference() && getProject() != null) {
+            return getRef(getProject()).hasPatterns();
+        }
+
         if (defaultPatterns.hasPatterns(getProject())) {
             return true;
         }
@@ -462,6 +480,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return the number of selectors in this container
      */
     public int selectorCount() {
+        if (isReference() && getProject() != null) {
+            return getRef(getProject()).selectorCount();
+        }
         return selectors.size();
     }
 
@@ -486,6 +507,9 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * @return an enumerator that goes through each of the selectors
      */
     public Enumeration selectorElements() {
+        if (isReference() && getProject() != null) {
+            return getRef(getProject()).selectorElements();
+        }
         return selectors.elements();
     }
 
