@@ -524,7 +524,7 @@ shell-prompt> m4 foo.m4 > foo
       </answer>
     </faq>
 
-    <faq if="use-zip-instead-of-jar">
+    <faq id="use-zip-instead-of-jar">
       <question>How do I use <code>jar</code>&apos;s <code>M</code> switch?
       I don&apos;t want a MANIFEST.</question>
 
@@ -532,7 +532,7 @@ shell-prompt> m4 foo.m4 > foo
         <p>A JAR archive is a ZIP file, so if you don&apos;t want a
         MANIFEST you can simply use <code>&lt;zip&gt;</code>.</p>
 
-        <p>If your filenames contain national characters you should
+        <p>If your file names contain national characters you should
         know that Sun&apos;s <code>jar</code> utility like Ant&apos;s
         <code>&lt;jar&gt;</code> uses UFT8 to encode their names while
         <code>&lt;zip&gt;</code> uses your platforms default encoding.
