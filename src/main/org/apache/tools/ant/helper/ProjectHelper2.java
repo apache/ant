@@ -157,6 +157,7 @@ public class ProjectHelper2 extends ProjectHelper {
             Target currentTarget = context.getCurrentTarget();
             try {
                 Target newCurrent = new Target();
+                newCurrent.setProject(project);
                 newCurrent.setName("");
                 context.setCurrentTarget(newCurrent);
                 parse(project, source, new RootHandler(context, mainHandler));
@@ -790,6 +791,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
             Project project = context.getProject();
             Target target = new Target();
+            target.setProject(project);
             context.addTarget(target);
 
             for (int i = 0; i < attrs.getLength(); i++) {
