@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 
 import org.apache.xalan.xslt.XSLTProcessorFactory;
@@ -126,5 +127,10 @@ public class XalanLiaison implements XSLTLiaison {
 
     public void addParam(String name, String value){
         processor.setStylesheetParam(name, value);
+    }
+
+    public void setOutputtype(String type) throws Exception {
+        if (!type.equals("xml")) 
+            throw new BuildException("Unsupported output type: " + type);
     }
 } //-- XalanLiaison

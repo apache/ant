@@ -93,6 +93,14 @@ public interface XSLTLiaison {
     void addParam(String name, String expression) throws Exception;
 
     /**
+     * set the output type to use for the transformation.  Only "xml" (the
+     * default) is guaranteed to work for all parsers.  Xalan2 also
+     * supports "html" and "text".
+     * @param type the output method to use
+     */
+    void setOutputtype(String type) throws Exception;
+
+    /**
      * Perform the transformation of a file into another.
      * @param infile the input file, probably an XML one. :-)
      * @param outfile the output file resulting from the transformation

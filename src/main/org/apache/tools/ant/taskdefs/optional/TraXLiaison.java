@@ -67,6 +67,7 @@ import javax.xml.transform.Templates;
 
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import javax.xml.transform.OutputKeys;
 
 /**
  * Concrete liaison for XSLT processor implementing TraX. (ie JAXP 1.1)
@@ -159,5 +160,9 @@ public class TraXLiaison implements XSLTLiaison {
 
     public void addParam(String name, String value){
         transformer.setParameter(name, value);
+    }
+
+    public void setOutputtype(String type) throws Exception {
+        transformer.setOutputProperty(OutputKeys.METHOD, type);
     }
 } //-- TraXLiaison

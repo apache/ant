@@ -58,6 +58,7 @@ import com.kvisco.xsl.XSLProcessor;
 import com.kvisco.xsl.XSLReader;
 import com.kvisco.xsl.XSLStylesheet;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.BuildException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -101,6 +102,11 @@ public class XslpLiaison implements XSLTLiaison {
 
     public void addParam(String name, String expression){
       processor.setProperty(name, expression);
+    }
+
+    public void setOutputtype(String type) throws Exception {
+        if (!type.equals("xml")) 
+            throw new BuildException("Unsupported output type: " + type);
     }
 
 } //-- XSLPLiaison

@@ -116,6 +116,8 @@ public class XSLTProcess extends MatchingTask {
 
     private FileUtils fileUtils;
 
+    private String outputtype = null;
+
     /**
      * Creates a new XSLTProcess Task.
      **/
@@ -455,6 +457,16 @@ public class XSLTProcess extends MatchingTask {
             if(expression==null)throw new BuildException("Expression attribute is missing.");
             return expression;
         }
+    }
+
+    /**
+     * Set the output type to use for the transformation.  Only "xml" (the
+     * default) is guaranteed to work for all parsers.  Xalan2 also
+     * supports "html" and "text".
+     * @param type the output method to use
+     */
+    public void setOutputtype(String type) {
+        this.outputtype = type;
     }
 
     /**

@@ -59,6 +59,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.BuildException;
 
 import org.exolab.adaptx.xslt.XSLTProcessor;
 import org.exolab.adaptx.xslt.XSLTReader;
@@ -91,6 +92,11 @@ public class AdaptxLiaison implements XSLTLiaison {
 
     public void addParam(String name, String expression){
         processor.setProperty(name, expression);
+    }
+
+    public void setOutputtype(String type) throws Exception {
+        if (!type.equals("xml")) 
+            throw new BuildException("Unsupported output type: " + type);
     }
 
 } //-- AdaptxLiaison
