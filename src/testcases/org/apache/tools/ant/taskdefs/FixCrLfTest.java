@@ -165,6 +165,12 @@ public class FixCrLfTest extends TaskdefsTest {
                            new File("src/etc/testcases/taskdefs/fixcrlf/result/input.crlf.utf16"));
     }
     
+    public void testLongLines() throws IOException { 
+        executeTarget("testLongLines");
+        assertEqualContent(new File("src/etc/testcases/taskdefs/fixcrlf/expected/longlines.lf"),
+                           new File("src/etc/testcases/taskdefs/fixcrlf/result/longlines.crlf"));
+    }
+    
     public void assertEqualContent(File expect, File result) 
         throws AssertionFailedError, IOException {
         if (!result.exists()) {

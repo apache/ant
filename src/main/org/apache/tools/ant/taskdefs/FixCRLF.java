@@ -858,7 +858,8 @@ public class FixCRLF extends MatchingTask {
         private StringBuffer eofStr = new StringBuffer();
 
         private BufferedReader reader;
-        private String line;
+        private StringBuffer line = new StringBuffer();
+        private boolean reachedEof = false;
 
         public OneLiner(File srcFile)
             throws BuildException
@@ -874,33 +875,25 @@ public class FixCRLF extends MatchingTask {
 
         protected void nextLine()
             throws BuildException {
-            int ch;
+            int ch = -1;
             int eolcount = 0;
 
             eolStr.setLength(0);
+            line.setLength(0);
 
             try {
-                int linelen;
-
-                reader.mark(INBUFLEN);
-                line = reader.readLine();
-                if (line == null) {
-                    // Eof has been reached
-                    linelen = 0;
-                }
-                else {
-                    linelen = line.length();
-                }
-                
-                
-                // Find the EOL character(s)
-
-                reader.reset();
-
-                // an IOException will be thrown
-                reader.skip((long)linelen);
-                reader.mark(INBUFLEN);
                 ch = reader.read();
+                while (ch != -1 && ch != '\r' && ch != '\n') {
+                    line.append((char) ch);
+                    ch = reader.read();
+                }
+                
+                if (ch == -1 && line.length() == 0) {
+                    // Eof has been reached
+                    reachedEof = true;
+                    return;
+                }
+                
                 switch ((char) ch) {
                 case '\r':
                     // Check for \r, \r\n and \r\r\n
@@ -928,20 +921,23 @@ public class FixCRLF extends MatchingTask {
                     
                 } // end of switch ((char) ch)
 
-                // Reset the position of the file reader
-                reader.reset();
-                reader.skip((long)eolcount);
-
                 // if at eolcount == 0 and trailing characters of string
                 // are CTRL-Zs, set eofStr
-                if (line != null && eolcount == 0) {
-                    int i = linelen;
-                    while (--i >= 0 && line.charAt(i) == CTRLZ) {}
-                    if (i < linelen - 1) {
+                if (eolcount == 0) {
+                    int i = line.length();
+                    while (--i >= 0 && line.charAt(i) == CTRLZ) {
+                        // keep searching for the first ^Z
+                    }
+                    if (i < line.length() - 1) {
                         // Trailing characters are ^Zs
                         // Construct new line and eofStr
                         eofStr.append(line.substring(i + 1));
-                        line = i < 0 ? null : line.substring(0, i + 1);
+                        if (i < 0) {
+                            line.setLength(0);
+                            reachedEof = true;
+                        } else {
+                            line.setLength(i + 1);
+                        }
                     }
                     
                 } // end of if (eolcount == 0)
@@ -965,7 +961,7 @@ public class FixCRLF extends MatchingTask {
 
         public boolean hasMoreElements()
         {
-            return line != null;
+            return !reachedEof;
         }
 
         public Object nextElement()
@@ -975,7 +971,7 @@ public class FixCRLF extends MatchingTask {
                 throw new NoSuchElementException("OneLiner");
             }
             BufferLine tmpLine =
-                    new BufferLine(line, eolStr.toString());
+                    new BufferLine(line.toString(), eolStr.toString());
             nextLine();
             return tmpLine;
         }

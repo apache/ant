@@ -32,6 +32,8 @@ Fixed bugs:
   of targets (it can now) and nested "unknown" elements have always
   been considered to be tasks (changed as well).
 
+* <fixcrlf> would fail for files that contained lines longer than 8kB.
+
 Other changes:
 --------------
 

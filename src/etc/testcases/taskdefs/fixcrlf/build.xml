@@ -106,4 +106,12 @@
              />
   </target>
 
+  <target name="testLongLines" depends="init">
+    <fixcrlf srcdir="input" destdir="result"
+             includes="longlines.crlf"
+             javafiles="false"
+             cr="remove"
+             />
+  </target>
+
 </project>
