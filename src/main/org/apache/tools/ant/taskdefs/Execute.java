@@ -450,27 +450,30 @@ public class Execute {
         }
         streamHandler.start();
 
-        // add the process to the list of those to destroy if the VM exits
-        //
-        processDestroyer.add(process);
+        try {
+            // add the process to the list of those to destroy if the VM exits
+            //
+            processDestroyer.add(process);
 
-        if (watchdog != null) {
-            watchdog.start(process);
-        }
-        waitFor(process);
+            if (watchdog != null) {
+                watchdog.start(process);
+            }
+            waitFor(process);
 
-        // remove the process to the list of those to destroy if the VM exits
-        //
-        processDestroyer.remove(process);
+            if (watchdog != null) {
+                watchdog.stop();
+            }
+            streamHandler.stop();
 
-        if (watchdog != null) {
-            watchdog.stop();
+            if (watchdog != null) {
+                watchdog.checkException();
+            }
+            return getExitValue();
+        } finally {
+            // remove the process to the list of those to destroy if the VM exits
+            //
+            processDestroyer.remove(process);
         }
-        streamHandler.stop();
-        if (watchdog != null) {
-            watchdog.checkException();
-        }
-        return getExitValue();
     }
 
     protected void waitFor(Process process) {

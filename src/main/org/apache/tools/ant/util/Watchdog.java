@@ -114,7 +114,8 @@ public class Watchdog implements Runnable {
         while (!stopped && until > (now = System.currentTimeMillis())) {
             try {
                 wait(until - now);
-            } catch (InterruptedException e) {}
+            } catch (InterruptedException e) {
+            }
         }
         if (!stopped) {
             fireTimeoutOccured();

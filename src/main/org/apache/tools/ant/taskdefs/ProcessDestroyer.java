@@ -214,6 +214,7 @@ class ProcessDestroyer implements Runnable {
         synchronized (processes) {
             boolean processRemoved = processes.removeElement(process);
             if (processes.size() == 0) {
+                processes.notify();
                 removeShutdownHook();
             }
             return processRemoved;
@@ -228,6 +229,13 @@ class ProcessDestroyer implements Runnable {
             Enumeration e = processes.elements();
             while (e.hasMoreElements()) {
                 ((Process) e.nextElement()).destroy();
+            }
+
+            try {
+                // wait for all processes to finish
+                processes.wait();
+            } catch (InterruptedException interrupt) {
+                // ignore
             }
         }
     }

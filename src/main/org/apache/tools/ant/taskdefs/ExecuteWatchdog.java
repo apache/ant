@@ -153,7 +153,7 @@ public class ExecuteWatchdog implements TimeoutObserver {
                 // We must check if the process was not stopped
                 // before being here
                 process.exitValue();
-            } catch (IllegalThreadStateException itse){
+            } catch (IllegalThreadStateException itse) {
                 // the process is not terminated, if this is really
                 // a timeout and not a manual stop then kill it.
                 if (watch){
