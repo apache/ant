@@ -20,7 +20,7 @@ Legal:
 
   <property name="year" value="2000"/>
 
-  <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test, ant1-tasklib-test" />
+  <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test, ant1-tasklib-test, prim->file-manip" />
 
   <target name="xp-deployer-test" depends="typedef-test, prim->undefined-task" />
 
@@ -71,10 +71,10 @@ Legal:
 
   <target name="datatype-test">
     <property name="foo">
-      <pattern name="*.java"/>
+      <pattern value="*.java"/>
     </property>
 
-    <pattern id="foo2" name="*.java" if="..." />
+    <pattern id="foo2" value="*.java" if="..." />
 
     <echo message="foo=${foo}" />
     <echo message="foo2=${foo2}" />

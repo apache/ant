@@ -22,6 +22,14 @@ Legal:
 
   <target name="main" depends="test-target" />
 
+  <target name="file-manip">
+    <file-manip-test base-directory=".">
+      <source>
+        <include value="**/*.java" />       
+      </source>
+    </file-manip-test>
+  </target>
+
   <target name="undefined-task">
     <echo message="About to execute task that hasn't been defined"/>
     <echo2 message="This should have failed"/>
