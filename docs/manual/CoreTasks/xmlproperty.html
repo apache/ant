@@ -8,7 +8,8 @@
 <h2><a name="xmlproperty">XmlProperty</a></h2>
 <h3>Description</h3>
 <p>
-Loads property values from a well-formed xml file.  This XML property file:
+Loads property values from a well-formed xml file. There are no other restrictions
+than "well-formed". You can choose the layout you want. For example this XML property file:
 <pre>
   &lt;root&gt;
     &lt;properties&gt;
@@ -95,7 +96,7 @@ is roughly equivalent to the following fragments in a build.xml file:
     <td valign="top">Keep the xml root tag as the
                      first value in the property name.</td>
     <td valign="top" align="center">No, default is <i>true</i>.</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">validate</td>
     <td valign="top">Validate the input file (e.g. by a DTD). Otherwise the XML must only be well-formed.</td>
@@ -112,7 +113,7 @@ is roughly equivalent to the following fragments in a build.xml file:
                      See the <a href="#semanticAttributes">Semantic Attributes</a>
                      section for more information.</td>
     <td valign="top" align="center">No, default is <i>false</i>.</td>
-  </tr>  
+  </tr>
   <tr>
     <td valign="top">includeSemanticAttribute</td>
     <td valign="top">Include the semantic attribute name
@@ -138,7 +139,7 @@ is roughly equivalent to the following fragments in a build.xml file:
 
 <p>Here is an example xml file that does not have any semantic attributes.</p>
 
-<pre> 
+<pre>
    &lt;root-tag myattr="true"&gt;
     &lt;inner-tag someattr="val"&gt;Text&lt;/inner-tag&gt;
     &lt;a2&gt;&lt;a3&gt;&lt;a4&gt;false&lt;/a4&gt;&lt;/a3&gt;&lt;/a2&gt;
