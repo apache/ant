@@ -195,6 +195,12 @@ public class Execute {
         return procEnvironment;
     }
 
+    /**
+     * This is the operation to get our environment.
+     * It is a notorious troublespot pre-Java1.5, and should be approached
+     * with extreme cuation.
+     * @return
+     */
     private static String[] getProcEnvCommand() {
         if (Os.isFamily("os/2")) {
             // OS/2 - use same mechanism as Windows 2000
