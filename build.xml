@@ -20,6 +20,7 @@
   <property name="deprecation" value="false" />
   <property name="optimize" value="true" />
   <property name="junit.fork" value="false" />
+  <property name="junit.filtertrace" value="off"/>
 
   <!--
        ===================================================================
@@ -846,7 +847,7 @@
 
 
     <junit printsummary="no" haltonfailure="yes" 
-           filtertrace="off"
+           filtertrace="${junit.filtertrace}"
            fork="${junit.fork}">
 <!--      <jvmarg value="-classic"/> -->
       <classpath refid="tests-classpath"/>
@@ -922,7 +923,7 @@
   <target name="run-single-test" if="testcase" depends="compile-tests">
 
     <junit printsummary="no" haltonfailure="yes" fork="${junit.fork}"
-           filtertrace="off">
+           filtertrace="${junit.filtertrace}">
 <!--      <jvmarg value="-classic"/> -->
       <sysproperty key="build.tests" value="${build.tests}"/>
       <classpath location="${java.home}/lib/classes.zip" />
