@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -266,32 +266,41 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         BufferedInputStream configurationStream = null;
 
         try {
-            configurationStream =
-                    new BufferedInputStream(new FileInputStream(src));
+            log("Loading " + src.getAbsolutePath(), Project.MSG_VERBOSE);
+           
+            if (src.exists()) {
 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+              configurationStream =
+                      new BufferedInputStream(new FileInputStream(src));
 
-            factory.setValidating(validate);
-            factory.setNamespaceAware(false);
+              DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
-            Element topElement = factory.newDocumentBuilder().parse(configurationStream).getDocumentElement();
+              factory.setValidating(validate);
+              factory.setNamespaceAware(false);
 
-            // Keep a hashtable of attributes added by this task.
-            // This task is allow to override its own properties
-            // but not other properties.  So we need to keep track
-            // of which properties we've added.
-            addedAttributes = new Hashtable();
+              Element topElement = factory.newDocumentBuilder().parse(configurationStream).getDocumentElement();
 
-            if (keepRoot) {
-                addNodeRecursively(topElement, prefix, null);
-            } else {
-                NodeList topChildren = topElement.getChildNodes();
-                int numChildren = topChildren.getLength();
-                for (int i = 0; i < numChildren; i++) {
+              // Keep a hashtable of attributes added by this task.
+              // This task is allow to override its own properties
+              // but not other properties.  So we need to keep track
+              // of which properties we've added.
+              addedAttributes = new Hashtable();
+
+              if (keepRoot) {
+                  addNodeRecursively(topElement, prefix, null);
+              } else {
+                  NodeList topChildren = topElement.getChildNodes();
+                  int numChildren = topChildren.getLength();
+                  for (int i = 0; i < numChildren; i++) {
                     addNodeRecursively(topChildren.item(i), prefix, null);
-                }
-            }
+                  }
+              }
 
+            } else {
+                log("Unable to find property file: " + src.getAbsolutePath(),
+                    Project.MSG_VERBOSE);
+            }
+            
         } catch (SAXException sxe) {
             // Error generated during parsing
             Exception x = sxe;
