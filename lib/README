@@ -2,7 +2,7 @@ Please refer to the Ant manual under Installing Ant / Library
 Dependencies for a list of the jar requirements for various optional
 tasks and features.
 
-This directory contains xercesImpl.jar from the 2.2.1 release of
+This directory contains xercesImpl.jar from the 2.3.0 release of
 Apache Xerces.  For more information or newer releases see
 <http://xml.apache.org/xerces2-j/>.  See the file LICENSE.xerces for
 the terms of distribution.
