@@ -475,6 +475,7 @@ public class Execute {
                 watchdog.stop();
             }
             streamHandler.stop();
+            closeStreams(process);
 
             if (watchdog != null) {
                 watchdog.checkException();
@@ -536,13 +537,6 @@ public class Execute {
             setExitValue(process.exitValue());
         } catch (InterruptedException e) {
             process.destroy();
-        } finally {
-            try {
-                process.getInputStream().close();
-                process.getOutputStream().close();
-                process.getErrorStream().close();
-            } catch (IOException eyeOhEx) {
-            }
         }
     }
 
@@ -656,6 +650,25 @@ public class Execute {
         } catch (java.io.IOException exc) {
             throw new BuildException("Could not launch " + cmdline[0] + ": "
                 + exc, task.getLocation());
+        }
+    }
+
+    /**
+     * Close the streams belonging to the given Process.
+     * @param process   the <CODE>Process</CODE>.
+     */
+    public static void closeStreams(Process process) {
+        try {
+            process.getInputStream().close();
+        } catch (IOException eyeOhEx) {
+        }
+        try {
+            process.getOutputStream().close();
+        } catch (IOException eyeOhEx) {
+        }
+        try {
+            process.getErrorStream().close();
+        } catch (IOException eyeOhEx) {
         }
     }
 
