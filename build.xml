@@ -54,7 +54,7 @@
   <target name="jar" depends="compile">
     <jar jarfile="${lib.dir}/${name}.jar" 
          basedir="${build.classes}" 
-         items="org" 
+         includes="org/**" 
          manifest="${manifest}"
     />
   </target>
@@ -112,7 +112,7 @@
      <copyfile src="TODO" dest="${dist.dir}/TODO"/>
      <copyfile src="LICENSE" dest="${dist.dir}/LICENSE"/>
 
-     <jar jarfile="${name}.jar" basedir="${dist.dir}" items="."/>     
+     <jar jarfile="${name}.jar" basedir="${dist.dir}" includes="**"/>     
   </target>
 
   <!-- =================================================================== -->
@@ -143,7 +143,7 @@
     <cvs cvsRoot=":pserver:anoncvs@jakarta.apache.org:/home/cvspublic"
          package="jakarta-ant"
          dest="."  />
-    <zip zipfile="/www/jakarta.apache.org/builds/tmp/ant/ant.src.zip" basedir="." items="jakarta-ant"/>
+    <zip zipfile="/www/jakarta.apache.org/builds/tmp/ant/ant.src.zip" basedir="." includes="jakarta-ant/**"/>
   </target>
   
 </project>
