@@ -274,6 +274,7 @@ Legal:
         </patternset>
 
         <property name="ant.package" value="org/apache/tools/todo"/>
+        <property name="taskdef.package" value="${ant.package}/taskdefs"/>
         <property name="antlib.package" value="org/apache/antlib"/>
         <property name="optional.package" value="org/apache/tools/ant/taskdefs/optional"/>
         <property name="optional.type.package" value="${ant.package}/types/optional"/>
@@ -305,65 +306,43 @@ Legal:
                      unless="trax.present" />
             <exclude name="${antlib.package}/xml/XalanLiaison.java"
                      unless="xalan.present" />
-            <exclude name="${optional.package}/ejb/Ejbc*.java"
-                     unless="ejb.ejbc.present" />
-            <exclude name="${optional.package}/ejb/DDCreator*.java"
-                     unless="ejb.DDCreator.present" />
-            <exclude name="${optional.package}/ejb/WLRun.java"
-                     unless="ejb.wls.present" />
-            <exclude name="${optional.package}/ejb/WLStop.java"
-                     unless="ejb.wls.present" />
-            <exclude name="${optional.package}/ejb/EjbJar.java"
-                     unless="ejbjar.support" />
-            <exclude name="${optional.package}/ejb/*DeploymentTool.java"
-                     unless="ejbjar.support" />
-            <exclude name="${optional.package}/ejb/IPlanet*.java"
-                     unless="ejbjar.support" />
             <exclude name="${optional.package}/Javah.java"
                      unless="jdk1.2+" />
-            <exclude name="${optional.package}/junit/*"
+            <exclude name="${taskdef.package}/junit/*"
                      unless="junit.present" />
-            <exclude name="${optional.package}/net/**.java"
+            <exclude name="${taskdef.package}/net/**.java"
                      unless="netcomp.present" />
-            <exclude name="${optional.package}/net/MimeMail.java"
+            <exclude name="${taskdef.package}/net/MimeMail.java"
                      unless="javamail.complete" />
-            <exclude name="${optional.package}/scm/AntStarTeam*.java"
+            <exclude name="${taskdef.package}/scm/AntStarTeam*.java"
                      unless="starteam.present" />
             <exclude name="${optional.package}/ANTLR.java"
                      unless="antlr.present" />
-            <exclude name="${optional.package}/ide/VAJ*.java"
-                     unless="vaj.present" />
-            <exclude name="${optional.package}/ide/VAJ*Servlet.java"
-                     unless="servlet.present" />
-            <exclude name="${optional.package}/perforce/*.java"
+            <exclude name="${taskdef.package}/perforce/*.java"
                      unless="jakarta.oro.present" />
-            <exclude name="${optional.package}/sound/*.java"
-                     unless="jmf.present" />
-            <exclude name="${optional.package}/junit/XMLResultAggregator.java"
+            <exclude name="${taskdef.package}/junit/XMLResultAggregator.java"
                      unless="trax.present" />
-            <exclude name="${optional.package}/junit/AggregateTransformer.java"
+            <exclude name="${taskdef.package}/junit/AggregateTransformer.java"
                      unless="trax.present" />
-            <exclude name="${optional.package}/junit/XMLResultAggregator.java"
+            <exclude name="${taskdef.package}/junit/XMLResultAggregator.java"
                      unless="xalan2.present" />
-            <exclude name="${optional.package}/junit/AggregateTransformer.java"
+            <exclude name="${taskdef.package}/junit/AggregateTransformer.java"
                      unless="xalan2.present" />
-            <exclude name="${optional.package}/junit/XalanExecutor.java"
+            <exclude name="${taskdef.package}/junit/XalanExecutor.java"
                      unless="xalan2.present" />
-            <exclude name="${optional.package}/junit/Xalan2Executor.java"
+            <exclude name="${taskdef.package}/junit/Xalan2Executor.java"
                      unless="xalan2.present" />
-            <exclude name="${optional.package}/junit/Xalan1Executor.java"
+            <exclude name="${taskdef.package}/junit/Xalan1Executor.java"
                      unless="xalan.present" />
-            <exclude name="${optional.package}/jdepend/*"
+            <exclude name="${taskdef.package}/jdepend/*"
                      unless="jdepend.present" />
-            <exclude name="${optional.package}/sitraka/**"
+            <exclude name="${taskdef.package}/sitraka/**"
                      unless="some.regexp.support"/>
-            <exclude name="${optional.package}/metamata/MAudit*"
+            <exclude name="${taskdef.package}/metamata/MAudit*"
                      unless="jakarta.oro.present"/>
-            <exclude name="${optional.package}/metamata/MMetrics*"
+            <exclude name="${taskdef.package}/metamata/MMetrics*"
                      unless="trax.present"/>
-            <exclude name="${optional.package}/metamata/**"
-                     unless="jdk1.2+" />
-            <exclude name="${optional.package}/ManifestFile.java"
+            <exclude name="${taskdef.package}/metamata/**"
                      unless="jdk1.2+" />
             <exclude name="${optional.type.package}/depend/*.java"
                      unless="bcel.present" />
