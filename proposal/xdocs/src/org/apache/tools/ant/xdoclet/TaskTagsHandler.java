@@ -330,7 +330,6 @@ public class TaskTagsHandler extends XDocletTagSupport {
         }
 
         return (MethodDoc[]) attributeMethods.toArray(new MethodDoc[0]);
-        ;
     }
 
     /**
@@ -418,7 +417,6 @@ public class TaskTagsHandler extends XDocletTagSupport {
         }
 
         return (MethodDoc[]) elementMethods.toArray(new MethodDoc[0]);
-        ;
     }
 
     /**
