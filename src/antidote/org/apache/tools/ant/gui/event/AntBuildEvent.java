@@ -107,15 +107,6 @@ public class AntBuildEvent extends AntEvent {
     }
 
 	/** 
-	 * Create the appropriate default response command to this event.
-	 * 
-	 * @return Command representing an appropriate response to this event.
-	 */
-    public Command createDefaultCmd() {
-        return new NoOpCmd();
-    }
-    
-	/** 
 	 * Create a string representation of this.
 	 * 
 	 * @return String representation.

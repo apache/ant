@@ -77,8 +77,10 @@ public class SaveAsCmd extends AbstractCommand {
 	/** 
 	 * Standard ctor.
 	 * 
+	 * @param context Application context.
 	 */
-    public SaveAsCmd() {
+    public SaveAsCmd(AppContext context) {
+        super(context);
     }
 
 	/** 

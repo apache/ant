@@ -67,7 +67,8 @@ public class ChangeLookAndFeelCmd extends AbstractCommand {
 	 * Standard ctor.
 	 *
 	 */
-    public ChangeLookAndFeelCmd() {
+    public ChangeLookAndFeelCmd(AppContext context) {
+        super(context);
     }
 
 	/**

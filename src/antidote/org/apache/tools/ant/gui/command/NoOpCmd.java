@@ -52,6 +52,7 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.command;
+import org.apache.tools.ant.gui.AppContext;
 
 /**
  * NoOp command.
@@ -60,6 +61,15 @@ package org.apache.tools.ant.gui.command;
  * @author Simeon Fitch 
  */
 public class NoOpCmd extends AbstractCommand {
+	/** 
+     * Standard ctor.
+     * 
+	 * @param context Application context.
+	 */
+    public NoOpCmd(AppContext context) {
+        super(context);
+    }
+
 	/** 
 	 * Successfully do nothing.
 	 * 

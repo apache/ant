@@ -54,8 +54,6 @@
 package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.gui.AppContext;
-import org.apache.tools.ant.gui.command.NoOpCmd;
-import org.apache.tools.ant.gui.command.Command;
 
 
 /**
@@ -90,12 +88,4 @@ public class BuildFinishedEvent extends AntEvent {
         return _orig;
     }
 
-	/** 
-	 * Create the appropriate response command to this event.
-	 * 
-	 * @return Command representing an appropriate response to this event.
-	 */
-    public Command createDefaultCmd() {
-        return new NoOpCmd();
-    }
 }

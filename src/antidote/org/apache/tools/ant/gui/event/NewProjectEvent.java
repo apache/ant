@@ -52,8 +52,6 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui.event;
-import org.apache.tools.ant.gui.command.Command;
-import org.apache.tools.ant.gui.command.NoOpCmd;
 import org.apache.tools.ant.gui.AppContext;
 
 /**
@@ -71,14 +69,5 @@ public class NewProjectEvent extends AntEvent {
 	 */
     public NewProjectEvent(AppContext context) {
         super(context);
-    }
-
-	/** 
-	 * Create the appropriate default response command to this event.
-	 * 
-	 * @return Command representing an appropriate response to this event.
-	 */
-    public Command createDefaultCmd() {
-        return new NoOpCmd();
     }
 }

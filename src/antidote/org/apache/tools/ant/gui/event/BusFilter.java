@@ -69,5 +69,5 @@ public interface BusFilter {
 	 * @param event Event to test.
 	 * @return True if event should be given to BusMember, false otherwise.
 	 */
-    public boolean accept(EventObject event);
+    boolean accept(EventObject event);
 }

@@ -69,8 +69,10 @@ public class ExitCmd extends AbstractCommand {
 	/** 
 	 * Standard constructor. 
 	 * 
+	 * @param context Application context.
 	 */
-    public ExitCmd() {
+    public ExitCmd(AppContext context) {
+        super(context);
     }
 
 	/** 

@@ -69,9 +69,10 @@ public class EmacsNotifyCmd extends AbstractCommand {
 	/** 
 	 * Standard ctor.
 	 * 
-     * @param state True if notifying on, false for notifying off.
+	 * @param context Application context.
 	 */
-    public EmacsNotifyCmd() {
+    public EmacsNotifyCmd(AppContext context) {
+        super(context);
     }
 
 	/** 

@@ -69,15 +69,7 @@ public abstract class AbstractCommand implements Command {
 	 * Default ctor.
 	 * 
 	 */
-    protected AbstractCommand() {
-    }
-
-	/** 
-	 * Set the application context.
-	 * 
-	 * @param context Application context.
-	 */
-    public void setContext(AppContext context) {
+    protected AbstractCommand(AppContext context) {
         _context = context;
     }
 

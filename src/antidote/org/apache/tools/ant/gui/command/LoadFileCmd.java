@@ -71,8 +71,10 @@ public class LoadFileCmd extends  AbstractCommand {
 	/** 
 	 * Standard ctor.
 	 * 
+	 * @param context Application context.
 	 */
-    public LoadFileCmd() {
+    public LoadFileCmd(AppContext context) {
+        super(context);
     }
 
 	/** 

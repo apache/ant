@@ -72,19 +72,23 @@ public class DisplayErrorCmd extends AbstractCommand {
     private Throwable _ex = null;
 
 	/** 
-	 * Default ctor.
+	 * Standard ctor.
 	 * 
+	 * @param context Application context.
 	 */
-    public DisplayErrorCmd() {
+    public DisplayErrorCmd(AppContext context) {
+        super(context);
     }
 
 	/** 
 	 * Standard constuctor.
 	 * 
+	 * @param context Application context.
 	 * @param message Error message.
 	 * @param ex Throwable assocated with error.
 	 */
-    public DisplayErrorCmd(String message, Throwable ex) {
+    public DisplayErrorCmd(AppContext context, String message, Throwable ex) {
+        this(context);
         setMessage(message);
         setThrowable(_ex);
     }
@@ -95,8 +99,8 @@ public class DisplayErrorCmd extends AbstractCommand {
 	 * @param context Application context.
 	 * @param message Error message.
 	 */
-    public DisplayErrorCmd(String message) {
-        this(message, null);
+    public DisplayErrorCmd(AppContext context, String message) {
+        this(context, message, null);
     }
 
 	/** 

@@ -70,7 +70,8 @@ public class AboutCmd extends AbstractCommand {
 	 * Standard constructor. 
 	 * 
 	 */
-    public AboutCmd() {
+    public AboutCmd(AppContext context) {
+        super(context);
     }
 
 	/** 

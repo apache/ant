@@ -71,8 +71,10 @@ public class OpenCmd extends AbstractCommand {
 	/** 
 	 * Standard ctor.
 	 * 
+	 * @param context Application context.
 	 */
-    public OpenCmd() {
+    public OpenCmd(AppContext context) {
+        super(context);
     }
 
 	/** 

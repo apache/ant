@@ -68,7 +68,8 @@ public class CloseCmd extends AbstractCommand {
 	 * Standard constructor. 
 	 * 
 	 */
-    public CloseCmd() {
+    public CloseCmd(AppContext context) {
+        super(context);
     }
 
 	/** 

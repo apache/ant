@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.gui.command.Command;
+import org.apache.tools.ant.gui.command.NoOpCmd;
 import org.apache.tools.ant.gui.AppContext;
 import java.util.EventObject;
 
@@ -87,11 +88,12 @@ public abstract class AntEvent extends EventObject {
 
 
 	/** 
-	 * Create the appropriate default response command to this event.
+	 * Override to create the appropriate default response
+	 * command to this event.
 	 * 
-	 * @return Command representing an appropriate response to this event.
-	 */
-    public abstract Command createDefaultCmd();
-
-
+	 * @return Command representing an appropriate response to this event.  
+     */
+    public Command createDefaultCmd() {
+        return new NoOpCmd(getContext());
+    }
 }

@@ -57,7 +57,7 @@ import org.apache.tools.ant.gui.AppContext;
 
 
 /**
- * Interface for commands.  Implementation needs to have a default ctor. 
+ * Interface for commands. 
  * Details TBD
  * 
  * @version $Revision$ 
@@ -65,15 +65,8 @@ import org.apache.tools.ant.gui.AppContext;
  */
 public interface Command extends Runnable {
 	/** 
-	 * Set the application context.
-	 * 
-	 * @param context Application context.
-	 */
-    public void setContext(AppContext context);
-
-	/** 
 	 * Run the command. From interface Runnable.
 	 * 
 	 */
-    public void run();
+    void run();
 }

@@ -68,7 +68,7 @@ public interface BusMember {
 	 * 
 	 * @return Filter to use.
 	 */
-    public BusFilter getBusFilter();
+    BusFilter getBusFilter();
 
 	/** 
 	 * Called when an event is to be posed to the member.
@@ -77,6 +77,6 @@ public interface BusMember {
      * @return true if event should be propogated, false if
      * it should be cancelled.
      */
-    public boolean eventPosted(EventObject event);
+    boolean eventPosted(EventObject event);
 
 }

@@ -109,8 +109,7 @@ public class ErrorEvent extends AntEvent {
 	 * @return Command representing an appropriate response to this event.
 	 */
     public Command createDefaultCmd() {
-        Command retval = new DisplayErrorCmd(_message, _ex);
-        retval.setContext(getContext());
+        Command retval = new DisplayErrorCmd(getContext(), _message, _ex);
         return retval;
     }
 

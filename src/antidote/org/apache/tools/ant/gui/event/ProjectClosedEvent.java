@@ -53,8 +53,6 @@
  */
 package org.apache.tools.ant.gui.event;
 import org.apache.tools.ant.gui.AppContext;
-import org.apache.tools.ant.gui.command.NoOpCmd;
-import org.apache.tools.ant.gui.command.Command;
 
 
 /**
@@ -65,7 +63,6 @@ import org.apache.tools.ant.gui.command.Command;
  */
 public class ProjectClosedEvent extends AntEvent {
 
-
 	/** 
 	 * Standard ctor.
 	 * 
@@ -73,14 +70,5 @@ public class ProjectClosedEvent extends AntEvent {
 	 */
     public ProjectClosedEvent(AppContext context) {
         super(context);
-    }
-
-	/** 
-	 * Create the appropriate response command to this event.
-	 * 
-	 * @return Command representing an appropriate response to this event.
-	 */
-    public Command createDefaultCmd() {
-        return new NoOpCmd();
     }
 }

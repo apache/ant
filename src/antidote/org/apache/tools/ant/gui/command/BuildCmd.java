@@ -68,7 +68,8 @@ public class BuildCmd extends AbstractCommand {
 	 * Standard ctor.
 	 * 
 	 */
-    public BuildCmd() {
+    public BuildCmd(AppContext context) { 
+        super(context);
     }
 
 	/** 

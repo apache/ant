@@ -62,16 +62,13 @@ import org.apache.tools.ant.gui.AppContext;
  */
 public class SaveCmd extends SaveAsCmd {
 
-    public SaveCmd() {
-    }
-
 	/** 
-	 * Set the application context.
+	 * Standard ctor.
 	 * 
 	 * @param context Application context.
 	 */
-    public void setContext(AppContext context) {
-        super.setContext(context);
+    public SaveCmd(AppContext context) {
+        super(context);
         setFile(context.getProject().getFile());
     }
 }
