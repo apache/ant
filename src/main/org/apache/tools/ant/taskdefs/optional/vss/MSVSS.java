@@ -206,6 +206,10 @@ public abstract class MSVSS extends Task {
      */
     public static final String COMMAND_CHECKOUT = "Checkout";
     /**
+     * The 'Checkin' command
+     */
+    public static final String COMMAND_CHECKIN = "Checkin";
+    /**
      * The 'Label' command
      */
     public static final String COMMAND_LABEL = "Label";
