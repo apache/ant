@@ -285,13 +285,17 @@ public class Replace extends MatchingTask {
             BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
 
             // read the entire file into a char[]
-            int fileLength = (int)(src.length());
-            char[] tmpBuf = new char[fileLength];
-            int numread = 0;
+            //   size of work buffer may be bigger than needed
+            //   when multibyte characters exist in the source file
+            int fileLengthInBytes = (int)(src.length());
+            char[] tmpBuf = new char[fileLengthInBytes];
+            int readChar = 0;
             int totread = 0;
-            while (numread != -1 && totread < fileLength) {
-                numread = br.read(tmpBuf,totread,fileLength);
-                totread += numread;
+            while (true) {
+                readChar = br.read();
+                if (readChar < 0) { break; }
+                tmpBuf[totread] = (char)readChar;
+                totread++;
             }
 
             // create a String so we can use indexOf
