@@ -80,7 +80,7 @@ JVM.
   <tr>
     <td valign="top">failonerror</td>
     <td valign="top">Stop the buildprocess if the command exits with a
-      returncode other than 0. Only available if fork is true.</td>
+      returncode other than 0. Default is "false"</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -111,17 +111,33 @@ variables</a>.</p>
 <p><code>Java</code>'s <i>classpath</i> attribute is a <a
 href="../using.html#path">PATH like structure</a> and can also be set via a nested
 <i>classpath</i> element.</p>
-<h5>Example</h5>
+<h3>Examples</h3>
 <pre>  
        &lt;java classname=&quot;test.Main&quot; &gt;
          &lt;arg value=&quot;-h&quot;/&gt; 
          &lt;classpath&gt;
-           &lt;pathelement location=&quot;\test.jar&quot;/&gt;
+           &lt;pathelement location=&quot;dist/test.jar&quot;/&gt;
            &lt;pathelement path=&quot;${java.class.path}&quot;/&gt;
          &lt;/classpath&gt;
        &lt;/java&gt;
 </pre>
-<h3>Examples</h3>
+Run a class in this JVM with a new jar on the classpath
+
+<pre>        &lt;java jar=&quot;dist/test.jar&quot; 
+           fork="true"
+           failonerror="true"
+           maxmemory="128m"
+           &gt;
+         &lt;arg value=&quot;-h&quot;/&gt; 
+         &lt;classpath&gt;
+           &lt;pathelement location=&quot;dist/test.jar&quot;/&gt;
+           &lt;pathelement path=&quot;${java.class.path}&quot;/&gt;
+         &lt;/classpath&gt;
+       &lt;/java&gt;
+</pre>
+Run the jar using the manifest supplied entry point, forking (as required),
+and with a maximum memory of 128MB. Any non zero return code breaks the build.  
+
 <pre>  &lt;java classname=&quot;test.Main&quot;/&gt;</pre>
 <pre>  &lt;java classname=&quot;test.Main&quot;
         fork=&quot;yes&quot; &gt;
@@ -130,7 +146,9 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
     &lt;jvmarg value=&quot;-Xrunhprof:cpu=samples,file=log.txt,depth=3&quot;/&gt; 
   &lt;/java&gt;
 </pre>
-
+<strong>Note</strong>: you can not specify the (highly deprecated) MSJVM, "jview.exe" as the
+JVM, as it takes different parameters for other JVMs,
+That JVM can be started from &lt;exec&gt; if required.
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
