@@ -56,6 +56,7 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.input.PropertyFileInputHandler;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * @author Ulrich Schmidt <usch@usch.net>
@@ -63,40 +64,55 @@ import org.apache.tools.ant.input.PropertyFileInputHandler;
  */
 public class InputTest extends BuildFileTest {
 
+    private String targetPostfix = "";
+
     public InputTest(String name) {
         super(name);
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+            targetPostfix = ".1";
+        }
     }
 
     public void setUp() {
+        configureProject("src/etc/testcases/taskdefs/input.xml");
         System.getProperties()
             .put(PropertyFileInputHandler.FILE_NAME_KEY,
-                 "src/etc/testcases/taskdefs/input.properties");
-        configureProject("src/etc/testcases/taskdefs/input.xml");
+                 getProject().resolveFile("input.properties")
+                 .getAbsolutePath());
         getProject().setInputHandler(new PropertyFileInputHandler());
     }
 
     public void test1() {
-        executeTarget("test1");
+        executeTarget("test1" + targetPostfix);
     }
 
     public void test2() {
-        executeTarget("test1");
+        executeTarget("test2" + targetPostfix);
     }
 
     public void test3() {
-        expectSpecificBuildException("test3", "invalid input",
-                                     "Found invalid input test for All data is"
-                                     + " going to be deleted from DB"
-                                     + " continue?");
+        expectSpecificBuildException("test3" + targetPostfix, "invalid input",
+                                     "Found invalid input test for \'"
+                                     + getKey("All data is"
+                                              + " going to be deleted from DB"
+                                              + " continue?")
+                                     + "\'");
     }
 
     public void test5() {
-        executeTarget("test5");
+        executeTarget("test5" + targetPostfix);
     }
 
     public void test6() {
-        executeTarget("test6");
+        executeTarget("test6" + targetPostfix);
         assertEquals("scott", project.getProperty("db.user"));
+    }
+
+    private String getKey(String key) {
+        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+            key = key.replace(' ', '_');
+        }
+        return key;
     }
 
 }

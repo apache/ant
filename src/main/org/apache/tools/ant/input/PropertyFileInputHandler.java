@@ -90,15 +90,16 @@ public class PropertyFileInputHandler implements InputHandler {
      */
     public void handleInput(InputRequest request) throws BuildException {
         readProps();
+        
         Object o = props.get(request.getPrompt());
         if (o == null) {
-            throw new BuildException("Unable to find input for "
-                                     + request.getPrompt());
+            throw new BuildException("Unable to find input for \'"
+                                     + request.getPrompt()+"\'");
         }
         request.setInput(o.toString());
         if (!request.isInputValid()) {
             throw new BuildException("Found invalid input " + o
-                                     + " for " + request.getPrompt());
+                                     + " for \'" + request.getPrompt() + "\'");
         }
     }
 
