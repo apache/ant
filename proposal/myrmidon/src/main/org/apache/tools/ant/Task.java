@@ -15,7 +15,6 @@ public abstract class Task
 {
     protected Target target;
     protected String description;
-    protected String taskName;
     protected String taskType;
     protected RuntimeConfigurable wrapper;
 
@@ -38,16 +37,6 @@ public abstract class Task
     public void setOwningTarget( Target target )
     {
         this.target = target;
-    }
-
-    /**
-     * Set the name to use in logging messages.
-     *
-     * @param name the name to use in logging messages.
-     */
-    public void setTaskName( String name )
-    {
-        this.taskName = name;
     }
 
     public String getDescription()
@@ -74,19 +63,9 @@ public abstract class Task
     {
         if( wrapper == null )
         {
-            wrapper = new RuntimeConfigurable( this, getTaskName() );
+            wrapper = new RuntimeConfigurable( this, getName() );
         }
         return wrapper;
-    }
-
-    /**
-     * Get the name to use in logging messages.
-     *
-     * @return the name to use in logging messages.
-     */
-    public String getTaskName()
-    {
-        return taskName;
     }
 
     /**
