@@ -1104,6 +1104,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * files are closed.
      */
     public void cleanup() {
+        project.removeBuildListener(this);
         pathComponents = null;
         project = null;
         for (Enumeration e = zipFiles.elements(); e.hasMoreElements();) {
