@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -536,11 +536,13 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         InputSource source = null;
 
         AntClassLoader loader = null;
-        if (classpath != null) {
-            loader = new AntClassLoader(project, classpath);
+        Path cp = classpath;
+        if (cp != null) {
+            cp = classpath.concatSystemClasspath("ignore");
         } else {
-            loader = new AntClassLoader(project, Path.systemClasspath);
+            cp = (new Path(getProject())).concatSystemClasspath("last");
         }
+        loader = new AntClassLoader(getProject(), cp);
 
         //
         // for classpath lookup we ignore the base directory

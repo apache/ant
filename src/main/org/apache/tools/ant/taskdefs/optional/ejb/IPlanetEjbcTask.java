@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -344,10 +344,13 @@ public class IPlanetEjbcTask extends Task {
      * @return Path The classpath to be used for EJBc.
      */
     private Path getClasspath() {
+        Path cp = null;
         if (classpath == null) {
-            classpath = Path.systemClasspath;
+            cp = (new Path(getProject())).concatSystemClasspath("last");
+        } else {
+            cp = classpath.concatSystemClasspath("ignore");
         }
 
-        return classpath;
+        return cp;
     }
 }

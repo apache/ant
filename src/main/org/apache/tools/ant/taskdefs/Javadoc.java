@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -1559,7 +1559,7 @@ public class Javadoc extends Task {
         }
 
         if (classpath == null) {
-            classpath = Path.systemClasspath;
+            classpath = (new Path(getProject())).concatSystemClasspath("last");
         } else {
             classpath = classpath.concatSystemClasspath("ignore");
         }
