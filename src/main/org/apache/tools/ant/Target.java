@@ -80,15 +80,11 @@ public class Target implements TaskContainer {
     private List dependencies = null;
     /** Children of this target (tasks and data types). */
     private List children = new ArrayList();
-    /** Position in task list */
-    private int taskPosition = 0;
 
     /** Project this target belongs to. */
     private Project project;
-    /** Description of this target, if any. */
+
     private String description = null;
-    /** Imported tasks/types being added */
-    private List importedTasks = null;
 
     /** Sole constructor. */
     public Target() {
@@ -171,34 +167,12 @@ public class Target implements TaskContainer {
     }
 
     /**
-     * This method called when an import file is being processed.
-     * The top-level tasks/types are placed in the importedTasks array.
-     *
-     */
-    public void startImportedTasks() {
-        importedTasks = new ArrayList();
-    }
-
-    /**
      * Adds a task to this target.
      *
      * @param task The task to be added. Must not be <code>null</code>.
      */
     public void addTask(Task task) {
-        if (importedTasks != null) {
-            importedTasks.add(task);
-        } else {
-            children.add(task);
-        }
-    }
-
-    /**
-     * This method called when an import file is being processed.
-     * The top-level tasks/types are placed in the importedTasks array.
-     *
-     */
-    public void endImportedTasks() {
-        children.addAll(taskPosition + 1, importedTasks);
+        children.add(task);
     }
 
     /**
@@ -354,7 +328,7 @@ public class Target implements TaskContainer {
      */
     public void execute() throws BuildException {
         if (testIfCondition() && testUnlessCondition()) {
-            for (taskPosition = 0;
+            for (int taskPosition = 0;
                  taskPosition < children.size();
                  ++taskPosition) {
                 Object o = children.get(taskPosition);

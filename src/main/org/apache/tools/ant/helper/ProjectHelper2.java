@@ -154,9 +154,16 @@ public class ProjectHelper2 extends ProjectHelper {
         if (getImportStack().size() > 1) {
             // we are in an imported file.
             context.setIgnoreProjectTag(true);
-            context.getCurrentTarget().startImportedTasks();
-            parse(project, source, new RootHandler(context, mainHandler));
-            context.getCurrentTarget().endImportedTasks();
+            Target currentTarget = context.getCurrentTarget();
+            try {
+                Target newCurrent = new Target();
+                newCurrent.setName("");
+                context.setCurrentTarget(newCurrent);
+                parse(project, source, new RootHandler(context, mainHandler));
+                newCurrent.execute();
+            } finally {
+                context.setCurrentTarget(currentTarget);
+            }
         } else {
             // top level file
             parse(project, source, new RootHandler(context, mainHandler));
