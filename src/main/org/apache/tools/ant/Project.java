@@ -371,6 +371,17 @@ public class Project {
     }
 
     /**
+     * Replace ${} style constructions in the given value with the
+     * string value of the corresponding data types.
+     *
+     * @param value the string to be scanned for property references.
+     */
+    public String replaceProperties(String value)
+        throws BuildException { 
+        return ProjectHelper.replaceProperties(this, value);
+    }
+
+    /**
      * query a user property.
      * @param name the name of the property
      * @return the property value, or null for no match

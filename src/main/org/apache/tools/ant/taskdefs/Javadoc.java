@@ -1146,7 +1146,7 @@ public class Javadoc extends Task {
      * Convenience method to expand properties.
      */
     protected String expand(String content) {
-        return ProjectHelper.replaceProperties(project, content);
+        return project.replaceProperties(content);
     }
 
     private String getJavadocExecutableName()

@@ -533,7 +533,7 @@ public class SQLExec extends Task {
         try{
             while ((line=in.readLine()) != null){
                 line = line.trim();
-                line = ProjectHelper.replaceProperties(project, line);
+                line = project.replaceProperties(line);
                 if (line.startsWith("//")) continue;
                 if (line.startsWith("--")) continue;
                 StringTokenizer st = new StringTokenizer(line);

@@ -289,7 +289,7 @@ public class Property extends Task {
             String name = (String) e.nextElement();
             String value = (String) props.getProperty(name);
 
-            String v = ProjectHelper.replaceProperties(project, value);
+            String v = project.replaceProperties(value);
             addProperty(name, v);
         }
     }

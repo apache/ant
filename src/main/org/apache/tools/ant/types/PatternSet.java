@@ -291,7 +291,7 @@ public class PatternSet extends DataType {
             String line = patternReader.readLine();
             while (line != null) {
                 if (line.length() > 0) {
-                    line = ProjectHelper.replaceProperties(p, line);
+                    line = p.replaceProperties(line);
                     addPatternToList(patternlist).setName(line);
                 }
                 line = patternReader.readLine();
