@@ -55,37 +55,75 @@
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
 import java.io.*;
-
-import javax.xml.parsers.SAXParser;
+import java.util.*;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
+import org.apache.tools.ant.Project;
 
-public interface EJBDeploymentTool {
+public class WeblogicTOPLinkDeploymentTool extends WeblogicDeploymentTool {
+
+    private static final String TL_DTD_LOC = "http://www.objectpeople.com/tlwl/dtd/toplink-cmp_2_5_1.dtd";
+
+    private String toplinkDescriptor;
+    private String toplinkDTD;
+    
     /**
-     * Process a deployment descriptor, generating the necessary vendor specific
-     * deployment files.
-     *
-     * @param descriptorFilename the name of the deployment descriptor
-     * @param saxParser a SAX parser which can be used to parse the deployment descriptor. 
+     * Setter used to store the name of the toplink descriptor.
+     * @param inString the string to use as the descriptor name.
      */
-    public void processDescriptor(String descriptorFilename, SAXParser saxParser) 
-        throws BuildException;
+    public void setToplinkdescriptor(String inString) {
+        this.toplinkDescriptor = inString;
+    }
+
+    /**
+     * Setter used to store the location of the toplink DTD file.
+     * This is expected to be an URL (file or otherwise). If running this on NT using a file URL, the safest 
+     * thing would be to not use a drive spec in the URL and make sure the file resides on the drive that 
+     * ANT is running from.  This will keep the setting in the build XML platform independent.
+     * @param inString the string to use as the DTD location.
+     */
+    public void setToplinkdtd(String inString) {
+        this.toplinkDTD = inString;
+    }
+
+    protected DescriptorHandler getDescriptorHandler(File srcDir) {
+        DescriptorHandler handler = super.getDescriptorHandler(srcDir);
+        if (toplinkDTD != null) {
+            handler.registerResourceDTD("-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
+                                        toplinkDTD);
+        } else {
+            handler.registerResourceDTD("-//The Object People, Inc.//DTD TOPLink for WebLogic CMP 2.5.1//EN",
+                                        TL_DTD_LOC);
+        }
+        return handler;                                    
+    }
+
+    /**
+     * Add any vendor specific files which should be included in the 
+     * EJB Jar.
+     */
+    protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
+        super.addVendorFiles(ejbFiles, baseName);
+        // Then the toplink deployment descriptor
+
+        // Setup a naming standard here?.
+
+        File toplinkDD = new File(getDescriptorDir(), toplinkDescriptor);
+
+        if (toplinkDD.exists()) {
+            ejbFiles.put(META_DIR + toplinkDescriptor,
+                         toplinkDD);
+        }
+    }
     
     /**
      * Called to validate that the tool parameters have been configured.
      *
      */
-    public void validateConfigured() throws BuildException;
-
-    /**
-     * Set the task which owns this tool
-     */
-    public void setTask(Task task);
-    
-    /**
-     * Configure this tool for use in the ejbjar task.
-     */
-    public void configure(File srcDir, File descriptorDir, String basenameTerminator, 
-                          String baseJarName, boolean flatDestDir);     
+    public void validateConfigured() throws BuildException {
+        super.validateConfigured();
+        if (toplinkDescriptor == null) {
+            throw new BuildException( "The toplinkdescriptor attribute must be specified" );
+        }
+    }
 }

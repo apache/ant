@@ -67,14 +67,19 @@ import org.apache.tools.ant.taskdefs.Java;
 public class WeblogicDeploymentTool extends GenericDeploymentTool {
     protected static final String WL_DD     = "weblogic-ejb-jar.xml";
     protected static final String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
+    protected static final String WL_DTD     = "/weblogic/ejb/deployment/xml/ejb-jar.dtd";
+    protected static final String WL_HTTP_DTD     = "http://www.bea.com/servers/wls510/dtd/weblogic-ejb-jar.dtd";
 
     /** Instance variable that stores the suffix for the weblogic jarfile. */
     private String jarSuffix = ".jar";
 
+    /** Instance variable that stores the location of the weblogic DTD file. */
+    private String weblogicDTD;
+
     private Path classpath;
 
     /** Instance variable that determines whether generic ejb jars are kept. */
-    private boolean keepgeneric = false;
+    private boolean keepGeneric = false;
     
     /**
      * Set the classpath to be used for this compilation.
@@ -92,17 +97,39 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     }
 
     /**
-     * Setter used to store the value of keepgeneric
+     * Setter used to store the value of keepGeneric
      * @param inValue a string, either 'true' or 'false'.
      */
-    public void setKeepgeneric(String inValue) {
-        this.keepgeneric = Boolean.valueOf(inValue).booleanValue();
+    public void setKeepgeneric(boolean inValue) {
+        this.keepGeneric = inValue;
     }
     
+    /**
+     * Setter used to store the location of the weblogic DTD. This can be a file on the system 
+     * or a resource on the classpath. 
+     * @param inString the string to use as the DTD location.
+     */
+    public void setWeblogicdtd(String inString) {
+        this.weblogicDTD = inString;
+    }
+
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
         DescriptorHandler handler = new DescriptorHandler(srcDir);
-        handler.registerResourceDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN",
-                                    "/weblogic/ejb/deployment/xml/ejb-jar.dtd");
+        if (weblogicDTD != null) {
+            // is the DTD a local file?
+            File dtdFile = new File(weblogicDTD);
+            if (dtdFile.exists()) {
+                handler.registerFileDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN",
+                                        dtdFile);
+            } else {
+                handler.registerResourceDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN",
+                                            weblogicDTD);
+            }                                            
+        } else {
+            handler.registerResourceDTD("-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN",
+                                        WL_DTD);
+        }
+        
         return handler;                                    
     }
 
@@ -110,10 +137,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, File srcdir, File descriptorDir, String baseName) {
-        // Then the weblogic deployment descriptor
-        File weblogicDD = new File(descriptorDir,
-                              baseName + getBasenameTerminator() + WL_DD);
+    protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
+        String ddPrefix = (usingBaseJarName() ? "" : baseName + getBaseNameTerminator());
+
+        File weblogicDD = new File(getDescriptorDir(), ddPrefix + WL_DD);
 
         if (weblogicDD.exists()) {
             ejbFiles.put(META_DIR + WL_DD,
@@ -121,8 +148,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         }
 
         // The the weblogic cmp deployment descriptor
-        File weblogicCMPDD = new File(descriptorDir,
-                              baseName + getBasenameTerminator() + WL_CMP_DD);
+        File weblogicCMPDD = new File(getDescriptorDir(), ddPrefix + WL_CMP_DD);
 
         if (weblogicCMPDD.exists()) {
             ejbFiles.put(META_DIR + WL_CMP_DD,
@@ -188,7 +214,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         super.writeJar(baseName, genericJarFile, files);
         
         buildWeblogicJar(genericJarFile, jarFile);
-        if (!keepgeneric) {
+        if (!keepGeneric) {
              getTask().log("deleting generic jar " + genericJarFile.toString(),
                            Project.MSG_VERBOSE);
              genericJarFile.delete();

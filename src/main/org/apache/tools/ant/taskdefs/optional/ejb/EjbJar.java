@@ -79,7 +79,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  * parsing them to locate the names of the classes which should be placed in
  * the jar.  The classnames are translated to java.io.Files by replacing periods
  * with File.separatorChar and resolving the generated filename as a relative
- * path under the srcdir attribute.  All necessary files are then assembled into
+ * path under the srcDir attribute.  All necessary files are then assembled into
  * a jarfile.  One jarfile is constructed for each deployment descriptor found.
  * </p>
  *
@@ -87,15 +87,15 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  * 5.1 jars. The weblogic deployment descriptors, used in constructing the 
  * Weblogic jar, are located based on a simple naming convention. The name of the
  * standard deployment descriptor is taken upto the first instance of a String,
- * specified by the attribute basenameTerminator, and then the regular Weblogic
- * descriptor name is appended. For example if basenameTerminator is set to '-',
+ * specified by the attribute baseNameTerminator, and then the regular Weblogic
+ * descriptor name is appended. For example if baseNameTerminator is set to '-',
  * its default value, and a standard descriptor is called Foo-ejb-jar.xml then
  * the files Foo-weblogic-ejb-jar.xml and Foo-weblogic-cmp-rdbms-jar.xml will be
  * looked for, and if found, included in the jarfile.</p>
  *
  * <p>Attributes and setter methods are provided to support optional generation
  * of Weblogic5.1 jars, optional deletion of generic jar files, setting alternate
- * values for basenameTerminator, and setting the strings to append to the names
+ * values for baseNameTerminator, and setting the strings to append to the names
  * of the generated jarfiles.</p>
  *
  * @author <a href="mailto:tfennell@sapient.com">Tim Fennell</a>
@@ -103,25 +103,28 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 public class EjbJar extends MatchingTask {
 
     /** Stores a handle to the directory under which to search for class files */
-    private File srcdir = null;
+    private File srcDir;
 
     /** Stores a handle to the directory under which to search for deployment descriptors */
-    private File descriptordir = null;
+    private File descriptorDir;
 
     /** Stores a handle to the directory to put the Jar files in */
-    private File destdir = null;
+    private File destDir;
 
+    /** Stores a handle to the destination EJB Jar file */
+    private String baseJarName;
+ 
     /**
      * Instance variable that determines whether to use a package structure
      * of a flat directory as the destination for the jar files.
      */
-    private boolean flatdestdir = false;
+    private boolean flatDestDir = false;
     
     /** Instance variable that marks the end of the 'basename' */
-    private String basenameTerminator = "-";
+    private String baseNameTerminator = "-";
 
     /** Instance variable that stores the suffix for the generated jarfile. */
-    private String genericjarsuffix = "-generic.jar";
+    private String genericJarSuffix = "-generic.jar";
 
     /**
      * The list of deployment tools we are going to run.
@@ -135,20 +138,35 @@ public class EjbJar extends MatchingTask {
         return tool;
     }
 
-    /**
-     * Setter used to store the value of srcdir prior to execute() being called.
-     * @param inDir the source directory.
-     */
-    public void setSrcdir(File inDir) {
-        this.srcdir = inDir;
+    public WeblogicTOPLinkDeploymentTool createWeblogictoplink() {
+        WeblogicTOPLinkDeploymentTool tool = new WeblogicTOPLinkDeploymentTool();
+        tool.setTask(this);
+        deploymentTools.add(tool);
+        return tool;
     }
 
     /**
-     * Setter used to store the value of descriptordir prior to execute() being called.
+     * Setter used to store the value of srcDir prior to execute() being called.
+     * @param inDir the source directory.
+     */
+    public void setSrcdir(File inDir) {
+        this.srcDir = inDir;
+    }
+
+    /**
+     * Setter used to store the value of descriptorDir prior to execute() being called.
      * @param inDir the directory containing the deployment descriptors.
      */
     public void setDescriptordir(File inDir) {
-        this.descriptordir = inDir;
+        this.descriptorDir = inDir;
+    }
+
+    /**
+     * Setter used to store the value of descriptorDir prior to execute() being called.
+     * @param inDir the directory containing the deployment descriptors.
+     */
+    public void setBasejarname(String inValue) {
+        this.baseJarName = inValue;
     }
 
     /**
@@ -157,15 +175,15 @@ public class EjbJar extends MatchingTask {
      * @param inFile the destination directory.
      */
     public void setDestdir(File inDir) {
-        this.destdir = inDir;
+        this.destDir = inDir;
     }
 
     /**
-     * Setter used to store the value of flatdestdir.
+     * Setter used to store the value of flatDestDir.
      * @param inValue a string, either 'true' or 'false'.
      */
     public void setFlatdestdir(boolean inValue) {
-        this.flatdestdir = inValue;
+        this.flatDestDir = inValue;
     }
      
     /**
@@ -173,15 +191,15 @@ public class EjbJar extends MatchingTask {
      * @param inString the string to use as the suffix.
      */
     public void setGenericjarsuffix(String inString) {
-        this.genericjarsuffix = inString;
+        this.genericJarSuffix = inString;
     }
 
     /**
-     * Setter used to store the value of basenameTerminator
+     * Setter used to store the value of baseNameTerminator
      * @param inValue a string which marks the end of the basename.
      */
-    public void setBasenameTerminator(String inValue) {
-        if (inValue != null) this.basenameTerminator = inValue;
+    public void setBasenameterminator(String inValue) {
+        this.baseNameTerminator = inValue;
     }
 
     /**
@@ -196,25 +214,27 @@ public class EjbJar extends MatchingTask {
      *            that a major problem occurred within this task.
      */
     public void execute() throws BuildException {
-        if (srcdir == null) {
-            throw new BuildException("The srcdir attribute must be specified");
-        }
-        if (descriptordir == null) {
-            throw new BuildException("The descriptordir attribute must be specified");
+        if (srcDir == null) {
+            throw new BuildException("The srcDir attribute must be specified");
         }
         
         if (deploymentTools.size() == 0) {
             GenericDeploymentTool genericTool = new GenericDeploymentTool();
-            genericTool.setDestdir(destdir);
+            genericTool.setDestdir(destDir);
             genericTool.setTask(this);
-            genericTool.setGenericjarsuffix(genericjarsuffix);
+            genericTool.setGenericJarSuffix(genericJarSuffix);
 
             deploymentTools.add(genericTool);
         }
         
+        File scanDir = descriptorDir;
+        if (scanDir == null) {
+            scanDir = srcDir;
+        }
+        
         for (Iterator i = deploymentTools.iterator(); i.hasNext(); ) {
             EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
-            tool.configure(basenameTerminator, flatdestdir);
+            tool.configure(srcDir, scanDir, baseNameTerminator, baseJarName, flatDestDir);
             tool.validateConfigured();
         }
         
@@ -224,7 +244,8 @@ public class EjbJar extends MatchingTask {
             saxParserFactory.setValidating(true);
             SAXParser saxParser = saxParserFactory.newSAXParser();
     
-            DirectoryScanner ds = getDirectoryScanner(descriptordir);
+            
+            DirectoryScanner ds = getDirectoryScanner(scanDir);
             ds.scan();
             String[] files = ds.getIncludedFiles();
     
@@ -238,7 +259,7 @@ public class EjbJar extends MatchingTask {
                 // process the deployment descriptor in each tool
                 for (Iterator i = deploymentTools.iterator(); i.hasNext(); ) {
                     EJBDeploymentTool tool = (EJBDeploymentTool)i.next();
-                    processDescriptor(files[index], saxParser, tool);
+                    tool.processDescriptor(files[index], saxParser);
                 }
             }    
         }
@@ -254,13 +275,6 @@ public class EjbJar extends MatchingTask {
             throw new BuildException(msg, pce);
         }
     } // end of execute()
-
-    
-    private void processDescriptor(String descriptorFilename, SAXParser saxParser,
-                                   EJBDeploymentTool tool) {
-
-        tool.processDescriptor(srcdir, descriptordir, descriptorFilename, saxParser);
-    }
 }
 
 

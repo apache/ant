@@ -72,9 +72,18 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     protected static final String META_DIR  = "META-INF/";
     protected static final String EJB_DD    = "ejb-jar.xml";
 
+    /** Stores a handle to the directory of the source tree */
+    private File srcDir;
+
+    /** Stores a handle to the directory of the deployment descriptors */
+    private File descriptorDir;
+
     /** Stores a handle to the directory to put the Jar files in */
-    private File destDir = null;
+    private File destDir;
     
+    /** Instance variable that stores the jar file name when not using the naming standard */
+    private String baseJarName;
+
     /**
      * Instance variable that determines whether to use a package structure
      * of a flat directory as the destination for the jar files.
@@ -82,10 +91,10 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     private boolean flatDestDir = false;
     
     /** Instance variable that marks the end of the 'basename' */
-    private String basenameTerminator = "-";
+    private String baseNameTerminator = "-";
 
     /** Instance variable that stores the suffix for the generated jarfile. */
-    private String genericjarsuffix = "-generic.jar";
+    private String genericJarSuffix = "-generic.jar";
 
     /**
      * The task to which this tool belongs.
@@ -126,23 +135,56 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     /**
      * Get the basename terminator.
      */
-    protected String getBasenameTerminator() {
-        return basenameTerminator;
+    protected String getBaseNameTerminator() {
+        return baseNameTerminator;
+    }
+    
+    /**
+     * Get the base jar name.
+     */
+    protected String getBaseJarName() {
+        return baseJarName;
+    }
+    
+    /**
+     * Get the source dir.
+     */
+    protected File getSrcDir() {
+        return srcDir;
+    }
+    
+    /**
+     * Get the meta-inf dir.
+     * 
+     */
+    protected File getDescriptorDir() {
+        return descriptorDir;
+    }
+
+    /**
+     * Returns true, if the meta-inf dir is being explicitly set, false otherwise.
+     */
+    protected boolean usingBaseJarName() {
+        return baseJarName != null;
     }
     
     /**
      * Setter used to store the suffix for the generated jar file.
      * @param inString the string to use as the suffix.
      */
-    public void setGenericjarsuffix(String inString) {
-        this.genericjarsuffix = inString;
+    public void setGenericJarSuffix(String inString) {
+        this.genericJarSuffix = inString;
     }
 
     /**
      * Configure this tool for use in the ejbjar task.
      */
-    public void configure(String basenameTerminator, boolean flatDestDir) {
-        this.basenameTerminator = basenameTerminator;
+    public void configure(File srcDir, File descriptorDir, String baseNameTerminator, 
+                          String baseJarName, boolean flatDestDir) {
+        this.srcDir = srcDir;
+        this.descriptorDir = descriptorDir;
+        this.baseJarName = baseJarName;
+        this.baseNameTerminator = baseNameTerminator;
         this.flatDestDir = flatDestDir;
     }
 
@@ -191,8 +233,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         return new DescriptorHandler(srcDir);
     }
     
-    public void processDescriptor(File srcDir, File descriptorDir,
-                                  String descriptorFilename, SAXParser saxParser) {
+    public void processDescriptor(String descriptorFileName, SAXParser saxParser) {
         try {
             DescriptorHandler handler = getDescriptorHandler(srcDir);
             
@@ -202,7 +243,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
              */
             saxParser.parse(new InputSource
                             (new FileInputStream
-                             (new File(descriptorDir, descriptorFilename))),
+                            (new File(getDescriptorDir(), descriptorFileName))),
                             handler);
                             
             Hashtable ejbFiles = handler.getFiles();
@@ -210,25 +251,30 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
             String baseName = "";
             
             // Work out what the base name is
-            int lastSeparatorIndex = descriptorFilename.lastIndexOf(File.separator);
-            int endBaseName = -1;
-            if (lastSeparatorIndex != -1) {
-                endBaseName = descriptorFilename.indexOf(basenameTerminator, 
-                                                         lastSeparatorIndex);
-            }
-            else {
-                endBaseName = descriptorFilename.indexOf(basenameTerminator);
-            }
-            
-            if (endBaseName != -1) {
-                baseName = descriptorFilename.substring(0, endBaseName);
+            if (baseJarName != null) {
+                baseName = baseJarName;
+            } else {
+                int lastSeparatorIndex = descriptorFileName.lastIndexOf(File.separator);
+                int endBaseName = -1;
+                if (lastSeparatorIndex != -1) {
+                    endBaseName = descriptorFileName.indexOf(baseNameTerminator, 
+                                                             lastSeparatorIndex);
+                }
+                else {
+                    endBaseName = descriptorFileName.indexOf(baseNameTerminator);
+                }
+
+                if (endBaseName != -1) {
+                    baseName = descriptorFileName.substring(0, endBaseName);
+                }
+                baseName = descriptorFileName.substring(0, endBaseName);
             }
 
             // First the regular deployment descriptor
             ejbFiles.put(META_DIR + EJB_DD,
-                         new File(descriptorDir, descriptorFilename));
+                         new File(getDescriptorDir(), descriptorFileName));
                          
-            addVendorFiles(ejbFiles, srcDir, descriptorDir, baseName);
+            addVendorFiles(ejbFiles, baseName);
 
             // Lastly create File object for the Jar files. If we are using
             // a flat destination dir, then we need to redefine baseName!
@@ -281,7 +327,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         }
         catch (SAXException se) {
             String msg = "SAXException while parsing '"
-                + descriptorFilename.toString()
+                + descriptorFileName.toString()
                 + "'. This probably indicates badly-formed XML."
                 + "  Details: "
                 + se.getMessage();
@@ -289,7 +335,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
         }
         catch (IOException ioe) {
             String msg = "IOException while parsing'"
-                + descriptorFilename.toString()
+                + descriptorFileName.toString()
                 + "'.  This probably indicates that the descriptor"
                 + " doesn't exist. Details: "
                 + ioe.getMessage();
@@ -301,7 +347,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * Add any vendor specific files which should be included in the 
      * EJB Jar.
      */
-    protected void addVendorFiles(Hashtable ejbFiles, File srcDir, File descriptorDir, String baseName) {
+    protected void addVendorFiles(Hashtable ejbFiles, String baseName) {
     }
 
 
@@ -310,7 +356,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * of this jar will be checked against the dependent bean classes.
      */
     File getVendorOutputJarFile(String baseName) {
-        return new File(destDir, baseName + genericjarsuffix);
+        return new File(destDir, baseName + genericJarSuffix);
     }
 
     /**
