@@ -848,6 +848,7 @@
     <optional-jar dep="jai"/>
     <optional-jar dep="swing"/>
     <optional-jar dep="jsch"/>
+    <optional-jar dep="jdepend"/>
 
     <jar destfile="${build.lib}/${optional.jars.prefix}-weblogic.jar"
          basedir="${build.classes}"
