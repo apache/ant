@@ -8,6 +8,14 @@
   </properties>
 
 <body>
+  <section name="Ant has won!">
+    <h3>Mar 26, 2002: Ant wins the JavaWorld Editors&apos; Choice
+    award</h3>
+
+    <p>Ant has won the JavaWorld Editors&apos; Choice award for
+    &quot;Most Useful Java Community-Developed Technology&quot;.</p>
+  </section>
+  
   <section name="Java 1.4 Support">
     <h3>Feb 15, 2002: Java 1.4 Support</h3>
     <p>

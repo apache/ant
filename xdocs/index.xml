@@ -9,8 +9,10 @@
 
 <body>
 
-  <section name="New Logo">
-    <p>By online vote, Ant has selected a new logo!</p>
+  <section name="Ant has won!">
+    <p>We are proud to announce that Ant has won the JavaWorld
+    Editors&apos; Choice award for &quot;Most Useful Java
+    Community-Developed Technology&quot;</p>
   </section>
 
   <section name="Ant 1.4.1">
