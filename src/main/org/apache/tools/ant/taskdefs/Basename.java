@@ -95,14 +95,16 @@ public class Basename extends Task {
     private String suffix;
 
     /**
-    * File or directory to get base name from.
-    */
+     * file or directory to get base name from
+     * @param file file or directory to get base name from
+     */
     public void setFile(File file) {
         this.file = file;
     }
 
     /**
     * Property to set base name to.
+     * @param property name of property
     */
     public void setProperty(String property) {
         this.property  = property;
@@ -110,13 +112,17 @@ public class Basename extends Task {
 
     /**
     * Optional suffix to remove from base name.
+     * @param suffix suffix to remove from base name
     */
     public void setSuffix(String suffix) {
         this.suffix = suffix;
     }
 
-
-    // The method executing the task
+    /**
+     * do the work
+     * @throws BuildException if required attributes are not supplied
+     * property and attribute are required attributes
+     */
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute required", getLocation());

@@ -202,6 +202,7 @@ public class Available extends Task implements Condition {
      *             setType(Available.FileDir) to make Ant's Introspection
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
+     * @param type the type of resource
      */
     public void setType(String type) {
         log("DEPRECATED - The setType(String) method has been deprecated."
@@ -510,13 +511,13 @@ public class Available extends Task implements Condition {
      */
     public static class FileDir extends EnumeratedAttribute {
 
-        private static final String[] values = {"file", "dir"};
+        private static final String[] VALUES = {"file", "dir"};
 
         /**
          * @see EnumeratedAttribute#getValues
          */
         public String[] getValues() {
-            return values;
+            return VALUES;
         }
 
         /**

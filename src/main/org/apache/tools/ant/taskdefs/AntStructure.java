@@ -96,6 +96,7 @@ public class AntStructure extends Task {
 
     /**
      * The output file.
+     * @param output the output file
      */
     public void setOutput(File output) {
         this.output = output;
@@ -358,6 +359,8 @@ public class AntStructure extends Task {
 
     /**
      * Does this String match the XML-NMTOKEN production?
+     * @param s the string to test
+     * @return true if the string matche the XML-NMTOKEN
      */
     protected boolean isNmtoken(String s) {
         final int length = s.length();
@@ -377,6 +380,8 @@ public class AntStructure extends Task {
      *
      * <p>Otherwise they are not suitable as an enumerated attribute,
      * for example.</p>
+     * @param s the array of string to test
+     * @return true if all the strings in the array math XML-NMTOKEN
      */
     protected boolean areNmtokens(String[] s) {
         for (int i = 0; i < s.length; i++) {
