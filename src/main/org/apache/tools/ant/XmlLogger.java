@@ -101,7 +101,7 @@ public class XmlLogger implements BuildListener {
     private final static String ERROR_ATTR = "error";
     private final static String STACKTRACE_TAG = "stacktrace";
 
-    private Document doc;
+    private Document doc = builder.newDocument();
     private Hashtable tasks = new Hashtable();
     private Hashtable targets = new Hashtable();
     private Hashtable threadStacks = new Hashtable();
@@ -121,8 +121,6 @@ public class XmlLogger implements BuildListener {
     public void buildStarted(BuildEvent event) {
         buildElement = new TimedElement();
         buildElement.startTime = System.currentTimeMillis();
-
-        doc = builder.newDocument();
         buildElement.element = doc.createElement(BUILD_TAG);
     }
 
