@@ -46,4 +46,11 @@
     <local id="local" />
   </target>
 
+  <target name="double-notpresent">
+    <typedef name="mytask" classname="notpresent" onerror="ignore"/>
+    <typedef name="mytask" classname="notpresent" onerror="ignore"/>
+    <typedef name="mytask" classname="org.apache.tools.ant.taskdefs.Echo"
+             onerror="ignore"/>
+    <mytask>hi</mytask>
+  </target>
 </project>

@@ -587,9 +587,33 @@ public class ComponentHelper  {
     }
 
 
-    /** return true if the two definitions are the same */
+    /**
+     * check if definition is a valid definition - it
+     * may be a definition of an optional task that
+     * does not exist
+     * @param def the definition to test
+     * @return true if exposed type of definition is present
+     */
+    private boolean validDefinition(AntTypeDefinition def) {
+        if (def.getTypeClass(project) == null
+            || def.getExposedClass(project) == null) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * check if two definitions are the same
+     * @param def  the new definition
+     * @param old the old definition
+     * @return true if the two definitions are the same
+     */
     private boolean sameDefinition(
         AntTypeDefinition def, AntTypeDefinition old) {
+        if (!validDefinition(def) || !validDefinition(old)) {
+            return validDefinition(def) == validDefinition(old);
+        }
+
         if (!(old.getTypeClass(project).equals(def.getTypeClass(project)))) {
             return false;
         }
@@ -600,9 +624,11 @@ public class ComponentHelper  {
         return true;
     }
 
+
     /**
      * update the component definition table with a new or
      * modified definition.
+     * @param def the definition to update or insert
      */
     private void updateDataTypeDefinition(AntTypeDefinition def) {
         String name = def.getName();
@@ -615,7 +641,7 @@ public class ComponentHelper  {
                     return;
                 }
                 Class oldClass = antTypeTable.getExposedClass(name);
-                if (Task.class.isAssignableFrom(oldClass)) {
+                if (oldClass != null && Task.class.isAssignableFrom(oldClass)) {
                     int logLevel = Project.MSG_WARN;
                     if (def.getClassName().equals(old.getClassName())
                         && def.getClassLoader() == old.getClassLoader()) {

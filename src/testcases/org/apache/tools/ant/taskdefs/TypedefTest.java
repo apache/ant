@@ -104,4 +104,11 @@ public class TypedefTest extends BuildFileTest {
                      ref.getClass().getName());
     }
 
+    /**
+     * test to make sure that one can define a not present
+     * optional type twice and then have a valid definition.
+     */
+    public void testDoubleNotPresent() {
+        expectLogContaining("double-notpresent", "hi");
+    }
 }
