@@ -17,11 +17,27 @@ in a selected file or set of files.</p>
 type mappers</a> this task needs a supporting regular expression
 library and an implementation of
 <code>org.apache.tools.ant.util.regexp.Regexp</code>.  Ant comes with
-implementations for 
-<a href="http://java.sun.com/j2se/1.4/docs/api/java/util/regex/package-summary.html" target="_top">the java.util.regex package of JDK 1.4</a>, 
-<a href="http://jakarta.apache.org/regexp/" target="_top">jakarta-regexp</a> 
+implementations for
+<a href="http://java.sun.com/j2se/1.4/docs/api/java/util/regex/package-summary.html" target="_top">the java.util.regex package of JDK 1.4</a>,
+<a href="http://jakarta.apache.org/regexp/" target="_top">jakarta-regexp</a>
 and <a href="http://jakarta.apache.org/oro/" target="_top">jakarta-ORO</a>,
 but you will still need the library itself.</p>
+<p>
+<i>
+There are cross-platform issues for matches related to line terminator.
+For example if you use $ to anchor your regular expression on the end of a line
+the results might be very different depending on both your platform and the regular
+expression library you use. It is 'highly recommended' to tests your pattern on
+Unix and Windows platforms before you rely on it.
+<ul>
+    <li>Jakarta Oro defines a line terminator as '\n' and is consistent with Perl.</li>
+    <li>Jakarta RegExp uses a system-dependant line terminator.</li>
+    <li>JDK 1.4 uses '\n', '\r\n', '\u0085', '\u2028', '\u2029' as a default
+    but is configured in the wrapper to use only '\n' (UNIX_LINE)</li>
+</ul>
+It is <b>strongly</b> recommended to use Jakarta Oro.
+</i>
+</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -67,7 +83,7 @@ but you will still need the library itself.</p>
   </tr>
 </table>
 <h3>Examples</h3>
-<pre>  &lt;replaceregexp file=&quot;${src}/build.properties&quot; 
+<pre>  &lt;replaceregexp file=&quot;${src}/build.properties&quot;
                          match=&quot;OldProperty=(.*)&quot;
                          replace=&quot;NewProperty=\1&quot;
                          byline=&quot;true&quot; /&gt;
@@ -76,7 +92,7 @@ but you will still need the library itself.</p>
  with &quot;NewProperty&quot; in a properties file, preserving the existing
 value, in the file <code>${src}/build.properties</code></p>
 <h3>Parameters specified as nested elements</h3>
-<p>This task supports a nested <a href="../CoreTypes/fileset.html">FileSet</a> 
+<p>This task supports a nested <a href="../CoreTypes/fileset.html">FileSet</a>
    element.</p>
 <p>This task supports a nested <i>RegularExpression</i> element to specify
    the regular expression.  You can use this element to refer to a previously
