@@ -142,6 +142,10 @@ Fixed bugs:
 * <copy> will remove target file (if it exists) before writing to it -
   this avoids problems with links on filesystems that support them.
 
+* <ftp> now properly recurses remote directories.
+
+* <ftp> closes remote connection when it's done.
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 

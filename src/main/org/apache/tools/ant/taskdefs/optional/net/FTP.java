@@ -71,6 +71,14 @@ import org.apache.tools.ant.types.*;
  *   <li><strong>list</strong> - create a file listing.</li>
  * </ul>
  *
+ * <strong>Note:</strong>
+ * Some FTP servers - notably the Solaris server - seem to hold data ports
+ * open after a "retr" operation, allowing them to timeout instead of
+ * shutting them down cleanly.  This happens in active or passive mode,
+ * and the ports will remain open even after ending the FTP session.
+ * FTP "send" operations seem to close ports immediately.  This behavior
+ * may cause problems on some systems when downloading large sets of files.
+ *
  * @author Roger Vaughn <a href="mailto:rvaughn@seaconinc.com">rvaughn@seaconinc.com</a>
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  */
@@ -154,50 +162,55 @@ public class FTP
 
                 FTPFile[] newfiles = ftp.listFiles();
                 if (newfiles == null) {
-                    return;    // no files in directory.
+                    ftp.changeToParentDirectory();
+                    return;
                 }
 
                 for (int i = 0; i < newfiles.length; i++) {
                     FTPFile file = newfiles[i];
-                    String name = vpath + file.getName();
-                    if (file.isDirectory()) {
-                        if (isIncluded(name)) {
-                            if (!isExcluded(name)) {
-                                dirsIncluded.addElement(name);
-                                if (fast) {
-                                    scandir(name, name + File.separator, fast);
-                                }
-                            } else {
-                                dirsExcluded.addElement(name);
-                            }
-                        } else {
-                            dirsNotIncluded.addElement(name);
-                            if (fast && couldHoldIncluded(name)) {
-                                scandir(name, name + File.separator, fast);
-                            }
-                        }
-                        if (!fast) {
-                            scandir(name, name + File.separator, fast);
-                        }
-                    } else {
-                        if (file.isFile()) {
+                    if (!file.getName().equals(".") && !file.getName().equals("..")) {
+                        if (file.isDirectory()) {
+                            String name = file.getName();
                             if (isIncluded(name)) {
                                 if (!isExcluded(name)) {
-                                    filesIncluded.addElement(name);
+                                    dirsIncluded.addElement(name);
+                                    if (fast) {
+                                        scandir(name, vpath + name + File.separator, fast);
+                                    }
                                 } else {
-                                    filesExcluded.addElement(name);
+                                    dirsExcluded.addElement(name);
                                 }
                             } else {
-                                filesNotIncluded.addElement(name);
+                                dirsNotIncluded.addElement(name);
+                                if (fast && couldHoldIncluded(name)) {
+                                    scandir(name, vpath + name + File.separator, fast);
+                                }
+                            }
+                            if (!fast) {
+                                scandir(name, vpath + name + File.separator, fast);
+                            }
+                        } else {
+                            if (file.isFile()) {
+                                String name = vpath + file.getName();
+                                if (isIncluded(name)) {
+                                    if (!isExcluded(name)) {
+                                        filesIncluded.addElement(name);
+                                    } else {
+                                        filesExcluded.addElement(name);
+                                    }
+                                } else {
+                                    filesNotIncluded.addElement(name);
+                                }
                             }
                         }
                     }
                 }
+                ftp.changeToParentDirectory();
             } catch (IOException e) {
                 throw new BuildException("Error while communicating with FTP server: ", e);
             }
         }
-    }        
+    }
 
     /**
      * Sets the remote directory where files will be placed.  This may
@@ -795,20 +808,19 @@ public class FTP
         }
         finally
         {
-            /*
-              if (ftp != null && ftp.isConnected())
-              {
-              try
-              {
-              // this hangs - I don't know why.
-              ftp.disconnect();
-              }
-              catch(IOException ex)
-              {
-              // ignore it
-              }
-              }
-            */
+            if (ftp != null && ftp.isConnected())
+            {
+                try
+                {
+                    log("disconnecting", Project.MSG_VERBOSE);
+                    ftp.logout();
+                    ftp.disconnect();
+                }
+                catch(IOException ex)
+                {
+                    // ignore it
+                }
+            }
         }
     }
 }
