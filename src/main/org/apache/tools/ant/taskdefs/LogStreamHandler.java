@@ -67,7 +67,7 @@ import org.apache.tools.ant.Task;
 public class LogStreamHandler extends PumpStreamHandler {
 
     /**
-     * Creates a new instance of this class.
+     * Creates log stream handler
      *
      * @param task the task for whom to log
      * @param outlevel the loglevel used to log standard output
@@ -78,6 +78,9 @@ public class LogStreamHandler extends PumpStreamHandler {
               new LogOutputStream(task, errlevel));
     }
 
+    /**
+     * Stop the log stream handler.
+     */
     public void stop() {
         super.stop();
         try {

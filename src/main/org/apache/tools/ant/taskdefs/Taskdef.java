@@ -75,6 +75,10 @@ import org.apache.tools.ant.TaskAdapter;
  */
 public class Taskdef extends Typedef {
 
+    /**
+     * Default constuctor.
+     *
+     */
     public Taskdef() {
         setAdapterClass(TaskAdapter.class);
         setAdaptToClass(Task.class);

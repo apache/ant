@@ -118,7 +118,7 @@ public class FilesMatch implements Condition {
         try {
             matches = fu.contentEquals(file1, file2);
         } catch (IOException ioe) {
-            throw new BuildException("when comparing files: " 
+            throw new BuildException("when comparing files: "
                 + ioe.getMessage(), ioe);
         }
         return matches;

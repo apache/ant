@@ -73,6 +73,9 @@ import org.apache.tools.ant.BuildException;
  */
 
 public class GZip extends Pack {
+    /**
+     * perform the GZip compression operation.
+     */
     protected void pack() {
         GZIPOutputStream zOut = null;
         try {

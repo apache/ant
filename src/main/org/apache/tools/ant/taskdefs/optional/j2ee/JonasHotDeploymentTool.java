@@ -96,7 +96,7 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
      *  Description of the Field
      */
     private File jonasroot;
-    
+
     /**
      *  Description of the Field
      */
@@ -106,7 +106,7 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
      *  Description of the Field
      */
     private String davidHost;
-    
+
     /**
      *  Description of the Field
      */
@@ -114,7 +114,7 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
 
 
     /**
-     *  Set the host for the David ORB; required if 
+     *  Set the host for the David ORB; required if
      *  ORB==david.
      *
      *@param  inValue  The new davidhost value
@@ -125,7 +125,7 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
 
 
     /**
-     *  Set the port for the David ORB; required if 
+     *  Set the port for the David ORB; required if
      *  ORB==david.
      *
      *@param  inValue  The new davidport value
@@ -147,11 +147,11 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
 
 
     /**
-     * 
+     *
      * Choose your ORB : RMI, JEREMIE, DAVID, ...; optional.
      * If omitted, it defaults
      * to the one present in classpath. The corresponding JOnAS JAR is
-     * automatically added to the classpath. If your orb is DAVID (RMI/IIOP) you must 
+     * automatically added to the classpath. If your orb is DAVID (RMI/IIOP) you must
      * specify davidhost and davidport properties.
      *
      *@param  inValue  RMI, JEREMIE, DAVID,...
@@ -217,21 +217,30 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
 
         if (jonasroot == null || jonasroot.isDirectory()) {
             java.createJvmarg().setValue("-Dinstall.root=" + jonasroot);
-            java.createJvmarg().setValue("-Djava.security.policy=" + jonasroot + "/config/java.policy");
+            java.createJvmarg().setValue("-Djava.security.policy=" + jonasroot
+                + "/config/java.policy");
 
             if ("DAVID".equals(orb)) {
-                java.createJvmarg().setValue("-Dorg.omg.CORBA.ORBClass=org.objectweb.david.libs.binding.orbs.iiop.IIOPORB");
-                java.createJvmarg().setValue("-Dorg.omg.CORBA.ORBSingletonClass=org.objectweb.david.libs.binding.orbs.ORBSingletonClass");
-                java.createJvmarg().setValue("-Djavax.rmi.CORBA.StubClass=org.objectweb.david.libs.stub_factories.rmi.StubDelegate");
-                java.createJvmarg().setValue("-Djavax.rmi.CORBA.PortableRemoteObjectClass=org.objectweb.david.libs.binding.rmi.ORBPortableRemoteObjectDelegate");
-                java.createJvmarg().setValue("-Djavax.rmi.CORBA.UtilClass=org.objectweb.david.libs.helpers.RMIUtilDelegate");
+                java.createJvmarg().setValue("-Dorg.omg.CORBA.ORBClass"
+                    + "=org.objectweb.david.libs.binding.orbs.iiop.IIOPORB");
+                java.createJvmarg().setValue("-Dorg.omg.CORBA.ORBSingletonClass="
+                    + "org.objectweb.david.libs.binding.orbs.ORBSingletonClass");
+                java.createJvmarg().setValue("-Djavax.rmi.CORBA.StubClass="
+                    + "org.objectweb.david.libs.stub_factories.rmi.StubDelegate");
+                java.createJvmarg().setValue("-Djavax.rmi.CORBA.PortableRemoteObjectClass="
+                    + "org.objectweb.david.libs.binding.rmi.ORBPortableRemoteObjectDelegate");
+                java.createJvmarg().setValue("-Djavax.rmi.CORBA.UtilClass="
+                    + "org.objectweb.david.libs.helpers.RMIUtilDelegate");
                 java.createJvmarg().setValue("-Ddavid.CosNaming.default_method=0");
-                java.createJvmarg().setValue("-Ddavid.rmi.ValueHandlerClass=com.sun.corba.se.internal.io.ValueHandlerImpl");
+                java.createJvmarg().setValue("-Ddavid.rmi.ValueHandlerClass="
+                    + "com.sun.corba.se.internal.io.ValueHandlerImpl");
                 if (davidHost != null) {
-                    java.createJvmarg().setValue("-Ddavid.CosNaming.default_host=" + davidHost);
+                    java.createJvmarg().setValue("-Ddavid.CosNaming.default_host="
+                        + davidHost);
                 }
                 if (davidPort != 0) {
-                    java.createJvmarg().setValue("-Ddavid.CosNaming.default_port=" + davidPort);
+                    java.createJvmarg().setValue("-Ddavid.CosNaming.default_port="
+                        + davidPort);
                 }
             }
         }
@@ -240,9 +249,9 @@ public class JonasHotDeploymentTool extends GenericHotDeploymentTool implements 
             java.createArg().setLine("-n " + getServer());
         }
 
-        if (action.equals(ACTION_DEPLOY) ||
-                action.equals(ACTION_UPDATE) ||
-                action.equals("redeploy")) {
+        if (action.equals(ACTION_DEPLOY)
+            || action.equals(ACTION_UPDATE)
+            || action.equals("redeploy")) {
             java.createArg().setLine("-a " + getTask().getSource());
         } else if (action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) {
             java.createArg().setLine("-r " + getTask().getSource());

@@ -63,7 +63,7 @@ import org.apache.tools.ant.taskdefs.LogOutputStream;
  */
 class RedirectingOutputStream
      extends LogOutputStream {
-    private final ChangeLogParser m_parser;
+    private final ChangeLogParser parser;
 
 
     /**
@@ -73,7 +73,7 @@ class RedirectingOutputStream
      */
     public RedirectingOutputStream(final ChangeLogParser parser) {
         super(null, 0);
-        m_parser = parser;
+        this.parser = parser;
     }
 
 
@@ -83,7 +83,7 @@ class RedirectingOutputStream
      * @param line the line to log.
      */
     protected void processLine(final String line) {
-        m_parser.stdout(line);
+        parser.stdout(line);
     }
 }
 

@@ -87,7 +87,7 @@ import org.apache.tools.ant.util.FileUtils;
  *   <li> <strong>del</strong> - delete files from a remote server.</li>
  *   <li> <strong>list</strong> - create a file listing.</li>
  *   <li> <strong>chmod</strong> - change unix file permissions.</li>
- *   <li> <strong>rmdir</strong> - remove directories, if empty, from a 
+ *   <li> <strong>rmdir</strong> - remove directories, if empty, from a
  *   remote server.</li>
  * </ul>
  * <strong>Note:</strong> Some FTP servers - notably the Solaris server - seem
@@ -115,6 +115,9 @@ public class FTP
     protected static final int CHMOD = 5;
     protected static final int RM_DIR = 6;
 
+    /** Default port for FTP */
+    public static final int DEFAULT_FTP_PORT = 21;
+
     private String remotedir;
     private String server;
     private String userid;
@@ -129,7 +132,7 @@ public class FTP
     private Vector dirCache = new Vector();
     private int transferred = 0;
     private String remoteFileSep = "/";
-    private int port = 21;
+    private int port = DEFAULT_FTP_PORT;
     private boolean skipFailedTransfers = false;
     private int skipped = 0;
     private boolean ignoreNoncriticalErrors = false;
@@ -282,31 +285,49 @@ public class FTP
      * Sets the remote directory where files will be placed. This may be a
      * relative or absolute path, and must be in the path syntax expected by
      * the remote server. No correction of path syntax will be performed.
+     *
+     * @param dir the remote directory name.
      */
     public void setRemotedir(String dir) {
         this.remotedir = dir;
     }
 
 
-    /** Sets the FTP server to send files to.  */
+    /**
+     * Sets the FTP server to send files to.
+     *
+     * @param server the remote server name.
+     */
     public void setServer(String server) {
         this.server = server;
     }
 
 
-    /** Sets the FTP port used by the remote server.  */
+    /**
+     * Sets the FTP port used by the remote server.
+     *
+     * @param port the port on which the remote server is listening.
+     */
     public void setPort(int port) {
         this.port = port;
     }
 
 
-    /** Sets the login user id to use on the specified server.  */
+    /**
+     * Sets the login user id to use on the specified server.
+     *
+     * @param userid remote system userid.
+     */
     public void setUserid(String userid) {
         this.userid = userid;
     }
 
 
-    /** Sets the login password for the given user id.  */
+    /**
+     * Sets the login password for the given user id.
+     *
+     * @param password the password on the remote system.
+     */
     public void setPassword(String password) {
         this.password = password;
     }
@@ -314,6 +335,8 @@ public class FTP
 
     /**
      * If true, uses binary mode, otherwise text mode (default is binary).
+     *
+     * @param binary if true use binary mode in transfers.
      */
     public void setBinary(boolean binary) {
         this.binary = binary;
@@ -324,6 +347,8 @@ public class FTP
      * Specifies whether to use passive mode. Set to true if you are behind a
      * firewall and cannot connect without it. Passive mode is disabled by
      * default.
+     *
+     * @param passive true is passive mode should be used.
      */
     public void setPassive(boolean passive) {
         this.passive = passive;
@@ -333,6 +358,8 @@ public class FTP
     /**
      * Set to true to receive notification about each file as it is
      * transferred.
+     *
+     * @param verbose true if verbose notifications are required.
      */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
@@ -340,8 +367,10 @@ public class FTP
 
 
     /**
-     * A synonym for <tt>depends</tt>. Set to true to transmit only new or changed
-     * files.
+     * A synonym for <tt>depends</tt>. Set to true to transmit only new
+     * or changed files.
+     *
+     * @param newer if true only transfer newer files.
      */
     public void setNewer(boolean newer) {
         this.newerOnly = newer;
@@ -350,6 +379,8 @@ public class FTP
 
     /**
      * Set to true to preserve modification times for "gotten" files.
+     *
+     * @param preserveLastModified if true preserver modification times.
      */
     public void setPreserveLastModified(boolean preserveLastModified) {
         this.preserveLastModified = preserveLastModified;
@@ -359,6 +390,8 @@ public class FTP
     /**
      * Set to true to transmit only files that are new or changed from their
      * remote counterparts. The default is to transmit all files.
+     *
+     * @param depends if true only transfer newer files.
      */
     public void setDepends(boolean depends) {
         this.newerOnly = depends;
@@ -370,6 +403,8 @@ public class FTP
      * Unix standard forward slash, but can be manually overridden using this
      * call if the remote server requires some other separator. Only the first
      * character of the string is used.
+     *
+     * @param separator the file separator on the remote system.
      */
     public void setSeparator(String separator) {
         remoteFileSep = separator;
@@ -377,16 +412,22 @@ public class FTP
 
 
     /**
-     * Sets the file permission mode (Unix only) for files sent to the server.
+     * Sets the file permission mode (Unix only) for files sent to the
+     * server.
+     *
+     * @param theMode unix style file mode for the files sent to the remote
+     *        system.
      */
-
     public void setChmod(String theMode) {
         this.chmod = theMode;
     }
 
 
-    /** Sets the default mask for file creation on a unix server.  */
-
+    /**
+     * Sets the default mask for file creation on a unix server.
+     *
+     * @param theUmask unix style umask for files created on the remote server.
+     */
     public void setUmask(String theUmask) {
         this.umask = theUmask;
     }
@@ -394,6 +435,9 @@ public class FTP
 
     /**
      *  A set of files to upload or download
+     *
+     * @param set the set of files to be added to the list of files to be
+     *        transferred.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -409,6 +453,10 @@ public class FTP
      *      work and also to encapsulate operations on the type in its own
      *      class.
      * @ant.attribute ignore="true"
+     *
+     * @param action the FTP action to be performed.
+     *
+     * @throws BuildException if the action is not a valid action.
      */
     public void setAction(String action) throws BuildException {
         log("DEPRECATED - The setAction(String) method has been deprecated."
@@ -424,6 +472,10 @@ public class FTP
     /**
      * Sets the FTP action to be taken. Currently accepts "put", "get", "del",
      * "mkdir", "chmod" and "list".
+     *
+     * @param action the FTP action to be performed.
+     *
+     * @throws BuildException if the action is not a valid action.
      */
     public void setAction(Action action) throws BuildException {
         this.action = action.getAction();
@@ -433,8 +485,10 @@ public class FTP
     /**
      * The output file for the "list" action. This attribute is ignored for
      * any other actions.
+     *
+     * @param listing file in which to store the listing.
      */
-    public void setListing(File listing) throws BuildException {
+    public void setListing(File listing) {
         this.listing = listing;
     }
 
@@ -443,6 +497,8 @@ public class FTP
      * If true, enables unsuccessful file put, delete and get
      * operations to be skipped with a warning and the remainder
      * of the files still transferred.
+     *
+     * @param skipFailedTransfers true if failures in transfers are ignored.
      */
     public void setSkipFailedTransfers(boolean skipFailedTransfers) {
         this.skipFailedTransfers = skipFailedTransfers;
@@ -452,13 +508,20 @@ public class FTP
     /**
      * set the flag to skip errors on directory creation.
      * (and maybe later other server specific errors)
+     *
+     * @param ignoreNoncriticalErrors true if non-critical errors should not
+     *        cause a failure.
      */
     public void setIgnoreNoncriticalErrors(boolean ignoreNoncriticalErrors) {
         this.ignoreNoncriticalErrors = ignoreNoncriticalErrors;
     }
 
 
-    /** Checks to see that all required parameters are set.  */
+    /**
+     * Checks to see that all required parameters are set.
+     *
+     * @throws BuildException if the configuration is not valid.
+     */
     protected void checkConfiguration() throws BuildException {
         if (server == null) {
             throw new BuildException("server attribute must be set!");
@@ -490,6 +553,14 @@ public class FTP
     /**
      * For each file in the fileset, do the appropriate action: send, get,
      * delete, or list.
+     *
+     * @param ftp the FTPClient instance used to perform FTP actions
+     * @param fs the fileset on which the actions are performed.
+     *
+     * @return the number of files to be transferred.
+     *
+     * @throws IOException if there is a problem reading a file
+     * @throws BuildException if there is a problem in the configuration.
      */
     protected int transferFiles(FTPClient ftp, FileSet fs)
          throws IOException, BuildException {
@@ -537,46 +608,26 @@ public class FTP
             for (int i = 0; i < dsfiles.length; i++) {
                 switch (action) {
                     case SEND_FILES:
-                    {
                         sendFile(ftp, dir, dsfiles[i]);
                         break;
-                    }
-
                     case GET_FILES:
-                    {
                         getFile(ftp, dir, dsfiles[i]);
                         break;
-                    }
-
                     case DEL_FILES:
-                    {
                         delFile(ftp, dsfiles[i]);
                         break;
-                    }
-
                     case LIST_FILES:
-                    {
                         listFile(ftp, bw, dsfiles[i]);
                         break;
-                    }
-
                     case CHMOD:
-                    {
                         doSiteCommand(ftp, "chmod " + chmod + " " + dsfiles[i]);
                         transferred++;
                         break;
-                    }
-
                     case RM_DIR:
-                    {
                         rmDir(ftp, dsfiles[i]);
                         break;
-                    }
-
                     default:
-                    {
                         throw new BuildException("unknown ftp action " + action);
-                    }
                 }
             }
         } finally {
@@ -592,6 +643,11 @@ public class FTP
     /**
      * Sends all files specified by the configured filesets to the remote
      * server.
+     *
+     * @param ftp the FTPClient instance used to perform FTP actions
+     *
+     * @throws IOException if there is a problem reading a file
+     * @throws BuildException if there is a problem in the configuration.
      */
     protected void transferFiles(FTPClient ftp)
          throws IOException, BuildException {
@@ -611,12 +667,11 @@ public class FTP
             }
         }
 
-        log(transferred + " " + ACTION_TARGET_STRS[action] + " " +
-                                COMPLETED_ACTION_STRS[action]);
+        log(transferred + " " + ACTION_TARGET_STRS[action] + " "
+            + COMPLETED_ACTION_STRS[action]);
         if (skipped != 0) {
-            log(skipped + " " + ACTION_TARGET_STRS[action] + 
-                                " were not successfully "
-                + COMPLETED_ACTION_STRS[action]);
+            log(skipped + " " + ACTION_TARGET_STRS[action]
+                + " were not successfully " + COMPLETED_ACTION_STRS[action]);
         }
     }
 
@@ -627,6 +682,10 @@ public class FTP
      * Unix-style paths with forward-slash separators. This can be overridden
      * with the <code>separator</code> task parameter. No attempt is made to
      * determine what syntax is appropriate for the remote host.
+     *
+     * @param file the remote file name to be resolved
+     *
+     * @return the filename as it will appear on the server.
      */
     protected String resolveFile(String file) {
         return file.replace(System.getProperty("file.separator").charAt(0),
@@ -638,6 +697,11 @@ public class FTP
      * Creates all parent directories specified in a complete relative
      * pathname. Attempts to create existing directories will not cause
      * errors.
+     *
+     * @param ftp the FTP client instance to use to execute FTP actions on
+     *        the remote server.
+     * @param filename the name of the file whose parents should be created.
+     *
      */
     protected void createParents(FTPClient ftp, String filename)
          throws IOException, BuildException {
@@ -647,7 +711,7 @@ public class FTP
             return;
         }
 
-        
+
         Vector parents = new Vector();
         String dirname;
 
@@ -662,35 +726,35 @@ public class FTP
 
         // find first non cached dir
         int i = parents.size() - 1;
-                
+
         if (i >= 0) {
             String cwd = ftp.printWorkingDirectory();
             String parent = dir.getParent();
             if (parent != null) {
                 if (!ftp.changeWorkingDirectory(resolveFile(parent))) {
-                    throw new BuildException("could not change to " 
+                    throw new BuildException("could not change to "
                         + "directory: " + ftp.getReplyString());
                 }
             }
-            
+
             while (i >= 0) {
                 dir = (File) parents.elementAt(i--);
                 // check if dir exists by trying to change into it.
                 if (!ftp.changeWorkingDirectory(dir.getName())) {
                     // could not change to it - try to create it
-                    log("creating remote directory " 
+                    log("creating remote directory "
                         + resolveFile(dir.getPath()), Project.MSG_VERBOSE);
-                    if(!ftp.makeDirectory(dir.getName())) {
+                    if (!ftp.makeDirectory(dir.getName())) {
                         handleMkDirFailure(ftp);
                     }
                     if (!ftp.changeWorkingDirectory(dir.getName())) {
-                        throw new BuildException("could not change to " 
+                        throw new BuildException("could not change to "
                             + "directory: " + ftp.getReplyString());
                     }
                 }
                 dirCache.addElement(dir);
             }
-            ftp.changeWorkingDirectory(cwd);            
+            ftp.changeWorkingDirectory(cwd);
         }
     }
 
@@ -717,8 +781,8 @@ public class FTP
                      + "assuming out of date.", Project.MSG_VERBOSE);
                 return false;
             } else {
-                throw new BuildException("could not date test remote file: " +
-                    ftp.getReplyString());
+                throw new BuildException("could not date test remote file: "
+                    + ftp.getReplyString());
             }
         }
 
@@ -734,24 +798,24 @@ public class FTP
 
 
     /** Sends a site command to the ftp server  */
-    protected void doSiteCommand(FTPClient ftp, String TheCMD)
+    protected void doSiteCommand(FTPClient ftp, String theCMD)
          throws IOException, BuildException {
         boolean rc;
-        String MyReply[] = null;
+        String myReply[] = null;
 
-        log("Doing Site Command: " + TheCMD, Project.MSG_VERBOSE);
+        log("Doing Site Command: " + theCMD, Project.MSG_VERBOSE);
 
-        rc = ftp.sendSiteCommand(TheCMD);
+        rc = ftp.sendSiteCommand(theCMD);
 
         if (rc == false) {
-            log("Failed to issue Site Command: " + TheCMD, Project.MSG_WARN);
+            log("Failed to issue Site Command: " + theCMD, Project.MSG_WARN);
         } else {
 
-            MyReply = ftp.getReplyStrings();
+            myReply = ftp.getReplyStrings();
 
-            for (int x = 0; x < MyReply.length; x++) {
-                if (MyReply[x].indexOf("200") == -1) {
-                    log(MyReply[x], Project.MSG_WARN);
+            for (int x = 0; x < myReply.length; x++) {
+                if (myReply[x].indexOf("200") == -1) {
+                    log(myReply[x], Project.MSG_WARN);
                 }
             }
         }
@@ -794,7 +858,7 @@ public class FTP
             if (!success) {
                 String s = "could not put file: " + ftp.getReplyString();
 
-                if (skipFailedTransfers == true) {
+                if (skipFailedTransfers) {
                     log(s, Project.MSG_WARN);
                     skipped++;
                 } else {
@@ -802,7 +866,8 @@ public class FTP
                 }
 
             } else {
-                if (chmod != null) {// see if we should issue a chmod command
+                // see if we should issue a chmod command
+                if (chmod != null) {
                     doSiteCommand(ftp, "chmod " + chmod + " " + filename);
                 }
                 log("File " + file.getAbsolutePath() + " copied to " + server,
@@ -831,7 +896,7 @@ public class FTP
         if (!ftp.deleteFile(resolveFile(filename))) {
             String s = "could not delete file: " + ftp.getReplyString();
 
-            if (skipFailedTransfers == true) {
+            if (skipFailedTransfers) {
                 log(s, Project.MSG_WARN);
                 skipped++;
             } else {
@@ -854,7 +919,7 @@ public class FTP
         if (!ftp.removeDirectory(resolveFile(dirname))) {
             String s = "could not remove directory: " + ftp.getReplyString();
 
-            if (skipFailedTransfers == true) {
+            if (skipFailedTransfers) {
                 log(s, Project.MSG_WARN);
                 skipped++;
             } else {
@@ -904,7 +969,7 @@ public class FTP
             if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
                 String s = "could not get file: " + ftp.getReplyString();
 
-                if (skipFailedTransfers == true) {
+                if (skipFailedTransfers) {
                     log(s, Project.MSG_WARN);
                     skipped++;
                 } else {
@@ -984,13 +1049,15 @@ public class FTP
             subdir = st.nextToken();
             log("Checking " + subdir, Project.MSG_DEBUG);
             if (!ftp.changeWorkingDirectory(subdir)) {
-                if(!ftp.makeDirectory(subdir)) {
+                if (!ftp.makeDirectory(subdir)) {
                     // codes 521, 550 and 553 can be produced by FTP Servers
                     //  to indicate that an attempt to create a directory has
                     //  failed because the directory already exists.
                     int rc = ftp.getReplyCode();
-                    if (!(ignoreNoncriticalErrors && (rc == 550 || rc == 553 || rc==521))) {
-                        throw new BuildException("could not create directory: " + ftp.getReplyString());
+                    if (!(ignoreNoncriticalErrors
+                        && (rc == 550 || rc == 553 || rc == 521))) {
+                        throw new BuildException("could not create directory: "
+                            + ftp.getReplyString());
                     }
                     if (verbose) {
                         log("Directory already exists");
@@ -1016,17 +1083,21 @@ public class FTP
      */
     private void handleMkDirFailure(FTPClient ftp)
             throws BuildException {
-        int rc=ftp.getReplyCode();
+        int rc = ftp.getReplyCode();
         if (!(ignoreNoncriticalErrors
              && (rc == 550 || rc == 553 || rc == 521))) {
-            throw new BuildException("could not create directory: " +
-                ftp.getReplyString());
+            throw new BuildException("could not create directory: "
+                + ftp.getReplyString());
         }
     }
 
-    /** Runs the task.  */
-    public void execute()
-         throws BuildException {
+    /**
+     * Runs the task.
+     *
+     * @throws BuildException if the task fails or is not configured
+     *         correctly.
+     */
+    public void execute() throws BuildException {
         checkConfiguration();
 
         FTPClient ftp = null;
@@ -1054,8 +1125,8 @@ public class FTP
             if (binary) {
                 ftp.setFileType(org.apache.commons.net.ftp.FTP.IMAGE_FILE_TYPE);
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
-                    throw new BuildException("could not set transfer type: " +
-                        ftp.getReplyString());
+                    throw new BuildException("could not set transfer type: "
+                        + ftp.getReplyString());
                 }
             }
 
@@ -1064,8 +1135,7 @@ public class FTP
                 ftp.enterLocalPassiveMode();
                 if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
                     throw new BuildException("could not enter into passive "
-                         + "mode: " +
-                        ftp.getReplyString());
+                         + "mode: " + ftp.getReplyString());
                 }
             }
 
@@ -1087,8 +1157,7 @@ public class FTP
                     ftp.changeWorkingDirectory(remotedir);
                     if (!FTPReply.isPositiveCompletion(ftp.getReplyCode())) {
                         throw new BuildException("could not change remote "
-                             + "directory: " +
-                            ftp.getReplyString());
+                             + "directory: " + ftp.getReplyString());
                     }
                 }
                 log(ACTION_STRS[action] + " " + ACTION_TARGET_STRS[action]);
@@ -1118,28 +1187,35 @@ public class FTP
      */
     public static class Action extends EnumeratedAttribute {
 
-        private static final String[] validActions = {
+        private static final String[] VALID_ACTIONS = {
             "send", "put", "recv", "get", "del", "delete", "list", "mkdir",
             "chmod", "rmdir"
             };
 
 
+        /**
+         * Get the valid values
+         *
+         * @return an array of the valid FTP actions.
+         */
         public String[] getValues() {
-            return validActions;
+            return VALID_ACTIONS;
         }
 
 
+        /**
+         * Get the symbolic equivalent of the action value.
+         *
+         * @return the SYMBOL representing the given action.
+         */
         public int getAction() {
             String actionL = getValue().toLowerCase(Locale.US);
 
-            if (actionL.equals("send") ||
-                actionL.equals("put")) {
+            if (actionL.equals("send") || actionL.equals("put")) {
                 return SEND_FILES;
-            } else if (actionL.equals("recv") ||
-                actionL.equals("get")) {
+            } else if (actionL.equals("recv") || actionL.equals("get")) {
                 return GET_FILES;
-            } else if (actionL.equals("del") ||
-                actionL.equals("delete")) {
+            } else if (actionL.equals("del") || actionL.equals("delete")) {
                 return DEL_FILES;
             } else if (actionL.equals("list")) {
                 return LIST_FILES;

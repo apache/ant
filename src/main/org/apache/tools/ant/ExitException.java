@@ -64,7 +64,7 @@ public class ExitException extends SecurityException {
 
     /** Status code */
     private int status;
-    
+
     /**
      * Constructs an exit exception.
      * @param status the status code returned via System.exit()

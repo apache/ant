@@ -79,6 +79,7 @@ public interface XSLTLiaison {
     /**
      * set the stylesheet to use for the transformation.
      * @param stylesheet the stylesheet to be used for transformation.
+     * @throws Exception thrown if any problems happens.
      * @since Ant 1.4
      */
     void setStylesheet(File stylesheet) throws Exception;

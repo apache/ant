@@ -124,8 +124,8 @@ public class Rename extends Task {
         try {
             FileUtils.newFileUtils().rename(src, dest);
         } catch (IOException e) {
-            throw new BuildException("Unable to rename " + src + " to " +
-                                     dest, e, getLocation());
+            throw new BuildException("Unable to rename " + src + " to "
+                + dest, e, getLocation());
         }
     }
 }

@@ -594,7 +594,7 @@ public class TokenFilter extends BaseFilterReader
      * Abstract class that converts derived filter classes into
      * ChainableReaderFilter's
      */
-    public static abstract class ChainableReaderFilter extends ProjectComponent
+    public abstract static class ChainableReaderFilter extends ProjectComponent
         implements ChainableReader, Filter {
         private boolean byLine = true;
 

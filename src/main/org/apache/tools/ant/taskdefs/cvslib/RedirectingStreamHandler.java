@@ -74,7 +74,7 @@ class RedirectingStreamHandler
 
     String getErrors() {
         try {
-            final ByteArrayOutputStream error 
+            final ByteArrayOutputStream error
                 = (ByteArrayOutputStream) getErr();
 
             return error.toString("ASCII");

@@ -63,6 +63,9 @@ import java.util.Date;
  */
 public class CCMCheckin extends CCMCheck {
 
+    /**
+     * Default constructor - setup checkin command
+     */
     public CCMCheckin() {
         super();
         setCcmAction(COMMAND_CHECKIN);
