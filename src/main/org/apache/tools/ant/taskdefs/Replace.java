@@ -296,8 +296,8 @@ public class Replace extends MatchingTask {
         try {
             Reader fileReader = encoding == null ? new FileReader(src)
                                                  : new InputStreamReader(new FileInputStream(src), encoding);
-            Writer fileWriter = encoding == null ? new FileWriter(src)
-                                                 : new OutputStreamWriter(new FileOutputStream(src), encoding);
+            Writer fileWriter = encoding == null ? new FileWriter(temp)
+                                                 : new OutputStreamWriter(new FileOutputStream(temp), encoding);
             
             BufferedReader br = new BufferedReader(fileReader);
             BufferedWriter bw = new BufferedWriter(fileWriter);
