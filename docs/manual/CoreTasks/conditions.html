@@ -185,6 +185,31 @@ TCP/IP listener at the specified host and port.</p>
   </tr>
 </table>
 
+<h4>filesmatch</h4>
+<p>Test two files for matching. Both files must exist first.
+This test does a byte for byte comparision, so test time scales with
+byte size. NB: if the files are different sizes or the filenames match
+the slower test is shortcutted.
+ 
+</p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr> 
+    <td width="12%" valign="top"><b>Attribute</b></td>
+    <td width="78%" valign="top"><b>Description</b></td>
+    <td width="10%" valign="top"><b>Required</b></td>
+  </tr>
+  <tr> 
+    <td valign="top">file1</td>
+    <td valign="top">First file to test</td>
+    <td align="center">Yes.</td>
+  </tr>
+  <tr> 
+    <td valign="top">file2</td>
+    <td valign="top">Second file to test</td>
+    <td align="center">Yes.</td>
+  </tr>
+</table>
+
 <hr>
 <p align="center">Copyright &copy; 2001-2002 Apache Software
 Foundation. All rights Reserved.</p>

@@ -169,6 +169,13 @@ public abstract class ConditionBase extends ProjectComponent {
     public void addSocket(Socket s) {conditions.addElement(s);}
 
     /**
+     * Add a &lt;filesmatch&gt; condition.
+     *
+     * @since 1.8
+     */
+    public void addFilesMatch(FilesMatch test) {conditions.addElement(test);}
+    
+    /**
      * Inner class that configures those conditions with a project
      * instance that need it.
      *
