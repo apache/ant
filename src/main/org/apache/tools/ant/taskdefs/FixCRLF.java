@@ -852,6 +852,8 @@ public class FixCRLF extends MatchingTask {
                         if ((char) (ch = reader.read()) == '\n') {
                             eolcount += 2;
                             eolStr.append("\r\n");
+                        } else {
+                            reader.reset();
                         }
                         break;
                     case '\n':
