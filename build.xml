@@ -283,7 +283,7 @@
           depends="build" 
           description="--> creates the ant jars">
 
-    <jar jarfile="${build.lib}/${name}.jar" 
+    <jar file="${build.lib}/${name}.jar" 
          basedir="${build.classes}" 
          manifest="${manifest}">
       <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
@@ -291,7 +291,7 @@
                includes="org/apache/tools/ant/taskdefs/optional/TraXLiaison.class" />
     </jar>
 
-    <jar jarfile="${build.lib}/optional.jar" 
+    <jar file="${build.lib}/optional.jar" 
          basedir="${build.classes}" 
          manifest="${manifest}">
       <include name="org/apache/tools/ant/taskdefs/optional/**" />
@@ -497,7 +497,7 @@
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
-    <zip zipfile="${dist.base}/${dist.name}-bin.zip" 
+    <zip file="${dist.base}/${dist.name}-bin.zip" 
          basedir="${dist.name}/.." 
          includes="${dist.name}/**"
          excludes="${dist.name}/lib/optional.jar"/>
@@ -514,7 +514,7 @@
         <exclude name="${dist.name}/lib/optional.jar"/>
       </tarfileset> 
     </tar>
-    <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
+    <gzip file="${dist.base}/${dist.name}-bin.tar.gz" 
           src="${dist.base}/${dist.name}-bin.tar"/>
     <delete file="${dist.base}/${dist.name}-bin.tar"/>
     <copy file="${dist.name}/lib/optional.jar" tofile="${dist.base}/${dist.name}-optional.jar"/>
@@ -524,7 +524,7 @@
     <antcall inheritAll="false" target="src-dist">
       <param name="src.dist.dir" value="${dist.name}" />
     </antcall>
-    <zip zipfile="${dist.base}/${dist.name}-src.zip" 
+    <zip file="${dist.base}/${dist.name}-src.zip" 
          basedir="${dist.name}/.." 
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
@@ -539,7 +539,7 @@
         <exclude name="${dist.name}/build.sh"/>
       </tarfileset>
     </tar> 
-    <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
+    <gzip file="${dist.base}/${dist.name}-src.tar.gz" 
           src="${dist.base}/${dist.name}-src.tar"/>
     <delete file="${dist.base}/${dist.name}-src.tar"/>
     <delete dir="${dist.name}" />
