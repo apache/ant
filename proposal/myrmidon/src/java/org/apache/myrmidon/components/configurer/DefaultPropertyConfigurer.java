@@ -63,7 +63,7 @@ class DefaultPropertyConfigurer
     public void addValue( final ConfigurationState state, final Object value )
         throws ConfigurationException
     {
-        final DefaultConfigurationState defState = (DefaultConfigurationState)state;
+        final ConfigurationState defState = (ConfigurationState)state;
 
         // Check the property count
         if( defState.getPropertyCount( m_propIndex ) >= m_maxCount )

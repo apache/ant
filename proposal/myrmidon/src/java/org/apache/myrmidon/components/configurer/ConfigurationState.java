@@ -9,21 +9,18 @@ package org.apache.myrmidon.components.configurer;
 
 /**
  * A default configuration state implementation.  Keeps track of which
- * of the object's properties have been set.  Also keeps track of the
- * objects created by the creator methods, but not yet set by the adder
- * methods.
+ * of the object's properties have been set.
  *
  * @author Adam Murdoch
  * @version $Revision$ $Date$
  */
-class DefaultConfigurationState
-    implements ConfigurationState
+class ConfigurationState
 {
     private final int[] m_propertyCount;
     private final ObjectConfigurer m_configurer;
     private final Object m_object;
 
-    public DefaultConfigurationState( final ObjectConfigurer configurer,
+    public ConfigurationState( final ObjectConfigurer configurer,
                                       final Object object,
                                       final int propertyCount )
     {

@@ -251,7 +251,7 @@ class DefaultObjectConfigurer
     public ConfigurationState startConfiguration( Object object )
         throws ConfigurationException
     {
-        return new DefaultConfigurationState( this, object, m_allProps.size() );
+        return new ConfigurationState( this, object, m_allProps.size() );
     }
 
     /**
@@ -262,7 +262,7 @@ class DefaultObjectConfigurer
         throws ConfigurationException
     {
         // Make sure there are no pending created objects
-        final DefaultConfigurationState defState = (DefaultConfigurationState)state;
+        final ConfigurationState defState = (ConfigurationState)state;
         return defState.getObject();
     }
 
