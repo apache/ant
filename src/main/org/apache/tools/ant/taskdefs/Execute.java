@@ -265,10 +265,13 @@ public class Execute {
 	    } finally {
                 System.getProperties().put("user.dir", antWorkingDirectory);
 	    }
-	} else if (myos.toLowerCase().indexOf("windows") >= 0 &&
-		   (myos.toLowerCase().indexOf("nt") >= 0 ||
-		    myos.indexOf("2000") >= 0)) {
-	    // cmd /c cd works OK on Windows NT & friends.
+	} else if ((myos.toLowerCase().indexOf("windows") >= 0 &&
+                       (myos.toLowerCase().indexOf("nt") >= 0 ||
+                        myos.indexOf("2000") >= 0))
+                      // cmd /c cd works OK on Windows NT & friends.
+                   || myos.toLowerCase().indexOf("os/2") >= 0
+                      // as well as on OS/2
+                   ) {
 	    String[] commandLine = new String[cmdl.length+5];
 	    commandLine[0] = "cmd";
 	    commandLine[1] = "/c";
