@@ -12,4 +12,4 @@ bsf.jar        - required for script task, available at http://oss.software.ibm.
 netrexx.jar    - required for netrexx task, available at http://www2.hursley.ibm.com/netrexx
 rhino.jar      - required for script task if you want to use javascript, available at www.mozilla.org
 jpython.jar    - required for script task if you want to use python, available at www.jpython.org
-
+netcomponents.jar - required by ftp task, available at http://www.savarese.org/oro/downloads/index.html#NetComponents
