@@ -27,16 +27,18 @@ import org.apache.avalon.excalibur.i18n.Resources;
  *
  * @author Adam Murdoch
  */
-public abstract class AbstractFileObject implements FileObject
+public abstract class AbstractFileObject
+    implements FileObject
 {
-    private static final Resources REZ =
+    private final static Resources REZ =
         ResourceManager.getPackageResources( AbstractFileObject.class );
+
+    private final static FileObject[] EMPTY_FILE_ARRAY = {};
 
     private FileName m_name;
     private AbstractFileSystem m_fs;
     private DefaultFileContent m_content;
 
-    private static final FileObject[] EMPTY_FILE_ARRAY = {};
 
     // Cached info
     private boolean m_attached;

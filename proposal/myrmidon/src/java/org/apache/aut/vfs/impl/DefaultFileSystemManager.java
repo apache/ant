@@ -27,9 +27,10 @@ import org.apache.avalon.excalibur.i18n.Resources;
  *
  * @author Adam Murdoch
  */
-public class DefaultFileSystemManager implements FileSystemManager
+public class DefaultFileSystemManager
+    implements FileSystemManager
 {
-    private static final Resources REZ
+    private final static Resources REZ
         = ResourceManager.getPackageResources( DefaultFileSystemManager.class );
 
     /** The default provider. */
@@ -90,7 +91,8 @@ public class DefaultFileSystemManager implements FileSystemManager
      * Creates a provider instance, returns null if the provider class is
      * not found.
      */
-    private FileSystemProvider createProvider( final String className ) throws Exception
+    private FileSystemProvider createProvider( final String className )
+        throws Exception
     {
         try
         {
@@ -186,7 +188,8 @@ public class DefaultFileSystemManager implements FileSystemManager
     /**
      * A provider context implementation.
      */
-    private final class ProviderContextImpl implements FileSystemProviderContext
+    private final class ProviderContextImpl
+        implements FileSystemProviderContext
     {
         /**
          * Locates a cached file system by root URI.

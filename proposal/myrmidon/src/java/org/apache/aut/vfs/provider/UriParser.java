@@ -20,8 +20,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
  */
 public class UriParser
 {
-    private static final Resources REZ
-        = ResourceManager.getPackageResources( UriParser.class );
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( UriParser.class );
 
     /** The normalised separator to use. */
     private char m_separatorChar;
@@ -495,16 +495,19 @@ public class UriParser
                 maxlen = path.length();
                 continue;
             }
-            if( elemLen == 2
-                && path.charAt( startElem ) == '.'
-                && path.charAt( startElem + 1 ) == '.' )
+            if( elemLen == 2 &&
+                path.charAt( startElem ) == '.' &&
+                path.charAt( startElem + 1 ) == '.' )
             {
                 // A '..' element - remove the previous element
                 if( startElem > startFirstElem )
                 {
                     int pos = startElem - 2;
-                    for( ; path.charAt( pos ) != m_separatorChar; pos-- )
+                    char ch = path.charAt( pos );
+                    while( ch != m_separatorChar )
                     {
+                        pos--;
+                        ch = path.charAt( pos );
                     }
                     startElem = pos + 1;
                 }

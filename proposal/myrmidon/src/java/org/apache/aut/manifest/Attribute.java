@@ -7,10 +7,6 @@
  */
 package org.apache.aut.manifest;
 
-import java.io.PrintWriter;
-import java.io.IOException;
-import java.util.jar.Attributes;
-
 /**
  * Class to hold manifest attributes
  *

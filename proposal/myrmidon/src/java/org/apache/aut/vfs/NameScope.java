@@ -22,7 +22,7 @@ public final class NameScope
      * not be empty, or <code>.</code>, or <code>..</code>, or contain any
      * separator characters.
      */
-    public static final NameScope CHILD = new NameScope( "child" );
+    public final static NameScope CHILD = new NameScope( "child" );
 
     /**
      * Resolve against files in the same file system as the base file.
@@ -39,7 +39,7 @@ public final class NameScope
      * <p>A path is considered absolute if it starts with a separator character,
      * and relative if it does not.
      */
-    public static final NameScope FILE_SYSTEM = new NameScope( "filesystem" );
+    public final static NameScope FILE_SYSTEM = new NameScope( "filesystem" );
 
     private String m_name;
 
