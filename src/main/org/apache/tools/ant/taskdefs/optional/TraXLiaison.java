@@ -162,9 +162,15 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     // because it grabs the base uri via lastIndexOf('/') without
     // making sure it is really a /'ed path
     protected String getSystemId(File file){
-      String path = file.getAbsolutePath();
-      path = path.replace('\\','/');
-      return FILE_PROTOCOL_PREFIX + path;
+        String path = file.getAbsolutePath();
+        path = path.replace('\\','/');
+
+        // on Windows, use 'file:///'
+        if (File.separatorChar == '\\') {
+            return FILE_PROTOCOL_PREFIX + "/" + path;
+        }
+        // Unix, use 'file://'
+        return FILE_PROTOCOL_PREFIX + path;
     }
 
     public void addParam(String name, String value){

@@ -76,7 +76,7 @@ public interface XSLTLiaison {
      * case since most parsers for now incorrectly makes no difference
      * between it.. and users also have problem with that :)
      */
-    String FILE_PROTOCOL_PREFIX = "file:///";
+    String FILE_PROTOCOL_PREFIX = "file://";
 
     /**
      * set the stylesheet to use for the transformation.

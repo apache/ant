@@ -1,6 +1,7 @@
 package org.apache.tools.ant.taskdefs.optional;
 
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.BuildException;
 
 import java.io.File;
@@ -110,4 +111,17 @@ public class TraXLiaisonTest extends AbstractXSLTLiaisonTest {
             }
         }
     }
+
+    public void testSystemId(){
+        File file = null;
+        if ( File.separatorChar == '\\' ){
+            file = new File("d:\\jdk");
+        } else {
+            file = new File("/user/local/bin");
+        }
+        String systemid = ((TraXLiaison)liaison).getSystemId(file);
+        assert("SystemIDs should start by file:///", systemid.startsWith("file:///"));
+        assert("SystemIDs should not start with file:////", !systemid.startsWith("file:////"));
+    }
+
 }

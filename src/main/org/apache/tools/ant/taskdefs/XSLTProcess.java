@@ -217,7 +217,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     /**
      * Set the destination directory into which the XSL result
      * files should be copied to
-     * @param dirName the name of the destination directory
+     * @param dir the name of the destination directory
      **/
     public void setDestdir(File dir) {
         destDir = dir;
