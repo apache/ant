@@ -92,7 +92,7 @@ public class PatternSet
     /**
      * Adds the patterns of the other instance to this set.
      */
-    protected void append( final PatternSet other )
+    public void append( final PatternSet other )
     {
         m_includeList.addAll( other.m_includeList );
         m_excludeList.addAll( other.m_excludeList );
