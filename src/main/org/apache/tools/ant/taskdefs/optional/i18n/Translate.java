@@ -67,6 +67,7 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.filters.TokenFilter;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
@@ -517,7 +518,10 @@ public class Translate extends MatchingTask {
                         BufferedReader in
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
-                        while ((line = in.readLine()) != null) {
+                        TokenFilter.LineTokenizer lineTokenizer = new TokenFilter.LineTokenizer();
+                        lineTokenizer.setIncludeDelims(true);
+                        line = lineTokenizer.getToken(in);
+                        while ((line) != null) {
                         // 2003-02-21 new replace algorithm by tbee (tbee@tbee.org)
                         // because it wasn't able to replace something like "@aaa;@bbb;"
 
@@ -579,7 +583,7 @@ public class Translate extends MatchingTask {
 
 
                             out.write(line);
-                            out.newLine();
+                            line = lineTokenizer.getToken(in);
                         }
                         if (in != null) {
                             in.close();
