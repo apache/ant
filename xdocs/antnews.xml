@@ -25,6 +25,32 @@
   </properties>
 
 <body>
+  <section name="Antidote Retired">
+    <h3>April 4th, 2005 - The Apache Ant Project Retires Antidote, the
+    Ant GUI</h3>
+
+    <p>The Antidote subproject was once started to provide a GUI for
+    Ant at a time where IDE support for Ant was far from usable.
+    Unfortunately it never attracted a developer community of its
+    own.</p>
+
+    <p>At the same time IDE support for Ant has become ubiquitous by
+    now and there is little reason to have a GUI just for Ant.  This
+    makes it even less likely that volunteers will start to spend time
+    working on it.</p>
+
+    <p>Antidote's development has been stalled for years now, despite
+    some efforts to rejuvenate it by single developers.  Therefore the
+    Ant developers have chosen to retire Antidote.</p>
+
+    <p>Antidote will no longer be developed by the Ant project; its
+    CVS module will be shut down.</p>
+
+    <p>If you are interested in Antidote's sources to learn from or
+    build on it, you can find snapshots at <a
+    href="http://archive.apache.org/ant/antidote/">http://archive.apache.org/ant/antidote/</a>.</p>
+  </section>
+
   <section name="Ant 1.6.3beta1">
     <h3>March 31st, 2005 - Ant 1.6.3beta1 Available</h3>
     <p>Apache Ant 1.6.3beta1 is now available for <a
