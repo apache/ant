@@ -30,6 +30,8 @@ import org.apache.myrmidon.components.role.RoleManager;
 import org.apache.myrmidon.converter.Converter;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -40,6 +42,9 @@ public class DefaultDeployer
     extends AbstractLoggable
     implements Deployer, Initializable, Composable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( DefaultDeployer.class );
+
     private final static String TYPE_DESCRIPTOR = "META-INF/ant-types.xml";
 
     private ConverterRegistry            m_converterRegistry;
@@ -80,7 +85,10 @@ public class DefaultDeployer
         {
             final URL url = (URL)enum.nextElement();
             parser.parse( url.toString() );
-            getLogger().debug( "deploying " + url );
+
+            final String message = REZ.getString( "url-deploy.notice", url );
+            getLogger().debug( message );
+
             deployFromDescriptor( handler.getConfiguration(), classLoader, url );
         }
     }
@@ -88,7 +96,11 @@ public class DefaultDeployer
     public void deploy( final File file )
         throws DeploymentException
     {
-        getLogger().info( "Deploying AntLib file (" + file + ")" );
+        if( getLogger().isInfoEnabled() )
+        {
+            final String message = REZ.getString( "file-deploy.notice", file );
+            getLogger().info( message );
+        }
 
         checkFile( file );
 
@@ -108,7 +120,8 @@ public class DefaultDeployer
         }
         catch( final Exception e )
         {
-            throw new DeploymentException( "Error deploying library", e );
+            final String message = REZ.getString( "deploy-lib.error" );
+            throw new DeploymentException( message, e );
         }
     }
 
@@ -137,11 +150,13 @@ public class DefaultDeployer
         }
         catch( final ConfigurationException ce )
         {
-            throw new DeploymentException( "Malformed taskdefs.xml", ce );
+            final String message = REZ.getString( "bad-descriptor.error" );
+            throw new DeploymentException( message, ce );
         }
         catch( final Exception e )
         {
-            throw new DeploymentException( "Failed to deploy " + name, e );
+            final String message = REZ.getString( "deploy-converter.error", name );
+            throw new DeploymentException( message, e );
         }
     }
 
@@ -171,11 +186,13 @@ public class DefaultDeployer
         }
         catch( final ConfigurationException ce )
         {
-            throw new DeploymentException( "Malformed taskdefs.xml", ce );
+            final String message = REZ.getString( "bad-descriptor.error" );
+            throw new DeploymentException( message, ce );
         }
         catch( final Exception e )
         {
-            throw new DeploymentException( "Failed to deploy " + name, e );
+            final String message = REZ.getString( "deploy-type.error", name );
+            throw new DeploymentException( message, e );
         }
     }
 
@@ -213,7 +230,8 @@ public class DefaultDeployer
         }
         catch( final Exception e )
         {
-            throw new DeploymentException( "Error deploying library from " + url, e );
+            final String message = REZ.getString( "deploy-lib.error", url );
+            throw new DeploymentException( message, e );
         }
     }
 
@@ -239,7 +257,8 @@ public class DefaultDeployer
 
         if( null == name )
         {
-            throw new DeploymentException( "RoleManager does not know name for role " + role );
+            final String message = REZ.getString( "unknown-name4role.error", role );
+            throw new DeploymentException( message );
         }
 
         return name;
@@ -252,7 +271,8 @@ public class DefaultDeployer
 
         if( null == role )
         {
-            throw new DeploymentException( "RoleManager does not know role for name " + name );
+            final String message = REZ.getString( "unknown-role4name.error", name );
+            throw new DeploymentException( message );
         }
 
         return role;
@@ -263,14 +283,14 @@ public class DefaultDeployer
     {
         if( !file.exists() )
         {
-            throw new DeploymentException( "Could not find application archive at " +
-                                           file );
+            final String message = REZ.getString( "no-file.error", file );
+            throw new DeploymentException( message );
         }
 
         if( file.isDirectory() )
         {
-            throw new DeploymentException( "Could not find application archive at " +
-                                           file + " as it is a directory." );
+            final String message = REZ.getString( "file-is-dir.error", file );
+            throw new DeploymentException( message );
         }
     }
 
@@ -287,8 +307,12 @@ public class DefaultDeployer
         factory.addNameClassMapping( name, name );
         m_typeManager.registerType( Converter.ROLE, name, factory );
 
-        getLogger().debug( "Registered converter " + name + " that converts from " +
-                           source + " to " + destination );
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = 
+                REZ.getString( "register-converter.notice", name, source, destination );
+            getLogger().debug( message );
+        }
     }
 
     private void handleType( final String role,
@@ -302,6 +326,11 @@ public class DefaultDeployer
         factory.addNameClassMapping( name, className );
         m_typeManager.registerType( role, name, factory );
 
-        getLogger().debug( "Registered " + role + "/" + name + " as " + className );
+        if( getLogger().isDebugEnabled() )
+        {
+            final String message = 
+                REZ.getString( "register-role.notice", role, name, className );
+            getLogger().debug( message );
+        }
     }
 }
