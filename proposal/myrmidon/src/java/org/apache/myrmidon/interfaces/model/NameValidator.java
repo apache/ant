@@ -17,8 +17,10 @@ public interface NameValidator
 {
     /**
      * Validates the supplied name, failing if it is not.
+     *
      * @param name The name to be validated.
      * @throws Exception is the supplied name is not valid.
      */
-    void validate( String name ) throws Exception;
+    void validate( String name )
+        throws Exception;
 }

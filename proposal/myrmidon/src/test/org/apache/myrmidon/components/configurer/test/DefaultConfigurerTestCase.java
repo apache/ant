@@ -15,6 +15,7 @@ import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.AbstractComponentTest;
+import org.apache.myrmidon.components.store.DefaultPropertyStore;
 import org.apache.myrmidon.components.configurer.DefaultConfigurer;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestAttributeConvert;
 import org.apache.myrmidon.components.configurer.test.data.ConfigTestConfigAdder;
@@ -76,7 +77,9 @@ public class DefaultConfigurerTestCase
         m_configurer = (Configurer)getServiceManager().lookup( Configurer.ROLE );
 
         // Setup a context
-        m_context = new DefaultTaskContext( null, getServiceManager(), getLogger() );
+        final DefaultPropertyStore store = new DefaultPropertyStore();
+        m_context =
+            new DefaultTaskContext( getServiceManager(), getLogger(), store );
         final File baseDir = new File( "." ).getAbsoluteFile();
         m_context.setProperty( TaskContext.BASE_DIRECTORY, baseDir );
     }

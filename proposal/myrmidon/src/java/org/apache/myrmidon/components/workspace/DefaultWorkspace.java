@@ -37,7 +37,9 @@ import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
+import org.apache.myrmidon.interfaces.store.PropertyStore;
 import org.apache.myrmidon.listeners.ProjectListener;
+import org.apache.myrmidon.components.store.DefaultPropertyStore;
 
 /**
  * This is the default implementation of Workspace.
@@ -56,7 +58,7 @@ public class DefaultWorkspace
     private ProjectListenerSupport m_listenerSupport = new ProjectListenerSupport();
     private ServiceManager m_serviceManager;
     private Parameters m_parameters;
-    private TaskContext m_baseContext;
+    private PropertyStore m_baseStore;
     private HashMap m_entries = new HashMap();
     private TypeManager m_typeManager;
     private Deployer m_deployer;
@@ -105,7 +107,7 @@ public class DefaultWorkspace
     public void initialize()
         throws Exception
     {
-        m_baseContext = createBaseContext();
+        m_baseStore = createBaseStore();
     }
 
     /**
@@ -128,22 +130,22 @@ public class DefaultWorkspace
         m_listenerSupport.projectFinished( project.getProjectName() );
     }
 
-    private TaskContext createBaseContext()
-        throws TaskException
+    private PropertyStore createBaseStore()
+        throws Exception
     {
-        final TaskContext context = new DefaultTaskContext( null, null, null );
+        final DefaultPropertyStore store = new DefaultPropertyStore();
 
         final String[] names = m_parameters.getNames();
         for( int i = 0; i < names.length; i++ )
         {
             final String value = m_parameters.getParameter( names[ i ], null );
-            context.setProperty( names[ i ], value );
+            store.setProperty( names[ i ], value );
         }
 
         //Add system properties so that they overide user-defined properties
-        addToContext( context, System.getProperties() );
+        addToStore( store, System.getProperties() );
 
-        return context;
+        return store;
     }
 
     private File findTypeLib( final String libraryName )
@@ -250,9 +252,12 @@ public class DefaultWorkspace
         final Logger logger =
             new RoutingLogger( getLogger(), m_listenerSupport );
 
-        // Create and configure the context
+        //TODO: Put this in Execution Frame
+        final PropertyStore store = m_baseStore.createChildStore("");
+
+       // Create and configure the context
         final DefaultTaskContext context =
-            new DefaultTaskContext( m_baseContext, serviceManager, logger );
+            new DefaultTaskContext( serviceManager, logger, store );
         context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
 
         final DefaultExecutionFrame frame =
@@ -467,13 +472,13 @@ public class DefaultWorkspace
     }
 
     /**
-     * Helper method to add values to a context
+     * Helper method to add values to a store.
      *
-     * @param context the context
+     * @param store the store
      * @param map the map of names->values
      */
-    private void addToContext( final TaskContext context, final Map map )
-        throws TaskException
+    private void addToStore( final PropertyStore store, final Map map )
+        throws Exception
     {
         final Iterator keys = map.keySet().iterator();
 
@@ -481,7 +486,7 @@ public class DefaultWorkspace
         {
             final String key = (String)keys.next();
             final Object value = map.get( key );
-            context.setProperty( key, value );
+            store.setProperty( key, value );
         }
     }
 }

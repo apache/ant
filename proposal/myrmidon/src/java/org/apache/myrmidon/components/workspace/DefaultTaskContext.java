@@ -8,19 +8,18 @@
 package org.apache.myrmidon.components.workspace;
 
 import java.io.File;
-import java.util.Hashtable;
 import java.util.Map;
-import java.util.HashMap;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
+import org.apache.myrmidon.interfaces.store.PropertyStore;
 
 /**
  * Default implementation of TaskContext.
@@ -34,33 +33,35 @@ public class DefaultTaskContext
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
 
-    // Property name validator allows digits, but no internal whitespace.
-    private static DefaultNameValidator c_propertyNameValidator =
-        new DefaultNameValidator();
-
-    static
-    {
-        c_propertyNameValidator.setAllowInternalWhitespace( false );
-        c_propertyNameValidator.setAdditionalInternalCharacters( "_-.+" );
-    }
-
-    private final Map m_contextData = new Hashtable();
-    private final TaskContext m_parent;
     private final ServiceManager m_serviceManager;
     private final Logger m_logger;
+    private final PropertyStore m_store;
     private PropertyResolver m_propertyResolver;
 
     /**
      * Constructor that takes both parent context and a service directory.
      */
-    public DefaultTaskContext( final TaskContext parent,
-                               final ServiceManager serviceManager,
-                               final Logger logger )
+    public DefaultTaskContext( final ServiceManager serviceManager,
+                               final Logger logger,
+                               final PropertyStore store )
         throws TaskException
     {
-        m_parent = parent;
         m_serviceManager = serviceManager;
         m_logger = logger;
+        m_store = store;
+
+        if( null == m_serviceManager )
+        {
+            throw new NullPointerException( "serviceManager" );
+        }
+        if( null == m_logger )
+        {
+            throw new NullPointerException( "logger" );
+        }
+        if( null == m_store )
+        {
+            throw new NullPointerException( "store" );
+        }
     }
 
     /**
@@ -96,8 +97,8 @@ public class DefaultTaskContext
     public Object getService( final Class serviceClass )
         throws TaskException
     {
-        // Try this context first
         final String name = serviceClass.getName();
+        //Note that this will chain up to parent ServiceManagers (if any)
         if( null != m_serviceManager && m_serviceManager.hasService( name ) )
         {
             try
@@ -108,12 +109,6 @@ public class DefaultTaskContext
             {
                 throw new TaskException( se.getMessage(), se );
             }
-        }
-
-        // Try parent
-        if( null != m_parent )
-        {
-            return m_parent.getService( serviceClass );
         }
 
         // Not found
@@ -179,12 +174,14 @@ public class DefaultTaskContext
      */
     public Object getProperty( final String name )
     {
-        Object value = m_contextData.get( name );
-        if( value == null && m_parent != null )
+        try
         {
-            value = m_parent.getProperty( name );
+            return m_store.getProperty( name );
         }
-        return value;
+        catch( final Exception e )
+        {
+            return null;
+        }
     }
 
     /**
@@ -193,14 +190,16 @@ public class DefaultTaskContext
      * @return the map of all property names to values
      */
     public Map getProperties()
+        throws TaskException
     {
-        Map props = new HashMap();
-        if( m_parent != null )
+        try
         {
-            props.putAll( m_parent.getProperties() );
+            return m_store.getProperties();
         }
-        props.putAll( m_contextData );
-        return props;
+        catch( final Exception e )
+        {
+            throw new TaskException( e.getMessage(), e );
+        }
     }
 
     /**
@@ -212,16 +211,13 @@ public class DefaultTaskContext
     public void setProperty( final String name, final Object value )
         throws TaskException
     {
-        checkPropertyName( name );
-        checkPropertyValid( name, value );
-
-        if ( value == null )
+        try
         {
-            m_contextData.remove( name );
+            m_store.setProperty( name, value );
         }
-        else
+        catch( final Exception e )
         {
-            m_contextData.put( name, value );
+            throw new TaskException( e.getMessage(), e );
         }
     }
 
@@ -391,52 +387,18 @@ public class DefaultTaskContext
     public TaskContext createSubContext( final String name )
         throws TaskException
     {
-        final DefaultTaskContext context =
-            new DefaultTaskContext( this, m_serviceManager, m_logger );
-
-        context.setProperty( TaskContext.NAME, getName() + "." + name );
-        context.setProperty( TaskContext.BASE_DIRECTORY, getBaseDirectory() );
-
-        return context;
-    }
-
-    /**
-     * Checks that the supplied property name is valid.
-     */
-    private void checkPropertyName( final String name ) throws TaskException
-    {
         try
         {
-            c_propertyNameValidator.validate( name );
-        }
-        catch( Exception e )
-        {
-            String message = REZ.getString( "bad-property-name.error" );
-            throw new TaskException( message, e );
-        }
-    }
+            final PropertyStore store = m_store.createChildStore( name );
+            final DefaultServiceManager serviceManager =
+                new DefaultServiceManager( m_serviceManager );
+            final Logger logger = m_logger.getChildLogger( name );
 
-    /**
-     * Make sure property is valid if it is one of the "magic" properties.
-     *
-     * @param name the name of property
-     * @param value the value of proeprty
-     * @exception TaskException if an error occurs
-     */
-    private void checkPropertyValid( final String name, final Object value )
-        throws TaskException
-    {
-        if( BASE_DIRECTORY.equals( name ) && !( value instanceof File ) )
-        {
-            final String message =
-                REZ.getString( "bad-property.error", BASE_DIRECTORY, File.class.getName() );
-            throw new TaskException( message );
+            return new DefaultTaskContext( serviceManager, logger, store );
         }
-        else if( NAME.equals( name ) && !( value instanceof String ) )
+        catch( final Exception e )
         {
-            final String message =
-                REZ.getString( "bad-property.error", NAME, String.class.getName() );
-            throw new TaskException( message );
+            throw new TaskException( e.getMessage(), e );
         }
     }
 }

@@ -11,9 +11,11 @@ import java.io.File;
 import java.util.Date;
 import org.apache.aut.converter.lib.ObjectToStringConverter;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.AbstractComponentTest;
+import org.apache.myrmidon.components.store.DefaultPropertyStore;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 
@@ -40,7 +42,9 @@ public abstract class AbstractPropertyResolverTestCase
     {
         m_resolver = (PropertyResolver)getServiceManager().lookup( PropertyResolver.ROLE );
 
-        m_context = new DefaultTaskContext( null, null, getLogger() );
+        final DefaultPropertyStore store = new DefaultPropertyStore();
+        final DefaultServiceManager serviceManager = new DefaultServiceManager();
+        m_context = new DefaultTaskContext( serviceManager, getLogger(), store );
         m_context.setProperty( "intProp", new Integer( 333 ) );
         m_context.setProperty( "stringProp", "String property" );
 
