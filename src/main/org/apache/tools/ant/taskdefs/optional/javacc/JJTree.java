@@ -233,15 +233,15 @@ public class JJTree extends Task {
             throw new BuildException("Invalid target: " + target);
         }
 
-        if (outputFile != null) {
-            cmdl.createArgument().setValue("-" + OUTPUT_FILE + ":"
-                                           + outputFile.replace('\\', '/'));
-        }
-
         File javaFile = null;
 
         // use the directory containing the target as the output directory
         if (outputDirectory == null) {
+            // convert backslashes to slashes, otherwise jjtree will
+            // put this as comments and this seems to confuse javacc
+            cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:"
+                                           + getDefaultOutputDirectory());
+
             javaFile = new File(createOutputFileName(target, outputFile,
                                                      null));
         } else {
@@ -267,6 +267,12 @@ public class JJTree extends Task {
                 Project.MSG_VERBOSE);
             return;
         }
+
+        if (outputFile != null) {
+            cmdl.createArgument().setValue("-" + OUTPUT_FILE + ":"
+                                           + outputFile.replace('\\', '/'));
+        }
+
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
         cmdl.setClassname(JavaCC.getMainClass(javaccHome,
@@ -300,6 +306,8 @@ public class JJTree extends Task {
 
     private String createOutputFileName(File target, String optionalOutputFile,
                                         String outputDirectory) {
+        optionalOutputFile = validateOutputFile(optionalOutputFile,
+                                                outputDirectory);
         String jjtreeFile = target.getAbsolutePath().replace('\\','/');
 
         if ((optionalOutputFile == null) || optionalOutputFile.equals("")) {
@@ -326,11 +334,7 @@ public class JJTree extends Task {
         }
 
         if ((outputDirectory == null) || outputDirectory.equals("")) {
-            if (isAbsolute(optionalOutputFile)) {
-                return optionalOutputFile.replace('\\','/');
-            } else {
-                outputDirectory = getProject().getBaseDir().getAbsolutePath();
-            }
+            outputDirectory = getDefaultOutputDirectory();
         }
 
         return (outputDirectory + "/" + optionalOutputFile).replace('\\', '/');
@@ -338,5 +342,84 @@ public class JJTree extends Task {
 
     private boolean isAbsolute(String fileName) {
         return (fileName.startsWith("/") || (new File(fileName).isAbsolute()));
+    }
+
+    /**
+     * When running JJTree from an Ant taskdesk the -OUTPUT_DIRECTORY must
+     * always be set. But when -OUTPUT_DIRECTORY is set, -OUTPUT_FILE is
+     * handled as if relative of this -OUTPUT_DIRECTORY. Thus when the
+     * -OUTPUT_FILE is absolute or contains a drive letter we have a problem.
+     *
+     * @param outputFile
+     * @param outputDirectory
+     * @return
+     * @throws BuildException
+     */
+    private String validateOutputFile(String outputFile, 
+                                      String outputDirectory) 
+        throws BuildException {
+        if (outputFile == null) {
+            return null;
+        }
+
+        if ((outputDirectory == null)
+            && (outputFile.startsWith("/") || outputFile.startsWith("\\"))) {
+            String relativeOutputFile = makeOutputFileRelative(outputFile);
+            setOutputfile(relativeOutputFile);
+
+            return relativeOutputFile;
+        }
+
+        String root = getRoot(new File(outputFile)).getAbsolutePath();
+
+        if ((root.length() > 1)
+            && outputFile.startsWith(root.substring(0, root.length() - 1))) {
+            throw new BuildException("Drive letter in 'outputfile' not "
+                                     + "supported: " + outputFile);
+        }
+
+        return outputFile;
+    }
+
+    private String makeOutputFileRelative(String outputFile) {
+        StringBuffer relativePath = new StringBuffer();
+        String defaultOutputDirectory = getDefaultOutputDirectory();
+        int nextPos = defaultOutputDirectory.indexOf('/');
+        int startPos = nextPos + 1;
+
+        while (startPos > -1 && startPos < defaultOutputDirectory.length()) {
+            relativePath.append("/..");
+            nextPos = defaultOutputDirectory.indexOf('/', startPos);
+
+            if (nextPos == -1) {
+                startPos = nextPos;
+            } else {
+                startPos = nextPos + 1;
+            }
+        }
+
+        relativePath.append(outputFile);
+
+        return relativePath.toString();
+    }
+
+    private String getDefaultOutputDirectory() {
+        return getProject().getBaseDir().getAbsolutePath().replace('\\', '/');
+    }
+
+    /**
+     * Determine root directory for a given file.
+     *
+     * @param file
+     * @return file's root directory
+     */
+    private File getRoot(File file) {
+        File root = file.getAbsoluteFile();
+
+        while (root.getParent() != null) {
+            root = root.getParentFile();
+        }
+
+        return root;
     }
 }
