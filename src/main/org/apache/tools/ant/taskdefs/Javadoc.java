@@ -466,6 +466,8 @@ public class Javadoc extends Task {
     private boolean useExternalFile = false;
     private FileUtils fileUtils = FileUtils.newFileUtils();
     private String source = null;
+    private boolean linksource = false;
+    private boolean breakiterator = false;
 
     private Vector fileSets = new Vector();
     private Vector packageSets = new Vector();
@@ -1502,6 +1504,34 @@ public class Javadoc extends Task {
         fileSets.addElement(fs);
     }
 
+    /**
+     * Enables the -linksource switch, will be ignored if javadoc is not
+     * the 1.4 version. Default is false
+     *
+     * @since Ant 1.6
+     */
+    public void setLinksource(boolean b) {
+        if (!javadoc4) {
+            log ("-linksource option not supported on JavaDoc < 1.4",
+                 Project.MSG_VERBOSE);
+        }
+        this.linksource = b;       
+    }
+
+    /**
+     * Enables the -linksource switch, will be ignored if javadoc is not
+     * the 1.4 version. Default is false
+     *
+     * @since Ant 1.6
+     */
+    public void setBreakiterator(boolean b) {
+        if (!javadoc4) {
+            log ("-breakiterator option not supported on JavaDoc < 1.4",
+                 Project.MSG_VERBOSE);
+        }
+        this.breakiterator = b;       
+    }
+
     public void execute() throws BuildException {
         if ("javadoc2".equals(getTaskType())) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
@@ -1792,6 +1822,13 @@ public class Javadoc extends Task {
                 if (source != null) {
                     toExecute.createArgument().setValue("-source");
                     toExecute.createArgument().setValue(source);
+                }
+                
+                if (linksource && doclet == null) {
+                    toExecute.createArgument().setValue("-linksource");
+                }
+                if (breakiterator && doclet == null) {
+                    toExecute.createArgument().setValue("-breakiterator");
                 }
             }
 

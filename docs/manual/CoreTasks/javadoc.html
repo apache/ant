@@ -40,7 +40,7 @@ versions, you are strongly encouraged to use <a href="javadoc.html">javadoc</a>
 instead.</i></p>
 
 <p>In the table below, 1.1 means available if your current Java VM is
-a 1.1 VM, 1.2 for either 1.2 or 1.3 and 1.4 for a 1.4 Java VM.  1.2+
+a 1.1 VM, 1.2 for either 1.2 or 1.3 and 1.4+ for any VM of at least version 1.4.  1.2+
 means any VM of at least version 1.2.</p>
 
 <h3>Parameters</h3>
@@ -397,7 +397,23 @@ means any VM of at least version 1.2.</p>
     present in J2SE v 1.4 source code. Set this to &quot;1.4&quot; to
     documents code that compiles using <code>&quot;javac -source
     1.4&quot;</code>.</td>
-    <td align="center" valign="top">1.4</td>
+    <td align="center" valign="top">1.4+</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">linksource</td>
+    <td valign="top">Generate hyperlinks to source files.
+      <em>since Ant 1.6</em>.
+      (<code>yes</code> | <code>no</code>). Default is no.</td>
+    <td align="center" valign="top">1.4+</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">breakiterator</td>
+    <td valign="top">Use the new breakiterator algorithm.
+      <em>since Ant 1.6</em>.
+      (<code>yes</code> | <code>no</code>). Default is no.</td>
+    <td align="center" valign="top">1.4+</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
