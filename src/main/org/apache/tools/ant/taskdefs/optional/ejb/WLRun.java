@@ -183,34 +183,34 @@ public class WLRun extends Task {
                                      " is not valid");
         }
 
-        File securityPolicyFile = null;
-        if (securityPolicy == null) {
-            securityPolicyFile = new File(weblogicSystemHome, DEFAULT_WL60_POLICY_FILE);
-        }
-        else {
-            securityPolicyFile = new File(weblogicSystemHome, securityPolicy);
-        }
-
-        if (!securityPolicyFile.exists()) {
-            // OK it maybe an absolute path. Use the project to resolve it
-            securityPolicyFile = project.resolveFile(securityPolicy);
-            if (!securityPolicyFile.exists()) {
-                throw new BuildException("Security policy " + securityPolicy +
-                                         " was not found.");
-            }                                         
-        }
-
-
         if (beaHome != null) {
-            executeWLS6(securityPolicyFile);
-        }
-        else {
-            executeWLS(securityPolicyFile);
+            executeWLS6();
+        } else {
+            executeWLS();
         }
     }
     
-    private void executeWLS6(File securityPolicyFile) {
-        
+    private File findSecurityPolicyFile(String defaultSecurityPolicy) {
+        String securityPolicy = this.securityPolicy;
+        if (securityPolicy == null) {
+            securityPolicy = defaultSecurityPolicy;
+        }
+        File securityPolicyFile = new File( weblogicSystemHome, securityPolicy );
+        // If an explicit securityPolicy file was specified, it maybe an
+        // absolute path.  Use the project to resolve it.
+        if (this.securityPolicy != null && !securityPolicyFile.exists()) {
+            securityPolicyFile = project.resolveFile(securityPolicy);
+        }
+        // If we still can't find it, complain
+        if (!securityPolicyFile.exists()) {
+            throw new BuildException("Security policy " + securityPolicy +
+                                     " was not found.");
+        }
+        return securityPolicyFile;
+    }
+    
+    private void executeWLS6() {
+        File securityPolicyFile = findSecurityPolicyFile( DEFAULT_WL60_POLICY_FILE );
         if (!beaHome.isDirectory()) {
             throw new BuildException("BEA home " + beaHome.getPath() + 
                                      " is not valid");
@@ -259,8 +259,8 @@ public class WLRun extends Task {
         }
      }
     
-    private void executeWLS(File securityPolicyFile) {
-
+    private void executeWLS() {
+        File securityPolicyFile = findSecurityPolicyFile( DEFAULT_WL51_POLICY_FILE );
         File propertiesFile = null;
         
 
