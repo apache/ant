@@ -806,7 +806,7 @@ public class ComponentHelper  {
      * called for each component name, check if the
      * associated URI has been examined for antlibs.
      */
-    private void checkNamespace(String componentName) {
+    private synchronized void checkNamespace(String componentName) {
         if (componentName.indexOf(':') == -1) {
             return; // not a namespaced name
         }
