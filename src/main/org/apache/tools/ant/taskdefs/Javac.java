@@ -420,28 +420,7 @@ public class Javac extends MatchingTask {
         if (compileClasspath == null) {
             classpath.addExisting(Path.systemClasspath);
         } else {
-            String order = project.getProperty("build.sysclasspath");
-            if (order == null) order="first";
-
-            if (order.equals("only")) {
-                // only: the developer knows what (s)he is doing
-                classpath.addExisting(Path.systemClasspath);
-
-            } else if (order.equals("last")) {
-                // last: don't trust the developer
-                classpath.addExisting(compileClasspath);
-                classpath.addExisting(Path.systemClasspath);
-
-            } else if (order.equals("ignore")) {
-                // ignore: don't trust anyone
-                classpath.addExisting(compileClasspath);
-                addRuntime = true;
-
-            } else {
-                // first: developer could use a little help
-                classpath.addExisting(Path.systemClasspath);
-                classpath.addExisting(compileClasspath);
-            }
+            classpath.addExisting(compileClasspath.concatSystemClasspath());
         }
 
         // optionally add the runtime classes

@@ -571,6 +571,8 @@ public class Javadoc extends Task {
 // ------------------------------------------------ general javadoc arguments
         if (classpath == null)
             classpath = Path.systemClasspath;
+        else
+            classpath = classpath.concatSystemClasspath();
 
         if (!javadoc1) {
             toExecute.createArgument().setValue("-classpath");

@@ -105,11 +105,13 @@ public class AntClassLoader  extends ClassLoader {
      * Create a classloader for the given project using the classpath given.
      *
      * @param project the project to ehich this classloader is to belong.
-     * @param classpath the classpath to use to load the classes.
+     * @param classpath the classpath to use to load the classes.  This
+     *                is combined with the system classpath in a manner
+     *                determined by the value of ${build.sysclasspath}
      */
     public AntClassLoader(Project project, Path classpath) {
         this.project = project;
-        this.classpath = classpath;
+        this.classpath = classpath.concatSystemClasspath();
 
         // JDK > 1.1 should add these by default, but some VMs don't
         addSystemPackageRoot("java");

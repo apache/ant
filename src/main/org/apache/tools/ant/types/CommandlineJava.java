@@ -190,7 +190,7 @@ public class CommandlineJava implements Cloneable {
         }
         if (classpath != null && classpath.size() > 0) {
             result[pos++] = "-classpath";
-            result[pos++] = classpath.toString();
+            result[pos++] = classpath.concatSystemClasspath().toString();
         }
         System.arraycopy(javaCommand.getCommandline(), 0, 
                          result, pos, javaCommand.size());
