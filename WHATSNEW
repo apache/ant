@@ -225,6 +225,9 @@ Fixed bugs:
 * ftp did not set the ascii mode explicity, causing problems with ftp servers
   having binary as default
 
+* ftp was not able to download files when they were pointed to by symbolic links
+  Bugzilla Report 14063.
+
 * replace would change \r\n into \r\r\n under Windows.
 
 * junitreport with frames did not display a link for classes without a package
