@@ -55,9 +55,11 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.*;
 
 import java.io.*;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
 import java.util.zip.*;
@@ -75,6 +77,10 @@ public class Zip extends MatchingTask {
     private File baseDir;
     private boolean doCompress = true;
     protected String archiveType = "zip";
+    // For directories:
+    private static long emptyCrc = new CRC32 ().getValue ();
+    protected String emptyBehavior = null;
+    private Vector filesets = new Vector ();
     
     /**
      * This is the name/location of where to 
@@ -99,73 +105,113 @@ public class Zip extends MatchingTask {
         doCompress = Project.toBoolean(compress);
     }
 
+    /**
+     * Adds a set of files (nested fileset attribute).
+     */
+    public void addFileset(FileSet set) {
+        filesets.addElement(set);
+    }
+
+    /**
+     * Adds a reference to a set of files (nested filesetref element).
+     */
+    public void addFilesetref(Reference ref) {
+        filesets.addElement(ref);
+    }
+
+    /**
+     * Sets behavior of the task when no files match.
+     * Possible values are: <code>fail</code> (throw an exception
+     * and halt the build); <code>skip</code> (do not create
+     * any archive, but issue a warning); <code>create</code>
+     * (make an archive with no entries).
+     * Default for zip tasks is <code>skip</code>;
+     * for jar tasks, <code>create</code>.
+     */
+    public void setWhenempty(String we) throws BuildException {
+        we = we.toLowerCase();
+        // XXX could instead be using EnumeratedAttribute, but this works
+        if (!"fail".equals(we) && !"skip".equals(we) && !"create".equals(we))
+            throw new BuildException("Unrecognized whenempty attribute: " + we);
+        emptyBehavior = we;
+    }
+
     public void execute() throws BuildException {
-        if (baseDir == null) {
-            throw new BuildException("basedir attribute must be set!");
-        }
-        if (!baseDir.exists()) {
-            throw new BuildException("basedir does not exist!");
-        }
+        if (baseDir == null && filesets.size() == 0)
+            throw new BuildException("basedir attribute must be set, or at least one fileset must be given!");
 
-        DirectoryScanner ds = super.getDirectoryScanner(baseDir);
-
-        String[] files = ds.getIncludedFiles();
-        String[] dirs  = ds.getIncludedDirectories();
+        Vector dss = new Vector ();
+        if (baseDir != null)
+            dss.addElement(getDirectoryScanner(baseDir));
+        for (int i=0; i<filesets.size(); i++) {
+            Object o = filesets.elementAt(i);
+            FileSet fs;
+            if (o instanceof FileSet) {
+                fs = (FileSet) o;
+            } else {
+                Reference r = (Reference) o;
+                o = r.getReferencedObject(project);
+                if (o instanceof FileSet) {
+                    fs = (FileSet) o;
+                } else {
+                    throw new BuildException(r.getRefId() + " does not denote a fileset", location);
+                }
+            }
+            dss.addElement (fs.getDirectoryScanner(project));
+        }
+        FileScanner[] scanners = new FileScanner[dss.size()];
+        dss.copyInto(scanners);
 
         // quick exit if the target is up to date
-        boolean upToDate = true;
-        for (int i=0; i<files.length && upToDate; i++)
-            if (new File(baseDir,files[i]).lastModified() > 
-                zipFile.lastModified())
-                upToDate = false;
-        if (upToDate) return;
+        // can also handle empty archives
+        if (isUpToDate(scanners, zipFile)) return;
 
         log("Building "+ archiveType +": "+ zipFile.getAbsolutePath());
 
-        ZipOutputStream zOut = null;
-        try {
-            zOut = new ZipOutputStream(new FileOutputStream(zipFile));
-            if (doCompress) {
-                zOut.setMethod(ZipOutputStream.DEFLATED);
-            } else {
-                zOut.setMethod(ZipOutputStream.STORED);
-            }
-            initZipOutputStream(zOut);
+	try {
+	    ZipOutputStream zOut = new ZipOutputStream(new FileOutputStream(zipFile));
+	    try {
+		if (doCompress) {
+		    zOut.setMethod(ZipOutputStream.DEFLATED);
+		} else {
+		    zOut.setMethod(ZipOutputStream.STORED);
+		}
+		initZipOutputStream(zOut);
 
-            for (int i = 0; i < dirs.length; i++) {
-                File f = new File(baseDir,dirs[i]);
-                String name = dirs[i].replace(File.separatorChar,'/')+"/";
-                zipDir(f, zOut, name);
-            }
+                // XXX ideally would also enter includedDirectories to the archive
+		Hashtable parentDirs = new Hashtable();
 
-            for (int i = 0; i < files.length; i++) {
-                File f = new File(baseDir,files[i]);
-                String name = files[i].replace(File.separatorChar,'/');
-                zipFile(f, zOut, name);
-            }
-        } catch (IOException ioe) {
-            String msg = "Problem creating " + archiveType + " " + ioe.getMessage();
+                for (int j = 0; j < scanners.length; j++) {
+                    String[] files = scanners[j].getIncludedFiles();
+                    File thisBaseDir = scanners[j].getBasedir();
+                    for (int i = 0; i < files.length; i++) {
+                        File f = new File(thisBaseDir,files[i]);
+                        String name = files[i].replace(File.separatorChar,'/');
+                        // Look for & create parent dirs as needed.
+                        int slashPos = -1;
+                        while ((slashPos = name.indexOf((int)'/', slashPos + 1)) != -1) {
+                            String dir = name.substring(0, slashPos);
+                            if (!parentDirs.contains(dir)) {
+                                parentDirs.put(dir, dir);
+                                zipDir(new File(thisBaseDir, dir.replace('/', File.separatorChar)),
+                                       zOut, dir + '/');
+                            }
+                        }
+                        zipFile(f, zOut, name);
+                    }
+                }
+	    } finally {
+		zOut.close ();
+	    }
+	} catch (IOException ioe) {
+	    String msg = "Problem creating " + archiveType + ": " + ioe.getMessage();
 
             // delete a bogus ZIP file
-	    if (zOut != null) {
-	        try {
-	            zOut.close();
-                    zOut = null;
-	        } catch (IOException e) {}
-                if (!zipFile.delete()) {
-                    msg = zipFile + " is probably corrupt but I could not delete it";
-                }
-            }
+	    if (!zipFile.delete()) {
+		msg += " (and the archive is probably corrupt but I could not delete it)";
+	    }
 
             throw new BuildException(msg, ioe, location);
-	} finally {
-	    if (zOut != null) {
-	        try {
-                    // close up
-	            zOut.close();
-	        }
-	        catch (IOException e) {}
-	    }
         }
     }
 
@@ -174,9 +220,87 @@ public class Zip extends MatchingTask {
     {
     }
 
+    /**
+     * Check whether the archive is up-to-date; and handle behavior for empty archives.
+     * @param scanners list of prepared scanners containing files to archive
+     * @param zipFile intended archive file (may or may not exist)
+     * @return true if nothing need be done (may have done something already); false if
+     *         archive creation should proceed
+     * @exception BuildException if it likes
+     */
+    protected boolean isUpToDate(FileScanner[] scanners, File zipFile) throws BuildException
+    {
+        if (emptyBehavior == null) emptyBehavior = "skip";
+        File[] files = grabFiles(scanners);
+        if (files.length == 0) {
+            if (emptyBehavior.equals("skip")) {
+                log("Warning: skipping ZIP archive " + zipFile +
+                    " because no files were included.", Project.MSG_WARN);
+                return true;
+            } else if (emptyBehavior.equals("fail")) {
+                throw new BuildException("Cannot create ZIP archive " + zipFile +
+                                         ": no files were included.", location);
+            } else {
+                // Create.
+                if (zipFile.exists()) return true;
+                // In this case using java.util.zip will not work
+                // because it does not permit a zero-entry archive.
+                // Must create it manually.
+                log("Note: creating empty ZIP archive " + zipFile, Project.MSG_INFO);
+                try {
+                    OutputStream os = new FileOutputStream(zipFile);
+                    try {
+                        // Cf. PKZIP specification.
+                        byte[] empty = new byte[22];
+                        empty[0] = 80; // P
+                        empty[1] = 75; // K
+                        empty[2] = 5;
+                        empty[3] = 6;
+                        // remainder zeros
+                        os.write(empty);
+                    } finally {
+                        os.close();
+                    }
+                } catch (IOException ioe) {
+                    throw new BuildException("Could not create empty ZIP archive", ioe, location);
+                }
+                return true;
+            }
+        } else {
+            // Probably unnecessary but just for clarity:
+            if (!zipFile.exists()) return false;
+            for (int i=0; i<files.length; i++) {
+                if (files[i].lastModified() > zipFile.lastModified()) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+
+    protected static File[] grabFiles(FileScanner[] scanners) {
+        Vector files = new Vector ();
+        for (int i = 0; i < scanners.length; i++) {
+            File thisBaseDir = scanners[i].getBasedir();
+            String[] ifiles = scanners[i].getIncludedFiles();
+            for (int j = 0; j < ifiles.length; j++)
+                files.addElement(new File(thisBaseDir, ifiles[j]));
+        }
+        File[] toret = new File[files.size()];
+        files.copyInto(toret);
+        return toret;
+    }
+
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
         throws IOException
     {
+	ZipEntry ze = new ZipEntry (vPath);
+	if (dir != null) ze.setTime (dir.lastModified ());
+	ze.setSize (0);
+	ze.setMethod (ZipEntry.STORED);
+	// This is faintly ridiculous:
+	ze.setCrc (emptyCrc);
+	zOut.putNextEntry (ze);
     }
 
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,

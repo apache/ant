@@ -90,7 +90,6 @@
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
-      <include name="**/defaultManifest.mf" />
       <include name="**/*.properties" />
     </copydir>
 
@@ -102,6 +101,7 @@
              forceoverwrite="true"
              filtering="on">
       <include name="**/version.txt" />
+      <include name="**/defaultManifest.mf" />
     </copydir>
   </target>
 

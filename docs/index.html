@@ -2022,6 +2022,15 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
 <code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
 elements.</p>
+<p>You can also use nested file sets for more flexibility, and specify
+multiple ones to merge together different trees of files into one JAR.
+See the <a href="#zip">Zip</a> task for more details and examples.</p>
+<p>If the manifest is omitted, a simple one will be supplied by Ant.
+You should not include <samp>META-INF/MANIFEST.MF</samp> in your set of files.
+<p>The <code>whenempty</code> parameter controls what happens when no files match.
+If <code>create</code> (the default), the JAR is created anyway with only a manifest.
+If <code>skip</code>, the JAR is not created and a warning is issued.
+If <code>fail</code>, the JAR is not created and the build is halted with an error.
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -2037,7 +2046,7 @@ elements.</p>
   <tr>
     <td valign="top">basedir</td>
     <td valign="top">the directory from which to jar the files.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">compress</td>
@@ -2079,6 +2088,11 @@ elements.</p>
     <td valign="top">the manifest file to use.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">whenempty</td>
+    <td valign="top">Behavior to use if no files match.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot; basedir=&quot;${build}/classes&quot; /&gt;</pre>
@@ -2100,6 +2114,21 @@ with the name <code>Test.class</code> are excluded.</p>
 called <code>app.jar</code> in the <code>${dist}/lib</code> directory. Only
 files under the directory <code>mypackage/test</code> are used, and files with
 the name <code>Test.class</code> are excluded.</p>
+<pre>  &lt;jar jarfile=&quot;${dist}/lib/app.jar&quot;&gt;
+    &lt;fileset dir=&quot;${build}/classes&quot;
+             excludes=&quot;**/Test.class&quot;
+    /&gt;
+    &lt;fileset dir=&quot;${src}/resources&quot;/&gt;
+  &lt;/jar&gt;</pre>
+<p>jars all files in the <code>${build}/classes</code> directory and also
+in the <code>${src}/resources</code> directory together in a file
+called <code>app.jar</code> in the <code>${dist}/lib</code> directory.
+Files with the name <code>Test.class</code> are excluded.
+If there are files such as <code>${build}/classes/mypackage/MyClass.class</code>
+and <code>${src}/resources/mypackage/image.gif</code>, they will appear
+in the same directory in the JAR (and thus be considered in the same package
+by Java).</p>
+
 <hr>
 <h2><a name="java">Java</a></h2>
 <h3>Description</h3>
@@ -3655,6 +3684,19 @@ supports all attributes of <code>&lt;fileset&gt;</code>
 <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code>,
 <code>&lt;patternset&gt;</code> and <code>&lt;patternsetref&gt;</code>
 elements.</p>
+<p>Or, you may place within it nested file sets, or references to file sets.
+In this case <code>basedir</code> is optional; the implicit file set is <em>only used</em>
+if <code>basedir</code> is set. You may use any mixture of the implicit file set
+(with <code>basedir</code> set, and optional attributes like <code>includes</code>
+and optional subelements like <code>&lt;include&gt;</code>); explicit nested
+<code>&lt;fileset&gt;</code> elements; and nested <code>&lt;filesetref&gt;</code>
+elements; so long as at least one fileset total is specified. The ZIP file will
+only reflect the relative paths of files <em>within</em> each fileset.</p>
+<p>The <code>whenempty</code> parameter controls what happens when no files match.
+If <code>skip</code> (the default), the ZIP is not created and a warning is issued.
+If <code>fail</code>, the ZIP is not created and the build is halted with an error.
+If <code>create</code>, an empty ZIP file (explicitly zero entries) is created,
+which should be recognized as such by compliant ZIP manipulation tools.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -3670,7 +3712,7 @@ elements.</p>
   <tr>
     <td valign="top">basedir</td>
     <td valign="top">the directory from which to zip the files.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">compress</td>
@@ -3707,6 +3749,11 @@ elements.</p>
       (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">whenempty</td>
+    <td valign="top">Behavior when no files match.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;
@@ -3729,6 +3776,14 @@ or files with the name <code>todo.html</code> are excluded.</p>
 <p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory. Only html files under the directory <code>api</code>
 are zipped, and files with the name <code>todo.html</code> are excluded.</p>
+<pre>  &lt;zip zipfile=&quot;${dist}/manual.zip&quot;&gt;
+    &lt;fileset dir=&quot;htdocs/manual&quot;/&gt;
+    &lt;fileset dir=&quot;.&quot; includes=&quot;ChangeLog.txt&quot;/&gt;
+  &lt;/zip&gt;</pre>
+<p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
+in the <code>${dist}</code> directory, and also adds the file <code>ChangeLog.txt</code> in the
+current directory. <code>ChangeLog.txt</code> will be added to the top of the ZIP file, just as if
+it had been located at <code>htdocs/manual/ChangeLog.txt</code>.</p>
 
 <hr>
 <h2><a name="optionaltasks">Optional tasks</a></h2>

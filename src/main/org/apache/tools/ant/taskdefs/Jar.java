@@ -86,38 +86,67 @@ public class Jar extends Zip {
             super.zipDir(new File(manifest.getParent()), zOut, "META-INF/");
 	    super.zipFile(manifest, zOut, "META-INF/MANIFEST.MF");
 	} else {
-            /*
-             * We don't store directories at all and this one will cause a lot
-             * of problems with STORED Zip-Mode.
-             *
-             * That's why i've removed it -- Stefan Bodewig
-             */
-            //            ZipEntry ze = new ZipEntry("META-INF/");
-            //            zOut.putNextEntry(ze);
 	    String s = "/org/apache/tools/ant/defaultManifest.mf";
 	    InputStream in = this.getClass().getResourceAsStream(s);
             if ( in == null )
 		throw new BuildException ( "Could not find: " + s );
+	    super.zipDir(null, zOut, "META-INF/");
 	    zipFile(in, zOut, "META-INF/MANIFEST.MF", System.currentTimeMillis());
  	}
      }
+
+    protected boolean isUpToDate(FileScanner[] scanners, File zipFile)
+    {
+        File[] files = grabFiles(scanners);
+        if (emptyBehavior == null) emptyBehavior = "create";
+        if (files.length == 0) {
+            if (emptyBehavior.equals("skip")) {
+                log("Warning: skipping JAR archive " + zipFile +
+                    " because no files were included.", Project.MSG_WARN);
+                return true;
+            } else if (emptyBehavior.equals("fail")) {
+                throw new BuildException("Cannot create JAR archive " + zipFile +
+                                         ": no files were included.", location);
+            } else {
+                // create
+                if (!zipFile.exists() ||
+                    (manifest != null &&
+                     manifest.lastModified() > zipFile.lastModified()))
+                    log("Note: creating empty JAR archive " + zipFile, Project.MSG_INFO);
+                // and continue below...
+            }
+        }
+        if (!zipFile.exists()) return false;
+	if (manifest != null && manifest.lastModified() > zipFile.lastModified())
+	    return false;
+        for (int i=0; i<files.length; i++) {
+            if (files[i].lastModified() > zipFile.lastModified()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath)
         throws IOException
     {
         // First add directory to zip entry
-        if(!vPath.equals("META-INF/")) {
+        if(!vPath.equalsIgnoreCase("META-INF/")) {
             // we already added a META-INF
             super.zipDir(dir, zOut, vPath);
         }
+        // no warning if not, it is harmless in and of itself
     }
 
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
         throws IOException
     {
         // We already added a META-INF/MANIFEST.MF
-        if (!vPath.equals("META-INF/MANIFEST.MF")) {
+        if (!vPath.equalsIgnoreCase("META-INF/MANIFEST.MF")) {
             super.zipFile(file, zOut, vPath);
+        } else {
+            log("Warning: selected JAR files include a META-INF/MANIFEST.MF which will be ignored " +
+                "(please use manifest attribute to jar task)", Project.MSG_WARN);
         }
     }
 }
