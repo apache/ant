@@ -100,7 +100,7 @@ public class BuildException extends RuntimeException {
      */
     
     public BuildException(Exception cause) {
-	super();
+	super(cause.toString());
 	this.cause = cause;
     }
 }
