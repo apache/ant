@@ -76,7 +76,7 @@ public class FixCrLfTest extends BuildFileTest {
     }
     
     public void tearDown() { 
-        //executeTarget("cleanup");
+        executeTarget("cleanup");
     }
     
     public void test1() throws IOException { 
