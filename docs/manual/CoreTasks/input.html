@@ -29,6 +29,16 @@ Since Ant 1.6, <code>&lt;input&gt;</code> will not prompt for input if
 a property should be set by the task that has already been set in the
 project (and the task wouldn't have any effect).</p>
 
+<p>A regular complaint about this task is that it echoes characters to the
+console, this is a critical security defect, we must fix it immediately, etc, etc.
+We know it leaves something to be desired, but the problem is Java, not Ant.
+There is nothing we can do to stop the console echoing. </p>
+
+<p>
+IDE behaviour depends upon the IDE: some hang waiting for input, some let you
+type it in. For this situation, place the password in a (secured) property
+file and load in before the input task.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
