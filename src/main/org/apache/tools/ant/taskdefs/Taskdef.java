@@ -65,15 +65,9 @@ public class Taskdef extends Task {
     private String name;
     private String value;
 
-    //
-    // REVISIT: Is this the right thing to do?
-    //          I moved the body of execute() into init().
-    //                               - akv
-    //
-    public void init() throws BuildException {
-	try {
+    public void execute() throws BuildException {
 	    if (name==null || value==null ) {
-		String msg = "name or class attributes of taskdef element "
+		String msg = "name or classname attributes of taskdef element "
 		    + "are undefined";
 		throw new BuildException(msg);
 	    }
@@ -83,22 +77,12 @@ public class Taskdef extends Task {
 	    } catch (ClassNotFoundException cnfe) {
 		String msg = "taskdef class " + value +
 		    " cannot be found";
-		throw new BuildException(msg);
+		throw new BuildException(msg, location);
 	    }
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
     }
     
     public void setName( String name) {
 	this.name = name;
-    }
-
-    public void XsetClass(String v) {
-        log("The class attribute is deprecated. " +
-            "Please use the classname attribute.",
-            Project.MSG_WARN);
-        value = v;
     }
 
     public String getClassname() {

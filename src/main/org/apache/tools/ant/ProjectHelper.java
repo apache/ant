@@ -360,6 +360,8 @@ public class ProjectHelper {
             if (target != null) {
                 task.setOwningTarget(target);
                 target.addTask(task);
+            } else {
+                task.execute();
             }
         }
 
