@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,9 +26,14 @@ import org.apache.tools.ant.Task;
  *
  * @since 1.4
  */
-public class RmicAdapterFactory {
+public final class RmicAdapterFactory {
+    /** The error message to be used when the compiler cannot be found. */
     public static final String ERROR_UNKNOWN_COMPILER = "Cannot find the compiler or class: ";
+
+    /** The error message to be used when the class is not an rmic adapter. */
     public static final String ERROR_NOT_RMIC_ADAPTER = "Not an rmic adapter: ";
+
+    /** If the compiler has this name use a default compiler. */
     public static final String DEFAULT_COMPILER = "default";
 
     /** This is a singleton -- can't create instances!! */
@@ -51,6 +56,7 @@ public class RmicAdapterFactory {
      * @param rmicType either the name of the desired rmic, or the
      * full classname of the rmic's adapter.
      * @param task a task to log through.
+     * @return the compiler adapter
      * @throws BuildException if the rmic type could not be resolved into
      * a rmic adapter.
      */

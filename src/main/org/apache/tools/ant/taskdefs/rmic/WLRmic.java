@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,20 +29,32 @@ import org.apache.tools.ant.types.Commandline;
  * @since Ant 1.4
  */
 public class WLRmic extends DefaultRmicAdapter {
+    /** The classname of the weblogic rmic */
     public static final String WLRMIC_CLASSNAME = "weblogic.rmic";
     /**
      * the name of this adapter for users to select
      */
     public static final String COMPILER_NAME = "weblogic";
 
-    public static final String ERROR_NO_WLRMIC_ON_CLASSPATH = "Cannot use WebLogic rmic, as it is not "
-                                         + "available.  A common solution is to "
-                                         + "set the environment variable "
-                                         + "CLASSPATH.";
+    /** The error string to use if not able to find the weblogic rmic */
+    public static final String ERROR_NO_WLRMIC_ON_CLASSPATH =
+        "Cannot use WebLogic rmic, as it is not "
+        + "available.  A common solution is to "
+        + "set the environment variable "
+        + "CLASSPATH.";
+
+    /** The error string to use if not able to start the weblogic rmic */
     public static final String ERROR_WLRMIC_FAILED = "Error starting WebLogic rmic: ";
+    /** The stub suffix */
     public static final String WL_RMI_STUB_SUFFIX = "_WLStub";
+    /** The skeleton suffix */
     public static final String WL_RMI_SKEL_SUFFIX = "_WLSkel";
 
+    /**
+     * Carry out the rmic compilation.
+     * @return true if the compilation succeeded
+     * @throws  BuildException on error
+     */
     public boolean execute() throws BuildException {
         getRmic().log("Using WebLogic rmic", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand(new String[] {"-noexit"});
@@ -80,6 +92,7 @@ public class WLRmic extends DefaultRmicAdapter {
 
     /**
      * Get the suffix for the rmic stub classes
+     * @return the stub suffix
      */
     public String getStubClassSuffix() {
         return WL_RMI_STUB_SUFFIX;
@@ -87,6 +100,7 @@ public class WLRmic extends DefaultRmicAdapter {
 
     /**
      * Get the suffix for the rmic skeleton classes
+     * @return the skeleton suffix
      */
     public String getSkelClassSuffix() {
         return WL_RMI_SKEL_SUFFIX;

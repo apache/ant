@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -47,12 +47,19 @@ public class SunRmic extends DefaultRmicAdapter {
      * name of the executable
      */
     public static final String RMIC_EXECUTABLE = "rmic";
+    /** Error message to use with the sun rmic is not the classpath. */
     public static final String ERROR_NO_RMIC_ON_CLASSPATH = "Cannot use SUN rmic, as it is not "
                                          + "available.  A common solution is to "
                                          + "set the environment variable "
                                          + "JAVA_HOME or CLASSPATH.";
+    /** Error message to use when there is an error starting the sun rmic compiler */
     public static final String ERROR_RMIC_FAILED = "Error starting SUN rmic: ";
 
+    /**
+     * Run the rmic compiler.
+     * @return true if the compilation succeeded
+     * @throws BuildException on error
+     */
     public boolean execute() throws BuildException {
         getRmic().log("Using SUN rmic compiler", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand();
