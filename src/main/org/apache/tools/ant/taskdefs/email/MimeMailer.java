@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,36 +16,38 @@
  */
 package org.apache.tools.ant.taskdefs.email;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.OutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.io.UnsupportedEncodingException;
 
-import java.util.Enumeration;
-import java.util.Properties;
-import java.util.StringTokenizer;
 import java.util.Vector;
-import java.security.Security;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Enumeration;
+import java.util.StringTokenizer;
+
 import java.security.Provider;
+import java.security.Security;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
-import javax.mail.Authenticator;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
 import javax.mail.Message;
+import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.Authenticator;
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
+import javax.mail.PasswordAuthentication;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.AddressException;
 
 import org.apache.tools.ant.BuildException;
 
@@ -62,59 +64,65 @@ public class MimeMailer extends Mailer {
     // To work properly with national charsets we have to use
     // implementation of interface javax.activation.DataSource
     /**
+     * String data source implementation.
      * @since Ant 1.6
      */
     class StringDataSource implements javax.activation.DataSource {
-      private String data = null;
-      private String type = null;
-      private String charset = null;
-      private ByteArrayOutputStream out;
+        private String data = null;
+        private String type = null;
+        private String charset = null;
+        private ByteArrayOutputStream out;
 
-      public InputStream getInputStream() throws IOException {
-        if (data == null && out == null) {
-          throw new IOException("No data");
-        } else {
-          if (out != null) {
-            data = (data != null) ? data.concat(out.toString(charset)) : out.toString(charset);
-            out = null;
-          }
-          return new ByteArrayInputStream(data.getBytes(charset));
+        public InputStream getInputStream() throws IOException {
+            if (data == null && out == null) {
+                throw new IOException("No data");
+            }
+            if (out != null) {
+                String encodedOut = out.toString(charset);
+                data = (data != null) ? data.concat(encodedOut) : encodedOut;
+                out = null;
+            }
+            return new ByteArrayInputStream(data.getBytes(charset));
         }
-      }
 
-      public OutputStream getOutputStream() throws IOException {
-        if (out == null) {
-          out = new ByteArrayOutputStream();
+        public OutputStream getOutputStream() throws IOException {
+            out = (out == null) ? new ByteArrayOutputStream() : out;
+            return out;
         }
-        return out;
-      }
 
-      public void setContentType(String type) {
-        this.type = type.toLowerCase();
-      }
-
-      public String getContentType() {
-        if (type != null && type.indexOf("charset") > 0 && type.startsWith("text/")) {
-          return type;
+        public void setContentType(String type) {
+            this.type = type.toLowerCase();
         }
-        // Must be like "text/plain; charset=windows-1251"
-        return type != null ? type.concat("; charset=".concat(charset))
-                            : "text/plain".concat("; charset=".concat(charset));
-      }
 
-      public String getName() {
-        return "StringDataSource";
-      }
-      public void setCharset(String charset) {
-        this.charset = charset;
-      }
-      public String getCharset() {
-        return charset;
-      }
-  }
+        public String getContentType() {
+            if (type != null && type.indexOf("charset") > 0
+                && type.startsWith("text/")) {
+                return type;
+            }
+            // Must be like "text/plain; charset=windows-1251"
+            return new StringBuffer(type != null ? type : "text/plain").append(
+                "; charset=").append(charset).toString();
+        }
 
-  /** Sends the email  */
-  public void send() {
+        public String getName() {
+            return "StringDataSource";
+        }
+
+        public void setCharset(String charset) {
+            this.charset = charset;
+        }
+
+        public String getCharset() {
+            return charset;
+        }
+    }
+
+    /**
+     * Send the email.
+     *
+     * @throws BuildException if the email can't be sent.
+     */
+    public void send() {
         try {
             Properties props = new Properties();
 
@@ -128,8 +136,8 @@ public class MimeMailer extends Mailer {
             Authenticator auth;
             if (SSL) {
                 try {
-                    Provider p
-                        = (Provider) Class.forName("com.sun.net.ssl.internal.ssl.Provider").newInstance();
+                    Provider p = (Provider) Class.forName(
+                        "com.sun.net.ssl.internal.ssl.Provider").newInstance();
                     Security.addProvider(p);
                 } catch (Exception e) {
                     throw new BuildException("could not instantiate ssl "
@@ -183,7 +191,6 @@ public class MimeMailer extends Mailer {
                     message.setCharset(charset);
                 }
             }
-
             // Using javax.activation.DataSource paradigm
             StringDataSource sds = new StringDataSource();
             sds.setContentType(message.getMimeType());
@@ -194,6 +201,10 @@ public class MimeMailer extends Mailer {
             }
             msg.addHeader("Date", getDate());
 
+            for (Iterator iter = headers.iterator(); iter.hasNext();) {
+                Header h = (Header) iter.next();
+                msg.addHeader(h.getName(), h.getValue());
+            }
             PrintStream out = new PrintStream(sds.getOutputStream());
             message.print(out);
             out.close();
@@ -222,7 +233,6 @@ public class MimeMailer extends Mailer {
                 body.setFileName(file.getName());
                 attachments.addBodyPart(body);
             }
-
             msg.setContent(attachments);
             Transport.send(msg);
         } catch (MessagingException e) {
@@ -232,24 +242,19 @@ public class MimeMailer extends Mailer {
         }
     }
 
-
     private static InternetAddress[] internetAddresses(Vector list)
-         throws AddressException, UnsupportedEncodingException {
+        throws AddressException, UnsupportedEncodingException {
         InternetAddress[] addrs = new InternetAddress[list.size()];
 
         for (int i = 0; i < list.size(); ++i) {
             EmailAddress addr = (EmailAddress) list.elementAt(i);
 
-            if (addr.getName() == null) {
-                addrs[i] = new InternetAddress(addr.getAddress());
-            } else {
-                addrs[i] = new InternetAddress(addr.getAddress(),
-                    addr.getName());
-            }
+            String name = addr.getName();
+            addrs[i] = (name == null)
+                ? new InternetAddress(addr.getAddress())
+                : new InternetAddress(addr.getAddress(), name);
         }
-
         return addrs;
-
     }
 
     private String parseCharSetFromMimeType(String type) {

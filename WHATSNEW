@@ -99,6 +99,8 @@ Other changes:
 
 * ant -diagnostics lists contents of ${user.home}/.ant/lib
 
+* mail task accepts nested header element.  Bugzilla report 24713.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

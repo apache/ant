@@ -212,6 +212,31 @@ inside the <code>&lt;message&gt;</code> element. Property expansion will occur
 in the message, whether it is specified as an external file or as text within
 the <code>&lt;message&gt;</code> element.</p>
 
+<h4>header</h4>
+<p><strong>Since Ant 1.7</strong>, arbitrary mail headers can be added by
+  specifying these attributes on one or more nested header elements:</p>
+
+<table width="60%" border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td>
+    <td valign="top">The name associated with this mail header.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">value</td>
+    <td valign="top">The value to assign to this mail header.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+
+<p>It is permissible to duplicate the name attribute amongst multiple headers.
+</p>
+
 <h3>Examples</h3>
 
 <blockquote><pre>
@@ -259,7 +284,7 @@ will be replaced with the <code>buildname</code> property's value.</p>
 <i>Test Build</i>, the message body being coded in UTF-8
 
 <hr>
-<p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2005 The Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>
