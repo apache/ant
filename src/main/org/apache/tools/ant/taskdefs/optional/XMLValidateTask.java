@@ -33,6 +33,7 @@ import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.XMLCatalog;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JAXPUtils;
+import org.apache.tools.ant.util.XmlConstants;
 
 import org.xml.sax.EntityResolver;
 import org.xml.sax.ErrorHandler;
@@ -258,6 +259,19 @@ public class XMLValidateTask extends Task {
     protected EntityResolver getEntityResolver() {
         return xmlCatalog;
     }
+
+    /**
+     * get the XML reader. Non-null only after {@link #initValidator()}.
+     * If the reader is an instance of  {@link ParserAdapter} then
+     * the parser is a SAX1 parser, and you cannot call
+     * {@link #setFeature(String, boolean)} or {@link #setProperty(String, String)}
+     * on it.
+     * @return the XML reader or null.
+     */
+    protected XMLReader getXmlReader() {
+        return xmlReader;
+    }
+
     /**
      * execute the task
      * @throws BuildException if <code>failonerror</code> is true and an error happens
@@ -304,16 +318,56 @@ public class XMLValidateTask extends Task {
     /**
      * init the parser :
      * load the parser class, and set features if necessary
+     * It is only after this that the reader is valid
+     * @throws BuildException if something went wrong
      */
-    private void initValidator() {
+    protected void initValidator() {
 
+        xmlReader=createXmlReader();
+
+        xmlReader.setEntityResolver(getEntityResolver());
+        xmlReader.setErrorHandler(errorHandler);
+
+        if (!isSax1Parser()) {
+            // turn validation on
+            if (!lenient) {
+                setFeature(XmlConstants.FEATURE_VALIDATION, true);
+            }
+            // set the feature from the attribute list
+            for (int i = 0; i < attributeList.size(); i++) {
+                Attribute feature = (Attribute) attributeList.elementAt(i);
+                setFeature(feature.getName(), feature.getValue());
+
+            }
+
+            // Sets properties
+            for (int i = 0; i < propertyList.size(); i++) {
+                final Property prop = (Property) propertyList.elementAt(i);
+                setProperty(prop.getName(), prop.getValue());
+            }
+        }
+    }
+
+    /**
+     * test that returns true if we are using a SAX1 parser.
+     * @return true when a SAX1 parser is in use
+     */
+    protected boolean isSax1Parser() {
+        return (xmlReader instanceof ParserAdapter);
+    }
+
+    /**
+     * create the XML reader.
+     * This is one by instantiating anything specified by {@link #readerClassName},
+     * falling back to a default reader if not.
+     * If the returned reader is an instance of {@link ParserAdapter} then
+     * we have created and wrapped a SAX1 parser.
+     * @returns the new XMLReader.
+     */
+    protected XMLReader createXmlReader() {
         Object reader = null;
         if (readerClassName == null) {
-            try {
-                reader = JAXPUtils.getXMLReader();
-            } catch (BuildException exc) {
-                reader = JAXPUtils.getParser();
-            }
+            reader = createDefaultReaderOrParser();
         } else {
 
             Class readerClass = null;
@@ -338,8 +392,9 @@ public class XMLValidateTask extends Task {
         }
 
         // then check it implements XMLReader
+        XMLReader newReader;
         if (reader instanceof XMLReader) {
-            xmlReader = (XMLReader) reader;
+            newReader = (XMLReader) reader;
             log(
                 "Using SAX2 reader " + reader.getClass().getName(),
                 Project.MSG_VERBOSE);
@@ -347,7 +402,7 @@ public class XMLValidateTask extends Task {
 
             // see if it is a SAX1 Parser
             if (reader instanceof Parser) {
-                xmlReader = new ParserAdapter((Parser) reader);
+                newReader = new ParserAdapter((Parser) reader);
                 log(
                     "Using SAX1 parser " + reader.getClass().getName(),
                     Project.MSG_VERBOSE);
@@ -358,36 +413,41 @@ public class XMLValidateTask extends Task {
                         + " implements nor SAX1 Parser nor SAX2 XMLReader.");
             }
         }
+        return newReader;
+    }
 
-        xmlReader.setEntityResolver(getEntityResolver());
-        xmlReader.setErrorHandler(errorHandler);
-
-        if (!(xmlReader instanceof ParserAdapter)) {
-            // turn validation on
-            if (!lenient) {
-                setFeature("http://xml.org/sax/features/validation", true);
-            }
-            // set the feature from the attribute list
-            for (int i = 0; i < attributeList.size(); i++) {
-                Attribute feature = (Attribute) attributeList.elementAt(i);
-                setFeature(feature.getName(), feature.getValue());
-
-            }
-
-            // Sets properties
-            for (int i = 0; i < propertyList.size(); i++) {
-                final Property prop = (Property) propertyList.elementAt(i);
-                setProperty(prop.getName(), prop.getValue());
-            }
+    /**
+     *
+     * @return
+     */
+    private Object createDefaultReaderOrParser() {
+        Object reader;
+        try {
+            reader = createDefaultReader();
+        } catch (BuildException exc) {
+            reader = JAXPUtils.getParser();
         }
+        return reader;
+    }
+
+    /**
+     * create a reader if the use of the class did not specify another one.
+     * If a BuildException is thrown, the caller may revert to an alternate
+     * reader.
+     * @return a new reader.
+     * @throws BuildException if something went wrong
+     */
+    protected XMLReader createDefaultReader() {
+        return JAXPUtils.getXMLReader();
     }
 
     /**
      * Set a feature on the parser.
      * @param feature the name of the feature to set
      * @param value the value of the feature
+     * @throws BuildException if the feature was not supported
      */
-    private void setFeature(String feature, boolean value)
+    protected void setFeature(String feature, boolean value)
         throws BuildException {
         log("Setting feature " + feature + "=" + value, Project.MSG_DEBUG);
         try {
@@ -417,8 +477,9 @@ public class XMLValidateTask extends Task {
      * @param name a property name
      * @param value a property value.
      * @throws BuildException if an error occurs.
+     * @throws BuildException if the property was not supported
      */
-    private void setProperty(String name, String value) throws BuildException {
+    protected void setProperty(String name, String value) throws BuildException {
         // Validates property
         if (name == null || value == null) {
             throw new BuildException("Property name and value must be specified.");
@@ -448,7 +509,7 @@ public class XMLValidateTask extends Task {
     /**
      * parse the file
      */
-    private void doValidate(File afile) {
+    protected void doValidate(File afile) {
         try {
             log("Validating " + afile.getName() + "... ", Project.MSG_VERBOSE);
             errorHandler.init(afile);
@@ -654,5 +715,7 @@ public class XMLValidateTask extends Task {
         }
 
     } // Property
+
+
 
 }

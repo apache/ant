@@ -175,5 +175,18 @@
       </xmlvalidate>
   </target>
 
+  <target name="testSchemaWithXSD">
+    <xmlvalidate warn="false" lenient="false" 
+        file="xml/endpiece-noSchema.xml">
+      
+        <attribute name="http://apache.org/xml/features/validation/schema"
+                   value="true"/>
+        <property
+            name="http://apache.org/xml/properties/schema/external-noNamespaceSchemaLocation"
+            value="${xsd.file}"/>
+
+       </xmlvalidate>
+  </target>
+  
 </project>
 
