@@ -52,6 +52,7 @@ goto end
 set _JAVACMD=%JAVACMD%
 set LOCALCLASSPATH="%CLASSPATH%"
 for %%i in ("%ANT_HOME%\lib\*.jar") do call "%ANT_HOME%\bin\lcp.bat" "%%i"
+for %%i in ("%ANT_HOME%\lib\core\*.jar") do call "%ANT_HOME%\bin\lcp.bat" "%%i"
 
 if "%JAVA_HOME%" == "" goto noJavaHome
 if "%_JAVACMD%" == "" set _JAVACMD=%JAVA_HOME%\bin\java

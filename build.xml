@@ -19,12 +19,14 @@
   <property name="src.bin.dir" value="src/bin"/>
   <property name="src.etc.dir" value="src/etc"/>
   <property name="src.dir" value="src/main"/>
+  <property name="srclib.dir" value="lib"/>
   <property name="src.tests.dir" value="src/testcases"/>
   <property name="docs.dir" value="docs"/>
   <property name="build.dir" value="../build/ant"/>
   <property name="lib.dir" value="${build.dir}/lib"/>
   <property name="bin.dir" value="${build.dir}/bin"/>
-  <property name="build.classes" value="${build.dir}/classes"/>
+  <property name="build.classes.core" value="${build.dir}/classes/core"/>
+  <property name="build.classes.optional" value="${build.dir}/classes/optional"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="ant.dist.dir" value="../dist/ant"/>
@@ -38,7 +40,7 @@
   <!-- =================================================================== -->
   <!-- Set some the defaults the user can override in .ant.properties      -->
   <!-- =================================================================== -->
-  <property name="build.compiler" value="classic"/>
+  <property name="build.compiler"/>
   <property name="build.compiler.emacs" value="on"/>
   <property name="junit.fork" value="false" />
   <property name="javac.optimize" value="true" />
@@ -90,16 +92,54 @@
   <!-- =================================================================== -->
   <!-- Compiles the source code                                            -->
   <!-- =================================================================== -->
-  <target name="compile" depends="prepare,check_for_optional_packages">
-    <mkdir dir="${build.classes}"/>
+  <target name="compile-core" depends="prepare,check_for_optional_packages">
+    <mkdir dir="${build.classes.core}"/>
 
     <javac srcdir="${src.dir}"
-           destdir="${build.classes}"
+           destdir="${build.classes.core}"
            debug="on"
            deprecation="off"
            optimize="${javac.optimize}" >
       <classpath refid="classpath" />
 
+      <exclude name="org/apache/tools/ant/taskdefs/optional/**/*.java"/>
+      <exclude name="**/JakartaRegexpMatcher.java" unless="jakarta.regexp.present" />
+      <exclude name="**/JakartaOroMatcher.java" unless="jakarta.oro.present" />
+    </javac>
+ 
+    <copy todir="${build.classes.core}">
+      <fileset dir="${src.dir}">
+        <include name="**/*.properties" />
+      </fileset>
+    </copy>
+
+    <filter token="VERSION" value="${version}" />
+    <filter token="DATE" value="${TODAY}" />
+    <filter token="TIME" value="${TSTAMP}" />
+    <copy    todir="${build.classes.core}" 
+             overwrite="true"
+             filtering="on">
+      <fileset dir="${src.dir}">
+        <include name="**/version.txt" />
+        <include name="**/defaultManifest.mf" />
+      </fileset>
+    </copy>
+  </target>
+
+  <target name="compile-optional" depends="compile-core">
+    <mkdir dir="${build.classes.optional}"/>
+
+    <javac srcdir="${src.dir}"
+           destdir="${build.classes.optional}"
+           debug="on"
+           deprecation="off"
+           optimize="${javac.optimize}" >
+      <classpath> 
+        <path refid="classpath" />
+        <pathelement location="${build.classes.core}" />
+      </classpath>
+      
+      <include name="org/apache/tools/ant/taskdefs/optional/**/*.java"/>
       <exclude name="**/Script.java" unless="bsf.present" />
       <exclude name="**/StyleBook.java" unless="stylebook.present" />
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
@@ -117,46 +157,38 @@
       <exclude name="**/AntStarTeam*.java" unless="starteam.present" />
       <exclude name="**/ANTLR.java" unless="antlr.present" />
       <exclude name="**/ide/VAJ*.java" unless="vaj.present" />
-      <exclude name="**/JakartaRegexpMatcher.java" unless="jakarta.regexp.present" />
-      <exclude name="**/JakartaOroMatcher.java" unless="jakarta.oro.present" />
       <exclude name="**/perforce/*.java" unless="jakarta.oro.present" />
     </javac>
- 
-    <copy todir="${build.classes}">
-      <fileset dir="${src.dir}">
-        <include name="**/*.properties" />
-      </fileset>
-    </copy>
-
-    <filter token="VERSION" value="${version}" />
-    <filter token="DATE" value="${TODAY}" />
-    <filter token="TIME" value="${TSTAMP}" />
-    <copy    todir="${build.classes}" 
-             overwrite="true"
-             filtering="on">
-      <fileset dir="${src.dir}">
-        <include name="**/version.txt" />
-        <include name="**/defaultManifest.mf" />
-      </fileset>
-    </copy>
   </target>
 
   <!-- =================================================================== -->
-  <!-- Creates the jar archive                                             -->
+  <!-- Creates the lib directory including the ant jars, ant.jar and       -->
+  <!-- optional.jar                                                        -->
   <!-- =================================================================== -->
-  <target name="jar" depends="compile">
+  <target name="jars" depends="compile-core, compile-optional">
     <mkdir dir="${lib.dir}"/>
     <jar jarfile="${lib.dir}/${name}.jar"
-         basedir="${build.classes}"
+         basedir="${build.classes.core}"
          includes="org/**"
          manifest="${manifest}"
     />
+    <jar jarfile="${lib.dir}/optional.jar"
+         basedir="${build.classes.optional}"
+         includes="org/**"
+         manifest="${manifest}"
+    />
+    <copy todir="${lib.dir}">
+        <fileset dir="${srclib.dir}">
+            <include name="**/*.jar"/>
+            <exclude name="ant.jar"/>
+        </fileset>
+    </copy>
   </target>
 
   <!-- =================================================================== -->
   <!-- Creates the binary structure                                        -->
   <!-- =================================================================== -->
-  <target name="main" depends="jar" description="Creates the binary structure">
+  <target name="main" depends="jars" description="Creates the binary structure">
      <mkdir dir="${bin.dir}"/>
      <copy todir="${bin.dir}">
        <fileset dir="${src.bin.dir}"/>
@@ -192,7 +224,7 @@
   <!-- =================================================================== -->
   <!-- Creates the distribution                                            -->
   <!-- =================================================================== -->
-  <target name="dist" depends="main,jar,javadocs" description="Creates the distribution">
+  <target name="dist" depends="main,jars,javadocs" description="Creates the distribution">
      <mkdir dir="${ant.dist.dir}"/>
      <mkdir dir="${ant.dist.dir}/bin"/>
      <mkdir dir="${ant.dist.dir}/lib"/>
@@ -249,7 +281,7 @@
   </target>
 
   <!-- =================================================================== -->
-  <!-- Installs the ant.jar library and binary files into ant.home         -->
+  <!-- Installs the ant jars and binary files into ant.home                -->
   <!-- =================================================================== -->
   <target name="bootstrap" depends="main" description="Installs the ant.jar library and binary files into ant.home">
     <echo message="copying bootstrapped files into bin and lib"/>
@@ -277,7 +309,7 @@
   <target name="fullinstall" depends="install"/>
   
   <target name="mininstall" depends="main" if="ant.install">
-    <echo message="copy minimal ant installation into ${ant.install}"/>
+    <echo message="copying minimal ant installation into ${ant.install}"/>
     <mkdir dir="${ant.install}"/>
     <copy todir="${ant.install}/lib">
       <fileset dir="${lib.dir}"/>
@@ -308,7 +340,6 @@
   <!-- =================================================================== -->
   <target name="total-clean" depends="clean">
     <delete dir="${bin.dir}"/>
-    <delete file="${lib.dir}/${name}.jar"/>
     <delete file="${Name}-${version}.zip"/>
     <delete file="${Name}-${version}.tar"/>
     <delete file="${Name}-${version}.tar.gz"/>
@@ -331,7 +362,7 @@
   <!-- =================================================================== -->
   <!-- Compile testcases                                                   -->
   <!-- =================================================================== -->
-  <target name="compiletests" depends="jar" if="junit.present">
+  <target name="compiletests" depends="jars" if="junit.present">
     <mkdir dir="${build.tests}"/>
 
     <javac srcdir="${src.tests.dir}"
@@ -414,7 +445,6 @@
   <!-- anybody but the people doing Ant releases.                          -->
   <!-- =================================================================== -->
 
-  <property name="JAXP_HOME" value="/usr/local/java/lib/jaxp1.0.1" />
   <property name="ant.srcdist.dir" value="../dist/jakarta-ant-src"/>
 
   <target name="srcbuild">
@@ -424,7 +454,7 @@
      <copy todir="${ant.srcdist.dir}">
        <fileset dir=".">
          <exclude name="bin/**" />
-         <exclude name="lib/**" />
+         <exclude name="lib/*.jar" />
        </fileset>
      </copy>
 
@@ -435,12 +465,6 @@
          <patternset refid="chmod.patterns"/>
        </fileset>
      </chmod>
-
-     <copy todir="${ant.srcdist.dir}/lib">
-       <fileset dir="${JAXP_HOME}">
-         <include name="**/*.jar" />
-       </fileset>
-     </copy>
   </target>
   
   <target name="src.zip" depends="srcbuild">
@@ -461,24 +485,7 @@
 
   <property name="ant.bindist.dir" value="../dist/jakarta-ant-bin"/>
 
-  <target name="binbuild" depends="compile">
-
-    <!-- ugly hack to build a binary distribution without optional tasks -->
-    <delete>
-      <fileset dir="${build.classes}">
-        <include name="**/Script.java" />
-        <include name="**/NetRexxC.java" />
-        <include name="**/XslpLiaison.java" />
-        <include name="**/XalanLiaison.java" />
-        <include name="**/Ejbc*.java" />
-        <include name="**/DDCreator*.java" />
-        <include name="**/WLRun.java" />
-        <include name="**/WLStop.java" />
-        <include name="**/junit/*" />
-        <include name="**/FTP*.java" />
-        <include name="**/AntStarTeam*.java" />
-      </fileset>
-    </delete>
+  <target name="binbuild" depends="compile-core">
 
     <mkdir dir="${ant.bindist.dir}"/>
     <mkdir dir="${ant.bindist.dir}/bin"/>
@@ -488,10 +495,17 @@
     <mkdir dir="${ant.bindist.dir}/docs/api"/>
 
     <jar jarfile="${ant.bindist.dir}/lib/${name}.jar"
-         basedir="${build.classes}"
+         basedir="${build.classes.core}"
          includes="org/**"
          manifest="${manifest}"
     />
+
+    <copy todir="${ant.bindist.dir}/lib">
+        <fileset dir="${srclib.dir}">
+            <include name="**/*.jar"/>
+            <exclude name="ant.jar"/>
+        </fileset>
+    </copy>
 
     <copy todir="${ant.bindist.dir}/docs">
       <fileset dir="${docs.dir}"/>
@@ -534,11 +548,6 @@
     <copy file="TODO" tofile="${ant.bindist.dir}/TODO"/>
     <copy file="LICENSE" tofile="${ant.bindist.dir}/LICENSE"/>
 
-    <copy todir="${ant.bindist.dir}/lib">
-      <fileset dir="${JAXP_HOME}">
-        <include name="**/*.jar" />
-      </fileset>
-    </copy>
   </target>
 
   <target name="bin.zip" depends="binbuild">
@@ -560,12 +569,11 @@
   <property name="contributed.tasks" value="../build/ant.contrib" />
   <property name="optional" value="../dist/optional.jar" />
 
-  <target name="optional.jar" depends="compile"
+  <target name="optional.jar" depends="compile-optional"
           description="Creates a JAR of the optional tasks">
     <mkdir dir="${contributed.tasks}" />
     <copy todir="${contributed.tasks}">
-      <fileset dir="${build.classes}">
-        <include name="**/optional/**" />
+      <fileset dir="${build.classes.optional}">
       </fileset>
     </copy>
     <jar jarfile="${optional}"

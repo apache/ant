@@ -21,7 +21,7 @@ echo ... Bootstrapping Ant Distribution
 if exist lib\ant.jar erase lib\ant.jar
 
 SET LOCALCLASSPATH=
-for %%i in (lib\*.jar) do call src\bin\lcp.bat %%i
+for %%i in (lib\core\*.jar) do call src\bin\lcp.bat %%i
 
 if exist %JAVA_HOME%\lib\tools.jar call src\bin\lcp.bat %JAVA_HOME%\lib\tools.jar
 if exist %JAVA_HOME%\lib\classes.zip call src\bin\lcp.bat %JAVA_HOME%\lib\classes.zip
