@@ -77,7 +77,7 @@ public class DefaultConfigurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    public void configure( final Object object,
+    public void configureElement( final Object object,
                            final Configuration configuration,
                            final TaskContext context )
         throws ConfigurationException
@@ -217,7 +217,7 @@ public class DefaultConfigurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    public void configure( final Object object,
+    public void configureAttribute( final Object object,
                            final String name,
                            final String value,
                            final TaskContext context )

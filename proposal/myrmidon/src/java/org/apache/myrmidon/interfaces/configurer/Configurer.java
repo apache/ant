@@ -32,7 +32,7 @@ public interface Configurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    void configure( Object object, Configuration configuration, TaskContext context )
+    void configureElement( Object object, Configuration configuration, TaskContext context )
         throws ConfigurationException;
 
     /**
@@ -46,6 +46,6 @@ public interface Configurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    void configure( Object object, String name, String value, TaskContext context )
+    void configureAttribute( Object object, String name, String value, TaskContext context )
         throws ConfigurationException;
 }

@@ -146,7 +146,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -205,7 +205,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -252,7 +252,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -323,7 +323,7 @@ public class DefaultConfigurerTest
         m_context.setProperty( "prop-a", "some value" );
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configureElement( test, config, m_context );
 
         // Check the configured object
         final ConfigTestReferenceElement expected = new ConfigTestReferenceElement();
@@ -349,7 +349,7 @@ public class DefaultConfigurerTest
         try
         {
             // Configure the object
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( ConfigurationException e )
@@ -429,7 +429,7 @@ public class DefaultConfigurerTest
         try
         {
             // Configure the object
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -458,7 +458,7 @@ public class DefaultConfigurerTest
         try
         {
             // Configure the object
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( final ConfigurationException ce )
@@ -616,7 +616,7 @@ public class DefaultConfigurerTest
         final ConfigTestConfigurable test = new ConfigTestConfigurable();
 
         // Configure the object
-        m_configurer.configure( test, config, m_context );
+        m_configurer.configureElement( test, config, m_context );
 
         final ConfigTestConfigurable expected = new ConfigTestConfigurable();
         expected.configure( config );
@@ -662,7 +662,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( ConfigurationException e )
@@ -693,7 +693,7 @@ public class DefaultConfigurerTest
         // Configure the object
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( ConfigurationException e )
@@ -753,7 +753,7 @@ public class DefaultConfigurerTest
         try
         {
             // Configure the object
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
             fail();
         }
         catch( ConfigurationException e )
@@ -797,7 +797,7 @@ public class DefaultConfigurerTest
     {
         try
         {
-            m_configurer.configure( test, config, m_context );
+            m_configurer.configureElement( test, config, m_context );
         }
         catch( final ConfigurationException ce )
         {

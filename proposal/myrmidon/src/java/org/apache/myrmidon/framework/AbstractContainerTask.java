@@ -89,10 +89,10 @@ public abstract class AbstractContainerTask
      * @param element the configuration element
      * @exception ConfigurationException if an error occurs
      */
-    protected final void configure( final Object object, final Configuration element )
+    protected final void configureElement( final Object object, final Configuration element )
         throws ConfigurationException
     {
-        m_configurer.configure( object, element, getContext() );
+        m_configurer.configureElement( object, element, getContext() );
     }
 
     /**
@@ -103,10 +103,10 @@ public abstract class AbstractContainerTask
      * @param value the attibute value
      * @exception ConfigurationException if an error occurs
      */
-    protected final void configure( final Object object, final String name, final String value )
+    protected final void configureAttribute( final Object object, final String name, final String value )
         throws ConfigurationException
     {
-        m_configurer.configure( object, name, value, getContext() );
+        m_configurer.configureAttribute( object, name, value, getContext() );
     }
 
     /**

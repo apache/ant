@@ -45,7 +45,7 @@ public class TypeInstanceTask
 
             if( name.equals( "id" ) || name.equals( "local-scope" ) )
             {
-                configure( this, name, value );
+                configureAttribute( this, name, value );
             }
             else
             {
@@ -69,7 +69,7 @@ public class TypeInstanceTask
             throw new ConfigurationException( message, e );
         }
 
-        configure( m_value, newConfiguration );
+        configureElement( m_value, newConfiguration );
     }
 
     public void setId( final String id )

@@ -64,7 +64,7 @@ public class ClassicConfigurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    public void configure( final Object object,
+    public void configureElement( final Object object,
                            final Configuration configuration,
                            final TaskContext context )
         throws ConfigurationException
@@ -154,7 +154,7 @@ public class ClassicConfigurer
      * @param context the Context
      * @exception ConfigurationException if an error occurs
      */
-    public void configure( final Object object,
+    public void configureAttribute( final Object object,
                            final String name,
                            final String value,
                            final TaskContext context )
@@ -474,7 +474,7 @@ public class ClassicConfigurer
         try
         {
             final Object created = method.invoke( object, new Object[ 0 ] );
-            configure( created, configuration, context );
+            configureElement( created, configuration, context );
         }
         catch( final ConfigurationException ce )
         {
@@ -498,7 +498,7 @@ public class ClassicConfigurer
             final Class clazz = method.getParameterTypes()[ 0 ];
             final Object created = clazz.newInstance();
 
-            configure( created, configuration, context );
+            configureElement( created, configuration, context );
             method.invoke( object, new Object[]{created} );
         }
         catch( final ConfigurationException ce )

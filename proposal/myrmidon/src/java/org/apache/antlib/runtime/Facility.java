@@ -41,7 +41,7 @@ public class Facility
         {
             final String name = attributes[ i ];
             final String value = configuration.getAttribute( name );
-            configure( this, name, value );
+            configureAttribute( this, name, value );
         }
 
         final Configuration[] children = configuration.getChildren();
@@ -60,7 +60,7 @@ public class Facility
                 throw new ConfigurationException( message, e );
             }
 
-            configure( m_aspectHandler, children[ 0 ] );
+            configureElement( m_aspectHandler, children[ 0 ] );
         }
         else
         {

@@ -115,7 +115,7 @@ public class DefaultExecutor
                                       final TaskContext taskContext )
         throws ConfigurationException
     {
-        m_configurer.configure( task, taskModel, taskContext );
+        m_configurer.configureElement( task, taskModel, taskContext );
     }
 
     /**
