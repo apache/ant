@@ -227,6 +227,7 @@
                unless="xalan.present" />
       <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
       <exclude name="${optional.package}/sitraka/**" unless="jakarta.oro.present"/>
+      <exclude name="${optional.package}/metamata/MAudit*" unless="jakarta.oro.present"/>
     </javac>
     
     <copy todir="${build.classes}">
