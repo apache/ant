@@ -116,6 +116,8 @@ public class DDCreatorHelper {
         for (int i = 0; i < descriptors.length; ++i) {
             String descriptorName = descriptors[i];
             File descriptorFile = new File(descriptorDirectory, descriptorName);
+            // flatten the generated file so all go into the 
+            descriptorName = descriptorFile.getName();
             int extIndex = descriptorName.lastIndexOf(".");
             String serName = null;
             if (extIndex != -1) {
