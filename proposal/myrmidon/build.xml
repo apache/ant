@@ -353,8 +353,8 @@ Legal:
     <jar jarfile="${build.lib}/selftest.atl"
          basedir="${build.classes}"
          manifest="${manifest.dir}/selftest.mf">
-      <include name="org/apache/myrmidon/libs/selftest/**" />
-      <exclude name="org/apache/myrmidon/libs/selftest/extension1/**" />
+      <include name="org/apache/antlib/selftest/**" />
+      <exclude name="org/apache/antlib/selftest/extension1/**" />
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="selftest-ant-descriptor.xml"/>
       </zipfileset>
@@ -363,22 +363,24 @@ Legal:
     <jar jarfile="${build.lib}/selftest-extension1.jar"
          basedir="${build.classes}"
          manifest="${manifest.dir}/selftest-extension1.mf">
-      <include name="org/apache/myrmidon/libs/selftest/extension1/**" />
+      <include name="org/apache/antlib/selftest/extension1/**" />
     </jar>
 
     <jar jarfile="${build.lib}/runtime.atl" basedir="${build.classes}">
-      <include name="org/apache/myrmidon/libs/runtime/**"/>
+      <include name="org/apache/antlib/runtime/**"/>
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="runtime-ant-descriptor.xml"/>
       </zipfileset>
     </jar>
 
+    <!--
     <jar jarfile="${build.lib}/ant1.atl" basedir="${build.classes}">
-      <include name="org/apache/myrmidon/libs/ant1/**"/>
+      <include name="org/apache/antlib/ant1/**"/>
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="ant1-ant-descriptor.xml"/>
       </zipfileset>
     </jar>
+    -->
 
   </target>
 
