@@ -433,6 +433,7 @@
     </condition>
   </target>
 
+
   <!--
        ===================================================================
          Prepare the build
@@ -1084,6 +1085,20 @@
       <java classname="org.apache.env.Which" taskname="which"/>
   </target>
 
+  <!-- test to see if we are online or not. can take a while when we are off line, so
+    setting the property is a good shortcut-->
+  <target name="probe-offline">
+      <condition property="offline">
+      <or>
+        <isset property="offline"/>
+        <not>
+          <http  url="http://www.apache.org/"/>
+        </not>
+      </or>
+    </condition>
+    <echo level="verbose" > offline=${offline}</echo>
+  </target>
+  
   <!--
        ===================================================================
          Run testcase
@@ -1091,7 +1106,7 @@
   -->
   <target name="test" depends="run-tests" description="--> run JUnit tests"/>
 
-  <target name="run-tests" depends="dump-info,compile-tests" if="junit.present">
+  <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present">
 
     <junit printsummary="${junit.summary}" haltonfailure="yes" 
            filtertrace="${junit.filtertrace}"
@@ -1137,8 +1152,8 @@
           <patternset refid="needs.xslp" />
 
           <!-- tests excluded if the test is run in offline mode -->
-          <patternset refid="onlinetests"/>
-          
+          <patternset refid="onlinetests"/> 
+
           <!-- runtime dependencies that are different from compile
                time dependencies -->
           <exclude name="${optional.package}/ReplaceRegExpTest.java"

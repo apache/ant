@@ -67,33 +67,33 @@ import java.io.*;
  */
 public class ExecuteWatchdogTest extends TestCase {
 
-	private final static int TIME_OUT = 5000;
+    private final static int TIME_OUT = 5000;
 
-	private final static String TEST_CLASSPATH = getTestClassPath();
+    private final static String TEST_CLASSPATH = getTestClassPath();
 
     private final static int CLOCK_ERROR=200;
     private final static int TIME_OUT_TEST=TIME_OUT-CLOCK_ERROR;
     
-	private ExecuteWatchdog watchdog;
+    private ExecuteWatchdog watchdog;
 
-	public ExecuteWatchdogTest(String name) {
-		super(name);
-	}
+    public ExecuteWatchdogTest(String name) {
+        super(name);
+    }
 
-	protected void setUp(){
-		watchdog = new ExecuteWatchdog(TIME_OUT);
-	}
+    protected void setUp(){
+        watchdog = new ExecuteWatchdog(TIME_OUT);
+    }
 
-	/**
-	 * Dangerous method to obtain the classpath for the test. This is
-	 * severely tighted to the build.xml properties.
-	 */
-	private static String getTestClassPath(){
-		String classpath = System.getProperty("build.tests");
-		if (classpath == null) {
-			System.err.println("WARNING: 'build.tests' property is not available !");
-			classpath = System.getProperty("java.class.path");
-		}
+    /**
+     * Dangerous method to obtain the classpath for the test. This is
+     * severely tighted to the build.xml properties.
+     */
+    private static String getTestClassPath(){
+        String classpath = System.getProperty("build.tests");
+        if (classpath == null) {
+            System.err.println("WARNING: 'build.tests' property is not available !");
+            classpath = System.getProperty("java.class.path");
+        }
 
                 // JDK 1.1 needs classes.zip in -classpath argument
                 if (Project.getJavaVersion() == Project.JAVA_1_1) {
@@ -103,108 +103,108 @@ public class ExecuteWatchdogTest extends TestCase {
                                  + File.separator + "classes.zip";
                 }
 
-		return classpath;
-	}
+        return classpath;
+    }
 
-	private Process getProcess(int timetorun) throws Exception {
-		String[] cmdArray = {
-			"java", "-classpath", TEST_CLASSPATH,
-			TimeProcess.class.getName(), String.valueOf(timetorun)
-		};
-		//System.out.println("Testing with classpath: " + System.getProperty("java.class.path"));
-		return Runtime.getRuntime().exec(cmdArray);
-	}
+    private Process getProcess(int timetorun) throws Exception {
+        String[] cmdArray = {
+            "java", "-classpath", TEST_CLASSPATH,
+            TimeProcess.class.getName(), String.valueOf(timetorun)
+        };
+        //System.out.println("Testing with classpath: " + System.getProperty("java.class.path"));
+        return Runtime.getRuntime().exec(cmdArray);
+    }
 
-	private String getErrorOutput(Process p) throws Exception {
-		BufferedReader err = new BufferedReader( new InputStreamReader(p.getErrorStream()) );
-		StringBuffer buf = new StringBuffer();
-		String line;
-		while ( (line = err.readLine()) != null){
-			buf.append(line);
-		}
-		return buf.toString();
-	}
-	
-	private int waitForEnd(Process p) throws Exception {
-		int retcode = p.waitFor();
-		if (retcode != 0){
-			String err = getErrorOutput(p);
-			if (err.length() > 0){
-				System.err.println("ERROR:");
-				System.err.println(err);
-			}
-		}
-		return retcode;
-	}
+    private String getErrorOutput(Process p) throws Exception {
+        BufferedReader err = new BufferedReader( new InputStreamReader(p.getErrorStream()) );
+        StringBuffer buf = new StringBuffer();
+        String line;
+        while ( (line = err.readLine()) != null){
+            buf.append(line);
+        }
+        return buf.toString();
+    }
+    
+    private int waitForEnd(Process p) throws Exception {
+        int retcode = p.waitFor();
+        if (retcode != 0){
+            String err = getErrorOutput(p);
+            if (err.length() > 0){
+                System.err.println("ERROR:");
+                System.err.println(err);
+            }
+        }
+        return retcode;
+    }
 
-	public void testNoTimeOut() throws Exception {
-		Process process = getProcess(TIME_OUT/2);
-		watchdog.start(process);
-		int retCode = waitForEnd(process);
-		assertTrue("process should not have been killed", !watchdog.killedProcess());
-		assertEquals(0, retCode);
-	}
+    public void testNoTimeOut() throws Exception {
+        Process process = getProcess(TIME_OUT/2);
+        watchdog.start(process);
+        int retCode = waitForEnd(process);
+        assertTrue("process should not have been killed", !watchdog.killedProcess());
+        assertEquals(0, retCode);
+    }
 
-	// test that the watchdog ends the process
-	public void testTimeOut() throws Exception {
-		Process process = getProcess(TIME_OUT*2);
-		long now = System.currentTimeMillis();
-		watchdog.start(process);
-		int retCode = process.waitFor();
-		long elapsed = System.currentTimeMillis() - now;
-		assertTrue("process should have been killed", watchdog.killedProcess());
-                //		assertTrue("return code is invalid: " + retCode, retCode!=0);
-		assertTrue("elapse time of "+elapsed+" ms is less than timeout value of "+TIME_OUT_TEST+" ms", elapsed >= TIME_OUT_TEST);
-		assertTrue("elapse time of "+elapsed+" ms is greater than run value of "+(TIME_OUT*2)+" ms", elapsed < TIME_OUT*2);
-	}
+    // test that the watchdog ends the process
+    public void testTimeOut() throws Exception {
+        Process process = getProcess(TIME_OUT*2);
+        long now = System.currentTimeMillis();
+        watchdog.start(process);
+        int retCode = process.waitFor();
+        long elapsed = System.currentTimeMillis() - now;
+        assertTrue("process should have been killed", watchdog.killedProcess());
+                //      assertTrue("return code is invalid: " + retCode, retCode!=0);
+        assertTrue("elapse time of "+elapsed+" ms is less than timeout value of "+TIME_OUT_TEST+" ms", elapsed >= TIME_OUT_TEST);
+        assertTrue("elapse time of "+elapsed+" ms is greater than run value of "+(TIME_OUT*2)+" ms", elapsed < TIME_OUT*2);
+    }
 
-	// test a process that runs and failed
-	public void testFailed() throws Exception {
-		Process process = getProcess(-1); // process should abort
-		watchdog.start(process);
-		int retCode = process.waitFor();
-		assertTrue("process should not have been killed", !watchdog.killedProcess());
-		assertTrue("return code is invalid: " + retCode, retCode!=0);
-	}
+    // test a process that runs and failed
+    public void testFailed() throws Exception {
+        Process process = getProcess(-1); // process should abort
+        watchdog.start(process);
+        int retCode = process.waitFor();
+        assertTrue("process should not have been killed", !watchdog.killedProcess());
+        assertTrue("return code is invalid: " + retCode, retCode!=0);
+    }
 
-	public void testManualStop() throws Exception {
-		final Process process = getProcess(TIME_OUT*2);
-		watchdog.start(process);
+    public void testManualStop() throws Exception {
+        final Process process = getProcess(TIME_OUT*2);
+        watchdog.start(process);
 
-		// I assume that starting this takes less than TIME_OUT/2 ms...
-		Thread thread = new Thread(){
-				public void run(){
-					try {
-						process.waitFor();
-					} catch(InterruptedException e){
-						// not very nice but will do the job
-						fail("process interrupted in thread");
-					}
-				}
-		};
-		thread.start();
+        // I assume that starting this takes less than TIME_OUT/2 ms...
+        Thread thread = new Thread(){
+                public void run(){
+                    try {
+                        process.waitFor();
+                    } catch(InterruptedException e){
+                        // not very nice but will do the job
+                        fail("process interrupted in thread");
+                    }
+                }
+        };
+        thread.start();
 
-		// wait for TIME_OUT/2, there should be about TIME_OUT/2 ms remaining before timeout
-		thread.join(TIME_OUT/2);
+        // wait for TIME_OUT/2, there should be about TIME_OUT/2 ms remaining before timeout
+        thread.join(TIME_OUT/2);
 
-		 // now stop the watchdog.
-		watchdog.stop();
+         // now stop the watchdog.
+        watchdog.stop();
 
-		// wait for the thread to die, should be the end of the process
-		thread.join();
+        // wait for the thread to die, should be the end of the process
+        thread.join();
 
-		// process should be dead and well finished
-		assertEquals(0, process.exitValue());
-		assertTrue("process should not have been killed", !watchdog.killedProcess());
-	}
+        // process should be dead and well finished
+        assertEquals(0, process.exitValue());
+        assertTrue("process should not have been killed", !watchdog.killedProcess());
+    }
 
-	public static class TimeProcess {
-		public static void main(String[] args) throws Exception {
-			int time = Integer.parseInt(args[0]);
-			if (time < 1) {
-				throw new IllegalArgumentException("Invalid time: " + time);
-			}
-			Thread.sleep(time);
-		}
-	}
+    public static class TimeProcess {
+        public static void main(String[] args) throws Exception {
+            int time = Integer.parseInt(args[0]);
+            if (time < 1) {
+                throw new IllegalArgumentException("Invalid time: " + time);
+            }
+            Thread.sleep(time);
+        }
+    }
 }
