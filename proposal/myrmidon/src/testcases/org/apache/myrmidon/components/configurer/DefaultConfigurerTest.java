@@ -496,6 +496,25 @@ public class DefaultConfigurerTest
     }
 
     /**
+     * Tests to see if typed adder works.
+     */
+    public void testConfigable()
+        throws Exception
+    {
+        // Setup test data
+        final DefaultConfiguration config = new DefaultConfiguration( "test", "test" );
+
+        final ConfigTest9 test = new ConfigTest9();
+
+        // Configure the object
+        m_configurer.configure( test, config, m_context );
+
+        final ConfigTest9 expected = new ConfigTest9();
+        expected.configure( config );
+        assertEquals( expected, test );
+    }
+
+    /**
      * Test resolving properties in an id.
      */
     public void testIdResolve()
