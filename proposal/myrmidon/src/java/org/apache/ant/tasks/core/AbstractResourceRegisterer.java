@@ -14,8 +14,7 @@ import org.apache.ant.AntException;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentNotAccessibleException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.camelot.RegistryException;
 
@@ -34,7 +33,7 @@ public abstract class AbstractResourceRegisterer
     protected TaskletEngine       m_engine;
     
     public void compose( final ComponentManager componentManager )
-        throws ComponentNotFoundException, ComponentNotAccessibleException
+        throws ComponentManagerException
     {
         m_engine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
@@ -84,7 +83,7 @@ public abstract class AbstractResourceRegisterer
     {
         if( null != libName )
         {
-            final File lib = new File( getContext().resolveFilename( libName ) );
+            final File lib = getContext().resolveFile( libName );
             try { return lib.toURL(); }
             catch( final MalformedURLException mue )
             {

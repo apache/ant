@@ -24,6 +24,6 @@ import org.apache.avalon.Loggable;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Tasklet
-    extends Component, Contextualizable, Runnable, Loggable
+    extends Component, Loggable, Contextualizable, Runnable 
 {
 }

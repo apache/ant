@@ -7,6 +7,8 @@
  */
 package org.apache.ant.convert;
 
+import org.apache.avalon.Context;
+
 /**
  * Instances of this interface are used to convert between different types.
  *
@@ -21,9 +23,10 @@ public interface Converter
      *
      * @param destination the destinaiton type
      * @param original the original type
+     * @param context the context in which to convert
      * @return the converted object
      * @exception Exception if an error occurs
      */
-    Object convert( Class destination, Object original )
+    Object convert( Class destination, Object original, Context context )
         throws ConverterException, Exception;
 }

@@ -8,14 +8,36 @@
 package org.apache.ant.project;
 
 import java.util.Iterator;
+import org.apache.ant.util.Condition;
 import org.apache.avalon.Component;
-import org.apache.ant.datatypes.Condition;
 
+/**
+ * Interface to represent targets in build file.
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public interface Target
     extends Component
 {
+    /**
+     * Get dependencies of target
+     *
+     * @return the dependency list
+     */
     Iterator getDependencies();
+
+    /**
+     * Get tasks in target
+     *
+     * @return the target list
+     */
     Iterator getTasks();
+
+    /**
+     * Get condition under which target is executed.
+     *
+     * @return the condition for target or null
+     */
     Condition getCondition();
 }
 

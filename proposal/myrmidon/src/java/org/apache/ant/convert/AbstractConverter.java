@@ -7,6 +7,8 @@
  */
 package org.apache.ant.convert;
 
+import org.apache.avalon.Context;
+
 /**
  * Instances of this interface are used to convert between different types.
  *
@@ -35,10 +37,11 @@ public abstract class AbstractConverter
      *
      * @param destination the destination type
      * @param original the original Object
+     * @param context the context in which to convert
      * @return the converted object
      * @exception Exception if an error occurs
      */
-    public Object convert( final Class destination, final Object original )
+    public Object convert( final Class destination, final Object original, Context context )
         throws Exception
     {
         if( m_destination != destination )
@@ -53,17 +56,18 @@ public abstract class AbstractConverter
                                                 "instance of " + m_source.getName() );
         }
             
-        return convert( original );
+        return convert( original, context );
     }
 
     /**
      * Overide this in a particular converter to do the conversion.
      *
      * @param original the original Object
+     * @param context the context in which to convert
      * @return the converted object
      * @exception Exception if an error occurs
      */
-    protected abstract Object convert( Object original )
+    protected abstract Object convert( Object original, Context context )
         throws Exception;
 }
 

@@ -8,6 +8,7 @@
 package org.apache.ant.convert.core;
 
 import org.apache.ant.convert.AbstractConverter;
+import org.apache.avalon.Context;
 
 /**
  * String to short converter
@@ -22,7 +23,7 @@ public class StringToShortConverter
         super( String.class, Short.class );
     }
 
-    public Object convert( final Object original )
+    public Object convert( final Object original, final Context context )
         throws Exception
     {
         return new Short( (String)original );

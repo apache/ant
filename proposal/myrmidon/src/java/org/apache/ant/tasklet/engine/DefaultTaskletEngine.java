@@ -17,8 +17,11 @@ import org.apache.ant.convert.ConverterEngine;
 import org.apache.ant.datatypes.DataTypeEngine;
 import org.apache.ant.tasklet.Tasklet;
 import org.apache.ant.tasklet.TaskletContext;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
+import org.apache.avalon.DefaultComponentManager;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Context;
 import org.apache.avalon.Contextualizable;
@@ -28,6 +31,7 @@ import org.apache.avalon.Initializable;
 import org.apache.avalon.Loggable;
 import org.apache.avalon.camelot.DefaultFactory;
 import org.apache.avalon.camelot.DefaultLocatorRegistry;
+import org.apache.avalon.camelot.Factory;
 import org.apache.avalon.camelot.FactoryException;
 import org.apache.avalon.camelot.Locator;
 import org.apache.avalon.camelot.LocatorRegistry;
@@ -35,20 +39,17 @@ import org.apache.avalon.camelot.RegistryException;
 import org.apache.log.Logger;
 
 public class DefaultTaskletEngine
-    implements TaskletEngine, Initializable
+    extends AbstractLoggable
+    implements TaskletEngine, Composer
 {
     protected TskDeployer          m_tskDeployer;
-    protected DefaultFactory       m_factory;
-    protected LocatorRegistry      m_locatorRegistry;
+    protected Factory              m_factory;
+    protected LocatorRegistry      m_locatorRegistry   = new DefaultLocatorRegistry();
     protected Configurer           m_configurer;
-    protected Logger               m_logger;
     protected DataTypeEngine       m_dataTypeEngine;
     protected ConverterEngine      m_converterEngine;
 
-    public void setLogger( final Logger logger )
-    {
-        m_logger = logger;
-    }
+    protected ComponentManager     m_componentManager;
 
     public TskDeployer getTskDeployer()
     {
@@ -74,119 +75,73 @@ public class DefaultTaskletEngine
     {
         return m_dataTypeEngine;
     }
-
-    public void init()
-        throws Exception
-    {
-        //converter must be created before configurerer 
-        //so that it gets placed in configurers componentManager
-        m_converterEngine = createConverterEngine();
-        setupSubComponent( m_converterEngine );
-
-        m_configurer = createConfigurer();
-        setupSubComponent( m_configurer );
-
-        m_locatorRegistry = createLocatorRegistry();
-        m_factory = createFactory();
-        setupSubComponent( m_factory );
-
-        m_dataTypeEngine = createDataTypeEngine();
-        setupSubComponent( m_dataTypeEngine );
-
-
-        m_tskDeployer = createTskDeployer();
-        setupSubComponent( m_tskDeployer );
-    }
     
-    protected void setupSubComponent( final Component component )
-        throws Exception
+    /**
+     * Retrieve relevent services needed to deploy.
+     *
+     * @param componentManager the ComponentManager
+     * @exception ComponentManagerException if an error occurs
+     */
+    public void compose( final ComponentManager componentManager )
+        throws ComponentManagerException
     {
-        if( component instanceof Loggable )
-        {
-            ((Loggable)component).setLogger( m_logger );
-        }
+        //cache CM so it can be used while executing tasks
+        m_componentManager = componentManager;
 
-        if( component instanceof Composer )
-        {
-            final DefaultComponentManager componentManager = new DefaultComponentManager();
-            componentManager.put( "org.apache.ant.convert.Converter",
-                                  getConverterEngine() );
-            componentManager.put( "org.apache.ant.configuration.Configurer",
-                                  m_configurer );
-            componentManager.put( "org.apache.ant.tasklet.engine.TaskletEngine", 
-                                  this );
-
-            ((Composer)component).compose( componentManager );
-        }
-
-        if( component instanceof Initializable )
-        {
-            ((Initializable)component).init();
-        }
-    }
-
-    protected DataTypeEngine createDataTypeEngine()
-    {
-        final TaskletDataTypeEngine engine = new TaskletDataTypeEngine();
-        engine.setFactory( m_factory );
-        return engine;
-    }
-    
-    protected TskDeployer createTskDeployer()
-    {
-        return new DefaultTskDeployer();
-    }
-
-    protected Configurer createConfigurer()
-    {
-        return new DefaultConfigurer();
-    }
-    
-    protected LocatorRegistry createLocatorRegistry()
-    {
-        return new DefaultLocatorRegistry();
-    }
-    
-    protected DefaultFactory createFactory()
-    {
-        return new DefaultFactory();
-    }
-    
-    protected ConverterEngine createConverterEngine()
-    {
-        //this is done so that the loaders are shared
-        //which results in much less overhead
-        final TaskletConverterEngine engine = new TaskletConverterEngine();
-        engine.setFactory( m_factory );
-        return engine;
+        m_factory = (Factory)componentManager.lookup( "org.apache.avalon.camelot.Factory" );
+        m_tskDeployer = 
+            (TskDeployer)componentManager.lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
+        m_configurer = 
+            (Configurer)componentManager.lookup( "org.apache.ant.configuration.Configurer" );
+        m_dataTypeEngine =
+            (DataTypeEngine)componentManager.lookup( "org.apache.ant.datatypes.DataTypeEngine" );
+        m_converterEngine =
+            (ConverterEngine)componentManager.lookup( "org.apache.ant.convert.ConverterEngine" );
     }
 
     public void execute( final Configuration task, 
-                         final TaskletContext context, 
-                         final ComponentManager componentManager )
+                         final TaskletContext context )
         throws AntException
     {
-        m_logger.debug( "Creating" );
+        getLogger().debug( "Creating" );
         final Tasklet tasklet = createTasklet( task.getName() );
-        tasklet.setLogger( m_logger );
+        setupLogger( tasklet );
 
-        m_logger.debug( "Contextualizing" );
+        getLogger().debug( "Contextualizing" );
         doContextualize( tasklet, task, context );
 
-        m_logger.debug( "Composing" );
-        doCompose( tasklet, task, componentManager );
+        getLogger().debug( "Composing" );
+        doCompose( tasklet, task );
 
-        m_logger.debug( "Configuring" );
+        getLogger().debug( "Configuring" );
         doConfigure( tasklet, task, context );
 
-        m_logger.debug( "Initializing" );
+        getLogger().debug( "Initializing" );
         doInitialize( tasklet, task );
 
-        m_logger.debug( "Running" );
+        getLogger().debug( "Running" );
         tasklet.run();
 
-        m_logger.debug( "Disposing" );
+        getLogger().debug( "Disposing" );
         doDispose( tasklet, task );
+    }
+    
+    protected Tasklet createTasklet( final String name )
+        throws AntException
+    {
+        try
+        {
+            final Locator locator = m_locatorRegistry.getLocator( name );
+            return (Tasklet)m_factory.create( locator, Tasklet.class );
+        }
+        catch( final RegistryException re )
+        {
+            throw new AntException( "Unable to locate task " + name, re );
+        }
+        catch( final FactoryException fe )
+        {
+            throw new AntException( "Unable to create task " + name, fe );
+        }
     }
 
     protected void doConfigure( final Tasklet tasklet, 
@@ -203,20 +158,12 @@ public class DefaultTaskletEngine
         }
     }
     
-    protected void doCompose( final Tasklet tasklet, 
-                              final Configuration task,
-                              final ComponentManager componentManager )
+    protected void doCompose( final Tasklet tasklet, final Configuration task )
         throws AntException
     {
-
-        final DefaultComponentManager subComponentManager = 
-            new DefaultComponentManager( componentManager );
-
-        subComponentManager.put( "org.apache.ant.configuration.Configurer", m_configurer );
-
         if( tasklet instanceof Composer )
         {
-            try { ((Composer)tasklet).compose( subComponentManager ); }
+            try { ((Composer)tasklet).compose( m_componentManager ); }
             catch( final Throwable throwable )
             {
                 throw new AntException( "Error composing task " +  task.getName() + " at " +
@@ -231,9 +178,6 @@ public class DefaultTaskletEngine
                                     final TaskletContext context )
         throws AntException
     {
-        // Already done in container ...
-        //context.setProperty( TaskletContext.NAME, name );
-
         try { tasklet.contextualize( context ); }
         catch( final Throwable throwable )
         {
@@ -270,24 +214,6 @@ public class DefaultTaskletEngine
                                         task.getLocation() + "(Reason: " +
                                         throwable.getMessage() + ")", throwable );
             }
-        }
-    }
-
-    protected Tasklet createTasklet( final String name )
-        throws AntException
-    {
-        try
-        {
-            final Locator locator = m_locatorRegistry.getLocator( name );
-            return (Tasklet)m_factory.create( locator, Tasklet.class );
-        }
-        catch( final RegistryException re )
-        {
-            throw new AntException( "Unable to locate task " + name, re );
-        }
-        catch( final FactoryException fe )
-        {
-            throw new AntException( "Unable to create task " + name, fe );
         }
     }
 }

@@ -10,12 +10,21 @@ package org.apache.ant.project;
 import org.apache.log.LogEntry;
 import org.apache.log.LogTarget;
 
+/**
+ * Adapter between Avalon LogKit and Project listener interfaces.
+ * 
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public class LogTargetToListenerAdapter
     implements LogTarget
 {
-
     protected final ProjectListener    m_listener;
 
+    /**
+     * Constructor taking listener to convert to.
+     *
+     * @param listener the ProjectListener
+     */
     public LogTargetToListenerAdapter( final ProjectListener listener )
     {
         m_listener = listener;

@@ -7,11 +7,21 @@
  */
 package org.apache.ant.project;
 
+/**
+ * Support for the project listener event dispatching.
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public class ProjectListenerSupport
     implements ProjectListener
 {
     protected ProjectListener[]   m_listeners = new ProjectListener[ 0 ];
 
+    /**
+     * Add an extra project listener that wants to receive notification of listener events.
+     *
+     * @param listener the listener
+     */
     public void addProjectListener( final ProjectListener listener )
     {
         final ProjectListener[] listeners = new ProjectListener[ m_listeners.length + 1 ];
@@ -20,6 +30,11 @@ public class ProjectListenerSupport
         m_listeners = listeners;
     }
 
+    /**
+     * Remove a project listener that wants to receive notification of listener events.
+     *
+     * @param listener the listener
+     */
     public void removeProjectListener( final ProjectListener listener )
     {
         int found = -1;
@@ -44,6 +59,11 @@ public class ProjectListenerSupport
         m_listeners = listeners;
     }
 
+    /**
+     * Fire a projectStarted event.
+     *
+     * @param projectName the projectName
+     */
     public void projectStarted( final String projectName )
     {
         for( int i = 0; i < m_listeners.length; i++ )
@@ -52,6 +72,9 @@ public class ProjectListenerSupport
         }
     }
 
+    /**
+     * Fire a projectFinished event.
+     */
     public void projectFinished()
     {
         for( int i = 0; i < m_listeners.length; i++ )
@@ -60,6 +83,11 @@ public class ProjectListenerSupport
         }
     }
 
+    /**
+     * Fire a targetStarted event.
+     *
+     * @param targetName the name of target
+     */
     public void targetStarted( String targetName )
     {
         for( int i = 0; i < m_listeners.length; i++ )
@@ -68,6 +96,9 @@ public class ProjectListenerSupport
         }
     }
 
+    /**
+     * Fire a targetFinished event.
+     */
     public void targetFinished()
     {
         for( int i = 0; i < m_listeners.length; i++ )
@@ -76,6 +107,11 @@ public class ProjectListenerSupport
         }
     }
 
+    /**
+     * Fire a targetStarted event.
+     *
+     * @param targetName the name of target
+     */
     public void taskletStarted( String taskletName )
     {
         for( int i = 0; i < m_listeners.length; i++ )
@@ -84,6 +120,9 @@ public class ProjectListenerSupport
         }
     }
 
+    /**
+     * Fire a taskletFinished event.
+     */
     public void taskletFinished()
     {
         for( int i = 0; i < m_listeners.length; i++ )
@@ -92,6 +131,11 @@ public class ProjectListenerSupport
         }
     }
 
+    /**
+     * Fire a log event.
+     *
+     * @param message the log message
+     */
     public void log( String message )
     {
         for( int i = 0; i < m_listeners.length; i++ )
@@ -100,6 +144,12 @@ public class ProjectListenerSupport
         }
     }
 
+    /**
+     * Fire a log event.
+     *
+     * @param message the log message
+     * @param throwable the throwable to be logged
+     */
     public void log( String message, Throwable throwable )
     {
         for( int i = 0; i < m_listeners.length; i++ )

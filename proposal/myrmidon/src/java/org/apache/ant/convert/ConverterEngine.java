@@ -8,13 +8,27 @@
 package org.apache.ant.convert;
 
 import org.apache.avalon.Component;
-import org.apache.avalon.Loggable;
 import org.apache.avalon.camelot.LocatorRegistry;
-import org.apache.log.Logger;
 
+/**
+ * Converter engine to handle converting between types.
+ * 
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public interface ConverterEngine
-    extends Component, Converter, Loggable
+    extends Component, Converter
 {
+    /**
+     * Get registry used to locate converters.
+     *
+     * @return the LocatorRegistry
+     */
     LocatorRegistry getRegistry();
+
+    /**
+     * Get registry for converterInfo objects.
+     *
+     * @return the ConverterRegistry
+     */
     ConverterRegistry getInfoRegistry();
 }

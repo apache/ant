@@ -8,6 +8,7 @@
 package org.apache.ant.convert.core;
 
 import org.apache.ant.convert.AbstractConverter;
+import org.apache.avalon.Context;
 
 /**
  * String to double converter
@@ -22,7 +23,7 @@ public class StringToDoubleConverter
         super( String.class, Double.class );
     }
 
-    public Object convert( final Object original )
+    public Object convert( final Object original, final Context context )
         throws Exception
     {
         return new Double( (String)original );

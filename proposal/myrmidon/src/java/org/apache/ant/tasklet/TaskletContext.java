@@ -60,9 +60,9 @@ public interface TaskletContext
      * different volumes, file conventions etc)
      *
      * @param filename the filename to resolve
-     * @return the resolved filename
+     * @return the resolved file
      */
-    String resolveFilename( String filename );
+    File resolveFile( String filename );
 
     /**
      * Resolve property. 

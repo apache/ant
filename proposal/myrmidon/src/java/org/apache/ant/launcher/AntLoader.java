@@ -7,31 +7,22 @@
  */
 package org.apache.ant.launcher;
 
+import java.io.File;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.StringTokenizer;
 
 /**
  * Basic Loader that is responsible for all the hackery to get classloader to work.
  * Other classes can call AntLoader.getLoader() and add to their own classloader.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ * @author <a href="mailto:mpfoemme@thoughtworks.com">Matthew Foemmel</a>
  */
 public final class AntLoader
-    extends URLClassLoader
 {
-    protected static AntLoader     c_classLoader;
-
-    public static AntLoader getLoader()
-    {
-        if( null == c_classLoader ) 
-        {
-            c_classLoader = new AntLoader( new URL[ 0 ] );
-        }
-
-        return c_classLoader;
-    }
-
     /**
      * Magic entry point.
      *
@@ -40,42 +31,67 @@ public final class AntLoader
      */
     public final static void main( final String[] args ) 
         throws Exception
-    { 
-        final URL archive = new URL( "file:lib/myrmidon.jar" );
-        c_classLoader = new AntLoader( new URL[] { archive } );
-        
+    {        
         try
         {
+            //actually try to discover the install directory based on where
+            // the ant.jar is
+            final File installDirectory = findInstallDir();
+            System.setProperty( "ant.home", installDirectory.toString() );
+
+            //setup classloader appropriately for myrmidon jar
+            final File archive = 
+                new File( installDirectory, "lib" + File.separator + "myrmidon.jar" );
+            final AntClassLoader classLoader = 
+                new AntClassLoader( new URL[] { archive.toURL() } );
+
             //load class and retrieve appropriate main method.
-            final Class clazz = c_classLoader.loadClass( "org.apache.ant.Main" );
+            final Class clazz = classLoader.loadClass( "org.apache.ant.Main" );
             final Method method = clazz.getMethod( "main", new Class[] { args.getClass() } );
             
             //kick the tires and light the fires....
             method.invoke( null, new Object[] { args } );
         }
+        catch( final InvocationTargetException ite ) 
+        {
+            System.err.println( "Error: " + ite.getTargetException().getMessage() );
+            ite.getTargetException().printStackTrace();
+        }
         catch( final Throwable throwable ) 
         {
+            System.err.println( "Error: " + throwable.getMessage() );
             throwable.printStackTrace();
         }
     }
 
     /**
-     * Basic constructor.
-     *
-     * @param urls the Starting URLS
+     *  Finds the ant.jar file in the classpath.
      */
-    public AntLoader( final URL[] urls )
+    protected final static File findInstallDir() 
+        throws Exception
     {
-        super( urls );
-    }
+        final String classpath = System.getProperty( "java.class.path" );
+        final String pathSeparator = System.getProperty( "path.separator" );
+        final StringTokenizer tokenizer = new StringTokenizer( classpath, pathSeparator );
+        
+        while( tokenizer.hasMoreTokens() )
+        {
+            final String element = tokenizer.nextToken();
 
-    /**
-     * Add a URL to classloader
-     *
-     * @param url the url
-     */
-    public void addURL( final URL url )
-    {
-        super.addURL( url );
+            if( element.endsWith( "ant.jar" ) )
+            {
+                File file = (new File( element )).getAbsoluteFile();
+                file = file.getParentFile();
+                
+                if( null != file )
+                {
+                    file = file.getParentFile();
+                }
+
+                return file;                
+            }
+        }
+        
+        throw new Exception( "Unable to locate ant.jar in classpath" );
     }
 }

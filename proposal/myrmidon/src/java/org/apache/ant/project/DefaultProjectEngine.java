@@ -11,88 +11,80 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.AntException;
 import org.apache.ant.configuration.Configuration;
-import org.apache.ant.datatypes.Condition;
 import org.apache.ant.tasklet.DefaultTaskletContext;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.DefaultTaskletEngine;
 import org.apache.ant.tasklet.engine.TaskletEngine;
+import org.apache.ant.util.Condition;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Composer;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.DefaultComponentManager;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.DefaultComponentManager;
 import org.apache.avalon.Disposable;
 import org.apache.avalon.Initializable;
 import org.apache.log.Logger;
 
+/**
+ * This is the default implementation of ProjectEngine.
+ * 
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public class DefaultProjectEngine
-    implements ProjectEngine, Initializable, Disposable
+    extends AbstractLoggable
+    implements ProjectEngine, Composer
 {
     protected TaskletEngine            m_taskletEngine;
-    protected Logger                   m_logger;
-    protected ProjectListenerSupport   m_listenerSupport;
+    protected ProjectListenerSupport   m_listenerSupport = new ProjectListenerSupport();
     protected DefaultComponentManager  m_componentManager;
     
-    public void setLogger( final Logger logger )
-    {
-        m_logger = logger;
-    }
-
+    /**
+     * Add a listener to project events.
+     *
+     * @param listener the listener
+     */
     public void addProjectListener( final ProjectListener listener )
     {
         m_listenerSupport.addProjectListener( listener );
     }
-
+    
+    /**
+     * Remove a listener from project events.
+     *
+     * @param listener the listener
+     */
     public void removeProjectListener( final ProjectListener listener )
     {
         m_listenerSupport.removeProjectListener( listener );
     }
-
-    public void init()
-        throws Exception
-    {
-        m_listenerSupport = new ProjectListenerSupport();
-
-        setupTaskletEngine();
-
-        m_componentManager = new DefaultComponentManager();
-        m_componentManager.put( "org.apache.ant.project.ProjectEngine", this );
-        m_componentManager.put( "org.apache.ant.tasklet.engine.TaskletEngine", m_taskletEngine );
-        m_componentManager.put( "org.apache.ant.convert.ConverterEngine", 
-                                m_taskletEngine.getConverterEngine() );
-    }
-
-    public void dispose()
-        throws Exception
-    {
-        if( m_taskletEngine instanceof Disposable )
-        {
-            ((Disposable)m_taskletEngine).dispose();
-        }
-    }
-
-    public TaskletEngine getTaskletEngine()
-    {
-        return m_taskletEngine;
-    }
-
-    protected void setupTaskletEngine()
-        throws Exception
-    {
-        m_taskletEngine = createTaskletEngine();
-        m_taskletEngine.setLogger( m_logger );
-        
-        if( m_taskletEngine instanceof Initializable )
-        {
-            ((Initializable)m_taskletEngine).init();
-        }
-    }    
     
-    protected TaskletEngine createTaskletEngine()
+    /**
+     * Retrieve relevent services needed for engine.
+     *
+     * @param componentManager the ComponentManager
+     * @exception ComponentManagerException if an error occurs
+     */
+    public void compose( final ComponentManager componentManager )
+        throws ComponentManagerException
     {
-        return new DefaultTaskletEngine();
-    }    
-    
+        m_componentManager = (DefaultComponentManager)componentManager;
+        m_taskletEngine = (TaskletEngine)componentManager.
+            lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
+    }
+
+    /**
+     * Execute a target in a particular project.
+     * Execute in the project context.
+     *
+     * @param project the Project
+     * @param target the name of the target
+     * @exception AntException if an error occurs
+     */    
     public void execute( final Project project, final String target )
         throws AntException
     {
+        //HACK: should do this a better way !!!!!!
         m_componentManager.put( "org.apache.ant.project.Project", project );
 
         final TaskletContext context = project.getContext();
@@ -110,12 +102,29 @@ public class DefaultProjectEngine
         m_listenerSupport.projectFinished();
     }
 
+    /**
+     * Execute a target in a particular project, in a particular context.
+     *
+     * @param project the Project
+     * @param target the name of the target
+     * @param context the context
+     * @exception AntException if an error occurs
+     */
     public void execute( Project project, String target, TaskletContext context )
         throws AntException
     {
         execute( project, target, context, new ArrayList() );
     }
 
+    /**
+     * Helper method to execute a target.
+     *
+     * @param project the Project
+     * @param target the name of the target
+     * @param context the context
+     * @param done the list of targets already executed in current run
+     * @exception AntException if an error occurs
+     */
     protected void execute( final Project project, 
                             final String targetName, 
                             final TaskletContext context,
@@ -128,9 +137,11 @@ public class DefaultProjectEngine
         {
             throw new AntException( "Unable to find target " + targetName );
         }
-
+        
+        //add target to list of targets executed
         done.add( targetName );
 
+        //execute all dependencies
         final Iterator dependencies = target.getDependencies();
         while( dependencies.hasNext() )
         {
@@ -144,41 +155,65 @@ public class DefaultProjectEngine
         executeTarget( targetName, target, context );
     }
 
+    /**
+     * Method to execute a particular target instance.
+     *
+     * @param targetName the name of target
+     * @param target the target
+     * @param context the context in which to execute
+     * @exception AntException if an error occurs
+     */
     protected void executeTarget( final String targetName, 
                                   final Target target, 
                                   final TaskletContext context )
         throws AntException
     {
-        m_componentManager.put( "org.apache.ant.project.Target", target );
+        //is this necessary ? I think not but ....
+        // NO it isn't because you set target name and project has already been provided
+        //m_componentManager.put( "org.apache.ant.project.Target", target );
 
+        //create project context and set target name
         final TaskletContext targetContext = new DefaultTaskletContext( context );
         targetContext.setProperty( Project.TARGET, targetName );
         
+        //notify listeners
         m_listenerSupport.targetStarted( targetName );
 
+        //actually do the execution work 
         executeTargetWork( targetName, target, targetContext );
         
+        //notify listeners
         m_listenerSupport.targetFinished();
     }
 
+    /**
+     * Do the work associated with target.
+     * ie execute all tasks
+     *
+     * @param name the name of target
+     * @param target the target
+     * @param context the context
+     */
     protected void executeTargetWork( final String name, 
                                       final Target target, 
                                       final TaskletContext context )
     {
+        //check the condition associated with target.
+        //if it is not satisfied then skip target
         final Condition condition = target.getCondition();
-
         if( null != condition )
         {
             if( false == condition.evaluate( context ) )
             {
-                m_logger.debug( "Skipping target " + name + 
-                                " as it does not satisfy condition" );
+                getLogger().debug( "Skipping target " + name + 
+                                   " as it does not satisfy condition" );
                 return;
             }
         }
 
-        m_logger.debug( "Executing target " + name );
+        getLogger().debug( "Executing target " + name );
 
+        //execute all tasks assciated with target
         final Iterator tasks = target.getTasks();
         while( tasks.hasNext() )
         {
@@ -187,24 +222,32 @@ public class DefaultProjectEngine
         }
     }
 
-    protected void executeTask( final Configuration configuration, 
-                                final TaskletContext context )
+    /**
+     * Execute a task.
+     *
+     * @param task the task definition
+     * @param context the context 
+     * @exception AntException if an error occurs
+     */
+    protected void executeTask( final Configuration task, final TaskletContext context )
         throws AntException
     {
-        final String name = configuration.getName();
-        m_logger.debug( "Executing task " + name );
+        final String name = task.getName();
+        getLogger().debug( "Executing task " + name );
 
         //Set up context for task...
 
         //is Only necessary if we are multi-threaded
         //final TaskletContext targetContext = new DefaultTaskletContext( context );
+
+        //is setting name even necessary ???
         context.setProperty( TaskletContext.NAME, name );
 
         //notify listeners
         m_listenerSupport.taskletStarted( name );
 
         //run task
-        m_taskletEngine.execute( configuration, context, m_componentManager );
+        m_taskletEngine.execute( task, context );
 
         //notify listeners task has ended
         m_listenerSupport.taskletFinished();

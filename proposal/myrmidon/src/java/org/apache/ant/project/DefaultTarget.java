@@ -10,8 +10,13 @@ package org.apache.ant.project;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.configuration.Configuration;
-import org.apache.ant.datatypes.Condition;
+import org.apache.ant.util.Condition;
 
+/**
+ * Default implementation of target.
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public class DefaultTarget
     implements Target
 {
@@ -19,36 +24,68 @@ public class DefaultTarget
     protected final ArrayList   m_tasks            = new ArrayList();
     protected final Condition   m_condition;
 
+    /**
+     * Constructor taking condition for target.
+     *
+     * @param condition the condition
+     */
     public DefaultTarget( final Condition condition )
     {
         m_condition = condition;
     }
 
+    /**
+     * Constructor for target with no condition.
+     */
     public DefaultTarget()
     {
         this( null );
     }
-
+    
+    /**
+     * Get condition under which target is executed.
+     *
+     * @return the condition for target or null
+     */
     public Condition getCondition()
     {
         return m_condition;
     }
-    
+    /**
+     * Get dependencies of target
+     *
+     * @return the dependency list
+     */
     public Iterator getDependencies()
     {
         return m_dependencies.iterator();
     }
 
+    /**
+     * Get tasks in target
+     *
+     * @return the target list
+     */
     public Iterator getTasks()
     {
         return m_tasks.iterator();
     }
 
+    /**
+     * Add a dependency to target.
+     *
+     * @param dependency the dependency
+     */
     public void addDependency( final String dependency )
     {
         m_dependencies.add( dependency );
     }
 
+    /**
+     * Add task to target.
+     *
+     * @param taskConfiguration the task representation
+     */
     public void addTask( final Configuration taskConfiguration )
     {
         m_tasks.add( taskConfiguration );

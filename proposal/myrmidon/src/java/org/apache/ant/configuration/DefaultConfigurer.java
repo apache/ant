@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.ant.convert.Converter;
 import org.apache.ant.convert.ConverterException;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentNotAccessibleException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Context;
@@ -30,6 +30,7 @@ import org.apache.log.Logger;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultConfigurer
+    extends AbstractLoggable
     implements Configurer, Composer, Loggable
 {
     protected final static String  RESERVED_ATTRIBUTES[] = 
@@ -44,15 +45,9 @@ public class DefaultConfigurer
 
     protected final static boolean DEBUG         = false;
     protected Converter            m_converter;
-    protected Logger               m_logger;
-
-    public void setLogger( final Logger logger )
-    {
-        m_logger = logger;
-    }
 
     public void compose( final ComponentManager componentManager )
-        throws ComponentNotFoundException, ComponentNotAccessibleException
+        throws ComponentManagerException
     {
         m_converter = (Converter)componentManager.lookup( "org.apache.ant.convert.Converter" );
     }
@@ -206,7 +201,7 @@ public class DefaultConfigurer
             final Object objectValue = 
                 PropertyUtil.resolveProperty( value, context, false );
 
-            setValue( object, objectValue, methods );
+            setValue( object, objectValue, methods, context );
         }
         catch( final PropertyException pe )
         {
@@ -215,7 +210,10 @@ public class DefaultConfigurer
         }
     }
 
-    protected void setValue( final Object object, Object value, final Method methods[] )
+    protected void setValue( final Object object, 
+                             Object value, 
+                             final Method methods[],
+                             final Context context )
         throws ConfigurationException
     {
         final Class sourceClass = value.getClass();
@@ -223,7 +221,7 @@ public class DefaultConfigurer
 
         for( int i = 0; i < methods.length; i++ )
         {
-            if( setValue( object, value, methods[ i ], sourceClass, source ) )
+            if( setValue( object, value, methods[ i ], sourceClass, source, context ) )
             {
                 return;
             }
@@ -238,7 +236,8 @@ public class DefaultConfigurer
                                 Object value, 
                                 final Method method,
                                 final Class sourceClass,
-                                final String source )
+                                final String source,
+                                final Context context )
         throws ConfigurationException
     {
         Class parameterType = method.getParameterTypes()[ 0 ];
@@ -249,7 +248,7 @@ public class DefaultConfigurer
         
         try
         {
-            value = m_converter.convert( parameterType, value );
+            value = m_converter.convert( parameterType, value, context );
         }
         catch( final ConverterException ce )
         {
@@ -359,7 +358,7 @@ public class DefaultConfigurer
 
     protected String getMethodNameFor( final String attribute )
     {
-        return "set" + getJavaNameFor( attribute );
+        return "set" + getJavaNameFor( attribute.toLowerCase() );
     }
 
     protected String getJavaNameFor( final String name )

@@ -8,9 +8,9 @@
 package org.apache.ant.tasklet;
 
 import org.apache.ant.AntException;
+import org.apache.avalon.AbstractLoggable;
 import org.apache.avalon.Context;
 import org.apache.avalon.Initializable;
-import org.apache.log.Logger;
 
 /**
  * This is abstract base class for tasklets.
@@ -18,23 +18,13 @@ import org.apache.log.Logger;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public abstract class AbstractTasklet
+    extends AbstractLoggable
     implements Tasklet, Initializable
 {
     //the user should set this in constructors of sub-classes
     protected JavaVersion             m_requiredJavaVersion;
 
     private TaskletContext            m_context;
-    private Logger                    m_logger;
-
-    /**
-     * Receive logger from container.
-     *
-     * @param logger the logger
-     */
-    public void setLogger( final Logger logger )
-    {
-        m_logger = logger;
-    }
 
     /**
      * Retrieve context from container.
@@ -78,15 +68,5 @@ public abstract class AbstractTasklet
     protected TaskletContext getContext()
     {
         return m_context;
-    }
-
-    /**
-     * Convenience method for subclass to get logger.
-     *
-     * @return the Logger
-     */
-    protected Logger getLogger()
-    {
-        return m_logger;
     }
 }

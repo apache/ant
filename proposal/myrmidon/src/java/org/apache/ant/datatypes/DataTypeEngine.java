@@ -13,11 +13,31 @@ import org.apache.avalon.camelot.FactoryException;
 import org.apache.avalon.camelot.LocatorRegistry;
 import org.apache.avalon.camelot.RegistryException;
 
+/**
+ * This is basically a engine that can be used to access data-types.
+ * The engine acts as a repository and factory for these types.
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public interface DataTypeEngine
-    extends Component, Loggable
+    extends Component
 {
+    /**
+     * Retrieve registry of data-types.
+     * This is used by deployer to add types into engine.
+     *
+     * @return the registry
+     */
     LocatorRegistry getRegistry();
 
+    /**
+     * Create a data-type of type registered under name.
+     *
+     * @param name the name of data type
+     * @return the DataType
+     * @exception RegistryException if an error occurs
+     * @exception FactoryException if an error occurs
+     */
     DataType createDataType( String name )
         throws RegistryException, FactoryException;
 }

@@ -19,8 +19,7 @@ import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentNotAccessibleException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.ConfigurationException;
 import org.apache.avalon.Resolvable;
@@ -40,16 +39,15 @@ public class Property
     protected Configurer          m_configurer;
     
     public void compose( final ComponentManager componentManager )
-        throws ComponentNotFoundException, ComponentNotAccessibleException
+        throws ComponentManagerException
     {
         m_configurer = (Configurer)componentManager.
             lookup( "org.apache.ant.configuration.Configurer" );
-        
-        final TaskletEngine taskletEngine = (TaskletEngine)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
 
-        m_engine = taskletEngine.getDataTypeEngine();
-        m_converter = taskletEngine.getConverterEngine();
+        m_engine = (DataTypeEngine)componentManager.
+            lookup( "org.apache.ant.datatypes.DataTypeEngine" );
+
+        m_converter = (Converter)componentManager.lookup( "org.apache.ant.convert.Converter" );
     }
 
     public void configure( final Configuration configuration )
@@ -71,7 +69,12 @@ public class Property
 
             if( name.equals( "name" ) )
             {
-                try { setName( (String)m_converter.convert( String.class, object ) ); }
+                try 
+                {
+                    final String convertedValue = 
+                        (String)m_converter.convert( String.class, object, getContext() );
+                    setName( convertedValue );
+                }
                 catch( final Exception e )
                 {
                     throw new ConfigurationException( "Error converting value", e );
@@ -86,7 +89,7 @@ public class Property
                 try 
                 {
                     final Boolean localScope = 
-                        (Boolean)m_converter.convert( Boolean.class, object );
+                        (Boolean)m_converter.convert( Boolean.class, object, getContext() );
                     setLocalScope( Boolean.TRUE == localScope ); 
                 }
                 catch( final Exception e )

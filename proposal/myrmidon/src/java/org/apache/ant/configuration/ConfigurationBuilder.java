@@ -18,12 +18,6 @@ import org.xml.sax.SAXException;
 public class ConfigurationBuilder
     extends org.apache.avalon.DefaultConfigurationBuilder
 {
-    public ConfigurationBuilder()
-        throws SAXException
-    {
-        super();
-    }
-
     protected org.apache.avalon.SAXConfigurationHandler getHandler()
     {
         return new SAXConfigurationHandler();

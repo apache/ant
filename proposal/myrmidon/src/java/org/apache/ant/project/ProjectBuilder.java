@@ -10,13 +10,25 @@ package org.apache.ant.project;
 import java.io.File;
 import java.io.IOException;
 import org.apache.ant.AntException;
-import org.apache.log.Logger;
+import org.apache.avalon.Component;
 
+/**
+ * Interface implemented by components that build projects from sources.
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public interface ProjectBuilder
+    extends Component
 {
-    void setLogger( Logger logger );
-
-    Project build( File projectFile )
+    /**
+     * build a project from source.
+     *
+     * @param source the source
+     * @return the constructed Project
+     * @exception IOException if an error occurs
+     * @exception AntException if an error occurs
+     */
+    Project build( File source )
         throws IOException, AntException;
 }
 

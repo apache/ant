@@ -1,4 +1,4 @@
-rem @echo off
+@echo off
 rem find ANT_HOME
 if not "%ANT_HOME%"=="" goto checkJava
 

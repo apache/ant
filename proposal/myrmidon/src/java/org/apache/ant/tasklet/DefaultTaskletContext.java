@@ -87,10 +87,10 @@ public class DefaultTaskletContext
      * @param filename the filename to resolve
      * @return the resolved filename
      */
-    public String resolveFilename( final String filename )
+    public File resolveFile( final String filename )
     {
         final File result = FileUtil.resolveFile( m_baseDirectory, filename );
-        if( null != result ) return result.toString();
+        if( null != result ) return result;
         else return null;
     }
 
@@ -106,7 +106,7 @@ public class DefaultTaskletContext
         try { return PropertyUtil.resolveProperty( property, this, false ); }
         catch( final PropertyException pe )
         {
-            throw new AntException( "Error resolving " + property + " due to " +pe.getMessage(),
+            throw new AntException( "Error resolving " + property + " due to " + pe.getMessage(),
                                     pe );
         }
     }
@@ -173,6 +173,14 @@ public class DefaultTaskletContext
         }
     }
 
+    /**
+     * put a value in context.
+     * This put method is overidden so new baseDirectory can be saved 
+     * in member variable.
+     *
+     * @param key the key
+     * @param value the value
+     */
     public void put( final Object key, final Object value  )
     {
         if( key.equals( BASE_DIRECTORY ) )

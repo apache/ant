@@ -16,8 +16,7 @@ import org.apache.ant.tasklet.DefaultTaskletContext;
 import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.Context;
-import org.apache.avalon.ComponentNotAccessibleException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 
 /**
@@ -43,7 +42,7 @@ public class AntCall
     } 
 
     public void compose( final ComponentManager componentManager )
-        throws ComponentNotFoundException, ComponentNotAccessibleException
+        throws ComponentManagerException
     {
         m_componentManager = componentManager;
         m_projectEngine = (ProjectEngine)componentManager.

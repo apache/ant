@@ -8,6 +8,7 @@
 package org.apache.ant.convert.core;
 
 import org.apache.ant.convert.AbstractConverter;
+import org.apache.avalon.Context;
 
 /**
  * String to integer converter.
@@ -22,7 +23,7 @@ public class StringToIntegerConverter
         super( String.class, Integer.class );
     }
 
-    public Object convert( final Object original )
+    public Object convert( final Object original, final Context context )
         throws Exception
     {
         return new Integer( (String)original );

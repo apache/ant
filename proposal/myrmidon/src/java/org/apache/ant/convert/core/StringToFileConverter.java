@@ -7,26 +7,29 @@
  */
 package org.apache.ant.convert.core;
 
+import java.io.File;
 import org.apache.ant.convert.AbstractConverter;
+import org.apache.ant.tasklet.TaskletContext;
 import org.apache.avalon.Context;
 
 /**
- * String to float converter
+ * String to file converter
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class StringToFloatConverter
+public class StringToFileConverter
     extends AbstractConverter
 {
-    public StringToFloatConverter()
+    public StringToFileConverter()
     {
-        super( String.class, Float.class );
+        super( String.class, File.class );
     }
 
     public Object convert( final Object original, final Context context )
         throws Exception
     {
-        return new Float( (String)original );
+        final TaskletContext taskletContext = (TaskletContext)context;
+        return taskletContext.resolveFile( (String)original );
     }
 }
 

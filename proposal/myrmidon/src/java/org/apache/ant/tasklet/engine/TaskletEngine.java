@@ -24,7 +24,7 @@ import org.apache.log.Logger;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface TaskletEngine
-    extends Component, Loggable
+    extends Component
 {
     /**
      * Retrieve deployer for engine.
@@ -60,8 +60,6 @@ public interface TaskletEngine
      * @param task the configruation data for task
      * @exception AntException if an error occurs
      */
-    void execute( Configuration task, 
-                  TaskletContext context, 
-                  ComponentManager componentManager )
+    void execute( Configuration task, TaskletContext context )
         throws AntException;
 }

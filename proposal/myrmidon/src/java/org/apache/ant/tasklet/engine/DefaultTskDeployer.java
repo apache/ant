@@ -15,13 +15,13 @@ import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import org.apache.ant.datatypes.DataTypeEngine;
 import org.apache.ant.convert.ConverterEngine;
 import org.apache.ant.convert.ConverterRegistry;
 import org.apache.ant.convert.DefaultConverterInfo;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentNotAccessibleException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.Configuration;
 import org.apache.avalon.ConfigurationException;
@@ -29,6 +29,7 @@ import org.apache.avalon.camelot.AbstractZipDeployer;
 import org.apache.avalon.camelot.DefaultLocator;
 import org.apache.avalon.camelot.DefaultLocatorRegistry;
 import org.apache.avalon.camelot.DeploymentException;
+import org.apache.avalon.camelot.DeployerUtil;
 import org.apache.avalon.camelot.Loader;
 import org.apache.avalon.camelot.LocatorRegistry;
 import org.apache.avalon.camelot.RegistryException;
@@ -55,7 +56,7 @@ public class DefaultTskDeployer
      */
     public DefaultTskDeployer()
     {
-        super( false );
+        super();
         m_autoUndeploy = true;
         m_type = "Tasklet";
     }
@@ -64,34 +65,32 @@ public class DefaultTskDeployer
      * Retrieve relevent services needed to deploy.
      *
      * @param componentManager the ComponentManager
-     * @exception ComponentNotFoundException if an error occurs
-     * @exception ComponentNotAccessibleException if an error occurs
+     * @exception ComponentManagerException if an error occurs
      */
     public void compose( final ComponentManager componentManager )
-        throws ComponentNotFoundException, ComponentNotAccessibleException
+        throws ComponentManagerException
     {
         final TaskletEngine taskletEngine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
 
-        final ConverterEngine converterEngine = taskletEngine.getConverterEngine();
+        m_taskletRegistry = taskletEngine.getRegistry();
+
+        final ConverterEngine converterEngine = (ConverterEngine)componentManager.
+            lookup( "org.apache.ant.convert.ConverterEngine" );
 
         m_converterInfoRegistry = converterEngine.getInfoRegistry();
         m_converterRegistry = converterEngine.getRegistry();
 
-        m_taskletRegistry = taskletEngine.getRegistry();
+        final DataTypeEngine dataTypeEngine = (DataTypeEngine)componentManager.
+            lookup( "org.apache.ant.datatypes.DataTypeEngine" );
         
-        m_dataTypeRegistry = taskletEngine.getDataTypeEngine().getRegistry();
-    }
-
-    public void setLogger( final Logger logger )
-    {
-        m_logger = logger;
+        m_dataTypeRegistry = dataTypeEngine.getRegistry();
     }
 
     protected void loadResources( final ZipFile zipFile, final String location, final URL url )
         throws DeploymentException
     {
-        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
+        final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
 
         try
         {
@@ -126,8 +125,8 @@ public class DefaultTskDeployer
         throws DeploymentException
     {
         checkDeployment( location, url );
-        final ZipFile zipFile = getZipFileFor( url );
-        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
+        final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
+        final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
         
         try
         {
@@ -152,8 +151,9 @@ public class DefaultTskDeployer
         throws DeploymentException
     {
         checkDeployment( location, url );
-        final ZipFile zipFile = getZipFileFor( url );
-        final Configuration datatypedefs = loadConfiguration( zipFile, TSKDEF_FILE );
+        final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
+        final Configuration datatypedefs = 
+            DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
         
         try
         {
@@ -178,8 +178,8 @@ public class DefaultTskDeployer
         throws DeploymentException
     {
         checkDeployment( location, url );
-        final ZipFile zipFile = getZipFileFor( url );
-        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
+        final ZipFile zipFile = DeployerUtil.getZipFileFor( getFileFor( url ) );
+        final Configuration taskdefs = DeployerUtil.loadConfiguration( zipFile, TSKDEF_FILE );
         
         try
         {

@@ -14,8 +14,7 @@ import org.apache.ant.AntException;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentNotAccessibleException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.camelot.DeploymentException;
 
@@ -32,7 +31,7 @@ public class RegisterTasklib
     protected TaskletEngine     m_engine;
     
     public void compose( final ComponentManager componentManager )
-        throws ComponentNotFoundException, ComponentNotAccessibleException
+        throws ComponentManagerException
     {
         m_engine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
@@ -53,7 +52,7 @@ public class RegisterTasklib
         
         URL url = null;
 
-        final File lib = new File( getContext().resolveFilename( m_lib ) );
+        final File lib = getContext().resolveFile( m_lib );
         try { url = lib.toURL(); }
         catch( final MalformedURLException mue )
         {

@@ -7,65 +7,62 @@
  */
 package org.apache.ant.datatypes;
 
-import org.apache.ant.AntException;
-import org.apache.avalon.Initializable;
-import org.apache.avalon.Loggable;
-import org.apache.avalon.camelot.DefaultFactory;
+import org.apache.avalon.Composer;
+import org.apache.avalon.ComponentManager;
+import org.apache.avalon.ComponentManagerException;
+import org.apache.avalon.Composer;
 import org.apache.avalon.camelot.DefaultLocatorRegistry;
+import org.apache.avalon.camelot.Factory;
+import org.apache.avalon.camelot.FactoryException;
 import org.apache.avalon.camelot.Locator;
 import org.apache.avalon.camelot.LocatorRegistry;
 import org.apache.avalon.camelot.RegistryException;
-import org.apache.avalon.camelot.FactoryException;
-import org.apache.log.Logger;
 
+/**
+ * This is basically a engine that can be used to access data-types.
+ * The engine acts as a repository and factory for these types.
+ *
+ * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
+ */
 public class DefaultDataTypeEngine
-    implements DataTypeEngine, Initializable
+    implements DataTypeEngine, Composer
 {
-    protected DefaultFactory       m_factory;
-    protected LocatorRegistry      m_registry;
-    protected Logger               m_logger;
+    protected Factory              m_factory;
+    protected LocatorRegistry      m_registry  = new DefaultLocatorRegistry();
     
-    public void setLogger( final Logger logger )
-    {
-        m_logger = logger;
-    }
-    
+    /**
+     * Retrieve registry of data-types.
+     * This is used by deployer to add types into engine.
+     *
+     * @return the registry
+     */
     public LocatorRegistry getRegistry()
     {
         return m_registry;
     }
     
-    public void init()
-        throws Exception
+    /**
+     * Retrieve relevent services needed to deploy.
+     *
+     * @param componentManager the ComponentManager
+     * @exception ComponentManagerException if an error occurs
+     */
+    public void compose( final ComponentManager componentManager )
+        throws ComponentManagerException
     {
-        m_registry = createRegistry();
-        setupComponent( m_registry );
-
-        m_factory =  createFactory();
-        setupComponent( m_factory );
-    }
-
-    protected void setupComponent( final Object object )
-        throws Exception
-    {
-        if( object instanceof Loggable )
-        {
-            ((Loggable)object).setLogger( m_logger );
-        }
+        m_factory = (Factory)componentManager.lookup( "org.apache.avalon.camelot.Factory" );
     }
     
-    protected LocatorRegistry createRegistry()
-    {
-        return new DefaultLocatorRegistry();
-    }
-    
-    protected DefaultFactory createFactory()
-    {
-        return new DefaultFactory();
-    }
-    
+    /**
+     * Create a data-type of type registered under name.
+     *
+     * @param name the name of data type
+     * @return the DataType
+     * @exception RegistryException if an error occurs
+     * @exception FactoryException if an error occurs
+     */    
     public DataType createDataType( final String name )
-        throws RegistryException, FactoryException
+         throws RegistryException, FactoryException
     {
         final Locator locator = m_registry.getLocator( name );
         return (DataType)m_factory.create( locator, DataType.class );

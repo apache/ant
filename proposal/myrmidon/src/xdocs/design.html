@@ -1,0 +1,224 @@
+
+<html>
+<head>
+    <title>Myrmidon: The Ant2.0 Proposal</title>
+</head>
+<body BGCOLOR="#ffffff">
+
+<center>
+  <h1>Myrmidon: The Ant2.0 Proposal</h1>
+  <i>by Peter Donald <a href="mailto:donaldp@apache.org">&lt;donaldp@apache.org&gt;</a></i>
+</center>
+
+<br />
+
+<div align="center">
+  <table border="0" width="60%">
+    <tr>
+      <td width="100%">
+        <i>Myrmidon is a proposal for <a href="http://jakarta.apache.org/ant">Ant</a> 2.0, a 
+        java based build tool. Unlike other proposals it was specifically designed as 
+        both a tool a an API library that can be reused in other domains.</i>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<br />
+
+<h3>To do and what not to do</h3>
+
+<blockquote>
+  <p>
+    There is a number of issues that this proposal addresses and a number of issues that 
+    have been deliberately elided. The focus is currently at the lower levels - namely
+    the task execution engine, the notion of contexts/scopes, loading of tasklets, 
+    datatypes and converters etc. While it does implement a Project engine API is still 
+    being discussed on ant-dev and this proposal just adopts Ant1.x's model until a better
+    understanding is gained of what is required.
+  </p>
+
+  <p>
+    Neither this document nor the proposal is intended to be a vision statement. Rather it 
+    is a description of how it could be implemented based on commonly accepted needs 
+    requested on ant lists and discussed by ant-dev. The vision statement is more 
+    strongly associated with the Project API and extentions (CJAN, import project trees,
+    preprocessing via xslt/css/whatever, templating etc). And thus is not addressed here.
+  </p>
+</blockquote>
+
+<h3>The Prime Directive: Execute tasks</h3>
+
+<blockquote>
+  <p>
+    One of the primary concerns of ant is providing a task execution environment (TEE). 
+    The TEE provides a number of services to tasks. The TEE manages the lifecycle of 
+    the tasks. This includes providing the tasks with a logger instance, context 
+    information and access to peer components. The lifecycle also involves executing 
+    init(), run() and dispose() methods at appropriate times.
+  </p>
+
+  <p>
+    Instead of reinventing the wheel this proposal instead reuses the Avalon framework
+    that already provides facilities for many of the concepts required. It already has 
+    interfaces/classes to model concepts of context, logger, containers etc.
+  </p>
+  
+  <p>
+    One of the requirements identified was the need for dynamic interpretation and 
+    instantiation of tasks. To implement this there needs to be an abstraction layer 
+    between task object instances and the objects that are manipulated by projects 
+    and tools outside tasklet API. This abstraction has the same requirements as 
+    Configuration objects in Avalon and thus the task proxies are represented by 
+    Avalons Configuration object.
+  </p>
+</blockquote>
+
+<h3>SOC, IOC and the alphabet soup</h3>
+
+<blockquote>
+  <p>
+    The design of Myrmidon follows many of the design patterns found in Avalon. The strongest
+    influence cna be seen from the meta-patterns; Separation of Concerns (SOC) and Inversion of 
+    Control (IOC). 
+  </p>
+
+  <p>
+    SOC essentially is a design pattern used to separate the system accroding to relevent
+    dimensions. (SOC is often called multi-dimensional SOC). The definition of "relevent"
+    is domain specific and in our case there is a number of dimensions. For instance you 
+    will notice that there is a separation between project, tasklet, conversion and datatype 
+    functionality. Where in Ant1.x these were only partially separated or tightly coupled 
+    there is now decoupling. This separation allows easy reuse of parts in other projects. ie 
+    It is now extremely easy to reuse the tasklet api in other tools (such as Installshield 
+    type apps or Cron-like deamons etc).
+  </p>
+
+  <p>
+    Another dimension in which myrmidon is separated is by users. For instance there is 
+    a separation between engine code and client code. The client code is the code used by 
+    those who implement the components. For instance tasklet developers only have to 
+    look at client code for tasklets and never look at implementation of engine.
+  </p>
+
+  <p>
+    Inversion of Control (IOC) aka the Holywood Principle (Don't call us - we'll call you) is
+    another pattern applied within Myrmidon. In this pattern it is the container that provides
+    facilities and executes lifecycle by calling methods of child components. So instead of the 
+    component calling methods to lookup or create peer components or method managing it's 
+    own lifecycle the container is responsible for these functions. 
+  </p>
+
+  <p>
+    These approach should be familiar to a servlet or EJB developer as they are also based on 
+    SOC and IOC except they do it at a lower resolution. For more detailed explanation of 
+    these design approaches have a look at <a 
+    href="http://java.apache.org/framework/developer/index.html">
+    http://java.apache.org/framework/developer/index.html</a>.
+  </p>
+
+  <p>
+    The result of these design choices is a more flexable and reusable components.
+  </p>
+</blockquote>
+
+<h3>Enough theory - give me Nuts and Bolts</h3>
+
+<blockquote>
+  <p>
+    The code is separated into 5 different sections. These are the project, tastlet,
+    converter, datatype and frontend APIs. The project API is concerned with building 
+    and representing a project. The tasklet API is concerned with executing tasks in a 
+    particular environment. The converter API is concerned with converting instances of one
+    type into another type. The datatype API is used to register, load and instantiate 
+    instances of named datatypes. The frontend API involves instantiating and managing 
+    all the other components and making it easy to build different frontends (CLI, GUI, 
+    Servlet).
+  </p>
+
+  <p>
+    When Myrmidon is started it interacts with FrontEnd API. It aquires a ProjectBuilder 
+    instance from FrontEnd API and uses it to build a project. It then aquires a 
+    ProjectEngine instance from FrontEnd again and uses it to execute the created project.
+    This project will first execute the implicit target (which includes all of properties 
+    outside target element). And then execute the default or specified target. Each target 
+    executes it's dependencies first and then checks it's condition to see if it should 
+    execute itself. Each target contains a list of tasks (in the form of Configuraiton 
+    objects). These are passed to the tasklet API that instantiates and executes the tasks. 
+    The tasklet API instantiates the relevent task and then applies rules to use the 
+    Configuration object to configure the task. In some cases this involves resolving 
+    properties and converting values to the correct type required by task. The convertion
+    is done by Converter API. Properties are associations between a name and a value, the 
+    types of the value aremanaged by the DataType API and accessed via the Property task.
+  </p>
+
+  <p>
+    Now if you wanted to change a certain component of the system - lets say the ProjectBuilder
+    component. You instead want to use a component that you wrote yourself that builds a project
+    with the result of a xslt + xml -> xml process so that you can use static templating. The 
+    way to do this would be to set the property "ant.comp.builder" to 
+    "com.biz.ant.MyXSLTProjectBuilder" before handing the properties to the FrontEnd API. The 
+    FrontEnd API would then wire together the components appropriately and the same process as 
+    documented above would be used. Other components can be replaced in a similar manner. For 
+    a full list of properties that can be set see the default FrontEnd implementation.
+  </p>
+
+  <p>
+    Now instead of replacing a component in the system say you wanted to add an extra task. In 
+    this case you would create a task "com.biz.ant.tasks.ProcessFile" that extends 
+    "org.apache.ant.tasklet.AbstractTasklet". You would then implement run() method to do the
+    work and and setter methods to accept parameters. The run method can throw AntException if
+    the task fails for any reason. The setter methods are in format of Ant1.x setters with one 
+    extention. The extention allows '-' characters to appear in xml names and these will be 
+    transferred into capitalisation of next character in java names. ie file-permission 
+    attribute --&gt; setFilePermission() method. After implementing this task you would have 
+    to define it in taskdef.xml of it's archive or else define it with a taskdef construct.
+  </p>
+  
+  <p>
+    In a similar method new converters and datatypes can be added to the system. For example
+    if you needed to add a TestSet datatype that held a list of test names then this would 
+    be possible. You could also add a converter that converted a list of comma separated 
+    strings into a TestSet.    
+  </p>
+
+  <p>
+    The one thing that this proposal does not address is validation concerns. You will notice
+    that the above is mainly aimed to reduce the complexity for task developers. Where in 1.x
+    you had to manage convertion manually (depending on version of Ant) and also had to explcitly
+    incorporate support for datatypes manually. The one other concern that was coded into every
+    task was validation. ie Were the correct parameters set ? It would be desirable to be able to
+    associate meta-information with the task that indicated the required parameters. This would 
+    reduce the workload on task developers even more and encourage better task structure. This 
+    is a future TODO.
+  </p>
+
+</blockquote>
+
+<h3>A Rose by any other name ...</h3>
+
+<blockquote>
+  <p>
+    The name Myrmidon is a derivation of a mythological name for some anst that were turned 
+    into soldiers by the god Zeus. It came to mean "a subordinate who executes orders 
+    unquestioningly" which seemed suitable for a task execution/build tool. A more complete
+    description stolen from <a href="http://bondi-blue.parlez.com/previous_words/myrmidon.txt">
+    http://bondi-blue.parlez.com/previous_words/myrmidon.txt</a>.
+  </p>
+
+  <quote>
+    <i>The appellation Myrmidon was derived from the Greek word "myrmex",
+    meaning ant.  According to Greek mythology, the Myrmidons were
+    transformed into humans by the god Zeus as an act of kindness to his
+    son Aeacus.  King Aeacus, captivated by a colony of ants, prayed
+    that he should receive an increase in population equal to the
+    number of ants before him.  When he awoke the next day, the ants
+    were his human subjects.  Thereafter, they were known as the
+    Myrmidons.  See "The Iliad" for Homers' account of the Myrmidons
+    during the Trojan War.</i>
+  </quote>
+
+</blockquote>
+
+</body>
+</html>

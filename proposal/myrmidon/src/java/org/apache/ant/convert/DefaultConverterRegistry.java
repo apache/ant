@@ -8,7 +8,7 @@
 package org.apache.ant.convert;
 
 import java.util.HashMap;
-import org.apache.avalon.camelot.AbstractRegistry;
+import org.apache.avalon.camelot.DefaultRegistry;
 import org.apache.avalon.camelot.Info;
 import org.apache.avalon.camelot.RegistryException;
 
@@ -18,10 +18,15 @@ import org.apache.avalon.camelot.RegistryException;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultConverterRegistry
-    extends AbstractRegistry
+    extends DefaultRegistry
     implements ConverterRegistry
 {
     protected final HashMap         m_mapping        = new HashMap();
+
+    public DefaultConverterRegistry()
+    {
+        super( ConverterInfo.class );
+    }
 
     /**
      * Retrieve ConverterInfo that describes converter that converts from source to destination.
@@ -37,6 +42,13 @@ public class DefaultConverterRegistry
         return (String)map.get( destination );
     }
 
+    /**
+     * Overidden method so can add info into mapping.
+     *
+     * @param name the name of info
+     * @param info the Info
+     * @exception RegistryException if an error occurs
+     */
     protected void checkInfo( final String name, final Info info )
         throws RegistryException
     {
@@ -54,10 +66,5 @@ public class DefaultConverterRegistry
         }
         
         map.put( destination, name );        
-    }
-
-    protected Class getInfoClass()
-    {
-        return ConverterInfo.class;
     }
 }

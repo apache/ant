@@ -40,7 +40,7 @@ fi
 LOCALCLASSPATH=`echo $ANT_HOME/lib/*.jar | tr ' ' ':'`
 
 if [ "$CLASSPATH" != "" ] ; then
-  LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
+  LOCALCLASSPATH=$LOCALCLASSPATH:$CLASSPATH
 fi
 
 if [ "$JAVA_HOME" != "" ] ; then

@@ -25,7 +25,7 @@ while [ -h "$PRG" ] ; do
   fi
 done
   
-MYRMIDON_HOME=`dirname "$PRG"`/..
+ANT_HOME=`dirname "$PRG"`/..
 
 if [ "$JAVA_HOME" == "" ] ; then
 
@@ -42,4 +42,4 @@ else
   fi
 fi
 
-$JAVACMD $ANT_OPTS -jar ant.jar --ant-home=${MYRMIDON_HOME} $@
+$JAVACMD $ANT_OPTS -jar $ANT_HOME/lib/ant.jar $@

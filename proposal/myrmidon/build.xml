@@ -154,7 +154,9 @@ Legal:
            destdir="${build.classes}"
            debug="${debug}"
            optimize="${optimize}"
-           deprecation="${deprecation}" />
+           deprecation="${deprecation}">
+        <exclude name="org/apache/ant/gui/**"/>
+    </javac>
 
 <!--
     <copy todir="${build.classes}">

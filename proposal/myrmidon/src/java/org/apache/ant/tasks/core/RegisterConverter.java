@@ -17,8 +17,7 @@ import org.apache.ant.convert.DefaultConverterInfo;
 import org.apache.ant.tasklet.AbstractTasklet;
 import org.apache.ant.tasklet.engine.TaskletEngine;
 import org.apache.avalon.ComponentManager;
-import org.apache.avalon.ComponentNotAccessibleException;
-import org.apache.avalon.ComponentNotFoundException;
+import org.apache.avalon.ComponentManagerException;
 import org.apache.avalon.Composer;
 import org.apache.avalon.camelot.DeploymentException;
 import org.apache.avalon.camelot.RegistryException;
@@ -39,7 +38,7 @@ public class RegisterConverter
     protected TaskletEngine       m_engine;
     
     public void compose( final ComponentManager componentManager )
-        throws ComponentNotFoundException, ComponentNotAccessibleException
+        throws ComponentManagerException
     {
         m_engine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
@@ -90,7 +89,7 @@ public class RegisterConverter
         if( !isFullyDefined && null == url )
         {
             throw new AntException( "Must supply parameter if not fully specifying converter" );
-        }
+       }
 
         if( !isFullyDefined )
         {
@@ -126,7 +125,7 @@ public class RegisterConverter
     {
         if( null != libName )
         {
-            final File lib = new File( getContext().resolveFilename( libName ) );
+            final File lib = getContext().resolveFile( libName );
             try { return lib.toURL(); }
             catch( final MalformedURLException mue )
             {
