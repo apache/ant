@@ -192,7 +192,7 @@ class VAJBuildInfo implements Runnable {
     private Vector projectTargets = new Vector();
 
     // target selected for execution
-    private java.lang.String target = "";
+    private String target = "";
 
     // log level
     private int outputMessageLevel = Project.MSG_INFO;
@@ -224,7 +224,7 @@ class VAJBuildInfo implements Runnable {
     /**
      * Returns the BuildInfo information as String. The BuildInfo can
      * be rebuilt from that String by calling parse().
-     * @return java.lang.String
+     * @return String
      */
     public String asDataString() {
         String result = getOutputMessageLevel() + "|" + getBuildFileName()
@@ -254,7 +254,7 @@ class VAJBuildInfo implements Runnable {
     /**
      * The firePropertyChange method was generated to support the propertyChange field.
      */
-    public void firePropertyChange(java.lang.String propertyName, java.lang.Object oldValue, java.lang.Object newValue) {
+    public void firePropertyChange(String propertyName, Object oldValue, Object newValue) {
         getPropertyChange().firePropertyChange(propertyName, oldValue, newValue);
     }
 
@@ -305,7 +305,7 @@ class VAJBuildInfo implements Runnable {
     /**
      * returns the selected target.
      */
-    public java.lang.String getTarget() {
+    public String getTarget() {
         return target;
     }
 
@@ -350,7 +350,7 @@ class VAJBuildInfo implements Runnable {
      * outputMessageLevel'|'buildFileName'|'defaultTarget'|'(project target'|')*
      *
      * @return org.apache.tools.ant.taskdefs.optional.vaj.BuildInfo
-     * @param data java.lang.String
+     * @param data String
      */
     public static VAJBuildInfo parse(String data) {
         VAJBuildInfo result = new VAJBuildInfo();

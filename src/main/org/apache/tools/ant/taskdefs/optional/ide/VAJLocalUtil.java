@@ -78,7 +78,7 @@ import org.apache.tools.ant.DirectoryScanner;
  * @author Wolf Siberski, TUI Infotec GmbH
  * @author Martin Landers, Beck et al. projects
  */
-abstract class VAJLocalUtil implements VAJUtil{
+abstract class VAJLocalUtil implements VAJUtil {
     // singleton containing the VAJ workspace
     private static Workspace workspace;
 
@@ -126,12 +126,11 @@ abstract class VAJLocalUtil implements VAJUtil{
     /**
      * export packages
      */
-    public void exportPackages(
-                               File dest,
+    public void exportPackages(File dest,
                                String[] includePatterns, String[] excludePatterns,
                                boolean exportClasses, boolean exportDebugInfo,
                                boolean exportResources, boolean exportSources,
-                               boolean useDefaultExcludes,    boolean overwrite) {
+                               boolean useDefaultExcludes, boolean overwrite) {
         if (includePatterns == null || includePatterns.length == 0) {
             log("You must specify at least one include attribute. "
                 + "Not exporting", MSG_ERR);
@@ -197,16 +196,18 @@ abstract class VAJLocalUtil implements VAJUtil{
             VAJProjectDescription d = (VAJProjectDescription) e.nextElement();
 
             ProjectEdition pe;
-            if (d.getVersion().equals("*"))
+            if (d.getVersion().equals("*")) {
                 pe = findLatestProjectEdition(d.getName(), false);
-            else if (d.getVersion().equals("**"))
+            } else if (d.getVersion().equals("**")) {
                 pe = findLatestProjectEdition(d.getName(), true);
-            else
+            } else {
                 pe = findProjectEdition(d.getName(), d.getVersion());
+            }
             try {
-                log("Loading '" + pe.getName() + "', Version '" +
-                    ((pe.getVersionName() != null)?pe.getVersionName():"("+pe.getVersionStamp()+ ")")+
-                    "' into Workspace", MSG_VERBOSE);
+                log("Loading '" + pe.getName() + "', Version '"
+                    + ((pe.getVersionName() != null) ? pe.getVersionName()
+                        : "("+pe.getVersionStamp()+ ")")
+                    + "' into Workspace", MSG_VERBOSE);
                 pe.loadIntoWorkspace();
             } catch (IvjException ex) {
                 throw createBuildException("Project '" + d.getName()
@@ -231,8 +232,8 @@ abstract class VAJLocalUtil implements VAJUtil{
                     String pattern = d.getName();
                     if (VAJWorkspaceScanner.match(pattern, projectNames[i])) {
                         d.setProjectFound();
-                        expandedDescs.addElement(new VAJProjectDescription(
-                                                                           projectNames[i], d.getVersion()));
+                        expandedDescs.addElement(new VAJProjectDescription(projectNames[i],
+                            d.getVersion()));
                         break;
                     }
                 }
@@ -298,10 +299,12 @@ abstract class VAJLocalUtil implements VAJUtil{
 
             // find latest (versioned) project edition by date
             ProjectEdition pe = null;
-            Date latestStamp = new Date(0); // Let's hope there are no projects older than the epoch ;-)
+            // Let's hope there are no projects older than the epoch ;-)
+            Date latestStamp = new Date(0);
             for (int i = 0; i < editions.length; i++) {
-                if (!includeOpenEditions && !editions[i].isVersion())
+                if (!includeOpenEditions && !editions[i].isVersion()) {
                     continue;
+                }
                 if (latestStamp.before(editions[i].getVersionStamp())) {
                     latestStamp = editions[i].getVersionStamp();
                     pe = editions[i];
@@ -311,8 +314,9 @@ abstract class VAJLocalUtil implements VAJUtil{
             if (pe == null) {
                 throw new BuildException("Can't determine latest edition for project " + name);
             }
-            log("Using version " + ((pe.getVersionName() != null)?pe.getVersionName():"("+pe.getVersionStamp()+ ")") +
-                " of " + pe.getName(), MSG_INFO);
+            log("Using version " + ((pe.getVersionName() != null) ? pe.getVersionName()
+                    : "("+pe.getVersionStamp()+ ")")
+                + " of " + pe.getName(), MSG_INFO);
             return pe;
         } catch (IvjException e) {
             throw createBuildException("VA Exception occured: ", e);

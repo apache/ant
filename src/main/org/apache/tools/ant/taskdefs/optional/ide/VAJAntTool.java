@@ -139,8 +139,7 @@ public class VAJAntTool {
         String data = info.asDataString();
         try {
             ToolData td = new ToolData(TOOL_DATA_KEY, data);
-            VAJLocalUtil.getWorkspace().loadedProjectNamed(
-                                                           info.getVAJProjectName()).setToolRepositoryData(td);
+            VAJLocalUtil.getWorkspace().loadedProjectNamed(info.getVAJProjectName()).setToolRepositoryData(td);
         } catch (Throwable t) {
             throw new BuildException("BuildInfo for Project "
                                      + info.getVAJProjectName() + " could not be saved", t);

@@ -94,10 +94,10 @@ public class VAJImportServlet extends VAJToolsServlet {
                       getBooleanParam(CLASSES_PARAM, false),
                       getBooleanParam(RESOURCES_PARAM, true),
                       getBooleanParam(SOURCES_PARAM, true),
-                      false); 
+                      false);
         // no default excludes, because they
         // are already added on client side
         // getBooleanParam(DEFAULT_EXCLUDES_PARAM, true)
-                      
+
     }
 }

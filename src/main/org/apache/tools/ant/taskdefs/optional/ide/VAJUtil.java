@@ -65,11 +65,11 @@ import java.util.Vector;
  */
 interface VAJUtil {
     // log levels
-    public static final int MSG_DEBUG = 4;
-    public static final int MSG_ERR = 0;
-    public static final int MSG_INFO = 2;
-    public static final int MSG_VERBOSE = 3;
-    public static final int MSG_WARN = 1;
+    static final int MSG_DEBUG = 4;
+    static final int MSG_ERR = 0;
+    static final int MSG_INFO = 2;
+    static final int MSG_VERBOSE = 3;
+    static final int MSG_WARN = 1;
 
     /**
      * export the array of Packages

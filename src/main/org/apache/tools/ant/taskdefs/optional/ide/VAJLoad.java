@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -66,7 +66,7 @@ import org.apache.tools.ant.BuildException;
  * <li>* (loads the latest <b>versioned</b> edition)</li>
  * <li>** (loads the latest edition, including open editions)</li>
  * </ul>
- * Example:  
+ * Example:
  * <blockquote>
  * &lt;vajload&gt;
  * &nbsp;&lt;project name=&quot;MyVAProject&quot; version=&quot;*&quot;/&gt;

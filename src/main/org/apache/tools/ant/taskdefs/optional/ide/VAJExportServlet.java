@@ -71,24 +71,24 @@ import java.io.File;
  *   <tr>
  *     <td>dir</td>
  *     <td>Any valid directory name on the server.</td>
- *     <td>The directory to export the files to on the machine 
- *         where the servlet is being run.  If the directory 
+ *     <td>The directory to export the files to on the machine
+ *         where the servlet is being run.  If the directory
  *         doesn't exist, it will be created.<p>
- *         Relative paths are relative to 
- *         IBMVJava/ide/tools/com-ibm-ivj-toolserver, 
- *         where IBMVJava is the VisualAge for Java installation 
+ *         Relative paths are relative to
+ *         IBMVJava/ide/tools/com-ibm-ivj-toolserver,
+ *         where IBMVJava is the VisualAge for Java installation
  *         directory.</td>
  *   </tr>
  *   <tr>
  *     <td>include</td>
  *     <td>See below.</td>
- *     <td>The pattern used to indicate which projects and 
+ *     <td>The pattern used to indicate which projects and
  *         packages to export.</td>
  *   </tr>
  *   <tr>
  *     <td>exclude</td>
  *     <td>See below</td>
- *     <td>The pattern used to indicate which projects and 
+ *     <td>The pattern used to indicate which projects and
  *         packages <em>not</em> to export.</td>
  *   </tr>
  *   <tr>
@@ -110,7 +110,7 @@ import java.io.File;
  *   <tr>
  *     <td>dex</td>
  *     <td>"yes" or "no" (without the quotes)</td>
- *     <td>Use the default exclusion patterns.  Defaults to "yes".  
+ *     <td>Use the default exclusion patterns.  Defaults to "yes".
  *         See below for an explanation of default excludes.</td>
  *   </tr>
  *   <tr>
@@ -120,11 +120,11 @@ import java.io.File;
  *   </tr>
  * </table>
  *
- * <p>The vajexport servlet uses include and exclude parameters to form 
- *    the criteria for selecting packages to export. The parameter is 
- *    broken up into ProjectName/packageNameSegments, where ProjectName 
- *    is what you expect, and packageNameSegments is a partial (or complete) 
- *    package name, separated by forward slashes, rather than periods.  
+ * <p>The vajexport servlet uses include and exclude parameters to form
+ *    the criteria for selecting packages to export. The parameter is
+ *    broken up into ProjectName/packageNameSegments, where ProjectName
+ *    is what you expect, and packageNameSegments is a partial (or complete)
+ *    package name, separated by forward slashes, rather than periods.
  *    Each packageNameSegment can have wildcard characters.</p>
  *
  * <table border="1">

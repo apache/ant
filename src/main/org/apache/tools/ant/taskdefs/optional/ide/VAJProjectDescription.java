@@ -108,7 +108,7 @@ public class VAJProjectDescription {
 
     /**
      * this may be a helper method, and is being ignored for now
-     
+
      * @ant.attribute ignore="true"
      */
     public void setProjectFound() {

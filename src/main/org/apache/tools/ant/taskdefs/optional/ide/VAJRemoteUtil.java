@@ -74,7 +74,7 @@ import org.apache.tools.ant.Task;
  * @author Wolf Siberski, TUI Infotec GmbH
  * @author Martin Landers, Beck et al. projects
  */
-class VAJRemoteUtil implements VAJUtil{
+class VAJRemoteUtil implements VAJUtil {
     // calling task
     Task caller;
 
@@ -91,8 +91,9 @@ class VAJRemoteUtil implements VAJUtil{
      */
     public void exportPackages(File destDir,
                                String[] includePatterns, String[] excludePatterns,
-                               boolean exportClasses, boolean exportDebugInfo, boolean exportResources,
-                               boolean exportSources, boolean useDefaultExcludes, boolean overwrite) {
+                               boolean exportClasses, boolean exportDebugInfo,
+                               boolean exportResources, boolean exportSources,
+                               boolean useDefaultExcludes, boolean overwrite) {
         try {
             String request = "http://" + remoteServer + "/servlet/vajexport?"
                 + VAJExportServlet.WITH_DEBUG_INFO + "=" + exportDebugInfo + "&"
@@ -148,13 +149,13 @@ class VAJRemoteUtil implements VAJUtil{
             + VAJToolsServlet.DEFAULT_EXCLUDES_PARAM + "=" + useDefaultExcludes;
 
         if (includePatterns != null) {
-            for (int i = 0; i < includePatterns.length; i++){
+            for (int i = 0; i < includePatterns.length; i++) {
                 result = result + "&" + VAJExportServlet.INCLUDE_PARAM + "="
                     + URLEncoder.encode(includePatterns[i]);
             }
         }
         if (excludePatterns != null) {
-            for (int i = 0; i < excludePatterns.length; i++){
+            for (int i = 0; i < excludePatterns.length; i++) {
                 result = result + "&" + VAJExportServlet.EXCLUDE_PARAM + "="
                     + URLEncoder.encode(excludePatterns[i]);
             }
@@ -213,6 +214,7 @@ class VAJRemoteUtil implements VAJUtil{
                     is = connection.getInputStream();
                     break;
                 } catch (IOException ex) {
+                    // ignore
                 }
             }
             if (is == null) {

@@ -58,7 +58,7 @@ import java.util.Vector;
 
 /**
  * A Remote Access to Tools Servlet to load a Project
- * from the Repository into the Workbench. The following 
+ * from the Repository into the Workbench. The following
  * table describes the servlet parameters.
  *
  * <table>
@@ -77,7 +77,7 @@ import java.util.Vector;
  *         the Workbench.</td>
  *   </tr>
  * </table>
- * 
+ *
  * @author Wolf Siberski, based on servlets written by Glenn McAllister
  */
 public class VAJLoadServlet extends VAJToolsServlet {
