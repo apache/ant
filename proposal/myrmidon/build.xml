@@ -6,7 +6,7 @@
  Ant build file
 
 Authors:
- Peter Donald <donaldp@apache.org>
+ Peter Donald <peter@apache.org>
 
 Legal:
   Copyright (c) 2000 The Apache Software Foundation. All Rights Reserved.
@@ -23,15 +23,16 @@ Legal:
   <property file=".ant.properties"/>
   <property file="${user.home}/.ant.properties"/>
 
-  <property name="name" value="ant"/>
-  <property name="Name" value="Ant"/>
-  <property name="version" value="0.01-myrmidon"/>
-  <property name="year" value="2000"/>
+  <property name="name" value="myrmidon"/>
+  <property name="Name" value="Myrmidon"/>
+  <property name="version" value="0.01"/>
+  <property name="year" value="2000-2001"/>
 
-  <!-- 
-    these are here only for those who use jikes compiler. For other 
+  <!--
+    these are here only for those who use jikes compiler. For other
     developers this part makes no difference.
   -->
+  <property name="build.compiler" value="jikes"/>
   <property name="build.compiler.emacs" value="on"/>
   <property name="build.compiler.pedantic" value="true"/>
   <property name="build.compiler.depend" value="true"/>
@@ -70,7 +71,109 @@ Legal:
 
   <!-- Main target -->
   <target name="main" depends="dist" />
- 
+
+  <!-- lets see what is available -->
+  <target name="check_for_optional_packages">
+    <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
+    <available property="jdk1.3+" classname="java.lang.StrictMath" />
+    <available property="jdk1.4+" classname="java.lang.CharSequence" />
+    <available property="bsf.present"
+               classname="com.ibm.bsf.BSFManager"
+               classpathref="project.class.path" />
+    <available property="netrexx.present"
+               classname="netrexx.lang.Rexx"
+               classpathref="project.class.path" />
+    <available property="trax.present"
+               classname="javax.xml.transform.Transformer"
+               classpathref="project.class.path" />
+    <available property="xslp.present"
+               classname="com.kvisco.xsl.XSLProcessor"
+               classpathref="project.class.path" />
+    <available property="xalan.present"
+               classname="org.apache.xalan.xslt.XSLTProcessorFactory"
+               classpathref="project.class.path" />
+    <available property="xalan2.present"
+               classname="org.apache.xalan.transformer.TransformerImpl"
+               classpathref="project.class.path" />
+    <available property="ejb.ejbc.present"
+               classname="weblogic.ejbc"
+               classpathref="project.class.path" />
+    <available property="ejb.DDCreator.present"
+               classname="weblogic.ejb.utils.DDCreator"
+               classpathref="project.class.path" />
+    <available property="ejb.wls.present"
+               classname="weblogic.Server"
+               classpathref="project.class.path" />
+    <available property="junit.present"
+               classname="junit.framework.TestCase"
+               classpathref="project.class.path" />
+    <available property="netcomp.present"
+               classname="com.oroinc.net.ftp.FTPClient"
+               classpathref="project.class.path" />
+    <available property="starteam.present"
+               classname="com.starbase.util.Platform"
+               classpathref="project.class.path" />
+    <available property="antlr.present"
+               classname="antlr.Tool"
+               classpathref="project.class.path"/>
+    <available property="vaj.present"
+               classname="com.ibm.ivj.util.base.Workspace"
+               classpathref="project.class.path"/>
+    <available property="stylebook.present"
+               classname="org.apache.stylebook.Engine"
+               classpathref="project.class.path"/>
+    <available property="jakarta.regexp.present"
+               classname="org.apache.regexp.RE"
+               classpathref="project.class.path"/>
+    <available property="jakarta.oro.present"
+               classname="org.apache.oro.text.regex.Perl5Matcher"
+               classpathref="project.class.path" />
+    <available property="jmf.present"
+               classname="javax.sound.sampled.Clip"
+               classpathref="project.class.path"/>
+    <available property="icontract.present"
+               classname="com.reliablesystems.iContract.IContracted"
+               classpathref="project.class.path"/>
+    <available property="jdepend.present"
+               classname="jdepend.framework.JDepend"
+               classpathref="project.class.path"/>
+    <available property="log4j.present"
+               classname="org.apache.log4j.Category"
+               classpathref="project.class.path"/>
+    <!-- this is just a way to check for a TraX implementation -->
+    <available property="trax.impl.present"
+               resource="META-INF/services/javax.xml.transform.TransformerFactory"
+               classpathref="project.class.path"/>
+    <available property="xalan.envcheck"
+               classname="org.apache.xalan.xslt.EnvironmentCheck"
+               classpathref="project.class.path" />
+
+    <available property="servlet.present"
+               classname="javax.servlet.Servlet"
+               classpathref="project.class.path"/>
+
+    <available property="adaptx.present"
+               classname="org.exolab.adaptx.xslt.XSLTProcessor"
+               classpathref="project.class.path" />
+    <available property="xerces.present"
+               classname="org.apache.xerces.parsers.SAXParser"
+               classpathref="project.class.path" />
+    <available property="bcel.present"
+               classname="org.apache.bcel.Constants"
+               classpathref="project.class.path" />
+
+    <condition property="javamail.complete">
+      <and>
+        <available classname="javax.activation.DataHandler"
+                   classpathref="project.class.path"/>
+        <available classname="javax.mail.Transport"
+                   classpathref="project.class.path"/>
+      </and>
+    </condition>
+
+  </target>
+
+
   <!-- Compiles the source code -->
   <target name="compile">
 
@@ -80,17 +183,103 @@ Legal:
     <replace file="${build.src}/${constants.file}" token="@@VERSION@@" value="${version}" />
     <replace file="${build.src}/${constants.file}" token="@@DATE@@" value="${TODAY}" />
 
+
+    <property name="ant.package" value="org/apache/tools/ant"/>
+    <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
+    <property name="optional.type.package" value="${ant.package}/types/optional"/>
+    <property name="util.package" value="${ant.package}/util"/>
+    <property name="regexp.package" value="${util.package}/regexp"/>
+
     <mkdir dir="${build.classes}"/>
-    <javac srcdir="${java.dir}"
+    <javac srcdir="src/main"
            destdir="${build.classes}"
            debug="${debug}"
            optimize="${optimize}"
            deprecation="${deprecation}">
-        <classpath refid="project.class.path"/>        
-        <exclude name="org/apache/ant/gui/**"/>
-        <exclude name="${constants.file}"/>
-        <src path="${build.src}" />
+      <classpath refid="project.class.path"/>
+      <!--
+      <exclude name="${constants.file}"/>
+      <src path="${build.src}" />
+      -->
+      <src path="${java.dir}" />
+      <include name="**/*.java"/>
+
+      <!-- the idea classes are too tightly coupled to ant1 and
+      will need a complete rewrite so we will exclude them for
+      the moment -->
+      <exclude name="${optional.package}/ide/*.java" />
+
+      <exclude name="${regexp.package}/JakartaRegexp*.java"
+               unless="jakarta.regexp.present" />
+      <exclude name="${regexp.package}/JakartaOro*.java"
+               unless="jakarta.oro.present" />
+      <exclude name="${regexp.package}/Jdk14Regexp*.java"
+               unless="jdk1.4+" />
+      <exclude name="${ant.package}/AntSecurityManager.java"
+               unless="jdk1.2+" />
+      <exclude name="${ant.package}/listener/Log4jListener.java"
+               unless="log4j.present" />
+
+      <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
+      <exclude name="${optional.package}/Script.java" unless="bsf.present" />
+      <exclude name="${optional.package}/StyleBook.java" unless="stylebook.present" />
+      <exclude name="${optional.package}/NetRexxC.java" unless="netrexx.present" />
+      <exclude name="${optional.package}/TraXLiaison.java"
+               unless="trax.present" />
+      <exclude name="${optional.package}/XslpLiaison.java" unless="xslp.present" />
+      <exclude name="${optional.package}/XalanLiaison.java" unless="xalan.present" />
+      <exclude name="${optional.package}/AdaptxLiaison.java" unless="adaptx.present" />
+      <exclude name="${optional.package}/ejb/Ejbc*.java" unless="ejb.ejbc.present" />
+      <exclude name="${optional.package}/ejb/DDCreator*.java" unless="ejb.DDCreator.present" />
+      <exclude name="${optional.package}/ejb/WLRun.java" unless="ejb.wls.present" />
+      <exclude name="${optional.package}/ejb/WLStop.java" unless="ejb.wls.present" />
+      <exclude name="${optional.package}/ejb/EjbJar.java" unless="ejbjar.support" />
+      <exclude name="${optional.package}/ejb/*DeploymentTool.java" unless="ejbjar.support" />
+      <exclude name="${optional.package}/ejb/IPlanet*.java" unless="ejbjar.support" />
+      <exclude name="${optional.package}/Javah.java" unless="jdk1.2+" />
+      <exclude name="${optional.package}/junit/*" unless="junit.present" />
+      <exclude name="${optional.package}/net/MimeMail.java" unless="javamail.complete" />
+      <exclude name="${optional.package}/net/FTP.java" unless="netcomp.present" />
+      <exclude name="${optional.package}/net/TelnetTask.java" unless="netcomp.present" />
+      <exclude name="${optional.package}/scm/AntStarTeam*.java" unless="starteam.present" />
+      <exclude name="${optional.package}/ANTLR.java" unless="antlr.present" />
+      <exclude name="${optional.package}/ide/VAJ*.java" unless="vaj.present" />
+      <exclude name="${optional.package}/ide/VAJ*Servlet.java"
+               unless="servlet.present" />
+      <exclude name="${optional.package}/perforce/*.java" unless="jakarta.oro.present" />
+      <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
+      <exclude name="${optional.package}/junit/XMLResultAggregator.java"
+               unless="trax.present" />
+      <exclude name="${optional.package}/junit/AggregateTransformer.java"
+               unless="trax.present" />
+      <exclude name="${optional.package}/junit/XMLResultAggregator.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/AggregateTransformer.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/XalanExecutor.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/Xalan2Executor.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/Xalan1Executor.java"
+               unless="xalan.present" />
+      <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
+      <exclude name="${optional.package}/sitraka/**" unless="some.regexp.support"/>
+      <exclude name="${optional.package}/metamata/MAudit*" unless="jakarta.oro.present"/>
+      <exclude name="${optional.package}/metamata/MMetrics*"
+               unless="trax.present"/>
+      <exclude name="${optional.package}/metamata/**" unless="jdk1.2+" />
+      <exclude name="${optional.package}/ManifestFile.java"
+               unless="jdk1.2+" />
+      <exclude name="${optional.type.package}/depend/*.java"
+               unless="bcel.present" />
+      <exclude name="${util.package}/depend/*.java"
+               unless="bcel.present" />
+      <exclude name="${optional.type.package}/depend/*.java"
+               unless="jdk1.2+" />
+      <exclude name="${util.package}/depend/*.java"
+               unless="jdk1.2+" />
     </javac>
+
 
     <copy todir="${build.classes}">
       <fileset dir="${java.dir}">
@@ -105,14 +294,14 @@ Legal:
 
     <mkdir dir="${build.lib}"/>
 
-    <jar jarfile="${build.lib}/myrmidon-launcher.jar" 
-         basedir="${build.classes}" 
+    <jar jarfile="${build.lib}/myrmidon-launcher.jar"
+         basedir="${build.classes}"
          manifest="${manifest.dir}/myrmidon-launcher.mf">
       <include name="org/apache/myrmidon/launcher/*" />
     </jar>
 
-    <jar jarfile="${build.lib}/myrmidon-api.jar" 
-         basedir="${build.classes}" 
+    <jar jarfile="${build.lib}/myrmidon-api.jar"
+         basedir="${build.classes}"
          manifest="${manifest.dir}/myrmidon-api.mf">
       <include name="org/apache/myrmidon/api/*" />
       <include name="org/apache/myrmidon/aspects/*" />
@@ -134,8 +323,8 @@ Legal:
     </jar>
 
 <!--
-    <jar jarfile="${build.lib}/myrmidon-framework.jar" 
-         basedir="${build.classes}" 
+    <jar jarfile="${build.lib}/myrmidon-framework.jar"
+         basedir="${build.classes}"
          manifest="${manifest.dir}/myrmidon-framework.mf">
       <include name="org/apache/myrmidon/framework/**" />
 
@@ -148,8 +337,8 @@ Legal:
       </zipfileset>
     </jar>
 -->
-    <jar jarfile="${build.lib}/myrmidon-container.jar" 
-         basedir="${build.classes}" 
+    <jar jarfile="${build.lib}/myrmidon-container.jar"
+         basedir="${build.classes}"
          manifest="${manifest.dir}/myrmidon-container.mf">
       <include name="org/apache/myrmidon/components/**" />
       <include name="org/apache/myrmidon/frontends/*" />
@@ -157,14 +346,13 @@ Legal:
     </jar>
 
     <jar jarfile="${build.lib}/core.atl" basedir="${build.classes}">
-      <include name="org/apache/ant/modules/**" />
-      <include name="org/apache/myrmidon/libs/core/**" />
+      <include name="org/apache/antlib/core/**" />
       <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="core-ant-descriptor.xml"/>
       </zipfileset>
     </jar>
 
-    <jar jarfile="${build.lib}/selftest.atl" 
+    <jar jarfile="${build.lib}/selftest.atl"
          basedir="${build.classes}"
          manifest="${manifest.dir}/selftest.mf">
       <include name="org/apache/myrmidon/libs/selftest/**" />
@@ -174,7 +362,7 @@ Legal:
       </zipfileset>
     </jar>
 
-    <jar jarfile="${build.lib}/selftest-extension1.jar" 
+    <jar jarfile="${build.lib}/selftest-extension1.jar"
          basedir="${build.classes}"
          manifest="${manifest.dir}/selftest-extension1.mf">
       <include name="org/apache/myrmidon/libs/selftest/extension1/**" />
