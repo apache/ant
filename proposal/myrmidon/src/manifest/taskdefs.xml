@@ -1,39 +1,45 @@
 <tasklib>
-  <task name="echo" classname="org.apache.ant.tasks.core.Echo" />
-  <task name="prim-test" classname="org.apache.ant.tasks.core.PrimitiveTypesTest" />
-  <task name="sub-elements-test" classname="org.apache.ant.tasks.core.SubElementTest" />
-  <task name="conf-test" classname="org.apache.ant.tasks.core.ConfigurationTest" />
-  <task name="content-test" classname="org.apache.ant.tasks.core.ContentTest" />
-  <task name="property" classname="org.apache.ant.tasks.core.Property" />
-  <task name="register-tasklet" classname="org.apache.ant.tasks.core.RegisterTasklet" />
-  <task name="register-converter" classname="org.apache.ant.tasks.core.RegisterConverter" />
-  <task name="ant-call" classname="org.apache.ant.tasks.core.AntCall" />
-  <task name="register-datatype" classname="org.apache.ant.tasks.core.RegisterDataType" />
 
-  <datatype name="pattern" classname="org.apache.ant.datatypes.Pattern" />
+  <!-- core tasks for operation -->
+  <task name="register-tasklet" classname="org.apache.ant.modules.core.RegisterTasklet" />
+  <task name="register-converter" classname="org.apache.ant.modules.core.RegisterConverter" />
+  <task name="register-datatype" classname="org.apache.ant.modules.core.RegisterDataType" />
 
-  <converter classname="org.apache.ant.convert.core.StringToLongConverter" 
+  <!-- tasks to test operation of engine -->
+  <task name="prim-test" classname="org.apache.ant.modules.test.PrimitiveTypesTest" />
+  <task name="sub-elements-test" classname="org.apache.ant.modules.test.SubElementTest" />
+  <task name="conf-test" classname="org.apache.ant.modules.test.ConfigurationTest" />
+  <task name="content-test" classname="org.apache.ant.modules.test.ContentTest" />
+
+  <!-- basic tasks/datatypes/coverters required in most environments -->
+  <task name="echo" classname="org.apache.ant.modules.basic.Echo" />
+  <task name="property" classname="org.apache.ant.modules.basic.Property" />
+  <task name="ant-call" classname="org.apache.ant.modules.basic.AntCall" />
+
+  <datatype name="pattern" classname="org.apache.ant.modules.basic.Pattern" />
+
+  <converter classname="org.apache.ant.modules.basic.StringToLongConverter" 
              source="java.lang.String" 
              destination="java.lang.Long" />
-  <converter classname="org.apache.ant.convert.core.StringToIntegerConverter" 
+  <converter classname="org.apache.ant.modules.basic.StringToIntegerConverter" 
              source="java.lang.String" 
              destination="java.lang.Integer" />
-  <converter classname="org.apache.ant.convert.core.StringToShortConverter" 
+  <converter classname="org.apache.ant.modules.basic.StringToShortConverter" 
              source="java.lang.String" 
              destination="java.lang.Short" />
-  <converter classname="org.apache.ant.convert.core.StringToByteConverter" 
+  <converter classname="org.apache.ant.modules.basic.StringToByteConverter" 
              source="java.lang.String" 
              destination="java.lang.Byte" />
-  <converter classname="org.apache.ant.convert.core.StringToDoubleConverter" 
+  <converter classname="org.apache.ant.modules.basic.StringToDoubleConverter" 
              source="java.lang.String" 
              destination="java.lang.Double" />
-  <converter classname="org.apache.ant.convert.core.StringToFloatConverter" 
+  <converter classname="org.apache.ant.modules.basic.StringToFloatConverter" 
              source="java.lang.String" 
              destination="java.lang.Float" />
-  <converter classname="org.apache.ant.convert.core.StringToClassConverter" 
+  <converter classname="org.apache.ant.modules.basic.StringToClassConverter" 
              source="java.lang.String" 
              destination="java.lang.Class" />
-  <converter classname="org.apache.ant.convert.core.StringToURLConverter" 
+  <converter classname="org.apache.ant.modules.basic.StringToURLConverter" 
              source="java.lang.String" 
              destination="java.net.URL" />
 </tasklib>

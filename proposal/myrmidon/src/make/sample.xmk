@@ -61,11 +61,11 @@ Legal:
 
     <register-tasklet lib="../../dist/lib/core.tsk" 
                       name="echo2" 
-                      classname="org.apache.ant.tasks.core.Echo" />
+                      classname="org.apache.ant.modules.basic.Echo" />
 
 <!--    
     <register-tasklib lib="../../dist/lib/core.tsk" />
-    <register-converter classname="org.apache.ant.convert.core.StringToClassConverter"
+    <register-converter classname="org.apache.ant.modules.basic.StringToClassConverter"
                         source-type="java.lang.String"
                         destination-type="java.lang.Class"
                         lib="../../dist/lib/core.tsk" />
@@ -86,7 +86,7 @@ Legal:
 
     <register-datatype lib="../../dist/lib/core.tsk" 
                        name="pattern2"
-                       classname="org.apache.ant.datatypes.Pattern" />
+                       classname="org.apache.ant.modules.basic.Pattern" />
 
     <property name="foo2">
       <pattern2 name="*.java"/>
