@@ -257,7 +257,7 @@ public class IntrospectionHelper implements BuildListener {
                         particular order.
                     */
                 }
-                AttributeSetter as = createAttributeSetter(m, args[0]);
+                AttributeSetter as = createAttributeSetter(m, args[0], propName);
                 if (as != null) {
                     attributeTypes.put(propName, args[0]);
                     attributeSetters.put(propName, as);
@@ -723,12 +723,15 @@ public class IntrospectionHelper implements BuildListener {
      *          Must not be <code>null</code>.
      * @param arg The type of the single argument of the bean's method.
      *            Must not be <code>null</code>.
+     * @param attrName the name of the attribute for which the setter is being
+     *                 created.
      * 
      * @return an appropriate AttributeSetter instance, or <code>null</code>
      *         if no appropriate conversion is available.
      */
     private AttributeSetter createAttributeSetter(final Method m,
-                                                  Class arg) {
+                                                  Class arg, 
+                                                  final String attrName) {
         // use wrappers for primitive classes, e.g. int and 
         // Integer are treated identically
         final Class reflectedArg = PRIMITIVE_TYPE_MAP.containsKey (arg) 
@@ -748,6 +751,11 @@ public class IntrospectionHelper implements BuildListener {
             return new AttributeSetter() {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
+                        if (value.length() == 0) {
+                            throw new BuildException("The value \"\" is not a " 
+                                + "legal value for attribute \"" 
+                                + attrName + "\"");
+                        }
                         m.invoke(parent, new Character[] {new Character(value.charAt(0))});
                     }
 
