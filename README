@@ -53,8 +53,8 @@
   -------------
 
   Documentation is available in HTML format, in the docs/ directory.
-  For building see docs/index.html#buildingant.
-  For installing see docs/index.html#installing.
+  For information about building and installing Ant, see
+	docs/manual/index.html
 
 
   Licensing
