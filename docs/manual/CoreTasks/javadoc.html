@@ -443,9 +443,8 @@ the second one a colon delimited list of packages.</p>
 contains a comma or a space character, using <a
 href="#groupelement">nested group elements</a> is highly
 recommended.</p>
-<p>E.g., </p>
-<pre>    group=&quot;XSLT_Packages org.apache.xalan.xslt*,XPath_Packages org.apache.xalan.xpath*&quot;
-</pre>
+<p>E.g.:</p>
+<pre>    group=&quot;XSLT_Packages org.apache.xalan.xslt*,XPath_Packages org.apache.xalan.xpath*&quot;</pre>
 
 <h3>Parameters specified as nested elements</h3>
 
@@ -608,7 +607,7 @@ therefore, if they can be interpreted by the doclet in use.</p>
 
 <p>If the doclet requires additional parameters, these can be specified with
 <code>&lt;param&gt;</code> elements within the <code>&lt;doclet&gt;</code>
-element. These paramaters are restricted to simple strings. An example usage
+element. These parameters are restricted to simple strings. An example usage
 of the doclet element is shown below:</p>
 
 <pre>  &lt;javadoc ... &gt;
@@ -665,13 +664,9 @@ not set the description attribute for those tags.</p>
     <td valign="top">If this attribute is specified, this element will behave as an implicit
     <a href="../CoreTypes/fileset.html">fileset</a>. The files included by this fileset should
     contain each tag definition on a separate line, as described in the
-    <a href="http://java.sun.com/j2se/1.4.1/docs/tooldocs/windows/javadoc.html#tag">javadoc reference guide</a>:
-    <p/>
-    <code>
-    ejb.bean:t:"XDoclet EJB Tag"<br/>
-    todo:a:"To Do"<br/>
-    </code>
-    <p/>
+    <a href="http://java.sun.com/j2se/1.4.2/docs/tooldocs/windows/javadoc.html#tag">Javadoc reference guide</a>:
+    <pre>ejb.bean:t:"XDoclet EJB Tag"
+todo:a:"To Do"</pre>
     Note: If this attribute is specified, all the other attributes in this
     element will be ignored.
     </td>

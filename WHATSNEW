@@ -30,7 +30,7 @@ Fixed bugs:
 Other changes:
 --------------
 
-* Docs fixes for xmlvalidate.html. Bugzilla Report 27092.
+* Docs fixes for xmlvalidate.html, javadoc.html. Bugzilla Report 27092, 27284.
 
 * Shipped XML parser is now Xerces-J 2.6.2.
 
