@@ -69,7 +69,7 @@ public abstract class WeakishReference  {
 
     private static Constructor referenceConstructor;
 
-    private final static String WEAK_REFERENCE_NAME= "org,apache.tools.ant.util.WeakishReference12";
+    private final static String WEAK_REFERENCE_NAME= "org.apache.tools.ant.util.optional.WeakishReference12";
 
     /**
      * create the appropriate type of reference for the java version
