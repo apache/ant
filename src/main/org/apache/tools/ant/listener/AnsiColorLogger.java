@@ -164,13 +164,13 @@ public final class AnsiColorLogger extends DefaultLogger {
                 prop.load(in);
             }
 
-            String err = prop.getProperty("AnsiColorLogger.ERROR_COLOR");
+            String errC = prop.getProperty("AnsiColorLogger.ERROR_COLOR");
             String warn = prop.getProperty("AnsiColorLogger.WARNING_COLOR");
             String info = prop.getProperty("AnsiColorLogger.INFO_COLOR");
             String verbose = prop.getProperty("AnsiColorLogger.VERBOSE_COLOR");
             String debug = prop.getProperty("AnsiColorLogger.DEBUG_COLOR");
-            if (err != null) {
-                errColor = PREFIX + err + SUFFIX;
+            if (errC != null) {
+                errColor = PREFIX + errC + SUFFIX;
             }
             if (warn != null) {
                 warnColor = PREFIX + warn + SUFFIX;

@@ -60,7 +60,7 @@ public class JJTree extends Task {
 
     // required attributes
     private File outputDirectory = null;
-    private File target          = null;
+    private File targetFile      = null;
     private File javaccHome      = null;
 
     private CommandlineJava cmdl = new CommandlineJava();
@@ -164,8 +164,8 @@ public class JJTree extends Task {
     /**
      * The jjtree grammar file to process.
      */
-    public void setTarget(File target) {
-        this.target = target;
+    public void setTarget(File targetFile) {
+        this.targetFile = targetFile;
     }
 
     /**
@@ -189,8 +189,8 @@ public class JJTree extends Task {
             cmdl.createArgument().setValue("-" + name + ":" + value.toString());
         }
 
-        if (target == null || !target.isFile()) {
-            throw new BuildException("Invalid target: " + target);
+        if (targetFile == null || !targetFile.isFile()) {
+            throw new BuildException("Invalid target: " + targetFile);
         }
 
         File javaFile = null;
@@ -202,7 +202,7 @@ public class JJTree extends Task {
             cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:"
                                            + getDefaultOutputDirectory());
 
-            javaFile = new File(createOutputFileName(target, outputFile,
+            javaFile = new File(createOutputFileName(targetFile, outputFile,
                                                      null));
         } else {
             if (!outputDirectory.isDirectory()) {
@@ -216,14 +216,14 @@ public class JJTree extends Task {
                                            + outputDirectory.getAbsolutePath()
                                              .replace('\\', '/'));
 
-            javaFile = new File(createOutputFileName(target, outputFile,
+            javaFile = new File(createOutputFileName(targetFile, outputFile,
                                                      outputDirectory
                                                      .getPath()));
         }
 
         if (javaFile.exists()
-            && target.lastModified() < javaFile.lastModified()) {
-            log("Target is already built - skipping (" + target + ")",
+            && targetFile.lastModified() < javaFile.lastModified()) {
+            log("Target is already built - skipping (" + targetFile + ")",
                 Project.MSG_VERBOSE);
             return;
         }
@@ -233,7 +233,7 @@ public class JJTree extends Task {
                                            + outputFile.replace('\\', '/'));
         }
 
-        cmdl.createArgument().setValue(target.getAbsolutePath());
+        cmdl.createArgument().setValue(targetFile.getAbsolutePath());
 
         final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
@@ -264,11 +264,11 @@ public class JJTree extends Task {
         }
     }
 
-    private String createOutputFileName(File target, String optionalOutputFile,
+    private String createOutputFileName(File targetFile, String optionalOutputFile,
                                         String outputDirectory) {
         optionalOutputFile = validateOutputFile(optionalOutputFile,
                                                 outputDirectory);
-        String jjtreeFile = target.getAbsolutePath().replace('\\', '/');
+        String jjtreeFile = targetFile.getAbsolutePath().replace('\\', '/');
 
         if ((optionalOutputFile == null) || optionalOutputFile.equals("")) {
             int filePos = jjtreeFile.lastIndexOf("/");

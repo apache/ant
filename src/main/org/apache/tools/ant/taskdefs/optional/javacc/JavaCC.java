@@ -67,7 +67,7 @@ public class JavaCC extends Task {
 
     // required attributes
     private File outputDirectory = null;
-    private File target          = null;
+    private File targetFile      = null;
     private File javaccHome      = null;
 
     private CommandlineJava cmdl = new CommandlineJava();
@@ -262,8 +262,8 @@ public class JavaCC extends Task {
     /**
      * The grammar file to process.
      */
-    public void setTarget(File target) {
-        this.target = target;
+    public void setTarget(File targetFile) {
+        this.targetFile = targetFile;
     }
 
     /**
@@ -288,13 +288,13 @@ public class JavaCC extends Task {
         }
 
         // check the target is a file
-        if (target == null || !target.isFile()) {
-            throw new BuildException("Invalid target: " + target);
+        if (targetFile == null || !targetFile.isFile()) {
+            throw new BuildException("Invalid target: " + targetFile);
         }
 
         // use the directory containing the target as the output directory
         if (outputDirectory == null) {
-            outputDirectory = new File(target.getParent());
+            outputDirectory = new File(targetFile.getParent());
         } else if (!outputDirectory.isDirectory()) {
             throw new BuildException("Outputdir not a directory.");
         }
@@ -302,12 +302,12 @@ public class JavaCC extends Task {
                                        + outputDirectory.getAbsolutePath());
 
         // determine if the generated java file is up-to-date
-        final File javaFile = getOutputJavaFile(outputDirectory, target);
-        if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
-            log("Target is already built - skipping (" + target + ")", Project.MSG_VERBOSE);
+        final File javaFile = getOutputJavaFile(outputDirectory, targetFile);
+        if (javaFile.exists() && targetFile.lastModified() < javaFile.lastModified()) {
+            log("Target is already built - skipping (" + targetFile + ")", Project.MSG_VERBOSE);
             return;
         }
-        cmdl.createArgument().setValue(target.getAbsolutePath());
+        cmdl.createArgument().setValue(targetFile.getAbsolutePath());
 
         final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);

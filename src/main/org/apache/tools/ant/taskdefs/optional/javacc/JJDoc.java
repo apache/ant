@@ -51,7 +51,7 @@ public class JJDoc extends Task {
     private static final String DEFAULT_SUFFIX_TEXT = ".txt";
 
     // required attributes
-    private File target          = null;
+    private File targetFile      = null;
     private File javaccHome      = null;
 
     private CommandlineJava cmdl = new CommandlineJava();
@@ -85,7 +85,7 @@ public class JJDoc extends Task {
      * The javacc grammar file to process.
      */
     public void setTarget(File target) {
-        this.target = target;
+        this.targetFile = target;
     }
 
     /**
@@ -110,8 +110,8 @@ public class JJDoc extends Task {
                 .setValue("-" + name + ":" + value.toString());
         }
 
-        if (target == null || !target.isFile()) {
-            throw new BuildException("Invalid target: " + target);
+        if (targetFile == null || !targetFile.isFile()) {
+            throw new BuildException("Invalid target: " + targetFile);
         }
 
         if (outputFile != null) {
@@ -120,17 +120,17 @@ public class JJDoc extends Task {
         }
 
         // use the directory containing the target as the output directory
-        File javaFile = new File(createOutputFileName(target, outputFile,
+        File javaFile = new File(createOutputFileName(targetFile, outputFile,
                                                       plainText));
 
         if (javaFile.exists()
-             && target.lastModified() < javaFile.lastModified()) {
-            log("Target is already built - skipping (" + target + ")",
+             && targetFile.lastModified() < javaFile.lastModified()) {
+            log("Target is already built - skipping (" + targetFile + ")",
                 Project.MSG_VERBOSE);
             return;
         }
 
-        cmdl.createArgument().setValue(target.getAbsolutePath());
+        cmdl.createArgument().setValue(targetFile.getAbsolutePath());
 
         final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
@@ -161,10 +161,10 @@ public class JJDoc extends Task {
         }
     }
 
-    private String createOutputFileName(File target, String optionalOutputFile,
+    private String createOutputFileName(File targetFile, String optionalOutputFile,
                                         boolean plainText) {
         String suffix = DEFAULT_SUFFIX_HTML;
-        String javaccFile = target.getAbsolutePath().replace('\\', '/');
+        String javaccFile = targetFile.getAbsolutePath().replace('\\', '/');
 
         if (plainText) {
             suffix = DEFAULT_SUFFIX_TEXT;

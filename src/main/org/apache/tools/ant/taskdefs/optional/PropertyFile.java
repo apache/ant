@@ -397,7 +397,7 @@ public class PropertyFile extends Task {
         */
         private void executeInteger(String oldValue) throws BuildException {
             int currentValue = DEFAULT_INT_VALUE;
-            int newValue  = DEFAULT_INT_VALUE;
+            int newV  = DEFAULT_INT_VALUE;
 
 
             DecimalFormat fmt = (pattern != null) ? new DecimalFormat(pattern)
@@ -416,7 +416,7 @@ public class PropertyFile extends Task {
             }
 
             if (operation == Operation.EQUALS_OPER) {
-                newValue = currentValue;
+                newV = currentValue;
             } else {
                 int operationValue = 1;
                 if (value != null) {
@@ -430,13 +430,13 @@ public class PropertyFile extends Task {
                 }
 
                 if (operation == Operation.INCREMENT_OPER) {
-                    newValue = currentValue + operationValue;
+                    newV = currentValue + operationValue;
                 } else if (operation == Operation.DECREMENT_OPER) {
-                    newValue = currentValue - operationValue;
+                    newV = currentValue - operationValue;
                 }
             }
 
-            this.newValue = fmt.format(newValue);
+            this.newValue = fmt.format(newV);
         }
 
         /**
@@ -447,7 +447,7 @@ public class PropertyFile extends Task {
         *                 not contained in the property file.
         */
         private void executeString(String oldValue) throws BuildException {
-            String newValue  = DEFAULT_STRING_VALUE;
+            String newV  = DEFAULT_STRING_VALUE;
 
             String currentValue = getCurrentValue(oldValue);
 
@@ -456,11 +456,11 @@ public class PropertyFile extends Task {
             }
 
             if (operation == Operation.EQUALS_OPER) {
-                newValue = currentValue;
+                newV = currentValue;
             } else if (operation == Operation.INCREMENT_OPER) {
-                newValue = currentValue + value;
+                newV = currentValue + value;
             }
-            this.newValue = newValue;
+            this.newValue = newV;
         }
 
         /**

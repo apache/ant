@@ -28,7 +28,7 @@ import org.apache.tools.ant.types.Commandline;
  */
 public class CCMReconfigure extends Continuus {
 
-    private String project = null;
+    private String ccmProject = null;
     private boolean recurse = false;
     private boolean verbose = false;
 
@@ -89,7 +89,7 @@ public class CCMReconfigure extends Continuus {
      * @return value of project.
      */
     public String getCcmProject() {
-        return project;
+        return ccmProject;
     }
 
     /**
@@ -97,7 +97,7 @@ public class CCMReconfigure extends Continuus {
      * @param v  Value to assign to project.
      */
     public void setCcmProject(String v) {
-        this.project = v;
+        this.ccmProject = v;
     }
 
 

@@ -54,7 +54,7 @@ public abstract class ClearCase extends Task {
      * @param dir the directory containing the cleartool executable
      */
     public final void setClearToolDir(String dir) {
-        mClearToolDir = getProject().translatePath(dir);
+        mClearToolDir = Project.translatePath(dir);
     }
 
     /**
@@ -149,7 +149,7 @@ public abstract class ClearCase extends Task {
         Commandline.Argument arg = exe.createArg();
 
         exe.setExecutable(cmdline.getExecutable());
-        arg.setLine(cmdline.toString(cmdline.getArguments()));
+        arg.setLine(Commandline.toString(cmdline.getArguments()));
         exe.setOutputproperty(outV);
         exe.execute();
         // System.out.println( "runS: " + outV + " : " + aProj.getProperty( outV ));

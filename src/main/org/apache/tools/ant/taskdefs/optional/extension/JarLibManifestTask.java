@@ -256,9 +256,9 @@ public final class JarLibManifestTask extends Task {
         throws BuildException {
         final int size = extensions.size();
         for (int i = 0; i < size; i++) {
-            final Extension extension = (Extension) extensions.get(i);
+            final Extension ext = (Extension) extensions.get(i);
             final String prefix = listPrefix + i + "-";
-            Extension.addExtension(extension, prefix, attributes);
+            Extension.addExtension(ext, prefix, attributes);
         }
     }
 

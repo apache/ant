@@ -334,11 +334,11 @@ public class JUnitTask extends Task {
          * @return boolean equivalent of the value
          */
         public boolean asBoolean() {
-            String value = getValue();
-            return "true".equals(value)
-                || "on".equals(value)
-                || "yes".equals(value)
-                || "withOutAndErr".equals(value);
+            String v = getValue();
+            return "true".equals(v)
+                || "on".equals(v)
+                || "yes".equals(v)
+                || "withOutAndErr".equals(v);
         }
     }
 

@@ -392,7 +392,7 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         // examples = /org/objectweb/fooAppli/foo/Foo-ejb-jar.xml
         // examples = /org/objectweb/fooAppli/foo/Foo.xml (JOnAS convention)
 
-        String jonasDescriptorName; // JOnAS-specific DD
+        String jonasDN; // JOnAS-specific DD
         boolean jonasConvention = false; // true if the JOnAS convention is used for the DD
         String path;            // Directory path of the EJB descriptor
         String fileName;        // EJB descriptor file name
@@ -439,15 +439,15 @@ public class JonasDeploymentTool extends GenericDeploymentTool {
         remainder = descriptorName.substring(endOfBaseName + 1);
 
         if (jonasConvention) {
-            jonasDescriptorName = path + "jonas-" + baseName + ".xml";
+            jonasDN = path + "jonas-" + baseName + ".xml";
         } else {
-            jonasDescriptorName = path + baseName + "jonas-" + remainder;
+            jonasDN = path + baseName + "jonas-" + remainder;
         }
 
         log("Standard EJB descriptor name: " + descriptorName, Project.MSG_VERBOSE);
-        log("JOnAS-specific descriptor name: " + jonasDescriptorName, Project.MSG_VERBOSE);
+        log("JOnAS-specific descriptor name: " + jonasDN, Project.MSG_VERBOSE);
 
-        return jonasDescriptorName;
+        return jonasDN;
     }
 
     protected String getJarBaseName(String descriptorFileName) {

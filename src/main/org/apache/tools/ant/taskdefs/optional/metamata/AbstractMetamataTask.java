@@ -174,8 +174,8 @@ public abstract class AbstractMetamataTask extends Task {
 
         // set the classpath as the jar file
         File jar = getMetamataJar(metamataHome);
-        final Path classPath = cmdl.createClasspath(getProject());
-        classPath.createPathElement().setLocation(jar);
+        final Path cp = cmdl.createClasspath(getProject());
+        cp.createPathElement().setLocation(jar);
 
         // set the metamata.home property
         final Commandline.Argument vmArgs = cmdl.createVmArgument();

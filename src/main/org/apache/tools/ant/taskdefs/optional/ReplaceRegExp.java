@@ -422,7 +422,7 @@ public class ReplaceRegExp extends Task {
 
                 pw.flush();
             } else {
-                String buf = fileUtils.readFully(br);
+                String buf = FileUtils.readFully(br);
                 if (buf == null) {
                     buf = "";
                 }

@@ -43,15 +43,15 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  */
 public class MParse extends AbstractMetamataTask {
 
-    private File target = null;
+    private File targetFile = null;
     private boolean verbose = false;
     private boolean debugparser = false;
     private boolean debugscanner = false;
     private boolean cleanup = false;
 
     /** The .jj file to process; required. */
-    public void setTarget(File target) {
-        this.target = target;
+    public void setTarget(File targetFile) {
+        this.targetFile = targetFile;
     }
 
     /** set verbose mode */
@@ -106,9 +106,9 @@ public class MParse extends AbstractMetamataTask {
 
         // set the classpath as the jar files
         File[] jars = getMetamataLibs();
-        final Path classPath = cmdl.createClasspath(getProject());
+        final Path cp = cmdl.createClasspath(getProject());
         for (int i = 0; i < jars.length; i++) {
-            classPath.createPathElement().setLocation(jars[i]);
+            cp.createPathElement().setLocation(jars[i]);
         }
 
         // set the metamata.home property
@@ -132,12 +132,12 @@ public class MParse extends AbstractMetamataTask {
     protected void _execute(ExecuteStreamHandler handler) throws BuildException {
         // target has been checked as a .jj, see if there is a matching
         // java file and if it is needed to run to process the grammar
-        String pathname = target.getAbsolutePath();
+        String pathname = targetFile.getAbsolutePath();
         int pos = pathname.length() - ".jj".length();
         pathname = pathname.substring(0, pos) + ".java";
         File javaFile = new File(pathname);
-        if (javaFile.exists() && target.lastModified() < javaFile.lastModified()) {
-            getProject().log("Target is already build - skipping (" + target + ")");
+        if (javaFile.exists() && targetFile.lastModified() < javaFile.lastModified()) {
+            getProject().log("Target is already build - skipping (" + targetFile + ")");
             return;
         }
 
@@ -160,10 +160,10 @@ public class MParse extends AbstractMetamataTask {
             optionsFile = null;
         }
         if (cleanup) {
-            String name = target.getName();
+            String name = targetFile.getName();
             int pos = name.length() - ".jj".length();
             name = "__jj" + name.substring(0, pos) + ".sunjj";
-            final File sunjj = new File(target.getParent(), name);
+            final File sunjj = new File(targetFile.getParent(), name);
             if (sunjj.exists()) {
                 getProject().log("Removing stale file: " + sunjj.getName());
                 sunjj.delete();
@@ -210,11 +210,11 @@ public class MParse extends AbstractMetamataTask {
         }
 
         // check that the target is ok and resolve it.
-        if (target == null || !target.isFile()
-            || !target.getName().endsWith(".jj")) {
-            throw new BuildException("Invalid target: " + target);
+        if (targetFile == null || !targetFile.isFile()
+            || !targetFile.getName().endsWith(".jj")) {
+            throw new BuildException("Invalid target: " + targetFile);
         }
-        target = getProject().resolveFile(target.getPath());
+        targetFile = getProject().resolveFile(targetFile.getPath());
     }
 
     /**
@@ -240,7 +240,7 @@ public class MParse extends AbstractMetamataTask {
             options.addElement("-sourcepath");
             options.addElement(sourcePath.toString());
         }
-        options.addElement(target.getAbsolutePath());
+        options.addElement(targetFile.getAbsolutePath());
         return options;
     }
 
