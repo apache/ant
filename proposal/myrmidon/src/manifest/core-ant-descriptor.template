@@ -2,7 +2,7 @@
 
   <types>
 
-    <XDtClass:forAllClasses type="org.apache.myrmidon.api.AbstractTask" extent="hierarchy">
+    <XDtClass:forAllClasses abstract="true" type="org.apache.myrmidon.api.AbstractTask" extent="hierarchy">
       <XDtClass:ifHasClassTag tagName="ant:task">
         <task name="<XDtClass:classTagValue tagName="ant:task" paramName="name"/>"
               classname="<XDtClass:fullClassName/>"/>
