@@ -26,7 +26,7 @@ Fixed bugs:
 Other changes:
 --------------
 
-* Shipped XML parser is now Xerces 2.4.0
+* Shipped XML parser is now Xerces 2.5.0
 
 * <javah> will invoke oldjavah on JDK 1.4.2.  Bugzilla Report 18667.
 
