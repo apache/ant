@@ -76,7 +76,7 @@ class ChangeLogParser
     private static final int GET_PREVIOUS_REV = 5;
 
     /** input format for dates read in from cvs log */
-    private static final SimpleDateFormat c_inputDate = new SimpleDateFormat( "yyyy/MM/dd" );
+    private static final SimpleDateFormat c_inputDate = new SimpleDateFormat( "yyyy/MM/dd hh:mm:ss" );
 
     //The following is data used while processing stdout of CVS command
     private String m_file;
@@ -220,7 +220,7 @@ class ChangeLogParser
     {
         if( line.startsWith( "date:" ) )
         {
-            m_date = line.substring( 6, 16 );
+            m_date = line.substring( 6, 25 );
             String lineData = line.substring( line.indexOf( ";" ) + 1 );
             m_author = lineData.substring( 10, lineData.indexOf( ";" ) );
 
