@@ -49,6 +49,10 @@ public class ExecuteOnTest extends BuildFileTest {
 
     public void testNoRedirect() {
         executeTarget("no-redirect");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
+
         String log = getLog();
         File x = getProject().resolveFile("x");
         File y = getProject().resolveFile("y");
@@ -73,6 +77,9 @@ public class ExecuteOnTest extends BuildFileTest {
 
     public void testRedirect1() {
         executeTarget("redirect1");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
         String actualOut = null;
         try {
             actualOut = FileUtils.newFileUtils().readFully(new FileReader(
@@ -102,6 +109,9 @@ public class ExecuteOnTest extends BuildFileTest {
 
     public void testRedirect2() {
         executeTarget("redirect2");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
         String actualOut = null;
         String actualErr = null;
         try {
@@ -134,6 +144,9 @@ public class ExecuteOnTest extends BuildFileTest {
 
     public void testRedirect3() {
         executeTarget("redirect3");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
         String actualOut = null;
         try {
             actualOut = FileUtils.newFileUtils().readFully(new FileReader(
@@ -164,6 +177,9 @@ public class ExecuteOnTest extends BuildFileTest {
 
     public void testRedirect4() {
         executeTarget("redirect4");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
         String actualOut = null;
         String actualErr = null;
         try {
@@ -206,6 +222,9 @@ public class ExecuteOnTest extends BuildFileTest {
 
     private void testRedirect5or6(String target) {
         executeTarget(target);
+        if (getProject().getProperty("sed.can.run") == null) {
+            return;
+        }
         String actualOut = null;
         String actualErr = null;
         try {
@@ -224,6 +243,9 @@ public class ExecuteOnTest extends BuildFileTest {
 
     public void testRedirect7() {
         executeTarget("redirect7");
+        if (getProject().getProperty("sed.can.run") == null) {
+            return;
+        }
         String actualOut = null;
         String actualErr = null;
         try {

@@ -59,12 +59,19 @@ public class ExecTaskTest extends BuildFileTest {
     }
 
     public void testNoRedirect() {
-        expectLog("no-redirect", getProject().getProperty("ant.file") + " out"
-            + getProject().getProperty("ant.file") + " err");
+        executeTarget("no-redirect");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
+        assertEquals(getProject().getProperty("ant.file") + " out"
+            + getProject().getProperty("ant.file") + " err", getLog());
     }
 
     public void testRedirect1() {
         executeTarget("redirect1");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
         String expectedOut = getProject().getProperty("ant.file") + " out\n"
             + getProject().getProperty("ant.file") + " err\n";
 
@@ -79,6 +86,9 @@ public class ExecTaskTest extends BuildFileTest {
 
     public void testRedirect2() {
         executeTarget("redirect2");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
         String expectedOut = getProject().getProperty("ant.file") + " out\n";
         String expectedErr = getProject().getProperty("ant.file") + " err\n";
 
@@ -96,7 +106,11 @@ public class ExecTaskTest extends BuildFileTest {
     }
 
     public void testRedirect3() {
-        expectLog("redirect3", getProject().getProperty("ant.file") + " err");
+        executeTarget("redirect3");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
+        assertEquals(getProject().getProperty("ant.file") + " err", getLog());
         String expectedOut = getProject().getProperty("ant.file") + " out\n";
 
         String actualOut = null;
@@ -111,6 +125,9 @@ public class ExecTaskTest extends BuildFileTest {
 
     public void testRedirect4() {
         executeTarget("redirect4");
+        if (getProject().getProperty("test.can.run") == null) {
+            return;
+        }
         String expectedOut = getProject().getProperty("ant.file") + " out\n";
         String expectedErr = getProject().getProperty("ant.file") + " err\n";
 
@@ -139,6 +156,9 @@ public class ExecTaskTest extends BuildFileTest {
 
     public void testRedirect5or6(String target) {
         executeTarget(target);
+        if (getProject().getProperty("wc.can.run") == null) {
+            return;
+        }
 
         String expectedOut = getProject().getProperty("ant.file") + " out\n";
 
@@ -159,6 +179,9 @@ public class ExecTaskTest extends BuildFileTest {
 
     public void testRedirect7() {
         executeTarget("redirect7");
+        if (getProject().getProperty("wc.can.run") == null) {
+            return;
+        }
 
         String expectedOut = getProject().getProperty("ant.file") + " out\n";
 
