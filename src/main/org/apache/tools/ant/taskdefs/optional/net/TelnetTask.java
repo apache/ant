@@ -250,7 +250,7 @@ public class TelnetTask extends Task {
          *  nested text elements need their properties explicitly expanded
          */
         public void addText(String s) {
-            setString(project.replaceProperties(s));
+            setString(getProject().replaceProperties(s));
         }
         /**
          * attribute assignment of properties
