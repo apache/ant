@@ -137,7 +137,7 @@ public class DotnetBaseMatchingTask extends MatchingTask {
             = getSrcDir() != null || filesets.size() == 0;
         if (scanImplicitFileset) {
             //scan for an implicit fileset if there was a srcdir set
-            //or there was no srcDir set but the @
+            //or there was no srcDir set but there was no contained classes
             if (getSrcDir() == null) {
                 //if there is no src dir here, set it
                 setSrcDir(getProject().resolveFile("."));

@@ -84,7 +84,11 @@ public class JSharp extends DotnetCompile {
      */
     boolean secureScoping = false;
 
+    public JSharp() {
+        setExecutable("vjc");
+    }
 
+    
     public void setBaseAddress(String baseAddress) {
         this.baseAddress = baseAddress;
     }
@@ -116,13 +120,7 @@ public class JSharp extends DotnetCompile {
         return ";";
     }
 
-    /**
-     * Get the name of the compiler executable.
-     * @return The name of the compiler executable.
-     */
-    public String getCompilerExeName() {
-        return "vjc";
-    }
+
 
     /**
      * Get the extension of filenames to compile.

@@ -155,6 +155,12 @@ public abstract class DotnetCompile
     protected Vector resources = new Vector();
 
     /**
+     *  executable
+     */
+
+    protected String executable;
+
+    /**
      *  Fix .NET reference inclusion. .NET is really dumb in how it handles
      *  inclusion. You have to list every 'assembly' -read DLL that is imported.
      *  So already you are making a platform assumption -shared libraries have a
@@ -791,6 +797,26 @@ public abstract class DotnetCompile
     }
 
     /**
+     * what is the executable?
+     * @return
+     */
+    protected String getExecutable() {
+        return executable;
+    }
+
+    /**
+     * set the name of the program, overriding the defaults.
+     * Can be used to set the full path to a program, or to switch
+     * to an alternate implementation of the command, such as the Mono or Rotor
+     * versions -provided they use the same command line arguments as the
+     * .NET framework edition
+     * @param executable
+     */
+    public void setExecutable(String executable) {
+        this.executable = executable;
+    }
+
+    /**
      *  test for a string containing something useful
      *
      *@param  s  string in
@@ -808,6 +834,9 @@ public abstract class DotnetCompile
             throws BuildException {
         if (outputFile != null && outputFile.isDirectory()) {
             throw new BuildException("destFile cannot be a directory");
+        }
+        if(getExecutable()==null) {
+            throw new BuildException("There is no executable defined for this task");
         }
     }
 
@@ -861,12 +890,6 @@ public abstract class DotnetCompile
      * @return The string delimiter for the reference string.
      */
     public abstract String getReferenceDelimiter();
-
-    /**
-     * Get the name of the compiler executable.
-     * @return The name of the compiler executable.
-     */
-    public abstract String getCompilerExeName() ;
 
     /**
      * Get the extension of filenames to compile.
@@ -963,7 +986,7 @@ public abstract class DotnetCompile
      * @return a command prefilled with the exe name and task name
      */
     protected NetCommand createNetCommand() {
-        NetCommand command = new NetCommand(this, getTaskName(), getCompilerExeName());
+        NetCommand command = new NetCommand(this, getTaskName(), getExecutable());
         return command;
     }
 

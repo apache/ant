@@ -107,7 +107,7 @@ public class VisualBasicCompile extends DotnetCompile {
      * Constructor for VisualBasicCompile.
      */
     public VisualBasicCompile() {
-        super();
+        clear();
     }
 
     /**
@@ -121,6 +121,7 @@ public class VisualBasicCompile extends DotnetCompile {
         optionExplicit = false;
         optionStrict = false;
         removeIntChecks = false;
+        setExecutable("vbc");
     }
 
     /**
@@ -347,14 +348,6 @@ public class VisualBasicCompile extends DotnetCompile {
      */
     protected String createResourceParameter(DotnetResource resource) {
         return resource.getVbStyleParameter();
-    }
-
-    /**
-     * Get the name of the compiler executable.
-     * @return The name of the compiler executable.
-     */
-    public String getCompilerExeName() {
-        return "vbc";
     }
 
     /**

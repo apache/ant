@@ -109,6 +109,14 @@ public class DotnetTest extends BuildFileTest {
     /**
      * A unit test for JUnit
      */
+    public void testCSCintrinsicFileset() throws Exception {
+        executeTarget("testCSCintrinsicFileset");
+    }
+
+
+    /**
+     * A unit test for JUnit
+     */
     public void testCSCdll() throws Exception {
         executeTarget("testCSCdll");
     }

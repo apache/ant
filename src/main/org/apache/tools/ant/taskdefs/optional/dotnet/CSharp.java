@@ -199,6 +199,7 @@ public class CSharp extends DotnetCompile {
      */
 
     public CSharp() {
+        clear();
     }
 
     /**
@@ -213,7 +214,7 @@ public class CSharp extends DotnetCompile {
         unsafe = false;
         noconfig = false;
         definitions = null;
-
+        setExecutable("csc");
     }
 
 
@@ -426,13 +427,6 @@ public class CSharp extends DotnetCompile {
         return ";";
     }
 
-    /**
-     * compiler is 'csc'
-     * @return
-     */
-    public String getCompilerExeName() {
-        return "csc";
-    }
 
     /**
      * extension is '.cs'

@@ -67,20 +67,35 @@
       destFile="${testCSC.exe}"
       targetType="exe" 
       >
-      <src dir="${src.dir}" includes="**/*.cs"/>
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
     <exec executable="${testCSC.exe}" failonerror="true" />
+    <delete file="${testCSC.exe}"/>
   </target>
-  
-  
+
+    <target name="testCSCintrinsicFileset" depends="init">
+      <property name="testCSC.exe"
+        location="${build.dir}/ExampleCsc.exe"/>
+      <csc
+        destFile="${testCSC.exe}"
+        targetType="exe"
+        srcDir="."
+        >
+      </csc>
+      <available property="app.created" file="${testCSC.exe}"/>
+      <fail unless="app.created">No app ${testCSC.exe} created</fail>
+      <exec executable="${testCSC.exe}" failonerror="true"/>
+      <delete file="${testCSC.exe}"/>
+    </target>
+
   <target name="testCSCdll" depends="init">
-    <property name="testCSC.dll" 
+    <property name="testCSC.dll"
       location="${build.dir}/Example2.dll" />
     <csc 
       destFile="${testCSC.dll}"
-      targetType="library" 
+      targetType="library"
+      executable="csc"
       >
       <src dir="${src.dir}" includes="example2.cs"/>
     </csc>
