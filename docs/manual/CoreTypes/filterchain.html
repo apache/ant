@@ -103,6 +103,7 @@ nested elements.<BR>
 <a href="#tabstospaces">TabsToSpaces</a><BR>
 <a href="#tailfilter">TailFilter</a><BR>
 <a href="#deletecharacters">DeleteCharacters</a><BR>
+<a href="#concatfilter">ConcatFilter</a><BR>
 <a href="#tokenfilter">TokenFilter</a><BR>
 
 <H3><a name="filterreader">FilterReader</a></H3>
@@ -817,6 +818,49 @@ Delete tabs and returns from the data.
 <BLOCKQUOTE><PRE>
 &lt;deletecharacters chars="\t\r"/&gt;
 </PRE></BLOCKQUOTE>
+
+<H3><a name="concatfilter">ConcatFilter</a></H3>
+  <p>This filter prepends or appends the content file to the filtered files.</p>
+  <p><em>since Ant 1.6</em></p>
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Parameter Name</B></TD>
+    <TD vAlign=top><B>Parameter Value</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>prepend</TD>
+    <TD vAlign=top>
+      The name of the file which content should be prepended to the file.
+    </TD>
+    <TD vAlign=top align="center">No</TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>append</TD>
+    <TD vAlign=top>
+      The name of the file which content should be appended to the file.
+    </TD>
+    <TD vAlign=top align="center">No</TD>
+  </TR>
+</TABLE>
+<P>
+
+<H4>Examples:</H4>
+
+Do nothing:
+<BLOCKQUOTE><PRE>
+&lt;filterchain&gt;
+    &lt;concatfilter/&gt;
+&lt;/filterchain&gt;
+</PRE></BLOCKQUOTE>
+
+Adds a license text before each java source:
+<BLOCKQUOTE><PRE>
+&lt;filterchain&gt;
+    &lt;concatfilter prepend="apache-license-java.txt"/&gt;
+&lt;/filterchain&gt;
+</PRE></BLOCKQUOTE>
+
 
 
 <H3><a name="tokenfilter">TokenFilter</a></H3>

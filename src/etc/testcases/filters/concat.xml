@@ -3,8 +3,8 @@
 
   <target name="init">
     <mkdir dir="result" />
-    <echo file="result/before.txt" message="this-should-be-the-first-line${line.separator}"/>
-    <echo file="result/after.txt" message="this-should-be-the-last-line${line.separator}"/>
+    <echo file="result/prepend.txt" message="this-should-be-the-first-line${line.separator}"/>
+    <echo file="result/append.txt" message="this-should-be-the-last-line${line.separator}"/>
     <copy file="input/head-tail.test" tofile="input/concatfilter.test"/>
     <fixcrlf srcDir="input" includes="concatfilter.test"/>
   </target>
@@ -26,35 +26,35 @@
     </copy>
   </target>
 
-  <target name="testFilterReaderBefore" depends="init">
+  <target name="testFilterReaderPrepend" depends="init">
     <copy file="input/concatfilter.test"
-          tofile="result/concat.filterReaderBefore.test">
+          tofile="result/concat.filterReaderPrepend.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
-          <param name="before" value="result/before.txt"/>
+          <param name="prepend" value="result/prepend.txt"/>
         </filterreader>
       </filterchain>
     </copy>
   </target>
 
-  <target name="testFilterReaderAfter" depends="init">
+  <target name="testFilterReaderAppend" depends="init">
     <copy file="input/concatfilter.test"
-          tofile="result/concat.filterReaderAfter.test">
+          tofile="result/concat.filterReaderAppend.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
-          <param name="after" value="result/after.txt"/>
+          <param name="append" value="result/append.txt"/>
         </filterreader>
       </filterchain>
     </copy>
   </target>
 
-  <target name="testFilterReaderBeforeAfter" depends="init">
+  <target name="testFilterReaderPrependAppend" depends="init">
     <copy file="input/concatfilter.test"
-          tofile="result/concat.filterReaderBeforeAfter.test">
+          tofile="result/concat.filterReaderPrependAppend.test">
       <filterchain>
         <filterreader classname="org.apache.tools.ant.filters.ConcatFilter">
-          <param name="before" value="result/before.txt"/>
-          <param name="after"  value="result/after.txt"/>
+          <param name="prepend" value="result/prepend.txt"/>
+          <param name="append"  value="result/append.txt"/>
         </filterreader>
       </filterchain>
     </copy>
@@ -70,32 +70,32 @@
     </copy>
   </target>
 
-  <target name="testConcatFilterBefore" depends="init">
+  <target name="testConcatFilterPrepend" depends="init">
     <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
     <copy file="input/concatfilter.test"
-          tofile="result/concat.concatfilterBefore.test">
+          tofile="result/concat.concatfilterPrepend.test">
       <filterchain>
-        <concatfilter before="result/before.txt"/>
+        <concatfilter prepend="result/prepend.txt"/>
       </filterchain>
     </copy>
   </target>
 
-  <target name="testConcatFilterAfter" depends="init">
+  <target name="testConcatFilterAppend" depends="init">
     <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
     <copy file="input/concatfilter.test"
-          tofile="result/concat.concatfilterAfter.test">
+          tofile="result/concat.concatfilterAppend.test">
       <filterchain>
-        <concatfilter after="result/after.txt"/>
+        <concatfilter append="result/append.txt"/>
       </filterchain>
     </copy>
   </target>
 
-  <target name="testConcatFilterBeforeAfter" depends="init">
+  <target name="testConcatFilterPrependAppend" depends="init">
     <typedef name="concatfilter" classname="org.apache.tools.ant.filters.ConcatFilter"/>
     <copy file="input/concatfilter.test"
-          tofile="result/concat.concatfilterBeforeAfter.test">
+          tofile="result/concat.concatfilterPrependAppend.test">
       <filterchain>
-        <concatfilter before="result/before.txt" after="result/after.txt"/>
+        <concatfilter prepend="result/prepend.txt" append="result/append.txt"/>
       </filterchain>
     </copy>
   </target>

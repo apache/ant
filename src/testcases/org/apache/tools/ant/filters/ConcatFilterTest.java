@@ -69,7 +69,7 @@ public class ConcatFilterTest extends BuildFileTest {
     private static FileUtils fu = FileUtils.newFileUtils();
     private static final String lSep = System.getProperty("line.separator");
 
-    private static final String FILE_BEGINNING_WITH =
+    private static final String FILE_PREPEND_WITH =
           "this-should-be-the-first-line" + lSep
         + "Line  1" + lSep
         + "Line  2" + lSep
@@ -77,7 +77,7 @@ public class ConcatFilterTest extends BuildFileTest {
         + "Line  4" + lSep
     ;
 
-    private static final String FILE_BEGINNING =
+    private static final String FILE_PREPEND =
           "Line  1" + lSep
         + "Line  2" + lSep
         + "Line  3" + lSep
@@ -85,7 +85,7 @@ public class ConcatFilterTest extends BuildFileTest {
         + "Line  5" + lSep
     ;
 
-    private static final String FILE_ENDING_WITH =
+    private static final String FILE_APPEND_WITH =
           "Line 57" + lSep
         + "Line 58" + lSep
         + "Line 59" + lSep
@@ -93,7 +93,7 @@ public class ConcatFilterTest extends BuildFileTest {
         + "this-should-be-the-last-line" + lSep
     ;
 
-    private static final String FILE_ENDING =
+    private static final String FILE_APPEND =
           "Line 56" + lSep
         + "Line 57" + lSep
         + "Line 58" + lSep
@@ -112,7 +112,7 @@ public class ConcatFilterTest extends BuildFileTest {
 
     public void tearDown() {
         // I dont know why - but on my machine I always get a
-        // "Unable to delete file ...result\after.txt" (or before.txt)
+        // "Unable to delete file ...result\append.txt" (or prepend.txt)
         // from Delete.removeDir(Delete.java:612).
         // Win2000, JDK 1.4.1_02
         // A <sleep> before <delete> doesn´t work. From 10ms to 3000ms.
@@ -137,59 +137,59 @@ public class ConcatFilterTest extends BuildFileTest {
     }
 
     public void testFilterReaderBefore() throws IOException {
-        executeTarget("testFilterReaderBefore");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderBefore.test");
+        executeTarget("testFilterReaderPrepend");
+        File resultFile = getProject().resolveFile("result/concat.filterReaderPrepend.test");
         String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_BEGINNING_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_ENDING));
+        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
+        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
     }
 
     public void testFilterReaderAfter() throws IOException {
-        executeTarget("testFilterReaderAfter");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderAfter.test");
+        executeTarget("testFilterReaderAppend");
+        File resultFile = getProject().resolveFile("result/concat.filterReaderAppend.test");
         String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_BEGINNING));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_ENDING_WITH));
+        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
+        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
     }
 
     public void testFilterReaderBeforeAfter() throws IOException {
-        executeTarget("testFilterReaderBeforeAfter");
-        File resultFile = getProject().resolveFile("result/concat.filterReaderBeforeAfter.test");
+        executeTarget("testFilterReaderPrependAppend");
+        File resultFile = getProject().resolveFile("result/concat.filterReaderPrependAppend.test");
         String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_BEGINNING_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_ENDING_WITH));
+        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
+        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
     }
 
     public void testConcatFilter() throws IOException {
         executeTarget("testConcatFilter");
         File resultFile = getProject().resolveFile("result/concat.concatfilter.test");
         String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_BEGINNING));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_ENDING));
+        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
+        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
     }
 
     public void testConcatFilterBefore() throws IOException {
-        executeTarget("testConcatFilterBefore");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterBefore.test");
+        executeTarget("testConcatFilterPrepend");
+        File resultFile = getProject().resolveFile("result/concat.concatfilterPrepend.test");
         String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_BEGINNING_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_ENDING));
+        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
+        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND));
     }
 
     public void testConcatFilterAfter() throws IOException {
-        executeTarget("testConcatFilterAfter");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterAfter.test");
+        executeTarget("testConcatFilterAppend");
+        File resultFile = getProject().resolveFile("result/concat.concatfilterAppend.test");
         String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_BEGINNING));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_ENDING_WITH));
+        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND));
+        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
     }
 
     public void testConcatFilterBeforeAfter() throws IOException {
-        executeTarget("testConcatFilterBeforeAfter");
-        File resultFile = getProject().resolveFile("result/concat.concatfilterBeforeAfter.test");
+        executeTarget("testConcatFilterPrependAppend");
+        File resultFile = getProject().resolveFile("result/concat.concatfilterPrependAppend.test");
         String resultContent = fu.readFully(new java.io.FileReader(resultFile));
-        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_BEGINNING_WITH));
-        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_ENDING_WITH));
+        assertTrue("First 5 lines differs.", resultContent.startsWith(FILE_PREPEND_WITH));
+        assertTrue("Last 5 lines differs.", resultContent.endsWith(FILE_APPEND_WITH));
     }
 
 }

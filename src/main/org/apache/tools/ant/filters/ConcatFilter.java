@@ -67,7 +67,7 @@ import org.apache.tools.ant.types.Parameter;
  * <copy todir="build">
  *     <fileset dir="src" includes="*.java"/>
  *     <filterchain>
- *         <concatfilter before="apache-license-java.txt"/>
+ *         <concatfilter prepend="apache-license-java.txt"/>
  *     </filterchain>
  * </copy>
  * </pre>
@@ -83,16 +83,16 @@ public final class ConcatFilter extends BaseParamFilterReader
     implements ChainableReader {
 
     /** File to add before the content. */
-    private File before;
+    private File prepend;
 
     /** File to add after the content. */
-    private File after;
+    private File append;
 
-    /** Reader for before-file. */
-    private Reader beforeReader = new EmptyReader();
+    /** Reader for prepend-file. */
+    private Reader prependReader = new EmptyReader();
 
-    /** Reader for after-file. */
-    private Reader afterReader = new EmptyReader();
+    /** Reader for append-file. */
+    private Reader appendReader = new EmptyReader();
 
     /**
      * Constructor for "dummy" instances.
@@ -134,49 +134,49 @@ public final class ConcatFilter extends BaseParamFilterReader
 
         int ch = -1;
 
-        // The readers return -1 if they end. So simply read the "before"
-        // after that the "content" and at the end the "after" file.
-        ch = beforeReader.read();
+        // The readers return -1 if they end. So simply read the "prepend"
+        // after that the "content" and at the end the "append" file.
+        ch = prependReader.read();
         if (ch == -1) {
             ch = super.read();
         }
         if (ch == -1) {
-            ch = afterReader.read();
+            ch = appendReader.read();
         }
 
         return ch;
     }
 
     /**
-     * Sets <i>before</i> attribute.
-     * @param before new value
+     * Sets <i>prepend</i> attribute.
+     * @param prepend new value
      */
-    public void setBefore(final File before) {
-        this.before = before;
+    public void setPrepend(final File prepend) {
+        this.prepend = prepend;
     }
 
     /**
-     * Returns <i>before</i> attribute.
-     * @return before attribute
+     * Returns <i>prepend</i> attribute.
+     * @return prepend attribute
      */
-    public File getBefore() {
-        return before;
+    public File getPrepend() {
+        return prepend;
     }
 
     /**
-     * Sets <i>after</i> attribute.
-     * @param after new value
+     * Sets <i>append</i> attribute.
+     * @param append new value
      */
-    public void setAfter(final File after) {
-        this.after = after;
+    public void setAppend(final File append) {
+        this.append = append;
     }
 
     /**
-     * Returns <i>after</i> attribute.
-     * @return after attribute
+     * Returns <i>append</i> attribute.
+     * @return append attribute
      */
-    public File getAfter() {
-        return after;
+    public File getAppend() {
+        return append;
     }
 
     /**
@@ -191,10 +191,10 @@ public final class ConcatFilter extends BaseParamFilterReader
      */
     public Reader chain(final Reader rdr) {
         ConcatFilter newFilter = new ConcatFilter(rdr);
-        newFilter.setBefore(getBefore());
-        newFilter.setAfter(getAfter());
+        newFilter.setPrepend(getPrepend());
+        newFilter.setAppend(getAppend());
         // Usually the initialized is set to true. But here it must not.
-        // Because the before and after readers have to be instantiated
+        // Because the prepend and append readers have to be instantiated
         // on runtime
         //newFilter.setInitialized(true);
         return newFilter;
@@ -210,27 +210,27 @@ public final class ConcatFilter extends BaseParamFilterReader
         Parameter[] params = getParameters();
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
-                if ("before".equals(params[i].getName())) {
-                    setBefore(new File(params[i].getValue()));
+                if ("prepend".equals(params[i].getName())) {
+                    setPrepend(new File(params[i].getValue()));
                     continue;
                 }
-                if ("after".equals(params[i].getName())) {
-                    setAfter(new File(params[i].getValue()));
+                if ("append".equals(params[i].getName())) {
+                    setAppend(new File(params[i].getValue()));
                     continue;
                 }
             }
         }
-        if (before != null) {
-            if (!before.isAbsolute()) {
-                before = new File(getProject().getBaseDir(), before.getPath());
+        if (prepend != null) {
+            if (!prepend.isAbsolute()) {
+                prepend = new File(getProject().getBaseDir(), prepend.getPath());
             }
-            beforeReader = new BufferedReader(new FileReader(before));
+            prependReader = new BufferedReader(new FileReader(prepend));
         }
-        if (after != null) {
-            if (!after.isAbsolute()) {
-                after = new File(getProject().getBaseDir(), after.getPath());
+        if (append != null) {
+            if (!append.isAbsolute()) {
+                append = new File(getProject().getBaseDir(), append.getPath());
             }
-            afterReader = new BufferedReader(new FileReader(after));
+            appendReader = new BufferedReader(new FileReader(append));
         }
    }
 
