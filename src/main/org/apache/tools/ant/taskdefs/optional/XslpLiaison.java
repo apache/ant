@@ -85,4 +85,8 @@ public class XslpLiaison implements XSLTLiaison {
       processor.process(infile, xslSheet, new FileWriter(outfile));
     }
 
+    public void addParam(String name, String expression){
+      processor.setProperty(name, expression);
+    }
+
 } //-- XSLPLiaison

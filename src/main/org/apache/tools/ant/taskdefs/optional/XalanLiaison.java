@@ -92,4 +92,8 @@ public class XalanLiaison implements XSLTLiaison {
         }
         return fileName;
     }
+    
+    public void addParam(String name, String value){
+        processor.setStylesheetParam(name, value);
+    }
 } //-- XalanLiaison

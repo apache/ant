@@ -65,6 +65,8 @@ public interface XSLTLiaison {
 
     public void setStylesheet(String fileName) throws Exception;
 
+    public void addParam(String name, String expression) throws Exception;
+
     public void transform(String infile, String outfile) throws Exception;
 
 } //-- XSLTLiaison
