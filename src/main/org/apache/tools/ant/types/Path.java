@@ -100,7 +100,7 @@ public class Path extends DataType implements Cloneable {
     private Vector elements;
 
     /** The system classspath as a Path object */
-    public static final Path systemClasspath =
+    public static Path systemClasspath =
         new Path(null, System.getProperty("java.class.path"));
 
 
