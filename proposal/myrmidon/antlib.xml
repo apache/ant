@@ -29,6 +29,7 @@ Legal:
   <property name="antlib.name" value="NONAME"/>
   <property name="antlib.include" value="org/apache/antlib/${antlib.name}/**"/>
   <property name="antlib.descriptor" value="${antlib.name}-ant-descriptor.xml"/>
+  <property name="antlib.role.descriptor" value="${antlib.name}-ant-roles.xml"/>
 
   <path id="project.class.path">
     <pathelement path="${java.class.path}" />
@@ -58,7 +59,7 @@ Legal:
       <template templateFile="${manifest.dir}/core-ant-descriptor.template"
                 destinationfile="${antlib.descriptor}"/>
       <template templateFile="${manifest.dir}/builtin-ant-roles.template"
-                destinationfile="${antlib.name}-ant-roles.xml"/>
+                destinationfile="${antlib.role.descriptor}"/>
     </xdoclet>
   </target>
 
@@ -68,6 +69,9 @@ Legal:
       <include name="${antlib.include}" />
       <zipfileset dir="${gen.dir}" fullpath="META-INF/ant-descriptor.xml">
         <include name="${antlib.descriptor}"/>
+      </zipfileset>
+      <zipfileset dir="${gen.dir}" fullpath="META-INF/ant-roles.xml">
+        <include name="${antlib.role.descriptor}"/>
       </zipfileset>
     </jar>
   </target>
