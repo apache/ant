@@ -73,7 +73,7 @@ public class ChangeLog
     private Vector m_cvsUsers = new Vector();
 
     /** Input dir */
-    private File m_basedir;
+    private File m_dir;
 
     /** Output file */
     private File m_destfile;
@@ -98,9 +98,9 @@ public class ChangeLog
     /**
      * Set the base dir for cvs.
      */
-    public void setBasedir( final File basedir )
+    public void setDir( final File dir )
     {
-        m_basedir = basedir;
+        m_dir = dir;
     }
 
     /**
@@ -222,7 +222,7 @@ public class ChangeLog
 
         final ChangeLogParser parser = new ChangeLogParser( userList );
         final Execute exe = new Execute();
-        exe.setWorkingDirectory( m_basedir );
+        exe.setWorkingDirectory( m_dir );
         exe.setCommandline( command );
         exe.setExecOutputHandler( parser );
         exe.execute( getContext() );
@@ -240,20 +240,19 @@ public class ChangeLog
     private void validate()
         throws TaskException
     {
-        if( null == m_basedir )
+        if( null == m_dir )
         {
-            final String message = REZ.getString( "changelog.missing-basedir.error" );
-            throw new TaskException( message );
+            m_dir = getContext().getBaseDirectory();
         }
         if( null == m_destfile )
         {
             final String message = REZ.getString( "changelog.missing-destfile.error" );
             throw new TaskException( message );
         }
-        if( !m_basedir.exists() )
+        if( !m_dir.exists() )
         {
             final String message =
-                REZ.getString( "changelog.bad-basedir.error", m_basedir.getAbsolutePath() );
+                REZ.getString( "changelog.bad-basedir.error", m_dir.getAbsolutePath() );
             throw new TaskException( message );
         }
         if( null != m_usersFile && !m_usersFile.exists() )
