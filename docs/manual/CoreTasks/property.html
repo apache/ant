@@ -48,12 +48,21 @@ href="../using.html#built-in-props">here</a>.</p>
   <tr>
     <td valign="top">name</td>
     <td valign="top">the name of the property to set.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">value</td>
     <td valign="top">the value of the property.</td>
-    <td valign="middle" align="center" rowspan="6">Yes</td>
+    <td valign="middle" align="center" rowspan="3">One of these, when using the
+       name attribute</td>
+  </tr>
+  <tr>
+    <td valign="top">location</td>
+    <td valign="top">Sets the property to the absolute filename of the
+      given file. If the value of this attribute is an absolute path, it
+      is left unchanged (with / and \ characters converted to the
+      current platforms conventions). Otherwise it is taken as a path
+      relative to the project's basedir and expanded.</td>
   </tr>
   <tr>
     <td valign="top">refid</td>
@@ -64,18 +73,12 @@ href="../using.html#built-in-props">here</a>.</p>
   <tr>
     <td valign="top">resource</td>
     <td valign="top">the resource name of the property file.</td>
+    <td valign="middle" align="center" rowspan="3">One of these, when
+      <b>not</b> using the name attribute</td>
   </tr>
   <tr>
     <td valign="top">file</td>
     <td valign="top">the filename of the property file .</td>
-  </tr>
-  <tr>
-    <td valign="top">location</td>
-    <td valign="top">Sets the property to the absolute filename of the
-      given file. If the value of this attribute is an absolute path, it
-      is left unchanged (with / and \ characters converted to the
-      current platforms conventions). Otherwise it is taken as a path
-      relative to the project's basedir and expanded.</td>
   </tr>
   <tr>
     <td valign="top">environment</td>
