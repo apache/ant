@@ -102,9 +102,4 @@ public class CopyfileTest extends TaskdefsTest {
             fail("Copy failed");
         }
     }
-/*
-    public void test6() { 
-        expectBuildException("test6", "target is directory");
-    }
-*/
 }

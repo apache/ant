@@ -755,7 +755,7 @@ public class Project {
         if (overwrite || !destFile.exists() ||
             destFile.lastModified() < sourceFile.lastModified()) {
 
-            if (destFile.exists()) {
+            if (destFile.exists() && destFile.isFile()) {
                 destFile.delete();
             }
 

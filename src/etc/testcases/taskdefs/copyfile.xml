@@ -25,6 +25,7 @@
   </target>
 
   <target name="test6">
+    <delete file="testdir"/>
     <mkdir dir="testdir" />
     <copyfile src="copyfile.xml" 
               dest="testdir"
