@@ -49,6 +49,30 @@ error).  Don't use this task to run <code>JAVA.EXE</code>, use a
 set to <code>true</code> instead as this task will follow the VM's
 interpretation of exit codes.</p>
 
+<h4>RedHat S/390 Users</h4>
+
+<p>It has been <a
+href="http://listserv.uark.edu/scripts/wa.exe?A1=ind0404&L=vmesa-l#33">reported
+on the VMESA-LISTSERV</a> that shell scripts invoked via the Ant Exec
+task must have their interpreter specified, i.e., the scripts must
+start with something like:
+
+<blockquote>
+<pre>
+#!/bin/bash
+</pre>
+</blockquote>
+
+or the task will fail as follows:
+
+<blockquote>
+<pre>
+[exec] Warning: UNIXProcess.forkAndExec native error: Exec format error
+[exec] Result: 255
+</pre>
+</blockquote>
+</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
