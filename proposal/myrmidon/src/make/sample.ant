@@ -148,4 +148,16 @@ Legal:
     <log message="myPrefix.foo=${myPrefix.foo}"/>
   </target>
 
+  <target name="exec-test">
+    <exec dir="../.." executable="cvs">
+      <arg value="up"/>
+    </exec>
+    <log message="exec cvs done!"/>
+  </target>
+
+  <target name="cvs-test">
+    <cvs noexec="true" dest="../.." command="up"/>
+    <log message="cvs done!"/>
+  </target>
+
 </project>
