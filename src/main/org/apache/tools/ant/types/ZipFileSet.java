@@ -295,7 +295,10 @@ public class ZipFileSet extends FileSet {
         }
 
         Object o = getRefid().getReferencedObject(p);
-        if (!(o instanceof ZipFileSet) && !(o instanceof FileSet)) {
+        if (o instanceof FileSet) {
+           return (AbstractFileSet)(new ZipFileSet((FileSet)o));
+        }
+        else if (!(o instanceof ZipFileSet)) {
             String msg = getRefid().getRefId() + " doesn\'t denote a zipfileset or a fileset";
             throw new BuildException(msg);
         } else {
