@@ -78,7 +78,7 @@ public class CallTargetTest extends BuildFileTest {
 
     // see bugrep 21724 (references not passing through with antcall)
     public void testInheritFilterset() {
-        project.executeTarget("testinheritfilterset");
+        project.executeTarget("testinheritreffilterset");
     }
 
     public void tearDown() {
