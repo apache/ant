@@ -31,6 +31,10 @@ import java.util.Properties;
 import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Collections;
 import java.util.Iterator;
 import javax.xml.parsers.DocumentBuilder;
@@ -43,6 +47,7 @@ import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -343,6 +348,24 @@ public class EchoProperties extends Task {
         Properties props = new Properties() {
             public Enumeration keys() {
                 return CollectionUtils.asEnumeration(keyList.iterator());
+            }
+            public Set entrySet() {
+                Set result = super.entrySet();
+                if (JavaEnvUtils.isKaffe()) {
+                    TreeSet t = new TreeSet(new Comparator() {
+                        public boolean equals(Object o) {
+                            return false;
+                        }
+                        public int compare(Object o1, Object o2) {
+                            String key1 = (String) ((Map.Entry) o1).getKey();
+                            String key2 = (String) ((Map.Entry) o2).getKey();
+                            return key1.compareTo(key2);
+                        }
+                    });
+                    t.addAll(result);
+                    result = t;
+                }
+                return result;
             }
         };
         for (int i = 0; i < keyList.size(); i++) {
