@@ -273,7 +273,7 @@ public class FTP
             // construct it
             if (newroots.containsKey("")) {
                 // we are going to scan everything anyway
-                scandir(remotedir, "", true);
+                scandir(rootPath, "", true);
             } else {
                 // only scan directories that can include matched files or
                 // directories
