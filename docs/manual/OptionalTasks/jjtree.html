@@ -12,18 +12,21 @@
 
 <h3>
 Description</h3>
-Invokes the <a href="http://www.webgain.com/products/java_cc/">JJTree</a> preprocessor
+<p>Invokes the <a href="http://javacc.dev.java.net/">JJTree</a> preprocessor
 for the JavaCC compiler compiler. It inserts parse tree building actions
 at various places in the JavaCC source that it generates. The output of
 JJTree is run through JavaCC to create the parser.
 <p>To use the jjtree task, set the <i>target</i> attribute to the name
-of the jjtree grammar file to process. You also need to specify the directory
+of the JJTree grammar file to process. You also need to specify the directory
 containing the JavaCC installation using the <i>javacchome</i> attribute,
 so that ant can find the JavaCC classes. Optionally, you can also set the
 <i>outputdirectory</i>
-to write the generated file to a specific directory. Otherwise jjtree writes
-the generated JavaCC grammar file to the directory containing the JJTree
-grammar file.</p>
+to write the generated JavaCC grammar and node files to a specific directory.
+Otherwise jjtree writes the generated JavaCC grammar and node files to the directory
+containing the JJTree grammar file. As an extra option, you can also set the
+<i>outputfile</i> to write the generated JavaCC grammar file to a specific (directory and) file.
+Otherwise jjtree writes the generated JavaCC grammar file as the JJTree
+grammar file with a suffix .jj.</p>
 <p>This task only invokes JJTree if the grammar file is newer than the
 generated JavaCC file.</p>
 
@@ -57,8 +60,20 @@ generated JavaCC file.</p>
 <tr>
 <td VALIGN=TOP>outputdirectory</td>
 
-<td VALIGN=TOP>The directory to write the generated file to. If not set,
-the files are written to the directory containing the grammar file.&nbsp;</td>
+<td VALIGN=TOP>The directory to write the generated JavaCC grammar and node files to.
+If not set, the files are written to the directory containing the grammar file.&nbsp;</td>
+
+<td ALIGN=CENTER VALIGN=TOP>No</td>
+</tr>
+
+<tr>
+<td VALIGN=TOP>outputfile</td>
+
+<td VALIGN=TOP>The file to write the generated JavaCC grammar file
+to. If not set, the file is written with the same name as the JJTree
+grammar file but with a the suffix <code>.jj</code>.  This is a
+filename relative to <em>outputdirectory</em> if specified, the
+project's basedir.</td>
 
 <td ALIGN=CENTER VALIGN=TOP>No</td>
 </tr>
@@ -173,7 +188,7 @@ grammar file, Parser.jj, file to build/src. The grammar option NODE_USES_PARSER
 is set to true when invoking JJTree.
 <br>
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2001-2003 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 </html>

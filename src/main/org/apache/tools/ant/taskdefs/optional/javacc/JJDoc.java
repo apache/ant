@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,37 +69,29 @@ import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * Runs the JJTree compiler compiler.
+ * Runs the JJDoc compiler compiler.
  *
+ * @author Jene Jasper <a href="mailto:jjasper@abz.nl">jjasper@abz.nl</a>
  * @author thomas.haas@softwired-inc.com
  * @author Michael Saunders 
  *         <a href="mailto:michael@amtec.com">michael@amtec.com</a>
  */
-public class JJTree extends Task {
+public class JJDoc extends Task {
 
     // keys to optional attributes
     private static final String OUTPUT_FILE       = "OUTPUT_FILE";
-    private static final String BUILD_NODE_FILES  = "BUILD_NODE_FILES";
-    private static final String MULTI             = "MULTI";
-    private static final String NODE_DEFAULT_VOID = "NODE_DEFAULT_VOID";
-    private static final String NODE_FACTORY      = "NODE_FACTORY";
-    private static final String NODE_SCOPE_HOOK   = "NODE_SCOPE_HOOK";
-    private static final String NODE_USES_PARSER  = "NODE_USES_PARSER";
-    private static final String STATIC            = "STATIC";
-    private static final String VISITOR           = "VISITOR";
-
-    private static final String NODE_PACKAGE      = "NODE_PACKAGE";
-    private static final String VISITOR_EXCEPTION = "VISITOR_EXCEPTION";
-    private static final String NODE_PREFIX       = "NODE_PREFIX";
+    private static final String TEXT              = "TEXT";
+    private static final String ONE_TABLE         = "ONE_TABLE";
 
     private final Hashtable optionalAttrs = new Hashtable();
 
     private String outputFile = null;
+    private boolean plainText = false;
 
-    private static final String DEFAULT_SUFFIX = ".jj";
+    private static final String DEFAULT_SUFFIX_HTML = ".html";
+    private static final String DEFAULT_SUFFIX_TEXT = ".txt";
 
     // required attributes
-    private File outputDirectory = null;
     private File target          = null;
     private File javaccHome      = null;
 
@@ -107,102 +99,31 @@ public class JJTree extends Task {
 
 
     /**
-     * Sets the BUILD_NODE_FILES grammar option.
+     * Sets the TEXT BNF documentation option.
      */
-    public void setBuildnodefiles(boolean buildNodeFiles) {
-        optionalAttrs.put(BUILD_NODE_FILES, new Boolean(buildNodeFiles));
+    public void setText(boolean plainText) {
+        optionalAttrs.put(TEXT, new Boolean(plainText));
+        this.plainText = plainText;
     }
 
     /**
-     * Sets the MULTI grammar option.
+     * Sets the ONE_TABLE documentation option.
      */
-    public void setMulti(boolean multi) {
-        optionalAttrs.put(MULTI, new Boolean(multi));
+    public void setOnetable(boolean oneTable) {
+        optionalAttrs.put(ONE_TABLE, new Boolean(oneTable));
     }
 
     /**
-     * Sets the NODE_DEFAULT_VOID grammar option.
-     */
-    public void setNodedefaultvoid(boolean nodeDefaultVoid) {
-        optionalAttrs.put(NODE_DEFAULT_VOID, new Boolean(nodeDefaultVoid));
-    }
-
-    /**
-     * Sets the NODE_FACTORY grammar option.
-     */
-    public void setNodefactory(boolean nodeFactory) {
-        optionalAttrs.put(NODE_FACTORY, new Boolean(nodeFactory));
-    }
-
-    /**
-     * Sets the NODE_SCOPE_HOOK grammar option.
-     */
-    public void setNodescopehook(boolean nodeScopeHook) {
-        optionalAttrs.put(NODE_SCOPE_HOOK, new Boolean(nodeScopeHook));
-    }
-
-    /**
-     * Sets the NODE_USES_PARSER grammar option.
-     */
-    public void setNodeusesparser(boolean nodeUsesParser) {
-        optionalAttrs.put(NODE_USES_PARSER, new Boolean(nodeUsesParser));
-    }
-
-    /**
-     * Sets the STATIC grammar option.
-     */
-    public void setStatic(boolean staticParser) {
-        optionalAttrs.put(STATIC, new Boolean(staticParser));
-    }
-
-    /**
-     * Sets the VISITOR grammar option.
-     */
-    public void setVisitor(boolean visitor) {
-        optionalAttrs.put(VISITOR, new Boolean(visitor));
-    }
-
-    /**
-     * Sets the NODE_PACKAGE grammar option.
-     */
-    public void setNodepackage(String nodePackage) {
-        optionalAttrs.put(NODE_PACKAGE, new String(nodePackage));
-    }
-
-    /**
-     * Sets the VISITOR_EXCEPTION grammar option.
-     */
-    public void setVisitorException(String visitorException) {
-        optionalAttrs.put(VISITOR_EXCEPTION, new String(visitorException));
-    }
-
-    /**
-     * Sets the NODE_PREFIX grammar option.
-     */
-    public void setNodeprefix(String nodePrefix) {
-        optionalAttrs.put(NODE_PREFIX, new String(nodePrefix));
-    }
-
-    /**
-     * The directory to write the generated JavaCC grammar and node files to.
-     * If not set, the files are written to the directory
-     * containing the grammar file.
-     */
-    public void setOutputdirectory(File outputDirectory) {
-        this.outputDirectory = outputDirectory;
-    }
-
-    /**
-     * The outputfile to write the generated JavaCC grammar file to.
+     * The outputfile to write the generated BNF documentation file to.
      * If not set, the file is written with the same name as
-     * the JJTree grammar file with a suffix .jj.
+     * the JavaCC grammar file with a suffix .html or .txt.
      */
     public void setOutputfile(String outputFile) {
         this.outputFile = outputFile;
     }
 
     /**
-     * The jjtree grammar file to process.
+     * The javacc grammar file to process.
      */
     public void setTarget(File target) {
         this.target = target;
@@ -215,7 +136,7 @@ public class JJTree extends Task {
         this.javaccHome = javaccHome;
     }
 
-    public JJTree() {
+    public JJDoc() {
         cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
     }
 
@@ -226,51 +147,34 @@ public class JJTree extends Task {
         while (iter.hasMoreElements()) {
             String name  = (String) iter.nextElement();
             Object value = optionalAttrs.get(name);
-            cmdl.createArgument().setValue("-" + name + ":" + value.toString());
+            cmdl.createArgument()
+                .setValue("-" + name + ":" + value.toString());
         }
 
         if (target == null || !target.isFile()) {
             throw new BuildException("Invalid target: " + target);
         }
-        
-        if (outputFile != null) {
-            cmdl.createArgument().setValue("-" + OUTPUT_FILE + ":" 
-                                           + outputFile.replace('\\', '/'));
-        }
 
-        File javaFile = null;
+        if (outputFile != null) {
+            cmdl.createArgument() .setValue("-" + OUTPUT_FILE + ":" 
+                                            + outputFile.replace('\\', '/'));
+        }
 
         // use the directory containing the target as the output directory
-        if (outputDirectory == null) {
-            javaFile = new File(createOutputFileName(target, outputFile, 
-                                                     null));
-        } else {
-            if (!outputDirectory.isDirectory()) {
-                throw new BuildException("'outputdirectory' " + outputDirectory
-                                         + " is not a directory.");
-            }
- 
-            // convert backslashes to slashes, otherwise jjtree will
-            // put this as comments and this seems to confuse javacc
-            cmdl.createArgument().setValue("-OUTPUT_DIRECTORY:"
-                                           + outputDirectory.getAbsolutePath()
-                                             .replace('\\', '/'));
- 
-            javaFile = new File(createOutputFileName(target, outputFile, 
-                                                     outputDirectory
-                                                     .getPath()));
-        }
+        File javaFile = new File(createOutputFileName(target, outputFile, 
+                                                      plainText));
 
         if (javaFile.exists()
-            && target.lastModified() < javaFile.lastModified()) {
+             && target.lastModified() < javaFile.lastModified()) {
             log("Target is already built - skipping (" + target + ")",
                 Project.MSG_VERBOSE);
             return;
         }
+
         cmdl.createArgument().setValue(target.getAbsolutePath());
 
         cmdl.setClassname(JavaCC.getMainClass(javaccHome, 
-                                              JavaCC.TASKDEF_TYPE_JJTREE));
+                                              JavaCC.TASKDEF_TYPE_JJDOC));
 
         final Path classpath = cmdl.createClasspath(getProject());
         final File javaccJar = JavaCC.getArchiveFile(javaccHome);
@@ -291,43 +195,48 @@ public class JJTree extends Task {
 
         try {
             if (process.execute() != 0) {
-                throw new BuildException("JJTree failed.");
+                throw new BuildException("JJDoc failed.");
             }
         } catch (IOException e) {
-            throw new BuildException("Failed to launch JJTree", e);
+            throw new BuildException("Failed to launch JJDoc", e);
         }
     }
 
     private String createOutputFileName(File target, String optionalOutputFile,
-                                        String outputDirectory) {
-        String jjtreeFile = target.getAbsolutePath().replace('\\','/');
+                                        boolean plainText) {
+        String suffix = DEFAULT_SUFFIX_HTML;
+        String javaccFile = target.getAbsolutePath().replace('\\','/');
+
+        if (plainText) {
+            suffix = DEFAULT_SUFFIX_TEXT;
+        }
 
         if ((optionalOutputFile == null) || optionalOutputFile.equals("")) {
-            int filePos = jjtreeFile.lastIndexOf("/");
+            int filePos = javaccFile.lastIndexOf("/");
 
             if (filePos >= 0) {
-                jjtreeFile = jjtreeFile.substring(filePos + 1);
+                javaccFile = javaccFile.substring(filePos + 1);
             }
 
-            int suffixPos = jjtreeFile.lastIndexOf('.');
+            int suffixPos = javaccFile.lastIndexOf('.');
 
             if (suffixPos == -1) {
-                optionalOutputFile = jjtreeFile + DEFAULT_SUFFIX;
+                optionalOutputFile = javaccFile + suffix;
             } else {
-                String currentSuffix = jjtreeFile.substring(suffixPos);
+                String currentSuffix = javaccFile.substring(suffixPos);
 
-                if (currentSuffix.equals(DEFAULT_SUFFIX)) {
-                    optionalOutputFile = jjtreeFile + DEFAULT_SUFFIX;
+                if (currentSuffix.equals(suffix)) {
+                    optionalOutputFile = javaccFile + suffix;
                 } else {
-                    optionalOutputFile = jjtreeFile.substring(0, suffixPos) 
-                        + DEFAULT_SUFFIX;
+                    optionalOutputFile = javaccFile.substring(0, suffixPos) 
+                        + suffix;
                 }
             }
+        } else {
+            optionalOutputFile = optionalOutputFile.replace('\\','/');
         }
 
-        if ((outputDirectory == null) || outputDirectory.equals("")) {
-            outputDirectory = getProject().getBaseDir().getAbsolutePath();
-        }
-        return (outputDirectory + "/" + optionalOutputFile).replace('\\', '/');
+        return (getProject().getBaseDir() + "/" + optionalOutputFile)
+            .replace('\\', '/');
     }
 }

@@ -98,6 +98,7 @@ public class JavaCC extends Task {
     private static final String SANITY_CHECK           = "SANITY_CHECK";
     private static final String FORCE_LA_CHECK         = "FORCE_LA_CHECK";
     private static final String CACHE_TOKENS           = "CACHE_TOKENS";
+    private static final String KEEP_LINE_COLUMN       = "KEEP_LINE_COLUMN";
 
     private final Hashtable optionalAttrs = new Hashtable();
 
@@ -113,18 +114,28 @@ public class JavaCC extends Task {
     protected static final int TASKDEF_TYPE_JJDOC = 3;
 
     protected static final String[] ARCHIVE_LOCATIONS =
-        new String[] {"JavaCC.zip", "bin/lib/JavaCC.zip",
-                      "bin/lib/javacc.jar",
-                      "javacc.jar", // used by jpackage for JavaCC 3.x
+        new String[] {
+            "JavaCC.zip", 
+            "bin/lib/JavaCC.zip",
+            "bin/lib/javacc.jar",
+            "javacc.jar", // used by jpackage for JavaCC 3.x
         };
 
+    protected static final int[] ARCHIVE_LOCATIONS_VS_MAJOR_VERSION =
+        new int[] {
+            1,
+            2,
+            3,
+            3,
+        };
+ 
     protected static final String COM_PACKAGE = "COM.sun.labs.";
     protected static final String COM_JAVACC_CLASS = "javacc.Main";
     protected static final String COM_JJTREE_CLASS = "jjtree.Main";
     protected static final String COM_JJDOC_CLASS = "jjdoc.JJDocMain";
 
-    protected static final String ORG_PACKAGE = "org.netbeans.javacc.";
-    protected static final String ORG_JAVACC_PACKAGE = "org.javacc.";
+    protected static final String ORG_PACKAGE_3_0 = "org.netbeans.javacc.";   
+    protected static final String ORG_PACKAGE_3_1 = "org.javacc.";
     protected static final String ORG_JAVACC_CLASS = "parser.Main";
     protected static final String ORG_JJTREE_CLASS = COM_JJTREE_CLASS;
     protected static final String ORG_JJDOC_CLASS = COM_JJDOC_CLASS;
@@ -270,6 +281,13 @@ public class JavaCC extends Task {
     }
 
     /**
+     * Sets the KEEP_LINE_COLUMN grammar option.
+     */
+    public void setKeeplinecolumn(boolean keepLineColumn) {
+        optionalAttrs.put(KEEP_LINE_COLUMN, new Boolean(keepLineColumn));
+    }
+
+    /**
      * The directory to write the generated files to.
      * If not set, the files are written to the directory
      * containing the grammar file.
@@ -354,7 +372,7 @@ public class JavaCC extends Task {
      */
     protected static File getArchiveFile(File home) throws BuildException {
         return new File(home,
-                        ARCHIVE_LOCATIONS[getMajorVersionNumber(home) - 1]);
+                        ARCHIVE_LOCATIONS[getArchiveLocationIndex(home)]);
     }
 
     /**
@@ -397,7 +415,6 @@ public class JavaCC extends Task {
             break;
 
         case 3:
-        case 4:
             /*
              * This is where the fun starts, JavaCC 3.0 uses
              * org.netbeans.javacc, 3.1 uses org.javacc - I wonder
@@ -409,10 +426,10 @@ public class JavaCC extends Task {
             ZipFile zf = null;
             try {
                 zf = new ZipFile(getArchiveFile(home));
-                if (zf.getEntry(ORG_PACKAGE.replace('.', '/')) != null) {
-                    packagePrefix = ORG_PACKAGE;
+                if (zf.getEntry(ORG_PACKAGE_3_0.replace('.', '/')) != null) {
+                    packagePrefix = ORG_PACKAGE_3_0;
                 } else {
-                    packagePrefix = ORG_JAVACC_PACKAGE;
+                    packagePrefix = ORG_PACKAGE_3_1;
                 }
             } catch (IOException e) {
                 throw new BuildException("Error reading javacc.jar", e);
@@ -450,23 +467,14 @@ public class JavaCC extends Task {
     }
 
     /**
-     * Helper method to determine the major version number of JavaCC.
-     *
-     * <p>Don't assume any relation between the number returned by
-     * this method and the &quot;major version number&quot; of JavaCC
-     * installed.  Both 3 and 4 map to JavaCC 3.x (with no difference
-     * between 3.0 and 3.1).</p>
-     *
-     * <p>This method is only useful within this class itself, use
-     * {@link #getArchiveFile getArchiveFile} and {@link #getMainClass
-     * getMainClass} for more widely useful results.</p>
+     * Helper method to determine the archive location index.
      *
      * @param home the javacc home path directory.
      * @throws BuildException thrown if the home directory is invalid
      * or if the archive could not be found despite attempts to do so.
-     * @return a number that is useless outside the scope of this class
+     * @return the archive location index
      */
-    protected static int getMajorVersionNumber(File home)
+    private static int getArchiveLocationIndex(File home)
         throws BuildException {
 
         if (home == null || !home.isDirectory()) {
@@ -477,12 +485,27 @@ public class JavaCC extends Task {
             File f = new File(home, ARCHIVE_LOCATIONS[i]);
 
             if (f.exists()) {
-                return (i + 1);
+                return i;
             }
         }
 
         throw new BuildException("Could not find a path to JavaCC.zip "
                                  + "or javacc.jar from '" + home + "'.");
+    }
+
+    /**
+     * Helper method to determine the major version number of JavaCC.
+     *
+     * @param home the javacc home path directory.
+     * @throws BuildException thrown if the home directory is invalid
+     * or if the archive could not be found despite attempts to do so.
+     * @return a the major version number
+     */
+    protected static int getMajorVersionNumber(File home)
+        throws BuildException {
+ 
+        return 
+            ARCHIVE_LOCATIONS_VS_MAJOR_VERSION[getArchiveLocationIndex(home)];
     }
 
     /**

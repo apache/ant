@@ -8,25 +8,25 @@
 <body>
 
 <h2><a name="javacc">JavaCC</a></h2>
-<h3>Description</h3> 
+<h3>Description</h3>
 <p>
-  Invokes the <a HREF="http://www.webgain.com/products/java_cc/" target="_top">JavaCC</a> compiler 
+  Invokes the <a HREF="http://javacc.dev.java.net/" target="_top">JavaCC</a> compiler
   compiler on a grammar file.
 </p>
 <p>
-  To use the javacc task, set the <i>target</i> attribute to the name of the 
-  grammar file to process.  You also need to specify the directory containing 
-  the JavaCC installation using the <i>javacchome</i> attribute, so that ant 
-  can find the JavaCC classes.  Optionally, you can also set the 
+  To use the javacc task, set the <i>target</i> attribute to the name of the
+  grammar file to process.  You also need to specify the directory containing
+  the JavaCC installation using the <i>javacchome</i> attribute, so that ant
+  can find the JavaCC classes.  Optionally, you can also set the
   <i>outputdirectory</i> to write the generated file to a specific directory.
   Otherwise javacc writes the generated files to the directory containing
   the grammar file.
 </p>
 <p>
-  This task only invokes JavaCC if the grammar file is newer than the generated 
+  This task only invokes JavaCC if the grammar file is newer than the generated
   Java files.  javacc assumes that the Java class name of the generated parser
   is the same as the name of the grammar file, ignoring the .jj.
-  If this is not the case, the javacc task will still work, but it will always 
+  If this is not the case, the javacc task will still work, but it will always
   generate the output files.
 </p>
 
@@ -116,6 +116,11 @@
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">keeplinecolumn</td>
+    <td valign="top">Sets the KEEP_LINE_COLUMN grammar option.  This is a boolean option.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">lookahead</td>
     <td valign="top">Sets the LOOKAHEAD grammar option.  This is an integer option.</td>
     <td valign="top" align="center">No</td>
@@ -158,10 +163,10 @@
 </table>
 <h3>Example</h3>
 <blockquote><pre>
-&lt;javacc 
-    target=&quot;src/Parser.jj&quot; 
+&lt;javacc
+    target=&quot;src/Parser.jj&quot;
     outputdirectory=&quot;build/src&quot;
-    javacchome=&quot;c:/program files/JavaCC&quot; 
+    javacchome=&quot;c:/program files/JavaCC&quot;
     static=&quot;true&quot;
 /&gt;
 </pre></blockquote>
@@ -172,7 +177,7 @@
 </p>
 <hr>
 
-<p align="center">Copyright &copy; 2000-2001 Apache Software Foundation.
+<p align="center">Copyright &copy; 2000-2001,2003 Apache Software Foundation.
 All rights
 Reserved.</p>
 

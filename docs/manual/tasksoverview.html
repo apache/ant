@@ -318,12 +318,12 @@ documentation.</p>
 
   <tr valign="top">
     <td nowrap><a href="OptionalTasks/stylebook.html">Stylebook</a></td>
-    <td><p>Executes the Apache Stylebook documentation generator. 
+    <td><p>Executes the Apache Stylebook documentation generator.
      Unlike the command-line version of this tool, all three arguments
      are required to run the Stylebook task.</p></td>
   </tr>
 </table>
-  
+
 <p></p>
 <table width="100%" border="0" cellpadding="4" cellspacing="0">
 <th align="left">
@@ -748,7 +748,7 @@ documentation.</p>
 
   <tr valign="top">
     <td nowrap><a href="OptionalTasks/script.html">Script</a></td>
-    <td><p>Executes a script in a 
+    <td><p>Executes a script in a
      <a href="http://jakarta.apache.org/bsf/"
       target="_top">Apache BSF</a>-supported language.</p></td>
   </tr>
@@ -861,7 +861,7 @@ documentation.</p>
   <tr valign="top">
     <td nowrap><a href="OptionalTasks/javacc.html">JavaCC</a></td>
     <td><p>Invokes the
-     <a HREF="http://www.webgain.com/products/java_cc/" target="_top">
+     <a HREF="http://javacc.dev.java.net/" target="_top">
      JavaCC</a> compiler-compiler on a grammar file.</p></td>
   </tr>
 
@@ -871,8 +871,18 @@ documentation.</p>
   </tr>
 
   <tr valign="top">
+    <td nowrap><a href="OptionalTasks/jjdoc.html">JJDoc</a></td>
+    <td><p>Invokes the <a href="http://javacc.dev.java.net/">
+     JJDoc</a> documentation generator for the JavaCC compiler-compiler.
+     JJDoc takes a JavaCC parser specification and produces documentation
+     for the BNF grammar.  It can operate in three modes, determined by
+     command line options. This task only invokes JJDoc if the grammar file
+     is newer than the generated BNF grammar documentation.</p></td>
+  </tr>
+
+  <tr valign="top">
     <td nowrap><a href="OptionalTasks/jjtree.html">JJTree</a></td>
-    <td><p>Invokes the <a href="http://www.webgain.com/products/java_cc/">
+    <td><p>Invokes the <a href="http://javacc.dev.java.net/">
      JJTree</a> preprocessor for the JavaCC compiler-compiler. It inserts
      parse-tree building actions at various places in the JavaCC source that
      it generates. The output of JJTree is run through JavaCC to create the
@@ -948,7 +958,7 @@ documentation.</p>
   <tr valign="top">
     <td nowrap><a href="CoreTasks/dirname.html">Dirname</a></td>
     <td><p>Sets a property to the value of the specified file up to,
-     but not including, the last path element. 
+     but not including, the last path element.
   </tr>
 
   <tr valign="top">
@@ -1032,7 +1042,7 @@ documentation.</p>
 
   <tr valign="top">
     <td nowrap><a href="OptionalTasks/telnet.html">Telnet</a></td>
-    <td><p>Task to automate a remote <i>telnet</i> session. This task uses 
+    <td><p>Task to automate a remote <i>telnet</i> session. This task uses
      nested <code>&lt;read&gt;</code> and <code>&lt;write&gt;</code> tags
      to indicate strings to wait for and specify text to send.</p></td>
   </tr>
@@ -1042,7 +1052,7 @@ documentation.</p>
  in the same JVM can have through-the-firewall access to remote web sites.</p></td>
   </tr>
 
-  
+
 </table>
 
 <p></p>
@@ -1083,8 +1093,8 @@ documentation.</p>
 
   <tr valign="top">
     <td nowrap><a href="CoreTasks/cvstagdiff.html">CvsTagDiff</a></td>
-    <td><p>Generates an XML-formatted report file of the changes between 
-    two tags or dates recorded in a <a href="http://www.cvshome.org/" 
+    <td><p>Generates an XML-formatted report file of the changes between
+    two tags or dates recorded in a <a href="http://www.cvshome.org/"
     target="_top">CVS</a> repository.</p></td>
   </tr>
 
@@ -1135,7 +1145,7 @@ documentation.</p>
     <td><p>Tasks to perform the StarTeam <i>stcheckout</i>, <i>stcheckin</i>,
      <i>stlabel</i>, and <i>stlist</i> commands. The
      <a href="OptionalTasks/starteam.html#starteam">Starteam</a> task
-     is deprecated; use 
+     is deprecated; use
      <a href="OptionalTasks/starteam.html#stcheckout">STCheckout</a>
      instead.</p></td>
   </tr>
