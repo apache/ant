@@ -169,17 +169,6 @@ public class Project {
     /** Name of the project's default target. */
     private String defaultTarget;
 
-    /** Map from data type names to implementing classes (String to Class). */
-    private Hashtable dataClassDefinitions = new AntTaskTable(this, false);
-    /** Map from task names to implementing classes (String to Class). */
-    private Hashtable taskClassDefinitions = new AntTaskTable(this, true);
-    /**
-     * Map from task names to vectors of created tasks
-     * (String to Vector of Task). This is used to invalidate tasks if
-     * the task definition changes.
-     */
-    private Hashtable createdTasks = new Hashtable();
-
     /** Map from target names to targets (String to Target). */
     private Hashtable targets = new Hashtable();
     /** Set of global filters. */
@@ -289,41 +278,8 @@ public class Project {
     public void init() throws BuildException {
         setJavaVersionProperty();
 
-        String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
-
-        try {
-            Properties props = new Properties();
-            InputStream in = this.getClass().getResourceAsStream(defs);
-            if (in == null) {
-                throw new BuildException("Can't load default task list");
-            }
-            props.load(in);
-            in.close();
-            ((AntTaskTable) taskClassDefinitions).addDefinitions(props);
-
-
-        } catch (IOException ioe) {
-            throw new BuildException("Can't load default task list");
-        }
-
-        String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
-
-        try {
-            Properties props = new Properties();
-            InputStream in = this.getClass().getResourceAsStream(dataDefs);
-            if (in == null) {
-                throw new BuildException("Can't load default datatype list");
-            }
-            props.load(in);
-            in.close();
-
-            ((AntTaskTable) dataClassDefinitions).addDefinitions(props);
-
-
-        } catch (IOException ioe) {
-            throw new BuildException("Can't load default datatype list");
-        }
-
+        ComponentHelper.getComponentHelper(this).initDefaultDefinitions();
+       
         setSystemProperties();
     }
 
@@ -886,41 +842,8 @@ public class Project {
      */
     public void addTaskDefinition(String taskName, Class taskClass)
          throws BuildException {
-        Class old = (Class) taskClassDefinitions.get(taskName);
-        if (null != old) {
-            if (old.equals(taskClass)) {
-                log("Ignoring override for task " + taskName
-                    + ", it is already defined by the same class.",
-                    MSG_VERBOSE);
-                return;
-            } else {
-                int logLevel = MSG_WARN;
-                if (old.getName().equals(taskClass.getName())) {
-                    ClassLoader oldLoader = old.getClassLoader();
-                    ClassLoader newLoader = taskClass.getClassLoader();
-                    // system classloader on older JDKs can be null
-                    if (oldLoader != null
-                        && newLoader != null
-                        && oldLoader instanceof AntClassLoader
-                        && newLoader instanceof AntClassLoader
-                        && ((AntClassLoader) oldLoader).getClasspath()
-                        .equals(((AntClassLoader) newLoader).getClasspath())) {
-                        // same classname loaded from the same
-                        // classpath components
-                        logLevel = MSG_VERBOSE;
-                    }
-                }
-
-                log("Trying to override old definition of task " + taskName,
-                    logLevel);
-                invalidateCreatedTasks(taskName);
-            }
-        }
-
-        String msg = " +User task: " + taskName + "     " + taskClass.getName();
-        log(msg, MSG_DEBUG);
-        checkTaskClass(taskClass);
-        taskClassDefinitions.put(taskName, taskClass);
+        ComponentHelper.getComponentHelper(this).addTaskDefinition(taskName,
+                taskClass);
     }
 
     /**
@@ -936,6 +859,8 @@ public class Project {
      *                           this exception is thrown.
      */
     public void checkTaskClass(final Class taskClass) throws BuildException {
+        ComponentHelper.getComponentHelper(this).checkTaskClass(taskClass);
+
         if (!Modifier.isPublic(taskClass.getModifiers())) {
             final String message = taskClass + " is not public";
             log(message, Project.MSG_ERR);
@@ -969,7 +894,7 @@ public class Project {
      *         (String to Class).
      */
     public Hashtable getTaskDefinitions() {
-        return taskClassDefinitions;
+        return ComponentHelper.getComponentHelper(this).getTaskDefinitions();
     }
 
     /**
@@ -986,24 +911,8 @@ public class Project {
      *                  Must not be <code>null</code>.
      */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
-        synchronized (dataClassDefinitions) {
-            Class old = (Class) dataClassDefinitions.get(typeName);
-            if (null != old) {
-                if (old.equals(typeClass)) {
-                    log("Ignoring override for datatype " + typeName
-                        + ", it is already defined by the same class.",
-                        MSG_VERBOSE);
-                    return;
-                } else {
-                    log("Trying to override old definition of datatype "
-                        + typeName, MSG_WARN);
-                }
-            }
-            dataClassDefinitions.put(typeName, typeClass);
-        }
-        String msg = " +User datatype: " + typeName + "     "
-            + typeClass.getName();
-        log(msg, MSG_DEBUG);
+        ComponentHelper.getComponentHelper(this).addDataTypeDefinition(typeName,
+                typeClass);
     }
 
     /**
@@ -1014,7 +923,7 @@ public class Project {
      *         (String to Class).
      */
     public Hashtable getDataTypeDefinitions() {
-        return dataClassDefinitions;
+        return ComponentHelper.getComponentHelper(this).getDataTypeDefinitions();
     }
 
     /**
@@ -1105,108 +1014,7 @@ public class Project {
      *                           creation fails.
      */
     public Task createTask(String taskType) throws BuildException {
-        Task task = createNewTask(taskType);
-        if (task != null) {
-            addCreatedTask(taskType, task);
-        }
-        return task;
-    }
-
-    /**
-     * Creates a new instance of a task. This task is not
-     * cached in the createdTasks list.
-     * @since ant1.6
-     * @param taskType The name of the task to create an instance of.
-     *                 Must not be <code>null</code>.
-     *
-     * @return an instance of the specified task, or <code>null</code> if
-     *         the task name is not recognised.
-     *
-     * @exception BuildException if the task name is recognised but task
-     *                           creation fails.
-     */
-    private Task createNewTask(String taskType) throws BuildException {
-        Class c = (Class) taskClassDefinitions.get(taskType);
-
-        if (c == null) {
-            return null;
-        }
-
-        try {
-            Object o = c.newInstance();
-            setProjectReference( o );
-            Task task = null;
-            if (o instanceof Task) {
-               task = (Task) o;
-            } else {
-                // "Generic" Bean - use the setter pattern
-                // and an Adapter
-                TaskAdapter taskA = new TaskAdapter();
-                taskA.setProxy(o);
-                task = taskA;
-            }
-            task.setProject(this);
-            task.setTaskType(taskType);
-
-            // set default value, can be changed by the user
-            task.setTaskName(taskType);
-
-            String msg = "   +Task: " + taskType;
-            log (msg, MSG_DEBUG);
-            return task;
-        } catch (Throwable t) {
-            String msg = "Could not create task of type: "
-                 + taskType + " due to " + t;
-            throw new BuildException(msg, t);
-        }
-    }
-
-    /**
-     * Keeps a record of all tasks that have been created so that they
-     * can be invalidated if a new task definition overrides the current one.
-     *
-     * @param type The name of the type of task which has been created.
-     *             Must not be <code>null</code>.
-     *
-     * @param task The freshly created task instance.
-     *             Must not be <code>null</code>.
-     */
-    private void addCreatedTask(String type, Task task) {
-        synchronized (createdTasks) {
-            Vector v = (Vector) createdTasks.get(type);
-            if (v == null) {
-                v = new Vector();
-                createdTasks.put(type, v);
-            }
-            v.addElement(WeakishReference.createReference(task));
-        }
-    }
-
-    /**
-     * Mark tasks as invalid which no longer are of the correct type
-     * for a given taskname.
-     *
-     * @param type The name of the type of task to invalidate.
-     *             Must not be <code>null</code>.
-     */
-    private void invalidateCreatedTasks(String type) {
-        synchronized (createdTasks) {
-            Vector v = (Vector) createdTasks.get(type);
-            if (v != null) {
-                Enumeration enum = v.elements();
-                while (enum.hasMoreElements()) {
-                    WeakishReference ref =
-                            (WeakishReference) enum.nextElement();
-                    Task t = (Task) ref.get();
-                    //being a weak ref, it may be null by this point
-                    if (t != null) {
-                        t.markInvalid();
-                    }
-                }
-                v.removeAllElements();
-                createdTasks.remove(type);
-            }
-        }
+        return ComponentHelper.getComponentHelper(this).createTask( taskType );
     }
 
     /**
@@ -1222,45 +1030,7 @@ public class Project {
      *                           instance creation fails.
      */
     public Object createDataType(String typeName) throws BuildException {
-        Class c = (Class) dataClassDefinitions.get(typeName);
-
-        if (c == null) {
-            return null;
-        }
-
-        try {
-            java.lang.reflect.Constructor ctor = null;
-            boolean noArg = false;
-            // DataType can have a "no arg" constructor or take a single
-            // Project argument.
-            try {
-                ctor = c.getConstructor(new Class[0]);
-                noArg = true;
-            } catch (NoSuchMethodException nse) {
-                ctor = c.getConstructor(new Class[] {Project.class});
-                noArg = false;
-            }
-
-            Object o = null;
-            if (noArg) {
-                 o = ctor.newInstance(new Object[0]);
-            } else {
-                 o = ctor.newInstance(new Object[] {this});
-            }
-            setProjectReference( o );
-            String msg = "   +DataType: " + typeName;
-            log (msg, MSG_DEBUG);
-            return o;
-        } catch (java.lang.reflect.InvocationTargetException ite) {
-            Throwable t = ite.getTargetException();
-            String msg = "Could not create datatype of type: "
-                 + typeName + " due to " + t;
-            throw new BuildException(msg, t);
-        } catch (Throwable t) {
-            String msg = "Could not create datatype of type: "
-                 + typeName + " due to " + t;
-            throw new BuildException(msg, t);
-        }
+        return ComponentHelper.getComponentHelper(this).createDataType(typeName);
     }
 
     /**
@@ -1927,29 +1697,7 @@ public class Project {
      * @since 1.95, Ant 1.5
      */
     public String getElementName(Object element) {
-        Hashtable elements = taskClassDefinitions;
-        Class elementClass = element.getClass();
-        String typeName = "task";
-        if (!elements.contains(elementClass)) {
-            elements = dataClassDefinitions;
-            typeName = "data type";
-            if (!elements.contains(elementClass)) {
-                elements = null;
-            }
-        }
-
-        if (elements != null) {
-            Enumeration e = elements.keys();
-            while (e.hasMoreElements()) {
-                String name = (String) e.nextElement();
-                Class clazz = (Class) elements.get(name);
-                if (elementClass.equals(clazz)) {
-                    return "The <" + name + "> " + typeName;
-                }
-            }
-        }
-
-        return "Class " + elementClass.getName();
+        return ComponentHelper.getComponentHelper(this).getElementName(element);
     }
 
     /**
@@ -2177,7 +1925,7 @@ public class Project {
     // Should move to a separate public class - and have API to add
     // listeners, etc.
     private static class AntRefTable extends Hashtable {
-        private Project project;
+        Project project;
         public AntRefTable(Project project) {
             super();
             this.project = project;
@@ -2214,102 +1962,6 @@ public class Project {
                 o = ((UnknownElement) o).getTask();
             }
             return o;
-        }
-    }
-
-    private static class AntTaskTable extends LazyHashtable {
-        private Project project;
-        private Properties props;
-        private boolean tasks = false;
-
-        public AntTaskTable(Project p, boolean tasks) {
-            this.project = p;
-            this.tasks = tasks;
-        }
-
-        public void addDefinitions(Properties props) {
-            this.props = props;
-        }
-
-        protected void initAll() {
-            if (initAllDone) {
-                return;
-            }
-            project.log("InitAll", Project.MSG_DEBUG);
-            if (props == null) {
-                return;
-            }
-            Enumeration enum = props.propertyNames();
-            while (enum.hasMoreElements()) {
-                String key = (String) enum.nextElement();
-                Class taskClass = getTask(key);
-                if (taskClass != null) {
-                    // This will call a get() and a put()
-                    if (tasks) {
-                        project.addTaskDefinition(key, taskClass);
-                    } else {
-                        project.addDataTypeDefinition(key, taskClass);
-                    }
-                }
-            }
-            initAllDone = true;
-        }
-
-        protected Class getTask(String key) {
-            if (props == null) {
-                return null; // for tasks loaded before init()
-            }
-            String value = props.getProperty(key);
-            if (value == null) {
-                //project.log( "No class name for " + key, Project.MSG_VERBOSE);
-                return null;
-            }
-            try {
-                Class taskClass = null;
-                if (project.getCoreLoader() != null &&
-                    !("only".equals(project.getProperty("build.sysclasspath")))) {
-                    try {
-                        taskClass = project.getCoreLoader().loadClass(value);
-                        if (taskClass != null) {
-                            return taskClass;
-                        }
-                    } catch (Exception ex) {
-                        // ignore
-                    }
-                }
-                taskClass = Class.forName(value);
-                return taskClass;
-            } catch (NoClassDefFoundError ncdfe) {
-                project.log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for task "
-                        + key, Project.MSG_DEBUG);
-            } catch (ClassNotFoundException cnfe) {
-                project.log("Could not load class (" + value
-                        + ") for task " + key, Project.MSG_DEBUG);
-            }
-            return null;
-        }
-
-        // Hashtable implementation
-        public Object get(Object key) {
-            Object orig = super.get(key);
-            if (orig != null) {
-                return orig;
-            }
-            if (!(key instanceof String)) {
-                return null;
-            }
-
-            project.log("Get task " + key, Project.MSG_DEBUG);
-            Object taskClass = getTask((String) key);
-            if (taskClass != null) {
-                super.put(key, taskClass);
-            }
-            return taskClass;
-        }
-
-        public boolean containsKey(Object key) {
-            return get(key) != null;
         }
     }
 
