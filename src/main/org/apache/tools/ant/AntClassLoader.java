@@ -919,11 +919,11 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         if (isParentFirst(classname)) {
             try {
                 theClass = findBaseClass(classname);
-                log("Class " + classname + " loaded from parent loader",
+                log("Class " + classname + " loaded from parent loader ( parentFirst )",
                     Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 theClass = findClass(classname);
-                log("Class " + classname + " loaded from ant loader",
+                log("Class " + classname + " loaded from ant loader ( parentFirst )",
                     Project.MSG_DEBUG);
             }
         } else {
@@ -1061,6 +1061,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
                 try {
                     stream = getResourceStream(pathComponent, classFilename);
                     if (stream != null) {
+                        log("Loaded from " + pathComponent + " " + classFilename,
+                                Project.MSG_DEBUG );
                         return getClassFromStream(stream, name);
                     }
                 } catch (SecurityException se) {
