@@ -345,6 +345,8 @@ Other changes:
 * <patch> has a new attribute that selects the directory in which to
   run the command.
 
+* <javadoc> now supports two new nested elements, <fileset> and <packageset>.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 

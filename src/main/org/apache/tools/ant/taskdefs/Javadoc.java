@@ -67,11 +67,13 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
-import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.DirSet;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
@@ -84,7 +86,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <P><UL>
  *    <LI>patterns must be of the form "xxx.*", every other pattern doesn't
  *        work.
- *    <LI>the java comment-stripper reader is horribly slow
  *    <LI>there is no control on arguments sanity since they are left
  *        to the javadoc implementation.
  *    <LI>argument J in javadoc1 is not supported (what is that for anyway?)
@@ -281,7 +282,7 @@ public class Javadoc extends Task {
          * @param name the package name.
          */
         public void setName(String name) {
-            this.name = name;
+            this.name = name.trim();
         }
         
         /** 
@@ -308,6 +309,11 @@ public class Javadoc extends Task {
         /** The source file */
         private File file;
         
+        public SourceFile() {}
+        public SourceFile(File file) {
+            this.file = file;
+        }
+
         /**
          * Set the source file.
          *
@@ -375,14 +381,14 @@ public class Javadoc extends Task {
     private Commandline cmd = new Commandline();
     
     /** Flag which indicates if javadoc from JDK 1.1 is to be used. */
-    private static boolean javadoc1 =
-        (JavaEnvUtils.getJavaVersion() == JavaEnvUtils.JAVA_1_1);
+    private static boolean javadoc1 = 
+        JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
 
     /** Flag which indicates if javadoc from JDK 1.4 is available */
     private static boolean javadoc4 =
-        (JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_1 &&
-         JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_2 &&
-         JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_3);
+        (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1) &&
+         !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2) &&
+         !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3));
 
     /**
      * Utility method to add an argument to the command line conditionally
@@ -429,7 +435,8 @@ public class Javadoc extends Task {
     }
 
     /** 
-     * Flag which indicates if the task should fail if there is a javadoc error.
+     * Flag which indicates if the task should fail if there is a
+     * javadoc error.
      */
     private boolean failOnError = false;
     private Path sourcePath = null;
@@ -453,9 +460,11 @@ public class Javadoc extends Task {
     private Html footer = null;
     private Html bottom = null;
     private boolean useExternalFile = false;
-    private File tmpList = null;
     private FileUtils fileUtils = FileUtils.newFileUtils();
     private String source = null;
+
+    private Vector fileSets = new Vector();
+    private Vector packageSets = new Vector();
 
     /**
      * Work around command line length limit by using an external file
@@ -1098,7 +1107,9 @@ public class Javadoc extends Task {
         cmd.createArgument().setValue(enc);
     }
     public void setPackageList(String src) {
-        packageList = src;
+        if (!javadoc1) {
+            packageList = src;
+        }
     }
 
     public LinkArgument createLink() {
@@ -1389,22 +1400,62 @@ public class Javadoc extends Task {
         this.source = source;
     }
 
+    /**
+     * Adds a packageset.
+     *
+     * <p>All included directories will be translated into package
+     * names be converting the directory separator into dots.</p>
+     *
+     * @since 1.5
+     */
+    public void addPackageset(DirSet packageSet) {
+        packageSets.addElement(packageSet);
+    }
+
+    /**
+     * Adds a fileset.
+     *
+     * <p>All included files will be added as sourcefiles.  The task
+     * will automatically add
+     * <code>includes=&quot;**&#47;*.java&quot;</code> to the
+     * fileset.</p>
+     *
+     * @since 1.5
+     */
+    public void addFileset(FileSet fs) {
+        fs.createInclude().setName("**/*.java");
+        fileSets.addElement(fs);
+    }
+
     public void execute() throws BuildException {
         if ("javadoc2".equals(taskType)) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
         }
 
-        if (sourcePath == null) {
-            String msg = "sourcePath attribute must be set!";
+        Vector packagesToDoc = new Vector();
+        Path sourceDirs = new Path(getProject());
+        parsePackages(packagesToDoc, sourceDirs);
+
+        if (packagesToDoc.size() != 0 && sourceDirs.size() == 0) {
+            String msg = "sourcePath attribute must be set when "
+                + "specifying package names.";
             throw new BuildException(msg);
         }
 
+        Vector sourceFilesToDoc = (Vector) sourceFiles.clone();
+        addFileSets(sourceFilesToDoc);
+
+        if (packagesToDoc.size() == 0 && sourceFilesToDoc.size() == 0) {
+            throw new BuildException("No source files and no packages have "
+                                     + "been specified.");
+        }
+        
         log("Generating Javadoc", Project.MSG_INFO);
 
         Commandline toExecute = (Commandline) cmd.clone();
         toExecute.setExecutable(JavaEnvUtils.getJdkExecutable("javadoc"));
 
-// ------------------------------------------------ general javadoc arguments
+        // ------------------------------------------ general javadoc arguments
         if (doctitle != null) {
             toExecute.createArgument().setValue("-doctitle");
             toExecute.createArgument().setValue(expand(doctitle.getText()));
@@ -1431,14 +1482,14 @@ public class Javadoc extends Task {
         if (!javadoc1) {
             toExecute.createArgument().setValue("-classpath");
             toExecute.createArgument().setPath(classpath);
-            toExecute.createArgument().setValue("-sourcepath");
-            toExecute.createArgument().setPath(sourcePath);
+            if (sourceDirs.size() > 0) {
+                toExecute.createArgument().setValue("-sourcepath");
+                toExecute.createArgument().setPath(sourceDirs);
+            }
         } else {
+            sourceDirs.append(classpath);
             toExecute.createArgument().setValue("-classpath");
-            toExecute.createArgument()
-                .setValue(sourcePath.toString() 
-                          + System.getProperty("path.separator") 
-                          + classpath.toString());
+            toExecute.createArgument().setPath(sourceDirs);
         }
 
         if (version && doclet == null) {
@@ -1455,7 +1506,7 @@ public class Javadoc extends Task {
             }
         }
 
-// --------------------------------- javadoc2 arguments for default doclet
+        // ---------------------------- javadoc2 arguments for default doclet
 
         if (!javadoc1) {
             if (doclet != null) {
@@ -1616,71 +1667,53 @@ public class Javadoc extends Task {
 
         }
 
-        tmpList = null;
-        if (packageNames.size() > 0) {
-            Vector packages = new Vector();
-            Enumeration enum = packageNames.elements();
+        File tmpList = null;
+        PrintWriter srcListWriter = null;
+        try {
+
+            /**
+             * Write sourcefiles and package names to a temporary file
+             * if requested.
+             */
+            if (useExternalFile) {
+                if (tmpList == null) {
+                    tmpList = fileUtils.createTempFile("javadoc", "", null);
+                    toExecute.createArgument()
+                        .setValue("@" + tmpList.getAbsolutePath());
+                }
+                srcListWriter = new PrintWriter(
+                                    new FileWriter(tmpList.getAbsolutePath(),
+                                                   true));
+            }
+
+            Enumeration enum = packagesToDoc.elements();
             while (enum.hasMoreElements()) {
-                PackageName pn = (PackageName) enum.nextElement();
-                String name = pn.getName().trim();
-                if (name.endsWith(".*")) {
-                    packages.addElement(name);
-                } else {
-                    toExecute.createArgument().setValue(name);
-                }
-            }
-
-            Vector excludePackages = new Vector();
-            if (excludePackageNames.size() > 0) {
-                enum = excludePackageNames.elements();
-                while (enum.hasMoreElements()) {
-                    PackageName pn = (PackageName) enum.nextElement();
-                    excludePackages.addElement(pn.getName().trim());
-                }
-            }
-            if (packages.size() > 0) {
-                evaluatePackages(toExecute, sourcePath, packages, 
-                                 excludePackages);
-            }
-        }
-
-        if (sourceFiles.size() > 0) {
-            PrintWriter srcListWriter = null;
-            try {
-
-                /**
-                 * Write sourcefiles to a temporary file if requested.
-                 */
+                String packageName = (String) enum.nextElement();
                 if (useExternalFile) {
-                    if (tmpList == null) {
-                        tmpList = fileUtils.createTempFile("javadoc", "", null);
-                        toExecute.createArgument()
-                            .setValue("@" + tmpList.getAbsolutePath());
-                    }
-                    srcListWriter = new PrintWriter(
-                                        new FileWriter(tmpList
-                                                       .getAbsolutePath(),
-                                                       true));
+                    srcListWriter.println(packageName);
+                } else {
+                    toExecute.createArgument().setValue(packageName);
                 }
+            }
+            
+            enum = sourceFilesToDoc.elements();
+            while (enum.hasMoreElements()) {
+                SourceFile sf = (SourceFile) enum.nextElement();
+                String sourceFileName = sf.getFile().getAbsolutePath();
+                if (useExternalFile) {
+                    srcListWriter.println(sourceFileName);
+                } else {
+                    toExecute.createArgument().setValue(sourceFileName);
+                }
+            }
 
-                Enumeration enum = sourceFiles.elements();
-                while (enum.hasMoreElements()) {
-                    SourceFile sf = (SourceFile) enum.nextElement();
-                    String sourceFileName = sf.getFile().getAbsolutePath();
-                    if (useExternalFile) {
-                        srcListWriter.println(sourceFileName);
-                    } else {
-                        toExecute.createArgument().setValue(sourceFileName);
-                    }
-                }
-
-            } catch (IOException e) {
-                throw new BuildException("Error creating temporary file",
-                                         e, location);
-            } finally {
-                if (srcListWriter != null) {
-                    srcListWriter.close();
-                }
+        } catch (IOException e) {
+            tmpList.delete();
+            throw new BuildException("Error creating temporary file",
+                                     e, location);
+        } finally {
+            if (srcListWriter != null) {
+                srcListWriter.close();
             }
         }
 
@@ -1712,7 +1745,6 @@ public class Javadoc extends Task {
         } catch (IOException e) {
             throw new BuildException("Javadoc failed: " + e, e, location);
         } finally {
-
             if (tmpList != null) {
                 tmpList.delete();
                 tmpList = null;
@@ -1728,111 +1760,105 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Given a source path, a list of package patterns, fill the given list
-     * with the packages found in that path subdirs matching one of the given
-     * patterns.
+     * Add the files matched by the nested filesets to the Vector as
+     * SourceFile instances.
+     *
+     * @since 1.5
      */
-    private void evaluatePackages(Commandline toExecute, Path sourcePath,
-                                  Vector packages, Vector excludePackages) {
-        log("Source path = " + sourcePath.toString(), Project.MSG_VERBOSE);
-        StringBuffer msg = new StringBuffer("Packages = ");
-        for (int i = 0; i < packages.size(); i++) {
-            if (i > 0) {
-                msg.append(",");
+    private void addFileSets(Vector sf) {
+        Enumeration enum = fileSets.elements();
+        while (enum.hasMoreElements()) {
+            FileSet fs = (FileSet) enum.nextElement();
+            File baseDir = fs.getDir(getProject());
+            DirectoryScanner ds = fs.getDirectoryScanner(getProject());
+            String[] files = ds.getIncludedFiles();
+            for (int i = 0; i < files.length; i++) {
+                sf.addElement(new SourceFile(new File(baseDir, files[i])));
             }
-            msg.append(packages.elementAt(i));
         }
-        log(msg.toString(), Project.MSG_VERBOSE);
+    }
 
-        msg.setLength(0);
-        msg.append("Exclude Packages = ");
-        for (int i = 0; i < excludePackages.size(); i++) {
-            if (i > 0) {
-                msg.append(",");
-            }
-            msg.append(excludePackages.elementAt(i));
-        }
-        log(msg.toString(), Project.MSG_VERBOSE);
-
+    /**
+     * Add the directories matched by the nested dirsets to the Vector
+     * and the base directories of the dirsets to the Path.  It also
+     * handles the packages and excludepackages attributes and
+     * elements.
+     *
+     * @since 1.5
+     */
+    private void parsePackages(Vector pn, Path sp) {
         Vector addedPackages = new Vector();
+        Vector dirSets = (Vector) packageSets.clone();
 
-        String[] list = sourcePath.list();
-        if (list == null) {
-            list = new String[0];
+        // for each sourcePath entry, add a directoryset with includes
+        // taken from packagenames attribute and nested package
+        // elements and excludes taken from excludepackages attribute
+        // and nested excludepackage elements
+        if (sourcePath != null) {
+            PatternSet ps = new PatternSet();
+            Enumeration enum = packageNames.elements();
+            while (enum.hasMoreElements()) {
+                PackageName p = (PackageName) enum.nextElement();
+                String pkg = p.getName().replace('.', '/');
+                if (pkg.endsWith("*")) {
+                    pkg += "*";
+                }
+                ps.createInclude().setName(pkg);
+            }
+            
+            enum = excludePackageNames.elements();
+            while (enum.hasMoreElements()) {
+                PackageName p = (PackageName) enum.nextElement();
+                String pkg = p.getName().replace('.', '/');
+                if (pkg.endsWith("*")) {
+                    pkg += "*";
+                }
+                ps.createExclude().setName(pkg);
+            }
+            
+
+            String[] pathElements = sourcePath.list();
+            for (int i = 0; i < pathElements.length; i++) {
+                DirSet ds = new DirSet();
+                ds.setDefaultexcludes(useDefaultExcludes);
+                ds.setDir(new File(pathElements[i]));
+                ds.createPatternSet().addConfiguredPatternset(ps);
+                dirSets.addElement(ds);
+            }
         }
 
-        FileSet fs = new FileSet();
-        fs.setDefaultexcludes(useDefaultExcludes);
-
-        Enumeration e = packages.elements();
-        while (e.hasMoreElements()) {
-            String pkg = (String) e.nextElement();
-            pkg = pkg.replace('.', '/');
-            if (pkg.endsWith("*")) {
-                pkg += "*";
-            }
-
-            fs.createInclude().setName(pkg);
-        } // while
-
-        e = excludePackages.elements();
-        while (e.hasMoreElements()) {
-            String pkg = (String) e.nextElement();
-            pkg = pkg.replace('.', '/');
-            if (pkg.endsWith("*")) {
-                pkg += "*";
-            }
-
-            fs.createExclude().setName(pkg);
-        }
-
-        PrintWriter packageListWriter = null;
-        try {
-            if (useExternalFile) {
-                tmpList = fileUtils.createTempFile("javadoc", "", null);
-                toExecute.createArgument()
-                    .setValue("@" + tmpList.getAbsolutePath());
-                packageListWriter = new PrintWriter(new FileWriter(tmpList));
-            }
-
-            for (int j = 0; j < list.length; j++) {
-                File source = project.resolveFile(list[j]);
-                fs.setDir(source);
-
-                DirectoryScanner ds = fs.getDirectoryScanner(project);
-                String[] packageDirs = ds.getIncludedDirectories();
-
-                for (int i = 0; i < packageDirs.length; i++) {
-                    File pd = new File(source, packageDirs[i]);
-                    String[] files = pd.list(new FilenameFilter () {
-                            public boolean accept(File dir1, String name) {
-                                if (name.endsWith(".java")) {
-                                    return true;
-                                }
-                                return false;        // ignore dirs
+        Enumeration enum = dirSets.elements();
+        while (enum.hasMoreElements()) {
+            DirSet ds = (DirSet) enum.nextElement();
+            File baseDir = ds.getDir(getProject());
+            log("scanning " + baseDir + " for packages.", Project.MSG_DEBUG); 
+            DirectoryScanner dsc = ds.getDirectoryScanner(getProject());
+            String[] dirs = dsc.getIncludedDirectories();
+            boolean containsPackages = false;
+            for (int i = 0; i < dirs.length; i++) {
+                // are there any java files in this directory?
+                File pd = new File(baseDir, dirs[i]);
+                String[] files = pd.list(new FilenameFilter () {
+                        public boolean accept(File dir1, String name) {
+                            if (name.endsWith(".java")) {
+                                return true;
                             }
-                        });
-
-                    if (files.length > 0) {
-                        String pkgDir = 
-                            packageDirs[i].replace('/', '.').replace('\\', '.');
-                        if (!addedPackages.contains(pkgDir)) {
-                            if (useExternalFile) {
-                                packageListWriter.println(pkgDir);
-                            } else {
-                                toExecute.createArgument().setValue(pkgDir);
-                            }
-                            addedPackages.addElement(pkgDir);
+                            return false;        // ignore dirs
                         }
+                    });
+
+                if (files.length > 0) {
+                    containsPackages = true;
+                    String packageName = 
+                        dirs[i].replace(File.separatorChar, '.');
+                    if (!addedPackages.contains(packageName)) {
+                        addedPackages.addElement(packageName);
+                        pn.addElement(packageName);
                     }
                 }
             }
-        } catch (IOException ioex) {
-            throw new BuildException("Error creating temporary file",
-                                     ioex, location);
-        } finally {
-            if (packageListWriter != null) {
-                packageListWriter.close();
+            if (containsPackages) {
+                sp.createPathElement().setLocation(baseDir);
             }
         }
     }

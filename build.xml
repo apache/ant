@@ -1042,15 +1042,16 @@
           unless="javadoc.notrequired"
           description="--> creates the API documentation">
     <mkdir dir="${build.javadocs}"/>
-    <javadoc packagenames="org.apache.*"
-             useexternalfile="yes"
-             sourcepath="${java.dir}"
+    <javadoc useexternalfile="yes"
              destdir="${build.javadocs}"
              author="true"
              version="true"
              locale="en"
              windowtitle="${Name} API"
              doctitle="${Name}">
+
+      <packageset dir="${java.dir}" />
+
       <tag name="todo" description="To do:" scope="all" />
       <tag name="ant.task" enabled="false" description="Task:" scope="types" />
       <tag name="ant.datatype" enabled="false" description="Data type:" scope="types" />

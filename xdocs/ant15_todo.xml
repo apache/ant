@@ -72,13 +72,6 @@
             <td>Steve + any other help he can get</td>
           </tr>
           
-          <tr>
-            <td>Make javadoc a real directory based task</td>
-            <td></td>
-            <td>Stefan, others welcome</td>
-          </tr>
-          
-
 <!-- for cut and paste use
           <tr>
             <td></td>
@@ -133,6 +126,11 @@
           </tr>
           <tr>
             <td>&lt;input&gt;</td>
+            <td></td>
+            <td>Stefan</td>
+          </tr>
+          <tr>
+            <td>Make javadoc a real directory based task</td>
             <td></td>
             <td>Stefan</td>
           </tr>

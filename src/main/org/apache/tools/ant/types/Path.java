@@ -356,7 +356,7 @@ public class Path extends DataType implements Cloneable {
 
         // empty path return empty string
         if (list.length == 0) {
-          return "";
+            return "";
         }
 
         // path containing one or more elements
