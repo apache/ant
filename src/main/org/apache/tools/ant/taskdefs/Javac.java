@@ -574,19 +574,8 @@ public class Javac extends MatchingTask {
      * Executes the task.
      */
     public void execute() throws BuildException {
-        // first off, make sure that we've got a srcdir
-
-        if (src == null) {
-            throw new BuildException("srcdir attribute must be set!", location);
-        }
-        String [] list = src.list();
-        if (list.length == 0) {
-            throw new BuildException("srcdir attribute must be set!", location);
-        }
-
-        if (destDir != null && !destDir.isDirectory()) {
-            throw new BuildException("destination directory \"" + destDir + "\" does not exist or is not a directory", location);
-        }
+        checkParameters();
+        String[] list = src.list();
 
         // scan source directories and dest directory to build up
         // compile lists
@@ -594,42 +583,18 @@ public class Javac extends MatchingTask {
         for (int i=0; i<list.length; i++) {
             File srcDir = project.resolveFile(list[i]);
             if (!srcDir.exists()) {
-                throw new BuildException("srcdir \"" + srcDir.getPath() + "\" does not exist!", location);
+                throw new BuildException("srcdir \"" 
+                                         + srcDir.getPath() 
+                                         + "\" does not exist!", location);
             }
 
             DirectoryScanner ds = this.getDirectoryScanner(srcDir);
-
             String[] files = ds.getIncludedFiles();
 
             scanDir(srcDir, destDir != null ? destDir : srcDir, files);
         }
 
-        // compile the source files
-
-        String compiler = determineCompiler();
-
-        if (compileList.length > 0) {
-
-            CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
-              compiler, this );
-            log("Compiling " + compileList.length +
-                " source file"
-                + (compileList.length == 1 ? "" : "s")
-                + (destDir != null ? " to " + destDir : ""));
-
-            // now we need to populate the compiler adapter
-            adapter.setJavac( this );
-
-            // finally, lets execute the compiler!!
-            if (!adapter.execute()) {
-                if (failOnError) {
-                    throw new BuildException(FAIL_MSG, location);
-                }
-                else {
-                    log(FAIL_MSG, Project.MSG_ERR);
-                }
-            }
-        }
+        compile();
     }
 
     /**
@@ -734,6 +699,61 @@ public class Javac extends MatchingTask {
             }
         }
         return compiler;
+    }
+
+    /**
+     * Check that all required attributes have been set and nothing
+     * silly has been entered.
+     *
+     * @since 1.82, Ant 1.5
+     */
+    protected void checkParameters() throws BuildException {
+        if (src == null) {
+            throw new BuildException("srcdir attribute must be set!", 
+                                     location);
+        }
+        if (src.size() == 0) {
+            throw new BuildException("srcdir attribute must be set!", 
+                                     location);
+        }
+
+        if (destDir != null && !destDir.isDirectory()) {
+            throw new BuildException("destination directory \"" 
+                                     + destDir 
+                                     + "\" does not exist "
+                                     + "or is not a directory", location);
+        }
+    }
+
+    /**
+     * Perform the compilation.
+     *
+     * @since 1.82, Ant 1.5
+     */
+    protected void compile() {
+        String compiler = determineCompiler();
+
+        if (compileList.length > 0) {
+            log("Compiling " + compileList.length +
+                " source file"
+                + (compileList.length == 1 ? "" : "s")
+                + (destDir != null ? " to " + destDir : ""));
+
+            CompilerAdapter adapter = 
+                CompilerAdapterFactory.getCompiler(compiler, this);
+
+            // now we need to populate the compiler adapter
+            adapter.setJavac(this);
+
+            // finally, lets execute the compiler!!
+            if (!adapter.execute()) {
+                if (failOnError) {
+                    throw new BuildException(FAIL_MSG, location);
+                } else {
+                    log(FAIL_MSG, Project.MSG_ERR);
+                }
+            }
+        }
     }
 
     /**
