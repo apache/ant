@@ -9,6 +9,18 @@
   </properties>
 
 <body>
+  <section name="Ant 1.5.3 Beta 1">
+    <h3>March 25, 2003 - Ant 1.5.3 Beta 1 Available</h3>
+    <p>Apache Ant 1.5.3 Beta 1 is now available for 
+     <a href="http://ant.apache.org/beta/">download</a>. 
+     Please download it and try it out. If you have any issues
+     please raise a bug on 
+     <a href="http://issues.apache.org/bugzilla/enter_bug.cgi?product=Ant">BugZilla</a>
+     or send an email to the Ant dev mailing list
+     </p>
+  </section>
+
+
   <section name="Ant 1.5.2">
     <h3>March 3, 2003 - Ant 1.5.2 Available!</h3>
     <p>The final version of Ant 1.5.2 is now available for 
