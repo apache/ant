@@ -30,9 +30,9 @@ import java.util.Vector;
 
 /**
  * A representation of a Java command line that is
- * a composite of 2 <tt>Commandline</tt>. One is used for the
+ * a composite of 2 <tt>Commandline</tt>s. One is used for the
  * vm/options and one for the classname/arguments. It provides
- * specific methods for a java command line.
+ * specific methods for a Java command line.
  *
  */
 public class CommandlineJava implements Cloneable {
@@ -71,17 +71,17 @@ public class CommandlineJava implements Cloneable {
     private boolean cloneVm = false;
 
     /**
-     * Specialized Environment class for System properties
+     * Specialized Environment class for System properties.
      */
     public static class SysProperties extends Environment implements Cloneable {
         Properties sys = null;
         private Vector propertySets = new Vector();
 
         /**
-         * get the properties as an array; this is an override of the
-         * superclass, as it evaluates all the properties
-         * @return the array of definitions; may be null
-         * @throws BuildException on error
+         * Get the properties as an array; this is an override of the
+         * superclass, as it evaluates all the properties.
+         * @return the array of definitions; may be null.
+         * @throws BuildException on error.
          */
         public String[] getVariables() throws BuildException {
 
@@ -96,8 +96,8 @@ public class CommandlineJava implements Cloneable {
         }
 
         /**
-         * add all definitions (including property sets) to a list
-         * @param listIt list iterator supporting add method
+         * Add all definitions (including property sets) to a list.
+         * @param listIt list iterator supporting add method.
          */
         public void addDefinitionsToList(ListIterator listIt) {
             String[] props = super.getVariables();
@@ -116,9 +116,9 @@ public class CommandlineJava implements Cloneable {
         }
 
         /**
-         * This method gets the size of the sysproperties instance. This merges all
+         * Get the size of the sysproperties instance. This merges all
          * property sets, so is not an O(1) operation.
-         * @return the size of the sysproperties instance
+         * @return the size of the sysproperties instance.
          */
         public int size() {
             Properties p = mergePropertySets();
@@ -126,9 +126,9 @@ public class CommandlineJava implements Cloneable {
         }
 
         /**
-         * cache the system properties and set the system properties to the
-         * new values
-         * @throws BuildException if Security prevented this operation
+         * Cache the system properties and set the system properties to the
+         * new values.
+         * @throws BuildException if Security prevented this operation.
          */
         public void setSystem() throws BuildException {
             try {
@@ -150,9 +150,9 @@ public class CommandlineJava implements Cloneable {
         }
 
         /**
-         * restore the system properties to the cached value
+         * Restore the system properties to the cached value.
          * @throws BuildException  if Security prevented this operation, or
-         * there was no system properties to restore
+         * there were no system properties to restore.
          */
         public void restoreSystem() throws BuildException {
             if (sys == null) {
@@ -168,9 +168,9 @@ public class CommandlineJava implements Cloneable {
         }
 
         /**
-         *  deep clone
-         * @return a cloned instance of SysProperties
-         * @exception CloneNotSupportedException for signature
+         * Create a deep clone.
+         * @return a cloned instance of SysProperties.
+         * @exception CloneNotSupportedException for signature.
          */
         public Object clone() throws CloneNotSupportedException {
             try {
@@ -184,16 +184,16 @@ public class CommandlineJava implements Cloneable {
         }
 
         /**
-         * add a propertyset to the total set
-         * @param ps the new property set
+         * Add a propertyset to the total set.
+         * @param ps the new property set.
          */
         public void addSyspropertyset(PropertySet ps) {
             propertySets.addElement(ps);
         }
 
         /**
-         * add a propertyset to the total set
-         * @param ps the new property set
+         * Add a propertyset to the total set.
+         * @param ps the new property set.
          * @since Ant 1.6.3
          */
         public void addSysproperties(SysProperties ps) {
@@ -202,8 +202,8 @@ public class CommandlineJava implements Cloneable {
         }        
 
         /**
-         * merge all property sets into a single Properties object
-         * @return the merged object
+         * Merge all property sets into a single Properties object.
+         * @return the merged object.
          */
         private Properties mergePropertySets() {
             Properties p = new Properties();
@@ -218,7 +218,7 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * constructor uses the VM we are running on now.
+     * Constructor uses the VM we are running on now.
      */
     public CommandlineJava() {
         setVm(JavaEnvUtils.getJreExecutable("java"));
@@ -226,40 +226,40 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * create a new argument to the java program
-     * @return an argument to be configured
+     * Create a new argument to the java program.
+     * @return an argument to be configured.
      */
     public Commandline.Argument createArgument() {
         return javaCommand.createArgument();
     }
 
     /**
-     * create a new JVM argument
-     * @return an argument to be configured
+     * Create a new JVM argument.
+     * @return an argument to be configured.
      */
     public Commandline.Argument createVmArgument() {
         return vmCommand.createArgument();
     }
 
     /**
-     * add a system property
-     * @param sysp a property to be set in the JVM
+     * Add a system property.
+     * @param sysp a property to be set in the JVM.
      */
     public void addSysproperty(Environment.Variable sysp) {
         sysProperties.addVariable(sysp);
     }
 
     /**
-     * add a set of system properties
-     * @param sysp a set of properties
+     * Add a set of system properties.
+     * @param sysp a set of properties.
      */
     public void addSyspropertyset(PropertySet sysp) {
         sysProperties.addSyspropertyset(sysp);
     }
 
     /**
-     * add a set of system properties
-     * @param sysp a set of properties
+     * Add a set of system properties.
+     * @param sysp a set of properties.
      * @since Ant 1.6.3
      */
     public void addSysproperties(SysProperties sysp) {
@@ -268,7 +268,7 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Set the executable used to start the new JVM.
-     * @param vm the executable to use
+     * @param vm the executable to use.
      */
     public void setVm(String vm) {
         vmCommand.setExecutable(vm);
@@ -276,17 +276,17 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Set the JVM version required.
-     * @param value the version required
+     * @param value the version required.
      */
     public void setVmversion(String value) {
         vmVersion = value;
     }
 
     /**
-     * If set, system properties will be copied to the cloned VM - as
+     * Set whether system properties will be copied to the cloned VM--as
      * well as the bootclasspath unless you have explicitly specified
-     * a bootclaspath.
-     * @param cloneVm if true copy the system properties
+     * a bootclasspath.
+     * @param cloneVm if true copy the system properties.
      * @since Ant 1.7
      */
     public void setCloneVm(boolean cloneVm) {
@@ -294,24 +294,24 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * get the current assertions
-     * @return assertions or null
+     * Get the current assertions.
+     * @return assertions or null.
      */
     public Assertions getAssertions() {
         return assertions;
     }
 
     /**
-     *  add an assertion set to the command
-     * @param assertions assertions to make
+     * Add an assertion set to the command.
+     * @param assertions assertions to make.
      */
     public void setAssertions(Assertions assertions) {
         this.assertions = assertions;
     }
 
     /**
-     * set a jar file to execute via the -jar option.
-     * @param jarpathname the pathname of the jar to execute
+     * Set a jar file to execute via the -jar option.
+     * @param jarpathname the pathname of the jar to execute.
      */
     public void setJar(String jarpathname) {
         javaCommand.setExecutable(jarpathname);
@@ -319,6 +319,7 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
+     * Get the name of the jar to be run.
      * @return the pathname of the jar file to run via -jar option
      * or <tt>null</tt> if there is no jar to run.
      * @see #getClassname()
@@ -331,7 +332,7 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * set the classname to execute
+     * Set the classname to execute.
      * @param classname the fully qualified classname.
      */
     public void setClassname(String classname) {
@@ -340,6 +341,7 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
+     * Get the name of the class to be run.
      * @return the name of the class to run or <tt>null</tt> if there is no class.
      * @see #getJar()
      */
@@ -352,8 +354,8 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Create a classpath.
-     * @param p the project to use to create the path in
-     * @return a path to be configured
+     * @param p the project to use to create the path.
+     * @return a path to be configured.
      */
     public Path createClasspath(Project p) {
         if (classpath == null) {
@@ -364,8 +366,8 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Create a boot classpath.
-     * @param p the project to use to create the path in
-     * @return a path to be configured
+     * @param p the project to use to create the path.
+     * @return a path to be configured.
      * @since Ant 1.6
      */
     public Path createBootclasspath(Project p) {
@@ -377,14 +379,14 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Get the vm version.
-     * @return the vm version
+     * @return the vm version.
      */
     public String getVmversion() {
         return vmVersion;
     }
 
     /**
-     * get the command line to run a java vm.
+     * Get the command line to run a Java vm.
      * @return the list of all arguments necessary to run the vm.
      */
     public String[] getCommandline() {
@@ -398,9 +400,9 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * add all the commands to a list identified by the iterator passed in
-     * @param listIterator an iterator that supports the add method
-     * @since Ant1.6
+     * Add all the commands to a list identified by the iterator passed in.
+     * @param listIterator an iterator that supports the add method.
+     * @since Ant 1.6
      */
     private void addCommandsToList(final ListIterator listIterator) {
         //create the command to run Java, including user specified options
@@ -418,25 +420,21 @@ public class CommandlineJava implements Cloneable {
             clonedSysProperties.addSyspropertyset(ps);
             clonedSysProperties.addDefinitionsToList(listIterator);
         }
-
         //boot classpath
         Path bcp = calculateBootclasspath(true);
         if (bcp.size() > 0) {
             listIterator.add("-Xbootclasspath:" + bcp.toString());
         }
-
         //main classpath
         if (haveClasspath()) {
             listIterator.add("-classpath");
             listIterator.add(
                     classpath.concatSystemClasspath("ignore").toString());
         }
-
         //now any assertions are added
         if (getAssertions() != null) {
             getAssertions().applyAssertions(listIterator);
         }
-
         // JDK usage command line says that -jar must be the first option, as there is
         // a bug in JDK < 1.4 that forces the jvm type to be specified as the first
         // option, it is appended here as specified in the docs even though there is
@@ -450,28 +448,26 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * Specify max memory of the JVM
-     * -mx or -Xmx depending on VM version
-     * @param max the string to pass to the jvm to specifiy the max memory
+     * Specify max memory of the JVM.
+     * -mx or -Xmx depending on VM version.
+     * @param max the string to pass to the jvm to specifiy the max memory.
      */
     public void setMaxmemory(String max) {
         this.maxMemory = max;
     }
 
-
     /**
-     * get a string description.
-     * @return the command line as a string
+     * Get a string description.
+     * @return the command line as a string.
      */
     public String toString() {
         return Commandline.toString(getCommandline());
     }
 
     /**
-     * Returns a String that describes the command and arguments
-     * suitable for verbose output before a call to
-     * <code>Runtime.exec(String[])<code>
-     * @return the description string
+     * Return a String that describes the command and arguments suitable for
+     * verbose output before a call to <code>Runtime.exec(String[])<code>.
+     * @return the description string.
      * @since Ant 1.5
      */
     public String describeCommand() {
@@ -479,11 +475,11 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * Returns a String that describes the java command and arguments
-     * for in VM executions.
+     * Return a String that describes the java command and arguments
+     * for in-VM executions.
      *
      * <p>The class name is the executable in this context.</p>
-     * @return the description string
+     * @return the description string.
      * @since Ant 1.5
      */
     public String describeJavaCommand() {
@@ -491,8 +487,8 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * Get the VM command parameters, including memory settings
-     * @return the VM command parameters
+     * Get the VM command parameters, including memory settings.
+     * @return the VM command parameters.
      */
     protected Commandline getActualVMCommand() {
         Commandline actualVMCommand = (Commandline) vmCommand.clone();
@@ -507,11 +503,11 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * The size of the java command line. This is a fairly intensive
+     * Get the size of the java command line. This is a fairly intensive
      * operation, as it has to evaluate the size of many components.
      * @return the total number of arguments in the java command line.
      * @see #getCommandline()
-     * @deprecated please dont use this -it effectively creates the entire command.
+     * @deprecated please dont use this--it effectively creates the entire command.
      */
     public int size() {
         int size = getActualVMCommand().size() + javaCommand.size()
@@ -520,7 +516,6 @@ public class CommandlineJava implements Cloneable {
         if (isCloneVm()) {
             size += System.getProperties().size();
         }
-
         // classpath is "-classpath <classpath>" -> 2 args
         if (haveClasspath()) {
             size += 2;
@@ -541,8 +536,8 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * get the Java command to be used.
-     * @return the java command -not a clone.
+     * Get the Java command to be used.
+     * @return the java command--not a clone.
      */
     public Commandline getJavaCommand() {
         return javaCommand;
@@ -550,38 +545,39 @@ public class CommandlineJava implements Cloneable {
 
     /**
      * Get the VM command, including memory.
-     * @return A deep clone of the instance's VM command, with memory settings added
+     * @return A deep clone of the instance's VM command, with memory settings added.
      */
     public Commandline getVmCommand() {
         return getActualVMCommand();
     }
 
     /**
-     * get the classpath for the command
-     * @return the classpath or null
+     * Get the classpath for the command.
+     * @return the classpath or null.
      */
     public Path getClasspath() {
         return classpath;
     }
 
     /**
-     * get the boot classpath
-     * @return boot classpath or null
+     * Get the boot classpath.
+     * @return boot classpath or null.
      */
     public Path getBootclasspath() {
         return bootclasspath;
     }
 
     /**
-     * cache current system properties and set them to those in this
-     * java command
-     * @throws BuildException  if Security prevented this operation
+     * Cache current system properties and set them to those in this
+     * Java command.
+     * @throws BuildException  if Security prevented this operation.
      */
     public void setSystemProperties() throws BuildException {
         sysProperties.setSystem();
     }
 
     /**
+     * Restore the cached system properties.
      * @throws BuildException  if Security prevented this operation, or
      * there was no system properties to restore
      */
@@ -590,18 +586,18 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * get the system properties object
-     * @return The system properties object
+     * Get the system properties object.
+     * @return The system properties object.
      */
     public SysProperties getSystemProperties() {
         return sysProperties;
     }
 
     /**
-     * clone the object; clone of all fields in the class
-     * @return a CommandlineJava object
+     * Deep clone the object.
+     * @return a CommandlineJava object.
      * @throws BuildException if anything went wrong.
-     * @throws CloneNotSupportedException never
+     * @throws CloneNotSupportedException never.
      */
     public Object clone() throws CloneNotSupportedException {
         try {
@@ -632,9 +628,9 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * Has the classpath been specified and shall it really be used or
-     * will build.sysclasspath null it?
-     * @return true if the classpath is to be used
+     * Determine whether the classpath has been specified, and whether it shall
+     * really be used or be nulled by build.sysclasspath.
+     * @return true if the classpath is to be used.
      * @since Ant 1.6
      */
     protected boolean haveClasspath() {
@@ -645,13 +641,13 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * Has the bootclasspath been specified and shall it really be
-     * used (build.sysclasspath could be set or the VM may not support
-     * it)?
+     * Determine whether the bootclasspath has been specified, and whether it
+     * shall really be used (build.sysclasspath could be set or the VM may not
+     * support it).
      *
      * @param log whether to log a warning if a bootclasspath has been
      * specified but will be ignored.
-     * @return true if the bootclasspath is to be used
+     * @return true if the bootclasspath is to be used.
      * @since Ant 1.6
      */
     protected boolean haveBootclasspath(boolean log) {
@@ -662,7 +658,7 @@ public class CommandlineJava implements Cloneable {
      * Calculate the bootclasspath based on the bootclasspath
      * specified, the build.sysclasspath and ant.build.clonevm magic
      * properties as well as the cloneVm attribute.
-     *
+     * @param log whether to write messages to the log.
      * @since Ant 1.7
      */
     private Path calculateBootclasspath(boolean log) {
@@ -684,9 +680,9 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * Has the cloneVm attribute or the magic property
-     * ant.build.clonevm been set?
-     *
+     * Find out whether either of the cloneVm attribute or the magic property
+     * ant.build.clonevm has been set.
+     * @return <code>boolean</code>.
      * @since 1.7
      */
     private boolean isCloneVm() {
