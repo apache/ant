@@ -537,8 +537,15 @@ public class Project {
         fileName = fileName.replace('/', File.separatorChar).replace('\\', File.separatorChar);
 
         // deal with absolute files
-        if (fileName.startsWith(File.separator)) 
-            return new File( fileName );
+        if (fileName.startsWith(File.separator)) {
+            try {
+                return new File(new File(fileName).getCanonicalPath());
+            } catch (IOException e) {
+                log("IOException getting canonical path for " + fileName 
+                    + ": " + e.getMessage(), MSG_ERR);
+                return new File(fileName);
+            }
+        }
 
         // Eliminate consecutive slashes after the drive spec
         if (fileName.length() >= 2 &&
