@@ -627,7 +627,7 @@ public class ProjectHelper2 extends ProjectHelper {
             // XXX Move to Project ( so it is shared by all helpers )
             String antFileProp="ant.file." + context.currentProjectName;
             String dup=project.getProperty(antFileProp);
-            if( dup!=null ) {
+            if( dup!=null && ! dup.equals(context.buildFile)) {
                 project.log("Duplicated project name in import. Project "+
                         context.currentProjectName + " defined first in " +
                         dup + " and again in " + context.buildFile,
