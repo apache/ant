@@ -543,8 +543,6 @@ public class ExecutionFrame {
                 task = new TaskAdapter(taskType, element);
             }
             
-            ExecutionContext context = new ExecutionContext(this, eventSupport, model);
-            task.setTaskContext(context);
             configureElement(element, model);
 
             return task;
@@ -611,10 +609,21 @@ public class ExecutionFrame {
      */   
     private void configureElement(Object element, TaskElement model) 
         throws ExecutionException, ConfigException {
-
+        
+        if (element instanceof Task) {
+            Task task = (Task)element;
+            ExecutionContext context = new ExecutionContext(this, eventSupport, model);
+            task.setTaskContext(context);
+        }
         try {
             ClassIntrospector introspector = getIntrospector(element.getClass());
                 
+            List aspects = getActiveAspects(model);
+            for (Iterator i = aspects.iterator(); i.hasNext(); ) {
+                AspectHandler aspectHandler = (AspectHandler)i.next();
+                aspectHandler.beforeConfigElement(element);
+            }
+            
             // start by setting the attributes of this element
             for (Iterator i = model.getAttributeNames(); i.hasNext();) {
                 String attributeName = (String)i.next();
@@ -644,7 +653,6 @@ public class ExecutionFrame {
                     configureElement(nestedElement, nestedElementModel);
                 }                    
             }
-            List aspects = getActiveAspects(model);
             for (Iterator i = aspects.iterator(); i.hasNext(); ) {
                 AspectHandler aspectHandler = (AspectHandler)i.next();
                 aspectHandler.afterConfigElement(element);

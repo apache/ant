@@ -69,6 +69,7 @@ import java.net.URL;
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
 public class PatternSet extends DataType {
+    private boolean filesRead = false;
     private List includeList = new ArrayList();
     private List excludeList = new ArrayList();
     
@@ -113,10 +114,6 @@ public class PatternSet extends DataType {
 //            }
 //            return true;
 //        }
-    }
-
-
-    public PatternSet() {
     }
 
     /**
@@ -203,7 +200,7 @@ public class PatternSet extends DataType {
      *
      * @param incl The file to fetch the include patterns from.  
      */
-     public void setIncludesfile(URL includeFile) throws ExecutionException {
+     public void setIncludesFile(URL includeFile) throws ExecutionException {
          if (isReference()) {
              throw tooManyAttributes();
          }
@@ -220,7 +217,7 @@ public class PatternSet extends DataType {
      *
      * @param excludeFile The file to fetch the exclude patterns from.  
      */
-     public void setExcludesfile(URL excludeFile) throws ExecutionException {
+     public void setExcludesFile(URL excludeFile) throws ExecutionException {
          if (isReference()) {
              throw tooManyAttributes();
          }
@@ -316,14 +313,14 @@ public class PatternSet extends DataType {
         }
     }
 
-//    /**
-//     * helper for FileSet.
-//     */
-//    boolean hasPatterns() {
-//        return incl != null || excl != null
-//            || includeList.size() > 0 || excludeList.size() > 0;
-//    }
-//
+    /**
+     * helper for FileSet.
+     */
+    boolean hasPatterns() {
+        return includeFile != null || excludeFile != null
+            || includeList.size() > 0 || excludeList.size() > 0;
+    }
+
     /**
      * Performs the check for circular references and returns the
      * referenced PatternSet.  
@@ -363,14 +360,14 @@ public class PatternSet extends DataType {
      * Read includefile ot excludefile if not already done so.
      */
     private void readFiles() throws ExecutionException {
-        if (includeFile != null) {
-            readPatterns(includeFile, includeList);
-            includeFile = null;
-        }
-        if (excludeFile != null) {
-            readPatterns(excludeFile, excludeList);
-            excludeFile = null;
+        if (!filesRead) {
+            filesRead = true;
+            if (includeFile != null) {
+                readPatterns(includeFile, includeList);
+            }
+            if (excludeFile != null) {
+                readPatterns(excludeFile, excludeList);
+            }
         }
     }
-
 }

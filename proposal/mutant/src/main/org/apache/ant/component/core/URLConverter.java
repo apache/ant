@@ -79,8 +79,15 @@ public class URLConverter implements AntConverter {
             return url;
         }
         catch (MalformedURLException e) {
-            throw new ConversionException("Unable to convert " + value 
-                                          + " into a URL relative to the project's base");
+            //try a local file
+            try {
+                File file = new File(value);
+                return file.toURL();
+            }
+            catch (MalformedURLException e2) {
+                throw new ConversionException("Unable to convert " + value 
+                                              + " into a URL relative to the project's base");
+            }                                              
         }
     }
 }

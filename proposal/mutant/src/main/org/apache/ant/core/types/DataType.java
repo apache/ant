@@ -67,6 +67,10 @@ public abstract class DataType extends AbstractTask {
     private Object referencedObject = null;
 
     public void execute() throws ExecutionException {
+        validate();
+    }
+
+    protected void validate() throws ExecutionException {
     }
 
     /**

@@ -175,9 +175,6 @@ public class Property extends AbstractTask {
                 if (file.exists()) {
                     stream = new FileInputStream(file);
                 } 
-                else {
-                    throw new ExecutionException("Unable to find " + file.getAbsolutePath());
-                }
             }
             else {
                 stream = url.openStream();
@@ -192,8 +189,8 @@ public class Property extends AbstractTask {
                     stream.close();
                 }
             }
-        } catch (Exception ex) {
-            throw new ExecutionException("Unable to load property file: " + url, ex);
+        } catch (IOException e) {
+            throw new ExecutionException("Unable to load property file: " + url, e);
         }
     }
 

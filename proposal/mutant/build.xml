@@ -12,7 +12,8 @@
     <target name="compile">
         <mkdir dir="${build.classes}"/>
         <depend srcdir="${src.dir}"
-                destdir="${build.classes}"/>
+                destdir="${build.classes}" closure="yes" 
+                cache="${build.dir}/depcache"/>
         <javac srcdir="${src.dir}"
                destdir="${build.classes}"
                deprecation="true"

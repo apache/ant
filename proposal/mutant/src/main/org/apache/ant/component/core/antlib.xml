@@ -5,6 +5,7 @@
    
    <!-- Data Types -->
    <taskdef name="patternset" classname="org.apache.ant.core.types.PatternSet"/>
+   <taskdef name="fileset" classname="org.apache.ant.core.types.FileSet"/>
    
    <!-- Converters -->
    <converter target="java.io.File" classname="org.apache.ant.component.core.FileConverter"/>

@@ -52,36 +52,64 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.ant.component.core;
+package org.apache.ant.core.types;
 
-import java.io.File;
-import java.net.*;
+import java.io.*;
+import java.net.URL;
 import org.apache.ant.core.execution.*;
 
 /**
- * Convert between a string and a data type
+ * The FileSetInfo interface defines the result of applying filtering to
+ * some base collection of files. Filtering involves both file exclusion 
+ * and file name mapping.
  *
- * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
+ * FileSetInfo should be lazily evaluated to allow them to be defined before the
+ * required files have been created. They should be evaluated at first use.
  */
-public class FileConverter implements AntConverter {
-    private ExecutionFrame frame;
-    
-    public void init(ExecutionFrame frame) {
-        this.frame = frame;
-    }
-    
-    public Object convert(String value, Class type) throws ConversionException {
-        // The string represents a value
-        // get the frame's URL
-        try {
-            URL url = new URL(frame.getBaseURL(), value);
-            if (url.getProtocol().equals("file")) {
-                return new File(url.getFile());
-            }
-        }
-        catch (MalformedURLException e) {
-            // ignore and return as a file.
-        }
-        return new File(value);
-    }
+public interface FileSetScanner {
+    /**
+     * Get the included files after their file names have been mapped
+     *
+     * @return an array of strings, each one is the mapped name of a file.
+     */
+    String[] getIncludedFiles() throws ExecutionException ;
+//    
+//    /**
+//     * Get directories included after their file names have been mapped
+//     *
+//     * @return an array of strings, each one is the mapped name of a file.
+//     */
+//    String[] getIncludedDirectories();
+//
+//    /**
+//     * Get a file for the content of the named included file. If the content
+//     * is not stored in the local filesystem, a temporary file is created with the content. 
+//     * Callers should not rely on this file representing the actual location of the underlying
+//     * data.
+//     */
+//    File getContentFile(String mappedName);
+//    
+//    /**
+//     * Get a URL for the content. The content may be cached on the local system and thus
+//     * callers should not rely on the location
+//     *
+//     */
+//    URL getContentURL(String mappedName);
+//    
+//    /**
+//     * Get an input stream to the content of the named entry of the fileset.
+//     */
+//    InputStream getInputStream(String mappedName);
+//    
+    /**
+     * Get a local file.
+     *
+     * This method returns a file pointing to the actual local filesystem file from 
+     * which the file content comes. If the file does not exist locally, a null is 
+     * returned. Note that due to name mapping, the actual file name may be different
+     * from the mapped name.
+     *
+     * @return a file representing the mapped file in the local filesystem.
+     */
+    File getLocalFile(String mappedName) throws ExecutionException ;
 }

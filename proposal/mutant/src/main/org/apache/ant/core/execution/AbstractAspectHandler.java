@@ -74,6 +74,9 @@ public abstract class AbstractAspectHandler implements AspectHandler {
         return aspectContext;
     }
     
+    public void beforeConfigElement(Object element) throws ExecutionException  {
+}
+
     public void afterConfigElement(Object element) throws ExecutionException  {
     }
 }

@@ -69,6 +69,7 @@ public interface AspectHandler {
    
     void setAspectContext(ExecutionContext context);
     
+    void beforeConfigElement(Object element) throws ExecutionException ;
     void afterConfigElement(Object element) throws ExecutionException ;
 }
 
