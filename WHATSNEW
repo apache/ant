@@ -17,7 +17,11 @@ Fixed bugs:
 * ant -diagnostics was not working properly when the task dependency
   was missing and was just printing the missing dependency.
 
-* Appendix E of Java Development with Ant (Loughran/Hatcher) was contributed to the docs.
+Other changes:
+--------------
+
+* Appendix E of Java Development with Ant (Loughran/Hatcher) was
+  contributed to the docs.
 
 Changes from Ant 1.5beta3 to Ant 1.5
 ====================================
