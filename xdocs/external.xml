@@ -159,6 +159,37 @@
         </table>
       </subsection>
 
+      <subsection name="CVSGrab">
+
+        <p>A little CVS client that can be useful when people are
+        behind corporate firewall that blocks any cvs
+        communications. It uses the ViewCVS web interface to access
+        the CVS repository via standard http, and downloads all the
+        files present in it.</p>
+
+        <p>It works from the command line or as an Ant task.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.3 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://cvsgrab.sourceforge.net/">http://cvsgrab.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:cvsgrab-users@lists.sourceforge.net">CVSGrab
+            user mailing list</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>LGPL</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Doxygen task">
         <p>Ant task for running the Doxygen documentation system.</p>
 
