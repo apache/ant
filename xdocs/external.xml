@@ -684,6 +684,32 @@
         </table>
       </subsection>
 
+      <subsection name="Rant">
+
+        <p>Rant stands for Remote Ant. It is a distributed build
+        system that allows an Ant build file to launch builds on other
+        systems and receive exceptions should they occur.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/remoteant/">http://sourceforge.net/projects/remoteant/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:cnelson@einnovation.com">Chris Nelson</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>MIT License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="XML Publication">
 
         <p>XML Publication is a set of tools to generate Web pages
