@@ -149,7 +149,7 @@
         </a>
       </td>
       <td style="text-align:right;vertical-align:bottom">
-        <a href="htp://jakarta.apache.org/ant">Jakarta Ant</a>
+        <a href="http://jakarta.apache.org/ant">Apache Ant</a>
       </td>
     </tr>
     </table>
