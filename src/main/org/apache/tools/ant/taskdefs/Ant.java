@@ -166,40 +166,11 @@ public class Ant extends Task {
      * <p>This can happen if the same instance of this task is run
      * twice as newProject is set to null at the end of execute (to
      * save memory and help the GC).</p>
+     * <p>calls init() again</p>
      *
-     * <p>Sets all properties that have been defined as nested
-     * property elements.</p>
      */
     private void reinit() {
         init();
-        final int count = properties.size();
-        for (int i = 0; i < count; i++) {
-            Property p = (Property) properties.elementAt(i);
-            Property newP = (Property) newProject.createTask("property");
-            newP.setName(p.getName());
-            if (p.getValue() != null) {
-                newP.setValue(p.getValue());
-            }
-            if (p.getFile() != null) {
-                newP.setFile(p.getFile());
-            }
-            if (p.getResource() != null) {
-                newP.setResource(p.getResource());
-            }
-            if (p.getPrefix() != null) {
-                newP.setPrefix(p.getPrefix());
-            }
-            if (p.getRefid() != null) {
-                newP.setRefid(p.getRefid());
-            }
-            if (p.getEnvironment() != null) {
-                newP.setEnvironment(p.getEnvironment());
-            }
-            if (p.getClasspath() != null) {
-                newP.setClasspath(p.getClasspath());
-            }
-            properties.setElementAt(newP, i);
-        }
     }
 
     /**
