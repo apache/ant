@@ -8,7 +8,6 @@
 <body>
 
 <h2><a name="maudit">MAudit</a></h2>
-<p>by</p>
 <ul>
   <li>Stephane Bailliez (<a href="mailto:sbailliez@imediation.com">sbailliez@imediation.com</a>)</li>
 </ul>
@@ -102,7 +101,7 @@ package names deduced from the file path will be incorrect.
     &lt;/classpath&gt;
     &lt;sourcepath&gt;
       &lt;pathelement location=&quot;c:/metamata/examples/auditexamples&quot;/&gt;
-    &lt;/classpath&gt;
+    &lt;/sourcepath&gt;
     &lt;fileset dir=&quot;c:/metamata/examples/auditexamples&quot;&gt;
         &lt;include name=&quot;*.java&quot;/&gt;
     &lt;fileset&gt;
@@ -112,20 +111,14 @@ package names deduced from the file path will be incorrect.
 and fix automatically the fixable errors.
 </p>
 <h3>Generating a report</h3>
-As a convenience, there is an XSL file(maudit-frames.xsl) that allows you to generate a full framed HTML report of the metrics.
-You can find it in the <i>etc</i> directory of Ant. As it uses the Xalan extensions, you will need
-BSF, Xalan and Xerces to run it. The stylesheet takes an <i>output.dir</i> parameter (otherwise it will be generated
+As a convenience, there is an XSL file(mmetrics-frames.xsl) that allows you to generate a full framed HTML report of the metrics.
+You can find it in the <i>etc</i> directory of Ant. As it uses the Xalan redirect extensions, you will need Xalan and Xerces to run it.
+The stylesheet takes an <i>output.dir</i> parameter (otherwise it will be generated
 in the current directory), it can be run in Ant as follows:
 <pre>
-&lt;java classname=&quot;org.apache.xalan.xslt.Process&quot;&gt;
-    &lt;param value=&quot;-IN&quot;/&gt;
-    &lt;param value=&quot;${metrics.xml}&quot;/&gt;
-    &lt;param value=&quot;-XSL&quot;/&gt;
-    &lt;param value=&quot;maudit-frames.xsl&quot;/&gt;
-    &lt;param value=&quot;-PARAM&quot;/&gt;
-    &lt;param value=&quot;output.dir&quot;/&gt;
-    &lt;param value=&quot;&amp;quot;'${report.dir}'&amp;quot;&quot;/&gt;
-&lt;/java&gt;
+&lt;style in=java &quot;${audit.xml}&quot; style=&quot;maudit-frames.xsl&quot; out="null.tmp"&gt;
+    &lt;param name=&quot;output.dir&quot; expression=&quot;${report.dir}quot;/&gt;
+&lt;/style&gt;
 </pre>
 
 <hr>
