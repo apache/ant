@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant.util.regexp;
 
+import java.io.*;
 import java.util.Vector;
 
 import junit.framework.Test;
@@ -67,14 +68,19 @@ import junit.framework.TestSuite;
  */
 public abstract class RegexpMatcherTest extends TestCase {
 
+    private RegexpMatcher reg;
+
     public abstract RegexpMatcher getImplementation();
 
     public RegexpMatcherTest(String name) {
         super(name);
     }
 
+    public void setUp() {
+        reg = getImplementation();
+    }
+
     public void testMatches() {
-        RegexpMatcher reg = getImplementation();
         reg.setPattern("aaaa");
         assertTrue("aaaa should match itself", reg.matches("aaaa"));
         assertTrue("aaaa should match xaaaa", reg.matches("xaaaa"));
@@ -101,7 +107,6 @@ public abstract class RegexpMatcherTest extends TestCase {
     }
 
     public void testGroups() {
-        RegexpMatcher reg = getImplementation();
         reg.setPattern("aaaa");
         Vector v = reg.getGroups("xaaaa");
         assertEquals("No parens -> no extra groups", 1, v.size());
@@ -123,4 +128,64 @@ public abstract class RegexpMatcherTest extends TestCase {
         assertEquals("aa", (String) v.elementAt(1));
         assertEquals("b", (String) v.elementAt(2));
     }
+
+    public void testCaseInsensitiveMatch() {
+        reg.setPattern("aaaa");
+        assertTrue("aaaa doesn't match AAaa", !reg.matches("AAaa"));
+        assertTrue("aaaa matches AAaa ignoring case", 
+                   reg.matches("AAaa", RegexpMatcher.MATCH_CASE_INSENSITIVE));
+    }
+
+    public void testMultiVersusSingleLine() throws IOException {
+        StringWriter swr = new StringWriter();
+        PrintWriter p = new PrintWriter(swr);
+        p.println("Line1");
+        p.println("starttest Line2");
+        p.println("Line3 endtest");
+        p.println("Line4");
+        p.close();
+        String text = swr.toString();
+        
+        doStartTest1(text);
+        doStartTest2(text);
+        doEndTest1(text);
+        doEndTest2(text);
+    }
+
+    protected void doStartTest1(String text) {
+        reg.setPattern("^starttest");
+        assert("^starttest in default mode", !reg.matches(text));
+        assert("^starttest in single line mode", 
+               !reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
+        assert("^starttest in multi line mode", 
+               reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
+    }
+
+    protected void doStartTest2(String text) {
+        reg.setPattern("^Line1");
+        assert("^Line1 in default mode", reg.matches(text));
+        assert("^Line1 in single line mode", 
+               reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
+        assert("^Line1 in multi line mode", 
+               reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
+    }
+
+    protected void doEndTest1(String text) {
+        reg.setPattern("endtest$");
+        assert("endtest$ in default mode", !reg.matches(text));
+        assert("endtest$ in single line mode", 
+               !reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
+        assert("endtest$ in multi line mode", 
+               reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
+    }
+
+    protected void doEndTest2(String text) {
+        reg.setPattern("Line4$");
+        assert("Line4$ in default mode", reg.matches(text));
+        assert("Line4$ in single line mode", 
+               reg.matches(text, RegexpMatcher.MATCH_SINGLELINE));
+        assert("Line4$ in multi line mode", 
+               reg.matches(text, RegexpMatcher.MATCH_MULTILINE));
+    }
+
 }
