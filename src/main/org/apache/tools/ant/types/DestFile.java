@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import org.apache.tools.ant.BuildException;
 
 /**
  * This wrapper class is used to represent Destination Files.
@@ -63,6 +64,21 @@ import java.io.File;
  */
 public final class DestFile extends ValidatedFileAttribute {
 
+
+    /** 
+     * empty constructor
+     */
+    public DestFile() {}
+    
+    
+     /** 
+     * file constructor; performs validation 
+     * @param file the file to use
+     */
+    public DestFile(File file) throws BuildException {
+        setFile(file);    
+    }
+    
     private String message;
 
     protected final String getMessage() {
@@ -84,5 +100,30 @@ public final class DestFile extends ValidatedFileAttribute {
             return false;
         }
         return true;
+    }
+    
+    /**
+     * test for the dest file being newer than the file passed in.
+     * returns true iff the dest exists and is the same age or newer
+     * @pre getFile()!=null && dependent!=null
+     * @param dependent file we are dependent on
+     * @return true iff we are up to date
+     */
+    public boolean isUpToDate(File dependent) {
+      if(!getFile().exists())
+          return false;
+      return getFile().lastModified() >= dependent.lastModified();    
+    }
+    
+    /**
+     * test for the dest file being newer than the SrcFile passed in.
+     * returns true iff the dest exists and is the same age or newer
+     * @pre getFile()!=null  
+     * @pre dependent!=null && depedent.getFile!=null;
+     * @param dependent file we are dependent on
+     * @return true iff we are up to date
+     */
+     public boolean isUpToDate(SrcFile dependent) {
+        return isUpToDate(dependent.getFile());
     }
 }

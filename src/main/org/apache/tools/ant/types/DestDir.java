@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,6 +55,7 @@
 package org.apache.tools.ant.types;
 
 import java.io.File;
+import org.apache.tools.ant.BuildException;
 
 /**
  * This wrapper class is used to represent Destination Directories.
@@ -63,6 +64,20 @@ import java.io.File;
  */
 public final class DestDir extends ValidatedFileAttribute {
 
+    /** 
+     * empty constructor
+     */
+    public DestDir() {}
+    
+    
+     /** 
+     * file constructor; performs validation 
+     * @param file the file to use
+     */
+    public DestDir(File file) throws BuildException {
+        setFile(file);    
+    }
+    
     private String message = null;
 
     protected final String getMessage() {
