@@ -74,7 +74,7 @@ public class Available extends Task implements Condition {
 
     private String property;
     private String classname;
-    private File file;
+    private String file;
     private Path filepath;
     private String resource;
     private String type;
@@ -122,7 +122,7 @@ public class Available extends Task implements Condition {
         }
     }
 
-    public void setFile(File file) {
+    public void setFile(String file) {
         this.file = file;
     }
 
@@ -144,7 +144,7 @@ public class Available extends Task implements Condition {
         }
     }
         
-    public boolean  eval() throws BuildException {
+    public boolean eval() throws BuildException {
         if (classname == null && file == null && resource == null) {
             throw new BuildException("At least one of (classname|file|resource) is required", location);
         }
@@ -170,9 +170,9 @@ public class Available extends Task implements Condition {
         
         if ((file != null) && !checkFile()) {
             if (type != null) {
-                log("Unable to find " + type + " " + file.getName() + " to set property " + property, Project.MSG_VERBOSE);
+                log("Unable to find " + type + " " + file + " to set property " + property, Project.MSG_VERBOSE);
             } else {
-                log("Unable to find " + file.getName() + " to set property " + property, Project.MSG_VERBOSE);
+                log("Unable to find " + file + " to set property " + property, Project.MSG_VERBOSE);
             }
             return false;
         }
@@ -196,30 +196,73 @@ public class Available extends Task implements Condition {
             String[] paths = filepath.list();
             for(int i = 0; i < paths.length; ++i) {
                 log("Searching " + paths[i], Project.MSG_DEBUG);
-                File filename = new File(paths[i]);
+                /* 
+                ** filepath can be a list of directory and/or
+                ** file names (gen'd via <fileset>)
+                **
+                ** look for:
+                **   full-pathname specified == path in list
+                **   full-pathname specified == parent dir of path in list
+                **   simple name specified   == path in list
+                **   simple name specified   == path in list + name
+                **   simple name specified   == parent dir + name
+                **   simple name specified   == parent of parent dir + name
+                **
+                */
+                File path = new File(paths[i]);
+                String dirname = path.getParent();
                 if (type != null) {
                     if (type.equalsIgnoreCase("dir")) {
-                        String dir = filename.getParent();
-                        if(dir != null) {
-                            int index = dir.lastIndexOf(File.separator);
-                            String dirname = dir.substring(index + 1);
-                            if(dirname.equals(file.getName())) {
-                                log("Found directory: " + dir, Project.MSG_VERBOSE);
+                        if (path.isFile()) {
+                            // full-pathname specified
+                            if (dirname.equals(path.toString())) {
+                                log("Found directory: " + path, Project.MSG_VERBOSE);
+                                return true;
+                            // simple name specified
+                            } else if(new File(dirname, file).isDirectory()) {
+                                log("Found directory: " + dirname + File.separator + file, Project.MSG_VERBOSE);
                                 return true;
                             }
+                        // full-pathname specified
+                        } else if (path.toString().equals(new File(file).toString()) && path.isDirectory()) {
+                                log("Found directory: " + path, Project.MSG_VERBOSE);
+                                return true;
+                        // simple name specified
+                        } else if (new File(path, file).isDirectory()) {
+                                log("Found directory: " + path + File.separator + file, Project.MSG_VERBOSE);
+                                return true;
                         }
-                    } else if (type.equalsIgnoreCase("file")) {
-                        if(filename.isFile()) {
-                            if(filename.getName().equals(file.getName())) {
-                                log("Found file: " + filename, Project.MSG_VERBOSE);
+                    /* end check for type dir */
+                    } else {
+                        if (path.toString().equals(new File(file).toString()) && path.isFile()) {
+                                log("Found file: " + path, Project.MSG_VERBOSE);
                                 return true;
-                            }
+                        } else if (new File(path, file).isFile()) {
+                            log("Found file: " + path + File.separator + file, Project.MSG_VERBOSE);
+                            return true;
+                        } else if (new File(dirname, file).isFile()) {
+                            log("Found file: " + dirname + File.separator + file, Project.MSG_VERBOSE);
+                            return true;
                         }
                     }
-                } else if(filename.isFile()) {
-                    if(filename.getName().equals(file.getName())) {
-                        log("Found file: " + filename, Project.MSG_VERBOSE);
+                /* end check for specified type */
+                } else {
+                    if (path.toString().equals(new File(file).toString())) {
+                        log("Found: " + path, Project.MSG_VERBOSE);
                         return true;
+                    } else if (new File(path, file).exists()) {
+                        log("Found: " + path + File.separator + file, Project.MSG_VERBOSE);
+                        return true;
+                    } else if (new File(dirname, file).exists()) {
+                        log("Found: " + dirname + File.separator + file, Project.MSG_VERBOSE);
+                        return true;
+                    } else {
+                        File dir = new File(dirname);
+                        dirname = dir.getParent();
+                        if (new File(dirname, file).exists()) {
+                            log("Found: " + dirname + File.separator + file, Project.MSG_VERBOSE);
+                            return true;
+                        }
                     }
                 }
             }
@@ -227,18 +270,25 @@ public class Available extends Task implements Condition {
         return false;
     }
 
-    private boolean checkFile(File file) {
+    private boolean checkFile(String file) {
+        File filename = new File(file);
         if (type != null) {
             if (type.equalsIgnoreCase("dir")) {
-                log("Found directory: " + file, Project.MSG_VERBOSE);
-                return file.isDirectory();
+                if( filename.isDirectory()) {
+                    log("Found directory: " + file, Project.MSG_VERBOSE);
+                }
+                return filename.isDirectory();
             } else if (type.equalsIgnoreCase("file")) {
-                log("Found file: " + file, Project.MSG_VERBOSE);
-                return file.isFile();
+                if( filename.isFile()) {
+                    log("Found file: " + file, Project.MSG_VERBOSE);
+                }
+                return filename.isFile();
             }
         }
-        log("Found: " + file, Project.MSG_VERBOSE);
-        return file.exists();
+        if (filename.exists()) {
+            log("Found: " + file, Project.MSG_VERBOSE);
+        }
+        return filename.exists();
     }
 
     private boolean checkResource(String resource) {
