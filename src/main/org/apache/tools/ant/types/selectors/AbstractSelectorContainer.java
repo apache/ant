@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,11 +17,9 @@
 
 package org.apache.tools.ant.types.selectors;
 
-import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.DataType;
 import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;

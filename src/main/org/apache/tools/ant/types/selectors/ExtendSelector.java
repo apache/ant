@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -177,8 +177,11 @@ public class ExtendSelector extends BaseSelector {
      * since we know we must have them all by now. And since we must know
      * both classpath and classname, creating the class is deferred to here
      * as well.
-     *
-     * @exception BuildException if an error occurs
+     * @param basedir The the base directory.
+     * @param filename The name of the file to check.
+     * @param file A File object for this filename.
+     * @return whether the file should be selected or not.
+     * @exception BuildException if an error occurs.
      */
     public boolean isSelected(File basedir, String filename, File file)
             throws BuildException {
