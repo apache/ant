@@ -44,16 +44,17 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class ComponentTestBase extends TestCase
+public abstract class AbstractComponentTest
+    extends TestCase
 {
     private DefaultComponentManager m_componentManager;
     private Logger m_logger;
 
     private final static String PATTERN = "[%8.8{category}] %{message}\\n%{throwable}";
 
-    public ComponentTestBase( String s )
+    public AbstractComponentTest( final String name )
     {
-        super( s );
+        super( name );
     }
 
     /**
@@ -75,7 +76,8 @@ public class ComponentTestBase extends TestCase
     /**
      * Setup the test case - prepares the set of components.
      */
-    protected void setUp() throws Exception
+    protected void setUp()
+        throws Exception
     {
         // Setup a logger
         final Priority priority = Priority.DEBUG;
@@ -149,9 +151,9 @@ public class ComponentTestBase extends TestCase
      * TODO - should take the expected exception, rather than the message,
      * to check the entire cause chain.
      */
-    protected void assertSameMessage( final String msg, final Throwable exc )
+    protected void assertSameMessage( final String message, final Throwable throwable )
     {
-        assertEquals( msg, exc.getMessage() );
+        assertEquals( message, throwable.getMessage() );
     }
 
     /**

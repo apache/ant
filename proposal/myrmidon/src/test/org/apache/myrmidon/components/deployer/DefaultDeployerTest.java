@@ -7,7 +7,7 @@
  */
 package org.apache.myrmidon.components.deployer;
 
-import org.apache.myrmidon.components.ComponentTestBase;
+import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.framework.DataType;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.deployer.ConverterDefinition;
@@ -23,7 +23,7 @@ import org.apache.myrmidon.interfaces.type.TypeFactory;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
 public class DefaultDeployerTest
-    extends ComponentTestBase
+    extends AbstractComponentTest
 {
     private Deployer m_deployer;
 

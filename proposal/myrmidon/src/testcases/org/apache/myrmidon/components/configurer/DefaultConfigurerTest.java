@@ -14,7 +14,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.components.ComponentTestBase;
+import org.apache.myrmidon.components.AbstractComponentTest;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
@@ -25,7 +25,7 @@ import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
  * @author Adam Murdoch
  */
 public class DefaultConfigurerTest
-    extends ComponentTestBase
+    extends AbstractComponentTest
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultConfigurerTest.class );
