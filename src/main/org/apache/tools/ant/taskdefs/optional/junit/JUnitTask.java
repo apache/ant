@@ -834,9 +834,8 @@ public class JUnitTask extends Task {
         try {
             log("Using System properties " + System.getProperties(),
                 Project.MSG_VERBOSE);
-            Path userClasspath = commandline.getClasspath();
-            if (userClasspath != null) {
-                cl = createClassLoader();
+            cl = createClassLoader();
+            if (cl != null) {
                 cl.setThreadContextLoader();
             }
             runner = new JUnitTestRunner(test, test.getHaltonerror(),
