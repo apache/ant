@@ -6,21 +6,29 @@
   <target name="init">
     <mkdir dir="${dir.a}" />
     <mkdir dir="${dir.b}" />
-    <concat destfile="${dir.a}/foo">foo</concat>
-    <concat destfile="${dir.b}/bar">bar</concat>
+    <property name="foo" location="${dir.a}/foo" />
+    <property name="bar" location="${dir.b}/bar" />
+    <echo file="${foo}" message="foo" />
+    <echo file="${bar}" message="bar" />
   </target>
 
   <target name="testEach" depends="init">
     <length mode="each" property="length.each">
       <fileset id="fs" dir="${dir}" />
     </length>
-    <pathconvert property="expected" refid="fs" pathsep="${line.separator}">
-      <globmapper from="*" to="* : 3" />
-    </pathconvert>
+    <length string="${length.each}" property="length.length.each" />
+    <length string="${foo}${bar}........${line.separator}"
+            property="length.expected" />
     <fail>
+      <!-- test that both files are represented, and that the
+           output is the expected length; do not assume order. -->
       <condition>
         <not>
-          <equals arg1="${expected}" arg2="${length.each}" />
+          <and>
+            <contains string="${length.each}" substring="${foo} : 3" />
+            <contains string="${length.each}" substring="${bar} : 3" />
+            <equals arg1="${length.length.each}" arg2="${length.expected}" />
+          </and>
         </not>
       </condition>
     </fail>
