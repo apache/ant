@@ -31,7 +31,7 @@ public abstract class AbstractTypeDef
     extends AbstractTask
     implements Composable
 {
-    private String              m_lib;
+    private File                m_lib;
     private String              m_name;
     private String              m_className;
     private TypeManager         m_typeManager;
@@ -44,7 +44,7 @@ public abstract class AbstractTypeDef
         m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
     }
 
-    public void setLib( final String lib )
+    public void setLib( final File lib )
     {
         //In the future this would be replaced by ClassPath sub-element
         m_lib = lib;
@@ -92,8 +92,7 @@ public abstract class AbstractTypeDef
         //TODO: Make this support classpath sub-element in future
         try
         {
-            final File file = getContext().resolveFile( m_lib );
-            final URL url = file.getCanonicalFile().toURL();
+            final URL url = m_lib.toURL();
             final ClassLoader classLoader =
                 Thread.currentThread().getContextClassLoader();
 

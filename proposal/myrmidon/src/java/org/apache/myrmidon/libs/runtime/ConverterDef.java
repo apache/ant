@@ -31,7 +31,7 @@ public class ConverterDef
 {
     private String              m_sourceType;
     private String              m_destinationType;
-    private String              m_lib;
+    private File                m_lib;
     private String              m_classname;
     private ConverterRegistry   m_converterRegistry;
     private TypeManager         m_typeManager;
@@ -43,7 +43,7 @@ public class ConverterDef
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
     }
 
-    public void setLib( final String lib )
+    public void setLib( final File lib )
     {
         m_lib = lib;
     }
@@ -83,13 +83,11 @@ public class ConverterDef
             throw new TaskException( "Must specify the lib parameter" );
         }
 
-        final File file = getContext().resolveFile( m_lib );
-
         try
         {
             m_converterRegistry.registerConverter( m_classname, m_sourceType, m_destinationType );
 
-            final URL url = file.toURL();
+            final URL url = m_lib.toURL();
             final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
             factory.addNameClassMapping( m_classname, m_classname );
 
