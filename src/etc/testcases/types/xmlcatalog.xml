@@ -1,0 +1,134 @@
+<?xml version='1.0'?>
+<!DOCTYPE project>
+
+<project name="xmlcatalog" default="all" basedir=".">
+
+  <description>
+    This is to test XMLCatalog for external entity resolution from the
+    xslt task, both the simple case and using the document() function
+    to refer to a second file (which refers to the entity). This
+    buildfile is called by
+    org.apache.tools.ant.types.XMLCatalogBuildFileTest.java
+    Alternatively, you may try it out by hand by first removing the
+    comment symbols around the echo statements and then calling 
+    ant -buildfile xmlcatalog.xml
+  </description>
+
+  <property name="transformer" value = "xmlcatalog.xsl"/>
+
+  <target 
+    name    = "all" 
+    depends = "testentitynocatalog, testentitywithcatalog, 
+    testdocumentnocatalog, testdocumentwithcatalog"/>
+
+  <target 
+    name        = "testentitynocatalog"
+    description = "Test external entity resolver for simple XML
+document without using XMLCatalog">
+    <delete
+      quiet = "yes"
+      file  = "result.out"/>
+    <xslt
+      basedir   = "${basedir}"
+      destdir   = "${basedir}"
+      extension = ".text"
+      style     = "${transformer}"
+      in        = "xmlcatalog1.xml"
+      out       = "result.out">
+      <param
+        name       = "outprop"
+        expression = "val1"/>
+    </xslt>
+    <property file = "result.out"/>
+    <!-- <echo message = "${val1}"/> -->
+    <delete
+      quiet = "yes"
+      file  = "result.out"/>
+  </target>
+
+  <target 
+    name        = "testentitywithcatalog"
+    description = "Test external entity resolver for simple
+XML document using XMLCatalog">
+    <delete
+      quiet = "yes"
+      file  = "result.out"/>
+    <xslt
+      basedir   = "${basedir}"
+      destdir   = "${basedir}"
+      extension = ".text"
+      style     = "${transformer}"
+      in        = "xmlcatalog1.xml"
+      out       = "result.out">
+      <param
+        name       = "outprop"
+        expression = "val2"/>
+      <xmlcatalog>
+        <entity 
+          publicId = "myquote"
+          location = "quote2.xml"/>
+      </xmlcatalog>
+    </xslt>
+    <property file = "result.out"/>
+    <!-- <echo message = "${val2}"/> -->
+    <delete
+      quiet = "yes"
+      file  = "result.out"/>
+  </target>
+
+  <target 
+    name        = "testdocumentnocatalog"
+    description = "Test entity resolution in XML document called
+from XSLT document() function without using XMLCatalog">
+    <delete
+      quiet = "yes"
+      file  = "result.out"/>
+    <xslt
+      basedir   = "${basedir}"
+      destdir   = "${basedir}"
+      extension = ".text"
+      style     = "${transformer}"
+      in        = "xmlcatalog2.xml"
+      out       = "result.out">
+      <param
+        name       = "outprop"
+        expression = "val3"/>
+    </xslt>
+    <property file = "result.out"/>
+    <!-- <echo message = "${val3}"/> -->
+    <delete
+      quiet = "yes"
+      file  = "result.out"/>
+  </target>
+
+  <target 
+    name        = "testdocumentwithcatalog" 
+    description = "Test entity resolution in XML document called
+from XSLT document() function using XMLCatalog">
+    <delete
+      quiet = "yes"
+      file  = "result.out"/>
+    <xslt
+      basedir   = "${basedir}"
+      destdir   = "${basedir}"
+      extension = ".text"
+      style     = "${transformer}"
+      in        = "xmlcatalog2.xml"
+      out       = "result.out">
+      <param
+        name       = "outprop"
+        expression = "val4"/>
+      <xmlcatalog>
+        <entity 
+          publicId = "myquote"
+          location = "quote2.xml"/>
+      </xmlcatalog>
+    </xslt>
+    <property file = "result.out"/>
+    <!-- <echo message = "${val4}"/> -->
+    <delete
+      quiet = "yes"
+      file  = "result.out"/>
+  </target>
+
+</project>

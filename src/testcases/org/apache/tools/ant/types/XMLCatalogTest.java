@@ -74,6 +74,8 @@ import javax.xml.transform.TransformerException;
 /**
  * JUnit testcases for org.apache.tools.ant.types.XMLCatalog
  *
+ * @see org.apache.tools.ant.types.XMLCatalogBuildFileTest
+ *
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a> 
  * @version $Id$
  */
@@ -90,7 +92,7 @@ public class XMLCatalogTest extends TestCase {
     }
 
     private String toURLString(File file) throws MalformedURLException {
-		  return fileUtils.getFileURL(file).toString();
+        return fileUtils.getFileURL(file).toString();
     }
 
     public XMLCatalogTest(String name) {
@@ -122,14 +124,15 @@ public class XMLCatalogTest extends TestCase {
        try {
            InputSource result = catalog.resolveEntity("PUBLIC ID ONE", 
                                                       "i/dont/exist.dtd");
-           assertNull("Empty catalog should return null", result);
+           assertNull("Empty catalog should return null entity", result);
        } catch (Exception e) {
            fail("resolveEntity() failed!" + e.toString());
        }
 
        try {
            Source result = catalog.resolve("i/dont/exist.dtd", null);
-           assertNull("Empty catalog should return null", result);
+           assertEquals("Empty catalog should resolve to input uri", 
+                        "i/dont/exist.dtd", result.getSystemId());
        } catch (Exception e) {
            fail("resolve() failed!" + e.toString());
        }
@@ -151,7 +154,9 @@ public class XMLCatalogTest extends TestCase {
 
         try {
             Source result = catalog.resolve("i/dont/exist.dtd", null);
-            assertNull("Nonexistent Catalog entry should not be returned", result);
+            assertEquals("Catalog with non-existent entry should" +
+                         " give up and resolve to input uri", 
+                         "i/dont/exist.dtd", result.getSystemId());
         } catch (Exception e) {
             fail("resolve() failed!" + e.toString());
         }
