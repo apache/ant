@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,10 +56,13 @@ package org.apache.tools.ant.taskdefs.optional;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -153,6 +156,10 @@ public class ReplaceRegExp extends Task {
 
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
+    /**
+     * Encoding to assume for the files
+     */
+    private String encoding = null;
 
     /** Default Constructor  */
     public ReplaceRegExp() {
@@ -241,6 +248,16 @@ public class ReplaceRegExp extends Task {
 
 
     /**
+     * Specifies the encoding Ant expects the files to be in -
+     * defaults to the platforms default encoding.
+     *
+     * @since Ant 1.6
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+
+    /**
      * list files to apply the replacement to
      */
     public void addFileset(FileSet set) {
@@ -300,11 +317,15 @@ public class ReplaceRegExp extends Task {
         File parentDir = fileUtils.getParentFile(f);
         File temp = fileUtils.createTempFile("replace", ".txt", parentDir);
 
-        FileReader r = null;
+        Reader r = null;
         FileWriter w = null;
 
         try {
-            r = new FileReader(f);
+            if (encoding == null) {
+                r = new FileReader(f);
+            } else {
+                r = new InputStreamReader(new FileInputStream(f), encoding);
+            }
             w = new FileWriter(temp);
 
             BufferedReader br = new BufferedReader(r);

@@ -196,6 +196,10 @@ Other changes:
   You can put in it all the strings described by p4 help usage. Refer to 
   the docs for more information.
 
+* <replaceregexp> now has an optional encoding attribute to support
+  replacing in files that are in a different encoding than the
+  platform's default.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
