@@ -22,4 +22,16 @@
     </cvs>
     <cvs failonerror="true" command="status ${file}"/>
   </target>
+
+  <target name="package-attribute">
+    <mkdir dir="tmpdir" />
+    <cvs cvsroot=":pserver:anoncvs@cvs.apache.org:/home/cvspublic"
+         package="jakarta-ant/build.xml"
+         dest="tmpdir"
+         quiet="true" />
+  </target>
+
+  <target name="cleanup">
+    <delete dir="tmpdir" />
+  </target>
 </project>

@@ -53,10 +53,13 @@
  */
 package org.apache.tools.ant.taskdefs;
  
+import java.io.File;
+
 import org.apache.tools.ant.BuildFileTest;
 
 /**
  * @author stephan <stephan@wanderinghorse.net>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
 public class AbstractCvsTaskTest extends BuildFileTest {
@@ -74,9 +77,17 @@ public class AbstractCvsTaskTest extends BuildFileTest {
     }
 
     public void tearDown() {
+        executeTarget("cleanup");
     }
 
     public void testAbstractCvsTask() {
         executeTarget( "all" );
+    }
+
+    public void testPackageAttribute() {
+        File f = getProject().resolveFile("tmpdir/jakarta-ant/build.xml");
+        assertTrue("starting empty", !f.exists());
+        expectLogContaining("package-attribute", "U jakarta-ant/build.xml");
+        assertTrue("now it is there", f.exists());
     }
 }

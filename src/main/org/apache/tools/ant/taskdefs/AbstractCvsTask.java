@@ -377,8 +377,8 @@ public abstract class AbstractCvsTask extends Task {
 
         String c = this.getCommand();
         if( c != null ) {
-            this.addConfiguredCommandline( this.cmd, true );
             this.cmd.createArgument().setLine(c);
+            this.addConfiguredCommandline( this.cmd, true );
         }
 
         for( int i = 0; i < vecCommandlines.size(); i++ ) {
@@ -551,7 +551,7 @@ public abstract class AbstractCvsTask extends Task {
         }
         c.setExecutable( "cvs" );
         if (cvsPackage != null) {
-            c.createArgument(true).setLine(cvsPackage);
+            c.createArgument().setLine(cvsPackage);
         }
         if ( this.compression > 0 && this.compression < 10 ) {
             c.createArgument(true).setValue("-z"+this.compression);
