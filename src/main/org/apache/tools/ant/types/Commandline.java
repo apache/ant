@@ -205,7 +205,9 @@ public class Commandline implements Cloneable {
      * Sets the executable to run.
      */
     public void setExecutable(String executable) {
-        if (executable == null || executable.length() == 0) return;
+        if (executable == null || executable.length() == 0) {
+          return;
+        }
         this.executable = executable.replace('/', File.separatorChar)
             .replace('\\', File.separatorChar);
     }
@@ -227,7 +229,9 @@ public class Commandline implements Cloneable {
      */
     public String[] getCommandline() {
         final String[] args = getArguments();
-        if (executable == null) return args;
+        if (executable == null) {
+          return args;
+        }
         final String[] result = new String[args.length+1];
         result[0] = executable;
         System.arraycopy(args, 0, result, 1, args.length);
@@ -285,7 +289,9 @@ public class Commandline implements Cloneable {
 
     public static String toString(String [] line) {
         // empty path return empty string
-        if (line == null || line.length == 0) return "";
+        if (line == null || line.length == 0) {
+          return "";
+        }
 
         // path containing one or more elements
         final StringBuffer result = new StringBuffer();

@@ -189,8 +189,9 @@ public class Get extends Task {
             }
             if( is==null ) {
                 log( "Can't get " + source + " to " + dest);
-                if(ignoreErrors)
+                if(ignoreErrors) {
                     return;
+                }
                 throw new BuildException( "Can't get " + source + " to " + dest,
                                           location);
             }
@@ -200,9 +201,13 @@ public class Get extends Task {
 
             while ((length = is.read(buffer)) >= 0) {
                 fos.write(buffer, 0, length);
-                if (verbose) System.out.print(".");
+                if (verbose) {
+                  System.out.print(".");
+                }
             }
-            if(verbose) System.out.println();
+            if(verbose) {
+              System.out.println();
+            }
             fos.close();
             is.close();
 
@@ -215,13 +220,15 @@ public class Get extends Task {
                     log("last modified = "+t.toString()
                         +((remoteTimestamp==0)?" - using current time instead":""));
                 }
-                if(remoteTimestamp!=0)
+                if(remoteTimestamp!=0) {
                     touchFile(dest,remoteTimestamp);
+                }
             }
         } catch (IOException ioe) {
             log("Error getting " + source + " to " + dest );
-            if(ignoreErrors)
+            if(ignoreErrors) {
                 return;
+            }
             throw new BuildException(ioe, location);
         }
     }

@@ -229,7 +229,9 @@ public class Cvs extends Task {
                                   null);
 
         exe.setAntRun(project);
-        if (dest == null) dest = project.getBaseDir();
+        if (dest == null) {
+          dest = project.getBaseDir();
+        }
         exe.setWorkingDirectory(dest);
 
         exe.setCommandline(toExecute.getCommandline());
@@ -237,8 +239,9 @@ public class Cvs extends Task {
         try {
             int retCode = exe.execute();
             /*Throw an exception if cvs exited with error. (Iulian)*/
-            if(failOnError && retCode != 0)
+            if(failOnError && retCode != 0) {
                 throw new BuildException("cvs exited with error code "+ retCode);
+            }
         } catch (IOException e) {
             throw new BuildException(e, location);
         } finally {
@@ -258,8 +261,9 @@ public class Cvs extends Task {
     public void setCvsRoot(String root) {
         // Check if not real cvsroot => set it to null
         if (root != null) {
-            if (root.trim().equals(""))
+            if (root.trim().equals("")) {
                 root = null;
+            }
         }
 
         this.cvsRoot = root;
@@ -268,8 +272,9 @@ public class Cvs extends Task {
     public void setCvsRsh(String rsh) {
         // Check if not real cvsrsh => set it to null
         if (rsh != null) {
-            if (rsh.trim().equals(""))
+            if (rsh.trim().equals("")) {
                 rsh = null;
+            }
         }
 
         this.cvsRsh = rsh;

@@ -194,12 +194,13 @@ public abstract class DefaultRmicAdapter implements RmicAdapter {
 
         String stubVersion = attributes.getStubVersion();
         if (null != stubVersion) {
-            if ("1.1".equals(stubVersion))
+            if ("1.1".equals(stubVersion)) {
                 cmd.createArgument().setValue("-v1.1");
-            else if ("1.2".equals(stubVersion))
+            } else if ("1.2".equals(stubVersion)) {
                 cmd.createArgument().setValue("-v1.2");
-            else
+                   } else {
                 cmd.createArgument().setValue("-vcompat");
+                   }
         }
 
         if (null != attributes.getSourceBase()) {

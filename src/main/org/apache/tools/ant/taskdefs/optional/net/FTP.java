@@ -638,8 +638,9 @@ public class FTP
         {
             File file = project.resolveFile(new File(dir, filename).getPath());
 
-            if (newerOnly && isUpToDate(ftp, file, resolveFile(filename)))
+            if (newerOnly && isUpToDate(ftp, file, resolveFile(filename))) {
                 return;
+            }
 
             if (verbose)
             {
@@ -729,8 +730,9 @@ public class FTP
         {
             File file = project.resolveFile(new File(dir, filename).getPath());
 
-            if (newerOnly && isUpToDate(ftp, file, resolveFile(filename)))
+            if (newerOnly && isUpToDate(ftp, file, resolveFile(filename))) {
                 return;
+            }
 
             if (verbose)
             {

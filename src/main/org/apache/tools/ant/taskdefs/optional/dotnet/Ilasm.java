@@ -182,8 +182,9 @@ public class Ilasm
         if(targetType.equals("exe") || targetType.equals("library")) {
             _targetType=targetType; 
         }
-        else 
+        else { 
             throw new BuildException("targetType " +targetType+" is not a valid type");
+        }
     }
 
     /**
@@ -201,15 +202,17 @@ public class Ilasm
     */
 
     protected String getTargetTypeParameter() {
-        if(!notEmpty(_targetType))
+        if(!notEmpty(_targetType)) {
             return null;
-        if (_targetType.equals("exe"))
+        }
+        if (_targetType.equals("exe")) {
             return "/exe";
-        else 
-        if (_targetType.equals("library"))
+        } else 
+        if (_targetType.equals("library")) {
             return "/dll";
-        else
+        } else {
             return null;
+        }
     }   
         
     
@@ -292,8 +295,9 @@ public class Ilasm
      * @return the argument string or null for no argument
     */
     protected String getOutputFileParameter() {
-        if (_outputFile==null || _outputFile.length()==0)
+        if (_outputFile==null || _outputFile.length()==0) {
             return null;
+        }
         File f = _outputFile;
         return "/output="+f.toString();
     }
@@ -369,10 +373,11 @@ public class Ilasm
     /** get the argument or null for no argument needed
     */
     protected String getKeyfileParameter() {
-        if(_keyfile!=null)
+        if(_keyfile!=null) {
              return "/keyfile:"+_keyfile.toString();
-         else
+        } else {
              return null;
+        }
     }       
     
     /** any extra command options?
@@ -401,10 +406,11 @@ public class Ilasm
      * @return    The ExtraOptions Parameter to CSC 
      */
     protected String getExtraOptionsParameter() {
-        if (_extraOptions!=null && _extraOptions.length()!=0)
+        if (_extraOptions!=null && _extraOptions.length()!=0) {
             return _extraOptions;
-        else
+        } else {
             return null;
+        }
     } 
 
         
@@ -414,8 +420,9 @@ public class Ilasm
      */
     public void execute() 
         throws BuildException {
-        if (_srcDir == null)
+        if (_srcDir == null) {
                 _srcDir=project.resolveFile(".");
+        }
     
         //get dependencies list. 
         DirectoryScanner scanner = super.getDirectoryScanner(_srcDir);

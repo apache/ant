@@ -102,7 +102,9 @@ public class Exec extends Task {
         }
 
         // default directory to the project's base directory
-        if (dir == null) dir = project.getBaseDir();
+        if (dir == null) {
+          dir = project.getBaseDir();
+        }
 
         if (myos.toLowerCase().indexOf("windows") >= 0) {
             if (!dir.equals(project.resolveFile("."))) {
@@ -121,7 +123,9 @@ public class Exec extends Task {
             }
         } else {
             String ant = project.getProperty("ant.home");
-            if (ant == null) throw new BuildException("Property 'ant.home' not found", location);
+            if (ant == null) {
+              throw new BuildException("Property 'ant.home' not found", location);
+            }
             String antRun = project.resolveFile(ant + "/bin/antRun").toString();
 
             command = antRun + " " + dir + " " + command;
@@ -203,7 +207,9 @@ public class Exec extends Task {
     }
 
     protected void logFlush() {
-        if (fos != null) fos.close();
+        if (fos != null) {
+          fos.close();
+        }
     }
 
     // Inner class for continually pumping the input stream during
