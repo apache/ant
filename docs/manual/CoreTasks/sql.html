@@ -7,11 +7,11 @@
 
 <h2><a name="sql">Sql</a></h2>
 <h3>Description</h3>
-<p>Executes a series of sql statement via JDBC to a database. Statements can either be read in from a text file using the src attribute or from between the enclosing sql tags.</p>
+<p>Executes a series of SQL statements via JDBC to a database. Statements can either be read in from a text file using the <i>src</i> attribute or from between the enclosing SQL tags.</p>
 
-<p>Multiple statements can be set and each statement is delimited from the next use a semi-colon. Individual lines within the statements can be commented using either --, // or REM at the start of the line.</p>
+<p>Multiple statements can be provided, separated by semi-colons (or the defined <i>delimiter</i>). Individual lines within the statements can be commented using either --, // or REM at the start of the line.</p>
 
-<p>The auto-commit attribute specifies whether auto commit should be turned on or off whilst executing the statements. If auto-commit is turned on each statement will be executed and committed. If it is turned off the statements will all be executed as one transaction.</p>
+<p>The <i>autocommit</i> attribute specifies whether auto-commit should be turned on or off whilst executing the statements. If auto-commit is turned on each statement will be executed and committed. If it is turned off the statements will all be executed as one transaction.</p>
 
 <p>The <i>onerror</i> attribute specifies how to proceed when an error occurs during the execution of one of the statements. 
 The possible values are: <b>continue</b> execution, only show the error;
@@ -47,8 +47,13 @@ and <b>abort</b> execution and transaction and fail task.</p>
 </tr>
 <tr>
   <td width="12%" valign="top">src</td>
-  <td width="78%" valign="top">File containing sql statements</td>
+  <td width="78%" valign="top">File containing SQL statements</td>
   <td width="10%" valign="top">Yes, unless statements enclosed within tags</td>
+</tr>
+<tr>
+  <td width="12%" valign="top">delimiter</td>
+  <td width="78%" valign="top">String that separates SQL statements</td>
+  <td width="10%" valign="top">No, default ";"</td>
 </tr>
 <tr>
   <td width="12%" valign="top">autocommit</td>
@@ -107,7 +112,7 @@ on the same schema.</p>
   </tr>
   <tr>
     <td valign="top">src</td>
-    <td valign="top">File containing sql statements</td>
+    <td valign="top">File containing SQL statements</td>
     <td valign="top" align="center">Yes, unless statements enclosed within tags</td>
   </tr>
 </table>
@@ -129,7 +134,7 @@ The
 /&gt;
 </pre></blockquote>
 
-<p>Connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the sql statements contained within the file data.sql</p>
+<p>Connects to the database given in <i>url</i> as the sa user using the org.database.jdbcDriver and executes the SQL statements contained within the file data.sql</p>
 
 <blockquote><pre>&lt;sql
     driver=&quot;org.database.jdbcDriver&quot;
@@ -145,7 +150,8 @@ truncate table some_other_table;
 &lt;/sql&gt;
 </pre></blockquote>
 
-<p>Connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the two sql statements inserting data into some_table and truncating some_other_table</p>
+<p>Connects to the database given in <i>url</i> as the sa
+ user using the org.database.jdbcDriver and executes the two SQL statements inserting data into some_table and truncating some_other_table </p>
 
 <p>Note that you may want to enclose your statements in
 <code>&lt;![CDATA[</code> ... <code>]]&gt;</code> sections so you don't
@@ -164,7 +170,7 @@ update some_table set column1 = column1 + 1 where column2 &lt; 42;
 ]]&gt;&lt;/sql&gt;
 </pre></blockquote>
 
-<p>The following connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the sql statements contained within the files data1.sql, data2.sql and data3.sql and then executes the truncate operation on <i>some_other_table</i>.</p>
+<p>The following connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the SQL statements contained within the files data1.sql, data2.sql and data3.sql and then executes the truncate operation on <i>some_other_table</i>.</p>
 
 <blockquote><pre>&lt;sql
     driver=&quot;org.database.jdbcDriver&quot;
@@ -180,7 +186,7 @@ update some_table set column1 = column1 + 1 where column2 &lt; 42;
 &lt;/sql&gt;
 </pre></blockquote>
 
-<p>The following connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the sql statements contained within the file data.sql, with output piped to outputfile.txt, searching /some/jdbc.jar as well as the system classpath for the driver class.</p>
+<p>The following connects to the database given in url as the sa user using the org.database.jdbcDriver and executes the SQL statements contained within the file data.sql, with output piped to outputfile.txt, searching /some/jdbc.jar as well as the system classpath for the driver class.</p>
 
 <blockquote><pre>&lt;sql
     driver=&quot;org.database.jdbcDriver&quot;
