@@ -56,6 +56,9 @@ Fixed bugs:
 
 * FileUtils.resolveFile() promised to return absolute files but
   did not always do so.
+  
+* <ftp> failed to retrieve a file when the path towards the file contained
+  an element starting with . . Bugzilla report 33770
 
 Other changes:
 --------------
