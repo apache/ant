@@ -121,4 +121,7 @@ public interface XMLConstants {
     /** value attribute for property elements */
     String ATTR_VALUE = "value";
 
+    /** classname attribute for testcase elements */
+    String ATTR_CLASSNAME = "classname";
+
 }

@@ -548,10 +548,10 @@ Other changes:
   <exec>'s manual page).  Bugzilla Report 21877.
 
 * <exec> will now have a new attribute spawn (default false).
-If set to true, the process will be spawned. Bugzilla Report 5907.
+  If set to true, the process will be spawned. Bugzilla Report 5907.
 
 * <java> will now have a new attribute spawn (default false).
-If set to true, the process will be spawned. Bugzilla Report 5907.
+  If set to true, the process will be spawned. Bugzilla Report 5907.
 
 * <parallel> now supports a timeout which can be used to recover
   from deadlocks, etc in the parallel threads. <parallel> also
@@ -570,6 +570,9 @@ If set to true, the process will be spawned. Bugzilla Report 5907.
 * <zip> and friends have a new attribute "keepcompression" that can be
   used to incrementally build an archive mixing compressed and uncompressed
   entries.
+
+* <junit>'s XML formatter adds a new classname attribute to the <testcase>
+  elements.
 
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================
