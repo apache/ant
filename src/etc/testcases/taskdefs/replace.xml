@@ -23,4 +23,22 @@
              token="dont_want_to_really_replace_something"/>
   </target>
 
+  <target name="test6">
+    <replace file="template.xml">
+      <replacefilter />
+    </replace>
+  </target>
+
+  <target name="test7">
+    <replace file="template.xml">
+      <replacefilter token="" />
+    </replace>
+  </target>
+
+  <target name="test8">
+    <replace file="template.xml">
+      <replacefilter token="dont_want_to_really_replace_something" />
+    </replace>
+  </target>
+
 </project>

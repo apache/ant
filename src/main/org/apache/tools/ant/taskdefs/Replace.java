@@ -107,6 +107,11 @@ public class Replace extends MatchingTask {
                 throw new BuildException(message);
             }
 
+            if ("".equals(token)) {
+                String message ="The token attribute must not be an empty string.";
+                throw new BuildException(message);
+            }
+
             //value and property are mutually exclusive attributes
             if ((value != null) && (property != null)) {
                 String message = "Either value or property " + "can be specified, but a replacefilter " + "element cannot have both.";
