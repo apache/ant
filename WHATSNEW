@@ -55,6 +55,15 @@ Other changes:
 
 * New <junit> formatter named "brief"
 
+* Add support for Borland Application Server to the <ejbjar> task using
+  a <borland> nested element.
+  
+* Add support for iPlanet Application Server to the <ejbjar> task. Also 
+  includes some iPlanet utility tasks
+  
+* Allow the SQL Delimiter to be set in the so that Oracle stored procs may be
+  entered  
+
 Fixed bugs:
 -----------
 
@@ -87,6 +96,24 @@ Fixed bugs:
 
 * Output written by testcases will now be captured by the <junit> task
   and passed to the formatters.
+  
+* Quote the -group parameter to Javadoc as per the specification
+
+* Initialise classes when loaded through the AntClassLoader - that is, run
+  static initializers
+  
+* Implement getResource() in AntClassLoader
+
+* Create the <ejbjar> weblogic command line as a set of arguments rather than
+  as a single line. Avoids problems with paths which contain spaces.
+  
+* Make the AntClassLoader load resources in the same order as it currently
+  loads classes
+  
+* Allow DTD locations to be specified when building generic ejb-jars
+
+* Handle classpaths with spaces
+  
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
