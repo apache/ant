@@ -209,6 +209,124 @@
     <echo>${filesmatch-match}</echo>
   </target>   
   
+  <target name="contains" >
+    <condition property="contains">
+      <contains 
+        string="abcd" 
+        substring="cd" />
+    </condition>
+    <echo>${contains}</echo>
+  </target> 
+  
+  <target name="contains-doesnt" >
+    <condition property="contains-doesnt">
+      <contains 
+        string="abcd" 
+        substring="CD" />
+    </condition>
+    <echo>${contains-doesnt}</echo>
+  </target> 
+  
+  <target name="contains-anycase" >
+    <condition property="contains-anycase">
+      <contains casesensitive="false"
+        string="abcd" 
+        substring="CD" />
+    </condition>
+    <echo>${contains-anycase}</echo>
+  </target> 
+  
+  <target name="contains-incomplete1" >
+    <condition property="contains-incomplete1">
+      <contains 
+        string="abcd" />
+    </condition>
+    <echo>${contains-incomplete1}</echo>
+  </target> 
+
+  <target name="contains-incomplete2" >
+    <condition property="contains-incomplete2">
+      <contains 
+        substring="CD" />
+    </condition>
+    <echo>${contains-incomplete2}</echo>
+  </target> 
+
+  <target name="istrue" >
+    <property name="t" value="true" />
+    <property name="o" value="o" />
+    <property name="n" value="n" />
+    <condition property="istrue">
+      <and>
+        <istrue value="${t}" />
+        <istrue value="TRUE" />
+        <istrue value="yes" />
+        <istrue value="YeS" />
+        <istrue value="on" />
+        <istrue value="${o}${n}" />
+      </and>
+    </condition>
+    <echo>${istrue}</echo>
+  </target> 
+
+  <target name="istrue-not" >
+    <condition property="istrue-not">
+      <istrue 
+        value="this sentence is true" />
+    </condition>
+    <echo>${istrue-not}</echo>
+  </target> 
+
+  <target name="istrue-false" >
+    <condition property="istrue-false">
+      <or>
+        <istrue value="false" />
+        <istrue value="" />
+      </or>
+    </condition>
+    <echo>${istrue-false}</echo>
+  </target> 
+  
+  <target name="istrue-incomplete" >
+    <condition property="istrue-incomplete">
+      <istrue />
+    </condition>
+    <echo>${istrue-incomplete}</echo>
+  </target>
+  
+  
+  <target name="isfalse-true" >
+    <property name="t" value="true" />
+    <condition property="isfalse-true">
+      <isfalse 
+        value="${t}" />
+    </condition>
+    <echo>${isfalse-true}</echo>
+  </target> 
+
+  <target name="isfalse-not" >
+    <condition property="isfalse-not">
+      <isfalse 
+        value="this sentence is true" />
+    </condition>
+    <echo>${isfalse-not}</echo>
+  </target> 
+
+  <target name="isfalse-false" >
+    <condition property="isfalse-false">
+      <isfalse 
+        value="false" />
+    </condition>
+    <echo>${isfalse-false}</echo>
+  </target> 
+  
+  <target name="isfalse-incomplete" >
+    <condition property="isfalse-incomplete">
+      <isfalse />
+    </condition>
+    <echo>${isfalse-incomplete}</echo>
+  </target>
+  
   <target name="cleanup" >
     <delete file="match1.txt" />
     <delete file="match2.txt" />
