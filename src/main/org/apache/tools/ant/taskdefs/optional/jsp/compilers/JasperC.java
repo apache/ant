@@ -104,10 +104,13 @@ public class JasperC extends DefaultJspCompilerAdapter {
             // REVISIT. ugly. 
             Java java = (Java) (getProject().createTask("java"));
             if (getJspc().getClasspath() != null) {
+                getProject().log("using user supplied classpath: "+getJspc().getClasspath(),
+                    Project.MSG_DEBUG);
                 java.setClasspath(getJspc().getClasspath());
             } else {
                 Path classpath=new Path(getProject());
-                classpath.concatSystemClasspath();
+                classpath=classpath.concatSystemClasspath("only");
+                getProject().log("using system classpath: "+classpath, Project.MSG_DEBUG);
                 java.setClasspath(classpath);
             }
             java.setDir(getProject().getBaseDir());
@@ -121,6 +124,7 @@ public class JasperC extends DefaultJspCompilerAdapter {
             //we are forking here to be sure that if JspC calls
             //System.exit() it doesn't halt the build
             java.setFork(true);
+            java.setTaskName("jasperc");
             java.execute();
             return true;
         } catch (Exception ex) {
