@@ -655,15 +655,15 @@ public class JUnitTask extends Task {
         }
 
         try {
-        Iterator iter = testLists.iterator();
-        while (iter.hasNext()) {
-            List l = (List) iter.next();
-            if (l.size() == 1) {
-                execute((JUnitTest) l.get(0));
-            } else {
-                execute(l);
-            }            
-        }
+            Iterator iter = testLists.iterator();
+            while (iter.hasNext()) {
+                List l = (List) iter.next();
+                if (l.size() == 1) {
+                    execute((JUnitTest) l.get(0));
+                } else {
+                    execute(l);
+                }            
+            }
         } finally {
             if (classLoader != null && reloading) {
                 classLoader.cleanup();
