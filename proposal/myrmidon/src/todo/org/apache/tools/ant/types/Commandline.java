@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Commandline objects help handling command lines specifying processes to
@@ -139,9 +140,11 @@ public class Commandline
     public void addLine( final String line )
         throws TaskException
     {
-        final Argument argument = new Argument();
-        argument.setLine( line );
-        addArgument( argument );
+        final String[] parts = FileUtils.translateCommandline( line );
+        for( int i = 0; i < parts.length; i++ )
+        {
+            addArgument( parts[ i ] );
+        }
     }
 
     /**
@@ -150,10 +153,10 @@ public class Commandline
      * This marker can be used to locate a position on the commandline - to
      * insert something for example - when all parameters have been set.</p>
      */
-    public Marker createMarker()
-    {
-        return new Marker( this, m_arguments.size() );
-    }
+//    public Marker createMarker()
+//    {
+//        return new Marker( this, m_arguments.size() );
+//    }
 
     public int size()
     {
