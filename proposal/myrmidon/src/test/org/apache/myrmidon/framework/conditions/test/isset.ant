@@ -1,0 +1,44 @@
+<!-- Tests for the <is-set> condition. -->
+<project version="2.0">
+
+    <!-- Set to some arbirary value -->
+    <target name="set">
+        <property name="test-prop">
+            <path location="some-location"/>
+        </property>
+        <assert>
+            <is-set property="test-prop"/>
+        </assert>
+    </target>
+
+    <!-- Set to true -->
+    <target name="set2true">
+        <property name="test-prop" value="true"/>
+        <assert>
+            <is-set property="test-prop"/>
+        </assert>
+    </target>
+
+    <!-- Set to false -->
+    <target name="set2false">
+        <property name="test-prop" value="false"/>
+        <assert>
+            <is-set property="test-prop"/>
+        </assert>
+    </target>
+
+    <!-- Not set -->
+    <target name="not-set">
+        <assert expected="false">
+            <is-set property="test-prop"/>
+        </assert>
+    </target>
+
+    <!-- No property name -->
+    <target name="no-prop-name">
+        <assert>
+            <is-set/>
+        </assert>
+    </target>
+
+</project>

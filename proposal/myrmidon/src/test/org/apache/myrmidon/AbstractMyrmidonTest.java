@@ -127,7 +127,7 @@ public abstract class AbstractMyrmidonTest
     /**
      * Returns the directory containing a Myrmidon install.
      */
-    protected File getHomeDirectory()
+    protected File getInstallDirectory()
     {
         final File file = new File( m_baseDir, "dist" );
         return getCanonicalFile( file );

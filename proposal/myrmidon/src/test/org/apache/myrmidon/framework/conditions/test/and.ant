@@ -1,0 +1,40 @@
+<!-- Tests for the <and> condition. -->
+<project version="2.0">
+
+    <!-- An empty <and> condition -->
+    <target name="empty">
+        <assert>
+            <and/>
+        </assert>
+    </target>
+
+    <!-- The truth-table -->
+    <target name="truth-table">
+        <assert expected="false">
+            <and><false/></and>
+        </assert>
+        <assert>
+            <and><true/></and>
+        </assert>
+        <assert expected="false">
+            <and><false/><false/></and>
+        </assert>
+        <assert expected="false">
+            <and><true/><false/></and>
+        </assert>
+        <assert expected="false">
+            <and><false/><true/></and>
+        </assert>
+        <assert>
+            <and><true/><true/></and>
+        </assert>
+    </target>
+
+    <!-- Check lazy evaluation -->
+    <target name="lazy">
+        <assert expected="false">
+            <and><false/><fail/></and>
+        </assert>
+    </target>
+
+</project>

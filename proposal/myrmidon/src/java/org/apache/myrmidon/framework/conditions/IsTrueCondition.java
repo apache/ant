@@ -11,31 +11,34 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.aut.converter.Converter;
+import org.apache.aut.converter.ConverterException;
 
 /**
- * A {@link Condition} that is true when a property is set.
+ * A {@link Condition} that is true when a property is set, but not set to
+ * 'false'.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant.type type="condition" name="is-set"
+ * @ant.type type="condition" name="is-true"
  */
-public class IsSetCondition
+public class IsTrueCondition
     implements Condition
 {
     private final static Resources REZ =
-        ResourceManager.getPackageResources( IsSetCondition.class );
+        ResourceManager.getPackageResources( IsTrueCondition.class );
 
     private String m_property;
 
-    public IsSetCondition( final String propName )
+    public IsTrueCondition( final String propName )
     {
         m_property = propName;
     }
 
-    public IsSetCondition()
+    public IsTrueCondition()
     {
     }
 
@@ -59,8 +62,23 @@ public class IsSetCondition
             throw new TaskException( message );
         }
 
-        // Resolve the condition
+        // Resolve the property name
         final Object object = context.getProperty( m_property );
-        return ( object != null );
+        if( object == null )
+        {
+            return false;
+        }
+
+        // Convert value to boolean
+        try
+        {
+            final Converter converter = (Converter)context.getService( Converter.class );
+            final Boolean value = (Boolean)converter.convert( Boolean.class, object, context );
+            return value.booleanValue();
+        }
+        catch( final ConverterException e )
+        {
+            throw new TaskException( e.getMessage(), e );
+        }
     }
 }

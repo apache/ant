@@ -59,7 +59,7 @@ public class AbstractProjectTest
             m_embeddor.enableLogging( logger );
 
             final Parameters params = new Parameters();
-            final File instDir = getHomeDirectory();
+            final File instDir = getInstallDirectory();
             params.setParameter( "myrmidon.home", instDir.getAbsolutePath() );
             m_embeddor.parameterize( params );
             m_embeddor.initialize();

@@ -42,9 +42,7 @@ public class IfTestCase
         executeTarget( projectFile, "true-prop", listener );
 
         // Test when property is set to a value other than 'true' or 'false'
-        listener = new LogMessageTracker();
-        listener.addExpectedMessage( "set-prop", "test-prop is set" );
-        executeTarget( projectFile, "set-prop", listener );
+        executeTargetExpectError( projectFile, "set-prop", new String[0] );
 
         // Test when property is set to 'false'
         listener = new LogMessageTracker();

@@ -9,6 +9,8 @@ package org.apache.myrmidon.framework.conditions;
 
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * &lt;not&gt; condition. Evaluates to true if the single condition nested into
@@ -22,6 +24,9 @@ import org.apache.myrmidon.api.TaskException;
 public class NotCondition
     implements Condition
 {
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( NotCondition.class );
+
     private Condition m_condition;
 
     public NotCondition()
@@ -34,10 +39,16 @@ public class NotCondition
     }
 
     /**
-     * Sets the nested condition.
+     * Adds a nested condition.
      */
-    public void set( final Condition condition )
+    public void add( final Condition condition )
+        throws TaskException
     {
+        if( m_condition != null )
+        {
+            final String message = REZ.getString( "not.too-many-conditions.error" );
+            throw new TaskException( message );
+        }
         m_condition = condition;
     }
 
@@ -49,7 +60,8 @@ public class NotCondition
     {
         if( m_condition == null )
         {
-            throw new TaskException( "no condition set" );
+            final String message = REZ.getString( "not.no-condition.error" );
+            throw new TaskException( message );
         }
 
         return ! m_condition.evaluate( context );
