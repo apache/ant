@@ -64,6 +64,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.w3c.dom.Document;
 
@@ -212,20 +213,18 @@ public class AggregateTransformer {
         if (NOFRAMES.equals(format)){
             xslname = "junit-noframes.xsl";
         }
-        URL url = null;
         if (styleDir == null){
-            url = getClass().getResource("xsl/" + xslname);
+            URL url = getClass().getResource("xsl/" + xslname);
             if (url == null){
                 throw new FileNotFoundException("Could not find jar resource " + xslname);
             }
-        } else {
-            File file = new File(styleDir, xslname);
-            if (!file.exists()){
-                throw new FileNotFoundException("Could not find file '" + file + "'");
-            }
-            url = new URL("file", "", file.getAbsolutePath());
+            return url.toExternalForm();
         }
-        return url.toExternalForm();
+        File file = new File(styleDir, xslname);
+        if (!file.exists()){
+            throw new FileNotFoundException("Could not find file '" + file + "'");
+        }
+        return JAXPUtils.getSystemId(file);
     }
 
 }

@@ -60,6 +60,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.JAXPUtils;
 import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
 import org.apache.tools.ant.taskdefs.XSLTLogger;
@@ -148,7 +149,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     public void setStylesheet(File stylesheet) throws Exception {
         xslStream = new FileInputStream(stylesheet);
         StreamSource src = new StreamSource(xslStream);
-        src.setSystemId(getSystemId(stylesheet));
+        src.setSystemId(JAXPUtils.getSystemId(stylesheet));
         templates = tfactory.newTemplates(src);
         transformer = templates.newTransformer();
         transformer.setErrorListener(this);
@@ -177,10 +178,10 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
             } else {
                 src = new StreamSource(fis);
             }
-            src.setSystemId(getSystemId(infile));
+            src.setSystemId(JAXPUtils.getSystemId(infile));
             StreamResult res = new StreamResult(fos);
             // not sure what could be the need of this...
-            res.setSystemId(getSystemId(outfile));
+            res.setSystemId(JAXPUtils.getSystemId(outfile));
 
             if (uriResolver != null)
                 transformer.setURIResolver(uriResolver);
@@ -206,22 +207,6 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
                 }
             } catch (IOException ignored){}
         }
-    }
-
-    // make sure that the systemid is made of '/' and not '\' otherwise
-    // crimson will complain that it cannot resolve relative entities
-    // because it grabs the base uri via lastIndexOf('/') without
-    // making sure it is really a /'ed path
-    protected String getSystemId(File file){
-        String path = file.getAbsolutePath();
-        path = path.replace('\\', '/');
-
-        // on Windows, use 'file:///'
-        if (File.separatorChar == '\\') {
-            return FILE_PROTOCOL_PREFIX + "/" + path;
-        }
-        // Unix, use 'file://'
-        return FILE_PROTOCOL_PREFIX + path;
     }
 
     public void addParam(String name, String value){
@@ -252,19 +237,18 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         
         StringBuffer msg = new StringBuffer();
         if (e.getLocator() != null) {
-            if (e.getLocator().getSystemId() != null) {
-                String url = e.getLocator().getSystemId();
-                if (url.startsWith("file:///")) {
-                  url = url.substring(8);
-                }
-                msg.append(url);
+            String systemId = e.getLocator().getSystemId();
+            if (systemId != null) {
+                msg.append(systemId);
             } else {
                 msg.append("Unknown file");
             }
-            if (e.getLocator().getLineNumber() != -1) {                          
-                msg.append(":" + e.getLocator().getLineNumber());
-                if (e.getLocator().getColumnNumber() != -1) {
-                    msg.append(":" + e.getLocator().getColumnNumber());
+            int line = e.getLocator().getLineNumber();
+            if (line != 0) {
+                msg.append(':').append(line);
+                int col = e.getLocator().getColumnNumber();
+                if (col != 0) {
+                    msg.append(':').append(col);
                 }
             }
         }
