@@ -25,8 +25,8 @@ import java.util.Arrays;
 import java.util.Vector;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Enumeration;
 
 import org.apache.tools.ant.taskdefs.condition.Os;
