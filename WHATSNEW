@@ -133,6 +133,10 @@ Fixed bugs:
 
 * URL-encoding in <vaj*port> didn't work properly.
 
+* VAJRemoteUtil called getAbsolutePath instead of getPath 
+  causing problems when using a Windows VAJ server from a UNIX server.
+  Bugzilla Report 20457.
+
 * file names that include spaces need to be quoted inside the @argfile
   argument using <javadoc> and JDK 1.4.  Bugzilla Report 16871.
 
@@ -153,6 +157,9 @@ Fixed bugs:
   element tagdiff of the xml output
   Bugzilla Report 16081.
 
+* <fixcrlf> make fixcrlf create its temporary files in the default directory
+  of FileUtils#createTempFile instead of the destination dir of fixcrlf.
+  Bugzilla Report 20870.
 
 Other changes:
 --------------
