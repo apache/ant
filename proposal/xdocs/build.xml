@@ -408,7 +408,10 @@
       <fileset dir="lib" includes="*.jar"/>
     </path>
     <path>
-      <fileset dir="${ant.home}/lib" includes="*.jar"/>
+      <!-- <fileset dir="${ant.home}/lib" includes="*.jar"/> -->
+      <fileset dir="../../lib" includes="*.jar"/>
+      <fileset dir="../../lib/optional" includes="*.jar"/>
+      <pathelement location="../../build/classes"/>
     </path>
   </path>
 

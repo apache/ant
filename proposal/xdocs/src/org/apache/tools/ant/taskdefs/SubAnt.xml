@@ -26,7 +26,10 @@
         </subsection>
      </description>
     <section anchor="examples" name="Examples">
-        <pre>
+                <source><![CDATA[
+shell-prompt> m4 foo.m4 > foo
+]]></source>
+<pre>
         &lt;project name="subant" default="subant1"&gt;
         &lt;property name="build.dir" value="subant.build"/&gt;
         &lt;target name="subant1"&gt;

@@ -36,7 +36,7 @@
     <dvsl basedir="${taskdocs.src}" destdir="${manual.dest}"
           style="task.dvsl" extension=".html"
           toolboxfile="toolbox.props"
-          includes="**/*.xml">
+          includes="property/property.xml">
       <velconfig name="velocimacro.library" value="" />
     </dvsl>
   </target>
