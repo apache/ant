@@ -61,7 +61,7 @@ import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.attributes.Attrib
 
 /**
  * Method info structure.
- * To-do: give a more appropriate name to methods.
+ * @todo give a more appropriate name to methods.
  *
  * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */

@@ -307,7 +307,7 @@ public class XMLResultAggregator extends Task implements XMLConstants {
     /**
      * Create a new document builder. Will issue an <tt>ExceptionInitializerError</tt>
      * if something is going wrong. It is fatal anyway.
-     * To-do: factorize this somewhere else. It is duplicated code.
+     * @todo factorize this somewhere else. It is duplicated code.
      * @return a new document builder to create a DOM
      */
     private static DocumentBuilder getDocumentBuilder() {

@@ -522,7 +522,7 @@ public class PropertyFile extends Task
         
         /**
          * Check if parameter combinations can be supported
-         * To-do: make sure the 'unit' attribute is only specified on date
+         * @todo make sure the 'unit' attribute is only specified on date
          *      fields
          */
         private void checkParameters() throws BuildException {
