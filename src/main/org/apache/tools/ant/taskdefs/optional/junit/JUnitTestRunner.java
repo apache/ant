@@ -344,14 +344,18 @@ public class JUnitTestRunner implements TestListener {
         }
     }
 
-    private static void createAndStoreFormatter(String line) 
+    /**
+     * Line format is: formatter=<classname>(,<pathname>)?
+     */
+    private static void createAndStoreFormatter(String line)
         throws BuildException {
-
         FormatterElement fe = new FormatterElement();
-        StringTokenizer tok = new StringTokenizer(line, ",");
-        fe.setClassname(tok.nextToken());
-        if (tok.hasMoreTokens()) {
-            fe.setOutfile(new java.io.File(tok.nextToken()));
+        int pos = line.indexOf(',');
+        if (pos == -1) {
+            fe.setClassname(line);
+        } else {
+            fe.setClassname(line.substring(0, pos));
+            fe.setOutfile( new File(line.substring(pos + 1)) );
         }
         fromCmdLine.addElement(fe.createFormatter());
     }

@@ -58,16 +58,19 @@ import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.*;
+import org.apache.tools.ant.taskdefs.Execute;
+import org.apache.tools.ant.taskdefs.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.ExecuteWatchdog;
+import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.types.Reference;
+
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.io.OutputStream;
 
 import java.util.Enumeration;
 import java.util.Vector;
@@ -82,8 +85,8 @@ import java.util.Vector;
  * <p> To spawn a new Java VM to prevent interferences between
  * different testcases, you need to enable <code>fork</code>.
  *
- * @author Thomas Haas 
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ * @author Thomas Haas
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class JUnitTask extends Task {
@@ -97,6 +100,12 @@ public class JUnitTask extends Task {
     private Integer timeout = null;
     private boolean summary = false;
 
+    /**
+     * Tells this task to halt when there is an error in a test.
+     * this property is applied on all BatchTest (batchtest) and JUnitTest (test)
+     * however it can possibly be overridden by their own properties.
+     * @param   value   <tt>true</tt> if it should halt, otherwise <tt>false<tt>
+     */
     public void setHaltonerror(boolean value) {
         Enumeration enum = allTests();
         while (enum.hasMoreElements()) {
@@ -105,6 +114,12 @@ public class JUnitTask extends Task {
         }
     }
 
+    /**
+     * Tells this task to halt when there is a failure in a test.
+     * this property is applied on all BatchTest (batchtest) and JUnitTest (test)
+     * however it can possibly be overridden by their own properties.
+     * @param   value   <tt>true</tt> if it should halt, otherwise <tt>false<tt>
+     */
     public void setHaltonfailure(boolean value) {
         Enumeration enum = allTests();
         while (enum.hasMoreElements()) {
@@ -113,22 +128,15 @@ public class JUnitTask extends Task {
         }
     }
 
-    public void setPrintsummary(boolean value) {
-        summary = value;
-    }
-
-    public void setMaxmemory(String max) {
-        if (Project.getJavaVersion().startsWith("1.1")) {
-            createJvmarg().setValue("-mx"+max);
-        } else {
-            createJvmarg().setValue("-Xmx"+max);
-        }
-    }
-
-    public void setTimeout(Integer value) {
-        timeout = value;
-    }
-
+    /**
+     * Tells whether a JVM should be forked for each testcase. It avoids interference
+     * between testcases and possibly avoids hanging the build.
+     * this property is applied on all BatchTest (batchtest) and JUnitTest (test)
+     * however it can possibly be overridden by their own properties.
+     * @param   value   <tt>true</tt> if a JVM should be forked, otherwise <tt>false<tt>
+     * @see #setTimeout(Integer)
+     * @see #haltOntimeout(boolean)
+     */
     public void setFork(boolean value) {
         Enumeration enum = allTests();
         while (enum.hasMoreElements()) {
@@ -137,39 +145,107 @@ public class JUnitTask extends Task {
         }
     }
 
+    /**
+     * Tells whether the task should print a short summary of the task.
+     * @param   value   <tt>true</tt> to print a summary, <tt>false</tt> otherwise.
+     * @see SummaryJUnitResultFormatter
+     */
+    public void setPrintsummary(boolean value) {
+        summary = value;
+    }
+
+    /**
+     * Set the timeout value (in milliseconds). If the test is running for more than this
+     * value, the test will be canceled. (works only when in 'fork' mode).
+     * @param   value   the maximum time (in milliseconds) allowed before declaring the test
+     *                  as 'timed-out'
+     * @see #setFork(boolean)
+     * @see #haltOnTimeout(boolean)
+     */
+    public void setTimeout(Integer value) {
+        timeout = value;
+    }
+
+    /**
+     * Set the maximum memory to be used by all forked JVMs.
+     * @param   max     the value as defined by <tt>-mx</tt> or <tt>-Xmx</tt>
+     *                  in the java command line options.
+     */
+    public void setMaxmemory(String max) {
+        if (Project.getJavaVersion().startsWith("1.1")) {
+            createJvmarg().setValue("-mx"+max);
+        } else {
+            createJvmarg().setValue("-Xmx"+max);
+        }
+    }
+
+    /**
+     * Set a new VM to execute the testcase. Default is <tt>java</tt>. Ignored if no JVM is forked.
+     * @param   value   the new VM to use instead of <tt>java</tt>
+     * @see #setFork(boolean)
+     */
     public void setJvm(String value) {
         commandline.setVm(value);
     }
 
+    /**
+     * Create a new JVM argument. Ignored if no JVM is forked.
+     * @return  create a new JVM argument so that any argument can be passed to the JVM.
+     * @see #setFork(boolean)
+     */
     public Commandline.Argument createJvmarg() {
         return commandline.createVmArgument();
     }
 
+    /**
+     * The directory to invoke the VM in. Ignored if no JVM is forked.
+     * @param   dir     the directory to invoke the JVM from.
+     * @see #setFork(boolean)
+     */
+    public void setDir(File dir) {
+        this.dir = dir;
+    }
+
+    /**
+     * Add a nested sysproperty element. This might be useful to tranfer
+     * Ant properties to the testcases when JVM forking is not enabled.
+     */
+    public void addSysproperty(Environment.Variable sysp) {
+        commandline.addSysproperty(sysp);
+    }
+
+    /**
+     * create a classpath to use for forked jvm
+     */
     public Path createClasspath() {
         return commandline.createClasspath(project).createPath();
     }
 
+    /**
+     * Add a new single testcase.
+     * @param   test    a new single testcase
+     * @see JUnitTest
+     */
     public void addTest(JUnitTest test) {
         tests.addElement(test);
     }
 
+    /**
+     * Create a new set of testcases (also called ..batchtest) and add it to the list.
+     * @return  a new instance of a batch test.
+     * @see BatchTest
+     */
     public BatchTest createBatchTest() {
         BatchTest test = new BatchTest(project);
         batchTests.addElement(test);
         return test;
     }
 
+    /**
+     * Add a new formatter to all tests of this task.
+     */
     public void addFormatter(FormatterElement fe) {
         formatters.addElement(fe);
-    }
-
-    /**
-     * The directory to invoke the VM in.
-     *
-     * <p>Ignored if fork=false.
-     */
-    public void setDir(File dir) {
-        this.dir = dir;
     }
 
     /**
@@ -183,201 +259,222 @@ public class JUnitTask extends Task {
      * Runs the testcase.
      */
     public void execute() throws BuildException {
-        boolean errorOccurred = false;
-        boolean failureOccurred = false;
+        Enumeration list = getIndividualTests();
+        try {
+            while (list.hasMoreElements()) {
+                JUnitTest test = (JUnitTest)list.nextElement();
+                if ( test.shouldRun(project)) {
+                    execute(test);
+                }
+            }
+        } finally {
+            //@todo here we should run test aggregation (SBa)
+        }
+    }
 
-        Vector runTests = (Vector) tests.clone();
+    protected void execute(JUnitTest test) throws BuildException {
+        // set the default values if not specified
+        //@todo should be moved to the test class (?) (SBa)
+        if (test.getTodir() == null) {
+            test.setTodir(project.resolveFile("."));
+        }
 
-        Enumeration list = batchTests.elements();
-        while (list.hasMoreElements()) {
-            BatchTest test = (BatchTest)list.nextElement();
-            Enumeration list2 = test.elements();
-            while (list2.hasMoreElements()) {
-                runTests.addElement(list2.nextElement());
+        if (test.getOutfile() == null) {
+            test.setOutfile( "TEST-" + test.getName() );
+        }
+
+        // execute the test and get the return code
+        int exitValue = JUnitTestRunner.ERRORS;
+        boolean wasKilled = false;
+        if (!test.getFork()) {
+            exitValue = executeInVM(test);
+        } else {                                
+            ExecuteWatchdog watchdog = createWatchdog();
+            exitValue = executeAsForked(test, watchdog);
+            // null watchdog means no timeout, you'd better not check with null
+            if (watchdog != null) {
+                //info will be used in later version do nothing for now
+                //wasKilled = watchdog.killedProcess();
             }
         }
 
-        list = runTests.elements();
-        while (list.hasMoreElements()) {
-            JUnitTest test = (JUnitTest)list.nextElement();
+        // if there is an error/failure and that it should halt, stop everything otherwise
+        // just log a statement
+        boolean errorOccurredHere = exitValue == JUnitTestRunner.ERRORS;
+        boolean failureOccurredHere = exitValue != JUnitTestRunner.SUCCESS;
+        if (errorOccurredHere && test.getHaltonerror()
+            || failureOccurredHere && test.getHaltonfailure()) {
+            throw new BuildException("Test "+test.getName()+" failed",
+                                     location);
+        } else if (errorOccurredHere || failureOccurredHere) {
+            log("TEST "+test.getName()+" FAILED", Project.MSG_ERR);
+        }
+    }
 
-            if (!test.shouldRun(project)) {
-                continue;
+    /**
+     * Execute a testcase by forking a new JVM. The command will block until
+     * it finishes. To know if the process was destroyed or not, use the
+     * <tt>killedProcess()</tt> method of the watchdog class.
+     * @param  test       the testcase to execute.
+     * @param  watchdog   the watchdog in charge of cancelling the test if it
+     * exceeds a certain amount of time. Can be <tt>null</tt>, in this case
+     * the test could probably hang forever.
+     */
+    private int executeAsForked(JUnitTest test, ExecuteWatchdog watchdog) throws BuildException {
+        CommandlineJava cmd = (CommandlineJava) commandline.clone();
+
+        cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
+        cmd.createArgument().setValue(test.getName());
+        cmd.createArgument().setValue("haltOnError=" + test.getHaltonerror());
+        cmd.createArgument().setValue("haltOnFailure=" + test.getHaltonfailure());
+        if (summary) {
+            log("Running " + test.getName(), Project.MSG_INFO);
+            cmd.createArgument().setValue("formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
+        }
+
+        StringBuffer formatterArg = new StringBuffer(128);
+        final FormatterElement[] feArray = mergeFormatters(test);
+        for (int i = 0; i < feArray.length; i++) {
+            FormatterElement fe = feArray[i];
+            formatterArg.append("formatter=");
+            formatterArg.append(fe.getClassname());
+            File outFile = getOutput(fe,test);
+            if (outFile != null) {
+                formatterArg.append(",");
+                formatterArg.append( outFile );
+            }
+            cmd.createArgument().setValue(formatterArg.toString());
+            formatterArg.setLength(0);
+        }
+
+        Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), watchdog);
+        execute.setCommandline(cmd.getCommandline());
+        if (dir != null) {
+            execute.setWorkingDirectory(dir);
+            execute.setAntRun(project);
+        }
+
+        log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
+        try {
+            return execute.execute();
+        } catch (IOException e) {
+            throw new BuildException("Process fork failed.", e, location);
+        }
+    }
+
+    // in VM is not very nice since it could probably hang the
+    // whole build. IMHO this method should be avoided and it would be best
+    // to remove it in future versions. TBD. (SBa)
+        
+    /**
+     * Execute inside VM.
+     */
+    private int executeInVM(JUnitTest test) throws BuildException {
+        if (dir != null) {
+            log("dir attribute ignored if running in the same VM", Project.MSG_WARN);
+        }
+
+        CommandlineJava.SysProperties sysProperties = commandline.getSystemProperties();
+        if (sysProperties != null) {
+            sysProperties.setSystem();
+        }
+        try {
+            log("Using System properties " + System.getProperties(), Project.MSG_VERBOSE);
+            AntClassLoader cl = null;
+            Path classpath = commandline.getClasspath();
+            if (classpath != null) {
+                log("Using CLASSPATH " + classpath, Project.MSG_VERBOSE);
+
+                cl = new AntClassLoader(project, classpath, false);
+                // make sure the test will be accepted as a TestCase
+                cl.addSystemPackageRoot("junit");
+                // will cause trouble in JDK 1.1 if omitted
+                cl.addSystemPackageRoot("org.apache.tools.ant");
+            }
+            JUnitTestRunner runner = new JUnitTestRunner(test, test.getHaltonerror(), test.getHaltonfailure(), cl);
+
+            if (summary) {
+                log("Running " + test.getName(), Project.MSG_INFO);
+
+                SummaryJUnitResultFormatter f = new SummaryJUnitResultFormatter();
+                f.setOutput( getDefaultOutput() );
+                runner.addFormatter(f);
             }
 
-            if (test.getTodir() == null){
-                test.setTodir(project.resolveFile("."));
+            final FormatterElement[] feArray = mergeFormatters(test);
+            for (int i = 0; i < feArray.length; i++) {
+                FormatterElement fe = feArray[i];
+                File outFile = getOutput(fe,test);
+                if (outFile == null) {
+                    fe.setOutput( getDefaultOutput() );
+                }
+                runner.addFormatter(fe.createFormatter());
             }
 
-            if (test.getOutfile() == null) {
-                test.setOutfile( "TEST-" + test.getName() );
-            }
-
-            int exitValue = JUnitTestRunner.ERRORS;
-            
-            if (!test.getFork()) {
-
-                if (dir != null) {
-                    log("dir attribute ignored if running in the same VM",
-                        Project.MSG_WARN);
-                }
-
-                JUnitTestRunner runner = null;
-
-                Path classpath = commandline.getClasspath();
-                if (classpath != null) {
-                    log("Using CLASSPATH " + classpath, Project.MSG_VERBOSE);
-                    AntClassLoader l = new AntClassLoader(project, classpath, 
-                                                          false);
-                    // make sure the test will be accepted as a TestCase
-                    l.addSystemPackageRoot("junit");
-                    // will cause trouble in JDK 1.1 if omitted
-                    l.addSystemPackageRoot("org.apache.tools.ant");
-                    runner = new JUnitTestRunner(test, test.getHaltonerror(),
-                                                 test.getHaltonfailure(), l);
-                } else {
-                    runner = new JUnitTestRunner(test, test.getHaltonerror(),
-                                                 test.getHaltonfailure());
-                }
-
-                if (summary) {
-                    log("Running " + test.getName(), Project.MSG_INFO);
-                    
-                    SummaryJUnitResultFormatter f = 
-                        new SummaryJUnitResultFormatter();
-                    f.setOutput(new LogOutputStream(this, Project.MSG_INFO));
-                    runner.addFormatter(f);
-                }
-
-                for (int i=0; i<formatters.size(); i++) {
-                    FormatterElement fe = (FormatterElement) formatters.elementAt(i);
-                    setOutput(fe, test);
-                    runner.addFormatter(fe.createFormatter());
-                }
-                FormatterElement[] add = test.getFormatters();
-                for (int i=0; i<add.length; i++) {
-                    setOutput(add[i], test);
-                    runner.addFormatter(add[i].createFormatter());
-                }
-
-                runner.run();
-                exitValue = runner.getRetCode();
-
-            } else {
-                CommandlineJava cmd = (CommandlineJava) commandline.clone();
-                
-                cmd.setClassname("org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner");
-                cmd.createArgument().setValue(test.getName());
-                cmd.createArgument().setValue("haltOnError=" 
-                                              + test.getHaltonerror());
-                cmd.createArgument().setValue("haltOnFailure="
-                                              + test.getHaltonfailure());
-                if (summary) {
-                    log("Running " + test.getName(), Project.MSG_INFO);
-                    
-                    cmd.createArgument().setValue("formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
-                }
-
-                StringBuffer formatterArg = new StringBuffer();
-                for (int i=0; i<formatters.size(); i++) {
-                    FormatterElement fe = (FormatterElement) formatters.elementAt(i);
-                    formatterArg.append("formatter=");
-                    formatterArg.append(fe.getClassname());
-                    if (fe.getUseFile()) {
-                        formatterArg.append(",");
-                    	File destFile = new File( test.getTodir(),
-                                                  test.getOutfile() + fe.getExtension() );
-                        String filename = destFile.getAbsolutePath();
-                        formatterArg.append( project.resolveFile(filename) );
-                    }
-                    cmd.createArgument().setValue(formatterArg.toString());
-                    formatterArg.setLength(0);
-                }
-                
-                FormatterElement[] add = test.getFormatters();
-                for (int i=0; i<add.length; i++) {
-                    formatterArg.append("formatter=");
-                    formatterArg.append(add[i].getClassname());
-                    if (add[i].getUseFile()) {
-                        formatterArg.append(",");
-                    	File destFile = new File( test.getTodir(),
-                                                  test.getOutfile() + add[i].getExtension() );
-                        String filename = destFile.getAbsolutePath();
-                        formatterArg.append( project.resolveFile(filename) );
-                    }
-                    cmd.createArgument().setValue(formatterArg.toString());
-                    formatterArg.setLength(0);
-                }
-
-                Execute execute = new Execute(new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_WARN), createWatchdog());
-                execute.setCommandline(cmd.getCommandline());
-                if (dir != null) {
-                    execute.setWorkingDirectory(dir);
-                    execute.setAntRun(project);
-                }
-                
-                log("Executing: "+cmd.toString(), Project.MSG_VERBOSE);
-                try {
-                    exitValue = execute.execute();
-                } catch (IOException e) {
-                    throw new BuildException("Process fork failed.", e, 
-                                             location);
-                }
-            }
-
-            boolean errorOccurredHere = exitValue == JUnitTestRunner.ERRORS;
-            boolean failureOccurredHere = exitValue != JUnitTestRunner.SUCCESS;
-            if (errorOccurredHere && test.getHaltonerror()
-                || failureOccurredHere && test.getHaltonfailure()) {
-                throw new BuildException("Test "+test.getName()+" failed", 
-                                         location);
-            } else if (errorOccurredHere || failureOccurredHere) {
-                log("TEST "+test.getName()+" FAILED", Project.MSG_ERR);
+            runner.run();
+            return runner.getRetCode();
+        } finally{
+            if (sysProperties != null) {
+                sysProperties.restoreSystem();
             }
         }
     }
 
+    /**
+     * @return <tt>null</tt> if there is a timeout value, otherwise the
+     * watchdog instance.
+     */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
-        if (timeout == null) return null;
+        if (timeout == null){
+            return null;
+        }
         return new ExecuteWatchdog(timeout.intValue());
     }
 
-    private void rename(String source, String destination) throws BuildException {
-        final File src = new File(source);
-        final File dest = new File(destination);
+    /**
+     * get the default output for a formatter.
+     */
+    protected OutputStream getDefaultOutput(){
+        return new LogOutputStream(this, Project.MSG_INFO);
+    }
 
-        if (dest.exists()) dest.delete();
-        src.renameTo(dest);
+    /**
+     * Merge all individual tests from the batchtest with all individual tests
+     * and return an enumeration over all <tt>JUnitTest</tt>.
+     */
+    protected Enumeration getIndividualTests(){
+        Enumeration[] enums = new Enumeration[ batchTests.size() + 1];
+        for (int i = 0; i < batchTests.size(); i++) {
+            BatchTest batchtest = (BatchTest)batchTests.elementAt(i);
+            enums[i] = batchtest.elements();
+        }
+        enums[enums.length - 1] = tests.elements();
+        return Enumerations.fromCompound(enums);
     }
 
     protected Enumeration allTests() {
-
-        return new Enumeration() {
-                private Enumeration testEnum = tests.elements();
-                private Enumeration batchEnum = batchTests.elements();
-                
-                public boolean hasMoreElements() {
-                    return testEnum.hasMoreElements() ||
-                        batchEnum.hasMoreElements();
-                }
-                
-                public Object nextElement() {
-                    if (testEnum.hasMoreElements()) {
-                        return testEnum.nextElement();
-                    }
-                    return batchEnum.nextElement();
-                }
-            };
+        Enumeration[] enums = { tests.elements(), batchTests.elements() };
+        return Enumerations.fromCompound(enums);
     }
 
-    protected void setOutput(FormatterElement fe, JUnitTest test) {
+    private FormatterElement[] mergeFormatters(JUnitTest test){
+        Vector feVector = (Vector)formatters.clone();
+        FormatterElement[] fes = test.getFormatters();
+        FormatterElement[] feArray = new FormatterElement[feVector.size() + fes.length];
+        feVector.copyInto(feArray);
+        System.arraycopy(fes, 0, feArray, feVector.size(), fes.length);
+        return feArray;
+    }
+
+    /** return the file or null if does not use a file */
+    protected File getOutput(FormatterElement fe, JUnitTest test){
         if (fe.getUseFile()) {
-            File destFile = new File( test.getTodir(),
-                                      test.getOutfile() + fe.getExtension() );
-            String filename = destFile.getAbsolutePath();
-            fe.setOutfile( project.resolveFile(filename) );
-        } else {
-            fe.setOutput(new LogOutputStream(this, Project.MSG_INFO));
+            String filename = test.getOutfile() + fe.getExtension();
+            File destFile = new File( test.getTodir(), filename );
+            String absFilename = destFile.getAbsolutePath();
+            return project.resolveFile(absFilename);
         }
+        return null;
     }
+
 }

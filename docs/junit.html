@@ -86,12 +86,30 @@ VM via nested <code>&lt;jvmarg&gt;</code> attributes, for example:</p>
 <pre><blockquote>
 &lt;junit fork=&quot;yes&quot;&gt;
   &lt;jvmarg value=&quot;-Djava.compiler=NONE&quot;/&gt;
+  ...
 &lt;/junit&gt;
 </blockquote></pre>
 would run the test in a VM without JIT.</p>
 
 <p><code>&lt;jvmarg&gt;</code> allows all attributes described in <a
 href="index.html#arg">Command line arguments</a>.</p>
+
+<h4>sysproperty</h4>
+
+<p>Use nested <code>&lt;sysproperty&gt;</code> elements to specify system
+properties required by the class. These properties will be made available
+to the VM during the execution of the test (either ANT's VM or the forked VM).
+The attributes for this element are the same as for <a href="index.html#env">environment variables</a>.
+
+<pre><blockquote>
+&lt;junit fork=&quot;no&quot;&gt;
+  &lt;sysproperty key=&quot;basedir&quot; value=&quot;${basedir}&quot;/&gt;
+  ...
+&lt;/junit&gt;
+</blockquote></pre>
+would run the test in ANT's VM and make the <code>basedir</code> property
+available to the test.</p>
+
 
 <h4>formatter</h4>
 

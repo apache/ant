@@ -58,21 +58,42 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * Destroys a process running for too long.
- *
+ * For example:
+ * <pre>
+ * ExecuteWatchdog watchdog = new ExecuteWatchdog(30000);
+ * Execute exec = new Execute(myloghandler, watchdog);
+ * exec.setCommandLine(mycmdline);
+ * int exitvalue = exec.execute();
+ * if (exitvalue != SUCCESS && watchdog.killedProcess()){
+ *              // it was killed on purpose by the watchdog
+ * }
+ * </pre>
+ 
  * @author thomas.haas@softwired-inc.com
+ * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
+ * @see Execute
  */
 public class ExecuteWatchdog implements Runnable {
-
+        
+    /** the process to execute and watch for duration */
     private Process process;
+
+    /** timeout duration. Once the process running time exceeds this it should be killed */
     private int timeout;
-    private boolean watch = true;
+
+    /** say whether or not the watchog is currently monitoring a process */
+    private boolean watch = false;
+        
+    /** exception that might be thrown during the process execution */
     private Exception caught = null;
 
+    /** say whether or not the process was killed due to running overtime */
+    private boolean     killedProcess = false;
 
     /**
-     * Creates a new watchdog.
+     * Creates a new watchdog with a given timeout.
      *
-     * @param timeout the timeout for the process.
+     * @param timeout the timeout for the process in milliseconds. It must be greather than 0.
      */
     public ExecuteWatchdog(int timeout) {
         if (timeout < 1) {
@@ -81,11 +102,11 @@ public class ExecuteWatchdog implements Runnable {
         this.timeout = timeout;
     }
 
-
     /**
-     * Watches the given process and terminates it, if it runs for to long.
-     *
-     * @param process the process to watch.
+     * Watches the given process and terminates it, if it runs for too long.
+     * All information from the previous run are reset.
+     * @param process the process to monitor. It cannot be <tt>null</tt>
+     * @throws IllegalStateException    thrown if a process is still being monitored.
      */
     public synchronized void start(Process process) {
         if (process == null) {
@@ -94,21 +115,21 @@ public class ExecuteWatchdog implements Runnable {
         if (this.process != null) {
             throw new IllegalStateException("Already running.");
         }
-        watch = true;
+        this.caught = null;
+        this.killedProcess = false;
+        this.watch = true;
         this.process = process;
         final Thread thread = new Thread(this, "WATCHDOG");
         thread.setDaemon(true);
         thread.start();
     }
 
-
     /**
-     * Stops the watcher.
+     * Stops the watcher. It will notify all threads possibly waiting on this object.
      */
     public synchronized void stop() {
         watch = false;
         notifyAll();
-        process = null;
     }
 
 
@@ -126,20 +147,56 @@ public class ExecuteWatchdog implements Runnable {
                     wait(until - now);
                 } catch (InterruptedException e) {}
             }
+            // if we are here, either someone stopped the watchdog or we are on timeout
+            // if watch is true, it means its a timeout
             if (watch) {
+                killedProcess = true;
                 process.destroy();
             }
-            stop();
         } catch(Exception e) {
             caught = e;
+        } finally {
+            cleanUp();
         }
     }
-    
+
+    /**
+     * reset the monitor flag and the process.
+     */
+    protected void cleanUp() {
+        watch = false;
+        process = null;
+    }
+
+    /**
+     * This method will rethrow the exception that was possibly caught during the
+     * run of the process. It will only remains valid once the process has been
+     * terminated either by 'error', timeout or manual intervention. Information
+     * will be discarded once a new process is ran.
+     * @throws  BuildException  a wrapped exception over the one that was silently
+     * swallowed and stored during the process run.
+     */
     public void checkException() throws BuildException {
         if (caught != null) {
             throw new BuildException("Exception in ExecuteWatchdog.run: "
                                      + caught.getMessage(), caught);
         }
+    }
+
+    /**
+     * Indicates whether or not the watchdog is still monitoring the process.
+     * @return  <tt>true</tt> if the process is still running, otherwise <tt>false</tt>.
+     */
+    public boolean isWatching(){
+        return watch;
+    }
+
+    /**
+     * Indicates whether the last process run was killed on timeout or not.
+     * @return  <tt>true</tt> if the process was killed otherwise <tt>false</tt>.
+     */
+    public boolean killedProcess(){
+        return killedProcess;
     }
 }
 
