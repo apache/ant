@@ -39,11 +39,8 @@ public abstract class AbstractResourceRegisterer
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_engine = (Executor)componentManager.
-            lookup( "org.apache.myrmidon.components.executor.Executor" );
-
-        m_tskDeployer = (TskDeployer)componentManager.
-            lookup( "org.apache.myrmidon.components.deployer.TskDeployer" );
+        m_engine = (Executor)componentManager.lookup( Executor.ROLE );
+        m_tskDeployer = (TskDeployer)componentManager.lookup( TskDeployer.ROLE );
 
         m_dataTypeEngine = (DataTypeEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );

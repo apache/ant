@@ -41,7 +41,6 @@ import org.apache.myrmidon.components.embeddor.MyrmidonEmbeddor;
 import org.apache.myrmidon.components.manager.LogTargetToListenerAdapter;
 import org.apache.myrmidon.components.manager.ProjectManager;
 import org.apache.myrmidon.components.model.Project;
-import org.apache.myrmidon.launcher.LauncherClassLoader;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -281,8 +280,6 @@ public class Main
         {
             throw new Exception( "myrmidon-home (" + homeDir + ") is not a directory" );
         }
-
-        final File libDir = new File( homeDir, "lib" );
 
         final String filename = m_parameters.getParameter( "filename", null );
         final File buildFile = (new File( filename )).getCanonicalFile();

@@ -42,8 +42,7 @@ public class Property
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_configurer = (Configurer)componentManager.
-            lookup( "org.apache.myrmidon.components.configurer.Configurer" );
+        m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
 
         m_engine = (DataTypeEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );

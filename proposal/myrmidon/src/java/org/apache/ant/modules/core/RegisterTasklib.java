@@ -33,8 +33,7 @@ public class RegisterTasklib
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
-        m_tskDeployer = (TskDeployer)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
+        m_tskDeployer = (TskDeployer)componentManager.lookup( TskDeployer.ROLE );
     }
 
     public void setLib( final String lib )

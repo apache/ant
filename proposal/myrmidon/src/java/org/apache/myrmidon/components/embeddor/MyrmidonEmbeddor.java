@@ -200,15 +200,15 @@ public class MyrmidonEmbeddor
         componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
 
         //Following components required when Myrmidon is used as build tool
-        componentManager.put( "org.apache.myrmidon.components.manager.ProjectManager", m_projectManager );
-        componentManager.put( "org.apache.myrmidon.components.builder.ProjectBuilder", m_builder );
+        componentManager.put( ProjectManager.ROLE, m_projectManager );
+        componentManager.put( ProjectBuilder.ROLE, m_builder );
 
         //Following components required when Myrmidon allows user deployment of tasks etal.
-        componentManager.put( "org.apache.myrmidon.components.deployer.TskDeployer", m_deployer );
+        componentManager.put( TskDeployer.ROLE, m_deployer );
 
         //Following components required when allowing Container tasks
-        componentManager.put( "org.apache.myrmidon.components.configurer.Configurer", m_configurer );
-        componentManager.put( "org.apache.myrmidon.components.executor.Executor", m_executor );
+        componentManager.put( Configurer.ROLE, m_configurer );
+        componentManager.put( Executor.ROLE, m_executor );
 
         return componentManager;
     }

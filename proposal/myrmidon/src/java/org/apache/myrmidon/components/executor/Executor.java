@@ -21,6 +21,8 @@ import org.apache.myrmidon.api.TaskException;
 public interface Executor
     extends Component
 {
+    String ROLE = "org.apache.myrmidon.components.executor.Executor";
+
     /**
      * Retrieve locator registry associated with engine.
      * TODO: Remove this as it violates IOC

@@ -23,6 +23,8 @@ import org.apache.myrmidon.components.manager.ProjectManager;
 public interface Embeddor
     extends Component, Parameterizable, Initializable, Startable, Disposable
 {
+    String ROLE = "org.apache.myrmidon.components.embeddor.Embeddor";
+
     /**
      * Retrieve builder for runtime.
      * Valid after initialize() call

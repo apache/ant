@@ -20,6 +20,8 @@ import org.apache.avalon.framework.context.Context;
 public interface Configurer
     extends Component
 {
+    String ROLE = "org.apache.myrmidon.components.configurer.Configurer";
+
     /**
      * Configure an object based on a configuration in a particular context.
      * This configuring can be done in different ways for different

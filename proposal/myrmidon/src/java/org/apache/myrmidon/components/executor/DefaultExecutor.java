@@ -64,8 +64,7 @@ public class DefaultExecutor
 
         m_factory = (Factory)componentManager.lookup( "org.apache.avalon.framework.camelot.Factory" );
 
-        m_configurer = (Configurer)componentManager.
-            lookup( "org.apache.myrmidon.components.configurer.Configurer" );
+        m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
     }
 
     public void execute( final Configuration taskData, final TaskContext context )

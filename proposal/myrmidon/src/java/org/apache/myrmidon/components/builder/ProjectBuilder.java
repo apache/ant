@@ -20,6 +20,8 @@ import org.apache.myrmidon.components.model.Project;
 public interface ProjectBuilder
     extends Component
 {
+    String ROLE = "org.apache.myrmidon.components.builder.ProjectBuilder";
+
     /**
      * build a project from source.
      *

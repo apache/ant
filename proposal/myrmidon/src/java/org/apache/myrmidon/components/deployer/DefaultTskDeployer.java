@@ -73,8 +73,7 @@ public class DefaultTskDeployer
         throws ComponentException
     {
         //UGLY HACK alert !!!
-        final Executor executor = (Executor)componentManager.
-            lookup( "org.apache.myrmidon.components.executor.Executor" );
+        final Executor executor = (Executor)componentManager.lookup( Executor.ROLE );
         m_taskRegistry = executor.getRegistry();
 
         final ConverterEngine converterEngine = (ConverterEngine)componentManager.

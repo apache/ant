@@ -19,6 +19,8 @@ import org.apache.avalon.framework.configuration.Configuration;
 public interface Target
     extends Component
 {
+    String ROLE = "org.apache.myrmidon.components.model.Target";
+
     /**
      * Get dependencies of target
      *

@@ -22,6 +22,8 @@ import org.apache.avalon.framework.component.Component;
 public interface Project
     extends Component
 {
+    String ROLE = "org.apache.myrmidon.components.model.Project";
+
     // the name of currently executing project
     String PROJECT          = "ant.project.name";
 

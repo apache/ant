@@ -70,8 +70,7 @@ public class DefaultProjectManager
         throws ComponentException
     {
         m_componentManager = (DefaultComponentManager)componentManager;
-        m_executor = (Executor)componentManager.
-            lookup( "org.apache.myrmidon.components.executor.Executor" );
+        m_executor = (Executor)componentManager.lookup( Executor.ROLE );
     }
 
     /**
@@ -86,7 +85,7 @@ public class DefaultProjectManager
         throws TaskException
     {
         //HACK: should do this a better way !!!!!!
-        m_componentManager.put( "org.apache.ant.project.Project", project );
+        m_componentManager.put( Project.ROLE, project );
 
         m_listenerSupport.projectStarted();
 

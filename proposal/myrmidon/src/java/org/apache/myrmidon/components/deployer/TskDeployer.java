@@ -10,8 +10,6 @@ package org.apache.myrmidon.components.deployer;
 import java.net.URL;
 import org.apache.avalon.framework.camelot.Deployer;
 import org.apache.avalon.framework.camelot.DeploymentException;
-import org.apache.avalon.framework.logger.Loggable;
-import org.apache.log.Logger;
 
 /**
  * This class deploys a .tsk file into a registry.
@@ -21,6 +19,8 @@ import org.apache.log.Logger;
 public interface TskDeployer
     extends Deployer
 {
+    String ROLE = "org.apache.myrmidon.components.deployer.TskDeployer";
+
     void deployConverter( String name, String location, URL url )
         throws DeploymentException;
 

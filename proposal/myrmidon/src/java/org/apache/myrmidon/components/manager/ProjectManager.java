@@ -22,6 +22,8 @@ import org.apache.myrmidon.listeners.ProjectListener;
 public interface ProjectManager
     extends Component
 {
+    String ROLE = "org.apache.myrmidon.components.manager.ProjectManager";
+
     /**
      * Add a listener to project events.
      *

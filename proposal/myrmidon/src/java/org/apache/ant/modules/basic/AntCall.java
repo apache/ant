@@ -45,9 +45,8 @@ public class AntCall
         throws ComponentException
     {
         m_componentManager = componentManager;
-        m_projectEngine = (ProjectManager)componentManager.
-            lookup( "org.apache.myrmidon.components.manager.ProjectManager" );
-        m_project = (Project)componentManager.lookup( "org.apache.ant.project.Project" );
+        m_projectEngine = (ProjectManager)componentManager.lookup( ProjectManager.ROLE );
+        m_project = (Project)componentManager.lookup( Project.ROLE );
     }
 
     public void setTarget( final String target )
