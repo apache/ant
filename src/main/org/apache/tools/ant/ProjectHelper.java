@@ -527,7 +527,7 @@ public class ProjectHelper {
             return ex;
         }
         String errorMessage
-            = "Following error occured while executing this line"
+            = "The following error occurred while executing this line:"
             + System.getProperty("line.separator")
             + ex.getLocation().toString()
             + ex.getMessage();

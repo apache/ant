@@ -335,7 +335,7 @@ public class PatternSet extends DataType implements Cloneable {
                 line = patternReader.readLine();
             }
         } catch (IOException ioe)  {
-            String msg = "An error occured while reading from pattern file: "
+            String msg = "An error occurred while reading from pattern file: "
                 + patternfile;
             throw new BuildException(msg, ioe);
         } finally {

@@ -76,7 +76,7 @@ class VAJBuildInfo implements Runnable {
 
         /**
          * checks if the thread was interrupted. When an
-         * interrupt occured, throw an Exception to stop
+         * interrupt occurred, throw an Exception to stop
          * the execution.
          */
         protected void checkInterrupted() {
@@ -87,7 +87,7 @@ class VAJBuildInfo implements Runnable {
 
         /**
          *  Fired after the last target has finished. This event
-         *  will still be thrown if an error occured during the build.
+         *  will still be thrown if an error occurred during the build.
          */
         public void buildFinished(BuildEvent event) {
             wrappedListener.buildFinished(event);
@@ -112,7 +112,7 @@ class VAJBuildInfo implements Runnable {
 
         /**
          *  Fired when a target has finished. This event will
-         *  still be thrown if an error occured during the build.
+         *  still be thrown if an error occurred during the build.
          */
         public void targetFinished(BuildEvent event) {
             wrappedListener.targetFinished(event);
@@ -129,7 +129,7 @@ class VAJBuildInfo implements Runnable {
 
         /**
          *  Fired when a task has finished. This event will still
-         *  be throw if an error occured during the build.
+         *  be throw if an error occurred during the build.
          */
         public void taskFinished(BuildEvent event) {
             wrappedListener.taskFinished(event);

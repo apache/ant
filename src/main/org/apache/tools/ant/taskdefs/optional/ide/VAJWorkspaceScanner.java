@@ -182,7 +182,7 @@ class VAJWorkspaceScanner extends DirectoryScanner {
                 }
             }
         } catch (IvjException e) {
-            throw VAJLocalUtil.createBuildException("VA Exception occured: ", e);
+            throw VAJLocalUtil.createBuildException("VA Exception occurred: ", e);
         }
     }
 }

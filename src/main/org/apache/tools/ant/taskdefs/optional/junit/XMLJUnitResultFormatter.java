@@ -213,7 +213,7 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
     /**
      * Interface TestListener.
      *
-     * <p>An error occured while running the test.
+     * <p>An error occurred while running the test.
      */
     public void addError(Test test, Throwable t) {
         formatError(ERROR, test, t);

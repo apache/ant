@@ -202,7 +202,7 @@ abstract class VAJLocalUtil implements VAJUtil {
                 }
             }
         } catch (IvjException e) {
-            throw createBuildException("VA Exception occured: ", e);
+            throw createBuildException("VA Exception occurred: ", e);
         }
 
         return expandedDescs;
@@ -238,7 +238,7 @@ abstract class VAJLocalUtil implements VAJUtil {
             return pe;
 
         } catch (IvjException e) {
-            throw createBuildException("VA Exception occured: ", e);
+            throw createBuildException("VA Exception occurred: ", e);
         }
 
     }
@@ -282,7 +282,7 @@ abstract class VAJLocalUtil implements VAJUtil {
                 + " of " + pe.getName(), MSG_INFO);
             return pe;
         } catch (IvjException e) {
-            throw createBuildException("VA Exception occured: ", e);
+            throw createBuildException("VA Exception occurred: ", e);
         }
 
     }
