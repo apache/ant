@@ -238,6 +238,9 @@ Other changes:
 
 * Added nowarn attribute to javac and deprecated the Jikes-magic property
   build.compiler.warnings.
+  
+* The <depend> task cache format has changed and all dependency information is
+  now stored in a single file.
 
 Fixed bugs:
 -----------
