@@ -203,7 +203,7 @@ public class UpToDate extends Task implements Condition {
         if (_sourceFile != null) {
             if (mapperElement == null) {
                 upToDate = upToDate &&
-                    (_targetFile.lastModified() > _sourceFile.lastModified());
+                    (_targetFile.lastModified() >= _sourceFile.lastModified());
             } else {
                 SourceFileScanner sfs = new SourceFileScanner(this);
                 upToDate = upToDate &&
