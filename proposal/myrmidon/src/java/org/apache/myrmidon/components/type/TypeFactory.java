@@ -8,7 +8,7 @@
 package org.apache.myrmidon.components.type;
 
 /**
- * Create a component based on role and hint.
+ * Create an instance on name.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @version CVS $Revision$ $Date$
@@ -16,11 +16,11 @@ package org.apache.myrmidon.components.type;
 public interface TypeFactory
 {
     /**
-     * Create a Component with appropriate name.
+     * Create a type instance based on name.
      *
      * @param name the name
-     * @return the created component
-     * @exception ComponentException if an error occurs
+     * @return the type instance
+     * @exception TypeException if an error occurs
      */
     Object create( String name )
         throws TypeException;

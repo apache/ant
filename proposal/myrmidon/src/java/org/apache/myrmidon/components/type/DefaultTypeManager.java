@@ -8,9 +8,6 @@
 package org.apache.myrmidon.components.type;
 
 import java.util.HashMap;
-import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentSelector;
 
 /**
  * The interface that is used to manage types.
@@ -21,80 +18,68 @@ public class DefaultTypeManager
     implements TypeManager
 {
     ///Parent type manager to inherit values from.
-    private final TypeManager  m_parent;
+    private final DefaultTypeManager  m_parent;
 
-    ///Maps role to TypedComponentSelector.
-    private final HashMap      m_roleMap      = new HashMap();
+    ///Maps role to MultiSourceTypeFactory.
+    private final HashMap             m_roleMap      = new HashMap();
 
     public DefaultTypeManager()
     {
         this( null );
     }
 
-    public DefaultTypeManager( final TypeManager parent )
+    public DefaultTypeManager( final DefaultTypeManager parent )
     {
         m_parent = parent;
-    }
-
-    public Component lookup( final String role )
-        throws ComponentException
-    {
-        if( role.endsWith( "Selector" ) )
-        {
-           return createSelector( role );
-        }
-        else
-        {
-            throw new ComponentException( "Unable to provide implementation for '" + 
-                                          role + "'" );
-        }
-    }
-
-    public void release( final Component component )
-    {
     }
 
     public void registerType( final String role, 
                               final String shorthandName, 
                               final TypeFactory factory ) 
-        throws Exception
+        throws TypeException
     {
-        final TypedComponentSelector selector = createSelector( role + "Selector" );
-        selector.register( shorthandName, factory );
+        final MultiSourceTypeFactory msFactory = createFactory( role + "Selector" );
+        msFactory.register( shorthandName, factory );
+    }
+
+    public TypeFactory getFactory( final String role )
+        throws TypeException
+    {
+        return createFactory( role + "Selector" );
+    }
+
+    protected final MultiSourceTypeFactory lookupFactory( final String role )
+    {
+        return (MultiSourceTypeFactory)m_roleMap.get( role );
     }
 
     /**
-     * Get a selector of appropriate role.
-     * Create a Selector if none exists with same name.
+     * Get a factory of appropriate role.
+     * Create a Factory if none exists with same name.
      *
      * @param role the role name(must be name of work interface)
-     * @return the Selector for interface
-     * @exception ComponentException if role exists and not a selector, role does not 
-     *            specify accessible work interface, or 
+     * @return the Factory for interface
+     * @exception TypeException role does not specify accessible work interface 
      */
-    private TypedComponentSelector createSelector( final String role )
-        throws ComponentException
+    private MultiSourceTypeFactory createFactory( final String role )
+        throws TypeException
     {
-        TypedComponentSelector selector = (TypedComponentSelector)m_roleMap.get( role );
-        if( null != selector ) 
+        MultiSourceTypeFactory factory = (MultiSourceTypeFactory)m_roleMap.get( role );
+        if( null != factory ) 
         {
-            return selector;
+            return factory;
         }
 
-        if( null != m_parent )
+        final MultiSourceTypeFactory parentFactory = getParentTypedFactory( role );       
+        if( null != parentFactory )
         {
-            final TypedComponentSelector parentSelector = getTypedSelector( m_parent, role );
-
-            if( null != parentSelector )
-            {
-                selector = new TypedComponentSelector( parentSelector );
-            }
+            factory = new MultiSourceTypeFactory( parentFactory );
         }
 
-        ///If we haven't goa selector try to create a new one
-        if( null == selector )
+        ///If we haven't goa factory try to create a new one
+        if( null == factory )
         {
-            //Precondition that role.endsWith( "Selector" )
+            //Precondition that role.endsWith( "Factory" )
             final int length = role.length() - 8;
             final String workInterface = role.substring( 0, length );
 
@@ -102,30 +87,29 @@ public class DefaultTypeManager
             {
                 //TODO: Should we use ContextClassLoader here ??? Or perhaps try that on failure??
                 final Class clazz = Class.forName( workInterface );
-                selector = new TypedComponentSelector( clazz );
+                factory = new MultiSourceTypeFactory( clazz );
             }
             catch( final Exception e )
             {
-                throw new ComponentException( "Role '" + role + "' does not specify " +
-                                              "accessible work interface" );
+                throw new TypeException( "Role '" + role + "' does not specify " +
+                                         "accessible work interface" );
             }
         }        
 
-        m_roleMap.put( role, selector );
+        m_roleMap.put( role, factory );
 
-        return selector;
+        return factory;
     }
 
-    private TypedComponentSelector getTypedSelector( final TypeManager typeManager, 
-                                                     final String role )
+    private MultiSourceTypeFactory getParentTypedFactory( final String role )
     {
-        try
+        if( null != m_parent )
         {
-            return (TypedComponentSelector)typeManager.lookup( role );
+            return m_parent.lookupFactory( role );
         }
-        catch( final ComponentException ce ) {}
-        catch( final ClassCastException cce ) {}
-        
-        return null;
+        else
+        {       
+            return null;
+        }
     }
 }

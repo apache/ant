@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.api;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * Base class for those classes that can appear inside the build file
  * as stand alone data types.  
@@ -16,7 +14,6 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface DataType
-    extends Component
 {
     String ROLE = "org.apache.myrmidon.api.DataType";
 }

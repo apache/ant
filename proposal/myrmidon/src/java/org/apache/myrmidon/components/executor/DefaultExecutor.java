@@ -12,7 +12,6 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configurable;
@@ -27,6 +26,8 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.configurer.Configurer;
+import org.apache.myrmidon.components.type.TypeException;
+import org.apache.myrmidon.components.type.TypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
 
 public class DefaultExecutor
@@ -34,7 +35,7 @@ public class DefaultExecutor
     implements Executor, Composable
 {
     private Configurer           m_configurer;
-    private ComponentSelector    m_selector;
+    private TypeFactory          m_factory;
 
     private ComponentManager     m_componentManager;
 
@@ -53,7 +54,11 @@ public class DefaultExecutor
         m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
 
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_selector = (ComponentSelector)typeManager.lookup( Task.ROLE + "Selector" );
+        try { m_factory = typeManager.getFactory( Task.ROLE ); }
+        catch( final TypeException te )
+        {
+            throw new ComponentException( "Unable to retrieve factory from TypeManager", te );
+        }
     }
 
     public void execute( final Configuration taskData, final TaskContext context )
@@ -88,11 +93,11 @@ public class DefaultExecutor
     {
         try
         {
-            return (Task)m_selector.select( name );
+            return (Task)m_factory.create( name );
         }
-        catch( final ComponentException ce )
+        catch( final TypeException te )
         {
-            throw new TaskException( "Unable to create task " + name, ce );
+            throw new TaskException( "Unable to create task " + name, te );
         }
     }
 

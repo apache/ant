@@ -9,7 +9,6 @@ package org.apache.ant.modules.basic;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
@@ -22,6 +21,8 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.type.TypeManager;
+import org.apache.myrmidon.components.type.TypeException;
+import org.apache.myrmidon.components.type.TypeFactory;
 
 /**
  * This is the property "task" to declare a binding of a datatype to a name.
@@ -35,7 +36,7 @@ public class Property
     private String              m_name;
     private Object              m_value;
     private boolean             m_localScope     = true;
-    private ComponentSelector   m_selector;
+    private TypeFactory         m_factory;
     private MasterConverter     m_converter;
     private Configurer          m_configurer;
 
@@ -44,7 +45,12 @@ public class Property
     {
         m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_selector = (ComponentSelector)typeManager.lookup( DataType.ROLE + "Selector" );
+        
+        try { m_factory = typeManager.getFactory( DataType.ROLE ); }
+        catch( final TypeException te )
+        {
+            throw new ComponentException( "Unable to retrieve factory from TypeManager", te );
+        }
 
         m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
     }
@@ -121,7 +127,7 @@ public class Property
 
             try
             {
-                final DataType value = (DataType)m_selector.select( child.getName() );
+                final DataType value = (DataType)m_factory.create( child.getName() );
                 setValue( value );
                 m_configurer.configure( value, child, getContext() );
             }

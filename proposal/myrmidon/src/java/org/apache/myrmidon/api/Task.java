@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.api;
 
-import org.apache.avalon.framework.component.Component;
-
 /**
  * This is the interface that tasks implement to be executed in Myrmidon runtime.
  * 
@@ -26,7 +24,6 @@ import org.apache.avalon.framework.component.Component;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Task
-    extends Component
 {
     String ROLE = "org.apache.myrmidon.api.Task";
 

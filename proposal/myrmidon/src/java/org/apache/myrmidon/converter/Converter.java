@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.converter;
 
-import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.context.Context;
 
 /**
@@ -16,7 +15,6 @@ import org.apache.avalon.framework.context.Context;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface Converter
-    extends Component
 {
     String ROLE = "org.apache.myrmidon.converter.Converter";
 

@@ -9,11 +9,12 @@ package org.apache.myrmidon.components.converter;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentSelector;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.logger.AbstractLoggable;
 import org.apache.myrmidon.components.converter.MasterConverter;
+import org.apache.myrmidon.components.type.TypeException;
+import org.apache.myrmidon.components.type.TypeFactory;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.converter.ConverterException;
@@ -30,7 +31,7 @@ public class DefaultMasterConverter
     private final static boolean DEBUG                = false;
 
     private ConverterRegistry    m_registry;
-    private ComponentSelector    m_selector;
+    private TypeFactory          m_factory;
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -44,7 +45,11 @@ public class DefaultMasterConverter
         m_registry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
 
         final TypeManager typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_selector = (ComponentSelector)typeManager.lookup( Converter.ROLE + "Selector" );
+        try { m_factory = typeManager.getFactory( Converter.ROLE ); }
+        catch( final TypeException te )
+        {
+            throw new ComponentException( "Unable to retrieve factory from TypeManager", te );
+        }
     }
 
     /**
@@ -86,7 +91,7 @@ public class DefaultMasterConverter
         try
         {
             //TODO: Start caching converters instead of repeatedly instantiating em.
-            final Converter converter = (Converter)m_selector.select( name );
+            final Converter converter = (Converter)m_factory.create( name );
 
 
             if( DEBUG )
@@ -96,10 +101,10 @@ public class DefaultMasterConverter
 
             return converter.convert( destination, original, context );
         }
-        catch( final ComponentException ce )
+        catch( final TypeException te )
         {
             throw new ConverterException( "Badly configured TypeManager missing " +
-                                          "converter definition" );
+                                          "converter definition", te );
         }
     }
 }

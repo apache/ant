@@ -8,7 +8,6 @@
 package org.apache.myrmidon.components.type;
 
 import org.apache.avalon.framework.component.Component;
-import org.apache.avalon.framework.component.ComponentManager;
 
 /**
  * The interface that is used to manage types.
@@ -16,10 +15,13 @@ import org.apache.avalon.framework.component.ComponentManager;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface TypeManager
-    extends Component, ComponentManager
+    extends Component
 {
     String ROLE = "org.apache.myrmidon.components.type.TypeManager";
 
     void registerType( String role, String shorthandName, TypeFactory factory )
-        throws Exception;
+        throws TypeException;
+
+    TypeFactory getFactory( String role )
+        throws TypeException;
 }
