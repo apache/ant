@@ -4,7 +4,7 @@
   =======================================================================
     Apache Ant own build file
 
-   Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
+   Copyright (c) 2000-2005 The Apache Software Foundation.  All rights
    reserved.
 
   =======================================================================
@@ -1522,6 +1522,8 @@
           <exclude name="${optional.package}/sitraka/*.java"
                    unless="some.regexp.support"/>
           <exclude name="${ant.package}/types/selectors/ContainsRegexpTest.java"
+                   unless="some.regexp.support"/>
+          <exclude name="${ant.package}/types/mappers/RegexpPatternMapperTest.java"
                    unless="some.regexp.support"/>
           <exclude name="${optional.package}/Rhino*.java"
                    unless="bsf.present"/>
