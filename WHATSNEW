@@ -59,6 +59,9 @@ Fixed bugs:
   
 * <ftp> failed to retrieve a file when the path towards the file contained
   an element starting with . . Bugzilla report 33770
+  
+* "<rmic> always compiles on Java1.5" bugzilla report=33862. Fixed default
+  stub version to always be "compat", even on Java1.5+. 
 
 Other changes:
 --------------
