@@ -10,11 +10,10 @@ package org.apache.aut.tar;
 /**
  * This class provides static utility methods to work with byte streams.
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">
- *      stefano@apache.org</a>
+ * @author <a href="mailto:time@ice.com">Timothy Gerard Endres</a>
+ * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
  */
-public class TarUtils
+class TarUtils
 {
     /**
      * Parse the checksum octal integer from a header buffer.
