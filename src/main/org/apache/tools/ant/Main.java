@@ -141,7 +141,7 @@ public class Main {
 
                 /* Interestingly enough, we get to here when a user
                  * uses -Dname=value. However, in some cases, the JDK
-                 * goes ahead * and parses this out to args 
+                 * goes ahead * and parses this out to args
                  *   {"-Dname", "value"}
                  * so instead of parsing on "=", we just make the "-D"
                  * characters go away and skip one argument forward.
@@ -189,7 +189,7 @@ public class Main {
 
         // ok, so if we've made it here, let's run the damn build allready
         runBuild();
-        
+
         return;
     }
 
@@ -216,15 +216,23 @@ public class Main {
             project.setUserProperty(arg, value);
         }
 	project.setUserProperty( "ant.file" , buildFile.getAbsolutePath() );
-	
+
         // first use the ProjectHelper to create the project object
         // from the given build file.
         try {
+            try {
+                Class.forName("javax.xml.parsers.SAXParserFactory");
+            } catch (ClassNotFoundException cnfe) {
+                throw new BuildException(cnfe);
+            }
             ProjectHelper.configureProject(project, buildFile);
         } catch (BuildException be) {
-            String msg = "BUILD CONFIG ERROR: ";
-            System.out.println(msg + be.getMessage());
-            be.printStackTrace();
+            System.out.println("\nBUILD CONFIG ERROR\n");
+            if (be.getException() == null) {
+                System.out.println(be.toString());
+            } else {
+                be.getException().printStackTrace();
+	    }
             System.exit(1);
         }
 
@@ -240,8 +248,8 @@ public class Main {
                 project.executeTarget((String) en.nextElement());
             }
         } catch (BuildException be) {
-            String msg = "BUILD FATAL ERROR: ";
-            System.out.println(msg + be.getMessage());
+            String msg = "\nBUILD FATAL ERROR\n\n";
+            System.out.println(msg + be.toString());
             if (msgOutputLevel > Project.MSG_INFO) {
                 be.printStackTrace();
             }

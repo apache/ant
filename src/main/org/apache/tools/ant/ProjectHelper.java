@@ -55,13 +55,13 @@
 package org.apache.tools.ant;
 
 import java.beans.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.*;
 import java.util.*;
-import org.xml.sax.SAXException;
+import org.xml.sax.*;
 import org.w3c.dom.*;
 import org.apache.tools.ant.taskdefs.*;
+import javax.xml.parsers.*;
 
 /**
  * Configures a Project (complete with Targets and Tasks) based on
@@ -72,228 +72,332 @@ import org.apache.tools.ant.taskdefs.*;
 
 public class ProjectHelper {
 
-    public static void configureProject(Project project, File buildFile)
-        throws BuildException
-    {
+    private static SAXParserFactory parserFactory = null;
 
-        // XXX
-        // need to get rid of the DOM layer and use SAX
+    private org.xml.sax.Parser parser;
+    private Project project;
+    private File buildFile;
+    private Locator locator;
 
-        Document doc;
-
-        try {
-            doc=Parser.getParser(project).parse(buildFile);
-        } catch (IOException ioe) {
-            String msg = "Can't open config file: " + buildFile +
-                " due to: " + ioe;
-            throw new BuildException(msg);
-        } catch (SAXException se) {
-            String msg = "Can't open config file: " + buildFile +
-                " due to: " + se;
-            throw new BuildException(msg);
-        }
-
-        Element root = doc.getDocumentElement();
-
-        // sanity check, make sure that we have the right element
-        // as we aren't validating the input
-
-        if (!root.getTagName().equals("project")) {
-            String msg = "Config file is not of expected XML type";
-            throw new BuildException(msg);
-        }
-
-        project.setDefaultTarget(root.getAttribute("default"));
-
-        String name = root.getAttribute("name");
-        project.setName(name);
-        if (name != null) project.addReference(name, project);
-
-        String id = root.getAttribute("id");
-        if (id != null) project.addReference(id, project);
-
-        String baseDir = project.getProperty("basedir");
-        if (baseDir == null) {
-            baseDir = root.getAttribute("basedir");
-            if (baseDir.equals("")) {
-                // Using clunky JDK1.1 methods here
-                baseDir = new File(buildFile.getAbsolutePath()).getParent();
-            }
-        }
-        project.setBasedir(baseDir);
-
-        // set up any properties that may be in the config file
-
-        //      configureProperties(project, root);
-
-        // set up any task defs that may be in the config file
-
-        //      configureTaskDefs(project, root);
-
-        // set up the taskdefs, properties, and targets into the project
-        configureProject(project, root);
+    /**
+     * Configures the Project with the contents of the specified XML file.
+     */
+    public static void configureProject(Project project, File buildFile) throws BuildException {
+        new ProjectHelper(project, buildFile).parse();
     }
 
-    private static void configureProject(Project project, Element root)
-        throws BuildException
-    {
-        // configure taskdefs
-        NodeList list = root.getElementsByTagName("taskdef");
-        for (int i = 0; i < list.getLength(); i++) {
-            Task taskdef = new Taskdef();
-            configure(project, taskdef, (Element)list.item(i));
-            taskdef.setProject(project);
-            taskdef.init();
+    /**
+     * Constructs a new Ant parser for the specified XML file.
+     */
+    private ProjectHelper(Project project, File buildFile) {
+        this.project = project;
+        this.buildFile = buildFile;
+    }
+
+    /**
+     * Parses the project file.
+     */
+    private void parse() throws BuildException {
+        try {
+            parser = getParserFactory().newSAXParser().getParser();
+            parser.setDocumentHandler(new RootHandler());
+            parser.parse(new InputSource(new FileReader(buildFile)));
+        }
+        catch(ParserConfigurationException exc) {
+            throw new BuildException("Parser has not been configured correctly", exc);
+        }
+        catch(SAXParseException exc) {
+            Location location =
+                new Location(buildFile.toString(), exc.getLineNumber(), exc.getColumnNumber());
+            throw new BuildException(exc.getMessage(), exc.getException(), location);
+        }
+        catch(SAXException exc) {
+            throw new BuildException(exc.getMessage(), exc.getException());
+        }
+        catch(FileNotFoundException exc) {
+            throw new BuildException("File \"" + buildFile.toString() + "\" not found");
+        }
+        catch(IOException exc) {
+            throw new BuildException("Error reading project file", exc);
+        }
+    }
+
+    /**
+     * The common superclass for all sax event handlers in Ant. Basically
+     * throws an exception in each method, so subclasses should override
+     * what they can handle.
+     *
+     * Each type of xml element (task, target, etc) in ant will
+     * have its own subclass of AbstractHandler.
+     *
+     * In the constructor, this class    takes over the handling of sax
+     * events from the parent handler, and returns
+     * control back to the parent in the endElement method.
+     */
+    private class AbstractHandler extends HandlerBase {
+        protected DocumentHandler parentHandler;
+
+        public AbstractHandler(DocumentHandler parentHandler) {
+            this.parentHandler = parentHandler;
+
+            // Start handling SAX events
+            parser.setDocumentHandler(this);
         }
 
-        // configure properties
-        list = root.getElementsByTagName("property");
-        for (int i = 0; i < list.getLength(); i++) {
-            Task property = new Property();
-            configure(project, property, (Element)list.item(i));
-            property.setProject(project);
-            property.init();
+        public void startElement(String tag, AttributeList attrs) throws SAXParseException {
+            throw new SAXParseException("Unexpected element \"" + tag + "\"", locator);
         }
 
-        // configure targets
-        list = root.getElementsByTagName("target");
-        for (int i = 0; i < list.getLength(); i++) {
-            Element element = (Element)list.item(i);
-            String targetName = element.getAttribute("name");
-            String targetDep = element.getAttribute("depends");
-            String targetCond = element.getAttribute("if");
-            String targetId = element.getAttribute("id");
+        public void characters(char[] buf, int start, int end) throws SAXParseException {
+            String s = new String(buf, start, end).trim();
 
-            // all targets must have a name
-            if (targetName.equals("")) {
-                String msg = "target element appears without a name attribute";
-                throw new BuildException(msg);
+            if (s.length() > 0) {
+                throw new SAXParseException("Unexpected text \"" + s + "\"", locator);
+            }
+        }
+
+        public void endElement(String name) throws SAXException {
+
+            // Let parent resume handling SAX events
+            parser.setDocumentHandler(parentHandler);
+        }
+    }
+
+    /**
+     * Handler for the root element. It's only child must be the "project" element.
+     */
+    private class RootHandler extends HandlerBase {
+        public void startElement(String tag, AttributeList attrs) throws SAXParseException {
+            if (tag.equals("project")) {
+                new ProjectHandler(this).init(tag, attrs);
+            } else {
+                throw new SAXParseException("Config file is not of expected XML type", locator);
+            }
+        }
+
+        public void setDocumentLocator(Locator locator) {
+            ProjectHelper.this.locator = locator;
+        }
+    }
+
+    /**
+     * Handler for the top level "project" element.
+     */
+    private class ProjectHandler extends AbstractHandler {
+        public ProjectHandler(DocumentHandler parentHandler) {
+            super(parentHandler);
+        }
+
+        public void init(String tag, AttributeList attrs) throws SAXParseException {
+            String def = null;
+            String name = null;
+            String id = null;
+            String baseDir = new File(buildFile.getAbsolutePath()).getParent();
+
+            for (int i = 0; i < attrs.getLength(); i++) {
+                String key = attrs.getName(i);
+                String value = attrs.getValue(i);
+
+                if (key.equals("default")) {
+                    def = value;
+                } else if (key.equals("name")) {
+                    name = value;
+                } else if (key.equals("id")) {
+                    id = value;
+                } else if (key.equals("basedir")) {
+                    baseDir = value;
+                } else {
+                    throw new SAXParseException("Unexpected attribute \"" + attrs.getName(i) + "\"", locator);
+                }
             }
 
-            Target target = new Target();
-            target.setName(targetName);
-            target.setCondition(targetCond);
-            project.addTarget(targetName, target);
+            project.setDefaultTarget(def);
 
-            if (targetId != null && !targetId.equals("")) 
-                project.addReference(targetId,target);
+            project.setName(name);
+            if (name != null) project.addReference(name, project);
+
+            if (id != null) project.addReference(id, project);
+
+            if (project.getProperty("basedir") != null) {
+                project.setBasedir(project.getProperty("basedir"));
+            } else {
+                project.setBasedir(baseDir);
+            }
+
+        }
+
+        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+            if (name.equals("taskdef")) {
+                handleTaskdef(name, attrs);
+            } else if (name.equals("property")) {
+                handleProperty(name, attrs);
+            } else if (name.equals("target")) {
+                handleTarget(name, attrs);
+            } else {
+                throw new SAXParseException("Unexpected element \"" + name + "\"", locator);
+            }
+        }
+
+        private void handleTaskdef(String name, AttributeList attrs) throws SAXParseException {
+            new TaskHandler(this, null).init(name, attrs);
+        }
+
+        private void handleProperty(String name, AttributeList attrs) throws SAXParseException {
+            new TaskHandler(this, null).init(name, attrs);
+        }
+
+        private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
+            new TargetHandler(this).init(tag, attrs);
+        }
+    }
+
+    /**
+     * Handler for "target" elements.
+     */
+    private class TargetHandler extends AbstractHandler {
+        private Target target;
+
+        public TargetHandler(DocumentHandler parentHandler) {
+            super(parentHandler);
+        }
+
+        public void init(String tag, AttributeList attrs) throws SAXParseException {
+            String name = null;
+            String depends = "";
+            String cond = null;
+            String id = null;
+
+            for (int i = 0; i < attrs.getLength(); i++) {
+                String key = attrs.getName(i);
+                String value = attrs.getValue(i);
+
+                if (key.equals("name")) {
+                    name = value;
+                } else if (key.equals("depends")) {
+                    depends = value;
+                } else if (key.equals("if")) {
+                    cond = value;
+                } else if (key.equals("id")) {
+                    id = value;
+                } else {
+                    throw new SAXParseException("Unexpected attribute \"" + key + "\"", locator);
+                }
+            }
+
+            if (name == null) {
+                throw new SAXParseException("target element appears without a name attribute", locator);
+            }
+
+            target = new Target();
+            target.setName(name);
+            target.setCondition(cond);
+            project.addTarget(name, target);
+
+            if (id != null && !id.equals(""))
+                project.addReference(id, target);
 
             // take care of dependencies
 
-            if (targetDep.length() > 0) {
-                StringTokenizer tok =
-                    new StringTokenizer(targetDep, ",", false);
+            if (depends.length() > 0) {
+                StringTokenizer tok = 
+                    new StringTokenizer(depends, ",", false);
                 while (tok.hasMoreTokens()) {
                     target.addDependency(tok.nextToken().trim());
                 }
             }
+        }
 
-            // populate target with tasks
-
-            configureTasks(project, target, element);
+        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+            new TaskHandler(this, target).init(name, attrs);
         }
     }
 
-    private static void configureTasks(Project project,
-                                       Target target,
-                                       Element targetElement)
-        throws BuildException
-    {
-        NodeList list = targetElement.getChildNodes();
-        for (int i = 0; i < list.getLength(); i++) {
-            Node node = list.item(i);
+    /**
+     * Handler for all task elements.
+     */
+    private class TaskHandler extends AbstractHandler {
+        private Target target;
+        private Task task;
 
-            // right now, all we are interested in is element nodes
-            // not quite sure what to do with others except drop 'em
+        public TaskHandler(DocumentHandler parentHandler, Target target) {
+            super(parentHandler);
 
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element)node;
-                String taskType = element.getTagName();
+            this.target = target;
+        }
 
-                // XXX
-                // put in some sanity checking
+        public void init(String tag, AttributeList attrs) throws SAXParseException {
+            task = project.createTask(tag);
+            configure(task, attrs);
+            task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));
+            task.init();
 
-                Task task = project.createTask(taskType);
-
-                // get the attributes of this element and reflect them
-                // into the task
-
-                configure(project, task, element);
-                task.init();
+            // Top level tasks don't have associated targets
+            if (target != null) {
                 task.setTarget(target);
                 target.addTask(task);
-
-                processNestedProperties(project, task, element);
             }
+        }
+
+        public void characters(char[] buf, int start, int end) throws SAXParseException {
+            String text = new String(buf, start, end).trim();
+            if (text.length() == 0) return;
+
+            try {
+                Method addProp = task.getClass().getMethod("addText", new Class[]{String.class});
+                Object child = addProp.invoke(task, new Object[] {text});
+            } catch(NoSuchMethodException exc) {
+                throw new SAXParseException(task.getClass() + " does not support nested text elements", locator);
+            } catch(InvocationTargetException exc) {
+                throw new SAXParseException("Error invoking \"addText\" method", locator, exc);
+            } catch(IllegalAccessException exc) {
+                throw new SAXParseException("Unable to access \"addText\" method", locator, exc);
+            }
+        }
+
+        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+            new NestedPropertyHandler(this, task).init(name, attrs);
         }
     }
 
-    private static void processNestedProperties(Project project,
-                                                Object target,
-                                                Element targetElement)
-        throws BuildException
-    {
-        Class targetClass = target.getClass();
-        NodeList list = targetElement.getChildNodes();
+    /**
+     * Handler for all nested properties.
+     */
+    private class NestedPropertyHandler extends AbstractHandler {
+        private DocumentHandler parentHandler;
 
-        for (int i = 0; i < list.getLength(); i++) {
-            Node node = list.item(i);
+        private Object target;
+        private Object child;
 
-            // right now, all we are interested in is element nodes
-            // not quite sure what to do with others except drop 'em
+        public NestedPropertyHandler(DocumentHandler parentHandler, Object target) {
+            super(parentHandler);
 
-            if (node.getNodeType() == Node.TEXT_NODE) {
-                String text = ((Text)node).getData();
-                try {
-                    Method addProp = targetClass.getMethod(
-                        "addText", new Class[]{"".getClass()});
-                    Object child = addProp.invoke(target, new Object[] {text});
-                } catch (NoSuchMethodException nsme) {
-                    if (text.trim().length() > 0)
-                        throw new BuildException(targetClass + 
-                            " does not support nested text elements");
-                } catch (InvocationTargetException ite) {
-                    throw new BuildException(ite.getMessage());
-                } catch (IllegalAccessException iae) {
-                    throw new BuildException(iae.getMessage());
-                }
+            this.target = target;
+        }
+
+        public void init(String propType, AttributeList attrs) throws SAXParseException {
+            Class targetClass = target.getClass();
+
+            String methodName = "create" + Character.toUpperCase(propType.charAt(0)) + propType.substring(1);
+
+            try {
+                Method addProp = targetClass.getMethod(methodName, new Class[]{});
+                child = addProp.invoke(target, new Object[] {});
+                configure(child, attrs);
+            } catch(NoSuchMethodException exc) {
+                throw new SAXParseException(targetClass + " does not support nested " + propType + " properties", locator);
+            } catch(InvocationTargetException exc) {
+                throw new SAXParseException(exc.getMessage(), locator);
+            } catch(IllegalAccessException exc) {
+                throw new SAXParseException(exc.getMessage(), locator);
             }
+        }
 
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                Element element = (Element)node;
-                String propType = element.getTagName();
-                String methodName = "create" +
-		    Character.toUpperCase(propType.charAt(0)) +
-                    propType.substring(1);
-
-                try {
-                    Method addProp =
-                        targetClass.getMethod(methodName, new Class[]{});
-                    Object child = addProp.invoke(target, new Object[] {});
-
-                    configure(project, child, element);
-
-                    processNestedProperties(project, child, element);
-                } catch (NoSuchMethodException nsme) {
-                    throw new BuildException(targetClass + 
-                        " does not support nested " + propType + " properties");
-                } catch (InvocationTargetException ite) {
-                    throw new BuildException(ite.getMessage());
-                } catch (IllegalAccessException iae) {
-                    throw new BuildException(iae.getMessage());
-                }
-
-            }
+        public void startElement(String name, AttributeList attrs) throws SAXParseException {
+            new NestedPropertyHandler(this, child).init(name, attrs);
         }
     }
 
-    private static void configure(Project project,
-                                  Object target,
-                                  Element element)
-        throws BuildException
-    {
-        NamedNodeMap nodeMap = element.getAttributes();
-
+    private void configure(Object target, AttributeList attrs) throws BuildException {
         if( target instanceof TaskAdapter )
             target=((TaskAdapter)target).getProxy();
 
@@ -332,47 +436,39 @@ public class ProjectHelper {
             }
         }
 
-        for (int i = 0; i < nodeMap.getLength(); i++) {
-            Node node = nodeMap.item(i);
+        for (int i = 0; i < attrs.getLength(); i++) {
+            // reflect these into the target
 
-            // these should only be attribs, we won't see anything
-            // else here.
-
-            if (node.getNodeType() == Node.ATTRIBUTE_NODE) {
-                Attr attr = (Attr)node;
-
-                // reflect these into the target
-
-                Method setMethod = (Method)propertySetters.get(attr.getName());
-                if (setMethod == null) {
-                    if (attr.getName().equals("id")) {
-                        project.addReference(attr.getValue(), target);
-                        continue;
-                    }
-
-                    String msg = "Configuration property \"" + attr.getName() +
-                        "\" does not have a setMethod in " + target.getClass();
-                    throw new BuildException(msg);
+            Method setMethod = (Method)propertySetters.get(attrs.getName(i));
+            if (setMethod == null) {
+                if (attrs.getName(i).equals("id")) {
+                    project.addReference(attrs.getValue(i), target);
+                    continue;
                 }
 
-                String value=replaceProperties(  attr.getValue(), project.getProperties() );
-                try {
-                    setMethod.invoke(target, new String[] {value});
-                } catch (IllegalAccessException iae) {
-                    String msg = "Error setting value for attrib: " +
-                        attr.getName();
-                    iae.printStackTrace();
-                    throw new BuildException(msg);
-                } catch (InvocationTargetException ie) {
-                    String msg = "Error setting value for attrib: " +
-                        attr.getName() + " in " + target.getClass().getName();
-                    ie.printStackTrace();
-                    ie.getTargetException().printStackTrace();
-                    throw new BuildException(msg);
-                }
+                String msg = "Class " + target.getClass() +
+                    " doesn't support the \"" + attrs.getName(i) + "\" property";
+                throw new BuildException(msg);
+            }
+
+            String value=replaceProperties(attrs.getValue(i), project.getProperties() );
+            try {
+                setMethod.invoke(target, new String[] {value});
+            } catch (IllegalAccessException iae) {
+                String msg = "Error setting value for attrib: " +
+                    attrs.getName(i);
+                iae.printStackTrace();
+                throw new BuildException(msg);
+            } catch (InvocationTargetException ie) {
+                String msg = "Error setting value for attrib: " +
+                    attrs.getName(i) + " in " + target.getClass().getName();
+                ie.printStackTrace();
+                ie.getTargetException().printStackTrace();
+                throw new BuildException(msg);
             }
         }
     }
+
 
     /** Replace ${NAME} with the property value
      */
@@ -411,13 +507,12 @@ public class ProjectHelper {
         // System.out.println("Before replace: " + value);
         return sb.toString();
     }
+
+    private static SAXParserFactory getParserFactory() {
+        if (parserFactory == null) {
+            parserFactory = SAXParserFactory.newInstance();
+        }
+
+        return parserFactory;
+    }
 }
-
-
-
-
-
-
-
-
-

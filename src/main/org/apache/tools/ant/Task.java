@@ -57,13 +57,14 @@ package org.apache.tools.ant;
 /**
  * Base class for all tasks.
  */
- 
+
 public abstract class Task {
 
     protected Project project = null;
     protected Target target = null;
     protected String description=null;
-    
+    protected Location location = Location.UNKNOWN_LOCATION;
+
     /**
      * Sets the project object of this task. This method is used by
      * project when a task is added to it so that the task has
@@ -87,7 +88,7 @@ public abstract class Task {
 
     /** Sets a description of the current action. It will be usefull in commenting
      *  what we are doing.
-     */ 
+     */
     public void setDescription( String desc ) {
 	description=desc;
     }
@@ -95,7 +96,7 @@ public abstract class Task {
     public String getDescription() {
 	return description;
     }
-    
+
     /**
      * Called by the project to let the task initialize properly. Normally it does nothing.
      *
@@ -110,5 +111,18 @@ public abstract class Task {
      */
     public void execute() throws BuildException {};
 
+    /**
+     * Returns the file location where this task was defined.
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     * Sets the file location where this task was defined.
+     */
+    public void setLocation(Location location) {
+        this.location = location;
+    }
 }
 

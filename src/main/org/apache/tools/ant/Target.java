@@ -117,7 +117,13 @@ public class Target {
             Enumeration enum = tasks.elements();
             while (enum.hasMoreElements()) {
                 Task task = (Task) enum.nextElement();
-                task.execute();
+
+                try {
+               	    task.execute();
+		} catch(BuildException exc) {
+		    exc.setLocation(task.getLocation());
+		    throw exc;
+		}
             }
         } else {
             project.log("Skipped because property '" + this.condition + "' not set.", this.name, Project.MSG_VERBOSE);

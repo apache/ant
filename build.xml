@@ -21,7 +21,7 @@
   <property name="build.javadocs" value="build/javadocs"/>
   <property name="ant.dist.dir" value="dist"/>
 
-  <property name="classpath" value="lib/xml.jar"/>
+  <property name="classpath" value=""/>
   <property name="packages" value="org.apache.tools.*"/>
   <property name="manifest" value="src/etc/manifest"/>
 

@@ -17,7 +17,7 @@ if "" == "%JAVAC%"                        set JAVAC=%JAVA_HOME%\bin\javac
 echo.
 echo ... Bootstrapping Ant Distribution
 
-set CLASSPATH=src\main;classes;lib\xml.jar
+set CLASSPATH=src\main;classes;%CLASSPATH%
 if exist %JAVA_HOME%\lib\tools.jar set CLASSPATH=%CLASSPATH%;%JAVA_HOME%\lib\tools.jar
 
 echo JAVA_HOME=%JAVA_HOME%
@@ -40,7 +40,6 @@ echo.
 echo ... Copying Required Files
 
 copy %TOOLS%\ant\taskdefs\*.properties classes\org\apache\tools\ant\taskdefs
-copy %TOOLS%\ant\*.properties          classes\org\apache\tools\ant
 
 echo.
 echo ... Building Ant Distribution
