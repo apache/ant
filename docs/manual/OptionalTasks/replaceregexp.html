@@ -128,6 +128,26 @@ value, in the file <code>${src}/build.properties</code></p>
  with &quot;NewProperty&quot; in a properties file, preserving the existing
 value, in all files ending in <code>.properties</code> in the current directory</p>
 
+<blockquote>
+<pre>&lt;replaceregexp match="\s+" replace=" " flags="g" byline="true"&gt;
+    &lt;fileset dir="${html.dir}" includes="**/*.html" /&gt;
+&lt;/replaceregexp&gt;
+</pre></blockquote>
+<p>replaces all whitespaces (blanks, tabs, etc) by one blank remaining the
+line separator. So with input
+
+<blockquote>
+<pre>
+&lt;html>    &lt;body&gt;
+&lt;&lt;TAB&gt;&gt;&lt;h1&gt;    T E S T   &lt;/h1&gt;  &lt;&lt;TAB&gt;&gt;    
+&lt;&lt;TAB&gt;&gt; &lt;/body&gt;&lt;/html&gt;
+</pre></blockquote>
+would converted to
+<pre>
+&lt;html&gt; &lt;body&gt;
+ &lt;h1&gt; T E S T &lt;/h1&gt; &lt;/body&gt;&lt;/html&gt;
+</pre>
+
 <hr>
 <p align="center">Copyright &copy; 2001-2003 Apache Software Foundation. All rights
 Reserved.</p>
