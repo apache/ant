@@ -246,7 +246,8 @@ public class Available extends Task implements Condition {
         isTask = true;
         try {
             if (eval()) {
-                if (null != getProject().getProperty(property)) {
+                oldvalue=getProject().getProperty(property);
+                if (null != oldvalue && !oldvalue.equals(value)) {
                     log("DEPRECATED - <available> used to override an existing"
                         + " property."
                         + StringUtils.LINE_SEP
