@@ -124,7 +124,7 @@ public class Execute {
             // Ignore and keep trying
         }
 
-        if (Os.isFamily("mac")) {
+        if (Os.isFamily("mac") && !Os.isFamily("unix")) {
             // Mac
             shellLauncher = new MacCommandLauncher(new CommandLauncher());
         } else if (Os.isFamily("os/2")) {
