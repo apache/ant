@@ -419,18 +419,10 @@ public class DefaultConfigurer
                                final TaskContext context )
         throws Exception
     {
-        if( name.toLowerCase().endsWith( "-ref" ) )
-        {
-            // A reference
-            setReference( state, name, value, context, false );
-        }
-        else
-        {
-            // Set the value
-            final PropertyConfigurer property =
-                getConfigurerFromName( state.getConfigurer(), name, false, false );
-            setValue( property, state, value, context );
-        }
+        // Set the value
+        final PropertyConfigurer property =
+            getConfigurerFromName( state.getConfigurer(), name, false, false );
+        setValue( property, state, value, context );
     }
 
     /**
