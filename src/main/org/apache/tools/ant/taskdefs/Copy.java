@@ -66,7 +66,7 @@ public class Copy extends Task {
     protected boolean flatten = false;
     protected int verbosity = Project.MSG_VERBOSE;
     protected boolean includeEmpty = true;
-    private boolean failonerror = true;
+    protected boolean failonerror = true;
 
     protected Hashtable fileCopyMap = new Hashtable();
     protected Hashtable dirCopyMap = new Hashtable();
@@ -660,4 +660,3 @@ public class Copy extends Task {
         }
     }
 }
-
