@@ -48,11 +48,6 @@ from the command line in the target directory in which you are working.
     <td valign="top">The file in which to write the diff report.</td>
     <td align="center" valign="top">Yes</td>
   </tr>
-  <tr>
-    <td valign="top">rootdir</td>
-    <td valign="top">Root directory for the package, if different from the package name.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
 </table>
 
 <h3>Parameters inherited from the <code>cvs</code> task</h3>
@@ -79,7 +74,10 @@ from the command line in the target directory in which you are working.
   </tr>
   <tr>
     <td valign="top">package</td>
-    <td valign="top">the package/module to analyze.</td>
+    <td valign="top">the package/module to analyze.<br>
+    Since ant 1.6
+    multiple packages separated by spaces are possible.
+    aliases corresponding to different modules are also possible</td>
     <td align="center" valign="top">Yes</td>
   </tr>
   <tr>
@@ -132,16 +130,14 @@ It writes these changes into the file <code>tagdiff.xml</code>.</p>
 
 <pre>  &lt;cvstagdiff
                 destfile=&quot;tagdiff.xml&quot;
-                package=&quot;ant&quot;
-                rootdir=&quot;apache/ant&quot;
-                startDate=&quot;2002-01-01&quot;
-                endDate=&quot;2002-31-01&quot;
+                package=&quot;ant jakarta-gump&quot;
+                startDate=&quot;2003-01-01&quot;
+                endDate=&quot;2003-31-01&quot;
   /&gt;</pre>
 
 <p>Generates a tagdiff report for all the changes that have been made
-in the <code>ant</code> module in january 2002, with <code>rootdir</code> indicating that
-the actual location of the <code>ant</code> module in cvs is <code>apache/ant</code>
-rather than <code>ant</code>. In this example <code>cvsRoot</code>
+in the <code>ant</code> and <code>jakarta-gump</code> modules in january 2003.
+In this example <code>cvsRoot</code>
 has not been set. The current <code>cvsRoot</code> will be used (assuming the build is started
 from a folder stored in <code>cvs</code>.
 It writes these changes into the file <code>tagdiff.xml</code>.</p>
@@ -161,9 +157,17 @@ how to generate a HTML report from the XML report.</p>
         &lt;/style&gt;
 </pre>
 
-<h4>Sample Output</h4>
+<h4>Output</h4>
 <p>
-The cvsroot and package attributes of the tagdiff element are new in ant 1.6.
+The cvsroot and package attributes of the tagdiff element are new in ant 1.6.<br>
+Notes on entry attributes :
+<table border="1">
+<tr><th>Attribute</th><th>Comment</th></tr>
+<tr><td>name</td><td>when reporting on one package, the package name is removed from the output</td></tr>
+<tr><td>revision</td><td>supplied for files which exist at the end of the reporting period</td></tr>
+<tr><td>prevrevision</td><td>supplied for files which exist at the beginning of the reporting period.<br>
+Old CVS servers do not supply it for deleted files. CVS 1.12.2 supplies it.</td></tr>
+</table>
 </p>
 <pre>
 &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
