@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="Jakarta Site"
+        href="http://jakarta.apache.org/">
+
+    <title>The Jakarta Site</title>
+    <!-- uncomment and put your project logo here!
+    <logo href="http://jakarta.apache.org/images/jakarta-logo.gif">The Jakarta Project</logo>
+    -->
+    
+    <body>
+    <menu name="Essentials">
+        <item name="Front Page"            href="/index.html"/>
+        <item name="News &amp; Status"     href="/site/news.html"/>
+        <item name="Mission"               href="/site/mission.html"/>
+        <item name="Guidelines Notes"      href="/site/guidelines.html"/>
+        <item name="FAQs"                  href="/site/faqs.html"/>
+    </menu>
+
+    <menu name="Download">
+        <item name="Binaries"              href="/site/binindex.html"/>
+        <item name="Source Code"           href="/site/sourceindex.html"/>
+    </menu>
+
+    <menu name="Get Involved">
+        <item name="Overview"              href="/site/getinvolved.html"/>
+        <item name="CVS Repositories"      href="/site/cvsindex.html"/>
+        <item name="Mailing Lists"         href="/site/mail.html"/>
+        <item name="Reference Library"     href="/site/library.html"/>
+        <item name="Bug Database"          href="/site/bugs.html"/>
+    </menu>
+
+    <menu name="SubProjects">
+        <item name="Ant"                   href="/ant/index.html"/>
+<!--    <item name="Avalon"                href="/avalon/index.html"/> -->
+        <item name="ECS"                   href="/ecs/index.html"/>
+        <item name="Log4J"                 href="/log4j/index.html"/> 
+        <item name="ORO"                   href="/oro/index.html"/>
+        <item name="Regexp"                href="/regexp/index.html"/>
+        <item name="Slide"                 href="/slide/index.html"/>
+        <item name="Struts"                href="/struts/index.html"/>
+        <item name="Taglibs"               href="/taglibs/index.html"/>
+        <item name="Tomcat"                href="/tomcat/index.html"/>
+        <item name="Velocity"              href="/velocity/index.html"/>
+        <item name="Watchdog"              href="/watchdog/index.html"/>
+    </menu>
+
+    <menu name="Misc">
+        <item name="Who We Are"            href="/site/whoweare.html"/>
+        <item name="Acknowledgements"      href="/site/acknowledgements.html"/>
+        <item name="Management"            href="/site/roles.html"/>
+        <item name="About This Site"       href="/site/jakarta-site2.html"/>
+        <item name="Contact"               href="/site/contact.html"/>
+        <item name="Legal"                 href="/site/legal.html"/>        
+    </menu>
+    </body>
+</project>
