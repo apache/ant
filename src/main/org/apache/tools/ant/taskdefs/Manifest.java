@@ -78,6 +78,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *
  * @author Conor MacNeill
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:j_a_fernandez@yahoo.com">Jose Alberto Fernandez</a>
  *
  * @ant.task category="java"
  */
@@ -1027,17 +1028,19 @@ public class Manifest extends Task {
         }
 
         Manifest toWrite = getDefaultManifest();
+        Manifest current = null;
+        BuildException error = null;
 
-        if (mode.getValue().equals("update") && manifestFile.exists()) {
+        if (manifestFile.exists()) {
             FileReader f = null;
             try {
                 f = new FileReader(manifestFile);
-                toWrite.merge(new Manifest(f));
+                current = new Manifest(f);
             } catch (ManifestException m) {
-                throw new BuildException("Existing manifest " + manifestFile
+                error = new BuildException("Existing manifest " + manifestFile
                                          + " is invalid", m, location);
             } catch (IOException e) {
-                throw new BuildException("Failed to read " + manifestFile,
+                error = new BuildException("Failed to read " + manifestFile,
                                          e, location);
             } finally {
                 if (f != null) {
@@ -1049,9 +1052,23 @@ public class Manifest extends Task {
         }
 
         try {
+            if (mode.getValue().equals("update") && manifestFile.exists()) {
+                if (current != null) {
+                    toWrite.merge(current);
+                }
+                else if (error != null) {
+                    throw error;
+                }
+            }
+
             toWrite.merge(this);
         } catch (ManifestException m) {
             throw new BuildException("Manifest is invalid", m, location);
+        }
+
+        if (toWrite.equals(current)) {
+            log("Manifest has not changed, do not recreate", project.MSG_VERBOSE);
+            return;
         }
 
         PrintWriter w = null;
