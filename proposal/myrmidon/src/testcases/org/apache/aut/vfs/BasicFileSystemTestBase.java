@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import junit.framework.TestCase;
-import org.apache.aut.vfs.provider.DefaultFileSystemManager;
+import org.apache.aut.vfs.impl.DefaultFileSystemManager;
 
 /**
  * File system test cases, which verifies the structure and naming

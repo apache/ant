@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.aut.vfs.provider;
+package org.apache.aut.vfs.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -15,6 +15,10 @@ import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileSystemManager;
 import org.apache.aut.vfs.provider.local.LocalFileSystemProvider;
+import org.apache.aut.vfs.provider.FileSystemProvider;
+import org.apache.aut.vfs.provider.UriParser;
+import org.apache.aut.vfs.provider.FileSystemProviderContext;
+import org.apache.aut.vfs.provider.FileSystem;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 
@@ -190,13 +194,13 @@ public class DefaultFileSystemManager implements FileSystemManager
         public FileSystem getFileSystem( String rootURI )
         {
             // TODO - need to have a per-fs uri comparator
-            return (org.apache.aut.vfs.provider.FileSystem)m_fileSystems.get( rootURI );
+            return (FileSystem)m_fileSystems.get( rootURI );
         }
 
         /**
          * Registers a file system for caching.
          */
-        public void putFileSystem( String rootURI, org.apache.aut.vfs.provider.FileSystem fs ) throws FileSystemException
+        public void putFileSystem( String rootURI, FileSystem fs ) throws FileSystemException
         {
             // TODO - should really check that there's not one already cached
             m_fileSystems.put( rootURI, fs );
