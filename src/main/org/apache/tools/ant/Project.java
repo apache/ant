@@ -769,7 +769,7 @@ public class Project {
                 ctor = c.getConstructor(new Class[0]);
                 noArg = true;
             } catch (NoSuchMethodException nse) {
-                ctor = c.getConstructor(new Class[] {getClass()});
+                ctor = c.getConstructor(new Class[] {Project.class});
                 noArg = false;
             }
 
