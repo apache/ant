@@ -706,7 +706,8 @@ public class FileUtils {
         synchronized (rand) {
             do {
                 result = new File(parent,
-                                  prefix + fmt.format(rand.nextInt())
+                                  prefix
+                                  + fmt.format(rand.nextInt(Integer.MAX_VALUE))
                                   + suffix);
             } while (result.exists());
         }
@@ -924,14 +925,14 @@ public class FileUtils {
             if (!path.startsWith("/")) {
                 sb.append("/");
             }
-            
+
         } catch (BuildException e) {
             // relative path
         }
-        
+
         path = path.replace('\\', '/');
         CharacterIterator iter = new StringCharacterIterator(path);
-        for (char c = iter.first(); c != CharacterIterator.DONE; 
+        for (char c = iter.first(); c != CharacterIterator.DONE;
              c = iter.next()) {
             if (isSpecial[c]) {
                 sb.append('%');
@@ -972,7 +973,7 @@ public class FileUtils {
 
         StringBuffer sb = new StringBuffer();
         CharacterIterator iter = new StringCharacterIterator(uri);
-        for (char c = iter.first(); c != CharacterIterator.DONE; 
+        for (char c = iter.first(); c != CharacterIterator.DONE;
              c = iter.next()) {
             if (c == '%') {
                 char c1 = iter.next();
