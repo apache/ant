@@ -12,6 +12,7 @@ import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.AbstractContainerTask;
 
 /**
  * This is to test self interpretation of configuration.
@@ -19,7 +20,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class ConfigurationTest
-    extends AbstractTask
+    extends AbstractContainerTask
     implements Configurable
 {
     private String              m_message;
@@ -27,15 +28,8 @@ public class ConfigurationTest
     public void configure( final Configuration configuration )
         throws ConfigurationException
     {
-        String message = configuration.getAttribute( "message" );
-
-        Object object = null;
-
-        try { object = getContext().resolveValue( message ); }
-        catch( final TaskException ae )
-        {
-            throw new ConfigurationException( "Error resolving : " + message, ae );
-        }
+        final String message = configuration.getAttribute( "message" );
+        final Object object = resolve( message );
 
         if( object instanceof String )
         {
