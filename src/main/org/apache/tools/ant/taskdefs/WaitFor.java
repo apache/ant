@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2004 The Apache Software Foundation
+ * Copyright  2001-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,7 +56,8 @@ public class WaitFor extends ConditionBase {
     private String timeoutProperty;
 
     /**
-     * Set the maximum length of time to wait
+     * Set the maximum length of time to wait.
+     * @param time a <code>long</code> value
      */
     public void setMaxWait(long time) {
         maxWaitMillis = time;
@@ -64,6 +65,7 @@ public class WaitFor extends ConditionBase {
 
     /**
      * Set the max wait time unit
+     * @param unit an enumerated <code>Unit</code> value
      */
     public void setMaxWaitUnit(Unit unit) {
         maxWaitMultiplier = unit.getMultiplier();
@@ -71,6 +73,7 @@ public class WaitFor extends ConditionBase {
 
     /**
      * Set the time between each check
+     * @param time a <code>long</code> value
      */
     public void setCheckEvery(long time) {
         checkEveryMillis = time;
@@ -78,6 +81,7 @@ public class WaitFor extends ConditionBase {
 
     /**
      * Set the check every time unit
+     * @param unit an enumerated <code>Unit</code> value
      */
     public void setCheckEveryUnit(Unit unit) {
         checkEveryMultiplier = unit.getMultiplier();
@@ -85,6 +89,7 @@ public class WaitFor extends ConditionBase {
 
     /**
      * Name the property to set after a timeout.
+     * @param p the property name
      */
     public void setTimeoutProperty(String p) {
         timeoutProperty = p;
@@ -93,6 +98,7 @@ public class WaitFor extends ConditionBase {
     /**
      * Check repeatedly for the specified conditions until they become
      * true or the timeout expires.
+     * @throws BuildException on error
      */
     public void execute() throws BuildException {
         if (countConditions() > 1) {
@@ -147,12 +153,13 @@ public class WaitFor extends ConditionBase {
         private static final String DAY = "day";
         private static final String WEEK = "week";
 
-        private static final String[] units = {
+        private static final String[] UNITS = {
             MILLISECOND, SECOND, MINUTE, HOUR, DAY, WEEK
         };
 
         private Hashtable timeTable = new Hashtable();
 
+        /** Constructor the Unit enumerated type. */
         public Unit() {
             timeTable.put(MILLISECOND, new Long(1L));
             timeTable.put(SECOND,      new Long(1000L));
@@ -162,14 +169,21 @@ public class WaitFor extends ConditionBase {
             timeTable.put(WEEK,        new Long(1000L * 60L * 60L * 24L * 7L));
         }
 
+        /**
+         * Convert the value to a multipler (millisecond to unit).
+         * @return a multipler (a long value)
+         */
         public long getMultiplier() {
             String key = getValue().toLowerCase();
             Long l = (Long) timeTable.get(key);
             return l.longValue();
         }
 
+        /**
+         * @see EnumeratedAttribute#getValues()
+         */
         public String[] getValues() {
-            return units;
+            return UNITS;
         }
     }
 }
