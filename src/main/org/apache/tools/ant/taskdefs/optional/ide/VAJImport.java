@@ -298,7 +298,7 @@ public class VAJImport extends Task {
                 throw new BuildException("Unable to import into Workspace!");
             }
         } catch (IvjException ivje) {
-            VAJUtil.createBuildException("Error while importing into Workspace: ", ivje);
+            throw VAJUtil.createBuildException("Error while importing into Workspace: ", ivje);
         }
     }
 
