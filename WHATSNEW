@@ -23,6 +23,10 @@ Fixed bugs:
   specify any nested <(zip)fileset>s and the manifest had changed.
   Bugzilla Report 17780.
 
+* If you used a value starting with \ on Windows for the appxml
+  attribute of <ear> or the webxml attribute of <war>, it would be
+  ignored.  Bugzilla Report 17871.
+
 Changes from Ant 1.5.1 to Ant 1.5.2
 ===================================
 
