@@ -130,7 +130,6 @@ public class ExecTaskTest extends BuildFileTest {
         long elapsed = myBuild.getTimeElapsed();
         assertTrue("we waited more than the process lasted", TIME_TO_WAIT * 1000 > elapsed);
         logFile = new File(logFile.getAbsolutePath());
-        System.out.println("log file exists "+ logFile.exists());
         assertTrue("log file found after spawn", logFile.exists());
     }
 
@@ -166,7 +165,6 @@ public class ExecTaskTest extends BuildFileTest {
             project.init();
             project.setUserProperty( "ant.file" , myBuildFile.getAbsolutePath() );
             ProjectHelper.configureProject(project, myBuildFile);
-            project.addBuildListener(createLogger());
         }
         /**
          *
@@ -186,15 +184,6 @@ public class ExecTaskTest extends BuildFileTest {
             timeStarted = new GregorianCalendar();
             project.executeTarget(target);
             timeFinished = new GregorianCalendar();
-        }
-        private static BuildLogger createLogger() {
-            BuildLogger logger = null;
-            logger = new DefaultLogger();
-            logger.setMessageOutputLevel(Project.MSG_VERBOSE);
-            logger.setOutputPrintStream(System.out);
-            logger.setErrorPrintStream(System.err);
-            logger.setEmacsMode(false);
-            return logger;
         }
     }
     private class MonitoredBuildListener implements BuildListener {
