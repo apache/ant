@@ -54,38 +54,82 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.Pack;
 
-import java.io.IOException;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.zip.GZIPOutputStream;
+import java.io.IOException;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.bzip2.CBZip2InputStream;
 
 /**
- * Compresses a file with the GZIP algorithm. Normally used to compress
- * non-compressed archives such as TAR files.
+ * Expands a file that has been compressed with the BZIP2
+ * algorithm. Normally used to compress non-compressed archives such
+ * as TAR files.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 
-public class GZip extends Pack {
-    protected void pack() {
-        GZIPOutputStream zOut = null;
-        try {
-            zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
-            zipFile(source, zOut);
-        } catch (IOException ioe) {
-            String msg = "Problem creating gzip " + ioe.getMessage();
-            throw new BuildException(msg, ioe, location);
-        } finally {
-            if (zOut != null) {
-                try {
-                    // close up
-                    zOut.close();
+public class BUnzip2 extends Unpack {
+
+    private final static String DEFAULT_EXTENSION = ".bz2";
+
+    protected String getDefaultExtension() {
+        return DEFAULT_EXTENSION;
+    }
+
+    protected void extract() {
+        if (source.lastModified() > dest.lastModified()) {
+            log("Expanding "+ source.getAbsolutePath() + " to "
+                + dest.getAbsolutePath());
+
+            FileOutputStream out = null;
+            CBZip2InputStream zIn = null;
+            FileInputStream fis = null;
+            BufferedInputStream bis = null;
+            try {
+                out = new FileOutputStream(dest);
+                fis = new FileInputStream(source);
+                bis = new BufferedInputStream(fis);
+                int b = bis.read();
+                if(b != 'B') {
+                    throw new BuildException("Invalid bz2 file.", location);
                 }
-                catch (IOException e) {}
+                b = bis.read();
+                if(b != 'Z') {
+                    throw new BuildException("Invalid bz2 file.", location);
+                }
+                zIn = new CBZip2InputStream(bis);
+                byte[] buffer = new byte[8 * 1024];
+                int count = 0;
+                do {
+                    out.write(buffer, 0, count);
+                    count = zIn.read(buffer, 0, buffer.length);
+                } while (count != -1);
+            } catch (IOException ioe) {
+                String msg = "Problem expanding bzip2 " + ioe.getMessage();
+                throw new BuildException(msg, ioe, location);
+            } finally {
+                if (bis != null) {
+                    try {
+                        bis.close();
+                    } catch (IOException ioex) {}
+                }
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException ioex) {}
+                }
+                if (out != null) {
+                    try {
+                        out.close();
+                    } catch (IOException ioex) {}
+                }
+                if (zIn != null) {
+                    try {
+                        zIn.close();
+                    } catch (IOException ioex) {}
+                }
             }
         }
     }

@@ -1,3 +1,4 @@
+
 /*
  * The Apache Software License, Version 1.1
  *
@@ -54,30 +55,33 @@
 
 package org.apache.tools.ant.taskdefs;
 
+
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.Pack;
-
-import java.io.IOException;
-import java.io.FileOutputStream;
-import java.util.zip.GZIPOutputStream;
+import org.apache.tools.bzip2.CBZip2OutputStream;
 
 /**
- * Compresses a file with the GZIP algorithm. Normally used to compress
+ * Compresses a file with the BZip2 algorithm. Normally used to compress
  * non-compressed archives such as TAR files.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 
-public class GZip extends Pack {
+public class BZip2 extends Pack {
     protected void pack() {
-        GZIPOutputStream zOut = null;
+        CBZip2OutputStream zOut = null;
         try {
-            zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
+            BufferedOutputStream bos =
+                new BufferedOutputStream(new FileOutputStream(zipFile));
+            bos.write('B');
+            bos.write('Z');
+            zOut = new CBZip2OutputStream(bos);
             zipFile(source, zOut);
         } catch (IOException ioe) {
-            String msg = "Problem creating gzip " + ioe.getMessage();
+            String msg = "Problem creating bzip2 " + ioe.getMessage();
             throw new BuildException(msg, ioe, location);
         } finally {
             if (zOut != null) {

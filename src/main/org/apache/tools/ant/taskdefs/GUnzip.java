@@ -54,73 +54,42 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
 /**
  * Expands a file that has been compressed with the GZIP
- * algorightm. Normally used to compress non-compressed archives such
+ * algorithm. Normally used to compress non-compressed archives such
  * as TAR files.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 
-public class GUnzip extends Task {
+public class GUnzip extends Unpack {
 
-    private File source;
-    private File dest;
+    private final static String DEFAULT_EXTENSION = ".gz";
 
-    public void setSrc(String src) {
-        source = project.resolveFile(src);
+    protected String getDefaultExtension() {
+        return DEFAULT_EXTENSION;
     }
 
-    public void setDest(String dest) {
-        this.dest = project.resolveFile(dest);
-    }
-
-    public void execute() throws BuildException {
-        if (source == null) {
-            throw new BuildException("No source for gunzip specified", location);
-        }
-
-        if (!source.exists()) {
-            throw new BuildException("source doesn't exist", location);
-        }
-
-        if (source.isDirectory()) {
-            throw new BuildException("Cannot expand a directory", location);
-        }
-
-        if (dest == null) {
-            dest = new File(source.getParent());
-        }
-
-        if (dest.isDirectory()) {
-            String sourceName = source.getName();
-            int len = sourceName.length();
-            if (len > 3
-                && ".gz".equalsIgnoreCase(sourceName.substring(len-3))) {
-                dest = new File(dest, sourceName.substring(0, len-3));
-            } else {
-                dest = new File(dest, sourceName);
-            }
-        }
-
+    protected void extract() {
         if (source.lastModified() > dest.lastModified()) {
             log("Expanding "+ source.getAbsolutePath() + " to "
                         + dest.getAbsolutePath());
 
             FileOutputStream out = null;
             GZIPInputStream zIn = null;
+            FileInputStream fis = null;
             try {
                 out = new FileOutputStream(dest);
-                zIn = new GZIPInputStream(new FileInputStream(source));
+                fis = new FileInputStream(source);
+                zIn = new GZIPInputStream(fis);
                 byte[] buffer = new byte[8 * 1024];
                 int count = 0;
                 do {
@@ -131,6 +100,11 @@ public class GUnzip extends Task {
                 String msg = "Problem expanding gzip " + ioe.getMessage();
                 throw new BuildException(msg, ioe, location);
             } finally {
+                if (fis != null) {
+                    try {
+                        fis.close();
+                    } catch (IOException ioex) {}
+                }
                 if (out != null) {
                     try {
                         out.close();

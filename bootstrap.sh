@@ -98,7 +98,7 @@ mkdir -p bin
 
 echo ... Compiling Ant Classes
 
-"${JAVAC}" -d ${CLASSDIR} ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
+"${JAVAC}" -d ${CLASSDIR} ${TOOLS}/bzip/*.java ${TOOLS}/tar/*.java ${TOOLS}/zip/*.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcher.java \
     ${TOOLS}/ant/util/regexp/RegexpMatcherFactory.java \
     ${TOOLS}/ant/util/*.java ${TOOLS}/ant/types/*.java \

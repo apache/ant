@@ -54,39 +54,76 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.Pack;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.FileOutputStream;
-import java.util.zip.GZIPOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
- * Compresses a file with the GZIP algorithm. Normally used to compress
- * non-compressed archives such as TAR files.
+ * Abstract Base class for pack tasks.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 
-public class GZip extends Pack {
-    protected void pack() {
-        GZIPOutputStream zOut = null;
-        try {
-            zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
-            zipFile(source, zOut);
-        } catch (IOException ioe) {
-            String msg = "Problem creating gzip " + ioe.getMessage();
-            throw new BuildException(msg, ioe, location);
-        } finally {
-            if (zOut != null) {
-                try {
-                    // close up
-                    zOut.close();
-                }
-                catch (IOException e) {}
-            }
+public abstract class Pack extends Task {
+
+    protected File zipFile;
+    protected File source;
+
+    public void setZipfile(File zipFile) {
+        this.zipFile = zipFile;
+    }
+
+    public void setSrc(File src) {
+        source = src;
+    }
+
+    private void validate() {
+        if (zipFile == null) {
+            throw new BuildException("zipfile attribute is required", location);
+        }
+
+        if (source == null) {
+            throw new BuildException("src attribute is required", location);
+        }
+
+        if (source.isDirectory()) {
+            throw new BuildException("Src attribute must not " +
+                                     "represent a directory!", location);
         }
     }
+
+    public void execute() throws BuildException {
+        validate();
+        log("Building: " + zipFile.getAbsolutePath());
+        pack();
+    }
+
+    private void zipFile(InputStream in, OutputStream zOut)
+        throws IOException
+    {
+        byte[] buffer = new byte[8 * 1024];
+        int count = 0;
+        do {
+            zOut.write(buffer, 0, count);
+            count = in.read(buffer, 0, buffer.length);
+        } while (count != -1);
+    }
+
+    protected void zipFile(File file, OutputStream zOut)
+        throws IOException
+    {
+        FileInputStream fIn = new FileInputStream(file);
+        try {
+            zipFile(fIn, zOut);
+        } finally {
+            fIn.close();
+        }
+    }
+
+    protected abstract void pack();
 }

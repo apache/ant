@@ -54,39 +54,71 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.Pack;
 
-import java.io.IOException;
-import java.io.FileOutputStream;
-import java.util.zip.GZIPOutputStream;
+import java.io.File;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
 /**
- * Compresses a file with the GZIP algorithm. Normally used to compress
- * non-compressed archives such as TAR files.
+ * Abstract Base class for unpack tasks.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 
-public class GZip extends Pack {
-    protected void pack() {
-        GZIPOutputStream zOut = null;
-        try {
-            zOut = new GZIPOutputStream(new FileOutputStream(zipFile));
-            zipFile(source, zOut);
-        } catch (IOException ioe) {
-            String msg = "Problem creating gzip " + ioe.getMessage();
-            throw new BuildException(msg, ioe, location);
-        } finally {
-            if (zOut != null) {
-                try {
-                    // close up
-                    zOut.close();
-                }
-                catch (IOException e) {}
-            }
+public abstract class Unpack extends Task {
+
+    protected File source;
+    protected File dest;
+
+    public void setSrc(String src) {
+        source = project.resolveFile(src);
+    }
+
+    public void setDest(String dest) {
+        this.dest = project.resolveFile(dest);
+    }
+
+    private void validate() throws BuildException {
+        if (source == null) {
+            throw new BuildException("No Src for gunzip specified", location);
+        }
+
+        if (!source.exists()) {
+            throw new BuildException("Src doesn't exist", location);
+        }
+
+        if (source.isDirectory()) {
+            throw new BuildException("Cannot expand a directory", location);
+        }
+
+        if (dest == null) {
+            dest = new File(source.getParent());
+        }
+
+        if (dest.isDirectory()) {
+            String defaultExtension = getDefaultExtension();
+            createDestFile(defaultExtension);
         }
     }
+
+    private void createDestFile(String defaultExtension) {
+        String sourceName = source.getName();
+        int len = sourceName.length();
+        if (defaultExtension != null
+            && len > defaultExtension.length()
+            && defaultExtension.equalsIgnoreCase(sourceName.substring(len-defaultExtension.length()))) {
+            dest = new File(dest, sourceName.substring(0,
+                                                       len-defaultExtension.length()));
+        } else {
+            dest = new File(dest, sourceName);
+        }
+    }
+
+    public void execute() throws BuildException {
+        validate();
+        extract();
+    }
+
+    protected abstract String getDefaultExtension();
+    protected abstract void extract();
 }
