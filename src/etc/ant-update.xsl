@@ -91,7 +91,7 @@
         <xsl:attribute name="overwrite"><xsl:value-of select="@forceoverwrite"/></xsl:attribute>
       </xsl:if>
       <fileset dir="{@src}">
-          <xsl:apply-templates select="@includes|@includesfile|@excludes|excludesfile|node()"/>
+          <xsl:apply-templates select="@includes|@includesfile|@excludes|@excludesfile|node()"/>
       </fileset>
     </copy>
   </xsl:template>
