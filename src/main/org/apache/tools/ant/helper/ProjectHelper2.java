@@ -804,6 +804,14 @@ public class ProjectHelper2 extends ProjectHelper {
 
             // If the name has already been defined ( import for example )
             if (currentTargets.containsKey(name)) {
+                if (!context.isIgnoringProjectTag()) {
+                    // not in a import'ed file
+                    throw new BuildException(
+                        "Duplicate target '" + name + "'",
+                        new Location(context.getLocator().getSystemId(),
+                                     context.getLocator().getLineNumber(),
+                                     context.getLocator().getColumnNumber()));
+                }
                 // Alter the name.
                 if (context.getCurrentProjectName() != null) {
                     String newName = context.getCurrentProjectName()
