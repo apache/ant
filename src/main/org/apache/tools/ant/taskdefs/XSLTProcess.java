@@ -947,4 +947,4 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
 
     } // -- class Factory
 
-} //-- XSLTProcess
+}
