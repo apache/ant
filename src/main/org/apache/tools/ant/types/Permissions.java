@@ -145,6 +145,7 @@ public class Permissions {
         granted.add(new java.util.PropertyPermission("os.name", "read"));
         granted.add(new java.util.PropertyPermission("os.version", "read"));
         granted.add(new java.util.PropertyPermission("os.arch", "read"));
+        granted.add(new java.util.PropertyPermission("file.encoding", "read"));
         granted.add(new java.util.PropertyPermission("file.separator", "read"));
         granted.add(new java.util.PropertyPermission("path.separator", "read"));
         granted.add(new java.util.PropertyPermission("line.separator", "read"));
