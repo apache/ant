@@ -71,6 +71,8 @@ public interface InputHandler {
      *
      * <p>Postcondition: request.getInput will return a non-null
      * value, request.isInputValid will return true.</p>
+     * @param request the request to be processed
+     * @throws org.apache.tools.ant.BuildException if the input cannot be read from the console
      */
     void handleInput(InputRequest request)
         throws org.apache.tools.ant.BuildException;

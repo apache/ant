@@ -120,38 +120,70 @@ public class AntXMLContext {
      * when processing a particular build file.
      */
     private boolean ignoreProjectTag = false;
-
+    /**
+     * constructor
+     * @param project the project to which this antxml context belongs to
+     */
     public AntXMLContext(Project project) {
         this.project = project;
         implicitTarget.setName("");
         targetVector.addElement(implicitTarget);
     }
 
+    /**
+     * sets the build file to which the XML context belongs
+     * @param buildFile  ant build file
+     */
     public void setBuildFile(File buildFile) {
         this.buildFile = buildFile;
         this.buildFileParent = new File(buildFile.getParent());
     }
 
+    /**
+     * find out the build file
+     * @return  the build file to which the xml context belongs
+     */
     public File getBuildFile() {
         return buildFile;
     }
 
+    /**
+     * find out the parent build file of this build file
+     * @return the parent build file of this build file
+     */
     public File getBuildFileParent() {
         return buildFileParent;
     }
 
+    /**
+     * find out the project to which this antxml context belongs
+     * @return project
+     */
     public Project getProject() {
         return project;
     }
 
+    /**
+     * find out the current project name
+     * @return current project name
+     */
     public String getCurrentProjectName() {
         return currentProjectName;
     }
 
+    /**
+     * set the name of the current project
+     * @param name name of the current project
+     */
     public void setCurrentProjectName(String name) {
         this.currentProjectName = name;
     }
 
+    /**
+     * get the current runtime configurable wrapper
+     * can return null
+     * @return runtime configurable wrapper
+     */
     public RuntimeConfigurable currentWrapper() {
         if (wStack.size() < 1) {
             return null;
@@ -159,6 +191,11 @@ public class AntXMLContext {
         return (RuntimeConfigurable) wStack.elementAt(wStack.size() - 1);
     }
 
+    /**
+     * get the runtime configurable wrapper of the parent project
+     * can return null
+     * @return runtime configurable wrapper  of the parent project
+     */
     public RuntimeConfigurable parentWrapper() {
         if (wStack.size() < 2) {
             return null;
@@ -166,41 +203,76 @@ public class AntXMLContext {
         return (RuntimeConfigurable) wStack.elementAt(wStack.size() - 2);
     }
 
+    /**
+     * add a runtime configurable wrapper to the internal stack
+     * @param wrapper runtime configurable wrapper
+     */
     public void pushWrapper(RuntimeConfigurable wrapper) {
         wStack.addElement(wrapper);
     }
 
+    /**
+     * remove a runtime configurable wrapper from the stack
+     */
     public void popWrapper() {
         if (wStack.size() > 0) {
             wStack.removeElementAt(wStack.size() - 1);
         }
     }
 
+    /**
+     * access the stack of wrappers
+     * @return the stack of wrappers
+     */
     public Vector getWrapperStack() {
         return wStack;
     }
 
+    /**
+     * add a new target
+     * @param target target to add
+     */
     public void addTarget(Target target) {
         targetVector.addElement(target);
         currentTarget = target;
     }
 
+    /**
+     * get the current target
+     * @return current target
+     */
     public Target getCurrentTarget() {
         return currentTarget;
     }
 
+    /**
+     * get the implicit target
+     * @return implicit target
+     */
     public Target getImplicitTarget() {
         return implicitTarget;
     }
 
+    /**
+     * sets the current target
+     * @param target current target
+     */
     public void setCurrentTarget(Target target) {
         this.currentTarget = target;
     }
 
+    /**
+     * sets the implicit target
+     * @param target
+     */
     public void setImplicitTarget(Target target) {
         this.implicitTarget = target;
     }
 
+    /**
+     * access the vector of targets
+     * @return vector of targets
+     */
     public Vector getTargets() {
         return targetVector;
     }
@@ -212,8 +284,6 @@ public class AntXMLContext {
      * <p>
      * This method was moved out of the configure method to allow
      * it to be executed at parse time.
-     *
-     * @see #configure(java.lang.Object,org.xml.sax.AttributeList,org.apache.tools.ant.Project)
      */
     public void configureId(Object element, Attributes attr) {
         String id = attr.getValue("id");
@@ -222,18 +292,34 @@ public class AntXMLContext {
         }
     }
 
+    /**
+     * access the locator
+     * @return locator
+     */
     public Locator getLocator() {
         return locator;
     }
 
+    /**
+     * sets the locator
+     * @param locator locator
+     */
     public void setLocator(Locator locator) {
         this.locator = locator;
     }
 
+    /**
+     * tells whether the project tag is being ignored
+     * @return whether the project tag is being ignored
+     */
     public boolean isIgnoringProjectTag() {
         return ignoreProjectTag;
     }
 
+    /**
+     *  sets the flag to ignore the project tag
+     * @param flag to ignore the project tag
+     */
     public void setIgnoreProjectTag(boolean flag) {
         this.ignoreProjectTag = flag;
     }

@@ -79,12 +79,14 @@ public class DefaultInputHandler implements InputHandler {
     /**
      * Prompts and requests input.  May loop until a valid input has
      * been entered.
+     * @param request the request to handle
+     * @throws BuildException if not possible to read from console
      */
     public void handleInput(InputRequest request) throws BuildException {
         String prompt = getPrompt(request);
         DataInputStream in = null;
         try {
-            in = 
+            in =
                 new DataInputStream(new KeepAliveInputStream(getInputStream()));
             do {
                 System.err.println(prompt);
@@ -115,6 +117,7 @@ public class DefaultInputHandler implements InputHandler {
      *
      * @param request the request to construct the prompt for.
      *                Must not be <code>null</code>.
+     * @return the prompt to ask the user
      */
     protected String getPrompt(InputRequest request) {
         String prompt = request.getPrompt();
@@ -139,6 +142,7 @@ public class DefaultInputHandler implements InputHandler {
 
     /**
      * Returns the input stream from which the user input should be read.
+     * @return the input stream from which the user input should be read.
      */
     protected InputStream getInputStream() {
         return System.in;

@@ -175,6 +175,10 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * The size of buffers to be used in this classloader.
      */
     private static final int BUFFER_SIZE = 8192;
+    /**
+     * Number of array elements in a test array of strings
+     */
+    private static final int NUMBER_OF_STRINGS = 256;
 
     /**
      * The components of the classpath that the classloader searches
@@ -549,7 +553,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         //At least one constructor is guaranteed to be there, but check anyway.
         if (cons != null) {
             if (cons.length > 0 && cons[0] != null) {
-                final String[] strs = new String[256];
+                final String[] strs = new String[NUMBER_OF_STRINGS];
                 try {
                     cons[0].newInstance(strs);
                     // Expecting an exception to be thrown by this call:

@@ -121,6 +121,9 @@ public class ProjectHelperImpl extends ProjectHelper {
      */
     private static FileUtils fu = FileUtils.newFileUtils();
 
+    /**
+     * default constructor
+     */
     public ProjectHelperImpl() {
         implicitTarget.setName("");
     }

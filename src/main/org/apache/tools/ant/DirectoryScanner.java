@@ -70,7 +70,6 @@ import org.apache.tools.ant.types.selectors.FileSelector;
 import org.apache.tools.ant.types.selectors.SelectorScanner;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Class for scanning a directory for files/directories which match certain
@@ -707,7 +706,7 @@ public class DirectoryScanner
                         if (!path.equals(currentelement)) {
                             myfile = findFile(basedir, currentelement);
                             if (myfile != null) {
-                                currentelement = 
+                                currentelement =
                                     fileUtils.removeLeadingPath(basedir,
                                                                 myfile);
                             }
@@ -716,7 +715,7 @@ public class DirectoryScanner
                         throw new BuildException(ex);
                     }
                 }
-            
+
                 if ((myfile == null || !myfile.exists()) && !isCaseSensitive) {
                     File f = findFileCaseInsensitive(basedir, currentelement);
                     if (f.exists()) {
@@ -729,7 +728,7 @@ public class DirectoryScanner
                 }
 
                 if (myfile != null && myfile.exists()) {
-                    if (!followSymlinks 
+                    if (!followSymlinks
                         && isSymlink(basedir, currentelement)) {
                         continue;
                     }
@@ -902,7 +901,7 @@ public class DirectoryScanner
         if (!filesIncluded.contains(name)
             && !filesExcluded.contains(name)
             && !filesDeselected.contains(name)) {
-        
+
             if (!isExcluded(name)) {
                 if (isSelected(name, file)) {
                     filesIncluded.addElement(name);
@@ -942,7 +941,7 @@ public class DirectoryScanner
                         scandir(file, name + File.separator, fast);
                     }
                 }
-                
+
             } else {
                 everythingIncluded = false;
                 dirsExcluded.addElement(name);
