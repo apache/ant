@@ -128,10 +128,12 @@ href="../using.html#path">PATH like structure</a> and can also be set via a nest
 builds using the following:</p>
 <pre>  &lt;property file=&quot;${user.home}/.ant-global.properties&quot;/&gt;</pre>
 <p>since the &quot;user.home&quot; property is defined by the Java virtual machine
-to be your home directory.  This technique is more appropriate for Unix than 
-Windows since the notion of a home directory doesn't exist on Windows.  On the
-JVM that I tested, the home directory on Windows is &quot;C:\&quot;.  Different JVM
-implementations may use other values for the home directory on Windows.</p>
+to be your home directory.  Where the &quot;user.home&quot; property resolves to in
+the file system depends on the operating system version and the JVM implementation.
+On Unix based systems, this will map to the user's home directory. On modern Windows
+variants, this will most likely resolve to the user's directory in the &quot;Documents
+and Settings&quot; folder. Older windows variants such as Windows 98/ME are less 
+predictable, as are other operating system/JVM combinations.</p>
 
 <pre>
   &lt;property environment=&quot;env&quot;/&gt;
