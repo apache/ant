@@ -310,6 +310,21 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             } else {
                 cmd.createArgument().setValue(source);
             }
+        } else if (assumeJava15() && attributes.getTarget() != null) {
+            String t = attributes.getTarget();
+            if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3") 
+                || t.equals("1.4")) {
+                attributes.log("The -source switch defaults to 1.5 in JDK 1.5.",
+                               Project.MSG_WARN);
+                attributes.log("If you specify -target " + t
+                               + " you now must also specify -source " + t 
+                               + ".", Project.MSG_WARN);
+                attributes.log("Ant will implicitly add -source " + t
+                               + " for you.  Please change your build file.",
+                               Project.MSG_WARN);
+                cmd.createArgument().setValue("-source");
+                cmd.createArgument().setValue(t);
+            }
         }
         return cmd;
     }
@@ -525,6 +540,20 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4))
             || ("extJavac".equals(attributes.getCompilerVersion())
                 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_4));
+    }
+
+    /**
+     * Shall we assume JDK 1.5 command line switches?
+     * @since Ant 1.6.3
+     */
+    protected boolean assumeJava15() {
+        return "javac1.5".equals(attributes.getCompilerVersion())
+            || ("classic".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
+            || ("modern".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5))
+            || ("extJavac".equals(attributes.getCompilerVersion())
+                && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5));
     }
 
     /**
