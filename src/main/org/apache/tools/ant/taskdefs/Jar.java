@@ -128,10 +128,10 @@ public class Jar extends Zip {
 
         this.manifestFile = manifestFile;
         
-        InputStream is = null;
+        Reader r = null;
         try {
-            is = new FileInputStream(manifestFile);
-            Manifest newManifest = new Manifest(is);
+            r = new FileReader(manifestFile);
+            Manifest newManifest = new Manifest(r);
             if (manifest == null) {
                 manifest = getDefaultManifest();
             }
@@ -145,9 +145,9 @@ public class Jar extends Zip {
             throw new BuildException("Unable to read manifest file: " + manifestFile, e);
         }
         finally {
-            if (is != null) {
+            if (r != null) {
                 try {
-                    is.close();
+                    r.close();
                 }
                 catch (IOException e) {
                     // do nothing
@@ -259,7 +259,13 @@ public class Jar extends Zip {
             if (in == null) {
                 throw new BuildException("Could not find default manifest: " + s);
             }
-            return new Manifest(in);
+            try {
+                return new Manifest(new InputStreamReader(in, "ASCII"));
+            } catch (UnsupportedEncodingException e) {
+                // impossible with ASCII encoding
+                log("ASCII encoding not supported by JVM", Project.MSG_ERR);
+                return new Manifest(new InputStreamReader(in));
+            }
         }
         catch (ManifestException e) {
             throw new BuildException("Default manifest is invalid !!");
@@ -280,10 +286,10 @@ public class Jar extends Zip {
     private void zipManifestEntry(InputStream is) throws IOException {
         try {
             if (execManifest == null) {
-                execManifest = new Manifest(is);
+                execManifest = new Manifest(new InputStreamReader(is));
             }
             else if (isAddingNewFiles()) {
-                execManifest.merge(new Manifest(is));
+                execManifest.merge(new Manifest(new InputStreamReader(is)));
             }
         }
         catch (ManifestException e) {
@@ -344,7 +350,7 @@ public class Jar extends Zip {
                     log("Updating jar since the current jar has no manifest", Project.MSG_VERBOSE);
                     return false;
                 }
-                Manifest currentManifest = new Manifest(theZipFile.getInputStream(entry));
+                Manifest currentManifest = new Manifest(new InputStreamReader(theZipFile.getInputStream(entry)));
                 if (manifest == null) {
                     manifest = getDefaultManifest();
                 }

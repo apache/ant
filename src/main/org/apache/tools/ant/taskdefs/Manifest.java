@@ -60,8 +60,7 @@ import java.util.Enumeration;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringWriter;
 
 import org.apache.tools.ant.BuildException;
@@ -504,15 +503,15 @@ public class Manifest {
     }
 
     /**
-     * Read a manifest file from the given input stream
+     * Read a manifest file from the given reader
      *
-     * @param is the input stream from which the Manifest is read
+     * @param is the reader from which the Manifest is read
      *
      * @throws ManifestException if the manifest is not valid according to the JAR spec
      * @throws IOException if the manifest cannot be read from the reader.
      */
-    public Manifest(InputStream is) throws ManifestException, IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+    public Manifest(Reader r) throws ManifestException, IOException {
+        BufferedReader reader = new BufferedReader(r);
         // This should be the manifest version
         String nextSectionName = mainSection.read(reader);
         String readManifestVersion = mainSection.getAttributeValue(ATTRIBUTE_MANIFEST_VERSION);
