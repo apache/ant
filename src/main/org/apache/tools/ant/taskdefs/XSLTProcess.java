@@ -268,6 +268,7 @@ public class XSLTProcess extends MatchingTask {
                 loadClass("org.apache.tools.ant.taskdefs.optional.TraXLiaison");
             liaison = (XSLTLiaison)clazz.newInstance();
         } else if (proc.equals("xslp")) {
+            log("DEPRECATED - xslp processor is deprecated. Use trax or xalan instead.");
             final Class clazz =
                 loadClass("org.apache.tools.ant.taskdefs.optional.XslpLiaison");
             liaison = (XSLTLiaison) clazz.newInstance();
