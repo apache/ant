@@ -30,33 +30,28 @@ import org.apache.tools.ant.types.Reference;
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:glennm@ca.ibm.com">Glenn McAllister</a>
  */
-public class Property extends Task
+public class Property
+    extends Task
 {
-    protected Path classpath;
-    protected String env;
-    protected File file;
+    private Path m_classpath;
+    private String m_env;
+    private File m_file;
 
-    protected String name;
-    protected Reference ref;
-    protected String resource;
-
-    protected String value;// set read-only properties
-
-    public Property()
-    {
-        super();
-    }
+    private String m_name;
+    private Reference m_ref;
+    private String m_resource;
+    private String m_value;
 
     public void setClasspath( Path classpath )
         throws TaskException
     {
-        if( this.classpath == null )
+        if( m_classpath == null )
         {
-            this.classpath = classpath;
+            m_classpath = classpath;
         }
         else
         {
-            this.classpath.append( classpath );
+            m_classpath.append( classpath );
         }
     }
 
@@ -68,12 +63,12 @@ public class Property extends Task
 
     public void setEnvironment( String env )
     {
-        this.env = env;
+        m_env = env;
     }
 
     public void setFile( File file )
     {
-        this.file = file;
+        m_file = file;
     }
 
     public void setLocation( File location )
@@ -83,127 +78,116 @@ public class Property extends Task
 
     public void setName( String name )
     {
-        this.name = name;
+        m_name = name;
     }
 
     public void setRefid( Reference ref )
     {
-        this.ref = ref;
+        m_ref = ref;
     }
 
     public void setResource( String resource )
     {
-        this.resource = resource;
+        m_resource = resource;
     }
 
     public void setValue( String value )
     {
-        this.value = value;
+        m_value = value;
     }
 
     public String getEnvironment()
     {
-        return env;
+        return m_env;
     }
 
     public File getFile()
     {
-        return file;
+        return m_file;
     }
 
     public Reference getRefid()
     {
-        return ref;
+        return m_ref;
     }
 
     public String getResource()
     {
-        return resource;
+        return m_resource;
     }
 
     public String getValue()
     {
-        return value;
+        return m_value;
     }
 
     public Path createClasspath()
         throws TaskException
     {
-        if( this.classpath == null )
+        if( m_classpath == null )
         {
-            this.classpath = new Path();
+            m_classpath = new Path();
         }
-        return this.classpath.createPath();
+        return m_classpath.createPath();
     }
 
     public void execute()
         throws TaskException
     {
-        if( name != null )
+        if( m_name != null )
         {
-            if( value == null && ref == null )
+            if( m_value == null && m_ref == null )
             {
                 throw new TaskException( "You must specify value, location or refid with the name attribute" );
             }
         }
         else
         {
-            if( file == null && resource == null && env == null )
+            if( m_file == null && m_resource == null && m_env == null )
             {
                 throw new TaskException( "You must specify file, resource or environment when not using the name attribute" );
             }
         }
 
-        if( ( name != null ) && ( value != null ) )
+        if( ( m_name != null ) && ( m_value != null ) )
         {
-            addProperty( name, value );
+            setProperty( m_name, m_value );
         }
 
-        if( file != null )
-            loadFile( file );
+        if( m_file != null )
+            loadFile( m_file );
 
-        if( resource != null )
-            loadResource( resource );
+        if( m_resource != null )
+            loadResource( m_resource );
 
-        if( env != null )
-            loadEnvironment( env );
+        if( m_env != null )
+            loadEnvironment( m_env );
 
-        if( ( name != null ) && ( ref != null ) )
+        if( ( m_name != null ) && ( m_ref != null ) )
         {
-            Object obj = ref.getReferencedObject( getProject() );
+            Object obj = m_ref.getReferencedObject( getProject() );
             if( obj != null )
             {
-                addProperty( name, obj.toString() );
+                setProperty( m_name, obj.toString() );
             }
         }
     }
 
     public String toString()
     {
-        return value == null ? "" : value;
+        return m_value == null ? "" : m_value;
     }
 
     protected void addProperties( Properties props )
         throws TaskException
     {
-        //no longer needs as ant2 properties are completely dynamic
-        //resolveAllProperties( props );
-
-        Enumeration e = props.keys();
-        while( e.hasMoreElements() )
+        final Iterator e = props.keySet().iterator();
+        while( e.hasNext() )
         {
-            String name = (String)e.nextElement();
-            String value = (String)props.getProperty( name );
-
-            String v = getProject().replaceProperties( value );
-            addProperty( name, v );
+            final String name = (String)e.next();
+            final String value = (String)props.getProperty( name );
+            setProperty( name, value );
         }
-    }
-
-    protected void addProperty( String n, String v )
-        throws TaskException
-    {
-        setProperty( n, v );
     }
 
     protected void loadEnvironment( String prefix )
@@ -288,13 +272,13 @@ public class Property extends Task
             ClassLoader cL = null;
             InputStream is = null;
 
-            if( classpath != null )
+            if( m_classpath != null )
             {
-                cL = new AntClassLoader( getProject(), classpath );
+                cL = new AntClassLoader( getProject(), m_classpath );
             }
             else
             {
-                cL = this.getClass().getClassLoader();
+                cL = getClass().getClassLoader();
             }
 
             if( cL == null )
