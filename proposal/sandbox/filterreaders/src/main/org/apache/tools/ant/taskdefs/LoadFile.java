@@ -73,7 +73,7 @@ import java.util.Vector;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  * @created 10 December 2001
  */
-public class LoadFile extends Task {
+public final class LoadFile extends Task {
 
     /**
      * source file, usually null
