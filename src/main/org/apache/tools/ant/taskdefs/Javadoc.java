@@ -55,7 +55,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  *        work.
  *    <LI>there is no control on arguments sanity since they are left
  *        to the javadoc implementation.
- *    <LI>argument J in javadoc1 is not supported (what is that for anyway?)
  * </UL>
  *
  * <P>If no <CODE>doclet</CODE> is set, then the <CODE>version</CODE> and
@@ -348,16 +347,6 @@ public class Javadoc extends Task {
     /** The command line built to execute Javadoc. */
     private Commandline cmd = new Commandline();
 
-    /** Flag which indicates if javadoc from JDK 1.1 is to be used. */
-    private static boolean javadoc1 =
-        JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1);
-
-    /** Flag which indicates if javadoc from JDK 1.4 is available */
-    private static boolean javadoc4 =
-        !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)
-            && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2)
-            && !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3);
-
     /**
      * Utility method to add an argument to the command line conditionally
      * based on the given flag.
@@ -372,33 +361,18 @@ public class Javadoc extends Task {
     }
 
     /**
-     * Utility method to add a non JDK1.1 javadoc argument.
+     * Utility method to add a javadoc argument.
      *
      * @param key the argument name.
      * @param value the argument value.
      */
-    private void add12ArgIfNotEmpty(String key, String value) {
-        if (!javadoc1) {
-            if (value != null && value.length() != 0) {
-                cmd.createArgument().setValue(key);
-                cmd.createArgument().setValue(value);
-            } else {
-                log("Warning: Leaving out empty argument '" + key + "'",
-                    Project.MSG_WARN);
-            }
-        }
-    }
-
-    /**
-     * Utility method to add a non-JDK1.1 argument to the command line
-     * conditionally based on the given flag.
-     *
-     * @param b the flag which controls if the argument is added.
-     * @param arg the argument value.
-     */
-    private void add12ArgIf(boolean b, String arg) {
-        if (!javadoc1 && b) {
-            cmd.createArgument().setValue(arg);
+    private void addArgIfNotEmpty(String key, String value) {
+        if (value != null && value.length() != 0) {
+            cmd.createArgument().setValue(key);
+            cmd.createArgument().setValue(value);
+        } else {
+            log("Warning: Leaving out empty argument '" + key + "'",
+                Project.MSG_WARN);
         }
     }
 
@@ -434,6 +408,8 @@ public class Javadoc extends Task {
     private boolean breakiterator = false;
     private String noqualifier;
     private boolean includeNoSourcePackages = false;
+    private boolean old = false;
+    private String executable = null;
 
     private Vector fileSets = new Vector();
     private Vector packageSets = new Vector();
@@ -445,9 +421,7 @@ public class Javadoc extends Task {
      * @param b true if an external file is to be used.
      */
     public void setUseExternalFile(boolean b) {
-        if (!javadoc1) {
-            useExternalFile = b;
-        }
+        useExternalFile = b;
     }
 
     /**
@@ -468,11 +442,7 @@ public class Javadoc extends Task {
      *        JVM conventions (e.g. 128m is 128 Megabytes)
      */
     public void setMaxmemory(String max) {
-        if (javadoc1) {
-            cmd.createArgument().setValue("-J-mx" + max);
-        } else {
-            cmd.createArgument().setValue("-J-Xmx" + max);
-        }
+        cmd.createArgument().setValue("-J-Xmx" + max);
     }
 
     /**
@@ -624,10 +594,8 @@ public class Javadoc extends Task {
      * @param f the file containing the overview.
      */
     public void setOverview(File f) {
-        if (!javadoc1) {
-            cmd.createArgument().setValue("-overview");
-            cmd.createArgument().setFile(f);
-        }
+        cmd.createArgument().setValue("-overview");
+        cmd.createArgument().setFile(f);
     }
 
     /**
@@ -750,17 +718,7 @@ public class Javadoc extends Task {
      * @param b if true attempt to generate old style documentation.
      */
     public void setOld(boolean b) {
-        if (b) {
-            if (javadoc1) {
-                log("Javadoc 1.1 doesn't support the -1.1 switch",
-                    Project.MSG_WARN);
-            } else if (javadoc4) {
-                log("Javadoc 1.4 doesn't support the -1.1 switch anymore",
-                    Project.MSG_WARN);
-            } else {
-                cmd.createArgument().setValue("-1.1");
-            }
-        }
+        old = b;
     }
 
     /**
@@ -839,10 +797,8 @@ public class Javadoc extends Task {
      * @deprecated Use the {@link #setExtdirs(Path)} version.
      */
     public void setExtdirs(String path) {
-        if (!javadoc1) {
-            cmd.createArgument().setValue("-extdirs");
-            cmd.createArgument().setValue(path);
-        }
+        cmd.createArgument().setValue("-extdirs");
+        cmd.createArgument().setValue(path);
     }
 
     /**
@@ -851,10 +807,8 @@ public class Javadoc extends Task {
      * @param path a path containing the extension directories.
      */
     public void setExtdirs(Path path) {
-        if (!javadoc1) {
-            cmd.createArgument().setValue("-extdirs");
-            cmd.createArgument().setPath(path);
-        }
+        cmd.createArgument().setValue("-extdirs");
+        cmd.createArgument().setPath(path);
     }
 
     /**
@@ -863,7 +817,7 @@ public class Javadoc extends Task {
      * @param b true if operation is to be verbose.
      */
     public void setVerbose(boolean b) {
-        add12ArgIf(b, "-verbose");
+        addArgIf(b, "-verbose");
     }
 
     /**
@@ -872,12 +826,10 @@ public class Javadoc extends Task {
      * @param locale the locale to use.
      */
     public void setLocale(String locale) {
-        if (!javadoc1) {
-            // createArgument(true) is necessary to make sure, -locale
-            // is the first argument (required in 1.3+).
-            cmd.createArgument(true).setValue(locale);
-            cmd.createArgument(true).setValue("-locale");
-        }
+        // createArgument(true) is necessary to make sure, -locale
+        // is the first argument (required in 1.3+).
+        cmd.createArgument(true).setValue(locale);
+        cmd.createArgument(true).setValue("-locale");
     }
 
     /**
@@ -905,7 +857,7 @@ public class Javadoc extends Task {
      * @param b true if the use page should be generated.
      */
     public void setUse(boolean b) {
-        add12ArgIf(b, "-use");
+        addArgIf(b, "-use");
     }
 
 
@@ -924,7 +876,7 @@ public class Javadoc extends Task {
      * @param b true if the index should be split into a file per letter.
      */
     public void setSplitindex(boolean b) {
-        add12ArgIf(b, "-splitindex");
+        addArgIf(b, "-splitindex");
     }
 
     /**
@@ -934,7 +886,7 @@ public class Javadoc extends Task {
      * @param title the window title to use.
      */
     public void setWindowtitle(String title) {
-        add12ArgIfNotEmpty("-windowtitle", title);
+        addArgIfNotEmpty("-windowtitle", title);
     }
 
     /**
@@ -954,9 +906,7 @@ public class Javadoc extends Task {
      * @param text the HTML element containing the document title.
      */
     public void addDoctitle(Html text) {
-        if (!javadoc1) {
-            doctitle = text;
-        }
+        doctitle = text;
     }
 
     /**
@@ -976,9 +926,7 @@ public class Javadoc extends Task {
      * @param text the header text
      */
     public void addHeader(Html text) {
-        if (!javadoc1) {
-            header = text;
-        }
+        header = text;
     }
 
     /**
@@ -998,9 +946,7 @@ public class Javadoc extends Task {
      * @param text the footer text.
      */
     public void addFooter(Html text) {
-        if (!javadoc1) {
-            footer = text;
-        }
+        footer = text;
     }
 
     /**
@@ -1020,9 +966,7 @@ public class Javadoc extends Task {
      * @param text the bottom text.
      */
     public void addBottom(Html text) {
-        if (!javadoc1) {
-            bottom = text;
-        }
+        bottom = text;
     }
 
     /**
@@ -1032,7 +976,7 @@ public class Javadoc extends Task {
      * @param src the offline link specification (url and package list)
      */
     public void setLinkoffline(String src) {
-        if (!javadoc1) {
+        if (/*1.2+*/true) {
             LinkArgument le = createLink();
             le.setOffline(true);
             String linkOfflineError = "The linkoffline attribute must include"
@@ -1066,9 +1010,7 @@ public class Javadoc extends Task {
      * Create links to javadoc output at the given URL.
      */
     public void setLink(String src) {
-        if (!javadoc1) {
-            createLink().setHref(src);
-        }
+        createLink().setHref(src);
     }
 
     /**
@@ -1086,7 +1028,7 @@ public class Javadoc extends Task {
      * @param b if true, do not generate deprecated list.
      */
     public void setNodeprecatedlist(boolean b) {
-        add12ArgIf(b, "-nodeprecatedlist");
+        addArgIf(b, "-nodeprecatedlist");
     }
 
     /**
@@ -1113,7 +1055,7 @@ public class Javadoc extends Task {
      * @param b if true, do not generate help link
      */
     public void setNohelp(boolean b) {
-        add12ArgIf(b, "-nohelp");
+        addArgIf(b, "-nohelp");
     }
 
     /**
@@ -1122,7 +1064,7 @@ public class Javadoc extends Task {
      * @param b if true, do not generate navigation bar.
      */
     public void setNonavbar(boolean b) {
-        add12ArgIf(b, "-nonavbar");
+        addArgIf(b, "-nonavbar");
     }
 
     /**
@@ -1131,7 +1073,7 @@ public class Javadoc extends Task {
      * @param b if true, generate warning about the serial tag.
      */
     public void setSerialwarn(boolean b) {
-        add12ArgIf(b, "-serialwarn");
+        addArgIf(b, "-serialwarn");
     }
 
     /**
@@ -1140,10 +1082,8 @@ public class Javadoc extends Task {
      * @param f the file with the CSS to use.
      */
     public void setStylesheetfile(File f) {
-        if (!javadoc1) {
-            cmd.createArgument().setValue("-stylesheetfile");
-            cmd.createArgument().setFile(f);
-        }
+        cmd.createArgument().setValue("-stylesheetfile");
+        cmd.createArgument().setFile(f);
     }
 
     /**
@@ -1152,10 +1092,8 @@ public class Javadoc extends Task {
      * @param f the file containing help content.
      */
     public void setHelpfile(File f) {
-        if (!javadoc1) {
-            cmd.createArgument().setValue("-helpfile");
-            cmd.createArgument().setFile(f);
-        }
+        cmd.createArgument().setValue("-helpfile");
+        cmd.createArgument().setFile(f);
     }
 
     /**
@@ -1174,9 +1112,7 @@ public class Javadoc extends Task {
      * @param src the file containing the package list.
      */
     public void setPackageList(String src) {
-        if (!javadoc1) {
-            packageList = src;
-        }
+        packageList = src;
     }
 
     /**
@@ -1253,10 +1189,6 @@ public class Javadoc extends Task {
      * when run on Java versions below 1.4.
      */
     public TagArgument createTag() {
-        if (!javadoc4) {
-            log ("-tag option not supported on JavaDoc < 1.4",
-                 Project.MSG_VERBOSE);
-        }
         TagArgument ta = new TagArgument();
         tags.addElement (ta);
         return ta;
@@ -1478,7 +1410,7 @@ public class Javadoc extends Task {
      * Charset for cross-platform viewing of generated documentation.
      */
     public void setCharset(String src) {
-        this.add12ArgIfNotEmpty("-charset", src);
+        this.addArgIfNotEmpty("-charset", src);
     }
 
     /**
@@ -1498,11 +1430,16 @@ public class Javadoc extends Task {
      * @since Ant 1.5
      */
     public void setSource(String source) {
-        if (!javadoc4) {
-            log ("-source option not supported on JavaDoc < 1.4",
-                 Project.MSG_VERBOSE);
-        }
         this.source = source;
+    }
+    
+    /**
+     * Sets the actual executable command to invoke, instead of the binary
+     * <code>javadoc</code> found in Ant's JDK.
+     * @since Ant 1.6.3
+     */
+    public void setExecutable(String executable) {
+        this.executable = executable;
     }
 
     /**
@@ -1538,10 +1475,6 @@ public class Javadoc extends Task {
      * @since Ant 1.6
      */
     public void setLinksource(boolean b) {
-        if (!javadoc4) {
-            log ("-linksource option not supported on JavaDoc < 1.4",
-                 Project.MSG_VERBOSE);
-        }
         this.linksource = b;
     }
 
@@ -1552,10 +1485,6 @@ public class Javadoc extends Task {
      * @since Ant 1.6
      */
     public void setBreakiterator(boolean b) {
-        if (!javadoc4) {
-            log ("-breakiterator option not supported on JavaDoc < 1.4",
-                 Project.MSG_VERBOSE);
-        }
         this.breakiterator = b;
     }
 
@@ -1566,10 +1495,6 @@ public class Javadoc extends Task {
      * @since Ant 1.6
      */
     public void setNoqualifier(String noqualifier) {
-        if (!javadoc4) {
-            log ("-noqualifier option not supported on JavaDoc < 1.4",
-                 Project.MSG_VERBOSE);
-        }
         this.noqualifier = noqualifier;
     }
 
@@ -1586,6 +1511,11 @@ public class Javadoc extends Task {
         if ("javadoc2".equals(getTaskType())) {
             log("!! javadoc2 is deprecated. Use javadoc instead. !!");
         }
+
+        // Whether *this VM* is 1.4+ (but also check executable != null).
+        boolean javadoc4 =
+            !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_2) &&
+            !JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_3);
 
         Vector packagesToDoc = new Vector();
         Path sourceDirs = new Path(getProject());
@@ -1620,7 +1550,11 @@ public class Javadoc extends Task {
         log("Generating Javadoc", Project.MSG_INFO);
 
         Commandline toExecute = (Commandline) cmd.clone();
-        toExecute.setExecutable(JavaEnvUtils.getJdkExecutable("javadoc"));
+        if (executable != null) {
+            toExecute.setExecutable(executable);
+        } else {
+            toExecute.setExecutable(JavaEnvUtils.getJdkExecutable("javadoc"));
+        }
 
         // ------------------------------------------ general javadoc arguments
         if (doctitle != null) {
@@ -1646,19 +1580,13 @@ public class Javadoc extends Task {
             classpath = classpath.concatSystemClasspath("ignore");
         }
 
-        if (!javadoc1) {
+        if (/*1.2+*/true) {
             if (classpath.size() > 0) {
                 toExecute.createArgument().setValue("-classpath");
                 toExecute.createArgument().setPath(classpath);
             }
             if (sourceDirs.size() > 0) {
                 toExecute.createArgument().setValue("-sourcepath");
-                toExecute.createArgument().setPath(sourceDirs);
-            }
-        } else {
-            sourceDirs.append(classpath);
-            if (sourceDirs.size() > 0) {
-                toExecute.createArgument().setValue("-classpath");
                 toExecute.createArgument().setPath(sourceDirs);
             }
         }
@@ -1670,7 +1598,7 @@ public class Javadoc extends Task {
             toExecute.createArgument().setValue("-author");
         }
 
-        if (javadoc1 || doclet == null) {
+        if (doclet == null) {
             if (destDir == null) {
                 String msg = "destDir attribute must be set!";
                 throw new BuildException(msg);
@@ -1679,7 +1607,7 @@ public class Javadoc extends Task {
 
         // ---------------------------- javadoc2 arguments for default doclet
 
-        if (!javadoc1) {
+        if (/*1.2+*/true) {
             if (doclet != null) {
                 if (doclet.getName() == null) {
                     throw new BuildException("The doclet name must be "
@@ -1838,7 +1766,7 @@ public class Javadoc extends Task {
             }
 
             // JavaDoc 1.4 parameters
-            if (javadoc4) {
+            if (javadoc4 || executable != null) {
                 for (Enumeration e = tags.elements(); e.hasMoreElements();) {
                     Object element = e.nextElement();
                     if (element instanceof TagArgument) {
@@ -1903,6 +1831,39 @@ public class Javadoc extends Task {
                 if (noqualifier != null && doclet == null) {
                     toExecute.createArgument().setValue("-noqualifier");
                     toExecute.createArgument().setValue(noqualifier);
+                }
+            } else {
+                // Not 1.4+.
+                if (!tags.isEmpty()) {
+                    log("-tag and -taglet options not supported on Javadoc < 1.4",
+                        Project.MSG_VERBOSE);
+                }
+                if (source != null) {
+                    log("-source option not supported on JavaDoc < 1.4",
+                        Project.MSG_VERBOSE);
+                }
+                if (linksource) {
+                    log("-linksource option not supported on JavaDoc < 1.4",
+                        Project.MSG_VERBOSE);
+                }
+                if (breakiterator) {
+                    log("-breakiterator option not supported on JavaDoc < 1.4",
+                        Project.MSG_VERBOSE);
+                }
+                if (noqualifier != null) {
+                    log("-noqualifier option not supported on JavaDoc < 1.4",
+                        Project.MSG_VERBOSE);
+                }
+            }
+            // Javadoc 1.2/1.3 parameters:
+            if (!javadoc4 || executable != null) {
+                if (old) {
+                    toExecute.createArgument().setValue("-1.1");
+                }
+            } else {
+                if (old) {
+                    log("Javadoc 1.4 doesn't support the -1.1 switch anymore",
+                        Project.MSG_WARN);
                 }
             }
 

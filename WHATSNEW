@@ -28,6 +28,8 @@ Changes that could break older environments:
 Other changes:
 --------------
 
+* <javadoc> can now take an attribute 'executable'. Bugzilla report 30606.
+
 * New attribute ignorecontents for <different> selector
 
 * Javadoc fixes for Location, Project, and RuntimeConfigurable
