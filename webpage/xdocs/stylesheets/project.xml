@@ -11,6 +11,8 @@
     <menu name="Ant">
         <item name="Front Page"            
               href="/index.html"/>
+        <item name="Documentation"            
+              href="/ant/manual/"/>
         <item name="News"                 
               href="/antnews.html"/>
         <item name="External Resources"
@@ -37,48 +39,5 @@
         <item name="Bug Database"          href="/site/bugs.html"/>
     </menu>
 
-    <menu name="Other Projects">	
-        <item name="Avalon"
-              href="http://jakarta.apache.org/avalon/index.html"/>
-        <item name="Commons"               
-              href="http://jakarta.apache.org/commons/index.html"/>
-        <item name="ECS"                   
-              href="http://jakarta.apache.org/ecs/index.html"/>
-        <item name="James"                 
-              href="http://jakarta.apache.org/james/index.html"/>
-        <item name="Jetspeed"              
-              href="http://jakarta.apache.org/jetspeed/index.html"/>
-        <item name="JMeter"                
-              href="http://jakarta.apache.org/jmeter/index.html"/>
-        <item name="Log4J"
-              href="http://jakarta.apache.org/log4j/index.html"/> 
-        <item name="ORO"
-              href="http://jakarta.apache.org/oro/index.html"/>
-        <item name="Regexp"
-              href="http://jakarta.apache.org/regexp/index.html"/>
-        <item name="Slide"
-              href="http://jakarta.apache.org/slide/index.html"/>
-        <item name="Struts"                
-              href="http://jakarta.apache.org/struts/index.html"/>
-        <item name="Taglibs"
-              href="http://jakarta.apache.org/taglibs/index.html"/>
-        <item name="Tomcat"
-              href="http://jakarta.apache.org/tomcat/index.html"/>
-        <item name="Turbine"
-              href="http://jakarta.apache.org/turbine/index.html"/>
-        <item name="Velocity"
-              href="http://jakarta.apache.org/velocity/index.html"/>
-        <item name="Watchdog"
-              href="http://jakarta.apache.org/watchdog/index.html"/>
-    </menu>					 
-
-    <menu name="Misc">
-        <item name="Who We Are"            href="/site/whoweare.html"/>
-        <item name="Acknowledgements"      href="/site/acknowledgements.html"/>
-        <item name="Management"            href="/site/roles.html"/>
-        <item name="About This Site"       href="/site/jakarta-site2.html"/>
-        <item name="Contact"               href="/site/contact.html"/>
-        <item name="Legal"                 href="/site/legal.html"/>        
-    </menu>
     </body>
 </project>

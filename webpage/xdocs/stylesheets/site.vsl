@@ -23,7 +23,7 @@
   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="$subbannerbg">
       <font color="$subbannerfg" face="arial,helvetica,sanserif">
-        <strong>$subsection.getAttributeValue("name")</strong>
+        <a name="$subsection.getAttributeValue("name")"><strong>$subsection.getAttributeValue("name")</strong></a>
       </font>
     </td></tr>
     <tr><td>
@@ -48,7 +48,7 @@
   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="$bannerbg">
       <font color="$bannerfg" face="arial,helvetica,sanserif">
-        <strong>$section.getAttributeValue("name")</strong>
+        <a name="$section.getAttributeValue("name")"><strong>$section.getAttributeValue("name")</strong></a>
       </font>
     </td></tr>
     <tr><td>

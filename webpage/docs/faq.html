@@ -35,6 +35,8 @@
     <ul>
           <li>      <a href="./index.html">Front Page</a>
   </li>
+          <li>      <a href="./ant/manual/">Documentation</a>
+  </li>
           <li>      <a href="./antnews.html">News</a>
   </li>
           <li>      <a href="./external.html">External Resources</a>
@@ -71,56 +73,6 @@
           <li>      <a href="http://jakarta.apache.org/site/bugs.html">Bug Database</a>
   </li>
         </ul>
-      <p><strong>Other Projects</strong></p>
-    <ul>
-          <li>      <a href="http://jakarta.apache.org/avalon/index.html">Avalon</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/commons/index.html">Commons</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/ecs/index.html">ECS</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/james/index.html">James</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/jetspeed/index.html">Jetspeed</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/jmeter/index.html">JMeter</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/log4j/index.html">Log4J</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/oro/index.html">ORO</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/regexp/index.html">Regexp</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/slide/index.html">Slide</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/struts/index.html">Struts</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/taglibs/index.html">Taglibs</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/tomcat/index.html">Tomcat</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/turbine/index.html">Turbine</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/velocity/index.html">Velocity</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/watchdog/index.html">Watchdog</a>
-  </li>
-        </ul>
-      <p><strong>Misc</strong></p>
-    <ul>
-          <li>      <a href="http://jakarta.apache.org/site/whoweare.html">Who We Are</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/site/acknowledgements.html">Acknowledgements</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/site/roles.html">Management</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/site/jakarta-site2.html">About This Site</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/site/contact.html">Contact</a>
-  </li>
-          <li>      <a href="http://jakarta.apache.org/site/legal.html">Legal</a>
-  </li>
-        </ul>
             </td>
           <td align="left" valign="top">
   <table border="0" cellspacing="0" cellpadding="2" width="100%">
@@ -140,7 +92,7 @@
     <tr><td>
       <blockquote>
         <ul>
-                    <li><a href="no-gnu-tar">
+                    <li><a href="#no-gnu-tar">
   <question>I get checksum errors when I try to extract the
       <code>tar.gz</code> distribution file. Why?</question>
   </a></li>
@@ -157,7 +109,7 @@
     <tr><td>
       <blockquote>
         <ul>
-                    <li><a href="xml-entity-include">
+                    <li><a href="#xml-entity-include">
   <question>How do I include an XML snippet in my build file?</question>
   </a></li>
                 </ul>
@@ -188,20 +140,20 @@
     </td></tr>
     <tr><td>
       <blockquote>
-                              <p>Ant'distibution contains file names which are longer
+                              <p>Ant's distibution contains file names that are longer
         than 100 characters, which is not supported by the standard
-        tar file format.  Several different implementations of tar use
+        tar file format. Several different implementations of tar use
         different and incompatible ways to work around this
         restriction.</p>
-                                        <p>Ant' &lt;tar&gt; task can create tar archives that use
+                                        <p>Ant's &lt;tar&gt; task can create tar archives that use
         the GNU tar extension, and this has been used when putting
-        together the distribution.  If you are using a different
-        version of tar (for example the one shipping with Solaris),
+        together the distribution. If you are using a different
+        version of tar (for example, the one shipping with Solaris),
         you cannot use it to extract the archive.</p>
                                         <p>The solution is to either install GNU tar, which can be
         found <a href="http://www.gnu.org/software/tar/tar.html">here</a> 
         or use the zip archive instead (you can extract it using
-        <code>jar cf</code>).</p>
+        <code>jar xf</code>).</p>
                         </blockquote>
     </td></tr>
   </table>
@@ -256,9 +208,9 @@
       </tr>
     </table>
   </div>
-                                        <p>will literally include the contents of common.xml where
-        you've placed the &amp;common; entity.</p>
-                                        <p>In combination with a DTD this would look like this:</p>
+                                        <p>will literally include the contents of <code>common.xml</code> where
+        you've placed the <code>&amp;common;</code> entity.</p>
+                                        <p>In combination with a DTD, this would look like this:</p>
                                           <div align="left">
     <table cellspacing="4" cellpadding="0" border="0">
       <tr>

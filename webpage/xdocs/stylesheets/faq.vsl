@@ -12,6 +12,7 @@
     #set ($subbannerfg = "#ffffff")
     #set ($tablethbg = "#039acc")
     #set ($tabletdbg = "#a0ddf0")
+    #set ($pound = "#" )
     
 <!-- start the processing -->
 #faqs()
@@ -40,7 +41,7 @@
 
 #macro (subtoc $faq)
   #set ($id = $faq.getAttributeValue("id"))
-  <li><a href="$id">
+  <li><a href="$pound$id">
   $xmlout.outputString($faq.getChild("question"))
   </a></li>
 #end
