@@ -9,6 +9,9 @@
   <property name="out.app" location="${classes.dir}/out.exe"/>
   <property name="out.type" value="exe"/>  
   
+  <target name="mark-mono-ok">
+    <property name="mono.ok" value="true"/>
+  </target>
   
   <target name="probe_for_apps" >
    <condition property="ilasm.found">
@@ -36,18 +39,41 @@
     </condition> 
    <echo> vbc.found=${vbc.found}</echo>
    -->
-   <condition property="dotnetapps.found">
-      <and>
+
+   <!-- Mono C# compiler -->
+   <condition property="mcs.found">
+      <available file="mcs"     filepath="${env.PATH}" />
+    </condition>
+   <echo> mcs.found=${mcs.found}</echo>
+
+    <condition property="cs.found">
+      <or>
         <isset property="csc.found"/>
+        <isset property="mcs.found"/>
+      </or>
+    </condition>
+   <echo> cs.found=${cs.found}</echo>
+
+   <condition property="dotnetapps.found">
+      <or>
+        <and>
+          <isset property="cs.found"/>
+          <isset property="mono.ok"/>
+        </and>
+        <and>
+          <not>
+            <isset property="mono.ok"/>
+          </not>
+          <isset property="csc.found"/>
 <!--         <isset property="vbc.found"/> -->
-        <isset property="ilasm.found"/>
-      </and>
+          <isset property="ilasm.found"/>
+        </and>
+      </or>
     </condition>
    <echo> dotnetapps.found=${dotnetapps.found}</echo>
   </target>
     
-    
-  <target name="validate" depends="probe_for_apps" >
+  <target name="validate" depends="probe_for_apps">
     <fail unless="dotnetapps.found">Needed .net apps are missing</fail>
   </target>  
     
@@ -60,13 +86,32 @@
     <delete dir="${build.dir}"/>
   </target>    
     
-  <target name="testCSC" depends="init">
+  <target name="testCSC" depends="testCSC-Mono,testCSC-MS"/>
+
+  <target name="testCSC-MS" depends="init" if="csc.found">
     <property name="testCSC.exe" 
       location="${build.dir}/ExampleCsc.exe" />
     <csc 
       destFile="${testCSC.exe}"
       targetType="exe" 
       >
+    </csc>
+    <available property="app.created" file="${testCSC.exe}"/>
+    <fail unless="app.created">No app ${testCSC.exe} created</fail>
+    <exec executable="${testCSC.exe}" failonerror="true" />
+    <delete file="${testCSC.exe}"/>
+  </target>
+
+  <target name="testCSC-Mono" depends="mark-mono-ok,init" if="mcs.found">
+    <property name="testCSC.exe" 
+      location="${build.dir}/ExampleCsc.exe" />
+    <csc 
+      destFile="${testCSC.exe}"
+      targetType="exe" 
+      executable="mcs"
+      includedefaultreferences="false"
+      >
+      <reference dir="/usr/lib" includes="*.dll"/>
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
     <fail unless="app.created">No app ${testCSC.exe} created</fail>
