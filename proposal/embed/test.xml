@@ -2,10 +2,12 @@
   <property name="ant.src" location="../.."/>
         
   <import file="build.xml"/>
-
-  <target name="main">
+  
+  <echo>Base.path from build.xml ( in top level ): ${base.path}</echo>
+  
+  <target name="init">
      <property name="junit.jar" location="${base.path}/junit3.7/junit.jar"/>
-     <echo>${junit.jar} ${velocity.jar}</echo>
+     <echo>Base.path from build.xml ( in init ) : ${base.path}</echo>
 
     <path id="myJars" >
       <pathelement path="${junit.jar}" />
@@ -16,14 +18,39 @@
       <pathelement path="${commons-discovery.jar}" />
       <pathelement path="${commons-logging.jar}" />
       <pathelement path="${ant.home}/lib/ant-sax2.jar" />
+      <pathelement location="/usr/share/java/xalan-j_2_3_1/bin/xercesImpl.jar"/>
+      <pathelement location="${ant.home}/lib/xercesImpl.jar"/>
+      <pathelement location="${ant.home}/lib/xml-apis.jar"/>
+      <pathelement location="${ant.home}/lib/ant.jar"/>
     </path>
 
     <systemPath pathRef="myJars"/>
-
-    <junit id="replacedJunit" />
   
-    <echo message="toString sample: ${toString:replacedJunit}" />
- 
+  </target>
+
+  <target name="discovery" depends="init">
+    <echo message="${commons-discovery.jar}"/>
+
+    <systemPath pathRef="myJars"/>
+
+    <taskdef classname="org.apache.tools.ant.taskdefs.ServiceDiscoveryTask"
+             name="discovery" />
+    <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPath"
+             name="jxpath" />
+
+    <jxpath/>
+    <discovery debug="1" id="myDiscovery"
+               serviceName="META-INF/services/javax.xml.parsers.SAXParserFactory" />
+    <echo message="Found ${jxpath:/references[@name='myDiscovery']}" />
+
+  </target>
+
+  <target name="systemPathTest" depends="init">
+    <junit id="replacedJunit" />
+    <echo message="Found JUNIT: ${toString:replacedJunit}" />
+  </target>
+
+  <target name="dynamicProperties" depends="init">
     <!-- This is Taksdef2.java - it'll use the systemPath as parent loader
       -->
     <taskdef classname="org.apache.tools.ant.taskdefs.optional.JXPath"
@@ -39,8 +66,15 @@
     <jxpath/>
     <velocityProperties/>
     <jexlProperties/>
+    
+    <echo id="foo" message="Starting dynamic props tests" />
 
-    <echo message="vel /references/myJars: ${vm:$ant.references.myJars}" />
+    <echo message="Value: ${vm:$ant.references.jxpathTask.foo}" />
+    <jxpathSet path="/references[@name='jxpathTask']/foo" value="Test"/>
+    <echo message="Value: ${vm:$ant.references.jxpathTask.foo}" />
+
+    <echo message="${jexl:ant.references.jxpathTask.foo=bar}" />
+    <echo message="Value: ${vm:$ant.references.jxpathTask.foo}" />
 
     <echo message="jexl /references/myJars: ${jexl:ant.references.myJars}" />
 
@@ -57,7 +91,9 @@
 
     <echo message="XMLDOM: ${jxpath:/references/test.xml/root/project/@name}" />
 
-    
+  </target>
+
+  <target name="main" depends="init,dynamicProperties,systemPathTest,test-import">
   </target>
 
 

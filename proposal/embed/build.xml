@@ -19,14 +19,44 @@
   <property name="commons-discovery.jar" location="${commons.src}/discovery/dist/commons-discovery.jar" />
 
     
+  <target name="build" depends="main" />
   <target name="main">
     <mkdir dir="build/classes" />
     <javac srcdir="src/java"  
            debug="${debug}"
            destdir="${embed.build}/classes" >
       <include name="**" />
+      <exclude name="org/apache/tools/ant/taskdefs/optional/**" />
+    </javac>
+
+    <copy toDir="${embed.build}/classes">
+      <fileset dir="src/java" includes="META-INF/**" />
+    </copy>
+
+    <jar file="${embed.build}/ant-sax2.jar" basedir="${embed.build}/classes"
+         manifest="src/java/META-INF/MANIFEST" >
+      <include name="**" />
+    </jar>
+        
+    <echo message="${embed.build}/ant-sax2.jar toDir=${ant.home}/lib"/>
+
+    <copy file="${embed.build}/ant-sax2.jar" toDir="${ant.home}/lib"/>
+    <copy file="${commons-logging.jar}" toDir="${ant.home}/lib"/>
+    <copy file="${commons-discovery.jar}" toDir="${ant.home}/lib"/>
+
+    <copy file="${commons-logging.jar}" toDir="${embed.build}"/>
+    <copy file="${commons-discovery.jar}" toDir="${embed.build}"/>
+  </target>
+
+  <target name="embed-optional">
+    <mkdir dir="build/classes" />
+    <javac srcdir="src/java"  
+           debug="${debug}"
+           destdir="${embed.build}/classes" >
+      <include name="org/apache/tools/ant/taskdefs/optional/**" />
       <classpath>
         <!-- all this will move to their package -->
+        <pathelement location="build/classes" />
         <pathelement location="${jxpath.jar}" />
         <pathelement location="${velocity.jar}" />
         <pathelement location="${jexl.jar}" />
@@ -38,11 +68,27 @@
       <fileset dir="src/java" includes="META-INF/**" />
     </copy>
 
-    <jar file="${embed.build}/ant-sax2.jar" basedir="${embed.build}/classes" >
-      <include name="**" />
+    <jar file="${embed.build}/optional-dynprop.jar" basedir="${embed.build}/classes"
+         manifest="src/java/META-INF/MANIFEST" >
+      <include name="org/apache/tools/ant/taskdefs/optional/**" />
     </jar>
         
+    <echo message="${embed.build}/ant-sax2.jar toDir=${ant.home}/lib"/>
+
     <copy file="${embed.build}/ant-sax2.jar" toDir="${ant.home}/lib"/>
+    <copy file="${commons-logging.jar}" toDir="${ant.home}/lib"/>
+    <copy file="${commons-discovery.jar}" toDir="${ant.home}/lib"/>
+
+    <copy file="${commons-logging.jar}" toDir="${embed.build}"/>
+    <copy file="${commons-discovery.jar}" toDir="${embed.build}"/>
   </target>
 
+  <target name="gump" description="Patch gump bootstrap ant" depends="main" >
+    <!-- What we'll do - in order to get around gump classpath use - is
+         to recreate ant.jar ( using build/classes ) to include our code -->
+    <unjar jar="${ant.src}/bootstrap/lib/ant.jar" dest="${embed.build}/classes" />
+    <delete file="${ant.src}/bootstrap/lib/ant.jar" />
+    <jar file="${ant.src}/bootstrap/lib/ant.jar" basedir="${embed.build}/classes"
+         manifest="${embed.build}/classes/META-INF/MANIFEST" includes="**" />
+  </target>
 </project>
