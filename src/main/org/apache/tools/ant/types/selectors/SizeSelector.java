@@ -1,5 +1,5 @@
 /*
- * Copyright  2002-2004 The Apache Software Foundation
+ * Copyright  2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -48,6 +48,9 @@ public class SizeSelector extends BaseExtendSelector {
     }
 
     /**
+     * Returns a <code>String</code> object representing the specified
+     * SizeSelector. This is "{sizeselector value: " + <"compare",
+     * "less", "more", "equal"> + "}".
      * @return a string describing this object
      */
     public String toString() {
@@ -70,7 +73,7 @@ public class SizeSelector extends BaseExtendSelector {
      * This will be further modified by the multiplier to get an
      * actual size limit.
      *
-     * @param size the size to select against expressed in units
+     * @param size the size to select against expressed in units.
      */
     public void setValue(long size) {
         this.size = size;
@@ -103,7 +106,7 @@ public class SizeSelector extends BaseExtendSelector {
      * multiplier.
      *
      * @param units The units to compare the size to, using an
-     *        EnumeratedAttribute
+     *        EnumeratedAttribute.
      */
     public void setUnits(ByteUnits units) {
         int i = units.getIndex();
@@ -135,7 +138,7 @@ public class SizeSelector extends BaseExtendSelector {
      * when the file matches a particular size, when it is smaller,
      * or whether it is larger.
      *
-     * @param cmp The comparison to perform, an EnumeratedAttribute
+     * @param scmp The comparison to perform, an EnumeratedAttribute.
      */
     public void setWhen(SizeComparisons scmp) {
         this.cmp = scmp.getIndex();
@@ -145,7 +148,7 @@ public class SizeSelector extends BaseExtendSelector {
      * When using this as a custom selector, this method will be called.
      * It translates each parameter into the appropriate setXXX() call.
      *
-     * @param parameters the complete set of parameters for this selector
+     * @param parameters the complete set of parameters for this selector.
      */
     public void setParameters(Parameter[] parameters) {
         super.setParameters(parameters);
@@ -199,10 +202,10 @@ public class SizeSelector extends BaseExtendSelector {
      * The heart of the matter. This is where the selector gets to decide
      * on the inclusion of a file in a particular fileset.
      *
-     * @param basedir A java.io.File object for the base directory
-     * @param filename The name of the file to check
-     * @param file A File object for this filename
-     * @return whether the file should be selected or not
+     * @param basedir A java.io.File object for the base directory.
+     * @param filename The name of the file to check.
+     * @param file A File object for this filename.
+     * @return whether the file should be selected or not.
      */
     public boolean isSelected(File basedir, String filename, File file) {
 
