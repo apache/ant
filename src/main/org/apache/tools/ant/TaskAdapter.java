@@ -114,9 +114,8 @@ public class TaskAdapter extends Task implements TypeAdapter {
                 Project.MSG_ERR);
             throw new BuildException(ex);
         }
-        Method executeM = null;
+
         try {
-            Class c = proxy.getClass();
             DispatchUtils.execute(proxy);
         } catch (Exception ex) {
             log("Error in " + proxy.getClass(), Project.MSG_VERBOSE);
