@@ -71,6 +71,7 @@ import java.io.File;
 public class PathTest extends TestCase {
 
     public static boolean isUnixStyle = File.pathSeparatorChar == ':';
+    public static boolean isNetWare = (System.getProperty("os.name").toLowerCase().indexOf("netware") > -1);
 
     private Project project;
 
@@ -91,6 +92,9 @@ public class PathTest extends TestCase {
         if (isUnixStyle) {
             assertEquals("/a", l[0]);
             assertEquals("/b", l[1]);
+        } else if (isNetWare) {
+            assertEquals("\\a", l[0]);
+            assertEquals("\\b", l[1]);
         } else {
             assertEquals(":\\a", l[0].substring(1));
             assertEquals(":\\b", l[1].substring(1));
@@ -102,6 +106,9 @@ public class PathTest extends TestCase {
         if (isUnixStyle) {
             assertEquals("/a", l[0]);
             assertEquals("/b", l[1]);
+        } else if (isNetWare) {
+            assertEquals("\\a", l[0]);
+            assertEquals("\\b", l[1]);
         } else {
             assertEquals(":\\a", l[0].substring(1));
             assertEquals(":\\b", l[1].substring(1));
@@ -114,6 +121,10 @@ public class PathTest extends TestCase {
             assertEquals("/a", l[0]);
             assertEquals("/b", l[1]);
             assertEquals("/c", l[2]);
+        } else if (isNetWare) {
+            assertEquals("\\a", l[0]);
+            assertEquals("\\b", l[1]);
+            assertEquals("\\c", l[2]);
         } else {
             assertEquals(":\\a", l[0].substring(1));
             assertEquals(":\\b", l[1].substring(1));
@@ -127,6 +138,9 @@ public class PathTest extends TestCase {
             assert("c resolved relative to project\'s basedir", 
                    l[0].endsWith("/c"));
             assertEquals("/test", l[1]);
+        } else if (isNetWare) {
+            assertEquals("volumes on NetWare", 1, l.length);
+            assertEquals("c:\\test", l[0].toLowerCase());
         } else {
             assertEquals("drives on DOS", 1, l.length);
             assertEquals("c:\\test", l[0].toLowerCase());
@@ -139,6 +153,9 @@ public class PathTest extends TestCase {
             assert("c resolved relative to project\'s basedir", 
                    l[0].endsWith("/c"));
             assertEquals("/test", l[1]);
+        } else if (isNetWare) {
+            assertEquals("volumes on NetWare", 1, l.length);
+            assertEquals("c:\\test", l[0].toLowerCase());
         } else {
             assertEquals("drives on DOS", 1, l.length);
             assertEquals("c:\\test", l[0].toLowerCase());
@@ -152,6 +169,9 @@ public class PathTest extends TestCase {
         if (isUnixStyle) {
             assertEquals(1, l.length);
             assertEquals("/a", l[0]);
+        } else if (isNetWare) {
+            assertEquals(1, l.length);
+            assertEquals("\\a", l[0]);
         } else {
             assertEquals(1, l.length);
             assertEquals(":\\a", l[0].substring(1));
@@ -313,6 +333,8 @@ public class PathTest extends TestCase {
                      1, l.length);
         if (isUnixStyle) {
             assertEquals("/a", l[0]);
+        } else if (isNetWare) {
+            assertEquals("\\a", l[0]);
         } else {
             assertEquals(":\\a", l[0].substring(1));
         }
