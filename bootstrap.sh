@@ -56,10 +56,11 @@ ${JAVAC} -d ${CLASSDIR} ${TOOLS}/ant/taskdefs/*.java
 echo ... Copying Required Files
 
 cp src/main/org/apache/tools/ant/taskdefs/defaults.properties ${CLASSDIR}/org/apache/tools/ant/taskdefs
+cp src/main/org/apache/tools/ant/types/defaults.properties ${CLASSDIR}/org/apache/tools/ant/types
 
 echo ... Building Ant Distribution
 
-java org.apache.tools.ant.Main clean main bootstrap $JIKESON
+java ${ANT_OPTS} org.apache.tools.ant.Main clean main bootstrap
 
 echo ... Cleaning Up Build Directories
 

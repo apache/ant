@@ -50,11 +50,12 @@ echo.
 echo ... Copying Required Files
 
 copy %TOOLS%\ant\taskdefs\*.properties %CLASSDIR%\org\apache\tools\ant\taskdefs
+copy %TOOLS%\ant\types\*.properties %CLASSDIR%\org\apache\tools\ant\types
 
 echo.
 echo ... Building Ant Distribution
 
-%JAVA% org.apache.tools.ant.Main clean main bootstrap %1 %2 %3 %4 %5
+%JAVA% %ANT_OPTS% org.apache.tools.ant.Main clean main bootstrap %1 %2 %3 %4 %5
 
 echo.
 echo ... Cleaning Up Build Directories
