@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
 
 <project name="depend" basedir="." default="help">
-  <property name="cvssrc.dir" value="java"/>
+  <property name="src1.dir" value="src1"/>
   <property name="tempsrc.dir" value="working"/>
   <property name="classes.dir" value="classes"/>
   <target name="help">
     <echo>This buildfile is used as part of Ant's test suite.</echo>
   </target>
 
-  <target name="setup">
+  <target name="basesetup">
     <mkdir dir="${tempsrc.dir}"/>
+  </target>
+  
+  <target name="src1setup" depends="basesetup">
     <copy todir="${tempsrc.dir}">
-      <fileset dir="${cvssrc.dir}"/>
+      <fileset dir="${src1.dir}"/>
     </copy>
   </target>
   
-  <target name="compile" depends="setup">
+  <target name="src1compile" depends="src1setup">
     <mkdir dir="${classes.dir}"/>
     <javac srcdir="${tempsrc.dir}" destdir="${classes.dir}"/>
   </target>
@@ -25,37 +28,37 @@
     <delete dir="${tempsrc.dir}"/>
   </target>
 
-  <target name="testdirect" depends="compile">
+  <target name="testdirect" depends="src1compile">
     <sleep seconds="3"/>
     <delete file="${tempsrc.dir}/C.java"/>
-    <copy file="${cvssrc.dir}/C.java" tofile="${tempsrc.dir}/C.java"/>
+    <copy file="${src1.dir}/C.java" tofile="${tempsrc.dir}/C.java"/>
     <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}"/>
     <fileset id="result" dir="${classes.dir}"/>
   </target>
 
-  <target name="testclosure" depends="compile">
+  <target name="testclosure" depends="src1compile">
     <sleep seconds="3"/>
     <delete file="${tempsrc.dir}/C.java"/>
-    <copy file="${cvssrc.dir}/C.java" tofile="${tempsrc.dir}/C.java"/>
+    <copy file="${src1.dir}/C.java" tofile="${tempsrc.dir}/C.java"/>
     <depend srcdir="${tempsrc.dir}" destdir="${classes.dir}" closure="yes"/>
     <fileset id="result" dir="${classes.dir}"/>
   </target>
 
-  <target name="testbasicset" depends="compile">
+  <target name="testbasicset" depends="src1compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="A"/>
   </target>
 
-  <target name="testsmallset" depends="compile">
+  <target name="testsmallset" depends="src1compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="B"/>
   </target>
 
-  <target name="testcomboset" depends="compile">
+  <target name="testcomboset" depends="src1compile">
     <classfileset id="result" dir="${classes.dir}" rootclass="B">
       <include name="**/C.class"/>
     </classfileset>
   </target>
   
-  <target name="testbyreference" depends="compile">
+  <target name="testbyreference" depends="src1compile">
     <classfileset id="classSet" dir="${classes.dir}" rootclass="A">
       <include name="**/C.class"/>
     </classfileset>
