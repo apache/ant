@@ -210,8 +210,14 @@
              version="true"
              windowtitle="Mutant API"
              doctitle="Mutant">
-      <group title="Apache Ant Core" packages="org.apache.ant.antcore*" />
-
+      <group title="Ant Library" packages="org.apache.ant.common.antlib*" />
+      <group title="Services" packages="org.apache.ant.common.service*" />
+      <group title="Common Facilities" packages="org.apache.ant.common*" />
+      <group title="Core" packages="org.apache.ant.antcore*" />
+      <group title="Initialisation" packages="org.apache.ant.init*,org.apache.ant.start*" />
+      <group title="Command Line" packages="org.apache.ant.cli*" />
+      <group title="Ant1 Compatability Layer" packages="org.apache.tools.ant*" />
+      <tag name="created" description="Date Created:" scope="types"/>
     </javadoc>
   </target>
 </project>
