@@ -326,7 +326,7 @@ public class ProjectHelper {
                     if ((new File(baseDir)).isAbsolute()) {
                         project.setBasedir(baseDir);
                     } else {
-                        project.setBasedir((new File(buildFileParent, baseDir)).getAbsolutePath());
+                        project.setBaseDir(project.resolveFile(baseDir, buildFileParent));
                     }
                 }
             }

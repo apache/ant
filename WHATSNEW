@@ -24,6 +24,10 @@ Changes that could break older environments:
 * JUnitResultFormater has two additional methods that must be
   implemented by custom formatters.
 
+* Ant will no longer use the canonical version of a path internally -
+  this may yield different results on filesystems that support
+  symbolic links.
+
 Other changes:
 --------------
 

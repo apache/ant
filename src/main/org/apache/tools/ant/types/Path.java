@@ -112,16 +112,7 @@ public class Path extends DataType implements Cloneable {
         private String[] parts;
 
         public void setLocation(File loc) {
-            try {
-                parts = new String[] {translateFile(loc.getCanonicalPath())};
-            } catch(IOException e) {
-                // XXX I'd like to log something here but if I don't
-                //     have a Project I can't
-                if (project != null) {
-                    project.log(e.getMessage(), Project.MSG_WARN);
-                }
-                parts = new String[] {translateFile(loc.getAbsolutePath())};
-            }
+            parts = new String[] {translateFile(loc.getAbsolutePath())};
         }
 
         public void setPath(String path) {
@@ -304,14 +295,9 @@ public class Path extends DataType implements Cloneable {
                 String[] s = ds.getIncludedFiles();
                 File dir = fs.getDir(project);
                 for (int j=0; j<s.length; j++) {
-                    String canonicalPath;
                     File f = new File(dir, s[j]);
-                    try {
-                        canonicalPath = f.getCanonicalPath();
-                    } catch(IOException e) {
-                        canonicalPath = f.getAbsolutePath();
-                    }
-                    addUnlessPresent(result, translateFile(canonicalPath));
+                    String absolutePath = f.getAbsolutePath();
+                    addUnlessPresent(result, translateFile(absolutePath));
                 } 
             }
         }
@@ -454,12 +440,7 @@ public class Path extends DataType implements Cloneable {
     private static String resolveFile(Project project, String relativeName) {
         if (project != null) {
             File f = project.resolveFile(relativeName);
-            try {
-                return f.getCanonicalPath();
-            } catch(IOException e) {
-                project.log(e.getMessage(), Project.MSG_WARN);
-                return f.getAbsolutePath();
-            }
+            return f.getAbsolutePath();
         }
         return relativeName;
     }

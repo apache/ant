@@ -314,19 +314,17 @@ public class Project {
 
     // match basedir attribute in xml
     public void setBasedir(String baseD) throws BuildException {
-        try {
-            setBaseDir(new File(new File(baseD).getCanonicalPath()));
-        } catch (IOException ioe) {
-            String msg = "Can't set basedir " + baseD + " due to " +
-                ioe.getMessage();
-            throw new BuildException(msg);
-        }
+        setBaseDir(new File(baseD));
     }
 
-    public void setBaseDir(File baseDir) {
-        this.baseDir = baseDir;
-        setProperty( "basedir", baseDir.getAbsolutePath());
-        String msg = "Project base dir set to: " + baseDir;
+    public void setBaseDir(File baseDir) throws BuildException {
+        if (!baseDir.exists()) 
+            throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " does not exist");
+        if (!baseDir.isDirectory()) 
+            throw new BuildException("Basedir " + baseDir.getAbsolutePath() + " is not a directory");
+        this.baseDir = new File(baseDir.getAbsolutePath());
+        setProperty( "basedir", this.baseDir.getPath());
+        String msg = "Project base dir set to: " + this.baseDir;
         log(msg, MSG_VERBOSE);
     }
 
@@ -335,7 +333,7 @@ public class Project {
             try {
                 setBasedir(".");
             } catch (BuildException ex) {
-              ex.printStackTrace();
+                ex.printStackTrace();
             }
         }
         return baseDir;
@@ -553,13 +551,7 @@ public class Project {
 
         // deal with absolute files
         if (fileName.startsWith(File.separator)) {
-            try {
-                return new File(new File(fileName).getCanonicalPath());
-            } catch (IOException e) {
-                log("IOException getting canonical path for " + fileName 
-                    + ": " + e.getMessage(), MSG_ERR);
-                return new File(fileName);
-            }
+            return new File(fileName);
         }
 
         // Eliminate consecutive slashes after the drive spec
@@ -608,14 +600,7 @@ public class Project {
             }
         }
 
-        try {
-            return new File(file.getCanonicalPath());
-        }
-        catch (IOException e) {
-            log("IOException getting canonical path for " + file + ": " +
-                e.getMessage(), MSG_ERR);
-            return new File(file.getAbsolutePath());
-        }
+        return new File(file.getAbsolutePath());
     }
 
     public File resolveFile(String fileName) {
