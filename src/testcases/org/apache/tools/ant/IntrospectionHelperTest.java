@@ -368,6 +368,16 @@ public class IntrospectionHelperTest extends TestCase {
         h.put("fourteen", java.lang.StringBuffer.class);
         h.put("fifteen", java.lang.Character.TYPE);
         h.put("sixteen", java.lang.Character.class);
+
+        /*
+         * JUnit 3.7 adds a getName method to TestCase - so we now
+         * have a name attribute in IntrospectionHelperTest if we run
+         * under JUnit 3.7 but not in earlier versions.
+         *
+         * Simply add it here and remove it after the tests.
+         */
+        h.put("name", java.lang.String.class);
+
         IntrospectionHelper ih = IntrospectionHelper.getHelper(getClass());
         Enumeration enum = ih.getAttributes();
         while (enum.hasMoreElements()) {
@@ -378,6 +388,7 @@ public class IntrospectionHelperTest extends TestCase {
             assertEquals("Type of "+name, expect, ih.getAttributeType(name));
             h.remove(name);
         }
+        h.remove("name");
         assert("Found all", h.isEmpty());
     }
 
