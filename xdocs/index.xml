@@ -9,12 +9,17 @@
 
 <body>
 
-  <section name="Ant 1.5.1">
-    <h3>Apache Ant 1.5.1 Released!</h3>
-
-    <p>Version 1.5.1 of Ant has been released. It is available for
-    download as <a href="http://ant.apache.org/bindownload.cgi">binary</a> or as <a
-    href="http://ant.apache.org/srcdownload.cgi">source</a> distribution.</p>
+  <section name="Ant Top Level Apache Project">
+    <h3>Ant Promoted to Top Level Apache Project</h3>
+    
+    <p>On November 18, 2002, the Apache board <a href="mission.html">created</a>
+       the Apache Ant top level project. Ant has now migrated from the Jakarta
+       project into an Apache project of its own. This is primarily an
+       organizational change and will not affect the technical aspects of
+       the project. Ant retains a strong association with the Apache
+       Jakarta project. One effect of this change is that the Ant webpage
+       is now located at <a href="http://ant.apache.org">http://ant.apache.org</a>
+     </p>
   </section>
 
   <section name="Apache Ant">
