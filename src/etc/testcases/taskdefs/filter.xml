@@ -20,22 +20,26 @@
 
   <target name="test5">
     <filter token="year" value="2000" />
-    <copyfile src="filter1.txt" dest="filtered.tmp" filtering="yes"/>
+    <copy file="filter1.txt" tofile="filtered.tmp" filtering="yes" overwrite="yes" />
   </target>
 
   <target name="test6">
     <filter token="year" value="2000" />
-    <copydir src="." dest="./taskdefs.tmp" filtering="yes" includes="filter1.txt"/>
+    <copy todir="./taskdefs.tmp" filtering="yes" overwrite="yes">
+      <fileset dir="." includes="filter1.txt" />
+    </copy>
   </target>
 
   <target name="test7">
     <filter token="ROOT" value="root" />
-    <copyfile src="filter2.txt" dest="filtered.tmp" filtering="yes"/>
+    <copy file="filter2.txt" tofile="filtered.tmp" filtering="yes" overwrite="yes" />
   </target>
 
   <target name="test8">
     <filter token="ROOT" value="root" />
-    <copydir src="." dest="./taskdefs.tmp" filtering="yes" includes="filter2.txt"/>
+    <copy todir="./taskdefs.tmp" filtering="yes" overwrite="yes">
+      <fileset dir="." includes="filter2.txt"/>
+    </copy>
   </target>
 
 </project>

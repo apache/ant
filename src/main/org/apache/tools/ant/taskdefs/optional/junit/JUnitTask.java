@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant.taskdefs.optional.junit;
 
+import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -76,14 +77,13 @@ import java.util.Vector;
  *
  * <p>JUnit is a framework to create unit test. It has been initially
  * created by Erich Gamma and Kent Beck.  JUnit can be found at <a
- * href="http://www.xprogramming.com/software.htm">http://www.xprogramming.com/software.htm</a>.
+ * href="http://www.junit.org">http://www.junit.org</a>.
  *
- * <p> This ant task runs a single TestCase. By default it spans a new
- * Java VM to prevent interferences between different testcases,
- * unless <code>fork</code> has been disabled.
+ * <p> To spawn a new Java VM to prevent interferences between
+ * different testcases, you need to enable <code>fork</code>.
  *
  * @author Thomas Haas 
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
 public class JUnitTask extends Task {
 
@@ -217,9 +217,24 @@ public class JUnitTask extends Task {
                         Project.MSG_WARN);
                 }
 
-                JUnitTestRunner runner = 
-                    new JUnitTestRunner(test, test.getHaltonerror(),
-                                        test.getHaltonfailure());
+                JUnitTestRunner runner = null;
+
+                Path classpath = commandline.getClasspath();
+                if (classpath != null) {
+                    log("Using CLASSPATH " + classpath, Project.MSG_VERBOSE);
+                    AntClassLoader l = new AntClassLoader(project, classpath, 
+                                                          false);
+                    // make sure the test will be accepted as a TestCase
+                    l.addSystemPackageRoot("junit");
+                    // will cause trouble in JDK 1.1 if omitted
+                    l.addSystemPackageRoot("org.apache.tools.ant");
+                    runner = new JUnitTestRunner(test, test.getHaltonerror(),
+                                                 test.getHaltonfailure(), l);
+                } else {
+                    runner = new JUnitTestRunner(test, test.getHaltonerror(),
+                                                 test.getHaltonfailure());
+                }
+
                 if (summary) {
                     log("Running " + test.getName(), Project.MSG_INFO);
                     

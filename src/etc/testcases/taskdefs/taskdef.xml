@@ -19,7 +19,7 @@
   </target>
 
   <target name="test5">
-    <taskdef name="test" classname="org.apache.tools.ant.ProjectTest"/>
+    <taskdef name="test" classname="org.apache.tools.ant.Project" />
   </target>
 
 </project>

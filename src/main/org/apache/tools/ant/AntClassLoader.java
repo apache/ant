@@ -113,6 +113,7 @@ public class AntClassLoader  extends ClassLoader {
         if (project.getJavaVersion().startsWith("1.1")) {
             // JDK > 1.1 adds these by default
             addSystemPackageRoot("java");
+            addSystemPackageRoot("javax");
         }
     }
 

@@ -749,7 +749,7 @@ public class Javac extends MatchingTask {
         try {
             /*
              * Many system have been reported to get into trouble with 
-             * long command lines - no, not only Windows 8^).
+             * long command lines - no, not only Windows ;-).
              *
              * POSIX seems to define a lower limit of 4k, so use a temporary 
              * file if the total length of the command line exceeds this limit.

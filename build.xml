@@ -298,7 +298,7 @@
   <!-- Run testcase                                                        -->
   <!-- =================================================================== -->
   <target name="runtests" depends="compiletests" if="junit.present">
-    <junit printsummary="no" fork="yes" haltonfailure="yes">
+    <junit printsummary="no" haltonfailure="yes">
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />
@@ -330,7 +330,7 @@
   </target>
 
   <target name="run.single.test" if="testcase" depends="compiletests">
-    <junit printsummary="no" fork="yes" haltonfailure="yes">
+    <junit printsummary="no" haltonfailure="yes">
       <classpath>
         <pathelement location="${lib.dir}/${name}.jar" />
         <pathelement location="${build.tests}" />

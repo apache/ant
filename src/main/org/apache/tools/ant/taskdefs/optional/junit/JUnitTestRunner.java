@@ -75,7 +75,7 @@ import java.util.Vector;
  *
  * <p>Summary output is generated at the end.
  *
- * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 
 public class JUnitTestRunner implements TestListener {
@@ -135,14 +135,31 @@ public class JUnitTestRunner implements TestListener {
      */
     private JUnitTest junitTest;
 
+    /**
+     * Constructor for fork=true or when the user hasn't specified a
+     * classpath.  
+     */
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean haltOnFailure) {
+        this(test, haltOnError, haltOnFailure, null);
+    }
+
+    /**
+     * Constructor to use when the user has specified a classpath.
+     */
+    public JUnitTestRunner(JUnitTest test, boolean haltOnError,
+                           boolean haltOnFailure, ClassLoader loader) {
         this.junitTest = test;
         this.haltOnError = haltOnError;
         this.haltOnFailure = haltOnFailure;
 
         try {
-            Class testClass = Class.forName(test.getName());
+            Class testClass = null;
+            if (loader == null) {
+                testClass = Class.forName(test.getName());
+            } else {
+                testClass = loader.loadClass(test.getName());
+            }
             
             try {
                 Method suiteMethod= testClass.getMethod("suite", new Class[0]);
