@@ -713,7 +713,7 @@ public class Zip extends MatchingTask {
             Stack directories = new Stack();
             int slashPos = entry.length();
 
-            while ((slashPos = entry.lastIndexOf((int)'/', slashPos-1)) != -1) {
+            while ((slashPos = entry.lastIndexOf('/', slashPos-1)) != -1) {
                 String dir = entry.substring(0, slashPos+1);
                 if (addedDirs.get(prefix+dir) != null) {
                     break;
