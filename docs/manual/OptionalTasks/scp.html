@@ -28,14 +28,18 @@ for more information.</p>
   <tr>
     <td valign="top">file</td>
     <td valign="top">The file to copy.  This can be a local path or a
-    remote path of the form <i>user:password@host:/directory/path.</i></td>
+    remote path of the form <i>user[:password]@host:/directory/path</i>.
+    <i>:password</i> can be ommitted if you use key based
+    authentication or specify the password attribute.</td>
     <td valign="top" align="center">Yes, unless a nested
     <code>&lt;fileset&gt;</code> element is used.</td>
   </tr>
   <tr>
     <td valign="top">todir</td>
     <td valign="top">The directory to copy to.  This can be a local path
-    or a remote path of the form <i>user:password@host:/directory/path</i></td>
+    or a remote path of the form <i>user[:password]@host:/directory/path</i>.
+    <i>:password</i> can be ommitted if you use key based
+    authentication or specify the password attribute.</td>
     <td valian="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -63,6 +67,25 @@ for more information.</p>
      </td>
      <td valign="top" align="center">No; defaults to true.</td>
   </tr>
+  <tr>
+    <td valign="top">password</td>
+     <td valign="top">The password.</td>
+     <td valign="top" align="center">Not if you are using key based
+     authentication or the password has been given in the file or
+     todir attribute.</td>
+  </tr>
+  <tr>
+    <td valign="top">keyfile</td>
+     <td valign="top">Location of the file holding the private key.</td>
+     <td valign="top" align="center">Yes, if you are using key based
+     authentication.</td>
+  </tr>
+  <tr>
+    <td valign="top">passphrase</td>
+     <td valign="top">Passphrase for your private key.</td>
+     <td valign="top" align="center">Yes, if you are using key based
+     authentication.</td>
+  </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
 
@@ -76,6 +99,23 @@ sets of files to copy.
 <pre>
   &lt;scp file=&quot;myfile.txt&quot; todir=&quot;user:password@somehost:/home/chuck&quot;/&gt;
 </pre>
+
+<p><b>Copy a single local file to a remote machine with separate
+password attribute</b></p>
+<pre>
+  &lt;scp file=&quot;myfile.txt&quot; todir=&quot;user@somehost:/home/chuck&quot; password=&quot;password&quot;/&gt;
+</pre>
+
+<p><b>Copy a single local file to a remote machine using key base
+authentication.</b></p>
+<pre>
+  &lt;scp file=&quot;myfile.txt&quot;
+       todir=&quot;user@somehost:/home/chuck&quot; 
+       keyfile=&quot;${user.home}/.ssh/id_dsa&quot;
+       passphrase=&quot;my extremely secret passphrase&quot;
+  /&gt;
+</pre>
+
 <p><b>Copy a single remote file to a local directory</b></p>
 <pre>
   &lt;scp file=&quot;user:password@somehost:/home/chuck/myfile.txt&quot; todir=&quot;../some/other/dir&quot;/&gt;
