@@ -247,7 +247,7 @@ public class Delete extends MatchingTask {
                     } 
                 } 
             } else {
-                log("Could not find file " + file.getAbsolutePath() + " to delete.");
+                log("Could not find file " + file.getAbsolutePath() + " to delete.", Project.MSG_VERBOSE);
             }
         }
 
