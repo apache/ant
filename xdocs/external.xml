@@ -359,7 +359,7 @@
 
       <subsection name="Cocoon Task">
         <p>This task allows the generation of static web pages and
-        sties using Apache Cocoon in off-line mode.</p>
+        sites using Apache Cocoon in off-line mode.</p>
         <p>It allows the configuration information for Cocoon to be
         included within the Ant build file, and is thus
         able to take advantage of Ant properties.</p>
