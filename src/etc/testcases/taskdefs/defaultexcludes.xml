@@ -2,6 +2,10 @@
 
 <project name="echo-test" basedir="." default="test1">
 
+  <target name="cleanup">
+    <defaultexcludes default="true"/>
+  </target>
+
   <target name="test1">
     <defaultexcludes echo="true"/>
   </target>
