@@ -57,19 +57,19 @@ public class ChangeLogWriter {
     public void printChangeLog(final PrintWriter output,
                                final CVSEntry[] entries) {
         try {
-        output.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
-        Document doc = DOMUtils.newDocument();
-        Element root = doc.createElement("changelog");
-        DOM_WRITER.openElement(root, output, 0, "\t");
-        output.println();
-        for (int i = 0; i < entries.length; i++) {
-            final CVSEntry entry = entries[i];
+            output.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+            Document doc = DOMUtils.newDocument();
+            Element root = doc.createElement("changelog");
+            DOM_WRITER.openElement(root, output, 0, "\t");
+            output.println();
+            for (int i = 0; i < entries.length; i++) {
+                final CVSEntry entry = entries[i];
 
-            printEntry(doc, output, entry);
-        }
-        DOM_WRITER.closeElement(root, output, 0, "\t", true);
-        output.flush();
-        output.close();
+                printEntry(doc, output, entry);
+            }
+            DOM_WRITER.closeElement(root, output, 0, "\t", true);
+            output.flush();
+            output.close();
         } catch (IOException e) {
             throw new org.apache.tools.ant.BuildException(e);
         }
