@@ -95,6 +95,11 @@ public abstract class AbstractBuildTask extends Task {
     private XMLFragment buildSnippet;
 
     /**
+     * The vm attribute - if given.
+     */
+    private String vm;
+
+    /**
      * Empty constructor.
      */
     protected AbstractBuildTask() {
@@ -117,6 +122,15 @@ public abstract class AbstractBuildTask extends Task {
             throw new BuildException("You must not specify more than one "
                                      + "build element");
         }
+    }
+
+    /**
+     * Set the name of the executable for the virtual machine.
+     *
+     * @param value the name of the executable for the virtual machine
+     */
+    public void setVm(String value) {
+        this.vm = value;
     }
 
     /**
@@ -226,6 +240,9 @@ public abstract class AbstractBuildTask extends Task {
         }
 
         DotNetExecTask exec = new DotNetExecTask();
+        if (vm != null) {
+            exec.setVm(vm);
+        }
         exec.setProject(getProject());
         exec.setExecutable(getExecutable());
         exec.setTaskName(getTaskName());
