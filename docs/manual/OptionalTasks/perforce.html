@@ -73,7 +73,11 @@ You will also need the Perforce client executable (p4 or p4.exe but not p4win.ex
         <td><a href="#p4revert">P4Revert</a></td>
         <td>Revert files</td>
     </tr>
-
+	    
+        <tr>
+        <td><a href="#p4add">P4Add</a></td>
+        <td>Add files</td>
+    </tr>
 </table>
 
 <h3>General P4 Properties</h3>
@@ -149,7 +153,7 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 </p>
 
 <h3>Taskdefs</h3>
-<p>Standard taskdefs (for you to copy'n'paste)</p>
+<p>Standard taskdefs (for you to copy'n'paste) -- normally this is done automatically if you install this optional task.</p>
 <pre>
     &lt;taskdef name=&quot;p4sync&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Sync&quot; /&gt;
     &lt;taskdef name=&quot;p4change&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Change&quot; /&gt;
@@ -158,8 +162,9 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
     &lt;taskdef name=&quot;p4have&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Have&quot; /&gt;
     &lt;taskdef name=&quot;p4label&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Label&quot; /&gt;
     &lt;taskdef name=&quot;p4counter&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Counter&quot; /&gt;
-	&lt;taskdef name=&quot;p4reopen&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Reopen&quot; /&gt;
-	&lt;taskdef name=&quot;p4revert&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Revert&quot; /&gt;
+    &lt;taskdef name=&quot;p4reopen&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Reopen&quot; /&gt;
+    &lt;taskdef name=&quot;p4revert&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Revert&quot; /&gt;
+    &lt;taskdef name=&quot;p4add&quot; classname=&quot;org.apache.tools.ant.taskdefs.optional.perforce.P4Add&quot; /&gt;
 </pre>
 
 <hr>
@@ -198,7 +203,8 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 <h2><a name="p4change">P4Change</a></h2>
 <h3>Description:</h3>
 <p>Request a new changelist from the Perforce server. 
-This task sets the ${p4.change} property which can then be passed to P4Submit or P4Edit.
+This task sets the ${p4.change} property which can then be passed to <A HREF="#p4submit">P4Submit</A>,
+<A HREF="#p4edit">P4Edit</A>, or <a HREF="#p4add">P4Add</A>.
 </p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -483,7 +489,47 @@ Revert any unchanged files in the default change
 </pre>
 <hr>
 
+<h2><a name="p4add">P4Add</a></h2>
+<h3>Description:</h3>
+<p>
+Adds files specified in nested fileset children.
+</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">commandlength</td>
+    <td valign="top">A positive integer specifying the maximum length
+        of the commandline when calling Perforce to add the files. 
+        Defaults to 450, higher values mean faster execution,
+        but also possible failures.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">changelist</td>
+    <td valign="top">If specified the open files are associated with the
+specified pending changelist number; otherwise the open files are
+associated with the default changelist.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  
+</table>
 
+<h3>Examples</h3>
+Require a changelist, add all java files starting from a directory,
+and submit
+
+<pre>
+&lt;p4change/&gt;
+&lt;p4add commandlength=&quot;20000&quot; changelist=&quot;${p4.change}&quot;&gt;
+    &lt;fileset dir=&quot;../dir/src/&quot; includes=&quot;**/*.java&quot;/&gt;
+&lt;p4add&gt;
+&lt;p4submit change=&quot;${p4.change}&quot;/&gt;
+</pre>
 
 <h2><a name="changes">Change History</a></h2>
 <table border="1" cellpadding="2" cellspacing="0">
