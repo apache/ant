@@ -613,7 +613,7 @@
 
     <blockquote><pre>
 &lt;fileset dir=&quot;${src}&quot;&gt;
-  &lt;type type="dir"/>
+  &lt;type type="dir"/&gt;
 &lt;/fileset&gt;
 </pre></blockquote>
 
@@ -622,12 +622,12 @@
     directory, but avoid selecting empty directories, use:
 
 <blockquote><pre>
-&lt;fileset dir="${src}">
-    &lt;and>
-        &lt;present targetdir="template"/>
-        &lt;type type="file"/>
-    &lt;/and>
-&lt;/fileset>
+&lt;fileset dir="${src}"&gt;
+    &lt;and&gt;
+        &lt;present targetdir="template"/&gt;
+        &lt;type type="file"/&gt;
+    &lt;/and&gt;
+&lt;/fileset&gt;
 </pre></blockquote>
 
 
@@ -816,62 +816,62 @@
     <p>Here are some examples of how to use the Modified Selector:</p>
 
     <blockquote><pre>
-    &lt;copy todir="dest">
-        &lt;fileset dir="src">
-            &lt;modified/>
-        &lt;/fileset>
-    &lt;/copy
+    &lt;copy todir="dest"&gt;
+        &lt;fileset dir="src"&gt;
+            &lt;modified/&gt;
+        &lt;/fileset&gt;
+    &lt;/copy&gt;
     </pre></blockquote>
     <p>This will copy all files from <i>src</i> to <i>dest</i> which content has changed.
     Using an updating PropertyfileCache with cache.properties and
     MD5-DigestAlgorithm.</p>
 
     <blockquote><pre>
-    &lt;copy todir="dest">
-        &lt;fileset dir="src">
+    &lt;copy todir="dest"&gt;
+        &lt;fileset dir="src"&gt;
             &lt;modified update="true"
                       seldirs="true"
                       cache="propertyfile"
                       algorithm="digest"
-                      comparator="equal">
-                &lt;param name="cache.cachefile"     value="cache.properties"/>
-                &lt;param name="algorithm.algorithm" value="MD5"/>
-            &lt;/modified>
-        &lt;/fileset>
-    &lt;/copy>
+                      comparator="equal"&gt;
+                &lt;param name="cache.cachefile"     value="cache.properties"/&gt;
+                &lt;param name="algorithm.algorithm" value="MD5"/&gt;
+            &lt;/modified&gt;
+        &lt;/fileset&gt;
+    &lt;/copy&gt;
     </pre></blockquote>
   <p>This is the same example rewritten as CoreSelector with setting the all the values
   (same as defaults are).</p>
 
     <blockquote><pre>
-    &lt;copy todir="dest">
-        &lt;fileset dir="src">
-            &lt;custom class="org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector">
-                &lt;param name="update"     value="true"/>
-                &lt;param name="seldirs"    value="true"/>
-                &lt;param name="cache"      value="propertyfile"/>
-                &lt;param name="algorithm"  value="digest"/>
-                &lt;param name="comparator" value="equal"/>
-                &lt;param name="cache.cachefile"     value="cache.properties"/>
-                &lt;param name="algorithm.algorithm" value="MD5"/>
-            &lt;/custom>
-        &lt;/fileset>
-    &lt;/copy>
+    &lt;copy todir="dest"&gt;
+        &lt;fileset dir="src"&gt;
+            &lt;custom class="org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector"&gt;
+                &lt;param name="update"     value="true"/&gt;
+                &lt;param name="seldirs"    value="true"/&gt;
+                &lt;param name="cache"      value="propertyfile"/&gt;
+                &lt;param name="algorithm"  value="digest"/&gt;
+                &lt;param name="comparator" value="equal"/&gt;
+                &lt;param name="cache.cachefile"     value="cache.properties"/&gt;
+                &lt;param name="algorithm.algorithm" value="MD5"/&gt;
+            &lt;/custom&gt;
+        &lt;/fileset&gt;
+    &lt;/copy&gt;
     </pre></blockquote>
   <p>And this is the same rewritten as CustomSelector.</p>
 
     <blockquote><pre>
-  &lt;target name="generate-and-upload-site">
-      &lt;echo> generate the site using forrest &lt;/echo>
-      &lt;antcall target="site"/>
+  &lt;target name="generate-and-upload-site"&gt;
+      &lt;echo&gt; generate the site using forrest &lt;/echo&gt;
+      &lt;antcall target="site"/&gt;
 
-      &lt;echo> upload the changed file &lt;/echo>
-      &lt;ftp server="${ftp.server}" userid="${ftp.user}" password="${ftp.pwd}">
-          &lt;fileset dir="htdocs/manual">
-              &lt;modified/>
-          &lt;/fileset>
-      &lt;/ftp>
-  &lt;/target>
+      &lt;echo&gt; upload the changed file &lt;/echo&gt;
+      &lt;ftp server="${ftp.server}" userid="${ftp.user}" password="${ftp.pwd}"&gt;
+          &lt;fileset dir="htdocs/manual"&gt;
+              &lt;modified/&gt;
+          &lt;/fileset&gt;
+      &lt;/ftp&gt;
+  &lt;/target&gt;
     </pre></blockquote>
   <p>A useful scenario for this selector inside a build environment
   for homepage generation (e.g. with <a href="http://xml.apache.org/forrest/">
