@@ -55,10 +55,10 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.zip.*;
 
 import java.io.*;
 import java.util.Vector;
-import java.util.zip.*;
 
 /**
  * Creates a EAR archive. Based on WAR task

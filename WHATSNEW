@@ -10,6 +10,9 @@ Changes that could break older environments:
   rmic to use a new compiler a lot easier but may break custom
   versions of this task that rely on the old implementation.
 
+* several Zip methods have changed their signature as we now use a Zip
+  package of our own that handles Unix permissions for directories.
+
 Other changes:
 --------------
 

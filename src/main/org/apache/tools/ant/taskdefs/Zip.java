@@ -59,10 +59,12 @@ import java.util.Hashtable;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.zip.*;
+import java.util.zip.CRC32;
+import java.util.zip.ZipInputStream;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
 import org.apache.tools.ant.util.*;
+import org.apache.tools.zip.*;
 
 /**
  * Create a ZIP archive.
@@ -280,7 +282,7 @@ public class Zip extends MatchingTask {
         try {
             in = new ZipInputStream(new FileInputStream(zipSrc));
 
-            while ((entry = in.getNextEntry()) != null) {
+            while ((entry = new ZipEntry(in.getNextEntry())) != null) {
                 String vPath = entry.getName();
                 if (zipScanner.match(vPath)) {
                     addParentDirs(null, vPath, zOut, prefix);
@@ -414,6 +416,10 @@ public class Zip extends MatchingTask {
         ze.setMethod (ZipEntry.STORED);
         // This is faintly ridiculous:
         ze.setCrc (emptyCrc);
+
+        // this is 040775 | MS-DOS directory flag in reverse byte order
+        ze.setExternalAttributes(0x41FD0010L);
+
         zOut.putNextEntry (ze);
     }
 
