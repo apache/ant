@@ -68,8 +68,6 @@ public abstract class HttpRepository extends Repository {
      * retry logic
      */
     public static final String ERROR_REENTRANT_USE = "Repository is already in use";
-    private static final String IF_MODIFIED_SINCE = "If-Modified-Since";
-    private static final int BLOCKSIZE = 8192;
 
     /**
      * get the base URL of the repository
@@ -169,9 +167,9 @@ public abstract class HttpRepository extends Repository {
             url = url + '/';
         }
 
-        //validate the URL
-        URL repository;
         try {
+            //validate the URL
+            URL repository;
             repository = new URL(url);
         } catch (MalformedURLException e) {
             throw new BuildException(e);
@@ -213,12 +211,13 @@ public abstract class HttpRepository extends Repository {
      *
      * @param library
      *
+     * @param useTimestamp
      * @return true if we retrieved
      *
      * @throws org.apache.tools.ant.BuildException
      *
      */
-    public boolean fetch(Library library) throws IOException {
+    public boolean fetch(Library library, boolean useTimestamp) throws IOException {
 
         String path = getRemoteLibraryURL(library);
         logVerbose("Library URL=" + path);
@@ -226,11 +225,9 @@ public abstract class HttpRepository extends Repository {
         logVerbose("destination =" + library.getAbsolutePath());
         long start, finish;
         start = System.currentTimeMillis();
-        finish = System.currentTimeMillis();
-        boolean useTimestamps = !getOwner().isForceDownload() &&
-                !library.exists();
-        boolean success=get(remoteURL, library.getLibraryFile(),useTimestamps,
+        boolean success=get(remoteURL, library.getLibraryFile(),useTimestamp,
                 username, password);
+        finish = System.currentTimeMillis();
         long diff = finish - start;
         logVerbose("downloaded in " + diff / 1000 + " seconds");
 
@@ -246,9 +243,11 @@ public abstract class HttpRepository extends Repository {
      */
     public boolean get(URL url,File destFile,boolean useTimestamp,String user,String passwd)
             throws IOException {
+        //create the destination dir
+        destFile.getParentFile().mkdirs();
         Get getTask = new Get();
         getTask.setProject(getProject());
-        getTask.setTaskName("dependencies");
+        getTask.setTaskName(owner.getTaskName());
         getTask.setDest(destFile);
         getTask.setUsername(user);
         getTask.setPassword(passwd);
@@ -287,65 +286,21 @@ public abstract class HttpRepository extends Repository {
     protected abstract String getRemoteLibraryURL(Library library);
 
     /**
-     * save a stream from a connection to a library. prerequisite: connection
-     * open and response=200.
-     *
-     * @param get
-     * @param library
-     *
-     * @throws java.io.IOException on any trouble.
-     */
-    /*
-    protected void saveStreamToLibrary(GetMethod get, Library library)
-            throws IOException {
-        //we only get here if we are happy
-        //so save it to a temp file
-        File tempDest = File.createTempFile("download", ".bin", getOwner()
-                .getDestDir());
-        logDebug("Saving file to " + tempDest);
-        FileOutputStream fos = new FileOutputStream(tempDest);
-        InputStream is = get.getResponseBodyAsStream();
-        boolean finished = false;
-        try {
-            byte[] buffer = new byte[BLOCKSIZE];
-            int length;
-
-            while ((length = is.read(buffer)) >= 0) {
-                fos.write(buffer, 0, length);
-            }
-            finished = true;
-        } finally {
-            FileUtils.close(fos);
-            FileUtils.close(is);
-            // we have started to (over)write dest, but failed.
-            // Try to delete the garbage we'd otherwise leave
-            // behind.
-            if (!finished) {
-                logVerbose("Deleting temporary file after failed download");
-                tempDest.delete();
-            }
-        }
-        logDebug("download complete; renaming destination file");
-        //then copy over the file
-        File libraryFile = library.getLibraryFile();
-        if (libraryFile.exists()) {
-            libraryFile.delete();
-        }
-        // set the dest file
-        if (!tempDest.renameTo(libraryFile)) {
-            tempDest.delete();
-            throw new IOException(
-                    "Could not rename temp file to destination file");
-        }
-    }
-    */
-
-    /**
      * Returns a string representation of the repository
-     *
+     * Used for scheduled updates.
      * @return the base URL
      */
     public String toString() {
         return "Repository at " + getUrl();
+    }
+
+    /**
+     * this is a string that uniquely describes the repository and can be used
+     * for equality tests <i>across</i> instances.
+     *
+     * @return
+     */
+    public String getRepositoryURI() {
+        return "HttpRepository://"+getUrl();
     }
 }

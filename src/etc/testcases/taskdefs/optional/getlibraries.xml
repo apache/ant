@@ -7,8 +7,10 @@
 
   <target name="init">
     <property name="lib.dir" value="getlib"/>
-    <mkdir dir="${lib.dir}"/>
-    <property name="commons.logging" value="commons-logging-1.0.1.jar"/>
+    
+    <property name="commons.logging.project" value="commons-logging"/>
+    <property name="commons.logging" 
+      value="${commons.logging.project}/jars/${commons.logging.project}-1.0.1.jar"/>
 
     <presetdef name="gl1">
       <getlibraries destDir="${lib.dir}">
@@ -24,10 +26,11 @@
     <macrodef name="assert-downloaded">
       <attribute name="library" default="${commons.logging}"/>
       <sequential>
+        <property name="@{library}.path" location="${lib.dir}/@{library}" />
         <available property="@{library}.exists"
-          file="${lib.dir}/@{library}"/>
+          file="${@{library}.path}"/>
         <fail unless="@{library}.exists">
-        Not found: ${lib.dir}@{library}
+          Not found: ${@{library}.path}
         </fail>
       </sequential>
     </macrodef>
@@ -35,20 +38,23 @@
     <macrodef name="assert-not-downloaded">
       <attribute name="library" default="${commons.logging}"/>
       <sequential>
+        <property name="@{library}.path" location="${lib.dir}/@{library}" />
         <available property="@{library}.exists"
-          file="${lib.dir}/@{library}"/>
+          file="${@{library}.path}"/>
         <fail if="@{library}.exists">
-        Found: ${lib.dir}@{library}
+          Found: ${@{library}.path}
         </fail>
       </sequential>
     </macrodef>
 
   </target>
 
-  <target name="cleanup">
+  <target name="cleanup"  depends="init">
     <delete dir="${lib.dir}"/>
   </target>
 
+  <target name="teardown"  depends="cleanup"/>
+  
   <target name="testEmpty" depends="init">
     <getlibraries/>
   </target>
@@ -99,7 +105,7 @@
 
   <target name="testMavenInlineBadURL" depends="init">
     <getlib>
-
+      <mavenrepository url="http://invalid.example.org"/>
     </getlib>
   </target>
 
@@ -118,19 +124,19 @@
   <target name="testOverwrite" depends="init">
     <getlib>
       <mavenrepository/>
+      <assertdownloaded count="1" />
     </getlib>
-    <assert-downloaded/>
     <getlib>
       <mavenrepository/>
+      <assertdownloaded count="0" />
     </getlib>
   </target>
 
   <target name="testIf" depends="init">
-    <property name="trueProp" value="true" />
     <gl1>
       <mavenrepository/>
       <library archive="commons-logging" project="commons-logging" version="1.0.1"
-        if="trueProp"/>
+        enabled="true"/>
     </gl1>
     <assert-downloaded/>
   </target>
@@ -139,7 +145,7 @@
     <gl1>
       <mavenrepository/>
       <library archive="commons-logging" project="commons-logging" version="1.0.1"
-        if="undefinedProp"/>
+        enabled="false"/>
     </gl1>
     <assert-not-downloaded/>
   </target>
@@ -164,5 +170,91 @@
     </getlib>
     <assert-downloaded/>
   </target>
+  
+  <target name="testSchedule" depends="init">
+    <getlib >
+      <mavenrepository/>
+      <schedule days="1" markerFile="${lib.dir}/marker.txt"/>
+      <assertdownloaded count="1" />
+    </getlib>
+    <getlib >
+      <mavenrepository/>
+      <schedule days="1" markerFile="${lib.dir}/marker.txt"/>
+      <assertdownloaded count="0" />
+    </getlib>
+  </target>
+
+  <target name="testForceEnabled" depends="init">
+    <getlib>
+      <mavenrepository/>
+      <force enabled="true" />
+      <assertdownloaded count="1" />
+    </getlib>
+    <getlib>
+      <mavenrepository/>
+      <force enabled="true" />
+      <assertdownloaded count="1" />
+    </getlib>    
+  </target>
+
+  <target name="testForceDisabled" depends="init">
+    <getlib>
+      <mavenrepository/>
+      <force enabled="true" />
+      <assertdownloaded count="1" />
+    </getlib>
+    <getlib >
+      <mavenrepository/>
+      <force enabled="false" />
+      <assertdownloaded count="0" />
+    </getlib>
+  </target>
+
+  <target name="testAbsentFiles" depends="init">
+    <getlib >
+      <mavenrepository/>
+      <absentfiles enabled="true" />
+      <assertdownloaded count="1" />
+    </getlib>
+  </target>
+
+  <target name="testAbsentFilesTwice" depends="testAbsentFiles">
+    <getlib >
+      <mavenrepository/>
+      <absentfiles enabled="true" />
+      <assertdownloaded count="0" />
+    </getlib>
+  </target>
+
+  <target name="testNoUpdate" depends="init">
+    <getlib >
+      <mavenrepository/>
+      <force />
+      <noupdate />
+      <assertdownloaded count="0" />
+    </getlib>
+  </target>
+
+  <target name="testTimestamp" depends="testAbsentFiles">
+    <getlib >
+      <mavenrepository/>
+      <timestamp />
+      <assertdownloaded count="0" />
+    </getlib>
+  </target>
+
+  <target name="testAssertDownloadedCountSet" depends="init">
+    <getlib>
+      <mavenrepository/>
+      <assertdownloaded />
+    </getlib>
+  </target>
+
+  <target name="testAssertDownloadedCountTested" depends="init">
+    <getlib>
+      <mavenrepository/>
+      <assertdownloaded count="152" />
+    </getlib>
+  </target>  
 </project>
 

@@ -70,10 +70,20 @@ public final class RepositoryRef extends Repository {
      *
      * @param library
      *
+     * @param useTimestamp
      * @return
      */
-    public boolean fetch(Library library) throws IOException {
+    public boolean fetch(Library library, boolean useTimestamp) throws IOException {
         throw new BuildException(E_NOTIMPL);
     }
 
+    /**
+     * this is a string that uniquely describes the repository and can be used
+     * for equality tests <i>across</i> instances.
+     *
+     * @return
+     */
+    public String getRepositoryURI() {
+        return "ref://"+getRefid();
+    }
 }

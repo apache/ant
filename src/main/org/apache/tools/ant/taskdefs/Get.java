@@ -17,6 +17,11 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,11 +31,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Date;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.FileUtils;
-import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Gets a particular file from a URL source.
@@ -115,6 +115,7 @@ public class Get extends Task {
             progress = new NullProgress();
         }
         log("Getting: " + source, logLevel);
+        log("To: " + dest.getAbsolutePath(), logLevel);
 
         //set the timestamp to the file date.
         long timestamp = 0;

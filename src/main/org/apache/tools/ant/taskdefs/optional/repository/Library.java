@@ -18,8 +18,9 @@
 package org.apache.tools.ant.taskdefs.optional.repository;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.repository.EnabledLibraryElement;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;
 
@@ -28,7 +29,30 @@ import java.io.File;
  *
  * @since Ant1.7
  */
-public class Library {
+public class Library implements EnabledLibraryElement {
+
+    /**
+     * enabled flag
+     */
+    private boolean enabled = true;
+
+    /**
+     * turn policy on/off
+     *
+     * @param enabled
+     */
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    /**
+     * are we enabled
+     *
+     * @return true if {@link #enabled} is set
+     */
+    public boolean getEnabled() {
+        return enabled;
+    }
 
     //project "ant"
     private String project;
@@ -52,14 +76,12 @@ public class Library {
     private File libraryFile;
 
     /**
-     * if clause
+     * we fetch every library by default; note the enabled/disabled
+     * flag has precedence, and this flag is not visible in the XML
      */
-    private String ifClause;
+    private boolean toFetch=true;
 
-    /**
-     * unless clause
-     */
-    private String unlessClause;
+    private boolean fetched=false;
 
     public static final String ERROR_NO_ARCHIVE = "No archive defined";
     public static final String ERROR_NO_PROJECT = "No project defined";
@@ -70,6 +92,7 @@ public class Library {
      * suffix
      */
     private String suffix = "jar";
+    public static final String ERROR_FILE_IS_A_DIR = "Library file is a directory:";
 
 
     /**
@@ -155,44 +178,20 @@ public class Library {
     }
 
     /**
-     * a property that must be set for the library to be considered a dependency
-     * @return
-     */
-    public String getIf() {
-        return ifClause;
-    }
-
-    /**
-     * a property that must be set for the library to be considered a dependency
-     * @param ifClause
-     */
-    public void setIf(String ifClause) {
-        this.ifClause = ifClause;
-    }
-
-    /**
-     * a property that must be unset for the library to be considered a dependency
-     * @return
-     */
-    public String getUnless() {
-        return unlessClause;
-    }
-
-    /**
-     * a property that must be unset for the library to be considered a dependency
-     * @param unlessClause
-     */
-    public void setUnless(String unlessClause) {
-        this.unlessClause = unlessClause;
-    }
-
-    /**
      * get the library file
      * (only non-null after binding)
      * @return library file or null
      */
     public File getLibraryFile() {
         return libraryFile;
+    }
+
+    /**
+     * set the library file.
+     * @param libraryFile
+     */
+    public void setLibraryFile(File libraryFile) {
+        this.libraryFile = libraryFile;
     }
 
     /**
@@ -241,10 +240,16 @@ public class Library {
      */
     public void bind(File baseDir) {
         validate();
+        FileUtils fileUtils=FileUtils.newFileUtils();
+
         if (destinationName == null) {
-            destinationName = getNormalFilename();
+            destinationName = getMavenPath('/');
         }
-        libraryFile = new File(baseDir, destinationName);
+        libraryFile = fileUtils.resolveFile(baseDir, destinationName);
+        if(libraryFile.isDirectory()) {
+            throw new BuildException(ERROR_FILE_IS_A_DIR
+                +libraryFile);
+        }
     }
 
     /**
@@ -310,21 +315,40 @@ public class Library {
         return libraryFile.getAbsolutePath();
     }
 
+
     /**
-     * test for being enabled
-     * @param project
-     * @return
+     * prefixed to avoid ant picking up on it, this sets
+     * the fetch/no-fetch flag.
+     * @param toFetch
      */
-    public boolean isEnabled(Project project) {
-        if (unlessClause != null && project.getProperty(unlessClause) != null) {
-            return false;
-        }
-        if (ifClause == null) {
-            return true;
-        }
-        return project.getProperty(ifClause) != null;
+    public void _setToFetch(boolean toFetch) {
+        this.toFetch = toFetch;
     }
 
+    /**
+     * get the fetch flag.
+     * @return
+     */
+    public boolean isToFetch() {
+        return toFetch;
+    }
+
+    /**
+     * get a flag that marks if a file is fetched
+     * @return
+     */
+    public boolean wasFetched() {
+        return fetched;
+    }
+
+    /**
+     * another not-for-end-users attribute; a flag set to true if the
+     * library has been fetched.
+     * @param fetched
+     */
+    public void _setFetched(boolean fetched) {
+        this.fetched = fetched;
+    }
 
     /**
      * add our location to a filepath
@@ -335,5 +359,55 @@ public class Library {
         pathElement.setLocation(getLibraryFile());
     }
 
+    /**
+     * equality test uses archive, destinationName, project, suffix and version
+     * fields (any of which can be null)
+     * @param o
+     * @return
+     */
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Library)) {
+            return false;
+        }
+
+        final Library library = (Library) o;
+
+        if (archive != null ? !archive.equals(library.archive) : library.archive != null) {
+            return false;
+        }
+        if (destinationName != null ? !destinationName.equals(
+                library.destinationName) : library.destinationName != null) {
+            return false;
+        }
+        if (project != null ? !project.equals(library.project) : library.project != null) {
+            return false;
+        }
+        if (suffix != null ? !suffix.equals(library.suffix) : library.suffix != null) {
+            return false;
+        }
+        if (version != null ? !version.equals(library.version) : library.version != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Hash code uses the name fields as {@link #equals(Object)}
+     * This sequence
+     * @return
+     */
+    public int hashCode() {
+        int result;
+        result = (project != null ? project.hashCode() : 0);
+        result = 29 * result + (version != null ? version.hashCode() : 0);
+        result = 29 * result + (archive != null ? archive.hashCode() : 0);
+        result = 29 * result + (destinationName != null ? destinationName.hashCode() : 0);
+        result = 29 * result + (suffix != null ? suffix.hashCode() : 0);
+        return result;
+    }
 
 }

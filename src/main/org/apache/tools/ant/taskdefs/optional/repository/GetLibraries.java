@@ -19,16 +19,23 @@ package org.apache.tools.ant.taskdefs.optional.repository;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.repository.AbsentFilesPolicy;
+import org.apache.tools.ant.taskdefs.repository.AssertDownloaded;
+import org.apache.tools.ant.taskdefs.repository.EnabledLibraryElementList;
+import org.apache.tools.ant.taskdefs.repository.ForceUpdatePolicy;
+import org.apache.tools.ant.taskdefs.repository.LibraryPolicy;
+import org.apache.tools.ant.taskdefs.repository.NoUpdatePolicy;
+import org.apache.tools.ant.taskdefs.repository.ScheduledUpdatePolicy;
+import org.apache.tools.ant.taskdefs.repository.TimestampPolicy;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.ListIterator;
 
 /**
  * This task will retrieve one or more libraries from a repository. <ol>
@@ -39,17 +46,12 @@ import java.util.NoSuchElementException;
  * @ant.task
  * @since Ant 1.7
  */
-public class GetLibraries extends Task {
+public final class GetLibraries extends Task {
 
     /**
      * destination
      */
     private File destDir;
-
-    /**
-     * flag to force a download
-     */
-    private boolean forceDownload = false;
 
     /**
      * flag to force offline
@@ -59,7 +61,12 @@ public class GetLibraries extends Task {
     /**
      * list of libraries
      */
-    private List libraries = new LinkedList();
+    private EnabledLibraryElementList libraries = new EnabledLibraryElementList();
+
+    /**
+     * helper list
+     */
+    private EnabledLibraryElementList policies=new EnabledLibraryElementList();
 
     /**
      * repository for retrieval
@@ -72,16 +79,33 @@ public class GetLibraries extends Task {
      */
     private String pathid;
 
-
+    /**
+     * should we be timestamp aware in downloads?
+     */
+    private boolean useTimestamp = false;
 
     public static final String ERROR_ONE_REPOSITORY_ONLY = "Only one repository is allowed";
     public static final String ERROR_NO_DEST_DIR = "No destination directory";
     public static final String ERROR_NO_REPOSITORY = "No repository defined";
-    public static final String ERROR_NO_LIBRARIES = "No libraries to load";
-    public static final String ERROR_REPO_PROBE_FAILED = "repository probe failed with ";
-    public static final String ERROR_LIBRARY_FETCH_FAILED = "failed to retrieve ";
-    public static final String ERROR_FORCED_DOWNLOAD_FAILED = "Failed to download every file on a forced download";
-    public static final String ERROR_INCOMPLETE_RETRIEVAL = "Not all libraries could be retrieved";
+    public static final String ERROR_NO_LIBRARIES = "No libraries declared";
+    public static final String ERROR_REPO_PROBE_FAILED = "Repository probe failed with ";
+    public static final String ERROR_LIBRARY_FETCH_FAILED = "Failed to retrieve ";
+    public static final String ERROR_INCOMPLETE_RETRIEVAL = "Missing Libraries :";
+    public static final String MSG_NO_RETRIEVE = "Connections disabled";
+    public static final String MSG_NO_LIBRARIES_TO_FETCH = "No libraries marked for retrieval";
+
+
+    /**
+     * Init the task
+     *
+     * @throws org.apache.tools.ant.BuildException
+     *          if something goes wrong with the build
+     */
+    public void init() throws BuildException {
+        super.init();
+        //set our default polocy
+        add(new AbsentFilesPolicy());
+    }
 
     /**
      * add a repository. Only one is (currently) supported
@@ -115,6 +139,64 @@ public class GetLibraries extends Task {
         add(r);
     }
 
+    /**
+     * add anything that implements the library policy interface
+     * @param policy
+     */
+    public void add(LibraryPolicy policy) {
+        policies.add(policy);
+    }
+
+    /**
+     * add a schedule
+     * @param update
+     */
+    public void addSchedule(ScheduledUpdatePolicy update) {
+        add(update);
+    }
+
+    /**
+     * Declare that the update should be forced: everything
+     * must be fetched; it will be a failure if any are not
+     * @param policy
+     */
+    public void addForce(ForceUpdatePolicy policy) {
+        add(policy);
+    }
+
+    /**
+     * Declare that no files should be fetched
+     * @param policy
+     */
+    public void addNoupdate(NoUpdatePolicy policy) {
+        add(policy);
+    }
+
+    /**
+     * declare that the update should be timestamp driven
+     * @param policy
+     */
+    public void addTimestamp(TimestampPolicy policy) {
+        add(policy);
+    }
+
+    /**
+     * declare that only absent files are to be fetched
+     * @param policy
+     */
+    public void addAbsentfiles(AbsentFilesPolicy policy) {
+        add(policy);
+    }
+
+
+    /**
+     * make a declaration about the number of files to fetch
+     *
+     * @param policy
+     */
+    public void addAssertDownloaded(AssertDownloaded policy) {
+        add(policy);
+    }
 
     /**
      * add a library for retrieval
@@ -134,14 +216,6 @@ public class GetLibraries extends Task {
         this.destDir = destDir;
     }
 
-    /**
-     * flag to force a download even if the clock indicates it aint needed.
-     *
-     * @param forceDownload
-     */
-    public void setForceDownload(boolean forceDownload) {
-        this.forceDownload = forceDownload;
-    }
 
     /**
      * test for being offline
@@ -172,13 +246,6 @@ public class GetLibraries extends Task {
         return destDir;
     }
 
-    /**
-     * get force download flag
-     * @return
-     */
-    public boolean isForceDownload() {
-        return forceDownload;
-    }
 
     /**
      * get the list of libraries
@@ -214,12 +281,38 @@ public class GetLibraries extends Task {
     }
 
     /**
+     * get the current timestamp flag
+     * @return
+     */
+    public boolean isUseTimestamp() {
+        return useTimestamp;
+    }
+
+    /**
+     * set the timestamp flag. Not for export into XML
+     * @param useTimestamp
+     */
+    public void _setUseTimestamp(boolean useTimestamp) {
+        this.useTimestamp = useTimestamp;
+    }
+
+    /**
+     * get the current policy list
+     * @return
+     */
+    public List getPolicies() {
+        return policies;
+    }
+
+    /**
      * validate ourselves
      *
      * @throws BuildException
      */
     public void validate() {
-        if (destDir == null || !destDir.isDirectory()) {
+        if (destDir == null
+        //        || !destDir.isDirectory()
+        ) {
             throw new BuildException(ERROR_NO_DEST_DIR);
         }
         if (repository == null) {
@@ -231,7 +324,6 @@ public class GetLibraries extends Task {
             library.validate();
         }
     }
-
     /**
      * Called by the project to let the task do its work.
      *
@@ -240,25 +332,90 @@ public class GetLibraries extends Task {
      */
     public void execute() throws BuildException {
         validate();
+        if (isOffline()) {
+            log("No retrieval, task is \"offline\"");
+        } else {
+            doExecute();
+        }
+        //validate the state
+        verifyAllLibrariesPresent();
+
+        //create the path
+        if (pathid != null) {
+            createPath();
+        }
+    }
+    /**
+     * This is the real worker method
+     *
+     * @throws org.apache.tools.ant.BuildException
+     *          if something goes wrong with the build
+     */
+    private void doExecute() throws BuildException {
         destDir.mkdirs();
         Repository repo = repository.resolve();
         repo.validate();
         if (libraries.size() == 0) {
             throw new BuildException(ERROR_NO_LIBRARIES);
         }
-        int failures = 0;
         log("Getting libraries from " + repo.toString(), Project.MSG_VERBOSE);
         log("Saving libraries to " + destDir.toString(), Project.MSG_VERBOSE);
 
+        //map libraries to files
         bindAllLibraries();
-        if (isOffline()) {
-            log("No retrieval, task is \"offline\"");
-            //when offline, we just make sure everything is in place
-            verifyAllLibrariesPresent();
-            return;
+
+
+        //flag to indicate whether the download should go ahead
+        boolean retrieve = true;
+        List processedPolicies = new ArrayList(policies.size());
+        //iterate through all policies and execute their preload task
+        Iterator policyIterator = policies.enabledIterator();
+        while (retrieve && policyIterator.hasNext()) {
+            LibraryPolicy libraryPolicy = (LibraryPolicy) policyIterator.next();
+            retrieve=libraryPolicy.beforeConnect(this, libraryIterator());
+            if(retrieve) {
+                //add all processed properties to the list, 'cept for anything that
+                //broke the chain
+                processedPolicies.add(libraryPolicy);
+            } else {
+                log("Policy "+libraryPolicy.getClass().getName()
+                        + " disabled retrieval",
+                        Project.MSG_VERBOSE);
+            }
         }
 
+        //see if we need to do a download
+        if(!retrieve) {
+            //if not, log it
+            log(MSG_NO_RETRIEVE);
+        } else {
+            int downloads = calculateFetchCount();
+            if(downloads>0) {
+                //get the files
+                connectAndRetrieve(repo, useTimestamp);
+            } else {
+                //nothing to fetch
+                log(MSG_NO_LIBRARIES_TO_FETCH,Project.MSG_VERBOSE);
+            }
+        }
+
+        //now reverse iterate through all processed properties.
+        for(int i=processedPolicies.size()-1;i>=0;i--) {
+            LibraryPolicy libraryPolicy = (LibraryPolicy)processedPolicies.get(i);
+            //and call their post-processor
+            libraryPolicy.afterFetched(this,libraryIterator() );
+        }
+    }
+
+    /**
+     * connect to the remote system, retrieve files
+     * @param repo
+     * @param useTimestamp
+     * @return number of failed retrievals.
+     */
+    private int connectAndRetrieve(Repository repo, boolean useTimestamp) {
         //connect the repository
+        int failures = 0;
         repo.connect(this);
         try {
 
@@ -274,55 +431,48 @@ public class GetLibraries extends Task {
                         Project.MSG_VERBOSE);
                 reachable = false;
             }
-            if (!reachable) {
-                if (forceDownload) {
-                    throw new BuildException(repo.toString()
-                            + " is unreachable and forceDownload is set");
-                }
-            } else {
-                log("Repository is live", Project.MSG_DEBUG);
+            if(!reachable) {
+                log("repository is not reachable", Project.MSG_INFO);
+                return 0;
             }
 
-            //iterate through the libs we have
-            Iterator it = filteredIterator();
+            //iterate through the libs we have enabled
+            Iterator it = enabledLibrariesIterator();
             while (it.hasNext()) {
                 Library library = (Library) it.next();
-                try {
-                    //fetch it
-                    if (repo.fetch(library)) {
+                //check to see if it is for fetching
+                if(library.isToFetch()) {
+                    log("Fetching "+library.getNormalFilename(), Project.MSG_VERBOSE);
+                    try {
+                        //fetch it
+                        boolean fetched=repo.fetch(library, useTimestamp) ;
+                        //record the fact in the library
+                        log("success; marking as fetched",
+                                Project.MSG_DEBUG);
+                        library._setFetched(fetched);
+                    } catch (IOException e) {
+                        log(ERROR_LIBRARY_FETCH_FAILED + library);
+                        log(e.getMessage());
+                        //add failures
+                        failures++;
                     }
-                } catch (IOException e) {
-                    //failures to fetch are logged at verbose level
-                    log(ERROR_LIBRARY_FETCH_FAILED + library);
-                    log(e.getMessage(), Project.MSG_VERBOSE);
-                    //add failures
-                    failures++;
+                } else {
+                    //no fetch
+                    log("Skipping " + library.getNormalFilename(), Project.MSG_VERBOSE);
                 }
             }
         } finally {
+
+            log("disconnecting",Project.MSG_VERBOSE);
             repo.disconnect();
         }
-
-        //at this point downloads have finished.
-        //we do still need to verify that everything worked.
-        if ((failures>0 && forceDownload)) {
-            throw new BuildException(ERROR_FORCED_DOWNLOAD_FAILED);
-        }
-
-        //validate the download
-        verifyAllLibrariesPresent();
-
-        //create the path
-        if(pathid!=null) {
-            createPath();
-        }
-
+        return failures;
     }
 
     /**
      * bind all libraries to our destination
      */
-    protected void bindAllLibraries() {
+    public  void bindAllLibraries() {
         Iterator it = libraries.iterator();
         while (it.hasNext()) {
             Library library = (Library) it.next();
@@ -331,25 +481,86 @@ public class GetLibraries extends Task {
     }
 
     /**
+     * set/clear the fetch flag on all libraries.
+     * @param fetch
+     */
+    public void markAllLibrariesForFetch(boolean fetch) {
+        Iterator it = libraryIterator();
+        while (it.hasNext()) {
+            Library library = (Library) it.next();
+            library._setToFetch(fetch);
+        }
+    }
+
+    /**
+     * set the fetch flag on all libraries that are absent; clear
+     * it from all those that exist
+     *
+     */
+    public void markMissingLibrariesForFetch() {
+        Iterator it = libraryIterator();
+        while (it.hasNext()) {
+            Library library = (Library) it.next();
+            library._setToFetch(!library.exists());
+        }
+    }
+
+    /**
+     * work out how many libraries to fetch
+     * @return count of enabled libraries with the to fetch bit set
+     */
+    public  int calculateFetchCount() {
+        int count=0;
+        Iterator it = enabledLibrariesIterator();
+        while (it.hasNext()) {
+            Library library = (Library) it.next();
+            if(library.isToFetch()) {
+                count++;
+            };
+        }
+        return count;
+    }
+
+    /**
+     * work out how many libraries were fetched
+     * @return number of libraries that are enabled with the
+     * {@link Library#wasFetched()} flag true.
+     */
+    public int calculateDownloadedCount() {
+        int count = 0;
+        //here verify that everything came in
+        Iterator downloaded = enabledLibrariesIterator();
+        while (downloaded.hasNext()) {
+            Library library = (Library) downloaded.next();
+            if (library.wasFetched()) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+
+    /**
      * verify that all libraries are present
      */
     protected void verifyAllLibrariesPresent() {
         //iterate through the libs we have
         boolean missing = false;
-
-        Iterator it = filteredIterator();
+        StringBuffer buffer=new StringBuffer();
+        Iterator it = enabledLibrariesIterator();
         while (it.hasNext()) {
             Library library = (Library) it.next();
             //check for the library existing
             if (!library.exists()) {
                 //and log if one is missing
+                buffer.append(library.toString()+"; ");
                 log("Missing: " + library.toString(),
                         Project.MSG_ERR);
                 missing = true;
             }
         }
         if (missing) {
-            throw new BuildException(ERROR_INCOMPLETE_RETRIEVAL);
+            throw new BuildException(ERROR_INCOMPLETE_RETRIEVAL+buffer);
         }
     }
 
@@ -358,7 +569,7 @@ public class GetLibraries extends Task {
      */
     private void createPath() {
         Path path = new Path(getProject());
-        for (Iterator iterator = filteredIterator();
+        for (Iterator iterator = enabledLibrariesIterator();
              iterator.hasNext();) {
             ((Library) iterator.next()).appendToPath(path);
         }
@@ -369,66 +580,17 @@ public class GetLibraries extends Task {
      * get a filtered iterator of the dependencies
      * @return a new iterator that ignores disabled libraries
      */
-    protected Iterator filteredIterator() {
-        return new LibraryIterator(libraries,getProject());
+    public Iterator enabledLibrariesIterator() {
+        return libraries.enabledIterator();
     }
 
     /**
-     * iterator through a list that skips everything that
-     * is not enabled
+     * get a list iterator for the files
+     * This gives you more power
+     * @return
      */
-    private static class LibraryIterator implements Iterator {
-        private Iterator _underlyingIterator;
-        private Library _next;
-        private Project _project;
-
-
-        /**
-         * constructor
-         * @param collection
-         * @param project
-         */
-        LibraryIterator(Collection collection, Project project) {
-            _project = project;
-            _underlyingIterator = collection.iterator();
-        }
-
-
-        /**
-         * test for having another enabled component
-         * @return
-         */
-        public boolean hasNext() {
-            while (_next == null && _underlyingIterator.hasNext()) {
-                Library candidate = (Library) _underlyingIterator.next();
-                if (candidate.isEnabled(_project)) {
-                    _next = candidate;
-                }
-            }
-            return (_next != null);
-        }
-
-        /**
-         * get the next element
-         * @return
-         */
-        public Object next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            Library result = _next;
-            _next = null;
-            return result;
-        }
-
-        /**
-         * removal is not supported
-         * @throws UnsupportedOperationException always
-         */
-        public void remove() {
-            throw new UnsupportedOperationException();
-        }
+    public ListIterator libraryIterator() {
+        return libraries.listIterator();
     }
-
 
 }

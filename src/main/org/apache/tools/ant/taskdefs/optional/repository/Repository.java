@@ -99,11 +99,18 @@ public abstract class Repository extends DataType {
     /**
      * fetch a library from the repository
      *
-     * @param library
+     * @param library library to fetch
      *
+     * @param useTimestamp flag to indicate the timestamp of the lib should be used
      * @return
      */
-    public abstract boolean fetch(Library library) throws IOException;
+    public abstract boolean fetch(Library library, boolean useTimestamp) throws IOException;
 
 
+    /**
+     * this is a string that uniquely describes the repository
+     * and can be used for equality tests <i>across</i> instances. 
+     * @return
+     */
+    public abstract String getRepositoryURI();
 }

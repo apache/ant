@@ -19,10 +19,9 @@ package org.apache.tools.ant.taskdefs.optional.repository;
 
 import org.apache.tools.ant.util.FileUtils;
 
-import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
@@ -91,17 +90,28 @@ public class MavenRepository extends HttpRepository {
     }
 
     /**
+     * this is a string that uniquely describes the repository and can be used
+     * for equality tests <i>across</i> instances.
+     *
+     * @return maven identifier
+     */
+    public String getRepositoryURI() {
+        return "maven://" + getUrl();
+    }
+
+    /**
      * fetch a library from the repository
      *
      * @param library
      *
+     * @param useTimestamp
      * @return true if we retrieved
      *
      * @throws org.apache.tools.ant.BuildException
      *
      */
-    public boolean fetch(Library library) throws IOException {
-        boolean  fetched=super.fetch(library);
+    public boolean fetch(Library library, boolean useTimestamp) throws IOException {
+        boolean  fetched=super.fetch(library, useTimestamp);
         if(fetched && checkMD5) {
             //we got here if there was a fetch. so we now get the MD5 info from the file,
             boolean successful=false;
@@ -140,5 +150,3 @@ public class MavenRepository extends HttpRepository {
     }
 
 }
-
-// e1b1720a761ca36eaa47e1c7d802e676

@@ -17,6 +17,7 @@
 package org.apache.tools.ant.taskdefs.optional.repository;
 
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.taskdefs.repository.AssertDownloaded;
 
 /**
  * test the test libraries stuff.
@@ -75,6 +76,10 @@ public class GetLibrariesTest extends BuildFileTest {
         execIfOnline(targetName);
     }
 
+    /**
+     * exec a target, but only if we are online
+     * @param targetName
+     */
     private void execIfOnline(String targetName) {
         if (offline()) {
             return;
@@ -83,15 +88,28 @@ public class GetLibrariesTest extends BuildFileTest {
     }
 
     public void testTwoRepositories() {
-        expectBuildException("testTwoRepositories", GetLibraries.ERROR_ONE_REPOSITORY_ONLY);
+        expectBuildException("testTwoRepositories",
+                GetLibraries.ERROR_ONE_REPOSITORY_ONLY);
     }
 
     public void testMavenInlineBadURL() {
+        expectExceptionIfOnline("testMavenInlineBadURL",
+                "testMavenInlineBadURL",
+                GetLibraries.ERROR_INCOMPLETE_RETRIEVAL);
+    }
+
+    /**
+     * exec a target if we are online; expect an eception
+     * @param target
+     * @param cause caue of the faule
+     * @param message
+     */
+    private void expectExceptionIfOnline(String target, String cause,String message) {
         if (offline()) {
             return;
         }
-        expectBuildException("testTwoRepositories",
-                GetLibraries.ERROR_INCOMPLETE_RETRIEVAL);
+        expectBuildExceptionContaining(target,cause,
+                message);
     }
 
     public void testRenaming() {
@@ -119,4 +137,45 @@ public class GetLibrariesTest extends BuildFileTest {
         execIfOnline("testSecurity");
     }
 
- }
+    public void testSchedule() {
+        execIfOnline("testSchedule");
+    }
+
+    public void testForceEnabled() {
+        execIfOnline("testForceEnabled");
+    }
+
+    public void testForceDisabled() {
+        execIfOnline("testForceDisabled");
+    }
+
+    public void testAbsentFiles() {
+        execIfOnline("testAbsentFiles");
+    }
+
+    public void testAbsentFilesTwice() {
+        execIfOnline("testAbsentFilesTwice");
+    }
+
+    public void testNoUpdate() {
+        expectExceptionIfOnline("testNoUpdate",
+                "update disabled; dest file missing",
+                GetLibraries.ERROR_INCOMPLETE_RETRIEVAL);
+    }
+
+    public void testTimestamp() {
+        execIfOnline("testTimestamp");
+    }
+
+    public void testAssertDownloadedCountSet() {
+        expectExceptionIfOnline("testAssertDownloadedCountSet",
+                "No count in assertdownloaded",
+                AssertDownloaded.ERROR_NO_COUNT);
+    }
+
+    public void testAssertDownloadedCountTested() {
+        expectExceptionIfOnline("testAssertDownloadedCountTested",
+                "Wrong count in assertdownloaded",
+                AssertDownloaded.ERROR_DOWNLOAD_FAILURE);
+    }
+}
