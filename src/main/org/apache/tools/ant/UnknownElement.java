@@ -102,12 +102,7 @@ public class UnknownElement extends Task {
                                      + elementName, location);
         }
 
-        try {
-            project.fireTaskStarted(realTask);
-            realTask.execute();
-        } finally {
-            project.fireTaskFinished(realTask, null);
-        }
+        realTask.perform();
     }
 
     public void addChild(UnknownElement child) {
