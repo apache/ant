@@ -374,7 +374,7 @@ public class Checksum extends MatchingTask implements Condition {
                 String[] srcFiles = ds.getIncludedFiles();
                 for (int j = 0; j < srcFiles.length; j++) {
                     File src = new File(fs.getDir(getProject()), srcFiles[j]);
-                    if (totalproperty != null) {
+                    if (totalproperty != null || todir != null) {
                         // Use '/' to calculate digest based on file name.
                         // This is required in order to get the same result
                         // on different platforms.
@@ -467,7 +467,7 @@ public class Checksum extends MatchingTask implements Condition {
                 messageDigest.reset();
                 File src = (File) e.nextElement();
                 if (!isCondition) {
-                    log("Calculating " + algorithm + " checksum for " + src);
+                    log("Calculating " + algorithm + " checksum for " + src, Project.MSG_VERBOSE);
                 }
                 fis = new FileInputStream(src);
                 DigestInputStream dis = new DigestInputStream(fis,

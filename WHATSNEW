@@ -93,6 +93,8 @@ Changes that could break older environments:
   are resolved at a later stage. This causes some
   differences especially for user defined task containers.
 
+* <checksum> log message "Calculating checksum ..." has been degraded from INFO to VERBOSE.
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla

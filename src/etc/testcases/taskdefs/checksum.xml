@@ -65,4 +65,12 @@
       </fileset>
     </checksum>
   </target>
+    <!-- bug report 25606 -->
+    <target name="verifyChecksumdirNoTotal">
+      <checksum todir="${basedir}/checksum/checksums">
+        <fileset dir="${basedir}/checksum">
+          <exclude name="**/*.MD5"/>
+        </fileset>
+      </checksum>
+    </target>
 </project>
