@@ -12,9 +12,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.role.RoleManager;
@@ -31,7 +28,6 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  */
 public abstract class AbstractTypeDef
     extends AbstractTask
-    implements Composable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( AbstractTypeDef.class );
@@ -39,15 +35,6 @@ public abstract class AbstractTypeDef
     private File m_lib;
     private String m_name;
     private String m_className;
-    private TypeManager m_typeManager;
-    private RoleManager m_roleManager;
-
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
-    {
-        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
-        m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
-    }
 
     public void setLib( final File lib )
     {
@@ -80,15 +67,17 @@ public abstract class AbstractTypeDef
         }
 
         final String typeName = getTypeName();
-        final String role = m_roleManager.getRoleForName( typeName );
+        final RoleManager roleManager = (RoleManager)getService( RoleManager.class );
+        final String role = roleManager.getRoleForName( typeName );
 
         final ClassLoader classLoader = createClassLoader();
         final DefaultTypeFactory factory = new DefaultTypeFactory( classLoader );
         factory.addNameClassMapping( m_name, m_className );
 
+        final TypeManager typeManager = (TypeManager)getService( TypeManager.class );
         try
         {
-            m_typeManager.registerType( role, m_name, factory );
+            typeManager.registerType( role, m_name, factory );
         }
         catch( final TypeException te )
         {
@@ -114,11 +103,6 @@ public abstract class AbstractTypeDef
             final String message = REZ.getString( "typedef.bad-classloader.error", e );
             throw new TaskException( message, e );
         }
-    }
-
-    protected final TypeManager getTypeManager()
-    {
-        return m_typeManager;
     }
 
     protected abstract String getTypeName();

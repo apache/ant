@@ -9,20 +9,21 @@ package org.apache.myrmidon.framework;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-
-
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-
+import org.apache.avalon.framework.context.Context;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.converter.ConverterException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.executor.Executor;
+import org.apache.myrmidon.interfaces.type.TypeFactory;
+import org.apache.myrmidon.interfaces.type.TypeManager;
+import org.apache.myrmidon.interfaces.type.TypeException;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.
@@ -31,7 +32,6 @@ import org.apache.myrmidon.interfaces.executor.Executor;
  */
 public abstract class AbstractContainerTask
     extends AbstractTask
-    implements Composable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( AbstractContainerTask.class );
@@ -45,12 +45,18 @@ public abstract class AbstractContainerTask
     ///For executing sub-elements as tasks
     private Executor m_executor;
 
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
+    /**
+     * Retrieve context from container.
+     *
+     * @param context the context
+     */
+    public void contextualize( TaskContext context )
+        throws TaskException
     {
-        m_configurer = (Configurer)componentManager.lookup( Configurer.ROLE );
-        m_converter = (MasterConverter)componentManager.lookup( MasterConverter.ROLE );
-        m_executor = (Executor)componentManager.lookup( Executor.ROLE );
+        super.contextualize( context );
+        m_configurer = (Configurer)getService( Configurer.class );
+        m_converter = (MasterConverter)getService( MasterConverter.class );
+        m_executor = (Executor)getService( Executor.class );
     }
 
     /**
@@ -100,6 +106,24 @@ public abstract class AbstractContainerTask
         throws ConfigurationException
     {
         getConfigurer().configure( object, name, value, getContext() );
+    }
+
+    /**
+     * Locates a type factory.
+     */
+    protected final TypeFactory getTypeFactory( final String role )
+        throws TaskException
+    {
+        final TypeManager typeManager = (TypeManager)getService( TypeManager.class );
+        try
+        {
+            return typeManager.getFactory( role );
+        }
+        catch( final TypeException te )
+        {
+            final String message = REZ.getString( "container.no-factory.error", role );
+            throw new TaskException( message, te );
+        }
     }
 
     /**

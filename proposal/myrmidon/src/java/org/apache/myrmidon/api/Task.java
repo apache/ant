@@ -29,7 +29,8 @@ public interface Task
      * The Task will use the TaskContext to receive information
      * about it's environment.
      */
-    void contextualize( TaskContext context );
+    void contextualize( TaskContext context )
+        throws TaskException;
 
     /**
      * Execute task.

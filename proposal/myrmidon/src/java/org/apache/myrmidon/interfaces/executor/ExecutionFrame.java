@@ -24,6 +24,4 @@ public interface ExecutionFrame
     Logger getLogger();
 
     TaskContext getContext();
-
-    ComponentManager getComponentManager();
 }

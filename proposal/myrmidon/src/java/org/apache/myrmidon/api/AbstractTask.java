@@ -8,9 +8,7 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
-import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
@@ -31,6 +29,7 @@ public abstract class AbstractTask
      * @param context the context
      */
     public void contextualize( final TaskContext context )
+        throws TaskException
     {
         m_context = context;
     }
@@ -102,6 +101,12 @@ public abstract class AbstractTask
         throws TaskException
     {
         getContext().setProperty( name, value, scope );
+    }
+
+    protected final Object getService( final Class serviceClass )
+        throws TaskException
+    {
+        return getContext().getService( serviceClass );
     }
 
     protected final TaskContext createSubContext( final String name )

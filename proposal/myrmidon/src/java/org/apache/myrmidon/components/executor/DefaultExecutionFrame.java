@@ -12,9 +12,11 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
+import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
@@ -24,36 +26,28 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultExecutionFrame
-    implements ExecutionFrame, LogEnabled, Contextualizable, Composable
+    implements ExecutionFrame, LogEnabled, Contextualizable
 {
-    private TypeManager m_typeManager;
-
     private Logger m_logger;
     private TaskContext m_context;
-    private ComponentManager m_componentManager;
+    private TypeManager m_typeManager;
 
     public void enableLogging( final Logger logger )
     {
         m_logger = logger;
     }
 
-    public void contextualize( final Context context )
+    public void contextualize( final Context context ) throws ContextException
     {
         m_context = (TaskContext)context;
-    }
-
-    /**
-     * Retrieve relevent services needed to deploy.
-     *
-     * @param componentManager the ComponentManager
-     * @exception ComponentException if an error occurs
-     */
-    public void compose( final ComponentManager componentManager )
-        throws ComponentException
-    {
-        m_componentManager = componentManager;
-
-        m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
+        try
+        {
+            m_typeManager = (TypeManager)m_context.getService( TypeManager.class );
+        }
+        catch( TaskException te )
+        {
+            throw new ContextException(te.getMessage(), te);
+        }
     }
 
     public TypeManager getTypeManager()
@@ -69,10 +63,5 @@ public class DefaultExecutionFrame
     public TaskContext getContext()
     {
         return m_context;
-    }
-
-    public ComponentManager getComponentManager()
-    {
-        return m_componentManager;
     }
 }

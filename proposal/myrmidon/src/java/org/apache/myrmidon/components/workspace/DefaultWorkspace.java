@@ -19,7 +19,6 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
@@ -31,6 +30,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.deployer.DefaultDeployer;
 import org.apache.myrmidon.components.executor.DefaultExecutionFrame;
+import org.apache.myrmidon.components.role.DefaultRoleManager;
 import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
@@ -41,6 +41,7 @@ import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -141,7 +142,7 @@ public class DefaultWorkspace
     private TaskContext createBaseContext()
         throws TaskException
     {
-        final TaskContext context = new DefaultTaskContext();
+        final TaskContext context = new DefaultTaskContext( m_componentManager );
 
         final String[] names = m_parameters.getNames();
         for( int i = 0; i < names.length; i++ )
@@ -219,9 +220,6 @@ public class DefaultWorkspace
     private ExecutionFrame createExecutionFrame( final Project project )
         throws TaskException
     {
-        final TaskContext context = new DefaultTaskContext( m_baseContext );
-        context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
-
         //Create per frame ComponentManager
         final DefaultComponentManager componentManager =
             new DefaultComponentManager( m_componentManager );
@@ -267,6 +265,11 @@ public class DefaultWorkspace
             componentManager.put( Project.ROLE + "/" + name, other );
         }
 
+        // Create and configure the context
+        final DefaultTaskContext context =
+            new DefaultTaskContext( m_baseContext, componentManager );
+        context.setProperty( TaskContext.BASE_DIRECTORY, project.getBaseDirectory() );
+
         final DefaultExecutionFrame frame = new DefaultExecutionFrame();
 
         try
@@ -276,7 +279,6 @@ public class DefaultWorkspace
 
             frame.enableLogging( logger );
             frame.contextualize( context );
-            frame.compose( componentManager );
         }
         catch( final Exception e )
         {
@@ -401,10 +403,10 @@ public class DefaultWorkspace
                     return;
                 }
             }
-            catch( final ContextException ce )
+            catch( final TaskException te )
             {
                 final String message = REZ.getString( "condition-eval.error", name );
-                throw new TaskException( message, ce );
+                throw new TaskException( message, te );
             }
         }
 

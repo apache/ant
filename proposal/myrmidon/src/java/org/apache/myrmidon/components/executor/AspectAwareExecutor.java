@@ -81,9 +81,6 @@ public class AspectAwareExecutor
         debug( "contextualizing.notice" );
         doContextualize( task, taskModel, frame.getContext() );
 
-        debug( "composing.notice" );
-        doCompose( task, taskModel, frame.getComponentManager() );
-
         debug( "configuring.notice" );
         getAspectManager().preConfigure( taskModel );
         doConfigure( task, taskModel, frame.getContext() );

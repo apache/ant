@@ -8,12 +8,14 @@
 package org.apache.myrmidon.components.workspace;
 
 import java.io.File;
-import java.util.Map;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
+import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.context.ContextException;
 import org.apache.avalon.framework.context.DefaultContext;
 import org.apache.myrmidon.api.TaskContext;
@@ -31,13 +33,7 @@ public class DefaultTaskContext
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultTaskContext.class );
 
-    /**
-     * Constructor for Context with no parent contexts.
-     */
-    public DefaultTaskContext( final Map contextData )
-    {
-        super( contextData );
-    }
+    private ComponentManager m_componentManager;
 
     /**
      * Constructor for Context with no parent contexts.
@@ -48,15 +44,33 @@ public class DefaultTaskContext
     }
 
     /**
-     * Constructor.
+     * Constructor that specified parent context.
      */
     public DefaultTaskContext( final TaskContext parent )
     {
-        super( parent );
+        this( parent, null );
     }
 
     /**
-     * Retrieve Name of tasklet.
+     * Constructor that specifies the ComponentManager for context.
+     */
+    public DefaultTaskContext( final ComponentManager componentManager )
+    {
+        this( null, componentManager );
+    }
+
+    /**
+     * Constructor that takes both parent context and a service directory.
+     */
+    public DefaultTaskContext( final TaskContext parent,
+                               final ComponentManager componentManager )
+    {
+        super( parent );
+        m_componentManager = componentManager;
+    }
+
+    /**
+     * Retrieve Name of task.
      *
      * @return the name
      */
@@ -104,7 +118,42 @@ public class DefaultTaskContext
     public Object getService( final Class serviceClass )
         throws TaskException
     {
-        throw new TaskException( "No services available atm" );
+        // Try this context first
+        final String name = serviceClass.getName();
+        if( m_componentManager.hasComponent( name ) )
+        {
+            try
+            {
+                final Component service = m_componentManager.lookup( name );
+                if( !serviceClass.isInstance( service ) )
+                {
+                    final String message =
+                        REZ.getString( "bad-service-class.error",
+                                       name,
+                                       service.getClass().getName(),
+                                       serviceClass.getName() );
+                    throw new TaskException( message );
+                }
+
+                return service;
+            }
+            catch( final ComponentException ce )
+            {
+                final String message = REZ.getString( "bad-find-service.error", name );
+                throw new TaskException( message, ce );
+            }
+        }
+
+        // Try parent
+        final TaskContext parent = (TaskContext)getParent();
+        if( null != parent )
+        {
+            return parent.getService( serviceClass );
+        }
+
+        // Not found
+        final String message = REZ.getString( "bad-find-service.error", name );
+        throw new TaskException( message );
     }
 
     /**
@@ -194,9 +243,11 @@ public class DefaultTaskContext
     {
         checkPropertyValid( name, value );
 
-        if( CURRENT == scope ) {
+        if( CURRENT == scope )
+        {
             put( name, value );
-        } else if( PARENT == scope )
+        }
+        else if( PARENT == scope )
         {
             if( null == getParent() )
             {
