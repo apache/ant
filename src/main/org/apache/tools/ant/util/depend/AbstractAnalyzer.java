@@ -113,13 +113,11 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * which the root classes depend.
      *
      * @return an enumeration of File instances.
-     * @exception UnsupportedOperationException if the analyzer cannot
-     *      determine file dependencies.
      */
-    public Enumeration getFileDependencies()
-         throws UnsupportedOperationException {
+    public Enumeration getFileDependencies() {
         if (!supportsFileDependencies()) {
-            throw new UnsupportedOperationException();
+            throw new RuntimeException("File dependencies are not supported " 
+                + "by this analyzer");
         }
         if (!determined) {
             determineDependencies(fileDependencies, classDependencies);

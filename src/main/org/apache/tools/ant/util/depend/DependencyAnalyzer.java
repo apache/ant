@@ -106,10 +106,8 @@ public interface DependencyAnalyzer {
      * which the root classes depend.
      *
      * @return an enumeration of File instances.
-     * @exception UnsupportedOperationException if the analyzer cannot
-     *      determine file dependencies.
      */
-    Enumeration getFileDependencies() throws UnsupportedOperationException;
+    Enumeration getFileDependencies();
 
     /**
      * Get the list of classes upon which root classes depend. This is a
