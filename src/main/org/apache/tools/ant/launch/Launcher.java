@@ -1,5 +1,5 @@
 /*
- * Copyright  2003-2004 The Apache Software Foundation
+ * Copyright  2003-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,11 +38,23 @@ public class Launcher {
     /** The Ant Library Directory property */
     public static final String ANTLIBDIR_PROPERTY = "ant.library.dir";
 
+    /** The directory name of the per-user ant directory */
+    public static final String ANT_PRIVATEDIR = ".ant";
+
+    /**
+     * The location of a per-user library directory
+     */
+    public static final String ANT_PRIVATELIB = "lib";
+
     /** The location of a per-user library directory */
-    public static final String USER_LIBDIR = ".ant/lib";
+    public static final String USER_LIBDIR = ANT_PRIVATEDIR + "/" + ANT_PRIVATELIB;
 
     /** The startup class that is to be run */
     public static final String MAIN_CLASS = "org.apache.tools.ant.Main";
+    /**
+     * system property with user home directory
+     */
+    public static final String USER_HOMEDIR = "user.home";
 
     /**
      *  Entry point for starting command line Ant
@@ -65,7 +77,7 @@ public class Launcher {
       * @param path        the classpath or lib path to add to the libPathULRLs
       * @param getJars     if true and a path is a directory, add the jars in
       *                    the directory to the path urls
-      * @param libPathURLS the list of paths to add to
+      * @param libPathURLs the list of paths to add to
       */
     private void addPath(String path, boolean getJars, List libPathURLs)
         throws MalformedURLException {
@@ -122,6 +134,8 @@ public class Launcher {
         String cpString = null;
         List argList = new ArrayList();
         String[] newArgs;
+        boolean  noUserLib = false;
+        boolean  noClassPath = false;
 
         for (int i = 0; i < args.length; ++i) {
             if (args[i].equals("-lib")) {
@@ -140,10 +154,18 @@ public class Launcher {
                         + "not be repeated");
                 }
                 cpString = args[++i];
+            } else if (args[i].equals("--nouserlib") || args[i].equals("-nouserlib")) {
+                noUserLib = true;
+            } else if (args[i].equals("--noclasspath") || args[i].equals("-noclasspath")) {
+                noClassPath = true;
             } else {
                 argList.add(args[i]);
             }
         }
+
+        //decide whether to copy the existing arg set, or
+        //build a new one from the list of all args excluding the special
+        //operations that only we handle
 
         if (libPaths.size() == 0 && cpString == null) {
             newArgs = args;
@@ -153,7 +175,7 @@ public class Launcher {
 
         List libPathURLs = new ArrayList();
 
-        if (cpString != null) {
+        if (cpString != null && !noClassPath) {
             addPath(cpString, false, libPathURLs);
         }
 
@@ -181,9 +203,10 @@ public class Launcher {
         URL[] systemJars = Locator.getLocationURLs(antLibDir);
 
         File userLibDir
-            = new File(System.getProperty("user.home"), USER_LIBDIR);
-        URL[] userJars = Locator.getLocationURLs(userLibDir);
+            = new File(System.getProperty(USER_HOMEDIR),
+                    ANT_PRIVATEDIR + File.separatorChar + ANT_PRIVATELIB);
 
+        URL[] userJars = noUserLib ? new URL[0] : Locator.getLocationURLs(userLibDir);
 
         int numJars = libJars.length + userJars.length + systemJars.length;
         if (toolsJar != null) {
