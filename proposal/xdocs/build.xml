@@ -465,7 +465,7 @@
              classpath="${build.dir}/classes"
              classname="org.apache.tools.ant.xdoclet.IndexGen"
     />
-    <indexgen rootdir="${build.dir}/docs/manual" destdir="${build.dir}/docs/manual"/>
+    <indexgen rootdir="${build.dir}/docs/manual"/>
   </target>
 
   <target name="docs-from-scratch" depends="clean,gen,docs,indexgen"/>
