@@ -79,6 +79,7 @@
       <exclude name="**/DDCreator*.java" unless="ejb.DDCreator.present" />
       <exclude name="**/WLRun.java" unless="ejb.wls.present" />
       <exclude name="**/WLStop.java" unless="ejb.wls.present" />
+      <exclude name="**/EjbJar.java" unless="ejb.build" />
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
