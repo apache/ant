@@ -156,6 +156,8 @@ Fixed bugs:
 
 * <telnet> and <rexec> didn't close the session.  Bugzilla Report 25935.
 
+* <subant> and XmlLogger didn't play nicley together.
+
 Other changes:
 --------------
 * doc fix concerning the dependencies of the ftp task

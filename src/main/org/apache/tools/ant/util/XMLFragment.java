@@ -87,7 +87,7 @@ public class XMLFragment implements DynamicConfiguratorNS {
         }
     }
 
-   public class Child implements DynamicConfiguratorNS {
+    public class Child implements DynamicConfiguratorNS {
         private Element e;
 
         Child(Element e) {
