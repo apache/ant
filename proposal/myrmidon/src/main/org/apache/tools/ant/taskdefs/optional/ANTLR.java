@@ -137,7 +137,7 @@ public class ANTLR extends Task
                 ExecuteJava exe = new ExecuteJava();
                 exe.setJavaCommand( commandline.getJavaCommand() );
                 exe.setClasspath( commandline.getClasspath() );
-                exe.execute( getProject() );
+                exe.execute();
             }
         }
     }
