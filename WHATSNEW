@@ -105,6 +105,9 @@ Fixed bugs:
 
 * Classpath was treated in the same way as -lib options. Bugzilla 28046.
 
+* Manual page for cvsversion contained incorrect attributes and did not say since 1.6.1.
+  Bugzilla 31408.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
