@@ -165,7 +165,7 @@ public class ZipFileSet extends FileSet {
         if (srcFile != null) {
             ZipScanner zs = new ZipScanner();
             zs.setSrc(srcFile);
-            super.setDir(new File("."));
+            super.setDir(p.getBaseDir());
             setupDirectoryScanner(zs, p);
             zs.init();
             return zs;
