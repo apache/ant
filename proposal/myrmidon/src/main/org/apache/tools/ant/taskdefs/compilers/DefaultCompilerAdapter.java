@@ -363,7 +363,8 @@ public abstract class DefaultCompilerAdapter
                 final Execute2 exe = new Execute2();
                 setupLogger( exe );
                 exe.setWorkingDirectory( m_baseDir );
-                exe.setCommandline( commandArray );
+                final String[] commandline = commandArray;
+                exe.setCommandline( new Commandline( commandline ) );
                 return exe.execute();
             }
             catch( IOException e )

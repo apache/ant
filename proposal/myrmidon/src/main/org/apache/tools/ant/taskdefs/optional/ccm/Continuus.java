@@ -118,7 +118,7 @@ public abstract class Continuus
                 exe.setExecOutputHandler( handler );
             }
             exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd.getCommandline() );
+            exe.setCommandline( cmd );
             return exe.execute();
         }
         catch( final IOException ioe )

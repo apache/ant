@@ -110,7 +110,7 @@ public abstract class ClearCase extends Task
             final Execute2 exe = new Execute2();
             setupLogger( exe );
             exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd.getCommandline() );
+            exe.setCommandline( cmd );
             return exe.execute();
         }
         catch( IOException e )

@@ -365,7 +365,7 @@ public class BorlandDeploymentTool
         exe.setWorkingDirectory( getTask().getBaseDirectory() );
 
         final Commandline cmd = buildCommandline( ithomes );
-        exe.setCommandline( cmd.getCommandline() );
+        exe.setCommandline( cmd );
 
         getLogger().debug( "Calling java2iiop" );
         getLogger().debug( cmd.toString() );

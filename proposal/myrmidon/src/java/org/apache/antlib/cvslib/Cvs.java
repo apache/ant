@@ -153,7 +153,7 @@ public class Cvs
         }
         exe.setWorkingDirectory( m_dest );
 
-        exe.setCommandline( command.getCommandline() );
+        exe.setCommandline( command );
         exe.setEnvironment( env );
         try
         {

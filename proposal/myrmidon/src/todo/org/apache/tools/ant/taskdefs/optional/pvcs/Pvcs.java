@@ -193,7 +193,7 @@ public class Pvcs
             final Execute2 exe = new Execute2();
             setupLogger( exe );
             exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd.getCommandline() );
+            exe.setCommandline( cmd );
             result = exe.execute();
             checkResultCode( result, cmd );
         }
@@ -276,7 +276,7 @@ public class Pvcs
             exe.setExecOutputHandler( this );
             m_output = new FileOutputStream( tmp );
             exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd.getCommandline() );
+            exe.setCommandline( cmd );
             final int result = exe.execute();
             checkResultCode( result, cmd );
 

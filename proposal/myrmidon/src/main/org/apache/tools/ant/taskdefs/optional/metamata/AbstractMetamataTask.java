@@ -24,6 +24,7 @@ import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ScannerUtil;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * Somewhat abstract framework to be used for other metama 2.0 tasks. This
@@ -280,7 +281,8 @@ public abstract class AbstractMetamataTask
         final Execute2 exe = new Execute2();
         setupLogger( exe );
         getLogger().debug( m_cmdl.toString() );
-        exe.setCommandline( m_cmdl.getCommandline() );
+        final String[] commandline = m_cmdl.getCommandline();
+        exe.setCommandline( new Commandline( commandline ) );
         try
         {
             if( 0 != exe.execute() )

@@ -163,7 +163,7 @@ public class BorlandGenerateClient extends Task
             final Execute2 exe = new Execute2();
             setupLogger( exe );
             exe.setWorkingDirectory( new File( "." ) );
-            exe.setCommandline( cmd.getCommandline() );
+            exe.setCommandline( cmd );
             exe.execute();
         }
         catch( Exception e )

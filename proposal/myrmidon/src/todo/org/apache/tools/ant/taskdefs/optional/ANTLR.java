@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * ANTLR task.
@@ -129,7 +130,7 @@ public class ANTLR extends Task
             if( fork )
             {
                 getLogger().debug( "Forking " + commandline.toString() );
-                int err = run( commandline.getCommandline() );
+                int err = run( commandline );
                 if( err == 1 )
                 {
                     throw new TaskException( "ANTLR returned: " + err );
@@ -222,7 +223,7 @@ public class ANTLR extends Task
      * @return Description of the Returned Value
      * @exception TaskException Description of Exception
      */
-    private int run( String[] command )
+    private int run( final Commandline command )
         throws TaskException
     {
         final Execute2 exe = new Execute2();

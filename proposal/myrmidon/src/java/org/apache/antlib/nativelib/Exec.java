@@ -176,7 +176,7 @@ public class Exec
         exe.setWorkingDirectory( m_dir );
         exe.setNewenvironment( m_newEnvironment );
         exe.setEnvironment( environment );
-        exe.setCommandline( m_command.getCommandline() );
+        exe.setCommandline( m_command );
         return exe;
     }
 

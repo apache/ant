@@ -217,7 +217,7 @@ public abstract class MSVSS extends Task
             }
 
             exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd.getCommandline() );
+            exe.setCommandline( cmd );
             return exe.execute();
         }
         catch( IOException e )

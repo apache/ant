@@ -37,6 +37,24 @@ public class Commandline
     protected final ArrayList m_arguments = new ArrayList();
     private String m_executable;
 
+    public Commandline()
+    {
+    }
+
+    public Commandline( final String[] command )
+    {
+        if( 0 == command.length )
+        {
+            throw new IllegalArgumentException( "command" );
+        }
+
+        m_executable = command[ 0 ];
+        for( int i = 1; i < command.length; i++ )
+        {
+            addArgument( command[ i ] );
+        }
+    }
+
     /**
      * Sets the executable to run.
      *
@@ -98,25 +116,12 @@ public class Commandline
         return m_executable;
     }
 
-    public void addArguments( String[] line )
+    public void addArguments( final String[] args )
     {
-        for( int i = 0; i < line.length; i++ )
+        for( int i = 0; i < args.length; i++ )
         {
-            addArgument( line[ i ] );
+            addArgument( args[ i ] );
         }
-    }
-
-    /**
-     * Creates an argument object. Each commandline object has at most one
-     * instance of the argument class.
-     *
-     * @return the argument object.
-     */
-    public Argument createArgument()
-    {
-        final Argument argument = new Argument();
-        m_arguments.add( argument );
-        return argument;
     }
 
     public void addArgument( final File argument )

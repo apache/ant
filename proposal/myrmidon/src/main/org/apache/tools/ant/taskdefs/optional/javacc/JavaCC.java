@@ -19,6 +19,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.avalon.excalibur.util.StringUtil;
 
 /**
@@ -234,27 +235,28 @@ public class JavaCC extends Task
         cmdl.addVmArgument( "-mx140M" );
         cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
-        runCommand( cmdl.getCommandline() );
+        runCommand( cmdl );
     }
 
-    private void runCommand( final String[] cmdline )
+    private void runCommand( final CommandlineJava cmdline )
         throws TaskException
     {
         try
         {
-            getLogger().debug( StringUtil.join( cmdline, " " ) );
+            getLogger().debug( cmdline.toString() );
             final Execute2 exe = new Execute2();
             setupLogger( exe );
-            exe.setCommandline( cmdline );
+            final String[] commandline = cmdline.getCommandline();
+            exe.setCommandline( new Commandline( commandline ) );
             int retval = exe.execute();
             if( retval != 0 )
             {
-                throw new TaskException( cmdline[ 0 ] + " failed with return code " + retval );
+                throw new TaskException( cmdline + " failed with return code " + retval );
             }
         }
         catch( final IOException ioe )
         {
-            throw new TaskException( "Could not launch " + cmdline[ 0 ] + ": " + ioe );
+            throw new TaskException( "Could not launch " + cmdline + ": " + ioe );
         }
     }
 

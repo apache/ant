@@ -98,7 +98,7 @@ public class Rpm
         }
         exe.setWorkingDirectory( m_topDir );
 
-        exe.setCommandline( cmd.getCommandline() );
+        exe.setCommandline( cmd );
         try
         {
             final String message = "Building the RPM based on the " + m_specFile + " file";

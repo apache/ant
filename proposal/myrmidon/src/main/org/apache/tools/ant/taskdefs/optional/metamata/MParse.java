@@ -19,6 +19,8 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline;
+import org.apache.avalon.excalibur.io.IOUtil;
 
 /**
  * Simple Metamata MParse task based on the original written by <a
@@ -287,7 +289,8 @@ public class MParse
         final Execute2 exe = new Execute2();
         setupLogger( exe );
         getLogger().debug( m_cmdl.toString() );
-        exe.setCommandline( m_cmdl.getCommandline() );
+        final String[] commandline = m_cmdl.getCommandline();
+        exe.setCommandline( new Commandline( commandline ) );
         try
         {
             if( exe.execute() != 0 )
@@ -386,17 +389,7 @@ public class MParse
         }
         finally
         {
-            if( fw != null )
-            {
-                try
-                {
-                    fw.close();
-                }
-                catch( IOException ignored )
-                {
-                }
-            }
+            IOUtil.shutdownWriter( fw );
         }
     }
-
 }

@@ -17,6 +17,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -241,7 +242,8 @@ public class JDependTask
         final Execute2 exe = new Execute2();
         setupLogger( exe );
 
-        exe.setCommandline( commandline.getCommandline() );
+        final String[] commandline1 = commandline.getCommandline();
+        exe.setCommandline( new Commandline( commandline1 ) );
         if( m_dir != null )
         {
             exe.setWorkingDirectory( m_dir );

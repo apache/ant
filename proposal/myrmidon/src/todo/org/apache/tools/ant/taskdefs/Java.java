@@ -11,11 +11,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
-
+import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Argument;
+import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
@@ -159,7 +159,7 @@ public class Java
         {
             getLogger().debug( "Forking " + m_cmdl.toString() );
 
-            return run( m_cmdl.getCommandline() );
+            return run( new Commandline( m_cmdl.getCommandline() ) );
         }
         else
         {
@@ -214,7 +214,7 @@ public class Java
     /**
      * Executes the given classname with the given arguments in a separate VM.
      */
-    private int run( final String[] command )
+    private int run( final Commandline command )
         throws TaskException
     {
         final Execute2 exe = new Execute2();

@@ -253,7 +253,7 @@ public class Coverage
             final Execute2 exe = new Execute2();
             setupLogger( exe );
             getLogger().debug( cmdl.toString() );
-            exe.setCommandline( cmdl.getCommandline() );
+            exe.setCommandline( cmdl );
             int exitValue = exe.execute();
             if( exitValue != 0 )
             {

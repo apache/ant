@@ -30,6 +30,7 @@ import org.apache.tools.ant.types.EnvironmentVariable;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.SysProperties;
 import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * Ant task to run JUnit tests. <p>
@@ -647,7 +648,7 @@ public class JUnitTask extends Task
 
         final Execute2 exe = new Execute2();
         setupLogger( exe );
-        exe.setCommandline( cmd.getCommandline() );
+        exe.setCommandline( new Commandline( cmd.getCommandline() ) );
         if( dir != null )
         {
             exe.setWorkingDirectory( dir );

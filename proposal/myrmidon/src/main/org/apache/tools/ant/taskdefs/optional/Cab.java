@@ -138,7 +138,7 @@ public class Cab
                 setupLogger( exe );
                 exe.setWorkingDirectory( m_baseDir );
                 final Commandline cmd = createCommand( listFile );
-                exe.setCommandline( cmd.getCommandline() );
+                exe.setCommandline( cmd );
                 exe.execute();
 
                 listFile.delete();

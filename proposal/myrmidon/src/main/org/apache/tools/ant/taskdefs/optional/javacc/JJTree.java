@@ -18,6 +18,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.PathUtil;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * Taskdef for the JJTree compiler compiler.
@@ -184,7 +185,7 @@ public class JJTree extends Task
         setupLogger( exe );
 
         getLogger().debug( cmdl.toString() );
-        exe.setCommandline( cmdl.getCommandline() );
+        exe.setCommandline( new Commandline( cmdl.getCommandline() ) );
 
         try
         {

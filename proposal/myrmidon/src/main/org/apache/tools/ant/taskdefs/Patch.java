@@ -113,7 +113,7 @@ public class Patch
         setupLogger( exe );
 
         final Commandline cmd = buildCommand();
-        exe.setCommandline( cmd.getCommandline() );
+        exe.setCommandline( cmd );
 
         try
         {

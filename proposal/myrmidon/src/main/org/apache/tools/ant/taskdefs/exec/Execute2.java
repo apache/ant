@@ -19,6 +19,7 @@ import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.factorys.ExecManagerFactory;
 import org.apache.myrmidon.services.ServiceException;
+import org.apache.tools.ant.types.Commandline;
 
 /**
  * Runs an external program.
@@ -28,17 +29,12 @@ import org.apache.myrmidon.services.ServiceException;
 public class Execute2
     extends AbstractLogEnabled
 {
-    private String[] m_command;
+    private Commandline m_command;
     private Properties m_environment = new Properties();
     private File m_workingDirectory = new File( "." );
     private boolean m_newEnvironment;
     private ExecOutputHandler m_handler;
     private long m_timeout;
-
-    /**
-     * Controls whether the VM is used to launch commands, where possible
-     */
-    private boolean m_useVMLauncher = true;
 
     public void setTimeout( final long timeout )
     {
@@ -55,9 +51,9 @@ public class Execute2
      *
      * @param commandline the commandline of the subprocess to launch
      */
-    public void setCommandline( final String[] commandline )
+    public void setCommandline( final Commandline command )
     {
-        m_command = commandline;
+        m_command = command;
     }
 
     public void setEnvironment( final Properties environment )
@@ -109,8 +105,10 @@ public class Execute2
             final ExecManagerFactory factory = new ExecManagerFactory();
             final ExecManager manager = (ExecManager)factory.createService();
 
+            final String[] command = m_command.getCommandline();
+
             final ExecMetaData metaData =
-                new ExecMetaData( m_command, m_environment,
+                new ExecMetaData( command, m_environment,
                                   m_workingDirectory, m_newEnvironment );
 
             return manager.execute( metaData, m_handler, m_timeout );

@@ -295,7 +295,7 @@ public class SignJar
         final Commandline cmd = buildCommand( jarTarget, jarSource );
         final Execute2 exe = new Execute2();
         setupLogger( exe );
-        exe.setCommandline( cmd.getCommandline() );
+        exe.setCommandline( cmd );
         try
         {
             exe.execute();

@@ -824,7 +824,7 @@ public class Javadoc
         exe.setWorkingDirectory( null );
         try
         {
-            exe.setCommandline( cmd.getCommandline() );
+            exe.setCommandline( cmd );
             final int ret = exe.execute();
             if( ret != 0 )
             {

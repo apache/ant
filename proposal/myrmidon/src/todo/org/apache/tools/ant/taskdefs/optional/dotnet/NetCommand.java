@@ -151,7 +151,7 @@ public class NetCommand
                 //in verbose mode we always log stuff
                 logVerbose( _commandLine.toString() );
             }
-            _exe.setCommandline( _commandLine.getCommandline() );
+            _exe.setCommandline( _commandLine );
             err = _exe.execute();
             if( err != 0 )
             {

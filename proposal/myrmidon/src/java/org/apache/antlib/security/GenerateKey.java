@@ -121,7 +121,7 @@ public class GenerateKey
         final Commandline cmd = createCommand();
         final Execute2 exe = new Execute2();
         exe.setWorkingDirectory( getBaseDirectory() );
-        exe.setCommandline( cmd.getCommandline() );
+        exe.setCommandline( cmd );
         try
         {
             exe.execute();

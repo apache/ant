@@ -167,7 +167,7 @@ public abstract class P4Base
 
             final Execute2 exe = new Execute2();
             exe.setExecOutputHandler( handler );
-            exe.setCommandline( cmd.getCommandline() );
+            exe.setCommandline( cmd );
 
             try
             {
