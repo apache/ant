@@ -257,7 +257,7 @@ public class Depend extends MatchingTask {
         classFileInfoMap = new Hashtable();
         boolean cacheDirty = false;
         
-        Hashtable dependencyMap = null;
+        Hashtable dependencyMap = new Hashtable();
         File depCacheFile = null;
         boolean depCacheFileExists = true;
         long depCacheFileLastModified = Long.MAX_VALUE;
