@@ -116,10 +116,10 @@ public class FilterSet
      *
      * @return The filter that was created.
      */
-    public FiltersFile createFiltersfile()
+    /*public FiltersFile createFiltersfile()
     {
         return new FiltersFile();
-    }
+    }*/
 
     /**
      * Test to see if this filter set it empty.
