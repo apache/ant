@@ -92,6 +92,22 @@ public class DefaultTaskContext
     }
 
     /**
+     * Retrieve a service that is offered by the runtime.
+     * The actual services registered and in place for the
+     * task is determined by the container. The returned service
+     * <b>MUST</b> implement the specified interface.
+     *
+     * @param serviceClass the interface class that defines the service
+     * @return an instance of the service implementing interface specified by parameter
+     * @exception TaskException is thrown when the service is unavailable or not supported
+     */
+    public Object getService( final Class serviceClass )
+        throws TaskException
+    {
+        throw new TaskException( "No services available atm" );
+    }
+
+    /**
      * Resolve filename.
      * This involves resolving it against baseDirectory and
      * removing ../ and ./ references. It also means formatting

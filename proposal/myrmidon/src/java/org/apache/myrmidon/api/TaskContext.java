@@ -34,11 +34,24 @@ public interface TaskContext
     String NAME = "myrmidon.task.name";
 
     /**
-     * Retrieve Name of tasklet.
+     * Retrieve Name of task.
      *
      * @return the name
      */
     String getName();
+
+    /**
+     * Retrieve a service that is offered by the runtime.
+     * The actual services registered and in place for the
+     * task is determined by the container. The returned service
+     * <b>MUST</b> implement the specified interface.
+     *
+     * @param serviceClass the interface class that defines the service
+     * @return an instance of the service implementing interface specified by parameter
+     * @exception TaskException is thrown when the service is unavailable or not supported
+     */
+    Object getService( Class serviceClass )
+        throws TaskException;
 
     /**
      * Retrieve base directory.
