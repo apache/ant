@@ -67,12 +67,17 @@ import java.io.*;
 public class Exec extends Task {
     private String os;
     private String out;
-    private String dir;
+    private String dir = ".";
     private String command;
 
     private static final int BUFFER_SIZE = 512;
 
     public void execute() throws BuildException {
+        run(command);
+    }
+
+    protected void run(String command) throws BuildException {
+
         // test if os match
         String myos = System.getProperty("os.name");
         project.log("Myos = " + myos, Project.MSG_VERBOSE);
@@ -88,11 +93,6 @@ public class Exec extends Task {
         String antRun = project.resolveFile(ant + "/bin/antRun").toString();
         if (myos.toLowerCase().indexOf("windows") >= 0) antRun = antRun + ".bat";
         command = antRun + " " + project.resolveFile(dir) + " " + command;
-
-        run(command);
-    }
-
-    protected void run(String command) throws BuildException {
 
         try {
             // show the command

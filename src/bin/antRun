@@ -10,5 +10,4 @@ if test -e $CMD.sh; then
   CMD="sh $CMD.sh"
 fi
 
-echo $CMD $@
-$CMD $@
+echo $CMD $@ | sh
