@@ -176,7 +176,7 @@ public class Touch extends Task {
             }
         }
 
-        if (millis >= 0 && project.getJavaVersion() == Project.JAVA_1_1) {
+        if (millis >= 0 && Project.getJavaVersion() == Project.JAVA_1_1) {
             log("modification time of files cannot be set in JDK 1.1",
                 Project.MSG_WARN);
             return;
@@ -220,7 +220,7 @@ public class Touch extends Task {
             throw new BuildException("Can not change modification date of read-only file " + file);
         }
 
-        if (project.getJavaVersion() == Project.JAVA_1_1) {
+        if (Project.getJavaVersion() == Project.JAVA_1_1) {
             return;
         }
 
