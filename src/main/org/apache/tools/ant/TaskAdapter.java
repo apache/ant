@@ -112,6 +112,8 @@ public class TaskAdapter extends Task implements TypeAdapter {
     /**
      * check if the proxy class is a valid class to use
      * with this adapter.
+     * the class must have a public no-arg "execute()" method.
+     * @param proxyClass the class to check
      */
     public void checkProxyClass(Class proxyClass) {
         checkTaskClass(proxyClass, getProject());
@@ -184,7 +186,7 @@ public class TaskAdapter extends Task implements TypeAdapter {
      * @return the target proxy object
      */
     public Object getProxy() {
-        return this.proxy ;
+        return proxy;
     }
 
 }
