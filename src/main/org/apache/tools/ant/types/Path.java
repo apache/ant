@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.Stack;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.FileUtils;
@@ -38,7 +37,8 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * &lt;sometask&gt;<br>
  * &nbsp;&nbsp;&lt;somepath&gt;<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file.jar" /&gt;<br>
- * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement path="/path/to/file2.jar:/path/to/class2;/path/to/class3" /&gt;<br>
+ * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement path="/path/to/file2.jar:/path/to/class2;/path/to/class3" /&gt;
+ * <br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file3.jar" /&gt;<br>
  * &nbsp;&nbsp;&nbsp;&nbsp;&lt;pathelement location="/path/to/file4.jar" /&gt;<br>
  * &nbsp;&nbsp;&lt;/somepath&gt;<br>
@@ -80,14 +80,29 @@ public class Path extends DataType implements Cloneable {
     public class PathElement {
         private String[] parts;
 
+        /**
+         * Set the location.
+         *
+         * @param loc a <code>File</code> value
+         */
         public void setLocation(File loc) {
             parts = new String[] {translateFile(loc.getAbsolutePath())};
         }
 
+        /**
+         * Set the path.
+         *
+         * @param path a <code>String</code> value
+         */
         public void setPath(String path) {
             parts = Path.translatePath(getProject(), path);
         }
 
+        /**
+         * Return the converted pathelements.
+         *
+         * @return a <code>String[]</code> value
+         */
         public String[] getParts() {
             return parts;
         }
@@ -96,8 +111,8 @@ public class Path extends DataType implements Cloneable {
     /**
      * Invoked by IntrospectionHelper for <code>setXXX(Path p)</code>
      * attribute setters.
-     * @param project the <CODE>Project</CODE> for this path.
-     * @param path the <CODE>String</CODE> path definition.
+     * @param p the <code>Project</code> for this path.
+     * @param path the <code>String</code> path definition.
      */
     public Path(Project p, String path) {
         this(p);
@@ -105,8 +120,8 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
-     * Construct an empty <CODE>Path</CODE>.
-     * @param project the <CODE>Project</CODE> for this path.
+     * Construct an empty <code>Path</code>.
+     * @param project the <code>Project</code> for this path.
      */
     public Path(Project project) {
         setProject(project);
@@ -117,6 +132,7 @@ public class Path extends DataType implements Cloneable {
      * Adds a element definition to the path.
      * @param location the location of the element to add (must not be
      * <code>null</code> nor empty.
+     * @throws BuildException on error
      */
     public void setLocation(File location) throws BuildException {
         if (isReference()) {
@@ -128,7 +144,8 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Parses a path definition and creates single PathElements.
-     * @param path the <CODE>String</CODE> path definition.
+     * @param path the <code>String</code> path definition.
+     * @throws BuildException on error
      */
     public void setPath(String path) throws BuildException {
         if (isReference()) {
@@ -142,6 +159,8 @@ public class Path extends DataType implements Cloneable {
      *
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>
+     * @param r the reference to another Path
+     * @throws BuildException on error
      */
     public void setRefid(Reference r) throws BuildException {
         if (!elements.isEmpty()) {
@@ -153,6 +172,8 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Creates the nested <code>&lt;pathelement&gt;</code> element.
+     * @return the <code>PathElement</code> to be configured
+     * @throws BuildException on error
      */
     public PathElement createPathElement() throws BuildException {
         if (isReference()) {
@@ -165,6 +186,8 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Adds a nested <code>&lt;fileset&gt;</code> element.
+     * @param fs a <code>FileSet</code> to be added to the path
+     * @throws BuildException on error
      */
     public void addFileset(FileSet fs) throws BuildException {
         if (isReference()) {
@@ -176,6 +199,8 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Adds a nested <code>&lt;filelist&gt;</code> element.
+     * @param fl a <code>FileList</code> to be added to the path
+     * @throws BuildException on error
      */
     public void addFilelist(FileList fl) throws BuildException {
         if (isReference()) {
@@ -187,6 +212,8 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Adds a nested <code>&lt;dirset&gt;</code> element.
+     * @param dset a <code>DirSet</code> to be added to the path
+     * @throws BuildException on error
      */
     public void addDirset(DirSet dset) throws BuildException {
         if (isReference()) {
@@ -198,6 +225,8 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Adds a nested path
+     * @param path a <code>Path</code> to be added to the path
+     * @throws BuildException on error
      * @since Ant 1.6
      */
     public void add(Path path) throws BuildException {
@@ -211,6 +240,8 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Creates a nested <code>&lt;path&gt;</code> element.
+     * @return a <code>Path</code> to be configured
+     * @throws BuildException on error
      */
     public Path createPath() throws BuildException {
         if (isReference()) {
@@ -224,6 +255,7 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Append the contents of the other Path instance to this.
+     * @param other a <code>Path</code> to be added to the path
      */
     public void append(Path other) {
         if (other == null) {
@@ -251,8 +283,8 @@ public class Path extends DataType implements Cloneable {
      * is true. Classpaths are relative to user dir, not the project base.
      * That used to break jspc test
      *
-     * @param source
-     * @param tryUserDir
+     * @param source the source path
+     * @param tryUserDir  if true try the user directory if the file is not present
      */
     public void addExisting(Path source, boolean tryUserDir) {
         String[] list = source.list();
@@ -367,6 +399,9 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Splits a PATH (with : or ; as separators) into its parts.
+     * @param project the project to use
+     * @param source a <code>String</code> value
+     * @return an array of strings, one for each path element
      */
     public static String[] translatePath(Project project, String source) {
         final Vector result = new Vector();
@@ -399,6 +434,8 @@ public class Path extends DataType implements Cloneable {
     /**
      * Returns its argument with all file separator characters
      * replaced so that they match the local OS conventions.
+     * @param source the path to convert
+     * @return the converted path
      */
     public static String translateFile(String source) {
         if (source == null) {
@@ -414,9 +451,12 @@ public class Path extends DataType implements Cloneable {
     }
 
     /**
-     * Translates all occurrences of / or \ to correct separator of the
-     * current platform and returns whether it had to do any
-     * replacements.
+     * Translates occurrences at a position of / or \ to correct separator of the
+     * current platform and returns whether it had to do a
+     * replacement.
+     * @param buffer a buffer containing a string
+     * @param pos the position in the string buffer to convert
+     * @return true if the character was a / or \
      */
     protected static boolean translateFileSep(StringBuffer buffer, int pos) {
         if (buffer.charAt(pos) == '/' || buffer.charAt(pos) == '\\') {
@@ -428,6 +468,7 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * How many parts does this Path instance consist of.
+     * @return the number of parts
      */
     public int size() {
         return list().length;
@@ -435,6 +476,7 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Return a Path that holds the same elements as this instance.
+     * @return a copy of the path
      */
     public Object clone() {
         try {
@@ -449,6 +491,9 @@ public class Path extends DataType implements Cloneable {
     /**
      * Overrides the version of DataType to recurse on all DataType
      * child elements that may have been added.
+     * @param stk the stack of data types to use (recursively)
+     * @param p   the project to use to dereference the references
+     * @throws BuildException on error
      */
     protected void dieOnCircularReference(Stack stk, Project p)
         throws BuildException {
@@ -510,6 +555,7 @@ public class Path extends DataType implements Cloneable {
      * Concatenates the system class path in the order specified by
      * the ${build.sysclasspath} property - using &quot;last&quot; as
      * default value.
+     * @return the concatenated path
      */
     public Path concatSystemClasspath() {
         return concatSystemClasspath("last");
@@ -519,6 +565,8 @@ public class Path extends DataType implements Cloneable {
      * Concatenates the system class path in the order specified by
      * the ${build.sysclasspath} property - using the supplied value
      * if ${build.sysclasspath} has not been set.
+     * @param defValue the order ("first", "last", "only")
+     * @return the concatenated path
      */
     public Path concatSystemClasspath(String defValue) {
         return concatSpecialPath(defValue, Path.systemClasspath);
@@ -528,6 +576,8 @@ public class Path extends DataType implements Cloneable {
      * Concatenates the system boot class path in the order specified
      * by the ${build.sysclasspath} property - using the supplied
      * value if ${build.sysclasspath} has not been set.
+     * @param defValue the order ("first", "last", "only")
+     * @return the concatenated path
      */
     public Path concatSystemBootClasspath(String defValue) {
         return concatSpecialPath(defValue, Path.systemBootClasspath);
