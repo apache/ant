@@ -1,5 +1,13 @@
 TODO List:
 
+    * Implement a "Worker Thread" pattern that allows workers to have
+      their work done in a thread property registered with Antidote, and
+      provide support to that worker to provide progress updates via
+      the GUI. Should also provide support for hour-glass cursor
+      handling, and AWT event blocking until task is completed. This
+      would be used for things such as loading files or other tasks
+      that the user must wait for completion.
+
     * Add menu option to select the compiler to use, which then sets
       the "build.compiler" property. Better yet, create a generic menu 
       building capability that allows the setting of a property from a 
