@@ -234,7 +234,7 @@ public class AntStructure extends Task {
                 sb.append("%boolean; ");
             } else if (org.apache.tools.ant.types.Reference.class.isAssignableFrom(type)) { 
                 sb.append("IDREF ");
-            } else if (org.apache.tools.ant.EnumeratedAttribute.class.isAssignableFrom(type)) {
+            } else if (org.apache.tools.ant.types.EnumeratedAttribute.class.isAssignableFrom(type)) {
                 try {
                     EnumeratedAttribute ea = 
                         (EnumeratedAttribute)type.newInstance();
