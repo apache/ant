@@ -7,220 +7,138 @@
  */
 package org.apache.tools.ant.taskdefs.unix;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.exec.Execute;
-import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 
 /**
  * @author lucas@collab.net
  */
-public class Rpm extends Task
+public class Rpm
+    extends AbstractTask
 {
-
     /**
      * the rpm command to use
      */
-    private String command = "-bb";
+    private String m_command = "-bb";
 
     /**
      * clean BUILD directory
      */
-    private boolean cleanBuildDir = false;
+    private boolean m_cleanBuildDir;
 
     /**
      * remove spec file
      */
-    private boolean removeSpec = false;
+    private boolean m_removeSpec;
 
     /**
      * remove sources
      */
-    private boolean removeSource = false;
-
-    /**
-     * the file to direct standard error from the command
-     */
-    private File error;
-
-    /**
-     * the file to direct standard output from the command
-     */
-    private File output;
+    private boolean m_removeSource;
 
     /**
      * the spec file
      */
-    private String specFile;
+    private String m_specFile;
 
     /**
      * the rpm top dir
      */
-    private File topDir;
+    private File m_topDir;
 
-    public void setCleanBuildDir( boolean cbd )
+    public void setCleanBuildDir( boolean cleanBuildDir )
     {
-        cleanBuildDir = cbd;
+        m_cleanBuildDir = cleanBuildDir;
     }
 
-    public void setCommand( String c )
+    public void setCommand( final String command )
     {
-        this.command = c;
+        m_command = command;
     }
 
-    public void setError( File error )
+    public void setRemoveSource( final boolean removeSource )
     {
-        this.error = error;
+        m_removeSource = removeSource;
     }
 
-    public void setOutput( File output )
+    public void setRemoveSpec( final boolean removeSpec )
     {
-        this.output = output;
+        m_removeSpec = removeSpec;
     }
 
-    public void setRemoveSource( boolean rs )
-    {
-        removeSource = rs;
-    }
-
-    public void setRemoveSpec( boolean rs )
-    {
-        removeSpec = rs;
-    }
-
-    public void setSpecFile( String sf )
+    public void setSpecFile( final String specFile )
         throws TaskException
     {
-        if( ( sf == null ) || ( sf.trim().equals( "" ) ) )
+        if( ( specFile == null ) || ( specFile.trim().equals( "" ) ) )
         {
             throw new TaskException( "You must specify a spec file" );
         }
-        this.specFile = sf;
+        m_specFile = specFile;
     }
 
-    public void setTopDir( File td )
+    public void setTopDir( final File topDir )
     {
-        this.topDir = td;
+        m_topDir = topDir;
     }
 
     public void execute()
         throws TaskException
     {
+        final Commandline cmd = createCommand();
+        final Execute2 exe = new Execute2();
+        setupLogger( exe );
 
-        Commandline toExecute = new Commandline();
+        if( m_topDir == null ) m_topDir = getBaseDirectory();
+        exe.setWorkingDirectory( m_topDir );
 
-        toExecute.setExecutable( "rpm" );
-        if( topDir != null )
-        {
-            toExecute.createArgument().setValue( "--define" );
-            toExecute.createArgument().setValue( "_topdir" + topDir );
-        }
-
-        toExecute.createArgument().setLine( command );
-
-        if( cleanBuildDir )
-        {
-            toExecute.createArgument().setValue( "--clean" );
-        }
-        if( removeSpec )
-        {
-            toExecute.createArgument().setValue( "--rmspec" );
-        }
-        if( removeSource )
-        {
-            toExecute.createArgument().setValue( "--rmsource" );
-        }
-
-        toExecute.createArgument().setValue( "SPECS/" + specFile );
-
-        OutputStream outputstream = null;
-        OutputStream errorstream = null;
-
-        if( error == null && output == null )
-        {
-            outputstream = new LogOutputStream( getLogger(), false );
-            errorstream = new LogOutputStream( getLogger(), true );
-        }
-        else
-        {
-            if( output != null )
-            {
-                try
-                {
-                    outputstream = new PrintStream( new BufferedOutputStream( new FileOutputStream( output ) ) );
-                }
-                catch( IOException e )
-                {
-                    throw new TaskException( "Error", e );
-                }
-            }
-            else
-            {
-                outputstream = new LogOutputStream( getLogger(), false );
-            }
-            if( error != null )
-            {
-                try
-                {
-                    errorstream = new PrintStream( new BufferedOutputStream( new FileOutputStream( error ) ) );
-                }
-                catch( IOException e )
-                {
-                    throw new TaskException( "Error", e );
-                }
-            }
-            else
-            {
-                errorstream = new LogOutputStream( getLogger(), true );
-            }
-        }
-
-        Execute exe = new Execute();
-        exe.setOutput( outputstream );
-        exe.setError( errorstream );
-
-        if( topDir == null ) topDir = getBaseDirectory();
-        exe.setWorkingDirectory( topDir );
-
-        exe.setCommandline( toExecute.getCommandline() );
+        exe.setCommandline( cmd.getCommandline() );
         try
         {
-            exe.execute();
-            getLogger().info( "Building the RPM based on the " + specFile + " file" );
+            final String message = "Building the RPM based on the " + m_specFile + " file";
+            getLogger().info( message );
+
+            if( 0 != exe.execute() )
+            {
+                throw new TaskException( "Failed to execute rpm" );
+            }
         }
         catch( IOException e )
         {
             throw new TaskException( "Error", e );
         }
-        finally
+    }
+
+    private Commandline createCommand()
+        throws TaskException
+    {
+        final Commandline cmd = new Commandline();
+        cmd.setExecutable( "rpm" );
+        if( m_topDir != null )
         {
-            if( output != null )
-            {
-                try
-                {
-                    outputstream.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-            if( error != null )
-            {
-                try
-                {
-                    errorstream.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
+            cmd.createArgument().setValue( "--define" );
+            cmd.createArgument().setValue( "_topdir" + m_topDir );
         }
+
+        cmd.createArgument().setLine( m_command );
+
+        if( m_cleanBuildDir )
+        {
+            cmd.createArgument().setValue( "--clean" );
+        }
+        if( m_removeSpec )
+        {
+            cmd.createArgument().setValue( "--rmspec" );
+        }
+        if( m_removeSource )
+        {
+            cmd.createArgument().setValue( "--rmsource" );
+        }
+
+        cmd.createArgument().setValue( "SPECS/" + m_specFile );
+        return cmd;
     }
 }
