@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer. 
+ *    notice, this list of conditions and the following disclaimer.
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:  
- *       "This product includes software developed by the 
+ *    any, must include the following acknowlegement:
+ *       "This product includes software developed by the
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written 
+ *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 
 
 
@@ -68,7 +69,7 @@ import java.lang.reflect.Method;
 public class TaskAdapter extends Task implements RoleAdapter {
 
     Object proxy;
-    
+
     /**
      * Checks a class, whether it is suitable to be adapted by TaskAdapter.
      *
@@ -81,15 +82,15 @@ public class TaskAdapter extends Task implements RoleAdapter {
      * Logs other suspicious conditions with Project.MSG_WARN.
      */
     public static void checkTaskClass(final Class taskClass, final Project project) {
-	// This code is for backward compatibility
-	checkClass(taskClass, project);
+        // This code is for backward compatibility
+        checkClass(taskClass, project);
     }
 
     /**
      * Checks a class, whether it is suitable to be adapted.
      *
      * Checks conditions only, which are additionally required for a tasks
-     * adapted by TaskAdapter. 
+     * adapted by TaskAdapter.
      *
      * Throws a BuildException and logs as Project.MSG_ERR for
      * conditions, that will cause the task execution to fail.
@@ -114,7 +115,7 @@ public class TaskAdapter extends Task implements RoleAdapter {
             throw new BuildException(message);
         }
     }
-    
+
     /**
      * Do the execution.
      */
@@ -122,7 +123,7 @@ public class TaskAdapter extends Task implements RoleAdapter {
         Method setProjectM = null;
         try {
             Class c = proxy.getClass();
-            setProjectM = 
+            setProjectM =
                 c.getMethod( "setProject", new Class[] {Project.class});
             if(setProjectM != null) {
                 setProjectM.invoke(proxy, new Object[] {project});
@@ -131,7 +132,7 @@ public class TaskAdapter extends Task implements RoleAdapter {
             // ignore this if the class being used as a task does not have
             // a set project method.
         } catch( Exception ex ) {
-            log("Error setting project in " + proxy.getClass(), 
+            log("Error setting project in " + proxy.getClass(),
                 Project.MSG_ERR);
             throw new BuildException( ex );
         }
@@ -146,14 +147,20 @@ public class TaskAdapter extends Task implements RoleAdapter {
                 throw new BuildException("No public execute() in " + proxy.getClass());
             }
             executeM.invoke(proxy, null);
-            return; 
+            return;
+        } catch( InvocationTargetException ite ) {
+            Throwable t = ite.getTargetException();
+            if (t instanceof BuildException) {
+                throw (BuildException) t;
+            }
+            throw new BuildException(t);
         } catch( Exception ex ) {
             log("Error in " + proxy.getClass(), Project.MSG_ERR);
             throw new BuildException( ex );
         }
 
     }
-    
+
     /**
      * Set the target object class
      */
@@ -165,4 +172,5 @@ public class TaskAdapter extends Task implements RoleAdapter {
         return this.proxy ;
     }
 
+    public void setId(String id) {}
 }

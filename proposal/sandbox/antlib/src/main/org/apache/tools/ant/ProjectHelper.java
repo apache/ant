@@ -114,7 +114,7 @@ public class ProjectHelper {
     private void parse() throws BuildException {
         FileInputStream inputStream = null;
         InputSource inputSource = null;
-        
+
         try {
             SAXParser saxParser = getParserFactory().newSAXParser();
             parser = saxParser.getParser();
@@ -123,7 +123,7 @@ public class ProjectHelper {
             for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
                 uri = uri.substring(0, index) + "%23" + uri.substring(index+1);
             }
-            
+
             inputStream = new FileInputStream(buildFile);
             inputSource = new InputSource(inputStream);
             inputSource.setSystemId(uri);
@@ -145,7 +145,7 @@ public class ProjectHelper {
                 }
                 throw be;
             }
-            
+
             throw new BuildException(exc.getMessage(), t, location);
         }
         catch(SAXException exc) {
@@ -231,20 +231,20 @@ public class ProjectHelper {
          */
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
-        
+
             project.log("resolving systemId: " + systemId, Project.MSG_VERBOSE);
-        
+
             if (systemId.startsWith("file:")) {
                 String path = systemId.substring(5);
                 int index = path.indexOf("file:");
-                
+
                 // we only have to handle these for backward compatibility
                 // since they are in the FAQ.
                 while (index != -1) {
                     path = path.substring(0, index) + path.substring(index + 5);
                     index = path.indexOf("file:");
                 }
-                
+
                 String entitySystemId = path;
                 index = path.indexOf("%23");
                 // convert these to #
@@ -257,13 +257,13 @@ public class ProjectHelper {
                 if (!file.isAbsolute()) {
                     file = new File(buildFileParent, path);
                 }
-                
+
                 try {
                     InputSource inputSource = new InputSource(new FileInputStream(file));
                     inputSource.setSystemId("file:" + entitySystemId);
                     return inputSource;
                 } catch (FileNotFoundException fne) {
-                    project.log(file.getAbsolutePath()+" could not be found", 
+                    project.log(file.getAbsolutePath()+" could not be found",
                                 Project.MSG_WARN);
                 }
             }
@@ -316,10 +316,10 @@ public class ProjectHelper {
             }
 
             if (def == null) {
-                throw new SAXParseException("The default attribute of project is required", 
+                throw new SAXParseException("The default attribute of project is required",
                                             locator);
             }
-            
+
 
             project.setDefaultTarget(def);
 
@@ -360,6 +360,8 @@ public class ProjectHelper {
                 handleTopTask(name, attrs);
             } else if (name.equals("target")) {
                 handleTarget(name, attrs);
+            } else if (name.equals("description")) {
+                handleDescription(name, attrs);
             } else if (project.isDefinedOnRole(Project.DATATYPE_ROLE, name)) {
                 handleTopTask(name, attrs);
             } else {
@@ -367,14 +369,18 @@ public class ProjectHelper {
             }
         }
 
-        private void handleTopTask(String name, AttributeList attrs) 
-	    throws SAXParseException {
-	    InmediateTarget target = new InmediateTarget(name);
+        private void handleTopTask(String name, AttributeList attrs)
+            throws SAXParseException {
+            InmediateTarget target = new InmediateTarget(name);
             (new TaskHandler(this, target, null, target)).init(name, attrs);
         }
 
         private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
             new TargetHandler(this).init(tag, attrs);
+        }
+
+        private void handleDescription(String tag, AttributeList attrs) throws SAXParseException {
+            new DescriptionHandler(this).init(tag, attrs);
         }
 
     }
@@ -441,8 +447,13 @@ public class ProjectHelper {
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-	    new TaskHandler(this, target, null, target).init(name, attrs);
-	}
+            if (name.equals("description")) {
+                new DescriptionHandler(this).init(name, attrs);
+            }
+            else {
+                new TaskHandler(this, target, null, target).init(name, attrs);
+            }
+        }
     }
 
     /**
@@ -466,7 +477,7 @@ public class ProjectHelper {
             try {
                 task = (Task)project.createInRole(container, tag);
             } catch (BuildException e) {
-                // swallow here, will be thrown again in 
+                // swallow here, will be thrown again in
                 // UnknownElement.maybeConfigure if the problem persists.
             }
 
@@ -475,21 +486,21 @@ public class ProjectHelper {
                 task.setProject(project);
                 task.setTaskType(tag);
                 task.setTaskName(tag);
-		container.addTask(task);
+                container.addTask(task);
             }
 
-            task.setLocation(new Location(buildFile.toString(), 
-					  locator.getLineNumber(), 
-					  locator.getColumnNumber()));
+            task.setLocation(new Location(buildFile.toString(),
+                                          locator.getLineNumber(),
+                                          locator.getColumnNumber()));
             configureId(task, attrs);
 
-	    task.setOwningTarget(target);
-	    task.init();
-	    wrapper = task.getRuntimeConfigurableWrapper();
-	    wrapper.setAttributes(attrs);
-	    if (parentWrapper != null) {
-		parentWrapper.addChild(wrapper);
-	    }
+            task.setOwningTarget(target);
+            task.init();
+            wrapper = task.getRuntimeConfigurableWrapper();
+            wrapper.setAttributes(attrs);
+            if (parentWrapper != null) {
+                parentWrapper.addChild(wrapper);
+            }
         }
 
         protected void finished() {
@@ -531,7 +542,7 @@ public class ProjectHelper {
         private RuntimeConfigurable childWrapper = null;
         private Target target;
 
-        public NestedElementHandler(DocumentHandler parentHandler, 
+        public NestedElementHandler(DocumentHandler parentHandler,
                                     Object parent,
                                     RuntimeConfigurable parentWrapper,
                                     Target target) {
@@ -548,7 +559,7 @@ public class ProjectHelper {
 
         public void init(String propType, AttributeList attrs) throws SAXParseException {
             Class parentClass = parent.getClass();
-            IntrospectionHelper ih = 
+            IntrospectionHelper ih =
                 IntrospectionHelper.getHelper(parentClass);
 
             try {
@@ -557,9 +568,9 @@ public class ProjectHelper {
                     UnknownElement uc = new UnknownElement(elementName);
                     uc.setProject(project);
                     ((UnknownElement) parent).addChild(uc);
-		    // Set this parameters just in case is a Task
-		    uc.setTaskType(elementName);
-		    uc.setTaskName(elementName);
+                    // Set this parameters just in case is a Task
+                    uc.setTaskType(elementName);
+                    uc.setTaskName(elementName);
                     child = uc;
                 } else {
                     child = ih.createElement(project, parent, elementName);
@@ -594,7 +605,7 @@ public class ProjectHelper {
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
             if (child instanceof TaskContainer) {
-                // taskcontainer nested element can contain other tasks - no other 
+                // taskcontainer nested element can contain other tasks - no other
                 // nested elements possible
                 new TaskHandler(this, (TaskContainer)child, childWrapper, target).init(name, attrs);
             }
@@ -605,38 +616,63 @@ public class ProjectHelper {
     }
 
     /**
+     * Handler to perform appropriate semantics for the special
+     * <description> element on tasks.
+     */
+    private class DescriptionHandler extends AbstractHandler {
+
+        public DescriptionHandler(DocumentHandler parent) {
+            super(parent);
+        }
+
+        public void init(String tag, AttributeList attrs) throws SAXParseException {
+            if (attrs.getLength() > 0) {
+                throw new SAXParseException("No attributes allowed on " + tag, locator);
+            }
+        }
+
+        public void characters(char[] buf, int start, int end) throws SAXParseException {
+            String desc = project.getDescription();
+            if (desc == null) {
+                desc = "";
+            }
+            project.setDescription(desc + new String(buf, start, end));
+        }
+    }
+
+    /**
      * Special target type for top level Tasks and Datatypes.
      * This will allow eliminating special cases.
      */
     private class InmediateTarget extends Target {
-	/**
-	 * Create a target for a top level task or datatype.
-	 * @param name the name of the task to be run on this target.
-	 */
-	InmediateTarget(String name) {
-	    super();
-	    setProject(project);
-	    setName("Top level " + name);
-	}
+        /**
+         * Create a target for a top level task or datatype.
+         * @param name the name of the task to be run on this target.
+         */
+        InmediateTarget(String name) {
+            super();
+            setProject(project);
+            setName("Top level " + name);
+        }
     }
 
-    public static void configure(Object target, AttributeList attrs, 
+    public static void configure(Object target, AttributeList attrs,
                                  Project project) throws BuildException {
         if( target instanceof RoleAdapter ) {
             target=((RoleAdapter)target).getProxy();
         }
 
-        IntrospectionHelper ih = 
+        IntrospectionHelper ih =
             IntrospectionHelper.getHelper(target.getClass());
 
         project.addBuildListener(ih);
 
         for (int i = 0; i < attrs.getLength(); i++) {
             // reflect these into the target
-            String value=replaceProperties(project, attrs.getValue(i), 
+            String value=replaceProperties(project, attrs.getValue(i),
                                            project.getProperties() );
             try {
-                ih.setAttribute(project, target, 
+                ih.setAttribute(project, target,
                                 attrs.getName(i).toLowerCase(Locale.US), value);
 
             } catch (BuildException be) {
@@ -674,7 +710,7 @@ public class ProjectHelper {
     }
 
     /**
-     * Stores a configured child element into its parent object 
+     * Stores a configured child element into its parent object
      */
     public static void storeChild(Project project, Object parent, Object child, String tag) {
         IntrospectionHelper ih = IntrospectionHelper.getHelper(parent.getClass());
@@ -719,23 +755,23 @@ public class ProjectHelper {
                 if (!keys.containsKey(propertyName)) {
                     project.log("Property ${" + propertyName + "} has not been set", Project.MSG_VERBOSE);
                 }
-                fragment = (keys.containsKey(propertyName)) ? (String) keys.get(propertyName) 
-                                                            : "${" + propertyName + "}"; 
+                fragment = (keys.containsKey(propertyName)) ? (String) keys.get(propertyName)
+                                                            : "${" + propertyName + "}";
             }
             sb.append(fragment);
-        }                        
-        
+        }
+
         return sb.toString();
     }
 
     /**
-     * This method will parse a string containing ${value} style 
+     * This method will parse a string containing ${value} style
      * property values into two lists. The first list is a collection
      * of text fragments, while the other is a set of string property names
      * null entries in the first list indicate a property reference from the
      * second list.
      */
-    public static void parsePropertyString(String value, Vector fragments, Vector propertyRefs) 
+    public static void parsePropertyString(String value, Vector fragments, Vector propertyRefs)
         throws BuildException {
         int prev = 0;
         int pos;
@@ -754,7 +790,7 @@ public class ProjectHelper {
             } else {
                 int endName = value.indexOf('}', pos);
                 if (endName < 0) {
-                    throw new BuildException("Syntax error in property: " 
+                    throw new BuildException("Syntax error in property: "
                                                  + value );
                 }
                 String propertyName = value.substring(pos + 2, endName);
@@ -779,17 +815,17 @@ public class ProjectHelper {
 
     /**
      * Scan AttributeList for the id attribute and maybe add a
-     * reference to project.  
+     * reference to project.
      *
      * <p>Moved out of {@link #configure configure} to make it happen
-     * at parser time.</p> 
+     * at parser time.</p>
      */
     private void configureId(Object target, AttributeList attr) {
         String id = attr.getValue("id");
         if (id != null) {
-	    if( target instanceof RoleAdapter ) {
-		((RoleAdapter)target).setId(id);
-	    }
+            if( target instanceof RoleAdapter ) {
+                ((RoleAdapter)target).setId(id);
+            }
             project.addReference(id, target);
         }
     }

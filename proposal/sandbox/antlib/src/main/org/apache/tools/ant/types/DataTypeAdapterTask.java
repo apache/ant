@@ -66,6 +66,7 @@ import org.apache.tools.ant.*;
 public class DataTypeAdapterTask extends Task implements RoleAdapter {
 
     Object proxy;
+    String id = null;
     
     /**
      * Checks a class, whether it is suitable to be adapted.
@@ -83,14 +84,27 @@ public class DataTypeAdapterTask extends Task implements RoleAdapter {
      * Do the execution.
      */
     public void execute() throws BuildException {
+	if (id != null) {
+	    // Need to re-register this reference
+	    // The container has register the Adapter instead
+            project.addReference(id, proxy);	    
+	}
+    }
+
+    /**
+     * Propagate configuration of Project
+     */
+    public void setProject(Project p) {
+	super.setProject(p);
+
 	// Check to see if the DataType has a setProject method to set
 	if (proxy instanceof ProjectComponent) {
-	    ((ProjectComponent)proxy).setProject(project);
+	    ((ProjectComponent)proxy).setProject(p);
 	    return;
 	}
 
 	// This may not be needed
-	// We are trying to set project even it is was not declared
+	// We are trying to set project even if is was not declared
 	// just like TaskAdapter does for beans, this is not done
 	// by the original code
         Method setProjectM = null;
@@ -99,7 +113,7 @@ public class DataTypeAdapterTask extends Task implements RoleAdapter {
             setProjectM = 
                 c.getMethod( "setProject", new Class[] {Project.class});
             if(setProjectM != null) {
-                setProjectM.invoke(proxy, new Object[] {project});
+                setProjectM.invoke(proxy, new Object[] {p});
             }
         } catch (NoSuchMethodException e) {
             // ignore this if the class being used as a task does not have
@@ -122,4 +136,8 @@ public class DataTypeAdapterTask extends Task implements RoleAdapter {
         return this.proxy ;
     }
 
+    public void setId(String id) {
+	log("Setting adapter id to: " + id, Project.MSG_DEBUG);
+	this.id = id;
+    }
 }

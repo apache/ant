@@ -104,7 +104,8 @@ public class Antjar extends Jar {
     public void setAntxml(File descriptor) {
         libraryDescriptor = descriptor;
         if (!libraryDescriptor.exists()) {
-            throw new BuildException("Deployment descriptor: " + libraryDescriptor + " does not exist.");
+            throw new BuildException("Deployment descriptor: " + 
+				     libraryDescriptor + " does not exist.");
         }
 
         // Create a ZipFileSet for this file, and pass it up.
@@ -127,7 +128,8 @@ public class Antjar extends Jar {
         throws IOException, BuildException {
         // If no antxml file is specified, it's an error.
         if (libraryDescriptor == null) {
-            throw new BuildException("antxml attribute is required", location);
+            throw new BuildException("antxml attribute is required", 
+				     location);
         }
 
         super.initZipOutputStream(zOut);
@@ -149,10 +151,12 @@ public class Antjar extends Jar {
         // meaning the same file is specified by the "antxml" attribute and in
         // a <fileset> element.
         if (vPath.equalsIgnoreCase(Antlib.ANT_DESCRIPTOR)) {
-            if (libraryDescriptor == null || !libraryDescriptor.equals(file) || descriptorAdded) {
+            if (libraryDescriptor == null || 
+		!libraryDescriptor.equals(file) || descriptorAdded) {
                 log("Warning: selected " + archiveType + " files include a " +
-                        Antlib.ANT_DESCRIPTOR + " which will be ignored " +
-                        "(please use antxml attribute to " + archiveType + " task)", Project.MSG_WARN);
+		    Antlib.ANT_DESCRIPTOR + " which will be ignored " +
+		    "(please use antxml attribute to " + archiveType + 
+		    " task)", Project.MSG_WARN);
             }
             else {
                 super.zipFile(file, zOut, vPath);

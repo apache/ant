@@ -55,12 +55,14 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
+import org.apache.tools.ant.taskdefs.*;
 import org.xml.sax.*;
 import javax.xml.parsers.*;
 
 import java.util.*;
 import java.util.zip.*;
 import java.io.*;
+import java.net.*;
 
 /**
  * Make available the tasks and types from an Ant library. <pre>
@@ -76,16 +78,18 @@ import java.io.*;
  * @since ant1.5
  */
 public class Antlib extends Task {
+
+    /**
+     * Location of descriptor in library
+     */
+    public static final String ANT_DESCRIPTOR = "META-INF/antlib.xml";
+
     /**
      * The named classloader to use.
      * Defaults to the default classLoader.
      */
     private String loaderId = "";
 
-    /**
-     * library attribute
-     */
-    private String library = null;
     /**
      * file attribute
      */
@@ -95,62 +99,200 @@ public class Antlib extends Task {
      */
     private boolean override = false;
     /**
-     * attribute to control classloader use
+     * attribute to control failure when loading
      */
-    private boolean useCurrentClassloader = false;
+    private FailureAction onerror = new FailureAction();
+
     /**
      * classpath to build up
      */
     private Path classpath = null;
 
     /**
+     * the manufacture set of classes to load
+     */
+    private Path loaderPath = null;
+
+    /**
      * our little xml parse
      */
     private SAXParserFactory saxFactory;
-    
+
     /**
      * table of aliases
      */
     private Vector aliases = new Vector();
 
     /**
-     * Location of descriptor in library
+     * Some internal constants.
      */
-    public static String ANT_DESCRIPTOR = "META-INF/antlib.xml";
+    private static final int FAIL = 0, REPORT = 1, IGNORE = 2;
 
     /**
-     * Prefix name for DTD of descriptor
+     * Posible actions when classes are not found
      */
-    public static String ANTLIB_DTD_URL =
-            "http://jakarta.apache.org/ant/";
-    /**
-     * prefix of the antlib
-     */
-    public static String ANTLIB_DTD_PREFIX = "Antlib-V";
-    
-    /**
-     * version counter 
-     */
-    public static String ANTLIB_DTD_VERSION = "1_0";
-    
-    /**
-     * dtd file extension
-     */
-    public static String ANTLIB_DTD_EXT = ".dtd";
+    public static class FailureAction extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[]{"fail", "report", "ignore"};
+        }
+    }
 
+    private static class DescriptorEnumeration implements Enumeration {
+
+        /**
+         * The name of the resource being searched for.
+         */
+        private String resourceName;
+
+        /**
+         * The index of the next file to search.
+         */
+        private int index;
+
+        /**
+         * The list of files to search
+         */
+        private File files[];
+
+        /**
+         * The URL of the next resource to return in the enumeration. If this
+         * field is <code>null</code> then the enumeration has been completed,
+         * i.e., there are no more elements to return.
+         */
+        private URL nextDescriptor;
+
+        /**
+         * Construct a new enumeration of resources of the given name found
+         * within this class loader's classpath.
+         *
+         * @param name the name of the resource to search for.
+         */
+        DescriptorEnumeration(String fileNames[], String name) {
+            this.resourceName = name;
+            this.index = 0;
+            this.files = new File[fileNames.length];
+            for (int i = 0; i < files.length; i++) {
+                files[i] = new File(fileNames[i]);
+            }
+            findNextDescriptor();
+        }
+
+        /**
+         * Indicates whether there are more elements in the enumeration to
+         * return.
+         *
+         * @return <code>true</code> if there are more elements in the
+         *         enumeration; <code>false</code> otherwise.
+         */
+        public boolean hasMoreElements() {
+            return (this.nextDescriptor != null);
+        }
+
+        /**
+         * Returns the next resource in the enumeration.
+         *
+         * @return the next resource in the enumeration.
+         */
+        public Object nextElement() {
+            URL ret = this.nextDescriptor;
+            findNextDescriptor();
+            return ret;
+        }
+
+        /**
+         * Locates the next descriptor of the correct name in the files and
+         * sets <code>nextDescriptor</code> to the URL of that resource. If no
+         * more resources can be found, <code>nextDescriptor</code> is set to
+         * <code>null</code>.
+         */
+        private void findNextDescriptor() {
+            URL url = null;
+            while (index < files.length && url == null) {
+                try {
+                    url = getDescriptorURL(files[index], this.resourceName);
+                    index++;
+                }
+                catch (BuildException e) {
+                    // ignore path elements which are not valid relative to the
+                    // project
+                }
+            }
+            this.nextDescriptor = url;
+        }
+
+        /**
+         * Get an URL to a given resource in the given file which may
+         * either be a directory or a zip file.
+         *
+         * @param file the file (directory or jar) in which to search for
+         *             the resource. Must not be <code>null</code>.
+         * @param resourceName the name of the resource for which a URL
+         *                     is required. Must not be <code>null</code>.
+         *
+         * @return a URL to the required resource or <code>null</code> if the
+         *         resource cannot be found in the given file object
+         * @todo This code is extracted from AntClassLoader.getResourceURL
+         *       I hate when that happens but the code there is too tied to
+         *       the ClassLoader internals. Maybe we can find a nice place
+         *       to put it where both can use it.
+         */
+        private URL getDescriptorURL(File file, String resourceName) {
+            try {
+                if (!file.exists()) {
+                    return null;
+                }
+
+                if (file.isDirectory()) {
+                    File resource = new File(file, resourceName);
+
+                    if (resource.exists()) {
+                        try {
+                            return new URL("file:"+resource.toString());
+                        } catch (MalformedURLException ex) {
+                            return null;
+                        }
+                    }
+                }
+                else {
+                    ZipFile zipFile = new ZipFile(file);
+                    try {
+                        ZipEntry entry = zipFile.getEntry(resourceName);
+                        if (entry != null) {
+                            try {
+                                return new URL("jar:file:"+file.toString()+"!/"+entry);
+                            } catch (MalformedURLException ex) {
+                                return null;
+                            }
+                        }
+                    }
+                    finally {
+                        zipFile.close();
+                    }
+                }
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+    }
 
     /**
      * constructor creates a validating sax parser
      */
     public Antlib() {
         super();
+        // Default error action
+        onerror.setValue("report");
         saxFactory = SAXParserFactory.newInstance();
-        saxFactory.setValidating(true);
+        saxFactory.setValidating(false);
     }
 
 
     /**
-     * constructor binds to a project as well as setting up internal state
+     * constructor binds to a project and sets ignore mode on errors
      *
      * @param p Description of Parameter
      */
@@ -161,12 +303,12 @@ public class Antlib extends Task {
 
 
     /**
-     * Set name of library to load. The library is located in $ANT_HOME/lib.
+     * Set name of library to load. The library is located in $ANT_HOME/antlib.
      *
-     * @param lib the name of library relative to $ANT_HOME/lib.
+     * @param lib the name of library relative to $ANT_HOME/antlib.
      */
     public void setLibrary(String lib) {
-        this.library = lib;
+        setFile(libraryFile("antlib", lib));
     }
 
 
@@ -180,13 +322,13 @@ public class Antlib extends Task {
     }
 
     /**
-     * Set the ClassLoader to use for this library.
+     * Set the ID of the ClassLoader to use for this library.
      *
-     * @param id the id for the ClassLoader to use, 
-     *           if other than the default.
+     * @param id the id for the ClassLoader to use,
+     *           <code>null</code> means use ANT's core classloader.
      */
     public void setLoaderid(String id) {
-	this.loaderId = id;
+        this.loaderId = id;
     }
 
     /**
@@ -200,15 +342,26 @@ public class Antlib extends Task {
 
 
     /**
-     * Set whether to use a new classloader or not. 
-     * Default is <code>false</code>.
+     * Get what to do if a definition cannot be loaded
+     * This method is mostly used by the core when loading core tasks.
+     *
+     * @return what to do if a definition cannot be loaded
+     */
+    final protected FailureAction getOnerror() {
+        return this.onerror;
+    }
+
+
+    /**
+     * Set whether to fail if a definition cannot be loaded
+     * Default is <code>true</code>.
      * This property is mostly used by the core when loading core tasks.
      *
-     * @param useCurrentClassloader if true the current classloader will
-     *      be used to load the definitions.
+     * @param failedonerror if true loading will stop if classes
+     *                      cannot be instantiated
      */
-    public void setUseCurrentClassloader(boolean useCurrentClassloader) {
-        this.useCurrentClassloader = useCurrentClassloader;
+    public void setOnerror(FailureAction onerror) {
+        this.onerror = onerror;
     }
 
 
@@ -263,77 +416,96 @@ public class Antlib extends Task {
 
 
     /**
+     * Obtain library file from ANT_HOME directory.
+     *
+     * @param lib the library name.
+     * @return the File instance of the library
+     */
+    private File libraryFile(String homeSubDir, String lib) {
+        // For the time being libraries live in $ANT_HOME/antlib.
+        // The idea being that not to load all the jars there anymore
+        String home = project.getProperty("ant.home");
+
+        if (home == null) {
+            throw new BuildException("ANT_HOME not set as required.");
+        }
+
+        return new File(new File(home, homeSubDir), lib);
+    }
+
+    /**
      * actually do the work of loading the library
      *
      * @exception BuildException Description of Exception
-     * @todo maybe have failonerror support for missing file?
      */
     public void execute()
         throws BuildException {
-        File realFile = file;
-        if (library != null) {
-            if (file != null) {
-                String msg = "You cannot specify both file and library.";
-                throw new BuildException(msg, location);
-            }
-            // For the time being libraries live in $ANT_HOME/antlib.
-            // The idea being that we would not load all the jars there anymore
-            String home = project.getProperty("ant.home");
-
-            if (home == null) {
-                throw new BuildException("ANT_HOME not set as required.");
-            }
-
-            realFile = new File(new File(home, "antlib"), library);
-        }
-        else if (file == null) {
-            String msg = "Must specify either library or file attribute.";
+        if (file == null && classpath == null) {
+            String msg =
+                "Must specify either library or file attribute or classpath.";
             throw new BuildException(msg, location);
         }
-        if (!realFile.exists()) {
-            String msg = "Cannot find library: " + realFile;
+        if (file != null && !file.exists()) {
+            String msg = "Cannot find library: " + file;
             throw new BuildException(msg, location);
         }
 
-        //open the descriptor
-        InputStream is = getDescriptor(realFile);
-
-        if (is == null) {
-            String msg = "Missing descriptor on library: " + realFile;
-            throw new BuildException(msg, location);
-        }
-
-        
-        ClassLoader classloader=null;
-        if (useCurrentClassloader && classpath != null) {
-            log("ignoring the useCurrentClassloader option as a classpath is defined",
-                    Project.MSG_WARN);
-            useCurrentClassloader=false;
-        }
-        if (!useCurrentClassloader) {
-            classloader = makeClassLoader(realFile);
-        }
-
-        //parse it and evaluate it.
-        evaluateDescriptor(classloader, processAliases(), is);
+        loadDefinitions();
     }
 
 
     /**
-     * Load definitions directly from an external XML file.
+     * Load definitions in library and classpath
      *
-     * @param xmlfile XML file in the Antlib format.
-     * @exception BuildException failure to open the file
+     * @exception BuildException failure to access the resource
      */
-    public void loadDefinitions(File xmlfile)
+    public boolean loadDefinitions() throws BuildException {
+        return loadDefinitions(ANT_DESCRIPTOR);
+    }
+
+    /**
+     * Load definitions from resource name in library and classpath
+     *
+     * @param res the name of the resources to load
+     * @exception BuildException failure to access the resource
+     */
+    final protected boolean loadDefinitions(String res)
         throws BuildException {
+        Path path = makeLoaderClasspath();
+        ClassLoader cl = makeClassLoader(path);
+        boolean found = false;
         try {
-            InputStream is = new FileInputStream(xmlfile);
-            loadDefinitions(is);
+            for (Enumeration e = getDescriptors(path, res); e.hasMoreElements(); ) {
+                URL resURL = (URL)e.nextElement();
+                InputStream is = resURL.openStream();
+                loadDefinitions(cl, is);
+                found = true;
+            }
+            if (!found && onerror.getIndex() != IGNORE) {
+                String sPath = path.toString();
+                if ("".equals(sPath.trim())) {
+                    sPath = System.getProperty("java.classpath");
+                }
+                String msg = "Cannot find any " + res +
+                    " antlib descriptors in: " + sPath;
+                switch (onerror.getIndex()) {
+                case FAIL:
+                    throw new BuildException(msg);
+                case REPORT:
+                    log(msg, project.MSG_WARN);
+                }
+            }
         }
         catch (IOException io) {
-            throw new BuildException("Cannot read file: " + file, io);
+            String msg = "Cannot load definitions from: " + res;
+            switch (onerror.getIndex()) {
+            case FAIL:
+                throw new BuildException(msg, io);
+            case REPORT:
+                log(io.getMessage(), project.MSG_WARN);
+            }
         }
+        return found;
     }
 
 
@@ -343,46 +515,29 @@ public class Antlib extends Task {
      * @param is InputStream for the Antlib descriptor.
      * @exception BuildException trouble
      */
-    public void loadDefinitions(InputStream is)
+    private void loadDefinitions(ClassLoader cl, InputStream is)
         throws BuildException {
-        evaluateDescriptor(null, processAliases(), is);
+        evaluateDescriptor(cl, processAliases(), is);
     }
 
 
     /**
-     * get a descriptor from the library file
+     * get an Enumeration of URLs for all resouces corresponding to the
+     * descriptor name.
      *
-     * @param file jarfile to open
-     * @return input stream to the Descriptor 
+     * @param res the name of the resource to collect
+     * @return input stream to the Descriptor or null if none existent
      * @exception BuildException io trouble, or it isnt a zipfile
      */
-    private InputStream getDescriptor(File file)
-        throws BuildException {
-        try {
-            final ZipFile zipfile = new ZipFile(file);
-            ZipEntry entry = zipfile.getEntry(ANT_DESCRIPTOR);
+    private Enumeration getDescriptors(Path path, final String res)
+        throws BuildException, IOException {
+        if (loaderId == null) {
+            // Path cannot be added to the CoreLoader so simply
+            // ask for all instances of the resource descriptors
+            return project.getCoreLoader().getResources(res);
+        }
 
-            if (entry == null) {
-                return null;
-            }
-
-            // Guarantee that when Entry is closed so does the zipfile instance.
-            return
-                new FilterInputStream(zipfile.getInputStream(entry)) {
-                    public void close()
-                        throws IOException {
-                        super.close();
-                        zipfile.close();
-                    }
-                };
-        }
-        catch (ZipException ze) {
-            throw new BuildException("Not a library file.", ze, location);
-        }
-        catch (IOException ioe) {
-            throw new BuildException("Cannot read library content.",
-                    ioe, location);
-        }
+        return new DescriptorEnumeration(path.list(), res);
     }
 
 
@@ -410,17 +565,33 @@ public class Antlib extends Task {
      * @return classloader using te
      * @exception BuildException trouble creating the classloader
      */
-    protected ClassLoader makeClassLoader(File file)
+    protected ClassLoader makeClassLoader(Path clspath)
         throws BuildException {
+        if (loaderId == null) {
+            log("Loading definitions from CORE, <classpath> ignored",
+                project.MSG_VERBOSE);
+            return project.getCoreLoader();
+        }
+
+        log("Using ClassLoader '" + loaderId + "' to load path: " + clspath,
+            project.MSG_VERBOSE);
+        return project.addToLoader(loaderId, clspath);
+    }
+
+
+    /**
+     * Constructs the Path to add to the ClassLoader
+     */
+    private Path makeLoaderClasspath()
+    {
         Path clspath = new Path(project);
-        clspath.setLocation(file);
+        if (file != null) clspath.setLocation(file);
         //append any build supplied classpath
         if (classpath != null) {
             clspath.append(classpath);
         }
-	return project.getSymbols().addToLoader(loaderId, clspath);
+        return clspath;
     }
-
 
     /**
      * parse the antlib descriptor
@@ -431,8 +602,8 @@ public class Antlib extends Task {
      * @exception BuildException trouble
      */
     protected void evaluateDescriptor(ClassLoader cl,
-            Properties als, InputStream is)
-            throws BuildException {
+                                      Properties als, InputStream is)
+        throws BuildException {
         try {
             SAXParser saxParser = saxFactory.newSAXParser();
             Parser parser = saxParser.getParser();
@@ -440,7 +611,7 @@ public class Antlib extends Task {
             InputSource inputSource = new InputSource(is);
             //inputSource.setSystemId(uri); //URI is nasty for jar entries
             project.log("parsing descriptor for library: " + file,
-                    Project.MSG_VERBOSE);
+                        Project.MSG_VERBOSE);
             saxParser.parse(inputSource, new AntLibraryHandler(cl, als));
         }
         catch (ParserConfigurationException exc) {
@@ -485,8 +656,8 @@ public class Antlib extends Task {
 
 
     /**
-     * Parses the document describing the content of the 
-     * library. An inner class for access to Project.log 
+     * Parses the document describing the content of the
+     * library. An inner class for access to Project.log
      */
     private class AntLibraryHandler extends HandlerBase {
 
@@ -503,13 +674,11 @@ public class Antlib extends Task {
          */
         private Locator locator = null;
 
-	private int level = 0;
+        private int level = 0;
 
-	private SymbolTable symbols = null;
-
-	private String name = null;
-	private String className = null;
-	private String adapter = null;
+        private String name = null;
+        private String className = null;
+        private String adapter = null;
 
         /**
          * Constructor for the AntLibraryHandler object
@@ -520,7 +689,6 @@ public class Antlib extends Task {
         AntLibraryHandler(ClassLoader classloader, Properties als) {
             this.classloader = classloader;
             this.aliasMap = als;
-	    this.symbols = project.getSymbols();
         }
 
         /**
@@ -533,35 +701,35 @@ public class Antlib extends Task {
             this.locator = locator;
         }
 
-	private void parseAttributes(String tag, AttributeList attrs) 
-	    throws SAXParseException {
-	    name = null;
-	    className = null;
-	    adapter = null;
-	    
-	    for (int i = 0, last = attrs.getLength(); i < last; i++) {
-		String key = attrs.getName(i);
-		String value = attrs.getValue(i);
-		
-		if (key.equals("name")) {
-		    name = value;
-		}
-		else if (key.equals("class")) {
-		    className = value;
-		}
-		else if ("role".equals(tag) && key.equals("adapter")) {
-		    adapter = value;
-		}
-		else {
-		    throw new SAXParseException("Unexpected attribute \""
-						+ key + "\"", locator);
-		}
-	    }
-	    if (name == null || className == null) {
-		String msg = "Underspecified " + tag + " declaration.";
-		throw new SAXParseException(msg, locator);
-	    }
-	}
+        private void parseAttributes(String tag, AttributeList attrs)
+            throws SAXParseException {
+            name = null;
+            className = null;
+            adapter = null;
+
+            for (int i = 0, last = attrs.getLength(); i < last; i++) {
+                String key = attrs.getName(i);
+                String value = attrs.getValue(i);
+
+                if (key.equals("name")) {
+                    name = value;
+                }
+                else if (key.equals("class")) {
+                    className = value;
+                }
+                else if ("role".equals(tag) && key.equals("adapter")) {
+                    adapter = value;
+                }
+                else {
+                    throw new SAXParseException("Unexpected attribute \""
+                                                + key + "\"", locator);
+                }
+            }
+            if (name == null || className == null) {
+                String msg = "Underspecified " + tag + " declaration.";
+                throw new SAXParseException(msg, locator);
+            }
+        }
 
         /**
          * SAX callback handler
@@ -572,103 +740,105 @@ public class Antlib extends Task {
          */
         public void startElement(String tag, AttributeList attrs)
             throws SAXParseException {
-	    level ++;
+            level ++;
             if ("antlib".equals(tag)) {
-		if (level > 1) {
-		    throw new SAXParseException("Unexpected element: " + tag,
-						locator);
-		}
+                if (level > 1) {
+                    throw new SAXParseException("Unexpected element: " + tag,
+                                                locator);
+                }
                 // No attributes to worry about
                 return;
             }
-	    if (level == 1) {
-		throw new SAXParseException("Missing antlib root element",
-					    locator);
-	    }
+            if (level == 1) {
+                throw new SAXParseException("Missing antlib root element",
+                                            locator);
+            }
 
-	    // Must have the two attributes declared
-	    parseAttributes(tag, attrs);
+            // Must have the two attributes declared
+            parseAttributes(tag, attrs);
 
-	    try {
-		if ("role".equals(tag)) {
-		    if (isRoleInUse(name)) {
-			String msg = "Cannot override role: " + name;
-			log(msg, Project.MSG_WARN);
-			return;			
-		    }
-		    // Defining a new role
-		    symbols.addRole(name, loadClass(className),
-				    (adapter == null? 
-				     null : loadClass(adapter))); 
-		    return;
-		}
+            try {
+                if ("role".equals(tag)) {
+                    if (project.isRoleDefined(name)) {
+                        String msg = "Cannot override role: " + name;
+                        log(msg, Project.MSG_WARN);
+                        return;
+                    }
+                    // Defining a new role
+                    Class clz = loadClass(className);
+                    if (clz != null) {
+                        project.addRoleDefinition(name, clz,
+                                                  (adapter == null? null :
+                                                   loadClass(adapter)));
+                    }
+                    return;
+                }
 
-		// Defining a new element kind
-		//check for name alias
-		String alias = aliasMap.getProperty(name);
-		if (alias != null) {
-		    name = alias;
-		}
-		//catch an attempted override of an existing name
-		if (!override && isInUse(tag, name)) {
-		    String msg = "Cannot override " + tag + ": " + name;
-		    log(msg, Project.MSG_WARN);
-		    return;
-		}
-		symbols.add(tag, name, loadClass(className));
-	    }
-	    catch(BuildException be) {
-		throw new SAXParseException(be.getMessage(), locator, be);
-	    }
+                // Defining a new element kind
+                //check for name alias
+                String alias = aliasMap.getProperty(name);
+                if (alias != null) {
+                    name = alias;
+                }
+                //catch an attempted override of an existing name
+                if (!override && project.isDefinedOnRole(tag, name)) {
+                    String msg = "Cannot override " + tag + ": " + name;
+                    log(msg, Project.MSG_WARN);
+                    return;
+                }
+                Class clz = loadClass(className);
+                if (clz != null)
+                    project.addDefinitionOnRole(tag, name, clz);
+            }
+            catch(BuildException be) {
+                switch (onerror.getIndex()) {
+                case FAIL:
+                    throw new SAXParseException(be.getMessage(), locator, be);
+                case REPORT:
+                    project.log(be.getMessage(), project.MSG_WARN);
+                    break;
+                default:
+                    project.log(be.getMessage(), project.MSG_DEBUG);
+                }
+            }
         }
 
-	public void endElement(String tag) {
-	    level--;
-	}
-
-	private Class loadClass(String className)
-	    throws SAXParseException {
-	    try {
-		//load the named class
-		Class cls;
-		if(classloader==null) {
-		    cls=Class.forName(className);
-		}
-		else {
-		    cls=classloader.loadClass(className);
-		}
-		return cls;
-	    }
-	    catch (ClassNotFoundException cnfe) {
-		String msg = "Class " + className +
-		    " cannot be found";
-		throw new SAXParseException(msg, locator, cnfe);
-	    }
-	    catch (NoClassDefFoundError ncdfe) {
-		String msg = "Class " + className +
-		    " cannot be found";
-		throw new SAXParseException(msg, locator);
-	    }
-	}
-
-        /**
-         * test for a name being in use already on this role
-         *
-         * @param name the name to test
-         * @return true if it is a task or a datatype
-         */
-        private boolean isInUse(String role, String name) {
-            return (symbols.get(role, name) != null);
+        public void endElement(String tag) {
+            level--;
         }
 
-        /**
-         * test for a role name being in use already
-         *
-         * @param name the name to test
-         * @return true if it is a task or a datatype
-         */
-        private boolean isRoleInUse(String name) {
-            return (symbols.getRole(name) != null);
+        private Class loadClass(String className)
+            throws SAXParseException {
+            String msg = null;
+            try {
+                //load the named class
+                Class cls;
+                if(classloader==null) {
+                    cls=Class.forName(className);
+                }
+                else {
+                    cls=classloader.loadClass(className);
+                }
+                return cls;
+            }
+            catch (ClassNotFoundException cnfe) {
+                msg = "Class " + className + " cannot be found";
+                if (onerror.getIndex() == FAIL)
+                    throw new SAXParseException(msg, locator, cnfe);
+            }
+            catch (NoClassDefFoundError ncdfe) {
+                msg = "Class " + className + " cannot be loaded";
+                if (onerror.getIndex() == FAIL)
+                    throw new SAXParseException(msg, locator);
+            }
+
+            if (onerror.getIndex() == REPORT) {
+                project.log(msg, project.MSG_WARN);
+            }
+            else {
+                project.log(msg, project.MSG_DEBUG);
+            }
+            return null;
         }
 
     //end inner class AntLibraryHandler
@@ -712,7 +882,7 @@ public class Antlib extends Task {
         }
     //end inner class alias
     }
-    
+
 //end class Antlib
 }
 
