@@ -90,7 +90,7 @@ public class Log4jListener implements BuildListener {
     }
 
     /**
-     * @see BuildListener@buildStarted.
+     * @see BuildListener#buildStarted
      */
     public void buildStarted(BuildEvent event) {
         if (initialized) {
@@ -100,7 +100,7 @@ public class Log4jListener implements BuildListener {
     }
 
     /**
-     * @see BuildListener@buildFinished.
+     * @see BuildListener#buildFinished
      */
     public void buildFinished(BuildEvent event) {
         if (initialized) {
@@ -114,7 +114,7 @@ public class Log4jListener implements BuildListener {
     }
 
     /**
-     * @see BuildListener@targetStarted.
+     * @see BuildListener#targetStarted
      */
     public void targetStarted(BuildEvent event) {
         if (initialized) {
@@ -124,7 +124,7 @@ public class Log4jListener implements BuildListener {
     }
 
     /**
-     * @see BuildListener@targetFinished.
+     * @see BuildListener#targetFinished
      */
     public void targetFinished(BuildEvent event) {
         if (initialized) {
@@ -140,7 +140,7 @@ public class Log4jListener implements BuildListener {
     }
 
     /**
-     * @see BuildListener@taskStarted.
+     * @see BuildListener#taskStarted
      */
     public void taskStarted(BuildEvent event) {
         if (initialized) {
@@ -151,7 +151,7 @@ public class Log4jListener implements BuildListener {
     }
 
     /**
-     * @see BuildListener@taskFinished.
+     * @see BuildListener#taskFinished
      */
     public void taskFinished(BuildEvent event) {
         if (initialized) {
@@ -167,7 +167,7 @@ public class Log4jListener implements BuildListener {
     }
 
     /**
-     * @see BuildListener@messageLogged.
+     * @see BuildListener#messageLogged
      */
     public void messageLogged(BuildEvent event) {
         if (initialized) {

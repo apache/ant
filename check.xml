@@ -6,7 +6,8 @@
     <taskdef name="checkstyle"
              classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
     <checkstyle headerFile="src/etc/RequiredHeader.txt"
-                headerIgnoreLine="4">
+                headerIgnoreLine="4"
+                allowProtected="true">
       <fileset dir="${java.dir}">
         <include name="${tocheck}"/>
       </fileset>

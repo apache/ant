@@ -83,7 +83,7 @@ public class DefaultLogger implements BuildLogger {
     private long startTime = System.currentTimeMillis();
 
     /** Line separator */
-    protected final static String lSep = StringUtils.LINE_SEP;
+    protected static final String lSep = StringUtils.LINE_SEP;
     
     /** Whether or not to use emacs-style output */
     protected boolean emacsMode = false;
@@ -168,8 +168,7 @@ public class DefaultLogger implements BuildLogger {
         if (error == null) {
             message.append(StringUtils.LINE_SEP);
             message.append("BUILD SUCCESSFUL");
-        }
-        else {
+        } else {
             message.append(StringUtils.LINE_SEP);
             message.append("BUILD FAILED");
             message.append(StringUtils.LINE_SEP);
@@ -177,13 +176,11 @@ public class DefaultLogger implements BuildLogger {
             if (Project.MSG_VERBOSE <= msgOutputLevel ||
                 !(error instanceof BuildException)) {
                 message.append(StringUtils.getStackTrace(error));
-            }
-            else {
+            } else {
                 if (error instanceof BuildException) {
-                    message.append(error.toString()).append(StringUtils.LINE_SEP);
-                }
-                else {
-                    message.append(error.getMessage()).append(StringUtils.LINE_SEP);
+                    message.append(error.toString()).append(lSep);
+                } else {
+                    message.append(error.getMessage()).append(lSep);
                 }
             }
         }
@@ -209,7 +206,8 @@ public class DefaultLogger implements BuildLogger {
       */
     public void targetStarted(BuildEvent event) {
         if (Project.MSG_INFO <= msgOutputLevel) {
-            String msg = StringUtils.LINE_SEP + event.getTarget().getName() + ":";
+            String msg = StringUtils.LINE_SEP 
+                + event.getTarget().getName() + ":";
             printMessage(msg, out, event.getPriority());
             log(msg);
         }
@@ -256,7 +254,8 @@ public class DefaultLogger implements BuildLogger {
 
                 if (!emacsMode) {
                     String label = "[" + name + "] ";
-                    for (int i = 0; i < (LEFT_COLUMN_SIZE - label.length()); i++) {
+                    int size = LEFT_COLUMN_SIZE - label.length();
+                    for (int i = 0; i < size; i++) {
                         message.append(" ");
                     }
                     message.append(label);
