@@ -214,11 +214,6 @@ Legal:
       <src path="${java.dir}" />
       <include name="**/*.java"/>
 
-      <!-- the idea classes are too tightly coupled to ant1 and
-      will need a complete rewrite so we will exclude them for
-      the moment -->
-      <exclude name="${optional.package}/ide/*.java" />
-
       <exclude name="${regexp.package}/JakartaRegexp*.java"
                unless="jakarta.regexp.present" />
       <exclude name="${regexp.package}/JakartaOro*.java"
@@ -290,7 +285,7 @@ Legal:
 
     <copy todir="${build.classes}">
       <fileset dir="${java.dir}">
-        <include name="**/*.properties"/>
+        <exclude name="**/*.java"/>
       </fileset>
     </copy>
 
