@@ -123,7 +123,7 @@ public abstract class WeakishReference  {
     /**
      * A hard reference for Java 1.1
      */
-    private static class HardReference extends WeakishReference {
+    public static class HardReference extends WeakishReference {
         private Object object;
 
         /**
