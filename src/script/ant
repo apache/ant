@@ -55,7 +55,7 @@ if [ -z "$ANT_HOME" ] ; then
   while [ -h "$PRG" ] ; do
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '.*-> \(.*\)$'`
-    if expr "$link" : '.*/.*' > /dev/null; then
+    if expr "$link" : '/.*' > /dev/null; then
 	PRG="$link"
     else
 	PRG=`dirname "$PRG"`"/$link"
@@ -150,9 +150,9 @@ if [ -n "$JAVA_HOME" ] ; then
 
   # OSX hack to make Ant work with jikes
   if $darwin ; then
-    OSXHACK="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Classes"
-    if [ -d ${OSXHACK} ] ; then
-      for i in ${OSXHACK}/*.jar
+    OSXHACK="${JAVA_HOME}/../Classes"
+    if [ -d "${OSXHACK}" ] ; then
+      for i in "${OSXHACK}"/*.jar
       do
         JIKESPATH="$JIKESPATH:$i"
       done

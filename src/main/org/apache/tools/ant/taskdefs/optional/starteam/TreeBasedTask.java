@@ -566,7 +566,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
         for (int i = 0; i < allLabels.length; i++) {
             Label stLabel = allLabels[i];
             log("checking label " + stLabel.getName(), Project.MSG_DEBUG);
-            if (stLabel.getName().equals(this.label)) {
+            if (stLabel != null && !stLabel.isDeleted() && stLabel.getName().equals(this.label)) {
                 if (!stLabel.isRevisionLabel() && !stLabel.isViewLabel()) {
                     throw new BuildException("Unexpected label type.");
                 }
