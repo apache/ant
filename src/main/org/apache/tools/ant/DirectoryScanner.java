@@ -672,36 +672,7 @@ public class DirectoryScanner
         for (int icounter = 0; icounter < includes.length; icounter++) {
             String newpattern =
                 SelectorUtils.rtrimWildcardTokens(includes[icounter]);
-            // check whether the candidate new pattern has a parent
-            boolean hasParent = false;
-            Enumeration myenum = newroots.keys();
-            // logically, there should be at most one child pattern present
-            // let's use a vector though to be sure
-            Vector vdelete = new Vector();
-            while (myenum.hasMoreElements()) {
-                String existingpattern = (String) myenum.nextElement();
-                // check whether the existing pattern is a child of the new pattern
-                if (existingpattern.length() >= newpattern.length()) {
-                    if (existingpattern.indexOf(newpattern) == 0) {
-                        vdelete.add(existingpattern);
-                    }
-                }
-                // check whether the new pattern is a child of the existing pattern
-                if (existingpattern.length() <= newpattern.length()) {
-                    if (newpattern.indexOf(existingpattern) == 0) {
-                        hasParent = true;
-                        break;
-                    }
-                }
-            }
-            // add the new pattern if does not have parents
-            if (!hasParent) {
-                newroots.put(newpattern, includes[icounter]);
-                // remove child patterns
-                for (int icounter2 = 0; icounter2 < vdelete.size(); icounter2++) {
-                    newroots.remove(vdelete.elementAt(icounter2));
-                }
-            }
+            newroots.put(newpattern, includes[icounter]);
         }
 
         Enumeration enum2 = newroots.keys();
