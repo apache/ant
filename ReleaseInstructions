@@ -62,8 +62,11 @@ Note: This document was created in the context of releasing Ant 1.5.
 9.  Meanwhile, convert the WHATSNEW file into HTML for the README file on the 
     website. See the previous release directories for examples of these files. 
     Add instructions and warnings (GNU tar format issues, etc).
+
+    You may choose to use the text2html convertor present at
+    http://www.aigeek.com/txt2html/
     
-    [[ TODO: Any tool to automatically convert from text to html? ]]
+    [[ TODO: This must perhaps be an Ant task. ]]
 
 10. Once this is uploaded, unpack things, create the release directory, 
     something like v1.5Beta1, push the release and README files into this 
