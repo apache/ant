@@ -25,11 +25,11 @@ shift
 goto setupArgs
 rem This label provides a place for the argument list loop to break out 
 rem and for NT handling to skip to.
-:doneStart
 
+:doneStart
 rem find ANT_HOME if it does not exist due to either an invalid value passed
 rem by the user or the %0 problem on Windows 9x
-if exist "%ANT_HOME%" goto checkJava
+if exist "%ANT_HOME%\lib\ant.jar" goto checkJava
 
 rem check for ant in Program Files on system drive
 if not exist "%SystemDrive%\Program Files\ant" goto checkSystemDrive
@@ -38,13 +38,13 @@ goto checkJava
 
 :checkSystemDrive
 rem check for ant in root directory of system drive
-if not exist %SystemDrive%\ant\nul goto checkCDrive
+if not exist %SystemDrive%\ant\lib\ant.jar goto checkCDrive
 set ANT_HOME=%SystemDrive%\ant
 goto checkJava
 
 :checkCDrive
 rem check for ant in C:\ant for Win9X users
-if not exist C:\ant\nul goto noAntHome
+if not exist C:\ant\lib\ant.jar goto noAntHome
 set ANT_HOME=C:\ant
 goto checkJava
 
