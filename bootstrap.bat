@@ -2,9 +2,9 @@
 
 REM You will need to specify JAVA_HOME if compiling with 1.2 or later.
 
-set JAVA_HOME=
-set JAVA=
-set JAVAC=
+set OLDJAVA=%JAVA%
+set OLDJAVAC=%JAVAC%
+set OLDCLASSPATH=%CLASSPATH%
 
 if exist ..\antrc.bat call ..\antrc.bat
 
@@ -58,8 +58,11 @@ if not "%OS%" == "Windows_NT" if exist classes\nul deltree/y classes
 echo.
 echo ... Done Bootstrapping Ant Distribution
 
-set JAVA_HOME=
-set JAVA=
-set JAVAC=
-set CLASSPATH=
+set JAVA=%OLDJAVA%
+set JAVAC=%OLDJAVAC%
+set CLASSPATH=%OLDCLASSPATH%
+set OLDJAVA=
+set OLDJAVAC=
+set OLDCLASSPATH=
 set TOOLS=
+
