@@ -134,11 +134,7 @@ public class ExecuteOn extends ExecTask {
             int err = -1;
             String myos = System.getProperty("os.name");
 
-            // antRun.bat currently limits us to directory + executable 
-            //                                             + 7 args
-            if (parallel && 
-                (myos.toLowerCase().indexOf("windows") < 0 || s.length+cmdl.size() <= 8)
-                ) {
+            if (parallel) {
                 cmdl.addLine(s);
                 exe.setCommandline(cmdl.getCommandline());
                 err = exe.execute();
