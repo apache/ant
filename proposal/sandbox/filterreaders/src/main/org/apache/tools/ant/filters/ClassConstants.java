@@ -59,8 +59,10 @@ import java.io.Reader;
 
 import org.apache.tools.ant.Project;
 
-import org.apache.bcel.*;
-import org.apache.bcel.classfile.*;
+import org.apache.bcel.classfile.ClassParser;
+import org.apache.bcel.classfile.ConstantValue;
+import org.apache.bcel.classfile.Field;
+import org.apache.bcel.classfile.JavaClass;
 
 /**
  * Assemble the constants declared in a Java class in
@@ -134,20 +136,20 @@ public final class ClassConstants
                 queuedData = null;
             }
         } else {
-            String clazz = readFully();
+            final String clazz = readFully();
             if (clazz == null) {
                 ch = -1;
             } else {
-                byte[] bytes = clazz.getBytes();
-                StringBuffer sb = new StringBuffer();
-                ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                ClassParser parser = new ClassParser(bis, "");
-                JavaClass javaClass = parser.parse();
-                Field[] fields = javaClass.getFields();
+                final byte[] bytes = clazz.getBytes();
+                final StringBuffer sb = new StringBuffer();
+                final ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+                final ClassParser parser = new ClassParser(bis, "");
+                final JavaClass javaClass = parser.parse();
+                final Field[] fields = javaClass.getFields();
                 for (int i = 0; i < fields.length; i++) {
-                    Field field = fields[i];
+                    final Field field = fields[i];
                     if (field != null) {
-                        ConstantValue cv = field.getConstantValue();
+                        final ConstantValue cv = field.getConstantValue();
                         if (cv != null) {
                             String cvs = cv.toString();
                             //Remove start and end quotes if field is a String
