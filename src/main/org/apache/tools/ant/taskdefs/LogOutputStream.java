@@ -85,7 +85,9 @@ public class LogOutputStream extends OutputStream {
      * Flush this log stream
      */
     public void flush() {
-       processBuffer();
+        if (buffer.size() > 0) {
+            processBuffer();
+        }
     }
 
 
