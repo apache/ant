@@ -68,12 +68,16 @@ aalbspazea4J9zgi59SSwOM=
 =Icm2
 -----END PGP PUBLIC KEY BLOCK-----
 
-pub  1024D/5F6B8B72 2001-05-28 Stefan Bodewig <bodewig@bost.de>
-sig        5F6B8B72 2001-05-28  Stefan Bodewig <bodewig@bost.de>
+pub  1024D/5F6B8B72 2001-05-28 Stefan Bodewig <stefan.bodewig@epost.de>
+sig        5F6B8B72 2002-01-11  Stefan Bodewig <stefan.bodewig@epost.de>
 uid                            Stefan Bodewig <bodewig@apache.org>
-sig        5F6B8B72 2001-05-28  Stefan Bodewig <bodewig@bost.de>
+sig        5F6B8B72 2001-05-28  Stefan Bodewig <stefan.bodewig@epost.de>
+sig        51898504 2002-01-11  Conor MacNeill <conor@cortexebusiness.com.au>
+uid                            Stefan Bodewig <bodewig@bost.de>
+sig        5F6B8B72 2001-05-28  Stefan Bodewig <stefan.bodewig@epost.de>
+sig        51898504 2002-01-11  Conor MacNeill <conor@cortexebusiness.com.au>
 sub  1024g/24774157 2001-05-28
-sig        5F6B8B72 2001-05-28  Stefan Bodewig <bodewig@bost.de>
+sig        5F6B8B72 2001-05-28  Stefan Bodewig <stefan.bodewig@epost.de>
 
 -----BEGIN PGP PUBLIC KEY BLOCK-----
 Version: GnuPG v1.0.6 (GNU/Linux)
@@ -90,16 +94,21 @@ Jcn+fEqukysTJixSXCPebosltd4RalJIupVYkp4w6MJ7biaDAlLuNhDcI/AiXTmV
 dXUedVXIaM8I3Ne23gucwbAyc0Hvb+3cSAKRhl/azFQhuHBvlrQjU3RlZmFuIEJv
 ZGV3aWcgPGJvZGV3aWdAYXBhY2hlLm9yZz6IVwQTEQIAFwUCOxIiTgULBwoDBAMV
 AwIDFgIBAheAAAoJEKIRWuFfa4tyLJ4An2yKSQ1o+lIF2O6wR/E6NdgYAfkSAJ94
-8O9lic6ZQLUoVU5rjJURUvhVDbQgU3RlZmFuIEJvZGV3aWcgPGJvZGV3aWdAYm9z
-dC5kZT6IVwQTEQIAFwUCOxI5gQULBwoDBAMVAwIDFgIBAheAAAoJEKIRWuFfa4ty
-yboAoNoD/9Jgm/alxfAYELz05LMa/HLeAKDWTHqq7rMkppZoTUv2gWpVzrk5RLkB
-DQQ7EiJUEAQAzVKWS8QrkysydbTJu2/14wIbz2Coi93aAGelwCwXSxf50JpYdY3L
-kcvd0FqT8bcEnz43MCSx8vlKubQtUpx9WMGIb4ixtShLJ4lAa6FJldhychz/dnxS
-Nyz5N8W6sby4dTVxac0rloxjAOurGanhG7TMtgfDi0cEEoXRyAVoKyMAAwUD/j1p
-Jm4Npq2mlJoE7MK3vAhgKwYHFflmJusmqvSAtRuFdT15pbMJrA5bAK+lA3SVOOhh
-WTCItlphSR2qxJCAcBTeOMqUi5ohFcCkSRNvwmDtH+80B3BehlEsEKNk8Z3moa2c
-h7Oxnb6XEXH5tGJ5Qvx9Qid6ZfBaXx7bc8yKyCb4iEYEGBECAAYFAjsSIlQACgkQ
-ohFa4V9ri3INMgCgnc22kj8TfjktU6u4SUUqud25ZZcAn0B2b0zPjKjGuiwdKSnk
-FbNcFS3g
-=Cay0
+8O9lic6ZQLUoVU5rjJURUvhVDYhGBBARAgAGBQI8PtWPAAoJEIEEZE9RiYUEnZIA
+njOkQx1BfxN9+E7Yiz4MOxqZjSUpAKDQi0Alv/VR61fmR7KHZ11J2g+HSLQgU3Rl
+ZmFuIEJvZGV3aWcgPGJvZGV3aWdAYm9zdC5kZT6IVwQTEQIAFwUCOxI5gQULBwoD
+BAMVAwIDFgIBAheAAAoJEKIRWuFfa4tyyboAoNoD/9Jgm/alxfAYELz05LMa/HLe
+AKDWTHqq7rMkppZoTUv2gWpVzrk5RIhGBBARAgAGBQI8PtWVAAoJEIEEZE9RiYUE
+0LMAn22/u01Lo3Bo5lDxxHSkayUkYq25AKCm20yaGFGtTDJW4Rdz50pfut1AwrQo
+U3RlZmFuIEJvZGV3aWcgPHN0ZWZhbi5ib2Rld2lnQGVwb3N0LmRlPohXBBMRAgAX
+BQI8Pto2BQsHCgMEAxUDAgMWAgECF4AACgkQohFa4V9ri3Kz/gCg0PlCER3JUjKk
+G8JQe/lIJoApx38AoMW2G1lOuMX54RiWS08tG0j3ON4TuQENBDsSIlQQBADNUpZL
+xCuTKzJ1tMm7b/XjAhvPYKiL3doAZ6XALBdLF/nQmlh1jcuRy93QWpPxtwSfPjcw
+JLHy+Uq5tC1SnH1YwYhviLG1KEsniUBroUmV2HJyHP92fFI3LPk3xbqxvLh1NXFp
+zSuWjGMA66sZqeEbtMy2B8OLRwQShdHIBWgrIwADBQP+PWkmbg2mraaUmgTswre8
+CGArBgcV+WYm6yaq9IC1G4V1PXmlswmsDlsAr6UDdJU46GFZMIi2WmFJHarEkIBw
+FN44ypSLmiEVwKRJE2/CYO0f7zQHcF6GUSwQo2TxneahrZyHs7GdvpcRcfm0YnlC
+/H1CJ3pl8FpfHttzzIrIJviIRgQYEQIABgUCOxIiVAAKCRCiEVrhX2uLcg0yAKCd
+zbaSPxN+OS1Tq7hJRSq53blllwCfQHZvTM+MqMa6LB0pKeQVs1wVLeA=
+=TAHR
 -----END PGP PUBLIC KEY BLOCK-----
