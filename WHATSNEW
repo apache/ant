@@ -97,6 +97,12 @@ Fixed bugs:
 * The <replacetokens> filter would throw an exception if the token's
   value was an empty string.  Bugzilla Report 18625.
 
+* Perforce tasks relying on output from the server such as <p4change> and <p4label>
+  were hanging. Bugzilla Reports 18129 and 18956.
+
+* build.sh install had a problem on cygwin (with REALANTHOME). 
+  Bugzilla Report 17257
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.
@@ -181,6 +187,13 @@ Other changes:
   You can put in it all the strings described by p4 help usage. Refer to 
   the docs for more information.
 
+* new Perforce tasks <p4integrate> and <p4resolve>
+
+* <p4submit> will change the property p4.change if the Perforce server 
+  renumbers the change list.
+  It will set the property p4.needsresolve if the submit fails, 
+  and the message says that file(s) need to be resolved.
+
 * <replaceregexp> now has an optional encoding attribute to support
   replacing in files that are in a different encoding than the
   platform's default.
@@ -246,6 +259,11 @@ Other changes:
   if their content matches a certain regular expression.
 
 * <antlr>'s debug attribute has been enabled.  Bugzilla Report 19051.
+
+* <mail> has a new attribute encoding. Bugzilla Report 15434.
+
+* <zipfileset> can now be defined in the main body of a project
+  and referred to with refid="xyz". Bugzilla Report 17007.
 
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
