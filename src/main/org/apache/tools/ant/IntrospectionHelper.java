@@ -64,6 +64,7 @@ import java.lang.reflect.Constructor;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 
 /**
  * Helper class that collects the methods a task or nested element
@@ -628,7 +629,7 @@ public class IntrospectionHelper implements BuildListener {
      */
     private String getPropertyName(String methodName, String prefix) {
         int start = prefix.length();
-        return methodName.substring(start).toLowerCase();
+        return methodName.substring(start).toLowerCase(Locale.US);
     }
 
     private interface NestedCreator {

@@ -61,6 +61,7 @@ import junit.framework.TestCase;
 import junit.framework.AssertionFailedError;
 
 import java.io.File;
+import java.util.Locale;
 
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Path
@@ -71,7 +72,7 @@ import java.io.File;
 public class PathTest extends TestCase {
 
     public static boolean isUnixStyle = File.pathSeparatorChar == ':';
-    public static boolean isNetWare = (System.getProperty("os.name").toLowerCase().indexOf("netware") > -1);
+    public static boolean isNetWare = (System.getProperty("os.name").toLowerCase(Locale.US).indexOf("netware") > -1);
 
     private Project project;
 
@@ -140,10 +141,10 @@ public class PathTest extends TestCase {
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
             assertEquals("volumes on NetWare", 1, l.length);
-            assertEquals("c:\\test", l[0].toLowerCase());
+            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
         } else {
             assertEquals("drives on DOS", 1, l.length);
-            assertEquals("c:\\test", l[0].toLowerCase());
+            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
         }
 
         p = new Path(project, "c:/test");
@@ -155,10 +156,10 @@ public class PathTest extends TestCase {
             assertEquals("/test", l[1]);
         } else if (isNetWare) {
             assertEquals("volumes on NetWare", 1, l.length);
-            assertEquals("c:\\test", l[0].toLowerCase());
+            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
         } else {
             assertEquals("drives on DOS", 1, l.length);
-            assertEquals("c:\\test", l[0].toLowerCase());
+            assertEquals("c:\\test", l[0].toLowerCase(Locale.US));
         }
     }
 

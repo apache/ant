@@ -74,6 +74,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -346,26 +347,27 @@ public class FTP
      */
     public void setAction(String action) throws BuildException
     {
-        if (action.toLowerCase().equals("send") ||
-            action.toLowerCase().equals("put"))
+        String actionL = action.toLowerCase(Locale.US);
+        if (actionL.equals("send") ||
+            actionL.equals("put"))
         {
             this.action = SEND_FILES;
         }
-        else if (action.toLowerCase().equals("recv") ||
-                 action.toLowerCase().equals("get"))
+        else if (actionL.equals("recv") ||
+                 actionL.equals("get"))
         {
             this.action = GET_FILES;
         }
-        else if (action.toLowerCase().equals("del") ||
-                 action.toLowerCase().equals("delete" ))
+        else if (actionL.equals("del") ||
+                 actionL.equals("delete" ))
         {
             this.action = DEL_FILES;
         }
-        else if (action.toLowerCase().equals("list"))
+        else if (actionL.equals("list"))
         {
             this.action = LIST_FILES;
         }
-        else if (action.toLowerCase().equals("mkdir"))
+        else if (actionL.equals("mkdir"))
         {
             this.action = MK_DIR;
         }

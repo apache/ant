@@ -59,6 +59,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * A representation of a Java command line that is nothing more
@@ -346,10 +347,7 @@ public class CommandlineJava implements Cloneable {
     private String getJavaExecutableName() {
 	// This is the most common extension case - exe for windows and OS/2, 
         // nothing for *nix.
-        String os = System.getProperty("os.name").toLowerCase();
-        boolean dosBased = 
-            os.indexOf("windows") >= 0 || os.indexOf("os/2") >= 0;
-	String extension =  dosBased? ".exe" : "";
+	String extension =  (new Os("dos")).eval() ? ".exe" : "";
 
 	// Look for java in the java.home/../bin directory.  Unfortunately
 	// on Windows java.home doesn't always refer to the correct location, 

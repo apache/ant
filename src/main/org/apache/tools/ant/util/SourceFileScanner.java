@@ -56,6 +56,7 @@ package org.apache.tools.ant.util;
 
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.File;
 import java.util.Vector;
@@ -106,8 +107,7 @@ public class SourceFileScanner {
           be able to check file modification times.
           (Windows has a max resolution of two secs for modification times)
         */
-        String osname = System.getProperty("os.name").toLowerCase();
-        if ( osname.indexOf("windows") >= 0 ) {
+        if ((new Os("windows")).eval()) {
             now += 2000;
         }
 

@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Vector;
 import org.xml.sax.AttributeList;
 import org.xml.sax.helpers.AttributeListImpl;
@@ -152,7 +153,7 @@ public class RuntimeConfigurable {
         while (enum.hasMoreElements()) {
             RuntimeConfigurable child = (RuntimeConfigurable) enum.nextElement();
             child.maybeConfigure(p);
-            ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject, child.getElementTag().toLowerCase());
+            ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject, child.getElementTag().toLowerCase(Locale.US));
         }
 
         if (id != null) {

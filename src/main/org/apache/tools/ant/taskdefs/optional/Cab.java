@@ -59,6 +59,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.taskdefs.ExecTask;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Commandline;
 
@@ -91,13 +92,8 @@ public class Cab extends MatchingTask {
     protected String archiveType = "cab";
 
     private static String myos;
-    private static boolean isWindows;
+    private static boolean isWindows = (new Os("windows")).eval();
 
-    static {
-        myos = System.getProperty("os.name");
-        isWindows = myos.toLowerCase().indexOf("windows") >= 0;
-    }
-    
     /**
      * This is the name/location of where to 
      * create the .cab file.

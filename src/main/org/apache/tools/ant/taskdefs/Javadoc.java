@@ -67,6 +67,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -1158,13 +1159,7 @@ public class Javadoc extends Task {
     {
         // This is the most common extension case - exe for windows and OS/2, 
         // nothing for *nix.
-        String os = System.getProperty("os.name").toLowerCase();
-        boolean dosBased = 
-            os.indexOf("windows") >= 0 || os.indexOf("os/2") >= 0;
-        // for NetWare, we do not want an extension either, so we will be
-        // "non dosBased".  If this variable is ever used for other logic
-        // besides the extension, we may need to revisit this code.
-        String extension =  dosBased? ".exe" : "";
+	String extension =  (new Os("dos")).eval() ? ".exe" : "";
 
         // Look for javadoc in the java.home/../bin directory.  Unfortunately
         // on Windows java.home doesn't always refer to the correct location,

@@ -58,6 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,6 +69,7 @@ import java.io.StringReader;
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.Vector;
 
 /**
@@ -109,17 +111,17 @@ public class Execute {
             // Ignore and keep try
         }
 
-        String osname = System.getProperty("os.name").toLowerCase();
-        if ( osname.indexOf("mac os") >= 0 ) {
+        if ( (new Os("mac")).eval() ) {
             // Mac
             shellLauncher = new MacCommandLauncher(new CommandLauncher());
         }
-        else if ( osname.indexOf("os/2") >= 0 ) {
+        else if ( (new Os("os/2")).eval() ) {
             // OS/2 - use same mechanism as Windows 2000
             shellLauncher = new WinNTCommandLauncher(new CommandLauncher());
         }
-        else if ( osname.indexOf("windows") >= 0 ) {
+        else if ( (new Os("windows")).eval() ) {
             // Windows.  Need to determine which JDK we're running in
+
             CommandLauncher baseLauncher;
             if ( System.getProperty("java.version").startsWith("1.1") ) {
                 // JDK 1.1
@@ -131,6 +133,9 @@ public class Execute {
             }
 
             // Determine if we're running under 2000/NT or 98/95
+            String osname = 
+                System.getProperty("os.name").toLowerCase(Locale.US);
+
             if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
                 // Windows 2000/NT
                 shellLauncher = new WinNTCommandLauncher(baseLauncher);
@@ -198,35 +203,15 @@ public class Execute {
     }
 
     private static String[] getProcEnvCommand() {
-        String osname = System.getProperty("os.name").toLowerCase();
-        if ( osname.indexOf("mac os") >= 0 ) {
-            // Mac
-            // Determine if we are running under OS X
-            try {
-                String version = System.getProperty("os.version");
-                int majorVersion = 
-                    Integer.parseInt(version.substring(0, version.indexOf('.')));
-
-                if (majorVersion >= 10) {
-                    // OS X - just line UNIX
-                    String[] cmd = {"/usr/bin/env"};
-                    return cmd;
-                }
-            } catch (NumberFormatException e) {
-                // fall through to OS 9
-            }
-            // OS 9 and previous
-            // TODO: I have no idea how to get it, someone must fix it
-            String[] cmd = null;
-            return cmd;
-        }
-        else if ( osname.indexOf("os/2") >= 0 ) {
+        if ( (new Os("os/2")).eval() ) {
             // OS/2 - use same mechanism as Windows 2000
             // Not sure
             String[] cmd = {"cmd", "/c", "set" };
             return cmd;
         }
-        else if ( osname.indexOf("indows") >= 0 ) {
+        else if ( (new Os("windows")).eval() ) {
+            String osname = 
+                System.getProperty("os.name").toLowerCase(Locale.US);
             // Determine if we're running under 2000/NT or 98/95
             if ( osname.indexOf("nt") >= 0 || osname.indexOf("2000") >= 0 ) {
                 // Windows 2000/NT
@@ -239,10 +224,16 @@ public class Execute {
                 return cmd;
             }
         }
-        else {
+        else if ( (new Os("unix")).eval() ) {
             // Generic UNIX
             // Alternatively one could use: /bin/sh -c env
             String[] cmd = {"/usr/bin/env"};
+            return cmd;
+        }
+        else {
+            // MAC OS 9 and previous, Netware
+            // TODO: I have no idea how to get it, someone must fix it
+            String[] cmd = null;
             return cmd;
         }
     }

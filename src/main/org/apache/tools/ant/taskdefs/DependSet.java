@@ -61,6 +61,7 @@ import java.util.Date;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
 
@@ -170,8 +171,7 @@ public class DependSet extends MatchingTask {
           be able to check file modification times.
           (Windows has a max resolution of two secs for modification times)
         */
-        String osname = System.getProperty("os.name").toLowerCase();
-        if ( osname.indexOf("windows") >= 0 ) {
+        if ((new Os("windows")).eval()) {
             now += 2000;
         }
 

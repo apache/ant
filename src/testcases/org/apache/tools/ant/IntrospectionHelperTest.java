@@ -424,10 +424,10 @@ public class IntrospectionHelperTest extends TestCase {
     public void setTen(File f) {
         if (isUnixStyle) { 
             assertEquals("/tmp/2", f.getAbsolutePath());
-        } else if (System.getProperty("os.name").toLowerCase().equals("netware")) {
-            assertEquals("\\tmp\\2", f.getAbsolutePath().toLowerCase());
+        } else if (System.getProperty("os.name").toLowerCase(Locale.US).equals("netware")) {
+            assertEquals("\\tmp\\2", f.getAbsolutePath().toLowerCase(Locale.US));
         } else {
-            assertEquals(":\\tmp\\2", f.getAbsolutePath().toLowerCase().substring(1));
+            assertEquals(":\\tmp\\2", f.getAbsolutePath().toLowerCase(Locale.US).substring(1));
         }
     }
 

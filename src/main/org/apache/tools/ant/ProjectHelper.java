@@ -61,6 +61,7 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Enumeration;
+import java.util.Locale;
 import org.xml.sax.Locator;
 import org.xml.sax.InputSource;
 import org.xml.sax.HandlerBase;
@@ -553,11 +554,12 @@ public class ProjectHelper {
                 IntrospectionHelper.getHelper(parentClass);
 
             try {
+                String elementName = propType.toLowerCase(Locale.US);
                 if (parent instanceof UnknownElement) {
-                    child = new UnknownElement(propType.toLowerCase());
+                    child = new UnknownElement(elementName);
                     ((UnknownElement) parent).addChild((UnknownElement) child);
                 } else {
-                    child = ih.createElement(project, parent, propType.toLowerCase());
+                    child = ih.createElement(project, parent, elementName);
                 }
 
                 configureId(child, attrs);
@@ -568,7 +570,7 @@ public class ProjectHelper {
                     parentWrapper.addChild(childWrapper);
                 } else {
                     configure(child, attrs, project);
-                    ih.storeElement(project, parent, child, propType.toLowerCase());
+                    ih.storeElement(project, parent, child, elementName);
                 }
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), locator, exc);
@@ -665,7 +667,7 @@ public class ProjectHelper {
                                            project.getProperties() );
             try {
                 ih.setAttribute(project, target, 
-                                attrs.getName(i).toLowerCase(), value);
+                                attrs.getName(i).toLowerCase(Locale.US), value);
 
             } catch (BuildException be) {
                 // id attribute must be set externally
