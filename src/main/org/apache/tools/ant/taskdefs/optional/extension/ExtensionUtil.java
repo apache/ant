@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -238,7 +238,11 @@ public class ExtensionUtil {
         throws BuildException {
         try {
             final JarFile jarFile = new JarFile(file);
-            return jarFile.getManifest();
+            Manifest m = jarFile.getManifest();
+            if (m == null) {
+                throw new BuildException(file + " doesn't have a MANIFEST");
+            }
+            return m;
         } catch (final IOException ioe) {
             throw new BuildException(ioe.getMessage(), ioe);
         }
