@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -149,5 +149,13 @@ public class CopyTest extends BuildFileTest {
         File file  = new File(getProjectDir(),
                                         "copytest_single_file_fileset.tmp");
         assertTrue(file.exists());
+    }
+
+    public void testTranscoding() throws IOException {
+        executeTarget("testTranscoding");
+        FileUtils fileUtils = FileUtils.newFileUtils();
+        File f1 = getProject().resolveFile("copy/expected/utf-8");
+        File f2 = getProject().resolveFile("copytest1.tmp");
+        assertTrue(fileUtils.contentEquals(f1, f2));
     }
 }

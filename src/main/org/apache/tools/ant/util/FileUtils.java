@@ -249,6 +249,29 @@ public class FileUtils {
     }
 
     /**
+     * Convienence method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @throws IOException
+     *
+     * @since Ant 1.6
+     */
+    public void copyFile(String sourceFile, String destFile,
+                         FilterSetCollection filters, Vector filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         String inputEncoding, String outputEncoding, 
+                         Project project)
+        throws IOException {
+        copyFile(new File(sourceFile), new File(destFile), filters,
+                 filterChains, overwrite, preserveLastModified,
+                 inputEncoding, outputEncoding, project);
+    }
+
+    /**
      * Convienence method to copy a file from a source to a destination.
      * No filtering is performed.
      *
@@ -334,6 +357,28 @@ public class FileUtils {
                          boolean overwrite, boolean preserveLastModified,
                          String encoding, Project project)
         throws IOException {
+        copyFile(sourceFile, destFile, filters, filterChains,
+                 overwrite, preserveLastModified, encoding, encoding, project);
+    }
+
+    /**
+     * Convienence method to copy a file from a source to a
+     * destination specifying if token filtering must be used, if
+     * filter chains must be used, if source files may overwrite
+     * newer destination files and the last modified time of
+     * <code>destFile</code> file should be made equal
+     * to the last modified time of <code>sourceFile</code>.
+     *
+     * @throws IOException
+     *
+     * @since 1.15, Ant 1.6
+     */
+    public void copyFile(File sourceFile, File destFile,
+                         FilterSetCollection filters, Vector filterChains,
+                         boolean overwrite, boolean preserveLastModified,
+                         String inputEncoding, String outputEncoding,
+                         Project project)
+        throws IOException {
 
         if (overwrite || !destFile.exists() ||
             destFile.lastModified() < sourceFile.lastModified()) {
@@ -354,23 +399,30 @@ public class FileUtils {
             final boolean filterChainsAvailable = (filterChains != null
                                                    && filterChains.size() > 0);
 
-            if (filterSetsAvailable || filterChainsAvailable) {
+            if (filterSetsAvailable || filterChainsAvailable
+                || (inputEncoding != null 
+                    && !inputEncoding.equals(outputEncoding))
+                || (inputEncoding == null && outputEncoding != null)) {
                 BufferedReader in = null;
                 BufferedWriter out = null;
 
                 try {
-                    if (encoding == null) {
+                    if (inputEncoding == null) {
                         in = new BufferedReader(new FileReader(sourceFile));
-                        out = new BufferedWriter(new FileWriter(destFile));
                     } else {
                         in =
                             new BufferedReader(new InputStreamReader(
                                                                      new FileInputStream(sourceFile),
-                                                                     encoding));
+                                                                     inputEncoding));
+                    }
+
+                    if (outputEncoding == null) {
+                        out = new BufferedWriter(new FileWriter(destFile));
+                    } else {
                         out =
                             new BufferedWriter(new OutputStreamWriter(
                                                                       new FileOutputStream(destFile),
-                                                                      encoding));
+                                                                      outputEncoding));
                     }
 
                     if (filterChainsAvailable) {

@@ -62,6 +62,11 @@
     </copy>
   </target>
 
+  <target name="testTranscoding">
+    <copy file="copy/input/iso8859-1" tofile="copytest1.tmp"
+          encoding="ISO8859_1" outputencoding="UTF8"/>
+  </target>
+
   <target name="cleanup"> 
     <delete file="copytest1.tmp"/>
     <delete file="copytest3.tmp"/>

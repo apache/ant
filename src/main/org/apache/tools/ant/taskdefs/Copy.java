@@ -118,7 +118,8 @@ public class Copy extends Task {
     private Vector filterChains = new Vector();
     private Vector filterSets = new Vector();
     private FileUtils fileUtils;
-    private String encoding = null;
+    private String inputEncoding = null;
+    private String outputEncoding = null;
 
     /**
      * Copy task constructor.
@@ -291,7 +292,10 @@ public class Copy extends Task {
      * @since 1.32, Ant 1.5
      */
     public void setEncoding (String encoding) {
-        this.encoding = encoding;
+        this.inputEncoding = encoding;
+        if (outputEncoding == null) {
+            outputEncoding = encoding;
+        }
     }
 
     /**
@@ -300,7 +304,26 @@ public class Copy extends Task {
      * @since 1.32, Ant 1.5
      */
     public String getEncoding() {
-        return encoding;
+        return inputEncoding;
+    }
+
+    /**
+     * Sets the character encoding for output files.
+     *
+     * @since Ant 1.6
+     */
+    public void setOutputEncoding(String encoding) {
+        this.outputEncoding = encoding;
+    }
+
+    /**
+     * @return the character encoding for output files,
+     * <code>null</code> if not set.
+     *
+     * @since Ant 1.6
+     */
+    public String getOutputEncoding() {
+        return outputEncoding;
     }
 
     /**
@@ -526,8 +549,8 @@ public class Copy extends Task {
                     }
                     fileUtils.copyFile(fromFile, toFile, executionFilters,
                                        filterChains, forceOverwrite,
-                                       preserveLastModified, encoding,
-                                       getProject());
+                                       preserveLastModified, inputEncoding,
+                                       outputEncoding, getProject());
                 } catch (IOException ioe) {
                     String msg = "Failed to copy " + fromFile + " to " + toFile
                         + " due to " + ioe.getMessage();

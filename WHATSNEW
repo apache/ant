@@ -184,6 +184,9 @@ Other changes:
   different separator.  This is useful if you want to run certain
   ported Unix tools.
 
+* Copy has a new outputencoding attribute that can be used to change
+  the encoding while copying files.  Bugzilla Report 18217.
+
 Changes from Ant 1.5.2 to Ant 1.5.3
 ===================================
 
