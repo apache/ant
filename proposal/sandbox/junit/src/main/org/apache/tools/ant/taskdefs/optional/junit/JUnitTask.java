@@ -74,6 +74,8 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * The core JUnit task.
@@ -81,6 +83,9 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class JUnitTask extends Task {
+
+    private final static Resources RES =
+        ResourceManager.getPackageResources( JUnitTask.class );
 
     /** port to run the server on */
     private int port = -1;
@@ -111,12 +116,13 @@ public class JUnitTask extends Task {
         execute.setCommandline(cmd.getCommandline());
         execute.setAntRun(project);
 
-        log("Executing: " + cmd.toString(), Project.MSG_VERBOSE);
+        log(RES.getString("task.process-cmdline.log", cmd.toString()), Project.MSG_VERBOSE);
         int retVal;
         try {
             retVal = execute.execute();
         } catch (IOException e) {
-            throw new BuildException("Process fork failed.", e, location);
+            String msg = RES.getString("task.process-failed.error");
+            throw new BuildException(msg, e, location);
         } finally {
             tmp.delete();
         }

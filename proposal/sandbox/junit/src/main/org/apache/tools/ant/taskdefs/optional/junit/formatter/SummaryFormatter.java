@@ -56,6 +56,9 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 import java.io.PrintWriter;
 import java.text.MessageFormat;
 
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+
 /**
  * Display a summary message at the end of a testsuite stating
  * runs, failures, errors, and elapsed time.
@@ -64,25 +67,16 @@ import java.text.MessageFormat;
  */
 public class SummaryFormatter extends BaseFormatter {
 
-    protected final MessageFormat mf = new MessageFormat(
-            "Tests run: {0, number, integer}" +
-            ", Failures: {1, number, integer}" +
-            ", Errors: {2, number, integer}" +
-            ", Time elapsed: {3, number, integer} sec");
+    private final static Resources RES =
+        ResourceManager.getPackageResources( SummaryFormatter.class );
 
     protected void finished(long elapsedtime) {
-        PrintWriter writer = getWriter();
-        writer.print("Testsuite: ");
-        writer.println();
-        String line = mf.format(new Object[]{
-            new Integer(getRunCount()),
-            new Integer(getFailureCount()),
-            new Integer(getErrorCount()),
-            new Long(elapsedtime / 1000)
-        });
-        writer.print(line);
-        writer.println();
-        writer.println();
+        String msg = RES.getString("summary.finished.msg",
+                new Integer(getRunCount()),
+                new Integer(getFailureCount()),
+                new Integer(getErrorCount()),
+                new Long(elapsedtime / 1000) );
+        getWriter().println(msg);
         close();
     }
 

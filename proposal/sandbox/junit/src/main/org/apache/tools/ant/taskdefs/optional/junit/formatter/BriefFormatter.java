@@ -55,6 +55,8 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
 import java.io.PrintWriter;
 
+import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
 
 /**
  * Display additional messages from a <tt>SummaryFormatter</tt>
@@ -64,19 +66,17 @@ import java.io.PrintWriter;
  */
 public class BriefFormatter extends SummaryFormatter {
 
+    private final static Resources RES =
+        ResourceManager.getPackageResources( BriefFormatter.class );
+
     public void onTestFailed(int status, String testname, String trace) {
-        PrintWriter writer = getWriter();
-        writer.print("TestCase: ");
-        writer.print(testname);
+        String msg = null;
         if (status == STATUS_ERROR) {
-            writer.print("\tCaused an ERROR");
-        } else if (status == STATUS_FAILURE) {
-            writer.write("\tFAILED");
+            msg = RES.getString("brief.status-error.msg", testname, trace);
+        } else {
+            msg = RES.getString("brief.status-failure.msg", testname, trace);
         }
-        writer.println();
-        writer.print(trace);
-        writer.println();
-        writer.println();
+        getWriter().println(msg);
         super.onTestFailed(status, testname, trace);
     }
 

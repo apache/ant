@@ -62,6 +62,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 /**
+ * XML Formatter. Due to the nature of the XML we are forced to store
+ * everything in memory until it is finished. It might be resource
+ * intensive when running lots of testcases.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
