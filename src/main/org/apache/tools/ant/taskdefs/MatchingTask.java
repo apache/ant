@@ -233,6 +233,25 @@ public abstract class MatchingTask extends Task implements SelectorContainer {
     }
 
     /**
+     * Sets case sensitivity of the file system
+     *
+     * @param isCaseSensitive "true"|"on"|"yes" if file system is case
+     *                           sensitive, "false"|"off"|"no" when not.
+     */
+    public void setCaseSensitive(boolean isCaseSensitive) {
+        fileset.setCaseSensitive(isCaseSensitive);
+    }
+
+    /**
+     * Sets whether or not symbolic links should be followed.
+     *
+     * @param followSymlinks whether or not symbolic links should be followed
+     */
+    public void setFollowSymlinks(boolean followSymlinks) {
+        fileset.setFollowSymlinks(followSymlinks);
+    }
+
+    /**
      * Indicates whether there are any selectors here.
      *
      * @return whether any selectors are in this container
