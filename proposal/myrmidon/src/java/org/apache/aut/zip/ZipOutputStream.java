@@ -33,9 +33,9 @@ import java.util.zip.ZipException;
  * @author <a href="stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
  */
-public class ZipOutputStream extends DeflaterOutputStream
+public class ZipOutputStream
+    extends DeflaterOutputStream
 {
-
     /**
      * Helper, a 0 as ZipShort.
      *
@@ -371,9 +371,11 @@ public class ZipOutputStream extends DeflaterOutputStream
     {
         closeEntry();
         cdOffset = new ZipLong( written );
-        for( int i = 0; i < entries.size(); i++ )
+        final int size = entries.size();
+        for( int i = 0; i < size; i++ )
         {
-            writeCentralFileHeader( (ZipEntry)entries.get( i ) );
+            final ZipEntry entry = (ZipEntry)entries.get( i );
+            writeCentralFileHeader( entry );
         }
         cdLength = new ZipLong( written - cdOffset.getValue() );
         writeCentralDirectoryEnd();
