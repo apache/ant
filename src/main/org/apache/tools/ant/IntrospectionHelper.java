@@ -270,7 +270,7 @@ public class IntrospectionHelper implements BuildListener {
         throws BuildException {
         AttributeSetter as = (AttributeSetter) attributeSetters.get(attributeName);
         if (as == null) {
-	    String msg = getElementName(p, element) +
+            String msg = getElementName(p, element) +
             //String msg = "Class " + element.getClass().getName() +
                 " doesn't support the \"" + attributeName + "\" attribute.";
             throw new BuildException(msg);
@@ -294,7 +294,7 @@ public class IntrospectionHelper implements BuildListener {
      */
     public void addText(Project project, Object element, String text) {
         if (addText == null) {
-	   String msg = getElementName(project, element) +
+           String msg = getElementName(project, element) +
            //String msg = "Class " + element.getClass().getName() +
                 " doesn't support nested text data.";
             throw new BuildException(msg);
@@ -320,8 +320,7 @@ public class IntrospectionHelper implements BuildListener {
         throws BuildException {
         NestedCreator nc = (NestedCreator) nestedCreators.get(elementName);
         if (nc == null) {
-	    String msg = getElementName(project, element) +
-            //String msg = "Class " + element.getClass().getName() +
+            String msg = getElementName(project, element) +
                 " doesn't support the nested \"" + elementName + "\" element.";
             throw new BuildException(msg);
         }
@@ -593,33 +592,33 @@ public class IntrospectionHelper implements BuildListener {
 
     protected String getElementName(Project project, Object element)
     {
-	Hashtable elements = project.getTaskDefinitions();
-	String typeName = "task";
-	if (!elements.contains( element.getClass() ))
-	{
-	    elements = project.getDataTypeDefinitions();
-	    typeName = "data type";
-	    if (!elements.contains( element.getClass() ))
-	    {
-		elements = null;
-	    }
-	}
+        Hashtable elements = project.getTaskDefinitions();
+        String typeName = "task";
+        if (!elements.contains( element.getClass() ))
+        {
+            elements = project.getDataTypeDefinitions();
+            typeName = "data type";
+            if (!elements.contains( element.getClass() ))
+            {
+                elements = null;
+            }
+        }
 
-	if (elements != null)
-	{
-	    Enumeration e = elements.keys();
-	    while (e.hasMoreElements())
-	    {
-		String elementName = (String) e.nextElement();
-		Class elementClass = (Class) elements.get( elementName );
-		if ( element.getClass().equals( elementClass ) )
-		{
-		    return "The <" + elementName + "> " + typeName;
-		}
-	    }
-	}
-	
-	return "Class " + element.getClass().getName();
+        if (elements != null)
+        {
+            Enumeration e = elements.keys();
+            while (e.hasMoreElements())
+            {
+                String elementName = (String) e.nextElement();
+                Class elementClass = (Class) elements.get( elementName );
+                if ( element.getClass().equals( elementClass ) )
+                {
+                    return "The <" + elementName + "> " + typeName;
+                }
+            }
+        }
+        
+        return "Class " + element.getClass().getName();
     }
 
     /**
