@@ -7,7 +7,7 @@ shift
 
 :argCheck
 if ""%1""=="""" goto gotAllArgs
-set _CLASSPATHCOMPONENT=%_CLASSPATHCOMPONENT%;%1
+set _CLASSPATHCOMPONENT=%_CLASSPATHCOMPONENT% %1
 shift
 goto argCheck
 
