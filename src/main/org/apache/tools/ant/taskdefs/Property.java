@@ -171,13 +171,13 @@ public class Property extends Task {
             if (project.getUserProperty(n) == null) {
                 project.setUserProperty(n, v);
             } else {
-                log("Override ignored for " + name, Project.MSG_VERBOSE);
+                log("Override ignored for " + n, Project.MSG_VERBOSE);
             } 
         } else {
             if (project.getProperty(n) == null) {
                 project.setProperty(n, v);
             } else {
-                log("Override ignored for " + name, Project.MSG_VERBOSE);
+                log("Override ignored for " + n, Project.MSG_VERBOSE);
             }
         }
     }
