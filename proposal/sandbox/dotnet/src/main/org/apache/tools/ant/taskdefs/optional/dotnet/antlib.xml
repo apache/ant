@@ -27,4 +27,8 @@
     name="nant"
     classname="org.apache.tools.ant.taskdefs.optional.dotnet.NAntTask"
     />
+  <taskdef
+    name="wix"
+    classname="org.apache.tools.ant.taskdefs.optional.dotnet.WixTask"
+    />
 </antlib>
