@@ -7,7 +7,6 @@
  */
 package org.apache.tools.ant.taskdefs.condition;
 
-import java.util.Iterator;
 import java.util.Enumeration;
 import org.apache.myrmidon.api.TaskException;
 
