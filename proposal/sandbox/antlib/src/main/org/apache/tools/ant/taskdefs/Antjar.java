@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 2000 The Apache Software Foundation.  All rights
+ *  Copyright (c) 2000,2003 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -53,15 +53,12 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import org.xml.sax.*;
-import javax.xml.parsers.*;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.*;
 
 import java.io.*;
-import java.util.*;
 
 /**
  * Creates a ANTLIB archive. Code is similar to the War class, but with
@@ -129,7 +126,7 @@ public class Antjar extends Jar {
         // If no antxml file is specified, it's an error.
         if (libraryDescriptor == null) {
             throw new BuildException("antxml attribute is required", 
-				     location);
+				     getLocation());
         }
 
         super.initZipOutputStream(zOut);
@@ -142,9 +139,10 @@ public class Antjar extends Jar {
      * @param file file to add
      * @param zOut stream to add to 
      * @param vPath the path to add it to in the zipfile
+     * @param mode the Unix permissions to set.
      * @exception IOException io trouble
      */
-    protected void zipFile(File file, ZipOutputStream zOut, String vPath)
+    protected void zipFile(File file, ZipOutputStream zOut, String vPath, int mode)
         throws IOException {
         // If the file being added is META-INF/antlib.xml, we warn if it's not the
         // one specified in the "antxml" attribute - or if it's being added twice,
@@ -159,12 +157,12 @@ public class Antjar extends Jar {
 		    " task)", Project.MSG_WARN);
             }
             else {
-                super.zipFile(file, zOut, vPath);
+                super.zipFile(file, zOut, vPath, mode);
                 descriptorAdded = true;
             }
         }
         else {
-            super.zipFile(file, zOut, vPath);
+            super.zipFile(file, zOut, vPath, mode);
         }
     }
 

@@ -1,7 +1,7 @@
 /*
  *  The Apache Software License, Version 1.1
  *
- *  Copyright (c) 1999 The Apache Software Foundation.  All rights
+ *  Copyright (c) 1999,2003 The Apache Software Foundation.  All rights
  *  reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,6 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.taskdefs.*;
 import org.xml.sax.*;
 import javax.xml.parsers.*;
 
@@ -108,10 +107,6 @@ public class Antlib extends Task {
      */
     private Path classpath = null;
 
-    /**
-     * the manufacture set of classes to load
-     */
-    private Path loaderPath = null;
 
     /**
      * our little xml parse
@@ -357,7 +352,7 @@ public class Antlib extends Task {
      * Default is <code>true</code>.
      * This property is mostly used by the core when loading core tasks.
      *
-     * @param failedonerror if true loading will stop if classes
+     * @param onerror if true loading will stop if classes
      *                      cannot be instantiated
      */
     public void setOnerror(FailureAction onerror) {
@@ -399,7 +394,7 @@ public class Antlib extends Task {
      */
     public Path createClasspath() {
         if (classpath == null) {
-            classpath = new Path(project);
+            classpath = new Path(getProject());
         }
         return classpath.createPath();
     }
@@ -424,7 +419,7 @@ public class Antlib extends Task {
     private File libraryFile(String homeSubDir, String lib) {
         // For the time being libraries live in $ANT_HOME/antlib.
         // The idea being that not to load all the jars there anymore
-        String home = project.getProperty("ant.home");
+        String home = getProject().getProperty("ant.home");
 
         if (home == null) {
             throw new BuildException("ANT_HOME not set as required.");
@@ -443,11 +438,11 @@ public class Antlib extends Task {
         if (file == null && classpath == null) {
             String msg =
                 "Must specify either library or file attribute or classpath.";
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
         if (file != null && !file.exists()) {
             String msg = "Cannot find library: " + file;
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
 
         loadDefinitions();
@@ -492,7 +487,7 @@ public class Antlib extends Task {
                 case FAIL:
                     throw new BuildException(msg);
                 case REPORT:
-                    log(msg, project.MSG_WARN);
+                    log(msg, Project.MSG_WARN);
                 }
             }
         }
@@ -502,7 +497,7 @@ public class Antlib extends Task {
             case FAIL:
                 throw new BuildException(msg, io);
             case REPORT:
-                log(io.getMessage(), project.MSG_WARN);
+                log(io.getMessage(), Project.MSG_WARN);
             }
         }
         return found;
@@ -534,7 +529,7 @@ public class Antlib extends Task {
         if (loaderId == null) {
             // Path cannot be added to the CoreLoader so simply
             // ask for all instances of the resource descriptors
-            return project.getCoreLoader().getResources(res);
+            return getProject().getCoreLoader().getResources(res);
         }
 
         return new DescriptorEnumeration(path.list(), res);
@@ -561,7 +556,7 @@ public class Antlib extends Task {
      * create the classpath for this library from the file passed in and
      * any classpath parameters
      *
-     * @param file library file to use
+     * @param clspath library file to use
      * @return classloader using te
      * @exception BuildException trouble creating the classloader
      */
@@ -569,13 +564,13 @@ public class Antlib extends Task {
         throws BuildException {
         if (loaderId == null) {
             log("Loading definitions from CORE, <classpath> ignored",
-                project.MSG_VERBOSE);
-            return project.getCoreLoader();
+                Project.MSG_VERBOSE);
+            return getProject().getCoreLoader();
         }
 
         log("Using ClassLoader '" + loaderId + "' to load path: " + clspath,
-            project.MSG_VERBOSE);
-        return project.addToLoader(loaderId, clspath);
+            Project.MSG_VERBOSE);
+        return getProject().addToLoader(loaderId, clspath);
     }
 
 
@@ -584,7 +579,7 @@ public class Antlib extends Task {
      */
     private Path makeLoaderClasspath()
     {
-        Path clspath = new Path(project);
+        Path clspath = new Path(getProject());
         if (file != null) clspath.setLocation(file);
         //append any build supplied classpath
         if (classpath != null) {
@@ -606,11 +601,10 @@ public class Antlib extends Task {
         throws BuildException {
         try {
             SAXParser saxParser = saxFactory.newSAXParser();
-            Parser parser = saxParser.getParser();
 
             InputSource inputSource = new InputSource(is);
             //inputSource.setSystemId(uri); //URI is nasty for jar entries
-            project.log("parsing descriptor for library: " + file,
+            getProject().log("parsing descriptor for library: " + file,
                         Project.MSG_VERBOSE);
             saxParser.parse(inputSource, new AntLibraryHandler(cl, als));
         }
@@ -683,7 +677,7 @@ public class Antlib extends Task {
         /**
          * Constructor for the AntLibraryHandler object
          *
-         * @param cl optional classloader
+         * @param classloader optional classloader
          * @param als alias list
          */
         AntLibraryHandler(ClassLoader classloader, Properties als) {
@@ -759,7 +753,7 @@ public class Antlib extends Task {
 
             try {
                 if ("role".equals(tag)) {
-                    if (project.isRoleDefined(name)) {
+                    if (getProject().isRoleDefined(name)) {
                         String msg = "Cannot override role: " + name;
                         log(msg, Project.MSG_WARN);
                         return;
@@ -767,7 +761,7 @@ public class Antlib extends Task {
                     // Defining a new role
                     Class clz = loadClass(className);
                     if (clz != null) {
-                        project.addRoleDefinition(name, clz,
+                        getProject().addRoleDefinition(name, clz,
                                                   (adapter == null? null :
                                                    loadClass(adapter)));
                     }
@@ -781,24 +775,24 @@ public class Antlib extends Task {
                     name = alias;
                 }
                 //catch an attempted override of an existing name
-                if (!override && project.isDefinedOnRole(tag, name)) {
+                if (!override && getProject().isDefinedOnRole(tag, name)) {
                     String msg = "Cannot override " + tag + ": " + name;
                     log(msg, Project.MSG_WARN);
                     return;
                 }
                 Class clz = loadClass(className);
                 if (clz != null)
-                    project.addDefinitionOnRole(tag, name, clz);
+                    getProject().addDefinitionOnRole(tag, name, clz);
             }
             catch(BuildException be) {
                 switch (onerror.getIndex()) {
                 case FAIL:
                     throw new SAXParseException(be.getMessage(), locator, be);
                 case REPORT:
-                    project.log(be.getMessage(), project.MSG_WARN);
+                    getProject().log(be.getMessage(), Project.MSG_WARN);
                     break;
                 default:
-                    project.log(be.getMessage(), project.MSG_DEBUG);
+                    getProject().log(be.getMessage(), Project.MSG_DEBUG);
                 }
             }
         }
@@ -833,10 +827,10 @@ public class Antlib extends Task {
             }
 
             if (onerror.getIndex() == REPORT) {
-                project.log(msg, project.MSG_WARN);
+                getProject().log(msg, Project.MSG_WARN);
             }
             else {
-                project.log(msg, project.MSG_DEBUG);
+                getProject().log(msg, Project.MSG_DEBUG);
             }
             return null;
         }
