@@ -38,6 +38,9 @@ class ProcessDestroyer implements Runnable {
     // whether or not this ProcessDestroyer has been registered as a
     // shutdown hook
     private boolean added = false;
+    // whether or not this ProcessDestroyer is currently running as
+    // shutdown hook
+    private boolean running = false;
 
     private class ProcessDestroyerImpl extends Thread {
         private boolean shouldDestroy = true;
@@ -89,7 +92,7 @@ class ProcessDestroyer implements Runnable {
      * uses reflection to ensure pre-JDK 1.3 compatibility.
      */
     private void addShutdownHook() {
-        if (addShutdownHookMethod != null) {
+        if (addShutdownHookMethod != null && !running) {
             destroyProcessThread = new ProcessDestroyerImpl();
             Object[] args = {destroyProcessThread};
             try {
@@ -98,7 +101,13 @@ class ProcessDestroyer implements Runnable {
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                Throwable t = e.getCause();
+                if (t != null && t.getClass() == IllegalStateException.class) {
+                    // shutdown already is in progress
+                    running = true;
+                } else {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -108,7 +117,7 @@ class ProcessDestroyer implements Runnable {
      * uses reflection to ensure pre-JDK 1.3 compatibility
      */
     private void removeShutdownHook() {
-        if (removeShutdownHookMethod != null && destroyProcessThread != null) {
+        if (removeShutdownHookMethod != null && added && !running) {
             Object[] args = {destroyProcessThread};
             try {
                 Boolean removed =
@@ -118,25 +127,31 @@ class ProcessDestroyer implements Runnable {
                 if (!removed.booleanValue()) {
                     System.err.println("Could not remove shutdown hook");
                 }
-                // start the hook thread, a unstarted thread may not be
-                // eligible for garbage collection
-                // Cf.: http://developer.java.sun.com/developer/bugParade/bugs/4533087.html
-                destroyProcessThread.setShouldDestroy(false);
-                destroyProcessThread.start();
-                // this should return quickly, since Process.destroy()
-                try {
-                    destroyProcessThread.join(20000);
-                } catch (InterruptedException ie) {
-                    // the thread didn't die in time
-                    // it should not kill any processes unexpectedly
-                }
-                destroyProcessThread = null;
-                added = false;
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             } catch (InvocationTargetException e) {
-                e.printStackTrace();
+                Throwable t = e.getCause();
+                if (t != null && t.getClass() == IllegalStateException.class) {
+                    // shutdown already is in progress
+                    running = true;
+                } else {
+                    e.printStackTrace();
+                }
             }
+            // start the hook thread, a unstarted thread may not be
+            // eligible for garbage collection
+            // Cf.: http://developer.java.sun.com/developer/bugParade/bugs/4533087.html
+            destroyProcessThread.setShouldDestroy(false);
+            destroyProcessThread.start();
+            // this should return quickly, since it basically is a NO-OP.
+            try {
+                destroyProcessThread.join(20000);
+            } catch (InterruptedException ie) {
+                // the thread didn't die in time
+                // it should not kill any processes unexpectedly
+            }
+            destroyProcessThread = null;
+            added = false;
         }
     }
 
@@ -179,8 +194,7 @@ class ProcessDestroyer implements Runnable {
     public boolean remove(Process process) {
         synchronized (processes) {
             boolean processRemoved = processes.removeElement(process);
-            if (processes.size() == 0) {
-                processes.notifyAll();
+            if (processRemoved && processes.size() == 0) {
                 removeShutdownHook();
             }
             return processRemoved;
@@ -192,16 +206,10 @@ class ProcessDestroyer implements Runnable {
      */
     public void run() {
         synchronized (processes) {
+            running = true;
             Enumeration e = processes.elements();
             while (e.hasMoreElements()) {
                 ((Process) e.nextElement()).destroy();
-            }
-
-            try {
-                // wait for all processes to finish
-                processes.wait();
-            } catch (InterruptedException interrupt) {
-                // ignore
             }
         }
     }
