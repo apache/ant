@@ -1,3 +1,5 @@
+#!/bin/sh
+
 if [ -f $HOME/.antrc ] ; then 
   . $HOME/.antrc
 fi
