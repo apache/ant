@@ -1612,6 +1612,8 @@
           <!-- misc oneoff tests -->
           <exclude name="${optional.package}/WsdlToDotnetTest.java"
                    unless="dotnetapps.found"/>
+          <exclude name="${optional.package}/DotnetTest.java"
+                   unless="dotnetapps.found"/>
 
           <!--  These tests only passes if testcases and Ant classes have
           been loaded by the same classloader - will throw
