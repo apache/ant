@@ -5,10 +5,12 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.interfaces.service;
+package org.apache.myrmidon.components.workspace;
 
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.myrmidon.interfaces.service.ServiceException;
+import org.apache.myrmidon.interfaces.service.ServiceManager;
 
 /**
  * An adaptor from {@link ComponentManager} to {@link ServiceManager}.
@@ -16,7 +18,7 @@ import org.apache.avalon.framework.component.ComponentManager;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-public class ComponentManagerAdaptor
+class ComponentManagerAdaptor
     implements ServiceManager
 {
     private final ComponentManager m_componentManager;

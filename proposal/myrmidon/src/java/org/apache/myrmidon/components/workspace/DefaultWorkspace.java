@@ -37,7 +37,6 @@ import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
-import org.apache.myrmidon.interfaces.service.ComponentManagerAdaptor;
 import org.apache.myrmidon.interfaces.service.MultiSourceServiceManager;
 import org.apache.myrmidon.interfaces.service.ServiceManager;
 import org.apache.myrmidon.interfaces.type.TypeManager;
