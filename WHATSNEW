@@ -49,6 +49,11 @@ incompatible and caused problems with custom doclets like xdoclet.
 
 * nested <filesets> of <javadoc> would include too much.
 
+* <dependset> will no longer choke on <targetfileset>s that point to
+non-existing directories.
+
+* <patch> didn't work at all.
+
 Other changes:
 --------------
 
