@@ -32,6 +32,14 @@ Other changes:
 * <rmic> now also supports Kaffe's rmic version shipping with Kaffe
   1.1.2 and above.
 
+* added casesensitive attribute to <globmapper> and <regexpmapper>
+  Bugzilla report 16686
+
+* added handledirchar attribute to <globmapper> and <regexpmapper>
+  Bugzilla report 32487
+
+* added a new mapper <filtermapper>
+
 Fixed bugs:
 -----------
 
@@ -91,6 +99,9 @@ Fixed bugs:
 
 * XMLValidate used URL#getFile rather than the ant method FileUtils#fromURI
   Bugzilla report 32508
+
+* fixed Regexp-Mapper docs which gave outdated instructions (optional.jar)
+  Bugzilla report 28584
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
