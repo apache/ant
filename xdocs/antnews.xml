@@ -9,6 +9,26 @@
   </properties>
 
 <body>
+  <section name="Ant 1.5.4">
+    <h3>August 12, 2003 - Ant 1.5.4 Available</h3>
+    <p>Apache Ant 1.5.4 is now available for 
+     <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
+    </p>
+    
+    <p>This is a minor bugfix release that fixes a problem with the
+    <code>javah</code> task on JDK 1.4.2 and a couple of bugs in the
+    Visual Age for Java intergration tasks.  If you don't use javah or
+    VAJ, there is no reason to upgrade.</p>
+
+    <div class="warning">
+    <div class="label">Note</div>
+    <div class="content">Ant 1.5.4 will be the last release that supports
+      JDK 1.1. The next major release of Ant, Ant 1.6, will require JDK 1.2 or
+      later.
+    </div>
+    </div>
+  </section>
+
   <section name="Java Pro 2003 Readers Choice Award">
     <a href="http://www.ftponline.com/javapro/">
       <img style="padding: 5px" src="images/jp_rcwinner_2003.gif" alt="" border="0" height="80" width="139" align="right"/></a>
@@ -50,15 +70,6 @@
     <p>Apache Ant 1.5.3 is now available for 
      <a href="http://ant.apache.org/bindownload.cgi">download</a>. 
     </p>
-    
-    <div class="warning">
-    <div class="label">Note</div>
-    <div class="content">Ant 1.5.3 will be the last release that supports
-      JDK 1.1. The next major release of Ant, Ant 1.6, will require JDK 1.2 or
-      later
-    </div>
-    </div>
-    
   </section>
 
 
