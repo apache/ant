@@ -1,17 +1,4 @@
 /*
- *******************************************************************
- *
- * File:         CSharp.java
- * RCS:          $Header$
- * Author:       Steve Loughran
- * Created:      July 21,  2000
- * Modified:     $Modtime: 00-11-01 10:09 $
- * Language:     Java
- * Status:       Experimental
- *
- *********************************************************************/
-
-/*
  * The Apache Software License, Version 1.1
  *
  * Copyright (c) 2000 The Apache Software Foundation.  All rights

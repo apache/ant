@@ -1,5 +1,3 @@
-package org.apache.tools.ant.taskdefs.optional.ide;
-
 /*
  * The Apache Software License, Version 1.1
  *
@@ -53,6 +51,9 @@ package org.apache.tools.ant.taskdefs.optional.ide;
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
+ 
+package org.apache.tools.ant.taskdefs.optional.ide;
+
 
 
 
