@@ -219,6 +219,44 @@ public abstract class BuildFileTest extends TestCase {
         }
         fail("Should throw BuildException because: " + cause);
     }
+    
+
+    /**
+     * call a target, verify property is as expected
+     *
+     * @param target build file target
+     * @param property property name
+     * @param value expected value
+     */
+
+    protected void expectPropertySet(String target, String property, String value) {
+        executeTarget(target);
+        String result = project.getProperty(property);
+        assertEquals("property " + property,value,result);
+    }
+
+
+    /**
+     * call a target, verify property is "true"
+     *
+     * @param target build file target
+     * @param property property name
+     */
+    protected void expectPropertySet(String target, String property) {
+        expectPropertySet(target, property, "true");
+    }
+
+
+    /**
+     * call a target, verify property is null
+     * @param target build file target
+     * @param property property name
+     */
+    protected void expectPropertyUnset(String target, String property) {
+        expectPropertySet(target, property, null);
+    }
+
+    
 
     private class AntOutputStream extends java.io.OutputStream { 
         public void write(int b) { 
