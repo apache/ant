@@ -84,7 +84,7 @@ import org.apache.tools.zip.ZipOutputStream;
 import org.apache.tools.zip.ZipEntry;
 
 /**
- * Create a ZIP archive.
+ * Create a zipfile.
  *
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
@@ -133,6 +133,7 @@ public class Zip extends MatchingTask {
      * create the .zip file.
      *
      * @deprecated Use setDestFile(File) instead.
+     * @ant.attribute ignore="true"
      */
     public void setZipfile(File zipFile) {
         setDestFile(zipFile);
@@ -140,9 +141,10 @@ public class Zip extends MatchingTask {
 
     /**
      * This is the name/location of where to
-     * create the .zip file.
-     * @since Ant 1.5alpha
+     * create the file.
+     * @since Ant 1.5
      * @deprecated Use setDestFile(File) instead
+     * @ant.attribute ignore="true"
      */
     public void setFile(File file) {
         setDestFile(file);
@@ -150,7 +152,7 @@ public class Zip extends MatchingTask {
 
 
     /**
-     * Archive file to create.
+     * The file to create; required.
      * @since Ant 1.5
      * @param destFile The new destination File
      */
@@ -160,28 +162,31 @@ public class Zip extends MatchingTask {
 
 
     /**
-     * Directory from which to archive files.
+     * Directory from which to archive files; optional.
      */
     public void setBasedir(File baseDir) {
         this.baseDir = baseDir;
     }
 
     /**
-     * Whether we want to compress the files or only store them.
+     * Whether we want to compress the files or only store them;
+     * optional, default=true;
      */
     public void setCompress(boolean c) {
         doCompress = c;
     }
 
     /**
-     * If true, emulate Sun's jar utility by not adding parent directories.
+     * If true, emulate Sun's jar utility by not adding parent directories;
+     * optional, defaults to false.
      */
     public void setFilesonly(boolean f) {
         doFilesonly = f;
     }
 
     /**
-     * If true, updates an existing file, otherwise create a new one.
+     * If true, updates an existing file, otherwise overwrite
+     * any existing one; optional defaults to false.
      */
     public void setUpdate(boolean c) {
         doUpdate = c;
@@ -218,7 +223,8 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * Sets behavior for when a duplicate file is about to be added.
+     * Sets behavior for when a duplicate file is about to be added -
+     * one of <code>keep</code>, <code>skip</code> or <code>overwrite</code>.
      * Possible values are: <code>keep</code> (keep both
      * of the files); <code>skip</code> (keep the first version
      * of the file found); <code>overwrite</code> overwrite the file
@@ -229,7 +235,10 @@ public class Zip extends MatchingTask {
         duplicate = df.getValue();
     }
 
-    /** Possible behaviors when there are no matching files for the task. */
+    /**
+     * Possible behaviors when there are no matching files for the task:
+     * "fail", "skip", or "create".
+     */
     public static class WhenEmpty extends EnumeratedAttribute {
         public String[] getValues() {
             return new String[] {"fail", "skip", "create"};
@@ -260,6 +269,9 @@ public class Zip extends MatchingTask {
         this.encoding = encoding;
     }
 
+    /**
+     * validate and build
+     */
     public void execute() throws BuildException {
         if (baseDir == null && filesets.size() == 0
             && groupfilesets.size() == 0 && "zip".equals(archiveType)) {
@@ -534,10 +546,16 @@ public class Zip extends MatchingTask {
         }
     }
 
+    /**
+     * method for subclasses to override
+     */
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
     }
 
+    /**
+     * method for subclasses to override
+     */
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
     }
@@ -893,7 +911,7 @@ public class Zip extends MatchingTask {
      * Makes this instance reset all attributes to their default
      * values and forget all children.
      *
-     * @since 1.72, Ant 1.5
+     * @since Ant 1.5
      *
      * @see #cleanUp
      */
@@ -911,7 +929,10 @@ public class Zip extends MatchingTask {
         encoding = null;
     }
 
-    /** Possible behaviors when a duplicate file is added. */
+    /**
+     * Possible behaviors when a duplicate file is added:
+     * "add", "preserve" or "fail"
+     */
     public static class Duplicate extends EnumeratedAttribute {
         public String[] getValues() {
             return new String[] {"add", "preserve", "fail"};
