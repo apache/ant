@@ -56,12 +56,10 @@ package org.apache.tools.ant.taskdefs.optional.metamata;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
 
 import java.io.File;
@@ -69,54 +67,27 @@ import java.io.IOException;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Vector;
-import java.util.Random;
 
 /**
  * Simple Metamata MParse task based on the original written by
  * <a href="mailto:thomas.haas@softwired-inc.com">Thomas Haas</a>.
- * 
+ *
  * This version was written for Metamata 2.0 available at
  * <a href="http://www.metamata.com">http://www.metamata.com</a>
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
-public class MParse extends Task {
+public class MParse extends AbstractMetamataTask {
 
-    private Path classpath = null;
-    private Path sourcepath = null;
-    private File metahome = null;
     private File target = null;
     private boolean verbose = false;
     private boolean debugparser = false;
-    private boolean debugscanner = false;    
+    private boolean debugscanner = false;
     private boolean cleanup = false;
-    private CommandlineJava cmdl = new CommandlineJava();
-    private File optionsFile = null;
-
-    /** location of metamata dev environment */
-    public void setMetamatahome(File metamatahome) {
-        this.metahome = metamatahome;
-    }
 
     /** the .jj file to process */
     public void setTarget(File target) {
         this.target = target;
-    }
-
-    /** create a classpath entry */
-    public Path createClasspath() {
-        if (classpath == null) {
-            classpath = new Path(project);
-        }        
-        return classpath;
-    }
-
-    /** creates a sourcepath entry */
-    public Path createSourcepath() {
-        if (sourcepath == null) {
-            sourcepath = new Path(project);
-        }        
-        return sourcepath;
     }
 
     /** set verbose mode */
@@ -139,22 +110,12 @@ public class MParse extends Task {
         cleanup = value;
     }
 
-    /** Creates a nested jvmarg element. */
-    public Commandline.Argument createJvmarg() {
-        return cmdl.createVmArgument();
-    }
-
-    /**  -mx or -Xmx depending on VM version */
-    public void setMaxmemory(String max){
-        cmdl.setMaxmemory(max);
-    }
-
     public MParse() {
         cmdl.setVm("java");
         cmdl.setClassname("com.metamata.jj.MParse");
     }
 
-   
+
     /** execute the command line */
     public void execute() throws BuildException {
         try {
@@ -165,12 +126,12 @@ public class MParse extends Task {
             cleanUp();
         }
     }
-    
+
     /** return the default stream handler for this task */
     protected ExecuteStreamHandler createStreamHandler(){
         return new LogStreamHandler(this, Project.MSG_INFO, Project.MSG_INFO);
     }
-    
+
     /**
      * check the options and build the command line
      */
@@ -186,18 +147,21 @@ public class MParse extends Task {
 
         // set the metamata.home property
         final Commandline.Argument vmArgs = cmdl.createVmArgument();
-        vmArgs.setValue("-Dmetamata.home=" + metahome.getAbsolutePath());
+        vmArgs.setValue("-Dmetamata.home=" + metamataHome.getAbsolutePath());
 
 
         // write all the options to a temp file and use it ro run the process
-        String[] options = getOptions();
+        Vector opts = getOptions();
+        String[] options = new String[ opts.size() ];
+        opts.copyInto(options);
+
         optionsFile = createTmpFile();
         generateOptionsFile(optionsFile, options);
         Commandline.Argument args = cmdl.createArgument();
         args.setLine("-arguments " + optionsFile.getAbsolutePath());
-    }    
+    }
 
-    
+
     /** execute the process with a specific handler */
     protected void _execute(ExecuteStreamHandler handler) throws BuildException {
         // target has been checked as a .jj, see if there is a matching
@@ -210,7 +174,7 @@ public class MParse extends Task {
             project.log("Target is already build - skipping (" + target + ")");
             return;
         }
-        
+
         final Execute process = new Execute(handler);
         log(cmdl.describeCommand(), Project.MSG_VERBOSE);
         process.setCommandline(cmdl.getCommandline());
@@ -219,10 +183,10 @@ public class MParse extends Task {
                 throw new BuildException("Metamata task failed.");
             }
         } catch (IOException e){
-            throw new BuildException("Failed to launch Metamata task: " + e);
+            throw new BuildException("Failed to launch Metamata task: ", e);
         }
-    }    
-    
+    }
+
     /** clean up all the mess that we did with temporary objects */
     protected void cleanUp(){
         if (optionsFile != null){
@@ -240,7 +204,7 @@ public class MParse extends Task {
             }
         }
     }
-    
+
     /**
      * return an array of files containing the path to the needed
      * libraries to run metamata. The file are not checked for
@@ -250,48 +214,47 @@ public class MParse extends Task {
      */
     protected File[] getMetamataLibs(){
         Vector files = new Vector();
-        files.addElement(new File(metahome, "lib/metamata.jar"));
-        files.addElement(new File(metahome, "bin/lib/JavaCC.zip"));
-        
+        files.addElement(new File(metamataHome, "lib/metamata.jar"));
+        files.addElement(new File(metamataHome, "bin/lib/JavaCC.zip"));
+
         File[] array = new File[ files.size() ];
         files.copyInto(array);
         return array;
     }
-    
-    
+
+
     /**
      * validate options set and resolve files and paths
      * @throws BuildException thrown if an option has an incorrect state.
      */
-    protected void checkOptions() throws BuildException {       
+    protected void checkOptions() throws BuildException {
         // check that the home is ok.
-        if (metahome == null || !metahome.exists()){
+        if (metamataHome == null || !metamataHome.exists()){
             throw new BuildException("'metamatahome' must point to Metamata home directory.");
         }
-        metahome = project.resolveFile(metahome.getPath());
-        
+        metamataHome = project.resolveFile(metamataHome.getPath());
+
         // check that the needed jar exists.
         File[] jars = getMetamataLibs();
         for (int i = 0; i < jars.length; i++){
             if (!jars[i].exists()){
-                throw new BuildException(jars[i] 
+                throw new BuildException(jars[i]
                     + " does not exist. Check your metamata installation.");
-            }           
+            }
         }
-        
+
         // check that the target is ok and resolve it.
-        if (target == null || !target.isFile() 
+        if (target == null || !target.isFile()
             || !target.getName().endsWith(".jj")) {
             throw new BuildException("Invalid target: " + target);
         }
         target = project.resolveFile(target.getPath());
-    }    
-    
+    }
+
     /**
      * return all options of the command line as string elements
-     * @param an array of options corresponding to the setted options.
      */
-    protected String[] getOptions(){
+    protected Vector getOptions() {
         Vector options = new Vector();
         if (verbose){
             options.addElement("-verbose");
@@ -302,21 +265,18 @@ public class MParse extends Task {
         if (debugparser){
             options.addElement("-dp");
         }
-        if (classpath != null){
+        if (classPath != null){
             options.addElement("-classpath");
-            options.addElement(classpath.toString());
+            options.addElement(classPath.toString());
         }
-        if (sourcepath != null){
+        if (sourcePath != null){
             options.addElement("-sourcepath");
-            options.addElement(sourcepath.toString());
+            options.addElement(sourcePath.toString());
         }
         options.addElement(target.getAbsolutePath());
-        
-        String[] array = new String[options.size()];
-        options.copyInto(array);
-        return array;
+        return options;
     }
-    
+
     /**
      * write all options to a file with one option / line
      * @param tofile the file to write the options to.
@@ -343,13 +303,4 @@ public class MParse extends Task {
             }
         }
     }
-    
-    /** create a temporary file in the current directory */
-    protected static final File createTmpFile(){
-        // must be compatible with JDK 1.1 !!!!
-        final long rand = (new Random(System.currentTimeMillis())).nextLong();
-        File file = new File("metamata" + rand + ".tmp");
-        return file;
-    }
-
 }
