@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 import junit.framework.*;
 import java.io.*;
 import org.apache.tools.ant.*;
-//import org.apache.tools.ant.taskdefs.StreamPumper;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
 
