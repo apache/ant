@@ -35,7 +35,7 @@ public abstract class AbstractAspectHandler
         return taskModel;
     }
 
-    public void aspect( final Parameters parameters, final Configuration[] elements )
+    public void aspectSettings( final Parameters parameters, final Configuration[] elements )
         throws TaskException
     {
         m_aspectParameters = parameters;

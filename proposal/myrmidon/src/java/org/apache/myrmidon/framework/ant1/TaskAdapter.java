@@ -64,8 +64,7 @@ public class TaskAdapter
             getProject().contextualize( getContext() );
             getProject().init();
 
-            //getTask().setProject( getProject() );
-
+            getTask().setProject( getProject() );
             getTask().init();
             getTask().execute();
         }

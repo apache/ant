@@ -7,8 +7,11 @@
  */
 package org.apache.myrmidon.components.aspect;
 
-import org.apache.myrmidon.aspects.AspectHandler;
 import org.apache.avalon.framework.component.Component;
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.aspects.AspectHandler;
 
 /**
  * Manage and propogate Aspects.
@@ -20,6 +23,14 @@ public interface AspectManager
 {
     String ROLE = "org.apache.myrmidon.components.aspect.AspectManager";
 
-    void addAspectHandler( AspectHandler handler );
-    void removeAspectHandler( AspectHandler handler );
+    String[] getNames();
+
+    void dispatchAspectSettings( String name, Parameters parameters, Configuration[] elements )
+        throws TaskException;
+
+    void addAspectHandler( String name, AspectHandler handler )
+        throws TaskException;
+
+    void removeAspectHandler( String name, AspectHandler handler )
+        throws TaskException;
 }

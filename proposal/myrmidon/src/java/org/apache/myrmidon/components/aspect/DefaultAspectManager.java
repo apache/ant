@@ -7,13 +7,15 @@
  */
 package org.apache.myrmidon.components.aspect;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
+import org.apache.myrmidon.aspects.NoopAspectHandler;
 
 /**
  * Manage and propogate Aspects.
@@ -21,21 +23,62 @@ import org.apache.myrmidon.aspects.AspectHandler;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class DefaultAspectManager
-    implements AspectManager
+    implements AspectManager, Initializable
 {
-    private ArrayList            m_aspectCopy  = new ArrayList();
-    private AspectHandler[]      m_aspects     = new AspectHandler[ 0 ];
+    private HashMap          m_aspectMap  = new HashMap();
+    private AspectHandler[]  m_aspects    = new AspectHandler[ 0 ];
+    private String[]         m_names      = new String[ 0 ];
 
-    public synchronized void addAspectHandler( final AspectHandler handler )
+    public void initialize()
+        throws Exception
     {
-        m_aspectCopy.add( handler );
-        m_aspects = (AspectHandler[])m_aspectCopy.toArray( m_aspects );
+        ///UGLY HACK!!!!
+        addAspectHandler( "ant", new NoopAspectHandler() );
+        addAspectHandler( "doc", new NoopAspectHandler() );
     }
 
-    public synchronized void removeAspectHandler( final AspectHandler handler )
+    public synchronized void addAspectHandler( final String name, final AspectHandler handler )
+        throws TaskException
     {
-        m_aspectCopy.remove( handler );
-        m_aspects = (AspectHandler[])m_aspectCopy.toArray( m_aspects );
+        m_aspectMap.put( name, handler );
+        rebuildArrays();
+    }
+
+    public synchronized void removeAspectHandler( final String name, final AspectHandler handler )
+        throws TaskException
+    {
+        final AspectHandler entry = (AspectHandler)m_aspectMap.remove( name );
+        if( null == entry )
+        {
+            throw new TaskException( "No such aspect with name '" + name + "'" );
+        }
+
+        rebuildArrays();
+    }
+
+    private void rebuildArrays()
+    {
+        m_aspects = (AspectHandler[])m_aspectMap.values().toArray( m_aspects );
+        m_names = (String[])m_aspectMap.keySet().toArray( m_names );
+    }
+
+    public String[] getNames()
+    {
+        return m_names;
+    }
+
+    public void dispatchAspectSettings( final String name,
+                                        final Parameters parameters,
+                                        final Configuration[] elements )
+        throws TaskException
+    {
+        final AspectHandler handler = (AspectHandler)m_aspectMap.get( name );
+        if( null == handler )
+        {
+            throw new TaskException( "No such aspect with name '" + name + "'" );
+        }
+
+        handler.aspectSettings( parameters, elements );
     }
 
     public Configuration preCreate( final Configuration configuration )
@@ -52,10 +95,10 @@ public class DefaultAspectManager
         return model;
     }
 
-    public void aspect( final Parameters parameters, final Configuration[] elements )
+    public void aspectSettings( final Parameters parameters, final Configuration[] elements )
         throws TaskException
     {
-        throw new UnsupportedOperationException( "Can not provide parameters to AspectManager" ); 
+        throw new UnsupportedOperationException( "Can not provide Settings to AspectManager" );
     }
 
     public void postCreate( final Task task )

@@ -34,10 +34,6 @@ public class AspectAwareExecutor
 
     private AspectManager        m_aspectManager;
 
-    public AspectAwareExecutor()
-    {
-    }
-
     /**
      * Retrieve relevent services.
      *
@@ -61,7 +57,7 @@ public class AspectAwareExecutor
         }
         catch( final TaskException te )
         {
-            if( false == getAspectHandler().error( te ) )
+            if( false == getAspectManager().error( te ) )
             {
                 throw te;
             }
@@ -73,14 +69,14 @@ public class AspectAwareExecutor
     {
         getLogger().debug( "Creating" );
 
-        taskModel = getAspectHandler().preCreate( taskModel );
+        taskModel = getAspectManager().preCreate( taskModel );
 
         taskModel = prepareAspects( taskModel );
 
         final Task task = createTask( taskModel.getName() );
-        getAspectHandler().postCreate( task );
+        getAspectManager().postCreate( task );
 
-        getAspectHandler().preLoggable( getLogger() );
+        getAspectManager().preLoggable( getLogger() );
         setupLogger( task );
 
         getLogger().debug( "Contextualizing" );
@@ -90,25 +86,25 @@ public class AspectAwareExecutor
         doCompose( task, taskModel );
 
         getLogger().debug( "Configuring" );
-        getAspectHandler().preConfigure( taskModel );
+        getAspectManager().preConfigure( taskModel );
         doConfigure( task, taskModel, context );
 
         getLogger().debug( "Initializing" );
         doInitialize( task, taskModel );
 
         getLogger().debug( "Executing" );
-        getAspectHandler().preExecute();
+        getAspectManager().preExecute();
         task.execute();
 
         getLogger().debug( "Disposing" );
-        getAspectHandler().preDestroy();
+        getAspectManager().preDestroy();
         doDispose( task, taskModel );
     }
 
     //TODO: Extract and clean taskModel here.
     //Get all parameters from model and provide to appropriate aspect.
     //aspect( final Parameters parameters, final Configuration[] elements )
-    private Configuration prepareAspects( final Configuration taskModel )
+    private final Configuration prepareAspects( final Configuration taskModel )
         throws TaskException
     {
         final DefaultConfiguration newTaskModel = 
@@ -119,7 +115,103 @@ public class AspectAwareExecutor
         processAttributes( taskModel, newTaskModel, parameterMap );
         processElements( taskModel, newTaskModel, elementMap );
 
+        dispatchAspectsSettings( parameterMap, elementMap );
+        checkForUnusedSettings( parameterMap, elementMap );
+
         return newTaskModel;
+    }
+
+    private final void dispatchAspectsSettings( final HashMap parameterMap, 
+                                                final HashMap elementMap )
+        throws TaskException
+    {
+        final String[] names = getAspectManager().getNames();
+        
+        for( int i = 0; i < names.length; i++ )
+        {
+            final ArrayList elementList = (ArrayList)elementMap.remove( names[ i ] );
+
+            Parameters parameters = (Parameters)parameterMap.remove( names[ i ] );
+            if( null == parameters ) parameters = EMPTY_PARAMETERS;
+
+            Configuration[] elements = null;
+            if( null == elementList ) elements = EMPTY_ELEMENTS;
+            else
+            {
+                elements = (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
+            }
+            
+            dispatch( names[ i ], parameters, elements );
+        }
+    }
+
+    private final void checkForUnusedSettings( final HashMap parameterMap, 
+                                               final HashMap elementMap )
+        throws TaskException
+    {
+        if( 0 != parameterMap.size() )
+        {
+            final String[] namespaces = 
+                (String[])parameterMap.keySet().toArray( new String[ 0 ] );
+
+            for( int i = 0; i < namespaces.length; i++ )
+            {
+                final String namespace = namespaces[ i ];
+                final Parameters parameters = (Parameters)parameterMap.get( namespace );
+                final ArrayList elementList = (ArrayList)elementMap.remove( namespace );
+                
+                Configuration[] elements = null;
+                
+                if( null == elementList ) elements = EMPTY_ELEMENTS;
+                else
+                {
+                    elements = (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
+                }
+                
+                unusedSetting( namespace, parameters, elements );
+            }
+        }
+
+        if( 0 != elementMap.size() )
+        {
+            final String[] namespaces = 
+                (String[])elementMap.keySet().toArray( new String[ 0 ] );
+            
+            for( int i = 0; i < namespaces.length; i++ )
+            {
+                final String namespace = namespaces[ i ];
+                final ArrayList elementList = (ArrayList)elementMap.remove( namespace );
+                final Configuration[] elements = 
+                    (Configuration[])elementList.toArray( EMPTY_ELEMENTS );
+                
+                unusedSetting( namespace, EMPTY_PARAMETERS, elements );
+            }
+        }
+    }
+
+    private void unusedSetting( final String namespace, 
+                                final Parameters parameters, 
+                                final Configuration[] elements )
+        throws TaskException
+    {
+        throw new TaskException( "Unused aspect settings for namespace " + namespace + 
+                                " (parameterCount=" + parameters.getNames().length + 
+                                 " elementCount=" + elements.length + ")" ); 
+    }
+
+    private void dispatch( final String namespace, 
+                           final Parameters parameters, 
+                           final Configuration[] elements )
+        throws TaskException
+    {
+        getAspectManager().dispatchAspectSettings( namespace, parameters, elements );
+
+        if( getLogger().isDebugEnabled() )
+        {
+            getLogger().debug( "Dispatching Aspect Settings to: " + namespace + 
+                               " parameterCount=" + parameters.getNames().length + 
+                               " elementCount=" + elements.length ); 
+        }
     }
 
     private final void processElements( final Configuration taskModel, 
@@ -198,7 +290,7 @@ public class AspectAwareExecutor
         return parameters;
     }
 
-    protected final AspectHandler getAspectHandler()
+    protected final AspectManager getAspectManager()
     {
         return m_aspectManager;
     }

@@ -103,7 +103,12 @@ Legal:
     <echo message="${blah}"/>
     <echo message="Whoa - it no fail. Did you use ant-call to call me and set param blah?"/>
 
-    <echo ant:fail-on-error="true" message="This should fail ...."/>
+    <echo ant:fail-on-error="true" message="Some random message">
+      <doc:description>
+        Test case for aspects
+      </doc:description>
+      <ant:some-element some-attribute="blah"/>
+    </echo>
   </target>
 
 </project>

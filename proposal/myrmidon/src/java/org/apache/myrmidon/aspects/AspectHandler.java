@@ -24,7 +24,7 @@ public interface AspectHandler
     Configuration preCreate( Configuration taskModel )
         throws TaskException;
 
-    void aspect( Parameters parameters, Configuration[] children )
+    void aspectSettings( Parameters parameters, Configuration[] children )
         throws TaskException;
 
     void postCreate( Task task )
