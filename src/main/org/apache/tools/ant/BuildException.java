@@ -55,18 +55,18 @@
 package org.apache.tools.ant;
 
 /**
- * Signals an error condition.
+ * Signals an error condition during a build.
  *
  * @author James Duncan Davidson
  */
 
 public class BuildException extends RuntimeException {
 
-    /** Exception that might have caused this one */
+    /** Exception that might have caused this one. */
     private Exception cause;
 
     /**
-     * Constructs an exception with no information.
+     * Constructs a build exception with no descriptive information.
      */
     
     public BuildException() {
@@ -74,7 +74,8 @@ public class BuildException extends RuntimeException {
     }
 
     /**
-     * Constructs an exception with the given message.
+     * Constructs an exception with the given descriptive message.
+     * @param msg Description of or information about the exception.
      */
     
     public BuildException(String msg) {
@@ -84,6 +85,8 @@ public class BuildException extends RuntimeException {
     /**
      * Constructs an exception with the given message and exception as
      * a root cause.
+     * @param msg Description of or information about the exception.
+     * @param cause Exception that might have cause this one.
      */
 
     public BuildException(String msg, Exception cause) {
@@ -93,6 +96,7 @@ public class BuildException extends RuntimeException {
     
     /**
      * Constructs an exception with the given exception as a root cause.
+     * @param cause Exception that might have caused this one.
      */
     
     public BuildException(Exception cause) {
