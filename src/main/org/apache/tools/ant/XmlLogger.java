@@ -197,7 +197,7 @@ public class XmlLogger implements BuildListener {
                 TimedElement poppedStack = (TimedElement)threadStack.pop();
                 if (poppedStack != targetElement) {
                     throw new RuntimeException("Mismatch - popped element = " + poppedStack.element +
-                    " finished task element = " + targetElement.element);
+                    " finished target element = " + targetElement.element);
                 }
                 if (!threadStack.empty()) {
                     parentElement = (TimedElement)threadStack.peek();
@@ -232,7 +232,10 @@ public class XmlLogger implements BuildListener {
             long totalTime = System.currentTimeMillis() - taskElement.startTime;
             taskElement.element.setAttribute(TIME_ATTR, DefaultLogger.formatTime(totalTime));
             Target target = task.getOwningTarget();
-            TimedElement targetElement = (TimedElement)targets.get(target);
+            TimedElement targetElement = null;
+            if (target != null) {
+                targetElement = (TimedElement)targets.get(target);
+            }
             if (targetElement == null) {
                 buildElement.element.appendChild(taskElement.element);
             }
