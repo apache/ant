@@ -104,7 +104,24 @@ coming from your ftp server (ls -l on the ftp prompt).
   </tr>
   <tr>
     <td valign="top">newer</td>
-    <td valign="top">a synonym for <i>depends</i>.</td>
+    <td valign="top">a synonym for <i>depends</i>.
+    see timediffauto and timediffmillis</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">timediffauto</td>
+    <td valign="top">set to <code>&quot;true&quot;</code>
+    to make ant calculate the time difference between client and server.<br/>
+    <em>requires write access in the remote directory</em><br/>
+    Since ant 1.6</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">timediffmillis</td>
+    <td valign="top">number of milliseconds to add to the time on the remote machine
+     to get the time on the local machine.<br/>
+    Since ant 1.6
+    </td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>

@@ -71,9 +71,9 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.Delete;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.FileUtils;
@@ -128,6 +128,8 @@ public class FTP
     private boolean passive = false;
     private boolean verbose = false;
     private boolean newerOnly = false;
+    private long timeDiffMillis = 0;
+    private boolean timeDiffAuto = false;
     private int action = SEND_FILES;
     private Vector filesets = new Vector();
     private Vector dirCache = new Vector();
@@ -467,12 +469,42 @@ public class FTP
      * A synonym for <tt>depends</tt>. Set to true to transmit only new
      * or changed files.
      *
+     * See the related attributes timediffmillis and timediffauto.
+     *
      * @param newer if true only transfer newer files.
      */
     public void setNewer(boolean newer) {
         this.newerOnly = newer;
     }
 
+    /**
+     * number of milliseconds to add to the time on the remote machine
+     * to get the time on the local machine.
+     *
+     * use in conjunction with <code>newer</code>
+     *
+     * @param timeDiffMillis number of milliseconds
+     *
+     * @since ant 1.6
+     */
+    public void setTimeDiffMillis(long timeDiffMillis) {
+        this.timeDiffMillis = timeDiffMillis;
+    }
+
+    /**
+     * &quot;true&quot; to find out automatically the time difference
+     * between local and remote machine.
+     *
+     * This requires right to create
+     * and delete a temporary file in the remote directory.
+     *
+     * @param timeDiffAuto true = find automatically the time diff
+     *
+     * @since ant 1.6
+     */
+    public void setTimeDiffAuto(boolean timeDiffAuto) {
+        this.timeDiffAuto = timeDiffAuto;
+    }
 
     /**
      * Set to true to preserve modification times for "gotten" files.
@@ -862,8 +894,71 @@ public class FTP
             ftp.changeWorkingDirectory(cwd);
         }
     }
-
-
+    /**
+     * auto find the time difference between local and remote
+     * @param ftp handle to ftp client
+     * @return number of millis to add to remote time to make it comparable to local time
+     * @since ant 1.6
+     */
+    private long getTimeDiff(FTPClient ftp) {
+        long returnValue = 0;
+        File tempFile = findFileName(ftp);
+        try {
+            // create a local temporary file
+            fileUtils.createNewFile(tempFile);
+            long localTimeStamp = tempFile.lastModified();
+            BufferedInputStream instream = new BufferedInputStream(new FileInputStream(tempFile));
+            ftp.storeFile(tempFile.getName(), instream);
+            instream.close();
+            boolean success = FTPReply.isPositiveCompletion(ftp.getReplyCode());
+            if (success) {
+                FTPFile [] ftpFiles = ftp.listFiles(tempFile.getName());
+                if (ftpFiles.length == 1) {
+                    long remoteTimeStamp = ftpFiles[0].getTimestamp().getTime().getTime();
+                    returnValue = remoteTimeStamp - localTimeStamp;
+                }
+                ftp.deleteFile(ftpFiles[0].getName());
+            }
+            // delegate the deletion of the local temp file to the delete task
+            // because of race conditions occuring on Windows
+            Delete mydelete = (Delete) getProject().createTask("delete");
+            mydelete.setFile(tempFile.getCanonicalFile());
+            mydelete.execute();
+        } catch (Exception e) {
+            throw new BuildException(e, getLocation());
+        }
+        return returnValue;
+    }
+    /**
+     *  find a suitable name for local and remote temporary file
+     */
+    private File findFileName(FTPClient ftp) {
+        FTPFile [] theFiles = null;
+        final int maxIterations = 1000;
+        for (int counter = 1; counter < maxIterations; counter++) {
+            File localFile = fileUtils.createTempFile("ant" + Integer.toString(counter), ".tmp",
+                null);
+            String fileName = localFile.getName();
+            boolean found = false;
+            try {
+                if (counter == 1) {
+                    theFiles = ftp.listFiles();
+                }
+                for (int counter2 = 0; counter2 < theFiles.length; counter2++) {
+                    if (theFiles[counter2].getName().equals(fileName)) {
+                        found = true;
+                        break;
+                    }
+                }
+            } catch (IOException ioe) {
+                throw new BuildException(ioe, getLocation());
+            }
+            if (!found) {
+                return localFile;
+            }
+        }
+        return null;
+    }
     /**
      * Checks to see if the remote file is current as compared with the local
      * file. Returns true if the target file is up to date.
@@ -902,9 +997,9 @@ public class FTP
         long localTimestamp = localFile.lastModified();
 
         if (this.action == SEND_FILES) {
-            return remoteTimestamp > localTimestamp;
+            return remoteTimestamp + timeDiffMillis > localTimestamp;
         } else {
-            return localTimestamp > remoteTimestamp;
+            return localTimestamp > remoteTimestamp + timeDiffMillis;
         }
     }
 
@@ -1322,6 +1417,11 @@ public class FTP
                         throw new BuildException("could not change remote "
                              + "directory: " + ftp.getReplyString());
                     }
+                }
+                if (newerOnly && timeDiffAuto) {
+                // in this case we want to find how much time span there is between local
+                // and remote
+                    timeDiffMillis = getTimeDiff(ftp);
                 }
                 log(ACTION_STRS[action] + " " + ACTION_TARGET_STRS[action]);
                 transferFiles(ftp);

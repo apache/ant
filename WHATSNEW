@@ -265,6 +265,11 @@ Other changes:
 
 * new rmdir action for <ftp> that removes directories from a fileset.
 
+* <ftp> has attributes timediffauto and timediffmillis to use together
+  with the newer attribute to tell ant to take into account a time difference
+  between client and remote side.
+  Bugzilla Report 19358.
+
 * The SOS and VSS tasks will no longer unconditionally prepend a $ to
   vsspath or projectpath.
 
