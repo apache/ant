@@ -201,10 +201,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Does the command line argument processing common to classic and
-     * modern.  
+     * modern.  Doesn't add the files to compile.
      */
-    protected Commandline setupJavacCommand() {
-        Commandline cmd = new Commandline();
+    protected Commandline setupJavacCommandlineSwitches(Commandline cmd) {
         Path classpath = getCompileClasspath();
 
         if (deprecation == true) {
@@ -280,7 +279,16 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         if (verbose) {
             cmd.createArgument().setValue("-verbose");
         }
+        return cmd;
+    }
 
+    /**
+     * Does the command line argument processing common to classic and
+     * modern and adds the files to compile as well.
+     */
+    protected Commandline setupJavacCommand() {
+        Commandline cmd = new Commandline();
+        setupJavacCommandlineSwitches(cmd);
         logAndAddFilesToCompile(cmd);
         return cmd;
     }

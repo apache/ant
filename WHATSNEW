@@ -136,7 +136,8 @@ Other changes:
   per <patternset>. 
 
 * Two new supported compilers for javac: kjc for kopi and gcj for the
-  gcc frontend.
+  gcc frontend. In addition extJavac or the new fork attribute can be
+  used to run the JDK's javac in a JVM separate from Ant.
 
 * <fixrlf> can now with CR only line-ends and can use an arbitraty
   between 2 and 80.

@@ -114,6 +114,7 @@ public class Javac extends MatchingTask {
     private Path extdirs;
     private boolean includeAntRuntime = true;
     private boolean includeJavaRuntime = false;
+    private boolean fork = false;
 
     protected boolean failOnError = true;
     protected File[] compileList = new File[0];
@@ -401,6 +402,15 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Sets whether to fork the javac compiler.
+     */    
+    public void setFork(boolean fork) 
+    {
+	this.fork = fork;
+    }
+	
+
+    /**
      * Executes the task.
      */
     public void execute() throws BuildException {
@@ -437,7 +447,15 @@ public class Javac extends MatchingTask {
         // compile the source files
 
         String compiler = project.getProperty("build.compiler");
-        if (compiler == null) {
+	
+	if (fork) {
+	    if (compiler != null) {
+		log("Since fork is true, ignoring build.compiler setting.", Project.MSG_WARN);
+	    }	    
+	    compiler = "extJavac";
+	} 
+
+	if (compiler == null) {
             if (Project.getJavaVersion() != Project.JAVA_1_1 &&
                 Project.getJavaVersion() != Project.JAVA_1_2) {
                 compiler = "modern";

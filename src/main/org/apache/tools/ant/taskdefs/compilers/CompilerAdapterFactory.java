@@ -100,6 +100,9 @@ public class CompilerAdapterFactory {
             if ( compilerType.equalsIgnoreCase("jikes") ) {
                 return new Jikes();
             }
+            if ( compilerType.equalsIgnoreCase("extJavac") ) {
+                return new JavacExternal();
+            }	    
             if ( compilerType.equalsIgnoreCase("classic") ||
                     compilerType.equalsIgnoreCase("javac1.1") ||
                     compilerType.equalsIgnoreCase("javac1.2")) {
