@@ -252,8 +252,10 @@ public class ProjectHelper {
 
             project.setDefaultTarget(def);
 
-            project.setName(name);
-            if (name != null) project.addReference(name, project);
+            if (name != null) {
+                project.setName(name);
+                project.addReference(name, project);
+            }
 
             if (id != null) project.addReference(id, project);
 
