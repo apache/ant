@@ -167,8 +167,9 @@ public class Jar extends Zip {
     public void setDestFile(File jarFile) {
         super.setDestFile(jarFile);
         if (jarFile.exists()) {
+            ZipFile zf = null;
             try {
-                ZipFile zf = new ZipFile(jarFile);
+                zf = new ZipFile(jarFile);
 
                 // must not use getEntry as "well behaving" applications
                 // must accept the manifest in any capitalization
@@ -184,6 +185,14 @@ public class Jar extends Zip {
             } catch (Throwable t) {
                 log("error while reading original manifest: " + t.getMessage(),
                     Project.MSG_WARN);
+            } finally {
+                if (zf != null) {
+                    try {
+                        zf.close();
+                    } catch (IOException e) {
+                        // XXX - log an error?  throw an exception?
+                    }
+                }
             }
         }
     }
