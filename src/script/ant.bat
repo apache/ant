@@ -55,7 +55,7 @@ goto end
 
 :checkJava
 set _JAVACMD=%JAVACMD%
-set LOCALCLASSPATH="%CLASSPATH%"
+set LOCALCLASSPATH=%CLASSPATH%
 for %%i in ("%ANT_HOME%\lib\*.jar") do call "%ANT_HOME%\bin\lcp.bat" "%%i"
 
 if "%JAVA_HOME%" == "" goto noJavaHome
@@ -85,6 +85,7 @@ goto end
 
 :end
 set LOCALCLASSPATH=
+set _JAVACMD=
 set ANT_CMD_LINE_ARGS=
 
 if not "%OS%"=="Windows_NT" goto mainEnd
