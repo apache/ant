@@ -68,6 +68,7 @@ import org.apache.tools.ant.*;
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Gero Vermaas <a href="mailto:gero@xs4all.nl">gero@xs4all.nl</a>
+ * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
  */
 public class Filter extends Task {
 
@@ -96,7 +97,7 @@ public class Filter extends Task {
         }
         
         if (isSingleFilter) {
-            project.addFilter(token, value);
+            project.getGlobalFilterSet().addFilter(token, value);
         }
         
         if (isFiltersFromFile) {
@@ -106,28 +107,6 @@ public class Filter extends Task {
     
     protected void readFilters() throws BuildException {
         log("Reading filters from " + filtersFile, Project.MSG_VERBOSE);
-        FileInputStream in = null;
-        try {
-            Properties props = new Properties();
-            in = new FileInputStream(filtersFile);
-            props.load(in);
-
-            Project proj = getProject();
-
-            Enumeration enum = props.propertyNames();
-            while (enum.hasMoreElements()) {
-                String strPropName = (String)enum.nextElement();
-                String strValue = props.getProperty(strPropName);
-                proj.addFilter(strPropName, strValue);
-            }
-        } catch (Exception e) {
-            throw new BuildException("Could not read filters from file: " + filtersFile);
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (java.io.IOException ioex) {}
-            }
-        }
+        project.getGlobalFilterSet().readFiltersFromFile(filtersFile);
     }
 }
