@@ -43,7 +43,7 @@ Legal:
 
   <target name="typedef-test">
     <type-def name="log2"
-              type="task"
+              role="task"
               classname="org.apache.antlib.core.Log"
               lib="../../dist/lib/core.atl" />
 
