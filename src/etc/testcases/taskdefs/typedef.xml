@@ -39,11 +39,11 @@
   </target>
 
   <target name="testLocal">
-    <typedef name="local"
+    <typedef name="localtype"
              classname="org.example.types.TypedefTestType">
       <classpath refid="testclasses" />
     </typedef>
-    <local id="local" />
+    <localtype id="local" />
   </target>
 
   <target name="double-notpresent">
