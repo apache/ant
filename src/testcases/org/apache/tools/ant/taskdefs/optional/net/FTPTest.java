@@ -206,6 +206,19 @@ public class FTPTest extends BuildFileTest{
             }
         }
     }
+    public void test2bisButCaseInsensitive() {
+        if (loginSuceeded) {
+            if (changeRemoteDir(remoteTmpDir)) {
+                FTP.FTPDirectoryScanner ds = myFTPTask.newScanner(ftp);
+                ds.setBasedir(new File(getProject().getBaseDir(), "tmp"));
+                ds.setIncludes(new String[] {"alpha/BETA/gamma/"});
+                ds.setCaseSensitive(false);
+                ds.scan();
+                compareFiles(ds, new String[] {"alpha/beta/gamma/gamma.xml"},
+                    new String[] {"alpha/beta/gamma"});
+            }
+        }
+    }
     public void testGetWithSelector() {
         expectLogContaining("ftp-get-with-selector",
             "selectors are not supported in remote filesets");
