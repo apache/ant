@@ -205,10 +205,14 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
                 return;
             }
             Long l = (Long) testStarts.get(test);
-            wri.println(" took " 
-                        + nf.format((System.currentTimeMillis() - l.longValue())
-                                    / 1000.0)
-                        + " sec");
+            double seconds = 0;
+            // can be null if an error occured in setUp
+            if (l != null) {
+                seconds = 
+                    (System.currentTimeMillis() - l.longValue()) / 1000.0;
+            }
+            
+            wri.println(" took " + nf.format(seconds) + " sec");
         }
     }
 

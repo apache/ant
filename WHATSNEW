@@ -10,6 +10,9 @@ Fixed bugs:
 * ant.bat now supports the ANT_ARGS environment variable again (like
   Ant 1.5 did).
 
+* The "plain" <junit> <formatter> could throw a NullPointerException
+  if an error occured in setUp.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
