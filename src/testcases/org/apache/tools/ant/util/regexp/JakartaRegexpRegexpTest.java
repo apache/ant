@@ -54,6 +54,12 @@
 
 package org.apache.tools.ant.util.regexp;
 
+import java.io.IOException;
+
+import junit.framework.AssertionFailedError;
+
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 /**
  * Tests for the jakarta-regexp implementation of the Regexp interface.
  *
@@ -67,6 +73,30 @@ public class JakartaRegexpRegexpTest extends RegexpTest {
 
     public JakartaRegexpRegexpTest(String name) {
         super(name);
+    }
+
+    public void testWindowsLineSeparator() throws IOException {
+        if ( Os.isFamily("windows") ) {
+            try {
+                super.testWindowsLineSeparator();
+                fail("Windows issue. Should trigger when this bug is fixed. {@since 1.2}");
+            } catch (AssertionFailedError e){
+            }
+        } else {
+            super.testWindowsLineSeparator();
+        }
+    }
+
+    public void testUnixLineSeparator() throws IOException {
+        if ( Os.isFamily("windows") ){
+            try {
+                super.testUnixLineSeparator();
+                fail("Windows issue. Should trigger once this bug is fixed. {@since 1.2}");
+            } catch (AssertionFailedError e){
+            }
+        } else {
+            super.testUnixLineSeparator();
+        }
     }
 
     /**

@@ -68,6 +68,8 @@ import junit.framework.TestSuite;
  */
 public abstract class RegexpMatcherTest extends TestCase {
 
+    public final static String UNIX_LINE = "\n";
+
     private RegexpMatcher reg;
 
     public abstract RegexpMatcher getImplementation();
@@ -138,15 +140,50 @@ public abstract class RegexpMatcherTest extends TestCase {
                    reg.matches("AAaa", RegexpMatcher.MATCH_CASE_INSENSITIVE));
     }
 
+
+// make sure there are no issues concerning line separator interpretation
+// a line separator for regex (perl) is always a unix line (ie \n)
+
+    public void testParagraphCharacter() throws IOException {
+        reg.setPattern("end of text$");
+        assertTrue("paragraph character", !reg.matches("end of text\u2029"));
+    }
+
+    public void testLineSeparatorCharacter() throws IOException {
+        reg.setPattern("end of text$");
+        assertTrue("line-separator character", !reg.matches("end of text\u2028"));
+    }
+
+    public void testNextLineCharacter() throws IOException {
+        reg.setPattern("end of text$");
+        assertTrue("next-line character", !reg.matches("end of text\u0085"));
+    }
+
+    public void testStandaloneCR() throws IOException {
+        reg.setPattern("end of text$");
+        assertTrue("standalone CR", !reg.matches("end of text\r"));
+    }
+
+    public void testWindowsLineSeparator() throws IOException {
+        reg.setPattern("end of text$");
+        assertTrue("Windows line separator", !reg.matches("end of text\r\n"));
+        reg.setPattern("end of text\r$");
+        assertTrue("Windows line separator", reg.matches("end of text\r\n"));
+    }
+
+    public void testUnixLineSeparator() throws IOException {
+        reg.setPattern("end of text$");
+        assertTrue("Unix line separator", reg.matches("end of text\n"));
+    }
+
+
     public void testMultiVersusSingleLine() throws IOException {
-        StringWriter swr = new StringWriter();
-        PrintWriter p = new PrintWriter(swr);
-        p.println("Line1");
-        p.println("starttest Line2");
-        p.println("Line3 endtest");
-        p.println("Line4");
-        p.close();
-        String text = swr.toString();
+        StringBuffer buf = new StringBuffer();
+        buf.append("Line1").append(UNIX_LINE);
+        buf.append("starttest Line2").append(UNIX_LINE);
+        buf.append("Line3 endtest").append(UNIX_LINE);
+        buf.append("Line4").append(UNIX_LINE);
+        String text = buf.toString();
         
         doStartTest1(text);
         doStartTest2(text);
