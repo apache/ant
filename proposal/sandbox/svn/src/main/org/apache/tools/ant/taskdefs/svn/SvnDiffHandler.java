@@ -29,9 +29,9 @@ import java.util.StringTokenizer;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.DOMElementWriter;
 import org.apache.tools.ant.util.DOMUtils;
+import org.apache.tools.ant.util.FileUtils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

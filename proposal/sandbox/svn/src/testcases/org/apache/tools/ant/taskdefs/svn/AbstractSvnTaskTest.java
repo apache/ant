@@ -25,7 +25,7 @@ import org.apache.tools.ant.BuildFileTest;
 public class AbstractSvnTaskTest extends BuildFileTest {
 
     public AbstractSvnTaskTest() {
-        this( "AbstractCvsTaskTest" );
+        this( "AbstractSvnTaskTest" );
     }
 
     public AbstractSvnTaskTest(String name) {
@@ -40,7 +40,7 @@ public class AbstractSvnTaskTest extends BuildFileTest {
         executeTarget("cleanup");
     }
 
-    public void testAbstractCvsTask() {
+    public void testAbstractSvnTask() {
         executeTarget("all");
     }
 
