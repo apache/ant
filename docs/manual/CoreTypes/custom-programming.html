@@ -57,7 +57,7 @@ import org.apache.tools.ant.taskdefs.condition.Condition;
 public class AllUpperCaseCondition extends Condition {
     private String value;
 
-    // The setter for the &quot;value&quot; attribute
+    // The setter for the "value" attribute
     public void setValue(String value) {
         this.value = value;
     }
@@ -65,7 +65,7 @@ public class AllUpperCaseCondition extends Condition {
     // This method evaluates the condition
     public boolean eval() {
         if (value == null) {
-            throw new BuildException(&quot;value attribute is not set&quot;);
+            throw new BuildException("value attribute is not set");
         }
         return value.toUpperCase().equals(value);
    }
@@ -79,9 +79,9 @@ public class AllUpperCaseCondition extends Condition {
     <blockquote>
       <pre>
 &lt;typedef
-    name=&quot;alluppercase&quot;
-    classname=&quot;com.mydomain.AllUpperCaseCondition&quot;
-    classpath=&quot;${mydomain.classes}&quot;/&gt;
+    name="alluppercase"
+    classname="com.mydomain.AllUpperCaseCondition"
+    classpath="${mydomain.classes}"/&gt;
       </pre>
     </blockquote>
     <p>
@@ -90,8 +90,8 @@ public class AllUpperCaseCondition extends Condition {
     </p>
     <blockquote>
       <pre>
-&lt;condition property=&quot;allupper&quot;&gt;
-   &lt;alluppercase value=&quot;THIS IS ALL UPPER CASE&quot;/&gt;
+&lt;condition property="allupper"&gt;
+   &lt;alluppercase value="THIS IS ALL UPPER CASE"/&gt;
 &lt;/condition&gt;
       </pre>
     </blockquote>
@@ -109,7 +109,7 @@ public class AllUpperCaseCondition extends Condition {
     </p>
     <p>
       An example of a custom selection that selects filenames ending
-      in &quot;.java&quot; would be:
+      in ".java" would be:
     </p>
     <blockquote>
       <pre>
@@ -118,7 +118,7 @@ import java.io.File;
 import org.apache.tools.ant.types.selectors.FileSelector;
 public class JavaSelector implements FileSelector {
     public boolean isSelected(File b, String filename, File f) {
-       return filename.toLowerCase().endsWith(&quot;.java&quot;);
+       return filename.toLowerCase().endsWith(".java");
     }
 }
       </pre>
@@ -129,9 +129,9 @@ public class JavaSelector implements FileSelector {
     <blockquote>
       <pre>
 &lt;typedef
-    name=&quot;javaselector&quot;
-    classname=&quot;com.mydomain.JavaSelector&quot;
-    classpath=&quot;${mydomain.classes}&quot;/&gt;
+    name="javaselector"
+    classname="com.mydomain.JavaSelector"
+    classpath="${mydomain.classes}"/&gt;
       </pre>
     </blockquote>
         <p>
@@ -140,8 +140,8 @@ public class JavaSelector implements FileSelector {
     </p>
     <blockquote>
       <pre>
-&lt;copy todir=&quot;to&quot;&gt;
-   &lt;fileset dir=&quot;src&quot;&gt;
+&lt;copy todir="to"&gt;
+   &lt;fileset dir="src"&gt;
       &lt;javaselector/&gt;
    &lt;/fileset&gt;
 &lt;/copy&gt;
@@ -189,7 +189,7 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     }
     public void verifySettings() {
         if (number &lt; 0) {
-           throw new BuildException(&quot;Number attribute should be set&quot;);
+           throw new BuildException("Number attribute should be set");
         }
     }
     public boolean isSelected(File baseDir, String filename, File file) {
@@ -211,13 +211,13 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     </p>
     <blockquote>
       <pre>
-&lt;typedef name=&quot;numberselected&quot;
-         classname=&quot;com.mydomain.MatchNumberSelectors&quot;/&gt;
+&lt;typedef name="numberselected"
+         classname="com.mydomain.MatchNumberSelectors"/&gt;
 ...
-&lt;fileset dir=&quot;${src.path}&quot;&gt;
-   &lt;numberselected number=&quot;2&quot;&gt;
-      &lt;contains text=&quot;script&quot; casesensitive=&quot;no&quot;/&gt;
-      &lt;size value=&quot;4&quot; units=&quot;Ki&quot; when=&quot;more&quot;/&gt;
+&lt;fileset dir="${src.path}"&gt;
+   &lt;numberselected number="2"&gt;
+      &lt;contains text="script" casesensitive="no"/&gt;
+      &lt;size value="4" units="Ki" when="more"/&gt;
       &lt;javaselector/&gt;
    &lt;/numberselected&gt;
 &lt;/fileset&gt;
@@ -291,9 +291,9 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     </p>
 
     <blockquote><pre>
-&lt;fileset dir=&quot;${mydir}&quot; includes=&quot;**/*&quot;&gt;
-    &lt;custom classname=&quot;com.mydomain.MySelector&quot;&gt;
-        &lt;param name=&quot;myattribute&quot; value=&quot;myvalue&quot;/&gt;
+&lt;fileset dir="${mydir}" includes="**/*"&gt;
+    &lt;custom classname="com.mydomain.MySelector"&gt;
+        &lt;param name="myattribute" value="myvalue"/&gt;
     &lt;/custom&gt;
 &lt;/fileset&gt;
       </pre></blockquote>
@@ -324,9 +324,9 @@ public class MatchNumberSelectors extends BaseSelectorContainer {
     to use the selector through <code>&lt;custom&gt;</code>.</p>
 
     <blockquote><pre>
-&lt;fileset dir=&quot;${doc.path}&quot; includes=&quot;**/*&quot;&gt;
-    &lt;custom classname=&quot;org.apache.tools.ant.types.selectors.DepthSelector&quot;&gt;
-        &lt;param name=&quot;max&quot; value=&quot;1&quot;/&gt;
+&lt;fileset dir="${doc.path}" includes="**/*"&gt;
+    &lt;custom classname="org.apache.tools.ant.types.selectors.DepthSelector"&gt;
+        &lt;param name="max" value="1"/&gt;
     &lt;/custom&gt;
 &lt;/fileset&gt;
       </pre></blockquote>
@@ -385,7 +385,7 @@ public class AddLineNumber extends ChainableReaderFilter {
    private void lineNumber = 0;
    public String filter(String string) {
       lineNumber++;
-      return &quot;&quot; + lineNumber + &quot;\t&quot; + string;
+      return "" + lineNumber + "\t" + string;
    }
 }
       </pre>
