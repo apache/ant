@@ -78,7 +78,7 @@ import org.apache.ant.init.LoaderUtils;
 public class AntLibManager {
 
     /** The list of extensions which are examined for ant libraries */
-    public final static String[] ANTLIB_EXTENSIONS
+    public static final String[] ANTLIB_EXTENSIONS
          = new String[]{".tsk", ".jar", ".zip"};
 
     /** Flag which indicates whether non-file URLS are used */

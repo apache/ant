@@ -55,6 +55,7 @@ package org.apache.ant.init;
 import java.net.MalformedURLException;
 
 import java.net.URL;
+import java.io.File;
 
 /**
  * The ClassLocator is a utility class which is used to determine the URL
@@ -101,6 +102,43 @@ public class ClassLocator {
             // its running out of something besides a jar.
             // We just return the Raw URL as a best guess
             return classRawURL;
+        }
+    }
+
+    /**
+     * Get the URLs necessary to load the Sun compiler tools. In some JVMs
+     * this is available in the VM's system loader, in others we have to
+     * find it ourselves
+     *
+     * @return the URL to the tools jar if available, null otherwise
+     * @throws InitException if the URL to the tools jar cannot be formed.
+     */
+    public static URL getToolsJarURL()
+         throws InitException {
+        try {
+            // just check whether this throws an exception
+            Class.forName("sun.tools.javac.Main");
+            // tools jar is on system classpath - no need for URL
+            return null;
+        } catch (ClassNotFoundException cnfe) {
+            try {
+                // couldn't find compiler - try to find tools.jar
+                // based on java.home setting
+                String javaHome = System.getProperty("java.home");
+                if (javaHome.endsWith("jre")) {
+                    javaHome = javaHome.substring(0, javaHome.length() - 4);
+                }
+                File toolsjar = new File(javaHome + "/lib/tools.jar");
+                if (!toolsjar.exists()) {
+                    System.out.println("Unable to locate tools.jar. "
+                         + "Expected to find it in " + toolsjar.getPath());
+                    return null;
+                }
+                URL toolsJarURL = InitUtils.getFileURL(toolsjar);
+                return toolsJarURL;
+            } catch (MalformedURLException e) {
+                throw new InitException(e);
+            }
         }
     }
 }

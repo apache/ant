@@ -62,7 +62,7 @@ package org.apache.ant.common.util;
 public class Location {
 
     /** Standard unknown location constant; */
-    public final static Location UNKNOWN_LOCATION = new Location();
+    public static final Location UNKNOWN_LOCATION = new Location();
     /** The source URL to which this location relates. */
     private String source;
 

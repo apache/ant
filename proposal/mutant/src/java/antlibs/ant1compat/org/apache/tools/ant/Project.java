@@ -83,36 +83,36 @@ import org.apache.tools.ant.util.FileUtils;
 public class Project implements org.apache.ant.common.event.BuildListener {
 
     /** String which indicates Java version 1.0 */
-    public final static String JAVA_1_0 = "1.0";
+    public static final String JAVA_1_0 = "1.0";
     /** String which indicates Java version 1.1 */
-    public final static String JAVA_1_1 = "1.1";
+    public static final String JAVA_1_1 = "1.1";
     /** String which indicates Java version 1.2 */
-    public final static String JAVA_1_2 = "1.2";
+    public static final String JAVA_1_2 = "1.2";
     /** String which indicates Java version 1.3 */
-    public final static String JAVA_1_3 = "1.3";
+    public static final String JAVA_1_3 = "1.3";
     /** String which indicates Java version 1.4 */
-    public final static String JAVA_1_4 = "1.4";
+    public static final String JAVA_1_4 = "1.4";
 
     /**
      * @see MessageLevel.MSG_ERR
      */
-    public final static int MSG_ERR = MessageLevel.MSG_ERR;
+    public static final int MSG_ERR = MessageLevel.MSG_ERR;
     /**
      * @see MessageLevel.MSG_WARN
      */
-    public final static int MSG_WARN = MessageLevel.MSG_WARN;
+    public static final int MSG_WARN = MessageLevel.MSG_WARN;
     /**
      * @see MessageLevel.MSG_INFO
      */
-    public final static int MSG_INFO = MessageLevel.MSG_INFO;
+    public static final int MSG_INFO = MessageLevel.MSG_INFO;
     /**
      * @see MessageLevel.MSG_VERBOSE
      */
-    public final static int MSG_VERBOSE = MessageLevel.MSG_VERBOSE;
+    public static final int MSG_VERBOSE = MessageLevel.MSG_VERBOSE;
     /**
      * @see MessageLevel.MSG_DEBUG
      */
-    public final static int MSG_DEBUG = MessageLevel.MSG_DEBUG;
+    public static final int MSG_DEBUG = MessageLevel.MSG_DEBUG;
 
     /** The java version detected that Ant is running on */
     private static String javaVersion;

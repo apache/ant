@@ -1,4 +1,4 @@
-<project default="build" name="Ant2 script tasks">
+<project default="build" name="Ant2 script tasks" basedir="..">
 
   <property name="src.dir" value="src"/>
   <property name="lib.dir" value="lib"/>

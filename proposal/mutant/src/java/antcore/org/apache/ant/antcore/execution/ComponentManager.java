@@ -82,7 +82,7 @@ import org.apache.ant.common.util.ExecutionException;
  */
 public class ComponentManager implements ComponentService {
     /** The prefix for library ids that are automatically imported */
-    public final static String ANT_LIB_PREFIX = "ant.";
+    public static final String ANT_LIB_PREFIX = "ant.";
 
     /**
      * Type converters for this frame. Converters are used when configuring
@@ -268,6 +268,38 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
+     * Imports a component defined in a nother frame.
+     *
+     * @param relativeName the qualified name of the component relative to
+     *      this execution frame
+     * @param alias the name under which this component will be used in the
+     *      build scripts. If this is null, the components default name is
+     *      used.
+     * @exception ExecutionException if the component cannot be imported
+     */
+    public void importFrameComponent(String relativeName, String alias)
+         throws ExecutionException {
+        ImportInfo definition 
+            = frame.getReferencedDefinition(relativeName);
+
+        if (definition == null) {
+            throw new ExecutionException("The reference \"relativeName\" does" 
+                + " not refer to a defined component");
+        }
+            
+        String label = alias;
+        if (label == null) {
+            label = frame.getNameInFrame(relativeName);
+        }
+
+        frame.log("Adding referenced component <" + definition.getLocalName() 
+             + "> as <" + label + "> from library \"" 
+             + definition.getComponentLibrary().getLibraryId() + "\", class: "
+             + definition.getClassName(), MessageLevel.MSG_DEBUG);
+        definitions.put(label, definition);
+    }
+
+    /**
      * Set the standard libraries (i.e. those which are independent of the
      * build files) to be used in this component manager
      *
@@ -443,5 +475,6 @@ public class ComponentManager implements ComponentService {
                  + className, e);
         }
     }
+
 }
 

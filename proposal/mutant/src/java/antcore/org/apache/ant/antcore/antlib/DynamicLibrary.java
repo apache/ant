@@ -65,7 +65,7 @@ import org.apache.ant.common.antlib.AntLibFactory;
  */
 public class DynamicLibrary implements ComponentLibrary {
     /** The name profix for naming dynamic libraries */
-    public final static String DYNAMIC_LIB_PREFIX = "_internal";
+    public static final String DYNAMIC_LIB_PREFIX = "_internal";
     /** A static field used to uniquely name dynamic libraries */
     private static int dynamicIdCounter = 0;
 

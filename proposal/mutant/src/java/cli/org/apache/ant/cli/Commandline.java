@@ -70,10 +70,11 @@ import org.apache.ant.antcore.execution.ExecutionManager;
 import org.apache.ant.antcore.modelparser.XMLProjectParser;
 import org.apache.ant.antcore.xml.ParseContext;
 import org.apache.ant.antcore.xml.XMLParseException;
+import org.apache.ant.common.event.BuildEvent;
 import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.model.Project;
 import org.apache.ant.common.util.ConfigException;
-import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.init.InitConfig;
 import org.apache.ant.init.InitUtils;
 
@@ -85,10 +86,10 @@ import org.apache.ant.init.InitUtils;
  */
 public class Commandline {
     /** The default build file name */
-    public final static String DEFAULT_BUILD_FILENAME = "build.ant";
+    public static final String DEFAULT_BUILD_FILENAME = "build.ant";
 
     /** The default build file name */
-    public final static String DEFAULT_ANT1_FILENAME = "build.xml";
+    public static final String DEFAULT_ANT1_FILENAME = "build.xml";
 
     /** The initialisation configuration for Ant */
     private InitConfig initConfig;
@@ -127,6 +128,9 @@ public class Commandline {
     /** Our current message output status. Follows MessageLevel values */
     private int messageOutputLevel = MessageLevel.MSG_INFO;
 
+    /** The logger that will be used for the build */
+    private BuildLogger logger = null;
+
     /**
      * Start the command line front end for mutant.
      *
@@ -152,7 +156,7 @@ public class Commandline {
          throws ConfigException {
 
         // Add the default listener
-        execManager.addBuildListener(createLogger());
+        execManager.addBuildListener(logger);
 
         for (Iterator i = listeners.iterator(); i.hasNext(); ) {
             String className = (String)i.next();
@@ -259,8 +263,11 @@ public class Commandline {
      */
     private void process(String[] args, InitConfig initConfig) {
         this.initConfig = initConfig;
+        ExecutionManager executionManager = null;
+        Project project = null;
         try {
             parseArguments(args);
+            createLogger();
             determineBuildFile();
 
             AntConfig config = new AntConfig();
@@ -287,12 +294,23 @@ public class Commandline {
                      + buildFileURL);
             }
 
-            Project project = parseProject();
+            project = parseProject();
 
             // create the execution manager to execute the build
-            ExecutionManager executionManager
-                 = new ExecutionManager(initConfig, config);
+            executionManager = new ExecutionManager(initConfig, config);
             addBuildListeners(executionManager);
+        } catch (Throwable e) {
+            if (logger != null) {
+                BuildEvent finishedEvent
+                     = new BuildEvent(this, BuildEvent.BUILD_FINISHED, e);
+                logger.buildFinished(finishedEvent);
+            } else {
+                e.printStackTrace();
+            }
+            System.exit(1);
+        }
+
+        try {
             executionManager.init();
             executionManager.runBuild(project, targets, definedProperties);
             System.exit(0);
@@ -448,11 +466,9 @@ public class Commandline {
      * Creates the default build logger for sending build events to the ant
      * log.
      *
-     * @return the logger instance to be used for the build
      * @exception ConfigException if the logger cannot be instantiatd
      */
-    private BuildLogger createLogger() throws ConfigException {
-        BuildLogger logger = null;
+    private void createLogger() throws ConfigException {
         if (loggerClassname != null) {
             try {
                 Class loggerClass = Class.forName(loggerClassname);
@@ -477,8 +493,6 @@ public class Commandline {
         logger.setMessageOutputLevel(messageOutputLevel);
         logger.setOutputPrintStream(out);
         logger.setErrorPrintStream(err);
-
-        return logger;
     }
 }
 

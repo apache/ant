@@ -64,9 +64,9 @@ import org.apache.ant.common.util.ExecutionException;
  */
 public interface ComponentLibrary {
     /** constant indicating a taskdef definition */
-    final static int TASKDEF = 1;
+    public static final int TASKDEF = 1;
     /** constant indicating a typedef definition */
-    final static int TYPEDEF = 2;
+    public static final int TYPEDEF = 2;
 
     /**
      * Gets the ClassLoader of the AntLibrary

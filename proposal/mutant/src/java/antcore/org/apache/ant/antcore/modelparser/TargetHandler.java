@@ -67,19 +67,19 @@ import org.xml.sax.SAXParseException;
  */
 public class TargetHandler extends ElementHandler {
     /** The name attribute */
-    public final static String NAME_ATTR = "name";
+    public static final String NAME_ATTR = "name";
 
     /** The depends attribute name */
-    public final static String DEPENDS_ATTR = "depends";
+    public static final String DEPENDS_ATTR = "depends";
 
     /** The depends attribute name */
-    public final static String DESC_ATTR = "description";
+    public static final String DESC_ATTR = "description";
 
     /** The if attribute name */
-    public final static String IF_ATTR = "if";
+    public static final String IF_ATTR = "if";
     
     /** The unless attribute name */
-    public final static String UNLESS_ATTR = "unless";
+    public static final String UNLESS_ATTR = "unless";
 
     /** The target being configured. */
     private Target target;

@@ -94,7 +94,7 @@ import org.apache.ant.init.InitConfig;
  */
 public class Frame {
     /** The Ant aspect used to identify Ant metadata */
-    public final static String ANT_ASPECT = "ant";
+    public static final String ANT_ASPECT = "ant";
 
     /** the base dir of the project */
     private File baseDir;
@@ -222,8 +222,8 @@ public class Frame {
          throws ExecutionException {
         Frame frame = getContainingFrame(name);
         if (frame == null) {
-            throw new ExecutionException("There is no project corresponding " 
-                + "to the name \"" + name + "\"");
+            throw new ExecutionException("There is no project corresponding "
+                 + "to the name \"" + name + "\"");
         }
         if (frame == this) {
             if (dataValues.containsKey(name) && !mutable) {
@@ -263,6 +263,31 @@ public class Frame {
         // set up various magic properties
         setDataValue(MagicProperties.ANT_HOME,
             initConfig.getAntHome().toString(), true);
+    }
+
+    /**
+     * Get a definition from a referenced frame
+     *
+     * @param definitionName the name of the definition relative to this
+     *      frame
+     * @return the appropriate import info object from the referenced
+     *      frame's imports
+     * @exception ExecutionException if the referenced definition cannot be
+     *      found
+     */
+    protected ImportInfo getReferencedDefinition(String definitionName)
+         throws ExecutionException {
+        Frame containingFrame = getContainingFrame(definitionName);
+        String localName = getNameInFrame(definitionName);
+        if (containingFrame == null) {
+            throw new ExecutionException("There is no project corresponding "
+                 + "to the name \"" + definitionName + "\"");
+        }
+        if (containingFrame == this) {
+            return componentManager.getDefinition(localName);
+        } else {
+            return containingFrame.getReferencedDefinition(localName);
+        }
     }
 
     /**
@@ -404,8 +429,8 @@ public class Frame {
     protected Object getDataValue(String name) throws ExecutionException {
         Frame frame = getContainingFrame(name);
         if (frame == null) {
-            throw new ExecutionException("There is no project corresponding " 
-                + "to the name \"" + name + "\"");
+            throw new ExecutionException("There is no project corresponding "
+                 + "to the name \"" + name + "\"");
         }
         if (frame == this) {
             return dataValues.get(name);
@@ -426,14 +451,44 @@ public class Frame {
     protected boolean isDataValueSet(String name) throws ExecutionException {
         Frame frame = getContainingFrame(name);
         if (frame == null) {
-            throw new ExecutionException("There is no project corresponding " 
-                + "to the name \"" + name + "\"");
+            throw new ExecutionException("There is no project corresponding "
+                 + "to the name \"" + name + "\"");
         }
         if (frame == this) {
             return dataValues.containsKey(name);
         } else {
             return frame.isDataValueSet(getNameInFrame(name));
         }
+    }
+
+
+    /**
+     * Get the execution frame which contains, directly, the named element
+     * where the name is relative to this frame
+     *
+     * @param elementName The name of the element
+     * @return the execution frame for the project that contains the given
+     *      target
+     */
+    protected Frame getContainingFrame(String elementName) {
+        int index = elementName.lastIndexOf(Project.REF_DELIMITER);
+        if (index == -1) {
+            return this;
+        }
+
+        Frame currentFrame = this;
+        String relativeName = elementName.substring(0, index);
+        StringTokenizer tokenizer
+             = new StringTokenizer(relativeName, Project.REF_DELIMITER);
+        while (tokenizer.hasMoreTokens()) {
+            String refName = tokenizer.nextToken();
+            currentFrame = currentFrame.getReferencedFrame(refName);
+            if (currentFrame == null) {
+                return null;
+            }
+        }
+
+        return currentFrame;
     }
 
     /**
@@ -706,36 +761,6 @@ public class Frame {
         return setter;
     }
 
-
-    /**
-     * Get the execution frame which contains, directly, the named target
-     * where the name is relative to this frame
-     *
-     * @param targetName The name of the target
-     * @return the execution frame for the project that contains the given
-     *      target
-     */
-    private Frame getContainingFrame(String targetName) {
-        int index = targetName.lastIndexOf(Project.REF_DELIMITER);
-        if (index == -1) {
-            return this;
-        }
-
-        Frame currentFrame = this;
-        String relativeName = targetName.substring(0, index);
-        StringTokenizer tokenizer
-             = new StringTokenizer(relativeName, Project.REF_DELIMITER);
-        while (tokenizer.hasMoreTokens()) {
-            String refName = tokenizer.nextToken();
-            currentFrame = currentFrame.getReferencedFrame(refName);
-            if (currentFrame == null) {
-                return null;
-            }
-        }
-
-        return currentFrame;
-    }
-
     /**
      * Determine the base directory for each frame in the frame hierarchy
      *
@@ -964,11 +989,11 @@ public class Frame {
 
             typeInstance = createTypeInstance(nestedType, factory, model, null);
         } else {
-            throw new ExecutionException("The type of the <" 
-                + nestedElementName + "> nested element is not known. "
-                + "Please specify by the type using the \"ant:type\" " 
-                + "attribute or provide a reference to an instance with " 
-                + "the \"ant:id\" attribute");
+            throw new ExecutionException("The type of the <"
+                 + nestedElementName + "> nested element is not known. "
+                 + "Please specify by the type using the \"ant:type\" "
+                 + "attribute or provide a reference to an instance with "
+                 + "the \"ant:id\" attribute");
         }
 
         // is the typeInstance compatible with the type expected

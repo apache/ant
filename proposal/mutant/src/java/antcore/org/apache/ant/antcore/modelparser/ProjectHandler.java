@@ -68,13 +68,13 @@ import org.xml.sax.SAXParseException;
  */
 public class ProjectHandler extends ElementHandler {
     /** The basedir attribute tag */
-    public final static String BASEDIR_ATTR = "basedir";
+    public static final String BASEDIR_ATTR = "basedir";
 
     /** The name attribute */
-    public final static String NAME_ATTR = "name";
+    public static final String NAME_ATTR = "name";
 
     /** The default attribute name */
-    public final static String DEFAULT_ATTR = "default";
+    public static final String DEFAULT_ATTR = "default";
 
     /** The project being parsed. */
     private Project project;

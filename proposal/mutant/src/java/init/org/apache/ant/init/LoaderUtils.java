@@ -77,7 +77,7 @@ public class LoaderUtils {
      * This is the file that is consulted on remote systems to specify
      * available jars
      */
-    public final static String LIST_FILE = "file.list";
+    public static final String LIST_FILE = "file.list";
 
 
     /**

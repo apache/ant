@@ -79,7 +79,7 @@ public class ExecutionContext implements AntContext {
      *
      * @param frame the frame containing this context
      */
-    public ExecutionContext(Frame frame) {
+    protected ExecutionContext(Frame frame) {
         this.frame = frame;
         this.eventSupport = frame.getEventSupport();
     }
@@ -89,7 +89,7 @@ public class ExecutionContext implements AntContext {
      *
      * @param modelElement the model element associated with this context
      */
-    public void setModelElement(ModelElement modelElement) {
+    protected void setModelElement(ModelElement modelElement) {
         this.modelElement = modelElement;
     }
 

@@ -1,4 +1,4 @@
-<project default="ant1compat" name="mutant Ant 1 compatability library">
+<project default="ant1compat" name="Ant1Compat" basedir="..">
 
   <property name="src.dir" value="src"/>
   <property name="lib.dir" value="lib"/>
@@ -198,8 +198,8 @@
       <classpath refid="classpath"/>
     </depend>
     <javac destdir="${bin.dir}/ant1compat" 
-           srcdir="${bin.dir}/ant1src;${java.dir}/antlibs/ant1compat"
-           includeAntRuntime="false" debug="${debug}">
+           srcdir="${bin.dir}/ant1src:${java.dir}/antlibs/ant1compat"
+           debug="${debug}">
       <classpath refid="classpath"/>
       <exclude name="${regexp.package}/JakartaRegexp*.java"
                unless="jakarta.regexp.present" />

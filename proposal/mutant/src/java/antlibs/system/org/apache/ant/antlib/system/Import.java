@@ -69,7 +69,11 @@ public class Import extends AbstractTask {
     private String libraryId = null;
     /** The name of the component to be imported */
     private String name = null;
-
+    /**
+     * A ref is used to import a task which has been declared in another
+     * project
+     */
+    private String ref = null;
     /** The alias that is to be used for the name */
     private String alias = null;
 
@@ -85,16 +89,25 @@ public class Import extends AbstractTask {
     /**
      * Sets the name of the Import
      *
-     * @param name  the new name value
+     * @param name the new name value
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
+     * Set the reference name of a task defined in a referenced frame
+     *
+     * @param ref the new ref value
+     */
+    public void setRef(String ref) {
+        this.ref = ref;
+    }
+
+    /**
      * Sets the alias of the Import
      *
-     * @param alias  the new alias value
+     * @param alias the new alias value
      */
     public void setAlias(String alias) {
         this.alias = alias;
@@ -106,13 +119,21 @@ public class Import extends AbstractTask {
      * @exception ExecutionException if the task is not configured correctly
      */
     public void validateComponent() throws ExecutionException {
-        if (libraryId == null) {
-            throw new ExecutionException("You must specify a library identifier"
-                 + " with the \"libraryid\" attribute");
-        }
-        if (alias != null && name == null) {
-            throw new ExecutionException("You may only specify an alias"
-                 + " when you specify the component name");
+        if (ref != null) {
+            if (libraryId != null || name != null) {
+                throw new ExecutionException("The \"ref\" attribute can only "
+                     + "be used when \"libraryId\" and \"name\" attributes are "
+                     + "not present");
+            }
+        } else {
+            if (libraryId == null) {
+                throw new ExecutionException("You must specify a library "
+                     + "identifier with the \"libraryid\" attribute");
+            }
+            if (alias != null && name == null) {
+                throw new ExecutionException("You may only specify an alias"
+                     + " when you specify the \"name\" or \"ref\" attributes");
+            }
         }
     }
 
@@ -125,7 +146,9 @@ public class Import extends AbstractTask {
         AntContext context = getContext();
         ComponentService componentService = (ComponentService)
             context.getCoreService(ComponentService.class);
-        if (name == null) {
+        if (ref != null) {
+            componentService.importFrameComponent(ref, alias);
+        } else if (name == null) {
             componentService.importLibrary(libraryId);
         } else {
             componentService.importComponent(libraryId, name, alias);

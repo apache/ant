@@ -145,5 +145,18 @@ public interface ComponentService {
      * @exception ExecutionException if the library cannot be imported
      */
     void importLibrary(String libraryId) throws ExecutionException;
+
+    /**
+     * Imports a component defined in a nother frame.
+     *
+     * @param relativeName the qualified name of the component relative to
+     *      this execution frame
+     * @param alias the name under which this component will be used in the
+     *      build scripts. If this is null, the components default name is
+     *      used.
+     * @exception ExecutionException if the component cannot be imported
+     */
+    void importFrameComponent(String relativeName, String alias)
+         throws ExecutionException;
 }
 

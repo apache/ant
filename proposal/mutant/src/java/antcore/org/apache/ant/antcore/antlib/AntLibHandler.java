@@ -65,24 +65,24 @@ import org.xml.sax.SAXParseException;
  */
 public class AntLibHandler extends ElementHandler {
     /** The library identifier attribute name */
-    public final static String LIBID_ATTR = "libid";
+    public static final String LIBID_ATTR = "libid";
     /** The home attribute name */
-    public final static String HOME_ATTR = "home";
+    public static final String HOME_ATTR = "home";
     /**
      * The name of the attribute which indicates if Ant's XML parser is to
      * be made available
      */
-    public final static String REQXML_ATTR = "reqxml";
+    public static final String REQXML_ATTR = "reqxml";
     /** The extends attribute name */
-    public final static String EXTENDS_ATTR = "extends";
+    public static final String EXTENDS_ATTR = "extends";
     /** The name of the attribute which indicates tools jar is required */
-    public final static String REQTOOLS_ATTR = "reqtools";
+    public static final String REQTOOLS_ATTR = "reqtools";
     /** The extends attribute name */
-    public final static String ISOLATED_ATTR = "isolated";
+    public static final String ISOLATED_ATTR = "isolated";
 
     
     /** The list of allowed Attributes */
-    public final static String[] ALLOWED_ATTRIBUTES
+    public static final String[] ALLOWED_ATTRIBUTES
          = {LIBID_ATTR, HOME_ATTR, REQXML_ATTR, REQTOOLS_ATTR,
         EXTENDS_ATTR, ISOLATED_ATTR};
 

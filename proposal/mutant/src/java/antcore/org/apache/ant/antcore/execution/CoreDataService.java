@@ -82,7 +82,7 @@ public class CoreDataService implements DataService {
      * @param allowUnsetProperties true if the reference to an unset
      *      property should not throw an exception
      */
-    public CoreDataService(Frame frame,
+    protected CoreDataService(Frame frame,
                                 boolean allowUnsetProperties) {
         this.frame = frame;
         this.allowUnsetProperties = allowUnsetProperties;

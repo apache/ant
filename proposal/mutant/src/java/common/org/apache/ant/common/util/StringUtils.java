@@ -66,7 +66,7 @@ import java.util.ArrayList;
 public final class StringUtils {
 
     /**  the line separator for this OS */
-    public final static String LINE_SEP = System.getProperty("line.separator");
+    public static final String LINE_SEP = System.getProperty("line.separator");
 
     /**
      *  Convenient method to retrieve the full stacktrace from a given

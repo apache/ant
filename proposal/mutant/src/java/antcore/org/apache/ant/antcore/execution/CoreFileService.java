@@ -76,7 +76,7 @@ public class CoreFileService implements FileService {
      *
      * @param frame the frame containing this context
      */
-    public CoreFileService(Frame frame) {
+    protected CoreFileService(Frame frame) {
         this.frame = frame;
     }
 

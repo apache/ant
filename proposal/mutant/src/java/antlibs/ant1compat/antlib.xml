@@ -6,6 +6,7 @@
           
   <converter classname="org.apache.tools.ant.Ant1Converter"/>          
 
+  <!-- typedefs -->  
   <taskdef name="ant" classname="org.apache.tools.ant.taskdefs.Ant"/>
   <taskdef name="antcall" classname="org.apache.tools.ant.taskdefs.CallTarget"/>
   <taskdef name="antlr" classname="org.apache.tools.ant.taskdefs.optional.ANTLR"/>
@@ -144,7 +145,14 @@
   <taskdef name="wlstop" classname="org.apache.tools.ant.taskdefs.optional.ejb.WLStop"/>
   <taskdef name="xmlvalidate" classname="org.apache.tools.ant.taskdefs.optional.XMLValidateTask"/>
   <taskdef name="zip" classname="org.apache.tools.ant.taskdefs.Zip"/>
+  
+  <!-- Deprecated tasks -->
+  <taskdef name="copydir" classname="org.apache.tools.ant.taskdefs.Copydir"/>
+  <taskdef name="copyfile" classname="org.apache.tools.ant.taskdefs.Copyfile"/>
+  <taskdef name="deltree" classname="org.apache.tools.ant.taskdefs.Deltree"/>
+  <taskdef name="rename" classname="org.apache.tools.ant.taskdefs.Rename"/>
 
+  <!-- typedefs -->  
   <typedef name="path" classname="org.apache.tools.ant.types.Path"/>
   <typedef name="fileset" classname="org.apache.tools.ant.types.FileSet"/>
   <typedef name="filelist" classname="org.apache.tools.ant.types.FileList"/>

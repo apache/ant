@@ -63,7 +63,7 @@ import org.xml.sax.SAXParseException;
  */
 public class ClassNameHandler extends ElementHandler {
     /** The classname attribute name */
-    public final static String CLASSNAME_ATTR = "classname";
+    public static final String CLASSNAME_ATTR = "classname";
 
     /**
      * Gets the className of the Converter

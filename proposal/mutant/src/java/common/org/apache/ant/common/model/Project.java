@@ -79,7 +79,7 @@ public class Project extends ModelElement {
      * The delimiter used to separate reference names in target names, data
      * values, etc
      */
-    public final static String REF_DELIMITER = ":";
+    public static final String REF_DELIMITER = ":";
 
     /** The default target in this project. */
     private String defaultTarget = null;

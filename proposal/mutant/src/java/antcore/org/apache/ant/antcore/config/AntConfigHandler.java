@@ -65,16 +65,16 @@ import org.xml.sax.SAXParseException;
  */
 public class AntConfigHandler extends ElementHandler {
     /** The allowRemoteProject attribute name */
-    public final static String REMOTE_PROJECT_ATTR = "allow-remote-project";
+    public static final String REMOTE_PROJECT_ATTR = "allow-remote-project";
     
     /** The allowRemoteLibrary attribute name */
-    public final static String REMOTE_LIBRARY_ATTR = "allow-remote-library";
+    public static final String REMOTE_LIBRARY_ATTR = "allow-remote-library";
 
     /** The allowReportProject attribute name */
-    public final static String UNSET_PROPS_ATTR = "allow-unset-properties";
+    public static final String UNSET_PROPS_ATTR = "allow-unset-properties";
 
     /** The list of allowed Attributes */
-    public final static String[] ALLOWED_ATTRIBUTES
+    public static final String[] ALLOWED_ATTRIBUTES
          = {REMOTE_PROJECT_ATTR, REMOTE_LIBRARY_ATTR, UNSET_PROPS_ATTR};
     /**
      * The config object which is contructed from the XML representation of

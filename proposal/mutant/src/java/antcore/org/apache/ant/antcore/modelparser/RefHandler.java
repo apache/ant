@@ -70,10 +70,10 @@ import org.xml.sax.SAXParseException;
  */
 public class RefHandler extends ElementHandler {
     /** The attribute used to name the ref. */
-    public final static String NAME_ATTR = "name";
+    public static final String NAME_ATTR = "name";
 
     /** The attribute name used to locate the project to be referenced. */
-    public final static String SYSTEMID_ATTR = "project";
+    public static final String SYSTEMID_ATTR = "project";
 
     /** The project that has been referenced. */
     private Project referencedProject;

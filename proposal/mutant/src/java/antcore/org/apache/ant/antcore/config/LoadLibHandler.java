@@ -64,7 +64,7 @@ import org.xml.sax.SAXParseException;
  */
 public class LoadLibHandler extends ElementHandler {
     /** The location attribute name */
-    public final static String LOCATION_ATTR = "location";
+    public static final String LOCATION_ATTR = "location";
 
     /**
      * Get the location of the additional search directory

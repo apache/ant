@@ -87,7 +87,7 @@ public class TaskContext extends ExecutionContext {
      *
      * @return the task instance
      */
-    public Task getTask() {
+    protected Task getTask() {
         return task;
     }
 
@@ -96,7 +96,7 @@ public class TaskContext extends ExecutionContext {
      *
      * @return the task's loader
      */
-    public ClassLoader getLoader() {
+    protected ClassLoader getLoader() {
         return loader;
     }
 
@@ -108,8 +108,8 @@ public class TaskContext extends ExecutionContext {
      * @param modelElement the model element associated with this context
      * @exception ExecutionException if the task cannot be initialized
      */
-    public void init(ClassLoader loader, Task task, ModelElement modelElement)
-         throws ExecutionException {
+    protected void init(ClassLoader loader, Task task,
+                        ModelElement modelElement) throws ExecutionException {
         this.task = task;
         this.loader = loader;
         setModelElement(modelElement);
@@ -122,7 +122,7 @@ public class TaskContext extends ExecutionContext {
      * @exception ExecutionException if there is a problem executing the
      *      task
      */
-    public void execute() throws ExecutionException {
+    protected void execute() throws ExecutionException {
         task.execute();
     }
 
@@ -130,7 +130,7 @@ public class TaskContext extends ExecutionContext {
      * Destroy this context. The context can be reused for another task
      * after this one
      */
-    public void destroy() {
+    protected void destroy() {
         task.destroy();
         task = null;
         loader = null;

@@ -51,22 +51,44 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.ant.common.service;
+package org.apache.ant.bootstrap;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
+
+import org.apache.ant.init.ClassLocator;
 
 /**
- * Ant's magic properties
+ * The Bootstrap class initailses the boot strap build, then loads the 
+ * Builder class to perform the bootstrap build.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 7 February 2002
+ * @created 18 February 2002
  */
-public class MagicProperties {
+public class Bootstrap {
     /**
-     * This property describes the basedir which is being used for an Ant
-     * run.
+     * The main program - adds tools.jar and runs build
+     *
+     * @param args The command line arguments
+     * @exception Exception if there is a bootstrap problem
      */
-    public static final String BASEDIR = "basedir";
+    public static void main(String[] args) throws Exception {
+        System.out.println("Bootstrapping mutant");
+        URL bootstrapURL = ClassLocator.getClassLocationURL(Bootstrap.class);
+        URL builderURL = new URL(bootstrapURL, "../builder/");
+        URL toolsJarURL = ClassLocator.getToolsJarURL();
 
-    /** This property provides the location of Ant's home directory */
-    public static final String ANT_HOME = "ant.home";
+        URL[] urls = new URL[]{builderURL, toolsJarURL};
+        ClassLoader builderLoader = new URLClassLoader(urls);
+        // org.apache.ant.init.LoaderUtils.dumpLoader(System.out,
+        //    builderLoader);
+
+        Class builderClass = Class.forName("org.apache.ant.builder.Builder",
+            true, builderLoader);
+        final Class[] param = {Class.forName("[Ljava.lang.String;")};
+        final Method main = builderClass.getMethod("main", param);
+        final Object[] argument = {args};
+        main.invoke(null, argument);
+    }
 }
 

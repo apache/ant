@@ -68,19 +68,19 @@ import org.apache.ant.common.model.ModelElement;
 public class BuildEvent extends EventObject {
 
     /** Build Started Event type */
-    public final static int BUILD_STARTED = 1;
+    public static final int BUILD_STARTED = 1;
     /** Build Finished Event Type */
-    public final static int BUILD_FINISHED = 2;
+    public static final int BUILD_FINISHED = 2;
     /** Start of target event type */
-    public final static int TARGET_STARTED = 3;
+    public static final int TARGET_STARTED = 3;
     /** Target finished event type */
-    public final static int TARGET_FINISHED = 4;
+    public static final int TARGET_FINISHED = 4;
     /** Start of task event type */
-    public final static int TASK_STARTED = 5;
+    public static final int TASK_STARTED = 5;
     /** end of task event type */
-    public final static int TASK_FINISHED = 6;
+    public static final int TASK_FINISHED = 6;
     /** message event type */
-    public final static int MESSAGE = 7;
+    public static final int MESSAGE = 7;
 
     /** The type of this event */
     private int eventType;
@@ -97,7 +97,7 @@ public class BuildEvent extends EventObject {
      * @param eventType the type of the buildEvent.
      * @param source the element with which this event is associated
      */
-    public BuildEvent(ModelElement source, int eventType) {
+    public BuildEvent(Object source, int eventType) {
         super(source);
         this.eventType = eventType;
     }
@@ -109,7 +109,7 @@ public class BuildEvent extends EventObject {
      * @param cause An exception if associated with the event
      * @param source the object with which this event is associated
      */
-    public BuildEvent(ModelElement source, int eventType,
+    public BuildEvent(Object source, int eventType,
                       Throwable cause) {
         this(source, eventType);
         this.cause = cause;

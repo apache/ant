@@ -61,14 +61,14 @@ package org.apache.ant.common.event;
  */
 public class MessageLevel {
     /** Error message level */
-    public final static int MSG_ERR = 0;
+    public static final int MSG_ERR = 0;
     /** Warnign message level */
-    public final static int MSG_WARN = 1;
+    public static final int MSG_WARN = 1;
     /** Informational message level */
-    public final static int MSG_INFO = 2;
+    public static final int MSG_INFO = 2;
     /** Verbose message level */
-    public final static int MSG_VERBOSE = 3;
+    public static final int MSG_VERBOSE = 3;
     /** Debug Message level */
-    public final static int MSG_DEBUG = 4;
+    public static final int MSG_DEBUG = 4;
 }
 

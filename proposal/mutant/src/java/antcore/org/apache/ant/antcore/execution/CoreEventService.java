@@ -71,7 +71,7 @@ public class CoreEventService implements EventService {
      *
      * @param frame the frame for which this instance is providing service
      */
-    public CoreEventService(Frame frame) {
+    protected CoreEventService(Frame frame) {
         this.frame = frame;
     }
 

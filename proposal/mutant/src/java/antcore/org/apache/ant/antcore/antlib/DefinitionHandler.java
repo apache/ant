@@ -64,10 +64,10 @@ import org.xml.sax.SAXParseException;
  */
 public class DefinitionHandler extends ElementHandler {
     /** The name attribute name */
-    public final static String NAME_ATTR = "name";
+    public static final String NAME_ATTR = "name";
 
     /** The classname attribute name */
-    public final static String CLASSNAME_ATTR = "classname";
+    public static final String CLASSNAME_ATTR = "classname";
 
     /** the type of the definition */
     private String definitionType;

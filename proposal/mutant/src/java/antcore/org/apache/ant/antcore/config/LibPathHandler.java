@@ -64,11 +64,11 @@ import org.xml.sax.SAXParseException;
  */
 public class LibPathHandler extends ElementHandler {
     /** The library identifier attribute name */
-    public final static String LIBID_ATTR = "libid";
+    public static final String LIBID_ATTR = "libid";
     /** The path attribute name */
-    public final static String PATH_ATTR = "path";
+    public static final String PATH_ATTR = "path";
     /** The path attribute name */
-    public final static String URL_ATTR = "url";
+    public static final String URL_ATTR = "url";
 
     /**
      * Get the libraryId for which the additional path is being defined

@@ -69,7 +69,7 @@ import org.xml.sax.SAXParseException;
  */
 public class IncludeHandler extends ElementHandler {
     /** The attribute name which identifies the fragment to be included */
-    public final static String SYSTEMID_ATTR = "fragment";
+    public static final String SYSTEMID_ATTR = "fragment";
 
     /** The including project */
     private Project project;

@@ -85,7 +85,7 @@ public class DefaultLogger implements BuildLogger {
     /**  Standard field separator */
     private static String lSep = System.getProperty("line.separator");
     /**  spacing to allow for task tags */
-    private final static int LEFT_COLUMN_SIZE = 12;
+    private static final int LEFT_COLUMN_SIZE = 12;
 
     /**
      *  Set the messageOutputLevel this logger is to respond to. Only
