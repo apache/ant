@@ -2565,6 +2565,38 @@
         </table>
       </subsection>
 
+      <subsection name="Xcluder">
+        <p>xcluder is an XML Inclusions (XInclude) task for Apache Ant.
+        Offers the choice of using Xerces or Elliotte Rusty Harold's XOM API.
+        </p>
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 or later. XInclude compliance depends on the
+            underlying Xerces or XOM used. Xerces 2.5.0 and above works fine,
+            but please note that 2.6.1 and 2.6.2 processed the
+            http://www.w3.org/2003/XInclude, now obsolete by
+            http://www.w3.org/2001/XInclude used by the latest
+            Candidate Recommendation (13 April 2004).
+            </td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://sourceforge.net/projects/xcluder">http://sourceforge.net/projects/xcluder</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:mbatsis@users.sf.net">mbatsis@users.sf.net</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU General Public License (GPL), GNU Library or Lesser
+            General Public License (LGPL)
+            </td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="XDoclet">
 
         <p>XDoclet is an extended Javadoc Doclet engine for use in Ant.
