@@ -9,6 +9,10 @@ Changes that could break older environments:
 
 * <perforce> has been replaced by a number of new tasks.
 
+* Ant now throws a BuildException when an attempt is made to use a property which has
+  not been set. Any build files which rely on non-set properties being passed
+  through untranslated will now break.
+
 Other changes:
 --------------
 

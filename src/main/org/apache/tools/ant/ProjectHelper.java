@@ -634,8 +634,12 @@ public class ProjectHelper {
                                              value );
                 }
                 String n=value.substring( pos+2, endName );
-                String v= (keys.containsKey(n)) ? (String) keys.get( n ) 
-                    : "${"+n+"}";
+                if (!keys.containsKey(n)) {
+                    throw new BuildException("Property ${" + n + "} has not been set");
+                }
+                
+                String v = (String) keys.get(n);
+                
                 //System.out.println("N: " + n + " " + " V:" + v);
                 sb.append( v );
                 prev=endName+1;
