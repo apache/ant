@@ -276,7 +276,8 @@ public class Javah extends Task {
 
         String compiler = project.getProperty("build.compiler");
         if (compiler == null) {
-            if (Project.getJavaVersion().startsWith("1.3")) {
+            if (Project.getJavaVersion() != Project.JAVA_1_1 &&
+                Project.getJavaVersion() != Project.JAVA_1_2) {
                 compiler = "modern";
             } else {
                 compiler = "classic";
