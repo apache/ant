@@ -179,7 +179,7 @@ public abstract class DefaultCompilerAdapter
         // as well as "bootclasspath" and "extdirs"
         if( Project.getJavaVersion().startsWith( "1.1" ) )
         {
-            Path cp = new Path( m_project );
+            Path cp = new Path();
             /*
              * XXX - This doesn't mix very well with build.systemclasspath,
              */
@@ -324,7 +324,7 @@ public abstract class DefaultCompilerAdapter
     protected Path getCompileClasspath()
         throws TaskException
     {
-        Path classpath = new Path( m_project );
+        Path classpath = new Path();
 
         // add dest dir to classpath so that previously compiled and
         // untouched classes are on classpath
@@ -438,8 +438,8 @@ public abstract class DefaultCompilerAdapter
             try
             {
                 final Execute exe = new Execute();
-                exe.setOutput( new LogOutputStream( m_attributes, Project.MSG_INFO ) );
-                exe.setError( new LogOutputStream( m_attributes, Project.MSG_WARN ) );
+                exe.setOutput( new LogOutputStream( m_attributes.hackGetLogger(), false ) );
+                exe.setError( new LogOutputStream( m_attributes.hackGetLogger(), true ) );
                 exe.setWorkingDirectory( m_project.getBaseDir() );
                 exe.setCommandline( commandArray );
                 return exe.execute();

@@ -205,7 +205,7 @@ public class JDependTask extends Task
     {
         if( _compileClasspath == null )
         {
-            _compileClasspath = new Path( getProject() );
+            _compileClasspath = new Path();
         }
         return _compileClasspath.createPath();
     }
@@ -232,7 +232,7 @@ public class JDependTask extends Task
     {
         if( _sourcesPath == null )
         {
-            _sourcesPath = new Path( getProject() );
+            _sourcesPath = new Path();
         }
         return _sourcesPath.createPath();
     }
@@ -328,8 +328,8 @@ public class JDependTask extends Task
         }
 
         final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-        exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+        exe.setOutput( new LogOutputStream( getLogger(), false ) );
+        exe.setError( new LogOutputStream( getLogger(), true ) );
 
         exe.setCommandline( commandline.getCommandline() );
         if( getDir() != null )

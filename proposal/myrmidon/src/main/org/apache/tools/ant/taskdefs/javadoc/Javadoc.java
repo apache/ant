@@ -512,7 +512,7 @@ public class Javadoc
     {
         if( m_bootclasspath == null )
         {
-            m_bootclasspath = new Path( getProject() );
+            m_bootclasspath = new Path();
         }
         return m_bootclasspath.createPath();
     }
@@ -522,7 +522,7 @@ public class Javadoc
     {
         if( m_classpath == null )
         {
-            m_classpath = new Path( getProject() );
+            m_classpath = new Path();
         }
         return m_classpath.createPath();
     }
@@ -552,7 +552,7 @@ public class Javadoc
     {
         if( m_sourcePath == null )
         {
-            m_sourcePath = new Path( getProject() );
+            m_sourcePath = new Path();
         }
         return m_sourcePath.createPath();
     }
@@ -838,8 +838,8 @@ public class Javadoc
 
         getLogger().info( "Javadoc execution" );
 
-        JavadocOutputStream out = new JavadocOutputStream( this, Project.MSG_INFO );
-        JavadocOutputStream err = new JavadocOutputStream( this, Project.MSG_WARN );
+        final JavadocOutputStream out = new JavadocOutputStream( getLogger(), false );
+        final JavadocOutputStream err = new JavadocOutputStream( getLogger(), true );
         Execute exe = new Execute();
         exe.setOutput( out );
         exe.setError( err );

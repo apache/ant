@@ -185,8 +185,8 @@ public class JJTree extends Task
         arg.setValue( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
         final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-        exe.setError( new LogOutputStream( this, Project.MSG_INFO ) );
+        exe.setOutput( new LogOutputStream( getLogger(), false ) );
+        exe.setError( new LogOutputStream( getLogger(), false ) );
 
         getLogger().debug( cmdl.toString() );
         exe.setCommandline( cmdl.getCommandline() );

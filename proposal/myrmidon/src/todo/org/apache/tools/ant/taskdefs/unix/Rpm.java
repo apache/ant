@@ -146,8 +146,8 @@ public class Rpm extends Task
 
         if( error == null && output == null )
         {
-            outputstream = new LogOutputStream( this, Project.MSG_INFO );
-            errorstream = new LogOutputStream( this, Project.MSG_WARN );
+            outputstream = new LogOutputStream( getLogger(), false );
+            errorstream = new LogOutputStream( getLogger(), true );
         }
         else
         {
@@ -164,7 +164,7 @@ public class Rpm extends Task
             }
             else
             {
-                outputstream = new LogOutputStream( this, Project.MSG_INFO );
+                outputstream = new LogOutputStream( getLogger(), false );
             }
             if( error != null )
             {
@@ -179,7 +179,7 @@ public class Rpm extends Task
             }
             else
             {
-                errorstream = new LogOutputStream( this, Project.MSG_WARN );
+                errorstream = new LogOutputStream( getLogger(), true );
             }
         }
 

@@ -14,6 +14,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -127,6 +128,9 @@ public abstract class Continuus
     protected int run( final Commandline cmd )
         throws TaskException
     {
-        return run( cmd, new LogStreamHandler( this, Project.MSG_VERBOSE, Project.MSG_WARN ) );
+        final LogOutputStream output = new LogOutputStream( getLogger(), false );
+        final LogOutputStream error = new LogOutputStream( getLogger(), true );
+        final LogStreamHandler handler = new LogStreamHandler( output, error );
+        return run( cmd, handler );
     }
 }

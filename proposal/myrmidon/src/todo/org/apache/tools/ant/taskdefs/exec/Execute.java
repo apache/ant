@@ -18,6 +18,7 @@ import org.apache.myrmidon.framework.exec.ExecMetaData;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.avalon.framework.logger.Logger;
 
 /**
  * Runs an external program.
@@ -65,10 +66,11 @@ public class Execute
     {
         try
         {
-            task.hackGetLogger().debug( Commandline.toString( cmdline ) );
+            final Logger logger = task.hackGetLogger();
+            logger.debug( Commandline.toString( cmdline ) );
             final Execute exe = new Execute();
-            exe.setOutput( new LogOutputStream( task, Project.MSG_INFO ) );
-            exe.setError( new LogOutputStream( task, Project.MSG_WARN ) );
+            exe.setOutput( new LogOutputStream( logger, false ) );
+            exe.setError( new LogOutputStream( logger, true ) );
 
             exe.setCommandline( cmdline );
             int retval = exe.execute();

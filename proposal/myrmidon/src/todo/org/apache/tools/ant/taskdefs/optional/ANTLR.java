@@ -225,8 +225,8 @@ public class ANTLR extends Task
         throws TaskException
     {
         final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-        exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+        exe.setOutput( new LogOutputStream( getLogger(), false ) );
+        exe.setError( new LogOutputStream( getLogger(), true ) );
 
         if( workingdir != null )
         {

@@ -206,8 +206,8 @@ public abstract class MSVSS extends Task
         try
         {
             final Execute exe = new Execute();
-            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+            exe.setOutput( new LogOutputStream( getLogger(), false ) );
+            exe.setError( new LogOutputStream( getLogger(), true ) );
 
             // If location of ss.ini is specified we need to set the
             // environment-variable SSDIR to this value

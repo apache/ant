@@ -365,7 +365,8 @@ public class Pvcs extends org.apache.tools.ant.Task
             tmp = new File( "pvcs_ant_" + rand.nextLong() + ".log" );
             tmp2 = new File( "pvcs_ant_" + rand.nextLong() + ".log" );
             getLogger().debug( "Executing " + commandLine.toString() );
-            result = runCmd( commandLine, new FileOutputStream( tmp ), new LogOutputStream( this, Project.MSG_WARN ) );
+            result = runCmd( commandLine, new FileOutputStream( tmp ),
+                             new LogOutputStream( getLogger(), true ) );
             if( result != 0 && !ignorerc )
             {
                 String msg = "Failed executing: " + commandLine.toString();
@@ -407,8 +408,8 @@ public class Pvcs extends org.apache.tools.ant.Task
             commandLine.createArgument().setValue( "@" + tmp2.getAbsolutePath() );
             getLogger().info( "Getting files" );
             getLogger().debug( "Executing " + commandLine.toString() );
-            final LogOutputStream output = new LogOutputStream( this, Project.MSG_INFO );
-            final LogOutputStream error = new LogOutputStream( this, Project.MSG_WARN );
+            final LogOutputStream output = new LogOutputStream( getLogger(), false );
+            final LogOutputStream error = new LogOutputStream( getLogger(), true );
             result = runCmd( commandLine, output, error );
 
             if( result != 0 && !ignorerc )

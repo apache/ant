@@ -308,8 +308,8 @@ public class ExecTask extends Task
         }
         else
         {
-            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+            exe.setOutput( new LogOutputStream( getLogger(), false ) );
+            exe.setError( new LogOutputStream( getLogger(), true ) );
         }
     }
 

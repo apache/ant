@@ -143,8 +143,8 @@ public class Patch extends Task
         }
 
         Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-        exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+        exe.setOutput( new LogOutputStream( getLogger(), false ) );
+        exe.setError( new LogOutputStream( getLogger(), true ) );
         exe.setCommandline( toExecute.getCommandline() );
         try
         {

@@ -20,6 +20,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -294,7 +295,9 @@ public class Coverage extends Task
             cmdl.createArgument().setValue( "-jp_input=" + paramfile.getAbsolutePath() );
 
             // use the custom handler for stdin issues
-            LogStreamHandler handler = new CoverageStreamHandler( this );
+                    final LogOutputStream output = new LogOutputStream( getLogger(), false );
+        final LogOutputStream error = new LogOutputStream( getLogger(), true );
+        final LogStreamHandler handler = new CoverageStreamHandler( output, error );
             Execute exec = new Execute( handler );
             getLogger().debug( cmdl.toString() );
             exec.setCommandline( cmdl.getCommandline() );
@@ -383,9 +386,7 @@ public class Coverage extends Task
             params.add( args[ i ] );
         }
 
-        String[] array = new String[ params.size() ];
-        params.copyInto( array );
-        return array;
+        return (String[])params.toArray( new String[ params.size() ] );
     }
 
     /**
@@ -540,11 +541,12 @@ public class Coverage extends Task
     /**
      * specific pumper to avoid those nasty stdin issues
      */
-    static class CoverageStreamHandler extends LogStreamHandler
+    static class CoverageStreamHandler
+        extends LogStreamHandler
     {
-        CoverageStreamHandler( Task task )
+        CoverageStreamHandler( OutputStream output, OutputStream error )
         {
-            super( task, Project.MSG_INFO, Project.MSG_WARN );
+            super( output, error );
         }
 
         /**

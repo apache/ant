@@ -135,7 +135,7 @@ public class MAudit extends AbstractMetamataTask
     {
         if( searchPath == null )
         {
-            searchPath = new Path( getProject() );
+            searchPath = new Path();
         }
         return searchPath;
     }
@@ -226,8 +226,8 @@ public class MAudit extends AbstractMetamataTask
         // if we didn't specify a file, then use a screen report
         if( outFile == null )
         {
-            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+            exe.setOutput( new LogOutputStream( getLogger(), false ) );
+            exe.setError( new LogOutputStream( getLogger(), true ) );
         }
         else
         {

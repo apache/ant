@@ -405,7 +405,7 @@ public class JUnitTask extends Task
      */
     protected OutputStream getDefaultOutput()
     {
-        return new LogOutputStream( this, Project.MSG_INFO );
+        return new LogOutputStream( getLogger(), false );
     }
 
     /**
@@ -650,8 +650,8 @@ public class JUnitTask extends Task
         }
 
         final Execute exe = new Execute();
-        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-        exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+        exe.setOutput( new LogOutputStream( getLogger(), false ) );
+        exe.setError( new LogOutputStream( getLogger(), true ) );
 
         exe.setCommandline( cmd.getCommandline() );
         if( dir != null )

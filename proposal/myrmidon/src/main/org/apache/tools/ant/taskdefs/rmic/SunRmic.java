@@ -32,7 +32,8 @@ public class SunRmic extends DefaultRmicAdapter
 
         // Create an instance of the rmic, redirecting output to
         // the project log
-        LogOutputStream logstr = new LogOutputStream( getRmic(), Project.MSG_WARN );
+        LogOutputStream logstr =
+            new LogOutputStream( getRmic().hackGetLogger(), true );
 
         try
         {

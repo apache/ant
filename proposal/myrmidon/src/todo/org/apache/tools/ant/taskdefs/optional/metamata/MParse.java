@@ -18,6 +18,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
+import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.taskdefs.exec.LogStreamHandler;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -150,7 +151,7 @@ public class MParse extends Task
     {
         if( classpath == null )
         {
-            classpath = new Path( getProject() );
+            classpath = new Path();
         }
         return classpath;
     }
@@ -174,7 +175,7 @@ public class MParse extends Task
     {
         if( sourcepath == null )
         {
-            sourcepath = new Path( getProject() );
+            sourcepath = new Path();
         }
         return sourcepath;
     }
@@ -385,7 +386,9 @@ public class MParse extends Task
      */
     protected ExecuteStreamHandler createStreamHandler()
     {
-        return new LogStreamHandler( this, Project.MSG_INFO, Project.MSG_INFO );
+        final LogOutputStream output = new LogOutputStream( getLogger(), false );
+        final LogOutputStream error = new LogOutputStream( getLogger(), false );
+        return new LogStreamHandler( output, error );
     }
 
     /**

@@ -10,30 +10,29 @@ package org.apache.tools.ant.taskdefs.javadoc;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
+import org.apache.avalon.framework.logger.Logger;
 
 class JavadocOutputStream
     extends LogOutputStream
 {
-
-    //
     // Override the logging of output in order to filter out Generating
     // messages.  Generating messages are set to a priority of VERBOSE
     // unless they appear after what could be an informational message.
     //
     private String m_queuedLine;
 
-    JavadocOutputStream( Task javadoc, int level )
+    JavadocOutputStream( final Logger logger, final boolean isError )
     {
-        super( javadoc, level );
+        super( logger, isError );
     }
 
-    protected void processLine( String line, int messageLevel )
+    protected void processLine( final String line )
     {
-        if( messageLevel == Project.MSG_INFO && line.startsWith( "Generating " ) )
+        if( !isError() && line.startsWith( "Generating " ) )
         {
             if( m_queuedLine != null )
             {
-                super.processLine( m_queuedLine, Project.MSG_VERBOSE );
+                getLogger().debug( m_queuedLine );
             }
             m_queuedLine = line;
         }
@@ -42,12 +41,16 @@ class JavadocOutputStream
             if( m_queuedLine != null )
             {
                 if( line.startsWith( "Building " ) )
-                    super.processLine( m_queuedLine, Project.MSG_VERBOSE );
+                {
+                    getLogger().debug( m_queuedLine );
+                }
                 else
-                    super.processLine( m_queuedLine, Project.MSG_INFO );
+                {
+                    getLogger().info( m_queuedLine );
+                }
                 m_queuedLine = null;
             }
-            super.processLine( line, messageLevel );
+            getLogger().warn( line );
         }
     }
 }

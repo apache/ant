@@ -203,7 +203,7 @@ public class CovReport extends Task
     {
         if( coveragePath == null )
         {
-            coveragePath = new Path( getProject() );
+            coveragePath = new Path();
         }
         return coveragePath.createPath();
     }
@@ -221,7 +221,7 @@ public class CovReport extends Task
     {
         if( sourcePath == null )
         {
-            sourcePath = new Path( getProject() );
+            sourcePath = new Path();
         }
         return sourcePath.createPath();
     }
@@ -243,8 +243,8 @@ public class CovReport extends Task
 
             // use the custom handler for stdin issues
             final Execute exe = new Execute();
-            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+            exe.setOutput( new LogOutputStream( getLogger(), false ) );
+            exe.setError( new LogOutputStream( getLogger(), true ) );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl.getCommandline() );
             int exitValue = exe.execute();
@@ -291,7 +291,7 @@ public class CovReport extends Task
         // as a default -sourcepath use . in JProbe, so use project .
         if( sourcePath == null )
         {
-            sourcePath = new Path( getProject() );
+            sourcePath = new Path();
             sourcePath.createPath().setLocation( getBaseDirectory() );
         }
         v.add( "-sourcepath=" + sourcePath );
@@ -301,9 +301,7 @@ public class CovReport extends Task
             v.add( "-inc_src_text=" + ( includeSource ? "on" : "off" ) );
         }
 
-        String[] params = new String[ v.size() ];
-        v.copyInto( params );
-        return params;
+        return (String[])v.toArray( new String[ v.size() ] );
     }
 
     /**
@@ -365,7 +363,7 @@ public class CovReport extends Task
         {
             if( classPath == null )
             {
-                classPath = new Path( CovReport.this.getProject() );
+                classPath = new Path();
             }
             return classPath.createPath();
         }

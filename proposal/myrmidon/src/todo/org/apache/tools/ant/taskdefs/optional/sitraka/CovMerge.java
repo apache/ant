@@ -116,8 +116,8 @@ public class CovMerge extends Task
             cmdl.createArgument().setValue( "-jp_paramfile=" + paramfile.getAbsolutePath() );
 
             final Execute exe = new Execute();
-            exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-            exe.setError( new LogOutputStream( this, Project.MSG_WARN ) );
+            exe.setOutput( new LogOutputStream( getLogger(), false ) );
+            exe.setError( new LogOutputStream( getLogger(), true ) );
             getLogger().debug( cmdl.toString() );
             exe.setCommandline( cmdl.getCommandline() );
 

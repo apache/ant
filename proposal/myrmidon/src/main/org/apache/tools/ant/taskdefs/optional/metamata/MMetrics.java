@@ -114,7 +114,7 @@ public class MMetrics extends AbstractMetamataTask
     {
         if( path == null )
         {
-            path = new Path( getProject() );
+            path = new Path();
         }
         return path;
     }
@@ -226,8 +226,8 @@ public class MMetrics extends AbstractMetamataTask
      */
     protected void setupStreamHandler( final Execute exe )
     {
-        exe.setOutput( new LogOutputStream( this, Project.MSG_INFO ) );
-        exe.setError( new LogOutputStream( this, Project.MSG_INFO ) );
+        exe.setOutput( new LogOutputStream( getLogger(), false ) );
+        exe.setError( new LogOutputStream( getLogger(), false ) );
     }
 
     protected void execute0( ExecuteStreamHandler handler )
