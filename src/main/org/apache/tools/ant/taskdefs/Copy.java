@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -119,22 +119,22 @@ public class Copy extends Task {
     /**
      * Sets a single source file to copy.
      */
-    public void setFile(File aFile) {
-        this.file = aFile;
+    public void setFile(File file) {
+        this.file = file;
     }
 
     /**
      * Sets the destination file.
      */
-    public void setTofile(File aDestFile) {
-        this.destFile = aDestFile;
+    public void setTofile(File destFile) {
+        this.destFile = destFile;
     }
 
     /**
      * Sets the destination directory.
      */
-    public void setTodir(File aDestDir) {
-        this.destDir = aDestDir;
+    public void setTodir(File destDir) {
+        this.destDir = destDir;
     }
 
     /**
@@ -175,8 +175,8 @@ public class Copy extends Task {
     /**
      * Sets filtering.
      */
-    public void setFiltering(boolean aFiltering) {
-        this.filtering = aFiltering;
+    public void setFiltering(boolean filtering) {
+        this.filtering = filtering;
     }
 
     /**
@@ -193,8 +193,8 @@ public class Copy extends Task {
      * file will be copied into the "flattened" directory, unless
      * the forceoverwrite attribute is true.
      */
-    public void setFlatten(boolean aFlatten) {
-        this.flatten = aFlatten;
+    public void setFlatten(boolean flatten) {
+        this.flatten = flatten;
     }
 
     /**
@@ -211,8 +211,8 @@ public class Copy extends Task {
     /**
      * Used to copy empty directories.
      */
-    public void setIncludeEmptyDirs(boolean aIncludeEmpty) {
-        this.includeEmpty = aIncludeEmpty;
+    public void setIncludeEmptyDirs(boolean includeEmpty) {
+        this.includeEmpty = includeEmpty;
     }
 
     /**

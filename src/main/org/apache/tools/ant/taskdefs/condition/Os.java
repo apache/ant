@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -81,8 +81,8 @@ public class Os implements Condition {
 
     public Os() {}
 
-    public Os(String aFamily) {
-        setFamily(aFamily);
+    public Os(String family) {
+        setFamily(family);
     }
 
     /**
@@ -104,8 +104,8 @@ public class Os implements Condition {
      *
      * @param name   The OS name
      */
-    public void setName(String aName) {
-        this.name = aName.toLowerCase(Locale.US);
+    public void setName(String name) {
+        this.name = name.toLowerCase(Locale.US);
     }
 
     /**
@@ -113,8 +113,8 @@ public class Os implements Condition {
      *
      * @param arch   The OS architecture
      */
-    public void setArch(String aArch) {
-        this.arch = aArch.toLowerCase(Locale.US);
+    public void setArch(String arch) {
+        this.arch = arch.toLowerCase(Locale.US);
     }
 
     /**
@@ -122,8 +122,8 @@ public class Os implements Condition {
      *
      * @param version   The OS version
      */
-    public void setVersion(String aVersion) {
-        this.version = aVersion.toLowerCase(Locale.US);
+    public void setVersion(String version) {
+        this.version = version.toLowerCase(Locale.US);
     }
 
     /**
@@ -141,8 +141,8 @@ public class Os implements Condition {
      *
      * @since 1.5
      */
-    public static boolean isFamily(String aFamily) {
-        return isOs(aFamily, null, null, null);
+    public static boolean isFamily(String family) {
+        return isOs(family, null, null, null);
     }
 
     /**
@@ -151,8 +151,8 @@ public class Os implements Condition {
      *
      * @since 1.7
      */
-    public static boolean isName(String aName) {
-        return isOs(null, aName, null, null);
+    public static boolean isName(String name) {
+        return isOs(null, name, null, null);
     }
 
     /**
@@ -161,8 +161,8 @@ public class Os implements Condition {
      *
      * @since 1.7
      */
-    public static boolean isArch(String aArch) {
-        return isOs(null, null, aArch, null);
+    public static boolean isArch(String arch) {
+        return isOs(null, null, arch, null);
     }
 
     /**
@@ -171,8 +171,8 @@ public class Os implements Condition {
      *
      * @since 1.7
      */
-    public static boolean isVersion(String aVersion) {
-        return isOs(null, null, null, aVersion);
+    public static boolean isVersion(String version) {
+        return isOs(null, null, null, version);
     }
 
     /**
@@ -186,46 +186,46 @@ public class Os implements Condition {
      *
      * @since 1.7
      */
-    public static boolean isOs(String aFamily, String aName, String aArch,
-                               String aVersion) {
+    public static boolean isOs(String family, String name, String arch,
+                               String version) {
         boolean retValue = false;
 
-        if (aFamily != null || aName != null || aArch != null
-            || aVersion != null) {
+        if (family != null || name != null || arch != null
+            || version != null) {
 
             boolean isFamily = true;
             boolean isName = true;
             boolean isArch = true;
             boolean isVersion = true;
 
-            if (aFamily != null) {
-                if (aFamily.equals("windows")) {
+            if (family != null) {
+                if (family.equals("windows")) {
                     isFamily = osName.indexOf("windows") > -1;
-                } else if (aFamily.equals("os/2")) {
+                } else if (family.equals("os/2")) {
                     isFamily = osName.indexOf("os/2") > -1;
-                } else if (aFamily.equals("netware")) {
+                } else if (family.equals("netware")) {
                     isFamily = osName.indexOf("netware") > -1;
-                } else if (aFamily.equals("dos")) {
+                } else if (family.equals("dos")) {
                     isFamily = pathSep.equals(";") && !isFamily("netware");
-                } else if (aFamily.equals("mac")) {
+                } else if (family.equals("mac")) {
                     isFamily = osName.indexOf("mac") > -1;
-                } else if (aFamily.equals("unix")) {
+                } else if (family.equals("unix")) {
                     isFamily = pathSep.equals(":")
                         && (!isFamily("mac") || osName.endsWith("x"));
                 } else {
                     throw new BuildException(
                         "Don\'t know how to detect os family \""
-                        + aFamily + "\"");
+                        + family + "\"");
                 }
             }
-            if (aName != null) {
-                isName = aName.equals(osName);
+            if (name != null) {
+                isName = name.equals(osName);
             }
-            if (aArch != null) {
-                isArch = aArch.equals(osArch);
+            if (arch != null) {
+                isArch = arch.equals(osArch);
             }
-            if (aVersion != null) {
-                isVersion = aVersion.equals(osVersion);
+            if (version != null) {
+                isVersion = version.equals(osVersion);
             }
             retValue = isFamily && isName && isArch && isVersion;
         }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,18 +88,18 @@ public abstract class Unpack extends Task {
      *             mechanism do the work and also to encapsulate operations on
      *             the type in its own class.
      */
-    public void setDest(String aDest) {
+    public void setDest(String dest) {
         log("DEPRECATED - The setDest(String) method has been deprecated."
             + " Use setDest(File) instead.");
-        setDest(project.resolveFile(aDest));
+        setDest(project.resolveFile(dest));
     }
 
     public void setSrc(File src) {
         source = src;
     }
 
-    public void setDest(File aDest) {
-        this.dest = aDest;
+    public void setDest(File dest) {
+        this.dest = dest;
     }
 
     private void validate() throws BuildException {

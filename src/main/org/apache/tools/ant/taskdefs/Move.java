@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -264,15 +264,15 @@ public class Move extends Copy {
      *
      * @throws IOException
      */
-    protected boolean renameFile(File sourceFile, File aDestFile,
-                                 boolean aFiltering, boolean overwrite)
+    protected boolean renameFile(File sourceFile, File destFile,
+                                 boolean filtering, boolean overwrite)
         throws IOException, BuildException {
 
         boolean renamed = true;
-        if (!aFiltering) {
+        if (!filtering) {
             // ensure that parent dir of dest file exists!
             // not using getParentFile method to stay 1.1 compat
-            String parentPath = aDestFile.getParent();
+            String parentPath = destFile.getParent();
             if (parentPath != null) {
                 File parent = new File(parentPath);
                 if (!parent.exists()) {
@@ -280,13 +280,13 @@ public class Move extends Copy {
                 }
             }
 
-            if (aDestFile.exists()) {
-                if (!aDestFile.delete()) {
+            if (destFile.exists()) {
+                if (!destFile.delete()) {
                     throw new BuildException("Unable to remove existing file "
-                                             + aDestFile);
+                                             + destFile);
                 }
             }
-            renamed = sourceFile.renameTo(aDestFile);
+            renamed = sourceFile.renameTo(destFile);
         } else {
             renamed = false;
         }

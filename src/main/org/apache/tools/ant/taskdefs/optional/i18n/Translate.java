@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -158,72 +158,72 @@ public class Translate extends MatchingTask {
     /**
      * Sets Family name of resource bundle
      */
-    public void setBundle(String aBundle) {
-        this.bundle = aBundle;
+    public void setBundle(String bundle) {
+        this.bundle = bundle;
     }
 
     /**
      * Sets locale specific language of resource bundle
      */
-    public void setBundleLanguage(String aBundleLanguage ) {
-        this.bundleLanguage = aBundleLanguage;
+    public void setBundleLanguage(String bundleLanguage ) {
+        this.bundleLanguage = bundleLanguage;
     }
 
     /**
      * Sets locale specific country of resource bundle
      */
-    public void setBundleCountry(String aBundleCountry) {
-        this.bundleCountry = aBundleCountry;
+    public void setBundleCountry(String bundleCountry) {
+        this.bundleCountry = bundleCountry;
     }
 
     /**
      * Sets locale specific variant of resource bundle
      */
-    public void setBundleVariant(String aBundleVariant) {
-        this.bundleVariant = aBundleVariant;
+    public void setBundleVariant(String bundleVariant) {
+        this.bundleVariant = bundleVariant;
     }
 
     /**
      * Sets Destination directory
      */
-    public void setToDir(File aToDir) {
-        this.toDir = aToDir;
+    public void setToDir(File toDir) {
+        this.toDir = toDir;
     }
 
     /**
      * Sets starting token to identify keys
      */
-    public void setStartToken(String aStartToken) {
-        this.startToken = aStartToken;
+    public void setStartToken(String startToken) {
+        this.startToken = startToken;
     }
 
     /**
      * Sets ending token to identify keys
      */
-    public void setEndToken(String aEndToken) {
-        this.endToken = aEndToken;
+    public void setEndToken(String endToken) {
+        this.endToken = endToken;
     }
 
     /**
      * Sets source file encoding scheme
      */
-    public void setSrcEncoding(String aSrcEncoding) {
-        this.srcEncoding = aSrcEncoding;
+    public void setSrcEncoding(String srcEncoding) {
+        this.srcEncoding = srcEncoding;
     }
 
     /**
      * Sets destination file encoding scheme.  Defaults to source file
      * encoding
      */
-    public void setDestEncoding(String aDestEncoding) {
-        this.destEncoding = aDestEncoding;
+    public void setDestEncoding(String destEncoding) {
+        this.destEncoding = destEncoding;
     }
 
     /**
      * Sets Resource Bundle file encoding scheme
      */
-    public void setBundleEncoding(String aBundleEncoding) {
-        this.bundleEncoding = aBundleEncoding;
+    public void setBundleEncoding(String bundleEncoding) {
+        this.bundleEncoding = bundleEncoding;
     }
 
     /**
@@ -231,8 +231,8 @@ public class Translate extends MatchingTask {
      * the source file as well as the resource bundle file?  Defaults to
      * false.
      */
-    public void setForceOverwrite(boolean aForceOverwrite) {
-        this.forceOverwrite = aForceOverwrite;
+    public void setForceOverwrite(boolean forceOverwrite) {
+        this.forceOverwrite = forceOverwrite;
     }
 
     /**
@@ -339,17 +339,17 @@ public class Translate extends MatchingTask {
      * but with bundle encoding also considered while loading.
      */
     private void loadResourceMaps() throws BuildException {
-        Locale aLocale = new Locale(bundleLanguage,
+        Locale locale = new Locale(bundleLanguage,
                                    bundleCountry,
                                    bundleVariant);
-        String language = aLocale.getLanguage().length() > 0 ?
-            "_" + aLocale.getLanguage() :
+        String language = locale.getLanguage().length() > 0 ?
+            "_" + locale.getLanguage() :
             "";
-        String country = aLocale.getCountry().length() > 0 ?
-            "_" + aLocale.getCountry() :
+        String country = locale.getCountry().length() > 0 ?
+            "_" + locale.getCountry() :
             "";
-        String variant = aLocale.getVariant().length() > 0 ?
-            "_" + aLocale.getVariant() :
+        String variant = locale.getVariant().length() > 0 ?
+            "_" + locale.getVariant() :
             "";
         String bundleFile = bundle + language + country + variant;
         processBundle(bundleFile, 0, false);
@@ -365,16 +365,16 @@ public class Translate extends MatchingTask {
 
         //Load default locale bundle files
         //using default file encoding scheme.
-        aLocale = Locale.getDefault();
+        locale = Locale.getDefault();
 
-        language = aLocale.getLanguage().length() > 0 ?
-            "_" + aLocale.getLanguage() :
+        language = locale.getLanguage().length() > 0 ?
+            "_" + locale.getLanguage() :
             "";
-        country = aLocale.getCountry().length() > 0 ?
-            "_" + aLocale.getCountry() :
+        country = locale.getCountry().length() > 0 ?
+            "_" + locale.getCountry() :
             "";
-        variant = aLocale.getVariant().length() > 0 ?
-            "_" + aLocale.getVariant() :
+        variant = locale.getVariant().length() > 0 ?
+            "_" + locale.getVariant() :
             "";
         bundleEncoding = System.getProperty("file.encoding");
 
@@ -391,19 +391,18 @@ public class Translate extends MatchingTask {
     /**
      * Process each file that makes up this bundle.
      */
-    private void processBundle(final String bundleFile, final int i,
-                               final boolean checkLoaded)
-        throws BuildException {
-        String lBundleFile = bundleFile + ".properties";
+    private void processBundle(String bundleFile, int i,
+                                 boolean checkLoaded) throws BuildException {
+        bundleFile += ".properties";
         FileInputStream ins = null;
         try {
-            ins = new FileInputStream(lBundleFile);
+            ins = new FileInputStream(bundleFile);
             loaded = true;
-            bundleLastModified[i] = new File(lBundleFile).lastModified();
-            log("Using " + lBundleFile, Project.MSG_DEBUG);
+            bundleLastModified[i] = new File(bundleFile).lastModified();
+            log("Using " + bundleFile, Project.MSG_DEBUG);
             loadResourceMap(ins);
         } catch (IOException ioe) {
-            log(lBundleFile + " not found.", Project.MSG_DEBUG);
+            log(bundleFile + " not found.", Project.MSG_DEBUG);
             //if all resource files associated with this bundle
             //have been scanned for and still not able to
             //find a single resrouce file, throw exception
@@ -525,49 +524,50 @@ public class Translate extends MatchingTask {
                                                                                      srcEncoding));
                         String line;
                         while((line = in.readLine()) != null) {
+                            StringBuffer newline = new StringBuffer(line);
                             int startIndex = -1;
                             int endIndex = -1;
-outer:                      while (true) {
-                                startIndex = line.indexOf(startToken, endIndex + 1);
-                                if (startIndex < 0 ||
-                                    startIndex + 1 >= line.length()) {
-                                    break;
-                                }
-                                endIndex = line.indexOf(endToken, startIndex + 1);
-                                if (endIndex < 0) {
-                                    break;
-                                }
-                                String matches = line.substring(startIndex + 1,
-                                                                endIndex);
-                                    //If there is a white space or = or :, then
-                                    //it isn't to be treated as a valid key.
-                                for (int k = 0; k < matches.length(); k++) {
-                                    char c = matches.charAt(k);
-                                    if (c == ':' ||
-                                        c == '=' ||
-                                        Character.isSpaceChar(c)) {
-                                        endIndex = endIndex - 1;
-                                        continue outer;
-                                    }
-                                }
-                                String replace = null;
-                                replace = (String) resourceMap.get(matches);
-                                    //If the key hasn't been loaded into resourceMap,
-                                    //use the key itself as the value also.
-                                if (replace == null) {
-                                    log("Warning: The key: " + matches
-                                        + " hasn't been defined.",
-                                        Project.MSG_DEBUG);
-                                    replace = matches;
-                                }
-                                line = line.substring(0, startIndex)
-                                    + replace
-                                    + line.substring(endIndex + 1);
-                                endIndex = startIndex + replace.length() + 1;
-                                if (endIndex + 1 >= line.length()) {
-                                    break;
+                        outer:                      while (true) {
+                            startIndex = line.indexOf(startToken, endIndex + 1);
+                            if (startIndex < 0 ||
+                                startIndex + 1 >= line.length()) {
+                                break;
+                            }
+                            endIndex = line.indexOf(endToken, startIndex + 1);
+                            if (endIndex < 0) {
+                                break;
+                            }
+                            String matches = line.substring(startIndex + 1,
+                                                            endIndex);
+                                //If there is a white space or = or :, then
+                                //it isn't to be treated as a valid key.
+                            for (int k = 0; k < matches.length(); k++) {
+                                char c = matches.charAt(k);
+                                if (c == ':' ||
+                                    c == '=' ||
+                                    Character.isSpaceChar(c)) {
+                                    endIndex = endIndex - 1;
+                                    continue outer;
                                 }
                             }
+                            String replace = null;
+                            replace = (String) resourceMap.get(matches);
+                                //If the key hasn't been loaded into resourceMap,
+                                //use the key itself as the value also.
+                            if (replace == null) {
+                                log("Warning: The key: " + matches
+                                    + " hasn't been defined.",
+                                    Project.MSG_DEBUG);
+                                replace = matches;
+                            }
+                            line = line.substring(0, startIndex)
+                                + replace
+                                + line.substring(endIndex + 1);
+                            endIndex = startIndex + replace.length() + 1;
+                            if (endIndex + 1 >= line.length()) {
+                                break;
+                            }
+                        }
                             out.write(line);
                             out.newLine();
                         }

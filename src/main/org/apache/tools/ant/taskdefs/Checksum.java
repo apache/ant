@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -129,55 +129,55 @@ public class Checksum extends MatchingTask implements Condition {
     /**
      * Sets the file for which the checksum is to be calculated.
      */
-    public void setFile(File aFile) {
-        this.file = aFile;
+    public void setFile(File file) {
+        this.file = file;
     }
 
     /**
      * Sets the MessageDigest algorithm to be used
      * to calculate the checksum.
      */
-    public void setAlgorithm(String aAlgorithm) {
-        this.algorithm = aAlgorithm;
+    public void setAlgorithm(String algorithm) {
+        this.algorithm = algorithm;
     }
 
     /**
      * Sets the MessageDigest algorithm provider to be used
      * to calculate the checksum.
      */
-    public void setProvider(String aProvider) {
-        this.provider = aProvider;
+    public void setProvider(String provider) {
+        this.provider = provider;
     }
 
     /**
      * Sets the File Extension that is be to used to
      * create or identify destination file
      */
-    public void setFileext(String aFileext) {
-        this.fileext = aFileext;
+    public void setFileext(String fileext) {
+        this.fileext = fileext;
     }
 
     /**
      * Sets the property to hold the generated checksum
      */
-    public void setProperty(String aProperty) {
-        this.property = aProperty;
+    public void setProperty(String property) {
+        this.property = property;
     }
 
     /**
      * Sets verify property.  This project property holds
      * the result of a checksum verification - "true" or "false"
      */
-    public void setVerifyproperty(String aVerifyProperty) {
-        this.verifyProperty = aVerifyProperty;
+    public void setVerifyproperty(String verifyProperty) {
+        this.verifyProperty = verifyProperty;
     }
 
     /**
      * Overwrite existing file irrespective of whether it is newer than
      * the source file?  Defaults to false.
      */
-    public void setForceOverwrite(boolean aForceOverwrite) {
-        this.forceOverwrite = aForceOverwrite;
+    public void setForceOverwrite(boolean forceOverwrite) {
+        this.forceOverwrite = forceOverwrite;
     }
 
     /**
@@ -311,24 +311,24 @@ public class Checksum extends MatchingTask implements Condition {
      * Add key-value pair to the hashtable upon which
      * to later operate upon.
      */
-    private void addToIncludeFileMap(File aFile) throws BuildException {
-        if (aFile != null) {
-            if (aFile.exists()) {
+    private void addToIncludeFileMap(File file) throws BuildException {
+        if (file != null) {
+            if (file.exists()) {
                 if (property == null) {
-                    File dest = new File(aFile.getParent(), aFile.getName() + fileext);
+                    File dest = new File(file.getParent(), file.getName() + fileext);
                     if (forceOverwrite || isCondition ||
-                        (aFile.lastModified() > dest.lastModified())) {
-                        includeFileMap.put(aFile, dest);
+                        (file.lastModified() > dest.lastModified())) {
+                        includeFileMap.put(file, dest);
                     } else {
-                        log(aFile + " omitted as " + dest + " is up to date.",
+                        log(file + " omitted as " + dest + " is up to date.",
                             Project.MSG_VERBOSE);
                     }
                 } else {
-                    includeFileMap.put(aFile, property);
+                    includeFileMap.put(file, property);
                 }
             } else {
                 String message = "Could not find file "
-                                 + aFile.getAbsolutePath()
+                                 + file.getAbsolutePath()
                                  + " to generate checksum for.";
                 log(message);
                 throw new BuildException(message, location);
