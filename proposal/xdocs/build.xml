@@ -24,54 +24,39 @@
   </path>
 
   <!-- depends on JDK version -->
-  <selector id="needs.jdk1.2+">
-    <or>
-      <filename name="${util.package}/optional/WeakishReference12*"/>
-      <filename name="${optional.package}/extension/**"/>
-      <filename name="${util.package}/optional/NoExitSecurityManager*"/>
-      <filename name="${optional.package}/Javah*"/>
-      <filename name="${optional.package}/metamata/*"/>
-      <filename name="${optional.package}/ejb/EjbJar*"/>
-      <filename name="${optional.package}/ejb/*DeploymentTool*"/>
-      <filename name="${optional.package}/ejb/IPlanet*"/>
-      <filename name="${optional.package}/ejb/Borland*"/>
-      <filename name="${optional.package}/j2ee/*"/>
-      <!-- uses the context classloader -->
-      <filename name="${optional.package}/junit/JUnitClassLoaderTest*"/>
-      <!-- use various 1.2 methods -->
-      <filename name="${optional.package}/sitraka/**"/>
-      <filename name="${optional.package}/ide/VAJ*"/>
-      <filename name="${optional.package}/starteam/*"/>
-    </or>
-  </selector>
   <selector id="needs.jdk1.3+">
     <or>
       <filename name="${ant.package}/taskdefs/TestProcess*"/>
       <filename name="${optional.package}/extension/**"/>
     </or>
   </selector>
+
   <selector id="needs.jdk1.4+">
-    <filename name="${regexp.package}/Jdk14Regexp*"/>
+    <or>
+      <filename name="${regexp.package}/Jdk14Regexp*"/>
+    </or>
   </selector>
 
   <!-- classes that should be present in Sun based JVMs, but not in
-       Kaffe for example -->
+  Kaffe for example -->
   <selector id="needs.sun.tools">
     <or>
       <filename name="${optional.package}/Native2Ascii*"/>
       <filename name="${optional.package}/Javah*"/>
     </or>
   </selector>
+
   <selector id="needs.sun.uue">
     <filename name="${ant.package}/taskdefs/email/UUMailer*"/>
   </selector>
+
   <selector id="needs.sun.b64">
     <or>
-      <filename name="${ant.package}/taskdefs/Get*"/>
       <filename name="${optional.package}/splash/SplashTask*"/>
     </or>
   </selector>
 
+  <!-- depends on external libraries -->
   <selector id="needs.trax">
     <or>
       <filename name="${optional.package}/TraXLiaison*"/>
@@ -81,27 +66,34 @@
       <filename name="${ant.package}/types/XMLCatalogBuildFileTest*"/>
     </or>
   </selector>
+
   <selector id="needs.xalan1">
     <or>
       <filename name="${optional.package}/XalanLiaison*"/>
       <filename name="${optional.package}/junit/Xalan1Executor*"/>
     </or>
   </selector>
+
   <selector id="needs.xalan2">
     <filename name="${optional.package}/junit/Xalan2Executor*"/>
   </selector>
+
   <selector id="needs.xslp">
     <filename name="${optional.package}/XslpLiaison*"/>
   </selector>
+
   <selector id="needs.apache.resolver">
     <filename name="${apache.resolver.type.package}/**"/>
   </selector>
+
   <selector id="needs.junit">
     <filename name="${optional.package}/junit/**"/>
   </selector>
+
   <selector id="needs.jakarta.regexp">
     <filename name="${regexp.package}/JakartaRegexp*"/>
   </selector>
+
   <selector id="needs.jakarta.oro">
     <or>
       <filename name="${regexp.package}/JakartaOro*"/>
@@ -109,6 +101,7 @@
       <filename name="${optional.package}/metamata/MAudit*"/>
     </or>
   </selector>
+
   <selector id="needs.jakarta.bcel">
     <or>
       <filename name="${ant.package}/filters/util/JavaClassHelper*"/>
@@ -116,253 +109,299 @@
       <filename name="${optional.type.package}/depend/ClassFileSetTest*"/>
     </or>
   </selector>
+
   <selector id="needs.jakarta.log4j">
     <filename name="${ant.package}/listener/Log4jListener*"/>
   </selector>
+
   <selector id="needs.commons.logging">
     <filename name="${ant.package}/listener/CommonsLoggingListener*"/>
   </selector>
+
   <selector id="needs.bsf">
-    <filename name="${optional.package}/Script*"/>
+    <or>
+      <filename name="${optional.package}/Script*"/>
+      <filename name="${optional.package}/script/**/*"/>
+      <filename name="${optional.type.package}/Script*"/>
+      <filename name="${util.package}/Script*"/>
+    </or>
   </selector>
+
   <selector id="needs.stylebook">
     <filename name="${optional.package}/StyleBook*"/>
   </selector>
+
   <selector id="needs.javamail">
-    <filename name="${ant.package}/taskdefs/email/MimeMailer*"/>
+    <or>
+      <filename name="${ant.package}/taskdefs/email/MimeMailer*"/>
+    </or>
   </selector>
+
   <selector id="needs.icontract">
     <filename name="${optional.package}/IContract*"/>
   </selector>
+
   <selector id="needs.netrexx">
     <filename name="${optional.package}/NetRexxC*"/>
   </selector>
+
   <selector id="needs.weblogic.ejbc">
     <filename name="${optional.package}/ejb/Ejbc*"/>
   </selector>
+
   <selector id="needs.weblogic.ddcreator">
     <filename name="${optional.package}/ejb/DDCreator*"/>
   </selector>
+
   <selector id="needs.weblogic.server">
     <or>
       <filename name="${optional.package}/ejb/WLRun*"/>
       <filename name="${optional.package}/ejb/WLStop*"/>
     </or>
   </selector>
-  <selector id="needs.netcomponents">
+
+  <selector id="needs.commons.net">
     <or>
       <filename name="${optional.package}/net/FTP*"/>
+      <filename name="${optional.package}/net/RExec*"/>
       <filename name="${optional.package}/net/TelnetTask*"/>
     </or>
   </selector>
+
   <selector id="needs.starteam">
     <or>
       <filename name="${optional.package}/scm/AntStarTeam*"/>
       <filename name="${optional.package}/starteam/*"/>
     </or>
   </selector>
+
   <selector id="needs.vaj">
     <filename name="${optional.package}/ide/VAJ*"/>
   </selector>
+
   <selector id="needs.antlr">
     <filename name="${optional.package}/ANTLR*"/>
   </selector>
-  <selector id="needs.servletapi">
-    <filename name="${optional.package}/ide/VAJ*Servlet*"/>
-  </selector>
+
   <selector id="needs.jmf">
     <filename name="${optional.package}/sound/*"/>
   </selector>
+
   <selector id="needs.jai">
     <or>
       <filename name="${optional.package}/image/*"/>
       <filename name="${ant.package}/types/optional/image/*"/>
     </or>
   </selector>
+
   <selector id="needs.jdepend">
     <filename name="${optional.package}/jdepend/*"/>
   </selector>
+
   <selector id="needs.swing">
     <filename name="${optional.package}/splash/*"/>
   </selector>
+
   <selector id="needs.jsch">
     <filename name="${optional.package}/ssh/*"/>
   </selector>
 
-    <available property="jdk1.2+" classname="java.lang.ThreadLocal"/>
-    <available property="jdk1.3+" classname="java.lang.StrictMath"/>
-    <available property="jdk1.4+" classname="java.lang.CharSequence"/>
-    <available property="kaffe" classname="kaffe.util.NotImplemented"/>
-    <available property="bsf.present"
-               classname="org.apache.bsf.BSFManager"
-               classpathref="classpath"/>
-    <condition property="netrexx.present">
+  <available property="jdk1.3+" classname="java.lang.StrictMath"/>
+  <available property="jdk1.4+" classname="java.lang.CharSequence"/>
+  <available property="kaffe" classname="kaffe.util.NotImplemented"/>
+  <available property="bsf.present"
+    classname="org.apache.bsf.BSFManager"
+    classpathref="classpath"/>
+  <available property="netrexx.present"
+    classname="netrexx.lang.Rexx"
+    classpathref="classpath"/>
+  <available property="trax.present"
+    classname="javax.xml.transform.Transformer"
+    classpathref="classpath"/>
+  <condition property="trax.impl.present">
+    <or>
       <and>
-        <isset property="jdk1.2+"/>
-        <available classname="netrexx.lang.Rexx"
-                   classpathref="classpath"/>
+        <isset property="javax.xml.transform.TransformerFactory"/>
+        <available classname="${javax.xml.transform.TransformerFactory}"
+          classpathref="classpath"/>
       </and>
-    </condition>
-    <available property="trax.present"
-               classname="javax.xml.transform.Transformer"
-               classpathref="classpath"/>
-    <condition property="trax.impl.present">
-      <or>
-        <and>
-          <isset property="javax.xml.transform.TransformerFactory"/>
-          <available classname="${javax.xml.transform.TransformerFactory}"
-                     classpathref="classpath"/>
-        </and>
-        <available resource="META-INF/services/javax.xml.transform.TransformerFactory"/>
-      </or>
-    </condition>
-    <available property="xslp.present"
-               classname="com.kvisco.xsl.XSLProcessor"
-               classpathref="classpath"/>
-   <available property="apache.resolver.present"
-              classname="org.apache.xml.resolver.tools.CatalogResolver"
-              classpathref="classpath" />
-    <available property="xalan.present"
-               classname="org.apache.xalan.xslt.XSLTProcessorFactory"
-               classpathref="classpath"/>
-    <available property="xalan2.present"
-               classname="org.apache.xalan.transformer.TransformerImpl"
-               classpathref="classpath"/>
-    <available property="ejb.ejbc.present"
-               classname="weblogic.ejbc"
-               classpathref="classpath"/>
-    <available property="ejb.DDCreator.present"
-               classname="weblogic.ejb.utils.DDCreator"
-               classpathref="classpath"/>
-    <available property="ejb.wls.present"
-               classname="weblogic.Server"
-               classpathref="classpath"/>
-    <available property="junit.present"
-               classname="junit.framework.TestCase"
-               classpathref="classpath"/>
-    <available property="netcomp.present"
-               classname="com.oroinc.net.ftp.FTPClient"
-               classpathref="classpath"/>
-    <available property="starteam.present"
-               classname="com.starbase.util.Platform"
-               classpathref="classpath"/>
-    <available property="antlr.present"
-               classname="antlr.Tool"
-               classpathref="classpath"/>
-    <available property="vaj.present"
-               classname="com.ibm.ivj.util.base.Workspace"
-               classpathref="classpath"/>
-    <available property="stylebook.present"
-               classname="org.apache.stylebook.Engine"
-               classpathref="classpath"/>
-    <available property="jakarta.regexp.present"
-               classname="org.apache.regexp.RE"
-               classpathref="classpath"/>
-    <available property="jakarta.oro.present"
-               classname="org.apache.oro.text.regex.Perl5Matcher"
-               classpathref="classpath"/>
-    <available property="jmf.present"
-               classname="javax.sound.sampled.Clip"
-               classpathref="classpath"/>
-    <available property="jai.present"
-               classname="javax.media.jai.JAI"
-               classpathref="classpath"/>
-    <condition property="icontract.present">
-        <and>
-            <isset property="jdk1.2+"/>
-            <available classname="com.reliablesystems.iContract.IContracted"
-                       classpathref="classpath"/>
-        </and>
-    </condition>
-    <available property="jdepend.present"
-               classname="jdepend.framework.JDepend"
-               classpathref="classpath"/>
-    <available property="log4j.present"
-               classname="org.apache.log4j.Category"
-               classpathref="classpath"/>
-    <available property="commons.logging.present"
-               classname="org.apache.commons.logging.LogFactory"
-               classpathref="classpath"/>
-    <available property="xalan.envcheck"
-               classname="org.apache.xalan.xslt.EnvironmentCheck"
-               classpathref="classpath"/>
-    <available property="which.present"
-               classname="org.apache.env.Which"
-               classpathref="classpath"/>
+      <available resource="META-INF/services/javax.xml.transform.TransformerFactory"/>
+    </or>
+  </condition>
+  <available property="xslp.present"
+    classname="com.kvisco.xsl.XSLProcessor"
+    classpathref="classpath"/>
+  <available property="apache.resolver.present"
+    classname="org.apache.xml.resolver.tools.CatalogResolver"
+    classpathref="classpath"/>
+  <available property="xalan.present"
+    classname="org.apache.xalan.xslt.XSLTProcessorFactory"
+    classpathref="classpath"/>
+  <available property="xalan2.present"
+    classname="org.apache.xalan.transformer.TransformerImpl"
+    classpathref="classpath"/>
+  <available property="ejb.ejbc.present"
+    classname="weblogic.ejbc"
+    classpathref="classpath"/>
+  <available property="ejb.DDCreator.present"
+    classname="weblogic.ejb.utils.DDCreator"
+    classpathref="classpath"/>
+  <available property="ejb.wls.present"
+    classname="weblogic.Server"
+    classpathref="classpath"/>
+  <available property="junit.present"
+    classname="junit.framework.TestCase"
+    classpathref="classpath"/>
+  <available property="commons.net.present"
+    classname="org.apache.commons.net.ftp.FTPClient"
+    classpathref="classpath"/>
+  <available property="starteam.present"
+    classname="com.starbase.util.Platform"
+    classpathref="classpath"/>
+  <available property="antlr.present"
+    classname="antlr.Tool"
+    classpathref="classpath"/>
+  <available property="vaj.present"
+    classname="com.ibm.ivj.util.base.Workspace"
+    classpathref="classpath"/>
+  <available property="stylebook.present"
+    classname="org.apache.stylebook.Engine"
+    classpathref="classpath"/>
+  <available property="jakarta.regexp.present"
+    classname="org.apache.regexp.RE"
+    classpathref="classpath"/>
+  <available property="jakarta.oro.present"
+    classname="org.apache.oro.text.regex.Perl5Matcher"
+    classpathref="classpath"/>
+  <available property="jmf.present"
+    classname="javax.sound.sampled.Clip"
+    classpathref="classpath"/>
+  <available property="jai.present"
+    classname="javax.media.jai.JAI"
+    classpathref="classpath"/>
+  <available property="icontract.present"
+    classname="com.reliablesystems.iContract.IContracted"
+    classpathref="classpath"/>
+  <available property="jdepend.present"
+    classname="jdepend.framework.JDepend"
+    classpathref="classpath"/>
+  <available property="log4j.present"
+    classname="org.apache.log4j.Category"
+    classpathref="classpath"/>
+  <available property="commons.logging.present"
+    classname="org.apache.commons.logging.LogFactory"
+    classpathref="classpath"/>
+  <available property="xalan.envcheck"
+    classname="org.apache.xalan.xslt.EnvironmentCheck"
+    classpathref="classpath"/>
+  <available property="which.present"
+    classname="org.apache.env.Which"
+    classpathref="classpath"/>
 
-    <available property="servlet.present"
-               classname="javax.servlet.Servlet"
-               classpathref="classpath"/>
+  <available property="xerces.present"
+    classname="org.apache.xerces.parsers.SAXParser"
+    classpathref="classpath"/>
+  <available property="bcel.present"
+    classname="org.apache.bcel.Constants"
+    classpathref="classpath"/>
+  <available property="sunuue.present"
+    classname="sun.misc.UUEncoder"
+    classpathref="classpath"/>
 
-    <available property="xerces.present"
-               classname="org.apache.xerces.parsers.SAXParser"
-               classpathref="classpath"/>
-    <condition property="bcel.present">
-        <and>
-            <isset property="jdk1.2+"/>
-            <available classname="org.apache.bcel.Constants"
-                       classpathref="classpath"/>
-        </and>
-    </condition>
-    <available property="sunuue.present"
-               classname="sun.misc.UUEncoder"
-               classpathref="classpath"/>
+  <condition property="javamail.complete">
+    <and>
+      <available classname="javax.activation.DataHandler"
+        classpathref="classpath"/>
+      <available classname="javax.mail.Transport"
+        classpathref="classpath"/>
+    </and>
+  </condition>
 
-    <condition property="javamail.complete">
-      <and>
-        <available classname="javax.activation.DataHandler"
-                   classpathref="classpath"/>
-        <available classname="javax.mail.Transport"
-                   classpathref="classpath"/>
-      </and>
-    </condition>
+  <condition property="some.regexp.support">
+    <or>
+      <isset property="jdk1.4+"/>
+      <isset property="jakarta.regexp.present"/>
+      <isset property="jakarta.oro.present"/>
+    </or>
+  </condition>
 
-    <condition property="some.regexp.support">
-      <or>
-        <isset property="jdk1.4+"/>
-        <isset property="jakarta.regexp.present"/>
-        <isset property="jakarta.oro.present"/>
-      </or>
-    </condition>
+  <condition property="tests.and.ant.share.classloader">
+    <or>
+      <equals arg1="${junit.fork}" arg2="true"/>
+      <equals arg1="${build.sysclasspath}" arg2="only"/>
+    </or>
+  </condition>
 
-    <condition property="sun.tools.present">
-      <and>
-        <available classname="sun.tools.native2ascii.Main"/>
-        <available classname="com.sun.tools.javah.Main"/>
-      </and>
-    </condition>
+  <condition property="sun.tools.present">
+    <and>
+      <available classname="sun.tools.native2ascii.Main"/>
+      <available classname="com.sun.tools.javah.Main"/>
+    </and>
+  </condition>
 
-    <available property="base64.present" classname="sun.misc.BASE64Encoder"/>
+  <available property="base64.present" classname="sun.misc.BASE64Encoder"/>
 
-    <condition property="jasper.present">
-      <and>
-        <available classname="org.apache.jasper.compiler.Compiler"/>
-        <available classname="org.apache.jasper.JasperException"/>
-      </and>
-    </condition>
+  <property name="build.tests.resolved" location="${build.tests}"/>
+  <condition property="tests.are.on.system.classpath">
+    <or>
+      <!-- relative paths in CLASSPATH -->
+      <contains string="${java.class.path}"
+        substring="${build.tests}"/>
+      <!-- absolute paths in CLASSPATH -->
+      <contains string="${java.class.path}"
+        substring="${build.tests.resolved}"/>
+    </or>
+  </condition>
 
-    <condition property="swing.present">
-      <or>
-        <and>
-          <isset property="jdk1.2+"/>
-          <not>
-            <isset property="kaffe"/>
-          </not>
-        </and>
-        <available classname="javax.swing.ImageIcon"
-                   classpathref="classpath"/>
-      </or>
-    </condition>
+  <condition property="jasper.present">
+    <and>
+      <available classname="org.apache.jasper.compiler.Compiler"/>
+      <available classname="org.apache.jasper.JasperException"/>
+    </and>
+  </condition>
 
-    <available property="rhino.present"
-               classname="org.mozilla.javascript.Scriptable"
-               classpathref="classpath"/>
-    <available property="beanshell.present"
-               classname="bsh.StringUtil"
-               classpathref="classpath"/>
-    <available property="jsch.present"
-               classname="com.jcraft.jsch.Session"
-               classpathref="classpath"/>
+  <condition property="swing.present">
+    <or>
+      <not>
+        <isset property="kaffe"/>
+      </not>
+      <available classname="javax.swing.ImageIcon"
+        classpathref="classpath"/>
+    </or>
+  </condition>
+  <condition property="wsdl.found">
+    <or>
+      <available file="wsdl" filepath="${env.PATH}"/>
+      <available file="wsdl.exe" filepath="${env.PATH}"/>
+      <available file="wsdl.exe" filepath="${env.Path}"/>
+    </or>
+  </condition>
+  <echo level="verbose"> wsdl.found=${wsdl.found}</echo>
+  <condition property="csc.found">
+    <or>
+      <available file="csc" filepath="${env.PATH}"/>
+      <available file="csc.exe" filepath="${env.PATH}"/>
+      <available file="csc.exe" filepath="${env.Path}"/>
+    </or>
+  </condition>
+  <echo level="verbose"> csc.found=${csc.found}</echo>
+  <condition property="dotnetapps.found">
+    <and>
+      <isset property="csc.found"/>
+      <isset property="wsdl.found"/>
+    </and>
+  </condition>
+  <echo level="verbose"> dotnetapps.found=${dotnetapps.found}</echo>
+
+  <available property="rhino.present"
+    classname="org.mozilla.javascript.Scriptable"
+    classpathref="classpath"/>
+  <available property="beanshell.present"
+    classname="bsh.StringUtil"
+    classpathref="classpath"/>
+  <available property="jsch.present"
+    classname="com.jcraft.jsch.Session"
+    classpathref="classpath"/>
 
   <path id="xdoclet.classpath">
     <path>
@@ -397,51 +436,49 @@
                force="${xdoclet.force}"
                mergedir="src">
       <fileset dir="${src.root}">
-      <selector id="conditional-patterns">
-        <not>
-          <or>
-            <selector refid="needs.jdk1.2+" unless="jdk1.2+"/>
-            <selector refid="needs.jdk1.3+" unless="jdk1.3+"/>
-            <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
-            <selector refid="needs.sun.tools" unless="sun.tools.present"/>
-            <selector refid="needs.sun.uue" unless="sunuue.present"/>
-            <selector refid="needs.sun.b64" unless="base64.present"/>
+        <selector id="conditional-patterns">
+          <not>
+            <or>
+              <selector refid="needs.jdk1.3+" unless="jdk1.3+"/>
+              <selector refid="needs.jdk1.4+" unless="jdk1.4+"/>
+              <selector refid="needs.sun.tools" unless="sun.tools.present"/>
+              <selector refid="needs.sun.uue" unless="sunuue.present"/>
+              <selector refid="needs.sun.b64" unless="base64.present"/>
 
-            <selector refid="needs.trax" unless="trax.present"/>
-            <selector refid="needs.xalan1" unless="xalan.present"/>
-            <selector refid="needs.xalan2" unless="xalan2.present"/>
-            <selector refid="needs.xslp" unless="xslp.present"/>
-            <selector refid="needs.apache.resolver" unless="apache.resolver.present"/>
-            <selector refid="needs.junit" unless="junit.present"/>
-            <selector refid="needs.jakarta.regexp"
-                      unless="jakarta.regexp.present"/>
-            <selector refid="needs.jakarta.oro" unless="jakarta.oro.present"/>
-            <selector refid="needs.jakarta.bcel" unless="bcel.present"/>
-            <selector refid="needs.jakarta.log4j" unless="log4j.present"/>
-            <selector refid="needs.commons.logging"
-                      unless="commons.logging.present"/>
-            <selector refid="needs.bsf" unless="bsf.present"/>
-            <selector refid="needs.stylebook" unless="stylebook.present"/>
-            <selector refid="needs.javamail" unless="javamail.complete"/>
-            <selector refid="needs.icontract" unless="icontract.present"/>
-            <selector refid="needs.netrexx" unless="netrexx.present"/>
-            <selector refid="needs.weblogic.ejbc" unless="ejb.ejbc.present"/>
-            <selector refid="needs.weblogic.ddcreator"
-                      unless="ejb.DDCreator.present"/>
-            <selector refid="needs.weblogic.server" unless="ejb.wls.present"/>
-            <selector refid="needs.netcomponents" unless="netcomp.present"/>
-            <selector refid="needs.starteam" unless="starteam.present"/>
-            <selector refid="needs.vaj" unless="vaj.present"/>
-            <selector refid="needs.antlr" unless="antlr.present"/>
-            <selector refid="needs.servletapi" unless="servlet.present"/>
-            <selector refid="needs.jmf" unless="jmf.present"/>
-            <selector refid="needs.jai" unless="jai.present"/>
-            <selector refid="needs.jdepend" unless="jdepend.present"/>
-            <selector refid="needs.swing"  unless="swing.present"/>
-            <selector refid="needs.jsch" unless="jsch.present"/>
-          </or>
-        </not>
-      </selector>
+              <selector refid="needs.trax" unless="trax.present"/>
+              <selector refid="needs.xalan1" unless="xalan.present"/>
+              <selector refid="needs.xalan2" unless="xalan2.present"/>
+              <selector refid="needs.xslp" unless="xslp.present"/>
+              <selector refid="needs.apache.resolver" unless="apache.resolver.present"/>
+              <selector refid="needs.junit" unless="junit.present"/>
+              <selector refid="needs.jakarta.regexp"
+                unless="jakarta.regexp.present"/>
+              <selector refid="needs.jakarta.oro" unless="jakarta.oro.present"/>
+              <selector refid="needs.jakarta.bcel" unless="bcel.present"/>
+              <selector refid="needs.jakarta.log4j" unless="log4j.present"/>
+              <selector refid="needs.commons.logging"
+                unless="commons.logging.present"/>
+              <selector refid="needs.bsf" unless="bsf.present"/>
+              <selector refid="needs.stylebook" unless="stylebook.present"/>
+              <selector refid="needs.javamail" unless="javamail.complete"/>
+              <selector refid="needs.icontract" unless="icontract.present"/>
+              <selector refid="needs.netrexx" unless="netrexx.present"/>
+              <selector refid="needs.weblogic.ejbc" unless="ejb.ejbc.present"/>
+              <selector refid="needs.weblogic.ddcreator"
+                unless="ejb.DDCreator.present"/>
+              <selector refid="needs.weblogic.server" unless="ejb.wls.present"/>
+              <selector refid="needs.commons.net" unless="commons.net.present"/>
+              <selector refid="needs.starteam" unless="starteam.present"/>
+              <selector refid="needs.vaj" unless="vaj.present"/>
+              <selector refid="needs.antlr" unless="antlr.present"/>
+              <selector refid="needs.jmf" unless="jmf.present"/>
+              <selector refid="needs.jai" unless="jai.present"/>
+              <selector refid="needs.jdepend" unless="jdepend.present"/>
+              <selector refid="needs.swing" unless="swing.present"/>
+              <selector refid="needs.jsch" unless="jsch.present"/>
+            </or>
+          </not>
+        </selector>
       </fileset>
       <taskdescriptor/>
 <!--      <taskdefproperties/> -->
