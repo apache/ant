@@ -606,12 +606,13 @@ public class NetRexxC extends MatchingTask
      */
     private void copyFilesToDestination()
     {
+        //FIXME: This should be zapped no ?
         if( filecopyList.size() > 0 )
         {
             getLogger().info( "Copying " + filecopyList.size() + " file"
                               + ( filecopyList.size() == 1 ? "" : "s" )
                               + " to " + destDir.getAbsolutePath() );
-            Iterator enum = filecopyList.keys();
+            Iterator enum = filecopyList.keySet().iterator();
             while( enum.hasNext() )
             {
                 String fromFile = (String)enum.next();
