@@ -79,7 +79,7 @@ if [ -d "build" ] ; then
   rm -r build
 fi
 
-CLASSPATH=lib/crimson.jar:${CLASSPATH}
+CLASSPATH=lib/xercesImpl.jar:lib/xmlParserAPIs.jar:${CLASSPATH}
 
 DIRLIBS=lib/optional/*.jar
 for i in ${DIRLIBS}
