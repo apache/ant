@@ -91,7 +91,7 @@ public abstract class MSVSS extends Task {
      * @param dir the directory containing ss.exe
      */
     public final void setSsdir(String dir) {
-        m_SSDir = project.translatePath(dir);
+        m_SSDir = Project.translatePath(dir);
     }
     
     /**

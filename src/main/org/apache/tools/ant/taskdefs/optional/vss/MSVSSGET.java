@@ -206,7 +206,7 @@ public class MSVSSGET extends MSVSS {
             File dir = project.resolveFile(m_LocalPath);
             if (!dir.exists()) {
                 boolean done = dir.mkdirs();
-                if (done == false) {
+                if (!done) {
                     String msg = "Directory " + m_LocalPath + " creation was not " +
                         "successful for an unknown reason";
                     throw new BuildException(msg, location);
