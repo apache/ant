@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -88,7 +88,7 @@ import org.apache.tools.ant.util.FileUtils;
  * </pre>
  *
  *
- * @author costin@dnt.ro
+ * @author Costin Manolache
  *
  * @since Ant 1.1
  *
@@ -356,8 +356,6 @@ public class Ant extends Task {
                 target = newProject.getDefaultTarget();
             }
 
-            addReferences();
-
             // Are we trying to call the target in which we are defined?
             if (newProject.getBaseDir().equals(project.getBaseDir()) &&
                 newProject.getProperty("ant.file").equals(project.getProperty("ant.file")) &&
@@ -367,6 +365,8 @@ public class Ant extends Task {
                 throw new BuildException("ant task calling its own parent " 
                     + "target");
             }
+
+            addReferences();
 
             newProject.executeTarget(target);
         } finally {
@@ -462,6 +462,12 @@ public class Ant extends Task {
      */
     private void copyReference(String oldKey, String newKey) {
         Object orig = getProject().getReference(oldKey);
+        if (orig == null) {
+            log("No object referenced by " + oldKey + ". Can't copy to " 
+                + newKey, 
+                Project.MSG_WARN);
+            return;
+        }
         Class c = orig.getClass();
         Object copy = orig;
         try {
@@ -588,8 +594,8 @@ public class Ant extends Task {
          *
          * @return the id of the reference in the new project.
          */
-        public String getToRefid() { 
-            return targetid; 
+        public String getToRefid() {
+            return targetid;
         }
     }
 }

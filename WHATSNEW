@@ -44,6 +44,13 @@ Fixed bugs:
 
 * Ant didn't find the runtime libraries on IBM's JDK 1.4 for Linux.
 
+* Ant could incorrectly try to use the 1.4 regexp implementation even
+  if it isn't available if you run the JVM with -Xverify:none.
+
+* Ant would die with an exception if you used nested <reference>
+  elements in Ant and the refid attribute didn't point to an existing
+  project reference.
+
 Other changes:
 --------------
 
