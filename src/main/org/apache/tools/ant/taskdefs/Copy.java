@@ -509,7 +509,7 @@ public class Copy extends Task {
         }
 
         if (destFile != null) {
-            destDir = fileUtils.getParentFile(destFile);
+            destDir = destFile.getParentFile();
         }
 
     }

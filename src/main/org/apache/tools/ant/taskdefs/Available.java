@@ -330,8 +330,7 @@ public class Available extends Task implements Condition {
                     return false;
                 }
 
-                FileUtils fileUtils = FileUtils.newFileUtils();
-                File parent = fileUtils.getParentFile(path);
+                File parent = path.getParentFile();
                 // **   full-pathname specified == parent dir of path in list
                 if (parent != null && parent.exists()
                     && file.equals(parent.getAbsolutePath())) {
@@ -364,7 +363,7 @@ public class Available extends Task implements Condition {
 
                 // **   simple name specified   == parent of parent dir + name
                 if (parent != null) {
-                    File grandParent = fileUtils.getParentFile(parent);
+                    File grandParent = parent.getParentFile();
                     if (grandParent != null && grandParent.exists()) {
                         if (checkFile(new File(grandParent, file),
                                       file + " in " + grandParent)) {

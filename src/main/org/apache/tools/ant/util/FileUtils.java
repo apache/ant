@@ -507,7 +507,7 @@ public class FileUtils {
 
             // ensure that parent dir of dest file exists!
             // not using getParentFile method to stay 1.1 compat
-            File parent = getParentFile(destFile);
+            File parent = destFile.getParentFile();
             if (parent != null && !parent.exists()) {
                 parent.mkdirs();
             }
@@ -709,7 +709,7 @@ public class FileUtils {
         while (tok.hasMoreTokens()) {
             String part = tok.nextToken();
             if (part.equals("..")) {
-                helpFile = getParentFile(helpFile);
+                helpFile = helpFile.getParentFile();
                 if (helpFile == null) {
                     String msg = "The file or path you specified ("
                         + filename + ") is invalid relative to "
@@ -1260,7 +1260,7 @@ public class FileUtils {
             throw new IOException("Failed to delete " + to
                                   + " while trying to rename " + from);
         }
-        File parent = getParentFile(to);
+        File parent = to.getParentFile();
         if (parent != null && !parent.exists() && !parent.mkdirs()) {
             throw new IOException("Failed to create directory " + parent
                                   + " while trying to rename " + from);

@@ -1000,3 +1000,4 @@ public class FixCRLF extends MatchingTask {
     }
 
 }
+

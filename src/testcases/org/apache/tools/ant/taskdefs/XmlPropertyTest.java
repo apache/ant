@@ -123,7 +123,7 @@ public class XmlPropertyTest extends BuildFileTest {
             // folder of the input file.  Otherwise, its the "current" dir..
             File workingDir;
             if ( localRoot ) {
-                workingDir = fileUtils.getParentFile(inputFile);
+                workingDir = inputFile.getParentFile();
             } else {
                 workingDir = fileUtils.resolveFile(new File("."), ".");
             }
@@ -285,7 +285,7 @@ public class XmlPropertyTest extends BuildFileTest {
                 + ".properties";
         }
 
-        File dir = fileUtils.getParentFile(fileUtils.getParentFile(input));
+        File dir = input.getParentFile().getParentFile();
 
         String goldFileFolder = "goldfiles/";
 

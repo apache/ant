@@ -562,7 +562,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     private void ensureDirectoryFor(File targetFile)
          throws BuildException {
-        File directory = fileUtils.getParentFile(targetFile);
+        File directory = targetFile.getParentFile();
         if (!directory.exists()) {
             if (!directory.mkdirs()) {
                 throw new BuildException("Unable to create directory: "

@@ -1310,7 +1310,7 @@ public class FTP
 
         try {
             if (action == LIST_FILES) {
-                File pd = fileUtils.getParentFile(listing);
+                File pd = listing.getParentFile();
 
                 if (!pd.exists()) {
                     pd.mkdirs();
@@ -1782,7 +1782,7 @@ public class FTP
                      + file.getAbsolutePath());
             }
 
-            File pdir = fileUtils.getParentFile(file);
+            File pdir = file.getParentFile();
 
             if (!pdir.exists()) {
                 pdir.mkdirs();

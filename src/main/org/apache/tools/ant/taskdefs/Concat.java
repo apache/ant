@@ -561,7 +561,7 @@ public class Concat extends Task {
                     os = new LogOutputStream(this, Project.MSG_WARN);
                 } else {
                     // ensure that the parent dir of dest file exists
-                    File parent = fileUtils.getParentFile(destinationFile);
+                    File parent = destinationFile.getParentFile();
                     if (!parent.exists()) {
                         parent.mkdirs();
                     }

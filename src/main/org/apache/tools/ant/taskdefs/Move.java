@@ -74,7 +74,7 @@ public class Move extends Copy {
             destFile = (destFile == null)
                 ? new File(destDir, file.getName()) : destFile;
             destDir = (destDir == null)
-                ? fileUtils.getParentFile(destFile) : destDir;
+                ? destFile.getParentFile() : destDir;
 
             completeDirMap.put(file, destFile);
             file = null;

@@ -407,7 +407,7 @@ public class Zip extends MatchingTask {
             if (doUpdate) {
                 renamedFile =
                     fileUtils.createTempFile("zip", ".tmp",
-                                             fileUtils.getParentFile(zipFile));
+                                             zipFile.getParentFile());
                 renamedFile.deleteOnExit();
 
                 try {
