@@ -58,7 +58,7 @@ It is <b>strongly</b> recommended to use Jakarta Oro.
   </tr>
   <tr>
     <td valign="top">replace</td>
-    <td valign="top">The substition pattern to place in the file(s) in place
+    <td valign="top">The substitution pattern to place in the file(s) in place
                      of the regular expression.</td>
     <td align="center">Yes, if no nested &lt;substitution&gt; is used</td>
   </tr>
@@ -66,7 +66,7 @@ It is <b>strongly</b> recommended to use Jakarta Oro.
     <td valign="top">flags</td>
     <td valign="top">The flags to use when matching the regular expression.  For more
                      information, consult the Perl5 syntax<br />
-                     g --> Global replacement.  Replace all occurances found<br />
+                     g --> Global replacement.  Replace all occurences found<br />
                      i --> Case Insensitive.  Do not consider case in the match<br />
                      m --> Multiline.  Treat the string as multiple lines of input, using "^" and "$" as the start or end of any line, respectively, rather than start or end of string.<br />
                      s --> Singleline.  Treat the string as a single line of input, using "." to match any character, including a newline, which normally, it would not match.<br />
@@ -76,7 +76,7 @@ It is <b>strongly</b> recommended to use Jakarta Oro.
     <td valign="top">byline</td>
     <td valign="top">Process the file(s) one line at a time, executing the replacement
                      on one line at a time (<i>true/false</i>).  This is useful if you
-                     want to only replace the first occurance of a regular expression on
+                     want to only replace the first occurence of a regular expression on
                      each line, which is not easy to do when processing the file as a whole.
                      Defaults to <i>false</i>.</td>
     <td valign="top" align="center">No</td>
@@ -103,7 +103,7 @@ value, in the file <code>${src}/build.properties</code></p>
 </blockquote>
 <p>This task supports a nested <i>Substitution</i> element to specify
    the substitution pattern.  You can use this element to refer to a previously
-   defined substition pattern datatype instance.</p>
+   defined substitution pattern datatype instance.</p>
 <blockquote>
      &lt;substitution id="id" pattern="expression" /&gt;<br />
      &lt;substitution refid="id" /&gt;

@@ -48,9 +48,9 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
   jboss 2.1</a> and above EJB servers</li>
   <li><a href="http://www.bea.com" target="_top">Weblogic</a>
    4.5.1, 5.1, and 6.0 EJB servers</li>
-  <li><a href="http://www.objectweb.com/jonas/" target="_top">JOnAS</a>
+  <li><a href="http://www.objectweb.org/jonas/" target="_top">JOnAS</a>
    2.4 Open Source EJB server</li>
-  <li>IBM WebSphere 4.0</li>
+  <li><a href="http://www.ibm.com/websphere">IBM WebSphere</a> 4.0</li>
 </ul>
   Over time we expect further optional tasks  to support additional EJB Servers.
 </p>
@@ -65,11 +65,11 @@ In general these tasks are specific to the particular vendor's EJB Server.</p>
  <tr><td><a href="#iplanet-ejbc">iplanet-ejbc</a></td><td colspan="2">iPlanet Application Server 6.0</td></tr>
  <tr><td rowspan="7"><a href="#ejbjar">ejbjar</a></td><td colspan="2" align="center"><b>Nested Elements</b></td></tr>
  <tr><td><a href="BorlandEJBTasks.html">borland</a></td><td>Borland Application Server 4.5</td></tr>
- <tr><td><a href="#ejbjar_jboss">jBoss</a></td><td>jBoss</td></tr>
  <tr><td><a href="#ejbjar_iplanet">iPlanet</a></td><td>iPlanet Application Server 6.0</td></tr>
+ <tr><td><a href="#ejbjar_jboss">jBoss</a></td><td>jBoss</td></tr>
+ <tr><td><a href="#ejbjar_jonas">jonas</a></td><td>JOnAS 2.4</td></tr>
  <tr><td><a href="#ejbjar_weblogic">weblogic</a></td><td>Weblogic 5.1 &amp; 6.0</td></tr>
  <tr><td><a href="#ejbjar_websphere">websphere</a></td><td>IBM WebSphere 4.0</td></tr>
- <tr><td><a href="#ejbjar_jonas">jonas</a></td><td>JOnAS 2.4</td></tr>
  <tr><td><a href="#wlrun">wlrun</a></td><td colspan="2">Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
  <tr><td><a href="#wlstop">wlstop</a></td><td colspan="2">Weblogic 4.5.1, 5.1 &amp; 6.0</td></tr>
 
@@ -97,7 +97,7 @@ is based on the standard Ant include and exclude selection mechanisms.
   </tr>
   <tr>
     <td valign="top">dest</td>
-    <td valign="top">The directory where the serialised deployment descriptors will be written</td>
+    <td valign="top">The directory where the serialized deployment descriptors will be written</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -118,20 +118,20 @@ is based on the standard Ant include and exclude selection mechanisms.
 <hr>
 <h2><a name="ejbc">ejbc</a></h2>
 <h3><b>Description:</b></h3>
-<p>The ejbc task will run Weblogic's ejbc tool. This tool will take a serialised deployment descriptor,
+<p>The ejbc task will run Weblogic's ejbc tool. This tool will take a serialized deployment descriptor,
 examine the various EJB interfaces and bean classes and then generate the required support classes
 necessary to deploy the bean in a Weblogic EJB container. This will include the RMI stubs and skeletons
 as well as the classes which implement the bean's home and remote interfaces.</p>
 <p>
 The ant task which runs this tool is able to compile several beans in a single operation. The beans to be
-compiled are selected by including their serialised deployment descriptors. The standard ant
+compiled are selected by including their serialized deployment descriptors. The standard ant
 <code>include</code> and <code>exclude</code> constructs can be used to select the deployment descriptors
 to be included. </p>
 <p>
 Each descriptor is examined to determine whether the generated classes are out of date and need to be
 regenerated. The deployment descriptor is de-serialized to discover the home, remote and
 implementation classes. The corresponding source files are determined and checked to see their
-modification times. These times and the modification time of the serialised descriptor itself are
+modification times. These times and the modification time of the serialized descriptor itself are
 compared with the modification time of the generated classes. If the generated classes are not present
 or are out of date, the ejbc tool is run to generate new versions.</p>
 <h3>Parameters:</h3>
@@ -143,7 +143,7 @@ or are out of date, the ejbc tool is run to generate new versions.</p>
   </tr>
   <tr>
     <td valign="top">descriptors</td>
-    <td valign="top">This is the base directory from which the serialised deployment descriptors are selected.</td>
+    <td valign="top">This is the base directory from which the serialized deployment descriptors are selected.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
   <tr>
@@ -165,7 +165,7 @@ or are out of date, the ejbc tool is run to generate new versions.</p>
   <tr>
     <td valign="top">classpath</td>
     <td valign="top">This classpath must include both the <code>weblogic.ejbc</code> class and the
-                     classfiles of the bean, home interface, remote interface, etc of the bean being
+                     class files of the bean, home interface, remote interface, etc of the bean being
                      processed.</td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -578,8 +578,8 @@ following values
 name of the deployment descriptor.  For an Account bean, for example, the deployment
 descriptor would be named <code>Account-ejb-jar.xml</code>. Vendor specific descriptors are
 located using the same naming convention. The weblogic bean, for example, would be named
-<code>Account-weblogic-ejb-jar.xml</code>. Under this arrangment, the deployment descriptors
-can be separated from the code implementing the beans, which can be useful whe the same bean code
+<code>Account-weblogic-ejb-jar.xml</code>. Under this arrangement, the deployment descriptors
+can be separated from the code implementing the beans, which can be useful when the same bean code
 is deployed in separate beans.
 </p>
 
@@ -792,7 +792,7 @@ deployment element are detailed here.
 
 <p>The jboss element searches for the jboss specific deployment descriptors and adds them
 to the final ejb jar file. Jboss has two deployment descriptors jboss.xml and jaws.xml
-(for container manager persistance only). The Jboss server uses hot deployment and does
+(for container manager persistence only). The Jboss server uses hot deployment and does
 not require compilation of additional stubs and skeletons.</p>
 
 <table border="1" cellpadding="2" cellspacing="0">
@@ -1140,7 +1140,7 @@ This will create only one TOPLink-enabled ejb jar file - 'Address.jar'.</p>
 <h3><a name="ejbjar_websphere">WebSphere element</a></h3>
 
 <p>The websphere element searches for the websphere specific deployment descriptors and
-adds them to the final ejb jar file. Websphere has two specific desriptors for session
+adds them to the final ejb jar file. Websphere has two specific descriptors for session
 beans:
 <ul>
    <li>ibm-ejb-jar-bnd.xmi</li>
@@ -1201,7 +1201,7 @@ the classpath of the ejbdeploy tool (look at the examples below).
   <tr>
     <td valign="top">alwaysrebuild</td>
     <td valign="top">This controls whether ejbdeploy is called although no changes
-                     have occured.</td>
+                     have occurred.</td>
     <td valign="top" align="center">No, defaults to false</td>
   </tr>
   <tr>
@@ -1287,7 +1287,7 @@ the task will fail) and a JAR file named ejb/Account.jar will be written
 in the destination directory.  Note that when the EJB descriptors
 are added to the JAR file, they are automatically renamed META-INF/ejb-jar.xml
 and META-INF/ias-ejb-jar.xml.</p>
-<p>Of course, this naming behavior can be modified by specifying attributes
+<p>Of course, this naming behaviour can be modified by specifying attributes
 in the ejbjar task (for example, basejarname, basenameterminator, and flatdestdir)
 as well as the iplanet element (for example, suffix).  Refer to the
 appropriate documentation for more details.</p>
@@ -1450,7 +1450,7 @@ up to date, and it will do the minimum amount of work required. </p>
  ejb/Account.jar will be written in the destination directory.
 
  </p>
-<p>Of course, this naming behavior can be modified by specifying attributes
+<p>Of course, this naming behaviour can be modified by specifying attributes
  in the ejbjar task (for example, basejarname, basenameterminator, and flatdestdir)
  as well as the iplanet element (for example, suffix).  Refer to the appropriate
  documentation for more details.</p>
@@ -1531,7 +1531,7 @@ source files will be retained.  If omitted, it defaults to "no". </td>
     <td valign="top">secpropag</td>
     <td valign="top">Modify the RMI Skel. and Stub. to implement the
                      implicit propagation of the security context (note that
-                     the transactionnal context is always provided).
+                     the transactional context is always provided).
                      </td>
     <td valign="top" align="center">No, defaults to false.</td>
   </tr>
