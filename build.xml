@@ -943,6 +943,8 @@
                    unless="jakarta.oro.present" />
           <exclude name="${regexp.package}/Jdk14Regexp*Test.java"
                    unless="jdk1.4+" />
+          <exclude name="${optional.package}/metamata/*.java"
+                   unless="jakarta.oro.present"/>
           <exclude name="${optional.package}/ide/VAJExportTest.java" unless="vaj.present" />
           <exclude name="${optional.package}/sitraka/*.java" unless="jakarta.oro.present" />
           <exclude name="${optional.package}/ReplaceRegExpTest.java"
