@@ -20,8 +20,16 @@ public class Log
 {
     private String      m_message;
 
+
     public void setMessage( final String message )
     {
+        checkNullMessage();
+        m_message = message;
+    }
+
+    public void addContent( final String message )
+    {
+        checkNullMessage();
         m_message = message;
     }
 
@@ -29,5 +37,15 @@ public class Log
         throws TaskException
     {
         getLogger().warn( m_message );
+    }
+
+    private void checkNullMessage()
+    {
+        if( null != m_message )
+        {
+            final String message = "Message can only be set once by " +
+                "either nested content or the message attribute";
+            throw new IllegalStateException( message );
+        }
     }
 }
