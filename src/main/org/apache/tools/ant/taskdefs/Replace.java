@@ -594,6 +594,8 @@ public class Replace extends MatchingTask {
 
             int repCountStart = replaceCount;
 
+            logFilterChain(src.getPath());
+
             out.setInputBuffer(buildFilterChain(in.getOutputBuffer()));
 
             while (in.readChunck()) {
@@ -681,6 +683,17 @@ public class Replace extends MatchingTask {
         return buf;
     }
 
+    /**
+     * Logs the chain of filters to operate on the file.
+     * @param filename
+     */
+    private void logFilterChain(String filename) {
+        for (int i = 0; i < replacefilters.size(); i++) {
+            Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
+            log("Replacing in " + filename + ": " + filter.getToken()
+                    + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE);
+        }
+    }
     /**
      * Set the source file; required unless <code>dir</code> is set.
      * @param file source file
