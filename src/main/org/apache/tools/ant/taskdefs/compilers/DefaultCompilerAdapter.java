@@ -42,7 +42,7 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
-    
+
     /* jdg - TODO - all these attributes are currently protected, but they
      * should probably be private in the near future.
      */
@@ -112,6 +112,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     }
 
     /**
+     * Get the project this compiler adapter was created in.
+     * @return the owner project
      * @since Ant 1.6
      */
     protected Project getProject() {
@@ -120,7 +122,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Builds the compilation classpath.
-     *
+     * @return the compilation class path
      */
     protected Path getCompileClasspath() {
         Path classpath = new Path(project);
@@ -152,6 +154,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         return classpath;
     }
 
+    /**
+     * Get the command line arguments for the switches.
+     * @param cmd the command line
+     * @return the command line
+     */
     protected Commandline setupJavacCommandlineSwitches(Commandline cmd) {
         return setupJavacCommandlineSwitches(cmd, false);
     }
@@ -159,6 +166,9 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     /**
      * Does the command line argument processing common to classic and
      * modern.  Doesn't add the files to compile.
+     * @param cmd the command line
+     * @param useDebugLevel if true set set the debug level with the -g switch
+     * @return the command line
      */
     protected Commandline setupJavacCommandlineSwitches(Commandline cmd,
                                                         boolean useDebugLevel) {
@@ -199,7 +209,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             cmd.createArgument().setValue("-nowarn");
         }
 
-        if (deprecation == true) {
+        if (deprecation) {
             cmd.createArgument().setValue("-deprecation");
         }
 
@@ -296,6 +306,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     /**
      * Does the command line argument processing for modern.  Doesn't
      * add the files to compile.
+     * @param cmd the command line
+     * @return the command line
      */
     protected Commandline setupModernJavacCommandlineSwitches(Commandline cmd) {
         setupJavacCommandlineSwitches(cmd, true);
@@ -312,12 +324,12 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             }
         } else if (assumeJava15() && attributes.getTarget() != null) {
             String t = attributes.getTarget();
-            if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3") 
+            if (t.equals("1.1") || t.equals("1.2") || t.equals("1.3")
                 || t.equals("1.4")) {
                 attributes.log("The -source switch defaults to 1.5 in JDK 1.5.",
                                Project.MSG_WARN);
                 attributes.log("If you specify -target " + t
-                               + " you now must also specify -source " + t 
+                               + " you now must also specify -source " + t
                                + ".", Project.MSG_WARN);
                 attributes.log("Ant will implicitly add -source " + t
                                + " for you.  Please change your build file.",
@@ -332,6 +344,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     /**
      * Does the command line argument processing for modern and adds
      * the files to compile as well.
+     * @return the command line
      */
     protected Commandline setupModernJavacCommand() {
         Commandline cmd = new Commandline();
@@ -341,6 +354,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         return cmd;
     }
 
+    /**
+     * Set up the command line.
+     * @return the command line
+     */
     protected Commandline setupJavacCommand() {
         return setupJavacCommand(false);
     }
@@ -348,6 +365,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     /**
      * Does the command line argument processing for classic and adds
      * the files to compile as well.
+     * @param debugLevelCheck if true set the debug level with the -g switch
+     * @return the command line
      */
     protected Commandline setupJavacCommand(boolean debugLevelCheck) {
         Commandline cmd = new Commandline();
@@ -359,6 +378,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     /**
      * Logs the compilation parameters, adds the files to compile and logs the
      * &quot;niceSourceList&quot;
+     * @param cmd the command line
      */
     protected void logAndAddFilesToCompile(Commandline cmd) {
         attributes.log("Compilation " + cmd.describeArguments(),
@@ -388,6 +408,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * if the index is negative, no temporary file will ever be
      * created, but this may hit the command line length limit on your
      * system.
+     * @return the exit code of the compilation
      */
     protected int executeExternalCompile(String[] args, int firstFileName) {
         return executeExternalCompile(args, firstFileName, true);
@@ -404,6 +425,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
      * spaces will be quoted when they appear in the external file.
      * This is necessary when running JDK 1.4's javac and probably
      * others.
+     * @return the exit code of the compilation
      *
      * @since Ant 1.6
      */
@@ -477,6 +499,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
     }
 
     /**
+     * Add extdirs to classpath
+     * @param classpath the classpath to use
      * @deprecated use org.apache.tools.ant.types.Path#addExtdirs instead
      */
     protected void addExtdirsToClasspath(Path classpath) {
@@ -485,6 +509,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Adds the command line arguments specific to the current implementation.
+     * @param cmd the command line to use
      */
     protected void addCurrentCompilerArgs(Commandline cmd) {
         cmd.addArguments(getJavac().getCurrentCompilerArgs());
@@ -492,6 +517,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Shall we assume JDK 1.1 command line switches?
+     * @return true if jdk 1.1
      * @since Ant 1.5
      */
     protected boolean assumeJava11() {
@@ -504,6 +530,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Shall we assume JDK 1.2 command line switches?
+     * @return true if jdk 1.2
      * @since Ant 1.5
      */
     protected boolean assumeJava12() {
@@ -516,6 +543,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Shall we assume JDK 1.3 command line switches?
+     * @return true if jdk 1.3
      * @since Ant 1.5
      */
     protected boolean assumeJava13() {
@@ -530,6 +558,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Shall we assume JDK 1.4 command line switches?
+     * @return true if jdk 1.4
      * @since Ant 1.6.3
      */
     protected boolean assumeJava14() {
@@ -544,6 +573,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
     /**
      * Shall we assume JDK 1.5 command line switches?
+     * @return true if JDK 1.5
      * @since Ant 1.6.3
      */
     protected boolean assumeJava15() {
