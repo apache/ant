@@ -29,7 +29,7 @@ import org.apache.tools.ant.types.Path;
  */
 public class MSVSSADD extends MSVSS {
 
-    private String m_LocalPath = null;
+    private String localPath = null;
 
     /**
      * Builds a command line to execute ss.
@@ -72,7 +72,7 @@ public class MSVSSADD extends MSVSS {
      * @return The local path value.
      */
     protected String getLocalpath() {
-        return m_LocalPath;
+        return localPath;
     }
 
     /**
@@ -117,6 +117,6 @@ public class MSVSSADD extends MSVSS {
      * @param   localPath   The path on disk.
      */
     public void setLocalpath(Path localPath) {
-        m_LocalPath = localPath.toString();
+        this.localPath = localPath.toString();
     }
 }

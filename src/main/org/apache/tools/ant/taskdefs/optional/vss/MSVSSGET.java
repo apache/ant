@@ -163,7 +163,7 @@ public class MSVSSGET extends MSVSS {
      * a file has been skipped, <code>failonerror</code> is set to false when using
      * the <code>skip</code> option.
      *
-     * @param files
+     * @param files The action to take.
      */
     public void setWritableFiles(WritableFiles files) {
         super.setInternalWritableFiles(files);
