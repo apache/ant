@@ -87,6 +87,7 @@ import org.apache.tools.ant.types.Commandline;
  *
  * @author Thomas Christensen <tchristensen@nordija.com>
  * @author Don Jeffery <donj@apogeenet.com>
+ * @author Steven E. Newton <snewton@standard.com>
  */
 public class Pvcs extends org.apache.tools.ant.Task {
     private String pvcsbin;
@@ -99,7 +100,8 @@ public class Pvcs extends org.apache.tools.ant.Task {
     private String label;
     private boolean ignorerc;
     private boolean updateOnly;
-
+    private String filenameFormat;
+    private String lineStart;
     /**
      * Constant for the thing to execute
      */
@@ -257,11 +259,13 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     private void createFolders(File file) throws IOException, ParseException {
         BufferedReader in = new BufferedReader(new FileReader(file));
-        MessageFormat mf = new MessageFormat("{0}-arc({1})");
+        MessageFormat mf = new MessageFormat( getFilenameFormat() );
         String line = in.readLine();
         while(line != null) {
             log("Considering \""+line+"\"", Project.MSG_VERBOSE);
-            if(line.startsWith("\"\\") || line.startsWith("\"/")) {
+            if(line.startsWith("\"\\") || 
+               line.startsWith("\"/") || 
+               line.startsWith(getLineStart()) ) {
                 Object[] objs = mf.parse(line);
                 String f = (String)objs[1];
                 // Extract the name of the directory from the filename
@@ -312,6 +316,22 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     public String getRepository() {
         return repository;
+    }
+
+    public String getFilenameFormat() {
+        return filenameFormat;
+    }
+
+    public void setFilenameFormat(String f) {
+        filenameFormat = f;
+    }
+
+    public String getLineStart() {
+        return lineStart;
+    }
+
+    public void setLineStart(String l) {
+        lineStart = l;
     }
 
     /**
@@ -480,5 +500,7 @@ public class Pvcs extends org.apache.tools.ant.Task {
         label=null;
         ignorerc=false;
         updateOnly = false;
+        lineStart="\"P:";
+        filenameFormat="{0}_arc({1})";
     }
 }
