@@ -842,4 +842,24 @@ public class Java extends Task {
         w.close();
         log(sw.toString(), Project.MSG_ERR);
     }
+
+    /**
+     * accessor to the command line
+     *
+     * @return the current command line
+     * @since 1.6.3
+     */
+    public CommandlineJava getCommandLine() {
+        return cmdl;
+    }
+
+    /**
+     * get the system properties of the command line
+     *
+     * @return the current properties of this java invocation
+     * @since 1.6.3
+     */
+    public CommandlineJava.SysProperties getSysProperties() {
+        return cmdl.getSystemProperties();
+    }
 }
