@@ -133,7 +133,7 @@ public class VAJExport extends VAJTask {
     }
 
     /**
-     * Sets whether default exclusions should be used or not.
+     * Sets whether default exclusions should be used or not; default true.
      *
      * @param useDefaultExcludes "true"|"on"|"yes" when default exclusions
      *                           should be used, "false"|"off"|"no" when they
@@ -145,7 +145,7 @@ public class VAJExport extends VAJTask {
 
     /**
      * Set the destination directory into which the selected
-     * items should be exported
+     * items should be exported; required.
      */
     public void setDestdir(File destDir) {
         this.destDir = destDir;
@@ -163,14 +163,14 @@ public class VAJExport extends VAJTask {
     }
 
     /**
-     * if exportClasses is set, class files are exported
+     * optional flag to export the class files; default false.
      */
     public void setExportClasses(boolean doExport) {
         exportClasses = doExport;
     }
 
     /**
-     * if exportDebugInfo is set, the exported class files contain
+     * optional flag to export the debug info; default false.
      * debug info
      */
     public void setExportDebugInfo(boolean doExport) {
@@ -178,14 +178,14 @@ public class VAJExport extends VAJTask {
     }
 
     /**
-     * if exportResources is set, resource file will be exported
+     * optional flag to export the resource file; default true.
      */
     public void setExportResources(boolean doExport) {
         exportResources = doExport;
     }
 
     /**
-     * if exportSources is set, java files will be exported
+     * optional flag to export the Java files; default true.
      */
     public void setExportSources(boolean doExport) {
         exportSources = doExport;
@@ -193,7 +193,7 @@ public class VAJExport extends VAJTask {
 
     /**
      * Sets the set of include patterns. Patterns may be separated by a comma
-     * or a space.Currently only patterns denoting packages are
+     * or a space. Currently only patterns denoting packages are
      * supported
      *
      * @param includes the string containing the include patterns
