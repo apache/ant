@@ -333,10 +333,17 @@
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
   </target>  
-  
-  <target name="internal_dist" depends="dist-lite,javadocs">
-    <mkdir dir="${dist.docs}"/>
+
+  <target name="dist_javadocs" depends="javadocs">
     <mkdir dir="${dist.javadocs}"/>
+    <copy todir="${dist.javadocs}" overwrite="true">
+      <fileset dir="${build.javadocs}"/>
+    </copy>
+  </target>
+  
+  
+  <target name="internal_dist" depends="dist-lite,dist_javadocs">
+    <mkdir dir="${dist.docs}"/>
 
     <copy todir="${dist.lib}">
       <fileset dir="${lib.dir}">
@@ -350,10 +357,6 @@
     <copy todir="${dist.docs}"
           filtering="on">
       <fileset dir="${docs.dir}"/>
-    </copy>
-
-    <copy todir="${dist.javadocs}" overwrite="true">
-      <fileset dir="${build.javadocs}"/>
     </copy>
 
     <copy todir="${dist.dir}">
