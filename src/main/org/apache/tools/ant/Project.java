@@ -926,6 +926,10 @@ public class Project {
                 + taskClass;
             log(message, Project.MSG_ERR);
             throw new BuildException(message);
+        } catch (LinkageError e) {
+            String message = "Could not load " + taskClass + ": " + e;
+            log(message, Project.MSG_ERR);
+            throw new BuildException(message, e);
         }
         if (!Task.class.isAssignableFrom(taskClass)) {
             TaskAdapter.checkTaskClass(taskClass, this);

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -106,6 +106,10 @@ public class TaskAdapter extends Task implements TypeAdapter {
             final String message = "No public execute() in " + taskClass;
             project.log(message, Project.MSG_ERR);
             throw new BuildException(message);
+        } catch (LinkageError e) {
+            String message = "Could not load " + taskClass + ": " + e;
+            project.log(message, Project.MSG_ERR);
+            throw new BuildException(message, e);
         }
     }
 
