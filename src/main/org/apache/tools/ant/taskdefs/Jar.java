@@ -90,7 +90,7 @@ public class Jar extends Zip {
         fs.setDir(new File(manifest.getParent()));
         fs.setIncludes(manifest.getName());
         fs.setFullpath("META-INF/MANIFEST.MF");
-        super.addFileset(fs);
+        super.addPrefixedfileset(fs);
     }
 
 

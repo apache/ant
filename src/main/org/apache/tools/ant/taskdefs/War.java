@@ -91,25 +91,25 @@ public class War extends Jar {
         fs.setDir(new File(deploymentDescriptor.getParent()));
         fs.setIncludes(deploymentDescriptor.getName());
         fs.setFullpath("WEB-INF/web.xml");
-        super.addFileset(fs);
+        super.addPrefixedfileset(fs);
     }
 
     public void addLib(PrefixedFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("WEB-INF/lib/");
-        super.addFileset(fs);
+        super.addPrefixedfileset(fs);
     }
 
     public void addClasses(PrefixedFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("WEB-INF/classes/");
-        super.addFileset(fs);
+        super.addPrefixedfileset(fs);
     }
 
     public void addWebinf(PrefixedFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         fs.setPrefix("WEB-INF/");
-        super.addFileset(fs);
+        super.addPrefixedfileset(fs);
     }
 
     protected void initZipOutputStream(ZipOutputStream zOut)
