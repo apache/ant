@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.antlib.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,9 +44,9 @@ import org.xml.sax.helpers.ParserAdapter;
  * @author Raphael Pierquin <a href="mailto:raphael.pierquin@agisphere.com">
  *      raphael.pierquin@agisphere.com</a>
  */
-public class XMLValidateTask extends Task
+public class XMLValidateTask
+    extends Task
 {
-
     /**
      * The default implementation parser classname used by the task to process
      * validation.
@@ -591,7 +591,7 @@ public class XMLValidateTask extends Task
                     urlDTDs.put( publicId, urldtd );
                 }
             }
-            catch( java.net.MalformedURLException e )
+            catch( MalformedURLException e )
             {
                 //ignored
             }

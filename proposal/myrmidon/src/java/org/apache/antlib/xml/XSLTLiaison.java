@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.antlib.xml;
 
 import java.io.File;
 
@@ -18,7 +18,6 @@ import java.io.File;
  */
 public interface XSLTLiaison
 {
-
     /**
      * the file protocol prefix for systemid. This file protocol must be
      * appended to an absolute path. Typically: <tt>FILE_PROTOCOL_PREFIX +

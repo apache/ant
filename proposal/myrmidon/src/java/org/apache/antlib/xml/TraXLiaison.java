@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.antlib.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -19,9 +19,8 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import org.apache.tools.ant.taskdefs.XSLTLiaison;
-import org.apache.tools.ant.taskdefs.XSLTLogger;
-import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogEnabled;
 
 /**
  * Concrete liaison for XSLT processor implementing TraX. (ie JAXP 1.1)
@@ -30,41 +29,35 @@ import org.apache.tools.ant.taskdefs.XSLTLoggerAware;
  * @author <a href="mailto:dims@yahoo.com">Davanum Srinivas</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware
+public class TraXLiaison
+    extends AbstractLogEnabled
+    implements XSLTLiaison, ErrorListener
 {
-
     /**
      * The trax TransformerFactory
      */
-    private TransformerFactory tfactory = null;
+    private TransformerFactory tfactory;
 
     /**
      * stylesheet stream, close it asap
      */
-    private FileInputStream xslStream = null;
+    private FileInputStream xslStream;
 
     /**
      * Stylesheet template
      */
-    private Templates templates = null;
+    private Templates templates;
 
     /**
      * transformer
      */
-    private Transformer transformer = null;
-
-    private XSLTLogger logger;
+    private Transformer transformer;
 
     public TraXLiaison()
         throws Exception
     {
         tfactory = TransformerFactory.newInstance();
         tfactory.setErrorListener( this );
-    }
-
-    public void setLogger( XSLTLogger l )
-    {
-        logger = l;
     }
 
     public void setOutputtype( String type )
@@ -214,7 +207,7 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware
             msg.append( " Cause: " + e.getCause() );
         }
 
-        logger.log( msg.toString() );
+        getLogger().info( msg.toString() );
     }
 
 }//-- TraXLiaison

@@ -5,15 +5,18 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.antlib.xml;
 
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
@@ -41,44 +44,28 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public class XSLTProcess
     extends MatchingTask
-    implements XSLTLogger
 {
-
-    private File destDir = null;
-
-    private File baseDir = null;
-
-    private String xslFile = null;
-
-    private String targetExtension = ".html";
-    private Vector params = new Vector();
-
-    private File inFile = null;
-
-    private File outFile = null;
-    private Path classpath = null;
-    private boolean stylesheetLoaded = false;
-
-    private boolean force = false;
-
-    private String outputtype = null;
-
-    private FileUtils fileUtils;
-    private XSLTLiaison liaison;
-
-    private String processor;
-
-    public void log( String msg )
-    {
-        getLogger().info( msg );
-    }
+    private File m_destDir;
+    private File m_baseDir;
+    private String m_xslFile;
+    private String m_targetExtension = ".html";
+    private ArrayList m_params = new ArrayList();
+    private File m_inFile;
+    private File m_outFile;
+    private Path m_classpath;
+    private boolean m_stylesheetLoaded;
+    private boolean m_force;
+    private String m_outputtype;
+    private FileUtils m_fileUtils;
+    private XSLTLiaison m_liaison;
+    private String m_processor;
 
     /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess()
     {
-        fileUtils = FileUtils.newFileUtils();
+        m_fileUtils = FileUtils.newFileUtils();
     }//-- setForce
 
     /**
@@ -88,7 +75,7 @@ public class XSLTProcess
      */
     public void setBasedir( File dir )
     {
-        baseDir = dir;
+        m_baseDir = dir;
     }
 
     /**
@@ -112,7 +99,7 @@ public class XSLTProcess
         throws TaskException
     {
         createClasspath().setRefid( r );
-    }//-- setSourceDir
+    }
 
     /**
      * Set the destination directory into which the XSL result files should be
@@ -122,8 +109,8 @@ public class XSLTProcess
      */
     public void setDestdir( File dir )
     {
-        destDir = dir;
-    }//-- setDestDir
+        m_destDir = dir;
+    }
 
     /**
      * Set the desired file extension to be used for the target
@@ -132,8 +119,8 @@ public class XSLTProcess
      */
     public void setExtension( String name )
     {
-        targetExtension = name;
-    }//-- execute
+        m_targetExtension = name;
+    }
 
     /**
      * Set whether to check dependencies, or always generate.
@@ -142,7 +129,7 @@ public class XSLTProcess
      */
     public void setForce( boolean force )
     {
-        this.force = force;
+        this.m_force = force;
     }
 
     /**
@@ -152,7 +139,7 @@ public class XSLTProcess
      */
     public void setIn( File inFile )
     {
-        this.inFile = inFile;
+        this.m_inFile = inFile;
     }
 
     /**
@@ -162,7 +149,7 @@ public class XSLTProcess
      */
     public void setOut( File outFile )
     {
-        this.outFile = outFile;
+        this.m_outFile = outFile;
     }
 
     /**
@@ -174,12 +161,12 @@ public class XSLTProcess
      */
     public void setOutputtype( String type )
     {
-        this.outputtype = type;
+        this.m_outputtype = type;
     }
 
     public void setProcessor( String processor )
     {
-        this.processor = processor;
+        this.m_processor = processor;
     }//-- setDestDir
 
     /**
@@ -190,7 +177,7 @@ public class XSLTProcess
      */
     public void setStyle( String xslFile )
     {
-        this.xslFile = xslFile;
+        this.m_xslFile = xslFile;
     }
 
     /**
@@ -201,17 +188,17 @@ public class XSLTProcess
     public Path createClasspath()
         throws TaskException
     {
-        if( classpath == null )
+        if( m_classpath == null )
         {
-            classpath = new Path( project );
+            m_classpath = new Path( project );
         }
-        return classpath.createPath();
+        return m_classpath.createPath();
     }
 
-    public Param createParam()
+    public XSLTParam createParam()
     {
-        Param p = new Param();
-        params.addElement( p );
+        XSLTParam p = new XSLTParam();
+        m_params.add( p );
         return p;
     }//-- XSLTProcess
 
@@ -228,32 +215,28 @@ public class XSLTProcess
         String[] list;
         String[] dirs;
 
-        if( xslFile == null )
+        if( m_xslFile == null )
         {
             throw new TaskException( "no stylesheet specified" );
         }
 
-        if( baseDir == null )
+        if( m_baseDir == null )
         {
-            baseDir = getBaseDirectory();
+            m_baseDir = getBaseDirectory();
         }
 
-        liaison = getLiaison();
+        m_liaison = getLiaison();
 
         // check if liaison wants to log errors using us as logger
-        if( liaison instanceof XSLTLoggerAware )
-        {
-            ( (XSLTLoggerAware)liaison ).setLogger( this );
-        }
+        setupLogger( m_liaison );
 
-        log( "Using " + liaison.getClass().toString(), Project.MSG_VERBOSE );
-
-        File stylesheet = resolveFile( xslFile );
+        log( "Using " + m_liaison.getClass().toString(), Project.MSG_VERBOSE );
+        File stylesheet = resolveFile( m_xslFile );
 
         // if we have an in file and out then process them
-        if( inFile != null && outFile != null )
+        if( m_inFile != null && m_outFile != null )
         {
-            process( inFile, outFile, stylesheet );
+            process( m_inFile, m_outFile, stylesheet );
             return;
         }
 
@@ -262,28 +245,28 @@ public class XSLTProcess
          * in batch processing mode.
          */
         //-- make sure Source directory exists...
-        if( destDir == null )
+        if( m_destDir == null )
         {
             String msg = "destdir attributes must be set!";
             throw new TaskException( msg );
         }
-        scanner = getDirectoryScanner( baseDir );
-        log( "Transforming into " + destDir, Project.MSG_INFO );
+        scanner = getDirectoryScanner( m_baseDir );
+        log( "Transforming into " + m_destDir, Project.MSG_INFO );
 
         // Process all the files marked for styling
         list = scanner.getIncludedFiles();
         for( int i = 0; i < list.length; ++i )
         {
-            process( baseDir, list[ i ], destDir, stylesheet );
+            process( m_baseDir, list[ i ], m_destDir, stylesheet );
         }
 
         // Process all the directoried marked for styling
         dirs = scanner.getIncludedDirectories();
         for( int j = 0; j < dirs.length; ++j )
         {
-            list = new File( baseDir, dirs[ j ] ).list();
+            list = new File( m_baseDir, dirs[ j ] ).list();
             for( int i = 0; i < list.length; ++i )
-                process( baseDir, list[ i ], destDir, stylesheet );
+                process( m_baseDir, list[ i ], m_destDir, stylesheet );
         }
     }
 
@@ -292,13 +275,13 @@ public class XSLTProcess
     {
         // if processor wasn't specified, see if TraX is available.  If not,
         // default it to xslp or xalan, depending on which is in the classpath
-        if( liaison == null )
+        if( m_liaison == null )
         {
-            if( processor != null )
+            if( m_processor != null )
             {
                 try
                 {
-                    resolveProcessor( processor );
+                    resolveProcessor( m_processor );
                 }
                 catch( Exception e )
                 {
@@ -341,7 +324,7 @@ public class XSLTProcess
                 }
             }
         }
-        return liaison;
+        return m_liaison;
     }
 
     /**
@@ -353,26 +336,27 @@ public class XSLTProcess
     protected void configureLiaison( File stylesheet )
         throws TaskException
     {
-        if( stylesheetLoaded )
+        if( m_stylesheetLoaded )
         {
             return;
         }
-        stylesheetLoaded = true;
+        m_stylesheetLoaded = true;
 
         try
         {
-            log( "Loading stylesheet " + stylesheet, Project.MSG_INFO );
-            liaison.setStylesheet( stylesheet );
-            for( Enumeration e = params.elements(); e.hasMoreElements(); )
+            getLogger().info( "Loading stylesheet " + stylesheet );
+            m_liaison.setStylesheet( stylesheet );
+            final Iterator params = m_params.iterator();
+            while( params.hasNext() )
             {
-                Param p = (Param)e.nextElement();
-                liaison.addParam( p.getName(), p.getExpression() );
+                final XSLTParam param = (XSLTParam)params.next();
+                m_liaison.addParam( param.getName(), param.getExpression() );
             }
         }
-        catch( Exception ex )
+        catch( final Exception e )
         {
-            log( "Failed to read stylesheet " + stylesheet, Project.MSG_INFO );
-            throw new TaskException( "Error", ex );
+            getLogger().info( "Failed to read stylesheet " + stylesheet );
+            throw new TaskException( "Error", e );
         }
     }
 
@@ -401,13 +385,13 @@ public class XSLTProcess
     private Class loadClass( String classname )
         throws Exception
     {
-        if( classpath == null )
+        if( m_classpath == null )
         {
             return Class.forName( classname );
         }
         else
         {
-            AntClassLoader al = new AntClassLoader( project, classpath );
+            AntClassLoader al = new AntClassLoader( project, m_classpath );
             Class c = al.loadClass( classname );
             AntClassLoader.initializeClass( c );
             return c;
@@ -429,7 +413,7 @@ public class XSLTProcess
         throws TaskException
     {
 
-        String fileExt = targetExtension;
+        String fileExt = m_targetExtension;
         File outFile = null;
         File inFile = null;
 
@@ -446,7 +430,7 @@ public class XSLTProcess
             {
                 outFile = new File( destDir, xmlFile + fileExt );
             }
-            if( force ||
+            if( m_force ||
                 inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified() )
             {
@@ -454,14 +438,14 @@ public class XSLTProcess
                 getLogger().info( "Processing " + inFile + " to " + outFile );
 
                 configureLiaison( stylesheet );
-                liaison.transform( inFile, outFile );
+                m_liaison.transform( inFile, outFile );
             }
         }
         catch( Exception ex )
         {
             // If failed to process document, must delete target document,
             // or it will not attempt to process it the second time
-            log( "Failed to process " + inFile, Project.MSG_INFO );
+            getLogger().info( "Failed to process " + inFile );
             if( outFile != null )
             {
                 outFile.delete();
@@ -477,23 +461,24 @@ public class XSLTProcess
     {
         try
         {
-            long styleSheetLastModified = stylesheet.lastModified();
-            log( "In file " + inFile + " time: " + inFile.lastModified(), Project.MSG_DEBUG );
-            log( "Out file " + outFile + " time: " + outFile.lastModified(), Project.MSG_DEBUG );
-            log( "Style file " + xslFile + " time: " + styleSheetLastModified, Project.MSG_DEBUG );
-            if( force ||
+            final long styleSheetLastModified = stylesheet.lastModified();
+            getLogger().debug( "In file " + inFile + " time: " + inFile.lastModified() );
+            getLogger().debug( "Out file " + outFile + " time: " + outFile.lastModified() );
+            getLogger().debug( "Style file " + m_xslFile + " time: " + styleSheetLastModified );
+
+            if( m_force ||
                 inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified() )
             {
                 ensureDirectoryFor( outFile );
-                log( "Processing " + inFile + " to " + outFile, Project.MSG_INFO );
+                getLogger().info( "Processing " + inFile + " to " + outFile );
                 configureLiaison( stylesheet );
-                liaison.transform( inFile, outFile );
+                m_liaison.transform( inFile, outFile );
             }
         }
         catch( Exception ex )
         {
-            log( "Failed to process " + inFile, Project.MSG_INFO );
+            getLogger().info( "Failed to process " + inFile );
             if( outFile != null )
                 outFile.delete();
             throw new TaskException( "Error", ex );
@@ -514,50 +499,18 @@ public class XSLTProcess
         {
             final Class clazz =
                 loadClass( "org.apache.tools.ant.taskdefs.optional.TraXLiaison" );
-            liaison = (XSLTLiaison)clazz.newInstance();
+            m_liaison = (XSLTLiaison)clazz.newInstance();
         }
         else if( proc.equals( "xalan" ) )
         {
             final Class clazz =
                 loadClass( "org.apache.tools.ant.taskdefs.optional.XalanLiaison" );
-            liaison = (XSLTLiaison)clazz.newInstance();
+            m_liaison = (XSLTLiaison)clazz.newInstance();
         }
         else
         {
-            liaison = (XSLTLiaison)loadClass( proc ).newInstance();
+            m_liaison = (XSLTLiaison)loadClass( proc ).newInstance();
         }
     }
 
-    public class Param
-    {
-        private String name = null;
-        private String expression = null;
-
-        public void setExpression( String expression )
-        {
-            this.expression = expression;
-        }
-
-        public void setName( String name )
-        {
-            this.name = name;
-        }
-
-        public String getExpression()
-            throws TaskException
-        {
-            if( expression == null )
-                throw new TaskException( "Expression attribute is missing." );
-            return expression;
-        }
-
-        public String getName()
-            throws TaskException
-        {
-            if( name == null )
-                throw new TaskException( "Name attribute is missing." );
-            return name;
-        }
-    }
-
-}//-- XSLTProcess
+}

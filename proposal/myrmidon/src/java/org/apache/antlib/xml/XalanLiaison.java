@@ -5,14 +5,13 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.tools.ant.taskdefs.optional;
+package org.apache.antlib.xml;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.taskdefs.XSLTLiaison;
 import org.apache.xalan.xslt.XSLTInputSource;
 import org.apache.xalan.xslt.XSLTProcessor;
 import org.apache.xalan.xslt.XSLTProcessorFactory;
@@ -24,11 +23,11 @@ import org.apache.xalan.xslt.XSLTResultTarget;
  * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class XalanLiaison implements XSLTLiaison
+public class XalanLiaison
+    implements XSLTLiaison
 {
-
-    protected XSLTProcessor processor;
-    protected File stylesheet;
+    private XSLTProcessor processor;
+    private File stylesheet;
 
     public XalanLiaison()
         throws Exception
