@@ -17,10 +17,9 @@ import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
