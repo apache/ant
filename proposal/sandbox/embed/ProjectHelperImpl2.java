@@ -83,9 +83,10 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.ParserConfigurationException;
 
 /**
- * Original helper.
+ * Sax2 based project reader
  *
  * @author duncan@x180.com
+ * @author Costin Manolache
  */
 public class ProjectHelperImpl2 extends ProjectHelper {
     /* Stateless */
@@ -709,14 +710,14 @@ public class ProjectHelperImpl2 extends ProjectHelper {
          * Wrapper for the parent element, if any. The wrapper for this 
          * element will be added to this wrapper as a child.
          */
-        private RuntimeConfigurable parentWrapper;
+        private RuntimeConfigurable2 parentWrapper;
         /**
          * Wrapper for this element which takes care of actually configuring
          * the element, if this element is contained within a target. 
          * Otherwise the configuration is performed with the configure method.
          * @see ProjectHelper#configure(Object,Attributes,Project)
          */
-        private RuntimeConfigurable wrapper = null;
+        private RuntimeConfigurable2 wrapper = null;
         
         /**
          * Constructor.
@@ -739,7 +740,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
          * @param target        Target this element is part of.
          *                      May be <code>null</code>.
          */
-        public TaskHandler(TaskContainer container, RuntimeConfigurable parentWrapper, Target target) {
+        public TaskHandler(TaskContainer container, RuntimeConfigurable2 parentWrapper, Target target) {
             this.container = container;
             this.parentWrapper = parentWrapper;
             this.target = target;
@@ -790,14 +791,15 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 task.setOwningTarget(target);
                 container.addTask(task);
                 task.init();
-                wrapper = task.getRuntimeConfigurableWrapper();
-                wrapper.setAttributes(sax1Attributes(attrs));
+                //wrapper = task.getRuntimeConfigurableWrapper();
+                wrapper=new RuntimeConfigurable2(task, task.getTaskName());
+                wrapper.setAttributes2(attrs);
                 if (parentWrapper != null) {
                     parentWrapper.addChild(wrapper);
                 }
             } else {
                 task.init();
-                ProjectHelper.configure(task, sax1Attributes(attrs), context.project);
+                RuntimeConfigurable2.configure(task, attrs, context.project);
             }
         }
 
@@ -879,14 +881,14 @@ public class ProjectHelperImpl2 extends ProjectHelper {
          * Wrapper for the parent element, if any. The wrapper for this 
          * element will be added to this wrapper as a child.
          */
-        private RuntimeConfigurable parentWrapper;
+        private RuntimeConfigurable2 parentWrapper;
         /**
          * Wrapper for this element which takes care of actually configuring
          * the element, if a parent wrapper is provided.
          * Otherwise the configuration is performed with the configure method.
          * @see ProjectHelper#configure(Object,Attributes,Project)
          */
-        private RuntimeConfigurable childWrapper = null;
+        private RuntimeConfigurable2 childWrapper = null;
         /** Target this element is part of, if any. */
         private Target target;
 
@@ -907,7 +909,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
          *                      May be <code>null</code>.
          */
         public NestedElementHandler(Object parent,
-                                    RuntimeConfigurable parentWrapper,
+                                    RuntimeConfigurable2 parentWrapper,
                                     Target target) {
             if (parent instanceof TaskAdapter) {
                 this.parent = ((TaskAdapter) parent).getProxy();
@@ -957,11 +959,11 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 context.configureId(child, attrs);
 
                 if (parentWrapper != null) {
-                    childWrapper = new RuntimeConfigurable(child, qname);
-                    childWrapper.setAttributes(sax1Attributes(attrs));
+                    childWrapper = new RuntimeConfigurable2(child, qname);
+                    childWrapper.setAttributes2(attrs);
                     parentWrapper.addChild(childWrapper);
                 } else {
-                    ProjectHelper.configure(child, sax1Attributes(attrs), context.project);
+                    RuntimeConfigurable2.configure(child, attrs, context.project);
                     ih.storeElement(context.project, parent, child, elementName);
                 }
             } catch (BuildException exc) {
@@ -1035,7 +1037,7 @@ public class ProjectHelperImpl2 extends ProjectHelper {
         /** The element being configured. */
         private Object element;
         /** Wrapper for this element, if it's part of a target. */
-        private RuntimeConfigurable wrapper = null;
+        private RuntimeConfigurable2 wrapper = null;
         
         /**
          * Constructor with a target specified.
@@ -1075,11 +1077,11 @@ public class ProjectHelperImpl2 extends ProjectHelper {
                 }
                 
                 if (target != null) {
-                    wrapper = new RuntimeConfigurable(element, qname);
-                    wrapper.setAttributes(sax1Attributes(attrs));
+                    wrapper = new RuntimeConfigurable2(element, qname);
+                    wrapper.setAttributes2(attrs);
                     target.addDataType(wrapper);
                 } else {
-                    ProjectHelper.configure(element, sax1Attributes(attrs), context.project);
+                    RuntimeConfigurable2.configure(element, attrs, context.project);
                     context.configureId(element, attrs);
                 }
             } catch (BuildException exc) {
@@ -1131,19 +1133,5 @@ public class ProjectHelperImpl2 extends ProjectHelper {
             return new NestedElementHandler(element, wrapper, target);
         }
     }
-
-    public static AttributeList sax1Attributes( Attributes sax2Att ) {
-        AttributeListImpl sax1Att=new AttributeListImpl();
-        int length = sax2Att.getLength();
-        if (length > 0) {
-            for (int i = 0; i < length; i++) {
-                // System.out.println("Attributes: " + sax2Att.getQName(i) + " " +
-                //                    sax2Att.getValue(i));
-                sax1Att.addAttribute( sax2Att.getQName(i), 
-                                      sax2Att.getType(i),
-                                      sax2Att.getValue(i));
-            }
-	}
-        return sax1Att;
-    }
+    
 }
