@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,7 +69,7 @@ import org.apache.tools.ant.types.Reference;
  * input the EJB JAR file.
  *
  * Two mode are available: java mode (default) and fork mode. With the fork mode,
- * it is impossible to add classpath to the commmand line.
+ * it is impossible to add classpath to the command line.
  *
  * @author  <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
@@ -163,7 +163,7 @@ public class BorlandGenerateClient extends Task {
      *
      * The work is actually done by creating a separate JVM to run a java task.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
         if (ejbjarfile == null || ejbjarfile.isDirectory()) {

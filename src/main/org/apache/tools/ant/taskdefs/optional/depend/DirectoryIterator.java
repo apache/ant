@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -154,7 +154,7 @@ public class DirectoryIterator implements ClassFileIterator {
      * stack and a new iterator is created for the subdirectory. If the
      * entry is a file, it is returned as the next element and the iterator
      * remains valid. If there are no more entries in the current directory,
-     * the topmost iterator on the statck is popped off to become the
+     * the topmost iterator on the stack is popped off to become the
      * current iterator.
      *
      * @return the next ClassFile in the iteration.

@@ -78,7 +78,7 @@ import org.apache.tools.ant.types.Path;
 /**
  * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5 and 4.5.1
  * This task generates and compiles the stubs and skeletons for all ejb described into the
- * Deployement Descriptor, builds the jar file including the support files and verify
+ * Deployment Descriptor, builds the jar file including the support files and verify
  * whether the produced jar is valid or not.
  * The supported options are:
  * <ul>
@@ -90,7 +90,7 @@ import org.apache.tools.ant.types.Path;
  *                           (see vbj com.inprise.ejb.util.Verify)</li>
  * <li>basdtd (String)     : location of the BAS DTD </li>
  * <li>generateclient (boolean) : turn on the client jar file generation </li>
- * <li>version (int)       : tell what is the borland appserver version 4 or 5 </li>
+ * <li>version (int)       : tell what is the Borland appserver version 4 or 5 </li>
  * </ul>
  *
  *<PRE>
@@ -144,12 +144,12 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     /** store additional param for java2iiop command used to build EJB Stubs */
     private String java2iioparams = null;
 
-    /** Instance variable that determines whetger the client jar file is generated */
+    /** Instance variable that determines whether the client jar file is generated */
     private boolean generateclient = false;
 
-    /** Borland Entreprise Server = version 5 */
+    /** Borland Enterprise Server = version 5 */
     static final int    BES       = 5;
-    /** Borland Application Server or Inprise Applcation Server  = version 4 */
+    /** Borland Application Server or Inprise Application Server  = version 4 */
     static final int    BAS       = 4;
 
     /** borland appserver version 4 or 5 */
@@ -191,7 +191,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
 
     /**
      * sets some additional args to send to verify command
-     * @param args addtions command line parameters
+     * @param args additional command line parameters
      */
     public void setVerifyArgs(String args) {
         this.verifyArgs = args;
@@ -334,7 +334,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
             }
             execTask.createArg().setValue("-verify");
             execTask.createArg().setValue("-src");
-            // ejb jar file to verfiy
+            // ejb jar file to verify
             execTask.createArg().setValue(sourceJar.getPath());
             log("Calling iastool", Project.MSG_VERBOSE);
             execTask.execute();
@@ -381,7 +381,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
 
 
     /**
-     * Generate the client jar corresponding to the jar file passed as paremeter
+     * Generate the client jar corresponding to the jar file passed as parameter
      * the method uses the BorlandGenerateClient task.
      * @param sourceJar java.io.File representing the produced jar file
      */
@@ -413,7 +413,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     }
 
     /**
-     * Generate stubs & sketelton for each home found into the DD
+     * Generate stubs & skeleton for each home found into the DD
      * Add all the generate class file into the ejb files
      * @param ithomes : iterator on home class
      */

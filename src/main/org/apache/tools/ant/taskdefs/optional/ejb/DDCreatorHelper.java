@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -68,12 +68,12 @@ import javax.ejb.deployment.DeploymentDescriptor;
  */
 public class DDCreatorHelper {
     /**
-     * The root directory of the tree containing the textual deployment desciptors.
+     * The root directory of the tree containing the textual deployment descriptors.
      */
     private File descriptorDirectory;
 
     /**
-     * The directory where generated serialised desployment descriptors are written.
+     * The directory where generated serialised deployment descriptors are written.
      */
     private File generatedFilesDirectory;
 

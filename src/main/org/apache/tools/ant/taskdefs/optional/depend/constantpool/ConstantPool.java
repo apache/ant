@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -250,7 +250,7 @@ public class ConstantPool {
      * @param methodClassName the name of the class which contains the
      *      method being referenced.
      * @param methodName the name of the method being referenced.
-     * @param methodType the type descriptor of the metho dbeing referenced.
+     * @param methodType the type descriptor of the method being referenced.
      * @return the index at which the given method ref entry occurs in the
      *      constant pool or -1 if the value does not occur.
      */
@@ -282,7 +282,7 @@ public class ConstantPool {
      * @param interfaceMethodClassName the name of the interface which
      *      contains the method being referenced.
      * @param interfaceMethodName the name of the method being referenced.
-     * @param interfaceMethodType the type descriptor of the metho dbeing
+     * @param interfaceMethodType the type descriptor of the method being
      *      referenced.
      * @return the index at which the given method ref entry occurs in the
      *      constant pool or -1 if the value does not occur.

@@ -95,7 +95,7 @@ public class NetCommand {
     protected Task owner;
 
     /**
-     *  executabe
+     *  executable
      */
     protected Execute executable;
 
@@ -190,7 +190,7 @@ public class NetCommand {
     /**
      *  verbose text log
      *
-     *@param  msg  string to add to log iff verbose is defined for the build
+     *@param  msg  string to add to log if verbose is defined for the build
      */
     protected void logVerbose(String msg) {
         owner.getProject().log(msg, Project.MSG_VERBOSE);
@@ -258,7 +258,7 @@ public class NetCommand {
     /**
      *  Run the command using the given Execute instance.
      *
-     *@exception  BuildException  iff something goes wrong and the
+     *@exception  BuildException  if something goes wrong and the
      *      failOnError flag is true
      */
     public void runCommand()

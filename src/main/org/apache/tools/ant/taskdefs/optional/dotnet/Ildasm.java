@@ -220,7 +220,7 @@ public class Ildasm extends Task {
     }
 
     /**
-     * enable or disable (default) the orginal bytes as comments
+     * enable or disable (default) the original bytes as comments
      * @param bytes
      */
     public void setBytes(boolean bytes) {
@@ -446,7 +446,7 @@ public class Ildasm extends Task {
         }
 
         /**
-         * map from an encoding enum to an encoding opion
+         * map from an encoding enum to an encoding option
          * @param enumValue
          * @return
          */

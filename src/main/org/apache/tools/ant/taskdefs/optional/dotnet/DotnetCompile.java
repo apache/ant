@@ -133,7 +133,7 @@ public abstract class DotnetCompile
     private boolean failOnError;
 
     /**
-     *  using the path approach didnt work as it could not handle the implicit
+     *  using the path approach didn't work as it could not handle the implicit
      *  execution path. Perhaps that could be extracted from the runtime and
      *  then the path approach would be viable
      */
@@ -169,11 +169,11 @@ public abstract class DotnetCompile
      *  .dll;"+ extension and the poor developer has to know every library which
      *  is included why the compiler cant find classes on the path or in a
      *  directory, is a mystery. To reduce the need to be explicit, here is a
-     *  long list of the core libraries used in Beta-1 of .NET ommitting the
+     *  long list of the core libraries used in Beta-1 of .NET omitting the
      *  blatantly non portable (MS.win32.interop) and the .designer libraries.
      *  (ripping out Com was tempting) Casing is chosen to match that of the
      *  file system <i>exactly</i> so may work on a unix box too. there is no
-     *  need to reference mscorlib.dll, cos it is always there
+     *  need to reference mscorlib.dll, because it is always there
      */
 
     protected static final String[] DEFAULT_REFERENCE_LIST_DOTNET_10 = {"Accessibility.dll",

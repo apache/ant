@@ -298,7 +298,7 @@ public class CSharp extends DotnetCompile {
     /**
      *  query the incrementalflag
      *
-     *@return    true iff incremental compilation is turned on
+     *@return    true if incremental compilation is turned on
      */
     public boolean getIncremental() {
         return incremental;

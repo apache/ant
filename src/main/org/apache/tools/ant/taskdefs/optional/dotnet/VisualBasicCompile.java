@@ -204,7 +204,7 @@ public class VisualBasicCompile extends DotnetCompile {
     }
 
     /**
-     * Forn the option string for optionStrict.
+     * For the option string for optionStrict.
      * @return The parameter string.
      */
     public String getOptionStrictParameter() {

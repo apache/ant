@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,7 +62,7 @@ import java.io.IOException;
  * @author Conor MacNeill
  */
 public class InterfaceMethodRefCPInfo extends ConstantPoolEntry {
-    /** the class name of the class defining the interafce method */
+    /** the class name of the class defining the interface method */
     private String interfaceMethodClassName;
     /** the name of the interface nmethod */
     private String interfaceMethodName;

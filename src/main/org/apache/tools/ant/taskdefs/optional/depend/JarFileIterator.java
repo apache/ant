@@ -69,10 +69,10 @@ public class JarFileIterator implements ClassFileIterator {
     private ZipInputStream jarStream;
 
     /**
-     * Construct a iterartor over a jar stream
+     * Construct an iterator over a jar stream
      *
-     * @param stream the basic input stream from which the Jar is recived
-     * @exception IOException if the jar stream connot be created
+     * @param stream the basic input stream from which the Jar is received
+     * @exception IOException if the jar stream cannot be created
      */
     public JarFileIterator(InputStream stream) throws IOException {
         super();

@@ -57,7 +57,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 /**
- * An entry in the constant pool. This class contains a represenation of the
+ * An entry in the constant pool. This class contains a representation of the
  * constant pool entries. It is an abstract base class for all the different
  * forms of constant pool entry.
  *
@@ -111,12 +111,12 @@ public abstract class ConstantPoolEntry {
     private int numEntries;
 
     /**
-     * A flag which indiciates if this entry has been resolved or not.
+     * A flag which indicates if this entry has been resolved or not.
      */
     private boolean resolved;
 
     /**
-     * Initialse the constant pool entry.
+     * Initialise the constant pool entry.
      *
      * @param tagValue the tag value which identifies which type of constant
      *      pool entry this is.

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -71,7 +71,7 @@ import org.apache.tools.ant.types.Path;
  */
 public class DDCreator extends MatchingTask {
     /**
-     * The root directory of the tree containing the textual deployment desciptors. The actual
+     * The root directory of the tree containing the textual deployment descriptors. The actual
      * deployment descriptor files are selected using include and exclude constructs
      * on the EJBC task, as supported by the MatchingTask superclass.
      */
@@ -98,7 +98,7 @@ public class DDCreator extends MatchingTask {
      * the classpath, this also avoids having to start ant with the class path of the
      * project it is building.
      *
-     * @exception BuildException if someting goes wrong with the build
+     * @exception BuildException if something goes wrong with the build
      */
     public void execute() throws BuildException {
         if (descriptorDirectory == null

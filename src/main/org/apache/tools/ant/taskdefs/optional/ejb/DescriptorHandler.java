@@ -377,7 +377,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
             }
         }
 
-    // Get the value of the <ejb-name> tag.  Only the first occurence.
+    // Get the value of the <ejb-name> tag.  Only the first occurrence.
         if (currentElement.equals(EJB_NAME)) {
             if (ejbName == null) {
                 ejbName = currentText.trim();
