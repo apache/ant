@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -77,7 +77,7 @@ import org.apache.tools.ant.Project;
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author Stefan Bodewig
  */
-public class PatternSet extends DataType {
+public class PatternSet extends DataType implements Cloneable {
     private Vector includeList = new Vector();
     private Vector excludeList = new Vector();
     private Vector includesFileList = new Vector();
@@ -475,6 +475,26 @@ public class PatternSet extends DataType {
     public String toString() {
         return "patternSet{ includes: " + includeList
                 + " excludes: " + excludeList + " }";
+    }
+
+    /**
+     * @since Ant 1.6
+     */
+    public Object clone() {
+        if (isReference()) {
+            return getRef(getProject()).clone();
+        } else {
+            try {
+                PatternSet ps = (PatternSet) super.clone();
+                ps.includeList = (Vector) includeList.clone();
+                ps.excludeList = (Vector) excludeList.clone();
+                ps.includesFileList = (Vector) includesFileList.clone();
+                ps.excludesFileList = (Vector) excludesFileList.clone();
+                return ps;
+            } catch (CloneNotSupportedException e) {
+                throw new BuildException(e);
+            }
+        }
     }
 
 }

@@ -719,15 +719,30 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     /**
+     * Creates a deep clone of this instance, except for the nested
+     * selectors (the list of selectors is a shallow clone of this
+     * instance's list).
+     *
      * @since Ant 1.6
      */
     public Object clone() {
-        try {
-            AbstractFileSet fs = (AbstractFileSet) super.clone();
-            fs.setProject(getProject());
-            return fs;
-        } catch (CloneNotSupportedException e) {
-            throw new BuildException(e);
+        if (isReference()) {
+            return (getRef(getProject())).clone();
+        } else {
+            try {
+                AbstractFileSet fs = (AbstractFileSet) super.clone();
+                fs.defaultPatterns = (PatternSet) defaultPatterns.clone();
+                fs.additionalPatterns = new Vector(additionalPatterns.size());
+                Enumeration e = additionalPatterns.elements();
+                while (e.hasMoreElements()) {
+                    fs.additionalPatterns
+                        .addElement(((PatternSet) e.nextElement()).clone());
+                }
+                fs.selectors = (Vector) fs.selectors.clone();
+                return fs;
+            } catch (CloneNotSupportedException e) {
+                throw new BuildException(e);
+            }
         }
     }
 
