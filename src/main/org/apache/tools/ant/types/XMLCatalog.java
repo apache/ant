@@ -82,9 +82,10 @@ import org.apache.tools.ant.util.FileUtils;
  * </code>
  * <p>
  * The object implemention <code>sometask</code> must provide a method called
- * <code>createCatalog</code> which returns an instance of <code>XCatalog</code>.
- * Nested dtd and entity definitions are handled by the XCatalog object and
- * must be labeled <code>dtd</code> and <code>entity</code> respectively.</p>
+ * <code>createCatalog</code> which returns an instance of 
+ * <code>XCatalog</code>. Nested dtd and entity definitions are handled by 
+ * the XCatalog object and must be labeled <code>dtd</code> and 
+ * <code>entity</code> respectively.</p>
  *
  * <p>Possible future extension could allow a catalog file instead of nested
  * elements, or use Norman Walsh's entity resolver from xml-commons</p>
@@ -93,7 +94,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @version $Id$
  */
 public class XMLCatalog extends DataType implements Cloneable, EntityResolver {
-    
+    /** File utilities instance */
     private FileUtils fileUtils = FileUtils.newFileUtils();
     
     //-- Fields ----------------------------------------------------------------
