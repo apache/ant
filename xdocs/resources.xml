@@ -42,7 +42,26 @@
       <p>Listed by descending publication date.</p>
       <!-- TODO: reorganize as a table? -->
       <subsection name="Java Development with Ant">
-        <p>Coming soon: August 2002, covers Ant 1.5
+        <p>Covers Ant 1.5, including:
+            <ul>
+                <li>The new Ant 1.5 features</li>
+                <li>Ant's datatypes and property handling</li> 
+                <li>JUnit testing and reporting</li> 
+                <li>Continuous integration techniques</li> 
+                <li>XDoclet for attribute-oriented programming</li> 
+                <li>EJB generation, building, and packaging</li> 
+                <li>Writing and testing native code</li> 
+                <li>Building Web Services with Apache Axis</li> 
+                <li>Deploying your system to multiple remote servers</li> 
+                <li>Using and writing
+                    <ul>
+                        <li>Loggers</li>
+                        <li>Listeners</li> 
+                        <li>Selectors</li> 
+                        <li>Custom tasks</li>
+                    </ul>
+                </li>
+            </ul>
         </p>
 
         <table>
