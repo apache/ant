@@ -79,8 +79,6 @@ import xdoclet.tagshandler.MethodTagsHandler;
 /**
  * Custom tag handler for XDoclet templates for Ant-specific processing.
  *
- * @author               Erik Hatcher
- * @author               Jesse Stockall
  * @created              January 1, 2003
  * @xdoclet.taghandler   namespace="Ant"
  * @todo                 clean up logic so that all setters are gathered first (even superclass) and sorted along wih

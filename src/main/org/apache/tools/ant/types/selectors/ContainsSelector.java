@@ -31,7 +31,6 @@ import org.apache.tools.ant.types.Parameter;
  * Selector that filters files based on whether they contain a
  * particular string.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class ContainsSelector extends BaseExtendSelector {

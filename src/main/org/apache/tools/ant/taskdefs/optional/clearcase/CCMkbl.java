@@ -77,7 +77,6 @@ previous baseline.</td>
  *   <tr>
  * </table>
  *
- * @author Robert Anderson
  */
 public class CCMkbl extends ClearCase {
     private String mComment = null;

@@ -30,7 +30,6 @@ import org.apache.tools.ant.Project;
  * works as expected. Note that this is the only selector you
  * can reference.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class SelectSelector extends BaseSelectorContainer {

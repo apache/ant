@@ -109,7 +109,6 @@ import java.io.File;
  *   </tr>
  * </table>
  *
- * @author Wolf Siberski, based on servlets written by Glenn McAllister
  */
 public class VAJExportServlet extends VAJToolsServlet {
     // constants for servlet param names

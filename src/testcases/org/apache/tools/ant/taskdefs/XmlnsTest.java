@@ -22,7 +22,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
 /**
- * @author Peter Reilly
  */
 public class XmlnsTest extends BuildFileTest {
     public XmlnsTest(String name) {

@@ -24,7 +24,6 @@ import java.awt.image.BufferedImage;
 
 /**
  *
- * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public class Ellipse extends BasicShape implements DrawOperation {

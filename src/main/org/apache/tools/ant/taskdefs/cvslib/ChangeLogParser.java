@@ -26,7 +26,6 @@ import java.util.TimeZone;
 /**
  * A class used to parse the output of the CVS log command.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 class ChangeLogParser {

@@ -61,7 +61,6 @@ import org.apache.tools.ant.Task;
 /**
  * The core JUnit task.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class RJUnitTask extends Task {
 

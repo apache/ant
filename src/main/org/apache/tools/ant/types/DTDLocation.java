@@ -27,9 +27,6 @@ package org.apache.tools.ant.types;
  * conformance with the OASIS standard.</p>
  *
  * @see org.apache.xml.resolver.Catalog
- * @author Conor MacNeill
- * @author dIon Gillard
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
  */
 public class DTDLocation extends ResourceLocation {

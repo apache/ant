@@ -23,8 +23,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Interface describing a regular expression matcher.
  *
- * @author Stefan Bodewig
- * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
 public interface RegexpMatcher {
 

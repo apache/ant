@@ -33,8 +33,6 @@ import java.io.OutputStream;
  * the archive, and the read each entry as a normal input stream
  * using read().
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
 public class TarInputStream extends FilterInputStream {
 

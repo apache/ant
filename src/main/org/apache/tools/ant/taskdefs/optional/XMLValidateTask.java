@@ -52,9 +52,6 @@ import org.xml.sax.helpers.ParserAdapter;
  * (probably the one that is used by Ant itself), but one can specify any
  * SAX1/2 parser if needed.
  *
- * @author Raphael Pierquin <a href="mailto:raphael.pierquin@agisphere.com">
- *                          raphael.pierquin@agisphere.com</a>
- * @author Nick Pellow <a href="mailto:nick@svana.org">nick@svana.org</a>
  */
 public class XMLValidateTask extends Task {
 
@@ -462,7 +459,6 @@ public class XMLValidateTask extends Task {
     /**
      * The class to create to set a feature of the parser.
      * @since ant1.6
-     * @author <a href="mailto:nick@svana.org">Nick Pellow</a>
      */
     public class Attribute {
         /** The name of the attribute to set.

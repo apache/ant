@@ -27,11 +27,6 @@ import org.apache.tools.ant.types.Path;
  * This is primarily a cut-and-paste from the original javac task before it
  * was refactored.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green
- *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author Stefan Bodewig
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @since Ant 1.3
  */
 public class Jvc extends DefaultCompilerAdapter {

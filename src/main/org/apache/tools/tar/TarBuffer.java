@@ -37,7 +37,6 @@ import java.io.IOException;
  * You should never have a need to access this class directly.
  * TarBuffers are created by Tar IO Streams.
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
  */
 
 public class TarBuffer {

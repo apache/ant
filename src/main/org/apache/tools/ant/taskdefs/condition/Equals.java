@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Simple String comparison condition.
  *
- * @author Stefan Bodewig
  * @since Ant 1.4
  * @version $Revision$
  */

@@ -41,7 +41,6 @@ import org.apache.tools.ant.util.FileUtils;
  * An implementation of the AntClassLoader suitable for use on post JDK 1.1
  * platforms
  *
- * @author Conor MacNeill
  */
 public class AntClassLoader2 extends AntClassLoader {
     /** Instance of a utility class to use for file operations. */

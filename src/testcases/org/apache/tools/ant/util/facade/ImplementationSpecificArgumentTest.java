@@ -20,7 +20,6 @@ package org.apache.tools.ant.util.facade;
 import junit.framework.TestCase;
 
 /**
- * @author Stefan Bodewig
  * @since Ant 1.5
  */
 public class ImplementationSpecificArgumentTest extends TestCase {

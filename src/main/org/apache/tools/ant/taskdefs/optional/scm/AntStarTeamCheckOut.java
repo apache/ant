@@ -65,10 +65,6 @@ import org.apache.tools.ant.Project;
  * For more information about the StarTeam API and how to license it, see
  * the link below.</B>
  *
- * @author <A HREF="mailto:chris.povirk@paytec.com">Chris Povirk</A>
- * @author <A HREF="mailto:jc.mann@paytec.com">JC Mann</A>
- * @author <A HREF="mailto:jeff.gettle@paytec.com">Jeff Gettle</A>
- * @author <A HREF="mailto:stevec@ignitesports.com">Steve Cohen</A>
  * @version 1.0
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  *

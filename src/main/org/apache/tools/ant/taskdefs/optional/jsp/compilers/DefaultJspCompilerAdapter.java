@@ -29,7 +29,6 @@ import org.apache.tools.ant.types.CommandlineJava;
  * This is currently very light on the ground since only one compiler type is
  * supported.
  *
- * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
 public abstract class DefaultJspCompilerAdapter
     implements JspCompilerAdapter {

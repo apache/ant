@@ -27,7 +27,6 @@ import java.io.IOException;
 /**
  * Tests FileSet using the Copy task.
  *
- * @author David Rees <dave@ubiqsoft.com>
  */
 public class CopyTest extends BuildFileTest {
 

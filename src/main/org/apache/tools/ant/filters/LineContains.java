@@ -42,7 +42,6 @@ import org.apache.tools.ant.types.Parameter;
  * This will include only those lines that contain <code>foo</code> and
  * <code>bar</code>.
  *
- * @author Magesh Umasankar
  */
 public final class LineContains
     extends BaseParamFilterReader

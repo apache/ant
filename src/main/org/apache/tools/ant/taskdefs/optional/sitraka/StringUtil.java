@@ -18,7 +18,6 @@ package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 /**
  * String utilities method.
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public final class StringUtil {
     /** private constructor, it's a utility class */

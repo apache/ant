@@ -24,7 +24,6 @@ import org.apache.tools.ant.taskdefs.optional.depend.constantpool.Utf8CPInfo;
 /**
  * Utilities mostly to manipulate methods and access flags.
  *
- * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class Utils {
     /** public access flag */

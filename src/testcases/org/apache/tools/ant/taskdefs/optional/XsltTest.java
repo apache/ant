@@ -21,7 +21,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Tests the style/xslt task.
  *
- * @author steve loughran
  * @since Ant 1.5
  */
 public class XsltTest extends BuildFileTest {

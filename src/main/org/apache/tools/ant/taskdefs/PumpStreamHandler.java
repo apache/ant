@@ -27,7 +27,6 @@ import java.io.OutputStream;
  *
  * TODO: standard input of the subprocess is not implemented.
  *
- * @author thomas.haas@softwired-inc.com
  * @since Ant 1.2
  */
 public class PumpStreamHandler implements ExecuteStreamHandler {

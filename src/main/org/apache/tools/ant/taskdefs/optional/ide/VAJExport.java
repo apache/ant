@@ -100,8 +100,6 @@ import org.apache.tools.ant.types.PatternSet;
  * </tr>
  * </table>
  *
- * @author Wolf Siberski, TUI Infotec GmbH
- * @author Martin Landers, Beck et al. projects
  */
 
 public class VAJExport extends VAJTask {

@@ -60,7 +60,6 @@ import java.io.IOException;
  * simple output stream which discards all write requests this should
  * really be part of java.io, as it is sporadically invaluable
  *
- * @author slo
  * @created March 17, 2001
  */
 public class NullOutputStream extends OutputStream {

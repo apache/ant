@@ -39,10 +39,6 @@ import org.apache.tools.zip.ZipFile;
 /**
  * Unzip a file.
  *
- * @author costin@dnt.ro
- * @author Stefan Bodewig
- * @author Magesh Umasankar
- * @author <a href="mailto:jasonsalter@hotmail.com">Jason Salter</a>
  *
  * @since Ant 1.1
  *

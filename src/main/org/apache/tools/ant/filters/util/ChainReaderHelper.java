@@ -37,7 +37,6 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Process a FilterReader chain.
  *
- * @author Magesh Umasankar
  */
 public final class ChainReaderHelper {
 

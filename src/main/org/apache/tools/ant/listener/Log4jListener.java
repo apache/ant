@@ -29,7 +29,6 @@ import org.apache.tools.ant.Task;
 /**
  *  Listener which sends events to Log4j logging system
  *
- * @author Conor MacNeill
  */
 public class Log4jListener implements BuildListener {
 

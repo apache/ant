@@ -27,11 +27,6 @@ import org.apache.tools.ant.Task;
  * to do token substitution. Sets multiple tokens by
  * reading these from a file.
  *
- * @author Stefano Mazzocchi
- *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Gero Vermaas <a href="mailto:gero@xs4all.nl">gero@xs4all.nl</a>
- * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
- *
  * @since Ant 1.1
  *
  * @ant.task category="filesystem"

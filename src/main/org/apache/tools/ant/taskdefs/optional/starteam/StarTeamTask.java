@@ -34,9 +34,7 @@ import org.apache.tools.ant.Task;
  * also abstract defines the tree-walking behavior common to many subtasks.
  *
  * @see TreeBasedTask
- * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>
  * @version 1.1
- * @author <a href="mailto:stevec@ignitesports.com">Steve Cohen</a>
  */
 
 public abstract class StarTeamTask extends Task {

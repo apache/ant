@@ -30,8 +30,6 @@ import junit.framework.TestCase;
  * Simple testcase for the ExecuteJava class - mostly stolen from
  * ExecuteWatchdogTest.
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
- * @author Stefan Bodewig
  */
 public class ExecuteJavaTest extends TestCase {
 

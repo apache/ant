@@ -28,7 +28,6 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
  * Compresses a file with the BZIP2 algorithm. Normally used to compress
  * non-compressed archives such as TAR files.
  *
- * @author Magesh Umasankar
  *
  * @since Ant 1.5
  *

@@ -34,9 +34,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * vm/options and one for the classname/arguments. It provides
  * specific methods for a java command line.
  *
- * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @author steve loughran
  */
 public class CommandlineJava implements Cloneable {
 

@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * A FieldRef CP Info
  *
- * @author Conor MacNeill
  */
 public class FieldRefCPInfo extends ConstantPoolEntry {
     /** Name of the field's class */

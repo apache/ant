@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * JUnit 3 testcases for org.apache.tools.zip.ZipEntry.
  *
- * @author Stefan Bodewig
  */
 public class ZipEntryTest extends TestCase {
 

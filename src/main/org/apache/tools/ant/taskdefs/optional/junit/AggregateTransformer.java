@@ -38,7 +38,6 @@ import org.w3c.dom.Document;
  * framed report is much more convenient if you want to browse into different
  * packages or testcases since it is a Javadoc like report.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class AggregateTransformer {
 

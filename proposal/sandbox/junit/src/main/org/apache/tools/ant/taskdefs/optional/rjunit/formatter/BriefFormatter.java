@@ -61,7 +61,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
  * Display additional messages from a <tt>SummaryFormatter</tt>
  * for failures and errors.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class BriefFormatter extends SummaryFormatter {
 

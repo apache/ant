@@ -27,7 +27,6 @@ import java.io.IOException;
 /**
  * JUnit Testcase for the optional replaceregexp task.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ReplaceRegExpTest extends BuildFileTest {

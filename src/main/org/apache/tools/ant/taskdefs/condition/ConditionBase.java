@@ -29,7 +29,6 @@ import org.apache.tools.ant.taskdefs.UpToDate;
  * conditions - ensures that the types of conditions inside the task
  * and the "container" conditions are in sync.
  *
- * @author Stefan Bodewig
  * @since Ant 1.4
  * @version $Revision$
  */

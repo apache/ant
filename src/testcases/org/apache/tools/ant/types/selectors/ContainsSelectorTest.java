@@ -29,7 +29,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests Contains Selectors.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
 public class ContainsSelectorTest extends BaseSelectorTest {
 

@@ -28,7 +28,6 @@ import java.util.Vector;
  * iterator should be created with the directory at the root of the Java
  * namespace.
  *
- * @author Conor MacNeill
  */
 public class DirectoryIterator implements ClassFileIterator {
 

@@ -60,7 +60,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * An extended file that gives state information.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CCFile extends File {
 

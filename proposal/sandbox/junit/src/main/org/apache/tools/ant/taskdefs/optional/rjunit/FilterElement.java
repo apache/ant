@@ -73,7 +73,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <!ATTLIST filter classname CDATA required>
  * </pre>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class FilterElement {
 

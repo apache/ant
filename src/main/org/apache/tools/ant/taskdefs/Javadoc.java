@@ -64,13 +64,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <P>Note: This task is run on another VM because the Javadoc code calls
  * <CODE>System.exit()</CODE> which would break Ant functionality.
  *
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- * @author Stefano Mazzocchi
- *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Patrick Chanezon
- *         <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
- * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
- * @author Stefan Bodewig
  *
  * @since Ant 1.1
  *
@@ -131,7 +124,6 @@ public class Javadoc extends Task {
      * A project aware class used for Javadoc extensions which take a name
      * and a path such as doclet and taglet arguments.
      *
-     * @author Conor MacNeill
      */
     public static class ExtensionInfo extends ProjectComponent {
         /** The name of the extension */
@@ -207,7 +199,6 @@ public class Javadoc extends Task {
     /**
      * This class stores info about doclets.
      *
-     * @author Conor MacNeill
      */
     public class DocletInfo extends ExtensionInfo {
 

@@ -29,9 +29,6 @@ import org.apache.tools.ant.taskdefs.Java;
  * and options are available. Do not set any apart from the <tt>classpath</tt>
  * as they are not guaranteed to be there in future.
  * @todo stop extending from Java.
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
- * @author <a href="mailto:marcus.boerger@post.rwth-aachen.de">Marcus
- *      B&ouml;rger</a>
  */
 public class StyleBook extends Java {
     protected File m_targetDirectory;

@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 /**
  * Extended Proxy interface for XSLT processors.
  *
- * @author Conor MacNeill
  * @see XSLTProcess
  * @since Ant 1.6
  */

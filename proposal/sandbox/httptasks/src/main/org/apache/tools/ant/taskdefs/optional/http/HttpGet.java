@@ -65,9 +65,6 @@ import org.apache.tools.ant.*;
  * subclass. because almost everything is done by the parent,
  * this class is almost completely empty
  * @since ant1.5
- * @author costin@dnt.ro
- * @author matth@pobox.com Matt Humphrey
- * @author steve_l@iseran.com Steve Loughran
  * @created March 17, 2001
  */
 

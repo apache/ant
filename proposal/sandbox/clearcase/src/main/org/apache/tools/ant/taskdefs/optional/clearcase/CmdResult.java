@@ -59,7 +59,6 @@ import org.apache.tools.ant.util.StringUtils;
 
 /**
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CmdResult {
 

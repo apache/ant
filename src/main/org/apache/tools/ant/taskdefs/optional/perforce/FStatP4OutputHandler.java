@@ -26,7 +26,6 @@ import java.util.ArrayList;
  * able to sort files recognized as managed by Perforce and files not
  * managed by Perforce in the output
  *
- * @author <A HREF="mailto:miha@softhome.net">Miha</A>
  */
 class FStatP4OutputHandler extends P4HandlerAdapter {
     private P4Fstat parent;

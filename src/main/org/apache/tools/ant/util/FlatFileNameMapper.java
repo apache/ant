@@ -24,7 +24,6 @@ package org.apache.tools.ant.util;
  * <p>This is the default FileNameMapper for the copy and move
  * tasks if the flatten attribute has been set.</p>
  *
- * @author Stefan Bodewig
  */
 public class FlatFileNameMapper implements FileNameMapper {
 

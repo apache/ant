@@ -24,7 +24,6 @@ import java.io.IOException;
  * constant pool entries. It is an abstract base class for all the different
  * forms of constant pool entry.
  *
- * @author Conor MacNeill
  * @see ConstantPool
  */
 public abstract class ConstantPoolEntry {

@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Tests the Dotnet tasks, based off WsdlToDotnetTest
  *
- * @author steve loughran
  * @since Ant 1.6
  */
 public class DotnetTest extends BuildFileTest {

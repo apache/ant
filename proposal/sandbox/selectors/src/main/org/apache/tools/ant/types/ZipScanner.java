@@ -68,7 +68,6 @@ import java.io.File;
  * complicate existing code which assumes that FileScanners return a
  * set of file system files that can be accessed directly.
  *
- * @author Don Ferguson <a href="mailto:don@bea.com">don@bea.com</a>
  */
 public class ZipScanner extends DirectoryScanner {
 

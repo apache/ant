@@ -23,7 +23,6 @@ import java.io.IOException;
 /**
  * A simple T-piece to replicate an output stream into two separate streams
  *
- * @author Conor MacNeill
  */
 public class TeeOutputStream extends OutputStream {
     private OutputStream left;

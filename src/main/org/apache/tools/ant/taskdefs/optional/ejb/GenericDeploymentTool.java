@@ -50,7 +50,6 @@ import org.xml.sax.SAXException;
  * deployment tools. A number of template methods are provided through which the
  * vendor specific tool can hook into the EJB creation process.
  *
- * @author Conor MacNeill
  */
 public class GenericDeploymentTool implements EJBDeploymentTool {
     /** The standard META-INF directory in jar files */

@@ -41,9 +41,6 @@ import org.apache.tools.ant.util.StringUtils;
  * tasks or that those tasks will finish first (i.e. it's a classic race
  * condition).
  * </p>
- * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
- * @author Conor MacNeill
- * @author Danno Ferrin
  * @since Ant 1.4
  *
  * @ant.task category="control"

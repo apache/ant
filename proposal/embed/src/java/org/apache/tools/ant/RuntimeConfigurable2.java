@@ -72,8 +72,6 @@ import org.xml.sax.helpers.AttributesImpl;
  * This uses SAX2 and a more flexible substitution mechansim, based on
  * o.a.tomcat.util.IntrospectionUtil.
  *
- * @author Stefan Bodewig
- * @author Costin Manolache
  */
 public class RuntimeConfigurable2 extends RuntimeConfigurable {
 

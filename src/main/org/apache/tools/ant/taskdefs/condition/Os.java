@@ -23,8 +23,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Condition that tests the OS type.
  *
- * @author Stefan Bodewig
- * @author Magesh Umasankar
  * @since Ant 1.4
  * @version $Revision$
  */

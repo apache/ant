@@ -88,8 +88,6 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Sax2 based project reader
  *
- * @author duncan@x180.com
- * @author Costin Manolache
  */
 public class ProjectHelperImpl2 extends ProjectHelper {
     /* Stateless */

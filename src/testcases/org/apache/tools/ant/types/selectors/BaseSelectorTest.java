@@ -31,7 +31,6 @@ import java.io.File;
  * a test bed for selecting on, and a helper method for determining
  * whether selections are correct.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
 public abstract class BaseSelectorTest extends TestCase {
 

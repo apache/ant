@@ -33,7 +33,6 @@ import junit.framework.TestSuite;
 /**
  * Very limited test class for Project. Waiting to be extended.
  *
- * @author Stefan Bodewig
  */
 public class ProjectTest extends TestCase {
 

@@ -39,7 +39,6 @@ import org.apache.tools.ant.util.StringUtils;
  *   &lt;P4Label name="MyLabel-${TSTAMP}-${DSTAMP}" desc="Auto Build Label" /&gt;
  * </pre>
  *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
  * @ant.task category="scm"
  */

@@ -22,7 +22,6 @@ import java.io.PrintWriter;
 /**
  * Signals an error condition during launching
  *
- * @author Conro MacNeill
  * @since Ant 1.6
  */
 public class LaunchException extends Exception {

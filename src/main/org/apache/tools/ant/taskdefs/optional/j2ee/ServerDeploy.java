@@ -29,7 +29,6 @@ import org.apache.tools.ant.Task;
  *  This class is used as a framework for the creation of vendor specific
  *  hot deployment tools.
  *
- *  @author Christopher A. Longo - cal@cloud9.net
  *
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool

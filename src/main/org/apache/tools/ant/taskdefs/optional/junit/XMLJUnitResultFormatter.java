@@ -39,8 +39,6 @@ import org.w3c.dom.Text;
 /**
  * Prints XML output of the test to a specified Writer.
  *
- * @author Stefan Bodewig
- * @author <a href="mailto:ehatcher@apache.org">Erik Hatcher</a>
  *
  * @see FormatterElement
  */

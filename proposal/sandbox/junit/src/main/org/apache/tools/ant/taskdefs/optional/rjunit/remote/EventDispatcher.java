@@ -59,7 +59,6 @@ import java.util.HashMap;
 /**
  * Dispatch messages to appropriate listener methode based on event id.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class EventDispatcher {
 

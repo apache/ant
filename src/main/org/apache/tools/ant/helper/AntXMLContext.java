@@ -35,7 +35,6 @@ import org.apache.tools.ant.RuntimeConfigurable;
 /**
  * Context information for the ant processing.
  *
- * @author Costin Manolache
  */
 public class AntXMLContext {
     /** The project to configure. */

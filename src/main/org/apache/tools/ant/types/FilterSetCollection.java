@@ -34,7 +34,6 @@ import java.util.Vector;
  * A FilterSetCollection is a collection of filtersets each of which may have
  * a different start/end token settings.
  *
- * @author Conor MacNeill
  */
 public class FilterSetCollection {
 

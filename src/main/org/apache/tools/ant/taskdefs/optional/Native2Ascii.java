@@ -31,8 +31,6 @@ import org.apache.tools.ant.util.SourceFileScanner;
 /**
  * Converts files from native encodings to ASCII.
  *
- * @author <a href="asudell@acm.org">Drew Sudell</a>
- * @author Stefan Bodewig
  * @since Ant 1.2
  */
 public class Native2Ascii extends MatchingTask {

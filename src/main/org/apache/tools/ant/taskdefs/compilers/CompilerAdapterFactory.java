@@ -25,7 +25,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 /**
  * Creates the necessary compiler adapter, given basic criteria.
  *
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @since Ant 1.3
  */
 public class CompilerAdapterFactory {

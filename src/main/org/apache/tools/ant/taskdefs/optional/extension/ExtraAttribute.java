@@ -21,7 +21,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Simple holder for extra attributes in main section of manifest.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  * @todo Refactor this and all the other parameter, sysproperty,
  *   property etc into a single class in framework

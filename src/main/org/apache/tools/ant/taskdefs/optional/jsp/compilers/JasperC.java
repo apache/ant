@@ -30,8 +30,6 @@ import org.apache.tools.ant.types.Path;
  * The implementation of the jasper compiler.
  * This is a cut-and-paste of the original Jspc task.
  *
- * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
- * @author steve loughran
  * @since ant1.5
  */
 public class JasperC extends DefaultJspCompilerAdapter {

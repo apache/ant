@@ -30,7 +30,6 @@ import org.apache.tools.ant.BuildException;
  * Prints plain text output of the test to a specified Writer.
  * Inspired by the PlainJUnitResultFormatter.
  *
- * @author <a href="mailto:robertdw@bigpond.net.au">Robert Watkins</a>
  *
  * @see FormatterElement
  * @see PlainJUnitResultFormatter

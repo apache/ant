@@ -41,10 +41,6 @@ import org.apache.tools.ant.Project;
  * createworkingdirectories="true"/&gt;
  * </pre>
  *
- * @author Christopher Charlier, ThoughtWorks, Inc. 2001
- * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>
- * @author Jason Pettiss
- * @author <a href="mailto:stevec@ignitesports.com">Steve Cohen</a>
  * @version 1.1
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  *

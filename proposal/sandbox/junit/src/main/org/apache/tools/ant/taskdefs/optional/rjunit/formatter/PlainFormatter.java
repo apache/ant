@@ -60,7 +60,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
 /**
  * Default formatter to text.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class PlainFormatter extends BaseStreamFormatter {
 

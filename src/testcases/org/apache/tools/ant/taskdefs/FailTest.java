@@ -21,8 +21,6 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
- * @author Stefan Bodewig
  */
 public class FailTest extends BuildFileTest {
 

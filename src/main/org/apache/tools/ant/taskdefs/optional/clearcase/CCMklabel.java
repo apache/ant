@@ -79,7 +79,6 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White
  */
 public class CCMklabel extends ClearCase {
     private boolean mReplace = false;

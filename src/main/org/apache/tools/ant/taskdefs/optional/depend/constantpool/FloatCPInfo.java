@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * A Float CP Info
  *
- * @author Conor MacNeill
  */
 public class FloatCPInfo extends ConstantCPInfo {
 

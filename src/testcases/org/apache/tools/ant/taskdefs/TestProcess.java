@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs;
 /**
  * Interactive Testcase for Processdestroyer.
  *
- * @author <a href="mailto:mnewcomb@tacintel.com">Michael Newcomb</a>
  */
 public class TestProcess
     implements Runnable

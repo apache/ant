@@ -37,7 +37,6 @@ import org.apache.tools.ant.types.Path;
  * as of Metamata 2.0, Metrics does not support command line :-(
  *
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class MMetrics extends AbstractMetamataTask {
 /*

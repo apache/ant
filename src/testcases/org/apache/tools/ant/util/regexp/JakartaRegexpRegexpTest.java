@@ -26,7 +26,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
 /**
  * Tests for the jakarta-regexp implementation of the Regexp interface.
  *
- * @author Stefan Bodewig
  */
 public class JakartaRegexpRegexpTest extends RegexpTest {
 

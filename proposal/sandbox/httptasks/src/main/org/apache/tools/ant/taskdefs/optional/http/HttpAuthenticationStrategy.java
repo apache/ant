@@ -60,8 +60,6 @@ import java.net.URLConnection;
 /**
  * this interface is for use by classes which authenticate connections.
  *
- * @author matth@pobox.com Matt Humphrey
- * @author steve_l@iseran.com Steve Loughran
  * @created 20 March 2001
  */
 

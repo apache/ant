@@ -30,7 +30,6 @@ import org.apache.tools.ant.types.Reference;
 /**
  * Selector that selects files by forwarding the request on to other classes.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class ExtendSelector extends BaseSelector {

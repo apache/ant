@@ -27,7 +27,6 @@ package org.apache.tools.bzip2;
  * A simple class the hold and calculate the CRC for sanity checking
  * of the data.
  *
- * @author <a href="mailto:keiron@aftexsw.com">Keiron Liddle</a>
  */
 class CRC {
     public static int crc32Table[] = {

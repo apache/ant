@@ -32,7 +32,6 @@ import org.apache.tools.ant.types.Parameter;
  *  &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * @author Magesh Umasankar
  */
 public final class PrefixLines
     extends BaseParamFilterReader

@@ -40,7 +40,6 @@ import org.w3c.dom.Document;
 /**
  * Runs the JProbe Coverage 3.0 snapshot merge utility.
  *
- * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  * @ant.task name="jpcovreport" category="metrics"
  */
 public class CovReport extends CovBase {

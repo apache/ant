@@ -65,7 +65,6 @@ import org.apache.tools.ant.DirectoryScanner;
 /**
  * Base task for all Clearcase tasks involving multiple-file processing.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public abstract class CCMatchingTask extends MatchingTask {
     

@@ -21,7 +21,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Tests using an undefined reference.
  *
- * @author Peter Reilly
  * @since Ant 1.6
  */
 public class RhinoReferenceTest extends BuildFileTest {

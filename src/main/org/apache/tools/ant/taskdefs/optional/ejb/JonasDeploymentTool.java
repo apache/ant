@@ -31,9 +31,6 @@ import org.apache.tools.ant.types.Path;
  * The deployment tool to add the jonas specific deployment descriptors to the
  * ejb JAR file. JONAS only requires one additional file jonas-ejb-jar.xml.
  *
- * @author <a href="mailto:cmorvan@ingenosya.com">Cyrille Morvan</a> , <a
- * href="http://www.ingenosya.com">Ingenosya France</a>, <a
- * href="mailto:mathieu.peltier@inrialpes.fr">Mathieu Peltier</a>
  * @version 1.0
  * @see EjbJar#createJonas
  */

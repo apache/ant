@@ -53,14 +53,6 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
  *
  * <p>Common base class for DirSet and FileSet.</p>
  *
- * @author <a href="mailto:ajkuiper@wxs.nl">Arnout J. Kuiper</a>
- * @author <a href="mailto:stefano@apache.org">Stefano Mazzocchi</a>
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:jon@clearink.com">Jon S. Stevens</a>
- * @author Stefan Bodewig
- * @author Magesh Umasankar
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
 public abstract class AbstractFileSet extends DataType implements Cloneable,
         SelectorContainer {

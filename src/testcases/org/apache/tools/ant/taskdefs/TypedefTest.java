@@ -21,7 +21,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class TypedefTest extends BuildFileTest {

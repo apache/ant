@@ -37,7 +37,6 @@ import org.apache.tools.ant.types.Reference;
 /**
  * Creates a partial DTD for Ant from the currently known tasks.
  *
- * @author Stefan Bodewig
  *
  * @version $Revision$
  *

@@ -29,10 +29,6 @@ import org.apache.tools.ant.util.ClasspathUtils;
  * handling uri and class loading.
  * (This was part of Definer)
  *
- * @author Costin Manolache
- * @author Stefan Bodewig
- * @author Peter Reilly
- *
  * @since Ant 1.6
  */
 public abstract class DefBase extends AntlibDefinition {

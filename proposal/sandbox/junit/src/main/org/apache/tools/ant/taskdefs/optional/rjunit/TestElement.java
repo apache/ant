@@ -58,7 +58,6 @@ import java.util.Enumeration;
 /**
  * A simple test element.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class TestElement extends BaseTestElement {
 

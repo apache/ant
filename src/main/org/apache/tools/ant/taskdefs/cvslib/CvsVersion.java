@@ -36,7 +36,6 @@ import java.util.StringTokenizer;
  * then calling getServerVersion and/or getClientVersion
  *
  * @ant.task category="scm"
- * @author Antoine Levy-Lambert
  * @since ant 1.6.1
  */
 public class CvsVersion extends AbstractCvsTask {

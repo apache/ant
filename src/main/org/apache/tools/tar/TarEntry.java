@@ -73,8 +73,6 @@ import java.util.Locale;
  * } header;
  * </pre>
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  */
 
 public class TarEntry implements TarConstants {

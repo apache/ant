@@ -24,7 +24,6 @@ import java.io.File;
 /**
  * Tests the examples of the &lt;scriptdef&gt; task.
  *
- * @author Conor MacNeill
  * @since Ant 1.6
  */
 public class ScriptDefTest extends BuildFileTest {

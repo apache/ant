@@ -28,7 +28,6 @@ package org.apache.tools.ant.taskdefs.optional.extension;
  * ants file.
  * WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  * @see Extension
  */

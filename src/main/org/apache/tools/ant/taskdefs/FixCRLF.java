@@ -76,8 +76,6 @@ import org.apache.tools.ant.util.FileUtils;
  * CRCRLF is regarded as a single EOL to handle cases where other
  * programs have converted CRLF into CRCRLF.
  *
- * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
- * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
  * @version $Revision$ $Name$
  * @since Ant 1.1
  *

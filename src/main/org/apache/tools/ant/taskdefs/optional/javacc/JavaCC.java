@@ -34,8 +34,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 /**
  * JavaCC compiler compiler task.
  *
- * @author thomas.haas@softwired-inc.com
- * @author Michael Saunders <a href="mailto:michael@amtec.com">michael@amtec.com</a>
  */
 public class JavaCC extends Task {
 

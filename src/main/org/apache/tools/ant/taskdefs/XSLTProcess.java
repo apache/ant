@@ -36,12 +36,6 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @version $Revision$
  *
- * @author <a href="mailto:kvisco@exoffice.com">Keith Visco</a>
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:russgold@acm.org">Russell Gold</a>
- * @author Stefan Bodewig
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- *
  * @since Ant 1.1
  *
  * @ant.task name="xslt" category="xml"

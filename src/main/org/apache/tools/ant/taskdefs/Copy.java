@@ -47,12 +47,6 @@ import org.apache.tools.ant.util.SourceFileScanner;
  * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
- * @author Glenn McAllister
- *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
- * @author Stefan Bodewig
- * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
- * @author Magesh Umasankar
- *
  * @version $Revision$
  *
  * @since Ant 1.2

@@ -62,8 +62,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *  </table>
  *
  *
- * @author      Brian Felder bfelder@providence.org
- * @author      Steve Loughran
  * @version     0.1
  */
 

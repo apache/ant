@@ -26,7 +26,6 @@ import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.ClassPathLoader;
 /**
  * Minimal testing for the classpath loader..
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class ClassPathLoaderTest extends TestCase {
     public ClassPathLoaderTest(String s) {

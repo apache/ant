@@ -39,7 +39,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * This version was written for Metamata 2.0 available at
  * <a href="http://www.metamata.com">http://www.metamata.com</a>
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  * @todo make a subclass of AbstractMetaMataTask
  */
 public class MParse extends AbstractMetamataTask {

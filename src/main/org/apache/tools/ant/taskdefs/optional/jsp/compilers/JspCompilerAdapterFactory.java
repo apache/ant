@@ -26,9 +26,6 @@ import org.apache.tools.ant.taskdefs.optional.jsp.Jasper41Mangler;
 /**
  * Creates the necessary compiler adapter, given basic criteria.
  *
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
- * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
- * @author Steve Loughran
  */
 public class JspCompilerAdapterFactory {
 

@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * A Long CP Info
  *
- * @author Conor MacNeill
  */
 public class LongCPInfo extends ConstantCPInfo {
 

@@ -71,7 +71,6 @@ import org.apache.tools.ant.types.PatternSet;
  * using include/exclude patterns in a set of paths. A path can either
  * be a directory or an archive. (zip or jar file)
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public final class ClasspathTestCollector extends ProjectComponent
         implements TestCollector {

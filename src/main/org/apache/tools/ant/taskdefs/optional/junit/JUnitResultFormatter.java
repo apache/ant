@@ -25,7 +25,6 @@ import org.apache.tools.ant.BuildException;
  * This Interface describes classes that format the results of a JUnit
  * testrun.
  *
- * @author Stefan Bodewig
  */
 public interface JUnitResultFormatter extends TestListener {
     /**

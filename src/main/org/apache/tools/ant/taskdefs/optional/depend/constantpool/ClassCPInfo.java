@@ -22,7 +22,6 @@ import java.io.IOException;
 /**
  * The constant pool entry which stores class information.
  *
- * @author Conor MacNeill
  */
 public class ClassCPInfo extends ConstantPoolEntry {
 

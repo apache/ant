@@ -27,7 +27,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Revert Perforce open files or files in a changelist
  *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
  * @ant.task category="scm"
  */

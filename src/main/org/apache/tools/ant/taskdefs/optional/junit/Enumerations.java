@@ -24,7 +24,6 @@ import java.util.NoSuchElementException;
  * This class should probably disappear once the required JDK is set to 1.2
  * instead of 1.1.
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public final class Enumerations {
 
@@ -56,7 +55,6 @@ public final class Enumerations {
 
 /**
  * Convenient enumeration over an array of objects.
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 class ArrayEnumeration implements Enumeration {
 
@@ -130,7 +128,6 @@ class ArrayEnumeration implements Enumeration {
  *    // do something
  * }
  * </pre>
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
  class CompoundEnumeration implements Enumeration {
 

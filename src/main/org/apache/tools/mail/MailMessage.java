@@ -87,7 +87,6 @@ import java.util.Enumeration;
  * <li>Figure out how to close the connection in case of error
  * </ul>
  *
- * @author Jason Hunter
  * @version 1.1, 2000/03/19, added angle brackets to address, helps some servers
  * version 1.0, 1999/12/29
  */

@@ -51,7 +51,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * </p>
  * @see <a href="http://java.sun.com/j2se/1.4/docs/guide/net/properties.html">
  *  java 1.4 network property list</a>
- * @author Steve Loughran
   *@since       Ant 1.5
  * @ant.task category="network"
  */

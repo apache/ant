@@ -29,7 +29,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests Filename Selectors
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
 public class FilenameSelectorTest extends BaseSelectorTest {
 

@@ -67,10 +67,6 @@ import org.apache.tools.ant.types.Commandline;
  * attribute will change to use the -v option of GET.  See bug #13847 for
  * discussion.
  *
- * @author <a href="mailto:tchristensen@nordija.com">Thomas Christensen</a>
- * @author <a href="mailto:donj@apogeenet.com">Don Jeffery</a>
- * @author <a href="mailto:snewton@standard.com">Steven E. Newton</a>
- * @author <a href="mailto:dickinson.j@ucles.org.uk">Jon Dickinson</a>
  */
 public class Pvcs extends org.apache.tools.ant.Task {
     private String pvcsbin;

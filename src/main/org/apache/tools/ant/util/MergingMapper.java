@@ -24,7 +24,6 @@ package org.apache.tools.ant.util;
  * <p>This is the default FileNameMapper for the archiving tasks and
  * uptodate.</p>
  *
- * @author Stefan Bodewig
  */
 public class MergingMapper implements FileNameMapper {
     protected String[] mergedFile = null;

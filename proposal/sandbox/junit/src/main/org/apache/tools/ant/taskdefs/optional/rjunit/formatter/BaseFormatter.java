@@ -61,7 +61,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
 /**
  * Provide a common set of attributes and methods to factorize
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public abstract class BaseFormatter implements Formatter {
 

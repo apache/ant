@@ -27,7 +27,6 @@ import org.apache.tools.ant.TypeAdapter;
 
 
 /**
- * @author Peter Reilly
  */
 public class TypeAdapterTest extends BuildFileTest {
 

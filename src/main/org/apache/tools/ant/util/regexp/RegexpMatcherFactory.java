@@ -29,7 +29,6 @@ import org.apache.tools.ant.Project;
  * <p>In a more general framework this class would be abstract and
  * have a static newInstance method.</p>
  *
- * @author Stefan Bodewig
  */
 public class RegexpMatcherFactory {
 

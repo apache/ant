@@ -21,7 +21,6 @@ package org.apache.tools.ant;
  * Base class for components of a project, including tasks and data types.
  * Provides common facilities.
  *
- * @author Conor MacNeill
  */
 public abstract class ProjectComponent {
 

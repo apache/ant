@@ -26,7 +26,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * The implementation of the rmic for WebLogic
  *
- * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  * @since Ant 1.4
  */
 public class WLRmic extends DefaultRmicAdapter {

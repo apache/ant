@@ -27,7 +27,6 @@ import java.io.IOException;
  * href="http://nagoya.apache.org/bugzilla/show_bug.cgi?id=5273">Bug
  * report 5273</a>.</p>
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ErrorInQuitException extends IOException {

@@ -27,7 +27,6 @@ import org.apache.tools.ant.util.StringUtils;
  * This is a class that represents a recorder. This is the listener to the
  * build process.
  *
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @version 0.5
  * @since Ant 1.4
  */

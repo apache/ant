@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
  * <p>The same rules used here would apply to FTP and other Telnet
  * based protocols as well.</p>
  *
- * @author Stefan Bodewig
  */
 public class SmtpResponseReader {
 

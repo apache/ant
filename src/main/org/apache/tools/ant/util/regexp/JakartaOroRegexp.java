@@ -25,7 +25,6 @@ import org.apache.tools.ant.BuildException;
 
 /***
  * Regular expression implementation using the Jakarta Oro package
- * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class JakartaOroRegexp extends JakartaOroMatcher implements Regexp {
 

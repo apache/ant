@@ -25,7 +25,6 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
  */
 public class FilterTest extends BuildFileTest {
 

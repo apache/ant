@@ -90,7 +90,6 @@ import org.apache.tools.ant.util.StringUtils;
  *  </testsuite>
  * </testsuites>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class XMLFormatter extends BaseStreamFormatter {
 

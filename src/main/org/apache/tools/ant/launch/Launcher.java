@@ -29,7 +29,6 @@ import java.util.Iterator;
 /**
  *  This is a launcher for Ant.
  *
- * @author  Conor MacNeill
  * @since Ant 1.6
  */
 public class Launcher {

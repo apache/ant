@@ -25,7 +25,6 @@ import org.apache.tools.ant.types.Commandline;
  * The implementation of the sj compiler.
  * Uses the defaults for DefaultCompilerAdapter
  *
- * @author <a href="mailto:don@bea.com">Don Ferguson</a>
  * @since Ant 1.4
  */
 public class Sj extends DefaultCompilerAdapter {

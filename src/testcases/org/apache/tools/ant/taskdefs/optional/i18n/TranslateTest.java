@@ -26,7 +26,6 @@ import java.io.IOException;
 /**
  * Tests the Translate task.
  *
- * @author    <a href="mailto:antoine@antbuild.com">Antoine Levy-Lambert</a>
  * @since     Ant 1.6
  */
 public class TranslateTest extends BuildFileTest {

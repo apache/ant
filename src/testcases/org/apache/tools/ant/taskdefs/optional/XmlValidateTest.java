@@ -28,8 +28,6 @@ import org.apache.tools.ant.BuildFileTest;
  * <p>
  *
  * @see XmlValidateCatalogTest
- * @author steve loughran
- * @author Jeff Turner
  * @since Ant 1.5
  */
 public class XmlValidateTest extends BuildFileTest {

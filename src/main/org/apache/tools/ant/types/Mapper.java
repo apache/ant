@@ -27,7 +27,6 @@ import org.apache.tools.ant.util.FileNameMapper;
 /**
  * Element to define a FileNameMapper.
  *
- * @author Stefan Bodewig
  */
 public class Mapper extends DataType implements Cloneable {
 

@@ -38,7 +38,6 @@ import org.apache.tools.zip.ZipOutputStream;
  * (with attributes <i>prefix</i>, <i>fullpath</i>, and <i>src</i>)
  * is available in the War task.</p>
  *
- * @author Stefan Bodewig
  *
  * @since Ant 1.2
  *

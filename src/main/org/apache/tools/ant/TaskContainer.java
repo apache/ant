@@ -28,7 +28,6 @@ package org.apache.tools.ant;
  * @see Task#execute
  * @see BuildEvent
  *
- * @author Conor MacNeill
  */
 public interface TaskContainer {
     /**

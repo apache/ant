@@ -22,8 +22,6 @@ import org.apache.tools.ant.input.PropertyFileInputHandler;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * @author Ulrich Schmidt <usch@usch.net>
- * @author Stefan Bodewig
  */
 public class InputTest extends BuildFileTest {
 

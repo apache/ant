@@ -54,8 +54,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * and split into single elements. It will usually be used
  * to define a path from an environment variable.
  *
- * @author Thomas.Haas@softwired-inc.com
- * @author Stefan Bodewig
  */
 
 public class Path extends DataType implements Cloneable {

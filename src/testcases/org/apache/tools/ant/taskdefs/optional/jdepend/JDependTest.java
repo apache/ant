@@ -32,7 +32,6 @@ import org.apache.tools.ant.DirectoryScanner;
 /**
  * Testcase for the JDepend optional task.
  *
- * @author Peter Reilly
  */
 public class JDependTest extends BuildFileTest {
     public static final String RESULT_FILESET = "result";

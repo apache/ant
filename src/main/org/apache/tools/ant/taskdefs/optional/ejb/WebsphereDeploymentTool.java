@@ -57,7 +57,6 @@ import org.apache.tools.ant.util.FileUtils;
  * ClassFormatError. Be sure to switch ejbdeploy off, if run ant with
  * sun jdk.
  *
- * @author <a href="mailto:msahu@interkeel.com">Maneesh Sahu</a>
  */
 public class WebsphereDeploymentTool extends GenericDeploymentTool {
     /**

@@ -24,7 +24,6 @@ import org.apache.tools.ant.ExitException;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Permissions.
  *
- * @author <a href="mailto:martijn@kruithof.xs4all.nl>Martijn Kruithof</a>
  */
 public class PermissionsTest extends TestCase {
 

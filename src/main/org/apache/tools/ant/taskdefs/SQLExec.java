@@ -68,10 +68,6 @@ import java.sql.ResultSetMetaData;
  * and <b>abort</b> execution and transaction and fail task.</p>
 
  *
- * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
- * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
- * @author <A href="mailto:tim.stephenson@sybase.com">Tim Stephenson</A>
- *
  * @since Ant 1.2
  *
  * @ant.task name="sql" category="database"

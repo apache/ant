@@ -68,8 +68,6 @@ import org.apache.commons.jxpath.*;
 /**
  *  Enable JXPath dynamic properties.
  *
- * @author Costin Manolache
- * @author Nicola Ken Barozzi
  */
 public class JXPath extends Task {
 

@@ -24,7 +24,6 @@ import java.lang.reflect.Method;
  * itself extend Task, but still contains an execute method and optionally
  * a setProject method.
  *
- * @author costin@dnt.ro
  */
 public class TaskAdapter extends Task implements TypeAdapter {
 

@@ -51,7 +51,6 @@ import org.xml.sax.SAXException;
  * TestListener that will receive events from the TestRunner via sockets. This
  * is IMHO the simplest way to do it to avoid this file hacking thing.
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  *
  * @ant.task name="junitreport" category="testing"
  */

@@ -63,7 +63,6 @@ import java.util.Iterator;
  *
  * </pre>
  * @since Ant 1.6
- * @author steve loughran
  */
 public class Assertions extends DataType {
 

@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Stefan Bodewig
  */
 public class LineContainsTest extends BuildFileTest {
 

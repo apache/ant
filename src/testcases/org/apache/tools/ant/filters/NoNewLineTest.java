@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /** JUnit Testcases for No new line when filterchain used
- * @author Peter Reilly
  */
 
 

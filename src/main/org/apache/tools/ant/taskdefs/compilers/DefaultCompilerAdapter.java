@@ -36,12 +36,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * This is the default implementation for the CompilerAdapter interface.
  * Currently, this is a cut-and-paste of the original javac task.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green
- *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author Stefan Bodewig
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
- *
  * @since Ant 1.3
  */
 public abstract class DefaultCompilerAdapter implements CompilerAdapter {

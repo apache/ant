@@ -25,7 +25,6 @@ import java.util.zip.ZipFile;
 import java.util.Enumeration;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
  */
 public class ZipTest extends BuildFileTest {
     //instance variable to allow cleanup

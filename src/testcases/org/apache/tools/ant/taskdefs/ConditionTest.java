@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildFileTest;
 import java.lang.reflect.InvocationTargetException;
 
 /**
- * @author steve_l
  * @created 13 January 2002
  */
 public class ConditionTest extends BuildFileTest {

@@ -32,8 +32,6 @@ import org.apache.tools.ant.util.FileNameMapper;
  * task, the execute command and a parameterless constructor (for
  * reflection).</p>
  *
- * @author <a href="mailto:tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
- * @author Stefan Bodewig
  * @since Ant 1.4
  */
 

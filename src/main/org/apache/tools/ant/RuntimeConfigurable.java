@@ -37,7 +37,6 @@ import org.xml.sax.helpers.AttributeListImpl;
  * any text within it. It then takes care of configuring that element at
  * runtime.
  *
- * @author Stefan Bodewig
  */
 public class RuntimeConfigurable implements Serializable {
 

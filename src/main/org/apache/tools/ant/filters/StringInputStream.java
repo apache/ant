@@ -23,7 +23,6 @@ import java.io.StringReader;
 /**
  * Wraps a String as an InputStream.
  *
- * @author Magesh Umasankar
  */
 public class StringInputStream
     extends InputStream {

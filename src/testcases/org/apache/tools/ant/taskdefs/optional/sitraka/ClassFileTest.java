@@ -27,8 +27,6 @@ import org.apache.tools.ant.taskdefs.optional.sitraka.bytecode.MethodInfo;
 /**
  * Nothing special about this testcase...
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
 public class ClassFileTest extends TestCase {
     public ClassFileTest(String s) {

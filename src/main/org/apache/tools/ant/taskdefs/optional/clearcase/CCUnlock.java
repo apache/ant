@@ -66,7 +66,6 @@ import org.apache.tools.ant.types.Commandline;
  *
  * </table>
  *
- * @author Sean P. Kane (Based on work by: Curtis White)
  */
 public class CCUnlock extends ClearCase {
     private String mComment = null;

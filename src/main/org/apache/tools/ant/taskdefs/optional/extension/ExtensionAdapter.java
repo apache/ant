@@ -24,7 +24,6 @@ import org.apache.tools.ant.types.Reference;
  * Simple class that represents an Extension and conforms to Ants
  * patterns.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  * @ant.data-type name="extension"
  */

@@ -60,8 +60,6 @@ import org.apache.tools.ant.BuildException;
  * </table>
  * </p>
  *
- * @author Wolf Siberski, TUI Infotec GmbH
- * @author Martin Landers, Beck et al. projects
  */
 
 public class VAJLoad extends VAJTask {

@@ -43,7 +43,6 @@ import org.apache.tools.ant.Target;
  * - manages a seperate thread for Ant project execution
  *   this allows interrupting a running build from a GUI
  *
- * @author Wolf Siberski, TUI Infotec GmbH
  */
 
 class VAJBuildInfo implements Runnable {

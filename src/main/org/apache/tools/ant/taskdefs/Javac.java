@@ -58,12 +58,6 @@ import org.apache.tools.ant.util.facade.FacadeTaskHelper;
  * destdir looking for Java source files to compile. This task makes its
  * compile decision based on timestamp.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green
- *         <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author Stefan Bodewig
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
- *
  * @version $Revision$
  *
  * @since Ant 1.1

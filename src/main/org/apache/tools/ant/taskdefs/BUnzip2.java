@@ -30,7 +30,6 @@ import org.apache.tools.bzip2.CBZip2InputStream;
  * algorithm. Normally used to compress non-compressed archives such
  * as TAR files.
  *
- * @author Magesh Umasankar
  *
  * @since Ant 1.5
  *

@@ -34,7 +34,6 @@ import org.xml.sax.XMLReader;
  *
  * <p>This class will create only a single factory instance.</p>
  *
- * @author Stefan Bodewig
  *
  * @since Ant 1.5
  */

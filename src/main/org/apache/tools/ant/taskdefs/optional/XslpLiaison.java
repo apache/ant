@@ -28,8 +28,6 @@ import org.apache.tools.ant.taskdefs.XSLTLiaison;
 /**
  * Concrete liaison for XSLP
  *
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @since Ant 1.1
  */
 public class XslpLiaison implements XSLTLiaison {

@@ -25,8 +25,6 @@ import java.util.Vector;
  * explicit implementation choices, magic properties and
  * implementation specific command line arguments.
  *
- * @author Stefan Bodewig
- *
  * @version $Revision$
  *
  * @since Ant 1.5

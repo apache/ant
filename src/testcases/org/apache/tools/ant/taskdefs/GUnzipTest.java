@@ -21,8 +21,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class GUnzipTest extends BuildFileTest {

@@ -61,7 +61,6 @@ import org.apache.tools.ant.util.StringUtils;
  * A wrapper around an exception since an exception stacktrace is
  * not serializable.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class ExceptionData implements Serializable {
 

@@ -37,7 +37,6 @@ import org.apache.tools.ant.util.StringUtils;
  *   view="//depot/...#head;//depot2/file1#25" /&gt;
  * </pre>
  *
- * @author <A HREF="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</A>
  *
  * @ant.task category="scm"
  */

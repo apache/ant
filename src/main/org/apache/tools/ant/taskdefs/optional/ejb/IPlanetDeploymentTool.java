@@ -79,7 +79,6 @@ import org.xml.sax.SAXException;
  * cannot be found or if they are out of date will ejbc be called.
  *
  * @see    IPlanetEjbc
- * @author Greg Nelson <a href="mailto:greg@netscape.com">greg@netscape.com</a>
  */
 public class IPlanetDeploymentTool extends GenericDeploymentTool {
 

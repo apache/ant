@@ -62,7 +62,6 @@ import org.apache.tools.ant.ProjectHelper;
 
 /**
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class RJUnitTaskTest extends BuildFileTest {
     public RJUnitTaskTest(String name) {

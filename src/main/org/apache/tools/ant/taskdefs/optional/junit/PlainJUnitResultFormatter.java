@@ -31,7 +31,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Prints plain text output of the test to a specified Writer.
  *
- * @author Stefan Bodewig
  */
 
 public class PlainJUnitResultFormatter implements JUnitResultFormatter {

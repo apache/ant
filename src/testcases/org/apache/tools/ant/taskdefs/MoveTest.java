@@ -26,7 +26,6 @@ import java.io.IOException;
 /**
  * Tests the Move task.
  *
- * @author Magesh Umasankar
  */
 public class MoveTest extends BuildFileTest {
 

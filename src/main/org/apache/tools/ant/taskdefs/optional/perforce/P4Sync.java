@@ -45,7 +45,6 @@ import org.apache.tools.ant.Project;
  *
  * @todo Add decent label error handling for non-exsitant labels
  *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
  * @ant.task category="scm"
  */

@@ -39,7 +39,6 @@ import org.apache.tools.ant.BuildException;
  *   &lt;param type="token" name="DATE" value="${TODAY}"/&gt;
  * &lt;/filterreader&gt;</pre>
  *
- * @author Magesh Umasankar
  */
 public final class ReplaceTokens
     extends BaseParamFilterReader

@@ -38,7 +38,6 @@ import org.apache.tools.ant.util.TeeOutputStream;
  * The Redirector class manages the setup and connection of
  * input and output redirection for an Ant task.
  *
- * @author Conor MacNeill
  * @since Ant 1.6
  */
 public class Redirector {

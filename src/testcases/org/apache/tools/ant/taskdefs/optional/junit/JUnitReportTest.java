@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildFileTest;
  * Small testcase for the junitreporttask.
  * First test added to reproduce an fault, still a lot to improve
  *
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
 public class JUnitReportTest extends BuildFileTest {
 

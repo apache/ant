@@ -30,8 +30,6 @@ import org.apache.tools.ant.taskdefs.optional.jsp.JspMangler;
  * task, the execute command and a parameterless constructor (for
  * reflection).</p>
  *
- * @author Jay Dickon Glanville <a href="mailto:jayglanville@home.com">jayglanville@home.com</a>
- * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
  */
 
 public interface JspCompilerAdapter {

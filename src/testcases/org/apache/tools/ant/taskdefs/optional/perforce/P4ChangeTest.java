@@ -21,7 +21,6 @@ import org.apache.oro.text.perl.Perl5Util;
 
 /**
  * Basic testcase to ensure that backslashing is OK.
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class P4ChangeTest extends TestCase {
 

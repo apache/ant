@@ -45,7 +45,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <p>
  * For additional information, visit <a href="http://www.sitraka.com">www.sitraka.com</a>
  *
- * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  *
  * @ant.task name="jpcoverage" category="metrics"
  */

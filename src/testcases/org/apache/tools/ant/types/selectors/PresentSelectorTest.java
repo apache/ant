@@ -34,7 +34,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests Present Selectors
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
 public class PresentSelectorTest extends BaseSelectorTest {
 

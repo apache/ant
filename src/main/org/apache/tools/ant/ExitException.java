@@ -22,8 +22,6 @@ package org.apache.tools.ant;
  * @see org.apache.tools.ant.util.optional.NoExitSecurityManager
  * @see org.apache.tools.ant.types.Permissions
  *
- * @author Conor MacNeill
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
 public class ExitException extends SecurityException {
 

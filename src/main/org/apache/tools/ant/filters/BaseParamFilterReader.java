@@ -23,7 +23,6 @@ import org.apache.tools.ant.types.Parameterizable;
 /**
  * Parameterized base class for core filter readers.
  *
- * @author Magesh Umasankar
  */
 public abstract class BaseParamFilterReader
     extends BaseFilterReader

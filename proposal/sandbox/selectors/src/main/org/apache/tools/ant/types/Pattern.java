@@ -66,7 +66,6 @@ import java.util.Vector;
 /**
  * Named collection of include/exclude tags.
  *
- * @author Magesh Umasankar
  */
 public class Pattern {
     private String pattern = null;

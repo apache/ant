@@ -28,7 +28,6 @@ import java.text.StringCharacterIterator;
  * The Locator is a utility class which is used to find certain items
  * in the environment
  *
- * @author Conor MacNeill
  * @since Ant 1.6
  */
 public final class Locator {

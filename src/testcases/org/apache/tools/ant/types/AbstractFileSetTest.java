@@ -30,7 +30,6 @@ import java.io.File;
  *
  * <p>This doesn't actually test much, mainly reference handling.
  *
- * @author Stefan Bodewig
  */
 
 public abstract class AbstractFileSetTest extends TestCase {

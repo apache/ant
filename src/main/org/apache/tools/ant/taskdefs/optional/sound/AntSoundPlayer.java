@@ -44,7 +44,6 @@ import org.apache.tools.ant.Project;
  *
  * I have only tested this with .WAV and .AIFF sound file formats. Both seem to work fine.
  *
- * @author Nick Pellow
  * @version $Revision$, $Date$
  */
 

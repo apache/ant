@@ -68,7 +68,6 @@ import java.util.*;
  * If this would be extended for <description> elements in targets - a special
  * construct would be needed to mark this as 'parsing time' task.
  * 
- * @author Costin Manolache
  */
 public class Description extends Task {
     String descr;

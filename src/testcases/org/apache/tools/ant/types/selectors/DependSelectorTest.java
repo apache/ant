@@ -34,7 +34,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests Depend Selectors
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
 public class DependSelectorTest extends BaseSelectorTest {
 

@@ -49,8 +49,6 @@ import org.apache.tools.ant.util.StringUtils;
  * The element <code>someelement</code> must provide a method
  * <code>createAcommandline</code> which returns an instance of this class.
  *
- * @author thomas.haas@softwired-inc.com
- * @author Stefan Bodewig
  */
 public class Commandline implements Cloneable {
 

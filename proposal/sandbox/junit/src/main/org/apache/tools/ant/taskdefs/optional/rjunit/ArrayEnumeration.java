@@ -58,7 +58,6 @@ import java.util.NoSuchElementException;
 
 /**
  * Convenient enumeration over an array of objects.
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 class ArrayEnumeration implements Enumeration {
 

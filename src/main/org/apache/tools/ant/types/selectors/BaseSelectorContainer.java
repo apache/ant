@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.selectors.modifiedselector.ModifiedSelector;
 /**
  * This is the base class for selectors that can contain other selectors.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public abstract class BaseSelectorContainer extends BaseSelector

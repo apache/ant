@@ -27,7 +27,6 @@ import org.apache.tools.ant.ProjectComponent;
  *   server - the name of the server.
  *   port - the port number of the socket.
  *
- * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  * @since Ant 1.5
  */
 public class Socket extends ProjectComponent implements Condition {

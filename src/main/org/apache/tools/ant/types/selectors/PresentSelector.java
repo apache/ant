@@ -31,7 +31,6 @@ import org.apache.tools.ant.util.IdentityMapper;
  * as an ExtendSelector (since those parameters can't hold other
  * elements).
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class PresentSelector extends BaseSelector {

@@ -67,8 +67,6 @@ import java.util.*;
  * It will also have additional features ( META-INF/ant.properties ,etc ).
  * 
  *
- * @author Stefan Bodewig
- * @author Costin Manolache
  * @since Ant 1.6
  * @ant.task category="internal"
  */

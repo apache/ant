@@ -66,9 +66,6 @@ import java.util.Vector;
  * With PH2, all components will be wrapped. Long term we should consolidate
  * UnkndownElement and RuntimeConfigurable.
  * 
- * @author Stefan Bodewig
- * @author Costin Manolache
- *
  * @deprecated All tasks will be lazily created and configured before execution.
  *       The xml reader will create a tree of RuntimeConfigurable, and tasks will
  *       be constructed ( and reconstructed for loops ) just before execution. The

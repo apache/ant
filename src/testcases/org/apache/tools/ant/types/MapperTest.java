@@ -30,7 +30,6 @@ import java.io.File;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.Mapper.
  *
- * @author Stefan Bodewig
  */
 
 public class MapperTest extends TestCase {

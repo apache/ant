@@ -38,7 +38,6 @@ package org.apache.tools.ant.taskdefs;
  * the project level and referenced via their ID attribute.</p>
  * <p>Custom data types usually need custom tasks to put them to good use.</p>
  *
- * @author Stefan Bodewig
  * @since Ant 1.4
  * @ant.task category="internal"
  */

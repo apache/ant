@@ -51,7 +51,6 @@ import org.apache.tools.ant.BuildException;
  * </tr>
  * </table>
  *
- * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */

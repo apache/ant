@@ -69,7 +69,6 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @see http://clearcase.rational.com/doc/latest/ccase_ux/ccref/rmname.html
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CCRmname extends CCMatchingTask {
 

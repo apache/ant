@@ -20,7 +20,6 @@ package org.apache.tools.ant;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Conor MacNeill
  *
  * Simple tests of build file processing
  */

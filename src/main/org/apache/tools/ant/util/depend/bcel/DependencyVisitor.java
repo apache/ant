@@ -30,8 +30,6 @@ import org.apache.bcel.classfile.ConstantNameAndType;
 /**
  * A BCEL visitor implementation to collect class dependency information
  *
- * @author Conor MacNeill
- * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class DependencyVisitor extends EmptyVisitor {
     /** The collectd dependencies */

@@ -24,8 +24,6 @@ import org.apache.tools.ant.types.Path;
 /**
  * Performs CheckIn commands to Microsoft Visual SourceSafe.
  *
- * @author Martin Poeschl
- * @author Jesse Stockall
  *
  * @ant.task name="vsscheckin" category="scm"
  */

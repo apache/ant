@@ -61,7 +61,6 @@ import java.net.*;
  * this is a class to work around the fact a function I want (guessContentTypeFromName)
  * is protected.
  *
- * @author steve_l@iseran.com Steve Loughran
  * @created March 17, 2001
  */
 class ContentGuesser extends URLConnection {

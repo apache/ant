@@ -43,7 +43,6 @@ import org.apache.tools.ant.Project;
 
  * Example Usage:<br>
  * &lt;p4counter name="${p4.counter}" property=${p4.change}"/&gt;
- * @author <a href="mailto:kirk@radik.com">Kirk Wylie</a>
  *
  * @ant.task category="scm"
  */

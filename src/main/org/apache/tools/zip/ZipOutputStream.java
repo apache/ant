@@ -50,8 +50,6 @@ import java.util.zip.ZipException;
  * uncompressed size information is required before {@link
  * #putNextEntry putNextEntry} can be called.</p>
  *
- * @author Stefan Bodewig
- * @author Richard Evans
  * @version $Revision$
  */
 public class ZipOutputStream extends FilterOutputStream {

@@ -23,8 +23,6 @@ import org.apache.tools.ant.Project;
 /**
  * Interface to locate a File that satisfies extension.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
- * @author <a href="mailto:jeff@socialchange.net.au">Jeff Turner</>
  * @version $Revision$ $Date$
  */
 public interface ExtensionResolver {

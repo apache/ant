@@ -21,7 +21,6 @@ import org.apache.tools.ant.taskdefs.LogOutputStream;
 /**
  * A dummy stream that just passes stuff to the parser.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 class RedirectingOutputStream

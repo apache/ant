@@ -21,8 +21,6 @@ package org.apache.tools.ant.taskdefs.optional.ide;
  * Super class for all VAJ tasks. Contains common
  * attributes (remoteServer) and util methods
  *
- * @author: Wolf Siberski
- * @author: Martin Landers, Beck et al. projects
  */
 import org.apache.tools.ant.Task;
 

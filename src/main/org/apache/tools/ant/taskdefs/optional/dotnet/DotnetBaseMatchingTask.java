@@ -30,7 +30,6 @@ import java.util.Enumeration;
 /**
  * refactoring of some stuff so that different things (like ILASM)
  * can use shared code.
- * @author steve loughran
  */
 public class DotnetBaseMatchingTask extends MatchingTask {
     /**

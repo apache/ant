@@ -86,8 +86,6 @@ import org.apache.tools.ant.types.FileSet;
  * </tr>
  * </table>
  *
- * @author Glenn McAllister, inspired by a similar task written by Peter Kelley
- * @author Martin Landers, Beck et al. projects
  */
 public class VAJImport extends VAJTask {
     protected Vector filesets = new Vector();

@@ -87,9 +87,6 @@ import org.apache.tools.ant.util.JAXPUtils;
  * It must be 'top level'. On execution it'll read another file
  * into the same Project. 
  *
- * @author Nicola Ken Barozzi nicolaken@apache.org
- * @author Dominique Devienne DDevienne@lgc.com
- * @author Costin Manolache
  */
 public class Import extends Task {
     String file;

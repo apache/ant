@@ -21,7 +21,6 @@ package org.apache.tools.ant;
  *
  * Not all magic names are here yet.
  *
- * @author Conor MacNeill
  * @since Ant 1.6
  */
 public class MagicNames {

@@ -105,7 +105,6 @@ import org.apache.tools.ant.taskdefs.Execute;
  * <code>link --> subdir/foo.bar</code>
  *
  * @version $Revision$
- * @author  <a href="mailto:gus.heck@olin.edu">Patrick G. Heck</a>
  */
 
 public class Symlink extends Task {

@@ -22,7 +22,6 @@ import java.util.Properties;
  * Interface used to bridge to the actual Main class without any
  * messy reflection
  *
- * @author  Conor MacNeill
  * @since Ant 1.6
  */
 public interface AntMain {

@@ -27,8 +27,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Implementation of RegexpMatcher for Jakarta-ORO.
  *
- * @author Stefan Bodewig
- * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
 public class JakartaOroMatcher implements RegexpMatcher {
 

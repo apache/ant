@@ -36,8 +36,6 @@ import org.apache.tools.ant.taskdefs.PreSetDef;
  * elements.
  * The class is final as it has a private constructor.
  *
- * @author Stefan Bodewig
- * @author Peter Reilly
  */
 public final class IntrospectionHelper implements BuildListener {
 

@@ -41,7 +41,6 @@ import java.io.IOException;
  * defined in the project itself.
  *
  *
- * @author Stefan Bodewig
  *
  * @since Ant 1.2
  *

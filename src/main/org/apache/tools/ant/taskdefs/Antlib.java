@@ -37,7 +37,6 @@ import org.apache.tools.ant.UnknownElement;
  * occur in an ant build file. It is the root element
  * an antlib xml file.
  *
- * @author Peter Reilly
  *
  * @since Ant 1.6
  */

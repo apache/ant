@@ -22,7 +22,6 @@ import java.util.Vector;
 /**
  * Encapsulates an input request.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  * @since Ant 1.5
  */

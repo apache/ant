@@ -26,7 +26,6 @@ import org.apache.tools.ant.Task;
 /**
  * Copies a file.
  *
- * @author duncan@x180.com
  *
  * @since Ant 1.1
  *

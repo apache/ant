@@ -24,7 +24,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Performs a compile using javac externally.
  *
- * @author Brian Deitte
  * @since Ant 1.4
  */
 public class JavacExternal extends DefaultCompilerAdapter {

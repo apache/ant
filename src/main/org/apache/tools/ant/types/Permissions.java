@@ -40,7 +40,6 @@ import org.apache.tools.ant.ExitException;
  * is active (after calling setSecurityManager() but before calling restoreSecurityManager()).
  *
  * @since Ant 1.6
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  */
 public class Permissions {
 

@@ -25,7 +25,6 @@ import javax.media.jai.PlanarImage;
  * wrapping and returning it as a PlanarImage.  This allows multible
  * "drawable" objects to be nested.
  *
- * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
  * @see org.apache.tools.ant.taskdefs.optional.image.Image
  */
 public interface DrawOperation {

@@ -34,7 +34,6 @@ import org.apache.tools.ant.Task;
  * also that the system clocks often have a fairly low granularity too, which complicates
  * measuring how long a sleep actually took.</p>
  *
- * @author steve_l@iseran.com steve loughran
  * @since Ant 1.4
  * @ant.task category="utility"
  */

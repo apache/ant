@@ -23,9 +23,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Performs Label commands to Microsoft Visual SourceSafe.
  *
- * @author Phillip Wells
- * @author Jesse Stockall
- *
  * @ant.task name="vsslabel" category="scm"
  */
 public class MSVSSLABEL extends MSVSS {

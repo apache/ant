@@ -26,7 +26,6 @@ import java.io.File;
  * Use of this algorithm doesn't require any additional nested <param>s and
  * doesn't support any.
  *
- * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */

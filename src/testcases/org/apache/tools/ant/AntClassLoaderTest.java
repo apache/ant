@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * Test case for ant class loader
  *
- * @author Conor MacNeill</a>
  */
 public class AntClassLoaderTest extends TestCase {
 

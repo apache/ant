@@ -26,7 +26,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 /**
  * Generates a key in a keystore.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  *
  * @since Ant 1.2
  *

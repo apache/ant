@@ -61,8 +61,6 @@ import org.apache.tools.ant.types.FileSet;
  * <FONT color=#6a5acd>&lt;!ELEMENT</FONT> prevrevision <FONT color=#ff00ff>(#PCDATA)</FONT><FONT color=#6a5acd>&gt;</FONT>
  * </PRE>
  *
- * @author <a href="mailto:jeff.martin@synamic.co.uk">Jeff Martin</a>
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  * @since Ant 1.5
  * @ant.task name="cvschangelog" category="scm"

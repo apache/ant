@@ -41,7 +41,6 @@ import org.apache.tools.ant.types.Commandline;
  * cleartool.
  * </p>
  *
- * @author Curtis White (Extended by Sean P. Kane)
  */
 public abstract class ClearCase extends Task {
     private String mClearToolDir = "";

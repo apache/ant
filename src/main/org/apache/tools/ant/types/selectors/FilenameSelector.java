@@ -25,7 +25,6 @@ import org.apache.tools.ant.types.Parameter;
 /**
  * Selector that filters files based on the filename.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class FilenameSelector extends BaseExtendSelector {

@@ -34,9 +34,6 @@ import java.net.URL;
  * </p>
  *
  * @see org.apache.xml.resolver.Catalog
- * @author Conor MacNeill
- * @author dIon Gillard
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
  * @since Ant 1.6
  */

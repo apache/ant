@@ -44,8 +44,6 @@ import org.apache.tools.ant.types.FileSet;
 /**
  * Used to create or verify file checksums.
  *
- * @author Magesh Umasankar
- * @author Aslak Hellesoy
  *
  * @since Ant 1.5
  *

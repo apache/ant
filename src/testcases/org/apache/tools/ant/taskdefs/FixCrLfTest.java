@@ -25,8 +25,6 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
- * @author Stefan Bodewig
  */
 public class FixCrLfTest extends BuildFileTest {
 

@@ -24,7 +24,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests for the JDK 1.4 implementation of the RegexpMatcher interface.
  *
- * @author Stefan Bodewig
  */
 public class Jdk14RegexpMatcherTest extends RegexpMatcherTest {
 

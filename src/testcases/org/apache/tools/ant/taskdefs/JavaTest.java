@@ -24,10 +24,6 @@ import org.apache.tools.ant.util.FileUtils;
 
 /**
  * stress out java task
- * @author steve loughran
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  * */
 public class JavaTest extends BuildFileTest {
 

@@ -30,8 +30,6 @@ import org.apache.tools.ant.util.depend.DependencyAnalyzer;
  * An interface used to describe the actions required by any type of
  * directory scanner.
  *
- * @author Conor MacNeill
- * @author <a href="mailto:hengels@innovidata.com">Holger Engels</a>
  */
 public class DependScanner extends DirectoryScanner {
     /**

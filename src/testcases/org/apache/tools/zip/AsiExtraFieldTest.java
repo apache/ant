@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * JUnit 3 testcases for org.apache.tools.zip.AsiExtraField.
  *
- * @author Stefan Bodewig
  */
 public class AsiExtraFieldTest extends TestCase implements UnixStat {
     public AsiExtraFieldTest(String name) {

@@ -25,7 +25,6 @@ import org.apache.tools.ant.util.FileNameMapper;
 
 
 /**
- * @author Peter Reilly
  */
 public class MultiMapTest extends BuildFileTest {
 

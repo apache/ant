@@ -33,10 +33,6 @@ import org.apache.tools.ant.util.StringUtils;
  * Will set the given property if the requested resource is available at
  * runtime. This task may also be used as a condition by the condition task.
  *
- * @author Stefano Mazzocchi
- *         <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Magesh Umasankar
- *
  * @since Ant 1.1
  *
  * @ant.task category="control"

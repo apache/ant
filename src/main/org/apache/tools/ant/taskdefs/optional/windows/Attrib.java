@@ -28,8 +28,6 @@ import java.io.File;
  * Attrib equivalent for Win32 environments.
  * Note: Attrib parameters /S and /D are not handled.
  *
- * @author skanga@bigfoot.com
- * @author <a href="mailto:Jerome@jeromelacoste.com">Jerome Lacoste</a>
  *
  * @since Ant 1.6
  */

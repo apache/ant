@@ -115,10 +115,6 @@ import org.xml.sax.XMLReader;
  * <p>Possible future extension could provide for additional OASIS
  * entry types to be specified inline.</p>
  *
- * @author dIon Gillard
- * @author Erik Hatcher
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
- * @author Jeff Turner
  */
 public class XMLCatalog extends DataType
     implements Cloneable, EntityResolver, URIResolver {

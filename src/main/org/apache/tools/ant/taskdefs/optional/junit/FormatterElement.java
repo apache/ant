@@ -40,9 +40,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * <p> Either the <code>type</code> or the <code>classname</code> attribute
  * must be set.
  *
- * @author Stefan Bodewig
- * @author <a href="http://nerdmonkey.com">Eli Tucker</a>
- *
  * @see JUnitTask
  * @see XMLJUnitResultFormatter
  * @see BriefJUnitResultFormatter

@@ -42,9 +42,6 @@ import org.apache.tools.ant.types.FilterSetCollection;
  * document, the following mailing list discussions, and the
  * copyfile/copydir tasks.</p>
  *
- * @author Glenn McAllister
- *         <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
- * @author Magesh Umasankar
  * @version $Revision$
  *
  * @since Ant 1.2

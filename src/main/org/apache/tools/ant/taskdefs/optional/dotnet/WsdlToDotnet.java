@@ -37,7 +37,6 @@ import org.apache.tools.ant.Task;
 
  * See "Creating an XML Web Service Proxy", "wsdl.exe" docs in
  * the framework SDK documentation
- * @author      Steve Loughran
  * @version     0.5
  * @ant.task    category="dotnet"
  * @since       Ant 1.5

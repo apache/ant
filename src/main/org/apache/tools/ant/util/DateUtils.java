@@ -31,8 +31,6 @@ import java.util.TimeZone;
  * defined format (<a href="http://www.w3.org/TR/NOTE-datetime">ISO8601</a>)
  * or a plurialization correct elapsed time in minutes and seconds.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
- * @author Stefan Bodewig
  *
  * @since Ant 1.5
  *

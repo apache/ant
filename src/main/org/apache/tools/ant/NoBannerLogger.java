@@ -22,7 +22,6 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * Extends DefaultLogger to strip out empty targets.
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class NoBannerLogger extends DefaultLogger {
 

@@ -47,7 +47,6 @@ import org.w3c.dom.Text;
  * if executed in parallel.
  *
  * @see Project#addBuildListener(BuildListener)
- * @author Matt Foemmel
  */
 public class XmlLogger implements BuildLogger {
 

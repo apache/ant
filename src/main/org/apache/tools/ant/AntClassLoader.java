@@ -42,9 +42,6 @@ import org.apache.tools.ant.util.LoaderUtils;
  * using the forceLoadClass method. Any subsequent classes loaded by that
  * class will then use this loader rather than the system class loader.
  *
- * @author Conor MacNeill
- * @author <a href="mailto:jglick@netbeans.org">Jesse Glick</a>
- * @author Magesh Umasankar
  */
 public class AntClassLoader extends ClassLoader implements BuildListener {
 
@@ -56,7 +53,6 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      *
      * @see AntClassLoader#findResources(String)
      * @see java.lang.ClassLoader#getResources(String)
-     * @author <a href="mailto:hermand@alumni.grinnell.edu">David A. Herman</a>
      */
     private class ResourceEnumeration implements Enumeration {
         /**

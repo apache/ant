@@ -34,8 +34,6 @@ import org.apache.tools.ant.util.Watchdog;
  * }
  * </pre>
 
- * @author thomas.haas@softwired-inc.com
- * @author <a href="mailto:sbailliez_at_apache.org">Stephane Bailliez</a>
  * @see Execute
  * @see org.apache.tools.ant.util.Watchdog
  * @since Ant 1.2

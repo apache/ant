@@ -62,7 +62,6 @@ import org.apache.tools.ant.BuildException;
  *
  * @see http://clearcase.rational.com/doc/latest/ccase_ux/ccref/checkin.html
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class CCCheckin extends CCMatchingTask {
     private boolean nowarn = false;

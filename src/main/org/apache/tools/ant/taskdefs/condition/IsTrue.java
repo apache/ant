@@ -23,7 +23,6 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * Condition that tests whether a given string evals to true
  *
- * @author Steve Loughran
  * @since Ant 1.5
  */
 public class IsTrue extends ProjectComponent implements Condition {

@@ -71,7 +71,6 @@ import org.apache.tools.ant.DirectoryScanner;
  * file (.jar or .zip).
  * </p>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class ZipScanner extends DirectoryScanner {
     public ZipScanner() {

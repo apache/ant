@@ -27,7 +27,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Patches a file by applying a 'diff' file to it; requires "patch" to be
  * on the execution path.
- * @author Stefan Bodewig
  *
  * @since Ant 1.1
  *

@@ -59,7 +59,6 @@ import xdoclet.TemplateSubTask;
 /**
  * Generates Ant taskdef properties files, suitable for bulk defining tasks with Ant's &lt;taskdef&gt; task.
  *
- * @author        Erik Hatcher (ehatcher@apache.org)
  * @created       January 5, 2003
  * @ant.element   display-name="taskdefproperties" name="taskdefproperties"
  *      parent="org.apache.ant.xdoclet.AntDocletTask"

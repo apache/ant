@@ -40,8 +40,6 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Create a CAB archive.
  *
- * @author Roger Vaughn <a href="mailto:rvaughn@seaconinc.com">rvaughn@seaconinc.com</a>
- * @author Jesse Stockall
  */
 
 public class Cab extends MatchingTask {

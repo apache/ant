@@ -30,8 +30,6 @@ import org.apache.xalan.xslt.XSLTResultTarget;
 /**
  * Concrete liaison for Xalan 1.x API.
  *
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @since Ant 1.1
  */
 public class XalanLiaison implements XSLTLiaison {

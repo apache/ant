@@ -23,7 +23,6 @@ import java.util.Vector;
 /**
  * A set of helper methods related to string manipulation.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public final class StringUtils {
 

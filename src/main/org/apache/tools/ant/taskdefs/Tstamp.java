@@ -37,11 +37,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * Sets properties to the current time, or offsets from the current time.
  * The default properties are TSTAMP, DSTAMP and TODAY;
  *
- * @author costin@dnt.ro
- * @author stefano@apache.org
- * @author roxspring@yahoo.com
- * @author Conor MacNeill
- * @author Magesh Umasankar
  * @since Ant 1.1
  * @ant.task category="utility"
  */

@@ -38,13 +38,6 @@ import org.apache.tools.ant.util.StringUtils;
  *  the addition of some accessors for extensibility.  Another task
  *  can extend this with some customized output processing.
  *
- * @author costin@dnt.ro
- * @author stefano@apache.org
- * @author Wolfgang Werner
- *         <a href="mailto:wwerner@picturesafe.de">wwerner@picturesafe.de</a>
- * @author Kevin Ross
- *         <a href="mailto:kevin.ross@bredex.com">kevin.ross@bredex.com</a>
- *
  * @since Ant 1.5
  */
 public abstract class AbstractCvsTask extends Task {

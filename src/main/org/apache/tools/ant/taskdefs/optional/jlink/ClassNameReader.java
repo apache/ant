@@ -26,7 +26,6 @@ import java.io.InputStream;
  *
  * <p>Extremely minimal constant pool implementation, mainly to support extracting
  * strings from a class file.
- * @author <a href="mailto:beard@netscape.com">Patrick C. Beard</a>.
  */
 class ConstantPool {
 

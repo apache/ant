@@ -34,8 +34,6 @@ import org.apache.tools.ant.Task;
  * Helper class for VAJ tasks. Holds Workspace singleton and
  * wraps IvjExceptions into BuildExceptions
  *
- * @author Wolf Siberski, TUI Infotec GmbH
- * @author Martin Landers, Beck et al. projects
  */
 class VAJRemoteUtil implements VAJUtil {
     // calling task

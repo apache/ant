@@ -33,7 +33,6 @@ import junit.framework.AssertionFailedError;
 /**
  * Tests Date Selectors.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  */
 public class DateSelectorTest extends BaseSelectorTest {
 

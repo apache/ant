@@ -27,7 +27,6 @@ import sun.misc.UUEncoder;
 /**
  * An emailer that uuencodes attachments.
  *
- * @author roxspring@yahoo.com Rob Oxspring
  * @since Ant 1.5
  */
 class UUMailer extends PlainMailer {

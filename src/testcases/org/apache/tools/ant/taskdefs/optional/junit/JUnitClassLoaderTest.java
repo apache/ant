@@ -22,7 +22,6 @@ import junit.framework.TestCase;
  * Test to ensure that the classloader loading JUnit testcase
  * is also the context classloader.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class JUnitClassLoaderTest extends TestCase {
 

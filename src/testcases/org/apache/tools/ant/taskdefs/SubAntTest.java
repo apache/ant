@@ -28,7 +28,6 @@ import org.apache.tools.ant.input.InputHandler;
 import org.apache.tools.ant.types.Path;
 
 /**
- * @author Antoine Levy-Lambert
  * @version $Revision$
  */
 public class SubAntTest extends BuildFileTest {

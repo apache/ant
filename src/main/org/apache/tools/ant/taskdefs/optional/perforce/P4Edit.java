@@ -32,7 +32,6 @@ import org.apache.tools.ant.BuildException;
  * Example Usage:<br>
  * &lt;p4edit change="${p4.change}" view="//depot/project/foo.txt" /&gt;
  *
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  *
  * @todo Should call reopen if file is already open in one of our changelists perhaps?
  *

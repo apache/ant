@@ -21,7 +21,6 @@ import java.io.*;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Thomas Christensen <tchristensen@nordija.com>
  */
 public class PvcsTest extends BuildFileTest {
 

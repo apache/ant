@@ -24,7 +24,6 @@ package org.apache.tools.ant.util;
  *
  * @see org.apache.tools.ant.util.Watchdog
  *
- * @author Stefan Bodewig
  */
 public interface TimeoutObserver {
 

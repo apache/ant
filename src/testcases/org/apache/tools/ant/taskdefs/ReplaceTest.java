@@ -24,7 +24,6 @@ import java.io.*;
 import junit.framework.AssertionFailedError;
 
 /**
- * @author Nico Seessle <nico@seessle.de>
  */
 public class ReplaceTest extends BuildFileTest {
 

@@ -28,7 +28,6 @@ import org.apache.tools.ant.types.Parameterizable;
  * as the base class for your custom selector rather than implementing
  * this interface from scratch.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public interface ExtendFileSelector extends FileSelector, Parameterizable {

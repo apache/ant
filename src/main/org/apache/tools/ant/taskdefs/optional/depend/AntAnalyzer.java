@@ -31,7 +31,6 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  * An analyzer which uses the depend task's bytecode classes to analyze
  * dependencies
  *
- * @author Conor MacNeill
  */
 public class AntAnalyzer extends AbstractAnalyzer {
     /**

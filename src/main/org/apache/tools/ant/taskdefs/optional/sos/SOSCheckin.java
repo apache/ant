@@ -21,7 +21,6 @@ import org.apache.tools.ant.types.Commandline;
 /**
  * Commits and unlocks files in Visual SourceSafe via a SourceOffSite server.
  *
- * @author    Jesse Stockall
  *
  * @ant.task name="soscheckin" category="scm"
  */

@@ -44,10 +44,6 @@ import org.apache.tools.zip.ZipOutputStream;
 /**
  * Creates a JAR archive.
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Brian Deitte
- *         <a href="mailto:bdeitte@macromedia.com">bdeitte@macromedia.com</a>
- *
  * @since Ant 1.1
  *
  * @ant.task category="packaging"

@@ -26,7 +26,6 @@ import java.util.zip.ZipException;
  * Extension that adds better handling of extra fields and provides
  * access to the internal and external file attributes.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ZipEntry extends java.util.zip.ZipEntry implements Cloneable {

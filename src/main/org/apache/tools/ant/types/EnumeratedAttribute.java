@@ -26,7 +26,6 @@ import org.apache.tools.ant.BuildException;
  * <p>See {@link org.apache.tools.ant.taskdefs.FixCRLF FixCRLF} for an
  * example.
  *
- * @author Stefan Bodewig
  */
 public abstract class EnumeratedAttribute {
 

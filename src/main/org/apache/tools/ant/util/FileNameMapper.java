@@ -27,7 +27,6 @@ package org.apache.tools.ant.util;
  * via the setFrom and setTo methods. The exact meaning of these is
  * implementation dependent.</p>
  *
- * @author Stefan Bodewig
  */
 public interface FileNameMapper {
 

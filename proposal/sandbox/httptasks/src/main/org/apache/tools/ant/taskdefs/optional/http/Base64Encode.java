@@ -59,8 +59,6 @@ package org.apache.tools.ant.taskdefs.optional.http;
  * This code handles Base64 encoding for basic authentication
  * and the like
  *
- * @author matth@pobox.com Matt Humphrey
- * @author steve_l@iseran.com Steve Loughran
  * @created 02 April 2001
  */
 class Base64Encode {

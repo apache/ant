@@ -29,7 +29,6 @@ import org.apache.tools.ant.Project;
  * <pre>&lt;filterreader
  *    classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;</pre>
  *
- * @author Magesh Umasankar
  */
 public final class ExpandProperties
     extends BaseFilterReader

@@ -64,7 +64,6 @@ import junit.framework.TestResult;
  * a certain time. It can be used globally or individually over
  * each testcase.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class WatchdogTest extends TestDecorator {
 

@@ -31,7 +31,6 @@ import org.apache.tools.ant.Project;
  * </pre>
  *
  * @see org.apache.oro.text.regex.Perl5Substitution
- * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class Substitution extends DataType {
     /** The name of this data type */

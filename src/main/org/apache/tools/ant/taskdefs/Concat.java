@@ -61,8 +61,6 @@ import org.apache.tools.ant.util.FileUtils;
  * &lt;/concat&gt;
  * </pre>
  *
- * @author <a href="mailto:derek@activate.net">Derek Slager</a>
- * @author Peter Reilly
  */
 public class Concat extends Task {
 

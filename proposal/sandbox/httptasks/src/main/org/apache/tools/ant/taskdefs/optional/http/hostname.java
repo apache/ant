@@ -66,7 +66,6 @@ import org.apache.tools.ant.*;
  * trivial task to get the hostname of a box; as IPaddr, hostname, or
  * fullname.
  *
- * @author steve_l@iseran.com Steve Loughran
  * @created 07 January 2002
  */
 

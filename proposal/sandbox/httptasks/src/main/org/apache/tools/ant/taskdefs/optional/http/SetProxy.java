@@ -64,7 +64,6 @@ import org.apache.tools.ant.*;
  * proxy definition task. This allows all web tasks in the build file
  * executed after this task to access the web through a proxy server
  *
- * @author steve_l@iseran.com Steve Loughran
  * @created March 17, 2001
  */
 

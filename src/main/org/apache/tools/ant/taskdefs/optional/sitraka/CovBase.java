@@ -27,7 +27,6 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @since Ant 1.6
  *
- * @author Stefan Bodewig
  */
 public abstract class CovBase extends Task {
     private File home;

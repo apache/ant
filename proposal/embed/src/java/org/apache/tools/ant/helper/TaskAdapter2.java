@@ -65,7 +65,6 @@ import org.apache.tools.ant.*;
  *  The adapter can also be used to wrap tasks that are loaded in a different class loader
  *  by ant, when used in programatic mode.
  *
- * @author Costin Manolache
  */
 public class TaskAdapter2 extends Task { // implements DynamicConfigurator {
     /* Need to support DynamicConfigurator so that adapted tasks can

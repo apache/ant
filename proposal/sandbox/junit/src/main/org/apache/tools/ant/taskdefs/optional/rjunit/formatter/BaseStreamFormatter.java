@@ -76,7 +76,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
  * if no file key exists in the properties, it defaults to stdout.
  * </p>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class BaseStreamFormatter extends BaseFormatter {
 

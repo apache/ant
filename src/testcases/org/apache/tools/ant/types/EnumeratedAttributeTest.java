@@ -25,7 +25,6 @@ import junit.framework.AssertionFailedError;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.EnumeratedAttribute.
  *
- * @author Stefan Bodewig
  */
 
 public class EnumeratedAttributeTest extends TestCase {

@@ -69,7 +69,6 @@ import org.apache.tools.ant.util.StringUtils;
  * but in fact I did a lot of <i>code-beautification</i> ;-).
  * <p>
  * @version 1.0 h
- * @author Christoph Wilhelms, TUI Infotec GmbH
  */
 public class VAJAntToolGUI extends Frame {
     /**

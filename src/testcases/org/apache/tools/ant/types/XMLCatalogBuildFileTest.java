@@ -29,7 +29,6 @@ import junit.framework.AssertionFailedError;
  *
  * @see org.apache.tools.ant.types.XMLCatalogTest
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Id$
  */
 public class XMLCatalogBuildFileTest extends BuildFileTest {

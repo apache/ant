@@ -22,7 +22,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * JUnit 3 testcases for org.apache.tools.ant.types.DirSet.
  *
- * @author Stefan Bodewig
  */
 public class DirSetTest extends AbstractFileSetTest {
 

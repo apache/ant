@@ -23,7 +23,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Testcases for the &lt;isreference&gt; condition.
  *
- * @author Stefan Bodewig
  */
 public class IsReferenceTest extends BuildFileTest {
 

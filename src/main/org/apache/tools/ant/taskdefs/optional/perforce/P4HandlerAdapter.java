@@ -27,7 +27,6 @@ import org.apache.tools.ant.taskdefs.PumpStreamHandler;
 /**
  * base class to manage streams around the execution of the Perforce
  * command line client
- * @author <A HREF="mailto:leslie.hughes@rubus.com">Les Hughes</A>
  */
 public abstract class P4HandlerAdapter  implements P4Handler {
 

@@ -24,7 +24,6 @@ import org.apache.tools.ant.ProjectComponent;
 /**
  * class to tokenize the input as lines seperated
  * by \r (mac style), \r\n (dos/windows style) or \n (unix style)
- * @author Peter Reilly
  * @since Ant 1.6
  */
 public class LineTokenizer extends ProjectComponent

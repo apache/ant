@@ -64,8 +64,6 @@ import org.apache.tools.ant.*;
  * this class implements basic auth, the one that shouldn't be used
  * except over an encrypted link or trusted network.
  *
- * @author matth@pobox.com Matt Humphrey
- * @author steve_l@iseran.com Steve Loughran
  * @created 20 March 2001
  */
 

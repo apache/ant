@@ -89,7 +89,6 @@ import org.apache.tools.ant.util.StringUtils;
  * merged with code originating from Ant 1.4.x.
  * </i>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class TestRunner implements TestListener {
 

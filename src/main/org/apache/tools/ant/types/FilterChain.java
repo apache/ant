@@ -39,7 +39,6 @@ import org.apache.tools.ant.filters.TokenFilter;
 /**
  * FilterChain may contain a chained set of filter readers.
  *
- * @author Magesh Umasankar
  */
 public final class FilterChain extends DataType
     implements Cloneable {

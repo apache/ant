@@ -27,7 +27,6 @@ import java.io.File;
  * same value.
  * The implementing class should implement a useful toString() method.
  *
- * @author Jan Mat\u00e8rne
  * @version 2003-09-13
  * @since  Ant 1.6
  */

@@ -27,8 +27,6 @@ import org.apache.tools.zip.ZipOutputStream;
 /**
  * Creates a EAR archive. Based on WAR task
  *
- * @author Stefan Bodewig
- * @author <a href="mailto:leslie.hughes@rubus.com">Les Hughes</a>
  *
  * @since Ant 1.4
  *

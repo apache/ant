@@ -68,12 +68,6 @@ import org.apache.tools.ant.util.FileUtils;
  * "send" operations seem to close ports immediately. This behavior may cause
  * problems on some systems when downloading large sets of files.
  *
- * @author Roger Vaughn <a href="mailto:rvaughn@seaconinc.com">
- *      rvaughn@seaconinc.com</a>
- * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">
- *      glennm@ca.ibm.com</a>
- * @author Magesh Umasankar
- * @author <a href="mailto:kadams@gfs.com">Kyle Adams</a>
  * @since Ant 1.3
  */
 public class FTP

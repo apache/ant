@@ -34,8 +34,6 @@ import org.apache.tools.ant.Task;
  * are true. i.e.
  * <pre>fail := defined(ifProperty) && !defined(unlessProperty)</pre>
  *
- * @author <a href="mailto:nico@seessle.de">Nico Seessle</a>
- * @author steve loughran
  * @since Ant 1.2
  *
  * @ant.task name="fail" category="control"

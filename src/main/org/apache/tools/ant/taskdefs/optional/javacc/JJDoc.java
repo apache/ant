@@ -34,10 +34,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
 /**
  * Runs the JJDoc compiler compiler.
  *
- * @author Jene Jasper <a href="mailto:jjasper@abz.nl">jjasper@abz.nl</a>
- * @author thomas.haas@softwired-inc.com
- * @author Michael Saunders
- *         <a href="mailto:michael@amtec.com">michael@amtec.com</a>
  */
 public class JJDoc extends Task {
 

@@ -41,7 +41,6 @@ import java.io.IOException;
  * over as few files as possible, perhaps following it with an &lt;uptodate;&gt
  * to keep the descendent routines conditional.
  *
- * @author not specified
  */
 public class DifferentSelector extends MappingSelector {
 

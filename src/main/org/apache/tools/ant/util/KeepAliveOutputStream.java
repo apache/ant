@@ -33,7 +33,6 @@ import java.io.OutputStream;
  * </pre>
  * </p>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class KeepAliveOutputStream extends FilterOutputStream {
 

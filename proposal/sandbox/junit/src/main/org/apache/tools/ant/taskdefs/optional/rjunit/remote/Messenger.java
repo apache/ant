@@ -62,7 +62,6 @@ import java.io.ObjectOutputStream;
 /**
  * Read or write events to/from appropriate streams.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class Messenger {
 

@@ -47,9 +47,6 @@ import org.apache.tools.ant.taskdefs.Typedef;
  * in custom code. It is also possible to replace the default behavior
  * ( for example in an app embedding ant )
  *
- * @author Costin Manolache
- * @author Peter Reilly
- * @author <a href="mailto:martijn@kruithof.xs4all.nl">Martijn Kruithof</a>
  * @since Ant1.6
  */
 public class ComponentHelper  {

@@ -24,7 +24,6 @@ import java.util.TimeZone;
 /**
  * Class used to generate an XML changelog.
  *
- * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
 class ChangeLogWriter {

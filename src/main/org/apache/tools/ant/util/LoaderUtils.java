@@ -23,7 +23,6 @@ import org.apache.tools.ant.launch.Locator;
 /**
  * ClassLoader utility methods
  *
- * @author Conor MacNeill
  */
 public class LoaderUtils {
     /**

@@ -27,7 +27,6 @@ import org.apache.tools.ant.taskdefs.Java;
  * @deprecated testlet has been abandoned in favor of JUnit by the
  * Avalon community
  *
- * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  * @ant.task ignore="true"
  */
 public class Test extends Java {

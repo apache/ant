@@ -23,7 +23,6 @@ import org.apache.tools.ant.BuildException;
 
 /***
  * Regular expression implementation using the Jakarta Regexp package
- * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class JakartaRegexpRegexp extends JakartaRegexpMatcher
     implements Regexp {

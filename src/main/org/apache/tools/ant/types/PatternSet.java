@@ -34,11 +34,6 @@ import org.apache.tools.ant.Project;
  * <p>Moved out of MatchingTask to make it a standalone object that
  * could be referenced (by scripts for example).
  *
- * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
- * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
- * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
- * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- * @author Stefan Bodewig
  */
 public class PatternSet extends DataType implements Cloneable {
     private Vector includeList = new Vector();

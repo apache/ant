@@ -29,7 +29,6 @@ import java.io.IOException;
  * An input stream that decompresses from the BZip2 format (without the file
  * header chars) to be read as any other stream.
  *
- * @author <a href="mailto:keiron@aftexsw.com">Keiron Liddle</a>
  */
 public class CBZip2InputStream extends InputStream implements BZip2Constants {
     private static void cadvise() {

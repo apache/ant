@@ -30,7 +30,6 @@ import org.apache.tools.ant.taskdefs.optional.jsp.compilers.JspCompilerAdapter;
 /**
  * Tests the Jspc task.
  *
- * @author slo
  * @created 07 March 2002
  * @since Ant 1.5
  */

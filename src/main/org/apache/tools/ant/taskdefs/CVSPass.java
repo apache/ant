@@ -31,7 +31,6 @@ import org.apache.tools.ant.util.StringUtils;
 /**
  * Adds an new entry to a CVS password file.
  *
- * @author <a href="jeff@custommonkey.org">Jeff Martin</a>
  * @version $Revision$
  *
  * @since Ant 1.4

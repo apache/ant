@@ -26,7 +26,6 @@ import org.apache.tools.ant.BuildException;
  * <p>Iterates over all conditions and returns true as soon as one
  * evaluates to true.</p>
  *
- * @author Stefan Bodewig
  * @since Ant 1.4
  * @version $Revision$
  */

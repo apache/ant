@@ -61,7 +61,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener;
 /**
  * The formatter interface.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public interface Formatter extends TestRunListener {
     /**

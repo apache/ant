@@ -28,7 +28,6 @@ import org.apache.tools.ant.util.depend.AbstractAnalyzer;
  * A dependency analyzer which returns superclass and superinterface
  * dependencies.
  *
- * @author Conor MacNeill
  */
 public class AncestorAnalyzer extends AbstractAnalyzer {
 

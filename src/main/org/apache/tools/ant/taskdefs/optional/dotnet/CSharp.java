@@ -90,7 +90,6 @@ import org.apache.tools.ant.taskdefs.condition.Os;
  * </pre>
  *
  *
- * @author      Steve Loughran
  * @ant.task    name="csc" category="dotnet"
  * @since Ant 1.3
  */

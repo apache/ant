@@ -40,7 +40,6 @@ import java.io.File;
  *       namespace="Apache.Xerces"/&gt;
  * </pre>
  * @since Ant 1.6
- * @author steve loughran
  * @ant.task category="dotnet"
  */
 public class ImportTypelib extends Task {

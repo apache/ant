@@ -76,7 +76,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.ExceptionData;
  * </pre>
  * Removing all the above will help to make stacktrace more readable.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class FilterStackFormatter extends FilterFormatter {
 

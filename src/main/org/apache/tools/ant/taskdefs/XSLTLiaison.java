@@ -22,8 +22,6 @@ import java.io.File;
 /**
  * Proxy interface for XSLT processors.
  *
- * @author <a href="mailto:rubys@us.ibm.com">Sam Ruby</a>
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @see XSLTProcess
  * @since Ant 1.1
  */

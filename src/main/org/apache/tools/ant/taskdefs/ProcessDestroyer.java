@@ -25,8 +25,6 @@ import java.util.Vector;
 /**
  * Destroys all registered <code>Process</code>es when the VM exits.
  *
- * @author <a href="mailto:mnewcomb@tacintel.com">Michael Newcomb</a>
- * @author <a href="mailto:jallers@advancedreality.com">Jim Allers</a>
  * @since Ant 1.5
  */
 class ProcessDestroyer implements Runnable {

@@ -27,7 +27,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Prints short summary output of the test to Ant's logging system.
  *
- * @author Stefan Bodewig
  */
 
 public class SummaryJUnitResultFormatter implements JUnitResultFormatter {

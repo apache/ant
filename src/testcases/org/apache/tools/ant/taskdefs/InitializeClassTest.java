@@ -29,7 +29,6 @@ import org.apache.tools.ant.util.FileUtils;
  * Test to see if static initializers are invoked the same way
  * when <java> is invoked in forked and unforked modes.
  *
- * @author Magesh Umasankar
  */
 public class InitializeClassTest extends BuildFileTest {
 

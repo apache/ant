@@ -31,7 +31,6 @@ import java.io.IOException;
  * Methods are provided to put entries, and then write their contents
  * by writing to this stream using write().
  *
- * @author Timothy Gerard Endres <a href="mailto:time@ice.com">time@ice.com</a>
  */
 public class TarOutputStream extends FilterOutputStream {
     /** Fail if a long file name is required in the archive. */

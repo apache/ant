@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildException;
  * Small testcase for the runner, tests are very very very basics.
  * They must be enhanced with time.
  *
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class JUnitTestRunnerTest extends TestCase {
 

@@ -26,7 +26,6 @@ import org.apache.bcel.classfile.JavaClass;
 /**
  * Helper class that filters constants from a Java Class
  *
- * @author Magesh Umasankar
  */
 public final class JavaClassHelper {
 

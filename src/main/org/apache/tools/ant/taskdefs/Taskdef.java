@@ -32,7 +32,6 @@ import org.apache.tools.ant.TaskAdapter;
  * <pre>
  * taskname=fully.qualified.java.classname
  * </pre>
- * @author Stefan Bodewig
  * @since Ant 1.1
  * @ant.task category="internal"
  */

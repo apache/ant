@@ -33,7 +33,6 @@ import org.apache.tools.ant.BuildException;
  * &lt;p4integrate change="${p4.change}"
  * fromfile="//depot/project/dev/foo.txt" tofile="//depot/project/main/foo.txt" /&gt;
  *
- * @author <A HREF="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</A>
  *
  * @ant.task category="scm"
  */

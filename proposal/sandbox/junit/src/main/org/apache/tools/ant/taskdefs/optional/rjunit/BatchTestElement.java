@@ -69,7 +69,6 @@ import org.apache.tools.ant.types.PatternSet;
  * <!ATTLIST batchtest path CDATA required>
  * </pre>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class BatchTestElement extends BaseTestElement {
 

@@ -32,7 +32,6 @@ import org.apache.tools.ant.util.regexp.RegexpMatcherFactory;
 /**
  * A set of properties.
  *
- * @author <a href="mailto:ddevienne@lgc.com">Dominique Devienne</a>
  * @since Ant 1.6
  */
 public class PropertySet extends DataType {

@@ -33,7 +33,6 @@ import org.apache.tools.ant.Task;
  * by the Ant developers and is unmaintained.  Don't use
  * it.</strong></p>
  *
- * @author James Duncan Davidson (duncan@x180.com)
  * @deprecated use LogOutputStream instead.
  */
 

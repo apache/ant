@@ -30,7 +30,6 @@ import java.io.File;
  *
  * <p>This doesn't actually test much, mainly reference handling.
  *
- * @author Antoine Levy-Lambert
  */
 
 public class ZipFileSetTest extends AbstractFileSetTest {

@@ -27,7 +27,6 @@ import org.apache.tools.ant.types.Parameter;
  * assigning an error message and throwing a build exception if an error is
  * detected.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public abstract class BaseExtendSelector

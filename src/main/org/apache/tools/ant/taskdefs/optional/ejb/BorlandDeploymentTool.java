@@ -71,7 +71,6 @@ import org.apache.tools.ant.types.Path;
  *         &lt;/support&gt;
  *     &lt;/ejbjar&gt;
  *</PRE>
- * @author     <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
  */
 public class BorlandDeploymentTool extends GenericDeploymentTool

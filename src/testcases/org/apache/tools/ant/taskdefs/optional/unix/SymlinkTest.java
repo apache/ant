@@ -41,7 +41,6 @@ import org.apache.tools.ant.Project;
  * Symlink.deleteSymlink, making a separate test redundant.
  *
  * @version $Revision$
- * @author <a href="mailto:gus.heck@olin.edu">Patrick G. Heck</a>
  */
 
 public class SymlinkTest extends BuildFileTest {

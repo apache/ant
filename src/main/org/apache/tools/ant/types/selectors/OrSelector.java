@@ -24,7 +24,6 @@ import java.util.Enumeration;
  * This selector has a collection of other selectors, any of which have to
  * select a file in order for this selector to select it.
  *
- * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
  */
 public class OrSelector extends BaseSelectorContainer {

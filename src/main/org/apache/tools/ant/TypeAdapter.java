@@ -20,8 +20,6 @@ package org.apache.tools.ant;
 /**
  * Used to wrap types.
  *
- * @author costin@dnt.ro
- * @author peter reilly
  */
 public interface TypeAdapter {
 

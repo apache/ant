@@ -27,7 +27,6 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * Renames a file.
  *
- * @author haas@softwired.ch
  *
  * @deprecated The rename task is deprecated since Ant 1.2.  Use move instead.
  * @since Ant 1.1

@@ -48,7 +48,6 @@ import org.xml.sax.helpers.XMLReaderAdapter;
 /**
  * Original helper.
  *
- * @author duncan@x180.com
  */
 public class ProjectHelperImpl extends ProjectHelper {
 

@@ -85,7 +85,6 @@ import java.util.NoSuchElementException;
  *    // do something
  * }
  * </pre>
- * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class CompoundEnumeration implements Enumeration {
 

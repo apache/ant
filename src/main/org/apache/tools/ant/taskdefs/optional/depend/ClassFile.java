@@ -30,7 +30,6 @@ import org.apache.tools.ant.taskdefs.optional.depend.constantpool.ConstantPoolEn
  * are usually streams from a Java class file or a class file component of a
  * Jar file.
  *
- * @author Conor MacNeill
  */
 public class ClassFile {
 

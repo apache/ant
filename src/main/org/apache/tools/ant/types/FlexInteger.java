@@ -22,7 +22,6 @@ package org.apache.tools.ant.types;
  * the build file to specify an integer in either decimal, octal, or hexadecimal
  * format.
  *
- * @author Erik Hatcher
  * @see java.lang.Integer#decode(String)
  */
 public class FlexInteger {

@@ -37,7 +37,6 @@ import java.util.Vector;
  * project description per project.  A second description element will
  * overwrite the first.
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @version $Revision$ $Date$
  *
  * @ant.datatype ignore="true"

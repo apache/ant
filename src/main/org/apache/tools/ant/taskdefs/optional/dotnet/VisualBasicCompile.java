@@ -68,8 +68,6 @@ import org.apache.tools.ant.BuildException;
  *          &lt;define name="def3" unless="def2.property"/&gt;
  *   &lt;/vbc&gt;
  </pre>
- * @author Brian Felder bfelder@providence.org
- * @author Steve Loughran
  * @ant.task    name="vbc" category="dotnet"
  */
 

@@ -38,8 +38,6 @@ import org.apache.tools.ant.DirectoryScanner;
  * Helper class for VAJ tasks. Holds Workspace singleton and
  * wraps IvjExceptions into BuildExceptions
  *
- * @author Wolf Siberski, TUI Infotec GmbH
- * @author Martin Landers, Beck et al. projects
  */
 abstract class VAJLocalUtil implements VAJUtil {
     // singleton containing the VAJ workspace

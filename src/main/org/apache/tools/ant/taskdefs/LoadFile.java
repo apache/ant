@@ -32,8 +32,6 @@ import org.apache.tools.ant.types.FilterChain;
 /**
  * Load a file into a property
  *
- * @author Steve Loughran
- * @author Magesh Umasankar
  * @since Ant 1.5
  * @ant.task category="utility"
  */

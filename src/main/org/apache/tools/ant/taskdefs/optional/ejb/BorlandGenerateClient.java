@@ -34,7 +34,6 @@ import org.apache.tools.ant.types.Reference;
  * Two mode are available: java mode (default) and fork mode. With the fork mode,
  * it is impossible to add classpath to the command line.
  *
- * @author  <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
  * @ant.task name="blgenclient" category="ejb"
  */

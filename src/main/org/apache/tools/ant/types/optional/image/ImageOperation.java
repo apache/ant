@@ -21,7 +21,6 @@ import java.util.Vector;
 
 /**
  *
- * @author <a href="mailto:kzgrey@ntplx.net">Kevin Z Grey</a>
  * @see org.apache.tools.ant.tasks.optional.image.Image
  */
 public abstract class ImageOperation extends DataType {

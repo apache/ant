@@ -28,7 +28,6 @@ import java.io.File;
  *         from="${test.data.dir}/TEST-*Test.xml" to="*Test.java"&gt;
  * </pre>
  *
- *@author     Brad Clark
  *
  */
 public class UnPackageNameMapper extends GlobPatternMapper {

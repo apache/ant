@@ -31,7 +31,6 @@ import java.io.File;
  * <p>This doesn't actually test much, mainly reference handling.
  * Adapted from FileSetTest.</p>
  *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  */
 
 public class FileListTest extends TestCase {

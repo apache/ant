@@ -23,7 +23,6 @@ import java.io.File;
 
 /**
  * Xalan Liaison testcase
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class XalanLiaisonTest extends AbstractXSLTLiaisonTest {
     public XalanLiaisonTest(String name){

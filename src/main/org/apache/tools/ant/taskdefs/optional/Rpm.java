@@ -39,7 +39,6 @@ import org.apache.tools.ant.types.Path;
 /**
  * Invokes the rpm tool to build a Linux installation file.
  *
- * @author lucas@collab.net
  */
 public class Rpm extends Task {
 

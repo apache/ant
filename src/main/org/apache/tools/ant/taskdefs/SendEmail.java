@@ -26,8 +26,6 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  * Attachments may be sent using nested FileSet
  * elements.
 
- * @author glenn_twiggs@bmc.com
- * @author Magesh Umasankar
  *
  * @since Ant 1.2
  *

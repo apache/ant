@@ -27,7 +27,6 @@ import java.util.Vector;
  * constants used in a Java class file. It stores strings, constant values,
  * class names, method names, field names etc.
  *
- * @author Conor MacNeill
  * @see <a href="http://java.sun.com/docs/books/vmspec/">The Java Virtual
  *      Machine Specification</a>
  */

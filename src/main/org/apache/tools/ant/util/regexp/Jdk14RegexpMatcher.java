@@ -27,8 +27,6 @@ import org.apache.tools.ant.BuildException;
  * Implementation of RegexpMatcher for the built-in regexp matcher of
  * JDK 1.4. UNIX_LINES option is enabled as a default.
  *
- * @author Stefan Bodewig
- * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class Jdk14RegexpMatcher implements RegexpMatcher {
 

@@ -23,7 +23,6 @@ import org.apache.tools.ant.util.FileUtils;
 import java.io.IOException;
 
 /**
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class BUnzip2Test extends BuildFileTest {

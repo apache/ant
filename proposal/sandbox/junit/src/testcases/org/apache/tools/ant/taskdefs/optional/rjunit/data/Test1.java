@@ -58,7 +58,6 @@ import junit.framework.TestCase;
 /**
  * Provide a common set of test reporting.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class Test1 extends TestCase {
     public Test1(String s) {

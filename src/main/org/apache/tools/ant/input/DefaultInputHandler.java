@@ -27,7 +27,6 @@ import org.apache.tools.ant.util.KeepAliveInputStream;
 /**
  * Prompts on System.err, reads input from System.in
  *
- * @author Stefan Bodewig
  * @version $Revision$
  * @since Ant 1.5
  */

@@ -24,7 +24,6 @@ import org.apache.tools.ant.BuildFileTest;
 /**
  * Tests CVSLogin task.
  *
- * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
  */
 public class CVSPassTest extends BuildFileTest {
     private final String EOL = System.getProperty("line.separator");

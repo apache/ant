@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 /**
  * Testcase for the &lt;equals&gt; condition.
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class EqualsTest extends TestCase {

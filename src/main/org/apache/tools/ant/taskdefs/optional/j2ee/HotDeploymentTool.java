@@ -21,7 +21,6 @@ import org.apache.tools.ant.BuildException;
 /**
  *  An interface for vendor-specific "hot" deployment tools.
  *
- *  @author Christopher A. Longo - cal@cloud9.net
  *
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
  *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy

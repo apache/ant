@@ -20,7 +20,6 @@ package org.apache.tools.ant.util.regexp;
 /**
  * Tests for the jakarta-oro implementation of the Regexp interface.
  *
- * @author Stefan Bodewig
  */
 public class JakartaOroRegexpTest extends RegexpTest {
 

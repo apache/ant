@@ -28,7 +28,6 @@ import java.util.Vector;
 /**
  * this class provides utility methods to process resources
  *
- * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.5.2
  */
 public class ResourceUtils {

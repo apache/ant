@@ -24,8 +24,6 @@ import java.io.IOException;
 import java.io.File;
 
 /**
- * @author Stefan Bodewig
- * @author Aslak Hellesoy
  * @version $Revision$
  */
 public class ChecksumTest extends BuildFileTest {

@@ -26,7 +26,6 @@ import org.apache.tools.ant.BuildException;
 
 /**
  * @ant.task category="scm"
- * @author <a href="mailto:antoine@antbuild.com">Antoine Levy-Lambert</a>
  */
 public class P4Resolve extends P4Base {
     private String resolvemode = null;

@@ -20,7 +20,6 @@ package org.apache.tools.ant.taskdefs.email;
 import junit.framework.TestCase;
 
 /**
- * @author Michael Davey
  * @since Ant 1.6
  */
 public class EmailAddressTest extends TestCase {

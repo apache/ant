@@ -42,9 +42,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * The maxwaitunit and checkeveryunit are allowed to have the following values:
  * millisecond, second, minute, hour, day and week. The default is millisecond.
  *
- * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
- * @author Magesh Umasankar
- *
  * @since Ant 1.5
  *
  * @ant.task category="control"

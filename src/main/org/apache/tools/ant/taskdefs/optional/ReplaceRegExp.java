@@ -110,7 +110,6 @@ import org.apache.tools.ant.util.regexp.Regexp;
  *
  * </pre>
  *
- * @author <a href="mailto:mattinger@mindless.com">Matthew Inger</a>
  */
 public class ReplaceRegExp extends Task {
 

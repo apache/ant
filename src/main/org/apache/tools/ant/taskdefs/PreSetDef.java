@@ -37,7 +37,6 @@ import org.apache.tools.ant.UnknownElement;
  * &lt;my.javac srcdir="src" destdir="classes"/&gt;
  * </pre>
  *
- * @author Peter Reilly
  * @since Ant 1.6
  */
 public class PreSetDef extends AntlibDefinition implements TaskContainer {

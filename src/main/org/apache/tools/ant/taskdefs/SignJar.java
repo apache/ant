@@ -39,10 +39,6 @@ import org.apache.tools.ant.util.JavaEnvUtils;
  * <strong>Note:</strong> Requires Java 1.2 or later. </p>
 
  *
- * @author Peter Donald
- *         <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
- * @author Nick Fortescue
- *         <a href="mailto:nick@ox.compsoc.net">nick@ox.compsoc.net</a>
  * @since Ant 1.1
  * @ant.task category="java"
  */

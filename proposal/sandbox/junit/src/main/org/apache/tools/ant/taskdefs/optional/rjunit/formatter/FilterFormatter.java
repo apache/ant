@@ -61,7 +61,6 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
 /**
  * A base class that can be used to filter data.
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public abstract class FilterFormatter implements Formatter {
 

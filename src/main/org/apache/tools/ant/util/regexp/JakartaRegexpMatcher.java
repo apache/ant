@@ -25,8 +25,6 @@ import org.apache.tools.ant.BuildException;
 /**
  * Implementation of RegexpMatcher for Jakarta-Regexp.
  *
- * @author Stefan Bodewig
- * @author Matthew Inger <a href="mailto:mattinger@mindless.com">mattinger@mindless.com</a>
  */
 public class JakartaRegexpMatcher implements RegexpMatcher {
 

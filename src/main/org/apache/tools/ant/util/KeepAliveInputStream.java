@@ -33,7 +33,6 @@ import java.io.InputStream;
  * </pre>
  * </p>
  *
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @since Ant 1.6
  */
 public class KeepAliveInputStream extends FilterInputStream {

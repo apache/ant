@@ -56,7 +56,6 @@ import java.util.zip.ZipException;
  *   <li>close is allowed to throw IOException.</li>
  * </ul>
  *
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class ZipFile {

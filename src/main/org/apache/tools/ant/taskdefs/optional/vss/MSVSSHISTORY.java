@@ -27,10 +27,6 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 /**
  * Performs History commands to Microsoft Visual SourceSafe.
  *
- * @author Balazs Fejes 2
- * @author Glenn_Twiggs@bmc.com
- * @author Jesse Stockall
- *
  * @ant.task name="vsshistory" category="scm"
  */
 public class MSVSSHISTORY extends MSVSS {

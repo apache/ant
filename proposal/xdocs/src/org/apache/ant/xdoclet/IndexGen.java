@@ -67,7 +67,6 @@ import java.util.Iterator;
 /**
  * Quick and dirty index.html generator for proposal/xdocs
  *
- * @author Erik Hatcher
  */
 public class IndexGen extends Task {
     private File rootDir;

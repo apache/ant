@@ -29,7 +29,6 @@ import org.apache.tools.ant.types.Path;
  * a set of deployment descriptors.
  *
  *
- * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
 public class Ejbc extends MatchingTask {
     /**

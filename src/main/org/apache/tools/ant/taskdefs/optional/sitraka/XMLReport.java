@@ -42,7 +42,6 @@ import org.xml.sax.InputSource;
  * classpath to add classes/methods that were not reported by JProbe
  * as being used (ie loaded)
  *
- * @author <a href="sbailliez@imediation.com">Stephane Bailliez</a>
  */
 public class XMLReport {
     /** task caller, can be null, used for logging purpose */

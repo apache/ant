@@ -83,11 +83,6 @@ public class SQLExampleTask extends JDBCTask {
 </pre></code>
 
 
- * @author <a href="mailto:nick@chalko.com">Nick Chalko</a>
- * @author <a href="mailto:jeff@custommonkey.org">Jeff Martin</a>
- * @author <A href="mailto:gholam@xtra.co.nz">Michael McCallum</A>
- * @author <A href="mailto:tim.stephenson@sybase.com">Tim Stephenson</A>
- *
  * @since Ant 1.5
  *
  */

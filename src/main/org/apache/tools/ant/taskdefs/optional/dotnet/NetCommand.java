@@ -51,7 +51,6 @@ import org.apache.tools.ant.types.Commandline;
  *  setting the path to point to the dotnet bin directory; in which case the
  *  shared code should go in here.
  *
- *@author     Steve Loughran steve_l@iseran.com
  *@version    0.5
  */
 

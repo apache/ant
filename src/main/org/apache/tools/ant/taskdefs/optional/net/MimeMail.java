@@ -24,10 +24,6 @@ import org.apache.tools.ant.taskdefs.email.EmailTask;
  *
  * @deprecated Use {@link EmailTask} instead.
  *
- * @author glenn_twiggs@bmc.com
- * @author steve_l@iseran.com steve loughran
- * @author ehatcher@apache.org Erik Hatcher
- * @author paulo.gaspar@krankikom.de Paulo Gaspar
  * @since Ant1.4
  */
 public class MimeMail extends EmailTask {

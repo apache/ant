@@ -20,7 +20,6 @@ import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
- * @author Stefan Bodewig
  * @version $Revision$
  */
 public class UntarTest extends BuildFileTest {

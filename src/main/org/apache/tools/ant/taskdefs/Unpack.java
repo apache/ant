@@ -25,7 +25,6 @@ import org.apache.tools.ant.Task;
 /**
  * Abstract Base class for unpack tasks.
  *
- * @author Magesh Umasankar
  *
  * @since Ant 1.5
  */
