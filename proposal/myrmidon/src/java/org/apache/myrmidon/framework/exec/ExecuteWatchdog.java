@@ -51,7 +51,7 @@ public class ExecuteWatchdog
      * timeout duration. Once the process running time exceeds this it should be
      * killed
      */
-    private int m_timeout;
+    private long m_timeout;
 
     /**
      * Creates a new watchdog with a given timeout.
@@ -59,7 +59,7 @@ public class ExecuteWatchdog
      * @param timeout the timeout for the process in milliseconds. It must be
      *      greather than 0.
      */
-    public ExecuteWatchdog( int timeout )
+    public ExecuteWatchdog( final long timeout )
     {
         if( timeout < 1 )
         {
