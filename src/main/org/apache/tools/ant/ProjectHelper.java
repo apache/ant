@@ -328,7 +328,9 @@ public class ProjectHelper {
                 project.addReference(name, project);
             }
 
-            if (id != null) project.addReference(id, project);
+            if (id != null) {
+              project.addReference(id, project);
+            }
 
             if (project.getProperty("basedir") != null) {
                 project.setBasedir(project.getProperty("basedir"));
@@ -435,8 +437,9 @@ public class ProjectHelper {
             target.setDescription(description);
             project.addTarget(name, target);
 
-            if (id != null && !id.equals(""))
+            if (id != null && !id.equals("")) {
                 project.addReference(id, target);
+            }
 
             // take care of dependencies
 
@@ -666,8 +669,9 @@ public class ProjectHelper {
 
     public static void configure(Object target, AttributeList attrs, 
                                  Project project) throws BuildException {
-        if( target instanceof TaskAdapter )
+        if( target instanceof TaskAdapter ) {
             target=((TaskAdapter)target).getProxy();
+        }
 
         IntrospectionHelper ih = 
             IntrospectionHelper.getHelper(target.getClass());
@@ -709,8 +713,9 @@ public class ProjectHelper {
             return;
         }
 
-        if(target instanceof TaskAdapter)
+        if(target instanceof TaskAdapter) {
             target = ((TaskAdapter) target).getProxy();
+        }
 
         IntrospectionHelper.getHelper(target.getClass()).addText(project, target, text);
     }
