@@ -635,7 +635,6 @@
       <include name="antRun" />
       <include name="*.pl" />
     </fixcrlf>
-    <fixcrlf srcdir="${dist.bin}" includes="*.pl" />
 
     <chmod perm="ugo+rx" dir="${dist.dir}" type="dir" includes="**" 
            failonerror="${chmod.fail}" />
@@ -801,7 +800,6 @@
       <include name="**/antRun" />
     </fixcrlf>
     <fixcrlf srcdir="${src.dist.dir}">
-      <include name="**/runant.pl" />
       <include name="**/*.java" />
     </fixcrlf>
 
