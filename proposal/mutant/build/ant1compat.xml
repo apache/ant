@@ -396,6 +396,30 @@
     <available property="swing.present"
                classname="javax.swing.ImageIcon"
                classpathref="classpath"/>
+               
+   <condition property="wsdl.found">
+      <or>
+        <available file="wsdl"     filepath="${env.PATH}" />
+        <available file="wsdl.exe" filepath="${env.PATH}" />
+        <available file="wsdl.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo level="verbose"> wsdl.found=${wsdl.found}</echo>
+   <condition property="csc.found">
+      <or>
+        <available file="csc"     filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.PATH}" />
+        <available file="csc.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo level="verbose"> csc.found=${csc.found}</echo>
+   <condition property="dotnetapps.found">
+      <and>
+        <isset property="csc.found"/>
+        <isset property="wsdl.found"/>
+      </and>
+    </condition>               
+   <echo level="verbose"> csc.found=${csc.found}</echo>
   </target>
 
   <target name="ant1compat" depends="check_for_optional_packages">

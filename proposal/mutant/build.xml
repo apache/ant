@@ -171,7 +171,8 @@
     <taskdef name="checkstyle"
              classname="com.puppycrawl.tools.checkstyle.CheckStyleTask"/>
     <mkdir dir="${bin.dir}/check"/>
-    <checkstyle>
+    <checkstyle headerFile="../../src/etc/RequiredHeader.txt"
+                headerIgnoreLine="4">
       <fileset dir="${java.dir}">
         <include name="**/*.java"/>
         <exclude name="**/org/apache/tools/ant/Task.java"/>
@@ -181,7 +182,9 @@
         <exclude name="**/builder/Ant1CompatBuilder.java"/>
       </fileset>
     </checkstyle>
-    <checkstyle allowProtected="true">
+    <checkstyle allowProtected="true" 
+                headerFile="../../src/etc/RequiredHeader.txt"
+                headerIgnoreLine="4">
       <fileset dir="${java.dir}">
         <include name="**/org/apache/tools/ant/Task.java"/>
         <include name="**/org/apache/tools/ant/ProjectComponent.java"/>
