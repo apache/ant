@@ -306,7 +306,8 @@ attribute.</p>
 &lt;style basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
        extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;/&gt;</pre>
   <h4>Using an xmlcatalog</h4>
-  <pre>&lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
+  <pre>
+&lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
       extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;&gt;
   &lt;xmlcatalog refid=&quot;mycatalog&quot;/&gt;
 &lt;/xslt&gt;
@@ -318,9 +319,11 @@ attribute.</p>
          publicId=&quot;-//ArielPartners//DTD XML Article V1.0//EN&quot;
          location=&quot;com/arielpartners/knowledgebase/dtd/article.dtd&quot;/&gt;
    &lt;/xmlcatalog&gt;
-&lt;/xslt&gt;</pre>
+&lt;/xslt&gt;
+</pre>
   <h4>Using XSL parameters</h4>
-<pre>&lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
+<pre>
+&lt;xslt basedir=&quot;doc&quot; destdir=&quot;build/doc&quot;
       extension=&quot;.html&quot; style=&quot;style/apache.xsl&quot;&gt;
   &lt;param name=&quot;date&quot; expression=&quot;07-01-2000&quot;/&gt;
 &lt;/xslt&gt;</pre>
@@ -331,16 +334,19 @@ attribute.</p>
   </p>
 
   <h4>Using output properties</h4>
-<pre>&lt;xslt in=&quot;doc.xml&quot; out=&quot;build/doc/output.xml&quot;
+<pre>
+&lt;xslt in=&quot;doc.xml&quot; out=&quot;build/doc/output.xml&quot;
       style=&quot;style/apache.xsl&quot;&gt;
   &lt;outputproperty name=&quot;method&quot; value=&quot;xml&quot;;/&gt;
   &lt;outputproperty name=&quot;standalone&quot; value=&quot;yes&quot;/&gt;
   &lt;outputproperty name=&quot;encoding&quot; value=&quot;iso8859_1&quot;/&gt;
   &lt;outputproperty name=&quot;indent&quot; value=&quot;yes&quot;/&gt;
-&lt;/xslt&gt;</pre>
+&lt;/xslt&gt;
+</pre>
 
   <h4>Using factory settings</h4>
-<pre>&lt;xslt in=&quot;doc.xml&quot; out=&quot;build/doc/output.xml&quot;
+<pre>
+&lt;xslt in=&quot;doc.xml&quot; out=&quot;build/doc/output.xml&quot;
       style=&quot;style/apache.xsl&quot;&gt;
   &lt;factory name=&quot;org.apache.xalan.processor.TransformerFactoryImpl&quot;&gt;
     &lt;attribute name=&quot;http://xml.apache.org/xalan/features/optimize&quot; value=&quot;true&quot;/&gt;
@@ -348,7 +354,8 @@ attribute.</p>
 &lt;/xslt&gt;</pre>
 
   <h4>Using a mapper</h4>
-<pre>&lt;xslt basedir=&quot;in&quot; destdir=&quot;out&quot;
+<pre>
+&lt;xslt basedir=&quot;in&quot; destdir=&quot;out&quot;
       style=&quot;style/apache.xsl&quot;&gt;
   &lt;mapper type=&quot;glob&quot; from=&quot;*.xml.en&quot; to=&quot;*.html.en&quot;/&gt;
 &lt;/xslt&gt;</pre>

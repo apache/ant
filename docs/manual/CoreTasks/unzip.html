@@ -69,17 +69,15 @@ to perform unarchival upon.
 
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;/&gt;</code></p>
-</blockquote>
-<blockquote>
-  <p><code>
-&lt;gunzip src=&quot;tools.tar.gz&quot;/&gt;<br>
+<pre>
+&lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot; dest=&quot;${tools.home}&quot;/&gt;
+</pre>
+<p/>
+<pre>
+&lt;gunzip src=&quot;tools.tar.gz&quot;/&gt;
 &lt;untar src=&quot;tools.tar&quot; dest=&quot;${tools.home}&quot;/&gt;
-</code></p>
-</blockquote>
-<blockquote>
-<p><pre>
+</pre>
+<pre>
 &lt;unzip src=&quot;${tomcat_src}/tools-src.zip&quot;
        dest=&quot;${tools.home}&quot;&gt;
     &lt;patternset&gt;
@@ -87,10 +85,9 @@ to perform unarchival upon.
         &lt;exclude name=&quot;**/Test*.java&quot;/&gt;
     &lt;/patternset&gt;
 &lt;/unzip&gt;
-</pre></p>
-</blockquote>
-<blockquote>
-<p><pre>
+</pre>
+<p/>
+<pre>
 &lt;unzip dest=&quot;${tools.home}&quot;&gt;
     &lt;patternset&gt;
         &lt;include name=&quot;**/*.java&quot;/&gt;

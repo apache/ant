@@ -86,27 +86,27 @@ true within the specified time.</p>
 <a href="conditions.html">here</a> for the full list.</p>
 
 <h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;waitfor maxwait=&quot;30&quot; maxwaitunit=&quot;second&quot;&gt;<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&lt;available file="errors.log"/&gt;<br>
-    &lt;/waitfor&gt;</code></p>
-</blockquote>
+<blockquote><pre>
+&lt;waitfor maxwait="30" maxwaitunit="second"&gt;
+        &lt;available file="errors.log"/&gt;
+&lt;/waitfor&gt;
+</pre></blockquote>
 <p>waits up to 30 seconds for a file called errors.log to appear.</p>
-<blockquote>
-  <p><code>&lt;waitfor maxwait=&quot;3&quot; maxwaitunit=&quot;minute&quot; checkevery=&quot;500&quot;&gt;<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&lt;http url=&quot;http://localhost/myapp/index.html&quot;/&gt;<br>
-    &lt;/waitfor&gt;</code></p>
-</blockquote>
+<blockquote><pre>
+&lt;waitfor maxwait="3" maxwaitunit="minute" checkevery="500"&gt;
+        &lt;http url="http://localhost/myapp/index.html"/&gt;
+&lt;/waitfor&gt;
+</pre></blockquote>
 <p>waits up to 3 minutes (and checks every 500 milliseconds) for a web server on localhost
   to serve up the specified URL.</p>
-<blockquote>
-  <p><code>&lt;waitfor maxwait=&quot;10&quot; maxwait=&quot;second&quot;&gt;<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&lt;and&gt;<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;socket server=&quot;dbserver&quot; port=&quot;1521&quot;/&gt;<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;http url=&quot;http://webserver/mypage.html&quot;/&gt;<br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&lt;/and&gt;<br>
-    &lt;/waitfor&gt;</code></p>
-</blockquote>
+<blockquote><pre>
+&lt;waitfor maxwait="10" maxwait="second"&gt;
+        &lt;and&gt;
+            &lt;socket server="dbserver" port="1521"/&gt;
+            &lt;http url="http://webserver/mypage.html"/&gt;
+        &lt;/and&gt;
+&lt;/waitfor&gt;
+</pre></blockquote>
 <p>waits up to 10 seconds for a server on the dbserver machine to begin listening
   on port 1521 and for the http://webserver/mypage.html web page
   to become available.</p>

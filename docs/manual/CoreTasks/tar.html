@@ -182,15 +182,17 @@ attributes
 </table>
 
 <h3>Examples</h3>
-<pre>  &lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot;/&gt;
-  &lt;gzip zipfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot;/&gt;</pre>
+<pre>
+&lt;tar tarfile=&quot;${dist}/manual.tar&quot; basedir=&quot;htdocs/manual&quot;/&gt;
+&lt;gzip zipfile=&quot;${dist}/manual.tar.gz&quot; src=&quot;${dist}/manual.tar&quot;/&gt;</pre>
 <p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code>  directory, then applies the gzip task to compress
 it.</p>
-<pre>  &lt;tar destfile=&quot;${dist}/manual.tar&quot;
-       basedir=&quot;htdocs/manual&quot;
-       excludes=&quot;mydocs/**, **/todo.html&quot;
-  /&gt;</pre>
+<pre>
+&lt;tar destfile=&quot;${dist}/manual.tar&quot;
+      basedir=&quot;htdocs/manual&quot;
+      excludes=&quot;mydocs/**, **/todo.html&quot;
+/&gt;</pre>
 <p>tars all files in the <code>htdocs/manual</code> directory into a file called <code>manual.tar</code>
 in the <code>${dist}</code> directory. Files in the directory <code>mydocs</code>,
 or files with the name <code>todo.html</code> are excluded.</p>
@@ -219,7 +221,8 @@ or files with the name <code>todo.html</code> are excluded.</p>
 </p>
 
 
-<pre>&lt;tar longfile=&quot;gnu&quot;
+<pre>
+&lt;tar longfile=&quot;gnu&quot;
      destfile=&quot;${dist.base}/${dist.name}-src.tar&quot; &gt;
   &lt;tarfileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
     &lt;include name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
@@ -230,7 +233,8 @@ or files with the name <code>todo.html</code> are excluded.</p>
     &lt;exclude name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;exclude name=&quot;${dist.name}/build.sh&quot;/&gt;
   &lt;/tarfileset&gt;
-&lt;/tar&gt; </pre>
+&lt;/tar&gt;
+</pre>
 
 <p>This example shows building a tar which uses the GNU extensions for long paths and
 where some files need to be marked as executable (mode 755)
