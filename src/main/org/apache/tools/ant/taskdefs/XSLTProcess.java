@@ -342,7 +342,7 @@ public class XSLTProcess extends MatchingTask {
                 inFile.lastModified() > outFile.lastModified() ||
                 styleSheetLastModified > outFile.lastModified()) {
                 ensureDirectoryFor( outFile );
-                log("Transforming into "+destDir);
+                log("Processing "+inFile+" to "+outFile);
 
                 configureLiaison(stylesheet);
                 liaison.transform(inFile, outFile);
