@@ -204,7 +204,7 @@
         Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>
 <short-description><![CDATA[Adds a directory set to the implicit build path.]]></short-description>
 <description>
-            <![CDATA[Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular order, so if order is significant, one should use a file list instead!</em>]]>
+            <![CDATA[Adds a directory set to the implicit build path. <p> <em>Note that the directories will be added to the build path in no particular o]]><![CDATA[rder, so if order is significant, one should use a file list instead!</em>]]>
           </description>
 
       </blockquote></td></tr>
@@ -360,6 +360,21 @@
 <p>
             this snippet build file will run ant in each subdirectory of the project directory,
             where a file called build.xml can be found.
+            The property build.dir will have the value subant1.build in the ant projects called by subant.
+        </p>
+<pre>
+          &lt;subant target=""&gt;
+             &lt;propertyset&gt;
+                  &lt;propertyref prefix="toplevel"/&gt;
+                  &lt;mapper type="glob" from="foo*" to="bar*"/&gt;
+             &lt;/propertyset&gt;
+             &lt;fileset dir="." includes="*/build.xml"/&gt;
+          &lt;/subant&gt;
+        </pre>
+<p>
+            this snippet build file will run ant in each subdirectory of the project directory,
+            where a file called build.xml can be found.
+            All properties whose name starts with "foo" are passed, their names are changed to start with "bar" instead
         </p>
 
       </blockquote></td></tr>

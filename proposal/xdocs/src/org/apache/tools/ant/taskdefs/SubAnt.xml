@@ -25,6 +25,21 @@
         <p>
             this snippet build file will run ant in each subdirectory of the project directory,
             where a file called build.xml can be found.
+            The property build.dir will have the value subant1.build in the ant projects called by subant.
+        </p>
+        <pre>
+          &lt;subant target=""&gt;
+             &lt;propertyset&gt;
+                  &lt;propertyref prefix="toplevel"/&gt;
+                  &lt;mapper type="glob" from="foo*" to="bar*"/&gt;
+             &lt;/propertyset&gt;
+             &lt;fileset dir="." includes="*/build.xml"/&gt;
+          &lt;/subant&gt;
+        </pre>
+        <p>
+            this snippet build file will run ant in each subdirectory of the project directory,
+            where a file called build.xml can be found.
+            All properties whose name starts with &quot;foo&quot; are passed, their names are changed to start with &quot;bar&quot; instead
         </p>
     </section>
 </external>
