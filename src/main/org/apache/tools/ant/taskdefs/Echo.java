@@ -116,6 +116,8 @@ public class Echo extends Task {
 
     /**
      * File to write to.
+     * @param file the file to write to, if not set, echo to
+     *             standard output
      */
     public void setFile(File file) {
         this.file = file;
@@ -123,6 +125,8 @@ public class Echo extends Task {
 
     /**
      * If true, append to existing file.
+     * @param append if true, append to existing file, default
+     *               is false.
      */
     public void setAppend(boolean append) {
         this.append = append;
@@ -130,6 +134,7 @@ public class Echo extends Task {
 
     /**
      * Set a multiline message.
+     * @param msg the CDATA text to append to the output text
      */
     public void addText(String msg) {
         message += getProject().replaceProperties(msg);
@@ -146,6 +151,7 @@ public class Echo extends Task {
      * </ul>
      * <p>The default is &quot;warning&quot; to ensure that messages are
      * displayed by default when using the -quiet command line option.</p>
+     * @param echoLevel the logging level
      */
     public void setLevel(EchoLevel echoLevel) {
         String option = echoLevel.getValue();
@@ -163,9 +169,13 @@ public class Echo extends Task {
         }
     }
 
+    /**
+     * The enumerated values for the level attribute.
+     */
     public static class EchoLevel extends EnumeratedAttribute {
         /**
          * @see EnumeratedAttribute#getValues
+         * @return the strings allowed for the level attribute
          */
         public String[] getValues() {
             return new String[] {"error", "warning", "info",
