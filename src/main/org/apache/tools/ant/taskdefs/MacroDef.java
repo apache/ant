@@ -596,13 +596,17 @@ public class MacroDef extends AntlibDefinition  {
     }
 
     /**
-     * equality method for macrodef, ignores project and
+     * similar equality method for macrodef, ignores project and
      * runtime info.
      *
      * @param obj an <code>Object</code> value
      * @return a <code>boolean</code> value
      */
-    public boolean equals(Object obj) {
+    public boolean similar(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
         if (obj == null) {
             return false;
         }
@@ -650,17 +654,6 @@ public class MacroDef extends AntlibDefinition  {
     }
 
     /**
-     * @return a hash code value for this object.
-     */
-    public int hashCode() {
-        return objectHashCode(name)
-            + objectHashCode(getURI())
-            + objectHashCode(nestedSequential)
-            + objectHashCode(attributes)
-            + objectHashCode(elements);
-    }
-
-    /**
      * extends AntTypeDefinition, on create
      * of the object, the template macro definition
      * is given.
@@ -704,7 +697,7 @@ public class MacroDef extends AntlibDefinition  {
                 return false;
             }
             MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
-            return macroDef.equals(otherDef.macroDef);
+            return macroDef.similar(otherDef.macroDef);
         }
 
         /**
@@ -720,7 +713,7 @@ public class MacroDef extends AntlibDefinition  {
                 return false;
             }
             MyAntTypeDefinition otherDef = (MyAntTypeDefinition) other;
-            return macroDef.equals(otherDef.macroDef);
+            return macroDef.similar(otherDef.macroDef);
         }
     }
 
