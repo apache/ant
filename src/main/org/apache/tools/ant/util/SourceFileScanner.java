@@ -106,6 +106,9 @@ public class SourceFileScanner {
           If we're on Windows, we have to munge the time up to 2 secs to
           be able to check file modification times.
           (Windows has a max resolution of two secs for modification times)
+          Actually this is a feature of the FAT file system, NTFS does
+          not have it, so if we could reliably passively test for an NTFS
+          file systems we could turn this off...
         */
         if (Os.isFamily("windows")) {
             now += 2000;
