@@ -330,7 +330,14 @@ public class ExecuteOn extends ExecTask {
             }
 
         } else { // no targetFilePos
+
+            // 0 --> srcIndex
             System.arraycopy(orig, 0, result, 0, srcIndex);
+            // srcIndex --> end
+            System.arraycopy(orig, srcIndex, result, 
+                             srcIndex + srcFiles.length,
+                             orig.length - srcIndex);
+
         }
 
         // fill in source file names

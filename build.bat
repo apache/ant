@@ -11,8 +11,8 @@ goto cleanup
 
 :runAnt
 set LOCALCLASSPATH=lib\crimson.jar;lib\jaxp.jar;bootstrap\lib\ant.jar
-for %%i in (lib\optional\*.jar) do call bootstrap\bin\lcp.bat "%%i"
-set CLASSPATH=%LOCALCLASSPATH%;%CLASSPATH%
+for %%i in (lib\optional\*.jar) do call bootstrap\bin\lcp.bat %%i
+set CLASSPATH=lib\optional\xalanj1compat.jar;%LOCALCLASSPATH%;%CLASSPATH%
 set LOCALCLASSPATH=
 
 if not "%REAL_ANT_HOME%" == "" goto install_ant

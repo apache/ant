@@ -87,6 +87,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      * Bunch of constants used for storing entries in a hashtable, and for
      * constructing the filenames of various parts of the ejb jar.
      */
+    private static final String EJB_REF   = "ejb-ref";
     private static final String HOME_INTERFACE   = "home";
     private static final String REMOTE_INTERFACE = "remote";
     private static final String BEAN_CLASS       = "ejb-class";
@@ -129,6 +130,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     private Hashtable fileDTDs = new Hashtable();
     
     private Hashtable resourceDTDs = new Hashtable();
+
+    private boolean inEJBRef = false;
 
     private Hashtable urlDTDs = new Hashtable();
 
@@ -244,6 +247,7 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     public void startDocument() throws SAXException {
         this.ejbFiles = new Hashtable(10, 1);
         this.currentElement = null;
+        inEJBRef = false;
     }
 
 
@@ -258,7 +262,10 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         throws SAXException {
         this.currentElement = name;
         currentText = "";
-        if (parseState == STATE_LOOKING_EJBJAR && name.equals(EJB_JAR)) {
+        if (name.equals(EJB_REF)) {
+            inEJBRef = true;
+        }
+        else if (parseState == STATE_LOOKING_EJBJAR && name.equals(EJB_JAR)) {
             parseState = STATE_IN_EJBJAR;
         }
         else if (parseState == STATE_IN_EJBJAR && name.equals(ENTERPRISE_BEANS)) {
@@ -286,7 +293,10 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         processElement();
         currentText = "";
         this.currentElement = "";
-        if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN )) {
+        if (name.equals(EJB_REF)) {
+            inEJBRef = false;
+        }
+        else if (parseState == STATE_IN_ENTITY && name.equals(ENTITY_BEAN )) {
             parseState = STATE_IN_BEANS;
         }
         else if (parseState == STATE_IN_SESSION && name.equals(SESSION_BEAN)) {
@@ -323,7 +333,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
     
     
     protected void processElement() {
-        if (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION) {
+        if (inEJBRef || 
+            (parseState != STATE_IN_ENTITY && parseState != STATE_IN_SESSION)) {
             return;
         }
         

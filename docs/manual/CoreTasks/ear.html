@@ -92,6 +92,12 @@ attributes of zipfilesets in a Zip or Jar task.)</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">update</td>
+    <td valign="top">indicates whether to update or overwrite
+      the destination file if it already exists.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">whenempty</td>
     <td valign="top">Behavior to use if no files match.</td>
     <td valign="top" align="center">No</td>
@@ -106,8 +112,8 @@ fileset includes a file named <code>MANIFEST.MF</code>, the file is
 ignored and you will get a warning.</p>
 <h2>Example</h2>
 <pre>
-    &lt;ear earfile="${build.dir}/myapp.ear" appxml="${src.dir}/metadata/application.xml"&gt;
-      &lt;fileset dir="${build.dir}" includes="*.jar,*.war"/&gt;
+    &lt;ear earfile=&quot;${build.dir}/myapp.ear&quot; appxml=&quot;${src.dir}/metadata/application.xml&quot;&gt;
+      &lt;fileset dir=&quot;${build.dir}&quot; includes=&quot;*.jar,*.war&quot;/&gt;
     &lt;/ear&gt;
 </pre>
 <hr>

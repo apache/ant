@@ -169,4 +169,13 @@ public class UnknownElement extends Task {
         return task;
     }
 
+    /**
+     * Get the name to use in logging messages.
+     *
+     * @return the name to use in logging messages.
+     */
+    public String getTaskName() {
+        return realTask == null ? super.getTaskName() : realTask.getTaskName();
+    }
+
 }// UnknownElement

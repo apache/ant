@@ -450,11 +450,6 @@ public class Manifest {
      */
     public Manifest(InputStream is) throws ManifestException, IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        String line = reader.readLine();
-        if (line == null) {
-            return;
-        }
-        
         // This should be the manifest version
         String nextSectionName = mainSection.read(reader);
         String readManifestVersion = mainSection.getAttributeValue(ATTRIBUTE_MANIFEST_VERSION);
@@ -463,6 +458,7 @@ public class Manifest {
             mainSection.removeAttribute(ATTRIBUTE_MANIFEST_VERSION);
         }
 
+        String line = null;
         while ((line = reader.readLine()) != null) {
             if (line.length() == 0) {
                 continue;

@@ -70,7 +70,9 @@ public class Jar extends Zip {
 
     private File manifestFile;
     private Manifest manifest;
-    private Manifest execManifest;    
+    private Manifest execManifest;  
+    
+    /** true if a manifest has been specified in the task */
     private boolean buildFileManifest = false;
     
     public Jar() {
@@ -138,20 +140,29 @@ public class Jar extends Zip {
         throws IOException, BuildException
     {
         try {
-            // If no manifest is specified, add the default one.
-            if (manifest == null) {
-                execManifest = null;
-            }
-            else {
-                execManifest = new Manifest();
+            execManifest = getDefaultManifest();
+
+            if (manifest != null) {
                 execManifest.merge(manifest);
             }
+            for (Enumeration e = execManifest.getWarnings(); e.hasMoreElements(); ) {
+                log("Manifest warning: " + (String)e.nextElement(), Project.MSG_WARN);
+            }
+        
             zipDir(null, zOut, "META-INF/");
+            // time to write the manifest
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            PrintWriter writer = new PrintWriter(baos);
+            execManifest.write(writer);
+            writer.flush();
+        
+            ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+            super.zipFile(bais, zOut, "META-INF/MANIFEST.MF", System.currentTimeMillis());
             super.initZipOutputStream(zOut);
         }
         catch (ManifestException e) {
-                log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
-                throw new BuildException("Invalid Manifest", e, getLocation());
+            log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
+            throw new BuildException("Invalid Manifest", e, getLocation());
         }
     }
         
@@ -172,28 +183,6 @@ public class Jar extends Zip {
         }
     }   
     
-    protected void finalizeZipOutputStream(ZipOutputStream zOut)
-        throws IOException, BuildException {
-
-        if (execManifest == null) {
-            execManifest = getDefaultManifest();
-        }
-
-        for (Enumeration e = execManifest.getWarnings(); e.hasMoreElements(); ) {
-            log("Manifest warning: " + (String)e.nextElement(), Project.MSG_WARN);
-        }
-        
-        // time to write the manifest
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintWriter writer = new PrintWriter(baos);
-        execManifest.write(writer);
-        writer.flush();
-        
-        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
-        super.zipFile(bais, zOut, "META-INF/MANIFEST.MF", System.currentTimeMillis());
-        super.finalizeZipOutputStream(zOut);
-    }
-
     /**
      * Handle situation when we encounter a manifest file
      *
@@ -220,30 +209,17 @@ public class Jar extends Zip {
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
         throws IOException
     {
-        // If the file being added is META-INF/MANIFEST.MF, we merge it with the
-        // current manifest 
+        // If the file being added is META-INF/MANIFEST.MF, we warn if it's not the
+        // one specified in the "manifest" attribute - or if it's being added twice, 
+        // meaning the same file is specified by the "manifeset" attribute and in
+        // a <fileset> element.
         if (vPath.equalsIgnoreCase("META-INF/MANIFEST.MF"))  {
-            InputStream is = null;
-            try {
-                is = new FileInputStream(file);
-                zipManifestEntry(is);
-            }
-            catch (IOException e) {
-                throw new BuildException("Unable to read manifest file: " + file, e);
-            }
-            finally {
-                if (is != null) {
-                    try {
-                        is.close();
-                    }
-                    catch (IOException e) {
-                        // do nothing
-                    }
-                }
-            }
+            log("Warning: selected "+archiveType+" files include a META-INF/MANIFEST.MF which will be ignored " +
+                "(please use manifest attribute to "+archiveType+" task)", Project.MSG_WARN);
         } else {
             super.zipFile(file, zOut, vPath);
         }
+
     }
 
     protected void zipFile(InputStream is, ZipOutputStream zOut, String vPath, long lastModified)
@@ -279,15 +255,22 @@ public class Jar extends Zip {
                 theZipFile = new java.util.zip.ZipFile(zipFile);
                 java.util.zip.ZipEntry entry = theZipFile.getEntry("META-INF/MANIFEST.MF");
                 if (entry == null) {
+                    log("Updating jar since the current jar has no manifest", Project.MSG_VERBOSE);
                     return false;
                 }
                 Manifest currentManifest = new Manifest(theZipFile.getInputStream(entry));
+                if (manifest == null) {
+                    manifest = getDefaultManifest();
+                }
                 if (!currentManifest.equals(manifest)) {
+                    log("Updating jar since jar manifest has changed", Project.MSG_VERBOSE);
                     return false;
                 }
             }
             catch (Exception e) {
                 // any problems and we will rebuild
+                log("Updating jar since cannot read current jar manifest: " + e.getClass().getName() + e.getMessage(), 
+                    Project.MSG_VERBOSE);
                 return false;
             }
             finally {

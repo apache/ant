@@ -421,11 +421,7 @@ public class ProjectHelper {
             // take care of dependencies
 
             if (depends.length() > 0) {
-                StringTokenizer tok =
-                    new StringTokenizer(depends, ",", false);
-                while (tok.hasMoreTokens()) {
-                    target.addDependency(tok.nextToken().trim());
-                }
+                target.setDepends(depends);
             }
         }
 
@@ -464,6 +460,8 @@ public class ProjectHelper {
             if (task == null) {
                 task = new UnknownElement(tag);
                 task.setProject(project);
+                task.setTaskType(tag);
+                task.setTaskName(tag);
             }
 
             task.setLocation(new Location(buildFile.toString(), locator.getLineNumber(), locator.getColumnNumber()));

@@ -586,7 +586,9 @@ public class FTP
 
         FTPFile[] files = ftp.listFiles(remoteFile);
 
-        if (files == null)
+        // For Microsoft's Ftp-Service an Array with length 0 is 
+        // returned if configured to return listings in "MS-DOS"-Format
+        if (files == null || files.length == 0)
         {
             // If we are sending files, then assume out of date.
             // If we are getting files, then throw an error
@@ -804,12 +806,12 @@ public class FTP
         }
 
         if( ! ftp.makeDirectory( dir ) ) {
-            // Both codes 550 and 553 can be produced by FTP Servers
+            // codes 521, 550 and 553 can be produced by FTP Servers
             //  to indicate that an attempt to create a directory has
             //  failed because the directory already exists.
 
             int rc = ftp.getReplyCode();
-            if( rc != 550 && rc != 553 && !ignoreNoncriticalErrors) {
+            if( !(ignoreNoncriticalErrors && (rc == 550 || rc == 553 || rc==521))) {
                 throw new BuildException( "could not create directory: " +
                                           ftp.getReplyString() );
             }

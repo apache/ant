@@ -215,10 +215,10 @@ public class BorlandDeploymentTool extends GenericDeploymentTool  implements Exe
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
 
-        File borlandDD = new File(getConfig().descriptorDir,BAS_DD);
+        File borlandDD = new File(getConfig().descriptorDir,ddPrefix + BAS_DD);
         if (borlandDD.exists()) {
             log("Borland specific file found "+ borlandDD,  Project.MSG_VERBOSE);
-            ejbFiles.put(META_DIR + BAS_DD, ddPrefix + borlandDD);
+            ejbFiles.put(META_DIR + BAS_DD,  borlandDD);
         }
         else {
             log("Unable to locate borland deployment descriptor. It was expected to be in " + 

@@ -9,10 +9,10 @@
 
 <h2><a name="log">BorlandDeploy</a>Tool</h2>
 <h3>Description</h3>
-<p>The BorlandDeployTool is a vendor specifc nested element for the Ejbjar optionaltask.
+<p>The BorlandDeployTool is a vendor specific nested element for the Ejbjar optional task.
 <p>BorlandDeploymentTool is dedicated to the Borland Application Server 4.5. It 
   generates and compiles the stubs and skeletons for all ejb described into the 
-  Deployement Descriptor, builds the jar file including the support files and 
+  Deployment Descriptor, builds the jar file including the support files and 
   verify whether the produced jar is valid or not.
 <h3>Borland element</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -55,7 +55,7 @@
     <td valign="top" width="915"><b>Deprecated</b>. Defines the location of the 
       weblogic-ejb-jar DTD which covers the Borland specific deployment descriptors. 
       This should not be necessary if you have borland in your classpath. If you 
-      do not, you should use a nested <dtd> element, described above</td>
+      do not, you should use a nested &lt;dtd&gt; element, described above</td>
     <td align="center" valign="middle" width="62">no</td>
   </tr>
   <tr> 
@@ -63,7 +63,7 @@
     <td valign="top" width="915"><b>Deprecated</b>. Defines the location of the 
       ejb-jar DTD in the weblogic class hierarchy. This should not be necessary 
       if you have weblogic in your classpath. If you do not, you should use a 
-      nested <dtd> element, described above. </td>
+      nested &lt;dtd&gt; element, described above. </td>
     <td align="center" valign="middle" width="62">no</td>
   </tr>
   <tr> 
@@ -75,7 +75,7 @@
 </table>
 
 <h3>Examples</h3>
-<p>The following build.xml snippit is an example of how to use Borland element 
+<p>The following build.xml snippet is an example of how to use Borland element 
   into the ejbjar task
 <pre>    &lt;ejbjar srcdir=&quot;${build.classes}&quot;  basejarname=&quot;vsmp&quot;  descriptordir=&quot;${rsc.dir}/hrmanager&quot;&gt;
         &lt;borland destdir=&quot;lib&quot; verify=&quot;on&quot; generateclient=&quot;on&quot;&gt;

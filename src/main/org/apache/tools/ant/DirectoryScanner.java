@@ -113,6 +113,9 @@ import java.util.*;
  * "**\test\**\XYZ*" matches all files/dirs that start with "XYZ" and where
  * there is a parent directory called test (e.g. "abc\test\def\ghi\XYZ123").
  * <p>
+ * Case sensitivity may be turned off if necessary.  By default, it is
+ * turned on.
+ * <p>
  * Example of usage:
  * <pre>
  *   String[] includes = {"**\\*.class"};
@@ -120,6 +123,7 @@ import java.util.*;
  *   ds.setIncludes(includes);
  *   ds.setExcludes(excludes);
  *   ds.setBasedir(new File("test"));
+ *   ds.setCaseSensitive(true);
  *   ds.scan();
  *
  *   System.out.println("FILES:");
@@ -132,6 +136,7 @@ import java.util.*;
  * .class files in all directories under a directory called "modules"
  *
  * @author Arnout J. Kuiper <a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>
+ * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
 public class DirectoryScanner implements FileScanner {
 
@@ -208,6 +213,11 @@ public class DirectoryScanner implements FileScanner {
     protected boolean haveSlowResults = false;
 
     /**
+     * Should the file system be treated as a case sensitive one?
+     */
+    protected boolean isCaseSensitive = true;
+
+    /**
      * Constructor.
      */
     public DirectoryScanner() {
@@ -216,7 +226,7 @@ public class DirectoryScanner implements FileScanner {
 
     /**
      * Does the path match the start of this pattern up to the first "**".
-     +
+     *
      * <p>This is not a general purpose test and should only be used if you
      * can live with false positives.</p>
      *
@@ -226,6 +236,23 @@ public class DirectoryScanner implements FileScanner {
      * @param str     the (non-null) string (path) to match
      */
     protected static boolean matchPatternStart(String pattern, String str) {
+        return matchPatternStart(pattern, str, true);
+    }
+
+    /**
+     * Does the path match the start of this pattern up to the first "**".
+     *
+     * <p>This is not a general purpose test and should only be used if you
+     * can live with false positives.</p>
+     *
+     * <p><code>pattern=**\\a</code> and <code>str=b</code> will yield true.
+     *
+     * @param pattern             the (non-null) pattern to match against
+     * @param str                 the (non-null) string (path) to match
+     * @param isCaseSensitive     must matches be case sensitive?
+     */
+    protected static boolean matchPatternStart(String pattern, String str,
+                                               boolean isCaseSensitive) {
         // When str starts with a File.separator, pattern has to start with a
         // File.separator.
         // When pattern starts with a File.separator, str has to start with a
@@ -258,7 +285,7 @@ public class DirectoryScanner implements FileScanner {
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxStart))) {
+            if (!match(patDir,(String)strDirs.elementAt(strIdxStart), isCaseSensitive)) {
                 return false;
             }
             patIdxStart++;
@@ -288,6 +315,20 @@ public class DirectoryScanner implements FileScanner {
      *         <code>false</code> otherwise.
      */
     protected static boolean matchPath(String pattern, String str) {
+        return matchPath(pattern, str, true);
+    }
+
+    /**
+     * Matches a path against a pattern.
+     *
+     * @param pattern            the (non-null) pattern to match against
+     * @param str                the (non-null) string (path) to match
+     * @param isCaseSensitive    must a case sensitive match be done?
+     *
+     * @return <code>true</code> when the pattern matches against the string.
+     *         <code>false</code> otherwise.
+     */
+    protected static boolean matchPath(String pattern, String str, boolean isCaseSensitive) {
         // When str starts with a File.separator, pattern has to start with a
         // File.separator.
         // When pattern starts with a File.separator, str has to start with a
@@ -320,7 +361,7 @@ public class DirectoryScanner implements FileScanner {
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxStart))) {
+            if (!match(patDir,(String)strDirs.elementAt(strIdxStart), isCaseSensitive)) {
                 return false;
             }
             patIdxStart++;
@@ -347,7 +388,7 @@ public class DirectoryScanner implements FileScanner {
             if (patDir.equals("**")) {
                 break;
             }
-            if (!match(patDir,(String)strDirs.elementAt(strIdxEnd))) {
+            if (!match(patDir,(String)strDirs.elementAt(strIdxEnd), isCaseSensitive)) {
                 return false;
             }
             patIdxEnd--;
@@ -386,7 +427,7 @@ strLoop:
                 for (int j = 0; j < patLength; j++) {
                     String subPat = (String)patDirs.elementAt(patIdxStart+j+1);
                     String subStr = (String)strDirs.elementAt(strIdxStart+i+j);
-                    if (!match(subPat,subStr)) {
+                    if (!match(subPat,subStr, isCaseSensitive)) {
                         continue strLoop;
                     }
                 }
@@ -413,7 +454,6 @@ strLoop:
     }
 
 
-
     /**
      * Matches a string against a pattern. The pattern contains two special
      * characters:
@@ -428,6 +468,24 @@ strLoop:
      *         <code>false</code> otherwise.
      */
     protected static boolean match(String pattern, String str) {
+        return match(pattern, str, true);
+    }
+
+
+    /**
+     * Matches a string against a pattern. The pattern contains two special
+     * characters:
+     * '*' which means zero or more characters,
+     * '?' which means one and only one character.
+     *
+     * @param pattern the (non-null) pattern to match against
+     * @param str     the (non-null) string that must be matched against the
+     *                pattern
+     *
+     * @return <code>true</code> when the string matches against the pattern,
+     *         <code>false</code> otherwise.
+     */
+    protected static boolean match(String pattern, String str, boolean isCaseSensitive) {
         char[] patArr = pattern.toCharArray();
         char[] strArr = str.toCharArray();
         int patIdxStart = 0;
@@ -451,21 +509,33 @@ strLoop:
             }
             for (int i = 0; i <= patIdxEnd; i++) {
                 ch = patArr[i];
-                if (ch != '?' && ch != strArr[i]) {
-                    return false; // Character mismatch
+                if (ch != '?') {
+                    if (isCaseSensitive && ch != strArr[i]) {
+                        return false;// Character mismatch
+                    }
+                    if (!isCaseSensitive && Character.toUpperCase(ch) !=
+                        Character.toUpperCase(strArr[i])) {
+                        return false; // Character mismatch
+                    }
                 }
             }
             return true; // String matches against pattern
         }
-
+        
         if (patIdxEnd == 0) {
             return true; // Pattern contains only '*', which matches anything
         }
 
         // Process characters before first star
         while((ch = patArr[patIdxStart]) != '*' && strIdxStart <= strIdxEnd) {
-            if (ch != '?' && ch != strArr[strIdxStart]) {
-                return false;
+            if (ch != '?') {
+                if (isCaseSensitive && ch != strArr[strIdxStart]) {
+                    return false;// Character mismatch
+                }
+                if (!isCaseSensitive && Character.toUpperCase(ch) !=
+                    Character.toUpperCase(strArr[strIdxStart])) {
+                    return false;// Character mismatch
+                }
             }
             patIdxStart++;
             strIdxStart++;
@@ -483,8 +553,14 @@ strLoop:
 
         // Process characters after last star
         while((ch = patArr[patIdxEnd]) != '*' && strIdxStart <= strIdxEnd) {
-            if (ch != '?' && ch != strArr[strIdxEnd]) {
-                return false;
+            if (ch != '?') {
+                if (isCaseSensitive && ch != strArr[strIdxEnd]) {
+                    return false;// Character mismatch
+                }
+                if (!isCaseSensitive && Character.toUpperCase(ch) !=
+                    Character.toUpperCase(strArr[strIdxEnd])) {
+                    return false;// Character mismatch
+                }
             }
             patIdxEnd--;
             strIdxEnd--;
@@ -520,12 +596,18 @@ strLoop:
             int patLength = (patIdxTmp-patIdxStart-1);
             int strLength = (strIdxEnd-strIdxStart+1);
             int foundIdx  = -1;
-strLoop:
+            strLoop:
             for (int i = 0; i <= strLength - patLength; i++) {
                 for (int j = 0; j < patLength; j++) {
                     ch = patArr[patIdxStart+j+1];
-                    if (ch != '?' && ch != strArr[strIdxStart+i+j]) {
-                        continue strLoop;
+                    if (ch != '?') {
+                        if (isCaseSensitive && ch != strArr[strIdxStart+i+j]) {
+                            continue strLoop;
+                        }
+                        if (!isCaseSensitive && Character.toUpperCase(ch) !=
+                            Character.toUpperCase(strArr[strIdxStart+i+j])) {
+                            continue strLoop;
+                        }
                     }
                 }
 
@@ -590,6 +672,15 @@ strLoop:
     }
 
 
+
+    /**
+     * Sets the case sensitivity of the file system
+     *
+     * @param specifies if the filesystem is case sensitive
+     */
+    public void setCaseSensitive(boolean isCaseSensitive) {
+        this.isCaseSensitive = isCaseSensitive;
+    }
 
     /**
      * Sets the set of include patterns to use. All '/' and '\' characters are
@@ -808,7 +899,7 @@ strLoop:
      */
     protected boolean isIncluded(String name) {
         for (int i = 0; i < includes.length; i++) {
-            if (matchPath(includes[i],name)) {
+            if (matchPath(includes[i],name, isCaseSensitive)) {
                 return true;
             }
         }
@@ -824,7 +915,7 @@ strLoop:
      */
     protected boolean couldHoldIncluded(String name) {
         for (int i = 0; i < includes.length; i++) {
-            if (matchPatternStart(includes[i],name)) {
+            if (matchPatternStart(includes[i],name, isCaseSensitive)) {
                 return true;
             }
         }
@@ -840,7 +931,7 @@ strLoop:
      */
     protected boolean isExcluded(String name) {
         for (int i = 0; i < excludes.length; i++) {
-            if (matchPath(excludes[i],name)) {
+            if (matchPath(excludes[i],name, isCaseSensitive)) {
                 return true;
             }
         }

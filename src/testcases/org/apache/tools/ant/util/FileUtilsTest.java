@@ -77,7 +77,8 @@ public class FileUtilsTest extends TestCase {
 
     public void setUp() {
         fu = FileUtils.newFileUtils();
-        root = new File(File.separator).getAbsolutePath();
+        // Windows adds the drive letter in uppercase, unless you run Cygnus
+        root = new File(File.separator).getAbsolutePath().toUpperCase();
     }
 
     public void tearDown() {
