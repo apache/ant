@@ -1,3 +1,17 @@
+Changes from Ant 1.6.1 to current CVS
+=====================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+
+Fixed bugs:
+-----------
+
+
+Other changes:
+--------------
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 
@@ -40,6 +54,9 @@ Fixed bugs:
 
 * <splash> used to break the build on non-GUI environments.  Bugzilla
   report 11482.
+
+* Ant 1.6.0 cannot run build scripts in directories with non-ASCII names.
+  Bugzilla Report 26642.
 
 Other changes:
 --------------
