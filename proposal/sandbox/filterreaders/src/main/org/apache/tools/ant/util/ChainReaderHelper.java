@@ -56,6 +56,7 @@ package org.apache.tools.ant.util;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.filters.CloneableReader;
 import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterReaderSet;
 import org.apache.tools.ant.types.Path;
@@ -133,9 +134,7 @@ public final class ChainReaderHelper {
             final Vector filterReaders = filterset.getFilterReaders();
             final int readerCount = filterReaders.size();
             for (int j = 0; j < readerCount; j++) {
-                final AntFilterReader afr =
-                    (AntFilterReader) filterReaders.elementAt(j);
-                finalFilters.addElement(afr);
+                finalFilters.addElement(filterReaders.elementAt(j));
             }
         }
 
@@ -143,47 +142,62 @@ public final class ChainReaderHelper {
 
         if (filtersCount > 0) {
             for (int i = 0; i < filtersCount; i++) {
-                final AntFilterReader filter =
-                    (AntFilterReader) finalFilters.elementAt(i);
-                final String className = filter.getClassName();
-                final Path classpath = filter.getClasspath();
-                final Project project = filter.getProject();
-                if (className != null) {
-                    try {
-                        Class clazz = null;
-                        if (classpath == null) {
-                            clazz = Class.forName(className);
-                        } else {
-                            AntClassLoader al = new AntClassLoader(project,
-                                                                   classpath);
-                            clazz = al.loadClass(className);
-                            AntClassLoader.initializeClass(clazz);
-                        }
-                        if (clazz != null) {
-                            if (!FilterReader.class.isAssignableFrom(clazz)) {
-                                throw new BuildException(className +
-                                    " does not extend java.io.FilterReader");
+                Object o = finalFilters.elementAt(i);
+
+                if (o instanceof AntFilterReader) {
+                    final AntFilterReader filter = (AntFilterReader) finalFilters.elementAt(i);
+                    final String className = filter.getClassName();
+                    final Path classpath = filter.getClasspath();
+                    final Project project = filter.getProject();
+                    if (className != null) {
+                        try {
+                            Class clazz = null;
+                            if (classpath == null) {
+                                clazz = Class.forName(className);
+                            } else {
+                                AntClassLoader al = new AntClassLoader(project,
+                                                                       classpath);
+                                clazz = al.loadClass(className);
+                                AntClassLoader.initializeClass(clazz);
                             }
-                            final Constructor[] constructors =
-                                clazz.getConstructors();
-                            final Reader[] rdr = {instream};
-                            instream =
-                                (Reader) constructors[0].newInstance(rdr);
-                            if (Parameterizable.class.isAssignableFrom(clazz)) {
-                                final Parameter[] params = filter.getParams();
-                                ((Parameterizable)
-                                    instream).setParameters(params);
+                            if (clazz != null) {
+                                if (!FilterReader.class.isAssignableFrom(clazz)) {
+                                    throw new BuildException(className +
+                                        " does not extend java.io.FilterReader");
+                                }
+                                final Constructor[] constructors =
+                                    clazz.getConstructors();
+                                int j = 0;
+                                for (; j < constructors.length; j++) {
+                                    Class[] types = constructors[j]
+                                                      .getParameterTypes();
+                                    if (types.length == 1 &&
+                                        types[0].isAssignableFrom(Reader.class)) {
+                                        break;
+                                    }
+                                }
+                                final Reader[] rdr = {instream};
+                                instream =
+                                    (Reader) constructors[j].newInstance(rdr);
+                                if (Parameterizable.class.isAssignableFrom(clazz)) {
+                                    final Parameter[] params = filter.getParams();
+                                    ((Parameterizable)
+                                        instream).setParameters(params);
+                                }
                             }
+                        } catch (final ClassNotFoundException cnfe) {
+                            throw new BuildException(cnfe);
+                        } catch (final InstantiationException ie) {
+                            throw new BuildException(ie);
+                        } catch (final IllegalAccessException iae) {
+                            throw new BuildException(iae);
+                        } catch (final InvocationTargetException ite) {
+                            throw new BuildException(ite);
                         }
-                    } catch (final ClassNotFoundException cnfe) {
-                        throw new BuildException(cnfe);
-                    } catch (final InstantiationException ie) {
-                        throw new BuildException(ie);
-                    } catch (final IllegalAccessException iae) {
-                        throw new BuildException(iae);
-                    } catch (final InvocationTargetException ite) {
-                        throw new BuildException(ite);
                     }
+                } else if (o instanceof CloneableReader &&
+                           o instanceof Reader) {
+                    instream = ((CloneableReader) o).clone(instream);
                 }
             }
         }

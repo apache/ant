@@ -55,6 +55,8 @@ package org.apache.tools.ant.types;
 
 import java.util.Vector;
 
+import org.apache.tools.ant.filters.HeadFilter;
+
 /**
  * Set of FilterReaders
  *
@@ -70,5 +72,9 @@ public final class FilterReaderSet {
 
     public final Vector getFilterReaders() {
         return filterReaders;
+    }
+
+    public final void addHeadFilter(final HeadFilter headFilter) {
+        filterReaders.addElement(headFilter);
     }
 }

@@ -56,6 +56,7 @@ package org.apache.tools.ant.filters;
 import java.io.FilterReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.StringReader;
 
 import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
@@ -66,6 +67,10 @@ import org.apache.tools.ant.types.Parameterizable;
  * Example:
  * =======
  *
+ * &lt;headfilter lines="3"/&gt;
+ *
+ * Or:
+ *
  * &lt;filterreader classname="org.apache.tools.ant.filters.HeadFilter"&gt;
  *    &lt;param name="lines" value="3"/&gt;
  * &lt;/filterreader&gt;
@@ -74,7 +79,7 @@ import org.apache.tools.ant.types.Parameterizable;
  */
 public final class HeadFilter
     extends FilterReader
-    implements Parameterizable
+    implements Parameterizable, CloneableReader
 {
     private static final String LINES_KEY = "lines";
 
@@ -89,6 +94,22 @@ public final class HeadFilter
     private boolean ignoreLineFeed = false;
 
     /**
+     * This constructor is a dummy constructor and is
+     * not meant to be used by any class other than Ant's
+     * introspection mechanism. This will close the filter
+     * that is created making it useless for further operations.
+     */
+    public HeadFilter() {
+        // Dummy constructor to be invoked by Ant's Introspector
+        super(new StringReader(new String()));
+        try {
+            close();
+        } catch (IOException  ioe) {
+            // Ignore
+        }
+    }
+
+    /**
      * Create a new filtered reader.
      *
      * @param in  a Reader object providing the underlying stream.
@@ -98,9 +119,9 @@ public final class HeadFilter
     }
 
     public final int read() throws IOException {
-        if (!initialized) {
+        if (!getInitialized()) {
             initialize();
-            initialized = true;
+            setInitialized(true);
         }
 
         int ch = -1;
@@ -155,12 +176,35 @@ public final class HeadFilter
         return n;
     }
 
+    public final void setLines(final long lines) {
+        this.lines = lines;
+    }
+
+    public final long getLines() {
+        return lines;
+    }
+
+    public final void setInitialized(final boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    public final boolean getInitialized() {
+        return initialized;
+    }
+
+    public final Reader clone(final Reader rdr) {
+        HeadFilter newFilter = new HeadFilter(rdr);
+        newFilter.setLines(getLines());
+        newFilter.setInitialized(true);
+        return newFilter;
+    }
+
     /**
      * Set Parameters
      */
     public final void setParameters(final Parameter[] parameters) {
         this.parameters = parameters;
-        initialized = false;
+        setInitialized(false);
     }
 
     private final void initialize() {
