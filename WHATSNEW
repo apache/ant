@@ -17,6 +17,8 @@ Other changes:
 
 * Add xmlcatalog nested element to XmlProperty. Bugzilla report 27053.
 
+* New attribute alwayslog for <redirector> type.
+
 Fixed bugs:
 -----------
 

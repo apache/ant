@@ -27,62 +27,66 @@ source (input) and destination (output/error) files.  <em>Since Ant 1.6.2</em>
   </tr>
   <tr>
     <td valign="top">output</td>
-    <td valign="top">Name of a file to which to write the output. If the error stream
-      is not also redirected to a file or property, it will appear in this output.</td>
+    <td valign="top">Name of a file to which output should be written.
+      If the error stream is not also redirected to a file or property,
+      it will appear in this output.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">error</td>
     <td valign="top">The file to which the standard error of the
-    command should be redirected.</td>
+      command should be redirected.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">logError</td>
-    <td valign="top">This attribute is used when you wish to see error output in Ant's
-                     log and you are redirecting output to a file/property. The error
-                     output will not be included in the output file/property. If you
-                     redirect error with the <i>error</i> or <i>errorProperty</i>
-                     attributes, this will have no effect.</td>
+    <td valign="top">This attribute is used when you wish to see
+      error output in Ant's log and you are redirecting output to
+      a file/property. The error output will not be included in
+      the output file/property. If you redirect error with the
+      <i>error</i> or <i>errorProperty</i> attributes, this will
+      have no effect.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">append</td>
-    <td valign="top">Whether output and error files should be appended to or overwritten.
-    Defaults to <code>false</code>.</td>
+    <td valign="top">Whether output and error files should be
+      appended to rather than overwritten. Defaults to
+      <code>false</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">createemptyfiles</td>
-    <td valign="top">Whether output and error files should be created even when empty.
-    Defaults to <code>true</code>.</td>
+    <td valign="top">Whether output and error files should be
+      created even when empty.  Defaults to <code>true</code>.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">outputproperty</td>
     <td valign="top">The name of a property in which the output of the
-      command should be stored. Unless the error stream is redirected to a separate
-      file or stream, this property will include the error output.</td>
+      command should be stored. Unless the error stream is redirected
+      to a separate file or stream, this property will include the
+      error output.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">errorproperty</td>
-    <td valign="top">The name of a property in which the standard error of the
-      command should be stored.</td>
+    <td valign="top">The name of a property in which the standard error
+      of the command should be stored.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">input</td>
     <td valign="top">A file from which the executed command's standard input
-                     is taken. This attribute is mutually exclusive with the
-                     <i>inputstring</i> attribute.</td>
+      is taken. This attribute is mutually exclusive with the
+      <i>inputstring</i> attribute.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">inputstring</td>
     <td valign="top">A string which serves as the input stream for the
-                     executed command. This attribute is mutually exclusive with the
-                     <i>input</i> attribute.</td>
+      executed command. This attribute is mutually exclusive with the
+      <i>input</i> attribute.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -98,6 +102,14 @@ source (input) and destination (output/error) files.  <em>Since Ant 1.6.2</em>
   <tr>
     <td valign="top">errorencoding</td>
     <td valign="top">The error encoding.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">alwayslog</td>
+    <td valign="top">Always send to the log in addition to
+        any other destination. Default <code>false</code>.
+        <i>Since Ant 1.6.3</i>.
+    </td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -122,13 +134,13 @@ consult the documentation of the individual task for more details.
 A nested &lt;errormapper&gt; is not compatible with the
 <i>error</i> attribute.</p>
 <h4>inputfilterchain</h4>
-<p>One or more <a href="./filterchain.html">FilterChain</a>s can be
+<p>A <a href="./filterchain.html">FilterChain</a> can be
 applied to the process input.</p>
 <h4>outputfilterchain</h4>
-<p>One or more <a href="./filterchain.html">FilterChain</a>s can be
+<p>A <a href="./filterchain.html">FilterChain</a> can be
 applied to the process output.</p>
 <h4>errorfilterchain</h4>
-<p>One or more <a href="./filterchain.html">FilterChain</a>s can be
+<p>A <a href="./filterchain.html">FilterChain</a> can be
 applied to the error output.</p>
 <h3>Usage</h3>
 Tasks known to support I/O redirection:

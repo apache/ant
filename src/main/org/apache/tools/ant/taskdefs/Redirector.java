@@ -122,6 +122,9 @@ public class Redirector {
     /** Flag which indicates if error and output files are to be appended. */
     private boolean append = false;
 
+    /** Flag which indicates that output should be always sent to the log */
+    private boolean alwaysLog = false;
+
     /** Flag which indicates whether files should be created even when empty. */
     private boolean createEmptyFiles = true;
 
@@ -334,11 +337,22 @@ public class Redirector {
     }
 
     /**
+     * If true, (error and non-error) output will be "teed", redirected
+     * as specified while being sent to Ant's logging mechanism as if no
+     * redirection had taken place.  Defaults to false.
+     * @param alwaysLog <code>boolean</code>
+     * @since Ant 1.6.3
+     */
+    public synchronized void setAlwaysLog(boolean alwaysLog) {
+        this.alwaysLog = alwaysLog;
+    }
+
+    /**
      * Whether output and error files should be created even when empty.
      * Defaults to true.
      * @param createEmptyFiles <CODE>boolean</CODE>.
      */
-    public void setCreateEmptyFiles(boolean createEmptyFiles) {
+    public synchronized void setCreateEmptyFiles(boolean createEmptyFiles) {
         this.createEmptyFiles = createEmptyFiles;
     }
 
@@ -371,7 +385,7 @@ public class Redirector {
      *
      * @param outputFilterChains <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
      */
-    public void setOutputFilterChains(Vector outputFilterChains) {
+    public synchronized void setOutputFilterChains(Vector outputFilterChains) {
         this.outputFilterChains = outputFilterChains;
     }
 
@@ -380,7 +394,7 @@ public class Redirector {
      *
      * @param errorFilterChains <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
      */
-    public void setErrorFilterChains(Vector errorFilterChains) {
+    public synchronized void setErrorFilterChains(Vector errorFilterChains) {
         this.errorFilterChains = errorFilterChains;
     }
 
@@ -413,35 +427,24 @@ public class Redirector {
      * configuration options.
      */
     public synchronized void createStreams() {
-        if ((out == null || out.length == 0) && outputProperty == null) {
-            outputStream = new LogOutputStream(managingTask, Project.MSG_INFO);
+        if (out != null && out.length > 0) {
+            String logHead = new StringBuffer("Output ").append(
+                ((append) ? "appended" : "redirected")).append(
+                " to ").toString();
+            outputStream = foldFiles(out, logHead, Project.MSG_VERBOSE);
+        }
+        if (outputProperty != null) {
+            if (baos == null) {
+                baos = new PropertyOutputStream(outputProperty);
+                managingTask.log("Output redirected to property: "
+                    + outputProperty, Project.MSG_VERBOSE);
+            }
+            //shield it from being closed by a filtering StreamPumper
+            OutputStream keepAliveOutput = new KeepAliveOutputStream(baos);
+            outputStream = (outputStream == null) ? keepAliveOutput
+                : new TeeOutputStream(outputStream, keepAliveOutput);
         } else {
-            if (out != null && out.length > 0) {
-                String logHead = new StringBuffer("Output ").append(
-                    ((append) ? "appended" : "redirected")).append(
-                    " to ").toString();
-                outputStream = foldFiles(out, logHead, Project.MSG_VERBOSE);
-            }
-
-            if (outputProperty != null) {
-                if (baos == null) {
-                    baos = new PropertyOutputStream(outputProperty);
-                    managingTask.log("Output redirected to property: "
-                        + outputProperty, Project.MSG_VERBOSE);
-                }
-                //shield it from being closed by a filtering StreamPumper
-                OutputStream keepAliveOutput = new KeepAliveOutputStream(baos);
-                if (outputStream == null) {
-                    outputStream = keepAliveOutput;
-                } else {
-                    outputStream
-                        = new TeeOutputStream(outputStream, keepAliveOutput);
-                }
-            } else {
-                baos = null;
-            }
-
-            errorStream = outputStream;
+            baos = null;
         }
 
         if (error != null && error.length > 0) {
@@ -449,10 +452,7 @@ public class Redirector {
                 ((append) ? "appended" : "redirected")).append(
                 " to ").toString();
             errorStream = foldFiles(error, logHead, Project.MSG_VERBOSE);
-
-        } else if (logError || errorStream == null) {
-            errorStream = new LogOutputStream(managingTask, Project.MSG_WARN);
-        } else { //must be errorStream == outputStream
+        } else if (!(logError || outputStream == null)) {
             long funnelTimeout = 0L;
             OutputStreamFunneler funneler
                 = new OutputStreamFunneler(outputStream, funnelTimeout);
@@ -464,7 +464,6 @@ public class Redirector {
                     "error splitting output/error streams", eyeOhEx);
             }
         }
-
         if (errorProperty != null) {
             if (errorBaos == null) {
                 errorBaos = new PropertyOutputStream(errorProperty);
@@ -478,7 +477,18 @@ public class Redirector {
         } else {
             errorBaos = null;
         }
-
+        if (alwaysLog || outputStream == null) {
+            OutputStream outputLog
+                = new LogOutputStream(managingTask, Project.MSG_INFO);
+            outputStream = (outputStream == null)
+                ? outputLog : new TeeOutputStream(outputLog, outputStream);
+        }
+        if (alwaysLog || errorStream == null) {
+            OutputStream errorLog
+                = new LogOutputStream(managingTask, Project.MSG_WARN);
+            errorStream = (errorStream == null)
+                ? errorLog : new TeeOutputStream(errorLog, errorStream);
+        }
         if ((outputFilterChains != null && outputFilterChains.size() > 0)
             || !(outputEncoding.equalsIgnoreCase(inputEncoding))) {
             try {
