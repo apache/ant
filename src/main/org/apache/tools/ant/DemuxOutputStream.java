@@ -139,9 +139,25 @@ public class DemuxOutputStream extends OutputStream {
      */
     private void resetBufferInfo() {    
         Thread current = Thread.currentThread();
-        buffers.remove(current);
+        BufferInfo bufferInfo = (BufferInfo)buffers.get(current);
+        try {
+            bufferInfo.buffer.close();
+        }
+        catch (IOException e) {
+            // Shouldn't happen
+        }
+        bufferInfo.buffer = new ByteArrayOutputStream();
+        bufferInfo.skip = false;
     }
     
+    /**
+     * Removes the buffer for the current thread.
+     */
+    private void removeBuffer() {    
+        Thread current = Thread.currentThread();
+        buffers.remove (current);
+    }
+
     /**
      * Writes the data to the buffer and flushes the buffer if a line
      * separator is detected or if the buffer has reached its maximum size.
@@ -189,6 +205,7 @@ public class DemuxOutputStream extends OutputStream {
      */
     public void close() throws IOException {
         flush();
+        removeBuffer();
     }
 
     /**
