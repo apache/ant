@@ -370,6 +370,7 @@
   <target name="init">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${gen.dir}" />
+    <echoproperties/>
   </target>
 
   <target name="clean">
