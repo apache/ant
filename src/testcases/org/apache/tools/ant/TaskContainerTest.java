@@ -64,6 +64,10 @@ public class TaskContainerTest extends BuildFileTest {
         configureProject("src/etc/testcases/core/taskcontainer.xml");
     }
 
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+
     public void testPropertyExpansion() {
         executeTarget("testPropertyExpansion");
         assertTrue("attribute worked",
@@ -71,4 +75,13 @@ public class TaskContainerTest extends BuildFileTest {
         assertTrue("nested text worked",
                    getLog().indexOf("As nested text: it worked") > -1);
     }
+
+    public void testTaskdef() {
+        executeTarget("testTaskdef");
+        assertTrue("attribute worked",
+                   getLog().indexOf("As attribute: it worked") > -1);
+        assertTrue("nested text worked",
+                   getLog().indexOf("As nested text: it worked") > -1);
+    }
+
 }
