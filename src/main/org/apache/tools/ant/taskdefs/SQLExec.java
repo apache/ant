@@ -527,7 +527,7 @@ public class SQLExec extends JDBCTask {
                     }
                 } else {
                     if (print) {
-                        printResults(out);
+                        printResults(resultSet, out);
                     }
                 }
                 ret = statement.getMoreResults();
@@ -563,13 +563,12 @@ public class SQLExec extends JDBCTask {
     }
 
     /**
-     * print any results in the statement.
+     * print any results in the result set.
+     * @param rs the resultset to print information about
      * @param out the place to print results
      * @throws SQLException on SQL problems.
      */
-    protected void printResults(PrintStream out) throws SQLException {
-        ResultSet rs = null;
-        rs = statement.getResultSet();
+    protected void printResults(ResultSet rs, PrintStream out) throws SQLException {
         if (rs != null) {
             log("Processing new result set.", Project.MSG_VERBOSE);
             ResultSetMetaData md = rs.getMetaData();
