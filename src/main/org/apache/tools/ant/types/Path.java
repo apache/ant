@@ -26,8 +26,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.PathTokenizer;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
-
 
 
 /**
@@ -260,12 +260,8 @@ public class Path extends DataType implements Cloneable {
                 : null;
 
         for (int i = 0; i < list.length; i++) {
-            File f = null;
-            if (getProject() != null) {
-                f = getProject().resolveFile(list[i]);
-            } else {
-                f = new File(list[i]);
-            }
+            File f = resolveFile(getProject(), list[i]);
+
             // probably not the best choice, but it solves the problem of
             // relative paths in CLASSPATH
             if (tryUserDir && !f.exists()) {
@@ -383,7 +379,7 @@ public class Path extends DataType implements Cloneable {
         while (tok.hasMoreTokens()) {
             String pathElement = tok.nextToken();
             try {
-                element.append(resolveFile(project, pathElement));
+                element.append(resolveFile(project, pathElement).getPath());
             } catch (BuildException e) {
                 project.log("Dropping path element " + pathElement
                     + " as it is not valid relative to the project",
@@ -483,12 +479,10 @@ public class Path extends DataType implements Cloneable {
 
     /**
      * Resolve a filename with Project's help - if we know one that is.
-     *
-     * <p>Assume the filename is absolute if project is null.</p>
      */
-    private static String resolveFile(Project project, String relativeName) {
-        return (project == null) ? relativeName
-            : project.resolveFile(relativeName).getAbsolutePath();
+    private static File resolveFile(Project project, String relativeName) {
+        return FileUtils.getFileUtils().resolveFile(
+            (project == null) ? null : project.getBaseDir(), relativeName);
     }
 
     /**
@@ -689,7 +683,7 @@ public class Path extends DataType implements Cloneable {
 
         String[] dirs = extdirs.list();
         for (int i = 0; i < dirs.length; i++) {
-            File dir = getProject().resolveFile(dirs[i]);
+            File dir = resolveFile(getProject(), dirs[i]);
             if (dir.exists() && dir.isDirectory()) {
                 FileSet fs = new FileSet();
                 fs.setDir(dir);
