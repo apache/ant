@@ -66,6 +66,7 @@ import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildFileTest;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * @author Erik Meade <emeade@geekfarm.org>
@@ -160,8 +161,12 @@ public class JarTest extends BuildFileTest {
 
     private void testRecreate(String firstTarget, String secondTarget) {
         executeTarget(firstTarget);
+        int sleeptime = 2500;
+        if (Os.isFamily("windows")) {
+            sleeptime += 2500;
+        }
         try {
-            Thread.currentThread().sleep(2500);
+            Thread.currentThread().sleep(sleeptime);
         } catch (InterruptedException e) {
         } // end of try-catch
         File jarFile = new File(getProjectDir(), tempJar);

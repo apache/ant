@@ -215,11 +215,7 @@ public abstract class BuildFileTest extends TestCase {
             if (!cr) {
                 cleanedBuffer.append(ch);
             } else {
-                if (ch == '\n') {
-                    cleanedBuffer.append(ch);
-                } else {
-                    cleanedBuffer.append('\r').append(ch);
-                }
+                cleanedBuffer.append(ch);
             }
         }
         return cleanedBuffer.toString();
