@@ -61,39 +61,39 @@
   
   
   <target name="testNoParams">
-    <WsdlToDotnet/>
+    <wsdltodotnet/>
   </target>
 
   <target name="testNoSrc">
-    <WsdlToDotnet destFile="${out.csc}"/>
+    <wsdltodotnet destFile="${out.csc}"/>
   </target>
 
   <target name="testDestIsDir" depends="init">
-    <WsdlToDotnet destFile="${build.dir}"
+    <wsdltodotnet destFile="${build.dir}"
       srcFile="${local.wsdl}"/>
   </target>
   
   <target name="testBothSrc" depends="init">
-    <WsdlToDotnet destFile="${out.csc}"
+    <wsdltodotnet destFile="${out.csc}"
       srcFile="${local.wsdl}"
       url="${endpoint.wsdl}"
       />
   </target>
 
   <target name="testSrcIsDir" depends="init">
-    <WsdlToDotnet destFile="${out.csc}"
+    <wsdltodotnet destFile="${out.csc}"
       srcFile="${build.dir}"
       />
   </target>
 
   <target name="testSrcIsMissing" depends="init">
-    <WsdlToDotnet destFile="${out.csc}"
+    <wsdltodotnet destFile="${out.csc}"
       srcFile="${build.dir}/invalidfile.wsdl"
       />
   </target>
   
   <target name="testLocalWsdl" depends="init">
-    <WsdlToDotnet destFile="${out.csc}"
+    <wsdltodotnet destFile="${out.csc}"
       srcFile="${local.wsdl}"
       />
     <csc 
@@ -106,7 +106,7 @@
   </target>
   
   <target name="testLocalWsdlServer" depends="init">
-    <WsdlToDotnet destFile="${out.csc}"
+    <wsdltodotnet destFile="${out.csc}"
       srcFile="${local.wsdl}"
       server="true"
       />
@@ -121,7 +121,7 @@
   </target>
   
   <target name="testInvalidExtraOps" depends="init">
-    <WsdlToDotnet destFile="${out.csc}"
+    <wsdltodotnet destFile="${out.csc}"
       srcFile="${local.wsdl}"
       extraOptions="/newOption:not-one-known-of"
       />
