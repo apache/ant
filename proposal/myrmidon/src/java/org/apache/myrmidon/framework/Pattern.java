@@ -9,10 +9,8 @@ package org.apache.myrmidon.framework;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.context.ContextException;
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.ant.Project;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Basic data type for holding patterns.
@@ -103,7 +101,7 @@ public class Pattern
                 return getName();
             }
         }
-        catch( final ContextException ce )
+        catch( final TaskException te )
         {
             //ignore for the moment
         }

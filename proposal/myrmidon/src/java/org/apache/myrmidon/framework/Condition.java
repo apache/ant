@@ -45,7 +45,7 @@ public class Condition
     }
 
     public boolean evaluate( final TaskContext context )
-        throws ContextException
+        throws TaskException
     {
         boolean result = false;
 
@@ -66,8 +66,9 @@ public class Condition
                 }
             }
         }
-        catch( final TaskException te )
+        catch( final ContextException ce )
         {
+            // Unknown property
             result = false;
         }
         /*
