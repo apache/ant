@@ -41,6 +41,10 @@ if [ -d "bootstrap" ] ; then
   rm -r bootstrap
 fi
 
+if [ -d "build/classes" ] ; then
+  rm -r build/classes
+fi
+
 CLASSPATH=lib/crimson.jar:lib/jaxp.jar:${CLASSPATH}
 
 DIRLIBS=lib/optional/*.jar
