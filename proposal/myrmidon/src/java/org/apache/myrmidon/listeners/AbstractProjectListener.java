@@ -16,6 +16,16 @@ public abstract class AbstractProjectListener
     implements ProjectListener
 {
     /**
+     * This contains the name of the current target.
+     */
+    private String m_target;
+
+    /**
+     * This contains the name of the current task.
+     */
+    private String m_task;
+
+    /**
      * Notify listener of projectStarted event.
      */
     public void projectStarted()
@@ -34,8 +44,9 @@ public abstract class AbstractProjectListener
      *
      * @param targetName the name of target
      */
-    public void targetStarted( final String targetName )
+    public void targetStarted( final String target )
     {
+        m_target = target;
     }
 
     /**
@@ -43,15 +54,17 @@ public abstract class AbstractProjectListener
      */
     public void targetFinished()
     {
+        m_target = null;
     }
 
     /**
      * Notify listener of taskStarted event.
      *
-     * @param taskName the name of task
+     * @param task the name of task
      */
-    public void taskStarted( final String taskName )
+    public void taskStarted( final String task )
     {
+        m_task = task;
     }
 
     /**
@@ -59,6 +72,7 @@ public abstract class AbstractProjectListener
      */
     public void taskFinished()
     {
+        m_task = null;
     }
 
     /**
@@ -78,5 +92,21 @@ public abstract class AbstractProjectListener
      */
     public void log( String message, Throwable throwable )
     {
+    }
+
+    /**
+     * Utility method to get the name of current target.
+     */
+    protected final String getTarget()
+    {
+        return m_target;
+    }
+
+    /**
+     * Utility method to get the name of current task.
+     */
+    protected final String getTask()
+    {
+        return m_task;
     }
 }
