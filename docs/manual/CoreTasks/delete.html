@@ -30,7 +30,13 @@ To remove empty directories, use the <code>includeEmptyDirs</code> attribute.
   </tr>
   <tr>
     <td valign="top">dir</td>
-    <td valign="top">The directory to delete, including all its files and subdirectories.</td>
+    <td valign="top">The directory to delete, including all its files and
+     subdirectories. <b>WARNING:</b> Do <b>not</b> set <code>dir</code> to
+     <code>&quot;.&quot;</code>, <code>&quot;${basedir}&quot;</code>,
+     or the full-pathname equivalent unless you truly <em>intend</em> to
+     recursively remove the entire contents of the current base directory
+     (and the base directory itself, if different from the current working
+     directory).</td>
   </tr>
   <tr>
     <td valign="top">verbose</td>
