@@ -1755,7 +1755,7 @@ public class Project {
     /**
      * Sends a "build started" event to the build listeners for this project.
      */
-    protected void fireBuildStarted() {
+    public void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
@@ -1769,7 +1769,7 @@ public class Project {
      *                  failure. May be <code>null</code>, indicating
      *                  a successful build.
      */
-    protected void fireBuildFinished(Throwable exception) {
+    public void fireBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
         for (int i = 0; i < listeners.size(); i++) {

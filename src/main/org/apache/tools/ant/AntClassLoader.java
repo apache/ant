@@ -391,7 +391,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
         if (LoaderUtils.isContextLoaderAvailable()) {
             savedContextLoader = LoaderUtils.getContextClassLoader();
             ClassLoader loader = this;
-            if ("only".equals(project.getProperty("build.sysclasspath"))) {
+            if (project != null 
+                && "only".equals(project.getProperty("build.sysclasspath"))) {
                 loader = this.getClass().getClassLoader();
             }
             LoaderUtils.setContextClassLoader(loader);
@@ -1103,10 +1104,7 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * Cleans up any resources held by this classloader. Any open archive
      * files are closed.
      */
-    public void cleanup() {
-        project.removeBuildListener(this);
-        pathComponents = null;
-        project = null;
+    public synchronized void cleanup() {
         for (Enumeration e = zipFiles.elements(); e.hasMoreElements();) {
             ZipFile zipFile = (ZipFile)e.nextElement();
             try {
@@ -1133,6 +1131,8 @@ public class AntClassLoader extends ClassLoader implements BuildListener {
      * @param event the buildFinished event
      */
     public void buildFinished(BuildEvent event) {
+        project.removeBuildListener(this);
+        project = null;
         cleanup();
     }
 
