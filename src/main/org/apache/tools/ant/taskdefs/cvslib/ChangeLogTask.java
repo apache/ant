@@ -260,6 +260,9 @@ public class ChangeLogTask
         final ChangeLogParser parser = new ChangeLogParser( userList );
         final RedirectingStreamHandler handler =
             new RedirectingStreamHandler( parser );
+
+        log( "ChangeLog command: [" + command.toString() + "]" );
+
         final Execute exe = new Execute( handler );
         exe.setWorkingDirectory( m_dir );
         exe.setCommandline( command.getCommandline() );
