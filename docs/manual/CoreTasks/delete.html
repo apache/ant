@@ -55,10 +55,8 @@ in <strong>Directory-based Tasks</strong>, and see the
   </tr>
   <tr>
     <td valign="top">verbose</td>
-    <td valign="top">Show the name of each deleted file
-     (&quot;true&quot;/&quot;false&quot;).
-     Default is &quot;false&quot; when omitted.</td>
-    <td align="center" valign="top">No</td>
+    <td valign="top">Whether to show the name of each deleted file.</td>
+    <td align="center" valign="top">No, default &quot;false&quot;</i></td>
   </tr>
   <tr>
     <td valign="top">quiet</td>
@@ -70,42 +68,37 @@ in <strong>Directory-based Tasks</strong>, and see the
      When set to &quot;true&quot;, if a file or directory cannot be deleted,
      no error is reported. This setting emulates the 
      <code>-f</code> option to the Unix <em>rm</em> command.
-     Default is &quot;false&quot;.
      Setting this to &quot;true&quot; implies setting
      <code>failonerror</code> to &quot;false&quot;.
     </td>
-    <td align="center" valign="top">No</td>
+    <td align="center" valign="top">No, default &quot;false&quot;</td>
   </tr>
   <tr>
     <td valign="top">failonerror</td>
-    <td valign="top">
-    Controls whether an error (such as a failure to delete a file)
-    stops the build or is merely reported to the screen.
-    Only relevant if <code>quiet</code> is &quot;false&quot;.
-    Default is &quot;true&quot;.
-    </td>
-    <td align="center" valign="top">No</td>
-  </tr>  
+    <td valign="top">Controls whether an error (such as a failure to
+    delete a file) stops the build or is merely reported to the screen.
+    Only relevant if <code>quiet</code> is &quot;false&quot;.</td>
+    <td align="center" valign="top">No, default &quot;true&quot;</td>
+  </tr>
   <tr>
-    <td valign="top">includeEmptyDirs</td>
-    <td valign="top">Set to &quot;true&quot; to delete empty directories when
-    using filesets.  Default is &quot;false&quot;.</td>
-    <td align="center" valign="top">No</td>
+    <td valign="top">includeemptydirs</td>
+    <td valign="top">Whether to delete empty directories
+                     when using filesets.</td>
+    <td align="center" valign="top">No, default &quot;false&quot;</td>
   </tr>
   <tr>
     <td valign="top">includes</td>
     <td valign="top"><em>Deprecated.</em>  Use <code>&lt;fileset&gt;</code>.
       Comma- or space-separated list of patterns of
       files that must be deleted. All files are relative to the directory
-      specified in <code>dir</code>.
-      </td>
+      specified in <code>dir</code>.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">includesfile</td>
     <td valign="top"><em>Deprecated.</em>  Use <code>&lt;fileset&gt;</code>.
       The name of a file. Each line of
-      this file is taken to be an include pattern</td>
+      this file is taken to be an include pattern.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -126,10 +119,10 @@ in <strong>Directory-based Tasks</strong>, and see the
   </tr>
   <tr>
     <td valign="top">defaultexcludes</td>
-    <td valign="top"> Indicates whether default excludes
-      should be used or not (&quot;yes&quot;/&quot;no&quot;).
-      Default excludes are used when omitted.</td>
-    <td valign="top" align="center">No</td>
+    <td valign="top"><em>Deprecated.</em>  Use <code>&lt;fileset&gt;</code>.
+      Whether to use <a href="../dirtasks.html#defaultexcludes">
+      default excludes.</a></td>
+    <td align="center" valign="top">No, default &quot;true&quot;</td>
   </tr>
   <tr>
     <td valign="top">deleteonexit</td>
@@ -137,9 +130,8 @@ in <strong>Directory-based Tasks</strong>, and see the
       Indicates whether to use File#deleteOnExit() if there is a
       failure to delete a file, this causes the jvm to attempt
       to delete the file when the jvm process is terminating.
-      The default is false.
-      <em>Since Ant 1.6.2</em>
-    <td valign="top" align="center">No</td>
+      <em>Since Ant 1.6.2</em></td>
+    <td align="center" valign="top">No, default &quot;false&quot;.</td>
   </tr>
 </table>
 <h3>Examples</h3>
