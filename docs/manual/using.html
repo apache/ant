@@ -78,8 +78,16 @@ can get executed earlier when an earlier target depends on it:</p>
 <code>depends</code> attribute, you
 might think that first target C, then B and then A is executed.
 Wrong! C depends on B, and B depends on A, so first A is executed, then B, then C, and finally D.</p>
-<p>A target gets executed only once, even when more than one target
-depends on it (see the previous example).</p>
+<p>In a chain of dependencies stretching back from a given target such
+as D above, each target gets executed only once, even when more than
+one target depends on it. Thus, executing the D target will first
+result in C being called, which in turn will first call B, which in
+turn will first call A. After A, then B, then C have executed,
+execution returns to the dependency list of D, which will <u>not</u>
+call B and A, since they were already called in process of dependency
+resolution for C and B respectively as dependencies of D. Had no such
+dependencies been discovered in processing C and B, B and A would
+have been executed after C in processing D's dependency list.</p>
 <p>A target also has the ability to perform its execution if (or
 unless) a property has been set. This allows, for example, better
 control on the building process depending on the state of the system
