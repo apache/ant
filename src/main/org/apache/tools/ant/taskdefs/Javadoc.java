@@ -859,7 +859,8 @@ public class Javadoc extends Exec {
                     log("Could not evaluate package for " + file, Project.MSG_WARN);
                     return null;
                 }
-                if (line.trim().startsWith("package ")) {
+                if (line.trim().startsWith("package ") ||
+                    line.trim().startsWith("package\t")) {
                     name = line.substring(8, line.indexOf(";")).trim();
                     break;
                 }
@@ -931,6 +932,10 @@ public class Javadoc extends Exec {
                         c = in.read();
                         if (c == '*') {
                             c = in.read();
+                            while (c == '*' && c != -1) {
+                                c = in.read();
+                            }
+                            
                             if (c == '/') {
                                 c = read();
                                 break;
