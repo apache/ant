@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.TaskException;
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  */
 
-public class Target implements TaskContainer
+public class Target
 {
     private String ifCondition = "";
     private String unlessCondition = "";
