@@ -70,6 +70,10 @@ public interface BuildLogger extends BuildListener {
      *
      * Only messages with a message level lower than or equal to the given level are 
      * output to the log.
+     * <P>
+     * Constants for the message levels are in Project.java. The order of
+     * the levels, from least to most verbose, is MSG_ERR, MSG_WARN,
+     * MSG_INFO, MSG_VERBOSE, MSG_DEBUG.
      *
      * @param level the logging level for the logger.
      */

@@ -66,7 +66,7 @@ public class DefaultLogger implements BuildLogger {
 
     protected PrintStream out;
     protected PrintStream err;
-    protected int msgOutputLevel;
+    protected int msgOutputLevel = Project.MSG_ERR;
     private long startTime = System.currentTimeMillis();
 
     protected static String lSep = System.getProperty("line.separator");
@@ -78,6 +78,12 @@ public class DefaultLogger implements BuildLogger {
      *
      * Only messages with a message level lower than or equal to the given level are 
      * output to the log.
+     * <P>
+     * Constants for the message levels are in Project.java. The order of
+     * the levels, from least to most verbose, is MSG_ERR, MSG_WARN,
+     * MSG_INFO, MSG_VERBOSE, MSG_DEBUG.
+     *
+     * The default message level for DefaultLogger is Project.MSG_ERR.
      *
      * @param level the logging level for the logger.
      */
