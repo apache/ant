@@ -117,6 +117,14 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         this.out = out;
     }
 
+    public void setSystemOutput(String out) {
+        formatOutput(SYSTEM_OUT, out);
+    }
+
+    public void setSystemError(String out) {
+        formatOutput(SYSTEM_ERR, out);
+    }
+
     /**
      * The whole testsuite started.
      */
@@ -228,6 +236,13 @@ public class XMLJUnitResultFormatter implements JUnitResultFormatter, XMLConstan
         t.printStackTrace(new PrintWriter(swr, true));
         Text trace = doc.createTextNode(swr.toString());
         nested.appendChild(trace);
+    }
+
+    private void formatOutput(String type, String output) {
+        Element nested = doc.createElement(type);
+        rootElement.appendChild(nested);
+        Text content = doc.createTextNode(output);
+        nested.appendChild(content);
     }
 
 } // XMLJUnitResultFormatter

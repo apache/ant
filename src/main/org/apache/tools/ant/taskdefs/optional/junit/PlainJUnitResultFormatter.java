@@ -96,6 +96,9 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      */
     private boolean failed = true;
 
+    private String systemOutput = null;
+    private String systemError = null;
+
     public PlainJUnitResultFormatter() {
         inner = new StringWriter();
         wri = new PrintWriter(inner);
@@ -103,6 +106,14 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
 
     public void setOutput(OutputStream out) {
         this.out = out;
+    }
+
+    public void setSystemOutput(String out) {
+        systemOutput = out;
+    }
+
+    public void setSystemError(String err) {
+        systemError = err;
     }
 
     /**
@@ -115,9 +126,10 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
      * The whole testsuite ended.
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
+        String newLine = System.getProperty("line.separator");
         StringBuffer sb = new StringBuffer("Testsuite: ");
         sb.append(suite.getName());
-        sb.append(System.getProperty("line.separator"));
+        sb.append(newLine);
         sb.append("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
@@ -127,8 +139,25 @@ public class PlainJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(", Time elapsed: ");
         sb.append(nf.format(suite.getRunTime()/1000.0));
         sb.append(" sec");
-        sb.append(System.getProperty("line.separator"));
-        sb.append(System.getProperty("line.separator"));
+        sb.append(newLine);
+        sb.append(newLine);
+        
+        // append the err and output streams to the log
+        if (systemOutput != null && systemOutput.length() > 0) {
+            sb.append("------------- Standard Output ---------------" )
+                .append(newLine)
+                .append(systemOutput)
+                .append("------------- ---------------- ---------------" )
+                .append(newLine);
+        }
+        
+        if (systemError != null && systemError.length() > 0) {
+            sb.append("------------- Standard Error -----------------" )
+                .append(newLine)
+                .append(systemError)
+                .append("------------- ---------------- ---------------" )
+                .append(newLine);
+        }
 
         if (out != null) {
             try {

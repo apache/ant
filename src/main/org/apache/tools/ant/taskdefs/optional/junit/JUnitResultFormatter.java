@@ -78,4 +78,15 @@ public interface JUnitResultFormatter extends TestListener {
      * Sets the stream the formatter is supposed to write its results to.
      */
     public void setOutput(java.io.OutputStream out);
+
+    /**
+     * This is what the test has written to System.out
+     */
+    public void setSystemOutput( String out );
+
+    /**
+     * This is what the test has written to System.err
+     */
+    public void setSystemError( String err );
+
 }

@@ -79,6 +79,10 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
      */
     private OutputStream out;
 
+    private boolean withOutAndErr = false;
+    private String systemOutput = null;
+    private String systemError = null;
+
     /**
      * Empty
      */
@@ -116,10 +120,27 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
         this.out = out;
     }
 
+    public void setSystemOutput( String out ) {
+        systemOutput = out;
+    }
+
+    public void setSystemError( String err ) {
+        systemError = err;
+    }
+
+    /**
+     * Should the output to System.out and System.err be written to
+     * the summary.
+     */
+    public void setWithOutAndErr( boolean value ) {
+        withOutAndErr = value;
+    }
+
     /**
      * The whole testsuite ended.
      */
     public void endTestSuite(JUnitTest suite) throws BuildException {
+        String newLine = System.getProperty("line.separator");
         StringBuffer sb = new StringBuffer("Tests run: ");
         sb.append(suite.runCount());
         sb.append(", Failures: ");
@@ -129,7 +150,20 @@ public class SummaryJUnitResultFormatter implements JUnitResultFormatter {
         sb.append(", Time elapsed: ");
         sb.append(nf.format(suite.getRunTime()/1000.0));
         sb.append(" sec");
-        sb.append(System.getProperty("line.separator"));
+        sb.append(newLine);
+
+        if (withOutAndErr) {
+            if (systemOutput != null && systemOutput.length() > 0) {
+                sb.append( "Output:" ).append(newLine).append(systemOutput)
+                    .append(newLine);
+            }
+            
+            if (systemError != null && systemError.length() > 0) {
+                sb.append( "Error: " ).append(newLine).append(systemError)
+                    .append(newLine);
+            }
+        }
+
         try {
             out.write(sb.toString().getBytes());
             out.flush();

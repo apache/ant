@@ -80,6 +80,12 @@ public interface XMLConstants {
     /** the failure element */
     public final static String FAILURE = "failure";
 
+    /** the system-err element */
+    public final static String SYSTEM_ERR = "system-err";
+
+    /** the system-out element */
+    public final static String SYSTEM_OUT = "system-out";
+
     /** package attribute for the aggregate document */
     public final static String ATTR_PACKAGE = "package";
 

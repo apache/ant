@@ -66,6 +66,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 
 
 import java.io.File;
@@ -88,6 +89,7 @@ import java.util.Vector;
  * @author Thomas Haas
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
+ * @author <a href="mailto:Gerrit.Riessen@web.de">Gerrit Riessen</a> -
  */
 public class JUnitTask extends Task {
 
@@ -99,6 +101,7 @@ public class JUnitTask extends Task {
 
     private Integer timeout = null;
     private boolean summary = false;
+    private String summaryValue = "";
 
     /**
      * Tells this task to halt when there is an error in a test.
@@ -128,6 +131,7 @@ public class JUnitTask extends Task {
         }
     }
 
+
     /**
      * Tells whether a JVM should be forked for each testcase. It avoids interference
      * between testcases and possibly avoids hanging the build.
@@ -147,11 +151,31 @@ public class JUnitTask extends Task {
 
     /**
      * Tells whether the task should print a short summary of the task.
-     * @param   value   <tt>true</tt> to print a summary, <tt>false</tt> otherwise.
+     * @param value <tt>true</tt> to print a summary,
+     *   <tt>withOutAndErr</tt> to include the test&apos;s output as
+     *   well, <tt>false</tt> otherwise.
      * @see SummaryJUnitResultFormatter
      */
-    public void setPrintsummary(boolean value) {
-        summary = value;
+    public void setPrintsummary(SummaryAttribute value) {
+        summaryValue = value.getValue();
+        summary = value.asBoolean();
+    }
+
+    /** 
+     * Print summary enumeration values.
+     */
+    public static class SummaryAttribute extends EnumeratedAttribute {
+        public String[] getValues() {
+            return new String[] {"true", "yes", "false", "no", 
+                                 "on", "off", "withOutAndErr"};
+        }
+
+        public boolean asBoolean() {
+            return "true".equals(value)
+                || "on".equals(value)
+                || "yes".equals(value)
+                || "withOutAndErr".equals(value);
+        }
     }
 
     /**
@@ -389,7 +413,9 @@ public class JUnitTask extends Task {
             if (summary) {
                 log("Running " + test.getName(), Project.MSG_INFO);
 
-                SummaryJUnitResultFormatter f = new SummaryJUnitResultFormatter();
+                SummaryJUnitResultFormatter f = 
+                  new SummaryJUnitResultFormatter();
+                f.setWithOutAndErr( "withoutanderr".equalsIgnoreCase( summaryValue ));
                 f.setOutput( getDefaultOutput() );
                 runner.addFormatter(f);
             }

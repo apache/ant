@@ -206,10 +206,31 @@ public class JUnitTestRunner implements TestListener {
             junitTest.setCounts(1, 0, 1);
             junitTest.setRunTime(0);
         } else {
-            suite.run(res);
-            junitTest.setCounts(res.runCount(), res.failureCount(), 
-                                res.errorCount());
-            junitTest.setRunTime(System.currentTimeMillis() - start);
+
+
+            PrintStream oldErr = System.err;
+            PrintStream oldOut = System.out;
+              
+            ByteArrayOutputStream errStrm = new ByteArrayOutputStream();
+            System.setErr(new PrintStream(errStrm));
+            
+            ByteArrayOutputStream outStrm = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(outStrm));
+
+            try {
+                suite.run(res);
+            } finally {
+                System.err.close();
+                System.out.close();
+                System.setErr(oldErr);
+                System.setOut(oldOut);
+                sendOutAndErr(new String(outStrm.toByteArray()),
+                              new String(errStrm.toByteArray()));
+
+                junitTest.setCounts(res.runCount(), res.failureCount(), 
+                                    res.errorCount());
+                junitTest.setRunTime(System.currentTimeMillis() - start);
+            }
         }
         fireEndTestSuite();
 
@@ -271,6 +292,16 @@ public class JUnitTestRunner implements TestListener {
     public void addError(Test test, Throwable t) {
         if (haltOnError) {
             res.stop();
+        }
+    }
+
+    private void sendOutAndErr(String out, String err) {
+        for (int i=0; i<formatters.size(); i++) {
+            JUnitResultFormatter formatter = 
+                ((JUnitResultFormatter)formatters.elementAt(i));
+            
+            formatter.setSystemOutput(out);
+            formatter.setSystemError(err);
         }
     }
 
