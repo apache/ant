@@ -256,8 +256,8 @@
       </fileset>
     </copy>
 
-    <copy    todir="${build.classes}" 
-             overwrite="true">
+    <copy todir="${build.classes}" 
+          overwrite="true">
       <fileset dir="${java.dir}">
         <include name="**/version.txt" />
         <include name="**/defaultManifest.mf" />
@@ -493,16 +493,18 @@
   <target name="distribution" 
           description="--> creates a binary distribution">
     <mkdir dir="${dist.base}"/>
+    <mkdir dir="${dist.base}/src"/>
+    <mkdir dir="${dist.base}/bin"/>
+    <mkdir dir="${dist.base}/rpms"/>
 
     <antcall inheritAll="false" target="internal_dist">
       <param name="dist.dir" value="${dist.name}" />
     </antcall>
-    <zip file="${dist.base}/${dist.name}-bin.zip" 
+    <zip file="${dist.base}/bin/${dist.name}-bin.zip" 
          basedir="${dist.name}/.." 
-         includes="${dist.name}/**"
-         excludes="${dist.name}/lib/optional.jar"/>
+         includes="${dist.name}/**"/>
     <tar longfile="gnu"
-         tarfile="${dist.base}/${dist.name}-bin.tar">
+         tarfile="${dist.base}/bin/${dist.name}-bin.tar">
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bin/ant"/>
         <include name="${dist.name}/bin/antRun"/>
@@ -511,24 +513,21 @@
         <include name="${dist.name}/**"/>
         <exclude name="${dist.name}/bin/ant"/>
         <exclude name="${dist.name}/bin/antRun"/>
-        <exclude name="${dist.name}/lib/optional.jar"/>
       </tarfileset> 
     </tar>
-    <gzip zipfile="${dist.base}/${dist.name}-bin.tar.gz" 
-          src="${dist.base}/${dist.name}-bin.tar"/>
-    <delete file="${dist.base}/${dist.name}-bin.tar"/>
-    <copy file="${dist.name}/lib/optional.jar" tofile="${dist.base}/${dist.name}-optional.jar"/>
+    <gzip zipfile="${dist.base}/bin/${dist.name}-bin.tar.gz" 
+          src="${dist.base}/bin/${dist.name}-bin.tar"/>
+    <delete file="${dist.base}/bin/${dist.name}-bin.tar"/>
     <delete dir="${dist.name}" />
-
 
     <antcall inheritAll="false" target="src-dist">
       <param name="src.dist.dir" value="${dist.name}" />
     </antcall>
-    <zip file="${dist.base}/${dist.name}-src.zip" 
+    <zip file="${dist.base}/src/${dist.name}-src.zip" 
          basedir="${dist.name}/.." 
          includes="${dist.name}/**"/>
     <tar longfile="gnu"
-         tarfile="${dist.base}/${dist.name}-src.tar" >
+         tarfile="${dist.base}/src/${dist.name}-src.tar" >
       <tarfileset dir="${dist.name}/.." mode="755" username="ant" group="ant">
         <include name="${dist.name}/bootstrap.sh"/>
         <include name="${dist.name}/build.sh"/>
@@ -539,9 +538,9 @@
         <exclude name="${dist.name}/build.sh"/>
       </tarfileset>
     </tar> 
-    <gzip zipfile="${dist.base}/${dist.name}-src.tar.gz" 
-          src="${dist.base}/${dist.name}-src.tar"/>
-    <delete file="${dist.base}/${dist.name}-src.tar"/>
+    <gzip zipfile="${dist.base}/src/${dist.name}-src.tar.gz" 
+          src="${dist.base}/src/${dist.name}-src.tar"/>
+    <delete file="${dist.base}/src/${dist.name}-src.tar"/>
     <delete dir="${dist.name}" />
   </target>
 
