@@ -1,28 +1,29 @@
 <project name="Myrmidon Docs" default="main">
-  <!--
-    Give user a chance to override without editing this file
-    (and without typing -D each time he compiles it)
-  -->
-  <property file=".ant.properties"/>
-  <property file="${user.home}/.ant.properties"/>
+
+    <!--
+      Give user a chance to override without editing this file
+      (and without typing -D each time he compiles it)
+    -->
+    <property file=".ant.properties"/>
+    <property file="${user.home}/.ant.properties"/>
 
     <target name="main">
         <taskdef name="anakia"
-                 classname="org.apache.velocity.anakia.AnakiaTask">
-          <classpath>
-            <fileset dir="${jakarta-site.dir}/lib">
-              <include name="*.jar"/>
-            </fileset>
-          </classpath>
+            classname="org.apache.velocity.anakia.AnakiaTask">
+            <classpath>
+                <fileset dir="${jakarta-site.dir}/lib">
+                    <include name="*.jar"/>
+                </fileset>
+            </classpath>
         </taskdef>
 
         <anakia basedir="src/xdocs"
-                destdir="docs"
-                style="docs.vsl"
-                projectfile="stylesheets/project.xml"
-                includes="**/*.xml"
-                excludes="stylesheets/**"
-                velocitypropertiesfile="src/xdocs/velocity.properties"
-        />
+            destdir="docs"
+            style="docs.vsl"
+            projectfile="stylesheets/project.xml"
+            includes="**/*.xml"
+            excludes="stylesheets/**"
+            velocitypropertiesfile="src/xdocs/velocity.properties"
+            />
     </target>
 </project>

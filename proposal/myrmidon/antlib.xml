@@ -16,64 +16,78 @@ Legal:
 
 <project default="main" basedir=".">
 
-  <property name="build.dir" value="build"/>
-  <property name="build.lib" value="${build.dir}/lib"/>
-  <property name="build.custom-tasks" value="${build.dir}/tasks"/>
+    <property name="build.dir" value="build"/>
+    <property name="build.lib" value="${build.dir}/lib"/>
+    <property name="build.custom-tasks" value="${build.dir}/tasks"/>
 
-  <property name="src.base" value="src"/>
-  <property name="java.dir" value="${src.base}/java"/>
-  <property name="lib.dir" value="lib"/>
+    <property name="src.base" value="src"/>
+    <property name="java.dir" value="${src.base}/java"/>
+    <property name="lib.dir" value="lib"/>
 
-  <!-- directory where you place generated code -->
-  <property name="gen.dir" value="${build.dir}/gen"/>
+    <!-- directory where you place generated code -->
+    <property name="gen.dir" value="${build.dir}/gen"/>
 
-  <property name="antlib.name" value="NONAME"/>
-  <property name="antlib.descriptor" value="${antlib.name}-ant-descriptor.xml"/>
-  <property name="antlib.role.descriptor" value="${antlib.name}-ant-roles.xml"/>
+    <property name="antlib.name" value="NONAME"/>
+    <property name="antlib.descriptor" value="${antlib.name}-ant-descriptor.xml"/>
+    <property name="antlib.role.descriptor" value="${antlib.name}-ant-roles.xml"/>
 
-  <path id="project.class.path">
-    <pathelement path="${java.class.path}" />
-    <fileset dir="${lib.dir}">
-      <include name="*.jar" />
-    </fileset>
-    <pathelement path="${build.classes}" />
-    <pathelement path="${build.custom-tasks}" />
-  </path>
+    <path id="project.class.path">
+        <pathelement path="${java.class.path}" />
+        <fileset dir="${lib.dir}">
+            <include name="*.jar" />
+        </fileset>
+        <pathelement path="${build.classes}" />
+        <pathelement path="${build.custom-tasks}" />
+    </path>
 
-  <!-- Main target -->
-  <target name="main" depends="antlib-jar" />
+    <!-- Main target -->
+    <target name="main" depends="antlib-jar" />
 
-  <!-- Define the pattern which specifies file to include/exclude
-       in this antlib. -->
-  <target name="antlib-definition">
-      <patternset id="antlib.include">
-        <include name="org/apache/antlib/${antlib.name}/**"/>
-      </patternset>
-  </target>
+    <!-- Define the pattern which specifies file to include/exclude
+         in this antlib. -->
+    <target name="antlib-definition">
+        <patternset id="antlib.include">
+            <include name="org/apache/antlib/${antlib.name}/**"/>
+        </patternset>
+    </target>
 
-  <!-- runs xdoclet if need be -->
-  <target name="antlib-descriptors"
-          depends="antlib-definition"
-          unless="antlib-descriptors.omit">
-    <antlib-descriptor libName="${antlib.name}"
-                       destdir="${gen.dir}"
-                       classpathref="project.class.path">
-      <fileset dir="${java.dir}">
-        <patternset refid="antlib.include"/>
-      </fileset>
-      <!-- antdoc docsDestDir="${gen.dir}/docs"/-->
-    </antlib-descriptor>
-  </target>
+    <!-- runs xdoclet if need be -->
+    <target name="antlib-docs"
+        depends="antlib-definition"
+        description="Generate documentation for antlib">
+        <antlib-descriptor libName="${antlib.name}"
+            destdir="${gen.dir}"
+            classpathref="project.class.path">
+            <fileset dir="${java.dir}">
+                <patternset refid="antlib.include"/>
+            </fileset>
+            <antdoc docsDestDir="${gen.dir}/docs"/>
+        </antlib-descriptor>
+    </target>
 
-  <!-- Generate an "atl" jar file for this antlib. -->
-  <target name="antlib-jar" depends="antlib-descriptors">
-    <antlib-jar jarfile="${build.lib}/${antlib.name}.atl"
-                descriptor="${gen.dir}/${antlib.descriptor}"
-                rolesDescriptor="${gen.dir}/${antlib.role.descriptor}">
-      <fileset dir="${build.classes}">
-        <patternset refid="antlib.include"/>
-      </fileset>
-    </antlib-jar>
-  </target>
+    <!-- runs xdoclet if need be -->
+    <target name="antlib-descriptors"
+        depends="antlib-definition"
+        unless="antlib-descriptors.omit">
+        <antlib-descriptor libName="${antlib.name}"
+            destdir="${gen.dir}"
+            classpathref="project.class.path">
+            <fileset dir="${java.dir}">
+                <patternset refid="antlib.include"/>
+            </fileset>
+            <!-- antdoc docsDestDir="${gen.dir}/docs"/-->
+        </antlib-descriptor>
+    </target>
+
+    <!-- Generate an "atl" jar file for this antlib. -->
+    <target name="antlib-jar" depends="antlib-descriptors">
+        <antlib-jar jarfile="${build.lib}/${antlib.name}.atl"
+            descriptor="${gen.dir}/${antlib.descriptor}"
+            rolesDescriptor="${gen.dir}/${antlib.role.descriptor}">
+            <fileset dir="${build.classes}">
+                <patternset refid="antlib.include"/>
+            </fileset>
+        </antlib-jar>
+    </target>
 
 </project>
