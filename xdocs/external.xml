@@ -695,12 +695,10 @@
             <th>URL:</th>
             <td><a href="http://jflex.de/">http://jflex.de/</a></td>
           </tr>
-<!--
           <tr>
             <th>Contact:</th>
-            <td><a href="mailto:Rafal.Mantiuk@bellstream.pl">Rafal Mantiuk</a></td>
+            <td><a href="http://www.jflex.de/mailing.html">jflex-users mailing list</a></td>
           </tr>
--->
           <tr>
             <th>License:</th>
             <td>GNU General Public License (GPL)</td>
