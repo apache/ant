@@ -24,10 +24,9 @@ import org.apache.tools.ant.util.depend.Filter;
 /**
  * An interface used to describe the actions required by any type of directory
  * scanner.
- *
- * @author RT
  */
-public class DependScanner extends DirectoryScanner
+public class DependScanner
+    extends DirectoryScanner
 {
     List included = new LinkedList();
     File baseClass;
