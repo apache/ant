@@ -332,9 +332,8 @@ public class Path extends DataType implements Cloneable {
                     dset.getDirectoryScanner(getProject()).getIncludedDirectories());
             } else if (o instanceof FileSet) {
                 FileSet fs = (FileSet) o;
-                DirectoryScanner ds = fs.getDirectoryScanner(getProject());
-                File dir = fs.getDir(getProject());
-                addUnlessPresent(result, dir, ds.getIncludedFiles());
+                addUnlessPresent(result, fs.getDir(getProject()),
+                    fs.getDirectoryScanner(getProject()).getIncludedFiles());
             } else if (o instanceof FileList) {
                 FileList fl = (FileList) o;
                 addUnlessPresent(result,
