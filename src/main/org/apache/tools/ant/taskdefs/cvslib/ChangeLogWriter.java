@@ -82,7 +82,7 @@ class ChangeLogWriter {
             final RCSFile file = (RCSFile) enumeration.nextElement();
 
             output.println("\t\t<file>");
-            output.println("\t\t\t<name>" + file.getName() + "</name>");
+            output.println("\t\t\t<name><![CDATA[" + file.getName() + "]]></name>");
             output.println("\t\t\t<revision>" + file.getRevision()
                 + "</revision>");
 
