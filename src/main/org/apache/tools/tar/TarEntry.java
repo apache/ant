@@ -454,7 +454,18 @@ public class TarEntry implements TarConstants {
     public void setSize(long size) {
         this.size = size;
     }   
+
         
+    /**
+     * Indicate if this entry is a GNU long name block
+     *
+     * @return true if this is a long name extension provided by GNU tar
+     */
+    public boolean isGNULongNameEntry() {
+        return linkFlag == LF_GNUTYPE_LONGNAME &&
+               name.toString().equals(GNU_LONGLINK);
+    }               
+
     /** 
      * Return whether or not this entry represents a directory.
      *  

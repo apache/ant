@@ -286,6 +286,18 @@ public class TarInputStream extends FilterInputStream {
             this.entrySize = (int) this.currEntry.getSize();
         } 
 
+        if (this.currEntry != null && this.currEntry.isGNULongNameEntry()) {
+            // read in the name
+            StringBuffer longName = new StringBuffer();
+            byte[] buffer = new byte[256];
+            int length = 0;
+            while ((length = read(buffer)) >= 0) {
+                longName.append(new String(buffer, 0, length));
+            }
+            getNextEntry();
+            this.currEntry.setName(longName.toString());
+        }
+
         return this.currEntry;
     } 
 
