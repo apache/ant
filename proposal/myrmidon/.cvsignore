@@ -7,3 +7,4 @@ emacs-jprj.el
 dist
 build
 todo
+*.ipr
