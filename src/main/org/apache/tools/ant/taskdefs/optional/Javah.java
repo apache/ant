@@ -105,7 +105,7 @@ public class Javah extends Task {
     private String cls;
     private File destDir;
     private Path classpath = null;
-    private String outputFile = null;
+    private File outputFile = null;
     private boolean verbose = false;
     private boolean force   = false;
     private boolean old     = false;
@@ -215,7 +215,7 @@ public class Javah extends Task {
     /**
      * Set the output file name.
      */
-    public void setOutputFile(String outputFile) {
+    public void setOutputFile(File outputFile) {
         this.outputFile = outputFile;
     }
 
@@ -354,7 +354,7 @@ public class Javah extends Task {
 
         if (outputFile != null) {
             cmd.createArgument().setValue("-o");
-            cmd.createArgument().setValue(outputFile);
+            cmd.createArgument().setFile(outputFile);
         }
 
         if (classpath != null) {
