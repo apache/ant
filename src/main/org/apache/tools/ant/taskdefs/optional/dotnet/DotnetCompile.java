@@ -205,6 +205,11 @@ public abstract class DotnetCompile
      */
     protected Vector referenceFilesets = new Vector();
 
+    /**
+     * flag to set to to use @file based command cache
+     */
+    private boolean useResponseFile = false;
+    private static final int AUTOMATIC_RESPONSE_FILE_THRESHOLD = 64;
 
     /**
      *  constructor inits everything and set up the search pattern
@@ -796,6 +801,25 @@ public abstract class DotnetCompile
         return "**/*." + getFileExtension();
     }
 
+    /**
+     * getter for flag
+     * @return
+     */
+    public boolean isUseResponseFile() {
+        return useResponseFile;
+    }
+
+    /**
+     * Flag to turn on response file use; default=false.
+     * When set the command params are saved to a file and
+     * this is passed in with @file. The task automatically switches
+     * to this mode with big commands; this option is here for
+     * testing and emergencies
+     * @param useResponseFile
+     */
+    public void setUseResponseFile(boolean useResponseFile) {
+        this.useResponseFile = useResponseFile;
+    }
 
     /**
      *  do the work by building the command line and then calling it
@@ -806,6 +830,9 @@ public abstract class DotnetCompile
              throws BuildException {
         validate();
         NetCommand command = createNetCommand();
+        //set up response file options
+        command.setAutomaticResponseFileThreshold(AUTOMATIC_RESPONSE_FILE_THRESHOLD);
+        command.setUseResponseFile(useResponseFile);
         //fill in args
         fillInSharedParameters(command);
         addResources(command);

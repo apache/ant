@@ -69,7 +69,7 @@ import org.apache.tools.ant.BuildException;
  *
  * @author Steve Loughran
  * @since ant1.6
- * @ant.task category="dotnet"
+ * @ant.task category="dotnet" name="jsharpc"
  */
 public class JSharp extends DotnetCompile {
 

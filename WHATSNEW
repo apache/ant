@@ -277,6 +277,9 @@ Fixed bugs:
 
 * <xmlcatalog>s only worked when defined inside of tasks.  Bugzilla
   Report 20965.
+  
+* <csc> and siblings (<vbc> <jsharpc>) handle large filesets by
+automatic use of response files.  Bugzilla report #19630
 
 Other changes:
 --------------
