@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ADDL_CLASSPATH=./../jakarta-tools/ant.jar:./../jakarta-tools/projectx-tr2.jar
+ADDL_CLASSPATH=./lib/ant.jar:./lib/projectx-tr2.jar
 
 if [ "$CLASSPATH" != "" ] ; then
   CLASSPATH=$CLASSPATH:$ADDL_CLASSPATH
