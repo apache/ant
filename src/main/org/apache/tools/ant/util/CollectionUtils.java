@@ -158,16 +158,16 @@ public class CollectionUtils {
 
     /**
      * Adapt the specified Enumeration to the Iterator interface.
-     * @param enum the Enumeration to adapt.
+     * @param e the Enumeration to adapt.
      * @return an Iterator.
      */
-    public static Iterator asIterator(final Enumeration enum) {
+    public static Iterator asIterator(final Enumeration e) {
         return new Iterator() {
             public boolean hasNext() {
-                return enum.hasMoreElements();
+                return e.hasMoreElements();
             }
             public Object next() {
-                return enum.nextElement();
+                return e.nextElement();
             }
             public void remove() {
                 throw new UnsupportedOperationException();
