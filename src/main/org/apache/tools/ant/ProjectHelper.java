@@ -531,5 +531,31 @@ public class ProjectHelper {
         }
         return componentName.substring(0, index);
     }
-//end class
+
+    /**
+     * Add location to build exception.
+     * @param ex the build exception, if the build exception
+     *           does not include
+     * @param newLocation the location of the calling task (may be null)
+     * @return a new build exception based in the build exception with
+     *         location set to newLocation. If the original exception
+     *         did not have a location, just return the build exception
+     */
+    public static BuildException addLocationToBuildException(
+        BuildException ex, Location newLocation) {
+        if (ex.getLocation() == null || ex.getMessage() == null) {
+            return ex;
+        }
+        String errorMessage
+            = "Following error occured while executing this line"
+            + System.getProperty("line.separator")
+            + ex.getLocation().toString()
+            + ex.getMessage();
+        if (newLocation == null) {
+            return new BuildException(errorMessage);
+        } else {
+            return new BuildException(
+                errorMessage, newLocation);
+        }
+    }
 }

@@ -66,10 +66,11 @@ import java.util.Enumeration;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DynamicConfigurator;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.RuntimeConfigurable;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
-import org.apache.tools.ant.RuntimeConfigurable;
 
 /**
  * The class to be placed in the ant type definition.
@@ -264,6 +265,11 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         // need to set the project on unknown element
         UnknownElement c = copy(macroDef.getNestedTask());
         c.init();
-        c.perform();
+        try {
+            c.perform();
+        } catch (BuildException ex) {
+            throw ProjectHelper.addLocationToBuildException(
+                ex, getLocation());
+        }
     }
 }

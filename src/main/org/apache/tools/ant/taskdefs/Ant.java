@@ -378,7 +378,12 @@ public class Ant extends Task {
                 }
             }
 
-            ProjectHelper.configureProject(newProject, new File(antFile));
+            try {
+                ProjectHelper.configureProject(newProject, new File(antFile));
+            } catch (BuildException ex) {
+                throw ProjectHelper.addLocationToBuildException(
+                    ex, getLocation());
+            }
 
             if (target == null) {
                 target = newProject.getDefaultTarget();
@@ -413,7 +418,10 @@ public class Ant extends Task {
                 try {
                     log("Entering " + antFile + "...", Project.MSG_VERBOSE);
                     newProject.executeTarget(target);
-                } finally {
+                } catch (BuildException ex) {
+                    throw ProjectHelper.addLocationToBuildException(
+                        ex, getLocation());
+              } finally {
                     log("Exiting " + antFile + ".", Project.MSG_VERBOSE);
                 }
             }

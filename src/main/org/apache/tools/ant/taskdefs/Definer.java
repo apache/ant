@@ -343,15 +343,8 @@ public abstract class Definer extends DefBase {
             antlib.setURI(getURI());
             antlib.perform();
         } catch (BuildException ex) {
-            Location exLocation = ex.getLocation();
-            if (exLocation == null) {
-                throw ex;
-            }
-            throw new BuildException(
-                "Error executing antlib"
-                + System.getProperty("line.separator")
-                + exLocation.toString()
-                + " " + ex.getMessage());
+            throw ProjectHelper.addLocationToBuildException(
+                ex, getLocation());
         }
     }
 
