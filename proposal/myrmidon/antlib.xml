@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<!--
+==============================================================================
+
+ Ant build file
+
+Authors:
+ Peter Donald <peter@apache.org>
+
+Legal:
+  Copyright (c) 2000 The Apache Software Foundation. All Rights Reserved.
+
+==============================================================================
+-->
+
+<project default="main" basedir=".">
+
+  <property name="build.dir" value="build"/>
+  <property name="build.lib" value="${build.dir}/lib"/>
+
+  <property name="src.base" value="src"/>
+  <property name="java.dir" value="${src.base}/java"/>
+  <property name="lib.dir" value="lib"/>
+
+  <!-- directory where you place generated code -->
+  <property name="gen.dir" value="gen"/>
+
+  <property name="antlib.name" value="NONAME"/>
+  <property name="antlib.include" value="org/apache/antlib/${antlib.name}/**"/>
+  <property name="antlib.descriptor" value="${antlib.name}-ant-descriptor.xml"/>
+
+  <path id="project.class.path">
+    <pathelement path="${java.class.path}" />
+    <fileset dir="${lib.dir}">
+      <include name="*.jar" />
+    </fileset>
+    <pathelement path="${build.classes}" />
+  </path>
+
+  <!-- Main target -->
+  <target name="main" depends="jar" />
+
+  <target name="check-uptodate">
+    <uptodate property="xdoclet.uptodate" targetfile="${gen.dir}/${antlib.descriptor}" >
+      <srcfiles dir= "${java.dir}" includes="${antlib.include}/*.java"/>
+    </uptodate>
+  </target>
+
+  <!-- runs xdoclet if need be -->
+  <target name="xdoclet" depends="check-uptodate" unless="xdoclet.uptodate">
+    <taskdef name="xdoclet" classname="xdoclet.DocletTask" classpathref="project.class.path"/>
+
+    <xdoclet sourcepath="${java.dir}" destdir="${gen.dir}" classpathref="project.class.path">
+      <fileset dir="${java.dir}">
+        <include name="${antlib.include}/*.java" />
+      </fileset>
+      <template templateFile="${manifest.dir}/core-ant-descriptor.template"
+                destinationfile="${antlib.descriptor}"/>
+      <template templateFile="${manifest.dir}/builtin-ant-roles.template"
+                destinationfile="${antlib.name}-ant-roles.xml"/>
+    </xdoclet>
+  </target>
+
+  <!-- Creates the jars file -->
+  <target name="jar" depends="xdoclet">
+    <jar jarfile="${build.lib}/${antlib.name}.atl" basedir="${build.classes}">
+      <include name="${antlib.include}" />
+      <zipfileset dir="${manifest.dir}" fullpath="META-INF/ant-descriptor.xml">
+        <include name="${antlib.descriptor}"/>
+      </zipfileset>
+    </jar>
+  </target>
+
+</project>
