@@ -14,6 +14,6 @@ public class NormalLine {
     }
 
     private String url = "http://ant.apache.org/"; 
-    private String url2 = "\"http://ant.apache.org/\"";
+    private String url2 = "\"http://ant.apache.org/\""; 
 
 }

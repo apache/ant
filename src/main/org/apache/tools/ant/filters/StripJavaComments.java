@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -80,6 +80,11 @@ public final class StripJavaComments
      */
     private boolean inString = false;
 
+    /** 
+     * Whether or not the last char has been a backslash.
+     */
+    private boolean quoted = false;
+
     /**
      * Constructor for "dummy" instances.
      * 
@@ -116,9 +121,13 @@ public final class StripJavaComments
             readAheadCh = -1;
         } else {
             ch = in.read();
-            if (ch == '"') {
+            if (ch == '"' && !quoted) {
                 inString = !inString;
+                quoted = false;
+            } else if (ch == '\\') {
+                quoted = !quoted;
             } else {
+                quoted = false;
                 if (!inString) {
                     if (ch == '/') {
                         ch = in.read();
