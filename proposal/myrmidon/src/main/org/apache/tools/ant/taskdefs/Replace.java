@@ -35,27 +35,27 @@ import org.apache.avalon.excalibur.util.StringUtil;
  *      stefano@apache.org</a>
  * @author <a href="mailto:erik@desknetinc.com">Erik Langenbach</a>
  */
-public class Replace extends MatchingTask
+public class Replace
+    extends MatchingTask
 {
+    private File m_src;
+    private NestedString m_token;
+    private NestedString m_value = new NestedString();
 
-    private File src = null;
-    private NestedString token = null;
-    private NestedString value = new NestedString();
+    private File m_propertyFile;
+    private Properties m_properties;
+    private ArrayList m_replacefilters = new ArrayList();
 
-    private File propertyFile = null;
-    private Properties properties = null;
-    private ArrayList replacefilters = new ArrayList();
-
-    private File dir = null;
-    private boolean summary = false;
+    private File m_dir;
+    private boolean m_summary;
 
     /**
      * The encoding used to read and write files - if null, uses default
      */
-    private String encoding = null;
+    private String m_encoding;
 
-    private int fileCount;
-    private int replaceCount;
+    private int m_fileCount;
+    private int m_replaceCount;
 
     /**
      * Set the source files path when using matching tasks.
@@ -64,7 +64,7 @@ public class Replace extends MatchingTask
      */
     public void setDir( File dir )
     {
-        this.dir = dir;
+        m_dir = dir;
     }
 
     /**
@@ -74,7 +74,7 @@ public class Replace extends MatchingTask
      */
     public void setEncoding( String encoding )
     {
-        this.encoding = encoding;
+        m_encoding = encoding;
     }
 
     /**
@@ -84,7 +84,7 @@ public class Replace extends MatchingTask
      */
     public void setFile( File file )
     {
-        this.src = file;
+        m_src = file;
     }
 
     /**
@@ -94,7 +94,7 @@ public class Replace extends MatchingTask
      */
     public void setPropertyFile( File filename )
     {
-        propertyFile = filename;
+        m_propertyFile = filename;
     }
 
     /**
@@ -105,7 +105,7 @@ public class Replace extends MatchingTask
      */
     public void setSummary( boolean summary )
     {
-        this.summary = summary;
+        m_summary = summary;
     }
 
     /**
@@ -158,11 +158,11 @@ public class Replace extends MatchingTask
      */
     public NestedString createReplaceToken()
     {
-        if( token == null )
+        if( m_token == null )
         {
-            token = new NestedString();
+            m_token = new NestedString();
         }
-        return token;
+        return m_token;
     }
 
     /**
@@ -172,7 +172,7 @@ public class Replace extends MatchingTask
      */
     public NestedString createReplaceValue()
     {
-        return value;
+        return m_value;
     }
 
     /**
@@ -182,8 +182,8 @@ public class Replace extends MatchingTask
      */
     public Replacefilter createReplacefilter()
     {
-        Replacefilter filter = new Replacefilter();
-        replacefilters.add( filter );
+        Replacefilter filter = new Replacefilter( this );
+        m_replacefilters.add( filter );
         return filter;
     }
 
@@ -197,35 +197,35 @@ public class Replace extends MatchingTask
     {
         validateAttributes();
 
-        if( propertyFile != null )
+        if( m_propertyFile != null )
         {
-            properties = getProperties( propertyFile );
+            m_properties = getProperties( m_propertyFile );
         }
 
         validateReplacefilters();
-        fileCount = 0;
-        replaceCount = 0;
+        m_fileCount = 0;
+        m_replaceCount = 0;
 
-        if( src != null )
+        if( m_src != null )
         {
-            processFile( src );
+            processFile( m_src );
         }
 
-        if( dir != null )
+        if( m_dir != null )
         {
-            DirectoryScanner ds = super.getDirectoryScanner( dir );
+            DirectoryScanner ds = super.getDirectoryScanner( m_dir );
             String[] srcs = ds.getIncludedFiles();
 
             for( int i = 0; i < srcs.length; i++ )
             {
-                File file = new File( dir, srcs[ i ] );
+                File file = new File( m_dir, srcs[ i ] );
                 processFile( file );
             }
         }
 
-        if( summary )
+        if( m_summary )
         {
-            getLogger().info( "Replaced " + replaceCount + " occurrences in " + fileCount + " files." );
+            getLogger().info( "Replaced " + m_replaceCount + " occurrences in " + m_fileCount + " files." );
         }
     }
 
@@ -238,23 +238,23 @@ public class Replace extends MatchingTask
     public void validateAttributes()
         throws TaskException
     {
-        if( src == null && dir == null )
+        if( m_src == null && m_dir == null )
         {
             String message = "Either the file or the dir attribute " + "must be specified";
             throw new TaskException( message );
         }
-        if( propertyFile != null && !propertyFile.exists() )
+        if( m_propertyFile != null && !m_propertyFile.exists() )
         {
-            String message = "Property file " + propertyFile.getPath() + " does not exist.";
+            String message = "Property file " + m_propertyFile.getPath() + " does not exist.";
             throw new TaskException( message );
         }
-        if( token == null && replacefilters.size() == 0 )
+        if( m_token == null && m_replacefilters.size() == 0 )
         {
             String message = "Either token or a nested replacefilter "
                 + "must be specified";
             throw new TaskException( message );
         }
-        if( token != null && "".equals( token.getText() ) )
+        if( m_token != null && "".equals( m_token.getText() ) )
         {
             String message = "The token attribute must not be an empty string.";
             throw new TaskException( message );
@@ -270,9 +270,9 @@ public class Replace extends MatchingTask
     public void validateReplacefilters()
         throws TaskException
     {
-        for( int i = 0; i < replacefilters.size(); i++ )
+        for( int i = 0; i < m_replacefilters.size(); i++ )
         {
-            Replacefilter element = (Replacefilter)replacefilters.get( i );
+            Replacefilter element = (Replacefilter)m_replacefilters.get( i );
             element.validate();
         }
     }
@@ -306,10 +306,10 @@ public class Replace extends MatchingTask
         Writer writer = null;
         try
         {
-            reader = encoding == null ? new FileReader( src )
-                : new InputStreamReader( new FileInputStream( src ), encoding );
-            writer = encoding == null ? new FileWriter( temp )
-                : new OutputStreamWriter( new FileOutputStream( temp ), encoding );
+            reader = m_encoding == null ? new FileReader( src )
+                : new InputStreamReader( new FileInputStream( src ), m_encoding );
+            writer = m_encoding == null ? new FileWriter( temp )
+                : new OutputStreamWriter( new FileOutputStream( temp ), m_encoding );
 
             BufferedReader br = new BufferedReader( reader );
             BufferedWriter bw = new BufferedWriter( writer );
@@ -340,20 +340,20 @@ public class Replace extends MatchingTask
             //Preserve original string (buf) so we can compare the result
             String newString = new String( buf );
 
-            if( token != null )
+            if( m_token != null )
             {
                 // line separators in values and tokens are "\n"
                 // in order to compare with the file contents, replace them
                 // as needed
-                final String val = stringReplace( value.getText(), "\n", StringUtil.LINE_SEPARATOR );
-                final String tok = stringReplace( token.getText(), "\n", StringUtil.LINE_SEPARATOR );
+                final String val = stringReplace( m_value.getText(), "\n", StringUtil.LINE_SEPARATOR );
+                final String tok = stringReplace( m_token.getText(), "\n", StringUtil.LINE_SEPARATOR );
 
                 // for each found token, replace with value
-                getLogger().debug( "Replacing in " + src.getPath() + ": " + token.getText() + " --> " + value.getText() );
+                getLogger().debug( "Replacing in " + src.getPath() + ": " + m_token.getText() + " --> " + m_value.getText() );
                 newString = stringReplace( newString, tok, val );
             }
 
-            if( replacefilters.size() > 0 )
+            if( m_replacefilters.size() > 0 )
             {
                 newString = processReplacefilters( newString, src.getPath() );
             }
@@ -375,7 +375,7 @@ public class Replace extends MatchingTask
             // otherwise, delete the new one
             if( changes )
             {
-                ++fileCount;
+                ++m_fileCount;
                 src.delete();
                 temp.renameTo( src );
                 temp = null;
@@ -420,9 +420,9 @@ public class Replace extends MatchingTask
     {
         String newString = new String( buffer );
 
-        for( int i = 0; i < replacefilters.size(); i++ )
+        for( int i = 0; i < m_replacefilters.size(); i++ )
         {
-            Replacefilter filter = (Replacefilter)replacefilters.get( i );
+            Replacefilter filter = (Replacefilter)m_replacefilters.get( i );
 
             //for each found token, replace with value
             getLogger().debug( "Replacing in " + filename + ": " + filter.getToken() + " --> " + filter.getReplaceValue() );
@@ -462,7 +462,7 @@ public class Replace extends MatchingTask
             // search again
             start = found + str1.length();
             found = str.indexOf( str1, start );
-            ++replaceCount;
+            ++m_replaceCount;
         }
 
         // write the remaining characters
@@ -474,122 +474,18 @@ public class Replace extends MatchingTask
         return ret.toString();
     }
 
-    //Inner class
-    public class NestedString
+    public NestedString getValue()
     {
-
-        private StringBuffer buf = new StringBuffer();
-
-        public String getText()
-        {
-            return buf.toString();
-        }
-
-        public void addContent( String val )
-        {
-            buf.append( val );
-        }
+        return m_value;
     }
 
-    //Inner class
-    public class Replacefilter
+    public File getPropertyFile()
     {
-        private String property;
-        private String token;
-        private String value;
-
-        public void setProperty( String property )
-        {
-            this.property = property;
-        }
-
-        public void setToken( String token )
-        {
-            this.token = token;
-        }
-
-        public void setValue( String value )
-        {
-            this.value = value;
-        }
-
-        public String getProperty()
-        {
-            return property;
-        }
-
-        public String getReplaceValue()
-        {
-            if( property != null )
-            {
-                return (String)properties.getProperty( property );
-            }
-            else if( value != null )
-            {
-                return value;
-            }
-            else if( Replace.this.value != null )
-            {
-                return Replace.this.value.getText();
-            }
-            else
-            {
-                //Default is empty string
-                return new String( "" );
-            }
-        }
-
-        public String getToken()
-        {
-            return token;
-        }
-
-        public String getValue()
-        {
-            return value;
-        }
-
-        public void validate()
-            throws TaskException
-        {
-            //Validate mandatory attributes
-            if( token == null )
-            {
-                String message = "token is a mandatory attribute " + "of replacefilter.";
-                throw new TaskException( message );
-            }
-
-            if( "".equals( token ) )
-            {
-                String message = "The token attribute must not be an empty string.";
-                throw new TaskException( message );
-            }
-
-            //value and property are mutually exclusive attributes
-            if( ( value != null ) && ( property != null ) )
-            {
-                String message = "Either value or property " + "can be specified, but a replacefilter " + "element cannot have both.";
-                throw new TaskException( message );
-            }
-
-            if( ( property != null ) )
-            {
-                //the property attribute must have access to a property file
-                if( propertyFile == null )
-                {
-                    String message = "The replacefilter's property attribute " + "can only be used with the replacetask's " + "propertyFile attribute.";
-                    throw new TaskException( message );
-                }
-
-                //Make sure property exists in property file
-                if( properties == null ||
-                    properties.getProperty( property ) == null )
-                {
-                    String message = "property \"" + property + "\" was not found in " + propertyFile.getPath();
-                    throw new TaskException( message );
-                }
-            }
-        }
+        return m_propertyFile;
     }
 
+    public Properties getProperties()
+    {
+        return m_properties;
+    }
 }
