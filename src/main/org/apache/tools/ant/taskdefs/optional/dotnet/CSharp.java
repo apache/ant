@@ -449,5 +449,15 @@ public class CSharp extends DotnetCompile {
         return "cs";
     }
 
+    /**
+     * from a resource, get the resource param string
+     * @param resource
+     * @return a string containing the resource param, or a null string
+     * to conditionally exclude a resource.
+     */
+    protected String createResourceParameter(DotnetResource resource) {
+        return resource.getCSharpStyleParameter();
+    }
+
 }
 

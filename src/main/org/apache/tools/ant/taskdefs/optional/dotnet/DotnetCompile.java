@@ -152,6 +152,10 @@ public abstract class DotnetCompile
      */
     protected Vector definitionList = new Vector();
 
+    /**
+     * our resources
+     */
+    protected Vector resources = new Vector();
 
     /**
      *  Fix .NET reference inclusion. .NET is really dumb in how it handles
@@ -167,7 +171,7 @@ public abstract class DotnetCompile
      *  need to reference mscorlib.dll, cos it is always there
      */
 
-    protected static final String [] DEFAULT_REFERENCE_LIST_DOTNET_10 =
+    protected static final String[] DEFAULT_REFERENCE_LIST_DOTNET_10 =
            {"Accessibility.dll",
             "cscompmgd.dll",
             "CustomMarshalers.dll",
@@ -191,6 +195,8 @@ public abstract class DotnetCompile
             "System.Web.Services.dll",
             "System.Windows.Forms.dll",
             "System.XML.dll"};
+
+    protected static final String REFERENCE_OPTION= "/reference:";
 
     /**
      *  debug flag. Controls generation of debug information.
@@ -230,6 +236,10 @@ public abstract class DotnetCompile
      *  list of extra modules to refer to
      */
     protected String additionalModules;
+    /**
+     * filesets of references
+     */
+    protected Vector referenceFilesets =new Vector();
 
 
     /**
@@ -278,7 +288,7 @@ public abstract class DotnetCompile
     protected String getReferencesParameter() {
         //bail on no references
         if (notEmpty(references)) {
-            return "/reference:" + references;
+            return REFERENCE_OPTION + references;
         } else {
             return null;
         }
@@ -297,6 +307,15 @@ public abstract class DotnetCompile
         }
         referenceFiles.append(path);
     }
+
+    /**
+     * add a new reference fileset to the compilation
+     * @param reference
+     */
+    public void addReference(FileSet reference) {
+        referenceFilesets.add(reference);
+    }
+
 
 
     /**
@@ -319,7 +338,7 @@ public abstract class DotnetCompile
             return null;
         }
 
-        StringBuffer s = new StringBuffer("/reference:");
+        StringBuffer s = new StringBuffer(REFERENCE_OPTION);
         s.append(refpath);
         return new String(s);
     }
@@ -681,7 +700,7 @@ public abstract class DotnetCompile
      * add a define to the list of definitions
      * @param define
      */
-    public void addDefine(Define define) {
+    public void addDefine(DotnetDefine define) {
         definitionList.addElement(define);
     }
 
@@ -695,7 +714,7 @@ public abstract class DotnetCompile
         Enumeration defEnum=definitionList.elements();
         while (defEnum.hasMoreElements()) {
             //loop through all definitions
-            Define define = (Define) defEnum.nextElement();
+            DotnetDefine define = (DotnetDefine) defEnum.nextElement();
             if(define.isSet(this)) {
                 //add those that are set, and a delimiter
                 defines.append(define.getValue(this));
@@ -768,6 +787,14 @@ public abstract class DotnetCompile
     }
 
     /**
+     * link or embed a resource
+     * @param resource
+     */
+    public void addResource(DotnetResource resource) {
+        resources.add(resource);
+    }
+
+    /**
      *  test for a string containing something useful
      *
      *@param  s  string in
@@ -810,6 +837,7 @@ public abstract class DotnetCompile
         return "**/*." + getFileExtension();
     }
 
+
     /**
      *  do the work by building the command line and then calling it
      *
@@ -821,8 +849,13 @@ public abstract class DotnetCompile
         NetCommand command = createNetCommand();
         //fill in args
         fillInSharedParameters(command);
+        addResources(command);
         addCompilerSpecificOptions(command);
-        addFilesAndExecute(command);
+        int referencesOutOfDate=addReferenceFilesets(command,
+                getOutputFileTimestamp());
+        //if the refs are out of date, force a build.
+        boolean forceBuild= referencesOutOfDate > 0;
+        addFilesAndExecute(command, forceBuild);
 
     }
 
@@ -870,6 +903,66 @@ public abstract class DotnetCompile
     }
 
     /**
+     * for every resource declared, we get the (language specific)
+     * resource setting
+     */
+    protected void addResources(NetCommand command) {
+        Enumeration e=resources.elements();
+        while (e.hasMoreElements()) {
+            DotnetResource resource = (DotnetResource) e.nextElement();
+            command.addArgument(createResourceParameter(resource));
+        }
+    }
+
+    /**
+     * from a resource, get the
+     * @param resource
+     * @return a string containing the resource param, or a null string
+     * to conditionally exclude a resource.
+     */
+    protected abstract String createResourceParameter(DotnetResource resource);
+
+
+    /**
+     * run through the list of reference files and add them to the command
+     * @param outputTimestamp timestamp to compare against
+     * @return number of files out of date
+     */
+
+    protected int addReferenceFilesets(NetCommand command, long outputTimestamp) {
+        int filesOutOfDate = 0;
+        Hashtable filesToBuild=new Hashtable();
+        for (int i = 0; i < referenceFilesets.size(); i++) {
+            FileSet fs = (FileSet) referenceFilesets.elementAt(i);
+            filesOutOfDate += command.scanOneFileset(
+                    fs.getDirectoryScanner(getProject()),
+                    filesToBuild,
+                    outputTimestamp);
+        }
+        //bail out early if there were no files
+        if(filesToBuild.size()==0) {
+            return 0;
+        }
+        StringBuffer referenceList= new StringBuffer(REFERENCE_OPTION);
+        //now scan the hashtable and add the files
+        Enumeration files = filesToBuild.elements();
+        while (files.hasMoreElements()) {
+            File file = (File) files.nextElement();
+            if(isFileManagedBinary(file)) {
+                referenceList.append(file.toString());
+                referenceList.append(getReferenceDelimiter());
+            } else {
+                log("ignoring "+file+" as it is not a managed executable",
+                        Project.MSG_VERBOSE);
+            }
+
+        }
+        //add it all to an argument
+        command.addArgument(referenceList.toString());
+        return filesOutOfDate;
+    }
+
+    /**
      * create our helper command
      * @return a command prefilled with the exe name and task name
      */
@@ -892,6 +985,19 @@ public abstract class DotnetCompile
         return ";";
     }
 
+
+    /**
+     * test for a file being managed or not
+     * @return true if we think this is a managed executable, and thus OK
+     * for linking
+     * @todo look at the PE header of the exe and see if it is managed or not.
+     */
+    protected static boolean isFileManagedBinary(File file) {
+        String filename= file.toString().toLowerCase();
+        return filename.endsWith(".exe") || filename.endsWith(".dll")
+                || filename.endsWith(".netmodule");
+    }
+
     /**
      * Target types to build.
      * valid build types are exe|library|module|winexe
@@ -904,69 +1010,6 @@ public abstract class DotnetCompile
                 "module",
                 "winexe"
             };
-        }
-    }
-
-    /**
-     * definitions can be conditional. What .NET conditions can not be
-     * is in any state other than defined and undefined; you cannot give
-     * a definition a value.
-     */
-    public static class Define {
-        private String name;
-        private String condition;
-
-        public String getCondition() {
-            return condition;
-        }
-
-        /**
-         * the name of a property which must be defined for
-         * the definition to be set. Optional.
-         * @param condition
-         */
-        public void setCondition(String condition) {
-            this.condition = condition;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        /**
-         * the name of the definition. Required.
-         * @param name
-         */
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        /**
-         * get the value of this definition. Will be null if a condition
-         * was declared and not met
-         * @param owner owning task
-         * @return
-         * @throws BuildException
-         */
-        public String getValue(Task owner) throws BuildException {
-            if(name==null) {
-                throw new BuildException("No name provided for the define element",
-                    owner.getLocation());
-            }
-            if(!isSet(owner)) {
-                return null;
-            }
-            return name;
-        }
-
-        /**
-         * test for a define being set
-         * @param owner
-         * @return true if there was no condition, or it is met
-         */
-        public boolean isSet(Task owner) {
-            return condition==null
-            || owner.getProject().getProperty(condition) != null;
         }
     }
 

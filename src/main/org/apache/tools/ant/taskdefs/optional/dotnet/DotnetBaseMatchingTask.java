@@ -76,9 +76,10 @@ public class DotnetBaseMatchingTask extends MatchingTask {
      */
     protected File outputFile;
     /**
-     * sets of file to compile
+     * filesets of file to compile
      */
     protected Vector filesets = new Vector();
+
     /**
      *  source directory upon which the search pattern is applied
      */
@@ -193,13 +194,14 @@ public class DotnetBaseMatchingTask extends MatchingTask {
      * finish off the command by adding all dependent files, execute
      * @param command
      */
-    protected void addFilesAndExecute(NetCommand command) {
+    protected void addFilesAndExecute(NetCommand command, boolean ignoreTimestamps) {
         long outputTimestamp = getOutputFileTimestamp();
         Hashtable filesToBuild =new Hashtable();
         int filesOutOfDate = buildFileList(command,filesToBuild, outputTimestamp);
 
         //add the files to the command
         addFilesToCommand(filesToBuild, command);
+
 
         //now run the command of exe + settings + files
         if (filesOutOfDate > 0) {
@@ -208,6 +210,7 @@ public class DotnetBaseMatchingTask extends MatchingTask {
             log("output file is up to date",Project.MSG_VERBOSE);
         }
     }
+
 
 
 }

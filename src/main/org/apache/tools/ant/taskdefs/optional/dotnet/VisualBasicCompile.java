@@ -68,6 +68,7 @@ import org.apache.tools.ant.BuildException;
  *
  * @author Brian Felder bfelder@providence.org
  * @author Steve Loughran
+ * @ant.task    name="vbc" category="dotnet"
  */
 
 public class VisualBasicCompile extends DotnetCompile {
@@ -336,6 +337,16 @@ public class VisualBasicCompile extends DotnetCompile {
      */
     public String getFileExtension() {
         return "vb";
+    }
+
+    /**
+     * from a resource, get the resource param
+     * @param resource
+     * @return a string containing the resource param, or a null string
+     * to conditionally exclude a resource.
+     */
+    protected String createResourceParameter(DotnetResource resource) {
+        return resource.getVbStyleParameter();
     }
 
     /**

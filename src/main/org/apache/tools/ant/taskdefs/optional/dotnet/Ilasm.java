@@ -61,10 +61,13 @@ package org.apache.tools.ant.taskdefs.optional.dotnet;
 
 
 import java.io.File;
+import java.util.Vector;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
@@ -86,8 +89,9 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
  *  </b> and <b>excludes="broken.il"</b> can be used to control the files pulled
  *  in. You can also use nested &lt;src&gt filesets to refer to source.
  *
- *@author     Steve Loughran steve_l@iseran.com
- *@version    0.6
+ * @author     Steve Loughran steve_l@iseran.com
+ * @version    0.6
+ * @ant.task    name="ilasm" category="dotnet"
  */
 
 public class Ilasm
@@ -158,6 +162,10 @@ public class Ilasm
      *  any extra command options?
      */
     protected String extraOptions;
+    /**
+     * filesets of references
+     */
+    protected Vector referenceFilesets =new Vector();
 
 
     /**
@@ -471,7 +479,7 @@ public class Ilasm
 
         NetCommand command = buildIlasmCommand();
 
-        addFilesAndExecute(command);
+        addFilesAndExecute(command, false);
 
     }
     // end execute
@@ -502,6 +510,25 @@ public class Ilasm
         return command;
     }
 
+    /**
+     * add a new reference fileset to the compilation
+     * @param reference
+     */
+    public void addReference(FileSet reference) {
+        referenceFilesets.add(reference);
+    }
+
+    /**
+     * test for a file being managed or not
+     * @return true if we think this is a managed executable, and thus OK
+     * for linking
+     * @todo look at the PE header of the exe and see if it is managed or not.
+     */
+    protected static boolean isFileManagedBinary(File file) {
+        String filename= file.toString().toLowerCase();
+        return filename.endsWith(".exe") || filename.endsWith(".dll")
+                || filename.endsWith(".netmodule");
+    }
 
 
     /**

@@ -281,14 +281,13 @@ public class NetCommand {
         for (int i = 0; i < dependencies.length; i++) {
             File targetFile = new File(base, dependencies[i]);
             if (filesToBuild.get(targetFile) == null) {
-                owner.log(targetFile.toString(), Project.MSG_VERBOSE);
                 filesToBuild.put(targetFile, targetFile);
                 if (targetFile.lastModified() > outputTimestamp) {
                     filesOutOfDate++;
-                    owner.log("Source file " + targetFile.toString() + " is out of date",
+                    owner.log(targetFile.toString() + " is out of date",
                             Project.MSG_VERBOSE);
                 } else {
-                    owner.log("Source file " + targetFile.toString() + " is up to date",
+                    owner.log(targetFile.toString(),
                             Project.MSG_VERBOSE);
                 }
             }
