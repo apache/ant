@@ -48,6 +48,9 @@ Other changes:
 
 * New attribute "negate" on <propertyset> to invert selection criteria.
 
+* New <redirector> type introduced to provide extreme I/O flexibility.
+  Initial support for <exec>, <apply>, and <java> tasks.
+
 Changes from Ant 1.6.1 to current Ant 1.6 CVS version
 =============================================
 

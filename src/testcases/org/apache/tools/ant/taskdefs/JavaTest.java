@@ -20,7 +20,9 @@ package org.apache.tools.ant.taskdefs;
 import junit.framework.*;
 import java.io.*;
 import org.apache.tools.ant.*;
+//import org.apache.tools.ant.taskdefs.StreamPumper;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.TeeOutputStream;
 
 /**
  * stress out java task
@@ -186,6 +188,26 @@ public class JavaTest extends BuildFileTest {
         assertTrue("log file exists", logFile.exists());
     }
 
+    public void testRedirect1() {
+        executeTarget("redirect1");
+    }
+
+    public void testRedirect2() {
+        executeTarget("redirect2");
+    }
+
+    public void testRedirect3() {
+        executeTarget("redirect3");
+    }
+
+    public void testRedirector1() {
+        executeTarget("redirector1");
+    }
+
+    public void testRedirector2() {
+        executeTarget("redirector2");
+    }
+
     /**
      * entry point class with no dependencies other
      * than normal JRE runtime
@@ -264,6 +286,37 @@ public class JavaTest extends BuildFileTest {
             finally {
                 try {out.close();} catch (IOException ioe) {}}
 
+        }
+    }
+
+    /**
+     * entry point class to pipe System.in to the specified stream:
+     * "out", "err", or "both".  If none specified, swallow the input.
+     */
+    public static class PipeEntryPoint {
+
+        /**
+         * pipe input to specified output
+         */
+        public static void main(String[] args) {
+            OutputStream os = null;
+            if (args.length > 0) {
+                if ("out".equalsIgnoreCase(args[0])) {
+                    os = System.out;
+                } else if ("err".equalsIgnoreCase(args[0])) {
+                    os = System.err;
+                } else if ("both".equalsIgnoreCase(args[0])) {
+                    os = new TeeOutputStream(System.out, System.err);
+                }
+            }
+            if (os != null) {
+                Thread t = new Thread(new StreamPumper(System.in, os, true));
+                t.start();
+                try {
+                    t.join();
+                } catch (InterruptedException eyeEx) {
+                }
+            }
         }
     }
 }

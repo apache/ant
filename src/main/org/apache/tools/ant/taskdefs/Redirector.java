@@ -16,23 +16,37 @@
  */
 package org.apache.tools.ant.taskdefs;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.OutputStream;
+import java.io.Reader;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.PrintStream;
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
+import java.io.OutputStream;
+import java.io.StringReader;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.PipedInputStream;
+import java.io.InputStreamReader;
+import java.io.PipedOutputStream;
+import java.io.OutputStreamWriter;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Vector;
 import org.apache.tools.ant.Task;
-import org.apache.tools.ant.util.LazyFileOutputStream;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.filters.util.ChainReaderHelper;
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.TeeOutputStream;
+import org.apache.tools.ant.util.ReaderInputStream;
+import org.apache.tools.ant.util.LeadPipeInputStream;
+import org.apache.tools.ant.util.LazyFileOutputStream;
+import org.apache.tools.ant.util.OutputStreamFunneler;
+import org.apache.tools.ant.util.ConcatFileInputStream;
+import org.apache.tools.ant.util.KeepAliveOutputStream;
 
 /**
  * The Redirector class manages the setup and connection of
@@ -41,21 +55,43 @@ import org.apache.tools.ant.util.TeeOutputStream;
  * @since Ant 1.6
  */
 public class Redirector {
+
+    private static final String defaultEncoding
+        = System.getProperty("file.encoding");
+
+    private class PropertyOutputStream extends ByteArrayOutputStream {
+        String property;
+        boolean closed = false;
+
+        PropertyOutputStream(String property) {
+            super();
+            this.property = property;
+        }
+
+        public void close() throws IOException {
+            if (!closed && !(append && appendProperties)) {
+                setPropertyFromBAOS(this, property);
+                closed = true;
+            }
+        }
+    }
+
     /**
-     * The file receiving standard output. Will also receive standard error
+     * The file(s) from which standard input is being taken.
+     * If > 1, files' content will be concatenated in the order received.
+     */
+    private File[] input;
+
+    /**
+     * The file(s) receiving standard output. Will also receive standard error
      * unless standard error is redirected or logError is true.
      */
-    private File out;
+    private File[] out;
 
     /**
-     * The file to which standard error is being redirected
+     * The file(s) to which standard error is being redirected
      */
-    private File error;
-
-    /**
-     * The file from which standard input is being taken.
-     */
-    private File input;
+    private File[] error;
 
     /**
       * Indicates if standard error should be logged to Ant's log system
@@ -67,12 +103,12 @@ public class Redirector {
     /**
      * Buffer used to capture output for storage into a property
      */
-    private ByteArrayOutputStream baos = null;
+    private PropertyOutputStream baos = null;
 
     /**
      * Buffer used to capture error output for storage into a property
      */
-    private ByteArrayOutputStream errorBaos = null;
+    private PropertyOutputStream errorBaos = null;
 
     /** The name of the property into which output is to be stored */
     private String outputProperty;
@@ -85,6 +121,9 @@ public class Redirector {
 
     /** Flag which indicates if error and output files are to be appended. */
     private boolean append = false;
+
+    /** Flag which indicates whether files should be created even when empty. */
+    private boolean createEmptyFiles = true;
 
     /** The task for which this redirector is working */
     private Task managingTask;
@@ -104,6 +143,30 @@ public class Redirector {
     /** Stream which is used for line oriented error output */
     private PrintStream errorPrintStream = null;
 
+    /** The output filter chains */
+    private Vector outputFilterChains;
+
+    /** The error filter chains */
+    private Vector errorFilterChains;
+
+    /** The input filter chains */
+    private Vector inputFilterChains;
+
+    /** The output encoding */
+    private String outputEncoding = defaultEncoding;
+
+    /** The error encoding */
+    private String errorEncoding = defaultEncoding;
+
+    /** The input encoding */
+    private String inputEncoding = defaultEncoding;
+
+    /** Whether to complete properties settings **/
+    private boolean appendProperties = true;
+
+    /** The thread group used for starting <code>StreamPumper</code> threads */
+    private ThreadGroup threadGroup = new ThreadGroup("redirector");
+
     /**
      * Create a redirector instance for the given task
      *
@@ -119,6 +182,15 @@ public class Redirector {
      * @param input the file from which input is read.
      */
     public void setInput(File input) {
+        setInput((input == null) ? null : new File[] {input});
+    }
+
+    /**
+     * Set the input to use for the task
+     *
+     * @param input the files from which input is read.
+     */
+    public synchronized void setInput(File[] input) {
         this.input = input;
     }
 
@@ -127,7 +199,7 @@ public class Redirector {
      *
      * @param inputString the string which is used as the input source
      */
-    public void setInputString(String inputString) {
+    public synchronized void setInputString(String inputString) {
         this.inputString = inputString;
     }
 
@@ -139,7 +211,59 @@ public class Redirector {
      * @param out the file to which output stream is written
      */
     public void setOutput(File out) {
+        setOutput((out == null) ? null : new File[] {out});
+    }
+
+    /**
+     * Files the output of the process is redirected to. If error is not
+     * redirected, it too will appear in the output
+     *
+     * @param out the files to which output stream is written
+     */
+    public synchronized void setOutput(File[] out) {
         this.out = out;
+    }
+
+    /**
+     * Set the output encoding.
+     *
+     * @param outputEncoding   <CODE>String</CODE>.
+     */
+    public synchronized void setOutputEncoding(String outputEncoding) {
+        if (outputEncoding == null) {
+            throw new IllegalArgumentException(
+                "outputEncoding must not be null");
+        } else {
+            this.outputEncoding = outputEncoding;
+        }
+    }
+
+    /**
+     * Set the error encoding.
+     *
+     * @param errorEncoding   <CODE>String</CODE>.
+     */
+    public synchronized void setErrorEncoding(String errorEncoding) {
+        if (errorEncoding == null) {
+            throw new IllegalArgumentException(
+                "errorEncoding must not be null");
+        } else {
+            this.errorEncoding = errorEncoding;
+        }
+    }
+
+    /**
+     * Set the input encoding.
+     *
+     * @param inputEncoding   <CODE>String</CODE>.
+     */
+    public synchronized void setInputEncoding(String inputEncoding) {
+        if (inputEncoding == null) {
+            throw new IllegalArgumentException(
+                "inputEncoding must not be null");
+        } else {
+            this.inputEncoding = inputEncoding;
+        }
     }
 
     /**
@@ -150,8 +274,19 @@ public class Redirector {
      * @param logError if true the standard error is sent to the Ant log system
      *        and not sent to output.
      */
-    public void setLogError(boolean logError) {
+    public synchronized void setLogError(boolean logError) {
         this.logError = logError;
+    }
+
+    /**
+     * This <CODE>Redirector</CODE>'s subordinate
+     * <CODE>PropertyOutputStream</CODE>s will not set their respective
+     * properties <CODE>while (appendProperties && append)</CODE>.
+     *
+     * @param appendProperties whether to append properties.
+     */
+    public synchronized void setAppendProperties(boolean appendProperties) {
+        this.appendProperties = appendProperties;
     }
 
     /**
@@ -160,6 +295,15 @@ public class Redirector {
      * @param error the file to which error is to be written
      */
     public void setError(File error) {
+        setError((error == null) ? null : new File[] {error});
+    }
+
+    /**
+     * Set the files to which standard error is to be redirected.
+     *
+     * @param error the file to which error is to be written
+     */
+    public synchronized void setError(File[] error) {
         this.error = error;
     }
 
@@ -170,8 +314,12 @@ public class Redirector {
      * @param outputProperty the name of the property to be set with the
      *        task's output.
      */
-    public void setOutputProperty(String outputProperty) {
-        this.outputProperty = outputProperty;
+    public synchronized void setOutputProperty(String outputProperty) {
+        if (outputProperty == null
+         || !(outputProperty.equals(this.outputProperty))) {
+            this.outputProperty = outputProperty;
+            baos = null;
+        }
     }
 
     /**
@@ -181,8 +329,17 @@ public class Redirector {
      * @param append if true output and error streams are appended to their
      *        respective files, if specified.
      */
-    public void setAppend(boolean append) {
+    public synchronized void setAppend(boolean append) {
         this.append = append;
+    }
+
+    /**
+     * Whether output and error files should be created even when empty.
+     * Defaults to true.
+     * @param createEmptyFiles <CODE>boolean</CODE>.
+     */
+    public void setCreateEmptyFiles(boolean createEmptyFiles) {
+        this.createEmptyFiles = createEmptyFiles;
     }
 
     /**
@@ -192,8 +349,39 @@ public class Redirector {
      * @param errorProperty the name of the property to be set
      *        with the error output.
      */
-    public void setErrorProperty(String errorProperty) {
-        this.errorProperty = errorProperty;
+    public synchronized void setErrorProperty(String errorProperty) {
+        if (errorProperty == null
+         || !(errorProperty.equals(this.errorProperty))) {
+            this.errorProperty = errorProperty;
+            errorBaos = null;
+        }
+    }
+
+    /**
+     * Set the input <CODE>FilterChain</CODE>s.
+     *
+     * @param <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     */
+    public synchronized void setInputFilterChains(Vector inputFilterChains) {
+        this.inputFilterChains = inputFilterChains;
+    }
+
+    /**
+     * Set the output <CODE>FilterChain</CODE>s.
+     *
+     * @param <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     */
+    public void setOutputFilterChains(Vector outputFilterChains) {
+        this.outputFilterChains = outputFilterChains;
+    }
+
+    /**
+     * Set the error <CODE>FilterChain</CODE>s.
+     *
+     * @param <CODE>Vector</CODE> containing <CODE>FilterChain</CODE>.
+     */
+    public void setErrorFilterChains(Vector errorFilterChains) {
+        this.errorFilterChains = errorFilterChains;
     }
 
     /**
@@ -207,8 +395,8 @@ public class Redirector {
     private void setPropertyFromBAOS(ByteArrayOutputStream baos,
                                      String propertyName) throws IOException {
 
-        BufferedReader in =
-            new BufferedReader(new StringReader(Execute.toString(baos)));
+        BufferedReader in
+            = new BufferedReader(new StringReader(Execute.toString(baos)));
         String line = null;
         StringBuffer val = new StringBuffer();
         while ((line = in.readLine()) != null) {
@@ -220,30 +408,34 @@ public class Redirector {
         managingTask.getProject().setNewProperty(propertyName, val.toString());
     }
 
-
     /**
      * Create the input, error and output streams based on the
      * configuration options.
      */
-    public void createStreams() {
-        if (out == null && outputProperty == null) {
+    public synchronized void createStreams() {
+        if ((out == null || out.length == 0) && outputProperty == null) {
             outputStream = new LogOutputStream(managingTask, Project.MSG_INFO);
-            errorStream = new LogOutputStream(managingTask, Project.MSG_WARN);
         } else {
-            if (out != null)  {
-                outputStream = new LazyFileOutputStream(out, append, true);
-                managingTask.log("Output redirected to " + out,
-                                 Project.MSG_VERBOSE);
+            if (out != null && out.length > 0) {
+                String logHead = new StringBuffer("Output ").append(
+                    ((append) ? "appended" : "redirected")).append(
+                    " to ").toString();
+                outputStream = foldFiles(out, logHead, Project.MSG_VERBOSE);
             }
 
             if (outputProperty != null) {
-                baos = new ByteArrayOutputStream();
-                managingTask.log("Output redirected to property: "
-                    + outputProperty, Project.MSG_VERBOSE);
-                if (out == null) {
-                    outputStream = baos;
+                if (baos == null) {
+                    baos = new PropertyOutputStream(outputProperty);
+                    managingTask.log("Output redirected to property: "
+                        + outputProperty, Project.MSG_VERBOSE);
+                }
+                //shield it from being closed by a filtering StreamPumper
+                OutputStream keepAliveOutput = new KeepAliveOutputStream(baos);
+                if (outputStream == null) {
+                    outputStream = keepAliveOutput;
                 } else {
-                    outputStream = new TeeOutputStream(outputStream, baos);
+                    outputStream
+                        = new TeeOutputStream(outputStream, keepAliveOutput);
                 }
             } else {
                 baos = null;
@@ -252,44 +444,132 @@ public class Redirector {
             errorStream = outputStream;
         }
 
-        if (logError) {
-            errorStream = new LogOutputStream(managingTask, Project.MSG_WARN);
-        }
+        if (error != null && error.length > 0) {
+            String logHead = new StringBuffer("Error ").append(
+                ((append) ? "appended" : "redirected")).append(
+                " to ").toString();
+            errorStream = foldFiles(error, logHead, Project.MSG_VERBOSE);
 
-        if (error != null)  {
-            errorStream = new LazyFileOutputStream(error, append, true);
-            managingTask.log("Error redirected to " + error,
-                             Project.MSG_VERBOSE);
+        } else if (logError || errorStream == null) {
+            errorStream = new LogOutputStream(managingTask, Project.MSG_WARN);
+        } else { //must be errorStream == outputStream
+            long funnelTimeout = 0L;
+            OutputStreamFunneler funneler
+                = new OutputStreamFunneler(outputStream, funnelTimeout);
+            try {
+                outputStream = funneler.getFunnelInstance();
+                errorStream = funneler.getFunnelInstance();
+            } catch (IOException eyeOhEx) {
+                throw new BuildException(
+                    "error splitting output/error streams", eyeOhEx);
+            }
         }
 
         if (errorProperty != null) {
-            errorBaos = new ByteArrayOutputStream();
-            managingTask.log("Error redirected to property: " + errorProperty,
-                Project.MSG_VERBOSE);
-            if (error == null) {
-                errorStream = errorBaos;
-            } else {
-                errorStream = new TeeOutputStream(errorStream, errorBaos);
+            if (errorBaos == null) {
+                errorBaos = new PropertyOutputStream(errorProperty);
+                managingTask.log("Error redirected to property: " + errorProperty,
+                    Project.MSG_VERBOSE);
             }
+            //shield it from being closed by a filtering StreamPumper
+            OutputStream keepAliveError = new KeepAliveOutputStream(errorBaos);
+            errorStream = (error == null || error.length == 0) ? keepAliveError
+                : new TeeOutputStream(errorStream, keepAliveError);
         } else {
             errorBaos = null;
         }
 
-        if (input != null && inputString != null) {
-            throw new BuildException("The \"input\" and \"inputstring\" "
-                + "attributes cannot both be specified");
-        }
-        if (input != null) {
+        if ((outputFilterChains != null && outputFilterChains.size() > 0)
+            || !(outputEncoding.equalsIgnoreCase(inputEncoding))) {
             try {
-                inputStream = new FileInputStream(input);
-            } catch (FileNotFoundException fne) {
-                throw new BuildException("Cannot read from " + input, fne);
+                LeadPipeInputStream snk = new LeadPipeInputStream();
+                snk.setManagingTask(managingTask);
+    
+                InputStream outPumpIn = snk;
+
+                Reader reader = new InputStreamReader(outPumpIn, inputEncoding);
+
+                if (outputFilterChains != null && outputFilterChains.size() > 0) {
+                    ChainReaderHelper helper = new ChainReaderHelper();
+                    helper.setPrimaryReader(reader);
+                    helper.setFilterChains(outputFilterChains);
+                    reader = helper.getAssembledReader();
+                }
+                outPumpIn = new ReaderInputStream(reader, outputEncoding);
+
+                Thread t = new Thread(threadGroup, new StreamPumper(
+                    outPumpIn, outputStream, true), "output pumper");
+                t.setPriority(Thread.MAX_PRIORITY);
+                outputStream = new PipedOutputStream(snk);
+                t.start();
+            } catch (IOException eyeOhEx) {
+                throw new BuildException(
+                    "error setting up output stream", eyeOhEx);
             }
+        }
+
+        if ((errorFilterChains != null && errorFilterChains.size() > 0)
+            || !(errorEncoding.equalsIgnoreCase(inputEncoding))) {
+            try {
+                LeadPipeInputStream snk = new LeadPipeInputStream();
+                snk.setManagingTask(managingTask);
+    
+                InputStream errPumpIn = snk;
+
+                Reader reader = new InputStreamReader(errPumpIn, inputEncoding);
+
+                if (errorFilterChains != null && errorFilterChains.size() > 0) {
+                    ChainReaderHelper helper = new ChainReaderHelper();
+                    helper.setPrimaryReader(reader);
+                    helper.setFilterChains(errorFilterChains);
+                    reader = helper.getAssembledReader();
+                }
+                errPumpIn = new ReaderInputStream(reader, errorEncoding);
+
+                Thread t = new Thread(threadGroup, new StreamPumper(
+                    errPumpIn, errorStream, true), "error pumper");
+                t.setPriority(Thread.MAX_PRIORITY);
+                errorStream = new PipedOutputStream(snk);
+                t.start();
+            } catch (IOException eyeOhEx) {
+                throw new BuildException(
+                    "error setting up error stream", eyeOhEx);
+            }
+        }
+
+        // if input files are specified, inputString is ignored;
+        // classes that work with redirector attributes can enforce
+        // whatever warnings are needed
+        if (input != null && input.length > 0) {
+            managingTask.log("Redirecting input from file"
+                + ((input.length == 1) ? "" : "s"), Project.MSG_VERBOSE);
+            try {
+                inputStream = new ConcatFileInputStream(input);
+            } catch (IOException eyeOhEx) {
+                throw new BuildException(eyeOhEx);
+            }
+            ((ConcatFileInputStream)inputStream).setManagingTask(managingTask);
         } else if (inputString != null) {
+            managingTask.log("Using input \"" + inputString + "\"",
+                Project.MSG_VERBOSE);
             inputStream = new ByteArrayInputStream(inputString.getBytes());
         }
-    }
 
+        if (inputStream != null
+            && inputFilterChains != null && inputFilterChains.size() > 0) {
+            ChainReaderHelper helper = new ChainReaderHelper();
+            try {
+                helper.setPrimaryReader(
+                    new InputStreamReader(inputStream, inputEncoding));
+            } catch (IOException eyeOhEx) {
+                throw new BuildException(
+                    "error setting up input stream", eyeOhEx);
+            }
+            helper.setFilterChains(inputFilterChains);
+            inputStream = new ReaderInputStream(
+                helper.getAssembledReader(), inputEncoding);
+        }
+    }
 
     /**
      * Create the StreamHandler to use with our Execute instance.
@@ -299,7 +579,8 @@ public class Redirector {
      *
      * @throws BuildException if the execute stream handler cannot be created.
      */
-    public ExecuteStreamHandler createHandler() throws BuildException {
+    public synchronized ExecuteStreamHandler createHandler()
+        throws BuildException {
         createStreams();
         return new PumpStreamHandler(outputStream, errorStream, inputStream);
     }
@@ -309,7 +590,7 @@ public class Redirector {
      *
      * @param output the data to be output
      */
-    protected void handleOutput(String output) {
+    protected synchronized void handleOutput(String output) {
         if (outPrintStream == null) {
             outPrintStream = new PrintStream(outputStream);
         }
@@ -327,8 +608,8 @@ public class Redirector {
      *
      * @exception IOException if the data cannot be read
      */
-    protected int handleInput(byte[] buffer, int offset, int length)
-        throws IOException {
+    protected synchronized int handleInput(byte[] buffer, int offset,
+                                           int length) throws IOException {
         if (inputStream == null) {
             return managingTask.getProject().defaultInput(buffer, offset,
                                                           length);
@@ -342,7 +623,7 @@ public class Redirector {
      *
      * @param output the data being flushed.
      */
-    protected void handleFlush(String output) {
+    protected synchronized void handleFlush(String output) {
         if (outPrintStream == null) {
             outPrintStream = new PrintStream(outputStream);
         }
@@ -355,7 +636,7 @@ public class Redirector {
      *
      * @param output the error output data.
      */
-    protected void handleErrorOutput(String output) {
+    protected synchronized void handleErrorOutput(String output) {
         if (errorPrintStream == null) {
             errorPrintStream = new PrintStream(errorStream);
         }
@@ -367,7 +648,7 @@ public class Redirector {
      *
      * @param output the error information being flushed.
      */
-    protected void handleErrorFlush(String output) {
+    protected synchronized void handleErrorFlush(String output) {
         if (errorPrintStream == null) {
             errorPrintStream = new PrintStream(errorStream);
         }
@@ -380,7 +661,7 @@ public class Redirector {
      * @return the redirector's output stream or null if no output
      *         has been configured
      */
-    public OutputStream getOutputStream() {
+    public synchronized OutputStream getOutputStream() {
         return outputStream;
     }
 
@@ -390,7 +671,7 @@ public class Redirector {
      * @return the redirector's error stream or null if no output
      *         has been configured
      */
-    public OutputStream getErrorStream() {
+    public synchronized OutputStream getErrorStream() {
         return errorStream;
     }
 
@@ -400,7 +681,7 @@ public class Redirector {
      * @return the redirector's input stream or null if no output
      *         has been configured
      */
-    public InputStream getInputStream() {
+    public synchronized InputStream getInputStream() {
         return inputStream;
     }
 
@@ -413,7 +694,7 @@ public class Redirector {
      * @throws IOException if the output properties cannot be read from their
      * output streams.
      */
-    public void complete() throws IOException {
+    public synchronized void complete() throws IOException {
         System.out.flush();
         System.err.flush();
 
@@ -421,17 +702,69 @@ public class Redirector {
             inputStream.close();
         }
 
+        outputStream.flush();
         outputStream.close();
 
-        if (errorStream != outputStream) {
-            errorStream.close();
+        errorStream.flush();
+        errorStream.close();
+
+        //wait for the StreamPumpers to finish
+        while (threadGroup.activeCount() > 0) {
+            try {
+                managingTask.log("waiting for " + threadGroup.activeCount()
+                    + " Threads:", Project.MSG_DEBUG);
+                Thread[] thread = new Thread[threadGroup.activeCount()];
+                threadGroup.enumerate(thread);
+                for (int i = 0; i < thread.length && thread[i] != null; i++) {
+                    try {
+                        managingTask.log(thread[i].toString(), Project.MSG_DEBUG);
+                    } catch (NullPointerException enPeaEx) {
+                    }
+                }
+                Thread.sleep(1000);
+            } catch (InterruptedException eyeEx) {
+            }
         }
 
+        setProperties();
+
+        inputStream = null;
+        outputStream = errorStream = outPrintStream = errorPrintStream = null;
+   }
+
+    /**
+     * Notify the <CODE>Redirector</CODE> that it is now okay
+     * to set any output and/or error properties.
+     */
+    public synchronized void setProperties() {
         if (baos != null) {
-            setPropertyFromBAOS(baos, outputProperty);
+            try {
+                baos.close();
+            } catch (IOException eyeOhEx) {
+            }
         }
         if (errorBaos != null) {
-            setPropertyFromBAOS(errorBaos, errorProperty);
+            try {
+                errorBaos.close();
+            } catch (IOException eyeOhEx) {
+            }
         }
+    }
+
+    private OutputStream foldFiles(File[] file, String logHead, int loglevel) {
+        OutputStream result
+            = new LazyFileOutputStream(file[0], append, createEmptyFiles);
+
+        managingTask.log(logHead + file[0], loglevel);
+        char[] c = new char[logHead.length()];
+        Arrays.fill(c, ' ');
+        String indent = new String(c);
+
+        for (int i = 1; i < file.length ; i++) {
+            outputStream = new TeeOutputStream(outputStream,
+                new LazyFileOutputStream(file[i], append, createEmptyFiles));
+            managingTask.log(indent + file[i], loglevel);
+        }
+        return result;
     }
 }

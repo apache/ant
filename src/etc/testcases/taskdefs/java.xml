@@ -7,6 +7,7 @@
   <property name="timeToWait" value="4"/>
   <!-- this property gets overridden programmatically-->
   <property name="logFile" value="spawn.log"/>
+  <property name="tmp" value="${java.io.tmpdir}"/>
   <property name="app"
     value="org.apache.tools.ant.taskdefs.JavaTest$$EntryPoint" />
 
@@ -15,6 +16,11 @@
 
   <property name="spawnapp"
     value="org.apache.tools.ant.taskdefs.JavaTest$$SpawnEntryPoint" />
+
+  <property name="pipeapp"
+    value="org.apache.tools.ant.taskdefs.JavaTest$$PipeEntryPoint" />
+
+  <!--taskdef name="gc" classname="org.apache.tools.ant.taskdefs.optional.Gc" /-->
 
   <target name="testNoJarNoClassname">
     <java/>
@@ -126,18 +132,17 @@
      <echo message="exitcode = ${exitcode}"/>
    </target>
  
-   <target name="testResultPropertyNonZeroNoFork">
-     <java classname="${app}"
-         classpath="${tests-classpath.value}"
-         resultproperty="exitcode"
-         failonerror="false"
-         fork="false"
-         >
-         <arg value="-1"/>
-         <permissions/>
-    </java>
-    <echo message="exitcode = ${exitcode}"/>
-  </target>
+    <target name="testResultPropertyNonZeroNoFork">
+        <java classname="${app}"
+              classpath="${tests-classpath.value}"
+              resultproperty="exitcode"
+              failonerror="false"
+              fork="false">
+            <arg value="-1"/>
+            <permissions/>
+        </java>
+        <echo message="exitcode = ${exitcode}"/>
+    </target>
 
     <target name="testRunFailWithFailOnError">
       <java classname="${app}"
@@ -157,16 +162,143 @@
       </java>
     </target>
 
-  <target name="testSpawn">
-    <java classname="${spawnapp}" fork="true" spawn="true" classpath="${tests-classpath.value}">
-      <arg value="${timeToWait}"/>
-      <arg value="${logFile}" />
-    </java>
-  </target>
+    <target name="testSpawn">
+        <java classname="${spawnapp}" fork="true" spawn="true" classpath="${tests-classpath.value}">
+            <arg value="${timeToWait}"/>
+            <arg value="${logFile}" />
+        </java>
+    </target>
 
+    <!--redirection testcases don't want to run under junit unless forked-->
+    <target name="redirect1">
+        <java classname="${pipeapp}"
+              classpath="${tests-classpath.value}"
+              inputstring="foo"
+              fork="true"
+              output="${tmp}/redirect.out"
+              errorproperty="redirect.err">
+            <arg value="out" />
+        </java>
+        <!-- let dumb Windows catch up -->
+        <sleep seconds="2" />
+        <loadfile property="redirect.out.contents" srcfile="${tmp}/redirect.out" />
+        <condition property="r1pass">
+            <and>
+                <equals arg1="${redirect.out.contents}" arg2="foo" />
+                <equals arg1="${redirect.err}" arg2="" />
+            </and>
+        </condition>
+        <fail unless="r1pass" />
+    </target>
 
-  <target name="cleanup">
-      <delete file="${logFile}"/>
-  </target>
-  <target name="foo" />
+    <target name="redirect2" depends="redirect1">
+        <java classname="${pipeapp}"
+              classpath="${tests-classpath.value}"
+              inputstring="bar"
+              append="true"
+              fork="true"
+              output="${tmp}/redirect.out"
+              errorproperty="redirect.err">
+            <arg value="both" />
+        </java>
+        <!-- let dumb Windows catch up -->
+        <sleep seconds="2" />
+        <loadfile property="redirect.out.contents2" srcfile="${tmp}/redirect.out" />
+        <condition property="r2pass">
+            <and>
+                <equals arg1="${redirect.out.contents2}" arg2="foobar" />
+                <!-- property should not be reset -->
+                <equals arg1="${redirect.err}" arg2="" />
+            </and>
+        </condition>
+        <fail unless="r2pass" />
+    </target>
+
+    <target name="redirect3">
+        <java classname="${pipeapp}"
+              classpath="${tests-classpath.value}"
+              inputstring="foo"
+              fork="true"
+              output="${tmp}/redirect.out"
+              error="${tmp}/redirect.err">
+            <arg value="both" />
+        </java>
+        <!-- let dumb Windows catch up -->
+        <sleep seconds="2" />
+        <loadfile property="redirect.out.contents"
+                  srcfile="${tmp}/redirect.out" />
+        <condition property="r3pass">
+            <and>
+                <equals arg1="${redirect.out.contents}" arg2="foo" />
+                <filesmatch file1="${tmp}/redirect.out"
+                            file2="${tmp}/redirect.err" />
+            </and>
+        </condition>
+        <fail unless="r3pass" />
+    </target>
+
+    <target name="redirector1">
+        <java taskname="foo" classname="${pipeapp}" fork="true"
+              classpath="${tests-classpath.value}">
+            <redirector inputstring="foo"
+                        output="${tmp}/redirector.out"
+                        error="${tmp}/redirector.err"
+                        createemptyfiles="false" />
+            <arg value="out" />
+        </java>
+        <!-- let dumb Windows catch up -->
+        <sleep seconds="2" />
+        <loadfile property="redirector.out.contents"
+                  srcfile="${tmp}/redirector.out" />
+        <condition property="ror1pass">
+            <and>
+                <equals arg1="${redirector.out.contents}" arg2="foo" />
+                <not>
+                    <available file="${tmp}/redirector.err" />
+                </not>
+            </and>
+        </condition>
+        <fail unless="ror1pass" />
+    </target>
+
+    <target name="redirector2" depends="redirector1">
+        <!-- fork here, some VMs can be ill-behaved with files,
+            such as W!nd0ws -->
+        <java taskname="foo" classname="${pipeapp}" fork="true"
+              classpath="${tests-classpath.value}">
+            <redirector inputstring="foo"
+                        append="true"
+                        output="${tmp}/redirector.out"
+                        error="${tmp}/redirector.err"
+                        createemptyfiles="false">
+                <errorfilterchain>
+                    <replacestring from="foo" to="bar" />
+                </errorfilterchain>
+            </redirector>
+            <arg value="both" />
+        </java>
+        <!-- let dumb Windows catch up -->
+        <sleep seconds="2" />
+        <loadfile property="redirector.out.contents2"
+                  srcfile="${tmp}/redirector.out" />
+        <loadfile property="redirector.err.contents"
+                  srcfile="${tmp}/redirector.err" />
+        <condition property="ror2pass">
+            <and>
+                <equals arg1="${redirector.out.contents2}" arg2="foofoo" />
+                <equals arg1="${redirector.err.contents}" arg2="bar" />
+            </and>
+        </condition>
+        <fail unless="ror2pass" />
+    </target>
+
+    <target name="cleanup">
+        <delete>
+            <fileset file="${logFile}" />
+            <fileset dir="${tmp}" includes="redirect*" />
+            <fileset dir="${tmp}" includes="redirector*" />
+        </delete>
+    </target>
+
+    <target name="foo" />
 </project>

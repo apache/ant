@@ -243,6 +243,19 @@ subelement.</p>
  
 <p><em>since Ant 1.6.</em></p>
 
+<a name="redirector"><h4>redirector</h4></a>
+<i><b>Since Ant 1.6.2</b></i>
+<p>A nested <a href="../CoreTypes/redirector.html">I/O Redirector</a>
+can be specified.  In general, the attributes of the redirector behave
+as the corresponding attributes available at the task level.  The most
+notable peculiarity stems from the retention of the &lt;java&gt;
+attributes for backwards compatibility.  Any file mapping is done
+using a <CODE>null</CODE> sourcefile; therefore not all
+<a href="../CoreTypes/mapper.html">Mapper</a> types will return
+results.  When no results are returned, redirection specifications
+will fall back to the task level attributes.  In practice this means that
+defaults can be specified for input, output, and error output files.
+</p>
 <h3>Errors and return codes</h3>
 By default the return code of a &lt;java&gt; is ignored. Alternatively, you can set <code>resultproperty</code> to the name
 of a property and have it assigned to the result code (barring immutability,

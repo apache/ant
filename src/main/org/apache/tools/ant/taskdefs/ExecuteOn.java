@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2004 The Apache Software Foundation.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -238,6 +238,17 @@ public class ExecuteOn extends ExecTask {
         }
     }
 
+    protected ExecuteStreamHandler createHandler() throws BuildException {
+        //if we have a RedirectorElement, return a decoy
+        return (redirectorElement == null)
+            ? super.createHandler() : new PumpStreamHandler();
+    }
+
+    protected void setupRedirector() {
+        super.setupRedirector();
+        redirector.setAppendProperties(true);
+    }
+
     protected void runExec(Execute exe) throws BuildException {
         int totalFiles = 0;
         int totalDirs = 0;
@@ -293,10 +304,17 @@ public class ExecuteOn extends ExecTask {
                         log(Commandline.describeCommand(command),
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
-                        if (haveExecuted) {
+
+                        if (redirectorElement != null) {
+                            setupRedirector();
+                            redirectorElement.configure(redirector, s[j]);
+                        }
+
+                        if (redirectorElement != null || haveExecuted) {
                             // need to reset the stream handler to restart
-                            // reading of pipes
-                            exe.setStreamHandler(createHandler());
+                            // reading of pipes;
+                            // go ahead and do it always w/ nested redirectors
+                            exe.setStreamHandler(redirector.createHandler());
                         }
                         runExecute(exe);
                         haveExecuted = true;
@@ -341,10 +359,17 @@ public class ExecuteOn extends ExecTask {
                         log(Commandline.describeCommand(command),
                             Project.MSG_VERBOSE);
                         exe.setCommandline(command);
-                        if (haveExecuted) {
+
+                        if (redirectorElement != null) {
+                            setupRedirector();
+                            redirectorElement.configure(redirector, s[j]);
+                        }
+
+                        if (redirectorElement != null || haveExecuted) {
                             // need to reset the stream handler to restart
-                            // reading of pipes
-                            exe.setStreamHandler(createHandler());
+                            // reading of pipes;
+                            // go ahead and do it always w/ nested redirectors
+                            exe.setStreamHandler(redirector.createHandler());
                         }
                         runExecute(exe);
                         haveExecuted = true;
@@ -373,6 +398,8 @@ public class ExecuteOn extends ExecTask {
         } finally {
             // close the output file if required
             logFlush();
+            redirector.setAppendProperties(false);
+            redirector.setProperties();
         }
     }
 
@@ -582,10 +609,16 @@ public class ExecuteOn extends ExecTask {
                 String[] command = getCommandline(cs, cb);
                 log(Commandline.describeCommand(command), Project.MSG_VERBOSE);
                 exe.setCommandline(command);
-                if (currentOffset > 0) {
+                if (redirectorElement != null) {
+                    setupRedirector();
+                    redirectorElement.configure(redirector, null);
+                }
+
+                if (redirectorElement != null || currentOffset > 0) {
                     // need to reset the stream handler to restart
-                    // reading of pipes
-                    exe.setStreamHandler(createHandler());
+                    // reading of pipes;
+                    // go ahead and do it always w/ nested redirectors
+                    exe.setStreamHandler(redirector.createHandler());
                 }
                 runExecute(exe);
 

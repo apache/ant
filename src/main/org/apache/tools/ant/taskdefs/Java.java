@@ -34,6 +34,7 @@ import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.Assertions;
 import org.apache.tools.ant.types.Permissions;
+import org.apache.tools.ant.types.RedirectorElement;
 
 /**
  * Launcher for Java applications. Allows use of
@@ -53,7 +54,16 @@ public class Java extends Task {
     private File dir = null;
     private boolean failOnError = false;
     private Long timeout = null;
-    private Redirector redirector = new Redirector(this);
+
+    //include locally for screening purposes
+    private String inputString;
+    private File input;
+    private File output;
+    private File error;
+    
+    protected Redirector redirector = new Redirector(this);
+    protected RedirectorElement redirectorElement;
+    
     private String resultProperty;
     private Permissions perm = null;
 
@@ -110,9 +120,11 @@ public class Java extends Task {
         if (spawn && incompatibleWithSpawn) {
             getProject().log("spawn does not allow attributes related to input, "
             + "output, error, result", Project.MSG_ERR);
-            getProject().log("spawn does not also not allow timeout", Project.MSG_ERR);
-            throw new BuildException("You have used an attribute which is "
-            + "not compatible with spawn");
+            getProject().log("spawn also does not allow timeout", Project.MSG_ERR);
+            getProject().log( "finally, spawn is not compatible "
+                + "with a nested I/O <redirector>", Project.MSG_ERR);
+            throw new BuildException("You have used an attribute "
+                + "or nested element which is not compatible with spawn");
         }
         if (cmdl.getAssertions() != null && !fork) {
             log("Assertion statements are currently ignored in non-forked mode");
@@ -151,6 +163,7 @@ public class Java extends Task {
                 Project.MSG_VERBOSE);
         }
 
+        setupRedirector();
         try {
             if (fork) {
                 if (!spawn) {
@@ -419,7 +432,7 @@ public class Java extends Task {
      * @param out name of the output file
      */
     public void setOutput(File out) {
-        redirector.setOutput(out);
+        this.output = out;
         incompatibleWithSpawn = true;
     }
 
@@ -429,7 +442,11 @@ public class Java extends Task {
      * @param input name of the input file
      */
     public void setInput(File input) {
-        redirector.setInput(input);
+        if (inputString != null) {
+            throw new BuildException("The \"input\" and \"inputstring\" "
+                + "attributes cannot both be specified");
+        }
+        this.input = input;
         incompatibleWithSpawn = true;
     }
 
@@ -439,7 +456,11 @@ public class Java extends Task {
      * @param inputString the string which is used as the input source
      */
     public void setInputString(String inputString) {
-        redirector.setInputString(inputString);
+        if (input != null) {
+            throw new BuildException("The \"input\" and \"inputstring\" "
+                + "attributes cannot both be specified");
+        }
+        this.inputString = inputString;
         incompatibleWithSpawn = true;
     }
 
@@ -464,7 +485,7 @@ public class Java extends Task {
      * @since ant 1.6
      */
     public void setError(File error) {
-        redirector.setError(error);
+        this.error = error;
         incompatibleWithSpawn = true;
     }
 
@@ -573,6 +594,19 @@ public class Java extends Task {
     }
 
     /**
+     * Add a <CODE>RedirectorElement</CODE> to this task.
+     * @param redirectorElement   <CODE>RedirectorElement</CODE>.
+     */
+    public void addConfiguredRedirector(RedirectorElement redirectorElement) {
+        if (this.redirectorElement != null) {
+            throw new BuildException("cannot have > 1 nested <redirector>s");
+        } else {
+            this.redirectorElement = redirectorElement;
+            incompatibleWithSpawn = true;
+        }
+    }
+
+    /**
      * Pass output sent to System.out to specified output file.
      *
      * @param output a string of output on its way to the handlers
@@ -650,6 +684,19 @@ public class Java extends Task {
             redirector.handleErrorFlush(output);
         } else {
             super.handleErrorOutput(output);
+        }
+    }
+
+    /**
+     * Set up properties on the redirector that we needed to store locally.
+     */
+    protected void setupRedirector() {
+        redirector.setInput(input);
+        redirector.setInputString(inputString);
+        redirector.setOutput(output);
+        redirector.setError(error);
+        if (redirectorElement != null) {
+            redirectorElement.configure(redirector);
         }
     }
 
