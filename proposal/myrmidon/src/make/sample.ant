@@ -21,7 +21,7 @@ Legal:
 
   <property name="year" value="2000"/>
 
-  <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test" />
+  <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test, prim->main" />
 
   <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test" />
 
