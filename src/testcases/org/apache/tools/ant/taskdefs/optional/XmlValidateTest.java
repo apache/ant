@@ -16,9 +16,6 @@
  */
 package org.apache.tools.ant.taskdefs.optional;
 
-import java.io.*;
-import java.util.Properties;
-
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 
@@ -35,8 +32,8 @@ public class XmlValidateTest extends BuildFileTest {
     /**
      * where tasks run
      */
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/";
-
+    private final static String TASKDEFS_DIR =
+        "src/etc/testcases/taskdefs/optional/";
 
     /**
      * Constructor
@@ -47,7 +44,6 @@ public class XmlValidateTest extends BuildFileTest {
         super(name);
     }
 
-
     /**
      * The JUnit setup method
      */
@@ -55,28 +51,23 @@ public class XmlValidateTest extends BuildFileTest {
         configureProject(TASKDEFS_DIR + "xmlvalidate.xml");
     }
 
-
     /**
      * The teardown method for JUnit
      */
-    public void tearDown() {
-
-    }
-
+    public void tearDown() {}
 
     /**
      * Basic inline 'dtd' element test.
      */
     public void testValidate() throws Exception {
-         executeTarget("testValidate");
+        executeTarget("testValidate");
     }
-
 
     /**
      * Test indirect validation.
      */
     public void testDeepValidate() throws Exception {
-         executeTarget("testDeepValidate");
+        executeTarget("testDeepValidate");
     }
 
     /**
@@ -124,10 +115,11 @@ public class XmlValidateTest extends BuildFileTest {
         try {
             executeTarget("testSchemaGood");
         } catch (BuildException e) {
-            if (e.getMessage()
-                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema") ||
-                e.getMessage()
-                .endsWith(" doesn't support feature http://apache.org/xml/features/validation/schema")) {
+            if (e
+                .getMessage()
+                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema")
+                || e.getMessage().endsWith(
+                    " doesn't support feature http://apache.org/xml/features/validation/schema")) {
                 System.err.println(" skipped, parser doesn't support schema");
             } else {
                 throw e;
@@ -142,18 +134,20 @@ public class XmlValidateTest extends BuildFileTest {
             executeTarget("testSchemaBad");
             fail("Should throw BuildException because 'Bad Schema Validation'");
 
-            expectBuildExceptionContaining("testSchemaBad",
-                                           "Bad Schema Validation",
-                                           "not a valid XML document");
+            expectBuildExceptionContaining(
+                "testSchemaBad",
+                "Bad Schema Validation",
+                "not a valid XML document");
         } catch (BuildException e) {
-            if (e.getMessage()
-                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema") ||
-                e.getMessage()
-                .endsWith(" doesn't support feature http://apache.org/xml/features/validation/schema")) {
+            if (e
+                .getMessage()
+                .endsWith(" doesn't recognize feature http://apache.org/xml/features/validation/schema")
+                || e.getMessage().endsWith(
+                    " doesn't support feature http://apache.org/xml/features/validation/schema")) {
                 System.err.println(" skipped, parser doesn't support schema");
             } else {
-                assertTrue(e.getMessage()
-                           .indexOf("not a valid XML document") > -1);
+                assertTrue(
+                    e.getMessage().indexOf("not a valid XML document") > -1);
             }
         }
     }
@@ -177,6 +171,18 @@ public class XmlValidateTest extends BuildFileTest {
      */
     public void testUtf8() {
         expectBuildException("testUtf8", "invalid characters in file");
+    }
+
+    // Tests property element, using XML schema properties as an example.
+
+    public void testPropertySchemaForValidXML() {
+        executeTarget("testProperty.validXML");
+    }
+
+    public void testPropertySchemaForInvalidXML() {
+        expectBuildException(
+            "testProperty.invalidXML",
+            "XML file does not satisfy schema.");
     }
 
 }

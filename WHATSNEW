@@ -128,6 +128,9 @@ Fixed bugs:
 
 Other changes:
 --------------
+* <xmlvalidate> has now a property nested element,
+  allowing to set string properties for the parser
+  Bugzilla Report 23395.
 
 * Docs fixes for xmlvalidate.html, javadoc.html, starteam.
   Bugzilla Reports 27092, 27284, 27554.
