@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -176,7 +176,9 @@ public class PathTokenizer {
                 // make sure we aren't going to get the path separator next
                 if (!nextToken.equals(File.pathSeparator)) {
                     if (nextToken.equals(":")) {
-                        if (!token.startsWith("/") && !token.startsWith("\\")) {
+                        if (!token.startsWith("/") && !token.startsWith("\\") 
+                            && !token.startsWith(".") 
+                            && !token.startsWith("..")) {
                             // it indeed is a drive spec, get the next bit
                             String oneMore = tokenizer.nextToken().trim();
                             if (!oneMore.equals(File.pathSeparator)) {

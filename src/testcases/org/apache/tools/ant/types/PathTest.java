@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -102,6 +102,29 @@ public class PathTest extends TestCase {
             assertEquals(":\\a", l[0].substring(1));
             assertEquals(":\\b", l[1].substring(1));
         }        
+    }
+
+    public void testRelativePathUnixStyle() {
+        project.setBasedir("src/etc");
+        Path p = new Path(project, "..:testcases");
+        String[] l = p.list(); 
+        assertEquals("two items, Unix style", 2, l.length);
+        if (isUnixStyle) {
+           assertTrue("test resolved relative to src/etc", 
+                 l[0].endsWith("/src"));
+           assertTrue("test resolved relative to src/etc", 
+                 l[1].endsWith("/src/etc/testcases"));
+        } else if (isNetWare) {
+           assertTrue("test resolved relative to src/etc", 
+                 l[0].endsWith("\\src"));
+           assertTrue("test resolved relative to src/etc", 
+                 l[1].endsWith("\\src\\etc\\testcases"));
+        } else {
+           assertTrue("test resolved relative to src/etc", 
+                 l[0].endsWith("\\src"));
+           assertTrue("test resolved relative to src/etc", 
+                 l[1].endsWith("\\src\\etc\\testcases"));
+        }
     }
 
     public void testConstructorWindowsStyle() {
