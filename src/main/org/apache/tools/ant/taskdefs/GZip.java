@@ -72,12 +72,12 @@ public class GZip extends Task {
     private File zipFile;
     private File source;
     
-    public void setZipfile(String zipFilename) {
-        zipFile = project.resolveFile(zipFilename);
+    public void setZipfile(File zipFilename) {
+        zipFile = zipFilename;
     }
 
-    public void setSrc(String src) {
-        source = project.resolveFile(src);
+    public void setSrc(File src) {
+        source = src;
     }
 
     public void execute() throws BuildException {

@@ -160,8 +160,8 @@ public class Ilasm
      * Set the source dir to find the files to be compiled
      * @param  srcDirName  The new SrcDir value 
      */
-    public void setSrcDir(String srcDirName){
-        _srcDir = project.resolveFile(srcDirName);
+    public void setSrcDir(File srcDirName){
+        _srcDir = srcDirName;
     }
     
 
@@ -293,15 +293,14 @@ public class Ilasm
      * output file. If not supplied this is derived from the
      *  source file
      */
-     
-    protected String _outputFile;
+    protected File _outputFile;
     
     /**
      * Set the definitions
      * @param list of definitions split by ; or , or even :
      */
-    public void setOutputFile(String params) {
-        _outputFile=params;
+    public void setOutputFile(File params) {
+        _outputFile = params;
     }
     
     /**
@@ -311,7 +310,7 @@ public class Ilasm
     protected String getOutputFileParameter() {
         if (_outputFile==null || _outputFile.length()==0)
             return null;
-        File f=project.resolveFile(_outputFile);
+        File f = _outputFile;
         return "/output="+f.toString();
     }
     
@@ -322,8 +321,8 @@ public class Ilasm
     /**
      * Set the resource file 
      * @param fileName path to the file. Can be relative, absolute, whatever.
-     */public void setResourceFile(String fileName) {
-        _resourceFile = project.resolveFile(fileName);
+     */public void setResourceFile(File fileName) {
+        _resourceFile = fileName;
     }
         
     protected String getResourceFileParameter() {

@@ -598,7 +598,7 @@ public class Project {
             if (part.equals("..")) {
                 String parentFile = file.getParent();
                 if (parentFile == null) {
-                    throw new BuildException("The file or path you specified (" + fileName + ") is invalid releative to " + rootDir.getAbsolutePath());
+                    throw new BuildException("The file or path you specified (" + fileName + ") is invalid relative to " + rootDir.getAbsolutePath());
                 }
                 file = new File(parentFile);
             } else if (part.equals(".")) {

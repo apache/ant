@@ -115,15 +115,15 @@ public class KeySubst extends Task {
     /**
         Set the source file.
     */
-    public void setSrc(String s) {
-        this.source=project.resolveFile(s);
+    public void setSrc(File s) {
+        this.source = s;
     }
 
     /**
         Set the destination file.
     */
-    public void setDest(String dest) {
-        this.dest = project.resolveFile(dest);
+    public void setDest(File dest) {
+        this.dest = dest;
     }
 
     /**

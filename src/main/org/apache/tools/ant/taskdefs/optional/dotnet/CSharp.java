@@ -388,8 +388,8 @@ public class CSharp
     /** file for generated XML documentation
      * @param f output file
      */
-    public void setDocFile(String f) {
-        _docFile=project.resolveFile(f);
+    public void setDocFile(File f) {
+        _docFile = f;
     }
             
     /** get the argument or null for no argument needed
@@ -526,8 +526,8 @@ public class CSharp
      * Set the source dir to find the files to be compiled
      * @param  srcDirName  The new SrcDir value 
      */
-    public void setSrcDir(String srcDirName){
-        _srcDir = project.resolveFile(srcDirName);
+    public void setSrcDir(File srcDirName){
+        _srcDir = srcDirName;
     }
     
     /** destination directory (null means use the source directory)
@@ -539,8 +539,8 @@ public class CSharp
      * Set the destination dir to find the files to be compiled
      * @param  dirName  The new DestDir value 
      */
-    public void setDestDir(String dirName) {
-        _destDir = project.resolveFile(dirName);
+    public void setDestDir(File dirName) {
+        _destDir = dirName;
     }
     
     /** type of target. Should be one of exe|library|module|winexe|(null)
@@ -593,8 +593,8 @@ public class CSharp
      * Set the win32 icon 
      * @param fileName path to the file. Can be relative, absolute, whatever.
      */
-    public void setWin32Icon(String fileName) {
-        _win32icon = project.resolveFile(fileName);
+    public void setWin32Icon(File fileName) {
+        _win32icon = fileName;
     }
     
     /**
@@ -660,22 +660,22 @@ public class CSharp
     /** output file. If not supplied this is derived from the
      *  source file
      */    
-    protected String _outputFile;
+    protected File _outputFile;
     
     /**
      * Set the definitions
      * @param list of definitions split by ; or , or even :
      */
-    public void setOutputFile(String params) {
-        _outputFile=params;
+    public void setOutputFile(File params) {
+        _outputFile = params;
     }
     
     /** get the argument or null for no argument needed
     * @return    The OutputFile Parameter to CSC 
     */
     protected String getOutputFileParameter() {
-        if (notEmpty(_outputFile)) {
-            File f=project.resolveFile(_outputFile);
+        if (_outputFile != null) {
+            File f = _outputFile;
             return "/out:"+f.toString();
         }
         else            

@@ -411,8 +411,8 @@ public class Replace extends MatchingTask {
     /**
      * Sets a file to be searched for property values.
      */
-    public void setPropertyFile(String filename) {
-        propertyFile = project.resolveFile(filename);
+    public void setPropertyFile(File filename) {
+        propertyFile = filename;
     }
 
     /**

@@ -77,16 +77,16 @@ public class Rename extends Task {
      * Sets the file to be renamed.
      * @param src the file to rename
      */
-    public void setSrc(String src) {
-        this.src = project.resolveFile(src);
+    public void setSrc(File src) {
+        this.src = src;
     }
 
     /**
      * Sets the new name of the file.
      * @param dest the new name of the file.
      */
-    public void setDest(String dest) {
-        this.dest = project.resolveFile(dest);
+    public void setDest(File dest) {
+        this.dest = dest;
     }
 
     /**

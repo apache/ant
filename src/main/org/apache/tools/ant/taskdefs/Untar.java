@@ -66,8 +66,8 @@ import java.io.*;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Untar extends Task {
-    private String dest; // req
-    private String source; // req
+    private File dest; // req
+    private File source; // req
 
     /**
      * Do the work.
@@ -81,7 +81,7 @@ public class Untar extends Task {
         touch.setTaskName(getTaskName());
         touch.setLocation(getLocation());
                     
-        File srcF=project.resolveFile(source);
+        File srcF = source;
 
         TarInputStream tis = null;
         try {
@@ -96,7 +96,7 @@ public class Untar extends Task {
             if (dest == null) {
                 throw new BuildException("No destination specified", location);
             }
-            File dir=project.resolveFile(dest);
+            File dir = dest;
 
             log("Expanding: " + srcF + " into " + dir, Project.MSG_INFO);
             tis = new TarInputStream(new FileInputStream(srcF));
@@ -154,8 +154,8 @@ public class Untar extends Task {
      *
      * @param d Path to the directory.
      */
-    public void setDest(String d) {
-        this.dest=d;
+    public void setDest(File d) {
+        this.dest = d;
     }
 
     /**
@@ -163,7 +163,7 @@ public class Untar extends Task {
      *
      * @param s Path to tar-file.
      */
-    public void setSrc(String s) {
+    public void setSrc(File s) {
         this.source = s;
     }
 }

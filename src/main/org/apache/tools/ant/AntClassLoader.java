@@ -152,14 +152,18 @@ public class AntClassLoader  extends ClassLoader {
             URL url = null;
             while ((this.pathElementsIndex < this.pathElements.length) &&
                    (url == null)) {
-                File pathComponent = AntClassLoader.this.project.resolveFile(
-                    (String)this.pathElements[this.pathElementsIndex]);
-                url = getResourceURL(pathComponent, this.resourceName);
-                this.pathElementsIndex++;
+                try {                       
+                    File pathComponent = AntClassLoader.this.project.resolveFile(
+                        (String)this.pathElements[this.pathElementsIndex]);
+                    url = getResourceURL(pathComponent, this.resourceName);
+                    this.pathElementsIndex++;
+                }
+                catch (BuildException e) {
+                    // ignore path elements which are not valid relative to the project
+                }
             }
             this.nextResource = url;
         }
-
     }
 
     /**
@@ -386,8 +390,13 @@ public class AntClassLoader  extends ClassLoader {
  
         String[] pathElements = classpath.list();
         for (int i = 0; i < pathElements.length && stream == null; ++i) {
-            File pathComponent = project.resolveFile((String)pathElements[i]);
-            stream = getResourceStream(pathComponent, name);
+            try {
+                File pathComponent = project.resolveFile((String)pathElements[i]);
+                stream = getResourceStream(pathComponent, name);
+            }
+            catch {BuildException e) {
+                // ignore path elements which are invalid relative to the project
+            }
         }
 
         return stream;

@@ -221,8 +221,8 @@ public class NetRexxC extends MatchingTask {
      * Set the destination directory into which the NetRexx source
      * files should be copied and then compiled.
      */
-    public void setDestDir(String destDirName) {
-        destDir = project.resolveFile(destDirName);
+    public void setDestDir(File destDirName) {
+        destDir = destDirName;
     }
 
     /**
@@ -308,8 +308,8 @@ public class NetRexxC extends MatchingTask {
     /**
      * Set the source dir to find the source Java files.
      */
-    public void setSrcDir(String srcDirName) {
-        srcDir = project.resolveFile(srcDirName);
+    public void setSrcDir(File srcDirName) {
+        srcDir = srcDirName;
     }
 
     /**
