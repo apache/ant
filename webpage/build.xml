@@ -39,6 +39,7 @@
              velocityPropertiesFile="${docs.src}/velocity.properties">
         </anakia>
 
+        <!-- In case we have images some day
         <copy todir="${docs.dest}/images" filtering="no">
             <fileset dir="${docs.src}/images">
                 <include name="**/*.gif"/>
@@ -46,6 +47,7 @@
                 <include name="**/*.jpg"/>
             </fileset>
         </copy>
+        -->
         <!-- In case we have CSS someday
         <copy todir="${docs.dest}" filtering="no">
             <fileset dir="${docs.src}">
