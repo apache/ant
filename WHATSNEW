@@ -58,6 +58,9 @@ Fixed bugs:
 
 * replacestring tokenfilter only replaced the first occurrence.
 
+* Ant failed to locate tools.jar if the jre directory name wasn't all
+  lowercase.  Bugzilla Report 25798.
+
 Other changes:
 --------------
 
