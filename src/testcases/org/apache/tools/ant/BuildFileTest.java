@@ -200,13 +200,26 @@ public abstract class BuildFileTest extends TestCase {
         try {
             executeTarget(target);
         } catch (org.apache.tools.ant.BuildException ex) {
-            if ((null != msg) && (ex.getMessage() != msg)) {
-                fail("Should throw BuildException because '" + cause + "' with message '" + msg + "' (received message '" + ex.getMessage() + "' instead)");
+            if ((null != msg) && (!ex.getMessage().equals(msg))) {
+                fail("Should throw BuildException because '" + cause + "' with message '" + msg + "' (actual message '" + ex.getMessage() + "' instead)");
             }
             return;
         }
         fail("Should throw BuildException because: " + cause);
     }
+    
+    protected void expectBuildExceptionContaining(String target, String cause, String contains) { 
+        try {
+            executeTarget(target);
+        } catch (org.apache.tools.ant.BuildException ex) {
+            if ((null != contains) && (ex.getMessage().indexOf(contains) == -1)) {
+                fail("Should throw BuildException because '" + cause + "' with message containing'" + contains + "' (actual message '" + ex.getMessage() + "' instead)");
+            }
+            return;
+        }
+        fail("Should throw BuildException because: " + cause);
+    }
+
     private class AntOutputStream extends java.io.OutputStream { 
         public void write(int b) { 
             outBuffer.append((char)b);

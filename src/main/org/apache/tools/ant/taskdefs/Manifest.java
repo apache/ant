@@ -149,7 +149,8 @@ public class Manifest {
         public void parse(String line) throws ManifestException {
             int index = line.indexOf(": ");
             if (index == -1) {
-                throw new ManifestException("Manifest line \"" + line + "\" is not valid");
+                throw new ManifestException("Manifest line \"" + line + "\" is not valid as it does not " +
+                                            "contain a name and a value separated by ': ' ");
             }
             name = line.substring(0, index);
             value = line.substring(index + 2);
@@ -377,8 +378,8 @@ public class Manifest {
         public void addConfiguredAttribute(Attribute attribute) throws ManifestException {
             String check = addAttributeAndCheck(attribute);
             if (check != null) {
-                throw new BuildException("Use the \"name\" attribute of the <section> element rather than using " +
-                                         "the \"Name\" attribute");
+                throw new BuildException("Specify the section name using the \"name\" attribute of the <section> element rather " + 
+                                         "than using a \"Name\" manifest attribute");
             }
         }
         

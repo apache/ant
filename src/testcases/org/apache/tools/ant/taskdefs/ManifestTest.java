@@ -59,43 +59,61 @@ import java.util.Date;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
- * @author Erik Meade <emeade@geekfarm.org>
+ * Testcase for the Manifest class used in the jar task. 
+ * 
+ * @author Conor MacNeill <conor@apache.org>
  */
-public class JarTest extends BuildFileTest {
+public class ManifestTest extends BuildFileTest {
 
-    private static long jarModifiedDate;
-    private static String tempJar = "tmp.jar";
-
-    public JarTest(String name) {
+    public ManifestTest(String name) {
         super(name);
     }
 
     public void setUp() {
-        configureProject("src/etc/testcases/taskdefs/jar.xml");
+        configureProject("src/etc/testcases/taskdefs/manifest.xml");
     }
 
+    public void tearDown() {
+        executeTarget("clean");
+    }
+    
+    /**
+     * Empty manifest - is OK 
+     */
     public void test1() {
-        expectBuildException("test1", "required argument not specified");
+        executeTarget("test1");
     }
-
+    
+    /**
+     * Simple Manifest with version 2.0
+     */
     public void test2() {
-        expectBuildException("test2", "manifest file does not exist");
+        executeTarget("test2");
     }
-
+    
+    /**
+     * Malformed manifest - no : on the line
+     */
     public void test3() {
-        expectBuildException("test3", "Unrecognized whenempty attribute: format C: /y");
+        expectBuildExceptionContaining("test3", "Manifest is invalid - no colon on header line",
+                                       "Invalid Manifest");
     }
 
+    /**
+     * Malformed manifest - starts with continuation line
+     */
     public void test4() {
-        executeTarget("test4");
-        File jarFile = new File(getProjectDir(), tempJar);
-        assertTrue(jarFile.exists());
-        jarModifiedDate = jarFile.lastModified();
+        expectBuildExceptionContaining("test4", "Manifest is invalid - section starts with continuation line",
+                                       "Invalid Manifest");
     }
 
-    public void XXXtest5() {
+    /**
+     * Malformed manifest - Name attribute in main section
+     */
+    public void test5() {
         executeTarget("test5");
-        File jarFile = new File(getProjectDir(), tempJar);
-        assertEquals(jarModifiedDate, jarFile.lastModified());
+        String output = getLog();
+        boolean hasWarning = output.indexOf("Manifest warning: \"Name\" attributes should not occur in the main section") != -1;
+        assertEquals("Expected warning about Name in main section", true, hasWarning);
     }
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<!-- Manifest tests build file
+     author: Conor MacNeill -->
+<project name="manifest-test" basedir="." default="test1">
+
+  <target name="test1">
+    <jar file="mftest1.jar" manifest="manifests/test1.mf"/>
+  </target>
+  
+  <target name="test2">
+    <jar file="mftest2.jar" manifest="manifests/test2.mf"/>
+  </target>
+  
+  <target name="test3">
+    <jar file="mftest3.jar" manifest="manifests/test3.mf"/>
+  </target>
+  
+  <target name="test4">
+    <jar file="mftest4.jar" manifest="manifests/test4.mf"/>
+  </target>
+  
+  <target name="test5">
+    <jar file="mftest5.jar" manifest="manifests/test5.mf"/>
+  </target>
+  
+  <target name="clean">
+    <delete>
+      <fileset dir="." includes="mftest*.jar"/>
+    </delete>
+  </target>
+</project>
