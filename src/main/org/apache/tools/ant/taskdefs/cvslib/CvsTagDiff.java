@@ -101,6 +101,7 @@ import java.util.Vector;
  * 
  * @author <a href="mailto:fred@castify.net">Frederic Lavigne</a>
  * @version $Revision$ $Date$
+ * @since Ant 1.5
  * @ant.task name="cvstagdiff"
  */
 public class CvsTagDiff extends Task {
@@ -289,7 +290,8 @@ public class CvsTagDiff extends Task {
         
         // build the rdiff command
         String rdiff = "rdiff -s " +
-            (m_startTag!=null?("-r " + m_startTag):("-D " + m_startDate)) + " " +
+            (m_startTag!=null?("-r " + m_startTag):("-D " + m_startDate)) 
+            + " " +
             (m_endTag!=null?("-r " + m_endTag):("-D " + m_endDate)) + " " +
             m_package;
         log("Cvs command is " + rdiff, Project.MSG_VERBOSE);
@@ -317,7 +319,8 @@ public class CvsTagDiff extends Task {
     }
     
     /**
-     * Parse the tmpFile and return and array of CvsTagEntry to be written in the output.
+     * Parse the tmpFile and return and array of CvsTagEntry to be
+     * written in the output.
      *
      * @param tmpFile the File containing the output of the cvs rdiff command
      * @return the entries in the output
@@ -335,8 +338,11 @@ public class CvsTagDiff extends Task {
             // or
             // File module/filename changed from revision 1.4 to 1.6
             // or
-            // File module/filename is removed; not included in release tag SKINLF_12
-            int headerLength = 5 + m_package.length() + 1;  // get rid of 'File module/"
+            // File module/filename is removed; not included in
+            // release tag SKINLF_12
+
+            // get rid of 'File module/"
+            int headerLength = 5 + m_package.length() + 1;  
             Vector entries = new Vector();
             
             String line = reader.readLine();
@@ -352,23 +358,28 @@ public class CvsTagDiff extends Task {
                     String filename = line.substring(0, index);
                     String rev = line.substring(index + FILE_IS_NEW.length());
                     
-                    entries.add(entry = new CvsTagEntry(filename, rev));
+                    entries.addElement(entry = new CvsTagEntry(filename, rev));
                     log(entry.toString(), Project.MSG_VERBOSE);
                 } else if ((index = line.indexOf(FILE_HAS_CHANGED)) != -1) {
                     // it is a modified file
                     // set the revision and the prevrevision
                     String filename = line.substring(0, index);
                     int revSeparator = line.indexOf(" to ", index);
-                    String prevRevision = line.substring(index + FILE_HAS_CHANGED.length(), revSeparator);
-                    String revision = line.substring(revSeparator + 4); // 4 is " to " length
+                    String prevRevision = 
+                        line.substring(index + FILE_HAS_CHANGED.length(), 
+                                       revSeparator);
+                     // 4 is " to " length
+                    String revision = line.substring(revSeparator + 4);
                     
-                    entries.add(entry = new CvsTagEntry(filename, revision, prevRevision));
+                    entries.addElement(entry = new CvsTagEntry(filename, 
+                                                               revision, 
+                                                               prevRevision));
                     log(entry.toString(), Project.MSG_VERBOSE);
                 } else if ((index = line.indexOf(FILE_WAS_REMOVED)) != -1) {
                     // it is a removed file
                     String filename = line.substring(0, index);
                     
-                    entries.add(entry = new CvsTagEntry(filename));
+                    entries.addElement(entry = new CvsTagEntry(filename));
                     log(entry.toString(), Project.MSG_VERBOSE);
                 }
                 line = reader.readLine();
@@ -400,18 +411,19 @@ public class CvsTagDiff extends Task {
         FileOutputStream output = null;
         try {
             output = new FileOutputStream(m_destfile);
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, "UTF-8"));
+            PrintWriter writer = new PrintWriter(
+                                     new OutputStreamWriter(output, "UTF-8"));
             writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             writer.print("<tagdiff ");
             if (m_startTag != null) {
                 writer.print("startTag=\"" + m_startTag + "\" ");
             } else {
-                writer.print("startDate=\"" + m_startDate + "\" ");                 
+                writer.print("startDate=\"" + m_startDate + "\" ");
             }
             if (m_endTag != null) {
                 writer.print("endTag=\"" + m_endTag + "\" ");
             } else {
-                writer.print("endDate=\"" + m_endDate + "\" ");                 
+                writer.print("endDate=\"" + m_endDate + "\" ");
             }
             writer.println(">");
             for (int i = 0, c = entries.length; i < c; i++) {
@@ -444,10 +456,12 @@ public class CvsTagDiff extends Task {
         writer.println("\t\t<file>");
         writer.println("\t\t\t<name>" + entry.getFile() + "</name>");
         if (entry.getRevision() != null) {
-            writer.println("\t\t\t<revision>" + entry.getRevision() + "</revision>");
+            writer.println("\t\t\t<revision>" + entry.getRevision() 
+                           + "</revision>");
         }
         if (entry.getPreviousRevision() != null) {
-            writer.println("\t\t\t<prevrevision>" + entry.getPreviousRevision() + "</prevrevision>");
+            writer.println("\t\t\t<prevrevision>" 
+                           + entry.getPreviousRevision() + "</prevrevision>");
         }
         writer.println("\t\t</file>");    
         writer.println("\t</entry>");
@@ -472,7 +486,8 @@ public class CvsTagDiff extends Task {
         }
 
         if (null != m_startTag && null != m_startDate) {
-            throw new BuildException("Only one of start tag and start date must be set.");
+            throw new BuildException("Only one of start tag and start date "
+                                     + "must be set.");
         }
                 
         if (null == m_endTag && null == m_endDate) {
@@ -480,7 +495,8 @@ public class CvsTagDiff extends Task {
         }
 
         if (null != m_endTag && null != m_endDate) {
-            throw new BuildException("Only one of end tag and end date must be set.");
+            throw new BuildException("Only one of end tag and end date must "
+                                     + "be set.");
         }    
     }
     
@@ -500,7 +516,8 @@ public class CvsTagDiff extends Task {
             this(filename, revision, null);
         }
 
-        public CvsTagEntry(String filename, String revision, String prevRevision) {
+        public CvsTagEntry(String filename, String revision, 
+                           String prevRevision) {
             m_filename = filename;
             m_revision = revision;
             m_prevRevision = prevRevision;
@@ -524,9 +541,11 @@ public class CvsTagDiff extends Task {
             if ((m_revision == null) && (m_prevRevision == null)) {
                 buffer.append(" was removed");
             } else if (m_revision != null && m_prevRevision == null) {
-                buffer.append(" is new; current revision is ").append(m_revision);
+                buffer.append(" is new; current revision is ")
+                    .append(m_revision);
             } else if (m_revision != null && m_prevRevision != null) {
-                buffer.append(" has changed from ").append(m_prevRevision).append(" to ").append(m_revision);
+                buffer.append(" has changed from ")
+                    .append(m_prevRevision).append(" to ").append(m_revision);
             }
             return buffer.toString();
         }
