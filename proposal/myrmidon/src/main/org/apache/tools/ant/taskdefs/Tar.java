@@ -13,16 +13,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
-import org.apache.myrmidon.api.TaskException;
-
-
-
-import org.apache.tools.ant.util.mappers.MergingMapper;
-import org.apache.tools.ant.types.SourceFileScanner;
-import org.apache.aut.tar.TarConstants;
 import org.apache.aut.tar.TarEntry;
 import org.apache.aut.tar.TarOutputStream;
 import org.apache.avalon.excalibur.io.IOUtil;
+import org.apache.myrmidon.api.TaskException;
+import org.apache.tools.ant.types.SourceFileScanner;
+import org.apache.tools.ant.util.mappers.MergingMapper;
 
 /**
  * Creates a TAR archive.
@@ -249,7 +245,7 @@ public class Tar
             path += "/";
         }
 
-        if( path.length() >= TarConstants.NAMELEN )
+        if( path.length() >= TarEntry.NAMELEN )
         {
             if( longFileMode.isOmitMode() )
             {
@@ -260,7 +256,7 @@ public class Tar
             else if( longFileMode.isWarnMode() )
             {
                 final String message = "Entry: " + path + " longer than " +
-                    TarConstants.NAMELEN + " characters.";
+                    TarEntry.NAMELEN + " characters.";
                 getLogger().warn( message );
                 if( !longWarningGiven )
                 {
@@ -273,7 +269,7 @@ public class Tar
             else if( longFileMode.isFailMode() )
             {
                 final String message = "Entry: " + path + " longer than " +
-                                        TarConstants.NAMELEN + "characters.";
+                    TarEntry.NAMELEN + "characters.";
                 throw new TaskException( message );
             }
         }
