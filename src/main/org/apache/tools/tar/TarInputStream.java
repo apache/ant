@@ -40,11 +40,17 @@ public class TarInputStream extends FilterInputStream {
     protected boolean hasHitEOF;
     protected int entrySize;
     protected int entryOffset;
-    protected byte[] oneBuf;
     protected byte[] readBuf;
     protected TarBuffer buffer;
     protected TarEntry currEntry;
     private boolean v7Format;
+
+    /**
+     * This contents of this array is not used at all in this class,
+     * it is only here to avoid repreated object creation during calls
+     * to the no-arg read method.
+     */
+    protected byte[] oneBuf;
 
     /**
      * Constructor for TarInputStream.
@@ -278,25 +284,7 @@ public class TarInputStream extends FilterInputStream {
      */
     public int read() throws IOException {
         int num = this.read(this.oneBuf, 0, 1);
-
-        if (num == -1) {
-            return num;
-        } else {
-            return (int) this.oneBuf[0];
-        }
-    }
-
-    /**
-     * Reads bytes from the current tar archive entry.
-     *
-     * This method simply calls read( byte[], int, int ).
-     *
-     * @param buf The buffer into which to place bytes read.
-     * @return The number of bytes read, or -1 at EOF.
-     * @throws IOException on error
-     */
-    public int read(byte[] buf) throws IOException {
-        return this.read(buf, 0, buf.length);
+        return num == -1 ? -1 : ((int) this.oneBuf[0]) & 0xFF;
     }
 
     /**

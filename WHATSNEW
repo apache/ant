@@ -420,6 +420,9 @@ Fixed bugs:
 * The VAJ tasks could fail if the project name contained characters
   that need to get URL encoded.  Bugzilla Report 23322.
 
+* TarInputStream#read() wasn't implemented correctly.  Bugzilla Report
+  34097.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
