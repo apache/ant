@@ -455,15 +455,17 @@ public class ExecTask extends Task {
      * </ul>
      */
     public void execute() throws BuildException {
+        // Quick fail if this is not a valid OS for the command
+        if (!isValidOs()) {
+            return;
+        }
         File savedDir = dir; // possibly altered in prepareExec
         cmdl.setExecutable(resolveExecutable(executable, searchPath));
         checkConfiguration();
-        if (isValidOs()) {
-            try {
-                runExec(prepareExec());
-            } finally {
-                dir = savedDir;
-            }
+        try {
+            runExec(prepareExec());
+        } finally {
+            dir = savedDir;
         }
     }
 
