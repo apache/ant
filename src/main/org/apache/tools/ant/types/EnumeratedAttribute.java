@@ -70,12 +70,12 @@ public abstract class EnumeratedAttribute {
     /**
      * The selected value in this enumeration.
      */
-    private String value;
+    protected String value;
 
     /**
      * the index of the selected value in the array.
      */
-    private int index;
+    protected int index;
 
     /**
      * This is the only method a subclass needs to implement.
