@@ -23,7 +23,6 @@ import java.io.OutputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Vector;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
@@ -43,8 +42,6 @@ public class Length extends Task {
     private static final String ALL = "all";
     private static final String EACH = "each";
     private static final String STRING = "string";
-
-    private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     private String property;
     private String string;
@@ -157,11 +154,12 @@ public class Length extends Task {
             File basedir = fs.getDir(getProject());
             String[] f = ds.getIncludedFiles();
             for (int j = 0; j < f.length; j++) {
-                included.add(FILE_UTILS.resolveFile(basedir, f[j]));
+                File file = FileUtils.getFileUtils().resolveFile(basedir, f[j]);
+                if (!(included.contains(file))) {
+                    included.add(file);
+                    h.handle(file);
+                }
             }
-        }
-        for (Iterator iter = included.iterator(); iter.hasNext();) {
-            h.handle((File)(iter.next()));
         }
         included.clear();
         included = null;
