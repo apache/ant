@@ -88,7 +88,7 @@ class CVSEntry {
     }
 
     void setAuthor(final String author) {
-	m_author = author;
+        m_author = author;
     }
     
     String getAuthor() {
