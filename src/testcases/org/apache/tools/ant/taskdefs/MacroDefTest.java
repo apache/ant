@@ -109,5 +109,11 @@ public class MacroDefTest extends BuildFileTest {
             "ignorecase",
             "a is ab is b");
     }
+
+    public void testIgnoreElementCase() {
+        expectLog(
+            "ignore-element-case",
+            "nested elementnested element");
+    }
 }
 

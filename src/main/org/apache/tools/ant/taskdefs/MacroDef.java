@@ -395,7 +395,7 @@ public class MacroDef extends AntlibDefinition  {
                 throw new BuildException(
                     "Illegal name [" + name + "] for attribute");
             }
-            this.name = name;
+            this.name = name.toLowerCase(Locale.US);
         }
 
         /**
