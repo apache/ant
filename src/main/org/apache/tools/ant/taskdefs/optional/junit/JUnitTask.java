@@ -398,7 +398,9 @@ public class JUnitTask extends Task {
             for (int i = 0; i < feArray.length; i++) {
                 FormatterElement fe = feArray[i];
                 File outFile = getOutput(fe,test);
-                if (outFile == null) {
+                if (outFile != null) {
+                    fe.setOutfile(outFile);
+                } else {
                     fe.setOutput( getDefaultOutput() );
                 }
                 runner.addFormatter(fe.createFormatter());
