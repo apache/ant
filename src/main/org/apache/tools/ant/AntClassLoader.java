@@ -71,6 +71,97 @@ import org.apache.tools.ant.types.Path;
  * @author <a href="mailto:Jesse.Glick@netbeans.com">Jesse Glick</a>
  */
 public class AntClassLoader  extends ClassLoader {
+
+    /**
+     * An enumeration of all resources of a given name found within the
+     * classpath of this class loader. This enumeration is used by the
+     * {@link #findResources(String) findResources} method, which is in
+     * turn used by the
+     * {@link ClassLoader#getResources ClassLoader.getResources} method.
+     *
+     * @see AntClassLoader#findResources(String)
+     * @see java.lang.ClassLoader#getResources(String)
+     * @author <a href="mailto:hermand@alumni.grinnell.edu">David A. Herman</a>
+     */
+    private class ResourceEnumeration implements Enumeration {
+
+        /**
+         * The name of the resource being searched for.
+         */
+        private String resourceName;
+
+        /**
+         * The array of classpath elements.
+         */
+        private String[] pathElements;
+
+        /**
+         * The index of the next classpath element to search.
+         */
+        private int pathElementsIndex;
+
+        /**
+         * The URL of the next resource to return in the enumeration. If this
+         * field is <code>null</code> then the enumeration has been completed,
+         * i.e., there are no more elements to return.
+         */
+        private URL nextResource;
+
+        /**
+         * Construct a new enumeration of resources of the given name found
+         * within this class loader's classpath.
+         *
+         * @param name the name of the resource to search for.
+         */
+        ResourceEnumeration(String name) {
+            this.resourceName = name;
+            this.pathElements = AntClassLoader.this.classpath.list();
+            this.pathElementsIndex = 0;
+            findNextResource();
+        }
+
+        /**
+         * Indicates whether there are more elements in the enumeration to
+         * return.
+         *
+         * @return <code>true</code> if there are more elements in the
+         *         enumeration; <code>false</code> otherwise.
+         */
+        public boolean hasMoreElements() {
+            return (this.nextResource != null);
+        }
+
+        /**
+         * Returns the next resource in the enumeration.
+         *
+         * @return the next resource in the enumeration.
+         */
+        public Object nextElement() {
+            URL ret = this.nextResource;
+            findNextResource();
+            return ret;
+        }
+
+        /**
+         * Locates the next resource of the correct name in the classpath and
+         * sets <code>nextResource</code> to the URL of that resource. If no
+         * more resources can be found, <code>nextResource</code> is set to
+         * <code>null</code>.
+         */
+        private void findNextResource() {
+            URL url = null;
+            while ((this.pathElementsIndex < this.pathElements.length) &&
+                   (url == null)) {
+                File pathComponent = AntClassLoader.this.project.resolveFile(
+                    (String)this.pathElements[this.pathElementsIndex]);
+                url = getResourceURL(pathComponent, this.resourceName);
+                this.pathElementsIndex++;
+            }
+            this.nextResource = url;
+        }
+
+    }
+
     /**
      * The size of buffers to be used in this classloader.
      */
@@ -436,6 +527,18 @@ public class AntClassLoader  extends ClassLoader {
         }
 
         return url;
+    }
+
+    /**
+     * Returns an enumeration of URLs representing all the resources with the
+     * given name by searching the class loader's classpath.
+     *
+     * @param name the resource name.
+     * @return an enumeration of URLs for the resources.
+     * @throws IOException if I/O errors occurs (can't happen)
+     */
+    protected Enumeration findResources(String name) throws IOException {
+        return new ResourceEnumeration(name);
     }
 
     /**
