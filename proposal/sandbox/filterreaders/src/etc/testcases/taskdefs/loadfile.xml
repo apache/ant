@@ -58,7 +58,7 @@
           <expandproperties/>
         </filterchain>
     </loadfile>
-    <echo>${testLoadAFile}</echo>
+    <echo>${testEvalProps}</echo>
   </target>
 
 
@@ -74,7 +74,7 @@
         <striplinebreaks/>
       </filterchain>
     </loadfile>
-    <echo>${testLoadAFile}</echo>
+    <echo>${testOneLine}</echo>
   </target>
 
 

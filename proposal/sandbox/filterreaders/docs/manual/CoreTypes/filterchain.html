@@ -2,21 +2,97 @@
 
 <HTML>
 <HEAD>
-  <TITLE>FilterChain Type</TITLE>
+  <TITLE>FilterChains and FilterReaders</TITLE>
 </HEAD>
 
 <BODY>
-<H2><A name="filterchain">FilterChain</A></H2>
 
-<P>FilterChains are groups of ordered FilterReaders. FilterChains can appear
-inside tasks that support this feature. <BR>FilterChains are used for
-filtering file contents read in by tasks like <a href="../CoreTasks/loadfile.html">
-LoadFile</a>, LoadProperties, etc.<BR>
+<H2>FilterChains and FilterReaders</H2>
+Look at Unix pipes - they offer you so much flexibility -
+say you wanted to copy just those lines that contained the
+string blee from the first 10 lines of a file 'foo'
+to a file 'bar' - you would do something like<P>
+<code>
+cat foo|head -n10|grep blee > bar
+</code><P>
+Ant was not flexible enough.  There was no way for the
+&lt;copy&gt; task to do something similar.  If you wanted
+the &lt;copy&gt; task to get the first 10 lines, you would have
+had to create special attributes:<P>
+<code>
+&lt;copy file=&quot;foo&quot; tofile=&quot;bar&quot; head=&quot;10&quot; contains=&quot;blee&quot;/&gt;
+</code><P>
+The obvious problem thus surfaced: Ant tasks would not be able
+to accomodate such data transformation attributes as they would
+be endless.  The task would also not know in which order these
+attributes were to be interpreted.  That is, must the task execute the
+contains attribute first and then the head attribute or vice-versa?
+What Ant tasks needed was a mechanism to allow pluggable filter (data
+tranformer) chains.  Ant would provide a few filters for which there
+have been repeated requests.  Users with special filtering needs
+would be able to easily write their own and plug them in.<P>
 
-Each FilterChain is composed of zero or more of the following nested elements.<BR>
+The solution was to refactor data transformation oriented
+tasks to support FilterChains.  A FilterChain is a group of
+ordered FilterReaders.  Users can define their own FilterReaders
+by just extending the java.io.FilterReader class.  Such custom
+FilterReaders can be easily plugged in as nested elements of
+&lt;filterchain&gt; by using &lt;filterreader&gt; elements.
+<P>
+Example:
+<BLOCKQUOTE><PRE>
+&lt;copy file=&quot;${src.file}&quot; tofile=&quot;${dest.file}&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;filterreader classname=&quot;your.extension.of.java.io.FilterReader&quot;&gt;
+      &lt;param name=&quot;foo&quot; value=&quot;bar&quot;/&gt;
+    &lt;/filterreader&gt;
+    &lt;filterreader classname=&quot;another.extension.of.java.io.FilterReader&quot;&gt;
+      &lt;classpath&gt;
+        &lt;pathelement path="${classpath}"/&gt;
+      &lt;/classpath&gt;
+      &lt;param name=&quot;blah&quot; value=&quot;blee&quot;/&gt;
+      &lt;param type=&quot;abra&quot; value=&quot;cadabra&quot;/&gt;
+    &lt;/filterreader&gt;
+  &lt;/filterchain&gt;
+&lt;/copy&gt;
+</PRE></BLOCKQUOTE>
+
+Ant provides some built-in filter readers.  These filter readers
+can also be declared using a syntax similar to the above syntax.
+However, they can be declared using some simpler syntax also.<P>
+Example:
+<BLOCKQUOTE><PRE>
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;headfilter lines=&quot;15&quot;/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</PRE></BLOCKQUOTE>
+is equivalent to:
+<BLOCKQUOTE><PRE>
+&lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;filterreader classname=&quot;org.apache.tools.ant.filters.HeadFilter&quot;&gt;
+      &lt;param name=&quot;lines&quot; value=&quot;15&quot;/&gt;
+    &lt;/filterreader&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</PRE></BLOCKQUOTE>
+
+The following built-in tasks support nested &lt;filterchain&gt; elements.<BR>
+<a href="../CoreTasks/copy.html">Copy</a>,<BR>
+<a href="../CoreTasks/loadfile.html">LoadFile</a>,<BR>
+<a href="../CoreTasks/loadproperties.html">LoadProperties</a>,<BR>
+<a href="../CoreTasks/move.html">Move</a><BR><BR>
+
+A FilterChain is formed by defining zero or more of the following
+nested elements.<BR>
 <a href="#filterreader">FilterReader</a><BR>
+<a href="#classconstants">ClassConstants</a><BR>
+<a href="#expandproperties">ExpandProperties</a><BR>
 <a href="#headfilter">HeadFilter</a><BR>
 <a href="#linecontains">LineContains</a><BR>
+<a href="#linecontainsregexp">LineContainsRegExp</a><BR>
 <a href="#prefixlines">PrefixLines</a><BR>
 <a href="#replacetokens">ReplaceTokens</a><BR>
 <a href="#stripjavacomments">StripJavaComments</a><BR>
@@ -25,12 +101,13 @@ Each FilterChain is composed of zero or more of the following nested elements.<B
 <a href="#tabstospaces">TabsToSpaces</a><BR>
 <a href="#tailfilter">TailFilter</a><BR>
 
-<H2><a name="filterreader">FilterReader</a></H2>
+<H3><a name="filterreader">FilterReader</a></H3>
 
 The filterreader element is the generic way to
-define a filter.  User defined filters can be
-used using this.  Built in filter readers can also
-be speficied using this.
+define a filter.  User defined filter elements are
+defined in the build file using this.  Please note that
+built in filter readers can also be defined using this
+syntax.
 
 A FilterReader element must be supplied with a class name as
 an attribute value.  The class resolved by this name must
@@ -51,11 +128,78 @@ org.apache.tools.type.Parameterizable.
   </TR>
 </TABLE>
 
-<p>
+<P>
+<H4>Nested Elements:</H4>
+&lt;filterreader&gt; supports &lt;classpath&gt; and &lt;param&gt;
+as nested elements.  Each &lt;param&gt; element may take in the following
+attributes - name, type and value.
+<P>
 The following FilterReaders are supplied with the default
 distribution.
 
-<H3>org.apache.tools.ant.filters.<a name="headfilter">HeadFilter</a></H3>
+<H3><a name="classconstants">ClassConstants</a></H3>
+<P>
+This filters basic constants defined in a Java Class,
+and outputs them in lines composed of the format name=value
+<P>
+<H4>Example:</H4>
+
+This loads the basic constants defined in a Java class as Ant properties.
+<BLOCKQUOTE><PRE>
+&lt;loadproperties srcfile=&quot;foo.class&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ClassConstants&quot;/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadproperties&gt;
+</PRE></BLOCKQUOTE>
+
+Convenience method:
+<BLOCKQUOTE><PRE>
+&lt;loadproperties srcfile=&quot;foo.class&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;classconstants/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadproperties&gt;
+</PRE></BLOCKQUOTE>
+
+<H3><a name="expandproperties">ExpandProperties</a></H3>
+<P>
+If the data contains data that represents Ant
+properties (of the form ${...}), that is substituted
+with the property's actual value.
+<P>
+<H4>Example:</H4>
+
+This results in the property modifiedmessage holding the value
+&quot;All these moments will be lost in time, like teardrops in the rain&quot;
+<BLOCKQUOTE><PRE>
+&lt;echo
+  message=&quot;All these moments will be lost in time, like teardrops in the ${weather}&quot;
+  file=&quot;loadfile1.tmp&quot;
+  /&gt;
+&lt;property name=&quot;weather&quot; value=&quot;rain&quot; /&gt;
+&lt;loadfile property=&quot;modifiedmessage&quot; srcFile=&quot;loadfile1.tmp&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</PRE></BLOCKQUOTE>
+
+Convenience method:
+<BLOCKQUOTE><PRE>
+&lt;echo
+  message=&quot;All these moments will be lost in time, like teardrops in the ${weather}&quot;
+  file=&quot;loadfile1.tmp&quot;
+  /&gt;
+&lt;property name=&quot;weather&quot; value=&quot;rain&quot; /&gt;
+&lt;loadfile property=&quot;modifiedmessage&quot; srcFile=&quot;loadfile1.tmp&quot;&gt;
+  &lt;filterchain&gt;
+    &lt;expandproperties/&gt;
+  &lt;/filterchain&gt;
+&lt;/loadfile&gt;
+</PRE></BLOCKQUOTE>
+
+<H3><a name="headfilter">HeadFilter</a></H3>
 
 This filter reads the first few lines from the data supplied to it.
 
@@ -86,7 +230,7 @@ This stores the first 15 lines of the supplied data in the property ${src.file.h
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-Short form:
+Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.head}&quot;&gt;
   &lt;filterchain&gt;
@@ -95,7 +239,7 @@ Short form:
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-<H3>org.apache.tools.ant.filters.<a name="replacetokens">ReplaceTokens</a></H3>
+<H3><a name="replacetokens">ReplaceTokens</a></H3>
 
 This filter reader replaces all strings that are
 sandwiched between begintoken and endtoken with
@@ -146,7 +290,7 @@ with today's date and stores it in the property ${src.file.replaced}
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-Short form:
+Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;tstamp/&gt;
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.replaced}&quot;&gt;
@@ -158,7 +302,7 @@ Short form:
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-<H3>org.apache.tools.ant.filters.<a name="stripjavacomments">StripJavaComments</a></H3>
+<H3><a name="stripjavacomments">StripJavaComments</a></H3>
 
 This filter reader strips away comments from the data,
 using Java syntax guidelines.  This filter does not
@@ -174,7 +318,7 @@ take in any parameters.
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-Short form:
+Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;loadfile srcfile=&quot;${java.src.file}&quot; property=&quot;${java.src.file.nocomments}&quot;&gt;
   &lt;filterchain&gt;
@@ -183,7 +327,7 @@ Short form:
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-<H3>org.apache.tools.ant.filters.<a name="striplinebreaks">StripLineBreaks</a></H3>
+<H3><a name="striplinebreaks">StripLineBreaks</a></H3>
 
 This filter reader strips away specific characters
 from the data supplied to it.
@@ -213,7 +357,7 @@ This strips the '\r' and '\n' characters.
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-Short form:
+Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.contents}&quot;&gt;
   &lt;filterchain&gt;
@@ -234,7 +378,7 @@ strips them.
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-<H3>org.apache.tools.ant.filters.<a name="tabstospaces">TabToSpaces</a></H3>
+<H3><a name="tabstospaces">TabsToSpaces</a></H3>
 
 This filter replaces tabs with spaces
 
@@ -263,7 +407,7 @@ This replaces tabs in ${src.file} with spaces.
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-Short form:
+Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.notab}&quot;&gt;
   &lt;filterchain&gt;
@@ -272,7 +416,7 @@ Short form:
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-<H3>org.apache.tools.ant.filters.<a name="tailfilter">TailFilter</a></H3>
+<H3><a name="tailfilter">TailFilter</a></H3>
 
 This filter reads the last few lines from the data supplied to it.
 
@@ -303,7 +447,7 @@ This stores the last 15 lines of the supplied data in the property ${src.file.ta
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-Short form:
+Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.tail}&quot;&gt;
   &lt;filterchain&gt;
@@ -328,7 +472,7 @@ data in the property ${src.file.mid}
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
-Short form:
+Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.mid}&quot;&gt;
   &lt;filterchain&gt;
