@@ -14,30 +14,6 @@ public abstract class Task
     implements org.apache.myrmidon.api.Task
 {
     /**
-     * Perform this task
-     */
-    public final void perform()
-        throws TaskException
-    {
-        try
-        {
-            project.fireTaskStarted( this );
-            execute();
-            project.fireTaskFinished( this, null );
-        }
-        catch( TaskException te )
-        {
-            project.fireTaskFinished( this, te );
-            throw te;
-        }
-        catch( RuntimeException re )
-        {
-            project.fireTaskFinished( this, re );
-            throw re;
-        }
-    }
-
-    /**
      * Called by the project to let the task do it's work. This method may be
      * called more than once, if the task is invoked more than once. For
      * example, if target1 and target2 both depend on target3, then running "ant
