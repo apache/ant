@@ -323,6 +323,18 @@ public class Sync extends Task {
     }
 
     /**
+     * The number of milliseconds leeway to give before deciding a
+     * target is out of date.
+     *
+     * <p>Default is 0 milliseconds, or 2 seconds on DOS systems.</p>
+     *
+     * @since Ant 1.6
+     */
+    public void setGranularity(long granularity) {
+        _copy.setGranularity(granularity);
+    }
+
+    /**
      * Subclass Copy in order to access it's file/dir maps.
      */
     public static class MyCopy extends Copy {

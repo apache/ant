@@ -121,12 +121,14 @@ public class Copy extends Task {
     private FileUtils fileUtils;
     private String inputEncoding = null;
     private String outputEncoding = null;
+    private long granularity = 0;
 
     /**
      * Copy task constructor.
      */
     public Copy() {
         fileUtils = FileUtils.newFileUtils();
+        granularity = fileUtils.getFileTimestampGranularity();
     }
 
     /**
@@ -371,6 +373,18 @@ public class Copy extends Task {
     }
 
     /**
+     * The number of milliseconds leeway to give before deciding a
+     * target is out of date.
+     *
+     * <p>Default is 0 milliseconds, or 2 seconds on DOS systems.</p>
+     *
+     * @since Ant 1.6
+     */
+    public void setGranularity(long granularity) {
+        this.granularity = granularity;
+    }
+
+    /**
      * Performs the copy operation.
      * @exception BuildException if an error occurs
      */
@@ -397,7 +411,8 @@ public class Copy extends Task {
                     }
 
                     if (forceOverwrite || !destFile.exists()
-                        || (file.lastModified() > destFile.lastModified())) {
+                        || (file.lastModified() - granularity 
+                                > destFile.lastModified())) {
                         fileCopyMap.put(file.getAbsolutePath(),
                                         new String[] {destFile.getAbsolutePath()});
                     } else {
@@ -583,7 +598,7 @@ public class Copy extends Task {
             v.copyInto(toCopy);
         } else {
             SourceFileScanner ds = new SourceFileScanner(this);
-            toCopy = ds.restrict(names, fromDir, toDir, mapper);
+            toCopy = ds.restrict(names, fromDir, toDir, mapper, granularity);
         }
 
         for (int i = 0; i < toCopy.length; i++) {

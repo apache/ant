@@ -58,6 +58,7 @@ import org.apache.tools.ant.ProjectComponent;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceFactory;
+import org.apache.tools.ant.types.selectors.SelectorUtils;
 
 import java.io.File;
 import java.util.Vector;
@@ -70,7 +71,7 @@ import java.util.Vector;
  */
 public class ResourceUtils {
 
-    /**                                                                      {
+    /**
      * tells which source files should be reprocessed based on the
      * last modification date of target files
      * @param logTo where to send (more or less) interesting output
@@ -88,19 +89,34 @@ public class ResourceUtils {
                                                     Resource[] source,
                                                     FileNameMapper mapper,
                                                     ResourceFactory targets) {
-        long now = (new java.util.Date()).getTime();
+        return selectOutOfDateSources(logTo, source, mapper, targets,
+                                      FileUtils.newFileUtils()
+                                      .getFileTimestampGranularity());
+    }
 
-        /*
-          If we're on Windows, we have to munge the time up to 2 secs to
-          be able to check file modification times.
-          (Windows has a max resolution of two secs for modification times)
-          Actually this is a feature of the FAT file system, NTFS does
-          not have it, so if we could reliably passively test for an NTFS
-          file systems we could turn this off...
-        */
-        if (Os.isFamily("windows")) {
-            now += 2000;
-        }
+    /**
+     * tells which source files should be reprocessed based on the
+     * last modification date of target files
+     * @param logTo where to send (more or less) interesting output
+     * @param source array of resources bearing relative path and last
+     * modification date
+     * @param mapper filename mapper indicating how to find the target
+     * files
+     * @param targets object able to map as a resource a relative path
+     * at <b>destination</b>
+     * @param granularity The number of milliseconds leeway to give
+     * before deciding a target is out of date.
+     * @return array containing the source files which need to be
+     * copied or processed, because the targets are out of date or do
+     * not exist
+     * @since Ant 1.6
+     */
+    public static Resource[] selectOutOfDateSources(ProjectComponent logTo,
+                                                    Resource[] source,
+                                                    FileNameMapper mapper,
+                                                    ResourceFactory targets,
+                                                    long granularity) {
+        long now = (new java.util.Date()).getTime() + granularity;
 
         Vector vresult = new Vector();
         for (int counter = 0; counter < source.length; counter++) {
@@ -130,8 +146,10 @@ public class ResourceUtils {
                                   + " doesn\'t exist.", Project.MSG_VERBOSE);
                         vresult.addElement(source[counter]);
                         added = true;
-                    } else if (!atarget.isDirectory() && atarget.getLastModified()
-                               < source[counter].getLastModified()) {
+                    } else if (!atarget.isDirectory() && 
+                               SelectorUtils.isOutOfDate(source[counter], 
+                                                         atarget,
+                                                         (int) granularity)) {
                         logTo.log(source[counter].getName() + " added as "
                                   + atarget.getName()
                                   + " is outdated.", Project.MSG_VERBOSE);
