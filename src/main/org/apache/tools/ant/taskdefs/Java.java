@@ -417,6 +417,7 @@ public class Java extends Task {
         failOnError = fail;
         incompatibleWithSpawn |= fail;
     }
+
     /**
      * The working directory of the process
      *

@@ -29,7 +29,15 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -37,9 +45,9 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.ZipOutputStream;
-
 
 /**
  * Creates a JAR archive.
@@ -114,6 +122,13 @@ public class Jar extends Zip {
      * @since Ant 1.6
      */
     private Vector rootEntries;
+
+    /**
+     * Path containing jars that shall be indexed in addition to this archive.
+     *
+     * @since Ant 1.7
+     */
+    private Path indexJars;
 
     /** constructor */
     public Jar() {
@@ -304,6 +319,16 @@ public class Jar extends Zip {
         super.addFileset(fs);
     }
 
+    /**
+     * @since Ant 1.7
+     */
+    public void addConfiguredIndexJars(Path p) {
+        if (indexJars == null) {
+            indexJars = new Path(getProject());
+        }
+        indexJars.append(p);
+    }
+
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
 
@@ -384,7 +409,7 @@ public class Jar extends Zip {
     /**
      * Create the index list to speed up classloading.
      * This is a JDK 1.3+ specific feature and is enabled by default. See
-     * <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR+Index">
+     * <a href="http://java.sun.com/j2se/1.3/docs/guide/jar/jar.html#JAR%20Index">
      * the JAR index specification</a> for more details.
      *
      * @param zOut the zip stream representing the jar being built.
@@ -404,34 +429,38 @@ public class Jar extends Zip {
         // header newline
         writer.println(zipFile.getName());
 
-        // JarIndex is sorting the directories by ascending order.
-        // it's painful to do in JDK 1.1 and it has no value but cosmetic
-        // since it will be read into a hashtable by the classloader.
-        Enumeration e = addedDirs.keys();
-        while (e.hasMoreElements()) {
-            String dir = (String) e.nextElement();
+        writeIndexLikeList(new ArrayList(addedDirs.keySet()), 
+                           rootEntries, writer);
+        writer.println();
 
-            // try to be smart, not to be fooled by a weird directory name
-            // @fixme do we need to check for directories starting by ./ ?
-            dir = dir.replace('\\', '/');
-            int pos = dir.lastIndexOf('/');
-            if (pos != -1) {
-                dir = dir.substring(0, pos);
+        if (indexJars != null) {
+            Manifest mf = createManifest();
+            Manifest.Attribute classpath =
+                mf.getMainSection().getAttribute(Manifest.ATTRIBUTE_CLASSPATH);
+            String[] cpEntries = null;
+            if (classpath != null) {
+                StringTokenizer tok = new StringTokenizer(classpath.getValue(),
+                                                          " ");
+                cpEntries = new String[tok.countTokens()];
+                int c = 0;
+                while (tok.hasMoreTokens()) {
+                    cpEntries[c++] = tok.nextToken();
+                }
             }
-
-            // looks like nothing from META-INF should be added
-            // and the check is not case insensitive.
-            // see sun.misc.JarIndex
-            if (dir.startsWith("META-INF")) {
-                continue;
+            String[] indexJarEntries = indexJars.list();
+            for (int i = 0; i < indexJarEntries.length; i++) {
+                String name = findJarName(indexJarEntries[i], cpEntries);
+                if (name != null) {
+                    ArrayList dirs = new ArrayList();
+                    ArrayList files = new ArrayList();
+                    grabFilesAndDirs(indexJarEntries[i], dirs, files);
+                    if (dirs.size() + files.size() > 0) {
+                        writer.println(name);
+                        writeIndexLikeList(dirs, files, writer);
+                        writer.println();
+                    }
+                }
             }
-            // name newline
-            writer.println(dir);
-        }
-
-        e = rootEntries.elements();
-        while (e.hasMoreElements()) {
-            writer.println(e.nextElement());
         }
 
         writer.flush();
@@ -670,6 +699,151 @@ public class Jar extends Zip {
     public static class FilesetManifestConfig extends EnumeratedAttribute {
         public String[] getValues() {
             return new String[] {"skip", "merge", "mergewithoutmain"};
+        }
+    }
+
+    /**
+     * Writes the directory entries from the first and the filenames
+     * from the second list to the given writer, one entry per line.
+     *
+     * @since Ant 1.7
+     */
+    protected final void writeIndexLikeList(List dirs, List files,
+                                            PrintWriter writer)
+        throws IOException {
+        // JarIndex is sorting the directories by ascending order.
+        // it has no value but cosmetic since it will be read into a
+        // hashtable by the classloader, but we'll do so anyway.
+        Collections.sort(dirs);
+        Collections.sort(files);
+        Iterator iter = dirs.iterator();
+        while (iter.hasNext()) {
+            String dir = (String) iter.next();
+
+            // try to be smart, not to be fooled by a weird directory name
+            dir = dir.replace('\\', '/');
+            if (dir.startsWith("./")) {
+                dir = dir.substring(2);
+            }
+            while (dir.startsWith("/")) {
+                dir = dir.substring(1);
+            }
+            int pos = dir.lastIndexOf('/');
+            if (pos != -1) {
+                dir = dir.substring(0, pos);
+            }
+
+            // looks like nothing from META-INF should be added
+            // and the check is not case insensitive.
+            // see sun.misc.JarIndex
+            if (dir.startsWith("META-INF")) {
+                continue;
+            }
+            // name newline
+            writer.println(dir);
+        }
+
+        iter = files.iterator();
+        while (iter.hasNext()) {
+            writer.println(iter.next());
+        }
+    }
+
+    /**
+     * try to guess the name of the given file.
+     *
+     * <p>If this jar has a classpath attribute in its manifest, we
+     * can assume that it will only require an index of jars listed
+     * there.  try to find which classpath entry is most likely the
+     * one the given file name points to.</p>
+     *
+     * <p>In the absence of a classpath attribute, assume the other
+     * files will be placed inside the same directory as this jar and
+     * use their basename.</p>
+     *
+     * <p>if there is a classpath and the given file doesn't match any
+     * of its entries, return null.</p>
+     *
+     * @since Ant 1.7
+     */
+    protected static final String findJarName(String fileName, 
+                                              String[] classpath) {
+        if (classpath == null) {
+            return (new File(fileName)).getName();
+        }
+        fileName = fileName.replace(File.separatorChar, '/');
+        TreeMap matches = new TreeMap(new Comparator() {
+                // longest match comes first
+                public int compare(Object o1, Object o2) {
+                    if (o1 instanceof String && o2 instanceof String) {
+                        return ((String) o2).length()
+                            - ((String) o1).length();
+                    }
+                    return 0;
+                }
+            });
+
+        for (int i = 0; i < classpath.length; i++) {
+            if (fileName.endsWith(classpath[i])) {
+                matches.put(classpath[i], classpath[i]);
+            } else {
+                int slash = classpath[i].indexOf("/");
+                String candidate = classpath[i];
+                while (slash > -1) {
+                    candidate = candidate.substring(slash + 1);
+                    if (fileName.endsWith(candidate)) {
+                        matches.put(candidate, classpath[i]);
+                        break;
+                    }
+                    slash = candidate.indexOf("/");
+                }
+            }
+        }
+                        
+        return matches.size() == 0 
+            ? null : (String) matches.get(matches.firstKey());
+    }
+
+    /**
+     * Grab lists of all root-level files and all directories
+     * contained in the given archive.
+     *
+     * @since Ant 1.7
+     */
+    protected static final void grabFilesAndDirs(String file, List dirs, 
+                                                 List files)
+        throws IOException {
+        org.apache.tools.zip.ZipFile zf = null;
+        try {
+            zf = new org.apache.tools.zip.ZipFile(file, "utf-8");
+            Enumeration entries = zf.getEntries();
+            HashSet dirSet = new HashSet();
+            while (entries.hasMoreElements()) {
+                org.apache.tools.zip.ZipEntry ze = 
+                    (org.apache.tools.zip.ZipEntry) entries.nextElement();
+                String name = ze.getName();
+                // META-INF would be skipped anyway, avoid index for
+                // manifest-only jars.
+                if (!name.startsWith("META-INF/")) {
+                    if (ze.isDirectory()) {
+                        dirSet.add(name);
+                    } else if (name.indexOf("/") == -1) {
+                        files.add(name);
+                    } else {
+                        // a file, not in the root
+                        // since the jar may be one without directory
+                        // entries, add the parent dir of this file as
+                        // well.
+                        dirSet.add(name.substring(0, 
+                                                  name.lastIndexOf("/") + 1));
+                    }
+                }
+            }
+            dirs.addAll(dirSet);
+        } finally {
+            if (zf != null) {
+                zf.close();
+            }
         }
     }
 }
