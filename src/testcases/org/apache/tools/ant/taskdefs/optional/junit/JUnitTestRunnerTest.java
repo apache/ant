@@ -112,14 +112,14 @@ public class JUnitTestRunnerTest extends TestCase {
     }
     
     protected TestRunner createRunner(Class clazz){
-        return new TestRunner(new JUnitTest(clazz.getName()), true, true);
+        return new TestRunner(new JUnitTest(clazz.getName()), true, true, true);
     }
 
     // the test runner that wrap the dummy formatter that interests us
     private final static class TestRunner extends JUnitTestRunner {
         private ResultFormatter formatter = new ResultFormatter();
-        TestRunner(JUnitTest test, boolean x, boolean y){
-            super(test, x, y,  TestRunner.class.getClassLoader());
+        TestRunner(JUnitTest test, boolean haltonerror, boolean filtertrace, boolean haltonfailure){
+            super(test, haltonerror, filtertrace,  haltonfailure, TestRunner.class.getClassLoader());
             // use the classloader that loaded this class otherwise
             // it will not be able to run inner classes if this test
             // is ran in non-forked mode.
