@@ -143,7 +143,7 @@ Other changes:
     beans
   * <dtd> elements can now be URLs
   * Allow the manifest to be specified for the generated jars
-  * The weblogic element now supprts an attribte noEJBC to skip the processing
+  * The weblogic element now supprts an attribute noEJBC to skip the processing
     of the jar by ejbc. The ejbc step will then occur at deployment
   * weblogic will tell ejbc to use Jikes compiler if build.compiler is set to 
     jikes. It can be restored to the default, javac, operation if desired.  
@@ -159,7 +159,7 @@ Other changes:
 
 * Data types like <path> can now be defined inside of <target>s
 
-* you can now specify a classpath for <style> - the XSLZ processor
+* you can now specify a classpath for <style> - the XSLT processor
   will be loaded from this path
 
 * added a force attribute to <style> to support dependencies that the
@@ -168,7 +168,7 @@ Other changes:
 
 * added vmlauncher attribute to exec tasks. This defaults to true. If
   it is set to false, the VM's ability to launch commands in bypassed
-  and the OS shell, either directly or through the auxillary antRun 
+  and the OS shell, either directly or through the auxiliary antRun 
   scripts is used. 
 
 * regexp mapper now supports the java.util.regex package of JDK 1.4.
@@ -204,7 +204,7 @@ Other changes:
   In addition extJavac or the new fork attribute can be
   used to run the JDK's javac in a JVM separate from Ant.
 
-* <fixrlf> can now with CR only line-ends and can use an arbitraty
+* <fixrlf> can now with CR only line-ends and can use an arbitrary
   between 2 and 80.
 
 * The .NET tasks have been adapted to the beta2 release of the framework.
@@ -329,7 +329,7 @@ Fixed bugs:
 
 * <move> removed files you tried to move to themselves.
 
-* <sql> task will not trty to print the result set unless the query succeeded.
+* <sql> task will not try to print the result set unless the query succeeded.
 
 * Ant classloader will now ignore paths which are invalid relative to the
   project base
