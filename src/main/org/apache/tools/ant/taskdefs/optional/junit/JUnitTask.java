@@ -179,6 +179,8 @@ public class JUnitTask extends Task {
     private boolean showOutput = false;
     private File tmpDir;
     private AntClassLoader classLoader = null;
+
+    private static final int STRING_BUFFER_SIZE = 128;
     /**
     * If true, force ant to re-classload all classes for each JUnit TestCase
     *
@@ -325,11 +327,19 @@ public class JUnitTask extends Task {
      * Print summary enumeration values.
      */
     public static class SummaryAttribute extends EnumeratedAttribute {
+        /**
+         * list the possible values
+         * @return  array of allowed values
+         */
         public String[] getValues() {
             return new String[] {"true", "yes", "false", "no",
                                  "on", "off", "withOutAndErr"};
         }
 
+        /**
+         * gives the boolean equivalent of the authorized values
+         * @return boolean equivalent of the value
+         */
         public boolean asBoolean() {
             String value = getValue();
             return "true".equals(value)
@@ -409,8 +419,26 @@ public class JUnitTask extends Task {
      * testcases when JVM forking is not enabled.
      *
      * @since Ant 1.3
+     * @deprecated since ant 1.6
+     * @param sysp environment variable to add
      */
     public void addSysproperty(Environment.Variable sysp) {
+
+        commandline.addSysproperty(sysp);
+    }
+
+    /**
+     * Adds a system property that tests can access.
+     * This might be useful to tranfer Ant properties to the
+     * testcases when JVM forking is not enabled.
+     * @param sysp new environment variable to add
+     * @since Ant 1.6
+     */
+    public void addConfiguredSysproperty(Environment.Variable sysp) {
+        // get a build exception if there is a missing key or value
+        // see bugzilla report 21684
+        String testString = sysp.getContent();
+        getProject().log("sysproperty added : " + testString, Project.MSG_DEBUG);
         commandline.addSysproperty(sysp);
     }
 
@@ -421,6 +449,7 @@ public class JUnitTask extends Task {
      * This might be useful to tranfer Ant properties to the
      * testcases when JVM forking is not enabled.
      *
+     * @param sysp set of properties to be added
      * @since Ant 1.6
      */
     public void addSyspropertyset(PropertySet sysp) {
@@ -430,6 +459,7 @@ public class JUnitTask extends Task {
     /**
      * Adds path to classpath used for tests.
      *
+     * @return reference to the classpath in the embedded java command line
      * @since Ant 1.2
      */
     public Path createClasspath() {
@@ -438,6 +468,7 @@ public class JUnitTask extends Task {
 
     /**
      * Adds a path to the bootclasspath.
+     * @return reference to the bootclasspath in the embedded java command line
      * @since Ant 1.6
      */
     public Path createBootclasspath() {
@@ -448,7 +479,7 @@ public class JUnitTask extends Task {
      * Adds an environment variable; used when forking.
      *
      * <p>Will be ignored if we are not forking a new VM.</p>
-     *
+     * @param var environment variable to be added
      * @since Ant 1.5
      */
     public void addEnv(Environment.Variable var) {
@@ -460,6 +491,7 @@ public class JUnitTask extends Task {
      *
      * <p>Will be ignored if we are not forking a new VM.</p>
      *
+     * @param newenv boolean indicating if setting a new environment is wished
      * @since Ant 1.5
      */
     public void setNewenvironment(boolean newenv) {
@@ -494,6 +526,7 @@ public class JUnitTask extends Task {
     /**
      * Add a new formatter to all tests of this task.
      *
+     * @param fe formatter element
      * @since Ant 1.2
      */
     public void addFormatter(FormatterElement fe) {
@@ -503,6 +536,7 @@ public class JUnitTask extends Task {
     /**
      * If true, include ant.jar, optional.jar and junit.jar in the forked VM.
      *
+     * @param b include ant run time yes or no
      * @since Ant 1.5
      */
     public void setIncludeantruntime(boolean b) {
@@ -519,6 +553,7 @@ public class JUnitTask extends Task {
      * tests that are interactive and prompt the user to do
      * something.</p>
      *
+     * @param showOutput if true, send output to Ant's logging system too
      * @since Ant 1.5
      */
     public void setShowOutput(boolean showOutput) {
@@ -528,6 +563,7 @@ public class JUnitTask extends Task {
     /**
      * Creates a new JUnitRunner and enables fork of a new Java VM.
      *
+     * @throws Exception under ??? circumstances
      * @since Ant 1.2
      */
     public JUnitTask() throws Exception {
@@ -538,6 +574,7 @@ public class JUnitTask extends Task {
     /**
      * Where Ant should place temporary files.
      *
+     * @param tmpDir location where temporary files should go to
      * @since Ant 1.6
      */
     public void setTempdir(File tmpDir) {
@@ -561,6 +598,7 @@ public class JUnitTask extends Task {
     /**
      * Runs the testcase.
      *
+     * @throws BuildException in case of test failures or errors
      * @since Ant 1.2
      */
     public void execute() throws BuildException {
@@ -575,6 +613,8 @@ public class JUnitTask extends Task {
 
     /**
      * Run the tests.
+     * @param arg one JunitTest
+     * @throws BuildException in case of test failures or errors
      */
     protected void execute(JUnitTest arg) throws BuildException {
         JUnitTest test = (JUnitTest) arg.clone();
@@ -632,6 +672,8 @@ public class JUnitTask extends Task {
      * @param  watchdog   the watchdog in charge of cancelling the test if it
      * exceeds a certain amount of time. Can be <tt>null</tt>, in this case
      * the test could probably hang forever.
+     * @throws BuildException in case of error creating a temporary property file,
+     * or if the junit process can not be forked
      */
     private int executeAsForked(JUnitTest test, ExecuteWatchdog watchdog)
         throws BuildException {
@@ -654,13 +696,14 @@ public class JUnitTask extends Task {
         if (summary) {
             log("Running " + test.getName(), Project.MSG_INFO);
             cmd.createArgument()
-                .setValue("formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
+                .setValue("formatter"
+                + "=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter");
         }
 
         cmd.createArgument().setValue("showoutput="
                                       + String.valueOf(showOutput));
 
-        StringBuffer formatterArg = new StringBuffer(128);
+        StringBuffer formatterArg = new StringBuffer(STRING_BUFFER_SIZE);
         final FormatterElement[] feArray = mergeFormatters(test);
         for (int i = 0; i < feArray.length; i++) {
             FormatterElement fe = feArray[i];
@@ -745,6 +788,7 @@ public class JUnitTask extends Task {
      * Pass output sent to System.out to the TestRunner so it can
      * collect ot for the formatters.
      *
+     * @param output output coming from System.out
      * @since Ant 1.5
      */
     protected void handleOutput(String output) {
@@ -777,6 +821,7 @@ public class JUnitTask extends Task {
      * Pass output sent to System.out to the TestRunner so it can
      * collect ot for the formatters.
      *
+     * @param output output coming from System.out
      * @since Ant 1.5.2
      */
     protected void handleFlush(String output) {
@@ -794,6 +839,7 @@ public class JUnitTask extends Task {
      * Pass output sent to System.err to the TestRunner so it can
      * collect ot for the formatters.
      *
+     * @param output output coming from System.err
      * @since Ant 1.5
      */
     public void handleErrorOutput(String output) {
@@ -812,6 +858,7 @@ public class JUnitTask extends Task {
      * Pass output sent to System.err to the TestRunner so it can
      * collect ot for the formatters.
      *
+     * @param output coming from System.err
      * @since Ant 1.5.2
      */
     public void handleErrorFlush(String output) {
@@ -831,6 +878,8 @@ public class JUnitTask extends Task {
 
     /**
      * Execute inside VM.
+     * @param arg one JUnitTest
+     * @throws BuildException under unspecified circumstances
      */
     private int executeInVM(JUnitTest arg) throws BuildException {
         JUnitTest test = (JUnitTest) arg.clone();
@@ -907,6 +956,7 @@ public class JUnitTask extends Task {
      * @return <tt>null</tt> if there is a timeout value, otherwise the
      * watchdog instance.
      *
+     * @throws BuildException under unspecified circumstances
      * @since Ant 1.2
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
@@ -919,6 +969,7 @@ public class JUnitTask extends Task {
     /**
      * Get the default output for a formatter.
      *
+     * @return default output stream for a formatter
      * @since Ant 1.3
      */
     protected OutputStream getDefaultOutput() {
@@ -929,6 +980,7 @@ public class JUnitTask extends Task {
      * Merge all individual tests from the batchtest with all individual tests
      * and return an enumeration over all <tt>JUnitTest</tt>.
      *
+     * @return enumeration over individual tests
      * @since Ant 1.3
      */
     protected Enumeration getIndividualTests() {
@@ -943,6 +995,8 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * return an enumeration listing each test, then each batchtest
+     * @return enumeration
      * @since Ant 1.3
      */
     protected Enumeration allTests() {
@@ -951,6 +1005,8 @@ public class JUnitTask extends Task {
     }
 
     /**
+     * @param test junit test
+     * @return array of FormatterElement
      * @since Ant 1.3
      */
     private FormatterElement[] mergeFormatters(JUnitTest test) {
@@ -964,7 +1020,9 @@ public class JUnitTask extends Task {
     /**
      * If the formatter sends output to a file, return that file.
      * null otherwise.
-     *
+     * @param fe  formatter element
+     * @param test one JUnit test
+     * @return file reference
      * @since Ant 1.3
      */
     protected File getOutput(FormatterElement fe, JUnitTest test) {
@@ -984,6 +1042,7 @@ public class JUnitTask extends Task {
      * <p>Doesn't work for archives in JDK 1.1 as the URL returned by
      * getResource doesn't contain the name of the archive.</p>
      *
+     * @param resource resource that one wants to lookup
      * @since Ant 1.4
      */
     protected void addClasspathEntry(String resource) {

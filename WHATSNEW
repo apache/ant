@@ -207,6 +207,9 @@ Fixed bugs:
 * Do not overwrite the value (increment) attribute of PropertyFile nested Entry element.
   Bugzilla Report 21505.
 
+* Prevent sysproperties with no key or no value from being added.
+  Bugzilla Report
+
 
 Other changes:
 --------------
