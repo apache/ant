@@ -900,6 +900,12 @@ preferred over the <i>checkout</i> command, because of speed.</p>
     <td valign="top">report only, don't change any files.</td>
     <td align="center" valign="top">No, default &quot;false&quot;</td>
   </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Stop the buildprocess if the command exits with a
+      returncode other than 0.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>  &lt;cvs cvsRoot=&quot;:pserver:anoncvs@jakarta.apache.org:/home/cvspublic&quot;
@@ -1066,6 +1072,12 @@ systems.</p>
     <td valign="top">the file to which the output of the command should be
       redirected.</td>
     <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Stop the buildprocess if the command exits with a
+      returncode other than 0.</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -1567,6 +1579,12 @@ the one that is currently running Ant.</p>
     <td valign="top">jvmargs</td>
     <td valign="top">the arguments to pass to the forked VM (ignored if fork is
       disabled)</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Stop the buildprocess if the command exits with a
+      returncode other than 0. Only available if fork is true.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -2077,6 +2095,12 @@ instead.</p>
     <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
   </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Stop the buildprocess if the command exits with a
+      returncode other than 0.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
 </table>
 
 <h3>Parameters specified as nested elements</h3>
@@ -2282,6 +2306,12 @@ necessary.</p>
     <td valign="top">strip</td> 
     <td valign="top">Strip the smallest prefix containing <i>num</i> leading 
       slashes from filenames.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">failonerror</td>
+    <td valign="top">Stop the buildprocess if the command exits with a
+      returncode other than 0.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>

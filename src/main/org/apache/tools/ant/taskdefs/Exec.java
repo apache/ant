@@ -70,6 +70,7 @@ public class Exec extends Task {
     private File dir;
     private String command;
     protected PrintWriter fos = null;
+    private boolean failOnError = false;
 
     private static final int BUFFER_SIZE = 512;
 
@@ -138,7 +139,11 @@ public class Exec extends Task {
             // check its exit value
             err = proc.exitValue();
             if (err != 0) {
-                log("Result: " + err, Project.MSG_ERR);
+                if (failOnError) {
+                    throw new BuildException("Exec returned: "+err, location);
+                } else {
+                    log("Result: " + err, Project.MSG_ERR);
+                }
             }
         } catch (IOException ioe) {
             throw new BuildException("Error exec: " + command, ioe, location);
@@ -161,6 +166,10 @@ public class Exec extends Task {
 
     public void setOutput(String out) {
         this.out = out;
+    }
+
+    public void setFailonerror(String fail) {
+        failOnError = Project.toBoolean(fail);
     }
 
     protected void outputLog(String line, int messageLevel) {
