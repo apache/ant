@@ -62,6 +62,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Stack;
 import java.util.Vector;
@@ -371,8 +372,12 @@ public class Project {
      * @param listener The listener to add to the list.
      *                 Must not be <code>null</code>.
      */
-    public void addBuildListener(BuildListener listener) {
-        listeners.addElement(listener);
+    public synchronized void addBuildListener(BuildListener listener) {
+        // create a new Vector to avoid ConcurrentModificationExc when
+        // the listeners get added/removed while we are in fire
+        Vector newListeners = getBuildListeners();
+        newListeners.addElement(listener);
+        listeners = newListeners;
     }
 
     /**
@@ -383,11 +388,15 @@ public class Project {
      *                 Should not be <code>null</code>.
      */
     public void removeBuildListener(BuildListener listener) {
-        listeners.removeElement(listener);
+        // create a new Vector to avoid ConcurrentModificationExc when
+        // the listeners get added/removed while we are in fire
+        Vector newListeners = getBuildListeners();
+        newListeners.removeElement(listener);
+        listeners = newListeners;
     }
 
     /**
-     * Returns a list of build listeners for the project.
+     * Returns a copy of the list of build listeners for the project.
      *
      * @return a list of build listeners for the project
      */
@@ -1800,10 +1809,9 @@ public class Project {
      */
     public void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
-        Vector listeners = getBuildListeners();
-        int size = listeners.size();
-        for (int i = 0; i < size; i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
+        Iterator iter = listeners.iterator();
+        while (iter.hasNext()) {
+            BuildListener listener = (BuildListener) iter.next();
             listener.buildStarted(event);
         }
     }
@@ -1817,10 +1825,9 @@ public class Project {
     public void fireBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
-        Vector listeners = getBuildListeners();
-        int size = listeners.size();
-        for (int i = 0; i < size; i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
+        Iterator iter = listeners.iterator();
+        while (iter.hasNext()) {
+            BuildListener listener = (BuildListener) iter.next();
             listener.buildFinished(event);
         }
     }
@@ -1834,10 +1841,9 @@ public class Project {
      */
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
-        Vector listeners = getBuildListeners();
-        int size = listeners.size();
-        for (int i = 0; i < size; i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
+        Iterator iter = listeners.iterator();
+        while (iter.hasNext()) {
+            BuildListener listener = (BuildListener) iter.next();
             listener.targetStarted(event);
         }
     }
@@ -1855,10 +1861,9 @@ public class Project {
     protected void fireTargetFinished(Target target, Throwable exception) {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
-        Vector listeners = getBuildListeners();
-        int size = listeners.size();
-        for (int i = 0; i < size; i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
+        Iterator iter = listeners.iterator();
+        while (iter.hasNext()) {
+            BuildListener listener = (BuildListener) iter.next();
             listener.targetFinished(event);
         }
     }
@@ -1873,10 +1878,9 @@ public class Project {
         // register this as the current task on the current thread.
         registerThreadTask(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
-        Vector listeners = getBuildListeners();
-        int size = listeners.size();
-        for (int i = 0; i < size; i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
+        Iterator iter = listeners.iterator();
+        while (iter.hasNext()) {
+            BuildListener listener = (BuildListener) iter.next();
             listener.taskStarted(event);
         }
     }
@@ -1897,10 +1901,9 @@ public class Project {
         System.err.flush();
         BuildEvent event = new BuildEvent(task);
         event.setException(exception);
-        Vector listeners = getBuildListeners();
-        int size = listeners.size();
-        for (int i = 0; i < size; i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
+        Iterator iter = listeners.iterator();
+        while (iter.hasNext()) {
+            BuildListener listener = (BuildListener) iter.next();
             listener.taskFinished(event);
         }
     }
@@ -1924,7 +1927,6 @@ public class Project {
         } else {
             event.setMessage(message, priority);
         }
-        Vector listeners = getBuildListeners();
         synchronized (this) {
             if (loggingMessage) {
                 throw new BuildException("Listener attempted to access "
@@ -1933,9 +1935,9 @@ public class Project {
             }
             try {
                 loggingMessage = true;
-                int size = listeners.size();
-                for (int i = 0; i < size; i++) {
-                    BuildListener listener = (BuildListener) listeners.elementAt(i);
+                Iterator iter = listeners.iterator();
+                while (iter.hasNext()) {
+                    BuildListener listener = (BuildListener) iter.next();
                     listener.messageLogged(event);
                 }
             } finally {
