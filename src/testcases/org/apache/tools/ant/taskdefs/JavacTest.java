@@ -144,13 +144,18 @@ public class JavacTest extends TestCase {
         // check defaults
         String compiler = javac.getCompiler();
         assertNotNull(compiler);
-        assertTrue("default value",
-                   "javac1.1".equals(compiler)
-                   || "javac1.2".equals(compiler)
-                   || "javac1.3".equals(compiler)
-                   || "javac1.4".equals(compiler)
-                   || "javac1.5".equals(compiler)
-                   || "classic".equals(compiler));
+        if (System.getProperty("build.compiler") != null) {
+            assertEquals(System.getProperty("build.compiler"),
+                         compiler);
+        } else {
+            assertTrue("default value",
+                       "javac1.1".equals(compiler)
+                       || "javac1.2".equals(compiler)
+                       || "javac1.3".equals(compiler)
+                       || "javac1.4".equals(compiler)
+                       || "javac1.5".equals(compiler)
+                       || "classic".equals(compiler));
+        }
 
         javac.setFork(true);
         assertNotNull(javac.getCompiler());
@@ -160,7 +165,8 @@ public class JavacTest extends TestCase {
         // check build.compiler provides defaults
         javac = new Javac();
         javac.setProject(project);
-        project.setNewProperty("build.compiler", "jikes");
+        // setUserProperty to override system properties
+        project.setUserProperty("build.compiler", "jikes");
         compiler = javac.getCompiler();
         assertNotNull(compiler);
         assertEquals("jikes", compiler);

@@ -593,6 +593,13 @@
     <condition property="running.in.gump">
       <isset property="gump.merge"/>
     </condition>
+
+    <condition property="build.compiler" value="classic">
+      <not>
+        <isset property="jdk1.3+"/>
+      </not>
+    </condition>
+    <property name="build.compiler" value="modern"/>
   </target>
 
 
@@ -1473,6 +1480,7 @@
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
       <sysproperty key="root" file="${basedir}"/>
+      <sysproperty key="build.compiler" value="${build.compiler}"/>
 
       <formatter type="brief" usefile="false"/>
 
@@ -1633,6 +1641,7 @@
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
       <sysproperty key="root" file="${basedir}"/>
+      <sysproperty key="build.compiler" value="${build.compiler}"/>
       <classpath refid="tests-classpath"/>
       <formatter type="plain" usefile="false"/>
       <test name="${testcase}"/>
