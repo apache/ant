@@ -192,7 +192,7 @@ public class JUnitTestRunner implements TestListener {
     public JUnitTestRunner(JUnitTest test, boolean haltOnError,
                            boolean filtertrace, boolean haltOnFailure,
                            boolean showOutput, ClassLoader loader) {
-        this.filtertrace = filtertrace;
+        JUnitTestRunner.filtertrace = filtertrace;
         this.junitTest = test;
         this.haltOnError = haltOnError;
         this.haltOnFailure = haltOnFailure;
@@ -391,7 +391,7 @@ public class JUnitTestRunner implements TestListener {
     }
 
     /**
-     * @see Task#handleInput(byte[], int, int)
+     * @see org.apache.tools.ant.Task#handleInput(byte[], int, int)
      *
      * @since Ant 1.6
      */
