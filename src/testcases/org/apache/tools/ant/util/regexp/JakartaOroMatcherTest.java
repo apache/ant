@@ -55,17 +55,17 @@
 package org.apache.tools.ant.util.regexp;
 
 /**
- * Tests for the jakarta-regexp implementation of the RegexpMatcher interface.
+ * Tests for the jakarta-oro implementation of the OroMatcher interface.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
-public class JakartaRegexpMatcherTest extends RegexpMatcherTest {
+public class JakartaOroMatcherTest extends RegexpMatcherTest {
 
     public RegexpMatcher getImplementation() {
-        return new JakartaRegexpMatcher();
+        return new JakartaOroMatcher();
     }
 
-    public JakartaRegexpMatcherTest(String name) {
+    public JakartaOroMatcherTest(String name) {
         super(name);
     }
 

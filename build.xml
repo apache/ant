@@ -75,6 +75,7 @@
     <available property="vaj.present" classname="com.ibm.ivj.util.base.Workspace" />
     <available property="stylebook.present" classname="org.apache.stylebook.Engine" />
     <available property="jakarta.regexp.present" classname="org.apache.regexp.RE" />
+    <available property="jakarta.oro.present" classname="org.apache.oro.text.regex.Perl5Matcher" />
   </target>
 
   <!-- =================================================================== -->
@@ -115,6 +116,7 @@
       <exclude name="**/ANTLR.java" unless="antlr.present" />
       <exclude name="**/ide/VAJ*.java" unless="vaj.present" />
       <exclude name="**/JakartaRegexpMatcher.java" unless="jakarta.regexp.present" />
+      <exclude name="**/JakartaOroMatcher.java" unless="jakarta.oro.present" />
     </javac>
  
     <copy todir="${build.classes}">
@@ -338,6 +340,7 @@
       </classpath>
       <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" unless="antlr.present" />
       <exclude name="org/apache/tools/ant/util/regexp/JakartaRegexpMatcherTest.java" unless="jakarta.regexp.present" />
+      <exclude name="org/apache/tools/ant/util/regexp/JakartaOroMatcherTest.java" unless="jakarta.oro.present" />
     </javac>
    </target>
 
@@ -371,6 +374,7 @@
           <exclude name="org/apache/tools/ant/taskdefs/optional/ANTLRTest.java" unless="antlr.present" />
 
           <exclude name="org/apache/tools/ant/util/regexp/JakartaRegexpMatcherTest.java" unless="jakarta.regexp.present" />
+          <exclude name="org/apache/tools/ant/util/regexp/JakartaOroMatcherTest.java" unless="jakarta.oro.present" />
         </fileset>
       </batchtest>
 

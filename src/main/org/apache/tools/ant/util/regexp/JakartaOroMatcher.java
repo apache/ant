@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights 
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -9,7 +9,7 @@
  * are met:
  *
  * 1. Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
+ *    notice, this list of conditions and the following disclaimer. 
  *
  * 2. Redistributions in binary form must reproduce the above copyright
  *    notice, this list of conditions and the following disclaimer in
@@ -17,15 +17,15 @@
  *    distribution.
  *
  * 3. The end-user documentation included with the redistribution, if
- *    any, must include the following acknowlegement:
- *       "This product includes software developed by the
+ *    any, must include the following acknowlegement:  
+ *       "This product includes software developed by the 
  *        Apache Software Foundation (http://www.apache.org/)."
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
  * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
- *    from this software without prior written permission. For written
+ *    from this software without prior written permission. For written 
  *    permission, please contact apache@apache.org.
  *
  * 5. Products derived from this software may not be called "Apache"
@@ -54,19 +54,63 @@
 
 package org.apache.tools.ant.util.regexp;
 
+import org.apache.oro.text.regex.*;
+
+import org.apache.tools.ant.BuildException;
+import java.util.Vector;
+
 /**
- * Tests for the jakarta-regexp implementation of the RegexpMatcher interface.
+ * Implementation of RegexpMatcher for Jakarta-ORO.
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  */
-public class JakartaRegexpMatcherTest extends RegexpMatcherTest {
+public class JakartaOroMatcher implements RegexpMatcher {
 
-    public RegexpMatcher getImplementation() {
-        return new JakartaRegexpMatcher();
+    protected Perl5Matcher reg = new Perl5Matcher();
+    protected Perl5Compiler comp = new Perl5Compiler();
+    private Pattern pattern;
+
+    /**
+     * Set the regexp pattern from the String description.
+     */
+    public void setPattern(String pattern) throws BuildException {
+        try {
+            this.pattern = comp.compile(pattern);
+        } catch (MalformedPatternException e) {
+            throw new BuildException(e);
+        }
     }
 
-    public JakartaRegexpMatcherTest(String name) {
-        super(name);
+    /**
+     * Get a String representation of the regexp pattern
+     */
+    public String getPattern() {
+        return pattern.getPattern();
+    }
+
+    /**
+     * Does the given argument match the pattern?
+     */
+    public boolean matches(String argument) {
+        return reg.contains(argument, pattern);
+    }
+
+    /**
+     * Returns a Vector of matched groups found in the argument.
+     *
+     * <p>Group 0 will be the full match, the rest are the
+     * parenthesized subexpressions</p>.
+     */
+    public Vector getGroups(String argument) {
+        if (!matches(argument)) {
+            return null;
+        }
+        Vector v = new Vector();
+        MatchResult mr = reg.getMatch();
+        for (int i=0; i<mr.groups(); i++) {
+            v.addElement(mr.group(i));
+        }
+        return v;
     }
 
 }

@@ -23,7 +23,7 @@
  *    Alternately, this acknowlegement may appear in the software itself,
  *    if and wherever such third-party acknowlegements normally appear.
  *
- * 4. The names "The Jakarta Project", "Tomcat", and "Apache Software
+ * 4. The names "The Jakarta Project", "Ant", and "Apache Software
  *    Foundation" must not be used to endorse or promote products derived
  *    from this software without prior written permission. For written
  *    permission, please contact apache@apache.org.
@@ -74,8 +74,15 @@ public class RegexpPatternMapper implements FileNameMapper {
 
     public RegexpPatternMapper() throws BuildException {
         try {
-            regexpMatcherClass = Class.forName("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
-        } catch (ClassNotFoundException ce) {}
+            regexpMatcherClass = Class.forName("org.apache.tools.ant.util.regexp.JakartaOroMatcher");
+
+            if (regexpMatcherClass == null) {
+                regexpMatcherClass = Class.forName("org.apache.tools.ant.util.regexp.JakartaRegexpMatcher");
+                 
+            }
+        } catch (ClassNotFoundException ce) {
+        } catch (NoClassDefFoundError ne) {
+        }
 
         if (regexpMatcherClass == null) {
             throw new BuildException("No supported regular expression matcher found");
