@@ -23,7 +23,7 @@ import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.framework.Condition;
 import org.apache.myrmidon.components.model.DefaultProject;
-import org.apache.myrmidon.components.model.Import;
+import org.apache.myrmidon.components.model.TypeLib;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
 import org.xml.sax.SAXException;
@@ -189,7 +189,7 @@ public class DefaultProjectBuilder
             {
                 if( name.equals( "import" ) )
                 {
-                    buildImport( project, element );
+                    buildTypeLib( project, element );
                     continue;
                 }
                 else
@@ -270,8 +270,8 @@ public class DefaultProjectBuilder
         project.addProject( name, other );
     }
 
-    private void buildImport( final DefaultProject project,
-                              final Configuration element )
+    private void buildTypeLib( final DefaultProject project,
+                               final Configuration element )
         throws Exception
     {
         final String library = element.getAttribute( "library", null );
@@ -294,7 +294,7 @@ public class DefaultProjectBuilder
             }
         }
 
-        project.addImport( new Import( library, type, name ) );
+        project.addTypeLib( new TypeLib( library, type, name ) );
     }
 
     /**

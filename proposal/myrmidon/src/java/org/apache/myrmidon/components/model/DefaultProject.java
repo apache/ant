@@ -43,9 +43,9 @@ public class DefaultProject
      *
      * @return the imports
      */
-    public Import[] getImports()
+    public TypeLib[] getTypeLibs()
     {
-        return (Import[])m_imports.toArray( new Import[ 0 ] );
+        return (TypeLib[])m_imports.toArray( new TypeLib[ 0 ] );
     }
 
     /**
@@ -151,9 +151,9 @@ public class DefaultProject
         m_baseDirectory = baseDirectory;
     }
 
-    public final void addImport( final Import importEntry )
+    public final void addTypeLib( final TypeLib typeLib )
     {
-        m_imports.add( importEntry );
+        m_imports.add( typeLib );
     }
 
     /**

@@ -38,7 +38,7 @@ public interface Project
      *
      * @return the imports
      */
-    Import[] getImports();
+    TypeLib[] getTypeLibs();
 
     /**
      * Get names of projects referred to by this project.

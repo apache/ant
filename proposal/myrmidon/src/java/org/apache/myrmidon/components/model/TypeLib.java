@@ -12,7 +12,7 @@ package org.apache.myrmidon.components.model;
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class Import
+public class TypeLib
 {
     //Name of library (this is location independent)
     private final String    m_library;
@@ -26,12 +26,12 @@ public class Import
     //The name of type instance
     private final String    m_name;
 
-    public Import( final String library )
+    public TypeLib( final String library )
     {
         this( library, null, null );
     }
 
-    public Import( final String library, final String type, final String name )
+    public TypeLib( final String library, final String type, final String name )
     {
         m_library = library;
         m_type = type;
