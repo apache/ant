@@ -265,7 +265,7 @@ public class Commandline implements Cloneable {
         final int inQuote = 1;
         final int inDoubleQuote = 2;
         int state = normal;
-        StringTokenizer tok = new StringTokenizer(to_process, "\\\"\' ", true);
+        StringTokenizer tok = new StringTokenizer(to_process, "\"\' ", true);
         Vector v = new Vector();
         StringBuffer current = new StringBuffer();
 
@@ -295,21 +295,6 @@ public class Commandline implements Cloneable {
                     if (current.length() != 0) {
                         v.addElement(current.toString());
                         current.setLength(0);
-                    }
-                } else if ("\\".equals(nextTok)) {
-                    if (tok.hasMoreTokens()) {
-                        String escapedToken = tok.nextToken();
-                        char escapedChar = escapedToken.charAt(0);
-                        if (escapedChar == '\\' || escapedChar == '\'' ||
-                            escapedChar == '\"') {
-                            current.append(escapedToken);
-                        }
-                        else {
-                            current.append("\\" + escapedToken);
-                        }
-                    } else {
-                        // just add the backslash
-                        current.append("\\");
                     }
                 } else {
                     current.append(nextTok);

@@ -111,17 +111,14 @@ public class CommandlineTest extends TestCase {
         assertEquals("Single quotes stripped, double quote included", "2\"3",
                      s[1]);
 
-        s = Commandline.translateCommandline("1 2\\\'3 4");
-        assertEquals("Case with quoted single quote", 3, s.length);
-        assertEquals("single quote included", "2\'3", s[1]);
+        // \ doesn't have a special meaning anymore - this is different from
+        // what the Unix sh does but causes a lot of problems on DOS
+        // based platforms otherwise
+        s = Commandline.translateCommandline("1 2\\ 3 4");
+        assertEquals("case with quotes whitespace", 4, s.length);
+        assertEquals("Single quotes stripped, double quote included", "2\\",
+                     s[1]);
 
-        s = Commandline.translateCommandline("1 2\\\"3 4");
-        assertEquals("Case with quoted double quote", 3, s.length);
-        assertEquals("double quote included", "2\"3", s[1]);
-
-        s = Commandline.translateCommandline("1 2\\\\3 4");
-        assertEquals("Case with quoted backslash", 3, s.length);
-        assertEquals("backslash included", "2\\3", s[1]);
 
         // now to the expected failures
         

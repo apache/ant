@@ -124,7 +124,8 @@ public class PathTest extends TestCase {
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertEquals("c", l[0]);
+            assert("c resolved relative to project\'s basedir", 
+                   l[0].endsWith("/c"));
             assertEquals("/test", l[1]);
         } else {
             assertEquals("drives on DOS", 1, l.length);
@@ -135,7 +136,8 @@ public class PathTest extends TestCase {
         l = p.list();
         if (isUnixStyle) {
             assertEquals("no drives on Unix", 2, l.length);
-            assertEquals("c", l[0]);
+            assert("c resolved relative to project\'s basedir", 
+                   l[0].endsWith("/c"));
             assertEquals("/test", l[1]);
         } else {
             assertEquals("drives on DOS", 1, l.length);

@@ -453,9 +453,10 @@ public class Project {
     }
 
     public File resolveFile(String fileName) {
+        fileName = fileName.replace('/', File.separatorChar).replace('\\', File.separatorChar);
+
         // deal with absolute files
-        if (fileName.startsWith("/")) return new File( fileName );
-        if (fileName.startsWith(System.getProperty("file.separator")))
+        if (fileName.startsWith(File.separator)) 
             return new File( fileName );
 
         // Eliminate consecutive slashes after the drive spec
@@ -488,7 +489,7 @@ public class Project {
         }
 
         File file = new File(baseDir.getAbsolutePath());
-        StringTokenizer tok = new StringTokenizer(fileName, "/", false);
+        StringTokenizer tok = new StringTokenizer(fileName, File.separator, false);
         while (tok.hasMoreTokens()) {
             String part = tok.nextToken();
             if (part.equals("..")) {
