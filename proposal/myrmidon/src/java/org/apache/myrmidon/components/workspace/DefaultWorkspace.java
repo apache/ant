@@ -134,7 +134,7 @@ public class DefaultWorkspace
 
         m_listenerSupport.projectStarted( project.getProjectName() );
 
-        executeTarget( "<init>", project.getImplicitTarget(), entry.getFrame() );
+        executeTarget( project, "<init>", project.getImplicitTarget(), entry.getFrame() );
 
         execute( project, target, entry );
 
@@ -370,13 +370,7 @@ public class DefaultWorkspace
             }
         }
 
-        //notify listeners
-        m_listenerSupport.targetStarted( project.getProjectName(), targetName );
-
-        executeTarget( targetName, target, entry.getFrame() );
-
-        //notify listeners
-        m_listenerSupport.targetFinished();
+        executeTarget( project, targetName, target, entry.getFrame() );
     }
 
     /**
@@ -387,11 +381,15 @@ public class DefaultWorkspace
      * @param frame the frame in which to execute
      * @exception TaskException if an error occurs
      */
-    private void executeTarget( final String name,
+    private void executeTarget( final Project project,
+                                final String name,
                                 final Target target,
                                 final ExecutionFrame frame )
         throws TaskException
     {
+        //notify listeners
+        m_listenerSupport.targetStarted( project.getProjectName(), name );
+
         //check the condition associated with target.
         //if it is not satisfied then skip target
         final Condition condition = target.getCondition();
@@ -426,6 +424,9 @@ public class DefaultWorkspace
         {
             executeTask( tasks[ i ], frame );
         }
+
+        //notify listeners
+        m_listenerSupport.targetFinished();
     }
 
     /**

@@ -384,6 +384,7 @@ Legal:
     <ant antfile="antlib.xml">
        <property name="antlib.name" value="sound"/>
     </ant>
+
     <!--
     <ant antfile="antlib.xml">
       <property name="antlib.name" value="vfile"/>
@@ -412,7 +413,7 @@ Legal:
   </target>
 
   <!-- Compiles and runs the unit tests -->
-  <target name="test" depends="compile" if="junit.present" description="Runs the unit tests">
+  <target name="test" depends="dist-lite" if="junit.present" description="Runs the unit tests">
     <!-- Compile the unit tests -->
     <mkdir dir="${test.classes}"/>
     <javac srcdir="src/testcases"
@@ -427,6 +428,11 @@ Legal:
     <delete dir="${test.working.dir}"/>
     <copy todir="${test.working.dir}">
         <fileset dir="etc/testcases"/>
+    </copy>
+
+    <!-- Prepare a dummy installation -->
+    <copy todir="${test.working.dir}/dist">
+        <fileset dir="${dist.dir}"/>
     </copy>
 
     <!-- Prepare the VFS tests -->
@@ -455,7 +461,10 @@ Legal:
     <junit printsummary="on"
            fork="true">
       <formatter type="brief" usefile="false"/>
-      <classpath refid="project.class.path"/>
+      <classpath>
+          <fileset dir="${test.working.dir}/dist/bin/lib" includes="**/*.jar"/>
+          <fileset dir="${test.working.dir}/dist/lib" includes="**/*.jar, **/*.atl"/>
+      </classpath>
       <classpath location="${test.classes}"/>
 
       <!-- Pass config to the tests -->

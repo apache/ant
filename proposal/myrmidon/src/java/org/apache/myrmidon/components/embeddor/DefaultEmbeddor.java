@@ -287,10 +287,10 @@ public class DefaultEmbeddor
 
         filepath = getParameter( "myrmidon.home" );
         m_homeDir = ( new File( filepath ) ).getAbsoluteFile();
-        checkDirectory( m_homeDir, "home" );
+        checkDirectory( m_homeDir, "home-dir.name" );
 
         filepath = getParameter( "myrmidon.lib.path" );
-        m_taskLibDir = resolveDirectory( filepath, "task-lib-dir" );
+        m_taskLibDir = resolveDirectory( filepath, "task-lib-dir.name" );
     }
 
     /**
@@ -339,12 +339,14 @@ public class DefaultEmbeddor
     {
         if( !file.exists() )
         {
-            final String message = REZ.getString( "file-no-exist.error", name, file );
+            final String nameStr = REZ.getString( name );
+            final String message = REZ.getString( "file-no-exist.error", nameStr, file );
             throw new Exception( message );
         }
         else if( !file.isDirectory() )
         {
-            final String message = REZ.getString( "file-not-dir.error", name, file );
+            final String nameStr = REZ.getString( name );
+            final String message = REZ.getString( "file-not-dir.error", nameStr, file );
             throw new Exception( message );
         }
     }

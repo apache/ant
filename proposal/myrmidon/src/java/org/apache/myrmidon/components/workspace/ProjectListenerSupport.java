@@ -110,7 +110,6 @@ public class ProjectListenerSupport
     {
         m_projectName = projectName;
         m_targetName = targetName;
-        ;
         m_taskName = null;
 
         for( int i = 0; i < m_listeners.length; i++ )
