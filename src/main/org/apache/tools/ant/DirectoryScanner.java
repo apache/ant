@@ -241,7 +241,7 @@ public class DirectoryScanner
     private boolean followSymlinks = true;
 
     /** Helper. */
-    private static final FileUtils fileUtils = FileUtils.newFileUtils();
+    private static final FileUtils FILE_UTILS = FileUtils.newFileUtils();
 
     /** Whether or not everything tested so far has been included. */
     protected boolean everythingIncluded = true;
@@ -684,14 +684,14 @@ public class DirectoryScanner
                     // we need to double check.
                     try {
                         File canonFile = myfile.getCanonicalFile();
-                        String path = fileUtils.removeLeadingPath(canonBase,
+                        String path = FILE_UTILS.removeLeadingPath(canonBase,
                                                                   canonFile);
                         if (!path.equals(currentelement) || ON_VMS) {
                             myfile = findFile(basedir, currentelement);
                             if (myfile != null) {
                                 currentelement =
-                                    fileUtils.removeLeadingPath(basedir,
-                                                                myfile);
+                                    FILE_UTILS.removeLeadingPath(basedir,
+                                                                 myfile);
                             }
                         }
                     } catch (IOException ex) {
@@ -704,7 +704,7 @@ public class DirectoryScanner
                     if (f.exists()) {
                         // adapt currentelement to the case we've
                         // actually found
-                        currentelement = fileUtils.removeLeadingPath(basedir,
+                        currentelement = FILE_UTILS.removeLeadingPath(basedir,
                                                                      f);
                         myfile = f;
                     }
@@ -833,7 +833,7 @@ public class DirectoryScanner
             Vector noLinks = new Vector();
             for (int i = 0; i < newfiles.length; i++) {
                 try {
-                    if (fileUtils.isSymbolicLink(dir, newfiles[i])) {
+                    if (FILE_UTILS.isSymbolicLink(dir, newfiles[i])) {
                         String name = vpath + newfiles[i];
                         File   file = new File(dir, newfiles[i]);
                         if (file.isDirectory()) {
@@ -1201,7 +1201,7 @@ public class DirectoryScanner
      * @since Ant 1.5.2
      */
     public Resource getResource(String name) {
-        File f = fileUtils.resolveFile(basedir, name);
+        File f = FILE_UTILS.resolveFile(basedir, name);
         return new Resource(name, f.exists(), f.lastModified(),
                             f.isDirectory());
     }
@@ -1346,7 +1346,7 @@ public class DirectoryScanner
         if (pathElements.size() > 0) {
             String current = (String) pathElements.remove(0);
             try {
-                if (fileUtils.isSymbolicLink(base, current)) {
+                if (FILE_UTILS.isSymbolicLink(base, current)) {
                     return true;
                 } else {
                     base = new File(base, current);

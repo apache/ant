@@ -27,7 +27,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Locale;
 import org.apache.tools.ant.types.EnumeratedAttribute;
-import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.PreSetDef;
 
 /**
@@ -310,6 +309,7 @@ public final class IntrospectionHelper implements BuildListener {
                                 throws InvocationTargetException,
                                 IllegalAccessException, InstantiationException {
                                 if (child != null) {
+                                    // Empty
                                 } else if (c.getParameterTypes().length == 0) {
                                     child = c.newInstance(new Object[] {});
                                 } else {
@@ -925,8 +925,8 @@ public final class IntrospectionHelper implements BuildListener {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent,
-                                 new Boolean[] {
-                                     new Boolean(Project.toBoolean(value))});
+                                 new Boolean[] {Project.toBoolean(value)
+                                                ? Boolean.TRUE : Boolean.FALSE});
                     }
 
                 };
