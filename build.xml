@@ -1233,6 +1233,16 @@
 
   <target name="run-tests" depends="dump-info,compile-tests,probe-offline" if="junit.present">
 
+    <condition property="run.junitreport">
+      <or>
+        <isset property="xalan2.present"/>
+        <and>
+          <isset property="xalan.present"/>
+          <isset property="bsf.present"/>
+        </and>
+      </or>
+    </condition>
+
     <junit printsummary="${junit.summary}" haltonfailure="yes"
            filtertrace="${junit.filtertrace}"
            fork="${junit.fork}">
@@ -1312,6 +1322,8 @@
                    unless="trax.impl.present"/>
           <exclude name="${ant.package}/types/XMLCatalogBuildFileTest.java"
                    unless="trax.impl.present"/>
+          <exclude name="${optional.package}/junit/JUnitReportTest.java"
+                   unless="run.junitreport"/>
 
           <!-- needs BSF to work -->
           <exclude name="${optional.package}/XalanLiaisonTest.java"
