@@ -1608,6 +1608,8 @@
                    unless="tests.and.ant.share.classloader"/>
           <exclude name="${optional.package}/metamata/MAuditParserTest.java"
                    unless="tests.and.ant.share.classloader"/>
+          <exclude name="${ant.package}/taskdefs/ProcessDestroyerTest.java"
+                   unless="tests.and.ant.share.classloader"/>
 
           <!-- can only run if cvs is installed on your machine
                enable by setting the property have.cvs
