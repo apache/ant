@@ -13,6 +13,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
@@ -27,6 +29,9 @@ import org.apache.myrmidon.api.TaskException;
 public class CVSPass
     extends AbstractTask
 {
+    private final static Resources REZ =
+        ResourceManager.getPackageResources( CVSPass.class );
+
     /**
      * CVS Root
      */
@@ -45,25 +50,25 @@ public class CVSPass
     /**
      * Array contain char conversion data
      */
-    private final static char[] c_shifts =
-        {
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
-            16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-            114, 120, 53, 79, 96, 109, 72, 108, 70, 64, 76, 67, 116, 74, 68, 87,
-            111, 52, 75, 119, 49, 34, 82, 81, 95, 65, 112, 86, 118, 110, 122, 105,
-            41, 57, 83, 43, 46, 102, 40, 89, 38, 103, 45, 50, 42, 123, 91, 35,
-            125, 55, 54, 66, 124, 126, 59, 47, 92, 71, 115, 78, 88, 107, 106, 56,
-            36, 121, 117, 104, 101, 100, 69, 73, 99, 63, 94, 93, 39, 37, 61, 48,
-            58, 113, 32, 90, 44, 98, 60, 51, 33, 97, 62, 77, 84, 80, 85, 223,
-            225, 216, 187, 166, 229, 189, 222, 188, 141, 249, 148, 200, 184, 136, 248, 190,
-            199, 170, 181, 204, 138, 232, 218, 183, 255, 234, 220, 247, 213, 203, 226, 193,
-            174, 172, 228, 252, 217, 201, 131, 230, 197, 211, 145, 238, 161, 179, 160, 212,
-            207, 221, 254, 173, 202, 146, 224, 151, 140, 196, 205, 130, 135, 133, 143, 246,
-            192, 159, 244, 239, 185, 168, 215, 144, 139, 165, 180, 157, 147, 186, 214, 176,
-            227, 231, 219, 169, 175, 156, 206, 198, 129, 164, 150, 210, 154, 177, 134, 127,
-            182, 128, 158, 208, 162, 132, 167, 209, 149, 241, 153, 251, 237, 236, 171, 195,
-            243, 233, 253, 240, 194, 250, 191, 155, 142, 137, 245, 235, 163, 242, 178, 152
-        };
+    private final static char[] c_shifts = new char[]
+    {
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+        16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
+        114, 120, 53, 79, 96, 109, 72, 108, 70, 64, 76, 67, 116, 74, 68, 87,
+        111, 52, 75, 119, 49, 34, 82, 81, 95, 65, 112, 86, 118, 110, 122, 105,
+        41, 57, 83, 43, 46, 102, 40, 89, 38, 103, 45, 50, 42, 123, 91, 35,
+        125, 55, 54, 66, 124, 126, 59, 47, 92, 71, 115, 78, 88, 107, 106, 56,
+        36, 121, 117, 104, 101, 100, 69, 73, 99, 63, 94, 93, 39, 37, 61, 48,
+        58, 113, 32, 90, 44, 98, 60, 51, 33, 97, 62, 77, 84, 80, 85, 223,
+        225, 216, 187, 166, 229, 189, 222, 188, 141, 249, 148, 200, 184, 136, 248, 190,
+        199, 170, 181, 204, 138, 232, 218, 183, 255, 234, 220, 247, 213, 203, 226, 193,
+        174, 172, 228, 252, 217, 201, 131, 230, 197, 211, 145, 238, 161, 179, 160, 212,
+        207, 221, 254, 173, 202, 146, 224, 151, 140, 196, 205, 130, 135, 133, 143, 246,
+        192, 159, 244, 239, 185, 168, 215, 144, 139, 165, 180, 157, 147, 186, 214, 176,
+        227, 231, 219, 169, 175, 156, 206, 198, 129, 164, 150, 210, 154, 177, 134, 127,
+        182, 128, 158, 208, 162, 132, 167, 209, 149, 241, 153, 251, 237, 236, 171, 195,
+        243, 233, 253, 240, 194, 250, 191, 155, 142, 137, 245, 235, 163, 242, 178, 152
+    };
 
     public CVSPass()
     {
@@ -103,18 +108,12 @@ public class CVSPass
     public final void execute()
         throws TaskException
     {
-        if( null == m_cvsRoot )
-        {
-            throw new TaskException( "cvsroot is required" );
-        }
-        if( null == m_password )
-        {
-            throw new TaskException( "password is required" );
-        }
+        validate();
 
-        getContext().debug( "cvsRoot: " + m_cvsRoot );
-        getContext().debug( "password: " + m_password );
-        getContext().debug( "passFile: " + m_passwordFile );
+        final String key = "cvsRoot: ";
+        notify( "root", m_cvsRoot );
+        notify( "password", m_password );
+        notify( "passFile", m_passwordFile );
 
         //FIXME: Should not be writing the whole file - Just append to the file
         //Also should have EOL configurable
@@ -142,7 +141,7 @@ public class CVSPass
             final String pwdfile =
                 sb.toString() + m_cvsRoot + " A" + mangle( m_password );
 
-            getContext().debug( "Writing -> " + pwdfile );
+            notify( "write", pwdfile );
 
             final PrintWriter writer =
                 new PrintWriter( new FileWriter( m_passwordFile ) );
@@ -151,9 +150,42 @@ public class CVSPass
 
             writer.close();
         }
-        catch( IOException e )
+        catch( final IOException ioe )
         {
-            throw new TaskException( "Error", e );
+            throw new TaskException( ioe.toString(), ioe );
+        }
+    }
+
+    /**
+     * Utility method that looks specified key up in resources and
+     * prints it out adding specified value as param.
+     *
+     * @param key the key into resource file
+     * @param value the accompanying value
+     */
+    private void notify( final String key, final Object value )
+    {
+        final String message = REZ.getString( "cvspass." + key + ".notice", value );
+        getContext().debug( message );
+    }
+
+    /**
+     * Validate the attributes of the task.
+     *
+     * @throws TaskException if invalid parameters supplied
+     */
+    private void validate() throws TaskException
+    {
+        if( null == m_cvsRoot )
+        {
+            final String message = REZ.getString( "cvspass.noroot.error" );
+            throw new TaskException( message );
+        }
+
+        if( null == m_password )
+        {
+            final String message = REZ.getString( "cvspass.nopassword.error" );
+            throw new TaskException( message );
         }
     }
 
