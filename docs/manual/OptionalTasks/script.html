@@ -26,7 +26,7 @@ used instead of the project name. The name "self" is a pre-defined reference to 
 <p>If you are using JavaScript a good resource is <a target="_blank" href="http://www.mozilla.org/rhino/doc.html">
 http://www.mozilla.org/rhino/doc.html</a> as we are using their JavaScript interpreter.</p>
 <p>Scripts can do almost anything a task written in Java could do.</p>
-<p>Rhino provides a special construct - the <i>JavaAdapter</i>. Whith that you can
+<p>Rhino provides a special construct - the <i>JavaAdapter</i>. With that you can
 create an object which implements several interfaces, extends classes and for which you
 can overwrite methods. Because this is an undocumented feature (yet), here is the link
 to an explanation: <a href="http://groups.google.com/groups?hl=en&lr=&ie=UTF-8&oe=UTF-8&newwindow=1&frame=right&th=610d2db45c0756bd&seekm=391EEC3C.5236D929%40yahoo.com#link2">
@@ -55,31 +55,52 @@ Groups@Google: "Rhino, enum.js, JavaAdapter?"</a> by Norris Boyd in the newsgrou
   </tr>
 </table>
 <h3>Examples</h3>
+The following snipnet shows use of three different languages:
+  <blockquote><pre>
+    &lt;property name="message" value="Hello world"/&gt;
+
+    &lt;script language="groovy"&gt;
+      println("message is " + message)
+    &lt;/script&gt;
+
+    &lt;script language="beanshell"&gt;
+      System.out.println("message is " + message);
+    &lt;/script&gt;
+
+    &lt;script language="jython"&gt;
+print "message is %s" % message
+    &lt;/script&gt;
+</pre>
+  </blockquote>
+  <p>
+  Note that for the <i>jython</i> example, the script contents <b>must</b>
+  start on the first column.
+  </p>
+  <p>
+    The following script uses javascript to create a number of
+    echo tasks and execute them.
+  </p>
 <blockquote><pre>
 &lt;project name=&quot;squares&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
 
-  &lt;target name=&quot;setup&quot;&gt;
+  &lt;target name=&quot;main&quot;&gt;
 
     &lt;script language=&quot;javascript&quot;&gt; &lt;![CDATA[
 
       for (i=1; i&lt;=10; i++) {
         echo = squares.createTask(&quot;echo&quot;);
-        main.addTask(echo);
         echo.setMessage(i*i);
+        echo.perform();
       }
 
     ]]&gt; &lt;/script&gt;
 
   &lt;/target&gt;
 
-  &lt;target name=&quot;main&quot; depends=&quot;setup&quot;/&gt;
-
 &lt;/project&gt;
 </pre></blockquote>
 <p>generates</p>
 <blockquote><pre>
-setup:
-
 main:
 1
 4
