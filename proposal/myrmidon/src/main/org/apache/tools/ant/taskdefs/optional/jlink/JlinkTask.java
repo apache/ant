@@ -157,7 +157,7 @@ public class JlinkTask extends MatchingTask
         {
             throw new TaskException( "addfiles or mergefiles required! Please set." );
         }
-        log( "linking:     " + outfile.getPath() );
+        getLogger().info( "linking:     " + outfile.getPath() );
         log( "compression: " + compress, Project.MSG_VERBOSE );
         jlink linker = new jlink();
         linker.setOutfile( outfile.getPath() );

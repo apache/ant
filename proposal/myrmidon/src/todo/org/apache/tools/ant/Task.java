@@ -37,16 +37,6 @@ public abstract class Task
     }
 
     /**
-     * Log a message with the default (INFO) priority.
-     *
-     * @param msg Description of Parameter
-     */
-    public void log( String msg )
-    {
-        log( msg, Project.MSG_INFO );
-    }
-
-    /**
      * Log a mesage with the give priority.
      *
      * @param msgLevel the message priority at which this message is to be

@@ -459,7 +459,7 @@ public class Javah extends Task
         public void setName( String name )
         {
             this.name = name;
-            log( "ClassArgument.name=" + name );
+            getLogger().info( "ClassArgument.name=" + name );
         }
 
         public String getName()

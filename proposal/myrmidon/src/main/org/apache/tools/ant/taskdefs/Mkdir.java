@@ -49,7 +49,7 @@ public class Mkdir extends Task
                     "successful for an unknown reason";
                 throw new TaskException( msg );
             }
-            log( "Created dir: " + dir.getAbsolutePath() );
+            getLogger().info( "Created dir: " + dir.getAbsolutePath() );
         }
     }
 }

@@ -333,7 +333,7 @@ public class CovReport extends Task
         }
         if( reference != null && !"xml".equals( format ) )
         {
-            log( "Ignored reference. It cannot be used in non XML report." );
+            getLogger().info( "Ignored reference. It cannot be used in non XML report." );
             reference = null;// nullify it so that there is no ambiguity
         }
 

@@ -774,7 +774,7 @@ public class Javac extends MatchingTask
 
             CompilerAdapter adapter = CompilerAdapterFactory.getCompiler(
                 compiler, this );
-            log( "Compiling " + compileList.length +
+            getLogger().info( "Compiling " + compileList.length +
                  " source file"
                  + ( compileList.length == 1 ? "" : "s" )
                  + ( destDir != null ? " to " + destDir : "" ) );

@@ -134,7 +134,7 @@ public class AggregateTransformer
             throw new TaskException( "Errors while applying transformations", e );
         }
         final long dt = System.currentTimeMillis() - t0;
-        task.log( "Transform time: " + dt + "ms" );
+        //task.getLogger().info( "Transform time: " + dt + "ms" );
     }
 
     /**

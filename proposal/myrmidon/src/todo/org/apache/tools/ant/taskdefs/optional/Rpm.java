@@ -198,7 +198,7 @@ public class Rpm extends Task
         try
         {
             exe.execute();
-            log( "Building the RPM based on the " + specFile + " file" );
+            getLogger().info( "Building the RPM based on the " + specFile + " file" );
         }
         catch( IOException e )
         {

@@ -163,7 +163,7 @@ public class Native2Ascii extends MatchingTask
         }
         String message = "Converting " + count + " file"
             + ( count != 1 ? "s" : "" ) + " from ";
-        log( message + srcDir + " to " + destDir );
+        getLogger().info( message + srcDir + " to " + destDir );
         for( int i = 0; i < files.length; i++ )
         {
             convert( files[ i ], m.mapFileName( files[ i ] )[ 0 ] );

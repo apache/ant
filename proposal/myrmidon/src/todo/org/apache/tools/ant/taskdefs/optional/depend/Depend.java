@@ -308,7 +308,7 @@ public class Depend extends MatchingTask
             int count = deleteAllAffectedFiles();
 
             long duration = ( System.currentTimeMillis() - start ) / 1000;
-            log( "Deleted " + count + " out of date files in " + duration + " seconds" );
+            getLogger().info( "Deleted " + count + " out of date files in " + duration + " seconds" );
         }
         catch( Exception e )
         {

@@ -334,7 +334,7 @@ public class MimeMail extends Task
         }// for i
 
         msg.setContent( attachments );
-        log( "sending email " );
+        getLogger().info( "sending email " );
         Transport.send( msg );
     }
 

@@ -312,7 +312,7 @@ public class Ilasm
         //get dependencies list.
         DirectoryScanner scanner = super.getDirectoryScanner( _srcDir );
         String[] dependencies = scanner.getIncludedFiles();
-        log( "assembling " + dependencies.length + " file" + ( ( dependencies.length == 1 ) ? "" : "s" ) );
+        getLogger().info( "assembling " + dependencies.length + " file" + ( ( dependencies.length == 1 ) ? "" : "s" ) );
         String baseDir = scanner.getBasedir().toString();
         //add to the command
         for( int i = 0; i < dependencies.length; i++ )

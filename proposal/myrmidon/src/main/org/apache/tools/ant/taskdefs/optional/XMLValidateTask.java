@@ -270,7 +270,7 @@ public class XMLValidateTask extends Task
                 fileProcessed++;
             }
         }
-        log( fileProcessed + " file(s) have been successfully validated." );
+        getLogger().info( fileProcessed + " file(s) have been successfully validated." );
     }
 
     protected EntityResolver getEntityResolver()

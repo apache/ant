@@ -62,7 +62,7 @@ abstract class XalanExecutor
             }
         }
         String version = getXalanVersion( procVersion );
-        caller.task.log( "Using Xalan version: " + version );
+        //caller.task.getLogger().info( "Using Xalan version: " + version );
         executor.setCaller( caller );
         return executor;
     }

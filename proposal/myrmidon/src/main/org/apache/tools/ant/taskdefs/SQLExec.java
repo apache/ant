@@ -579,7 +579,7 @@ public class SQLExec extends Task
             }
         }
 
-        log( goodSql + " of " + totalSql +
+        getLogger().info( goodSql + " of " + totalSql +
              " SQL statements executed successfully" );
     }
 

@@ -22,7 +22,7 @@ import org.apache.tools.ant.util.FileUtils;
 public abstract class ProjectComponent
     extends AbstractTask
 {
-    protected Project project = null;
+    protected Project project;
 
     /**
      * Sets the project object of this component. This method is used by project
@@ -56,16 +56,6 @@ public abstract class ProjectComponent
         throws TaskException
     {
         return FileUtils.newFileUtils().resolveFile( project.getBaseDir(), name );
-    }
-
-    /**
-     * Log a message with the default (INFO) priority.
-     *
-     * @param msg Description of Parameter
-     */
-    public void log( String msg )
-    {
-        log( msg, Project.MSG_INFO );
     }
 
     /**

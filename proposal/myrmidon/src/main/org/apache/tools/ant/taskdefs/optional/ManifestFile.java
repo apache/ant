@@ -186,7 +186,7 @@ public class ManifestFile extends Task
 
         if( manifestFile.exists() )
         {
-            this.log( "update existing manifest file " + manifestFile.getAbsolutePath() );
+            getLogger().info( "update existing manifest file " + manifestFile.getAbsolutePath() );
 
             if( container != null )
             {
@@ -234,7 +234,7 @@ public class ManifestFile extends Task
         try
         {
             manifestFile.delete();
-            log( "Replacing or creating new manifest file " + manifestFile.getAbsolutePath() );
+            getLogger().info( "Replacing or creating new manifest file " + manifestFile.getAbsolutePath() );
             if( manifestFile.createNewFile() )
             {
                 FileOutputStream fos = new FileOutputStream( manifestFile );

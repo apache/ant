@@ -117,7 +117,7 @@ public class Cab extends MatchingTask
         if( isUpToDate( files ) )
             return;
 
-        log( "Building " + archiveType + ": " + cabFile.getAbsolutePath() );
+        getLogger().info( "Building " + archiveType + ": " + cabFile.getAbsolutePath() );
 
         if( !Os.isFamily( "windows" ) )
         {

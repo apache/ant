@@ -326,7 +326,7 @@ public class SignJar extends Task
 
         cmd.createArg().setValue( alias );
 
-        log( "Signing Jar : " + jarSource.getAbsolutePath() );
+        getLogger().info( "Signing Jar : " + jarSource.getAbsolutePath() );
         cmd.setFailonerror( true );
         cmd.execute();
     }

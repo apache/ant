@@ -105,7 +105,7 @@ public class Move extends Copy
         }
         if( fileCopyMap.size() > 0 )
         {// files to move
-            log( "Moving " + fileCopyMap.size() + " files to " +
+            getLogger().info( "Moving " + fileCopyMap.size() + " files to " +
                  destDir.getAbsolutePath() );
 
             Enumeration e = fileCopyMap.keys();
@@ -200,7 +200,7 @@ public class Move extends Copy
 
             if( count > 0 )
             {
-                log( "Moved " + count + " empty directories to " + destDir.getAbsolutePath() );
+                getLogger().info( "Moved " + count + " empty directories to " + destDir.getAbsolutePath() );
             }
         }
 

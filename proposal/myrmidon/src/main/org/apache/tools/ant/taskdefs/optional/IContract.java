@@ -527,7 +527,7 @@ public class IContract extends MatchingTask
     {
         if( !controlFile.exists() )
         {
-            log( "WARNING: Control file " + controlFile.getAbsolutePath() + " doesn't exist. iContract will be run without control file." );
+            getLogger().info( "WARNING: Control file " + controlFile.getAbsolutePath() + " doesn't exist. iContract will be run without control file." );
         }
         this.controlFile = controlFile;
     }
@@ -710,7 +710,7 @@ public class IContract extends MatchingTask
             // issue warning if pre,post or invariant is used together with controlfile
             if( ( pre || post || invariant ) && controlFile != null )
             {
-                log( "WARNING: specifying pre,post or invariant will override control file settings" );
+                getLogger().info( "WARNING: specifying pre,post or invariant will override control file settings" );
             }
 
 
@@ -796,7 +796,7 @@ public class IContract extends MatchingTask
                 }
                 catch( IOException e )
                 {
-                    log( "File icontrol.properties not found. That's ok. Writing a default one." );
+                    getLogger().info( "File icontrol.properties not found. That's ok. Writing a default one." );
                 }
                 iControlProps.setProperty( "sourceRoot", srcDir.getAbsolutePath() );
                 iControlProps.setProperty( "classRoot", classDir.getAbsolutePath() );
@@ -807,11 +807,11 @@ public class IContract extends MatchingTask
                 try
                 {// to read existing propertiesfile
                     iControlProps.store( new FileOutputStream( "icontrol.properties" ), ICONTROL_PROPERTIES_HEADER );
-                    log( "Updated icontrol.properties" );
+                    getLogger().info( "Updated icontrol.properties" );
                 }
                 catch( IOException e )
                 {
-                    log( "Couldn't write icontrol.properties." );
+                    getLogger().info( "Couldn't write icontrol.properties." );
                 }
             }
 
@@ -821,9 +821,9 @@ public class IContract extends MatchingTask
             {
                 if( iContractMissing )
                 {
-                    log( "iContract can't be found on your classpath. Your classpath is:" );
-                    log( classpath.toString() );
-                    log( "If you don't have the iContract jar, go get it at http://www.reliable-systems.com/tools/" );
+                    getLogger().info( "iContract can't be found on your classpath. Your classpath is:" );
+                    getLogger().info( classpath.toString() );
+                    getLogger().info( "If you don't have the iContract jar, go get it at http://www.reliable-systems.com/tools/" );
                 }
                 throw new TaskException( "iContract instrumentation failed. Code=" + result );
             }
@@ -948,17 +948,17 @@ public class IContract extends MatchingTask
             if( targets == null )
             {
                 targets = new File( "targets" );
-                log( "Warning: targets file not specified. generating file: " + targets.getName() );
+                getLogger().info( "Warning: targets file not specified. generating file: " + targets.getName() );
                 writeTargets = true;
             }
             else if( !targets.exists() )
             {
-                log( "Specified targets file doesn't exist. generating file: " + targets.getName() );
+                getLogger().info( "Specified targets file doesn't exist. generating file: " + targets.getName() );
                 writeTargets = true;
             }
             if( writeTargets )
             {
-                log( "You should consider using iControl to create a target file." );
+                getLogger().info( "You should consider using iControl to create a target file." );
                 targetOutputStream = new FileOutputStream( targets );
                 targetPrinter = new PrintStream( targetOutputStream );
             }
@@ -1018,7 +1018,7 @@ public class IContract extends MatchingTask
                             {
                                 if( !dirty )
                                 {
-                                    log( "Control file " + controlFile.getAbsolutePath() + " has been updated. Instrumenting all files..." );
+                                    getLogger().info( "Control file " + controlFile.getAbsolutePath() + " has been updated. Instrumenting all files..." );
                                 }
                                 dirty = true;
                                 instrumentall = true;

@@ -276,7 +276,7 @@ public class Zip extends MatchingTask
 
         String action = doUpdate ? "Updating " : "Building ";
 
-        log( action + archiveType + ": " + zipFile.getAbsolutePath() );
+        getLogger().info( action + archiveType + ": " + zipFile.getAbsolutePath() );
 
         boolean success = false;
         try

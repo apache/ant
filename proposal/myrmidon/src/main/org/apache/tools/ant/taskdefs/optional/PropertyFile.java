@@ -228,7 +228,7 @@ public class PropertyFile extends Task
         {
             if( m_propertyfile.exists() )
             {
-                log( "Updating property file: " + m_propertyfile.getAbsolutePath() );
+                getLogger().info( "Updating property file: " + m_propertyfile.getAbsolutePath() );
                 FileInputStream fis = null;
                 try
                 {
@@ -246,7 +246,7 @@ public class PropertyFile extends Task
             }
             else
             {
-                log( "Creating new property file: " +
+                getLogger().info( "Creating new property file: " +
                      m_propertyfile.getAbsolutePath() );
                 FileOutputStream out = null;
                 try

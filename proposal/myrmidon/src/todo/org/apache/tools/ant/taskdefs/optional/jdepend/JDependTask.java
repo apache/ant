@@ -344,7 +344,7 @@ public class JDependTask extends Task
         }
 
         if( getOutputFile() != null )
-            log( "Output to be stored in " + getOutputFile().getPath() );
+            getLogger().info( "Output to be stored in " + getOutputFile().getPath() );
         log( "Executing: " + commandline.toString(), Project.MSG_VERBOSE );
         try
         {
@@ -389,11 +389,11 @@ public class JDependTask extends Task
             catch( IOException e )
             {
                 String msg = "JDepend Failed when creating the output file: " + e.getMessage();
-                log( msg );
+                getLogger().info( msg );
                 throw new TaskException( msg );
             }
             jdepend.setWriter( new PrintWriter( fw ) );
-            log( "Output to be stored in " + getOutputFile().getPath() );
+            getLogger().info( "Output to be stored in " + getOutputFile().getPath() );
         }
 
         PathTokenizer sourcesPath = new PathTokenizer( getSourcespath().toString() );
@@ -405,7 +405,7 @@ public class JDependTask extends Task
             if( !f.exists() || !f.isDirectory() )
             {
                 String msg = "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail.";
-                log( msg );
+                getLogger().info( msg );
                 throw new TaskException( msg );
             }
             try
@@ -415,7 +415,7 @@ public class JDependTask extends Task
             catch( IOException e )
             {
                 String msg = "JDepend Failed when adding a source directory: " + e.getMessage();
-                log( msg );
+                getLogger().info( msg );
                 throw new TaskException( msg );
             }
         }

@@ -132,11 +132,11 @@ public class BorlandGenerateClient extends Task
 
         if( mode == null )
         {
-            log( "mode is null default mode  is java" );
+            getLogger().info( "mode is null default mode  is java" );
             setMode( JAVA_MODE );
         }// end of if ()
 
-        log( "client jar file is " + clientjarfile );
+        getLogger().info( "client jar file is " + clientjarfile );
 
         if( mode.equalsIgnoreCase( FORK_MODE ) )
         {
@@ -158,7 +158,7 @@ public class BorlandGenerateClient extends Task
     {
         try
         {
-            log( "mode : fork" );
+            getLogger().info( "mode : fork" );
 
             org.apache.tools.ant.taskdefs.ExecTask execTask = null;
             execTask = (ExecTask)getProject().createTask( "exec" );
@@ -203,7 +203,7 @@ public class BorlandGenerateClient extends Task
     {
         try
         {
-            log( "mode : java" );
+            getLogger().info( "mode : java" );
 
             org.apache.tools.ant.taskdefs.Java execTask = null;
             execTask = (Java)getProject().createTask( "java" );

@@ -239,7 +239,7 @@ public class Delete extends MatchingTask
     {
         if( usedMatchingTask )
         {
-            log( "DEPRECATED - Use of the implicit FileSet is deprecated.  Use a nested fileset element instead." );
+            getLogger().info( "DEPRECATED - Use of the implicit FileSet is deprecated.  Use a nested fileset element instead." );
         }
 
         if( file == null && dir == null && filesets.size() == 0 )
@@ -259,11 +259,11 @@ public class Delete extends MatchingTask
             {
                 if( file.isDirectory() )
                 {
-                    log( "Directory " + file.getAbsolutePath() + " cannot be removed using the file attribute.  Use dir instead." );
+                    getLogger().info( "Directory " + file.getAbsolutePath() + " cannot be removed using the file attribute.  Use dir instead." );
                 }
                 else
                 {
-                    log( "Deleting: " + file.getAbsolutePath() );
+                    getLogger().info( "Deleting: " + file.getAbsolutePath() );
 
                     if( !file.delete() )
                     {
@@ -294,7 +294,7 @@ public class Delete extends MatchingTask
              */
             if( verbosity == Project.MSG_VERBOSE )
             {
-                log( "Deleting directory " + dir.getAbsolutePath() );
+                getLogger().info( "Deleting directory " + dir.getAbsolutePath() );
             }
             removeDir( dir );
         }
@@ -408,7 +408,7 @@ public class Delete extends MatchingTask
     {
         if( files.length > 0 )
         {
-            log( "Deleting " + files.length + " files from " + d.getAbsolutePath() );
+            getLogger().info( "Deleting " + files.length + " files from " + d.getAbsolutePath() );
             for( int j = 0; j < files.length; j++ )
             {
                 File f = new File( d, files[ j ] );
@@ -454,7 +454,7 @@ public class Delete extends MatchingTask
 
             if( dirCount > 0 )
             {
-                log( "Deleted " + dirCount + " director" +
+                getLogger().info( "Deleted " + dirCount + " director" +
                      ( dirCount == 1 ? "y" : "ies" ) +
                      " from " + d.getAbsolutePath() );
             }

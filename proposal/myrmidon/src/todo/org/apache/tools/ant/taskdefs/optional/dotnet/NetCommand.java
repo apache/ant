@@ -146,7 +146,7 @@ public class NetCommand
         {
             if( _traceCommandLine )
             {
-                _owner.log( _commandLine.toString() );
+                //_owner.getLogger().info( _commandLine.toString() );
             }
             else
             {

@@ -197,7 +197,7 @@ public class WLJspc extends MatchingTask
         args[ j++ ] = compileClasspath.toString();
 
         this.scanDir( files );
-        log( "Compiling " + filesToDo.size() + " JSP files" );
+        getLogger().info( "Compiling " + filesToDo.size() + " JSP files" );
 
         for( int i = 0; i < filesToDo.size(); i++ )
         {

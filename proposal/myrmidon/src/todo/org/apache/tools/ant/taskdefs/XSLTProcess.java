@@ -445,7 +445,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger
                 styleSheetLastModified > outFile.lastModified() )
             {
                 ensureDirectoryFor( outFile );
-                log( "Processing " + inFile + " to " + outFile );
+                getLogger().info( "Processing " + inFile + " to " + outFile );
 
                 configureLiaison( stylesheet );
                 liaison.transform( inFile, outFile );

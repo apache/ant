@@ -621,7 +621,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
         // send the message to the project log.
 
         // Tell how many files were checked out.
-        log( checkedOut + " files checked out." );
+        getLogger().info( checkedOut + " files checked out." );
     }
 
     /**
@@ -856,7 +856,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
                 {
                     strFolder = strFolder.substring( i + 1 );
                 }
-                log( "            Folder: \"" + strFolder + "\"" );
+                getLogger().info( "            Folder: \"" + strFolder + "\"" );
                 prevFolder = f;
 
                 // If we displayed the project, view, item type, or folder,
@@ -867,7 +867,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
                 {
                     header.append( ",\t" ).append( p2.getDisplayName() );
                 }
-                log( header.toString() );
+                getLogger().info( header.toString() );
             }
 
             // Finally, show the Item properties ...
@@ -896,7 +896,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             {
                 itemLine.append( ",\tNot locked" );
             }
-            log( itemLine.toString() );
+            getLogger().info( itemLine.toString() );
         }
         // END VERBOSE ONLY
 
@@ -936,7 +936,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             {
                 if( getVerbose() )
                 {
-                    log( "Found " + getProjectName() + delim + getViewName() + delim );
+                    getLogger().info( "Found " + getProjectName() + delim + getViewName() + delim );
                 }
                 runType( s, p, v, s.typeForName( (String)s.getTypeNames().FILE ) );
                 break;
@@ -960,7 +960,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
             {
                 if( getVerbose() )
                 {
-                    log( "Found " + getProjectName() + delim );
+                    getLogger().info( "Found " + getProjectName() + delim );
                 }
                 runProject( s, p );
                 break;
@@ -997,7 +997,7 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
 
         if( getVerbose() && getFolderName() != null )
         {
-            log( "Found " + getProjectName() + delim + getViewName() +
+            getLogger().info( "Found " + getProjectName() + delim + getViewName() +
                  delim + getFolderName() + delim + "\n" );
         }
 

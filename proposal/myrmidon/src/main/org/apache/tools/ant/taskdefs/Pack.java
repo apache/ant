@@ -41,7 +41,7 @@ public abstract class Pack extends Task
         throws TaskException
     {
         validate();
-        log( "Building: " + zipFile.getAbsolutePath() );
+        getLogger().info( "Building: " + zipFile.getAbsolutePath() );
         pack();
     }
 

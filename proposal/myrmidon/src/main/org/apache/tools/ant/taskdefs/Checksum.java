@@ -230,7 +230,7 @@ public class Checksum extends MatchingTask implements Condition
                 String message = "Could not find file "
                     + file.getAbsolutePath()
                     + " to generate checksum for.";
-                log( message );
+                getLogger().info( message );
                 throw new TaskException( message );
             }
         }
@@ -256,7 +256,7 @@ public class Checksum extends MatchingTask implements Condition
                 File src = (File)e.nextElement();
                 if( !isCondition )
                 {
-                    log( "Calculating " + algorithm + " checksum for " + src );
+                    getLogger().info( "Calculating " + algorithm + " checksum for " + src );
                 }
                 fis = new FileInputStream( src );
                 DigestInputStream dis = new DigestInputStream( fis,

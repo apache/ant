@@ -352,7 +352,7 @@ public class FTP
                             ftp.getReplyString() );
                     }
                 }
-                log( ACTION_STRS[ action ] + " files" );
+                getLogger().info( ACTION_STRS[ action ] + " files" );
                 transferFiles( ftp );
             }
 
@@ -405,7 +405,7 @@ public class FTP
 
             if( verbose )
             {
-                log( "transferring " + filename + " to " + file.getAbsolutePath() );
+                getLogger().info( "transferring " + filename + " to " + file.getAbsolutePath() );
             }
 
             File pdir = new File( file.getParent() );// stay 1.1 compatible
@@ -595,7 +595,7 @@ public class FTP
     {
         if( verbose )
         {
-            log( "deleting " + filename );
+            getLogger().info( "deleting " + filename );
         }
 
         if( !ftp.deleteFile( resolveFile( filename ) ) )
@@ -636,7 +636,7 @@ public class FTP
     {
         if( verbose )
         {
-            log( "listing " + filename );
+            getLogger().info( "listing " + filename );
         }
 
         FTPFile ftpfile = ftp.listFiles( resolveFile( filename ) )[ 0 ];
@@ -659,7 +659,7 @@ public class FTP
     {
         if( verbose )
         {
-            log( "creating directory: " + dir );
+            getLogger().info( "creating directory: " + dir );
         }
 
         if( !ftp.makeDirectory( dir ) )
@@ -677,14 +677,14 @@ public class FTP
 
             if( verbose )
             {
-                log( "directory already exists" );
+                getLogger().info( "directory already exists" );
             }
         }
         else
         {
             if( verbose )
             {
-                log( "directory created OK" );
+                getLogger().info( "directory created OK" );
             }
         }
     }
@@ -733,7 +733,7 @@ public class FTP
 
             if( verbose )
             {
-                log( "transferring " + file.getAbsolutePath() );
+                getLogger().info( "transferring " + file.getAbsolutePath() );
             }
 
             instream = new BufferedInputStream( new FileInputStream( file ) );
@@ -907,10 +907,10 @@ public class FTP
             }
         }
 
-        log( transferred + " files " + COMPLETED_ACTION_STRS[ action ] );
+        getLogger().info( transferred + " files " + COMPLETED_ACTION_STRS[ action ] );
         if( skipped != 0 )
         {
-            log( skipped + " files were not successfully " + COMPLETED_ACTION_STRS[ action ] );
+            getLogger().info( skipped + " files were not successfully " + COMPLETED_ACTION_STRS[ action ] );
         }
     }
 

@@ -390,7 +390,7 @@ public class SendEmail extends Task
                 throw new TaskException( "Attribute \"file\" or \"message\" is required." );
             }
 
-            log( "Sending email" );
+            getLogger().info( "Sending email" );
             mailMessage.sendAndClose();
         }
         catch( IOException ioe )

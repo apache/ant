@@ -160,7 +160,7 @@ public class GenerateKey
             throw new TaskException( "dname must be set" );
         }
 
-        log( "Generating Key for " + alias );
+        getLogger().info( "Generating Key for " + alias );
         final ExecTask cmd = (ExecTask)project.createTask( "exec" );
         cmd.setExecutable( "keytool" );
 

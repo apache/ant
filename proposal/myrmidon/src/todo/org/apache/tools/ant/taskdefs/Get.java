@@ -151,7 +151,7 @@ public class Get extends Task
 
         try
         {
-            log( "Getting: " + source );
+            getLogger().info( "Getting: " + source );
 
             //set the timestamp to the file date.
             long timestamp = 0;
@@ -163,7 +163,7 @@ public class Get extends Task
                 if( verbose )
                 {
                     Date t = new Date( timestamp );
-                    log( "local file date : " + t.toString() );
+                    getLogger().info( "local file date : " + t.toString() );
                 }
 
                 hasTimestamp = true;
@@ -209,13 +209,13 @@ public class Get extends Task
                     //not modified so no file download. just return instead
                     //and trace out something so the user doesn't think that the
                     //download happened when it didnt
-                    log( "Not modified - so not downloaded" );
+                    getLogger().info( "Not modified - so not downloaded" );
                     return;
                 }
                 // test for 401 result (HTTP only)
                 if( httpConnection.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED )
                 {
-                    log( "Not authorized - check " + dest + " for details" );
+                    getLogger().info( "Not authorized - check " + dest + " for details" );
                     return;
                 }
 
@@ -237,12 +237,12 @@ public class Get extends Task
                 }
                 catch( IOException ex )
                 {
-                    log( "Error opening connection " + ex );
+                    getLogger().info( "Error opening connection " + ex );
                 }
             }
             if( is == null )
             {
-                log( "Can't get " + source + " to " + dest );
+                getLogger().info( "Can't get " + source + " to " + dest );
                 if( ignoreErrors )
                     return;
                 throw new TaskException( "Can't get " + source + " to " + dest );
@@ -270,7 +270,7 @@ public class Get extends Task
                 if( verbose )
                 {
                     Date t = new Date( remoteTimestamp );
-                    log( "last modified = " + t.toString()
+                    getLogger().info( "last modified = " + t.toString()
                          + ( ( remoteTimestamp == 0 ) ? " - using current time instead" : "" ) );
                 }
                 if( remoteTimestamp != 0 )
@@ -279,7 +279,7 @@ public class Get extends Task
         }
         catch( IOException ioe )
         {
-            log( "Error getting " + source + " to " + dest );
+            getLogger().info( "Error getting " + source + " to " + dest );
             if( ignoreErrors )
                 return;
             throw new TaskException( "Error", ioe );

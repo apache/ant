@@ -388,7 +388,7 @@ public class JspC extends MatchingTask
 
             CompilerAdapter adapter =
                 CompilerAdapterFactory.getCompiler( compiler, this );
-            log( "Compiling " + compileList.size() +
+            getLogger().info( "Compiling " + compileList.size() +
                  " source file"
                  + ( compileList.size() == 1 ? "" : "s" )
                  + ( destDir != null ? " to " + destDir : "" ) );

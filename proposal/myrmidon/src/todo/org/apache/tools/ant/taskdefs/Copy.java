@@ -243,7 +243,7 @@ public class Copy extends Task
             {
                 String message = "Could not find file "
                     + file.getAbsolutePath() + " to copy.";
-                log( message );
+                getLogger().info( message );
                 throw new TaskException( message );
             }
         }
@@ -334,7 +334,7 @@ public class Copy extends Task
     {
         if( fileCopyMap.size() > 0 )
         {
-            log( "Copying " + fileCopyMap.size() +
+            getLogger().info( "Copying " + fileCopyMap.size() +
                  " file" + ( fileCopyMap.size() == 1 ? "" : "s" ) +
                  " to " + destDir.getAbsolutePath() );
 
@@ -397,7 +397,7 @@ public class Copy extends Task
 
             if( count > 0 )
             {
-                log( "Copied " + count +
+                getLogger().info( "Copied " + count +
                      " empty director" +
                      ( count == 1 ? "y" : "ies" ) +
                      " to " + destDir.getAbsolutePath() );

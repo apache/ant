@@ -500,7 +500,7 @@ public class NetRexxC extends MatchingTask
         // compile the source files
         if( compileList.size() > 0 )
         {
-            log( "Compiling " + compileList.size() + " source file"
+            getLogger().info( "Compiling " + compileList.size() + " source file"
                  + ( compileList.size() == 1 ? "" : "s" )
                  + " to " + destDir );
             doNetRexxCompile();
@@ -610,7 +610,7 @@ public class NetRexxC extends MatchingTask
     {
         if( filecopyList.size() > 0 )
         {
-            log( "Copying " + filecopyList.size() + " file"
+            getLogger().info( "Copying " + filecopyList.size() + " file"
                  + ( filecopyList.size() == 1 ? "" : "s" )
                  + " to " + destDir.getAbsolutePath() );
             Enumeration enum = filecopyList.keys();
