@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -64,39 +64,13 @@ import org.apache.tools.ant.types.Path;
 
 /**
  * A base class for creating tasks for executing commands on SourceOffSite.
- * <p>
- * The class extends the 'exec' task as it operates by executing the soscmd(.exe) program
- * supplied with SOS. By default the task expects soscmd(.exe) to be in the path,
- * you can override this be specifying the sosdir attribute.
- * </p>
- * <p>
- * This class provides set and get methods for the following attributes
- * <br> 'vssserverpath'
- * <br> 'sosserverpath'
- * <br> 'vsspath'
- * <br> 'projectpath'
- * <br> 'username'
- * <br> 'password'
- * <br> 'soscmddir'
- * <br> 'file'
- * <br> 'soshome'
- * <br> 'localpath"
- * <br> 'comment'
- * <br> 'label'
- * <br> 'version'
- * <br> 'recursive'
- * <br> 'verbose'
- * <br> 'nocache'
- * <br> 'nocompression'
- * <br>
- *  It also contains constants for the flags that can be passed to SOS.
- * <p>
+ *
  *  These tasks were inspired by the VSS tasks
  *
- * @author    <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
+ * @author Jesse Stockall
  */
 
-public abstract class SOS extends Task {
+public abstract class SOS extends Task implements SOSCmd {
 
     private String sosCmdDir = null;
     private String sosUsername = null;
@@ -116,27 +90,27 @@ public abstract class SOS extends Task {
     private boolean recursive = false;
     private boolean verbose = false;
 
+    /** Commandline to be executed */
+    protected Commandline commandLine;
 
     /**
-     * flag to disable the cache when set;
-     * optional needed if SOSHOME is set as an environment variable.
+     * Flag to disable the cache when set;
+     * optional needed if SOSHOME is set as an environment variable., default false
      *
-     * @param  nocache  The new noCache value
+     * @param  nocache  True to disable caching.
      */
-    public void setNoCache(boolean nocache) {
+    public final void setNoCache(boolean nocache) {
         noCache = nocache;
     }
 
-
     /**
-     * Flag that disables compression when set; optional, default 
+     * Flag that disables compression when set; optional, default false
      *
-     * @param  nocompress  true to disable compression
+     * @param  nocompress  True to disable compression.
      */
-    public void setNoCompress(boolean nocompress) {
+    public final void setNoCompress(boolean nocompress) {
         noCompress = nocompress;
     }
-
 
     /**
      * Set the directory where soscmd(.exe) is located;
@@ -148,7 +122,6 @@ public abstract class SOS extends Task {
         sosCmdDir = Project.translatePath(dir);
     }
 
-
     /**
      * Set the SourceSafe username; required.
      *
@@ -158,9 +131,8 @@ public abstract class SOS extends Task {
         sosUsername = username;
     }
 
-
     /**
-     * Set the SourceSafe password; optional. 
+     * Set the SourceSafe password; optional.
      *
      * @param  password  The new password value
      */
@@ -168,11 +140,10 @@ public abstract class SOS extends Task {
         sosPassword = password;
     }
 
-
     /**
-     * Set the SourceSafe project path without the "$" prefix; required
+     * Set the SourceSafe project path; required.
      *
-     * @param  projectpath  The new projectPath value
+     * @param  projectpath  The new projectpath value
      */
     public final void setProjectPath(String projectpath) {
         if (projectpath.startsWith(SOSCmd.PROJECT_PREFIX)) {
@@ -182,9 +153,8 @@ public abstract class SOS extends Task {
         }
     }
 
-
     /**
-     * Set the path to the location of the ss.ini file; 
+     * Set the path to the location of the ss.ini file;
      * required.
      *
      * @param  vssServerPath  The new vssServerPath value
@@ -192,7 +162,6 @@ public abstract class SOS extends Task {
     public final void setVssServerPath(String vssServerPath) {
         this.vssServerPath = vssServerPath;
     }
-
 
     /**
      * The path to the SourceOffSite home directory
@@ -203,11 +172,9 @@ public abstract class SOS extends Task {
         this.sosHome = sosHome;
     }
 
-
     /**
      * Sets the address and port of SourceOffSite Server,
-     * for example 192.168.0.1:8888.
-     * This attribute is required. 
+     * for example 192.168.0.1:8888.; required.
      *
      * @param  sosServerPath  The new sosServerPath value
      */
@@ -215,92 +182,56 @@ public abstract class SOS extends Task {
         this.sosServerPath = sosServerPath;
     }
 
-
     /**
      * Override the working directory and get to the specified path; optional.
      *
      * @param  path  The new localPath value
      */
-    public void setLocalPath(Path path) {
+    public final void setLocalPath(Path path) {
         localPath = path.toString();
     }
-
-
-    /**
-     * Set the Filename to act upon; optional.
-     * If no file is specified then the tasks 
-     * act upon the project
-     *
-     * @param  filename  The new file value
-     */
-    public final void setFile(String filename) {
-        this.filename = filename;
-    }
-
 
     /**
      * Enable verbose output; optional, default false
      *
-     * @param  verbose  The new verbose value
+     * @param  verbose  True for verbose output.
      */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;
     }
 
+    // Special setters for the sub-classes
 
-    /**
-     * Flag to recursively apply the action (not valid
-     * on all SOS tasks ); optional, default false
-     *
-     * @param  recursive  The new recursive value
-     */
-    public void setRecursive(boolean recursive) {
-        this.recursive = recursive;
+    protected void setInternalFilename(String file) {
+        filename = file;
     }
 
-
-    /**
-     * Set the a version number to get - 
-     * only works with the SOSGet on a file; optional.
-     *
-     * @param  version  The new version value
-     */
-    public void setVersion(String version) {
-        this.version = version;
+    protected void setInternalRecursive(boolean recurse) {
+        recursive = recurse;
     }
 
-
-    /**
-     * Set the labeled version to operate on in SourceSafe
-     *
-     * @param  label  The new label value
-     */
-    public void setLabel(String label) {
-        this.label = label;
+    protected void setInternalComment(String text) {
+        comment = text;
     }
 
-
-    /**
-     * Set the comment to apply to all files being labelled;
-     * optional, only valid in SOSLabel
-     *
-     * @param  comment  The new comment value
-     */
-    public void setComment(String comment) {
-        this.comment = comment;
+    protected void setInternalLabel(String text) {
+        label = text;
     }
 
+    protected void setInternalVersion(String text) {
+        version = text;
+    }
 
     /**
      * Get the executable to run. Add the path if it was specifed in the build file
      *
      * @return    String the executable to run
      */
-    public String getSosCommand() {
+    protected String getSosCommand() {
         if (sosCmdDir == null) {
-            return SOSCmd.COMMAND_SOS_EXE;
+            return COMMAND_SOS_EXE;
         } else {
-            return sosCmdDir + File.separator + SOSCmd.COMMAND_SOS_EXE;
+            return sosCmdDir + File.separator + COMMAND_SOS_EXE;
         }
     }
 
@@ -308,147 +239,117 @@ public abstract class SOS extends Task {
      * Get the comment
      * @return String if it was set, null if not
      */
-    public String getComment() {
+    protected String getComment() {
         return comment;
     }
-
 
     /**
      * Get the version
      * @return String if it was set, null if not
      */
-    public String getVersion() {
+    protected String getVersion() {
         return version;
     }
-
 
     /**
      * Get the label
      * @return String if it was set, null if not
      */
-    public String getLabel() {
+    protected String getLabel() {
         return label;
     }
-
 
     /**
      * Get the username
      * @return String if it was set, null if not
      */
-    public String getUsername() {
+    protected String getUsername() {
         return sosUsername;
     }
-
 
     /**
      * Get the password
      * @return String empty string if it wans't set
      */
-    public String getPassword() {
+    protected String getPassword() {
         return sosPassword;
     }
-
 
     /**
      * Get the project path
      * @return String if it was set, null if not
      */
-    public String getProjectPath() {
+    protected String getProjectPath() {
         return projectPath;
     }
-
 
     /**
      * Get the VSS server path
      * @return String if it was set, null if not
      */
-    public String getVssServerPath() {
+    protected String getVssServerPath() {
         return vssServerPath;
     }
-
 
     /**
      * Get the SOS home directory
      * @return String if it was set, null if not
      */
-    public String getSosHome() {
+    protected String getSosHome() {
         return sosHome;
     }
-
 
     /**
      * Get the SOS serve path
      * @return String if it was set, null if not
      */
-    public String getSosServerPath() {
+    protected String getSosServerPath() {
         return sosServerPath;
     }
-
 
     /**
      * Get the filename to be acted upon
      * @return String if it was set, null if not
      */
-    public String getFilename() {
+    protected String getFilename() {
         return filename;
     }
-
 
     /**
      * Get the NoCompress flag
      *
      * @return    String the 'nocompress' Flag if the attribute was 'true', otherwise an empty string
      */
-    public String getNoCompress() {
-        if (!noCompress) {
-            return "";
-        } else {
-            return SOSCmd.FLAG_NO_COMPRESSION;
-        }
+    protected String getNoCompress() {
+        return noCompress ? FLAG_NO_COMPRESSION : "";
     }
-
 
     /**
      * Get the NoCache flag
      *
      * @return    String the 'nocache' Flag if the attribute was 'true', otherwise an empty string
      */
-    public String getNoCache() {
-        if (!noCache) {
-            return "";
-        } else {
-            return SOSCmd.FLAG_NO_CACHE;
-        }
+    protected String getNoCache() {
+        return noCache ? FLAG_NO_CACHE : "";
     }
-
 
     /**
      * Get the 'verbose' Flag
      *
      * @return    String the 'verbose' Flag if the attribute was 'true', otherwise an empty string
      */
-    public String getVerbose() {
-        if (!verbose) {
-            return "";
-        } else {
-            return SOSCmd.FLAG_VERBOSE;
-        }
+    protected String getVerbose() {
+        return verbose ? FLAG_VERBOSE : "";
     }
-
 
     /**
      * Get the 'recursive' Flag
      *
      * @return    String the 'recursive' Flag if the attribute was 'true', otherwise an empty string
      */
-    public String getRecursive() {
-        if (!recursive) {
-            return "";
-        } else {
-            return SOSCmd.FLAG_RECURSION;
-        }
+    protected String getRecursive() {
+        return recursive ? FLAG_RECURSION : "";
     }
-
 
     /**
      * Builds and returns the working directory.
@@ -457,7 +358,7 @@ public abstract class SOS extends Task {
      *
      * @return    String the absolute path of the working directory
      */
-    public String getLocalPath() {
+    protected String getLocalPath() {
         if (localPath == null) {
             return getProject().getBaseDir().getAbsolutePath();
         } else {
@@ -476,12 +377,35 @@ public abstract class SOS extends Task {
         }
     }
 
+    /**
+     * Subclasses implement the logic required to construct the command line.
+     *
+     * @return   The command line to execute.
+     */
+    abstract Commandline buildCmdLine();
+
 
     /**
-     * Execute the created command line
+     * Execute the created command line.
      *
-     * @param  cmd              Description of Parameter
-     * @return                  int the exit code
+     * @throws BuildException
+     */
+    public void execute()
+        throws BuildException {
+        int result = 0;
+        buildCmdLine();
+        result = run(commandLine);
+        if (result == 255) {  // This is the exit status
+            String msg = "Failed executing: " + commandLine.toString();
+            throw new BuildException(msg, getLocation());
+        }
+    }
+
+    /**
+     * Execute the created command line.
+     *
+     * @param  cmd              The command line to run.
+     * @return                  int the exit code.
      * @throws  BuildException
      */
     protected int run(Commandline cmd) {
@@ -493,10 +417,65 @@ public abstract class SOS extends Task {
             exe.setAntRun(getProject());
             exe.setWorkingDirectory(getProject().getBaseDir());
             exe.setCommandline(cmd.getCommandline());
+            exe.setVMLauncher(false);  // Use the OS VM launcher so we get environment variables
             return exe.execute();
         } catch (java.io.IOException e) {
             throw new BuildException(e, getLocation());
         }
     }
-}
 
+    /** Sets the executable and add the required attributes to the command line. */
+    protected void getRequiredAttributes() {
+        // Get the path to the soscmd(.exe)
+        commandLine.setExecutable(getSosCommand());
+        // SOS server address is required
+        if (getSosServerPath() == null) {
+            throw new BuildException("sosserverpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(FLAG_SOS_SERVER);
+        commandLine.createArgument().setValue(getSosServerPath());
+        // Login info is required
+        if (getUsername() == null) {
+            throw new BuildException("username attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(FLAG_USERNAME);
+        commandLine.createArgument().setValue(getUsername());
+        // The SOS class knows that the SOS server needs the password flag,
+        // even if there is no password ,so we send a " "
+        commandLine.createArgument().setValue(FLAG_PASSWORD);
+        commandLine.createArgument().setValue(getPassword());
+        // VSS Info is required
+        if (getVssServerPath() == null) {
+            throw new BuildException("vssserverpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(FLAG_VSS_SERVER);
+        commandLine.createArgument().setValue(getVssServerPath());
+        // VSS project is required
+        if (getProjectPath() == null) {
+            throw new BuildException("projectpath attribute must be set!", getLocation());
+        }
+        commandLine.createArgument().setValue(FLAG_PROJECT);
+        commandLine.createArgument().setValue(getProjectPath());
+    }
+
+    /** Adds the optional attributes to the command line. */
+    protected void getOptionalAttributes() {
+        // -verbose
+        commandLine.createArgument().setValue(getVerbose());
+        // Disable Compression
+        commandLine.createArgument().setValue(getNoCompress());
+        // Path to the SourceOffSite home directory /home/user/.sos
+        if (getSosHome() == null) {
+            // If -soshome was not specified then we can look for nocache
+            commandLine.createArgument().setValue(getNoCache());
+        } else {
+            commandLine.createArgument().setValue(FLAG_SOS_HOME);
+            commandLine.createArgument().setValue(getSosHome());
+        }
+        //If a working directory was specified then add it to the command line
+        if (getLocalPath() != null) {
+            commandLine.createArgument().setValue(FLAG_WORKING_DIR);
+            commandLine.createArgument().setValue(getLocalPath());
+        }
+    }
+}

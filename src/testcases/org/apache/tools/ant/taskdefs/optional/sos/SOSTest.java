@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,18 +55,16 @@ package org.apache.tools.ant.taskdefs.optional.sos;
 
 import java.io.File;
 
-import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildFileTest;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
-import org.apache.tools.ant.util.FileUtils;
 
 /**
  *  Testcase to ensure that command line generation and required attributes are
  *  correct.
  *
- * @author    <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
+ * @author    Jesse Stockall
  */
 public class SOSTest extends BuildFileTest {
 

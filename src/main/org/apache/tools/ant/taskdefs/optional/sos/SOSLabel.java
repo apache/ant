@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -84,7 +84,7 @@ import org.apache.tools.ant.types.Commandline;
  *   </tr>
  *   <tr>
  *      <td>projectpath</td>
- *      <td>SourceSafe project path without the "$"</td>
+ *      <td>SourceSafe project</td>
  *      <td>Yes</td>
  *   </tr>
  *   <tr>
@@ -114,31 +114,38 @@ import org.apache.tools.ant.types.Commandline;
  *   </tr>
  * </table>
  *
- * @author    <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
+ * @author    Jesse Stockall
  */
 
 public class SOSLabel extends SOS {
-    Commandline commandLine;
-
 
     /**
-     *  Executes the task. <br>
-     *  Builds a command line to execute soscmd and then calls Exec's run method
-     *  to execute the command line.
+     * Set the version number to label; optional.
      *
-     * @exception  BuildException  Description of Exception
+     * @param  version  The new version value
      */
-    public void execute() throws BuildException {
-        int result = 0;
-        buildCmdLine();
-        result = run(commandLine);
-        if (result == 255) {
-            // This is the exit status
-            String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, getLocation());
-        }
+    public void setVersion(String version) {
+        super.setInternalVersion(version);
     }
 
+    /**
+     * Set the label to apply the the files in SourceSafe.
+     *
+     * @param  label  The new label value
+     */
+    public void setLabel(String label) {
+        super.setInternalLabel(label);
+    }
+
+    /**
+     * Set the comment to apply to all files being labelled;
+     * optional
+     *
+     * @param  comment  The new comment value
+     */
+    public void setComment(String comment) {
+        super.setInternalComment(comment);
+    }
 
     /**
      *  Build the command line <br>
@@ -149,47 +156,19 @@ public class SOSLabel extends SOS {
      */
     protected Commandline buildCmdLine() {
         commandLine = new Commandline();
-        // Get the path to the soscmd(.exe)
-        commandLine.setExecutable(getSosCommand());
+
         // add -command AddLabel to the commandline
         commandLine.createArgument().setValue(SOSCmd.FLAG_COMMAND);
         commandLine.createArgument().setValue(SOSCmd.COMMAND_LABEL);
-        // SOS server address is required
-        if (getSosServerPath() == null) {
-            throw new BuildException("sosserverpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_SOS_SERVER);
-        commandLine.createArgument().setValue(getSosServerPath());
-        // Login info is required
-        if (getUsername() == null) {
-            throw new BuildException("username attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_USERNAME);
-        commandLine.createArgument().setValue(getUsername());
-        // The SOS class knows that the SOS server needs the password flag,
-        // even if there is no password ,so we send a " "
-        commandLine.createArgument().setValue(SOSCmd.FLAG_PASSWORD);
-        commandLine.createArgument().setValue(getPassword());
-        // VSS Info is required
-        if (getVssServerPath() == null) {
-            throw new BuildException("vssserverpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_VSS_SERVER);
-        commandLine.createArgument().setValue(getVssServerPath());
-        // SS project path is required
-        if (getProjectPath() == null) {
-            throw new BuildException("projectpath attribute must be set!", getLocation());
-        }
-        commandLine.createArgument().setValue(SOSCmd.FLAG_PROJECT);
-        commandLine.createArgument().setValue(getProjectPath());
+
+        getRequiredAttributes();
+
         // a label is required
         if (getLabel() == null) {
             throw new BuildException("label attribute must be set!", getLocation());
         }
         commandLine.createArgument().setValue(SOSCmd.FLAG_LABEL);
         commandLine.createArgument().setValue(getLabel());
-
-        // The following options are optional.
 
         // -verbose
         commandLine.createArgument().setValue(getVerbose());
@@ -201,4 +180,3 @@ public class SOSLabel extends SOS {
         return commandLine;
     }
 }
-

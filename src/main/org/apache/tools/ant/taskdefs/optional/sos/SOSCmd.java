@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,7 +56,7 @@ package org.apache.tools.ant.taskdefs.optional.sos;
 /**
  * Interface to hold constants used by the SOS tasks
  *
- * @author    <a href="mailto:jesse@cryptocard.com">Jesse Stockall</a>
+ * @author    Jesse Stockall
  */
 public interface SOSCmd {
     // soscmd Command options
@@ -88,4 +88,3 @@ public interface SOSCmd {
     String FLAG_FILE = "-file";
     String FLAG_VERBOSE = "-verbose";
 }
-

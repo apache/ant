@@ -102,7 +102,7 @@
         <soslabel sosserverpath="192.168.0.1:8888"
             username="ant"
             vssserverpath="\\server\vss\srcsafe.ini"
-            projectpath="/SourceRoot/Project"/>
+            projectpath="$/SourceRoot/Project"/>
     </target>
 
 </project>
