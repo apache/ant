@@ -1,0 +1,64 @@
+Apache Ant Status
+Last modified at [$Date$]
+
+Release:
+    Current:        1.5.1
+    Maintenance:    1.5.2   (in CVS ANT_15_BRANCH)
+    Development:    1.6     (in CVS HEAD)
+
+Resolved Issues:
+
+Pending Issues:
+
+Project Mission:
+
+Assets:
+    DNS:                ant.apache.org
+
+    Mailing lists:      ant-dev@jakarta.apache.org
+                        ant=user@jakarta.apache.org
+
+    Web site:           http://ant.apache.org/
+
+    Repositories:       jakarta-ant             (code, info, etc)
+                        jakarta-ant-antidote    (Ant GUI)
+
+PMC Members
+    Bruce Atherton
+    Stefane Bailliez
+    Stefan Bodewig
+    James Duncan Davidson (Emeritus)
+    Erik Hatcher
+    Diane Holt
+    Donald Leslie
+    Steve Loughran
+    Conor MacNeill
+    Costin Manolache
+    Sam Ruby
+    Jon Skeet
+    Magesh Umasankar
+    Christoph Wilhelms
+
+Committers:
+    Preston Bannister
+    Nick Davis
+    Darrell DeBoer
+    Peter Donald
+    Danno Ferrin
+    Thomas Haas
+    Jason Hunter
+    Arun Jamwal
+    Arnout Kuiper
+    Adam Murdoch,
+    Harish Prabandham
+    Nico Seessle
+    Gal Shachor
+    Jon Stevens
+    James Todd
+    Anil Vijendran
+
+
+
+
+
+
