@@ -129,11 +129,28 @@ public class DotnetTest extends BuildFileTest {
     }
 
     /**
-     * A unit test for JUnit
+     * test we can assemble
      */
     public void testILASM() throws Exception {
         executeTarget("testILASM");
-    } 
+    }
+
+    /**
+     * test we can disassemble
+     */
+    public void testILDASM() throws Exception {
+        executeTarget("testILDASM");
+    }
+
+    /**
+     * test we can disassemble
+     */
+    public void testILDASM_empty() throws Exception {
+        expectBuildExceptionContaining("testILDASM_empty",
+                "parameter validation",
+                "invalid");
+    }
+
 
 }
 

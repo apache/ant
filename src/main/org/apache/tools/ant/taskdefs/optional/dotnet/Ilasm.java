@@ -304,7 +304,7 @@ public class Ilasm
 
     /**
      * Set the output file; identical to setDestFile
-     * @see DotnetBaseMatchingTask.setDestFile
+     * @see DotnetBaseMatchingTask#setDestFile
      *@param  params  The new outputFile value
      */
     public void setOutputFile(File params) {
@@ -473,10 +473,6 @@ public class Ilasm
      */
     public void execute()
              throws BuildException {
-        if (srcDir == null) {
-            srcDir = getProject().resolveFile(".");
-        }
-
         NetCommand command = buildIlasmCommand();
 
         addFilesAndExecute(command, false);

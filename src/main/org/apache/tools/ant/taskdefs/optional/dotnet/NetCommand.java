@@ -124,6 +124,11 @@ public class NetCommand {
      */
     protected boolean failOnError;
 
+    /**
+     * the directory to execute the command in. When null, the current
+     * directory is used.
+     */
+    private File directory;
 
     /**
      *  constructor
@@ -175,6 +180,14 @@ public class NetCommand {
 
 
     /**
+     * set the directory to run from, if the default is inadequate
+     * @param directory
+     */
+    public void setDirectory(File directory) {
+        this.directory = directory;
+    }
+
+    /**
      *  verbose text log
      *
      *@param  msg  string to add to log iff verbose is defined for the build
@@ -206,7 +219,13 @@ public class NetCommand {
         }
     }
 
-    public void addArgument(String argument1, String argument2) {
+    /**
+     *  concatenate two strings together and add them as a single argument,
+     *  but only if argument2 is non-null and non-zero length
+     *
+     *@param  argument1  The first argument
+     *@param  argument2  The second argument
+     */   public void addArgument(String argument1, String argument2) {
         if (argument2 != null && argument2.length() != 0) {
             commandLine.createArgument().setValue(argument1 + argument2);
         }
@@ -224,6 +243,10 @@ public class NetCommand {
             throw new RuntimeException("Owner has no project");
         }
         File dir = owner.getProject().getBaseDir();
+        if (directory != null) {
+            dir=directory;
+        }
+
         ExecuteStreamHandler handler = new LogStreamHandler(owner,
                 Project.MSG_INFO, Project.MSG_WARN);
         executable = new Execute(handler, null);

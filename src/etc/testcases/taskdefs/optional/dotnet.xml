@@ -6,7 +6,7 @@
   <property name="src.dir" location="dotnet"/>
   
   <property name="out.csc" location="${src.dir}/out.cs"/>
-  <property name="out.app" location="${classes.dir}/out.exe"/>
+  <property name="out.app" location="${build.dir}/out.exe"/>
   <property name="out.type" value="exe"/>  
   
   <target name="probe_for_apps" >
@@ -48,6 +48,15 @@
     </condition>
    <echo> mono.ilasm.found=${mono.ilasm.found}</echo>
 
+   <condition property="ildasm.found">
+      <or>
+        <available file="ildasm"     filepath="${env.PATH}" />
+        <available file="ildasm.exe" filepath="${env.PATH}" />
+        <available file="ildasm.exe" filepath="${env.Path}" />
+      </or>
+    </condition>
+   <echo> ilasm.found=${ildasm.found}</echo>
+   
    <condition property="dotnetapps.found">
       <or>
         <and>
@@ -228,17 +237,17 @@
     </exec> 
   </target>
 
-  <target name="testILASM"  depends="init">
+  <target name="testILASM"  depends="init"  if="ilasm.found">
     <property name="testILASM.exe" 
       location="${build.dir}/ExampleIlasm.exe" />
     <ilasm 
       destFile="${testILASM.exe}"
       targetType="exe"
       >
-      <src dir="${src.dir}" includes="**/*.il"/>
+      <src dir="${src.dir}" includes="*.il"/>
     </ilasm>
     <available property="ilasm.created" file="${testILASM.exe}"/>
-    <fail unless="ilasm.created">No app ${testCSC.exe} created</fail>
+    <fail unless="ilasm.created">No app ${testILASM.exe} created</fail>
     <exec executable="${testILASM.exe}" failonerror="true" />
   </target>  
 
@@ -258,5 +267,29 @@
     <property name="ilasm.string" refid="ilasm"/>
     <echo>${ilasm.string}</echo>
   </target>
+  
+  <target name="testILDASM"   depends="testILASM" if="ildasm.found">
+    <property name="testILDASM.il" 
+      location="${build.dir}/ExampleIldasm.il" />
+    <ildasm 
+      srcFile="${testILASM.exe}"
+      destFile="${testILDASM.il}"
+      metadata="true"
+      header="true"
+      linenumbers="true"
+      encoding="ascii"
+      />
+    <available property="ildasm.created" file="${testILDASM.il}"/>
+    <fail unless="ildasm.created">No file ${testILDASM.il} created</fail>
+  </target>  
+
+  <!-- this is an error -->
+  <target name="testILDASM_empty"   depends="init" >
+    <ildasm/> 
+  </target>  
+  <target name="testILDASM_empty"   depends="init" >
+    <ildasm/> 
+  </target>  
+  
 </project>
 
