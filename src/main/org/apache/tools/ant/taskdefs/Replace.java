@@ -92,7 +92,7 @@ public class Replace extends MatchingTask {
          * @return the text
          */
         public String getText() {
-            return buf.substring(0);
+            return buf.toString();
         }
     }
 
@@ -162,7 +162,7 @@ public class Replace extends MatchingTask {
                 return Replace.this.value.getText();
             } else {
                 //Default is empty string
-                return new String("");
+                return "";
             }
         }
 
@@ -227,6 +227,21 @@ public class Replace extends MatchingTask {
         Vector savedFilters = (Vector) replacefilters.clone();
         Properties savedProperties =
             properties == null ? null : (Properties) properties.clone();
+
+        if (token != null) {
+            // line separators in values and tokens are "\n"
+            // in order to compare with the file contents, replace them
+            // as needed
+            StringBuffer val = new StringBuffer(value.getText());
+            stringReplace(val, "\r\n", "\n", false);
+            stringReplace(val, "\n", StringUtils.LINE_SEP, false);
+            StringBuffer tok = new StringBuffer(token.getText());
+            stringReplace(tok, "\r\n", "\n", false);
+            stringReplace(tok, "\n", StringUtils.LINE_SEP, false);
+            Replacefilter firstFilter = createPrimaryfilter();
+            firstFilter.setToken(tok.toString());
+            firstFilter.setValue(val.toString());
+        }
 
         try {
             if (replaceFilterFile != null) {
@@ -367,67 +382,43 @@ public class Replace extends MatchingTask {
                                      + " doesn't exist", getLocation());
         }
 
-        File temp = fileUtils.createTempFile("rep", ".tmp",
-                                             fileUtils.getParentFile(src));
-        temp.deleteOnExit();
-
+        File temp = null;
         Reader reader = null;
         Writer writer = null;
         try {
             reader = encoding == null ? new FileReader(src)
                 : new InputStreamReader(new FileInputStream(src), encoding);
-            writer = encoding == null ? new FileWriter(temp)
-                : new OutputStreamWriter(new FileOutputStream(temp), encoding);
 
             BufferedReader br = new BufferedReader(reader);
-            BufferedWriter bw = new BufferedWriter(writer);
 
             String buf = FileUtils.readFully(br);
+            br.close();
+            reader = null;
+
             if (buf == null) {
                 buf = "";
             }
 
-            //Preserve original string (buf) so we can compare the result
-            String newString = new String(buf);
+            StringBuffer buffer = new StringBuffer(buf);
+            buf = null;
 
-            if (token != null) {
-                // line separators in values and tokens are "\n"
-                // in order to compare with the file contents, replace them
-                // as needed
-                String val = stringReplace(value.getText(), "\r\n",
-                                           "\n", false);
-                val = stringReplace(val, "\n",
-                                           StringUtils.LINE_SEP, false);
-                String tok = stringReplace(token.getText(), "\r\n",
-                                            "\n", false);
-                tok = stringReplace(tok, "\n",
-                                           StringUtils.LINE_SEP, false);
+            int repCountStart = replaceCount;
 
-                // for each found token, replace with value
-                log("Replacing in " + src.getPath() + ": " + token.getText()
-                    + " --> " + value.getText(), Project.MSG_VERBOSE);
-                newString = stringReplace(newString, tok, val, true);
-            }
+            processReplacefilters(buffer, src.getPath());
 
-            if (replacefilters.size() > 0) {
-                newString = processReplacefilters(newString, src.getPath());
-            }
-
-            boolean changes = !newString.equals(buf);
+            boolean changes = (replaceCount != repCountStart);
             if (changes) {
-                bw.write(newString, 0, newString.length());
+                String out = buffer.toString();
+                temp = fileUtils.createTempFile("rep", ".tmp",
+                        src.getParentFile());
+                temp.deleteOnExit();
+                writer = encoding == null ? new FileWriter(temp)
+                        : new OutputStreamWriter(new FileOutputStream(temp), encoding);
+                BufferedWriter bw = new BufferedWriter(writer);
+                bw.write(out, 0, out.length());
                 bw.flush();
-            }
-
-            // cleanup
-            bw.close();
-            writer = null;
-            br.close();
-            reader = null;
-
-            // If there were changes, move the new one to the old one;
-            // otherwise, delete the new one
-            if (changes) {
+                bw.close();
+                writer = null;
                 ++fileCount;
                 fileUtils.rename(temp, src);
                 temp = null;
@@ -460,24 +451,19 @@ public class Replace extends MatchingTask {
 
     /**
      * apply all replace filters to a buffer
-     * @param buffer string to filter
+     * @param buffer stringbuffer to filter
      * @param filename filename for logging purposes
-     * @return filtered string
      */
-    private String processReplacefilters(String buffer, String filename) {
-        String newString = new String(buffer);
-
+    private void processReplacefilters(StringBuffer buffer, String filename) {
         for (int i = 0; i < replacefilters.size(); i++) {
             Replacefilter filter = (Replacefilter) replacefilters.elementAt(i);
 
             //for each found token, replace with value
             log("Replacing in " + filename + ": " + filter.getToken()
                 + " --> " + filter.getReplaceValue(), Project.MSG_VERBOSE);
-            newString = stringReplace(newString, filter.getToken(),
+            stringReplace(buffer, filter.getToken(),
                                       filter.getReplaceValue(), true);
         }
-
-        return newString;
     }
 
 
@@ -593,38 +579,28 @@ public class Replace extends MatchingTask {
     }
 
     /**
-     * Replace occurrences of str1 in string str with str2
+     * Adds the token and value as first &lt;replacefilter&gt; element.
+     * The token and value are always processed first.
+     * @return a nested ReplaceFilter object to be configured
      */
-    private String stringReplace(String str, String str1, String str2,
+    private Replacefilter createPrimaryfilter() {
+        Replacefilter filter = new Replacefilter();
+        replacefilters.insertElementAt(filter, 0);
+        return filter;
+    }
+    /**
+     * Replace occurrences of str1 in stringbuffer str with str2
+     */
+    private void stringReplace(StringBuffer str, String str1, String str2,
                                  boolean countReplaces) {
-        StringBuffer ret = new StringBuffer();
-        int start = 0;
         int found = str.indexOf(str1);
         while (found >= 0) {
-            // write everything up to the found str1
-            if (found > start) {
-                ret.append(str.substring(start, found));
-            }
-
-            // write the replacement str2
-            if (str2 != null) {
-                ret.append(str2);
-            }
-
-            // search again
-            start = found + str1.length();
-            found = str.indexOf(str1, start);
+            str.replace(found, found + str1.length(), str2);
+            found = str.indexOf(str1, found + str2.length());
             if (countReplaces) {
                 ++replaceCount;
             }
         }
-
-        // write the remaining characters
-        if (str.length() > start) {
-            ret.append(str.substring(start, str.length()));
-        }
-
-        return ret.toString();
     }
 
 }
