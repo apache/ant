@@ -31,6 +31,9 @@ Fixed bugs:
 * The gcj compiler adapter for <javac> failed if the destination
   directory didn't exist.  Bugzilla Report 25856.
 
+* Ant now fails with a more useful message if a new process will be
+  forked in a directory and that directory doesn't exist.
+
 Other changes:
 --------------
 * Translate task logs a debug message specifying the number of files
