@@ -548,6 +548,13 @@ public class Javac extends MatchingTask {
      */
 
     private void doModernCompile() throws BuildException {
+        try {
+            Class.forName("com.sun.tools.javac.Main");
+        } catch (ClassNotFoundException cnfe) {
+            doClassicCompile();
+            return;
+        }
+
         log("Using modern compiler", Project.MSG_VERBOSE);
         String classpath = getCompileClasspath(false);
         Vector argList = new Vector();
