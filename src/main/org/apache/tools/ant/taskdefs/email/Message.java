@@ -53,6 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.email;
 
+import org.apache.tools.ant.ProjectComponent;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -65,7 +67,7 @@ import java.io.PrintStream;
  * @author roxspring@yahoo.com Rob Oxspring
  * @since Ant 1.5
  */
-public class Message {
+public class Message extends ProjectComponent {
     private File messageSource = null;
     private StringBuffer buffer = new StringBuffer();
     private String mimeType = "text/plain";
@@ -155,19 +157,19 @@ public class Message {
                 String line = null;
 
                 while ((line = in.readLine()) != null) {
-                    out.println(line);
+                    out.println(getProject().replaceProperties(line));
                 }
             } finally {
                 freader.close();
             }
         } else {
-            out.println(buffer);
+            out.println(getProject().replaceProperties(buffer.toString()));
         }
     }
 
 
     /**
-     * Returns true iff the mimeType has been set.
+     * Returns true if the mimeType has been set.
      *
      * @return false if the default value is in use
      */

@@ -70,7 +70,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 /**
- * Will set the given property if the specified target has a timestamp
+ * Sets the given property if the specified target has a timestamp
  * greater than all of the source files.
  *
  * @author William Ferguson 
@@ -223,6 +223,10 @@ public class UpToDate extends Task implements Condition {
      * than (each of) the corresponding source file(s).
      */
     public void execute() throws BuildException {
+        if (_property == null) {
+            throw new BuildException("property attribute is required.", 
+                                     location);
+        }
         boolean upToDate = eval();
         if (upToDate) {
             this.project.setNewProperty(_property, getValue());

@@ -61,7 +61,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Task to perform CheckIn commands to Microsoft Visual Source Safe.
+ * Performs CheckIn commands to Microsoft Visual SourceSafe.
  *
  * @author Martin Poeschl
  *
@@ -156,7 +156,8 @@ public class MSVSSCHECKIN extends MSVSS {
     }
 
     /**
-     * Set behaviour recursive or non-recursive
+     * Flag to tell the task to recurse down the tree;
+     * optional, default false.
      */
     public void setRecursive(boolean recursive) {
         m_Recursive = recursive;
@@ -174,7 +175,7 @@ public class MSVSSCHECKIN extends MSVSS {
     }
 
     /**
-     * Set behaviour, used in get command to make files that are 'got' writable
+     * Leave checked in files writable? Default: false. 
      */
     public final void setWritable(boolean argWritable) {
         m_Writable = argWritable;
@@ -191,6 +192,10 @@ public class MSVSSCHECKIN extends MSVSS {
         }
     }
 
+    /**
+     * What to respond with (sets the -I option). By default, -I- is
+     * used; values of Y or N will be appended to this.
+     */    
     public void setAutoresponse(String response){
         if (response.equals("") || response.equals("null")) {
             m_AutoResponse = null;
@@ -221,7 +226,7 @@ public class MSVSSCHECKIN extends MSVSS {
     }
 
     /**
-     * Set the comment to apply in SourceSafe.
+     * Set the comment to apply; optional.
      * <p>
      * If this is null or empty, it will be replaced with "-" which
      * is what SourceSafe uses for an empty comment.

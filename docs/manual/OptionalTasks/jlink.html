@@ -98,9 +98,9 @@ mergefiles or addfiles</td>
 
 <h3>Examples</h3>
 
-The following will merge the entries in mergefoo.jar and mergebar.jar 
+<p>The following will merge the entries in mergefoo.jar and mergebar.jar 
 into out.jar.
-mac.jar and pc.jar will be added as single entries to out.jar.
+mac.jar and pc.jar will be added as single entries to out.jar.</p>
 <pre>
 &lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;&gt;
    &lt;mergefiles&gt;
@@ -114,11 +114,25 @@ mac.jar and pc.jar will be added as single entries to out.jar.
 &lt;/jlink&gt;
 </pre>
 
-Suppose the file foo.jar contains two entries: bar.class and 
+<p><b>Non-deprecated alternative to the above:</b></p>
+<pre>
+&lt;jar compress=&quot;false&quot; destfile=&quot;out.jar&quot;&gt;
+  &lt;zipgroupfileset dir=&quot;${build.dir}&quot;&gt;
+    &lt;include name=&quot;mergefoo.jar&quot;/&gt;
+    &lt;include name=&quot;mergebar.jar&quot;/&gt;
+  &lt;/zipgroupfileset&gt;
+  &lt;fileset dir=&quot;${build.dir}&quot;&gt;
+    &lt;include name=&quot;mac.jar&quot;/&gt;
+    &lt;include name=&quot;pc.jar&quot;/&gt;
+  &lt;/fileset&gt;
+&lt;/jar&gt;
+</pre>
+
+<p>Suppose the file foo.jar contains two entries: bar.class and 
 barnone/myClass.zip.
 Suppose the path for file foo.jar is build/tempbuild/foo.jar. The 
 following example
-will provide the entry tempbuild/foo.jar in the out.jar.
+will provide the entry tempbuild/foo.jar in the out.jar.</p>
 <pre>
 &lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;&gt;
    &lt;mergefiles&gt;
@@ -127,8 +141,8 @@ will provide the entry tempbuild/foo.jar in the out.jar.
 &lt;/jlink&gt;
 </pre>
 
-However, the next example would result in two top-level entries in out.jar,
-namely bar.class and barnone/myClass.zip
+<p>However, the next example would result in two top-level entries in out.jar,
+namely bar.class and barnone/myClass.zip</p>
 <pre>
 &lt;jlink compress=&quot;false&quot; outfile=&quot;out.jar&quot;&gt;
    &lt;mergefiles&gt;
@@ -138,7 +152,7 @@ namely bar.class and barnone/myClass.zip
 </pre>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 </body>
 

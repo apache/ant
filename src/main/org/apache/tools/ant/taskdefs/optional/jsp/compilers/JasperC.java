@@ -54,16 +54,15 @@
 
 package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 
+import java.io.File;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspC;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspMangler;
 import org.apache.tools.ant.taskdefs.optional.jsp.JspNameMangler;
-import org.apache.tools.ant.taskdefs.Java;
-
-import java.io.File;
+import org.apache.tools.ant.types.CommandlineJava;
+import org.apache.tools.ant.types.Path;
 
 /**
  * The implementation of the jasper compiler.
@@ -80,20 +79,44 @@ public class JasperC extends DefaultJspCompilerAdapter {
     public boolean execute()
         throws BuildException {
         getJspc().log("Using jasper compiler", Project.MSG_VERBOSE);
-        Commandline cmd = setupJasperCommand();
+        CommandlineJava cmd = setupJasperCommand();
+        /*
+        Path classpath=cmd.createClasspath(getProject());
+        if (getJspc().getClasspath() != null) {
+            classpath=getJspc().getClasspath();
+        } else {
+            classpath.concatSystemClasspath();
+        }
+        ExecuteJava exec=new ExecuteJava();
+        exec.execute(getProject());
+        if ((err = executeJava()) != 0) {
+            if (failOnError) {
+                throw new BuildException("Java returned: " + err, location);
+            } else {
+                log("Java Result: " + err, Project.MSG_ERR);
+            }
+        */
+
 
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
             // REVISIT. ugly. 
-            Java java = (Java) (getJspc().getProject()).createTask("java");
+            Java java = (Java) (getProject().createTask("java"));
             if (getJspc().getClasspath() != null) {
+                getProject().log("using user supplied classpath: "+getJspc().getClasspath(),
+                    Project.MSG_DEBUG);
                 java.setClasspath(getJspc().getClasspath());
             } else {
-                java.setClasspath(Path.systemClasspath);
+                Path classpath=new Path(getProject());
+                classpath=classpath.concatSystemClasspath("only");
+                getProject().log("using system classpath: "+classpath, Project.MSG_DEBUG);
+                java.setClasspath(classpath);
             }
+            java.setDir(getProject().getBaseDir());
             java.setClassname("org.apache.jasper.JspC");
-            String args[] = cmd.getArguments();
+            //this is really irritating; we need a way to set stuff
+            String args[] = cmd.getJavaCommand().getArguments();
             for (int i = 0; i < args.length; i++) {
                 java.createArg().setValue(args[i]);
             }
@@ -101,10 +124,10 @@ public class JasperC extends DefaultJspCompilerAdapter {
             //we are forking here to be sure that if JspC calls
             //System.exit() it doesn't halt the build
             java.setFork(true);
+            java.setTaskName("jasperc");
             java.execute();
             return true;
         } catch (Exception ex) {
-            //@todo implement failonerror support here?
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
@@ -122,8 +145,8 @@ public class JasperC extends DefaultJspCompilerAdapter {
      * build up a command line
      * @return a command line for jasper
      */
-    private Commandline setupJasperCommand() {
-        Commandline cmd = new Commandline();
+    private CommandlineJava setupJasperCommand() {
+        CommandlineJava cmd = new CommandlineJava();
         JspC jspc = getJspc();
         addArg(cmd, "-d", jspc.getDestdir());
         addArg(cmd, "-p", jspc.getPackage());

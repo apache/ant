@@ -62,8 +62,9 @@ import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Shutdown a Weblogic server.
-
+ * Shuts down a WebLogic server.
+ * To shut down an instance you must supply both a username and
+ * a password.
  *
  * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
@@ -136,16 +137,18 @@ public class WLStop extends Task {
     }
 
     /**
-     * Set the classpath to be used for this compilation.
+     * The classpath to be used with the Java Virtual Machine that runs the Weblogic
+     * Shutdown command;
      *
-     * @param s the classpath to use when executing the weblogic admin task.
+     * @param path the classpath to use when executing the weblogic admin task.
      */
     public void setClasspath(Path path) {
         this.classpath = path;
     }
 
     /**
-     * Add the classpath for the user classes
+     * The classpath to be used with the Java Virtual Machine that runs the Weblogic
+     * Shutdown command;
      */
     public Path createClasspath() {
         if (classpath == null) {
@@ -155,7 +158,8 @@ public class WLStop extends Task {
     }
 
     /**
-     * Set the username to use to request shutdown of the server.
+     * The username of the account which will be used to shutdown the server;
+     * required.
      *
      * @param s the username.
      */
@@ -164,7 +168,8 @@ public class WLStop extends Task {
     }
 
     /**
-     * Set the password to use to request shutdown of the server.
+     * The password for the account specified in the
+     * user parameter; required
      *
      * @param s the password.
      */
@@ -173,7 +178,8 @@ public class WLStop extends Task {
     }
 
     /**
-     * Set the URL to which the weblogic server is listening.
+     * Set the URL to which the weblogic server is listening
+     * for T3 connections; required.
      *
      * @param s the url.
      */
@@ -183,7 +189,8 @@ public class WLStop extends Task {
 
 
     /**
-     * Set the delay (in seconds) before shutting down the server.
+     * Set the delay (in seconds) before shutting down the server;
+     * optional.
      *
      * @param s the selay.
      */
@@ -192,7 +199,8 @@ public class WLStop extends Task {
     }
 
     /**
-     * The location of the BEA Home.
+     * The location of the BEA Home; implicitly
+     * selects Weblogic 6.0 shutdown; optional.
      *
      * @param beaHome the BEA Home directory.
      *

@@ -87,8 +87,10 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.ParserAdapter;
 
 /**
- * The <code>XMLValidateTask</code> checks that an XML document is valid,
- * with a SAX validating parser.
+ * Checks XML files are valid (or only well formed). The
+ * task uses the SAX2 parser implementation provided by JAXP by default
+ * (probably the one that is used by Ant itself), but one can specify any
+ * SAX1/2 parser if needed
  * @author Raphael Pierquin <a href="mailto:raphael.pierquin@agisphere.com">raphael.pierquin@agisphere.com</a>
  */
 public class XMLValidateTask extends Task {
@@ -122,7 +124,8 @@ public class XMLValidateTask extends Task {
     private XMLCatalog xmlCatalog = new XMLCatalog();
 
     /**
-     * Specify how parser error are to be handled.
+     * Specify how parser error are to be handled; 
+     * optional, default=true
      * <p>
      * If set to <code>true</code> (default), throw a buildException if the parser yields an error.
      */
@@ -193,6 +196,7 @@ public class XMLValidateTask extends Task {
     }
 
     /**
+     * Where to find the parser class; optional. 
      * @see #setClasspath
      */
     public void setClasspathRef(Reference r) {
@@ -200,21 +204,21 @@ public class XMLValidateTask extends Task {
     }
 
     /**
-     * specifify the file to be checked
+     * specify the file to be checked; optional.
      */
     public void setFile(File file) {
         this.file = file;
     }
 
     /**
-     *
+     * add an XMLCatalog as a nested element; optional.
      */
     public void addConfiguredXMLCatalog(XMLCatalog catalog) {
         xmlCatalog.addConfiguredXMLCatalog(catalog);
     }
 
     /**
-     * specifify a set of file to be checked
+     * specify a set of file to be checked
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -226,7 +230,8 @@ public class XMLValidateTask extends Task {
     }
 
     /**
-     * Create a DTD location record. This stores the location of a DTD. The DTD is identified
+     * Create a DTD location record; optional.
+     * This stores the location of a DTD. The DTD is identified
      * by its public Id.
      */
     public DTDLocation createDTD() {
@@ -353,9 +358,9 @@ public class XMLValidateTask extends Task {
         }
     }
 
-    /*
+    /**
      * set a feature on the parser.
-     * TODO: find a way to set any feature from build.xml
+     * @todo find a way to set any feature from build.xml
      */
     private boolean setFeature(String feature, boolean value, boolean warn) {
 
@@ -380,7 +385,8 @@ public class XMLValidateTask extends Task {
         }
         return toReturn;
     }
-    /*
+    
+    /**
      * parse the file
      */
     private void doValidate(File afile) {
@@ -415,7 +421,7 @@ public class XMLValidateTask extends Task {
         }
     }
 
-    /*
+    /**
      * ValidatorErrorHandler role :
      * <ul>
      * <li> log SAX parse exceptions,

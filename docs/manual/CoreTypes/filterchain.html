@@ -239,6 +239,108 @@ Convenience method:
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
+<H3><a name="linecontains">LineContains</a></H3>
+
+This filter includes only those lines that contain all the user-specified
+strings.
+
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Parameter Type</B></TD>
+    <TD vAlign=top><B>Parameter Value</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>contains</TD>
+    <TD vAlign=top align="center">Substring to be searched for.</TD>
+    <TD vAlign=top align="center">Yes</TD>
+  </TR>
+</TABLE>
+<P>
+<H4>Example:</H4>
+
+This will include only those lines that contain <code>foo</code> and
+<code>bar</code>.
+<BLOCKQUOTE><PRE>
+&lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContains&quot;&gt;
+  &lt;param type=&quot;contains&quot; value=&quot;foo&quot;/&gt;
+  &lt;param type=&quot;contains&quot; value=&quot;bar&quot;/&gt;
+&lt;/filterreader&gt;
+</PRE></BLOCKQUOTE>
+
+Convenience method:
+<BLOCKQUOTE><PRE>
+&lt;linecontains&gt;
+  &lt;contains value=&quot;foo&quot;&gt;
+  &lt;contains value=&quot;bar&quot;&gt;
+&lt;/linecontains&gt;
+</PRE></BLOCKQUOTE>
+
+<H3><a name="linecontainsregexp">LineContainsRegExp</a></H3>
+
+Filter which includes only those lines that contain the user-specified
+regular expression matching strings.
+
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Parameter Type</B></TD>
+    <TD vAlign=top><B>Parameter Value</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>regexp</TD>
+    <TD vAlign=top align="center">Pattern of the substring to be searched for.</TD>
+    <TD vAlign=top align="center">Yes</TD>
+  </TR>
+</TABLE>
+<P>
+<H4>Example:</H4>
+
+This will fetch all those lines that contain the pattern <code>foo</code>
+<BLOCKQUOTE><PRE>
+&lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContainsRegExp&quot;&gt;
+  &lt;param type=&quot;regexp&quot; value=&quot;foo*&quot;/&gt;
+&lt;/filterreader&gt;
+</PRE></BLOCKQUOTE>
+
+Convenience method:
+<BLOCKQUOTE><PRE>
+&lt;linecontainsregexp&gt;
+  &lt;regexp pattern=&quot;foo*&quot;&gt;
+&lt;/linecontainsregexp&gt;
+</PRE></BLOCKQUOTE>
+
+<H3><a name="prefixlines">PrefixLines</a></H3>
+
+Attaches a prefix to every line.
+
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Parameter Name</B></TD>
+    <TD vAlign=top><B>Parameter Value</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>prefix</TD>
+    <TD vAlign=top align="center">Prefix to be attached to lines.</TD>
+    <TD vAlign=top align="center">Yes</TD>
+  </TR>
+</TABLE>
+<P>
+<H4>Example:</H4>
+
+This will attach the prefix <code>Foo</code> to all lines.
+<BLOCKQUOTE><PRE>
+&lt;filterreader classname=&quot;org.apache.tools.ant.filters.PrefixLines&quot;&gt;
+  &lt;param name=&quot;prefix&quot; value=&quot;Foo&quot;/&gt;
+&lt;/filterreader&gt;
+</PRE></BLOCKQUOTE>
+
+Convenience method:
+<BLOCKQUOTE><PRE>
+&lt;prefixlines prefix=&quot;Foo&quot;/&gt;
+</PRE></BLOCKQUOTE>
+
 <H3><a name="replacetokens">ReplaceTokens</a></H3>
 
 This filter reader replaces all strings that are
@@ -277,7 +379,7 @@ user defined values.
 
 <H4>Example:</H4>
 
-This replaces occurences of the string @DATE@ in the data
+This replaces occurences of the string &#64;DATE&#64; in the data
 with today's date and stores it in the property ${src.file.replaced}
 <BLOCKQUOTE><PRE>
 &lt;tstamp/&gt;
@@ -378,6 +480,49 @@ strips them.
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>
 
+<H3><a name="striplinecomments">StripLineComments</a></H3>
+
+This filter removes all those lines that begin with strings
+that represent comments as specified by the user.
+
+<TABLE cellSpacing=0 cellPadding=2 border=1>
+  <TR>
+    <TD vAlign=top><B>Parameter Type</B></TD>
+    <TD vAlign=top><B>Parameter Value</B></TD>
+    <TD vAlign=top align="center"><B>Required</B></TD>
+  </TR>
+  <TR>
+    <TD vAlign=top>comment</TD>
+    <TD vAlign=top align="center">Strings that identify a line as a comment
+    when they appear at the start of the line.</TD>
+    <TD vAlign=top align="center">Yes</TD>
+  </TR>
+</TABLE>
+<P>
+<H4>Examples:</H4>
+
+This removes all lines that begin with #, --, REM, rem and //
+<BLOCKQUOTE><PRE>
+&lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineComments&quot;&gt;
+  &lt;param type=&quot;comment&quot; value="#&quot;/&gt;
+  &lt;param type=&quot;comment&quot; value=&quot;--&quot;/&gt;
+  &lt;param type=&quot;comment&quot; value=&quot;REM &quot;/&gt;
+  &lt;param type=&quot;comment&quot; value=&quot;rem &quot;/&gt;
+  &lt;param type=&quot;comment&quot; value=&quot;//&quot;/&gt;
+&lt;/filterreader&gt;
+</PRE></BLOCKQUOTE>
+
+Convenience method:
+<BLOCKQUOTE><PRE>
+&lt;striplinecomments&gt;
+  &lt;comment value=&quot;#&quot;/&gt;
+  &lt;comment value=&quot;--&quot;/&gt;
+  &lt;comment value=&quot;REM &quot;/&gt;
+  &lt;comment value=&quot;rem &quot;/&gt;
+  &lt;comment value=&quot;//&quot;/&gt;
+&lt;/striplinecomments&gt;
+</PRE></BLOCKQUOTE>
+
 <H3><a name="tabstospaces">TabsToSpaces</a></H3>
 
 This filter replaces tabs with spaces
@@ -476,8 +621,8 @@ Convenience method:
 <BLOCKQUOTE><PRE>
 &lt;loadfile srcfile=&quot;${src.file}&quot; property=&quot;${src.file.mid}&quot;&gt;
   &lt;filterchain&gt;
-    &lt;HeadFilter lines=&quot;15&quot;/&gt;
-    &lt;TailFilter lines=&quot;5&quot;/&gt;
+    &lt;headfilter lines=&quot;15&quot;/&gt;
+    &lt;tailfilter lines=&quot;5&quot;/&gt;
   &lt;/filterchain&gt;
 &lt;/loadfile&gt;
 </PRE></BLOCKQUOTE>

@@ -54,6 +54,8 @@
 
 package org.apache.tools.ant;
 
+import java.util.Enumeration;
+
 /**
  * Base class for all tasks.
  *
@@ -226,13 +228,17 @@ public abstract class Task extends ProjectComponent {
 
     /**
      * Sets the wrapper to be used for runtime configuration.
+     *
+     * This method should be used only by the ProjectHelper and ant internals.
+     * It is public to allow helper plugins to operate on tasks, normal tasks
+     * should never use it.
      * 
      * @param wrapper The wrapper to be used for runtime configuration.
      *                May be <code>null</code>, in which case the next call
      *                to getRuntimeConfigurableWrapper will generate a new
      *                wrapper.
      */
-    protected void setRuntimeConfigurableWrapper(RuntimeConfigurable wrapper) {
+    public void setRuntimeConfigurableWrapper(RuntimeConfigurable wrapper) {
         this.wrapper = wrapper;
     }
 
@@ -338,6 +344,15 @@ public abstract class Task extends ProjectComponent {
     }
 
     /**
+     * Has this task been marked invalid?
+     *
+     * @since Ant 1.5
+     */
+    protected final boolean isInvalid() {
+        return invalid;
+    }
+
+    /**
      * Replacement element used if this task is invalidated.
      */
     private UnknownElement replacement;
@@ -359,9 +374,32 @@ public abstract class Task extends ProjectComponent {
             replacement.setOwningTarget(target);
             replacement.setRuntimeConfigurableWrapper(wrapper);
             wrapper.setProxy(replacement);
+            replaceChildren(wrapper, replacement);
             target.replaceChild(this, replacement);
             replacement.maybeConfigure();
         }
         return replacement;
+    }
+
+    /**
+     * Recursively adds an UnknownElement instance for each child
+     * element of replacement.
+     *
+     * @since Ant 1.5.1
+     */
+    private void replaceChildren(RuntimeConfigurable wrapper,
+                                 UnknownElement parentElement) {
+        Enumeration enum = wrapper.getChildren();
+        while (enum.hasMoreElements()) {
+            RuntimeConfigurable childWrapper =
+                (RuntimeConfigurable) enum.nextElement();
+            UnknownElement childElement = 
+                new UnknownElement(childWrapper.getElementTag());
+            parentElement.addChild(childElement);
+            childElement.setProject(getProject());
+            childElement.setRuntimeConfigurableWrapper(childWrapper);
+            childWrapper.setProxy(childElement);
+            replaceChildren(childWrapper, childElement);
+        }
     }
 }

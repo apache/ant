@@ -1,6 +1,8 @@
 <XDtTagDef:tagDef namespace="Ant" handler="org.apache.tools.ant.xdoclet.TaskTagsHandler"/>
 <task name="<XDtAnt:taskName/>" category="<XDtAnt:categoryName/>"
-      classname="<XDtClass:fullClassName/>">
+      classname="<XDtClass:fullClassName/>"
+      <XDtClass:ifHasClassTag tagName="deprecated">deprecated="true"</XDtClass:ifHasClassTag>
+      <XDtType:ifIsOfType type="org.apache.tools.ant.taskdefs.MatchingTask">matchingTask="true"</XDtType:ifIsOfType>>
 
   <XDtMerge:merge file="{0}.xml" generateMergedFile="false"></XDtMerge:merge>
 
@@ -13,7 +15,9 @@
 
     <attributes>
     <XDtAnt:forAllAttributes>
-      <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
+      <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>"
+                 <XDtMethod:ifHasMethodTag tagName="deprecated">deprecated="true"</XDtMethod:ifHasMethodTag>>
+        <short-description><![CDATA[<XDtAnt:shortMethodDescription/>]]></short-description>
         <description><![CDATA[
           <XDtMethod:methodComment no-comment-signs="true"/>
         ]]></description>
@@ -23,23 +27,15 @@
 
     <elements>
     <XDtAnt:forAllElements>
-      <element name="<XDtAnt:elementName/>" type="<XDtAnt:elementType/>">
+      <element name="<XDtAnt:elementName/>" type="<XDtAnt:elementType/>"
+               <XDtMethod:ifHasMethodTag tagName="deprecated">deprecated="true"</XDtMethod:ifHasMethodTag>
+        <XDtClass:pushClass value="<XDtAnt:elementType/>">
+               <XDtClass:ifIsClassAbstract>abstract="true"</XDtClass:ifIsClassAbstract>>
+        </XDtClass:pushClass>
+        <short-description><![CDATA[<XDtAnt:shortMethodDescription/>]]></short-description>
         <description>
           <![CDATA[<XDtMethod:methodComment no-comment-signs="true"/>]]>
         </description>
-        <XDtClass:pushClass value="<XDtAnt:elementType/>">
-        <XDtAnt:ifHasAttributes>
-        <attributes>
-          <XDtAnt:forAllAttributes>
-          <attribute name="<XDtMethod:propertyName/>" type="<XDtParameter:forAllMethodParams><XDtParameter:methodParamType/></XDtParameter:forAllMethodParams>">
-            <description><![CDATA[
-              <XDtMethod:methodComment no-comment-signs="true"/>
-            ]]></description>
-          </attribute>
-          </XDtAnt:forAllAttributes>
-        </attributes>
-        </XDtAnt:ifHasAttributes>
-        </XDtClass:pushClass>
       </element>
 
     </XDtAnt:forAllElements>
@@ -48,7 +44,7 @@
     <!-- @todo: wrap setCurrentMethod inside AntTagsHandler -->
     <!-- @todo: create a XDtAnt:description wrapper for methodComment -->
     <XDtMethod:setCurrentMethod name="addText" parameters="java.lang.String">
-      <body>
+      <body <XDtMethod:ifHasMethodTag tagName="deprecated">deprecated="true"</XDtMethod:ifHasMethodTag>>
         <description><![CDATA[
           <XDtMethod:methodComment no-comment-signs="true"/>
         ]]></description>

@@ -142,8 +142,12 @@ public class Kjc extends DefaultCompilerAdapter {
         }
         
         cp.append(classpath);
-        cp.append(src);
-        
+        if (compileSourcepath != null) {
+            cp.append(compileSourcepath);
+        } else {
+            cp.append(src);
+        }        
+
         cmd.createArgument().setPath(cp);
         
         // kjc-1.5A doesn't support -encoding option now.

@@ -182,7 +182,7 @@ public abstract class JDBCTask extends Task {
     private String version = null;
 
     /**
-     * Sets the classpath.
+     * Sets the classpath for loading the driver.
      * @param classpath The classpath to set
      */
     public void setClasspath(Path classpath) {
@@ -192,7 +192,7 @@ public abstract class JDBCTask extends Task {
     /**
      * Caching loaders / driver. This is to avoid
      * getting an OutOfMemoryError when calling this task
-     * multiple times in a row.
+     * multiple times in a row; default: true
      * @param enable
      */
     public void setCaching(boolean enable) {
@@ -200,7 +200,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Create the classpath for loading the driver.
+     * Add a path to the classpath for loading the driver.
      */
     public Path createClasspath() {
         if (this.classpath == null) {
@@ -210,14 +210,15 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Set the classpath for loading the driver using the classpath reference.
+     * Set the classpath for loading the driver 
+     * using the classpath reference.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
     /**
-     * Sets the driver.
+     * Class name of the JDBC driver; required.
      * @param driver The driver to set
      */
     public void setDriver(String driver) {
@@ -225,7 +226,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the url.
+     * Sets the database connection URL; required.
      * @param url The url to set
      */
     public void setUrl(String url) {
@@ -233,14 +234,7 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Set the user name for the DB connection.
-     */
-    public void setUserid(String userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * Sets the password.
+     * Sets the password; required.
      * @param password The password to set
      */
     public void setPassword(String password) {
@@ -248,7 +242,8 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the autocommit.
+     * Auto commit flag for database connection;
+     * optional, default false.
      * @param autocommit The autocommit to set
      */
     public void setAutocommit(boolean autocommit) {
@@ -256,7 +251,8 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the rdbms.
+     * Execute task only if the lower case product name 
+     * of the DB matches this
      * @param rdbms The rdbms to set
      */
     public void setRdbms(String rdbms) {
@@ -264,7 +260,8 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the version.
+     * Sets the version string, execute task only if 
+     * rdbms version match; optional.
      * @param version The version to set
      */
     public void setVersion(String version) {
@@ -272,8 +269,8 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Verify if connected to the correct RDBMS
-     **/
+     * Verify we are connected to the correct RDBMS
+     */
     protected boolean isValidRdbms(Connection conn) {
         if (rdbms == null && version == null) {
             return true;
@@ -456,10 +453,10 @@ public abstract class JDBCTask extends Task {
     }
 
     /**
-     * Sets the userId.
+     * Set the user name for the connection; required.
      * @param userId The userId to set
      */
-    public void setUserId(String userId) {
+    public void setUserid(String userId) {
         this.userId = userId;
     }
 

@@ -96,44 +96,42 @@ public class Cab extends MatchingTask {
     private FileUtils fileUtils = FileUtils.newFileUtils();
 
     /**
-     * This is the name/location of where to
-     * create the .cab file.
+     * The name/location of where to create the .cab file.
      */
     public void setCabfile(File cabFile) {
         this.cabFile = cabFile;
     }
 
     /**
-     * This is the base directory to look in for
-     * things to cab.
+     * Base directory to look in for files to CAB.
      */
     public void setBasedir(File baseDir) {
         this.baseDir = baseDir;
     }
 
     /**
-     * Sets whether we want to compress the files or only store them.
+     * If true, compress the files otherwise only store them.
      */
     public void setCompress(boolean compress) {
         doCompress = compress;
     }
 
     /**
-     * Sets whether we want to see or suppress cabarc output.
+     * If true, display cabarc output.
      */
     public void setVerbose(boolean verbose) {
         doVerbose = verbose;
     }
 
     /**
-     * Sets additional cabarc options that aren't supported directly.
+     * Sets additional cabarc options that are not supported directly.
      */
     public void setOptions(String options) {
         cmdOptions = options;
     }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Adds a set of files to archive.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);

@@ -202,8 +202,10 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
   </tr>
   <tr>
     <td valign="top">force</td>
-    <td valign="top">force a refresh of files</td>
-    <td valign="top" align="center">no</td>
+    <td valign="top">force a refresh of files, if this attribute has
+    been set.</td>
+    <td valign="top" align="center">no - if ommitted, it will be off,
+    otherwise a refresh will be forced.</td>
   </tr>
 <tr>
     <td valign="top">label</td>
@@ -213,7 +215,7 @@ available from the <a href="http://www.perforce.com/" target="_top">Perforce web
 </table>
 
 <h3>Examples</h3>
-<pre>&lt;p4sync label=&quot;nightlybuild-0.0123&quot; force=&quot;yes&quot; /&gt;
+<pre>&lt;p4sync label=&quot;nightlybuild-0.0123&quot; force=&quot;foo&quot; /&gt;
 &lt;p4sync view=&quot;//depot/projects/projectfoo/main/src/...&quot; /&gt;
 </pre>
 <hr>
@@ -277,8 +279,8 @@ although P4Edit can open files to the default change,  P4Submit cannot yet submi
 <h3>Examples</h3>
 <pre>
 &lt;p4edit
-	view=&quot;//depot/projects/projectfoo/main/src/Blah.java...&quot;
-	change=&quot;${p4.change}&quot; /&gt;
+    view=&quot;//depot/projects/projectfoo/main/src/Blah.java...&quot;
+    change=&quot;${p4.change}&quot; /&gt;
 </pre>
 <hr>
 

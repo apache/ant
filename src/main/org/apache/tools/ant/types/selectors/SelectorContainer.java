@@ -64,7 +64,7 @@ import java.util.Stack;
 import java.util.Vector;
 
 /**
- * This is the base class for selectors that can contain other selectors.
+ * This is the interface for selectors that can contain other selectors.
  *
  * @author <a href="mailto:bruce@callenish.com">Bruce Atherton</a>
  * @since 1.5
@@ -107,7 +107,12 @@ public interface SelectorContainer {
      */
     public void appendSelector(FileSelector selector);
 
-    /* Methods below all implement the static selectors */
+    /* Methods below all add specific selectors */
+
+    /**
+     * add a "Select" selector entry on the selector list
+     */
+    public void addSelector(SelectSelector selector);
 
     /**
      * add an "And" selector entry on the selector list
@@ -137,42 +142,42 @@ public interface SelectorContainer {
     /**
      * add a selector date entry on the selector list
      */
-    public void addDateselect(DateSelector selector);
+    public void addDate(DateSelector selector);
 
     /**
      * add a selector size entry on the selector list
      */
-    public void addSizeselect(SizeSelector selector);
+    public void addSize(SizeSelector selector);
 
     /**
      * add a selector filename entry on the selector list
      */
-    public void addFilenameselect(FilenameSelector selector);
+    public void addFilename(FilenameSelector selector);
 
     /**
      * add an extended selector entry on the selector list
      */
-    public void addExtendSelect(ExtendSelector selector);
+    public void addCustom(ExtendSelector selector);
 
     /**
      * add a contains selector entry on the selector list
      */
-    public void addContainsSelect(ContainsSelector selector);
+    public void addContains(ContainsSelector selector);
 
     /**
      * add a present selector entry on the selector list
      */
-    public void addPresentSelect(PresentSelector selector);
+    public void addPresent(PresentSelector selector);
 
     /**
      * add a depth selector entry on the selector list
      */
-    public void addDepthSelect(DepthSelector selector);
+    public void addDepth(DepthSelector selector);
 
     /**
      * add a depends selector entry on the selector list
      */
-    public void addDependSelect(DependSelector selector);
+    public void addDepend(DependSelector selector);
 
 }
 

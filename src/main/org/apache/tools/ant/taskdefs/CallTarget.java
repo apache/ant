@@ -93,16 +93,16 @@ public class CallTarget extends Task {
     private boolean inheritRefs = false;
 
     /**
-     * If true, inherit all properties from parent Project
-     * If false, inherit only userProperties and those defined
-     * inside the antcall call itself
-     **/
+     * If true, pass all properties to the new Ant project.
+     * Defaults to true.
+     */
     public void setInheritAll(boolean inherit) {
        inheritAll = inherit;
     }
 
     /**
-     * set the inherit refs flag
+     * If true, pass all references to the new Ant project.
+     * Defaults to false
      * @param inheritRefs new value
      */
     public void setInheritRefs(boolean inheritRefs) {
@@ -136,7 +136,6 @@ public class CallTarget extends Task {
                                      location);
         }
         
-        callee.setDir(getProject().getBaseDir());
         callee.setAntfile(getProject().getProperty("ant.file"));
         callee.setTarget(subTarget);
         callee.setInheritAll(inheritAll);
@@ -145,7 +144,7 @@ public class CallTarget extends Task {
     }
 
     /**
-     * Create a nested param element.
+     * Property to pass to the invoked target.
      */
     public Property createParam() {
         if (callee == null) {
@@ -154,10 +153,9 @@ public class CallTarget extends Task {
         return callee.createProperty();
     }
 
-    /** 
-     * create a reference element that identifies a data type that
-     * should be carried over to the new project.
-     *
+    /**
+     * Reference element identifying a data type to carry
+     * over to the invoked target.
      * @since Ant 1.5
      */
     public void addReference(Ant.Reference r) {
@@ -168,7 +166,7 @@ public class CallTarget extends Task {
     }
 
     /**
-     * Sets the target attribute, required.
+     * Target to execute, required.
      */
     public void setTarget(String target) {
         subTarget = target;

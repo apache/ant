@@ -1,17 +1,270 @@
-Changes from Ant 1.4.1 to current CVS version
-==============================================
+
+Changes from Ant 1.5 to current 1.5Beta1
+========================================
+
+Fixed bugs:
+-----------
+* Checksum was broken in the following scenario: 
+  (using verifyproperty OR in a condition) AND using filesets 
+  with multiple files.
+
+* The ExpandProperties filter threw NPEs when defined using
+  the <filterreader> format.
+
+* The sh wrapper script didn't work under Cygwin if ANT_HOME wasn't
+  set with a Unix style filename.
+
+* The sh wrapper script could fail if you started Ant from a directory
+  with whitespace in its name.
+
+* ant -diagnostics was not working properly when the task dependency
+  was missing and was just printing the missing dependency.
+
+* If a task got redefined via <taskdef>, it lost its child elements.
+
+* <property>'s classpathref attribute was broken.
+
+* <arg line="''" /> would result in no command line argument, will now
+  be a single empty argument.  Use <arg value="''"/> if you need the
+  quotes literally.
+
+Other changes:
+--------------
+
+* Appendix E of Java Development with Ant (Loughran/Hatcher) was
+  contributed to the docs.
+
+* <available> will only print deprecration warnings if it is actually
+  used to change the value of a property.
+
+Changes from Ant 1.5beta3 to Ant 1.5
+====================================
 
 Changes that could break older environments:
 --------------------------------------------
 
-* Important: Single $ signs are no longer silently stripped! 
+* The filesetmanifest attribute added to <jar> after the 1.4.1 
+  release has been removed for now.  This change may affect only
+  the 1.5Beta/1.6Alpha users.  An attempt will be made to add this
+  feature back into Ant 1.6.
+
+Fixed bugs:
+-----------
+
+* <zip> and friends would always update existing archive if you set
+  the update attribute to true.
+
+* To support backward compatibility with older versions, <pathconvert>
+  will once again set the property, even if the result is the empty
+  string, unless the new 'setonempty' attribute is set to false|no|off
+  (default is "true").
+
+* The manifest task would crash XmlLogger
+
+Other changes:
+--------------
+
+* added **/.svn and **/.svn/** to the default excludes
+
+Changes from Ant 1.5beta2 to Ant 1.5beta3
+=========================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+* Project.getBuildListeners now returns a clone of the listener
+  list. Changes to the returned list will not affect the listeners
+  currently attached to the Project. It also means that it is safe to
+  iterate over the returned list if listeners are added or removed
+  during the traversal.
+
+* <pvcs> default filenameformat has been different from Ant 1.4.1.
+  Now it is different from 1.5beta1 and 1.5beta2.
+
+* Some messages that are printed during startup will not be
+  written to the logfile specified via -logfile as they might destroy
+  the format of the file for special BuildLoggers (like XmlLogger).
+
+* <pathconvert> won't set the property if the result is the empty string.
+
+Fixed bugs:
+-----------
+
+* <available> could fail to find files or directories that happen to
+  start with the name of the project's basedir but are not children of
+  the basedir.
+
+* Nested <property>'s inside <ant> can now be overriden by subsequent
+  <ant> and <antcall> tasks.
+
+* <xslt>'s outputtype attribute wouldn't do anything.
+
+* <linecontains> filterreader could swallow lines.
+
+* <sequential> used to configure the tasks (set their attributes)
+  before the first task has been executed.  This means that properties
+  that have been set by nested task seemed to be unset for the other
+  tasks in the same <sequential> element.
+
+* <javac>'s sourcepath setting has been ignored by some compiler
+  implementations.
+
+* <javadoc>'s packagelist attribute didn't work.
+
+* the plain mailer would always use port 25 in <mail>.
+
+* Ant's default logger could swallow empty lines.
+
+* ejbjar's iPlanet nested element now can process multiple descriptors.
+
+* IPlanetEjbc was looking in the wrong place for four iiop files.
+
+* <javac> would pass the -source switch to JDK 1.3's javac, even
+  though it doesn't support it.
+
+Other changes:
+--------------
+
+* <checksum> now uses a buffer (of configurable size).
+
+* The "Trying to override task definition" warning has been degraded
+  to verbose level if the two task definitions only differ in the class
+  loader instance that has loaded the definition.
+
+* Add a jvmargs to the ejbjar's weblogic element to allow additional
+  arguments to be provided to the VM runnign ejbc. Document the
+  jvmdebuglevel attribute which can be used to avoid warnings about
+  interface classess being found on the classpath. Document the new
+  <sysproperty> element which allows JVM properties to be defined.
+  Added an outputdir attribute to allow the destination to be a
+  directory into which the exploded jar is written.
+
+* ejbjar now supports Borland Enterprise Server 5 and Jonas 2.5
+
+Changes from Ant 1.5beta1 to Ant 1.5beta2
+=========================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+* Properties will now be expanded in mail message bodies.  This means
+that one $ sign will be stripped if your mail message contains the text
+$$.
+
+* org.apache.tools.ant.taskdefs.Expand no longer extends MatchingTask.
+
+* Available#setFile now again uses a File argument as it did in 1.4,
+this may break environments that have been adapted to the String
+argument version present in 1.5beta1.
+
+Fixed bugs:
+-----------
+* When <move> attempts a rename, it deletes the destination file, if it
+  exists, before renaming the source file.  However, <move> was not
+  checking if the destination file was actually a directory before
+  trying to delete it.
+
+* Make CVS Tasks to work under Cygwin.
+
+* Fix LineContains to handle huge files elegantly without causing
+Stack Overflows.
+
+* if you ask for the "classic" compiler on Java1.4, you get upgraded to
+"modern" because there is no classic compiler any more.
+
+* the <http> condition was viewing 404 'not found' exceptions as success. Now
+it defaults to viewing any response >=400 as an error, and has an errorsBeginAt
+attribute you can use if you want a higher or lower value.
+
+* <get> throws a build exception on an http authorization error, unless you
+have set ignoreerrors to true.
+
+* <wsdltodotnet> was spelt in Wintel case: <WsdlToDotnet>. It is now lower
+case, though the old spelling is retained for anyone who used it.
+
+* Merging of Manifests in jar now works as documented.
+
+* paths that have been separated by colons would be incorrectly parsed
+on NetWare.
+
+* runant.pl now supports NetWare.
+
+* <tempfile> and <setproxy> tasks were in beta1, but not defined by
+default; They now are. <tempfile> fills a property with the name of a
+temporary file; <setproxy> lets you set the JVM's http, ftp and socks proxy
+settings.
+
+* <available classname="foo" ignoresystemclasses="true"> failed for
+JDK 1.1 and 1.2, even if the class could be found on the
+user-specified classpath.
+
+* <property environment=... /> now works on z/OS.
+
+* forked <javac> failed for the wrong reason on JDK 1.1 - Ant would
+use a temporary file to hold the names of the files to compile under
+some conditons, but 1.1 doesn't support this feature.  Ant will no
+longer try this, but you may run into problems with the length of the
+command line now.
+
+* the refid attribute for <property>s nested into <ant> or <param>s
+nested into <antcall> didn't work.
+
+* <replaceregexp> didn't work for nested <fileset>s.
+
+* <javadoc> dropped sourcepath entries if no "interesting" .java
+source files  could be found below them.  This has been backwards
+incompatible and caused problems with custom doclets like xdoclet.
+
+* Using the doclet, docletpath or docletpathref attributes of
+<javadoc> may have caused NullPointerExceptions.
+
+* nested <filesets> of <javadoc> would include too much.
+
+* <dependset> will no longer choke on <targetfileset>s that point to
+non-existing directories.
+
+* <patch> didn't work at all.
+
+* <replace> and <replaceregexp> now fail if the file they are working
+on is locked.
+
+* <javadoc> would pick up the wrong executable in the combination JDK
+1.2  and AIX.
+
+Other changes:
+--------------
+
+* z/OS now gets detected by the os condition.
+
+* <fileset> and <dirset> now have an optional followsymlink attribute
+that can prevent Ant from following symbolic links on some platforms.
+
+* BeanShell is now supported in the <script> task.
+
+* <ejbjar> under Weblogic attempts to use the ejbc20 compiler for 2.0 beans
+  based on the deployment descriptor's DTD reference. Under weblogic 7.00 Beta
+  this ejbc class has been deprecated. To avoid the deprecation warning use
+  ejbcclass="weblogic.ejbc".
+
+* <ejbjar> will add a manifest to the generated jar based on the naming
+  convention in use. This overrides the manifest specified in the
+  <ejbjar> attribute
+
+
+Changes from Ant 1.4.1 to 1.5beta1
+==================================
+
+Changes that could break older environments:
+--------------------------------------------
+
+* Important: Single $ signs are no longer silently stripped!
   Before you panic that we have broken all your build files, we have kept
   the old "$$" -> "$" behaviour. So only build files which accidentally had
   a $ sign in a string that was being silently stripped may break.
-  We added this fix to stop newbie confusion; if you want to write a 
-  build file which works on ant versions 1.4.1 or earlier, stay with 
-  the double $$ sign rule. 
-    
+  We added this fix to stop newbie confusion; if you want to write a
+  build file which works on ant versions 1.4.1 or earlier, stay with
+  the double $$ sign rule.
+
 * Shipped XML parser is now Xerces 2.0.1 along with the XML Parser APIs.
   XML Parser APIs is a separate jar that contains the necessary
   JAXP/DOM/SAX classes.
@@ -19,7 +272,7 @@ Changes that could break older environments:
 * <telnet> was fixed to expand properties inside nested <read> and
   <write> elements; before this only happened when you assigned the text
   to the string attribute. If you had $ signs in the string, they may
-  need escaping. 
+  need escaping.
 
 * the RegexpMatcher interface has been extended to support case
   insensitive matches and other options - custom implementations of
@@ -37,18 +290,18 @@ Changes that could break older environments:
   <condition>, <exec>, <pathconvert>, or <tstamp>. In some exceptional
   cases it will generate a warning if you attempt to overwrite an
   existing property.
-  
+
 * Taskwriters please note: Whenever tasks had any overloaded set* methods,
   Ant's introspection mechanism would select the last overloaded method
-  provided to it by the Java Runtime.  A modification has now been made such 
-  that when the Java Runtime provides a method with a String as its argument, 
+  provided to it by the Java Runtime.  A modification has now been made such
+  that when the Java Runtime provides a method with a String as its argument,
   a check is made to see if there is another overloaded method that takes in
-  some other type of argument.  If there is one such method, then the method 
+  some other type of argument.  If there is one such method, then the method
   that takes in String as an argument is not selected by the Introspector.
-  
-* The pattern definition **/._* has been included into the Default 
+
+* The pattern definition **/._* has been included into the Default
   Excludes list.
-  
+
 * <propertyfile>'s <entry> element was modified to remove "never" as a value
   as its behavior was undocumented and flakey.
 
@@ -67,7 +320,7 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
-* A bug existed that prevented generated log files from being deleted as 
+* A bug existed that prevented generated log files from being deleted as
   part of the build process itself.  This has now been fixed.
 
 * Fixed bug where <move> ignored <filterset>s.
@@ -86,7 +339,7 @@ Fixed bugs:
 
 * <propertyfile> would not close the original property file.
 
-* <ant> will no longer override a subbuild's basedir with inheritall="true". 
+* <ant> will no longer override a subbuild's basedir with inheritall="true".
 
 * Fixed problem with the built-in <junit> formatters which assumed
   that only one test could be running at the same time - this is not
@@ -109,7 +362,7 @@ Fixed bugs:
 
 Other changes:
 --------------
-* Selector Elements now provide a way to create filesets based on 
+* Selector Elements now provide a way to create filesets based on
   sophisticated selection criteria.
 
 * Gzip and Bzip2 files can now be constructed in the fly when using
@@ -120,54 +373,59 @@ Other changes:
 * New optional type, <classfileset> added.
 
 * <ejbjar> now allows control over which additional classes and interfaces
-  are added to the generated EJB jars. A new attribute "dependency" can be 
-  defines which classes are added. The addition of classes now uses 
+  are added to the generated EJB jars. A new attribute "dependency" can be
+  defined which controls what classes are added. The addition of classes now uses
   the Jakarta-BCEL library rather than reflection, meaning bean classes are
-  no longer loaded into Ant's JVM. 
+  no longer loaded into Ant's JVM. The default dependency analyzer is known as
+  the ancestor analyzer. It provides the same behaviour as the 1.4.1 version of
+  <ejbjar>. If the BCEL library is not present, a warning will be issued stating
+  the ancestor analyzer is not available. In this case <ejbjar> will continue
+  to function but will not add super classes to the jar.
 
 * <available> has a new attribute named ignoreSystemClasses.
 
 * New task <cvschangelog/> generates an XML report of changes that occur
   on CVS repository.
 
-* New filter readers: ClassConstants, ExpandProperties, HeadFilter, 
-  LineContains, LineContainsRegExp, PrefixLines, ReplaceTokens, 
-  StripJavaComments, StripLineBreaks, StripLineComments, TabsToSpaces, 
+* New filter readers: ClassConstants, ExpandProperties, HeadFilter,
+  LineContains, LineContainsRegExp, PrefixLines, ReplaceTokens,
+  StripJavaComments, StripLineBreaks, StripLineComments, TabsToSpaces,
   TailFilter.
 
-* <copy>, <loadfile>, <loadproperties>, <move> support FilterChains 
+* <copy>, <loadfile>, <loadproperties>, <move> support FilterChains
   of FilterReaders.
-  
+
 * New task <loadproperties> to load contents of file as Ant properties,
   with nested <filterchain> elements.
-  
+
 * New task <loadfile> to load a whole file into a property.
 
 * New task <echoproperties> to list your current properties to the screen
-  or a file. 
+  or a file.
 
-* New tasks <bzip2> and <bunzip2> to pack and unpack files using the 
+* New tasks <bzip2> and <bunzip2> to pack and unpack files using the
   BZip2 alogrithm.
 
-* New tasks <replaceregexp>, <checksum>, <translate>, <waitfor>, 
+* New tasks <replaceregexp>, <checksum>, <translate>, <waitfor>,
   <manifest>, <vsscp>, <vssadd>, <vsscreate>, <splash>, <basename>, <dirname>,
-  <concat>.
+  <concat>, <sourceoffsite>, <jarlib-available>, <jarlib-display>,
+  <jarlib-manifest>, <jarlib-resolve>.
 
 * A new combined <mail> task, which replaces the old <mail> and
-  <mimemail> tasks, has been added.  The <mimemail> task, and 
+  <mimemail> tasks, has been added.  The <mimemail> task, and
   old SendEmail and MimeMail classes have been deprecated.
 
 * Mail task allows specification of port number.
 
-* Users can control what <zip> and <jar> must do when duplicate files 
-  are found.  A new element <zipgroupfileset> allows for multiple zip 
-  files to be merged into the archive.  In addition, <jar> also has 
+* Users can control what <zip> and <jar> must do when duplicate files
+  are found.  A new element <zipgroupfileset> allows for multiple zip
+  files to be merged into the archive.  In addition, <jar> also has
   another new attribute: filesetmanifest.  The existing manifest
-  attribute of <jar> now also accepts the name of a jar added through 
+  attribute of <jar> now also accepts the name of a jar added through
   a fileset.
 
 * gzip now checks that the zipfile is older than the source file
-  before rebuilding the zipfile. 
+  before rebuilding the zipfile.
 
 * TarFileset takes in three new attributes - fullpath, prefix
   and preserveLeadingSlashes.
@@ -180,24 +438,24 @@ Other changes:
 
 * Exec task has extra attribute "resultproperty" to get the return code
   into a property.
-  
-* Exec task prints a message when a timed-out process is killed.  
-  
+
+* Exec task prints a message when a timed-out process is killed.
+
 * Added optional attributes - name, arch and version to the <os> task.
 
-* Unjar, Untar, Unwar and Unzip now support patternsets to 
-  select files from an archive for extraction.  Filesets may be 
+* Unjar, Untar, Unwar and Unzip now support patternsets to
+  select files from an archive for extraction.  Filesets may be
   used to select archived files for unarchival.
 
 * Javac task allows debug levels to be specified.  Debug levels
-  will have an effect only when the modern compiler or the 
+  will have an effect only when the modern compiler or the
   classic compiler (version 1.2 and higher) is used and debugging
   is enabled.
 
 * Added support for specifying CVS_RSH in the <cvs/> task
 
-* The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
-  Jar, War and Ear tasks) have been deprecated and superseded by a 
+* The attributes zipfile, jarfile, warfile and earfile (from the Zip,
+  Jar, War and Ear tasks) have been deprecated and superseded by a
   new attribute "destfile".
 
 * Added new conditions <isset>, <checksum>, <http>, <socket>, <contains>,
@@ -224,17 +482,17 @@ Other changes:
 * <fail> now supports builds to fail based on conditions via if and
   unless attributes.
 
-* Ant now comes with two new BuildLogger implementations - one that 
+* Ant now comes with two new BuildLogger implementations - one that
   can send emails containing a log of the build process (MailLogger),
   and one that colorizes the output based on message levels, using
   ANSI color code escape sequences (AnsiColorLogger).
 
 * A "package" mapper type has been added to allow package directory
   names replaced with the dotted form.
-  
-* You can now specify environment variables in the <java> and <junit> tasks 
+
+* You can now specify environment variables in the <java> and <junit> tasks
   if the fork attribute has been set to true.
-  
+
 * -propertyfile command-line option has been added to load an entire
   property file just as -D properties are declared (as user properties).
   -D properties take precedence over -propertyfile specified ones.
@@ -242,7 +500,7 @@ Other changes:
 * You can now set an ANT_ARGS environment variable to hold arguments you
   always want passed to the 'ant' command -- for example, if you always
   want to use a different logger or the -find flag.
-  
+
 * <tstamp> now supports a new "prefix" attribute to prefix properties set.
 
 * You can now specify the -sourcepath for <javac> explicitly.
@@ -253,7 +511,7 @@ Other changes:
 * The compiler implementation for <javac> can now be chosen on a task by
   task basis.  The new "compiler" attribute of <javac> can be used to override
   the value of the build.compiler property, if set.
-  
+
 * <javac> has a new nested element, <compilerarg>, which allows you
   to specify additional args for the specific compiler you're using.
 
@@ -261,7 +519,7 @@ Other changes:
 
 * <propertyfile>'s <entry> now has a 'unit' attribute to specify the
   increment/decrement unit on date operations.
-  
+
 * <property> now supports a 'prefix' attribute when loading from a file
   or resource.
 
@@ -282,7 +540,7 @@ Other changes:
 * <ftp> can now chmod files on a remote server that supports
   "site chmod", as well as set the umask before transferring files, if
   the server supports "site umask".
-  
+
 * New <serverdeploy> "optional" task.
 
 * <patternset> now supports nested patternsets.
@@ -304,13 +562,13 @@ Other changes:
 * <copy> task now has a 'failonerror' attribute to allow keep-going
   behaviour when the file to be copied is not found (defaults to "true").
 
-* <uptodate> now has a 'srcfile' attribute to allow specifying a 
+* <uptodate> now has a 'srcfile' attribute to allow specifying a
   full-path filename.
 
 * <exec>, <sql> and <java> now support append attributes to allow
   appending the output to an existing file.
 
-* <java> now supports a timeout attribute analog to <exec> - it is 
+* <java> now supports a timeout attribute analog to <exec> - it is
   highly recommended to only use it together with fork="true".
 
 * <javadoc> now supports a source attribute to enable javadoc to
@@ -319,16 +577,16 @@ Other changes:
 * <replace> supports a new replacefilterfile attribute that
   automatically turns all properties of a given file into
   replacefilters.
-  
+
 * An alias of <xslt> has been added to refer to the <style> task.
 
 * The compiler implementation for <rmic> can now be chosen on a task by
   task basis.  The new "compiler" attribute of <rmic> can be used to override
   the value of the build.rmic property, if set.
-  
+
 * <rmic> has a new nested element, <compilerarg>, which allows you
   to specify additional args for the specific compiler you're using.
-  
+
 * org.apache.tools.ant.XmlLogger now is a BuildLogger, rather than just
   a BuildListener. It can operate in either mode successfully.
 
@@ -358,21 +616,21 @@ Fixed bugs:
 
 * <ant>'s antfile attribute will now also be considered an absolute path on
   Windows systems, if it starts with a \ and no drive specifier.
- 
+
 * The fullpath attribute of <zipfileset> has been ignored if you used
   the src attribute at the same time.
 
 * The manifest file is now always placed as the second entry (after /META-INF)
   in generated jars. This allows the manifest to be read by JarInputStreams
-  
+
 * Fixed bug in depend task which would fail with a NullPointerException if no
   dependency cache was specified.
-  
+
 * sql task now handles REM statements correctly so that lines starying with rem
   but which are not comments are actually processed.
-  
+
 * XMLLogger now uses the task's name rather than the classname
-  
+
 * <mapper>s will now work as expected if the to pattern expands to an
   absolute pathname.
 
@@ -436,33 +694,33 @@ Changes that could break older environments:
 
 * <fixcrlf> will not remove trailing whitespace at the end of lines anymore.
 
-* The Classloader usage has been changed for the taskdef, property, available 
-  and sql tasks so that it delegates to the parent classloader. This may cause 
+* The Classloader usage has been changed for the taskdef, property, available
+  and sql tasks so that it delegates to the parent classloader. This may cause
   ClassNotFoundExceptions to be thrown if a system class attempts to load a
   class in the taskdef's classpath (typically factory objects).
 
 * Ant now allows multithreading of tasks and the containment of tasks within
   other tasks. This can break customer listeners which do not expect messages
-  from a task before the previous task has finished. 
-  
+  from a task before the previous task has finished.
+
 * Ant now installs its own ouput stream into System.out to route output to the
-  task currently executing on the current thread. This also means that all 
-  output is now routed as Ant message events. Customer listeners and loggers 
-  should not call System.out at any time. This has always been true but such 
+  task currently executing on the current thread. This also means that all
+  output is now routed as Ant message events. Customer listeners and loggers
+  should not call System.out at any time. This has always been true but such
   usage now will cause problems due to possible recursion.
 
 * Invalid manifest files will now cause build failures in the <jar> task.
 
 * Ant Introspection now looks for methods with method names starting with
-  addConfigured. When called these methods are passed an argument after it has 
-  been configured from the build file. Custom tasks supporting nested elements 
-  starting with the name configured will no longer function.  
+  addConfigured. When called these methods are passed an argument after it has
+  been configured from the build file. Custom tasks supporting nested elements
+  starting with the name configured will no longer function.
 
 * The environment variable JAVACMD that can be used to specify the
   java executable to Ant's wrapper scripts must not contain additional
   command line parameters any longer - please use the environment
   variable ANT_OPTS for such parameters now.
-  
+
 * Ant's wrapper scripts now quote the CLASSPATH environment variable, thus
   supporting classpaths which refer to directories containing spaces. This means
   that the CLASSPATH environment variable cannot have quotes. Any quotes should
@@ -475,12 +733,12 @@ Changes that could break older environments:
   </delete>
   will now remove "somedir" as well, unless there are still files left
   in it (matched by the default excludes).
-  
-* The copy task will now fail if the file to be copied is not found. 
 
-* Ant properties defined in properties files now behave the same way as 
+* The copy task will now fail if the file to be copied is not found.
+
+* Ant properties defined in properties files now behave the same way as
   properties defined in the build file. In particular the $ character needs
-  to be escaped in property values by doubling it to $$. So, to define a 
+  to be escaped in property values by doubling it to $$. So, to define a
   property with the value $hello, you need to define it in a properties file
   as
     test.prop=$$hello
@@ -528,9 +786,9 @@ Other changes:
 * <ejbjar> changes
   * Add support for Borland Application Server to the <ejbjar> task using
     a <borland> nested element.
-  * Add support for iPlanet Application Server to the <ejbjar> task. Also 
+  * Add support for iPlanet Application Server to the <ejbjar> task. Also
     includes some iPlanet utility tasks
-  * Add support for JBoss Application Server to the <ejbjar> task. 
+  * Add support for JBoss Application Server to the <ejbjar> task.
   * Add a naming attribute to control the naming scheme that
     ejbjar uses to name the generated EJB jars.
   * Weblogic element now sets the compiler class for EJB 2.0 beans
@@ -540,11 +798,11 @@ Other changes:
   * Allow the manifest to be specified for the generated jars
   * The weblogic element now supprts an attribte noEJBC to skip the processing
     of the jar by ejbc. The ejbc step will then occur at deployment
-  * weblogic will tell ejbc to use Jikes compiler if build.compiler is set to 
-    jikes. It can be restored to the default, javac, operation if desired.  
-  
+  * weblogic will tell ejbc to use Jikes compiler if build.compiler is set to
+    jikes. It can be restored to the default, javac, operation if desired.
+
 * Allow the <sql> Delimiter to be set in the so that Oracle stored procs may be
-  entered  
+  entered
 
 * <execon> and <apply> can now optionally skip empty filesets.
 
@@ -563,8 +821,8 @@ Other changes:
 
 * added vmlauncher attribute to exec tasks. This defaults to true. If
   it is set to false, the VM's ability to launch commands in bypassed
-  and the OS shell, either directly or through the auxillary antRun 
-  scripts is used. 
+  and the OS shell, either directly or through the auxillary antRun
+  scripts is used.
 
 * regexp mapper now supports the java.util.regex package of JDK 1.4.
 
@@ -583,7 +841,7 @@ Other changes:
 
 * <junit> can now optionally set a property on test failure.
 
-* <taskdef> can now define several tasks at once, reading the 
+* <taskdef> can now define several tasks at once, reading the
   name/classname pairs from a property file or resource.
 
 * <unzip/unjar/unwar> and <untar> now have an overwrite attribute that
@@ -592,10 +850,10 @@ Other changes:
 
 * <patternset> and <fileset> now support nested <in/excludesfile>
   elements - using these you can have more than one in/excludes file
-  per <patternset>. 
+  per <patternset>.
 
 * Three new supported compilers for javac: kjc for kopi, gcj for the
-  gcc frontend and sj for Symantec's compiler. 
+  gcc frontend and sj for Symantec's compiler.
   In addition extJavac or the new fork attribute can be
   used to run the JDK's javac in a JVM separate from Ant.
 
@@ -606,44 +864,44 @@ Other changes:
 
 * <move> will now try to rename() files before copying them byte by
   byte - only if filtering is of, of course.
-  
+
 * <ant> and <antcall> tasks now support a new attribute inheritAll. When set to
   false, only user properties are passed through to the target Ant instance.
   This includes properties set on the command line and properties explicitly
   passed
-  
+
 * <javadoc> now skips off line links if the package list cannot be found.
 
 * <wlrun> now allows the security policy file to exist outside the weblogic
   directory.
-  
+
 * <java> task will set the Thread contextClassLoader under JDKs 1.2+ to the
   classloader for the class being executed.
-  
+
 * Introduce the concept of a TaskContainer - a task or element which can contain
-  Ant Tasks. 
-  
+  Ant Tasks.
+
 * Add new tasks implementing the TaskContainer interface <parallel> and
   <sequential> which allow parallel execution of tasks to be specified.
 
 * <depend> task will now take into account dependencies on jar files and class
   files from a given classpath.
-  
-* <jar> manifest entries may now be specified in the build file either 
+
+* <jar> manifest entries may now be specified in the build file either
   completely or to be merged with a manifest file.
 
-* <tstamp> task custom formats now support locales. 
+* <tstamp> task custom formats now support locales.
 
-* Added a listner which will forward events to Log4J. The log4j configuration 
+* Added a listner which will forward events to Log4J. The log4j configuration
   file should be in the directory from which Ant is run or passed as a system
   property using a JVM argument.
 
-* Introduced the concept of <filtersets> to allow for more control in which 
-  filters get applied in a <copy> or <move> operation.       
+* Introduced the concept of <filtersets> to allow for more control in which
+  filters get applied in a <copy> or <move> operation.
 
 * Added nowarn attribute to javac and deprecated the Jikes-magic property
   build.compiler.warnings.
-  
+
 * The <depend> task cache format has changed and all dependency information is
   now stored in a single file.
 
@@ -660,7 +918,7 @@ Fixed bugs:
 * <javah>'s outputfile attribute will be resolved as relative to the
   projects basedir.
 
-* <antstructure> should create a valid DTD for propertyfile.operation.entry 
+* <antstructure> should create a valid DTD for propertyfile.operation.entry
   and omit tasks it fails to load.
 
 * won't try to pass a -bootclasspath flag to javac 1.1 anymore
@@ -679,25 +937,25 @@ Fixed bugs:
 
 * Output written by testcases will now be captured by the <junit> task
   and passed to the formatters.
-  
+
 * Quote the -group parameter to Javadoc as per the specification
 
 * Initialise classes when loaded through the AntClassLoader - that is, run
   static initializers
-  
+
 * Implement getResource() and getResources() in AntClassLoader
 
 * Create the <ejbjar> weblogic command line as a set of arguments rather than
   as a single line. Avoids problems with paths which contain spaces.
-  
+
 * <ejbjar> now fails when the weblogic ejbc compiler reports an error.
-  
+
 * Make the AntClassLoader load resources in the same order as it currently
-  loads classes. 
-  
+  loads classes.
+
 * Handle classpaths with spaces
 
-* Make sure XSLT processors close their output files in <style>.  
+* Make sure XSLT processors close their output files in <style>.
 
 * perform proper uptodate check in <rmic> when compiling for IIOP.
 
@@ -728,23 +986,23 @@ Fixed bugs:
 
 * Ant classloader will now ignore paths which are invalid relative to the
   project base
-  
+
 * <ejbjar> weblogic elements check for jar file changes has been fixed.
   Previously some changes would not be included.
 
 * properties loaded from properties files are now resolved internally. This
   removes the spurious warnings about usage of properties which have not been
   set.
-  
+
 * <jar> task and friends now process the JAR manifest to ensure it is valid.
 
 * The task finished event now includes any exception thrown by the task.
 
 * <java> task now supports a jvmVersion attribute so that if another JVM is
-  being used, Ant can determine which options to use for features such as the 
-  VM memory limits 
+  being used, Ant can determine which options to use for features such as the
+  VM memory limits
 
-  
+
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
 
@@ -777,14 +1035,14 @@ Other changes:
 
 * Added nested zipfileset element to <zip>
 
-* Changed <sql> so that printing is at the task level rather than 
+* Changed <sql> so that printing is at the task level rather than
   the statement level.
-  
+
 * javadoc task will pass -d flag to any doclet if the destDir attribute is
   given. If the doclet does not accept the -d flag then omit the destdir
   attribute.
 
-* <cab> can work on non-Windows platforms with the help of libcabinet. 
+* <cab> can work on non-Windows platforms with the help of libcabinet.
   See http://trill.cis.fordham.edu/~barbacha/cabinet_library/.
 
 * <ftp> now supports passive mode.
@@ -798,20 +1056,20 @@ Other changes:
   command.
 
 * Style tasks will now support TraX compliant XSL processors if one is present
-  in your classpath.  
+  in your classpath.
 
-* Added a failonerror to the javac task. If set to false, the build will 
+* Added a failonerror to the javac task. If set to false, the build will
   continue even if there are compilation errors.
-  
-* Added nested format elements to the tstamp task allowing additional time 
-  formats to be defined for arbitrary properties.   
+
+* Added nested format elements to the tstamp task allowing additional time
+  formats to be defined for arbitrary properties.
 
 * Added classpath attribute and nested classpath element to <property>
   to make the resource attribute more powerful.
 
 * ${} property expansion will now be performed on the patterns read
   from files specified as includesfile or excludesfile attributes.
-  
+
 * The <tar> and <untar> tasks now support GNU format for handling paths
   which are greater than 100 characters in length. In addition the <tar>
   task now supports nested filesets through which the file permissions
@@ -838,16 +1096,16 @@ Fixed bugs:
 
 * Changes to ddcreator and ejbc helper to respect the descriptor hierarchy
   keppgenerated in ejbc can now be turned off
-  
+
 * ejbjar now correctly ignores <ejb-ref> elements in the deployment descriptor.
-  CMP files are included by parsing the weblogic deployment descriptor rather 
+  CMP files are included by parsing the weblogic deployment descriptor rather
   than relying on the naming convention used in ant 1.2
-  
-* ejbjar includes super classes and super interfaces into the generated ejb 
-  jar files. The <support> nested element allows support classes to be 
+
+* ejbjar includes super classes and super interfaces into the generated ejb
+  jar files. The <support> nested element allows support classes to be
   included in the EJB jar. The toplink element should now correctly locate
   the toplink descriptor.
-  
+
 * <vssget> now correctly deals with spaces in arguments
 
 * <jar> fails early if a given manifest file doesn't exist
@@ -856,7 +1114,7 @@ Fixed bugs:
   set to 1.2.
 
 * <rmic> uses the the same classpath to verify a class can be rmic'd
-  as it passes to the compiler. 
+  as it passes to the compiler.
 
 * org.apache.tools.mail.MailMessage (and therefore <mail>) can now
   handle SMTP servers sending multi line responses.
@@ -867,13 +1125,13 @@ Fixed bugs:
 * <property> and <available> will search for the resource "foo" instead
   of "/org/apache/tools/ant/taskdefs/foo" when given a relative resource
   name foo.
-  
+
 * Handle build files in directories whose name contained a "#" character
 
-* <junit> can now log to files whose name contains a comma as well. 
+* <junit> can now log to files whose name contains a comma as well.
 
-* The AntClassLoader now refers to the loader which loaded it, any 
-  requests it does not handle itself. Previously these went to the 
+* The AntClassLoader now refers to the loader which loaded it, any
+  requests it does not handle itself. Previously these went to the
   primordial loader.
 
 Changes from Ant 1.1 to Ant 1.2
@@ -919,7 +1177,7 @@ behavior has been dropped.
 
 * <ejbjar> task syntax has been changed significantly
 
-* <exec> is no longer implemented by org.apache.tool.ant.taskdefs.Exec. 
+* <exec> is no longer implemented by org.apache.tool.ant.taskdefs.Exec.
 Custom tasks that rely on Project.createTask("exec") to return an
 instance of this class are going to fail.
 
@@ -956,7 +1214,7 @@ level and later be referenced by their id attribute.
 * <get> can check whether a remote file is actually newer than a local
 copy before it starts a download (HTTP only).
 
-* Added a -logger option to allow the class which performs logging to be 
+* Added a -logger option to allow the class which performs logging to be
 specified on the command line.
 
 * Added a -emacs option to tell the logger to leave out taskname adornments
@@ -996,5 +1254,5 @@ cases.
 * many more fixes we've forgotten to document here ...
 
 * The packagelistloc attribute of <javadoc>'s <link> child will be
-  resolved as a file (i.e. it is either absolute or relative to 
+  resolved as a file (i.e. it is either absolute or relative to
   basedir).

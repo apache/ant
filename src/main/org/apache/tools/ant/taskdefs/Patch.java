@@ -62,8 +62,8 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Task as a layer on top of patch. Patch applies a diff file to an original.
- *
+ * Patches a file by applying a 'diff' file to it; requires "patch" to be
+ * on the execution path.
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
  * @since Ant 1.1
@@ -78,14 +78,15 @@ public class Patch extends Task {
     private Commandline cmd = new Commandline();
 
     /**
-     * The file to patch.
+     * The file to patch; optional if it can be inferred from
+     * the diff file
      */
     public void setOriginalfile(File file) {
         originalFile = file;
     }
 
     /**
-     * The file containing the diff output.
+     * The file containing the diff output; required.
      */
     public void setPatchfile(File file) {
         if (!file.exists()) {
@@ -98,7 +99,7 @@ public class Patch extends Task {
     }
 
     /**
-     * Shall patch write backups.
+     * flag to create backups; optional, default=false
      */
     public void setBackups(boolean backups) {
         if (backups) {
@@ -107,7 +108,7 @@ public class Patch extends Task {
     }
 
     /**
-     * Ignore whitespace differences.
+     * flag to ignore whitespace differences; default=false
      */
     public void setIgnorewhitespace(boolean ignore) {
         if (ignore) {
@@ -120,6 +121,7 @@ public class Patch extends Task {
      * from filenames.
      *
      * <p>patch's <i>-p</i> option.
+     * @param num number of lines to strip
      */
     public void setStrip(int num) throws BuildException {
         if (num < 0) {
@@ -129,7 +131,7 @@ public class Patch extends Task {
     }
 
     /**
-     * Work silently unless an error occurs.
+     * Work silently unless an error occurs; optional, default=false
      */
     public void setQuiet(boolean q) {
         if (q) {
@@ -138,7 +140,8 @@ public class Patch extends Task {
     }
 
     /**
-     * Assume patch was created with old and new files swapped.
+     * Assume patch was created with old and new files swapped; optional,
+     * default=false
      */
     public void setReverse(boolean r) {
         if (r) {
@@ -156,6 +159,10 @@ public class Patch extends Task {
         this.directory = directory;
     }
 
+    /**
+     * execute patch
+     * @throws BuildException when it all goes a bit pear shaped
+     */
     public void execute() throws BuildException {
         if (!havePatchfile) {
             throw new BuildException("patchfile argument is required", 
@@ -171,6 +178,7 @@ public class Patch extends Task {
         Execute exe = new Execute(new LogStreamHandler(this, Project.MSG_INFO,
                                                        Project.MSG_WARN), 
                                   null);
+        exe.setCommandline(toExecute.getCommandline());
 
         if (directory != null) {
             if (directory.exists() && directory.isDirectory()) {
@@ -186,6 +194,7 @@ public class Patch extends Task {
             exe.setWorkingDirectory(getProject().getBaseDir());
         }
 
+        log(toExecute.describeCommand(), Project.MSG_VERBOSE);
         try {
             exe.execute();
         } catch (IOException e) {

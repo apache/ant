@@ -65,11 +65,13 @@ import java.io.IOException;
 import java.util.Enumeration;
 
 /**
- * Moves a file or directory to a new file or directory.  By default,
- * the destination is overwriten when existing.  When overwrite is
+ * Moves a file or directory to a new file or directory.
+ * By default, the
+ * destination file is overwritten if it already exists.
+ * When <i>overwrite</i> is
  * turned off, then files are only moved if the source file is
  * newer than the destination file, or when the destination file does
- * not exist.</p>
+ * not exist.
  *
  * <p>Source files and directories are only deleted when the file or
  * directory has been copied to the destination successfully.  Filtering
@@ -227,6 +229,7 @@ public class Move extends Copy {
     /**
      * Its only ok to delete a directory tree if there are
      * no files in it.
+     * @return true if a deletion can go ahead
      */
     protected boolean okToDelete(File d) {
         String[] list = d.list();
@@ -306,7 +309,7 @@ public class Move extends Copy {
                     }
                 }
 
-                if (destFile.exists()) {
+                if (destFile.exists() && destFile.isFile()) {
                     if (!destFile.delete()) {
                         throw new BuildException("Unable to remove existing "
                                                  + "file " + destFile);

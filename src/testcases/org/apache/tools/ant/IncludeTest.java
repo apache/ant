@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -91,4 +91,58 @@ public class IncludeTest extends BuildFileTest {
         configureProject("src/etc/testcases/core/include/frag#ment/relative.xml");
         expectLog("test1", "from included entity");
     }
+
+    public void testParseErrorInIncluding() {
+        try {
+            configureProject("src/etc/testcases/core/include/including_file_parse_error/build.xml");
+            fail("should have caused a parser exception");
+        } catch (BuildException e) {
+            assertTrue(e.getLocation().toString() 
+                       + " should refer to build.xml",
+                       e.getLocation().toString().indexOf("build.xml:") > -1);
+        }
+    }
+
+    public void testTaskErrorInIncluding() {
+        configureProject("src/etc/testcases/core/include/including_file_task_error/build.xml");
+        try {
+            executeTarget("test");
+            fail("should have cause a build failure");
+        } catch (BuildException e) {
+            assertTrue(e.getMessage() 
+                       + " should start with \'Warning: Could not find",
+                         e.getMessage().startsWith("Warning: Could not find file "));
+            assertTrue(e.getLocation().toString() 
+                       + " should end with build.xml:14: ",
+                       e.getLocation().toString().endsWith("build.xml:14: "));
+        }
+    }
+
+    public void testParseErrorInIncluded() {
+        try {
+            configureProject("src/etc/testcases/core/include/included_file_parse_error/build.xml");
+            fail("should have caused a parser exception");
+        } catch (BuildException e) {
+            assertTrue(e.getLocation().toString() 
+                       + " should refer to included_file.xml",
+                       e.getLocation().toString()
+                       .indexOf("included_file.xml:") > -1);
+        }
+    }
+
+    public void testTaskErrorInIncluded() {
+        configureProject("src/etc/testcases/core/include/included_file_task_error/build.xml");
+        try {
+            executeTarget("test");
+            fail("should have cause a build failure");
+        } catch (BuildException e) {
+            assertTrue(e.getMessage() 
+                       + " should start with \'Warning: Could not find",
+                         e.getMessage().startsWith("Warning: Could not find file "));
+            assertTrue(e.getLocation().toString() 
+                       + " should end with included_file.xml:2: ",
+                       e.getLocation().toString().endsWith("included_file.xml:2: "));
+        }
+    }
+
 }

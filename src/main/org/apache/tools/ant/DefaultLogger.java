@@ -54,8 +54,10 @@
 
 package org.apache.tools.ant;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintStream;
-import java.util.StringTokenizer;
+import java.io.StringReader;
 
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.util.DateUtils;
@@ -261,18 +263,24 @@ public class DefaultLogger implements BuildLogger {
                 tmp.append(label);
                 label = tmp.toString();
 
-                StringTokenizer tok = new StringTokenizer(event.getMessage(),
-                                                          "\r\n", false);
-                boolean first = true;
-                while (tok.hasMoreTokens()) {
-                    if (!first) {
-                        message.append(StringUtils.LINE_SEP);
+                try {
+                    BufferedReader r = 
+                        new BufferedReader(
+                            new StringReader(event.getMessage()));
+                    String line = r.readLine();
+                    boolean first = true;
+                    while (line != null) {
+                        if (!first) {
+                            message.append(StringUtils.LINE_SEP);
+                        }
+                        first = false;
+                        message.append(label).append(line);
+                        line = r.readLine();
                     }
-                    first = false;
-                    message.append(label);
-                    message.append(tok.nextToken());
+                } catch (IOException e) {
+                    // shouldn't be possible
+                    message.append(label).append(event.getMessage());
                 }
-
             } else {
                 message.append(event.getMessage());
             }

@@ -125,4 +125,13 @@ public class ZipTest extends BuildFileTest {
 
         zipFile.close();
     }
+
+    public void testUpdateNotNecessary() {
+        executeTarget("testUpdateNotNecessary");
+        assertEquals(-1, getLog().indexOf("Updating"));
+    }
+
+    public void testUpdateIsNecessary() {
+        expectLogContaining("testUpdateIsNecessary", "Updating");
+    }
 }

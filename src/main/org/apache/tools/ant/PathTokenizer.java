@@ -165,7 +165,7 @@ public class PathTokenizer {
         } else {
             // we are on NetWare, tokenizing is handled a little differently,
             // due to the fact that NetWare has multiple-character volume names.
-            if (token.equals(File.pathSeparator)) {
+            if (token.equals(File.pathSeparator) || token.equals(":")) {
                 // ignore ";" and get the next token
                 token = tokenizer.nextToken().trim();
             }
@@ -184,6 +184,7 @@ public class PathTokenizer {
                                 token += ":" + oneMore;
                             } else {
                                 token += ":";
+                                lookahead = oneMore;
                             }
                         }
                         // implicit else: ignore the ':' since we have either a

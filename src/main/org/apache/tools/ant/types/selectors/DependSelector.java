@@ -61,6 +61,7 @@ import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
  * Selector that filters files based on whether they are newer than
@@ -73,18 +74,25 @@ import org.apache.tools.ant.BuildException;
  */
 public class DependSelector extends BaseSelector {
 
-    private String targetdir = null;
-    private File targetbase = null;
+    private File targetdir = null;
     private Mapper mapperElement = null;
     private FileNameMapper map = null;
     private int granularity = 0;
 
     public DependSelector() {
+        if (Os.isFamily("dos")) {
+            granularity = 2000;
+        }
     }
 
     public String toString() {
         StringBuffer buf = new StringBuffer("{dependselector targetdir: ");
-        buf.append(targetdir);
+        if (targetdir == null) {
+            buf.append("NOT YET SET");
+        }
+        else {
+            buf.append(targetdir.getName());
+        }
         buf.append(" granularity: ");
         buf.append(granularity);
         if (map != null) {
@@ -105,9 +113,8 @@ public class DependSelector extends BaseSelector {
      *
      * @param targetdir the directory to scan looking for files.
      */
-    public void setTargetdir(String targetdir) {
-        this.targetdir = SelectorUtils.fixPath(targetdir);
-        targetbase = new File(this.targetdir);
+    public void setTargetdir(File targetdir) {
+        this.targetdir = targetdir;
     }
 
     /**
@@ -163,21 +170,20 @@ public class DependSelector extends BaseSelector {
         // throw BuildException on error
         validate();
 
-        // Get File object for the target directory
-        File target = targetbase;
-        if (target == null) {
-            target = new File(basedir,targetdir);
-        }
-
         // Determine file whose out-of-dateness is to be checked
         String[] destfiles = map.mapFileName(filename);
+        // If filename does not match the To attribute of the mapper
+        // then filter it out of the files we are considering
+        if (destfiles == null) {
+            return false;
+        }
         // Sanity check
         if (destfiles.length != 1 || destfiles[0] == null) {
             throw new BuildException("Invalid destination file results for "
-                + targetdir + " with filename " + filename);
+                + targetdir.getName() + " with filename " + filename);
         }
         String destname = destfiles[0];
-        File destfile = new File(target,destname);
+        File destfile = new File(targetdir,destname);
 
         return SelectorUtils.isOutOfDate(file, destfile, granularity);
     }

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,7 +54,7 @@
 package org.apache.tools.ant.taskdefs.optional.sitraka;
 
 /**
- * Socket element for connection.
+ * Define a host and port to connect to if you want to do remote viewing.
  * <tt>&lt;socket/&gt;</tt> defaults to host 127.0.0.1 and port 4444
  *
  * Otherwise it requires the host and port attributes to be set:
@@ -70,10 +70,17 @@ public class Socket {
     /** default to 4444 */
     private int port = 4444;
 
+    /**
+     * the host name/ip of the machine on which the Viewer is running;
+     * defaults to localhost.
+     */
     public void setHost(String value) {
         host = value;
     }
 
+    /**
+     * Optional port number for the viewer; default is 4444
+     */
     public void setPort(Integer value) {
         port = value.intValue();
     }

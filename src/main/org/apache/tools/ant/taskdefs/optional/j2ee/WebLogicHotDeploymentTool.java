@@ -246,8 +246,8 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
     }
 
     /**
-     *  Sets the debug field.
-     *  <p>This is not a required attribute.
+     *  If set to true, additional information will be
+     *  printed during the deployment process; optional.
      *  @param debug A boolean representing weblogic.deploy "-debug" flag.
      */
     public void setDebug(boolean debug) {
@@ -255,8 +255,7 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
     }
 
     /**
-     *  Sets the application field.
-     *  <p>This is a required attribute.
+     *  The name of the application being deployed; required.
      *  @param application A String representing the application portion of the
      *  weblogic.deploy command line.
      */
@@ -265,12 +264,13 @@ public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool impleme
     }
 
     /**
-     *  Sets the component attribute.
-     *  <p>This attribute is not a required attribute.
+     * the component string for the deployment targets; optional.
+     * It is in the form <code>&lt;component&gt;:&lt;target1&gt;,&lt;target2&gt;...</code>
+     * Where component is the archive name (minus the .jar, .ear, .war
+     * extension).  Targets are the servers where the components will be deployed
+    
      *  @param component A String representing the value of the "-component"
-     *  argument of the weblogic.deploy command line argument.<br>
-     *  This string should be in the format of
-     *  &lt;<i>componentName</i>&gt;:&lt<i>target1</i>&gt;,&lt<i>target2</i>&gt;...
+     *  argument of the weblogic.deploy command line argument.
      */
     public void setComponent(String component) {
         this.component = component;

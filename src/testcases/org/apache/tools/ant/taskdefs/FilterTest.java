@@ -119,6 +119,12 @@ public class FilterTest extends BuildFileTest {
                      getFilteredFile("8", "taskdefs.tmp/filter2.txt"));
     }
     
+    public void test9() {
+        executeTarget("test9");
+        assertEquals("included",
+                    getFilteredFile("9", "taskdefs.tmp/filter3.txt"));
+    }
+        
     private String getFilteredFile(String testNumber, String filteredFile) {
     
         String line = null;

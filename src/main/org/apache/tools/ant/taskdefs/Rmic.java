@@ -54,6 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import java.io.File;
+import java.io.IOException;
+import java.rmi.Remote;
+import java.util.Vector;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
@@ -68,33 +72,42 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.ant.util.facade.FacadeTaskHelper;
 
-import java.io.File;
-import java.io.IOException;
-import java.rmi.Remote;
-import java.util.Vector;
-
 /**
- * Task to compile RMI stubs and skeletons. This task can take the following
- * arguments:
+ * Runs the rmic compiler against classes.</p>
+ * <p>Rmic can be run on a single class (as specified with the classname
+ * attribute) or a number of classes at once (all classes below base that
+ * are neither _Stub nor _Skel classes).  If you want to rmic a single
+ * class and this class is a class nested into another class, you have to
+ * specify the classname in the form <code>Outer$$Inner</code> instead of
+ * <code>Outer.Inner</code>.</p>
+ * <p>It is possible to refine the set of files that are being rmiced. This can be
+ * done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, 
+ * <i>excludesfile</i> and <i>defaultexcludes</i>
+ * attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+ * have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
+ * the files you want to have excluded. This is also done with patterns. And
+ * finally with the <i>defaultexcludes</i> attribute, you can specify whether you
+ * want to use default exclusions or not. See the section on 
+ * directory based tasks</a>, on how the
+ * inclusion/exclusion of files works, and how to write patterns.</p>
+ * <p>This task forms an implicit FileSet and
+ * supports all attributes of <code>&lt;fileset&gt;</code>
+ * (<code>dir</code> becomes <code>base</code>) as well as the nested
+ * <code>&lt;include&gt;</code>, <code>&lt;exclude&gt;</code> and
+ * <code>&lt;patternset&gt;</code> elements.</p>
+ * <p>It is possible to use different compilers. This can be selected
+ * with the &quot;build.rmic&quot; property or the <code>compiler</code>
+ * attribute. <a name="compilervalues">There are three choices</a>:</p>
  * <ul>
- * <li>base: The base directory for the compiled stubs and skeletons
- * <li>class: The name of the class to generate the stubs from
- * <li>stubVersion: The version of the stub prototol to use (1.1, 1.2, compat)
- * <li>sourceBase: The base directory for the generated stubs and skeletons
- * <li>classpath: Additional classpath, appended before the system classpath
- * <li>iiop: Generate IIOP compatable output 
- * <li>iiopopts: Include IIOP options 
- * <li>idl: Generate IDL output 
- * <li>idlopts: Include IDL options 
- * <li>includeantruntime
- * <li>includejavaruntime
- * <li>extdirs
+ *   <li>sun (the standard compiler of the JDK)</li>
+ *   <li>kaffe (the standard compiler of 
+ *       {@link <a href="http://www.kaffe.org">Kaffe</a>})</li>
+ *   <li>weblogic</li>
  * </ul>
- * Of these arguments, <b>base</b> is required.
- * <p>
- * If classname is specified then only that classname will be compiled. If it
- * is absent, then <b>base</b> is traversed for classes according to patterns.
- * <p>
+ * 
+ * <p> The <a href="http://dione.zcu.cz/~toman40/miniRMI/">miniRMI</a>
+ * project contains a compiler implementation for this task as well,
+ * please consult miniRMI's documentation to learn how to use it.</p>
  *
  * @author duncan@x180.com
  * @author ludovic.claude@websitewatchers.co.uk
@@ -146,37 +159,54 @@ public class Rmic extends MatchingTask {
         }
     }
 
-    /** Sets the base directory to output generated class. */
+    /** 
+     * Sets the location to store the compiled files; required 
+     */
     public void setBase(File base) {
         this.baseDir = base;
     }
 
-    /** Gets the base directory to output generated class. */
+    /** 
+     * Gets the base directory to output generated class. 
+     */
+     
     public File getBase() {
         return this.baseDir;
     }
 
-    /** Sets the class name to compile. */
+    /** 
+     * Sets the the class to run <code>rmic</code> against;
+     * optional
+     */
     public void setClassname(String classname) {
         this.classname = classname;
     }
 
-    /** Gets the class name to compile. */
+    /**
+     * Gets the class name to compile. 
+     */
     public String getClassname() {
         return classname;
     }
 
-    /** Sets the source dirs to find the source java files. */
+    /**
+     * optional directory to save generated source files to.
+     */
     public void setSourceBase(File sourceBase) {
         this.sourceBase = sourceBase;
     }
 
-    /** Gets the source dirs to find the source java files. */
+    /**
+     * Gets the source dirs to find the source java files. 
+     */
     public File getSourceBase() {
         return sourceBase;
     }
 
-    /** Sets the stub version. */
+    /**
+     * Specify the JDK version for the generated stub code.
+     * Specify &quot;1.1&quot; to pass the &quot;-v1.1&quot; option to rmic.</td>
+     */
     public void setStubVersion(String stubVersion) {
         this.stubVersion = stubVersion;
     }
@@ -185,6 +215,10 @@ public class Rmic extends MatchingTask {
         return stubVersion;
     }
 
+    /**
+     * indicates whether token filtering should take place;
+     * optional, default=false
+     */
     public void setFiltering(boolean filter) {
         filtering = filter;
     }
@@ -193,12 +227,17 @@ public class Rmic extends MatchingTask {
         return filtering;
     }
 
-    /** Sets the debug flag. */
+    /**
+     * generate debug info (passes -g to rmic);
+     * optional, defaults to false
+     */
     public void setDebug(boolean debug) {
         this.debug = debug;
     }
 
-    /** Gets the debug flag. */
+    /**
+     * Gets the debug flag. 
+     */
     public boolean getDebug() {
         return debug;
     }
@@ -219,13 +258,14 @@ public class Rmic extends MatchingTask {
      */
     public Path createClasspath() {
         if (compileClasspath == null) {
-            compileClasspath = new Path(project);
+            compileClasspath = new Path(getProject());
         }
         return compileClasspath.createPath();
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Adds to the classpath a reference to 
+     * a &lt;path&gt; defined elsewhere.
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
@@ -239,9 +279,12 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Indicates that the classes found by the directory match should be
+     * Flag to enable verification so that the classes 
+     * found by the directory match are
      * checked to see if they implement java.rmi.Remote.
-     * This defaults to false if not set.  */
+     * Optional; his defaults to false if not set.  
+     */
+     
     public void setVerify(boolean verify) {
         this.verify = verify;
     }
@@ -253,26 +296,30 @@ public class Rmic extends MatchingTask {
 
     /**
      * Indicates that IIOP compatible stubs should
-     * be generated.  This defaults to false 
+     * be generated; optional, defaults to false 
      * if not set.  
      */
     public void setIiop(boolean iiop) {
         this.iiop = iiop;
     }
 
-    /** Gets iiop flags. */
+    /** 
+     * Gets iiop flags. 
+     */
     public boolean getIiop() {
         return iiop;
     }
 
     /**
-     * pass additional arguments for iiop 
+     * Set additional arguments for iiop 
      */
     public void setIiopopts(String iiopopts) {
         this.iiopopts = iiopopts;
     }
 
-    /** Gets additional arguments for iiop. */
+    /**
+     * Gets additional arguments for iiop. 
+     */
     public String getIiopopts() {
         return iiopopts;
     }
@@ -286,7 +333,9 @@ public class Rmic extends MatchingTask {
         this.idl = idl;
     }
 
-    /* Gets IDL flags. */
+    /**
+     * Gets IDL flags. 
+     */
     public boolean getIdl() {
         return idl;
     }
@@ -305,13 +354,17 @@ public class Rmic extends MatchingTask {
         return idlopts;
     }
 
-    /** Gets file list to compile. */
+    /**
+     * Gets file list to compile. 
+     */
     public Vector getFileList() {
         return compileList;
     }
 
     /**
-     * Include ant's own classpath in this task's classpath?
+     * Sets whether or not to include ant's own classpath in this task's 
+     * classpath.
+     * Optional; default is <code>true</code>.
      */
     public void setIncludeantruntime(boolean include) {
         includeAntRuntime = include;
@@ -326,8 +379,10 @@ public class Rmic extends MatchingTask {
     }
 
     /**
-     * Sets whether or not to include the java runtime libraries to this
      * task's classpath.
+     * Enables or disables including the default run-time
+     * libraries from the executing VM; optional,
+     * defaults to false     
      */
     public void setIncludejavaruntime(boolean include) {
         includeJavaRuntime = include;
@@ -343,7 +398,7 @@ public class Rmic extends MatchingTask {
 
     /**
      * Sets the extension directories that will be used during the
-     * compilation.
+     * compilation; optional.
      */
     public void setExtdirs(Path extdirs) {
         if (this.extdirs == null) {
@@ -358,7 +413,7 @@ public class Rmic extends MatchingTask {
      */
     public Path createExtdirs() {
         if (extdirs == null) {
-            extdirs = new Path(project);
+            extdirs = new Path(getProject());
         }
         return extdirs.createPath();
     }
@@ -376,6 +431,9 @@ public class Rmic extends MatchingTask {
     }
 
     /**
+     * Sets the compiler implementation to use; optional,
+     * defaults to the value of the <code>build.rmic</code> property,
+     * or failing that, default compiler for the current VM
      * @since Ant 1.5
      */
     public void setCompiler(String compiler) {
@@ -383,6 +441,7 @@ public class Rmic extends MatchingTask {
     }
 
     /**
+     * get the name of the current compiler
      * @since Ant 1.5
      */
     public String getCompiler() {
@@ -411,16 +470,20 @@ public class Rmic extends MatchingTask {
         return facade.getArgs();
     }
 
+    /**
+     * execute by creating an instance of an implementation
+     * class and getting to do the work
+     */
     public void execute() throws BuildException {
         if (baseDir == null) {
-            throw new BuildException("base attribute must be set!", location);
+            throw new BuildException("base attribute must be set!", getLocation());
         }
         if (!baseDir.exists()) {
-            throw new BuildException("base does not exist!", location);
+            throw new BuildException("base does not exist!", getLocation());
         }
 
         if (verify) {
-            log("Verify has been turned on.", Project.MSG_INFO);
+            log("Verify has been turned on.", Project.MSG_VERBOSE);
         }
 
         RmicAdapter adapter = RmicAdapterFactory.getRmic(getCompiler(), this);
@@ -429,7 +492,7 @@ public class Rmic extends MatchingTask {
         adapter.setRmic(this);
 
         Path classpath = adapter.getClasspath();
-        loader = new AntClassLoader(project, classpath);
+        loader = new AntClassLoader(getProject(), classpath);
 
         try {
             // scan base dirs to build up compile lists only if a
@@ -455,7 +518,7 @@ public class Rmic extends MatchingTask {
                 
                 // finally, lets execute the compiler!!
                 if (!adapter.execute()) {
-                    throw new BuildException(FAIL_MSG, location);
+                    throw new BuildException(FAIL_MSG, getLocation());
                 }
             }
             
@@ -487,7 +550,7 @@ public class Rmic extends MatchingTask {
     /**
      * Move the generated source file(s) to the base directory
      *
-     * @exception org.apache.tools.ant.BuildException When error
+     * @throws org.apache.tools.ant.BuildException When error
      * copying/removing files.
      */
     private void moveGeneratedFile (File baseDir, File sourceBaseFile,
@@ -501,15 +564,16 @@ public class Rmic extends MatchingTask {
             adapter.getMapper().mapFileName(classFileName);
 
         for (int i = 0; i < generatedFiles.length; i++) {
-            if (!generatedFiles[i].endsWith(".class")) {
+            final String generatedFile = generatedFiles[i];
+            if (!generatedFile.endsWith(".class")) {
                 // don't know how to handle that - a IDL file doesn't
                 // have a corresponding Java source for example.
                 continue;
             }
-            
-            String sourceFileName = 
-                generatedFiles[i].substring(0, classFileName.length() - 6)
-                + ".java";
+
+            final int pos = generatedFile.length() - ".class".length();
+            String sourceFileName =
+                generatedFile.substring(0, pos) + ".java";
 
             File oldFile = new File(baseDir, sourceFileName);
             if (!oldFile.exists()) {
@@ -530,7 +594,7 @@ public class Rmic extends MatchingTask {
             } catch (IOException ioe) {
                 String msg = "Failed to copy " + oldFile + " to " +
                     newFile + " due to " + ioe.getMessage();
-                throw new BuildException(msg, ioe, location);
+                throw new BuildException(msg, ioe, getLocation());
             }
         }
     }
@@ -629,6 +693,13 @@ public class Rmic extends MatchingTask {
     public class ImplementationSpecificArgument extends 
         org.apache.tools.ant.util.facade.ImplementationSpecificArgument {
 
+        /**
+         * Only pass the specified argument if the 
+         * chosen compiler implementation matches the 
+         * value of this attribute. Legal values are
+         * the same as those in the above list of
+         * valid compilers.)
+         */
         public void setCompiler(String impl) {
             super.setImplementation(impl);
         }

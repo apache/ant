@@ -14,6 +14,10 @@ task uses the SAX2 parser implementation provided by JAXP by default
 (probably the one that is used by Ant itself), but one can specify any
 SAX1/2 parser if needed.</p>
 
+<p>This task supports the use of nested <a
+href="../CoreTypes/xmlcatalog.html">xmlcatalog</a> elements and/or nested 
+<tt>&lt;dtd&gt;</tt> elements which are used to resolve DTDs and entities.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -30,7 +34,7 @@ SAX1/2 parser if needed.</p>
     <td valign="top">lenient</td>
     <td valign="top">
       if true, only check the xml document is well formed
-	    (ignored if the specified parser is as SAX1 parser)
+        (ignored if the specified parser is as SAX1 parser)
     </td>
     <td valign="top" align="center">No</td>
   </tr>
@@ -77,6 +81,9 @@ SAX1/2 parser if needed.</p>
     <td align="center" valign="top">Yes</td>
   </tr>
 </table>
+<h4>xmlcatalog</h4>
+<p>The <a href="../CoreTypes/xmlcatalog.html">xmlcatalog</a> 
+element is used to perform Entity resolution.</p>
 
 
 <h3>Examples</h3>
@@ -92,6 +99,20 @@ SAX1/2 parser if needed.</p>
 &lt;xmlvalidate file="struts-config.xml" warn="false"&gt;
   &lt;dtd publicId="-//Apache Software Foundation//DTD Struts Configuration 1.0//EN"
        location="struts-config_1_0.dtd"/&gt;
+&lt;/xmlvalidate&gt;
+
+&lt;xmlvalidate failonerror="no"&gt;
+  &lt;fileset dir="${project.dir}" includes="**/*.xml"/&gt;
+  &lt;xmlcatalog refid="mycatalog"/&gt;
+&lt;/xmlvalidate&gt;
+
+&lt;xmlvalidate failonerror="no"&gt;
+  &lt;fileset dir="${project.dir}" includes="**/*.xml"/&gt;
+  &lt;xmlcatalog&gt;
+       &lt;dtd 
+         publicId=&quot;-//ArielPartners//DTD XML Article V1.0//EN&quot;
+         location=&quot;com/arielpartners/knowledgebase/dtd/article.dtd&quot;/&gt;
+  &lt;/xmlcatalog&gt;
 &lt;/xmlvalidate&gt;
 </pre></blockquote>
 <hr>

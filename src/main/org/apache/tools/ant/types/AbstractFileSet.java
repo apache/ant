@@ -89,7 +89,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     private File dir;
     private boolean useDefaultExcludes = true;
     private boolean isCaseSensitive = true;
-
+    private boolean followSymlinks = true;
 
     public AbstractFileSet() {
         super();
@@ -99,8 +99,10 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         this.dir = fileset.dir;
         this.defaultPatterns = fileset.defaultPatterns;
         this.additionalPatterns = fileset.additionalPatterns;
+        this.selectors = fileset.selectors;
         this.useDefaultExcludes = fileset.useDefaultExcludes;
         this.isCaseSensitive = fileset.isCaseSensitive;
+        this.followSymlinks = fileset.followSymlinks;
         setProject(fileset.getProject());
     }
 
@@ -111,10 +113,13 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * this element if you make it a reference.</p>
      */
     public void setRefid(Reference r) throws BuildException {
-        if (dir != null || defaultPatterns.hasPatterns()) {
+        if (dir != null || defaultPatterns.hasPatterns(getProject())) {
             throw tooManyAttributes();
         }
         if (!additionalPatterns.isEmpty()) {
+            throw noChildrenAllowed();
+        }
+        if (!selectors.isEmpty()) {
             throw noChildrenAllowed();
         }
         super.setRefid(r);
@@ -276,7 +281,14 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         this.isCaseSensitive = isCaseSensitive;
     }
 
-
+    /**
+     * Sets whether or not symbolic links should be followed.
+     *
+     * @param followSymlinks whether or not symbolic links should be followed
+     */
+    public void setFollowSymlinks(boolean followSymlinks) {
+        this.followSymlinks = followSymlinks;
+    }
 
     /**
      * sets the name used for this datatype instance.
@@ -327,6 +339,7 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
 
         DirectoryScanner ds = new DirectoryScanner();
         setupDirectoryScanner(ds, p);
+        ds.setFollowSymlinks(followSymlinks);
         ds.scan();
         return ds;
     }
@@ -393,6 +406,27 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     }
 
     /**
+     * Indicates whether there are any patterns here.
+     *
+     * @return whether any patterns are in this container
+     */
+    public boolean hasPatterns() {
+        if (defaultPatterns.hasPatterns(getProject())) {
+            return true;
+        }
+
+        Enumeration enum = additionalPatterns.elements();
+        while (enum.hasMoreElements()) {
+            PatternSet ps = (PatternSet) enum.nextElement();
+            if (ps.hasPatterns(getProject())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Gives the count of the number of selectors in this container
      *
      * @return the number of selectors in this container
@@ -437,7 +471,14 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
         selectors.addElement(selector);
     }
 
-    /* Methods below all implement the static selectors */
+    /* Methods below all add specific selectors */
+
+    /**
+     * add a "Select" selector entry on the selector list
+     */
+    public void addSelector(SelectSelector selector) {
+        appendSelector(selector);
+    }
 
     /**
      * add an "And" selector entry on the selector list
@@ -477,56 +518,56 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
     /**
      * add a selector date entry on the selector list
      */
-    public void addDateselect(DateSelector selector) {
+    public void addDate(DateSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a selector size entry on the selector list
      */
-    public void addSizeselect(SizeSelector selector) {
+    public void addSize(SizeSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a selector filename entry on the selector list
      */
-    public void addFilenameselect(FilenameSelector selector) {
+    public void addFilename(FilenameSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add an extended selector entry on the selector list
      */
-    public void addExtendSelect(ExtendSelector selector) {
+    public void addCustom(ExtendSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a contains selector entry on the selector list
      */
-    public void addContainsSelect(ContainsSelector selector) {
+    public void addContains(ContainsSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a present selector entry on the selector list
      */
-    public void addPresentSelect(PresentSelector selector) {
+    public void addPresent(PresentSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a depth selector entry on the selector list
      */
-    public void addDepthSelect(DepthSelector selector) {
+    public void addDepth(DepthSelector selector) {
         appendSelector(selector);
     }
 
     /**
      * add a depends selector entry on the selector list
      */
-    public void addDependSelect(DependSelector selector) {
+    public void addDepend(DependSelector selector) {
         appendSelector(selector);
     }
 

@@ -93,6 +93,7 @@ the tests succeed.
   <li>netware (for Novell NetWare)</li>
   <li>os/2 (for OS/2)</li>
   <li>win9x for Microsoft Windows 95 and 98</li>
+  <li>z/os for z/OS and OS/390</li>
 </ul>
 
 <h4>equals</h4>
@@ -150,7 +151,8 @@ ignored.</p>
 
 <h4>http</h4>
 <p>The <code>http</code> condition checks for a valid response from a
-web server of the specified url.</p>
+web server of the specified url. By default, HTTP responses errors
+of 400 or greater are viewed as invalid.</p>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
     <td width="12%" valign="top"><b>Attribute</b></td>
@@ -160,8 +162,15 @@ web server of the specified url.</p>
   <tr>
     <td valign="top">url</td>
     <td valign="top">The full URL of the page to request. The web server must
-      return a status code of &lt;500..</td>
+      return a status code of &lt;<tt>errorsBeginAt</tt></td>
     <td align="center">Yes.</td>
+  </tr>
+  <tr>
+    <td valign="top">errorsBeginAt</td>
+    <td valign="top">The lowest HTTP response code that signals an error;
+    by default '400'; server errors, not-authorized, not-found and the like
+    are detected</td>
+    <td align="center">No</td>
   </tr>
 </table>
 
@@ -256,8 +265,8 @@ that is "true","yes", or "on"</p>
 <pre>
     &lt;istrue value=&quot;${someproperty}&quot; /&gt;
     &lt;istrue value=&quot;false&quot; /&gt;
-</pre>   
- 
+</pre>
+
 <h4>isfalse</h4>
 <p>Tests whether a string is not true, the negation of &lt;istrue&gt;
 </p>
@@ -276,8 +285,8 @@ that is "true","yes", or "on"</p>
 <pre>
     &lt;isfalse value=&quot;${someproperty}&quot; /&gt;
     &lt;isfalse value=&quot;false&quot; /&gt;
-</pre>   
- 
+</pre>
+
 <hr>
 <p align="center">Copyright &copy; 2001-2002 Apache Software
 Foundation. All rights Reserved.</p>

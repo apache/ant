@@ -78,7 +78,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 
 /**
- *  Task to assemble .net 'Intermediate Language' files. The task will only work
+ *  Assembles .NET Intermediate Language files. The task will only work
  *  on win2K until other platforms support csc.exe or an equivalent. ilasm.exe
  *  must be on the execute path too. <p>
  *
@@ -207,9 +207,9 @@ public class Ilasm
 
 
     /**
-     *  Set the source dir to find the files to be compiled
+     * Set the source directory containing the files to be compiled.
      *
-     *@param  srcDirName  The new SrcDir value
+     * @param  srcDirName  The new SrcDir value
      */
     public void setSrcDir(File srcDirName) {
         srcDir = srcDirName;
@@ -217,13 +217,12 @@ public class Ilasm
 
 
     /**
-     *  define the target
+     * Sets the type of target, either "exe" or "library".
      *
      *@param  targetType          one of exe|library|
      *@exception  BuildException  if target is not one of
-     *      exe|library|module|winexe
+     *      exe|library
      */
-
     public void setTargetType(String targetType)
              throws BuildException {
         this.targetType = targetType.toLowerCase();
@@ -266,11 +265,11 @@ public class Ilasm
 
 
     /**
-     *  Sets the Owner attribute
+     * Sets the Owner attribute.
      *
-     *@param  s  The new Owner value
+     * @param  s  The new Owner value
+     * @ant.attribute ignore="true"
      */
-
     public void setOwner(String s) {
         log("This option is not supported by ILASM as of Beta-2, and will be ignored", Project.MSG_WARN);
     }
@@ -288,7 +287,7 @@ public class Ilasm
 
 
     /**
-     *  enable/disable verbose ILASM output
+     *  If true, enable verbose ILASM output.
      *
      *@param  b  flag set to true for verbose on
      */
@@ -308,7 +307,7 @@ public class Ilasm
 
 
     /**
-     *  enable/disable listing
+     * If true, produce a listing (off by default).
      *
      *@param  b  flag set to true for listing on
      */
@@ -328,7 +327,7 @@ public class Ilasm
 
 
     /**
-     *  Set the output file
+     * Set the output file.
      *
      *@param  params  The new outputFile value
      */
@@ -352,9 +351,9 @@ public class Ilasm
 
 
     /**
-     *  Set the resource file
+     * name of resource file to include.
      *
-     *@param  fileName  path to the file. Can be relative, absolute, whatever.
+     * @param  fileName  path to the file. Can be relative, absolute, whatever.
      */
     public void setResourceFile(File fileName) {
         resourceFile = fileName;
@@ -376,7 +375,7 @@ public class Ilasm
 
 
     /**
-     *  set fail on error flag
+     * If true, fails if ilasm tool fails.
      *
      *@param  b  The new failOnError value
      */
@@ -396,7 +395,7 @@ public class Ilasm
 
 
     /**
-     *  set the debug flag on or off
+     *  set the debug flag on or off.
      *
      *@param  f  on/off flag
      */
@@ -426,7 +425,7 @@ public class Ilasm
 
 
     /**
-     *  Sets the keyfile attribute of the Ilasm object
+     * the name of a file containing a private key.
      *
      *@param  keyfile  The new keyfile value
      */
@@ -450,7 +449,8 @@ public class Ilasm
 
 
     /**
-     *  Sets the ExtraOptions attribute
+     * Any extra options which are not explicitly
+     * supported by this task.
      *
      *@param  extraOptions  The new ExtraOptions value
      */

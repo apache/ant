@@ -63,7 +63,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Build a serialised deployment descriptor given a text file description of the 
+ * Builds a serialized deployment descriptor given a text file description of the
  * descriptor in the format supported by WebLogic.
  *
  * This ant task is a front end for the weblogic DDCreator tool.
@@ -149,7 +149,7 @@ public class DDCreator extends MatchingTask {
     }
     
     /**
-     * Set the directory into which the serialised deployment descriptors are to 
+     * Set the directory into which the serialized deployment descriptors are to
      * be written.
      *
      * @param dirName the name of the directory into which the serialised deployment

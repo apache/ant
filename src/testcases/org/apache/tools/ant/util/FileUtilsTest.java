@@ -383,6 +383,32 @@ public class FileUtilsTest extends TestCase {
     }
 
     /**
+     * Test removeLeadingPath.
+     */
+    public void testRemoveLeadingPath() {
+        assertEquals("bar", fu.removeLeadingPath(new File("/foo"), 
+                                                 new File("/foo/bar")));
+        assertEquals("bar", fu.removeLeadingPath(new File("/foo/"), 
+                                                 new File("/foo/bar")));
+        assertEquals("bar", fu.removeLeadingPath(new File("\\foo"), 
+                                                 new File("\\foo\\bar")));
+        assertEquals("bar", fu.removeLeadingPath(new File("\\foo\\"), 
+                                                 new File("\\foo\\bar")));
+        assertEquals("bar", fu.removeLeadingPath(new File("c:/foo"), 
+                                                 new File("c:/foo/bar")));
+        assertEquals("bar", fu.removeLeadingPath(new File("c:/foo/"), 
+                                                 new File("c:/foo/bar")));
+        assertEquals("bar", fu.removeLeadingPath(new File("c:\\foo"), 
+                                                 new File("c:\\foo\\bar")));
+        assertEquals("bar", fu.removeLeadingPath(new File("c:\\foo\\"), 
+                                                 new File("c:\\foo\\bar")));
+        assertEquals(fu.normalize("/bar").getAbsolutePath(), 
+                     fu.removeLeadingPath(new File("/foo"), new File("/bar")));
+        assertEquals(fu.normalize("/foobar").getAbsolutePath(), 
+                     fu.removeLeadingPath(new File("/foo"), new File("/foobar")));
+    }
+
+    /**
      * adapt file separators to local conventions
      */
     private String localize(String path) {

@@ -59,8 +59,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
 /**
- * Task to determine the basename of a specified file, optionally minus a
- * specified suffix.
+ * Sets a property to the base name of a specified file, optionally minus a
+ * suffix.
  *
  * This task can accept the following attributes:
  * <ul>
@@ -94,17 +94,23 @@ public class Basename extends Task {
   private String property;
   private String suffix;
 
-  // The setter for the `file' attribute
+  /**
+   * File or directory to get base name from.
+   */
   public void setFile(File file) {
     this.file = file;
   }
 
-  // The setter for the `property' attribute
+  /**
+   * Property to set base name to.
+   */
   public void setProperty(String property) {
     this.property  = property ;
   }
 
-  // The setter for the `suffix' attribute
+  /**
+   * Optional suffix to remove from base name.
+   */
   public void setSuffix(String suffix) {
     this.suffix = suffix;
   }

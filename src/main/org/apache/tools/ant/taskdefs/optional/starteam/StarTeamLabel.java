@@ -65,8 +65,8 @@ import com.starbase.util.OLEDate;
 import org.apache.tools.ant.BuildException;
 
 /**
- * This class logs into StarTeam and creates a label for the repository at the
- * time of the last successful build.
+ * Creates a view label in StarTeam at the specified view.
+ *
  * Ant Usage:
  * <pre>
  * &lt;taskdef name="stlabel"
@@ -105,14 +105,24 @@ public class StarTeamLabel extends StarTeamTask {
             new SimpleDateFormat("yyyyMMddHHmmss");
 
 
+    /**
+    * The name to be given to the label; required.
+    */
     public void setLabel(String label) {
         this.labelName = label;
     }
 
+    /**
+     * Optional description of the label to be stored in the StarTeam project.
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * The timestamp of the build that will be stored with the label; required.  
+     * Must be formatted <code>yyyyMMddHHmmss</code>
+     */
     public void setLastBuild(String lastbuild) throws BuildException {
         try {
             Date lastBuildTime = DATE_FORMAT.parse(lastbuild);

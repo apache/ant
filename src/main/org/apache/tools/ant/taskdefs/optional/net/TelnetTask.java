@@ -67,7 +67,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 /**
- * Class to provide automated telnet protocol support for the Ant build tool
+ * Automates the telnet protocol.
  *
  * @author <a href="mailto:ScottCarlson@email.com">ScottCarlson@email.com</a>
  * @version $Revision$
@@ -172,41 +172,44 @@ public class TelnetTask extends Task {
     }
 
     /**
-     *  Set the userid attribute 
+     * Set the the login id to use on the server; 
+     * required if <tt>password</tt> is set. 
      */
     public void setUserid(String u) { this.userid = u; }
 
     /**
-     *  Set the password attribute 
+     *  Set the the login password to use
+     * required if <tt>userid</tt> is set. 
      */
     public void setPassword(String p) { this.password = p; }
 
     /**
-     *  Set the server address attribute 
+     *  Set the hostname or address of the remote server.
      */
     public void setServer(String m) { this.server = m; }
 
     /**
-     *  Set the tcp port to connect to attribute 
+     *  Set the tcp port to connect to; default is 23.
      */
     public void setPort(int p) { this.port = p; }
 
     /**
-     *  Set the tcp port to connect to attribute 
+     *  send a carriage return after connecting; optional, defaults to false.
      */
     public void setInitialCR(boolean b) {
        this.addCarriageReturn = b;
     }
 
     /**
-     *  Change the default timeout to wait for 
-     *  valid responses
+     * set a default timeout in seconds to wait for a response, 
+     * zero means forever (the default) 
      */
     public void setTimeout(Integer i) {
        this.defaultTimeout = i;
     }
 
     /**
+     *  A string to wait for from the server. 
      *  A subTask &lt;read&gt; tag was found.  Create the object, 
      *  Save it in our list, and return it.
      */
@@ -218,6 +221,7 @@ public class TelnetTask extends Task {
     }
 
     /**
+     *  Add text to send to the server
      *  A subTask &lt;write&gt; tag was found.  Create the object, 
      *  Save it in our list, and return it.
      */
@@ -237,21 +241,24 @@ public class TelnetTask extends Task {
                 throws BuildException {
             throw new BuildException("Shouldn't be able instantiate a SubTask directly");
         }
+        
         /**
-         *  nested text elements need their properties explicitly expanded
+         *  the message as nested text
          */
         public void addText(String s) {
             setString(getProject().replaceProperties(s));
         }
+        
         /**
-         * attribute assignment of properties
+         * the message as an attribute
          */
         public void setString(String s) {
            taskString += s; 
         }
     }
+    
     /**
-     *  This class sends text to the connected server 
+     *  Sends text to the connected server 
      */
     public class TelnetWrite extends TelnetSubTask {
         private boolean echoString = true;
@@ -260,13 +267,17 @@ public class TelnetTask extends Task {
            telnet.sendString(taskString, echoString);
         }
         
+        /**
+         * should the message be echoed to the log? default=true.
+         */
         public void setEcho(boolean b) {
            echoString = b;
         }
     }
+    
     /**
-     *  This class reads the output from the connected server
-     *  until the required string is found. 
+     *  Reads the output from the connected server
+     *  until the required string is found or we time out. 
      */
     public class TelnetRead extends TelnetSubTask {
         private Integer timeout = null;
@@ -275,13 +286,15 @@ public class TelnetTask extends Task {
             telnet.waitForString(taskString, timeout);
         }
         /**
-         *  Override any default timeouts
+         *  a timeout value that overrides any task wide timeout. 
          */
         public void setTimeout(Integer i) {
            this.timeout = i;
         }
+        
         /**
-         *  Sets the default timeout if none has been set already
+         * Sets the default timeout if none has been set already
+         * @ant.attribute ignore="true"
          */
         public void setDefaultTimeout(Integer defaultTimeout) {
            if (timeout == null) {
@@ -289,6 +302,7 @@ public class TelnetTask extends Task {
            }
         }
     }
+    
     /**
      *  This class handles the abstraction of the telnet protocol.
      *  Currently it is a wrapper around <a href="www.oroinc.com">ORO</a>'s 
@@ -327,7 +341,9 @@ public class TelnetTask extends Task {
                             Thread.sleep(250);
                         }
                         if (is.available() == 0) {
-                            throw new BuildException("Response Timed-Out", getLocation());
+                            throw new BuildException(
+                                "Response timed-out waiting for \""+s+'\"', 
+                                getLocation());
                         }
                         sb.append((char) is.read());
                     }

@@ -67,13 +67,13 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
 
 /**
- * Calculates global complexity and quality metrics on Java source code.
- *
+ * Computes the metrics of a set of Java files and write the results to an XML
+ * file. As a convenience, a stylesheet is given in <tt>etc</tt> directory,
+ * so that an HTML report can be generated from the XML file.
+ * <p>
  * You will not be able to use this task with the evaluation version since
  * as of Metamata 2.0, Metrics does not support command line :-(
  *
- * For more information, visit the website at
- * <a href="http://www.metamata.com">www.metamata.com</a>
  *
  * @author <a href="mailto:sbailliez@imediation.com">Stephane Bailliez</a>
  */

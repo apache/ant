@@ -63,7 +63,7 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Build EJB support classes using Weblogic's ejbc tool from a directory containing
+ * Builds EJB support classes using WebLogic's ejbc tool from a directory containing
  * a set of deployment descriptors.
  *
  *
@@ -166,7 +166,7 @@ public class Ejbc extends MatchingTask {
     }
 
     /**
-     * Set the directory from where the serialised deployment descriptors are
+     * Set the directory from where the serialized deployment descriptors are
      * to be read.
      *
      * @param dirName the name of the directory containing the serialised deployment descriptors.
@@ -176,7 +176,7 @@ public class Ejbc extends MatchingTask {
     }
 
     /**
-     * Set the directory into which the support classes, RMI stubs, etc are to be written
+     * Set the directory into which the support classes, RMI stubs, etc are to be written.
      *
      * @param dirName the name of the directory into which code is generated
      */
@@ -184,13 +184,18 @@ public class Ejbc extends MatchingTask {
         generatedFilesDirectory = new File(dirName);
     }
 
+    /**
+     * If true, ejbc will keep the
+     * intermediate Java files used to build the class files.
+     * This can be useful when debugging.
+     */
     public void setKeepgenerated(String newKeepgenerated) {
         keepgenerated = Boolean.valueOf(newKeepgenerated.trim()).booleanValue();
 
     }
 
     /**
-     * Set the generated manifest file.
+     * Set the name of the generated manifest file.
      *
      * For each EJB that is processed an entry is created in this file. This can then be used
      * to create a jar file for dploying the beans.

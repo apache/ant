@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -118,6 +118,31 @@ public class CommandlineTest extends TestCase {
         assertEquals("case with quoted whitespace", 4, s.length);
         assertEquals("backslash included", "2\\", s[1]);
 
+        // "" should become a single empty argument, same for ''
+        // PR 5906
+        s = Commandline.translateCommandline("\"\" a");
+        assertEquals("Doublequoted null arg prepend", 2, s.length);
+        assertEquals("Doublequoted null arg prepend", "", s[0]);
+        assertEquals("Doublequoted null arg prepend", "a", s[1]);
+        s = Commandline.translateCommandline("a \"\"");
+        assertEquals("Doublequoted null arg append", 2, s.length);
+        assertEquals("Doublequoted null arg append", "a", s[0]);
+        assertEquals("Doublequoted null arg append", "", s[1]);
+        s = Commandline.translateCommandline("\"\"");
+        assertEquals("Doublequoted null arg", 1, s.length);
+        assertEquals("Doublequoted null arg", "", s[0]);
+
+        s = Commandline.translateCommandline("\'\' a");
+        assertEquals("Singlequoted null arg prepend", 2, s.length);
+        assertEquals("Singlequoted null arg prepend", "", s[0]);
+        assertEquals("Singlequoted null arg prepend", "a", s[1]);
+        s = Commandline.translateCommandline("a \'\'");
+        assertEquals("Singlequoted null arg append", 2, s.length);
+        assertEquals("Singlequoted null arg append", "a", s[0]);
+        assertEquals("Singlequoted null arg append", "", s[1]);
+        s = Commandline.translateCommandline("\'\'");
+        assertEquals("Singlequoted null arg", 1, s.length);
+        assertEquals("Singlequoted null arg", "", s[0]);
 
         // now to the expected failures
         

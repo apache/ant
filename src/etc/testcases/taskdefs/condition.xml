@@ -197,6 +197,7 @@
     </condition>
     <echo>${filesmatch-different}</echo>
   </target>   
+
   
   <target name="filesmatch-match" >
     <echo file="match3.txt" message="012345676890" />
@@ -207,6 +208,26 @@
         file2="match4.txt" />
     </condition>
     <echo>${filesmatch-match}</echo>
+  </target>   
+
+  <target name="filesmatch-different-sizes">
+    <echo file="match5.txt" message="012345676890" />
+    <echo file="match6.txt" message="0123456768" />
+    <condition property="filesmatch-different-sizes">
+      <filesmatch 
+        file1="match5.txt" 
+        file2="match6.txt" />
+    </condition>
+    <echo>${filesmatch-different-sizes}</echo>
+  </target>   
+
+  <target name="filesmatch-different-onemissing">
+    <condition property="filesmatch-different-sizes">
+      <filesmatch 
+        file1="condition.xml" 
+        file2="missing-file.txt" />
+    </condition>
+    <echo>${filesmatch-different-onemissing}</echo>
   </target>   
   
   <target name="contains" >
@@ -332,6 +353,8 @@
     <delete file="match2.txt" />
     <delete file="match3.txt" />
     <delete file="match4.txt" />
+    <delete file="match5.txt" />
+    <delete file="match6.txt" />
   </target>
    
 </project>

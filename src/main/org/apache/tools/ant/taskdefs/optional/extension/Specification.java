@@ -123,29 +123,29 @@ public final class Specification
      * Enum indicating that extension is compatible with other Package
      * Specification.
      */
-    public static final Compatability COMPATIBLE =
-        new Compatability( "COMPATIBLE" );
+    public static final Compatibility COMPATIBLE =
+        new Compatibility( "COMPATIBLE" );
 
     /**
      * Enum indicating that extension requires an upgrade
      * of specification to be compatible with other Package Specification.
      */
-    public static final Compatability REQUIRE_SPECIFICATION_UPGRADE =
-        new Compatability( "REQUIRE_SPECIFICATION_UPGRADE" );
+    public static final Compatibility REQUIRE_SPECIFICATION_UPGRADE =
+        new Compatibility( "REQUIRE_SPECIFICATION_UPGRADE" );
 
     /**
      * Enum indicating that extension requires a vendor
      * switch to be compatible with other Package Specification.
      */
-    public static final Compatability REQUIRE_VENDOR_SWITCH =
-        new Compatability( "REQUIRE_VENDOR_SWITCH" );
+    public static final Compatibility REQUIRE_VENDOR_SWITCH =
+        new Compatibility( "REQUIRE_VENDOR_SWITCH" );
 
     /**
      * Enum indicating that extension requires an upgrade
      * of implementation to be compatible with other Package Specification.
      */
-    public static final Compatability REQUIRE_IMPLEMENTATION_CHANGE =
-        new Compatability( "REQUIRE_IMPLEMENTATION_CHANGE" );
+    public static final Compatibility REQUIRE_IMPLEMENTATION_CHANGE =
+        new Compatibility( "REQUIRE_IMPLEMENTATION_CHANGE" );
 
     /**
      * Enum indicating that extension is incompatible with
@@ -153,8 +153,8 @@ public final class Specification
      * indicate). ie For example the other Package Specification
      * may have a different ID.
      */
-    public static final Compatability INCOMPATIBLE =
-        new Compatability( "INCOMPATIBLE" );
+    public static final Compatibility INCOMPATIBLE =
+        new Compatibility( "INCOMPATIBLE" );
 
     /**
      * The name of the Package Specification.
@@ -395,10 +395,10 @@ public final class Specification
      * <code>Package Specification</code> with the specified <code>Extension</code>.
      *
      * @param other the other specification
-     * @return the enum indicating the compatability (or lack thereof)
+     * @return the enum indicating the compatibility (or lack thereof)
      *         of specifed Package Specification
      */
-    public Compatability getCompatibilityWith( final Specification other )
+    public Compatibility getCompatibilityWith( final Specification other )
     {
         // Specification Name must match
         if( !m_specificationTitle.equals( other.getSpecificationTitle() ) )

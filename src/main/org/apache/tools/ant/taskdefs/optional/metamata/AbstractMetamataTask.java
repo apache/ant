@@ -123,16 +123,25 @@ public abstract class AbstractMetamataTask extends Task {
         cmdl.setClassname(className);
     }
 
-    /** the metamata.home property to run all tasks. */
+    /**
+     * the metamata.home property to run all tasks.
+     * @ant.attribute ignore="true"
+     */
     public void setHome(final File value) {
         this.metamataHome = value;
     }
 
+    /**
+     * The home directory containing the Metamata distribution; required
+     */
     public void setMetamatahome(final File value) {
         setHome(value);
     }
 
-    /** user classpath */
+    /**
+     * Sets the class path (also source path unless one explicitly set).
+     * Overrides METAPATH/CLASSPATH environment variables.
+     */
     public Path createClasspath() {
         if (classPath == null) {
             classPath = new Path(project);
@@ -140,7 +149,10 @@ public abstract class AbstractMetamataTask extends Task {
         return classPath;
     }
 
-    /** create the source path for this task */
+    /**
+     * Sets the source path. 
+     * Overrides the SOURCEPATH environment variable. 
+     */
     public Path createSourcepath() {
         if (sourcePath == null) {
             sourcePath = new Path(project);
@@ -148,18 +160,37 @@ public abstract class AbstractMetamataTask extends Task {
         return sourcePath;
     }
 
-    /** Creates a nested jvmarg element. */
+    /**
+     * Additional optional parameters to pass to the JVM. 
+     * You can avoid using the  <code>&lt;jvmarg&gt;</code> by adding these empty 
+     * entries to <code>metamata.properties</code> located at <code>${metamata.home}/bin</code>
+     *
+     * <pre>metamata.classpath=
+     * metamata.sourcepath=
+     * metamata.baseclasspath=
+     * </pre>
+     */
     public Commandline.Argument createJvmarg() {
         return cmdl.createVmArgument();
     }
 
-    /**  -mx or -Xmx depending on VM version */
+    /**
+     * Set the maximum memory for the JVM; optional.
+     * -mx or -Xmx depending on VM version 
+     */
     public void setMaxmemory(String max) {
         cmdl.setMaxmemory(max);
     }
 
 
-    /** The java files or directory to be audited */
+    /** 
+     * The java files or directory to audit.
+     * Whatever the filter is, only the files that end 
+     * with .java will be included for processing. 
+     * Note that the base directory used for the fileset 
+     * MUST be the root of the source files otherwise package names
+     * deduced from the file path will be incorrect. 
+     */
     public void addFileSet(FileSet fs) {
         fileSets.addElement(fs);
     }

@@ -55,11 +55,10 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Path;
@@ -94,7 +93,7 @@ public class Available extends Task implements Condition {
     private boolean ignoreSystemclasses = false;
 
     /**
-     * Set the classpath to be used when searching for classes and resources
+     * Set the classpath to be used when searching for classes and resources.
      * 
      * @param classpath an Ant Path object containing the search path.
      */
@@ -103,14 +102,13 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Create a classpath object to be configured by Ant. The resulting
-     * path will be used when searching for classes or resources
+     * Classpath to be used when searching for classes and resources.
      *
      * @return an empty Path instance to be configured by Ant.
      */
     public Path createClasspath() {
         if (this.classpath == null) {
-            this.classpath = new Path(project);
+            this.classpath = new Path(getProject());
         }
         return this.classpath.createPath();
     }
@@ -126,7 +124,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Set the path to use when looking for a file
+     * Set the path to use when looking for a file.
      *
      * @param filepath a Path instance containing the search path for files.
      */
@@ -135,14 +133,14 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Create a filepath to be configured by Ant.
+     * Path to search for file resources.
      *
      * @return a new Path instance which Ant will configure with a file search
      *         path.
      */
     public Path createFilepath() {
         if (this.filepath == null) {
-            this.filepath = new Path(project);
+            this.filepath = new Path(getProject());
         }
         return this.filepath.createPath();
     }
@@ -158,7 +156,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Set the value to be given to the property of the desired resource is
+     * Set the value to be given to the property if the desired resource is
      * available.
      *
      * @param value the value to be given.
@@ -185,12 +183,13 @@ public class Available extends Task implements Condition {
      *
      * @param file the name of the file which is required.
      */
-    public void setFile(String file) {
-        this.file = file;
+    public void setFile(File file) {
+        this.file = FileUtils.newFileUtils()
+            .removeLeadingPath(getProject().getBaseDir(), file);
     }
 
     /**
-     * Set the name of a Java resouirce which is required to set the property.
+     * Set the name of a Java resource which is required to set the property.
      *
      * @param resource the name of a resource which is required to be available.
      */
@@ -212,7 +211,7 @@ public class Available extends Task implements Condition {
     }
 
     /**
-     * Set what type of file is required - either a directory or a file.
+     * Set what type of file is required - either directory or file.
      *
      * @param type an instance of the FileDir enumeratedAttribute indicating
      *             whether the file required is to be a directory or a plain 
@@ -240,13 +239,14 @@ public class Available extends Task implements Condition {
     public void execute() throws BuildException {
         if (property == null) {
             throw new BuildException("property attribute is required", 
-                                     location);
+                                     getLocation());
         }
 
         isTask = true;
         try {
             if (eval()) {
-                if (null != getProject().getProperty(property)) {
+                String oldvalue = getProject().getProperty(property);
+                if (null != oldvalue && !oldvalue.equals(value)) {
                     log("DEPRECATED - <available> used to override an existing"
                         + " property."
                         + StringUtils.LINE_SEP
@@ -264,25 +264,25 @@ public class Available extends Task implements Condition {
      * Evaluate the availability of a resource.
      *
      * @return boolean is the resource is available.
-     * @exception if the condition is not configured correctly
+     * @exception BuildException if the condition is not configured correctly
      */
     public boolean eval() throws BuildException {
         if (classname == null && file == null && resource == null) {
             throw new BuildException("At least one of (classname|file|"
-                                     + "resource) is required", location);
+                                     + "resource) is required", getLocation());
         }
 
         if (type != null) {
             if (file == null) {
                 throw new BuildException("The type attribute is only valid "
                                          + "when specifying the file "
-                                         + "attribute.", location);
+                                         + "attribute.", getLocation());
             }
         }
 
         if (classpath != null) {
-            classpath.setProject(project);
-            this.loader = new AntClassLoader(project, classpath);
+            classpath.setProject(getProject());
+            this.loader = new AntClassLoader(getProject(), classpath);
         }
 
         String appendix = "";
@@ -344,7 +344,7 @@ public class Available extends Task implements Condition {
      */
     private boolean checkFile() {
         if (filepath == null) {
-            return checkFile(project.resolveFile(file), file);
+            return checkFile(getProject().resolveFile(file), file);
         } else {
             String[] paths = filepath.list();
             for (int i = 0; i < paths.length; ++i) {
@@ -464,19 +464,20 @@ public class Available extends Task implements Condition {
         try {
             Class requiredClass = null;
             if (ignoreSystemclasses) {
-                loader = new AntClassLoader(null, getProject(), 
-                    classpath, false);
+                loader = new AntClassLoader(null, getProject(), classpath, 
+                                            false);
                 if (loader != null) {
                     try {
-                        loader.findClass(classname);
+                        requiredClass = loader.findClass(classname);
                     } catch (SecurityException se) {
-                        // class found but restricted name; this is actually
-                        // the case we're looking for, so catch the exception
-                        // and return
+                        // class found but restricted name; this is
+                        // actually the case we're looking for in JDK 1.3+,
+                        // so catch the exception and return
                         return true;
                     }
+                } else {
+                    return false;
                 }
-                return false;
             } else if (loader != null) {
                 requiredClass = loader.loadClass(classname);
             } else {

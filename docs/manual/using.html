@@ -30,7 +30,7 @@ to be unique. (For additional information, see the
   <tr>
     <td valign="top">default</td>
     <td valign="top">the default target to use when no target is supplied.</td>
-    <td align="center" valign="top">No. Will default to "main" if not specified.</td>
+    <td align="center" valign="top">Yes.</td>
   </tr>
   <tr>
     <td valign="top">basedir</td>
@@ -432,10 +432,6 @@ that contain space characters, nested <code>arg</code> elements can be used.</p>
     <td align="center" rowspan="4">Exactly one of these.</td>
   </tr>
   <tr>
-    <td valign="top">line</td>
-    <td valign="top">a space-delimited list of command-line arguments.</td>
-  </tr>
-  <tr>
     <td valign="top">file</td>
     <td valign="top">The name of a file as a single command-line
       argument; will be replaced with the absolute filename of the file.</td>
@@ -448,7 +444,17 @@ that contain space characters, nested <code>arg</code> elements can be used.</p>
       path separators and Ant will convert it to the platform's local
       conventions.</td>
   </tr>
+  <tr>
+    <td valign="top">line</td>
+    <td valign="top">a space-delimited list of command-line arguments.</td>
+  </tr>
 </table>
+
+<p>It is highly recommended to avoid the <code>line</code> version
+when possible.  Ant will try to split the command line in a way
+similar to what a (Unix) shell would do, but may create something that
+is very different from what you expect under some circumstances.</p>
+
 <h4>Examples</h4>
 <blockquote><pre>
   &lt;arg value=&quot;-l -a&quot;/&gt;
@@ -523,7 +529,7 @@ href="CoreTypes/patternset.html">PatternSet</a>s, <a href="CoreTypes/fileset.htm
 structures as well.</p>
 
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

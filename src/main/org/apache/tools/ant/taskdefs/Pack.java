@@ -76,15 +76,28 @@ public abstract class Pack extends Task {
     protected File zipFile;
     protected File source;
 
+    /**
+     * the required destination file.
+     * @param zipFile
+     */
     public void setZipfile(File zipFile) {
         this.zipFile = zipFile;
     }
 
+    /**
+     * the file to compress; required.
+     * @param src
+     */
     public void setSrc(File src) {
         source = src;
     }
 
-    private void validate() {
+
+    /**
+     * validation routine
+     * @throws BuildException if anything is invalid
+     */
+    private void validate() throws BuildException {
         if (zipFile == null) {
             throw new BuildException("zipfile attribute is required", location);
         }
@@ -104,6 +117,10 @@ public abstract class Pack extends Task {
         }
     }
 
+    /**
+     * validate, then hand off to the subclass
+     * @throws BuildException
+     */
     public void execute() throws BuildException {
         validate();
 
@@ -116,6 +133,12 @@ public abstract class Pack extends Task {
         }
     }
 
+    /**
+     * zip a stream to an output stream
+     * @param in
+     * @param zOut
+     * @throws IOException
+     */
     private void zipFile(InputStream in, OutputStream zOut)
         throws IOException {
         byte[] buffer = new byte[8 * 1024];
@@ -126,6 +149,12 @@ public abstract class Pack extends Task {
         } while (count != -1);
     }
 
+    /**
+     * zip a file to an output stream
+     * @param file
+     * @param zOut
+     * @throws IOException
+     */
     protected void zipFile(File file, OutputStream zOut)
         throws IOException {
         FileInputStream fIn = new FileInputStream(file);
@@ -136,5 +165,8 @@ public abstract class Pack extends Task {
         }
     }
 
+    /**
+     * subclasses must implement this method to do their compression
+     */
     protected abstract void pack();
 }

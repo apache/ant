@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights 
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -63,8 +63,9 @@ import org.apache.tools.ant.types.Path;
 import java.io.File;
 
 /**
- * Execute a Weblogic server.
- 
+ * Starts a WebLogic server.
+ * A number of parameters are used to control the operation of the weblogic instance. Note that the task,
+ * and hence ant, will not complete until the weblogic instance is stopped.</p>
  *
  * @author Conor MacNeill, Cortex ebusiness Pty Limited
  */
@@ -85,17 +86,17 @@ public class WLRun extends Task {
     private Path weblogicClasspath;
 
     private String weblogicMainClass = "weblogic.Server";
-    
+
     /**
      * Addional arguments to pass to the JVM used to run weblogic
      */
     private String additionalArgs = "";
-    
+
     /**
      * The security policy to use when running the weblogic server
      */
     private String securityPolicy;
-    
+
     /**
      * The weblogic system home directory
      */
@@ -105,13 +106,13 @@ public class WLRun extends Task {
      * The weblogic domain
      */
     private String weblogicDomainName;
-    
+
     /**
-     * The name of the weblogic server - used to select the server's directory in the 
+     * The name of the weblogic server - used to select the server's directory in the
      * weblogic home directory.
      */
     private String weblogicSystemName = "myserver";
-    
+
     /**
      * The file containing the weblogic properties for this server.
      */
@@ -132,7 +133,7 @@ public class WLRun extends Task {
      * The management username
      */
     private String managementUsername = "system";
-    
+
     /**
      * The management password
      */
@@ -166,10 +167,10 @@ public class WLRun extends Task {
     /**
      * Do the work.
      *
-     * The work is actually done by creating a separate JVM to run a helper task. 
-     * This approach allows the classpath of the helper task to be set. Since the 
-     * weblogic tools require the class files of the project's home and remote 
-     * interfaces to be available in the classpath, this also avoids having to 
+     * The work is actually done by creating a separate JVM to run a helper task.
+     * This approach allows the classpath of the helper task to be set. Since the
+     * weblogic tools require the class files of the project's home and remote
+     * interfaces to be available in the classpath, this also avoids having to
      * start ant with the class path of the project it is building.
      *
      * @exception BuildException if someting goes wrong with the build
@@ -179,7 +180,7 @@ public class WLRun extends Task {
             throw new BuildException("weblogic home must be set");
         }
         if (!weblogicSystemHome.isDirectory()) {
-            throw new BuildException("weblogic home directory " + weblogicSystemHome.getPath() + 
+            throw new BuildException("weblogic home directory " + weblogicSystemHome.getPath() +
                                      " is not valid");
         }
 
@@ -189,7 +190,7 @@ public class WLRun extends Task {
             executeWLS();
         }
     }
-    
+
     private File findSecurityPolicyFile(String defaultSecurityPolicy) {
         String securityPolicy = this.securityPolicy;
         if (securityPolicy == null) {
@@ -208,22 +209,22 @@ public class WLRun extends Task {
         }
         return securityPolicyFile;
     }
-    
+
     private void executeWLS6() {
-        File securityPolicyFile 
+        File securityPolicyFile
             = findSecurityPolicyFile(DEFAULT_WL60_POLICY_FILE);
         if (!beaHome.isDirectory()) {
-            throw new BuildException("BEA home " + beaHome.getPath() + 
+            throw new BuildException("BEA home " + beaHome.getPath() +
                                      " is not valid");
         }
-        
-        File configFile = new File(weblogicSystemHome, "config/" 
+
+        File configFile = new File(weblogicSystemHome, "config/"
             + weblogicDomainName + "/config.xml");
         if (!configFile.exists()) {
-            throw new BuildException("Server config file " + configFile 
+            throw new BuildException("Server config file " + configFile
                 + " not found.");
         }
-        
+
         if (managementPassword == null) {
             throw new BuildException("You must supply a management password to start the server");
         }
@@ -235,38 +236,38 @@ public class WLRun extends Task {
         weblogicServer.setClassname(weblogicMainClass);
 
         String jvmArgs = additionalJvmArgs;
-        
+
         jvmArgs += " -Dweblogic.Domain=" + weblogicDomainName;
         jvmArgs += " -Dweblogic.Name=" + weblogicSystemName;
         jvmArgs += " -Dweblogic.system.home=" + weblogicSystemHome;
 
         jvmArgs += " -Dbea.home=" + beaHome;
         jvmArgs += " -Djava.security.policy==" + securityPolicyFile;
-        
+
         jvmArgs += " -Dweblogic.management.username=" + managementUsername;
         jvmArgs += " -Dweblogic.management.password=" + managementPassword;
         if (pkPassword != null) {
             jvmArgs += " -Dweblogic.pkpassword=" + pkPassword;
         }
-        
+
 
         weblogicServer.createJvmarg().setLine(jvmArgs);
         weblogicServer.createArg().setLine(additionalArgs);
-        
+
         if (classpath != null) {
-            weblogicServer.setClasspath(classpath);                         
+            weblogicServer.setClasspath(classpath);
         }
-            
-        if (weblogicServer.executeJava() != 0) {                         
+
+        if (weblogicServer.executeJava() != 0) {
             throw new BuildException("Execution of weblogic server failed");
         }
      }
-    
+
     private void executeWLS() {
-        File securityPolicyFile 
+        File securityPolicyFile
             = findSecurityPolicyFile(DEFAULT_WL51_POLICY_FILE);
         File propertiesFile = null;
-        
+
 
         if (weblogicPropertiesFile == null) {
             weblogicPropertiesFile = DEFAULT_PROPERTIES_FILE;
@@ -279,7 +280,7 @@ public class WLRun extends Task {
                 throw new BuildException("Properties file " + weblogicPropertiesFile +
                                          " not found in weblogic home " + weblogicSystemHome +
                                          " or as absolute file");
-            }                                         
+            }
         }
 
         Java weblogicServer = (Java) project.createTask("java");
@@ -288,11 +289,11 @@ public class WLRun extends Task {
         weblogicServer.setClassname(weblogicMainClass);
 
         String jvmArgs = additionalJvmArgs;
-        
+
         if (weblogicClasspath != null) {
             jvmArgs += " -Dweblogic.class.path=" + weblogicClasspath;
         }
-            
+
         jvmArgs += " -Djava.security.manager -Djava.security.policy==" + securityPolicyFile;
         jvmArgs += " -Dweblogic.system.home=" + weblogicSystemHome;
         jvmArgs += " -Dweblogic.system.name=" + weblogicSystemName;
@@ -300,27 +301,31 @@ public class WLRun extends Task {
 
         weblogicServer.createJvmarg().setLine(jvmArgs);
         weblogicServer.createArg().setLine(additionalArgs);
-        
+
         if (classpath != null) {
-            weblogicServer.setClasspath(classpath);                         
+            weblogicServer.setClasspath(classpath);
         }
-        if (weblogicServer.executeJava() != 0) {                         
+        if (weblogicServer.executeJava() != 0) {
             throw new BuildException("Execution of weblogic server failed");
         }
     }
 
-    
+
     /**
-     * Set the classpath to be used for this execution.
+     * The classpath to be used with the Java Virtual Machine that runs the Weblogic
+     * Server; required. Prior to Weblogic 6.0, this is typically set to the Weblogic
+     * boot classpath. Under Weblogic 6.0 this should include all the
+     * weblogic jars
      *
-     * @param s the classpath to use when executing the weblogic server.
+     * @param classpath the classpath to use when executing the weblogic server.
      */
     public void setClasspath(Path classpath) {
         this.classpath = classpath;
     }
-    
+
     /**
-     * Set the weblogic classpath.
+     * Set the weblogic classpath used by the Weblogic Server;
+     * optional, and only applicable to WL4.5.1
      *
      * The weblogic classpath is used by weblogic to support dynamic class loading.
      *
@@ -329,19 +334,22 @@ public class WLRun extends Task {
     public void setWlclasspath(Path weblogicClasspath) {
         this.weblogicClasspath = weblogicClasspath;
     }
-    
+
     /**
-     * Set the security policy for this invocation of weblogic.
+     * The name of the security policy file within the weblogic home directory that
+     * is to be used. If not specified, the default policy file <code>weblogic.policy</code>
+     * is used.
      *
      * @param securityPolicy the security policy to use.
      */
     public void setPolicy(String securityPolicy) {
         this.securityPolicy = securityPolicy;
     }
-    
+
     /**
      * The location where weblogic lives.
-     *
+     * Required. This is the absolute location, not relative to
+     *  BEA home.
      * @param weblogicHome the home directory of weblogic.
      *
      */
@@ -350,7 +358,8 @@ public class WLRun extends Task {
     }
 
     /**
-     * The location of the BEA Home.
+     * The location of the BEA Home; implicitly
+     * selects Weblogic 6.0; optional.
      *
      * @param beaHome the BEA Home directory.
      *
@@ -358,29 +367,31 @@ public class WLRun extends Task {
     public void setBEAHome(File beaHome) {
         this.beaHome = beaHome;
     }
-    
+
     /**
-     * Set the name of the server to run
+     * The name of the weblogic server within the weblogic home which is to be run.
+     * Optiona, defaults to &quot;myserver&quot;
      *
-     * @param systemName the name of the server.
+     * @param serverName the name of the server.
      */
     public void setName(String serverName) {
         this.weblogicSystemName = serverName;
     }
-    
+
     /**
-     * Set the Domain to run in
+     * Set the Domain to run in; required for WL6.0
      *
      * @param domain the domain
      */
     public void setDomain(String domain) {
         this.weblogicDomainName = domain;
     }
-    
+
     /**
-     * Set the properties file to use.
+     * The name of the server's properties file within the weblogic home directory
+     * used to control the weblogic instance;
+     * required for WL4.5.1
      *
-     * The location of the properties file is relative to the weblogi system home
      *
      * @param propertiesFilename the properties file name
      */
@@ -395,40 +406,47 @@ public class WLRun extends Task {
     public void setJvmargs(String args) {
         this.additionalJvmArgs = args;
     }
-    
+
     /**
-     * Set the management username to run the server
+     * Set the management username to run the server;
+     * optional and only applicable to WL6.0.
      *
      * @param username the management username of the server.
      */
     public void setUsername(String username) {
         this.managementUsername = username;
     }
-    
+
 
     /**
-     * Set the management password of the server
-     *
+     * Set the management password of the server;
+     * optional and only applicable to WL6.0.
      * @param password the management pasword of the server.
      */
     public void setPassword(String password) {
         this.managementPassword = password;
     }
-    
+
     /**
-     * Set the private key password so the server can decrypt the SSL private key file.
-     *
+     * Set the private key password so the server can decrypt the SSL private key file;
+     * optional and only applicable to WL6.0.
      * @param pkpassword the private key password,
      */
     public void setPKPassword(String pkpassword) {
         this.pkPassword = pkpassword;
     }
-    
+
+    /**
+     * Additional argument string passed to the Weblogic instance;
+     * optional.
+     */
     public void setArgs(String args) {
         additionalArgs = args;
     }
 
-    
+    /**
+     * name of the main class for weblogic; optional.
+     */
     public void setWeblogicMainClass(String c) {
         weblogicMainClass = c;
     }

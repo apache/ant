@@ -17,8 +17,8 @@ href="http://jakarta.apache.org/builds/ant/nightly/">http://jakarta.apache.org/b
 <h3>Source Edition</h3>
 
 <p>If you prefer the source edition, you can download the source for the latest Ant release from <a
-href="http://jakarta.apache.org/builds/ant/release/v1.4.1/src/">
-http://jakarta.apache.org/builds/ant/release/v1.4.1/src/</a>. 
+href="http://jakarta.apache.org/builds/ant/release/v1.5/src/">
+http://jakarta.apache.org/builds/ant/release/v1.5/src/</a>.
 
 Again, if you prefer the edge, you can access 
 the code as it is being developed via CVS. The Jakarta website has details on 
@@ -41,12 +41,12 @@ To build and use Ant, you must have a JAXP-compliant XML parser installed and
 available on your classpath.</p>
 <p>
 The binary distribution of Ant includes the latest version of the
-<a href="http://xml.apache.org/crimson/index.html">Apache Crimson</a> XML parser. 
+<a href="http://xml.apache.org/xerces2-j/index.html">Apache Xerces2</a> XML parser. 
 Please see 
 <a href="http://java.sun.com/xml/" target="_top">http://java.sun.com/xml/</a> 
 for more information about JAXP. 
 If you wish to use a different JAXP-compliant parser, you should remove
-<code>jaxp.jar</code> and <code>crimson.jar</code>
+<code>xercesImpl.jar</code> and <code>xmlParserAPIs.jar</code>
 from Ant's <code>lib</code> directory.
 
 You can then either put the jars from your preferred parser into Ant's 
@@ -67,10 +67,25 @@ compiler is supported.
 </p>  
 <hr>
 <h2><a name="installing">Installing Ant</a></h2>
-<p>The binary distribution of Ant consists of three directories:
-<code>bin</code>,
-<code>docs</code> and
-<code>lib</code>
+<p>The binary distribution of Ant consists of the following directory layout:
+<pre>
+  ant
+   +--- bin  // contains launcher scripts
+   |
+   +--- lib  // contains Ant jars plus necessary dependencies
+   |
+   +--- docs // contains documentation
+   |      +--- ant2    // a brief description of ant2 requirements
+   |      |
+   |      +--- images  // various logos for html documentation
+   |      |
+   |      +--- manual  // Ant documentation (a must read ;-)
+   |
+   +--- etc // contains xsl goodies to:
+            //   - create an enhanced report from xml output of various tasks.
+            //   - migrate your build files and get rid of 'deprecated' warning
+            //   - ... and more ;-)
+</pre>
 
 Only the <code>bin</code> and <code>lib</code> directories are 
 required to run Ant. 
@@ -118,11 +133,7 @@ restrictions on the classes which may be loaded by an extension.</p>
 <h3><a name="optionalTasks">Optional Tasks</a></h3>
 <p>Ant supports a number of optional tasks. An optional task is a task which
 typically requires an external library to function. The optional tasks are 
-packaged separately from the core Ant tasks. This package is available in 
-the same download directory as the core ant distribution. The current 
-jar containing optional tasks is named <code>jakarta-ant-1.4.1-optional.jar</code>.
-This jar should be downloaded and placed in the lib directory of your Ant 
-installation.</p> 
+packaged together with the core Ant tasks.</p>
 
 <p>The external libraries required by each of the optional tasks is detailed
 in the <a href="#librarydependencies">Library Dependencies</a> section. These external
@@ -193,7 +204,7 @@ for examples on how to do this for your operating system. </p>
 
 <p>Make sure you have downloaded any auxiliary jars required to
 build tasks you are interested in. These should either be available
-on the CLASSPATH or added to the <code>lib/optional</code>
+on the CLASSPATH or added to the <code>lib</code>
 directory.
 See <a href="#librarydependencies">Library Dependencies</a>
 for a list of jar requirements for various features.
@@ -287,7 +298,7 @@ Installing Ant / Optional Tasks</a> section above.</p>
     <td><a href="http://www.junit.org/" target="_top">www.junit.org</a></td>
   </tr>
   <tr>
-    <td>xerces.jar and xalan.jar</td>
+    <td>xalan.jar</td>
     <td>junitreport task</td>
     <td><a href="http://xml.apache.org/" target="_top">xml.apache.org</a></td>
   </tr>
@@ -319,7 +330,7 @@ Installing Ant / Optional Tasks</a> section above.</p>
         www2.hursley.ibm.com/netrexx</a></td>
   </tr>
   <tr>
-    <td>rhino.jar</td>
+    <td>js.jar</td>
     <td>javascript with script task</td>
     <td><a href="http://www.mozilla.org/rhino/" target="_top">www.mozilla.org/rhino</a></td>
   </tr>
@@ -332,6 +343,11 @@ Installing Ant / Optional Tasks</a> section above.</p>
     <td>jacl.jar and tcljava.jar</td>
     <td>TCL with script task</td>
     <td><a href="http://www.scriptics.com/java" target="_top">www.scriptics.com/java</a></td>
+  </tr>
+  <tr>
+    <td>BeanShell JAR(s)</td>
+    <td>BeanShell with script task</td>
+    <td><a href="http://www.beanshell.org" target="_top">www.beanshell.org</a></td>
   </tr>
   <tr>
     <td>netcomponents.jar</td>
@@ -368,7 +384,7 @@ Installing Ant / Optional Tasks</a> section above.</p>
 </table>
 <br>
 <hr>
-<p align="center">Copyright &copy; 2001-2002 Apache Software Foundation. All rights
+<p align="center">Copyright &copy; 2000-2002 Apache Software Foundation. All rights
 Reserved.</p>
 
 </body>

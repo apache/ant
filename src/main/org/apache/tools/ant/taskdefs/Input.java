@@ -64,7 +64,7 @@ import org.apache.tools.ant.input.MultipleChoiceInputRequest;
 import org.apache.tools.ant.util.StringUtils;
 
 /**
- * Ant task to read input line from console.
+ * Reads an input line from the console.
  *
  * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
@@ -79,7 +79,7 @@ public class Input extends Task {
     private String addproperty = null;
 
     /**
-     * Defines valid input parameters as comma separated String. If set, input
+     * Defines valid input parameters as comma separated strings. If set, input
      * task will reject any input not defined as accepted and requires the user
      * to reenter it. Validargs are case sensitive. If you want 'a' and 'A' to
      * be accepted you need to define both values as accepted arguments.

@@ -313,11 +313,13 @@ public class Target implements TaskContainer {
                 }
             }
         } else if (!testIfCondition()) {
-            project.log(this, "Skipped because property '" + this.ifCondition 
-                + "' not set.", Project.MSG_VERBOSE);
+            project.log(this, "Skipped because property '" 
+                        + project.replaceProperties(this.ifCondition) 
+                        + "' not set.", Project.MSG_VERBOSE);
         } else {
             project.log(this, "Skipped because property '" 
-                + this.unlessCondition + "' set.", Project.MSG_VERBOSE);
+                        + project.replaceProperties(this.unlessCondition) 
+                        + "' set.", Project.MSG_VERBOSE);
         }
     }
 

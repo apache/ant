@@ -74,7 +74,7 @@ import org.apache.tools.ant.taskdefs.MatchingTask;
 /**
  * Translates text embedded in files using Resource Bundle files.
  *
- * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ * @author Magesh Umasankar
  */
 public class Translate extends MatchingTask {
 
@@ -157,63 +157,64 @@ public class Translate extends MatchingTask {
     private boolean loaded = false;
 
     /**
-     * Sets Family name of resource bundle
+     * Sets Family name of resource bundle; required.
      */
     public void setBundle(String bundle) {
         this.bundle = bundle;
     }
 
     /**
-     * Sets locale specific language of resource bundle
+     * Sets locale specific language of resource bundle; optional.
      */
     public void setBundleLanguage(String bundleLanguage) {
         this.bundleLanguage = bundleLanguage;
     }
 
     /**
-     * Sets locale specific country of resource bundle
+     * Sets locale specific country of resource bundle; optional.
      */
     public void setBundleCountry(String bundleCountry) {
         this.bundleCountry = bundleCountry;
     }
 
     /**
-     * Sets locale specific variant of resource bundle
+     * Sets locale specific variant of resource bundle; optional.
      */
     public void setBundleVariant(String bundleVariant) {
         this.bundleVariant = bundleVariant;
     }
 
     /**
-     * Sets Destination directory
+     * Sets Destination directory; required.
      */
     public void setToDir(File toDir) {
         this.toDir = toDir;
     }
 
     /**
-     * Sets starting token to identify keys
+     * Sets starting token to identify keys; required.
      */
     public void setStartToken(String startToken) {
         this.startToken = startToken;
     }
 
     /**
-     * Sets ending token to identify keys
+     * Sets ending token to identify keys; required.
      */
     public void setEndToken(String endToken) {
         this.endToken = endToken;
     }
 
     /**
-     * Sets source file encoding scheme
+     * Sets source file encoding scheme; optional,
+     * defaults to encoding of local system.
      */
     public void setSrcEncoding(String srcEncoding) {
         this.srcEncoding = srcEncoding;
     }
 
     /**
-     * Sets destination file encoding scheme.  Defaults to source file
+     * Sets destination file encoding scheme; optional.  Defaults to source file
      * encoding
      */
     public void setDestEncoding(String destEncoding) {
@@ -221,15 +222,16 @@ public class Translate extends MatchingTask {
     }
 
     /**
-     * Sets Resource Bundle file encoding scheme
+     * Sets Resource Bundle file encoding scheme; optional.  Defaults to source file
+     * encoding
      */
     public void setBundleEncoding(String bundleEncoding) {
         this.bundleEncoding = bundleEncoding;
     }
 
     /**
-     * Whether or not to overwrite existing file irrespective of 
-     * whether it is newer than the source file as well as the 
+     * Whether or not to overwrite existing file irrespective of
+     * whether it is newer than the source file as well as the
      * resource bundle file.
      * Defaults to false.
      */
@@ -238,7 +240,7 @@ public class Translate extends MatchingTask {
     }
 
     /**
-     * Adds a set of files (nested fileset attribute).
+     * Adds a set of files to translate as a nested fileset element.
      */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
@@ -503,7 +505,8 @@ public class Translate extends MatchingTask {
                             Project.MSG_DEBUG);
                     }
                     destLastModified = dest.lastModified();
-                    srcLastModified = new File(srcFiles[i]).lastModified();
+                    File src = fileUtils.resolveFile(ds.getBasedir(), srcFiles[j]);
+                    srcLastModified = src.lastModified();
                     //Check to see if dest file has to be recreated
                     if (forceOverwrite
                         || destLastModified < srcLastModified
@@ -517,10 +520,10 @@ public class Translate extends MatchingTask {
                         log("Processing " + srcFiles[j],
                             Project.MSG_DEBUG);
                         FileOutputStream fos = new FileOutputStream(dest);
-                        BufferedWriter out 
+                        BufferedWriter out
                             = new BufferedWriter(new OutputStreamWriter(fos, destEncoding));
-                        FileInputStream fis = new FileInputStream(srcFiles[j]);
-                        BufferedReader in 
+                        FileInputStream fis = new FileInputStream(src);
+                        BufferedReader in
                             = new BufferedReader(new InputStreamReader(fis, srcEncoding));
                         String line;
                         while ((line = in.readLine()) != null) {

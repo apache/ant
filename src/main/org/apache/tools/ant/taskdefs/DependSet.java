@@ -66,7 +66,7 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.FileList;
 
 /**
- * A Task to record explicit dependencies.  If any of the target files
+ * Examines and removes out of date target files.  If any of the target files
  * are out of date with respect to any of the source files, all target
  * files are removed.  This is useful where dependencies cannot be
  * computed (for example, dynamically interpreted parameters or files
@@ -127,28 +127,28 @@ public class DependSet extends MatchingTask {
     } //-- DependSet
 
     /**
-     * Nested &lt;srcfileset&gt; element.
+     * Add a set of source files.
      */
     public void addSrcfileset(FileSet fs) {
         sourceFileSets.addElement(fs);
     }
 
     /**
-     * Nested &lt;srcfilelist&gt; element.
+     * Add a list of source files.
      */
     public void addSrcfilelist(FileList fl) {
         sourceFileLists.addElement(fl);
     }
 
     /**
-     * Nested &lt;targetfileset&gt; element.
+     * Add a set of target files.
      */
     public void addTargetfileset(FileSet fs) {
         targetFileSets.addElement(fs);
     }
 
     /**
-     * Nested &lt;targetfilelist&gt; element.
+     * Add a list of target files.
      */
     public void addTargetfilelist(FileList fl) {
         targetFileLists.addElement(fl);
@@ -190,6 +190,11 @@ public class DependSet extends MatchingTask {
         while (enumTargetSets.hasMoreElements()) {
                  
            FileSet targetFS          = (FileSet) enumTargetSets.nextElement();
+           if (!targetFS.getDir(getProject()).exists()) {
+               // this is the same as if it was empty, no target files found
+               continue;
+           }
+           
            DirectoryScanner targetDS = targetFS.getDirectoryScanner(project);
            String[] targetFiles      = targetDS.getIncludedFiles();
                  

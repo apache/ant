@@ -68,7 +68,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 
-/** P4Add  - add the specified files to perforce.
+/** Adds specified files to Perforce.
  *
  * <b>Example Usage:</b>
  * <table border="1">
@@ -88,6 +88,13 @@ public class P4Add extends P4Base {
     private Vector filesets = new Vector();
     private int cmdLength = 450;
 
+    /**
+     *   positive integer specifying the maximum length
+     *   of the commandline when calling Perforce to add the files. 
+     *   Defaults to 450, higher values mean faster execution,
+     *   but also possible failures.
+     */
+     
     public void setCommandlength(int len) throws BuildException {
         if (len <= 0) {
             throw new BuildException("P4Add: Commandlength should be a positive number");
@@ -95,6 +102,11 @@ public class P4Add extends P4Base {
         this.cmdLength = len;
     }
 
+    /**
+     * If specified the open files are associated with the
+     * specified pending changelist number; otherwise the open files are
+     * associated with the default changelist.
+     */
     public void setChangelist(int changelist) throws BuildException {
         if (changelist <= 0) {
             throw new BuildException("P4Add: Changelist# should be a positive number");
@@ -103,6 +115,9 @@ public class P4Add extends P4Base {
         this.changelist = changelist;
     }
 
+    /**
+     * files to add
+     */
     public void addFileset(FileSet set) {
         filesets.addElement(set);
     }

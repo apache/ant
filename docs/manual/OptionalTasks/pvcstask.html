@@ -137,6 +137,24 @@ tag expects the executables to be found using the PATH environment variable.</td
         newer than existing local files.</td>
       <td VALIGN=TOP WIDTH="10%">No</td>
     </tr>
+    <tr> 
+      <td valign="TOP">filenameformat</td>
+      <td valign="TOP">The format of your folder names in a
+          format suitable for <code>java.text.MessageFormat</code>.
+          Defaults to <code>{0}-arc({1})</code>.  Repositories where
+          the archive extension is not  <code>-arc</code> should set 
+          this.</td>
+      <td valign="TOP">No</td>
+    </tr>
+    <tr> 
+      <td valign="TOP">linestart</td>
+        <td valign="TOP">Used to parse the output of the pcli
+          command. It defaults to <code>&quot;P:</code>.  The parser already
+          knows about / and \\, this property is useful in cases where the
+          repository is accessed on a Windows platform via a drive letter
+          mapping.</td>
+      <td valign="TOP">No</td>
+    </tr>
 </table>
 <h3><a name="nested">Nested Elements</a></h3>
 
@@ -230,6 +248,8 @@ repository from two projects using nested &lt;pvcsproject&gt; elements.
   Total time: 22 seconds</pre>
 
 <hr WIDTH="100%">
-PVCS is a registered trademark of MERANT.
+<p align="center">Copyright &copy; 2001-2002 Apache Software
+Foundation. All rights Reserved.</p>
+<p>PVCS is a registered trademark of MERANT.</p>
 </body>
 </html>

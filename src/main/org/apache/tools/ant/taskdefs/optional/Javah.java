@@ -71,8 +71,9 @@ import java.util.StringTokenizer;
 import java.util.Enumeration;
 
 /**
- * Task to generate JNI header files using javah. This task can take the following
- * arguments:
+ * Generates JNI header files using javah.
+ *
+ * This task can take the following arguments:
  * <ul>
  * <li>classname - the fully-qualified name of a class</li>
  * <li>outputFile - Concatenates the resulting header or source files for all
@@ -118,10 +119,16 @@ public class Javah extends Task {
     //private Path extdirs;
     private static String lSep = System.getProperty("line.separator");
 
+    /**
+     * the fully-qualified name of the class (or classes, separated by commas).
+     */
     public void setClass(String cls) {
         this.cls = cls;
     }
 
+    /**
+     * Adds class to process.
+     */
     public ClassArgument createClass() {
         ClassArgument ga = new ClassArgument();
         classes.addElement(ga);
@@ -152,6 +159,9 @@ public class Javah extends Task {
         this.destDir = destDir;
     }
 
+    /**
+     * the classpath to use.
+     */
     public void setClasspath(Path src) {
         if (classpath == null) {
             classpath = src;
@@ -159,6 +169,10 @@ public class Javah extends Task {
             classpath.append(src);
         }
     }
+
+    /**
+     * Path to use for classpath.
+     */
     public Path createClasspath() {
         if (classpath == null) {
             classpath = new Path(project);
@@ -167,12 +181,16 @@ public class Javah extends Task {
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Adds a reference to a classpath defined elsewhere.
+     * @todo this needs to be documented in the HTML docs
      */
     public void setClasspathRef(Reference r) {
         createClasspath().setRefid(r);
     }
 
+    /**
+     * location of bootstrap class files.
+     */
     public void setBootclasspath(Path src) {
         if (bootclasspath == null) {
             bootclasspath = src;
@@ -180,6 +198,10 @@ public class Javah extends Task {
             bootclasspath.append(src);
         }
     }
+
+    /**
+     * Adds path to bootstrap class files.
+     */
     public Path createBootclasspath() {
         if (bootclasspath == null) {
             bootclasspath = new Path(project);
@@ -188,7 +210,8 @@ public class Javah extends Task {
     }
 
     /**
-     * Adds a reference to a CLASSPATH defined elsewhere.
+     * Adds a reference to a classpath defined elsewhere.
+     * @todo this needs to be documented in the HTML
      */
     public void setBootClasspathRef(Reference r) {
         createBootclasspath().setRefid(r);
@@ -217,35 +240,39 @@ public class Javah extends Task {
     //}
 
     /**
-     * Set the output file name.
+     * Concatenates the resulting header or source files for all
+     * the classes listed into this file.
      */
     public void setOutputFile(File outputFile) {
         this.outputFile = outputFile;
     }
 
     /**
-     * Set the force-write flag.
+     * If true, output files should always be written (JDK1.2 only).
      */
     public void setForce(boolean force) {
         this.force = force;
     }
 
     /**
-     * Set the old flag.
+     * If true, specifies that old JDK1.0-style header files should be
+     * generated.
+     * (otherwise output file contain JNI-style native method function prototypes) (JDK1.2 only)
      */
     public void setOld(boolean old) {
         this.old = old;
     }
 
     /**
-     * Set the stubs flag.
+     * If true, generate C declarations from the Java object file (used with old).
      */
     public void setStubs(boolean stubs) {
         this.stubs = stubs;
     }
 
     /**
-     * Set the verbose flag.
+     * If true, causes Javah to print a message concerning
+     * the status of the generated files.
      */
     public void setVerbose(boolean verbose) {
         this.verbose = verbose;

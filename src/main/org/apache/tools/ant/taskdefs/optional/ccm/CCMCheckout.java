@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,7 +55,8 @@
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
 /**
- * Task to perform Checkout command to Continuus
+ * Performs Continuus checkout command.
+ *
  * @author Benoit Moussaud benoit.moussaud@criltelecom.com
  */
 public class CCMCheckout extends CCMCheck {
