@@ -4,6 +4,12 @@ if [ -f $HOME/.antrc ] ; then
   . $HOME/.antrc
 fi
 
+# Cygwin support.
+if [ "$OSTYPE" == 'cygwin32' ]; then
+  ANT_HOME=`cygpath -u $ANT_HOME`
+  JAVA_HOME=`cygpath -u $JAVA_HOME`
+fi
+
 if [ "$ANT_HOME" = "" ] ; then
   # try to find ANT
   if [ -d /opt/ant ] ; then 
@@ -65,6 +71,11 @@ if [ "$JIKESPATH" != "" ] ; then
   else
     ANT_OPTS=-Djikes.class.path=$JIKESPATH
   fi
+fi
+
+# More Cygwin support
+if [ "$OSTYPE" == 'cygwin32' ]; then
+  LOCALCLASSPATH=`cygpath -p -w "$LOCALCLASSPATH"`
 fi
 
 $JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} $ANT_OPTS org.apache.tools.ant.Main $@
