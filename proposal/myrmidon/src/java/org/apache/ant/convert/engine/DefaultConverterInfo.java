@@ -5,31 +5,45 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.convert;
-
-import org.apache.avalon.camelot.Info;
+package org.apache.ant.convert.engine;
 
 /**
  * This info represents meta-information about a converter.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public interface ConverterInfo
-    extends Info
+public class DefaultConverterInfo
+    implements ConverterInfo
 {
+    protected final String            m_source;
+    protected final String            m_destination;
+
+    public DefaultConverterInfo( final String source, final String destination )
+    {
+        m_source = source;
+        m_destination = destination;
+    } 
+
     /**
      * Retrieve the source type from which it can convert.
      * NB: Should this be an array ????
      *
      * @return the classname from which object produced
      */
-    String getSource();
-
+    public String getSource()
+    {
+        return m_source;
+    }
+    
     /**
      * Retrieve the type to which the converter converts.
      * NB: Should this be an array ????
      *
      * @return the classname of the produced object
      */
-    String getDestination();
+    public String getDestination()
+    {
+        return m_destination;
+    }
 }
+

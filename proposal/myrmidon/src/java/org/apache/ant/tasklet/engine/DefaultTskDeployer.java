@@ -15,9 +15,9 @@ import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
-import org.apache.ant.convert.ConverterEngine;
-import org.apache.ant.convert.ConverterRegistry;
-import org.apache.ant.convert.DefaultConverterInfo;
+import org.apache.ant.convert.engine.ConverterEngine;
+import org.apache.ant.convert.engine.ConverterRegistry;
+import org.apache.ant.convert.engine.DefaultConverterInfo;
 import org.apache.avalon.Component;
 import org.apache.avalon.ComponentManager;
 import org.apache.avalon.ComponentManagerException;
@@ -75,7 +75,7 @@ public class DefaultTskDeployer
         m_taskletRegistry = taskletEngine.getRegistry();
 
         final ConverterEngine converterEngine = (ConverterEngine)componentManager.
-            lookup( "org.apache.ant.convert.ConverterEngine" );
+            lookup( "org.apache.ant.convert.engine.ConverterEngine" );
 
         m_converterInfoRegistry = converterEngine.getInfoRegistry();
         m_converterRegistry = converterEngine.getRegistry();

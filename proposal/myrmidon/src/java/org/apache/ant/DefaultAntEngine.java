@@ -10,7 +10,7 @@ package org.apache.ant;
 import java.io.File;
 import java.util.Properties;
 import org.apache.ant.configuration.Configurer;
-import org.apache.ant.convert.ConverterEngine;
+import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.project.ProjectBuilder;
 import org.apache.ant.project.ProjectEngine;
@@ -158,7 +158,7 @@ public class DefaultAntEngine
 
         //create all the default properties for components
         defaults.setProperty( "ant.comp.converter",
-                              "org.apache.ant.convert.DefaultConverterEngine" );
+                              "org.apache.ant.convert.engine.DefaultConverterEngine" );
         defaults.setProperty( "ant.comp.datatype",
                               "org.apache.ant.tasklet.engine.DefaultDataTypeEngine" );
         defaults.setProperty( "ant.comp.tasklet",
@@ -186,7 +186,8 @@ public class DefaultAntEngine
 
         componentManager.put( "org.apache.ant.tasklet.engine.TaskletEngine", m_taskletEngine );
         componentManager.put( "org.apache.ant.project.ProjectEngine", m_projectEngine );
-        componentManager.put( "org.apache.ant.convert.ConverterEngine", m_converterEngine );
+        componentManager.put( "org.apache.ant.convert.engine.ConverterEngine", 
+                              m_converterEngine );
         componentManager.put( "org.apache.ant.convert.Converter", m_converterEngine );
         componentManager.put( "org.apache.ant.tasklet.engine.DataTypeEngine", m_dataTypeEngine );
         componentManager.put( "org.apache.ant.project.ProjectBuilder", m_builder );
