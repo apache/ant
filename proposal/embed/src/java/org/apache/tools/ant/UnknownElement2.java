@@ -115,7 +115,7 @@ public class UnknownElement2 extends UnknownElement {
         return elementName;
     }
 
-    protected RuntimeConfigurable getWrapper() {
+    public RuntimeConfigurable getWrapper() {
         return wrapper;
     }
 
