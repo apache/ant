@@ -100,6 +100,8 @@ Fixed bugs:
 * Ant 1.6.0 cannot run build scripts in directories with non-ASCII names.
   Bugzilla Report 26642.
 
+* filterset used by filtertask doesn't respect loglevel. Bugzilla Report 27568.
+
 Other changes:
 --------------
 
