@@ -406,18 +406,12 @@ public final class FixCrLfFilter
          * Does this filter want to block edits on the last character returned by read()?
          */
         public boolean editsBlocked() {
-            if (in instanceof SimpleFilterReader) {
-                return ((SimpleFilterReader) in).editsBlocked();
-            }
-            return false;
+            return in instanceof SimpleFilterReader
+                && ((SimpleFilterReader) in).editsBlocked();
         }
 
         public int read() throws java.io.IOException {
-            if (preemptIndex > 0) {
-                return preempt[--preemptIndex];
-            }
-
-            return in.read();
+            return preemptIndex > 0 ? preempt[--preemptIndex] : in.read();
         }
 
         public void close() throws java.io.IOException {
@@ -457,10 +451,7 @@ public final class FixCrLfFilter
                 count++;
             }
             // if at EOF with no characters in the buffer, return EOF
-            if (count == 0 && c == -1) {
-                return -1;
-            }
-            return count;
+            return (count == 0 && c == -1) ? -1 : count;
         }
     }
 
@@ -610,7 +601,6 @@ public final class FixCrLfFilter
             } else {
                 normalizedEOL--;
             }
-
             return thisChar;
         }
     }
@@ -637,7 +627,6 @@ public final class FixCrLfFilter
                     push(eol, 1, eol.length - 1);
                 }
             }
-            
             lastChar = thisChar;
             return thisChar;
         }
@@ -654,14 +643,10 @@ public final class FixCrLfFilter
             int thisChar = super.read();
 
             // if source is EOF but last character was NOT ctrl-z, return ctrl-z
-            if (thisChar == -1) {
-                if (lastChar != CTRLZ) {
-                    lastChar = CTRLZ;
-                    thisChar = CTRLZ;
-                }
-            } else {
-                lastChar = thisChar;
+            if (thisChar == -1 && lastChar != CTRLZ) {
+                thisChar = CTRLZ;
             }
+            lastChar = thisChar;
             return thisChar;
         }
     }
@@ -790,7 +775,6 @@ public final class FixCrLfFilter
                     for (;width > 1; width--) {
                         push(' ');
                     }
-
                     c = ' ';
                 }
                 columnNumber += width;
@@ -873,13 +857,13 @@ public final class FixCrLfFilter
             if (this.equals(ASIS)) {
                 return ASIS;
             }
-            if (this.equals(CR) || this.equals(UNIX)) {
+            if (this.equals(CR) || this.equals(MAC)) {
                 return CR;
             }
             if (this.equals(CRLF) || this.equals(DOS)) {
                 return CRLF;
             }
-            if (this.equals(LF) || this.equals(MAC)) {
+            if (this.equals(LF) || this.equals(UNIX)) {
                 return LF;
             }
             throw new IllegalStateException("No replacement for " + this);
