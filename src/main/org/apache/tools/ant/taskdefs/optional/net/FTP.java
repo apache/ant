@@ -206,29 +206,31 @@ public class FTP
                     if (!file.getName().equals(".") 
                         && !file.getName().equals("..")) {
                         if (file.isDirectory()) {
-                            String name = file.getName();
+                            String name = vpath + file.getName();
                             if (isIncluded(name)) {
                                 if (!isExcluded(name)) {
                                     dirsIncluded.addElement(name);
                                     if (fast) {
-                                        scandir(name, 
-                                                vpath + name + File.separator,
-                                                fast);
+                                        scandir(file.getName(), 
+                                                name + File.separator, fast);
                                     }
                                 } else {
                                     dirsExcluded.addElement(name);
+                                    if (fast && couldHoldIncluded(name)) {
+                                        scandir(file.getName(), 
+                                                name + File.separator, fast);
+                                    }
                                 }
                             } else {
                                 dirsNotIncluded.addElement(name);
                                 if (fast && couldHoldIncluded(name)) {
-                                    scandir(name, 
-                                            vpath + name + File.separator, 
-                                            fast);
+                                    scandir(file.getName(), 
+                                            name + File.separator, fast);
                                 }
                             }
                             if (!fast) {
-                                scandir(name, vpath + name + File.separator, 
-                                        fast);
+                                scandir(file.getName(), 
+                                        name + File.separator, fast);
                             }
                         } else {
                             if (file.isFile()) {
