@@ -329,7 +329,7 @@ public abstract class AbstractFileSet extends DataType
 
     /**
      * Whether default exclusions should be used or not.
-     * @since Ant 1.7
+     * @since Ant 1.6.3
      */
     public synchronized boolean getDefaultexcludes() {
         return (isReference())
