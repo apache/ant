@@ -37,6 +37,11 @@ element name. This will return a list of all instances of the nested element.
 The instances in this list may be accessed by an integer index.
 </p>
 
+<p><b>Note:</b> Ant will turn all attribute and element names into all
+lowercase names, so even if you use name="SomeAttribute", you'll have
+to use "someattribute" to retrieve the attribute's value from the
+<code>attributes</code> collection.</p>
+
 <p>The name "project" is a pre-defined reference to the Ant Project. For
 more information on writing scripts, please refer to the
 <a href="script.html">&lt;script&gt;</a> task
