@@ -62,60 +62,69 @@ import org.apache.tools.ant.types.RegularExpression;
 import org.apache.tools.ant.util.regexp.Regexp;
 
 /**
- * Filter Reader to fetch only those lines that contain user specified
+ * Filter which includes only those lines that contain the user-specified
  * regular expression matching strings.
  *
  * Example:
- * =======
- *
- * &lt;linecontainsregexp&gt;
+ * <pre>&lt;linecontainsregexp&gt;
  *   &lt;regexp pattern=&quot;foo*&quot;&gt;
- * &lt;/linecontainsregexp&gt;
+ * &lt;/linecontainsregexp&gt;</pre>
  *
  * Or:
  *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContainsRegExp&quot;&gt;
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.LineContainsRegExp&quot;&gt;
  *    &lt;param type=&quot;regexp&quot; value=&quot;foo*&quot;/&gt;
- * &lt;/filterreader&gt;
+ * &lt;/filterreader&gt;</pre>
  *
- * This will fetch all those lines that contain the pattern foo
+ * This will fetch all those lines that contain the pattern <code>foo</code>
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class LineContainsRegExp
     extends BaseParamFilterReader
     implements ChainableReader {
-    /** contains key */
+    /** Parameter name for the regular expression to filter on. */
     private static final String REGEXP_KEY = "regexp";
 
-    /** Vector that holds the strings that input lines must contain. */
+    /** Vector that holds the expressions that input lines must contain. */
     private Vector regexps = new Vector();
 
-    /** Currently read in line. */
+    /** 
+     * Remaining line to be read from this filter, or <code>null</code> if
+     * the next call to <code>read()</code> should read the original stream
+     * to find the next matching line.
+     */
     private String line = null;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public LineContainsRegExp() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public LineContainsRegExp(final Reader in) {
         super(in);
     }
 
     /**
-     * Choose only those lines that contains
-     * user defined values.
+     * Returns the next character in the filtered stream, only including
+     * lines from the original stream which match all of the specified
+     * regular expressions.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -157,29 +166,51 @@ public final class LineContainsRegExp
     }
 
     /**
-     * Add a contains element.
+     * Adds a <code>regexp</code> element.
+     * 
+     * @param regExp The <code>regexp</code> element to add. 
+     *               Must not be <code>null</code>.
      */
     public final void addConfiguredRegexp(final RegularExpression regExp) {
         this.regexps.addElement(regExp);
     }
 
     /**
-     * Set regexps vector.
+     * Sets the vector of regular expressions which must be contained within 
+     * a line read from the original stream in order for it to match this 
+     * filter.
+     * 
+     * @param regexps A vector of regular expressions which must be contained 
+     * within a line in order for it to match in this filter. Must not be 
+     * <code>null</code>.
      */
     private void setRegexps(final Vector regexps) {
         this.regexps = regexps;
     }
 
     /**
-     * Get regexps vector.
+     * Returns the vector of regular expressions which must be contained within 
+     * a line read from the original stream in order for it to match this 
+     * filter.
+     * 
+     * @return the vector of regular expressions which must be contained within 
+     * a line read from the original stream in order for it to match this 
+     * filter. The returned object is "live" - in other words, changes made to 
+     * the returned object are mirrored in the filter.
      */
     private final Vector getRegexps() {
         return regexps;
     }
 
     /**
-     * Create a new LineContainsRegExp using the passed in
+     * Creates a new LineContainsRegExp using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         LineContainsRegExp newFilter = new LineContainsRegExp(rdr);
@@ -189,7 +220,7 @@ public final class LineContainsRegExp
     }
 
     /**
-     * Parse params to add user defined contains strings.
+     * Parses parameters to add user defined regular expressions.
      */
     private final void initialize() {
         Parameter[] params = getParameters();

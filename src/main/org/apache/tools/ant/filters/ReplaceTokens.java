@@ -60,67 +60,73 @@ import java.util.Hashtable;
 import org.apache.tools.ant.types.Parameter;
 
 /**
- * Replace tokens with user supplied values
+ * Replaces tokens in the original input with user-supplied values
  *
- * Example Usage:
- * =============
+ * Example:
  *
- * &lt;replacetokens begintoken=&quot;#&quot; endtoken=&quot;#&quot;&gt;
+ * <pre>&lt;replacetokens begintoken=&quot;#&quot; endtoken=&quot;#&quot;&gt;
  *   &lt;token key=&quot;DATE&quot; value=&quot;${TODAY}&quot;/&gt;
- * &lt;/replacetokens&gt;
+ * &lt;/replacetokens&gt;</pre>
  *
  * Or:
  *
- * &lt;filterreader classname="org.apache.tools.ant.filters.ReplaceTokens"&gt;
- *    &lt;param type="tokenchar" name="begintoken" value="#"/&gt;
- *    &lt;param type="tokenchar" name="endtoken" value="#"/&gt;
- *    &lt;param type="token" name="DATE" value="${TODAY}"/&gt;
- * &lt;/filterreader&gt;
+ * <pre>&lt;filterreader classname="org.apache.tools.ant.filters.ReplaceTokens"&gt;
+ *   &lt;param type="tokenchar" name="begintoken" value="#"/&gt;
+ *   &lt;param type="tokenchar" name="endtoken" value="#"/&gt;
+ *   &lt;param type="token" name="DATE" value="${TODAY}"/&gt;
+ * &lt;/filterreader&gt;</pre>
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class ReplaceTokens
     extends BaseParamFilterReader
     implements ChainableReader {
-    /** Default begin token character. */
+    /** Default "begin token" character. */
     private static final char DEFAULT_BEGIN_TOKEN = '@';
 
-    /** Default end token character. */
+    /** Default "end token" character. */
     private static final char DEFAULT_END_TOKEN = '@';
 
     /** Data that must be read from, if not null. */
     private String queuedData = null;
 
-    /** Hashtable to hold the replacee-replacer pairs. */
+    /** Hashtable to hold the replacee-replacer pairs (String to String). */
     private Hashtable hash = new Hashtable();
 
-    /** Begin token. */
+    /** Character marking the beginning of a token. */
     private char beginToken = DEFAULT_BEGIN_TOKEN;
 
-    /** End token. */
+    /** Character marking the end of a token. */
     private char endToken = DEFAULT_END_TOKEN;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public ReplaceTokens() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public ReplaceTokens(final Reader in) {
         super(in);
     }
 
     /**
-     * Replace tokens with values.
+     * Returns the next character in the filtered stream, replacing tokens
+     * from the original stream.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -169,57 +175,80 @@ public final class ReplaceTokens
     }
 
     /**
-     * Set begin token.
+     * Sets the "begin token" character.
+     * 
+     * @param beginToken the character used to denote the beginning of a token
      */
     public final void setBeginToken(final char beginToken) {
         this.beginToken = beginToken;
     }
 
     /**
-     * Get begin token.
+     * Returns the "begin token" character.
+     * 
+     * @return the character used to denote the beginning of a token
      */
     private final char getBeginToken() {
         return beginToken;
     }
 
     /**
-     * Set end token.
+     * Sets the "end token" character.
+     * 
+     * @param endToken the character used to denote the end of a token
      */
     public final void setEndToken(final char endToken) {
         this.endToken = endToken;
     }
 
     /**
-     * Get begin token.
+     * Returns the "end token" character.
+     * 
+     * @return the character used to denote the end of a token
      */
     private final char getEndToken() {
         return endToken;
     }
 
     /**
-     * Add a token element.
+     * Adds a token element to the map of tokens to replace.
+     * 
+     * @param token The token to add to the map of replacements.
+     *              Must not be <code>null</code>.
      */
     public final void addConfiguredToken(final Token token) {
         hash.put(token.getKey(), token.getValue());
     }
 
     /**
-     * Set the tokens.
+     * Sets the map of tokens to replace.
+     * 
+     * @param hash A map (String->String) of token keys to replacement
+     * values. Must not be <code>null</code>.
      */
     private void setTokens(final Hashtable hash) {
         this.hash = hash;
     }
 
     /**
-     * Get the tokens.
+     * Returns the map of tokens which will be replaced.
+     * 
+     * @return a map (String->String) of token keys to replacement
+     * values
      */
     private final Hashtable getTokens() {
         return hash;
     }
 
     /**
-     * Create a new ReplaceTokens using the passed in
+     * Creates a new ReplaceTokens using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         ReplaceTokens newFilter = new ReplaceTokens(rdr);
@@ -231,7 +260,7 @@ public final class ReplaceTokens
     }
 
     /**
-     * Initialize tokens and load the replacee-replacer hashtable.
+     * Initializes tokens and loads the replacee-replacer hashtable.
      */
     private final void initialize() {
         Parameter[] params = getParameters();
@@ -261,35 +290,43 @@ public final class ReplaceTokens
      */
     public static class Token {
 
-        /** token key */
+        /** Token key */
         private String key;
 
-        /** token value */
+        /** Token value */
         private String value;
 
         /**
-         * Set the token key
+         * Sets the token key
+         * 
+         * @param key The key for this token. Must not be <code>null</code>.
          */
         public final void setKey(String key) {
             this.key = key;
         }
 
         /**
-         * Set the token value
+         * Sets the token value
+         * 
+         * @param value The value for this token. Must not be <code>null</code>.
          */
         public final void setValue(String value) {
             this.value = value;
         }
 
         /**
-         * Get the token key
+         * Returns the key for this token.
+         * 
+         * @return the key for this token
          */
         public final String getKey() {
             return key;
         }
 
         /**
-         * Get the token value
+         * Returns the value for this token.
+         * 
+         * @return the value for this token
          */
         public final String getValue() {
             return value;

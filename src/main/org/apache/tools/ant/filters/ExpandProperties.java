@@ -59,17 +59,13 @@ import java.io.Reader;
 import org.apache.tools.ant.Project;
 
 /**
- * Expand Ant properties, if any, in the data.
- *
- * Example:
- * =======
- *
- * &lt;expandproperties/&gt;
- *
+ * Expands Ant properties, if any, in the data.
+ * <p>
+ * Example:<br>
+ * <pre>&lt;expandproperties/&gt;</pre>
  * Or:
- *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;
- *
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.ExpandProperties&quot;/&gt;</pre>
+ * 
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class ExpandProperties
@@ -79,26 +75,35 @@ public final class ExpandProperties
     private String queuedData = null;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public ExpandProperties() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public ExpandProperties(final Reader in) {
         super(in);
     }
 
     /**
-     * Prefix lines with user defined prefix.
+     * Returns the next character in the filtered stream. The original
+     * stream is first read in fully, and the Ant properties are expanded.
+     * The results of this expansion are then queued so they can be read
+     * character-by-character.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
 
@@ -128,8 +133,14 @@ public final class ExpandProperties
     }
 
     /**
-     * Create a new PrefixLines using the passed in
+     * Creates a new ExpandProperties filter using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         ExpandProperties newFilter = new ExpandProperties(rdr);

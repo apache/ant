@@ -60,12 +60,14 @@ import org.apache.tools.ant.types.Parameter;
 
 /**
  * Filter to flatten the stream to a single line.
+ * 
+ * Example:
  *
- * &lt;striplinebreaks/&gt;
+ * <pre>&lt;striplinebreaks/&gt;</pre>
  *
  * Or:
  *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineBreaks&quot;/&gt;
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineBreaks&quot;/&gt;</pre>
  *
  * @author Steve Loughran
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
@@ -74,43 +76,45 @@ public final class StripLineBreaks
     extends BaseParamFilterReader
     implements ChainableReader {
     /**
-     * Linebreaks. What do to on funny IBM mainframes with odd line endings?
+     * Line-breaking characters.
+     * What should we do on funny IBM mainframes with odd line endings?
      */
     private static final String DEFAULT_LINE_BREAKS = "\r\n";
 
-    /**
-     * Linebreaks key that can be set via param element of
-     * AntFilterReader
-     */
+    /** Parameter name for the line-breaking characters parameter. */
     private static final String LINE_BREAKS_KEY = "linebreaks";
 
-
-    /** Holds the characters that are recognized as line breaks. */
+    /** The characters that are recognized as line breaks. */
     private String lineBreaks = DEFAULT_LINE_BREAKS;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public StripLineBreaks() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public StripLineBreaks(final Reader in) {
         super(in);
     }
 
     /**
-     * If the character that is being read in is a
-     * line break character, ignore it and move on to the
-     * next one.
+     * Returns the next character in the filtered stream, only including
+     * characters not in the set of line-breaking characters.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -130,22 +134,34 @@ public final class StripLineBreaks
     }
 
     /**
-     * Set the line break characters.
+     * Sets the line-breaking characters.
+     * 
+     * @param lineBreaks A String containing all the characters to be
+     *                   considered as line-breaking.
      */
     public final void setLineBreaks(final String lineBreaks) {
         this.lineBreaks = lineBreaks;
     }
 
     /**
-     * Get the line breaks characters
+     * Returns the line-breaking characters as a String.
+     * 
+     * @return a String containing all the characters considered as 
+     *         line-breaking
      */
     private final String getLineBreaks() {
         return lineBreaks;
     }
 
     /**
-     * Create a new StripLineBreaks object using the passed in
+     * Creates a new StripLineBreaks using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         StripLineBreaks newFilter = new StripLineBreaks(rdr);
@@ -155,7 +171,7 @@ public final class StripLineBreaks
     }
 
     /**
-     * Line break characters set using the param element.
+     * Parses the parameters to set the line-breaking characters.
      */
     private final void initialize() {
         String userDefinedLineBreaks = null;

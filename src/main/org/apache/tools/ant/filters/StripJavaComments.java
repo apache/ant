@@ -57,8 +57,8 @@ import java.io.IOException;
 import java.io.Reader;
 
 /**
- * This is a java comment and string stripper reader that filters
- * these lexical tokens out for purposes of simple Java parsing.
+ * This is a Java comment and string stripper reader that filters
+ * those lexical tokens out for purposes of simple Java parsing.
  * (if you have more complex Java parsing needs, use a real lexer).
  * Since this class heavily relies on the single char read function,
  * you are reccomended to make it work on top of a buffered reader.
@@ -66,31 +66,47 @@ import java.io.Reader;
 public final class StripJavaComments
     extends BaseFilterReader
     implements ChainableReader {
+        
+    /** 
+     * The read-ahead character, used for effectively pushing a single
+     * character back. -1 indicates that no character is in the buffer.
+     */
     private int readAheadCh = -1;
 
+    /** 
+     * Whether or not the parser is currently in the middle of a string
+     * literal.
+     */
     private boolean inString = false;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public StripJavaComments() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public StripJavaComments(final Reader in) {
         super(in);
     }
 
     /**
-     * Filter out Java Style comments
+     * Returns the next character in the filtered stream, not including
+     * Java comments.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
         int ch = -1;
@@ -137,9 +153,16 @@ public final class StripJavaComments
     }
 
     /**
-     * Create a new StripJavaComments object using the passed in
+     * Creates a new StripJavaComments using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
+
     public final Reader chain(final Reader rdr) {
         StripJavaComments newFilter = new StripJavaComments(rdr);
         return newFilter;

@@ -60,28 +60,23 @@ import java.lang.reflect.Method;
 
 
 /**
- * Assemble the constants declared in a Java class in
- * key1=value1(line separator)key2=value2
- * format
- *
+ * Assembles the constants declared in a Java class in
+ * <code>key1=value1(line separator)key2=value2</code>
+ * format.
+ *<p>
  * Notes:
- * =====
- * 1. This filter uses the BCEL external toolkit.
- * 2. This assembles only those constants that are not created
- *    using the syntax new whatever().
- * 3. This assembles constants declared using the basic datatypes
- *    and String only.
- * 4. The access modifiers of the declared constants do not matter.
- *
- * Example:
- * =======
- *
- * &lt;classconstants/&gt;
- *
+ * <ol>
+ * <li>This filter uses the BCEL external toolkit.
+ * <li>This assembles only those constants that are not created
+ * using the syntax <code>new whatever()</code>
+ * <li>This assembles constants declared using the basic datatypes
+ * and String only.</li>
+ * <li>The access modifiers of the declared constants do not matter.</li>
+ *</ol>
+ * Example:<br>
+ * <pre>&lt;classconstants/&gt;</pre>
  * Or:
- *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.ClassConstants&quot;/&gt;
- *
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.ClassConstants&quot;/&gt;</pre>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class ClassConstants
@@ -91,30 +86,39 @@ public final class ClassConstants
     private String queuedData = null;
 
     /** Helper Class to be invoked via reflection. */
-    private String JAVA_CLASS_HELPER =
+    private static final String JAVA_CLASS_HELPER =
         "org.apache.tools.ant.filters.util.JavaClassHelper";
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public ClassConstants() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader. The contents of the passed-in reader
+     * are expected to be the name of the class from which to produce a 
+     * list of constants.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public ClassConstants(final Reader in) {
         super(in);
     }
 
     /**
-     * Read and assemble the constants declared in a class file.
+     * Reads and assembles the constants declared in a class file.
+     * 
+     * @return the next character in the list of constants, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading, or if the constants for the specified class cannot
+     * be read (for example due to the class not being found).
      */
     public final int read() throws IOException {
 
@@ -148,7 +152,7 @@ public final class ClassConstants
                         final Object[] args = {
                             bytes
                         };
-                        // getConstants is a staic method, no need to
+                        // getConstants is a static method, no need to
                         // pass in the object
                         final StringBuffer sb = (StringBuffer)
                                 getConstants.invoke(null, args);
@@ -174,8 +178,14 @@ public final class ClassConstants
     }
 
     /**
-     * Create a new ClassConstants using the passed in
+     * Creates a new ClassConstants using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         ClassConstants newFilter = new ClassConstants(rdr);

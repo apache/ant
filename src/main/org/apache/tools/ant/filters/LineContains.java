@@ -60,62 +60,72 @@ import java.util.Vector;
 import org.apache.tools.ant.types.Parameter;
 
 /**
- * Filter Reader to fetch only those lines that contain user specified
+ * Filter which includes only those lines that contain all the user-specified
  * strings.
  *
  * Example:
- * =======
  *
- * &lt;linecontains&gt;
+ * <pre>&lt;linecontains&gt;
  *   &lt;contains value=&quot;foo&quot;&gt;
  *   &lt;contains value=&quot;bar&quot;&gt;
- * &lt;/linecontains&gt;
+ * &lt;/linecontains&gt;</pre>
  *
  * Or:
  *
- * &lt;filterreader classname="org.apache.tools.ant.filters.LineContains"&gt;
+ * <pre>&lt;filterreader classname="org.apache.tools.ant.filters.LineContains"&gt;
  *    &lt;param type="contains" value="foo"/&gt;
  *    &lt;param type="contains" value="bar"/&gt;
- * &lt;/filterreader&gt;
+ * &lt;/filterreader&gt;</pre>
  *
- * This will fetch all those lines that contain foo and bar
+ * This will include only those lines that contain <code>foo</code> and 
+ * <code>bar</code>.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class LineContains
     extends BaseParamFilterReader
     implements ChainableReader {
-    /** contains key */
+    /** Parameter name for the words to filter on. */
     private static final String CONTAINS_KEY = "contains";
 
     /** Vector that holds the strings that input lines must contain. */
     private Vector contains = new Vector();
 
-    /** Currently read in line. */
+    /** 
+     * Remaining line to be read from this filter, or <code>null</code> if
+     * the next call to <code>read()</code> should read the original stream
+     * to find the next matching line.
+     */
     private String line = null;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public LineContains() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public LineContains(final Reader in) {
         super(in);
     }
 
     /**
-     * Choose only those lines that contains
-     * user defined values.
+     * Returns the next character in the filtered stream, only including
+     * lines from the original stream which contain all of the specified words.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -154,29 +164,48 @@ public final class LineContains
     }
 
     /**
-     * Add a contains element.
+     * Adds a <code>contains</code> element.
+     * 
+     * @param contains The <code>contains</code> element to add. 
+     *                 Must not be <code>null</code>.
      */
     public final void addConfiguredContains(final Contains contains) {
         this.contains.addElement(contains.getValue());
     }
 
     /**
-     * Set contains vector.
+     * Sets the vector of words which must be contained within a line read
+     * from the original stream in order for it to match this filter.
+     * 
+     * @param contains A vector of words which must be contained within a line
+     * in order for it to match in this filter. Must not be <code>null</code>.
      */
     private void setContains(final Vector contains) {
         this.contains = contains;
     }
 
     /**
-     * Get contains vector.
+     * Returns the vector of words which must be contained within a line read
+     * from the original stream in order for it to match this filter.
+     * 
+     * @return the vector of words which must be contained within a line read
+     * from the original stream in order for it to match this filter. The
+     * returned object is "live" - in other words, changes made to the
+     * returned object are mirrored in the filter.
      */
     private final Vector getContains() {
         return contains;
     }
 
     /**
-     * Create a new LineContains using the passed in
+     * Creates a new LineContains using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         LineContains newFilter = new LineContains(rdr);
@@ -186,7 +215,7 @@ public final class LineContains
     }
 
     /**
-     * Parse params to add user defined contains strings.
+     * Parses the parameters to add user-defined contains strings.
      */
     private final void initialize() {
         Parameter[] params = getParameters();
@@ -208,14 +237,19 @@ public final class LineContains
         private String value;
 
         /**
-         * Set the contains string
+         * Sets the contains string
+         * 
+         * @param contains The contains string to set. 
+         *                 Must not be <code>null</code>.
          */
         public final void setValue(String contains) {
             value = contains;
         }
 
         /**
-         * Get the contains string
+         * Returns the contains string.
+         * 
+         * @return the contains string for this element
          */
         public final String getValue() {
             return value;

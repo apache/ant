@@ -59,7 +59,7 @@ import org.apache.tools.ant.types.Parameter;
 import org.apache.tools.ant.types.Parameterizable;
 
 /**
- * Parameterized Base class for core filter readers.
+ * Parameterized base class for core filter readers.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
@@ -70,32 +70,41 @@ public abstract class BaseParamFilterReader
     private Parameter[] parameters;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public BaseParamFilterReader() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public BaseParamFilterReader(final Reader in) {
         super(in);
     }
 
     /**
-     * Set Parameters
+     * Sets the parameters used by this filter, and sets
+     * the filter to an uninitialized status.
+     * 
+     * @param parameters The parameters to be used by this filter.
+     *                   Should not be <code>null</code>.
      */
     public final void setParameters(final Parameter[] parameters) {
         this.parameters = parameters;
         setInitialized(false);
     }
 
+    /**
+     * Returns the parameters to be used by this filter.
+     * 
+     * @return the parameters to be used by this filter
+     */
     protected final Parameter[] getParameters() {
         return parameters;
     }

@@ -61,55 +61,61 @@ import org.apache.tools.ant.types.Parameter;
 /**
  * Converts tabs to spaces.
  *
- * Example Usage:
- * =============
+ * Example:
  *
- * &lt;tabtospaces tablength=&quot;8&quot;/&gt;
+ * <pre>&lt;tabtospaces tablength=&quot;8&quot;/&gt;</pre>
  *
  * Or:
  *
- * <filterreader classname=&quot;org.apache.tools.ant.filters.TabsToSpaces&quot;>
- *    <param name=&quot;tablength&quot; value=&quot;8&quot;/>
- * </filterreader>
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.TabsToSpaces&quot;&gt;
+ *   &lt;param name=&quot;tablength&quot; value=&quot;8&quot;/&gt;
+ * &lt;/filterreader&gt;</pre>
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class TabsToSpaces
     extends BaseParamFilterReader
     implements ChainableReader {
-    /** The default tab length is 8 */
+    /** The default tab length. */
     private static final int DEFAULT_TAB_LENGTH = 8;
 
-    /** The name that param recognizes to set the tablength. */
+    /** Parameter name for the length of a tab. */
     private static final String TAB_LENGTH_KEY = "tablength";
 
-    /** Default tab length. */
+    /** Tab length in this filter. */
     private int tabLength = DEFAULT_TAB_LENGTH;
 
-    /** How many more spaces must be returned to replace a tab? */
+    /** The number of spaces still to be read to represent the last-read tab. */
     private int spacesRemaining = 0;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public TabsToSpaces() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public TabsToSpaces(final Reader in) {
         super(in);
     }
 
     /**
-     * Convert tabs with spaces
+     * Returns the next character in the filtered stream, converting tabs
+     * to the specified number of spaces.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -133,22 +139,32 @@ public final class TabsToSpaces
     }
 
     /**
-     * Set the tab length.
+     * Sets the tab length.
+     * 
+     * @param tabLength the number of spaces to be used when converting a tab.
      */
     public final void setTablength(final int tabLength) {
         this.tabLength = tabLength;
     }
 
     /**
-     * Get the tab length
+     * Returns the tab length.
+     * 
+     * @return the number of spaces used when converting a tab
      */
     private final int getTablength() {
         return tabLength;
     }
 
     /**
-     * Create a new TabsToSpaces object using the passed in
+     * Creates a new TabsToSpaces using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         TabsToSpaces newFilter = new TabsToSpaces(rdr);
@@ -158,7 +174,7 @@ public final class TabsToSpaces
     }
 
     /**
-     * Initialize tokens
+     * Parses the parameters to set the tab length.
      */
     private final void initialize() {
         Parameter[] params = getParameters();

@@ -207,13 +207,14 @@ public abstract class BaseFilterReader
     protected final String readLine() throws IOException {
         int ch = in.read();
         
-        if (ch==-1)
+        if (ch == -1) {
             return null;
+        }
             
         StringBuffer line = new StringBuffer();
                 
         while (ch != -1) {
-            line.append ((char)ch);
+            line.append ((char) ch);
             if (ch == '\n') {
                 break;
             }

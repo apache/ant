@@ -59,31 +59,30 @@ import java.io.Reader;
 import org.apache.tools.ant.types.Parameter;
 
 /**
- * Read the last n lines.  Default is last 10 lines.
+ * Reads the last <code>n</code> lines of a stream. (Default is last10 lines.)
  *
  * Example:
- * =======
  *
- * &lt;tailfilter lines=&quot;3&quot;/&gt;
+ * <pre>&lt;tailfilter lines=&quot;3&quot;/&gt;</pre>
  *
  * Or:
  *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.TailFilter&quot;&gt;
- *    &lt;param name=&quot;lines&quot; value=&quot;3&quot;/&gt;
- * &lt;/filterreader&gt;
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.TailFilter&quot;&gt;
+ *   &lt;param name=&quot;lines&quot; value=&quot;3&quot;/&gt;
+ * &lt;/filterreader&gt;</pre>
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class TailFilter
     extends BaseParamFilterReader
     implements ChainableReader {
-    /** The name that param recognizes to set the number of lines. */
+    /** Parameter name for the number of lines to be returned. */
     private static final String LINES_KEY = "lines";
 
     /** Number of lines currently read in. */
     private long linesRead = 0;
 
-    /** Default number of lines returned. */
+    /** Number of lines to be returned in the filtered stream. */
     private long lines = 10;
 
     /** Buffer to hold in characters read ahead. */
@@ -92,34 +91,43 @@ public final class TailFilter
     /** The character position that has been returned from the buffer. */
     private int returnedCharPos = -1;
 
-    /** Has read ahead been completed? */
+    /** Whether or not read-ahead been completed. */
     private boolean completedReadAhead = false;
 
     /** Current index position on the buffer. */
     private int bufferPos = 0;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public TailFilter() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public TailFilter(final Reader in) {
         super(in);
     }
 
     /**
-     * Read ahead and keep in buffer last n lines only at any given
-     * point.  Grow buffer as needed.
+     * Returns the next character in the filtered stream. If the read-ahead
+     * has been completed, the next character in the buffer is returned.
+     * Otherwise, the stream is read to the end and buffered (with the buffer
+     * growing as necessary), then the appropriate position in the buffer is
+     * set to read from.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -176,22 +184,32 @@ public final class TailFilter
     }
 
     /**
-     * Set number of lines to be returned.
+     * Sets the number of lines to be returned in the filtered stream.
+     * 
+     * @param lines the number of lines to be returned in the filtered stream
      */
     public final void setLines(final long lines) {
         this.lines = lines;
     }
 
     /**
-     * Get number of lines to be returned.
+     * Returns the number of lines to be returned in the filtered stream.
+     * 
+     * @return the number of lines to be returned in the filtered stream
      */
     private final long getLines() {
         return lines;
     }
 
     /**
-     * Create a new TailFilter using the passed in
+     * Creates a new TailFilter using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         TailFilter newFilter = new TailFilter(rdr);
@@ -201,7 +219,8 @@ public final class TailFilter
     }
 
     /**
-     * Scan for the lines parameter.
+     * Scans the parameters list for the "lines" parameter and uses
+     * it to set the number of lines to be returned in the filtered stream.
      */
     private final void initialize() {
         Parameter[] params = getParameters();

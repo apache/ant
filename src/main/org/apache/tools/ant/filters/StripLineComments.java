@@ -60,65 +60,71 @@ import java.util.Vector;
 import org.apache.tools.ant.types.Parameter;
 
 /**
- * This is a line comment stripper reader
+ * This filter strips line comments.
  *
  * Example:
- * =======
  *
- * &lt;striplinecomments&gt;
+ * <pre>&lt;striplinecomments&gt;
  *   &lt;comment value=&quot;#&quot;/&gt;
  *   &lt;comment value=&quot;--&quot;/&gt;
  *   &lt;comment value=&quot;REM &quot;/&gt;
  *   &lt;comment value=&quot;rem &quot;/&gt;
  *   &lt;comment value=&quot;//&quot;/&gt;
- * &lt;/striplinecomments&gt;
+ * &lt;/striplinecomments&gt;</pre>
  *
  * Or:
  *
- * &lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineComments&quot;&gt;
- *    &lt;param type=&quot;comment&quot; value="#&quot;/&gt;
- *    &lt;param type=&quot;comment&quot; value=&quot;--&quot;/&gt;
- *    &lt;param type=&quot;comment&quot; value=&quot;REM &quot;/&gt;
- *    &lt;param type=&quot;comment&quot; value=&quot;rem &quot;/&gt;
- *    &lt;param type=&quot;comment&quot; value=&quot;//&quot;/&gt;
- * &lt;/filterreader&gt;
+ * <pre>&lt;filterreader classname=&quot;org.apache.tools.ant.filters.StripLineComments&quot;&gt;
+ *   &lt;param type=&quot;comment&quot; value="#&quot;/&gt;
+ *   &lt;param type=&quot;comment&quot; value=&quot;--&quot;/&gt;
+ *   &lt;param type=&quot;comment&quot; value=&quot;REM &quot;/&gt;
+ *   &lt;param type=&quot;comment&quot; value=&quot;rem &quot;/&gt;
+ *   &lt;param type=&quot;comment&quot; value=&quot;//&quot;/&gt;
+ * &lt;/filterreader&gt;</pre>
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public final class StripLineComments
     extends BaseParamFilterReader
     implements ChainableReader {
-    /** The type that param recognizes to set the comments. */
+    /** Parameter name for the comment prefix. */
     private static final String COMMENTS_KEY = "comment";
 
-    /** Vector that holds comments. */
+    /** Vector that holds the comment prefixes. */
     private Vector comments = new Vector();
 
     /** The line that has been read ahead. */
     private String line = null;
 
     /**
-     * This constructor is a dummy constructor and is
-     * not meant to be used by any class other than Ant's
-     * introspection mechanism. This will close the filter
-     * that is created making it useless for further operations.
+     * Constructor for "dummy" instances.
+     * 
+     * @see BaseFilterReader#BaseFilterReader()
      */
     public StripLineComments() {
         super();
     }
 
     /**
-     * Create a new filtered reader.
+     * Creates a new filtered reader.
      *
-     * @param in  a Reader object providing the underlying stream.
+     * @param in A Reader object providing the underlying stream.
+     *           Must not be <code>null</code>.
      */
     public StripLineComments(final Reader in) {
         super(in);
     }
 
     /**
-     * Read in line by line; Ignore line if it
-     * begins with a comment string.
+     * Returns the next character in the filtered stream, only including
+     * lines from the original stream which don't start with any of the 
+     * specified comment prefixes.
+     * 
+     * @return the next character in the resulting stream, or -1
+     * if the end of the resulting stream has been reached
+     * 
+     * @exception IOException if the underlying stream throws an IOException
+     * during reading     
      */
     public final int read() throws IOException {
         if (!getInitialized()) {
@@ -156,29 +162,43 @@ public final class StripLineComments
     }
 
     /**
-     * Add the Comment element.
+     * Adds a <code>comment</code> element to the list of prefixes.
+     * 
+     * @param comment The <code>comment</code> element to add to the
+     * list of comment prefixes to strip. Must not be <code>null</code>.
      */
     public final void addConfiguredComment(final Comment comment) {
         comments.addElement(comment.getValue());
     }
 
     /**
-     * Set the comments vector.
+     * Sets the list of comment prefixes to strip.
+     * 
+     * @param comments A list of strings, each of which is a prefix
+     * for a comment line. Must not be <code>null</code>.
      */
     private void setComments(final Vector comments) {
         this.comments = comments;
     }
 
     /**
-     * Get the comments vector.
+     * Returns the list of comment prefixes to strip.
+     * 
+     * @return the list of comment prefixes to strip.
      */
     private final Vector getComments() {
         return comments;
     }
 
     /**
-     * Create a new StripLineComments object using the passed in
+     * Creates a new StripLineComments using the passed in
      * Reader for instantiation.
+     * 
+     * @param rdr A Reader object providing the underlying stream.
+     *            Must not be <code>null</code>.
+     * 
+     * @return a new filter based on this configuration, but filtering
+     *         the specified reader
      */
     public final Reader chain(final Reader rdr) {
         StripLineComments newFilter = new StripLineComments(rdr);
@@ -188,7 +208,7 @@ public final class StripLineComments
     }
 
     /**
-     * Comments set using the param element.
+     * Parses the parameters to set the comment prefixes.
      */
     private final void initialize() {
         Parameter[] params = getParameters();
@@ -202,22 +222,27 @@ public final class StripLineComments
     }
 
     /**
-     * The class that holds a comment.
+     * The class that holds a comment representation.
      */
     public static class Comment {
 
-        /** The comment*/
+        /** The prefix for a line comment. */
         private String value;
 
         /**
-         * Set the comment.
+         * Sets the prefix for this type of line comment.
+         * 
+         * @param comment The prefix for a line comment of this type.
+         * Must not be <code>null</code>.
          */
         public final void setValue(String comment) {
             value = comment;
         }
 
         /**
-         * Get the comment.
+         * Returns the prefix for this type of line comment.
+         * 
+         * @return the prefix for this type of line comment.
          */
         public final String getValue() {
             return value;
