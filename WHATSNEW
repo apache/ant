@@ -23,6 +23,8 @@ Fixed bugs:
 
 * If a task got redefined via <taskdef>, it lost its child elements.
 
+* <property>'s classpathref attribute was broken.
+
 Other changes:
 --------------
 
