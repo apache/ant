@@ -965,8 +965,13 @@
   </target>
 
   <target name="rpm_check">
-    <available property="rpm.present"
-               file="/bin/rpm"/>
+    <condition property="rpm.present">
+      <or>
+        <available file="/bin/rpm" />
+        <available file="/usr/local/bin/rpm" />
+        <available file="rpm" filepath="${env.PATH}" />
+      </or>
+    </condition>
   </target>
 
   <target name="rpm" description="--> Build the RPM files for ant"
