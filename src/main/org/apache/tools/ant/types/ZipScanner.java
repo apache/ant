@@ -235,7 +235,7 @@ public class ZipScanner extends DirectoryScanner {
          for (int counter = 0; counter < myentries.size(); counter++) {
              Resource myresource = (Resource) myentries.elementAt(counter);
              if (myresource.isDirectory() && match(myresource.getName())) {
-                 myvector.add(myresource.clone());
+                 myvector.addElement(myresource.clone());
              }
          }
          Resource[] resources = new Resource[myvector.size()];
@@ -308,7 +308,7 @@ public class ZipScanner extends DirectoryScanner {
                     if (entry == null) {
                         break;
                     }
-                    myentries.add(new Resource(entry.getName(),
+                    myentries.addElement(new Resource(entry.getName(),
                                                true,
                                                entry.getTime(),
                                                entry.isDirectory()));
