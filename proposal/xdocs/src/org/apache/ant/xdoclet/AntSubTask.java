@@ -152,7 +152,8 @@ public abstract class AntSubTask extends TemplateSubTask
 
     protected void startProcess() throws XDocletException
     {
-        Collection classes = XJavaDoc.getInstance().getSourceClasses(false, processInnerClasses());
+        XJavaDoc xjd = new XJavaDoc();
+        Collection classes = xjd.getSourceClasses(false, processInnerClasses());
 
         super.startProcess();
     }
