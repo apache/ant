@@ -54,6 +54,7 @@ public class CLIMain
     private final static int INCREMENTAL_OPT = 6;
     private final static int HOME_DIR_OPT = 7;
     private final static int DRY_RUN_OPT = 8;
+    private final static int DEBUG_OPT = 9;
 
     //incompatable options for info options
     private final static int[] INFO_OPT_INCOMPAT = new int[]
@@ -67,7 +68,7 @@ public class CLIMain
     //incompatable options for other logging options
     private final static int[] LOG_OPT_INCOMPAT = new int[]
     {
-        QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT
+        QUIET_OPT, VERBOSE_OPT, LOG_LEVEL_OPT, DEBUG_OPT
     };
 
     //incompatible options for listener options
@@ -169,6 +170,11 @@ public class CLIMain
                                     VERBOSE_OPT,
                                     REZ.getString( "verbose.opt" ),
                                     LOG_OPT_INCOMPAT ),
+            new CLOptionDescriptor( "debug",
+                                    CLOptionDescriptor.ARGUMENT_DISALLOWED,
+                                    DEBUG_OPT,
+                                    REZ.getString( "debug.opt" ),
+                                    LOG_OPT_INCOMPAT ),
             new CLOptionDescriptor( "listener",
                                     CLOptionDescriptor.ARGUMENT_REQUIRED,
                                     LISTENER_OPT,
@@ -254,6 +260,9 @@ public class CLIMain
                     break;
                 case VERBOSE_OPT:
                     m_priority = BasicLogger.LEVEL_INFO;
+                    break;
+                case DEBUG_OPT:
+                    m_priority = BasicLogger.LEVEL_DEBUG;
                     break;
                 case QUIET_OPT:
                     m_priority = BasicLogger.LEVEL_ERROR;
@@ -426,17 +435,21 @@ public class CLIMain
         {
             return BasicLogger.LEVEL_DEBUG;
         }
-        else if( "INFO".equals( logLevelCapitalized ) )
+        else if( "VERBOSE".equals( logLevelCapitalized ) )
         {
             return BasicLogger.LEVEL_INFO;
         }
-        else if( "WARN".equals( logLevelCapitalized ) )
+        else if( "INFO".equals( logLevelCapitalized ) )
         {
             return BasicLogger.LEVEL_WARN;
         }
-        else if( "ERROR".equals( logLevelCapitalized ) )
+        else if( "WARN".equals( logLevelCapitalized ) )
         {
             return BasicLogger.LEVEL_ERROR;
+        }
+        else if( "ERROR".equals( logLevelCapitalized ) )
+        {
+            return BasicLogger.LEVEL_FATAL;
         }
         else
         {
