@@ -55,21 +55,15 @@
 
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
+
 import java.io.*;
-import java.io.FileReader;
-import java.io.LineNumberReader;
-import java.io.StringReader;
 import java.net.*;
 import java.util.*;
-import java.util.Iterator;
 import java.util.jar.*;
 import javax.xml.parsers.*;
-
 import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.ExecTask;
-import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.taskdefs.*;
 import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.types.Commandline.Argument;
 import org.xml.sax.*;
 
 /**
@@ -102,7 +96,7 @@ import org.xml.sax.*;
  * @author     <a href="mailto:benoit.moussaud@criltelecom.com">Benoit Moussaud</a>
  *
  */
-public class BorlandDeploymentTool extends GenericDeploymentTool 
+public class BorlandDeploymentTool extends GenericDeploymentTool  implements ExecuteStreamHandler 
 {
     public static final String PUBLICID_BORLAND_EJB
     = "-//Inprise Corporation//DTD Enterprise JavaBeans 1.1//EN";
@@ -127,7 +121,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     /** Instance variable that stores the location of the borland DTD file. */
     private String borlandDTD;
         
-
     /** Instance variable that determines whether the debug mode is on */
     private boolean java2iiopdebug = false;
 
@@ -136,6 +129,8 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
     /** Instance variable that determines whether it is necessary to verify the produced jar */
     private boolean verify     = true;
     private String  verifyArgs = "";
+
+    private Hashtable _genfiles = new Hashtable();
 
     /** 
      * set the debug mode for java2iiop (default false)
@@ -190,19 +185,19 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
 
     protected DescriptorHandler getBorlandDescriptorHandler(final File srcDir) {
         DescriptorHandler handler =
-           new DescriptorHandler(getTask(), srcDir) {
-                   protected void processElement() {
-                       if (currentElement.equals("type-storage")) {
-                           // Get the filename of vendor specific descriptor
-                           String fileNameWithMETA = currentText;
-                           //trim the META_INF\ off of the file name
-                           String fileName = fileNameWithMETA.substring(META_DIR.length(), 
-                                                                        fileNameWithMETA.length() );
-                           File descriptorFile = new File(srcDir, fileName);
+            new DescriptorHandler(getTask(), srcDir) {
+                    protected void processElement() {
+                        if (currentElement.equals("type-storage")) {
+                            // Get the filename of vendor specific descriptor
+                            String fileNameWithMETA = currentText;
+                            //trim the META_INF\ off of the file name
+                            String fileName = fileNameWithMETA.substring(META_DIR.length(), 
+                                                                         fileNameWithMETA.length() );
+                            File descriptorFile = new File(srcDir, fileName);
                        
-                           ejbFiles.put(fileNameWithMETA, descriptorFile);
-                       }
-                   }
+                            ejbFiles.put(fileNameWithMETA, descriptorFile);
+                        }
+                    }
                 };
         handler.registerDTD(PUBLICID_BORLAND_EJB, 
                             borlandDTD == null ? DEFAULT_BAS_DTD_LOCATION : borlandDTD);
@@ -220,7 +215,7 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      */
     protected void addVendorFiles(Hashtable ejbFiles, String ddPrefix) {
 
-        File borlandDD = new File(getConfig().descriptorDir,META_DIR+BAS_DD);
+        File borlandDD = new File(getConfig().descriptorDir,BAS_DD);
         if (borlandDD.exists()) {
             log("Borland specific file found "+ borlandDD,  Project.MSG_VERBOSE);
             ejbFiles.put(META_DIR + BAS_DD, borlandDD);
@@ -313,68 +308,50 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
      * @param files   : file list , updated by the adding generated files
      */
     private void buildBorlandStubs(Iterator ithomes,Hashtable files ) {
-        org.apache.tools.ant.taskdefs.ExecTask execTask = null;
-        File java2iiopOut = null;
-        try {
-            java2iiopOut = File.createTempFile("java2iiop","log");
-            log(" iiop log file : "+ java2iiopOut ,Project.MSG_DEBUG);
+        Execute execTask = null;
 
-            execTask = (ExecTask) getTask().getProject().createTask("exec");
-            execTask.setOutput(java2iiopOut);
-            if ( java2iiopdebug ) {
-                execTask.createArg().setValue("-VBJdebug");                
-            } // end of if ()
-                       
-            execTask.setDir(getConfig().srcDir);
-            execTask.setExecutable(JAVA2IIOP);
-            //set the classpath 
-            execTask.createArg().setValue("-VBJclasspath");
-            execTask.createArg().setPath(getCombinedClasspath());
-            //list file
-            execTask.createArg().setValue("-list_files");
-            //no TIE classes
-            execTask.createArg().setValue("-no_tie");
-            //root dir
-            execTask.createArg().setValue("-root_dir");
-            execTask.createArg().setValue(getConfig().srcDir.getAbsolutePath());
-            //compiling order
-            execTask.createArg().setValue("-compile");
-            //add the home class
-            while ( ithomes.hasNext()) {
-                execTask.createArg().setValue(ithomes.next().toString());                
-            } // end of while ()
+        execTask = new Execute(this);
+        Project project = getTask().getProject();
+        execTask.setAntRun(project);
+        execTask.setWorkingDirectory(project.getBaseDir());
+        
+        Commandline commandline = new Commandline();
+        commandline.setExecutable(JAVA2IIOP);
+        //debug ?
+        if ( java2iiopdebug ) {
+            commandline.createArgument().setValue("-VBJdebug");                
+        } // end of if ()
+        //set the classpath 
+        commandline.createArgument().setValue("-VBJclasspath");
+        commandline.createArgument().setPath(getCombinedClasspath());
+        //list file
+        commandline.createArgument().setValue("-list_files");
+        //no TIE classes
+        commandline.createArgument().setValue("-no_tie");
+        //root dir
+        commandline.createArgument().setValue("-root_dir");
+        commandline.createArgument().setValue(getConfig().srcDir.getAbsolutePath());
+        //compiling order
+        commandline.createArgument().setValue("-compile");
+        //add the home class
+        while ( ithomes.hasNext()) {
+            commandline.createArgument().setValue(ithomes.next().toString());                
+        } // end of while ()
+
+        try {
             log("Calling java2iiop",Project.MSG_VERBOSE);                       
-            execTask.execute();
+            log(commandline.toString(),Project.MSG_DEBUG);
+            execTask.setCommandline(commandline.getCommandline());
+            int result = execTask.execute();
+            if ( result != 0 ) {
+                String msg = "Failed executing java2iiop (ret code is "+result+")";
+                throw new BuildException(msg, getTask().getLocation());
+            }                       
         }
-        catch (Exception e) {
-            // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling java2iiop. Details: " + e.toString();
-            throw new BuildException(msg, e);
-        }
-
-        try {
-            FileReader fr = new FileReader(java2iiopOut);
-            LineNumberReader lnr = new LineNumberReader(fr);
-            String javafile;
-            while ( ( javafile = lnr.readLine()) != null) {
-                if ( javafile.endsWith(".java") ) {
-                    String classfile = toClassFile(javafile);
-                    
-                    String key = classfile.substring(getConfig().srcDir.getAbsolutePath().length()+1);
-                    log(" generated : "+ classfile ,Project.MSG_DEBUG);
-                    log(" key       : "+ key       ,Project.MSG_DEBUG);
-                    files.put(key, new File(classfile));                                           
-                } // end of if ()                
-            } // end of while ()
-            lnr.close();            
-        }
-        catch(Exception e) {
-            String msg = "Exception while parsing  java2iiop output. Details: " + e.toString();
-            throw new BuildException(msg, e);
-        }
-
-        //delete the output , only if all is succesfull
-        java2iiopOut.delete();
+        catch (java.io.IOException e) {
+            log("java2iiop exception :"+e.getMessage(),Project.MSG_ERR);
+            throw new BuildException(e,getTask().getLocation());
+        }            
     }
 
     /**
@@ -398,6 +375,9 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         } // end of while ()
         
         buildBorlandStubs(homes.iterator(),files);
+
+        //add the gen files to the collection
+        files.putAll(_genfiles);
         
         super.writeJar(baseName, jarFile, files, publicId);
 
@@ -432,4 +412,52 @@ public class BorlandDeploymentTool extends GenericDeploymentTool
         return classfile;
     }
 
+    // implementation of org.apache.tools.ant.taskdefs.ExecuteStreamHandler interface
+
+    public void start() throws IOException  { }
+    public void stop()  {  }
+    public void setProcessInputStream(OutputStream param1) throws IOException   { }
+
+    /**
+     *
+     * @param param1 <description>
+     * @exception java.io.IOException <description>
+     */
+    public void setProcessOutputStream(InputStream is) throws IOException
+    {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+            String javafile;
+            while ( ( javafile = reader.readLine()) != null) {
+                log("buffer:" +javafile,Project.MSG_DEBUG);             
+                if ( javafile.endsWith(".java") ) {
+                    String classfile = toClassFile(javafile);                  
+                    String key = classfile.substring(getConfig().srcDir.getAbsolutePath().length()+1);
+                    log(" generated : "+ classfile ,Project.MSG_DEBUG);
+                    log(" key       : "+ key       ,Project.MSG_DEBUG);
+                    _genfiles.put(key, new File(classfile));                                           
+                } // end of if ()                
+            } // end of while ()
+            reader.close();            
+        }
+        catch(Exception e) {
+            String msg = "Exception while parsing  java2iiop output. Details: " + e.toString();
+            throw new BuildException(msg, e);
+        }
+    }
+
+    /**
+     * @param param1 <description>
+     * @exception java.io.IOException <description>
+     */
+    public void setProcessErrorStream(InputStream is) throws IOException
+    {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String s = reader.readLine();
+        if ( s != null) 
+        {
+            log("[java2iiop] "+s,Project.MSG_DEBUG);
+        } // end of if ()        
+    }
+    
 }
