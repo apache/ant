@@ -11,21 +11,21 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.ant.AntException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.ant.tasklet.engine.TskDeployer;
-import org.apache.myrmidon.components.executor.Executor;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.camelot.RegistryException;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.executor.Executor;
 
 /**
  * Method to register a single tasklet.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public abstract class AbstractResourceRegisterer 
+public abstract class AbstractResourceRegisterer
     extends AbstractTask
     implements Composable
 {
@@ -43,7 +43,7 @@ public abstract class AbstractResourceRegisterer
             lookup( "org.apache.myrmidon.components.executor.Executor" );
 
         m_tskDeployer = (TskDeployer)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
+            lookup( "org.apache.myrmidon.components.deployer.TskDeployer" );
 
         m_dataTypeEngine = (DataTypeEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.DataTypeEngine" );
@@ -53,12 +53,12 @@ public abstract class AbstractResourceRegisterer
     {
         m_lib = lib;
     }
-    
+
     public void setName( final String name )
     {
         m_name = name;
     }
-    
+
     public void setClassname( final String classname )
     {
         m_classname = classname;
@@ -73,10 +73,10 @@ public abstract class AbstractResourceRegisterer
         }
         else if( null == m_lib && null == m_classname )
         {
-            throw new AntException( "Must specify classname if you don't specify " + 
+            throw new AntException( "Must specify classname if you don't specify " +
                                     "lib parameter" );
         }
-        
+
         final URL url = getURL( m_lib );
 
         try

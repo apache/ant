@@ -11,7 +11,6 @@ import java.io.File;
 import org.apache.ant.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
-import org.apache.ant.tasklet.engine.TskDeployer;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.camelot.CamelotUtil;
@@ -29,6 +28,7 @@ import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.manager.ProjectManager;
+import org.apache.myrmidon.components.deployer.TskDeployer;
 
 /**
  * Default implementation of Ant runtime.
@@ -178,7 +178,7 @@ public class MyrmidonEmbeddor
         defaults.setParameter( "ant.comp.builder",
                                "org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
         defaults.setParameter( "ant.comp.deployer",
-                               "org.apache.ant.tasklet.engine.DefaultTskDeployer" );
+                               "org.apache.myrmidon.components.deployer.DefaultTskDeployer" );
         defaults.setParameter( "ant.comp.configurer",
                                "org.apache.myrmidon.components.configurer.DefaultConfigurer" );
 
@@ -194,15 +194,20 @@ public class MyrmidonEmbeddor
     {
         final DefaultComponentManager componentManager = new DefaultComponentManager();
 
-        componentManager.put( "org.apache.myrmidon.components.manager.ProjectManager", m_projectEngine );
         componentManager.put( "org.apache.ant.convert.engine.ConverterEngine",
                               m_converterEngine );
         componentManager.put( "org.apache.ant.convert.Converter", m_converterEngine );
         componentManager.put( "org.apache.ant.tasklet.engine.DataTypeEngine", m_dataTypeEngine );
-        componentManager.put( "org.apache.myrmidon.components.builder.ProjectBuilder", m_builder );
-        componentManager.put( "org.apache.ant.tasklet.engine.TskDeployer", m_deployer );
         componentManager.put( "org.apache.avalon.framework.camelot.Factory", m_factory );
 
+        //Following components required when Myrmidon is used as build tool
+        componentManager.put( "org.apache.myrmidon.components.manager.ProjectManager", m_projectEngine );
+        componentManager.put( "org.apache.myrmidon.components.builder.ProjectBuilder", m_builder );
+
+        //Following components required when Myrmidon allows user deployment of tasks etal.
+        componentManager.put( "org.apache.myrmidon.components.deployer.TskDeployer", m_deployer );
+
+        //Following components required when allowing Container tasks
         componentManager.put( "org.apache.myrmidon.components.configurer.Configurer", m_configurer );
         componentManager.put( "org.apache.myrmidon.components.executor.Executor", m_executor );
 

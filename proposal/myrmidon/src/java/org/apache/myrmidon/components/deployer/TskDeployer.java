@@ -5,12 +5,12 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.tasklet.engine;
+package org.apache.myrmidon.components.deployer;
 
 import java.net.URL;
-import org.apache.avalon.framework.logger.Loggable;
 import org.apache.avalon.framework.camelot.Deployer;
 import org.apache.avalon.framework.camelot.DeploymentException;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
 
 /**
@@ -19,13 +19,13 @@ import org.apache.log.Logger;
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public interface TskDeployer
-    extends Deployer, Loggable
+    extends Deployer
 {
     void deployConverter( String name, String location, URL url )
         throws DeploymentException;
 
     void deployDataType( String name, String location, URL url )
-        throws DeploymentException;    
+        throws DeploymentException;
 
     void deployTask( String name, String location, URL url )
         throws DeploymentException;

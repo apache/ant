@@ -7,7 +7,6 @@
  */
 package org.apache.myrmidon.api;
 
-import org.apache.ant.AntException;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
@@ -45,6 +44,17 @@ public abstract class AbstractTask
         throws Exception
     {
     }
+
+    /**
+     * Execute task. 
+     * This method is called to perform actual work associated with task.
+     * It is called after Task has been Configured and Initialized and before
+     * beig Disposed (If task implements appropriate interfaces).
+     *
+     * @exception Exception if an error occurs
+     */
+    public abstract void execute()
+        throws Exception;
 
     /**
      * This will be called after execute() method.

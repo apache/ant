@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.tasklet.engine;
+package org.apache.myrmidon.components.deployer;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
+import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.ConverterRegistry;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
@@ -32,6 +33,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.avalon.framework.logger.Loggable;
 import org.apache.log.Logger;
 import org.apache.myrmidon.components.executor.Executor;
 
@@ -42,7 +44,7 @@ import org.apache.myrmidon.components.executor.Executor;
  */
 public class DefaultTskDeployer
     extends AbstractDeployer
-    implements Composable, TskDeployer
+    implements Composable, TskDeployer, Loggable
 {
     private final static String   TSKDEF_FILE     = "TASK-LIB/taskdefs.xml";
 
@@ -253,7 +255,7 @@ public class DefaultTskDeployer
         }
 
         getLogger().debug( "Registered converter " + name + " that converts from " +
-                        source + " to " + destination );
+                           source + " to " + destination );
     }
 
     private void handleTask( final Configuration task, final URL url )

@@ -14,7 +14,7 @@ import org.apache.ant.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
 import org.apache.ant.convert.engine.DefaultConverterInfo;
 import org.apache.myrmidon.api.AbstractTask;
-import org.apache.ant.tasklet.engine.TskDeployer;
+import org.apache.myrmidon.components.deployer.TskDeployer;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.Composable;
@@ -42,7 +42,7 @@ public class RegisterConverter
         throws ComponentException
     {
         m_tskDeployer = (TskDeployer)componentManager.
-            lookup( "org.apache.ant.tasklet.engine.TskDeployer" );
+            lookup( "org.apache.myrmidon.components.deployer.TskDeployer" );
 
         m_converterEngine = (ConverterEngine)componentManager.
             lookup( "org.apache.ant.convert.engine.ConverterEngine" );

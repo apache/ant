@@ -11,25 +11,25 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import org.apache.ant.AntException;
-import org.apache.myrmidon.api.AbstractTask;
-import org.apache.ant.tasklet.engine.TskDeployer;
-import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.avalon.framework.component.ComponentException;
-import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.camelot.DeploymentException;
+import org.apache.avalon.framework.component.ComponentException;
+import org.apache.avalon.framework.component.ComponentManager;
+import org.apache.avalon.framework.component.Composable;
+import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.components.deployer.TskDeployer;
 
 /**
  * Method to register a tasklib.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class RegisterTasklib 
+public class RegisterTasklib
     extends AbstractTask
     implements Composable
 {
     protected String              m_lib;
     protected TskDeployer         m_tskDeployer;
-    
+
     public void compose( final ComponentManager componentManager )
         throws ComponentException
     {
@@ -49,7 +49,7 @@ public class RegisterTasklib
         {
             throw new AntException( "Must specify lib parameter" );
         }
-        
+
         URL url = null;
 
         final File lib = getContext().resolveFile( m_lib );
