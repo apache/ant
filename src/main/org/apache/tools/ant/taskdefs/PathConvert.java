@@ -150,7 +150,7 @@ public class PathConvert extends Task {
     public MapEntry createMap() {
 
         MapEntry entry = new MapEntry();
-        prefixMap.add( entry );
+        prefixMap.addElement( entry );
         return entry;
     }
 
@@ -288,7 +288,7 @@ public class PathConvert extends Task {
             // entries actually changes the element
 
             for( int i=0; i < size; i++ ) {
-                MapEntry entry = (MapEntry)prefixMap.get(i);
+                MapEntry entry = (MapEntry)prefixMap.elementAt(i);
                 String newElem = entry.apply( elem );
 
                 // Note I'm using "!=" to see if we got a new object back from
@@ -359,7 +359,7 @@ public class PathConvert extends Task {
     private boolean targetWindows = false;  // Set when targetOS is set
     private boolean onWindows = false;      // Set if we're running on windows
     private String property = null;         // The property to receive the results
-    private ArrayList prefixMap = new ArrayList();  // Path prefix map
+    private Vector prefixMap = new Vector();  // Path prefix map
     private String pathSep = null;          // User override on path sep char
     private String dirSep = null;           // User override on directory sep char
 }
