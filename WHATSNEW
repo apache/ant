@@ -31,6 +31,8 @@ Changes that could break older environments:
 
 Fixed bugs:
 -----------
+* Fixed bug where <java> used to sometimes invoke class constructors twice.
+
 * Fixed bug with 4NT shell support
 
 * Fixed bug where ant would not perform ftp without remotedir being
