@@ -201,6 +201,18 @@ public class Frame implements DemuxOutputReceiver {
     }
 
     /**
+     * get the name of the project associated with this frame.
+     *
+     * @return the project's name
+     */
+    public String getProjectName() {
+        if (project != null) {
+            return project.getName();
+        }
+        return null;
+    }
+    
+    /**
      * Set a value in this frame or any of its imported frames.
      *
      * @param name the name of the value

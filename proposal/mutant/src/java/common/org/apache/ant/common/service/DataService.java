@@ -137,6 +137,5 @@ public interface DataService {
      *      name.
      */
     Map getAllProperties();
-
 }
 

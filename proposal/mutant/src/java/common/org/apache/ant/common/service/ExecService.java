@@ -106,5 +106,13 @@ public interface ExecService {
      * @exception ExecutionException if there is a problem in execution.
      */
     void executeTask(Task task) throws ExecutionException;
+    
+    /**
+     * get the name of the project associated with this execution.
+     *
+     * @return the project's name
+     */
+    String getProjectName();
+
 }
 

@@ -192,7 +192,15 @@ public class Project extends ModelElement {
         return base;
     }
 
-
+    /**
+     * Get the name of the project element
+     *
+     * @return the project's name
+     */
+    public String getName() {
+        return name;
+    }
+    
     /**
      * Get the targets in this project.
      *

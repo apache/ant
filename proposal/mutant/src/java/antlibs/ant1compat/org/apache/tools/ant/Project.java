@@ -67,6 +67,7 @@ import org.apache.ant.common.antlib.AntLibFactory;
 import org.apache.ant.common.event.MessageLevel;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
+import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.util.ExecutionException;
 import org.apache.ant.common.util.PropertyUtils;
@@ -143,6 +144,9 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     /** The core's DataService instance */
     private DataService dataService;
 
+    /** Th ecore's execution service */
+    private ExecService execService;
+    
     /** The core's Component Service instance */
     private ComponentService componentService;
 
@@ -715,6 +719,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
         this.context = context;
         fileService = (FileService)context.getCoreService(FileService.class);
         dataService = (DataService)context.getCoreService(DataService.class);
+        execService = (ExecService)context.getCoreService(ExecService.class);
         componentService
              = (ComponentService)context.getCoreService(ComponentService.class);
 
@@ -1071,6 +1076,15 @@ public class Project implements org.apache.ant.common.event.BuildListener {
             BuildListener listener = (BuildListener)listeners.elementAt(i);
             listener.messageLogged(event);
         }
+    }
+    
+    /**
+     * Get the name of the project.
+     *
+     * @return the project name
+     */
+    public String getName() {
+        return execService.getProjectName();
     }
 }
 

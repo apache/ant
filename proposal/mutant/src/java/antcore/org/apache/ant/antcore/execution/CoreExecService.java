@@ -167,5 +167,14 @@ public class CoreExecService implements ExecService {
             frame.getEventSupport().fireTaskFinished(task, failureCause);
         }
     }
+
+    /**
+     * get the name of the project associated with this execution.
+     *
+     * @return the project's name
+     */
+    public String getProjectName() {
+        return frame.getProjectName();
+    }
 }
 
