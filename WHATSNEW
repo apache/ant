@@ -6,8 +6,8 @@ Fixed bugs:
 
 * Merging of Manifests in jar now works as documented.
 
-* paths that have been separated by would be incorrectly parsed on
-NetWare.
+* paths that have been separated by colons would be incorrectly parsed
+on NetWare.
 
 * runant.pl now supports NetWare.
 
@@ -20,8 +20,6 @@ settings.
 JDK 1.1 and 1.2, even if the class could be found on the
 user-specified classpath.
 
-* z/OS now gets detected by the os condition.
-
 * <property environment=... /> now works on z/OS.
 
 * forked <javac> failed for the wrong reason on JDK 1.1 - Ant would
@@ -29,6 +27,11 @@ use a temporary file to hold the names of the files to compile under
 some conditons, but 1.1 doesn't support this feature.  Ant will no
 longer try this, but you may run into problems with the length of the
 command line now.
+
+Other changes:
+--------------
+
+* z/OS now gets detected by the os condition.
 
 Changes from Ant 1.4.1 to 1.5beta1
 ==================================
