@@ -16,8 +16,11 @@
  */
 package org.apache.tools.ant.taskdefs;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildLogger;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
@@ -28,7 +31,6 @@ import org.apache.tools.ant.util.StringUtils;
  * This is a class that represents a recorder. This is the listener to the
  * build process.
  *
- * @version 0.5
  * @since Ant 1.4
  */
 public class RecorderEntry implements BuildLogger, SubBuildListener {
@@ -80,6 +82,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
      */
     public void setRecordState(Boolean state) {
         if (state != null) {
+            flush();
             record = state.booleanValue();
         }
     }
@@ -93,6 +96,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
     public void buildFinished(BuildEvent event) {
         log("< BUILD FINISHED", Project.MSG_DEBUG);
 
+        if (record && out != null) {
         Throwable error = event.getException();
 
         if (error == null) {
@@ -101,6 +105,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
             out.println(StringUtils.LINE_SEP + "BUILD FAILED"
                  + StringUtils.LINE_SEP);
             error.printStackTrace(out);
+        }
         }
         cleanup();
     }
@@ -145,7 +150,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
         String time = formatTime(System.currentTimeMillis() - targetStartTime);
 
         log(event.getTarget() + ":  duration " + time, Project.MSG_VERBOSE);
-        out.flush();
+        flush();
     }
 
 
@@ -156,7 +161,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
     public void taskFinished(BuildEvent event) {
         log("<<< TASK FINISHED -- " + event.getTask(), Project.MSG_DEBUG);
-        out.flush();
+        flush();
     }
 
 
@@ -191,8 +196,14 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
      * @param level The verbosity level of the message.
      */
     private void log(String mesg, int level) {
-        if (record && (level <= loglevel)) {
+        if (record && (level <= loglevel) && out != null) {
             out.println(mesg);
+        }
+    }
+    
+    private void flush() {
+        if (record && out != null) {
+            out.flush();
         }
     }
 
@@ -205,6 +216,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
 
     public void setOutputPrintStream(PrintStream output) {
+        closeFile();
         out = output;
     }
 
@@ -215,7 +227,7 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
 
 
     public void setErrorPrintStream(PrintStream err) {
-        out = err;
+        setOutputPrintStream(err);
     }
 
 
@@ -254,12 +266,57 @@ public class RecorderEntry implements BuildLogger, SubBuildListener {
      * @since 1.6.2
      */
     public void cleanup() {
-        out.flush();
-        out.close();
+        closeFile();
         if (project != null) {
             project.removeBuildListener(this);
         }
         project = null;
     }
+    
+    /**
+     * Initially opens the file associated with this recorder.
+     * Used by Recorder.
+     * @param append Indicates if output must be appended to the logfile or that
+     * the logfile should be overwritten.
+     * @throws BuildException
+     * @since 1.6.3
+     */
+    void openFile(boolean append) throws BuildException {
+        openFileImpl(append);
+    }
+
+    /**
+     * Closes the file associated with this recorder.
+     * Used by Recorder.
+     * @since 1.6.3
+     */
+    void closeFile() {
+        if (out != null) {
+            out.close();
+            out = null;
+        }
+    }
+    
+    /**
+     * Re-opens the file associated with this recorder.
+     * Used by Recorder.
+     * @throws BuildException
+     * @since 1.6.3
+     */
+    void reopenFile() throws BuildException {
+        openFileImpl(true);
+    }
+
+    private void openFileImpl(boolean append) throws BuildException {
+        if (out == null) {
+            try {
+                out = new PrintStream(new FileOutputStream(filename, append));
+            } catch (IOException ioe) {
+                throw new BuildException("Problems opening file using a " +
+                        "recorder entry", ioe);
+            }
+        }        
+    }
+
 }
 
