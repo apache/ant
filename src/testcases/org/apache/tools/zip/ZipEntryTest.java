@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -121,4 +121,22 @@ public class ZipEntryTest extends TestCase {
         } catch (java.util.NoSuchElementException nse) {
         }
     }
+
+    public void testUnixMode() {
+        ZipEntry ze = new ZipEntry("foo");
+        assertEquals(0, ze.getPlatform());
+        ze.setUnixMode(0755);
+        assertEquals(3, ze.getPlatform());
+        assertEquals(0755, 
+                     (ze.getExternalAttributes() >> 16) & 0xFFFF);
+        assertEquals(0, ze.getExternalAttributes()  & 0xFFFF);
+
+        ze = new ZipEntry("foo/");
+        ze.setUnixMode(0577);
+        assertEquals(3, ze.getPlatform());
+        assertEquals(0577, 
+                     (ze.getExternalAttributes() >> 16) & 0xFFFF);
+        assertEquals(0x10, ze.getExternalAttributes()  & 0xFFFF);
+    }
+
 }

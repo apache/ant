@@ -519,7 +519,7 @@ public class ZipOutputStream extends DeflaterOutputStream {
         written += 4;
 
         // version made by
-        out.write((new ZipShort(20)).getBytes());
+        out.write((new ZipShort((ze.getPlatform() << 8) | 20)).getBytes());
         written += 2;
 
         // version needed to extract

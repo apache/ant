@@ -68,7 +68,11 @@ import java.util.zip.ZipException;
  */
 public class ZipEntry extends java.util.zip.ZipEntry {
 
+    private static final int PLATFORM_UNIX = 3;
+    private static final int PLATFORM_FAT  = 0;
+
     private int internalAttributes = 0;
+    private int platform = PLATFORM_FAT;
     private long externalAttributes = 0;
     private Vector extraFields = new Vector();
 
@@ -184,6 +188,32 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      */
     public void setExternalAttributes(long value) {
         externalAttributes = value;
+    }
+
+    /**
+     * Sets Unix permissions in a way that is understood by Info-Zip's
+     * unzip command.
+     *
+     * @since Ant 1.6
+     */
+    public void setUnixMode(int mode) {
+        setExternalAttributes((mode << 16)
+                              // MS-DOS directory flag
+                              | (isDirectory() ? 0x10 : 0));
+        platform = PLATFORM_UNIX;
+    }
+
+    /**
+     * Platform specification to put into the &quot;version made
+     * by&quot; part of the central file header.
+     *
+     * @return 0 (MS-DOS FAT) unless {@link #setUnixMode setUnixMode}
+     * has been called, in which case 3 (Unix) will be returned.
+     *
+     * @since Ant 1.6
+     */
+    public int getPlatform() {
+        return platform;
     }
 
     /**
