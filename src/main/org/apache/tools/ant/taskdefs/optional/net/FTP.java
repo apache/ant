@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -86,6 +86,7 @@ import java.util.Vector;
  *   <li><strong>get</strong> - retrive files from a remote server.</li>
  *   <li><strong>del</strong> - delete files from a remote server.</li>
  *   <li><strong>list</strong> - create a file listing.</li>
+ *   <li><strong>chmod</strong> - change unix file permissions.</li>
  * </ul>
  *
  * <strong>Note:</strong>
@@ -108,6 +109,7 @@ public class FTP
     protected final static int DEL_FILES    = 2;
     protected final static int LIST_FILES   = 3;
     protected final static int MK_DIR       = 4;
+    protected final static int CHMOD        = 5;
 
     private String remotedir;
     private String server;
@@ -127,13 +129,16 @@ public class FTP
     private boolean skipFailedTransfers=false;
     private int skipped=0;
     private boolean ignoreNoncriticalErrors=false;
+    private String chmod = null;
+    private String umask = null;
 
     protected final static String[] ACTION_STRS = {
         "sending",
         "getting",
         "deleting",
         "listing",
-        "making directory"
+        "making directory",
+        "chmod"
     };
 
     protected final static String[] COMPLETED_ACTION_STRS = {
@@ -141,7 +146,8 @@ public class FTP
         "retrieved",
         "deleted",
         "listed",
-        "created directory"
+        "created directory",
+        "mode changed"
     };
 
     protected class FTPDirectoryScanner extends DirectoryScanner {
@@ -337,6 +343,22 @@ public class FTP
     }
 
     /**
+     * Sets the file permission mode (Unix only) for files sent to the server.
+    */
+
+    public void setChmod(String theMode) {
+        this.chmod = theMode;
+    }
+
+    /**
+     * Sets the default mask for file creation on a unix server.
+    */
+
+    public void setUmask(String theUmask) {
+        this.umask = theUmask;
+    }
+
+    /**
      * Adds a set of files (nested fileset attribute).
      */
     public void addFileset(FileSet set) {
@@ -362,7 +384,7 @@ public class FTP
 
     /**
      * Sets the FTP action to be taken.  Currently accepts "put", "get",
-     * "del", "mkdir" and "list".
+     * "del", "mkdir", "chmod" and "list".
      */
     public void setAction(Action action) throws BuildException {
         this.action = action.getAction();
@@ -415,8 +437,12 @@ public class FTP
             throw new BuildException("listing attribute must be set for list action!");
         }
 
-        if( action == MK_DIR && remotedir == null ) {
+        if (action == MK_DIR && remotedir == null) {
             throw new BuildException("remotedir attribute must be set for mkdir action!");
+        }
+
+        if (action == CHMOD && chmod == null) {
+            throw new BuildException("chmod attribute must be set for chmod action!");
         }
     }
 
@@ -478,6 +504,12 @@ public class FTP
             case LIST_FILES: {
                 listFile(ftp, bw, dsfiles[i]);
                 break;
+            }
+
+            case CHMOD: {
+                 doSiteCommand(ftp,"chmod " + chmod + " " + dsfiles[i]);
+                 transferred++;
+                 break;
             }
 
             default: {
@@ -621,6 +653,32 @@ public class FTP
     }
 
     /**
+     * Sends a site command to the ftp server
+     */
+    protected void doSiteCommand(FTPClient ftp, String TheCMD)
+        throws IOException, BuildException {
+        boolean rc;
+        String MyReply[] = null;
+
+        log("Doing Site Command: " + TheCMD,Project.MSG_VERBOSE);
+
+        rc = ftp.sendSiteCommand(TheCMD);
+
+        if (rc == false) {
+            log("Failed to issue Site Command: " + TheCMD,Project.MSG_WARN);
+        } else {
+
+            MyReply = ftp.getReplyStrings();
+
+            for (int x=0; x < MyReply.length; x++) {
+                if (MyReply[x].indexOf("200") == -1) {
+                    log(MyReply[x],Project.MSG_WARN);
+                }
+            }
+        }
+    }
+
+    /**
      * Sends a single file to the remote host.
      * <code>filename</code> may contain a relative path specification.
      * When this is the case, <code>sendFile</code> will attempt to create
@@ -666,7 +724,9 @@ public class FTP
 
             }
             else {
-
+                if (chmod != null) { // see if we should issue a chmod command
+                  doSiteCommand(ftp,"chmod " + chmod + " " + filename);
+                }
                 log("File " + file.getAbsolutePath() +
                     " copied to " + server,
                     Project.MSG_VERBOSE);
@@ -891,6 +951,13 @@ public class FTP
                 }
             }
 
+            // For a unix ftp server you can set the default mask for all files
+            // created.
+
+            if (umask != null) {
+               doSiteCommand(ftp,"umask " + umask);
+            }
+
             // If the action is MK_DIR, then the specified remote directory is the
             // directory to create.
 
@@ -940,7 +1007,8 @@ public class FTP
     public static class Action extends EnumeratedAttribute {
 
         private final static String[] validActions = {
-            "send", "put", "recv", "get", "del", "delete", "list", "mkdir"
+            "send", "put", "recv", "get", "del", "delete", "list", "mkdir", 
+            "chmod"
         };
 
         public String[] getValues() {
@@ -960,6 +1028,8 @@ public class FTP
                 return DEL_FILES;
             } else if (actionL.equals("list")) {
                 return LIST_FILES;
+            } else if (actionL.equals("chmod")) {
+                return CHMOD;
             } else if (actionL.equals("mkdir")) {
                 return MK_DIR;
             }

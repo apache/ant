@@ -232,7 +232,11 @@ Other changes:
   to the standard Java 1.4 doclet. The element is ignored when not running
   on Java 1.4.
 
-* <java>'s source attribute is now enabled for jikes as well.
+* <javac>'s source attribute is now enabled for jikes as well.
+
+* <ftp> can now chmod files on a remote server that supports
+  "site chmod" as well as set the umask before transfering files if
+  the server supports "site umask".
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
