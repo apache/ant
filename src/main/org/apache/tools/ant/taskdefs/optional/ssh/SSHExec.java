@@ -170,7 +170,7 @@ public class SSHExec extends SSHBase {
         try {
             // execute the command
             Session session = openSession();
-            session.setTimeout(maxwait);
+            session.setTimeout((int) maxwait);
             final ChannelExec channel=(ChannelExec) session.openChannel("exec");
             channel.setCommand(command);
             channel.setOutputStream(tee);
