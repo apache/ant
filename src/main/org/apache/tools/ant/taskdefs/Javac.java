@@ -97,8 +97,8 @@ public class Javac extends MatchingTask {
     private String bootclasspath;
     private String extdirs;
 
-    private Vector compileList = new Vector();
-    private Hashtable filecopyList = new Hashtable();
+    protected Vector compileList = new Vector();
+    protected Hashtable filecopyList = new Hashtable();
 
     /**
      * Set the source dir to find the source Java files.
@@ -193,7 +193,7 @@ public class Javac extends MatchingTask {
         // scan source and dest dirs to build up both copy lists and
         // compile lists
 
-        DirectoryScanner ds = super.getDirectoryScanner(srcDir);
+        DirectoryScanner ds = this.getDirectoryScanner(srcDir);
 
         String[] files = ds.getIncludedFiles();
 
@@ -252,7 +252,7 @@ public class Javac extends MatchingTask {
      * class variables compileList and filecopyList.
      */
 
-    private void scanDir(File srcDir, File destDir, String files[]) {
+    protected void scanDir(File srcDir, File destDir, String files[]) {
 
         compileList.removeAllElements();
         filecopyList.clear();
