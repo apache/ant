@@ -431,6 +431,38 @@ public class Zip extends MatchingTask {
         throws IOException, BuildException
     {
     }
+
+    /**
+     * Create an empty zip file
+     *
+     * @return true if the file is then considered up to date.
+     */
+    protected boolean createEmptyZip(File zipFile) {
+        // In this case using java.util.zip will not work
+        // because it does not permit a zero-entry archive.
+        // Must create it manually.
+        log("Note: creating empty "+archiveType+" archive " + zipFile, Project.MSG_INFO);
+        try {
+            OutputStream os = new FileOutputStream(zipFile);
+            try {
+                // Cf. PKZIP specification.
+                byte[] empty = new byte[22];
+                empty[0] = 80; // P
+                empty[1] = 75; // K
+                empty[2] = 5;
+                empty[3] = 6;
+                // remainder zeros
+                os.write(empty);
+            } finally {
+                os.close();
+            }
+        } catch (IOException ioe) {
+            throw new BuildException("Could not create empty ZIP archive", ioe, location);
+        }
+        return true;
+    }
+    
+    
     /**
      * Check whether the archive is up-to-date; and handle behavior for empty archives.
      * @param scanners list of prepared scanners containing files to archive
@@ -453,29 +485,7 @@ public class Zip extends MatchingTask {
                                          ": no files were included.", location);
             } else {
                 // Create.
-                if (zipFile.exists()) return true;
-                // In this case using java.util.zip will not work
-                // because it does not permit a zero-entry archive.
-                // Must create it manually.
-                log("Note: creating empty "+archiveType+" archive " + zipFile, Project.MSG_INFO);
-                try {
-                    OutputStream os = new FileOutputStream(zipFile);
-                    try {
-                        // Cf. PKZIP specification.
-                        byte[] empty = new byte[22];
-                        empty[0] = 80; // P
-                        empty[1] = 75; // K
-                        empty[2] = 5;
-                        empty[3] = 6;
-                        // remainder zeros
-                        os.write(empty);
-                    } finally {
-                        os.close();
-                    }
-                } catch (IOException ioe) {
-                    throw new BuildException("Could not create empty ZIP archive", ioe, location);
-                }
-                return true;
+                return createEmptyZip(zipFile);
             }
         } else {
             for (int i = 0; i < files.length; ++i) {

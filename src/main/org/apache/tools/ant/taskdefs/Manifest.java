@@ -63,64 +63,132 @@ import java.io.*;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  */
 public class Manifest {
-    static public final String ATTR_MANIFEST_VERSION = "Manifest-Version";
-    static public final String ATTR_SIGNATURE_VERSION = "Signature-Version";
-    static public final String ATTR_NAME = "Name";
-    static public final String ATTR_FROM = "From";
+    /** The standard manifest version header */
+    static public final String ATTRIBUTE_MANIFEST_VERSION = "Manifest-Version";
+    
+    /** The standard Signature Version header */
+    static public final String ATTRIBUTE_SIGNATURE_VERSION = "Signature-Version";
+    
+    /** The Name Attribute is the first in a named section */
+    static public final String ATTRIBUTE_NAME = "Name";
+    
+    /** THe From Header is disallowed in a Manifest */    
+    static public final String ATTRIBUTE_FROM = "From";
+    
+    /** Default Manifest version if one is not specified */
     static public final String DEFAULT_MANIFEST_VERSION = "1.0";
+    
+    /** The max length of a line in a Manifest */
     static public final int MAX_LINE_LENGTH = 70;
     
     /**
      * Class to hold manifest attributes
      */
-    static private class Attribute {
+    private class Attribute {
         /** The attribute's name */
         private String name = null;
         
         /** The attribute's value */
         private String value = null;
 
+        /** 
+         * Construct an empty attribute */
         public Attribute() {
         }
         
-        public Attribute(String line) throws IOException {
+        /**
+         * Construct an attribute by parsing a line from the Manifest
+         * 
+         * @param line the line containing the attribute name and value
+         *
+         * @throws ManifestException if the line is not valid 
+         */
+        public Attribute(String line) throws ManifestException {
             parse(line);
         }
         
+        /**
+         * Construct a manifest by specifying its name and value 
+         * 
+         * @param name the attribute's name
+         * @param value the Attribute's value
+         */
         public Attribute(String name, String value) {
             this.name = name;
             this.value = value;
         }
         
-        public void parse(String line) throws IOException {
+        /**
+         * Parse a line into name and value pairs
+         *
+         * @param line the line to be parsed
+         *
+         * @throws ManifestException if the line does not contain a colon
+         * separating the name and value
+         */
+        public void parse(String line) throws ManifestException {
             int index = line.indexOf(": ");
             if (index == -1) {
-                throw new IOException("Manifest line \"" + line + "\" is not valid");
+                throw new ManifestException("Manifest line \"" + line + "\" is not valid");
             }
             name = line.substring(0, index);
             value = line.substring(index + 2);
         } 
         
+        /**
+         * Set the Attribute's name
+         * 
+         * @param name the attribute's name
+         */
         public void setName(String name) {
             this.name = name;
         }
         
+        /**
+         * Get the Attribute's name
+         *
+         * @return the attribute's name.
+         */
         public String getName() {
             return name;
         }
         
+        /**
+         * Set the Attribute's value
+         * 
+         * @param value the attribute's value
+         */
         public void setValue(String value) {
             this.value = value;
         }
         
+        /**
+         * Get the Attribute's value
+         *
+         * @return the attribute's value.
+         */
         public String getValue() {
             return value;
         }
         
+        /**
+         * Add a continuation line from the Manifest file
+         *
+         * When lines are too long in a manifest, they are continued on the 
+         * next line by starting with a space. This method adds the continuation
+         * data to the attribute value by skipping the first character.
+         */
         public void addContinuation(String line) {
             value += line.substring(1);
         }
         
+        /**
+         * Write the attribute out to a print writer.
+         *
+         * @param writer the Writer to which the attribute is written
+         *
+         * @throws IOException if the attribte value cannot be written
+         */
         public void write(PrintWriter writer) throws IOException {
             String line = name + ": " + value;
             while (line.getBytes().length > MAX_LINE_LENGTH) {
@@ -143,22 +211,46 @@ public class Manifest {
 
     /** 
      * Class to represent an individual section in the 
-     * Manifest 
+     * Manifest. A section consists of a set of attribute values,
+     * separated from other sections by a blank line.
      */
-    static private class Section {
+    private class Section {
+        /** The section's name if any. The main section in a manifest is unnamed.*/
         private String name = null;
         
+        /** The section's attributes.*/
         private Hashtable attributes = new Hashtable();
         
+        /**
+         * Set the Section's name
+         * 
+         * @param name the section's name
+         */
         public void setName(String name) {
             this.name = name;
         }
         
+        /**
+         * Get the Section's name
+         *
+         * @return the section's name.
+         */
         public String getName() {
             return name;
         }
         
-        public String read(BufferedReader reader) throws IOException {
+        /**
+         * Read a section through a reader 
+         * 
+         * @param reader the reader from which the section is read
+         *
+         * @return the name of the next section if it has been read as part of this 
+         *         section - This only happens if the Manifest is malformed.
+         * 
+         * @throws ManifestException if the section is not valid according to the JAR spec
+         * @throws IOException if the section cannot be read from the reader.
+         */
+        public String read(BufferedReader reader) throws ManifestException, IOException {
             Attribute attribute = null;
             while (true) { 
                 String line = reader.readLine();
@@ -168,29 +260,31 @@ public class Manifest {
                 if (line.charAt(0) == ' ') {
                     // continuation line
                     if (attribute == null) {
-                        throw new IOException("Can't start an attribute with a continuation line " + line);
+                        throw new ManifestException("Can't start an attribute with a continuation line " + line);
                     }
                     attribute.addContinuation(line);
                 }
                 else {
                     attribute = new Attribute(line);
-                    if (attribute.getName().equalsIgnoreCase(ATTR_NAME)) {
-                        return attribute.getValue();
+                    String nameReadAhead = addAttribute(attribute);
+                    if (nameReadAhead != null) {
+                        return nameReadAhead;
                     }
-                    
-                    if (attribute.getName().toLowerCase().startsWith(ATTR_FROM.toLowerCase())) {
-                        throw new IOException("Attribute names may not start with " + ATTR_FROM);
-                    }
-                    
-                    addAttribute(attribute);
                 }
             }
         }
         
-        public void merge(Section section) throws IOException {
+        /**
+         * Merge in another section
+         *
+         * @param section the section to be merged with this one.
+         *
+         * @throws ManifestException if the sections cannot be merged.
+         */
+        public void merge(Section section) throws ManifestException {
             if (name == null && section.getName() != null ||
                     name != null && !(name.equalsIgnoreCase(section.getName()))) {
-                throw new IOException("Unable to merge sections with different names");
+                throw new ManifestException("Unable to merge sections with different names");
             }
             
             for (Enumeration e = section.attributes.keys(); e.hasMoreElements();) {
@@ -200,9 +294,16 @@ public class Manifest {
             }
         }
         
+        /**
+         * Write the section out to a print writer.
+         *
+         * @param writer the Writer to which the section is written
+         *
+         * @throws IOException if the section cannot be written
+         */
         public void write(PrintWriter writer) throws IOException {
             if (name != null) {
-                Attribute nameAttr = new Attribute(ATTR_NAME, name);
+                Attribute nameAttr = new Attribute(ATTRIBUTE_NAME, name);
                 nameAttr.write(writer);
             }
             for (Enumeration e = attributes.elements(); e.hasMoreElements();) {
@@ -212,6 +313,14 @@ public class Manifest {
             writer.println();
         }
     
+        /**
+         * Get the value of the attribute with the name given.
+         *
+         * @param attributeName the name of the attribute to be returned.
+         *
+         * @return the attribute's value or null if the attribute does not exist
+         *         in the section
+         */         
         public String getAttributeValue(String attributeName) {
             Attribute attribute = (Attribute)attributes.get(attributeName.toLowerCase());
             if (attribute == null) {
@@ -219,25 +328,61 @@ public class Manifest {
             }
             return attribute.getValue();
         }
-        
+
+        /**
+         * Remove tge given attribute from the section 
+         *
+         * @param attributeName the name of the attribute to be removed.
+         */
         public void removeAttribute(String attributeName) {
             attributes.remove(attributeName.toLowerCase());
         }
         
-        public void addAttribute(Attribute attribute) throws IOException {
-            if (attributes.containsKey(attribute.getName().toLowerCase())) {
-                throw new IOException("The attribute \"" + attribute.getName() + "\" may not occur more than" +
-                                      " once in the same section");
+        /**
+         * Add an attribute to the section
+         *
+         * @param attribute the attribute to be added.
+         *
+         * @return the value of the attribute if it is a name attribute - null other wise
+         *
+         * @throws ManifestException if the attribute already exists in this section.
+         */
+        public String addAttribute(Attribute attribute) throws ManifestException {
+            if (attribute.getName().equalsIgnoreCase(ATTRIBUTE_NAME)) {
+                warnings.addElement("\"" + ATTRIBUTE_NAME + "\" attributes should not occur in the " +
+                                    "main section and must be the first element in all " + 
+                                    "other sections: \"" +attribute.getName() + ": " + attribute.getValue() + "\"");  
+                return attribute.getValue();
             }
-            attributes.put(attribute.getName().toLowerCase(), attribute);
+            
+            if (attribute.getName().toLowerCase().startsWith(ATTRIBUTE_FROM.toLowerCase())) {
+                warnings.addElement("Manifest attributes should not start with \"" +
+                                    ATTRIBUTE_FROM + "\" in \"" +attribute.getName() + ": " + attribute.getValue() + "\"");  
+            }
+            else if (attributes.containsKey(attribute.getName().toLowerCase())) {
+                throw new ManifestException("The attribute \"" + attribute.getName() + "\" may not " + 
+                                            "occur more than once in the same section");
+            }
+            else {
+                attributes.put(attribute.getName().toLowerCase(), attribute);
+            }
+            return null;
         }
     }
 
-    
+    /** The version of this manifest */
     private String manifestVersion = DEFAULT_MANIFEST_VERSION;
+    
+    /** The main section of this manifest */ 
     private Section mainSection = new Section();
+    
+    /** The named sections of this manifest */
     private Hashtable sections = new Hashtable();
 
+    /** Warnings for this manifest file */
+    private Vector warnings = new Vector();
+    
+    /** Construct an empty manifest */
     public Manifest() {
     }
     
@@ -245,8 +390,11 @@ public class Manifest {
      * Read a manifest file from the given input stream
      *
      * @param is the input stream from which the Manifest is read 
+     * 
+     * @throws ManifestException if the manifest is not valid according to the JAR spec
+     * @throws IOException if the manifest cannot be read from the reader.
      */
-    public Manifest(InputStream is) throws IOException {
+    public Manifest(InputStream is) throws ManifestException, IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         String line = reader.readLine();
         if (line == null) {
@@ -255,10 +403,10 @@ public class Manifest {
         
         // This should be the manifest version
         String nextSectionName = mainSection.read(reader);
-        String readManifestVersion = mainSection.getAttributeValue(ATTR_MANIFEST_VERSION);
+        String readManifestVersion = mainSection.getAttributeValue(ATTRIBUTE_MANIFEST_VERSION);
         if (readManifestVersion != null) {
             manifestVersion = readManifestVersion;
-            mainSection.removeAttribute(ATTR_MANIFEST_VERSION);
+            mainSection.removeAttribute(ATTRIBUTE_MANIFEST_VERSION);
         }
 
         while ((line = reader.readLine()) != null) {
@@ -269,9 +417,9 @@ public class Manifest {
             Section section = new Section();
             if (nextSectionName == null) {
                 Attribute sectionName = new Attribute(line);
-                if (!sectionName.getName().equalsIgnoreCase(ATTR_NAME)) {
-                    throw new IOException("Manifest sections should start with a \"" + ATTR_NAME + 
-                                          "\" attribute and not \"" + sectionName.getName() + "\"");
+                if (!sectionName.getName().equalsIgnoreCase(ATTRIBUTE_NAME)) {
+                    throw new ManifestException("Manifest sections should start with a \"" + ATTRIBUTE_NAME + 
+                                                "\" attribute and not \"" + sectionName.getName() + "\"");
                 }
                 nextSectionName = sectionName.getValue();
             }
@@ -291,8 +439,13 @@ public class Manifest {
     
     /**
      * Merge the contents of the given manifest into this manifest
+     *
+     * @param other the Manifest to be merged with this one.
+     *
+     * @throws ManifestException if there is a problem merging the manfest according
+     *         to the Manifest spec.
      */
-    public void merge(Manifest other) throws IOException {
+    public void merge(Manifest other) throws ManifestException {
         manifestVersion = other.manifestVersion;
         mainSection.merge(other.mainSection);
         for (Enumeration e = other.sections.keys(); e.hasMoreElements();) {
@@ -306,18 +459,35 @@ public class Manifest {
                 ourSection.merge(otherSection);
             }
         }
+        
+        // add in the warnings
+        for (Enumeration e = other.warnings.elements(); e.hasMoreElements();) {
+            warnings.addElement(e.nextElement());
+        }
     }
     
+    /**
+    * Write the manifest out to a print writer.
+    *
+    * @param writer the Writer to which the manifest is written
+    *
+    * @throws IOException if the manifest cannot be written
+    */
     public void write(PrintWriter writer) throws IOException {
-        writer.println(ATTR_MANIFEST_VERSION + ": " + manifestVersion);
-        String signatureVersion = mainSection.getAttributeValue(ATTR_SIGNATURE_VERSION);
+        writer.println(ATTRIBUTE_MANIFEST_VERSION + ": " + manifestVersion);
+        String signatureVersion = mainSection.getAttributeValue(ATTRIBUTE_SIGNATURE_VERSION);
         if (signatureVersion != null) {
-            writer.println(ATTR_SIGNATURE_VERSION + ": " + signatureVersion);
-            mainSection.removeAttribute(ATTR_SIGNATURE_VERSION);
+            writer.println(ATTRIBUTE_SIGNATURE_VERSION + ": " + signatureVersion);
+            mainSection.removeAttribute(ATTRIBUTE_SIGNATURE_VERSION);
         }
         mainSection.write(writer);
         if (signatureVersion != null) {
-            mainSection.addAttribute(new Attribute(ATTR_SIGNATURE_VERSION, signatureVersion));
+            try {
+                mainSection.addAttribute(new Attribute(ATTRIBUTE_SIGNATURE_VERSION, signatureVersion));
+            }
+            catch (ManifestException e) {
+                // shouldn't happen - ignore
+            }
         }
         
         for (Enumeration e = sections.elements(); e.hasMoreElements();) {
@@ -326,6 +496,11 @@ public class Manifest {
         }
     }
     
+    /**
+     * Convert the manifest to its string representation
+     *
+     * @return a multiline string with the Manifest as it appears in a Manifest file.
+     */
     public String toString() {
         StringWriter sw = new StringWriter();
         try {
@@ -335,5 +510,14 @@ public class Manifest {
             return null;
         }
         return sw.toString();
+    }
+    
+    /**
+     * Get the warnings for this manifest.
+     *
+     * @return an enumeration of warning strings
+     */
+    public Enumeration getWarnings() {
+        return warnings.elements();
     }
 }

@@ -59,6 +59,7 @@ import org.apache.tools.ant.types.ZipFileSet;
 import org.apache.tools.zip.*;
 
 import java.io.*;
+import java.util.Enumeration;
 
 /**
  * Creates a JAR archive.
@@ -67,6 +68,7 @@ import java.io.*;
  */
 public class Jar extends Zip {
 
+    private File manifestFile;
     private Manifest manifest;
     private Manifest execManifest;    
 
@@ -86,6 +88,8 @@ public class Jar extends Zip {
             throw new BuildException("Manifest file: " + manifestFile + " does not exist.", 
                                      getLocation());
         }
+
+        this.manifestFile = manifestFile;
         
         InputStream is = null;
         try {
@@ -95,6 +99,10 @@ public class Jar extends Zip {
                 manifest = getDefaultManifest();
             }
             manifest.merge(newManifest);
+        }
+        catch (ManifestException e) {
+            log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
+            throw new BuildException("Invalid Manifest: " + manifestFile, e, getLocation());
         }
         catch (IOException e) {
             throw new BuildException("Unable to read manifest file: " + manifestFile, e);
@@ -120,25 +128,39 @@ public class Jar extends Zip {
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException
     {
-        // If no manifest is specified, add the default one.
-        if (manifest == null) {
-            execManifest = null;
+        try {
+            // If no manifest is specified, add the default one.
+            if (manifest == null) {
+                execManifest = null;
+            }
+            else {
+                execManifest = new Manifest();
+                execManifest.merge(manifest);
+            }
+            zipDir(null, zOut, "META-INF/");
+            super.initZipOutputStream(zOut);
         }
-        else {
-            execManifest = new Manifest();
-            execManifest.merge(manifest);
+        catch (ManifestException e) {
+                log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
+                throw new BuildException("Invalid Manifest", e, getLocation());
         }
-        zipDir(null, zOut, "META-INF/");
-        super.initZipOutputStream(zOut);
     }
-
-    private Manifest getDefaultManifest() throws IOException {
-        String s = "/org/apache/tools/ant/defaultManifest.mf";
-        InputStream in = this.getClass().getResourceAsStream(s);
-        if (in == null) {
-            throw new BuildException("Could not find: " + s);
+        
+    private Manifest getDefaultManifest() {
+        try {
+            String s = "/org/apache/tools/ant/defaultManifest.mf";
+            InputStream in = this.getClass().getResourceAsStream(s);
+            if (in == null) {
+                throw new BuildException("Could not find default manifest: " + s);
+            }
+            return new Manifest(in);
         }
-        return new Manifest(in);
+        catch (ManifestException e) {
+            throw new BuildException("Default manifest is invalid !!");
+        }
+        catch (IOException e) {
+            throw new BuildException("Unable to read default manifest", e);
+        }
     }   
     
     protected void finalizeZipOutputStream(ZipOutputStream zOut)
@@ -146,6 +168,10 @@ public class Jar extends Zip {
 
         if (execManifest == null) {
             execManifest = getDefaultManifest();
+        }
+
+        for (Enumeration e = execManifest.getWarnings(); e.hasMoreElements(); ) {
+            log("Manifest warning: " + (String)e.nextElement(), Project.MSG_WARN);
         }
         
         // time to write the manifest
@@ -157,7 +183,6 @@ public class Jar extends Zip {
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         super.zipFile(bais, zOut, "META-INF/MANIFEST.MF", System.currentTimeMillis());
         super.finalizeZipOutputStream(zOut);
-
     }
 
     /**
@@ -169,11 +194,17 @@ public class Jar extends Zip {
      * and not the old one from the JAR we are updating
      */
     private void zipManifestEntry(InputStream is) throws IOException {
-        if (execManifest == null) {
-            execManifest = new Manifest(is);
+        try {
+            if (execManifest == null) {
+                execManifest = new Manifest(is);
+            }
+            else if (isAddingNewFiles()) {
+                execManifest.merge(new Manifest(is));
+            }
         }
-        else if (isAddingNewFiles()) {
-            execManifest.merge(new Manifest(is));
+        catch (ManifestException e) {
+            log("Manifest is invalid: " + e.getMessage(), Project.MSG_ERR);
+            throw new BuildException("Invalid Manifest", e, getLocation());
         }
     }
     
@@ -223,6 +254,27 @@ public class Jar extends Zip {
         }
     }
 
+    /**
+     * Check whether the archive is up-to-date; 
+     * @param scanners list of prepared scanners containing files to archive
+     * @param zipFile intended archive file (may or may not exist)
+     * @return true if nothing need be done (may have done something already); false if
+     *         archive creation should proceed
+     * @exception BuildException if it likes
+     */
+    protected boolean isUpToDate(FileScanner[] scanners, File zipFile) throws BuildException {
+        // need to handle manifest as a special check
+        if (manifestFile != null && manifestFile.lastModified() > zipFile.lastModified()) {
+            return false;
+        }
+        return super.isUpToDate(scanners, zipFile);
+    }
+        
+    protected boolean createEmptyZip(File zipFile) {
+        // Jar files always contain a manifest and can never be empty        
+        return false;
+    }
+    
     /**
      * Make sure we don't think we already have a MANIFEST next time this task
      * gets executed.
