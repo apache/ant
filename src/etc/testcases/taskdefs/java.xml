@@ -20,8 +20,6 @@
   <property name="pipeapp"
     value="org.apache.tools.ant.taskdefs.JavaTest$$PipeEntryPoint" />
 
-  <!--taskdef name="gc" classname="org.apache.tools.ant.taskdefs.optional.Gc" /-->
-
   <target name="testNoJarNoClassname">
     <java/>
   </target>
