@@ -569,10 +569,10 @@ public class ProjectHelper {
             + ex.getLocation().toString()
             + ex.getMessage();
         if (newLocation == null) {
-            return new BuildException(errorMessage);
+            return new BuildException(errorMessage, ex);
         } else {
             return new BuildException(
-                errorMessage, newLocation);
+                errorMessage, ex, newLocation);
         }
     }
 }
