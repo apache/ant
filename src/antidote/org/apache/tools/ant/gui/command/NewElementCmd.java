@@ -109,11 +109,11 @@ public class NewElementCmd extends AbstractCommand {
         String name = button.getText();
 
         // Get the AntAction
-        Action action = button.getAction();
-        if (!(action instanceof AntAction)) {
+        String cmdStr = button.getActionCommand();
+        AntAction antAction = getContext().getActions().getAction(cmdStr);
+        if (antAction == null) {
             return;
         }
-        AntAction antAction = (AntAction) action;
 
         ACSElement e = vals[vals.length - 1];
         
@@ -152,4 +152,6 @@ public class NewElementCmd extends AbstractCommand {
         }
     }
 }
+
+
 
