@@ -1,5 +1,5 @@
 #
-#  Copyright  2002-2004 Apache Software Foundation
+#  Copyright  2002-2005 Apache Software Foundation
 # 
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 # statement for a given year.
 #
 # Rename (or symlink) this script to the year you want to check, i.e. name it
-# 2002 if you want to check for copyright statements that do not contain#
+# 2002 if you want to check for copyright statements that do not contain
 # the year 2002.
 #
 # Use this script instead of your usual cvs update command.
