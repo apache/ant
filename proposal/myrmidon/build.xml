@@ -537,6 +537,8 @@ Legal:
                debug="${debug}"
                deprecation="${deprecation}">
             <classpath refid="project.class.path"/>
+            <exclude name="**/SmbFileSystemTest.java" unless="jcifs.present"/>
+            <exclude name="**/FtpFileSystemTest.java" unless="netcomp.present"/>
         </javac>
 
         <!-- Prepare test files -->
