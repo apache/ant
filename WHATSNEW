@@ -34,6 +34,11 @@ Changes that could break older environments:
   now - and we'd like to know about it.  The current set of tasks is
   supposed to work with any version of VAJ starting with 3.0.
 
+* <input> will no longer prompt the user and wait for input if the
+  addproperty attribute is set to a property that has already been
+  defined in the project.  If you rely on the task waiting for input,
+  don't use the addproperty attribute.
+
 Fixed bugs:
 -----------
 * Filter readers were not handling line endings properly.  Bugzilla

@@ -24,7 +24,10 @@ one of the predefined.</p>
 <p>Optionally a property can be created from the value entered by the
 user. This property can then be used during the following build
 run. Input behaves according to <a href="property.html">property
-task</a> which means that existing properties cannot be overriden.</p>
+task</a> which means that existing properties cannot be overriden.
+Since Ant 1.6, <code>&lt;input&gt;</code> will not prompt for input if
+a property should be set by the task that has already been set in the
+project (and the task wouldn't have any effect).</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">

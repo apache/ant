@@ -137,6 +137,12 @@ public class Input extends Task {
      * @exception BuildException
      */
     public void execute () throws BuildException {
+        if (addproperty != null 
+            && getProject().getProperty(addproperty) != null) {
+            log("skipping " + getTaskName() + " as property " + addproperty
+                + " has already been set.");
+        }
+
         InputRequest request = null;
         if (validargs != null) {
             Vector accept = StringUtils.split(validargs, ',');
