@@ -54,14 +54,14 @@
 
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.util.StringUtils;
+
 /**
  * Extends DefaultLogger to strip out empty targets.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
 public class NoBannerLogger extends DefaultLogger {
-
-    static private final String lSep = System.getProperty("line.separator");
 
     protected String targetName;
 
@@ -76,13 +76,13 @@ public class NoBannerLogger extends DefaultLogger {
     public void messageLogged(BuildEvent event) {
 
         if( event.getPriority() > msgOutputLevel ||
-                null == event.getMessage() || 
+                null == event.getMessage() ||
             "".equals( event.getMessage().trim() ) ) {
             return;
         }
 
         if( null != targetName ) {
-            out.println(lSep + targetName + ":");
+            out.println(StringUtils.LINE_SEP + targetName + ":");
             targetName = null;
         }
 

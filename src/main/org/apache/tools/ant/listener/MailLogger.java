@@ -66,6 +66,7 @@ import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.mail.MailMessage;
 
 /**
@@ -101,8 +102,6 @@ import org.apache.tools.mail.MailMessage;
 public class MailLogger extends DefaultLogger {
 
   private StringBuffer buffer = new StringBuffer();
-
-  static private final String lSep = System.getProperty("line.separator");
 
   /**
    *  Sends an e-mail with the log results.
@@ -179,7 +178,7 @@ public class MailLogger extends DefaultLogger {
    *@param  message
    */
   protected void log(String message) {
-    buffer.append(message + lSep);
+    buffer.append(message + StringUtils.LINE_SEP);
   }
 
 

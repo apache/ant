@@ -73,6 +73,9 @@ public class DefaultLogger implements BuildLogger {
     protected int msgOutputLevel = Project.MSG_ERR;
     private long startTime = System.currentTimeMillis();
 
+    /** line separator */
+    protected final static String lSep = StringUtils.LINE_SEP;
+
     protected boolean emacsMode = false;
 
     /**
