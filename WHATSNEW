@@ -4,6 +4,10 @@ Changes from Ant 1.5.3 to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* This version of Ant can not be built with JDK 1.1 and requires at
+  least Java 1.2 at runtime as well.  Compiling for a 1.1 target is
+  still supported.
+
 * Targets cannot have the empty string as their name any longer.
 
 * ant.jar's manifest does no longer include a Class-Path entry, so it
