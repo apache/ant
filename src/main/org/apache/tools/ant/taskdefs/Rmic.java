@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -457,7 +457,7 @@ public class Rmic extends MatchingTask {
      * Scans the directory looking for class files to be compiled.
      * The result is returned in the class variable compileList.
      */
-    protected void scanDir(File baseDir, String files[],
+    protected void scanDir(File baseDir, String[] files,
                            FileNameMapper mapper) {
 
         String[] newFiles = files;
