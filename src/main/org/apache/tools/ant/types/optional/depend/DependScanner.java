@@ -69,7 +69,7 @@ public class DependScanner extends DirectoryScanner {
      *
      * @param rootClasses the rootClasses to be used for this scan.
      */
-    public void setRootClasses(Vector rootClasses) {
+    public synchronized void setRootClasses(Vector rootClasses) {
         this.rootClasses = rootClasses;
     }
 
@@ -79,16 +79,17 @@ public class DependScanner extends DirectoryScanner {
      * @return the names of the files.
      */
     public String[] getIncludedFiles() {
-        int count = included.size();
-        String[] files = new String[count];
-        for (int i = 0; i < count; i++) {
+        String[] files = new String[getIncludedFilesCount()];
+        for (int i = 0; i < files.length; i++) {
             files[i] = (String) included.elementAt(i);
         }
         return files;
     }
 
-    //inherit doc
-    public int getIncludedFilesCount() {
+    /**
+     * @see DirectoryScanner#getIncludedFilesCount
+     */
+    public synchronized int getIncludedFilesCount() {
         if (included == null) {
             throw new IllegalStateException();
         }
@@ -100,7 +101,7 @@ public class DependScanner extends DirectoryScanner {
      *
      * @exception IllegalStateException when basedir was set incorrectly.
      */
-    public void scan() throws IllegalStateException {
+    public synchronized void scan() throws IllegalStateException {
         included = new Vector();
         String analyzerClassName = DEFAULT_ANALYZER_CLASS;
         DependencyAnalyzer analyzer = null;
