@@ -55,8 +55,8 @@
 package org.apache.tools.ant;
 
 import java.io.PrintStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+
+
 
 import org.apache.tools.ant.util.StringUtils;
 

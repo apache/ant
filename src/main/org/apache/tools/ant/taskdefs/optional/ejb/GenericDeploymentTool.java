@@ -74,12 +74,13 @@ import javax.xml.parsers.SAXParser;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.types.*;
+
+
 import org.apache.tools.ant.util.depend.Dependencies;
 import org.apache.tools.ant.util.depend.Filter;
-import org.apache.bcel.classfile.*;
-import org.apache.bcel.*;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.ClassParser;
+
 
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;

@@ -85,8 +85,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.TextEvent;
 import java.awt.event.WindowEvent;
-import java.io.StringWriter;
-import java.io.PrintWriter;
+
+
 import java.beans.PropertyChangeListener;
 
 import org.apache.tools.ant.BuildException;

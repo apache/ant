@@ -192,7 +192,7 @@ public class StarTeamList extends TreeBasedTask {
         log(b.toString());
     }
 
-    private static final String blankstr = blanks(30);
+    private final static String blankstr = blanks(30);
 
     private static String blanks(int len) {
         StringBuffer b = new StringBuffer();

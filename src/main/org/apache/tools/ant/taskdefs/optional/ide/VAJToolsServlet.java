@@ -57,8 +57,8 @@ package org.apache.tools.ant.taskdefs.optional.ide;
 
 
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.PrintWriter;
+
+
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

@@ -98,7 +98,7 @@ public class StarTeamLabel extends StarTeamTask {
      */
     private OLEDate lastBuild = null;
 
-    private static final SimpleDateFormat DATE_FORMAT =
+    private final static SimpleDateFormat DATE_FORMAT =
             new SimpleDateFormat("yyyyMMddHHmmss");
 
 

@@ -55,7 +55,7 @@
 package org.apache.tools.ant.types;
 
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
+
 import org.apache.tools.ant.BuildException;
 
 import java.io.File;

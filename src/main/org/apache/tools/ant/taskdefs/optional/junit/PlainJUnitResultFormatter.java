@@ -65,7 +65,7 @@ import java.util.Hashtable;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-import junit.framework.TestCase;
+
 
 /**
  * Prints plain text output of the test to a specified Writer.

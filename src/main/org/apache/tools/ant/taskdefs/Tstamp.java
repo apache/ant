@@ -234,14 +234,14 @@ public class Tstamp extends Task {
 
     public static class Unit extends EnumeratedAttribute {
 
-        private static final String MILLISECOND = "millisecond";
-        private static final String SECOND = "second";
-        private static final String MINUTE = "minute";
-        private static final String HOUR = "hour";
-        private static final String DAY = "day";
-        private static final String WEEK = "week";
-        private static final String MONTH = "month";
-        private static final String YEAR = "year";
+        private final static String MILLISECOND = "millisecond";
+        private final static String SECOND = "second";
+        private final static String MINUTE = "minute";
+        private final static String HOUR = "hour";
+        private final static String DAY = "day";
+        private final static String WEEK = "week";
+        private final static String MONTH = "month";
+        private final static String YEAR = "year";
 
         private final static String[] units = {
                                                 MILLISECOND,

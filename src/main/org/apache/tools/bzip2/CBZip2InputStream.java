@@ -59,7 +59,8 @@
  */
 package org.apache.tools.bzip2;
 
-import java.io.*;
+import java.io.InputStream;
+import java.io.IOException;
 
 /**
  * An input stream that decompresses from the BZip2 format (without the file
@@ -151,13 +152,13 @@ public class CBZip2InputStream extends InputStream implements BZip2Constants {
 
     private int currentChar = -1;
 
-    private static final int START_BLOCK_STATE = 1;
-    private static final int RAND_PART_A_STATE = 2;
-    private static final int RAND_PART_B_STATE = 3;
-    private static final int RAND_PART_C_STATE = 4;
-    private static final int NO_RAND_PART_A_STATE = 5;
-    private static final int NO_RAND_PART_B_STATE = 6;
-    private static final int NO_RAND_PART_C_STATE = 7;
+    private final static int START_BLOCK_STATE = 1;
+    private final static int RAND_PART_A_STATE = 2;
+    private final static int RAND_PART_B_STATE = 3;
+    private final static int RAND_PART_C_STATE = 4;
+    private final static int NO_RAND_PART_A_STATE = 5;
+    private final static int NO_RAND_PART_B_STATE = 6;
+    private final static int NO_RAND_PART_C_STATE = 7;
 
     private int currentState = START_BLOCK_STATE;
 

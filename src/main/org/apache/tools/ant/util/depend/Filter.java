@@ -53,7 +53,7 @@
  */
 package org.apache.tools.ant.util.depend;
 
-import java.util.*;
+
 
 public interface Filter {
     boolean accept(Object object);

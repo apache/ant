@@ -62,7 +62,7 @@ import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Date;
+
 
 /**
  * Untar a file.

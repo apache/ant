@@ -58,8 +58,8 @@ import java.io.OutputStream;
 import java.io.Writer;
 import java.io.OutputStreamWriter;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.PrintWriter;
+
+
 
 
 import java.util.Properties;
@@ -75,7 +75,7 @@ import org.apache.tools.ant.util.DOMElementWriter;
 
 import junit.framework.AssertionFailedError;
 import junit.framework.Test;
-import junit.framework.TestCase;
+
 
 /**
  * Prints XML output of the test to a specified Writer.

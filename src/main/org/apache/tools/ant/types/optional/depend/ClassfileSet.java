@@ -53,15 +53,15 @@
  */
 package org.apache.tools.ant.types.optional.depend;
 
-import java.io.File;
-import java.util.Stack;
+
+
 import java.util.List;
 import java.util.ArrayList;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.util.depend.Dependencies;
+
 
 /**
  * A DepSet is a FileSet, that enlists all classes that depend on a
@@ -76,7 +76,7 @@ import org.apache.tools.ant.util.depend.Dependencies;
 public class ClassfileSet extends FileSet {
     private List rootClasses = new ArrayList();
 
-    static public class ClassRoot {
+    public static class ClassRoot {
         private String rootClass;
         
         public void setClassname(String name) {

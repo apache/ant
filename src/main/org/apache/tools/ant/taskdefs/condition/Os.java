@@ -66,13 +66,13 @@ import java.util.Locale;
  * @version $Revision$
  */
 public class Os implements Condition {
-    private static final String osName =
+    private final static String osName =
         System.getProperty("os.name").toLowerCase(Locale.US);
-    private static final String osArch =
+    private final static String osArch =
         System.getProperty("os.arch").toLowerCase(Locale.US);
-    private static final String osVersion =
+    private final static String osVersion =
         System.getProperty("os.version").toLowerCase(Locale.US);
-    private static final String pathSep = System.getProperty("path.separator");
+    private final static String pathSep = System.getProperty("path.separator");
 
     private String family;
     private String name;

@@ -58,7 +58,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectComponent;
 
-import java.io.IOException;
+
 import java.net.MalformedURLException;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;

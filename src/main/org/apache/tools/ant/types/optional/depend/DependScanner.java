@@ -53,15 +53,22 @@
  */
 package org.apache.tools.ant.types.optional.depend;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Iterator;
+import java.util.HashSet;
 
 import org.apache.tools.ant.util.depend.Dependencies;
 import org.apache.tools.ant.util.depend.Filter;
 import org.apache.tools.ant.DirectoryScanner;
 
-import org.apache.bcel.classfile.*;
-import org.apache.bcel.*;
+import org.apache.bcel.classfile.JavaClass;
+import org.apache.bcel.classfile.ClassParser;
+
 
 /**
  * An interface used to describe the actions required by any type of 

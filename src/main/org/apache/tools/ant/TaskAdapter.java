@@ -55,7 +55,7 @@
 package org.apache.tools.ant;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+
 
 
 /**

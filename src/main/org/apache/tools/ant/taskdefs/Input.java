@@ -59,7 +59,9 @@ import  java.io.InputStreamReader;
 import  java.io.IOException;
 import  java.util.StringTokenizer;
 import  java.util.Vector;
-import  org.apache.tools.ant.*;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 
 
 /**

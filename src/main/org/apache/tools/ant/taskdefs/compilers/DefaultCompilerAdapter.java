@@ -62,7 +62,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Commandline;
-import org.apache.tools.ant.types.FileSet;
+
 import org.apache.tools.ant.util.FileUtils;
 
 import java.io.File;

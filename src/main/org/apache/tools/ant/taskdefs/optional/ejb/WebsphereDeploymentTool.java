@@ -54,18 +54,30 @@
 
 package org.apache.tools.ant.taskdefs.optional.ejb;
 
-import java.io.*;
-import java.util.jar.*;
-import java.util.*;
-import java.net.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
+import java.util.jar.JarEntry;
+import java.util.Iterator;
+import java.util.Hashtable;
+import java.util.Enumeration;
 
-import javax.xml.parsers.*;
-import org.xml.sax.*;
 
-import org.apache.tools.ant.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.types.*;
-import org.apache.tools.ant.taskdefs.ExecTask;
+
+
+
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Environment;
+import org.apache.tools.ant.types.Commandline;
+
 /**
  * Websphere deployment tool that augments the ejbjar task.
  * @author <mailto:msahu@interkeel.com>Maneesh Sahu</mailto>
@@ -83,16 +95,16 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
         }
     }
         
-    public static final String PUBLICID_EJB11
+    public final static String PUBLICID_EJB11
         = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
-    public static final String PUBLICID_EJB20
+    public final static String PUBLICID_EJB20
         = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
-    protected static final String SCHEMA_DIR = "Schema/";
+    protected final static String SCHEMA_DIR = "Schema/";
         
-    protected static final String WAS_EXT = "ibm-ejb-jar-ext.xmi";
-    protected static final String WAS_BND = "ibm-ejb-jar-bnd.xmi";
-    protected static final String WAS_CMP_MAP = "Map.mapxmi";
-    protected static final String WAS_CMP_SCHEMA = "Schema.dbxmi";
+    protected final static String WAS_EXT = "ibm-ejb-jar-ext.xmi";
+    protected final static String WAS_BND = "ibm-ejb-jar-bnd.xmi";
+    protected final static String WAS_CMP_MAP = "Map.mapxmi";
+    protected final static String WAS_CMP_SCHEMA = "Schema.dbxmi";
         
     /** Instance variable that stores the suffix for the websphere jarfile. */
     private String jarSuffix = ".jar";

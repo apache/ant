@@ -64,7 +64,7 @@ import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.ProjectHelper;
+
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Path;
