@@ -74,7 +74,7 @@ import java.util.Vector;
  * @author ludovic.claude@websitewatchers.co.uk
  * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
- * @author Takashi Okamoto <tokamoto@rd.nttdata.co.jp>
+ * @author <a href="tokamoto@rd.nttdata.co.jp">Takashi Okamoto</a>
  */
 public abstract class DefaultRmicAdapter implements RmicAdapter {
 
