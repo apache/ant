@@ -99,13 +99,17 @@ public class ProjectHelper {
      */
     private void parse() throws BuildException {
         FileInputStream inputStream = null;
+        InputSource inputSource = null;
         
         try {
             SAXParser saxParser = getParserFactory().newSAXParser();
             parser = saxParser.getParser();
             
-            inputStream = new FileInputStream(buildFile);
-            saxParser.parse(inputStream, new RootHandler());
+            String uri = "file:" + buildFile.getAbsolutePath().replace('\\', '/');
+            for (int index = uri.indexOf('#'); index != -1; index = uri.indexOf('#')) {
+                uri = uri.substring(0, index) + "%23" + uri.substring(index+1);
+            }
+            saxParser.parse(uri, new RootHandler());
         }
         catch(ParserConfigurationException exc) {
             throw new BuildException("Parser has not been configured correctly", exc);
@@ -208,16 +212,35 @@ public class ProjectHelper {
          */
         public InputSource resolveEntity(String publicId,
                                          String systemId) {
-
+        
             if (systemId.startsWith("file:")) {
                 String path = systemId.substring(5);
+                int index = path.indexOf("file:");
+                
+                // we only have to handle these for backward compatibility
+                // since they are in the FAQ.
+                while (index != -1) {
+                    path = path.substring(0, index) + path.substring(index + 5);
+                    index = path.indexOf("file:");
+                }
+                
+                String entitySystemId = path;
+                index = path.indexOf("%23");
+                // convert these to #
+                while (index != -1) {
+                    path = path.substring(0, index) + "#" + path.substring(index + 3);
+                    index = path.indexOf("%23");
+                }
+
                 File file = new File(path);
                 if (!file.isAbsolute()) {
                     file = new File(buildFileParent, path);
                 }
                 
                 try {
-                    return new InputSource(new FileInputStream(file));
+                    InputSource inputSource = new InputSource(new FileInputStream(file));
+                    inputSource.setSystemId("file:" + entitySystemId);
+                    return inputSource;
                 } catch (FileNotFoundException fne) {
                     project.log(file.getAbsolutePath()+" could not be found", 
                                 Project.MSG_WARN);
