@@ -332,7 +332,8 @@ Installing Ant / Optional Tasks</a> section above.</p>
   </tr>
   <tr>
     <td >bsf.jar</td>
-    <td>script task</td>
+    <td>script task<br/>
+    bsf2.3 is recommended.</td>
     <td><a href="http://jakarta.apache.org/bsf/" target="_top">http://jakarta.apache.org/bsf/</a></td>
   </tr>
   <tr>
@@ -343,7 +344,8 @@ Installing Ant / Optional Tasks</a> section above.</p>
   </tr>
   <tr>
     <td>js.jar</td>
-    <td>Javascript with script task</td>
+    <td>Javascript with script task<br/>
+    rhino 1.5R3 is the recommended version. Do not use 1.5R4.</td>
     <td><a href="http://www.mozilla.org/rhino/" target="_top">www.mozilla.org/rhino</a></td>
   </tr>
   <tr>
@@ -438,6 +440,15 @@ Already included in jdk 1.4</td>
     <td>image task</td>
     <td><a href="http://java.sun.com/products/java-media/jai/"
         target="_top">http://java.sun.com/products/java-media/jai/</a></td>
+  </tr>
+  <tr>
+    <td>IContract</td>
+    <td>icontract task<br/>
+    Warning : the icontract jar file contains also antlr classes.<br/>
+    To make the antlr task work properly, remove antlr/ANTLRGrammarParseBehavior.class
+    from the icontract jar file installed under $ANT_HOME/lib.</td>
+    <td><a href="http://www.reliable-systems.com/tools/"
+    target="_top">http://www.reliable-systems.com/tools/</a></td>
   </tr>
 </table>
 <br>
