@@ -325,9 +325,9 @@ public class Ant extends Task {
 
             // Are we trying to call the target in which we are defined (or
             // the build file if this is a top level task)?
-            if (newProject.getProperty("ant.file")
-                .equals(getProject().getProperty("ant.file"))
-                && getOwningTarget() != null) {
+            if (newProject.resolveFile(newProject.getProperty("ant.file"))
+                .equals(getProject().resolveFile(getProject()
+                .getProperty("ant.file"))) && getOwningTarget() != null) {
 
                 if (getOwningTarget().getName().equals("")) {
                     if (getTaskName().equals("antcall")) {

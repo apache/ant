@@ -23,6 +23,8 @@ Fixed bugs:
 
 * replacestring tokenfilter only replaced the first occurrence.
 
+* AntLikeTasksAtTopLevelTest failed on cygwin.
+
 Other changes:
 --------------
 
