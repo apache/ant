@@ -5,10 +5,10 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.modules.basic;
+package org.apache.myrmidon.libs.core;
 
-import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This is the echo task to display a message.
@@ -18,7 +18,7 @@ import org.apache.myrmidon.api.AbstractTask;
 public class Echo 
     extends AbstractTask
 {
-    protected String              m_message;
+    private String      m_message;
 
     public void setMessage( final String message )
     {
