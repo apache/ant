@@ -103,8 +103,6 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
             if (sysProperties != null) {
                 sysProperties.setSystem();
             }
-
-            final Class[] param = {Class.forName("[Ljava.lang.String;")};
             Class target = null;
             if (classpath == null) {
                 target = Class.forName(classname);
@@ -118,18 +116,15 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                 loader.forceLoadClass(classname);
                 target = Class.forName(classname, true, loader);
             }
-            main = target.getMethod("main", param);
+            main = target.getMethod("main", new Class[] {String[].class});
             if (main == null) {
                 throw new BuildException("Could not find main() method in "
                                          + classname);
             }
-
             if ((main.getModifiers() & Modifier.STATIC) == 0) {
                 throw new BuildException("main() method in " + classname
                     + " is not declared static");
             }
-
-
             if (timeout == null) {
                 run();
             } else {
@@ -161,11 +156,9 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
                     }
                 }
             }
-
             if (caught != null) {
                 throw caught;
             }
-
         } catch (ClassNotFoundException e) {
             throw new BuildException("Could not find " + classname + "."
                                      + " Make sure you have it in your"
