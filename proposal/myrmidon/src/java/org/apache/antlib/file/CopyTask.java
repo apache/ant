@@ -120,6 +120,11 @@ public class CopyTask
         m_mapper = mapper;
     }
 
+    protected final boolean isPreserveLastModified()
+    {
+        return m_preserveLastModified;
+    }
+
     public void execute()
         throws TaskException
     {
@@ -417,7 +422,7 @@ public class CopyTask
      * Utility method to perform operation to transform a single source file
      * to a destination.
      */
-    private void doOperation( final String sourceFilename,
+    protected void doOperation( final String sourceFilename,
                               final String destinationFilename )
         throws IOException
     {
