@@ -620,8 +620,18 @@ if the <i>org.whatever.Myclass</i> is found in Ant's classpath.</p>
 <hr>
 <h2><a name="chmod">Chmod</a></h2>
 <h3>Description</h3>
-<p>Changes the permissions of a file. Right now it has efect only under Unix.
+<p>Changes the permissions of a file or all files inside a specified directory. Right now it has efect only under Unix.
 The permissions are also UNIX style, like the argument for the chmod command.</p>
+<p>It is possible to refine the set of files whose permissions are changed. This can be
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
+the files you want to have excluded. This is also done with patterns. And
+finally with the <i>defaultexcludes</i> attribute, you can specify whether you
+want to use default exclusions or not. See the section on <a
+href="#directorybasedtasks">directory based tasks</a>, on how the
+inclusion/exclusion of files works, and how to write patterns. The patterns are
+relative to the <i>dir</i> directory.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -630,23 +640,71 @@ The permissions are also UNIX style, like the argument for the chmod command.</p
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
   <tr>
+    <td valign="top">file</td>
+    <td valign="top">the file or single directory of which the permissions 
+      must be changed.</td>
+    <td valign="top" valign="middle" rowspan="2">exactly one of the two</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory which holds the files whose permissions 
+      must be changed.</td>
+  </tr>
+  <tr>
     <td valign="top">src</td>
-    <td valign="top">the file of which the permissions must be changed.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top">the file or single directory of which the permissions 
+      must be changed (<b>deprecated</b>, use <i>file</i> instead).</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">perm</td>
     <td valign="top">the new permissions.</td>
     <td valign="top" align="center">Yes</td>
   </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <blockquote>
-  <p><code>&lt;chmod src=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;
+  <p><code>&lt;chmod file=&quot;${dist}/start.sh&quot; perm=&quot;ugo+rx&quot;
   /&gt;</code></p>
 </blockquote>
 <p>makes the &quot;start.sh&quot; file readable and executable for anyone on a
 UNIX system.</p>
+<pre>
+    &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; includes="**/*.sh" /&gt;
+</pre>
+</blockquote>
+<p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
+readable and executable for anyone on a UNIX system.</p>
 <hr>
 <h2><a name="copydir">Copydir</a></h2>
 <h3>Description</h3>

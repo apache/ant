@@ -60,33 +60,66 @@ import java.io.*;
 import java.util.*;
 
 /**
- *
+ * Chmod equivalent for unix-like environments.
  *
  * @author costin@eng.sun.com
+ * @author Mariusz Nowostawski (Marni) <a href="mailto:mnowostawski@infoscience.otago.ac.nz">mnowostawski@infoscience.otago.ac.nz</a>
  */
 
-public class Chmod extends Task {
+public class Chmod extends MatchingTask {
 
-    private File srcFile;
+    private File srcFile; //if we want to chmod a single file or dir
+    private File srcDir;  //if we want to chmod a list of files
     private String mod;
     
+    public void setFile(String src) {
+        srcFile = project.resolveFile(src);
+    }
+
+    public void setDir(String src) {
+        srcDir = project.resolveFile(src);
+    }
+
     public void setSrc(String src) {
-	srcFile = project.resolveFile(src);
+        project.log("The src attribute is deprecated. " +
+                    "Please use the file attribute.",
+                    Project.MSG_WARN);
+        setFile(src);
     }
 
     public void setPerm(String perm) {
-	mod=perm;
+        mod=perm;
     }
 
     public void execute() throws BuildException {
-	try {
-	    // XXX if OS=unix
-	    if (System.getProperty("path.separator").equals(":") &&
-                    !System.getProperty("os.name").startsWith("Mac"))
-		Runtime.getRuntime().exec("chmod " + mod + " " + srcFile );
-	} catch (IOException ioe) {
-	    // ignore, but warn
-	    System.out.println("Error chmod" + ioe.toString() );
-	}
+        try {
+            // XXX if OS=unix
+            if (System.getProperty("path.separator").equals(":") &&
+                !System.getProperty("os.name").startsWith("Mac")) {
+        
+                if (srcFile != null && srcDir == null) {
+                    chmod(srcFile.toString());
+                } else if(srcFile == null && srcDir == null) {
+                    project.log("The attribute 'file' or 'dir' needs to be set.", Project.MSG_WARN);
+                    throw new BuildException("Required attribute not set in Chmod", location);
+                } else if(srcFile == null && srcDir != null) {
+          
+                    DirectoryScanner ds = getDirectoryScanner(srcDir);
+                    String[] files = ds.getIncludedFiles();
+          
+                    for (int i = 0; i < files.length; i++) {
+                        chmod(files[i]);
+                    }
+                }
+            }
+        } catch (IOException ioe) {
+            // ignore, but warn
+            project.log("Error in Chmod " + ioe.toString() , Project.MSG_WARN);
+        }
+    }
+
+
+    private void chmod(String file) throws BuildException, IOException {
+        Runtime.getRuntime().exec("chmod " + mod + " " + file);
     }
 }
