@@ -52,31 +52,39 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs.optional.ejb;
-
-import java.io.File;
+package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.taskdefs.Java;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy;
 
 /**
- *  A task to support "hot" deployment tools for J2EE servers.
+ *  Abstract class to support vendor-specific hot deployment tools.
+ *  This class will validate boilerplate attributes.
  *
- *  This class is used as a framework for the creation of vendor specific
- *  "hot" deployment tools.
+ *  Subclassing this class for a vendor specific tool involves the
+ *  following.
+ *  <ol><li>Implement the <code>isActionValid()<code> method to insure the
+ *  action supplied as the "action" attribute of ServerDeploy is valid.
+ *  <li>Implement the <code>validateAttributes()</code> method to insure
+ *  all required attributes are supplied, and are in the correct format.
+ *  <li>Add a <code>add&lt;TOOL&gt;</code> method to the ServerDeploy
+ *  class.  This method will be called when Ant encounters a
+ *  <code>add&lt;TOOL&gt;</code> task nested in the
+ *  <code>serverdeploy</code> task.
+ *  <li>Define the <code>deploy</code> method.  This method should perform
+ *  whatever task it takes to hot-deploy the component.  IE: spawn a JVM and
+ *  run class, exec a native executable, run Java code...
  *
  *  @author Christopher A. Longo - cal@cloud9.net
  *
- *  @see EjbHotDeploymentTool
- *  @see AbstractEjbHotDeploymentTool
- *  @see WebLogicHotDeploymentTool
+ *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
+ *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */
-public class EjbDeploy extends Task
+public abstract class AbstractHotDeploymentTool implements HotDeploymentTool
 {
-    /** The action to be performed.  IE: "deploy", "delete", etc... **/
-    private String action;
+    /** The parent task **/
+    private ServerDeploy task;
 
     /** The classpath passed to the JVM on execution. **/
     private Path classpath;
@@ -87,91 +95,71 @@ public class EjbDeploy extends Task
     /** The password for the deployment server. **/
     private String password;
 
-    /** The URL of the deployment server **/
-    private String serverUrl;
-
-    /** The source (fully-qualified path) to the component being deployed **/
-    private File source;
-
-    /** The vendor specific tool for deploying the component **/
-    private EjbHotDeploymentTool vendorTool;
+    /** The address of the deployment server **/
+    private String server;
 
     /**
-     *  Creates a classpath.  Used to handle the nested classpath
+     *  Add a classpath.  Used to handle the nested classpath
      *  element.
      *  @return A Path object representing the classpath to be used.
      */
     public Path createClasspath() {
         if(classpath == null)
-            classpath = new Path(project);
+            classpath = new Path(task.getProject());
 
         return classpath.createPath();
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    //	Place vendor specific tool creations here.
-    //
-    ///////////////////////////////////////////////////////////////////////////
+    /**
+     *  Determines if the "action" attribute defines a valid action.
+     *  <p>Subclasses should determine if the action passed in is
+     *  supported by the vendor's deployment tool.
+     *  <p>Actions may by "deploy", "delete", etc... It all depends
+     *  on the tool.
+     *  @return true if the "action" attribute is valid, false if not.
+     */
+    protected abstract boolean isActionValid();
 
     /**
-     *  Creates a WebLogic deployment tool, for deployment to WebLogic servers.
-     *  <p>Ant calls this method on creation to handle embedded "weblogic" tags
-     *  in the EjbDeploy task.
-     *  @return An instance of WebLogicHotDeployment tool.
+     *  Validates the passed in attributes.
+     *  Subclasses should chain to this super-method to insure
+     *  validation of boilerplate attributes.
+     *  <p>Only the "action" attribute is required in the
+     *  base class.  Subclasses should check attributes accordingly.
+     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
-    public WebLogicHotDeploymentTool createWeblogic() {
-        WebLogicHotDeploymentTool weblogic = new WebLogicHotDeploymentTool(this);
-        vendorTool = (EjbHotDeploymentTool)weblogic;
-        return weblogic;
+    public void validateAttributes() throws BuildException {
+        if (task.getAction() == null)
+            throw new BuildException("The \"action\" attribute must be set");
+
+        if (!isActionValid())
+            throw new BuildException("Invalid action \"" + task.getAction() + "\" passed");
+
+        if (classpath == null)
+            throw new BuildException("The classpath attribute must be set");
     }
 
     /**
-     *  Execute the task.
-     *  <p>This will fork a JVM and run the vendor-specific deployment tool.
-     *  The process will fail if the tool returns an error.
-     *  @exception BuildException if the attributes are invalid or incomplete
+     *  Perform the actual deployment.<br>
+     *  It's up to the subclasses to implement the actual behavior.
+     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
-    public void execute() throws BuildException {
-        if (vendorTool == null) {
-            throw new BuildException("No vendor tool specified");
-        }
-        
-        vendorTool.validateAttributes();
-
-        Java deploy = (Java)project.createTask("java");
-        deploy.setFork(true);
-        deploy.setFailonerror(true);
-        deploy.setClasspath(classpath);
-
-        deploy.setClassname(vendorTool.getClassName());
-        deploy.createArg().setLine(vendorTool.getArguments());
-        deploy.execute();
-
-        deploy = null;
-    }
-
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    //	Set/get methods
-    //
-    ///////////////////////////////////////////////////////////////////////////
+    public abstract void deploy() throws BuildException;
 
     /**
-     *  Returns the action field.
-     *  @return A string representing the "action" attribute.
+     *  Sets the parent task.
+     *  @param task a ServerDeploy object representing the parent task.
      */
-    public String getAction() {
-        return action;
+    public void setTask(ServerDeploy task) {
+        this.task = task;
     }
 
     /**
-     *  Sets the action field.
-     *  This is a required attribute.
-     *  @param action A String representing the "action" attribute.
+     *  Returns the task field, a ServerDeploy object.
+     *  @return An ServerDeploy representing the parent task.
      */
-    public void setAction(String action) {
-        this.action = action;
+    protected ServerDeploy getTask() {
+        return task;
     }
 
     /**
@@ -184,7 +172,7 @@ public class EjbDeploy extends Task
 
     /**
      *  Sets the classpath field.
-     *  This is not a required attribute.
+     *  This is a required attribute.
      *  @param classpath A Path object representing the "classpath" attribute.
      */
     public void setClasspath(Path classpath) {
@@ -201,7 +189,7 @@ public class EjbDeploy extends Task
 
     /**
      *  Sets the userName field.
-     *  This is not a required attribute.
+     *  This is a  <b>not</b> required attribute.
      *  @param userName A String representing the "userName" attribute.
      */
     public void setUserName(String userName) {
@@ -218,46 +206,27 @@ public class EjbDeploy extends Task
 
     /**
      *  Set the password field.
-     *  This is a required attribute.
-     *  @param A String representing the "password" attribute.
+     *  This is a  <b>not</b> required attribute.
+     *  @param password A String representing the "password" attribute.
      */
     public void setPassword(String password) {
         this.password = password;
     }
 
     /**
-     *  Returns the serverUrl field.
-     *  @return A String representing the "serverUrl" attribute.
+     *  Returns the server field.
+     *  @return A String representing the "server" attribute.
      */
-    public String getServerUrl() {
-        return serverUrl;
+    public String getServer() {
+        return server;
     }
 
     /**
-     *  Sets the serverUrl field.
-     *  This is not a required attribute.
-     *  @param serverUrl A String representing the "serverUrl" attribute.
+     *  Sets the server field.
+     *  This is  <b>not</b> a required attribute.
+     *  @param server A String representing the "server" attribute.
      */
-    public void setServerUrl(String serverUrl) {
-        this.serverUrl = serverUrl;
-    }
-
-    /**
-     *  Returns the source field (the path/filename of the component to be
-     *  deployed.
-     *  @return A File object representing the "source" attribute.
-     */
-    public File getSource() {
-        return source;
-    }
-
-    /**
-     *  Sets the source field (the path/filename of the component to be
-     *  deployed.
-     *  This is not a required attribute.
-     *  @param A String representing the "source" attribute.
-     */
-    public void setSource(File source) {
-        this.source = source;
+    public void setServer(String server) {
+        this.server = server;
     }
 }

@@ -52,9 +52,13 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs.optional.ejb;
+package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.Java;
+import org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy;
+import org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool;
+import org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool;
 
 /**
  *  An Ant wrapper task for the weblogic.deploy tool.  This is used to
@@ -62,35 +66,17 @@ import org.apache.tools.ant.BuildException;
  *  This is <b>not</b> the same as creating the application archive.
  *  This task assumes the archive (EAR, JAR, or WAR) file has been
  *  assembled and is supplied as the "source" attribute.
- *  <p>
- *  In the end, this task assembles the commadline parameters
- *  to run the weblogic.deploy tool.
+ *  <p>In the end, this task assembles the commadline parameters
+ *  and runs the weblogic.deploy tool in a seperate JVM.
  *
  *  @author Christopher A. Longo - cal@cloud9.net
  *
- *  @see EjbHotDeploymentTool
- *  @see AbstractEjbHotDeploymentTool
- *  @see EjbDeploy
+ *  @see org.apache.tools.ant.taskdefs.optional.j2ee.HotDeploymentTool
+ *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
+ *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */
-public class WebLogicHotDeploymentTool
-        extends AbstractEjbHotDeploymentTool
-        implements EjbHotDeploymentTool
+public class WebLogicHotDeploymentTool extends AbstractHotDeploymentTool implements HotDeploymentTool
 {
-    /** The delete action String **/
-    public static final String ACTION_DELETE = "delete";
-
-    /** The deploy action String **/
-    public static final String ACTION_DEPLOY = "deploy";
-
-    /** The list action String **/
-    public static final String ACTION_LIST = "list";
-
-    /** The undeploy action String **/
-    public static final String ACTION_UNDEPLOY = "undeploy";
-
-    /** The update action String **/
-    public static final String ACTION_UPDATE = "update";
-
     /** The classname of the tool to run **/
     private static final String WEBLOGIC_DEPLOY_CLASS_NAME = "weblogic.deploy";
 
@@ -99,29 +85,30 @@ public class WebLogicHotDeploymentTool
             {ACTION_DELETE, ACTION_DEPLOY, ACTION_LIST, ACTION_UNDEPLOY, ACTION_UPDATE};
 
     /** Represents the "-debug" flag from weblogic.deploy **/
-    public boolean debug;
+    private boolean debug;
 
     /** The application name that is being deployed **/
-    public String application;
+    private String application;
 
     /** The component name:target(s) for the "-component" argument of weblogic.deploy **/
-    public String component;
+    private String component;
 
     /**
-     *  Constructor
-     *  @param deploy - The super-task which wraps this task
+     *  Perform the actual deployment.<br>
+     *  For this implementation, a JVM is spawned and the weblogic.deploy
+     *  tools is executed.
+     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
-    public WebLogicHotDeploymentTool(EjbDeploy deploy) {
-        super(deploy);
-    }
+    public void deploy()
+    {
+        Java java = (Java)getTask().getProject().createTask("java");
+        java.setFork(true);
+        java.setFailonerror(true);
+        java.setClasspath(getClasspath());
 
-    /**
-     *  Returns the class name of the weblogic.deploy tool to the super-task.
-     *  <p>This is called by the super-task, EjbDeploy.
-     *  @return A String representing the classname of the deployment tool to run
-     */
-    public String getClassName() {
-        return WEBLOGIC_DEPLOY_CLASS_NAME;
+        java.setClassname(WEBLOGIC_DEPLOY_CLASS_NAME);
+        java.createArg().setLine(getArguments());
+        java.execute();
     }
 
     /**
@@ -131,30 +118,28 @@ public class WebLogicHotDeploymentTool
      *  attributes must be supplied.
      *  <li>If action is "delete" or "undeploy" the "application" attribute must
      *  be supplied.
-     *  @exception BuildException if the attributes are invalid or incomplete
+     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete
      */
     public void validateAttributes() throws BuildException {
         super.validateAttributes();
 
-        String action = getDeploy().getAction();
+        String action = getTask().getAction();
+
+        // check that the password has been set
+        if((getPassword() == null))
+            throw new BuildException("The password attribute must be set.");
 
         // check for missing application on deploy & update
-        if((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
-                && application == null)
-            throw new BuildException(
-                    "The application attribute must be set if action = " + action);
+        if((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) && application == null)
+            throw new BuildException("The application attribute must be set if action = " + action);
 
         // check for missing source on deploy & update
-        if((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
-                && getDeploy().getSource() == null)
-            throw new BuildException(
-                    "The source attribute must be set if action = " + action);
+        if((action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE)) && getTask().getSource() == null)
+            throw new BuildException("The source attribute must be set if action = " + action);
 
         // check for missing application on delete & undeploy
-        if((action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY))
-                && application == null)
-            throw new BuildException(
-                    "The application attribute must be set if action = " + action);
+        if((action.equals(ACTION_DELETE) || action.equals(ACTION_UNDEPLOY)) && application == null)
+            throw new BuildException("The application attribute must be set if action = " + action);
     }
 
     /**
@@ -163,7 +148,7 @@ public class WebLogicHotDeploymentTool
      *  @return A String containing the arguments for the weblogic.deploy tool.
      */
     public String getArguments() throws BuildException {
-        String action = getDeploy().getAction();
+        String action = getTask().getAction();
         String args = null;
 
         if(action.equals(ACTION_DEPLOY) || action.equals(ACTION_UPDATE))
@@ -184,7 +169,7 @@ public class WebLogicHotDeploymentTool
     protected boolean isActionValid() {
         boolean valid = false;
 
-        String action = getDeploy().getAction();
+        String action = getTask().getAction();
 
         for(int i = 0; i < VALID_ACTIONS.length; i++) {
             if(action.equals(VALID_ACTIONS[i])) {
@@ -203,22 +188,21 @@ public class WebLogicHotDeploymentTool
      *  The action-specific build methods will append to this StringBuffer.
      */
     protected StringBuffer buildArgsPrefix() {
-        EjbDeploy deploy = getDeploy();
-
+        ServerDeploy task = getTask();
         // constructs the "-url <url> -debug <action> <password>" portion
         // of the commmand line
         return new StringBuffer(1024)
-                .append((deploy.getServerUrl() != null)
-                ? "-url " + deploy.getServerUrl()
-                : "")
+                .append((getServer() != null)
+                    ? "-url " + getServer()
+                    : "")
                 .append(" ")
                 .append(debug ? "-debug " : "")
-                .append((deploy.getUserName() != null)
-                ? "-username " + deploy.getUserName()
-                : "")
+                .append((getUserName() != null)
+                    ? "-username " + getUserName()
+                    : "")
                 .append(" ")
-                .append(deploy.getAction()).append(" ")
-                .append(deploy.getPassword()).append(" ");
+                .append(task.getAction()).append(" ")
+                .append(getPassword()).append(" ");
     }
 
     /**
@@ -229,7 +213,7 @@ public class WebLogicHotDeploymentTool
     protected String buildDeployArgs() {
         String args = buildArgsPrefix()
                 .append(application).append(" ")
-                .append(getDeploy().getSource())
+                .append(getTask().getSource())
                 .toString();
 
         if(component != null)
@@ -260,7 +244,7 @@ public class WebLogicHotDeploymentTool
 
     /**
      *  Sets the debug field.
-     *  <p>This attribute is not a required attribute.
+     *  <p>This is not a required attribute.
      *  @param debug A boolean representing weblogic.deploy "-debug" flag.
      */
     public void setDebug(boolean debug) {
@@ -269,7 +253,7 @@ public class WebLogicHotDeploymentTool
 
     /**
      *  Sets the application field.
-     *  <p>This attribute is a required attribute.
+     *  <p>This is a required attribute.
      *  @param application A String representing the application portion of the
      *  weblogic.deploy command line.
      */

@@ -242,7 +242,7 @@ Other changes:
   "site chmod", as well as set the umask before transferring files, if
   the server supports "site umask".
   
-* New <ejbdeploy> "optional" task.
+* New <serverdeploy> "optional" task.
 
 * <patternset> now supports nested patternsets.
 

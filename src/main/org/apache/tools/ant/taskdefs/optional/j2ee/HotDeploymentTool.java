@@ -51,47 +51,51 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.ejb;
+package org.apache.tools.ant.taskdefs.optional.j2ee;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy;
 
 /**
  *  An interface for vendor-specific "hot" deployment tools.
  *
  *  @author Christopher A. Longo - cal@cloud9.net
  *
- *  @see AbstractEjbHotDeploymentTool
- *  @see EjbDeploy
+ *  @see org.apache.tools.ant.taskdefs.optional.j2ee.AbstractHotDeploymentTool
+ *  @see org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy
  */
-public interface EjbHotDeploymentTool
+public interface HotDeploymentTool
 {
-    /**
-     *  Returns the class name of the weblogic.deploy tool to the super-task.
-     *  <p>This is called by the super-task, EjbDeploy.
-     *  <p>Subclasses should return the fully qualified class name of the
-     *  vendor tool to run.  IE: "com.foobar.tools.DeployTool"
-     *  @return A String representing the classname of the deployment tool to run
-     */
-    public String getClassName();
+    /** The delete action String **/
+    public static final String ACTION_DELETE = "delete";
+
+    /** The deploy action String **/
+    public static final String ACTION_DEPLOY = "deploy";
+
+    /** The list action String **/
+    public static final String ACTION_LIST = "list";
+
+    /** The undeploy action String **/
+    public static final String ACTION_UNDEPLOY = "undeploy";
+
+    /** The update action String **/
+    public static final String ACTION_UPDATE = "update";
 
     /**
      *  Validates the passed in attributes.
-     *  <p>The rules are:
-     *  <ol><li>If action is "deploy" or "update" the "application" and "source"
-     *  attributes must be supplied.
-     *  <li>If action is "delete" or "undeploy" the "application" attribute must
-     *  be supplied.
-     *  @exception BuildException if the attributes are invalid or incomplete
+     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
     public void validateAttributes() throws BuildException;
 
     /**
-     *  Returns a String containing the runtime commandline arguments
-     *  of the deployment tool.
-     *  <p>Subclasses should return the appropriate string from that
-     *  vendor's tool.  IE: "-url=http://myserver:31337 -user=foo -passsword=bar"
-     *  @return a String containing the runtime commandline arguments
-     *  of the deployment tool.
+     *  Perform the actual deployment.<br>
+     *  @exception org.apache.tools.ant.BuildException if the attributes are invalid or incomplete.
      */
-    public String getArguments() throws BuildException;
+    public void deploy() throws BuildException;
+
+    /**
+     *  Sets the parent task.
+     *  @param task A ServerDeploy object representing the parent task.
+     */
+    public void setTask(ServerDeploy task);
 }
