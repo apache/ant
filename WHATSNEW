@@ -1,6 +1,23 @@
 Changes from Ant 1.3 to CVS Version
 ===========================================
 
+Changes that could break older environments:
+--------------------------------------------
+
+* Zip.setWhenempty() has changed its signature.
+
+Fixed bugs:
+-----------
+
+* Testcases have been made independant of current working directory.
+
+* Input ZIP-Files will be closed when using a <zipfileset>.
+
+* p4 tasks now don't fail if user, port or client have been ommitted
+  (and this is acceptable for the context of the command).
+
+* <javah>'s outputfile attribute will be resolved as relative to the
+  projects basedir.
 
 Changes from Ant 1.2 to Ant 1.3
 ===========================================
