@@ -274,16 +274,6 @@ front and back, extraNet implementations which have been based on
 Apache, Java and Tcl.
 </p>
 
-            <p>
-                <b>Anil Vijendran</b> (akv at eng.sun.com)
-<br/>
-Anil Vijendran is the principal developer of the JSP engine in
-Tomcat. He's done some pretty scary things in his past life --
-implementing the CORBA IDL to C++ 2.0 mapping, skydiving, IDL to Java
-compilers, Object Databases (SIGSEV, you da man!) for C++, Java ORB
-and EJB runtime environments -- in that order.
-</p>
-
       </subsection>
       <subsection name="Emeritus Committers">
             <p>
@@ -304,6 +294,11 @@ working on bringing software agent technology and J2EE together.
 </p>
 
             <p>
+                <b>Justyna Horwat</b> (horwat at apache.org)
+<br/>
+</p>
+
+<p>
                 <b>Stefano Mazzocchi</b> (stefano at apache.org)
 <br/>
 Stefano is addicted to software design, Java programming and
@@ -329,6 +324,17 @@ a next generation architecture and feature set for the core servlet
 engine.  He has recently joined Sun as technical lead for the servlet
 and JSP reference implementation.
           </p>
+
+          <p>
+                <b>Anil Vijendran</b> (akv at eng.sun.com)
+<br/>
+Anil Vijendran is the principal developer of the JSP engine in
+Tomcat. He's done some pretty scary things in his past life --
+implementing the CORBA IDL to C++ 2.0 mapping, skydiving, IDL to Java
+compilers, Object Databases (SIGSEV, you da man!) for C++, Java ORB
+and EJB runtime environments -- in that order.
+</p>
+
       </subsection>
     </section>
 
