@@ -42,10 +42,10 @@ Legal:
   </target>
 
   <target name="typedef-test">
-    <typedef name="log2"
-             type="task"
-             classname="org.apache.antlib.core.Log"
-             lib="../../dist/lib/core.atl" />
+    <type-def name="log2"
+              type="task"
+              classname="org.apache.antlib.core.Log"
+              lib="../../dist/lib/core.atl" />
 
     <log2 message="Luke to Echo base. Can you hear me?"/>
   </target>
