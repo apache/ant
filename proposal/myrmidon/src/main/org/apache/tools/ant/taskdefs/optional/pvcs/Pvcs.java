@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.exec.Execute;
 import org.apache.tools.ant.taskdefs.exec.LogOutputStream;
 import org.apache.tools.ant.types.Commandline;
@@ -319,7 +318,6 @@ public class Pvcs extends org.apache.tools.ant.Task
     public void execute()
         throws TaskException
     {
-        Project aProj = getProject();
         int result = 0;
 
         if( repository == null || repository.trim().equals( "" ) )
