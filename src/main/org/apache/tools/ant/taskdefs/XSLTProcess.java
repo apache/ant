@@ -216,8 +216,8 @@ public class XSLTProcess extends MatchingTask {
     /**
      * Sets the file to use for styling relative to the base directory.
      */
-    public void setStyle(String xslFile) {
-        this.xslFile = new File(xslFile);
+    public void setStyle(File xslFile) {
+        this.xslFile = xslFile;
     }
 
     /**
