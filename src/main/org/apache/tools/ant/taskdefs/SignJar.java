@@ -18,10 +18,7 @@ package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.Vector;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
@@ -95,6 +92,7 @@ public class SignJar extends Task {
 
     /**
      * the jar file to sign; required
+     * @param jar the jar file to sign
      */
     public void setJar(final File jar) {
         this.jar = jar;
@@ -102,6 +100,7 @@ public class SignJar extends Task {
 
     /**
      * the alias to sign under; required
+     * @param alias the alias to sign under
      */
     public void setAlias(final String alias) {
         this.alias = alias;
@@ -109,6 +108,7 @@ public class SignJar extends Task {
 
     /**
      * keystore location; required
+     * @param keystore the keystore location
      */
     public void setKeystore(final String keystore) {
         this.keystore = keystore;
@@ -116,6 +116,7 @@ public class SignJar extends Task {
 
     /**
      * password for keystore integrity; required
+     * @param storepass the password for the keystore
      */
     public void setStorepass(final String storepass) {
         this.storepass = storepass;
@@ -123,6 +124,7 @@ public class SignJar extends Task {
 
     /**
      * keystore type; optional
+     * @param storetype the keystore type
      */
     public void setStoretype(final String storetype) {
         this.storetype = storetype;
@@ -130,6 +132,7 @@ public class SignJar extends Task {
 
     /**
      * password for private key (if different); optional
+     * @param keypass the password for the key (if different)
      */
     public void setKeypass(final String keypass) {
         this.keypass = keypass;
@@ -137,6 +140,7 @@ public class SignJar extends Task {
 
     /**
      * name of .SF/.DSA file; optional
+     * @param sigfile the name of the .SF/.DSA file
      */
     public void setSigfile(final String sigfile) {
         this.sigfile = sigfile;
@@ -144,6 +148,7 @@ public class SignJar extends Task {
 
     /**
      * name of signed JAR file; optional
+     * @param signedjar the name of the signed jar file
      */
     public void setSignedjar(final File signedjar) {
         this.signedjar = signedjar;
@@ -152,6 +157,7 @@ public class SignJar extends Task {
     /**
      * Enable verbose output when signing
      * ; optional: default false
+     * @param verbose if true enable verbose output
      */
     public void setVerbose(final boolean verbose) {
         this.verbose = verbose;
@@ -160,6 +166,7 @@ public class SignJar extends Task {
     /**
      * Flag to include the .SF file inside the signature;
      * optional; default false
+     * @param internalsf if true include the .SF file inside the signature
      */
     public void setInternalsf(final boolean internalsf) {
         this.internalsf = internalsf;
@@ -168,6 +175,7 @@ public class SignJar extends Task {
     /**
      * flag to compute hash of entire manifest;
      * optional, default false
+     * @param sectionsonly flag to compute hash of entire manifest
      */
     public void setSectionsonly(final boolean sectionsonly) {
         this.sectionsonly = sectionsonly;
@@ -177,6 +185,7 @@ public class SignJar extends Task {
      * flag to control whether the presence of a signature
      * file means a JAR is signed;
      * optional, default false
+     * @param lazy flag to control whether the presence of a signature
      */
     public void setLazy(final boolean lazy) {
         this.lazy = lazy;
@@ -185,6 +194,7 @@ public class SignJar extends Task {
     /**
      * Adds a set of files to sign
      * @since Ant 1.4
+     * @param set a set of files to sign
      */
     public void addFileset(final FileSet set) {
         filesets.addElement(set);
@@ -193,6 +203,7 @@ public class SignJar extends Task {
 
     /**
      * sign the jar(s)
+     * @throws BuildException on errors
      */
     public void execute() throws BuildException {
         if (null == jar && filesets.size() == 0) {
@@ -315,6 +326,15 @@ public class SignJar extends Task {
         }
     }
 
+    /**
+     * Compare a jar file with its corresponding signed jar
+     *
+     * @param jarFile  the unsigned jar file
+     * @param signedjarFile the result signed jar file
+     * @return true if the signedjarfile is newer than the jar file
+     *         false if the signedjarfile is the same as the jarfile or if
+     *         jarfile or the signedjar does not exist.
+     */
     protected boolean isUpToDate(File jarFile, File signedjarFile) {
         if (null == jarFile) {
             return false;
@@ -346,7 +366,7 @@ public class SignJar extends Task {
     /**
      * test for a file being signed, by looking for a signature in the META-INF
      * directory
-     * @param file
+     * @param file the file to be checked
      * @return true if the file is signed
      */
     protected boolean isSigned(File file) {
@@ -366,4 +386,3 @@ public class SignJar extends Task {
         this.preserveLastModified = preserveLastModified;
     }
 }
-
