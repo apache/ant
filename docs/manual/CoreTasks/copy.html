@@ -2,7 +2,7 @@
 
 <head>
 <meta http-equiv="Content-Language" content="en-us">
-<title>Apache Ant User Manual</title>
+<title>Copy Task</title>
 </head>
 
 <body>
@@ -70,9 +70,9 @@ To use a fileset, the <var>todir</var> attribute must be set.</p>
   </tr>
   <tr>
     <td valign="top">includeEmptyDirs</td>
-	 <td valign="top">Copy empty directories included with the nested FileSet(s).
-	   Defaults to &quot;yes&quot;.</td>
-	 <td valign="top" align="center">No</td>
+     <td valign="top">Copy empty directories included with the nested FileSet(s).
+       Defaults to &quot;yes&quot;.</td>
+     <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Parameters specified as nested elements</h3>
@@ -110,20 +110,20 @@ To use a fileset, the <var>todir</var> attribute must be set.</p>
 <p><b>Copy a set of files to a directory</b></p>
 <pre>
   &lt;copy todir=&quot;../dest/dir&quot; &gt;
-    &lt;fileset dir=&quot;src_dir&quot &gt;
+    &lt;fileset dir=&quot;src_dir&quot; &gt;
       &lt;exclude name=&quot;**/*.java&quot;/&gt;
     &lt;/fileset&gt;
   &lt;/copy&gt;
 
   &lt;copy todir=&quot;../dest/dir&quot; &gt;
-    &lt;fileset dir=&quot;src_dir&quot excludes=&quot;**/*.java&quot;/&gt;
+    &lt;fileset dir=&quot;src_dir&quot; excludes=&quot;**/*.java&quot;/&gt;
   &lt;/copy&gt;
 </pre>
 <p><b>Copy a set of files to a directory appending
 &quot;<code>.bak</code>&quot; to the file name on the fly</b></p>
 <pre>
   &lt;copy todir=&quot;../backup/dir&quot; &gt;
-    &lt;fileset dir=&quot;src_dir&quot /&gt;
+    &lt;fileset dir=&quot;src_dir&quot; /&gt;
     &lt;mapper type=&quot;glob&quot; from=&quot;*&quot; to=&quot;*.bak&quot;/&gt;
   &lt;/copy&gt;
 </pre>
@@ -139,6 +139,11 @@ To use a fileset, the <var>todir</var> attribute must be set.</p>
   &lt;/copy&gt;
 </pre>
 
+<p><strong>Unix Note:</strong> file permissions are not retained when files
+are copied; they end up with the default UMASK permissions instead. This
+is caused by the lack of any means to query or set file permissions in the
+current Java runtimes. If you need a permission preserving copy function,
+use &lt;exec executable="cp" ... &gt; instead. 
 
 <hr><p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
