@@ -278,6 +278,11 @@ public class XSLTProcess extends MatchingTask {
             final Class clazz =
                 loadClass("org.apache.tools.ant.taskdefs.optional.XalanLiaison");
             liaison = (XSLTLiaison)clazz.newInstance();
+        } else if (proc.equals("adaptx")) {
+            log("DEPRECATED - adaptx processor is deprecated. Use trax or xalan instead.");
+            final Class clazz =
+                loadClass("org.apache.tools.ant.taskdefs.optional.AdaptxLiaison");
+            liaison = (XSLTLiaison) clazz.newInstance();
         } else {
             liaison = (XSLTLiaison) loadClass(proc).newInstance();
         }
@@ -402,14 +407,19 @@ public class XSLTProcess extends MatchingTask {
                     resolveProcessor("trax");
                 } catch (Throwable e1) {
                     try {
-                        resolveProcessor("xslp");
+                        resolveProcessor("xalan");
                     } catch (Throwable e2) {
                         try {
-                            resolveProcessor("xalan");
+                            resolveProcessor("adaptx");
                         } catch (Throwable e3) {
-                            e3.printStackTrace();
-                            e2.printStackTrace();
-                            throw new BuildException(e1);
+                            try {
+                                resolveProcessor("xslp");
+                            } catch (Throwable e4) {
+                                e4.printStackTrace();
+                                e3.printStackTrace();
+                                e2.printStackTrace();
+                                throw new BuildException(e1);
+                            }
                         }
                     }
                 }

@@ -166,6 +166,13 @@
     <available property="servlet.present"
                classname="javax.servlet.Servlet"
                classpathref="classpath"/>
+
+    <available property="adaptx.present" 
+               classname="org.exolab.adaptx.xslt.XSLTProcessor" 
+               classpathref="classpath" />
+    <available property="xerces.present" 
+               classname="org.apache.xerces.parsers.SAXParser" 
+               classpathref="classpath" />
                
     <condition property="javamail.complete">
       <and>
@@ -236,6 +243,7 @@
       <exclude name="${optional.package}/NetRexxC.java" unless="netrexx.present" />
       <exclude name="${optional.package}/XslpLiaison.java" unless="xslp.present" />
       <exclude name="${optional.package}/XalanLiaison.java" unless="xalan.present" />
+      <exclude name="${optional.package}/AdaptxLiaison.java" unless="adaptx.present" />
       <exclude name="${optional.package}/ejb/Ejbc*.java" unless="ejb.ejbc.present" />
       <exclude name="${optional.package}/ejb/DDCreator*.java" unless="ejb.DDCreator.present" />
       <exclude name="${optional.package}/ejb/WLRun.java" unless="ejb.wls.present" />
@@ -663,6 +671,8 @@
                unless="xslp.present"/>
       <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
                unless="xalan.present"/>
+      <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java" 
+               unless="adaptx.present"/>
     </javac>
   </target>
 
@@ -744,6 +754,11 @@
           <exclude name="org/apache/tools/ant/taskdefs/optional/AbstractXSLTLiaisonTest.java" />
           <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" unless="xslp.present"/>
           <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" unless="xalan.present"/>
+
+          <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java" 
+                   unless="adaptx.present"/>
+          <exclude name="org/apache/tools/ant/taskdefs/optional/AdaptxLiaisonTest.java" 
+                   unless="xerces.present"/>
           
           <!-- ehm, this is not really a TraX test but rather a xalan2 test..-->
           <exclude name="org/apache/tools/ant/taskdefs/optional/TraXLiaisonTest.java" unless="xalan2.present"/>
