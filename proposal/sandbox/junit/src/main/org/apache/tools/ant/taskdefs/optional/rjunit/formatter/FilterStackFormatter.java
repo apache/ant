@@ -57,6 +57,7 @@ import java.util.StringTokenizer;
 
 import org.apache.tools.ant.util.StringUtils;
 import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.ExceptionData;
 
 /**
  * Filtered Formatter that strips out unwanted stack frames from the full
@@ -103,15 +104,22 @@ public class FilterStackFormatter extends FilterFormatter {
     }
 
     public void onTestFailure(TestRunEvent evt) {
-        String filteredTrace = filter(evt.getStackTrace());
-        evt.setStackTrace(filteredTrace);
+        filterEvent(evt);
         super.onTestFailure(evt);
     }
 
     public void onTestError(TestRunEvent evt) {
-        String filteredTrace = filter(evt.getStackTrace());
-        evt.setStackTrace(filteredTrace);
+        filterEvent(evt);
         super.onTestFailure(evt);
+    }
+
+    protected void filterEvent(TestRunEvent evt){
+        String filteredTrace = filter(evt.getError().getStackTrace());
+        ExceptionData error = new ExceptionData(
+                evt.getError().getType(),
+                evt.getError().getMessage(),
+                filteredTrace);
+        evt.setError(error);
     }
 
     protected String filter(String trace){

@@ -84,12 +84,12 @@ public class PlainFormatter extends BaseStreamFormatter {
 
     public void onTestFailure(TestRunEvent evt) {
         getWriter().println("    failure: " + evt.getName());
-        getWriter().println(evt.getStackTrace());
+        getWriter().println(evt.getError().getStackTrace());
     }
 
     public void onTestError(TestRunEvent evt) {
         getWriter().println("    error: " + evt.getName());
-        getWriter().println(evt.getStackTrace());
+        getWriter().println(evt.getError().getStackTrace());
     }
 
     public void onRunEnded(TestRunEvent evt) {

@@ -53,142 +53,127 @@
  */
 package org.apache.tools.ant.taskdefs.optional.rjunit.remote;
 
-import java.util.Vector;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
+ * Dispatch messages to appropriate listener methode based on event id.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public class EventDispatcher {
 
-    /** the set of registered listeners */
-    private Vector listeners = new Vector();
+    private final static HashMap eventMap = new HashMap(3);
 
-   /**
+    static {
+        registerDefaults();
+    }
+
+    /** the set of registered listeners */
+    private ArrayList listeners = new ArrayList();
+
+    /**
      * Add a new listener.
      * @param listener a listener that will receive events from the client.
      */
     public void addListener(TestRunListener listener) {
-        listeners.addElement(listener);
+        listeners.add(listener);
     }
 
-    public void removeListener(org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener listener) {
-        listeners.removeElement(listener);
+    public void removeListener(TestRunListener listener) {
+        listeners.remove(listener);
     }
 
-   /**
+    /**
      * Process a message from the client and dispatch the
      * appropriate message to the listeners.
      */
     public void dispatchEvent(TestRunEvent evt) {
-       // I hate switch/case but no need to design a complex
-       // system for limited events.
-        switch (evt.getType()){
-            case TestRunEvent.RUN_STARTED:
-                fireRunStarted(evt);
-                break;
-            case TestRunEvent.RUN_ENDED:
-                fireRunEnded(evt);
-                break;
-            case TestRunEvent.RUN_STOPPED:
-                fireRunStopped(evt);
-                break;
-            case TestRunEvent.TEST_STARTED:
-                fireTestStarted(evt);
-                break;
-            case TestRunEvent.TEST_ERROR:
-                fireTestError(evt);
-                break;
-            case TestRunEvent.TEST_FAILURE:
-                fireTestFailure(evt);
-                break;
-            case TestRunEvent.TEST_ENDED:
-                fireTestEnded(evt);
-                break;
-            case TestRunEvent.SUITE_ENDED:
-                fireSuiteEnded(evt);
-                break;
-            case TestRunEvent.SUITE_STARTED:
-                fireSuiteStarted(evt);
-                break;
-            default:
-                // should not happen
+        final Integer type = new Integer(evt.getType());
+        final EventAction action = (EventAction) eventMap.get(type);
+        if (action == null) {
+            return;
         }
-    }
-
-    protected void fireRunStarted(TestRunEvent evt) {
         synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onRunStarted(evt);
+            final int count = listeners.size();
+            for (int i = 0; i < count; i++) {
+                TestRunListener listener = (TestRunListener) listeners.get(i);
+                action.dispatch(listener, evt);
             }
         }
     }
 
-    protected void fireRunEnded(TestRunEvent evt) {
-        synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onRunEnded(evt);
-            }
+    private static void registerDefaults() {
+        registerAction(TestRunEvent.RUN_STARTED, new RunStartedAction());
+        registerAction(TestRunEvent.RUN_ENDED, new RunEndedAction());
+        registerAction(TestRunEvent.TEST_STARTED, new TestStartedAction());
+        registerAction(TestRunEvent.TEST_ENDED, new TestEndedAction());
+        registerAction(TestRunEvent.TEST_FAILURE, new TestFailureAction());
+        registerAction(TestRunEvent.TEST_ERROR, new TestErrorAction());
+        registerAction(TestRunEvent.SUITE_STARTED, new SuiteStartedAction());
+        registerAction(TestRunEvent.SUITE_ENDED, new SuiteEndedAction());
+        registerAction(TestRunEvent.RUN_STOPPED, new RunStoppedAction());
+    }
+
+    private static void registerAction(int id, EventAction action){
+        eventMap.put(new Integer(id), action);
+    }
+
+    public interface EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt);
+    }
+
+    private static class RunStartedAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onRunStarted(evt);
         }
     }
 
-    protected void fireTestStarted(TestRunEvent evt) {
-        synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onTestStarted(evt);
-            }
+    private static class RunEndedAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onRunEnded(evt);
         }
     }
 
-    protected void fireTestEnded(TestRunEvent evt) {
-        synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onTestEnded(evt);
-            }
+    private static class TestStartedAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onTestStarted(evt);
         }
     }
 
-    protected void fireTestFailure(TestRunEvent evt) {
-        synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onTestFailure(evt);
-            }
+    private static class TestEndedAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onTestEnded(evt);
         }
     }
 
-    protected void fireTestError(TestRunEvent evt) {
-        synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onTestError(evt);
-            }
+    private static class TestFailureAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onTestFailure(evt);
         }
     }
 
-    protected void fireSuiteStarted(TestRunEvent evt) {
-        synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onSuiteStarted(evt);
-            }
+    private static class TestErrorAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onTestError(evt);
         }
     }
 
-    protected void fireSuiteEnded(TestRunEvent evt) {
-        synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onSuiteEnded(evt);
-            }
+    private static class SuiteStartedAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onSuiteStarted(evt);
         }
     }
 
-    protected void fireRunStopped(TestRunEvent evt) {
-        synchronized (listeners) {
-            for (int i = 0; i < listeners.size(); i++) {
-                ((org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunListener) listeners.elementAt(i)).onRunStopped(evt);
-            }
+    private static class SuiteEndedAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onSuiteEnded(evt);
+        }
+    }
+
+    private static class RunStoppedAction implements EventAction {
+        public void dispatch(TestRunListener listener, TestRunEvent evt) {
+            listener.onRunStopped(evt);
         }
     }
 

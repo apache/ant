@@ -53,69 +53,81 @@
  */
 package org.apache.tools.ant.taskdefs.optional.rjunit.remote;
 
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
+import org.apache.tools.ant.util.StringUtils;
 
 /**
- * Read or write events to/from appropriate streams.
+ * A wrapper around an exception since an exception stacktrace is
+ * not serializable.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class Messenger {
+public class ExceptionData implements Serializable {
 
-    private InputStream in;
+    /** the stacktrace of the exception */
+    private final String stacktrace;
 
-    private OutputStream out;
+    /** the classname of an exception */
+    private final String type;
 
-    public Messenger(InputStream in, OutputStream out) throws IOException {
-        setOutputStream( new ObjectOutputStream(out) );
-        setInputStream( new ObjectInputStream(in) );
+    /** the message associated to this exception */
+    private final String message;
+
+    /**
+     * Create a new error.
+     * @param exception the exception to run as
+     */
+    public ExceptionData(Throwable exception) {
+        this(exception.getClass().getName(),
+                exception.getMessage(),
+                StringUtils.getStackTrace(exception));
     }
 
-    protected void finalize() throws Throwable {
-        close();
+    /**
+     * Create a new error.
+     * @param type the type of the error (ie classname).
+     * @param message the message associated to this error.
+     * @param stacktrace the full stacktrace of this error.
+     */
+    public ExceptionData(String type, String message, String stacktrace) {
+        this.stacktrace = stacktrace;
+        this.type = type;
+        this.message = message;
     }
 
-    public void close() throws IOException {
-        if (out != null) {
-            out.flush();
-            out.close();
-            out = null;
+    /**
+     * @return the type of the error (ie classname)
+     */
+    public String getType() {
+        return type;
+    }
+
+    /**
+     * @return the message associated to this error.
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * @return the stacktrace for this error.
+     */
+    public String getStackTrace() {
+        return stacktrace;
+    }
+
+    public boolean equals(Object o){
+        if ( o instanceof ExceptionData ){
+            ExceptionData other = (ExceptionData)o;
+            return ( ( type == null ? other.type == null :  type.equals(other.type) ) &&
+                    ( message == null ? other.message == null : message.equals(other.message) ) &&
+                    ( stacktrace == null ? other.stacktrace == null : stacktrace.equals(other.stacktrace) ) );
         }
-        if (in != null) {
-            in.close();
-            in = null;
-        }
+        return false;
     }
 
-    public TestRunEvent read() {
-        try {
-            return (TestRunEvent)((ObjectInputStream)in).readObject();
-        } catch (Exception e){
-            return null;
-        }
-    }
-
-    public void writeEvent(TestRunEvent evt) throws IOException {
-        ((ObjectOutputStream)out).writeObject(evt);
-    }
-
-    protected OutputStream getOutputStream(){
-        return out;
-    }
-
-    protected InputStream getInputStream(){
-        return in;
-    }
-
-    protected void setOutputStream(OutputStream out){
-        this.out = out;
-    }
-
-    protected void setInputStream(InputStream in){
-        this.in = in;
+    public String toString() {
+        return (message != null) ? (type + ": " + message) : type;
     }
 }

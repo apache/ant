@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
+import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -68,7 +69,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.rjunit.JUnitHelper;
 import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
 import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestSummary;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.ExceptionData;
 import org.apache.tools.ant.util.DOMElementWriter;
+import org.apache.tools.ant.util.DateUtils;
+import org.apache.tools.ant.util.StringUtils;
 
 /**
  * XML Formatter. Due to the nature of the XML we are forced to store
@@ -153,6 +157,7 @@ public class XMLFormatter extends BaseStreamFormatter {
     private Element lastTestElement = null;
     private TestRunEvent lastTestEvent = null;
     private Element lastSuiteElement = null;
+    private long programStart;
 
     public void onSuiteStarted(TestRunEvent evt) {
         String fullclassname = evt.getName();
@@ -180,10 +185,12 @@ public class XMLFormatter extends BaseStreamFormatter {
     }
 
     public void onRunEnded(TestRunEvent evt) {
+        final String elapsedTime = String.valueOf(evt.getTimeStamp() - programStart);
+        rootElement.setAttribute("elapsed_time", elapsedTime);
         // Output properties
-        Element propsElement = doc.createElement(PROPERTIES);
+        final Element propsElement = doc.createElement(PROPERTIES);
         rootElement.appendChild(propsElement);
-        Properties props = evt.getProperties();
+        final Properties props = evt.getProperties();
         if (props != null) {
             Enumeration e = props.propertyNames();
             while (e.hasMoreElements()) {
@@ -198,11 +205,13 @@ public class XMLFormatter extends BaseStreamFormatter {
     }
 
     public void onRunStarted(TestRunEvent evt) {
-        //
+        programStart = evt.getTimeStamp();
+        final String date = DateUtils.format(programStart, DateUtils.ISO8601_DATETIME_PATTERN);
+        rootElement.setAttribute("program_start", date);
     }
 
     public void onRunStopped(TestRunEvent evt) {
-        // add a stop attribute ?
+        rootElement.setAttribute("stopped", "true");
         onRunEnded(evt);
     }
 
@@ -242,22 +251,21 @@ public class XMLFormatter extends BaseStreamFormatter {
         String type = evt.getType() == TestRunEvent.TEST_FAILURE ? FAILURE : ERROR;
         Element nested = doc.createElement(type);
         lastTestElement.appendChild(nested);
-
-        String[] args = parseFirstLine(evt.getStackTrace());
-        if (args[1] != null && args[1].length() > 0) {
-            nested.setAttribute(ATTR_MESSAGE, args[1]);
-        }
-        nested.setAttribute(ATTR_TYPE, args[0]);
-        Text text = doc.createTextNode(evt.getStackTrace());
+        ExceptionData error = evt.getError();
+        nested.setAttribute(ATTR_MESSAGE, error.getMessage());
+        nested.setAttribute(ATTR_TYPE, error.getType());
+        Text text = doc.createTextNode(error.getStackTrace());
         nested.appendChild(text);
         onTestEnded(evt);
     }
 
     protected void close() {
-        DOMElementWriter domWriter = new DOMElementWriter();
         // the underlying writer uses UTF8 encoding
-        getWriter().println("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
+        getWriter().println("<?xml version='1.0' encoding='UTF-8' ?>");
+        String now = DateUtils.format(new Date(), DateUtils.ISO8601_DATETIME_PATTERN);
+        rootElement.setAttribute("snapshot_created", now);
         try {
+            final DOMElementWriter domWriter = new DOMElementWriter();
             domWriter.write(rootElement, getWriter(), 0, "  ");
         } catch (IOException e) {
             throw new BuildException(e);
@@ -274,18 +282,4 @@ public class XMLFormatter extends BaseStreamFormatter {
         }
     }
 
-    protected static String[] parseFirstLine(String trace) {
-        int pos = trace.indexOf('\n');
-        if (pos == -1) {
-            return new String[]{trace, ""};
-        }
-        String line = trace.substring(0, pos);
-        pos = line.indexOf(": ");
-        if (pos != -1) {
-            String classname = line.substring(0, pos).trim();
-            String message = line.substring(pos + 1).trim();
-            return new String[]{classname, message};
-        }
-        return new String[]{trace, ""};
-    }
 }

@@ -91,7 +91,7 @@ public class TestRunEvent extends EventObject {
     private String name;
 
     /** stacktrace for error or failure */
-    private String stacktrace;
+    private ExceptionData error;
 
     /** properties for end of testrun */
     private Properties props;
@@ -122,7 +122,7 @@ public class TestRunEvent extends EventObject {
 
     public TestRunEvent(Integer id, int type, String name, Throwable t){
         this(id, type, name);
-        this.stacktrace = StringUtils.getStackTrace(t);
+        this.error = new ExceptionData(t);
     }
 
     public void setType(int type) {
@@ -133,8 +133,8 @@ public class TestRunEvent extends EventObject {
         this.timestamp = timestamp;
     }
 
-    public void setStackTrace(String stacktrace) {
-        this.stacktrace = stacktrace;
+    public void setError(ExceptionData error) {
+        this.error = error;
     }
 
     public void setName(String name) {
@@ -161,8 +161,8 @@ public class TestRunEvent extends EventObject {
         return result;
     }
 
-    public String getStackTrace(){
-        return stacktrace;
+    public ExceptionData getError(){
+        return error;
     }
 
     public Properties getProperties(){
@@ -175,7 +175,7 @@ public class TestRunEvent extends EventObject {
             return ( (type == other.type) &&
                     (timestamp == other.timestamp) &&
                     ( name == null ? other.name == null :  name.equals(other.name) ) &&
-                    ( stacktrace == null ? other.stacktrace == null : stacktrace.equals(other.stacktrace) ) &&
+                    ( error == null ? other.error == null : error.equals(other.error) ) &&
                     ( props == null ? other.props == null : props.equals(other.props) ) &&
                     ( result == null ? other.result == null : result.equals(other.result) ) );
         }

@@ -69,13 +69,15 @@ public class BriefFormatter extends SummaryFormatter {
             ResourceManager.getPackageResources(BriefFormatter.class);
 
     public void onTestFailure(TestRunEvent evt) {
-        String msg = RES.getString("brief.status-failure.msg", evt.getName(), evt.getStackTrace());
+        String msg = RES.getString("brief.status-failure.msg", evt.getName(),
+                evt.getError().getStackTrace());
         getWriter().println(msg);
         super.onTestFailure(evt);
     }
 
     public void onTestError(TestRunEvent evt) {
-        String msg = RES.getString("brief.status-error.msg", evt.getName(), evt.getStackTrace());
+        String msg = RES.getString("brief.status-error.msg", evt.getName(),
+                evt.getError().getStackTrace());
         getWriter().println(msg);
         super.onTestError(evt);
     }
