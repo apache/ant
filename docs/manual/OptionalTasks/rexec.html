@@ -17,6 +17,11 @@ it uses nested <tt>&lt;read&gt;</tt> to indicate strings to wait for, and
 <p><b>Note:</b> This task depends on external libraries not included in the Ant distribution.
 See <a href="../install.html#librarydependencies">Library Dependencies</a> for more information.</p>
 
+<p>You can specify the commands you want to execute as nested elements
+or via the command attribute, we recommend you use the command
+attribute.  If you use the command attribute, you must use the
+username and password attributes as well.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -27,12 +32,12 @@ See <a href="../install.html#librarydependencies">Library Dependencies</a> for m
   <tr>
      <td>userid</td>
      <td>the login id to use on the remote server.</td>
-     <td>Yes</td>
+     <td>No</td>
   </tr>
   <tr>
      <td>password</td>
      <td>the login password to use on the remote server.</td>
-     <td>Yes</td>
+     <td>No</td>
   </tr>
   <tr>
      <td>server</td>
@@ -42,7 +47,7 @@ See <a href="../install.html#librarydependencies">Library Dependencies</a> for m
   <tr>
      <td>command</td>
      <td>the command to execute on the remote server.</td>
-     <td>Yes</td>
+     <td>No</td>
   </tr>
   <tr>
      <td>port</td>

@@ -257,6 +257,9 @@ Other changes:
 * Ant generated jar files should now be detected as jar files by
   Solaris.  Bugzilla Report 32649.
   
+* <rexec> with a single command should now work with unusal login
+  dialogs without special read/write pairs.  Bugzilla Report 26632.
+
 Fixed bugs:
 -----------
 

@@ -350,23 +350,20 @@ public class RExecTask extends Task {
             } catch (IOException e) {
                 throw new BuildException("Can't connect to " + server);
             }
-            /**  Login if userid and password were specified */
-            if (userid != null && password != null) {
-                login(rexec);
-            }
-            /**  Process each sub command */
-            Enumeration tasksToRun = rexecTasks.elements();
-            while (tasksToRun != null && tasksToRun.hasMoreElements()) {
-                RExecSubTask task = (RExecSubTask) tasksToRun.nextElement();
-                if (task instanceof RExecRead && defaultTimeout != null) {
-                    ((RExecRead) task).setDefaultTimeout(defaultTimeout);
-                }
-                task.execute(rexec);
+            if (userid != null && password != null && command != null
+                && rexecTasks.size() == 0) {
+                // simple one-shot execution
+                rexec.rexec(userid, password, command);
+            } else {
+                // need nested read/write elements
+                handleMultipleTasks(rexec);
             }
 
             /** Keep reading input stream until end of it or time-out */
             rexec.waitForEOF(defaultTimeout);
-       } finally {
+        } catch (IOException e) {
+            throw new BuildException("Error r-executing command", e);
+        } finally {
             if (rexec != null && rexec.isConnected()) {
                 try {
                     rexec.disconnect();
@@ -445,5 +442,27 @@ public class RExecTask extends Task {
      */
     public void setUserid(String u) {
         this.userid = u;
+    }
+
+    /**
+     * Deals with multiple read/write calls.
+     *
+     * @since Ant 1.6.3
+     */
+    private void handleMultipleTasks(AntRExecClient rexec) {
+
+        /**  Login if userid and password were specified */
+        if (userid != null && password != null) {
+            login(rexec);
+        }
+        /**  Process each sub command */
+        Enumeration tasksToRun = rexecTasks.elements();
+        while (tasksToRun != null && tasksToRun.hasMoreElements()) {
+            RExecSubTask task = (RExecSubTask) tasksToRun.nextElement();
+            if (task instanceof RExecRead && defaultTimeout != null) {
+                ((RExecRead) task).setDefaultTimeout(defaultTimeout);
+            }
+            task.execute(rexec);
+        }
     }
 }
