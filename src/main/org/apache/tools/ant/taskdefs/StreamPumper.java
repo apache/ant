@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000,2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,7 +72,7 @@ public class StreamPumper implements Runnable {
     private final static int SIZE = 128;
     private InputStream is;
     private OutputStream os;
-
+    private boolean finished;
 
     /**
      * Create a new stream pumper.
@@ -92,6 +92,11 @@ public class StreamPumper implements Runnable {
      * Terminates as soon as the input stream is closed or an error occurs.
      */
     public void run() {
+        synchronized(this) {
+            // Just in case this object is reused in the future
+            finished = false;
+        }
+
         final byte[] buf = new byte[SIZE];
 
         int length;
@@ -102,6 +107,32 @@ public class StreamPumper implements Runnable {
                     Thread.sleep(SLEEP);
                 } catch (InterruptedException e) {}
             }
-        } catch(IOException e) {}
+        } catch(IOException e) {
+        } finally {
+            synchronized(this) {
+                finished = true;
+                notify();
+            }
+        }
+    }
+
+    /**
+     * Tells whether the end of the stream has been reached.
+     * @return true is the stream has been exhausted.
+     **/
+    public synchronized boolean isFinished() {
+        return finished;
+    }
+
+    /**
+     * This method blocks until the stream pumper finishes.
+     * @see #isFinished()
+     **/
+    public synchronized void waitFor()
+        throws InterruptedException
+    {
+        while(!isFinished()) {
+            wait();
+        }
     }
 }

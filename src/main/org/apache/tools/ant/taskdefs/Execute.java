@@ -383,6 +383,28 @@ public class Execute {
     }
 
     /**
+     * Creates a process that runs a command.
+     *
+     * @param project the Project, only used for logging purposes, may be null.
+     * @param command the command to run
+     * @param env the environment for the command
+     * @param the working directory for the command
+     * @param useVM use the built-in exec command for JDK 1.3 if available.
+     *
+     * @since 1.35, Ant 1.5
+     */
+    public static Process launch(Project project, String[] command, 
+                                 String[] env, File dir, boolean useVM)
+        throws IOException {
+        CommandLauncher launcher = vmLauncher != null ? vmLauncher : shellLauncher;
+        if (!useVM) {
+            launcher = shellLauncher;
+        }
+
+        return launcher.exec(project, command, env, dir);
+    }
+
+    /**
      * Runs a process defined by the command line and returns its exit status.
      *
      * @return the exit status of the subprocess or <code>INVALID</code>
@@ -390,12 +412,10 @@ public class Execute {
      *            of the subprocess failed
      */
     public int execute() throws IOException {
-        CommandLauncher launcher = vmLauncher != null ? vmLauncher : shellLauncher;
-        if (!useVMLauncher) {
-            launcher = shellLauncher;
-        }
+        final Process process = launch(project, getCommandline(), 
+                                       getEnvironment(), workingDirectory, 
+                                       useVMLauncher);
 
-        final Process process = launcher.exec(project, getCommandline(), getEnvironment(), workingDirectory);
         try {
             streamHandler.setProcessInputStream(process.getOutputStream());
             streamHandler.setProcessOutputStream(process.getInputStream());

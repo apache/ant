@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -65,8 +65,11 @@ import java.util.Vector;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.taskdefs.ExecTask;
+import org.apache.tools.ant.taskdefs.LogOutputStream;
 import org.apache.tools.ant.taskdefs.MatchingTask;
+import org.apache.tools.ant.taskdefs.StreamPumper;
 import org.apache.tools.ant.taskdefs.condition.Os;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
@@ -175,7 +178,7 @@ public class Cab extends MatchingTask {
         for (int i = 0; i < files.size() && upToDate; i++) {
             String file = files.elementAt(i).toString();
             if (new File(baseDir, file).lastModified() >
-                    cabFile.lastModified()) {
+                cabFile.lastModified()) {
                 upToDate = false;
             }
         }
@@ -212,7 +215,7 @@ public class Cab extends MatchingTask {
      * to be included in the cab, one file per line.
      */
     protected File createListFile(Vector files)
-            throws IOException {
+        throws IOException {
         File listFile = fileUtils.createTempFile("ant", "", null);
 
         PrintWriter writer = new PrintWriter(new FileOutputStream(listFile));
@@ -286,11 +289,45 @@ public class Cab extends MatchingTask {
             sb.append("\n").append(cabFile.getAbsolutePath()).append("\n");
 
             try {
-                Process p = Runtime.getRuntime().exec("listcab");
+                Process p = Execute.launch(getProject(), 
+                                           new String[] {"listcab"}, null,
+                                           baseDir, true);
                 OutputStream out = p.getOutputStream();
                 out.write(sb.toString().getBytes());
                 out.flush();
                 out.close();
+
+                // Create the stream pumpers to forward listcab's stdout and stderr to the log
+                // note: listcab is an interactive program, and issues prompts for every new line.
+                //       Therefore, make it show only with verbose logging turned on.
+                LogOutputStream outLog = new LogOutputStream(this, Project.MSG_VERBOSE);
+                LogOutputStream errLog = new LogOutputStream(this, Project.MSG_ERR);
+                StreamPumper    outPump = new StreamPumper(p.getInputStream(), outLog);
+                StreamPumper    errPump = new StreamPumper(p.getErrorStream(), errLog);
+                
+                // Pump streams asynchronously
+                (new Thread(outPump)).start();
+                (new Thread(errPump)).start();
+
+                int result = -99; // A wild default for when the thread is interrupted
+
+                try {
+                    // Wait for the process to finish
+                    result = p.waitFor();
+
+                    // Wait for the end of output and error streams
+                    outPump.waitFor();
+                    outLog.close();
+                    errPump.waitFor();
+                    errLog.close();
+                } catch(InterruptedException ie) {
+                    log("Thread interrupted: " + ie);
+                }
+
+                // Informative summary message in case of errors
+                if(result != 0) {
+                    log("Error executing listcab; error code: " + result);
+                }
             } catch (IOException ex) {
                 String msg = "Problem creating " + cabFile + " " + ex.getMessage();
                 throw new BuildException(msg);
