@@ -254,6 +254,22 @@
 
     <section name="Articles">
 
+      <subsection name="Ant 1.6 for Task Writers">
+        <p>This article talks about XML namespace handling, Ant
+        libraries and the newly introduced type polymorphism.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Author:</th>
+            <td>Stefan Bodewig</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://otn.oracle.com/pub/articles/bodewig_taskwriters.html">http://otn.oracle.com/pub/articles/bodewig_taskwriters.html</a></td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="Managing Build Complexity with Apache Ant 1.6">
 
         <p>As Apache Ant is applied to increasingly difficult tasks,
