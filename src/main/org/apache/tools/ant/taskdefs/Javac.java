@@ -432,6 +432,9 @@ public class Javac extends MatchingTask {
 
     private void doModernCompile() throws BuildException {
         project.log("Performing a Modern Compile");
+        project.log("WARNING: Modern Compiler usage not implemented!");
+        project.log("Switching modes to Classic");
+        doClassicCompile();
     }
 
     /**
