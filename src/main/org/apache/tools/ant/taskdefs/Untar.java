@@ -56,9 +56,9 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.Expand;
 import org.apache.tools.tar.TarInputStream;
 import org.apache.tools.tar.TarEntry;
+import org.apache.tools.ant.util.FileUtils;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -97,7 +97,7 @@ public class Untar extends Expand {
     private final static int S_IWOTH  = 00002;
     private final static int S_IXOTH  = 00001;
 
-    protected void expandFile(Touch touch, File srcF, File dir) {
+    protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         TarInputStream tis = null;
         try {
             if (dest != null) {
@@ -108,7 +108,7 @@ public class Untar extends Expand {
             TarEntry te = null;
 
             while ((te = tis.getNextEntry()) != null) {
-                extractFile(touch, srcF, dir, tis,
+                extractFile(fileUtils, srcF, dir, tis,
                             te.getName(), te.getSize(),
                             te.getModTime(), te.isDirectory(),
                             mode2str(te.getMode()),

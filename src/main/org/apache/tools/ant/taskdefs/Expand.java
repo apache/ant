@@ -59,6 +59,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.PatternSet;
+import org.apache.tools.ant.util.FileUtils;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -97,7 +98,6 @@ public class Expand extends MatchingTask {
      *
      * @exception BuildException Thrown in unrecoverable error.
      */
-    // XXX move it to util or tools
     public void execute() throws BuildException {
         if ("expand".equals(taskType)) {
             log("!! expand is deprecated. Use unzip instead. !!");
@@ -123,10 +123,7 @@ public class Expand extends MatchingTask {
                 "specified");
         }
 
-        Touch touch = (Touch) project.createTask("touch");
-        touch.setOwningTarget(target);
-        touch.setTaskName(getTaskName());
-        touch.setLocation(getLocation());
+        FileUtils fileUtils = FileUtils.newFileUtils();
 
         try {
             if (outFile != null) {
@@ -158,11 +155,11 @@ public class Expand extends MatchingTask {
                 String[] files = ds.getIncludedFiles();
                 for (int i = 0; i < files.length; ++i) {
                     File file = new File(source, files[i]);
-                    expandFile(touch, file, dest);
+                    expandFile(fileUtils, file, dest);
                 }
             }
             else {
-                expandFile(touch, source, dest);
+                expandFile(fileUtils, source, dest);
             }
         }
         if (filesets.size() > 0) {
@@ -174,29 +171,31 @@ public class Expand extends MatchingTask {
                 String[] files = ds.getIncludedFiles();
                 for (int i = 0; i < files.length; ++i) {
                     File file = new File(fromDir, files[i]);
-                    expandFile(touch, file, dest);
+                    expandFile(fileUtils, file, dest);
                 }
             }
         }
-        try {
-            if (pw != null) {
-                pw.close();
-            }
-            if (bw != null) {
+        if (pw != null) {
+            pw.close();
+        }
+        if (bw != null) {
+            try {
                 bw.close();
-            }
-            if (fw != null) {
+            } catch (IOException ioe1) {}
+        }
+        if (fw != null) {
+            try {
                 fw.close();
+            } catch (IOException ioe1) {
+                //Oh, well!  We did our best
             }
-        } catch (IOException ioe1) {
-            //Oh, well!  We did our best
         }
     }
 
     /*
      * This method is to be overridden by extending unarchival tasks.
      */
-    protected void expandFile(Touch touch, File srcF, File dir) {
+    protected void expandFile(FileUtils fileUtils, File srcF, File dir) {
         ZipInputStream zis = null;
         try {
             // code from WarExpand
@@ -204,7 +203,7 @@ public class Expand extends MatchingTask {
             ZipEntry ze = null;
 
             while ((ze = zis.getNextEntry()) != null) {
-                extractFile(touch, srcF, dir, zis,
+                extractFile(fileUtils, srcF, dir, zis,
                             ze.getName(), ze.getSize(),
                             new Date(ze.getTime()),
                             ze.isDirectory());
@@ -226,18 +225,18 @@ public class Expand extends MatchingTask {
         }
     }
 
-    protected void extractFile(Touch touch, File srcF, File dir,
+    protected void extractFile(FileUtils fileUtils, File srcF, File dir,
                                InputStream compressedInputStream,
                                String entryName, long entrySize,
                                Date entryDate, boolean isDirectory)
                                throws IOException {
-        extractFile(touch, srcF, dir, compressedInputStream,
+        extractFile(fileUtils, srcF, dir, compressedInputStream,
                     entryName, entrySize, entryDate, isDirectory,
                     null, null);
 
     }
 
-    protected void extractFile(Touch touch, File srcF, File dir,
+    protected void extractFile(FileUtils fileUtils, File srcF, File dir,
                                InputStream compressedInputStream,
                                String entryName, long entrySize,
                                Date entryDate, boolean isDirectory,
@@ -307,7 +306,7 @@ public class Expand extends MatchingTask {
             }
         }
         if (dest != null) {
-            File f = new File(dir, project.translatePath(entryName));
+            File f = fileUtils.resolveFile(dir, entryName);
             try {
                 if (!overwrite && f.exists()
                     && f.lastModified() >= entryDate.getTime()) {
@@ -319,7 +318,7 @@ public class Expand extends MatchingTask {
                 log("expanding " + entryName + " to "+ f,
                     Project.MSG_VERBOSE);
                 // create intermediary directories - sometimes zip don't add them
-                File dirF=new File(f.getParent());
+                File dirF= fileUtils.getParentFile(f);
                 dirF.mkdirs();
 
                 if (isDirectory) {
@@ -327,22 +326,27 @@ public class Expand extends MatchingTask {
                 } else {
                     byte[] buffer = new byte[1024];
                     int length = 0;
-                    FileOutputStream fos = new FileOutputStream(f);
-
-                    while ((length =
+                    FileOutputStream fos = null;
+                    try {
+                        fos = new FileOutputStream(f);
+                        
+                        while ((length =
                                 compressedInputStream.read(buffer)) >= 0) {
-                        fos.write(buffer, 0, length);
+                            fos.write(buffer, 0, length);
+                        }
+                        
+                        fos.close();
+                        fos = null;
+                    } finally {
+                        if (fos != null) {
+                            try {
+                                fos.close();
+                            } catch (IOException e) {}
+                        }
                     }
-
-                    fos.close();
                 }
-
-                if (project.getJavaVersion() != Project.JAVA_1_1) {
-                    touch.setFile(f);
-                    touch.setMillis(entryDate.getTime());
-                    touch.touch();
-                }
-
+                    
+                fileUtils.setFileLastModified(f, entryDate.getTime());
             } catch( FileNotFoundException ex ) {
                 log("Unable to expand to file " + f.getPath(), Project.MSG_WARN);
             }
