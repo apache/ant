@@ -191,26 +191,6 @@ public class Project
     }
 
     /**
-     * set a property. An existing property of the same name will not be
-     * overwritten.
-     *
-     * @param name name of property
-     * @param value new value of the property
-     * @since 1.5
-     */
-    public void setNewProperty( String name, String value )
-    {
-        if( null != properties.get( name ) )
-        {
-            log( "Override ignored for property " + name, MSG_VERBOSE );
-            return;
-        }
-        log( "Setting project property: " + name + " -> " +
-             value, MSG_DEBUG );
-        properties.put( name, value );
-    }
-
-    /**
      * get the base directory of the project as a file object
      *
      * @return the base directory. If this is null, then the base dir is not
@@ -290,16 +270,6 @@ public class Project
     }
 
     /**
-     * get the target hashtable
-     *
-     * @return hashtable, the contents of which can be cast to Target
-     */
-    public Hashtable getTargets()
-    {
-        return targets;
-    }
-
-    /**
      * get the current task definition hashtable
      *
      * @return The TaskDefinitions value
@@ -348,16 +318,6 @@ public class Project
     }
 
     /**
-     * Output a message to the log with the default log level of MSG_INFO
-     *
-     * @param msg text to log
-     */
-    public void log( String msg )
-    {
-        log( msg, MSG_INFO );
-    }
-
-    /**
      * Output a message to the log with the given log level and an event scope
      * of project
      *
@@ -365,30 +325,6 @@ public class Project
      * @param msgLevel level to log at
      */
     public void log( String msg, int msgLevel )
-    {
-    }
-
-    /**
-     * Output a message to the log with the given log level and an event scope
-     * of a task
-     *
-     * @param task task to use in the log
-     * @param msg text to log
-     * @param msgLevel level to log at
-     */
-    public void log( Task task, String msg, int msgLevel )
-    {
-    }
-
-    /**
-     * Output a message to the log with the given log level and an event scope
-     * of a target
-     *
-     * @param target target to use in the log
-     * @param msg text to log
-     * @param msgLevel level to log at
-     */
-    public void log( Target target, String msg, int msgLevel )
     {
     }
 
