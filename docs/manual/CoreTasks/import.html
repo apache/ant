@@ -5,24 +5,31 @@
   <title>Import Task</title>
 </head>
 <body>
-<h2><a name="import">Import</a></h2>
-<h3>Description</h3>
-Imports another build file into the current project.<br>
-<br>
-On execution it will read another Ant file into
-the same Project. This means that it basically works like the <a
- href="http://ant.apache.org/faq.html#xml-entity-include">Entity
-Includes as explained in the Ant FAQ</a>, as if the imported file was
-contained in the importing file, minus the top <code>&lt;project&gt;</code>
-tag.<br>
-<br>
+  <h2><a name="import">Import</a></h2>
+  <h3>Description</h3>
+  <p>
+    Imports another build file into the current project.
+  </p>
+  <p>
+    On execution it will read another Ant file into
+    the same Project. This means that it basically works like the 
+    <a href="http://ant.apache.org/faq.html#xml-entity-include">Entity
+      Includes as explained in the Ant FAQ</a>, as if the imported file was
+    contained in the importing file, minus the top <code>&lt;project&gt;</code>
+    tag.
+  </p>
+  <p>
+    The import task may only be used as a top-level task. This means that
+    it may not be used in a target.
+  </p>
+  <p>
 There are two further functional aspects that pertain to this task and
-that are not possible with entity includes:<br>
+that are not possible with entity includes:
 <ul>
   <li>target overriding</li>
-  <li>special properties<br>
-  </li>
+  <li>special properties</li>
 </ul>
+  </p>
 <b>Target overriding<br>
 <br>
 </b>If a target in the main file is also present in at least one of the
