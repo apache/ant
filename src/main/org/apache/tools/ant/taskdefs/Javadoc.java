@@ -173,6 +173,9 @@ public class Javadoc extends Task {
         public String getName() {
             return name;
         }
+        public String toString() {
+            return getName();
+        }
     }
 
     public static class SourceFile {
@@ -661,16 +664,14 @@ public class Javadoc extends Task {
         }
 
         public String getPackages() {
-            String p = null;
+            StringBuffer p = new StringBuffer( "\"" );
             for (int i = 0; i < packages.size(); i++) {
-                PackageName pn = (PackageName)packages.elementAt(i);
-                if (p == null || p.equals("")) {
-                    p = pn.getName();
-                } else {
-                    p += ":" + pn.getName();
-                }
+                p.append( packages.elementAt( i ).toString() );
+                if ( i > 0 )
+                    p.append( ":" );
             }
-            return p;
+            p.append( "\"" );
+            return p.toString();
         }
     }
     
