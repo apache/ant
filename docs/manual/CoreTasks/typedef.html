@@ -100,6 +100,12 @@
     align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">classpathref</td>
+    <td valign="top">
+      a reference to a classpath to use when looking up <code>classname</code>.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">loaderRef</td> <td valign="top">the name of the loader that is
     used to load the class, constructed from the specified classpath. Use this to
     allow multiple tasks/types to be loaded with the same loader, so they can call
@@ -167,10 +173,30 @@
     and in the execute method invokes <i>run</i> on the proxied object,
     one may use a Runnable class as an Ant task. The following fragment
     defines  a task called <i>runclock</i>.
-    <pre>
+  </p>
+  <pre>
     &lt;typedef name="runclock"
              classname="com.acme.ant.RunClock"
              adapter="org.acme.ant.RunnableAdapter"/&gt;
+  </pre>
+  <p>
+    The following fragment shows the use of the classpathref and
+    loaderref to load up two definitions.
+  </p>
+  <pre>
+    &lt;path id="lib.path"&gt;
+      &lt;fileset dir="lib" includes="lib/*.jar"/&gt;
+    &lt;/path&gt;
+
+    &lt;typedef name="filter1"
+             classname="org.acme.filters.Filter1"
+             classpathref="lib.path"
+             loaderref="lib.path.loader"
+             /&gt;
+    &lt;typedef name="filter2"
+             classname="org.acme.filters.Filter2"
+             loaderref="lib.path.loader"
+             /&gt;
   </pre>
 <hr>
 <p align="center">Copyright &copy; 2001-2004 Apache Software
