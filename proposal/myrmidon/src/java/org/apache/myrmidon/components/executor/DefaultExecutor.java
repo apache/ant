@@ -13,7 +13,6 @@ import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.context.Contextualizable;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.avalon.framework.logger.Logger;
@@ -33,7 +32,7 @@ public class DefaultExecutor
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultExecutor.class );
 
-    private static final String TASK_ROLE = Task.class.getName();
+    private final static String TASK_ROLE = Task.class.getName();
 
     private Configurer m_configurer;
 
@@ -119,7 +118,7 @@ public class DefaultExecutor
     {
         try
         {
-           task.contextualize( context );
+            task.contextualize( context );
         }
         catch( final Throwable throwable )
         {
