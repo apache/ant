@@ -53,6 +53,7 @@
  */
 package org.apache.tools.ant.gui.acs;
 import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
+import org.apache.tools.ant.gui.modules.edit.DtdAttributePropertyEditor;
 import java.beans.*;
 
 /**
@@ -125,6 +126,11 @@ public class ACSDtdDefinedElementBeanInfo extends BaseBeanInfo {
 
     /** Customizer for this bean info. */
     public static class Customizer extends DynamicCustomizer {
+        static {
+            PropertyEditorManager.registerEditor(
+		ACSDtdDefinedAttributes.class, DtdAttributePropertyEditor.class);
+        }
+        
         public Customizer() {
             super(ACSDtdDefinedElement.class);
         }
