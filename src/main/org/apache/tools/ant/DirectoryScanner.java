@@ -705,6 +705,10 @@ public class DirectoryScanner
             }
 
             if (myfile.exists()) {
+                if (!followSymlinks && isSymlink(basedir, currentelement)) {
+                    continue;
+                }
+
                 if (myfile.isDirectory()) {
                     if (isIncluded(currentelement)
                         && currentelement.length() > 0) {
@@ -1191,5 +1195,40 @@ public class DirectoryScanner
             }
         }
         return null;
+    }
+
+    /**
+     * Do we have to traverse a symlink when trying to reach path from
+     * basedir?
+     * @since Ant 1.6
+     */
+    private boolean isSymlink(File base, String path) {
+        return isSymlink(base, SelectorUtils.tokenizePath(path));
+    }
+
+    /**
+     * Do we have to traverse a symlink when trying to reach path from
+     * basedir?
+     * @since Ant 1.6
+     */
+    private boolean isSymlink(File base, Vector pathElements) { 
+        if (pathElements.size() > 0) {
+            String current = (String) pathElements.remove(0);
+            try {
+                if (fileUtils.isSymbolicLink(base, current)) {
+                    return true;
+                } else {
+                    base = new File(base, current);
+                    return isSymlink(base, pathElements);
+                }
+            } catch (IOException ioe) {
+                String msg = "IOException caught while checking "
+                    + "for links, couldn't get cannonical path!";
+                // will be caught and redirected to Ant's logging system
+                System.err.println(msg);
+                return false;
+            }
+        }
+        return false;
     }
 }
