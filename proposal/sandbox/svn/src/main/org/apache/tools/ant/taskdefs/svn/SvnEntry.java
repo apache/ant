@@ -60,8 +60,8 @@ public class SvnEntry {
      * @param path the path to add
      * @param revision the revision
      */
-    public void addPath(final String name) {
-        paths.add(name);
+    public void addPath(final String name, final char action) {
+        paths.add(new Path(name, action));
     }
 
     /**
@@ -108,8 +108,56 @@ public class SvnEntry {
      * Gets the paths in this SvnEntry
      * @return the files
      */
-    public String[] getPaths() {
-        return (String[]) paths.toArray(new String[paths.size()]);
+    public Path[] getPaths() {
+        return (Path[]) paths.toArray(new Path[paths.size()]);
+    }
+
+    public static class Path {
+
+        private static final char ADDED_MARKER = 'A';
+        private static final char MODIFIED_MARKER = 'M';
+        private static final char DELETED_MARKER = 'D';
+
+        public static final int ADDED = 0;
+        public static final int MODIFIED = 1;
+        public static final int DELETED = 2;
+
+        private static final String[] ACTIONS = {
+            "added", "modified", "deleted",
+        };
+
+        private final String name;
+        private final int action;
+
+        public Path(final String name, final char actionChar) {
+            this.name = name;
+            switch (actionChar) {
+            case ADDED_MARKER:
+                action = ADDED;
+                break;
+            case MODIFIED_MARKER:
+                action = MODIFIED;
+                break;
+            case DELETED_MARKER:
+                action = DELETED;
+                break;
+            default:
+                throw new IllegalArgumentException("Unkown action; " 
+                                                   + actionChar);
+            }
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getAction() {
+            return action;
+        }
+
+        public String getActionDescription() {
+            return ACTIONS[action];
+        }
     }
 
 }

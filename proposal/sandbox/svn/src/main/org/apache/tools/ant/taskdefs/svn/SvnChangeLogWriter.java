@@ -65,16 +65,19 @@ public class SvnChangeLogWriter {
             + "</time>");
         output.println("\t\t<author><![CDATA[" + entry.getAuthor()
             + "]]></author>");
-        output.println("\t\t<revision><![CDATA[" + entry.getRevision()
-            + "]]></revision>");
+        output.println("\t\t<revision>" + entry.getRevision()
+            + "</revision>");
 
-        String[] paths = entry.getPaths();
+        SvnEntry.Path[] paths = entry.getPaths();
         for (int i = 0; i < paths.length; i++) {
-            output.println("\t\t<file>");
-            output.println("\t\t\t<name><![CDATA[" + paths[i] + "]]></name>");
-            output.println("\t\t</file>");
+            output.println("\t\t<path>");
+            output.println("\t\t\t<name><![CDATA[" + paths[i].getName() 
+                           + "]]></name>");
+            output.println("\t\t\t<action>" + paths[i].getActionDescription() 
+                           + "</action>");
+            output.println("\t\t</path>");
         }
-        output.println("\t\t<msg><![CDATA[" + entry.getMessage() + "]]></msg>");
+        output.println("\t\t<message><![CDATA[" + entry.getMessage() + "]]></message>");
         output.println("\t</entry>");
     }
 }

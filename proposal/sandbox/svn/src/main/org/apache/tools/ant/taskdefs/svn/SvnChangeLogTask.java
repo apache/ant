@@ -46,7 +46,7 @@ import org.apache.tools.ant.util.FileUtils;
  * <font color=#0000ff>&lt;!-- Root element --&gt;</font>
  * <font color=#6a5acd>&lt;!ELEMENT</font> changelog <font color=#ff00ff>(entry</font><font color=#ff00ff>+</font><font color=#ff00ff>)</font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- SVN Entry --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> entry <font color=#ff00ff>(date,time,revision,author,file</font><font color=#ff00ff>+,msg</font><font color=#ff00ff>,msg)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> entry <font color=#ff00ff>(date,time,revision,author,path</font><font color=#ff00ff>+,msg</font><font color=#ff00ff>,msg)</font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- Date of svn entry --&gt;</font>
  * <font color=#6a5acd>&lt;!ELEMENT</font> date <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- Time of svn entry --&gt;</font>
@@ -55,10 +55,11 @@ import org.apache.tools.ant.util.FileUtils;
  * <font color=#6a5acd>&lt;!ELEMENT</font> author <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- commit message --&gt;</font>
  * <font color=#6a5acd>&lt;!ELEMENT</font> msg <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- List of files affected --&gt;</font>
- * <font color=#6a5acd>&lt;!ELEMENT</font> file <font color=#ff00ff>(name</font><font color=#ff00ff>?</font><font color=#ff00ff>)</font><font color=#6a5acd>&gt;</font>
- * <font color=#0000ff>&lt;!-- Name of the file --&gt;</font>
+ * <font color=#0000ff>&lt;!-- List of paths affected --&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> path <font color=#ff00ff>(name,action)</font><font color=#ff00ff></font><font color=#ff00ff>)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#0000ff>&lt;!-- Name of the path --&gt;</font>
  * <font color=#6a5acd>&lt;!ELEMENT</font> name <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
+ * <font color=#6a5acd>&lt;!ELEMENT</font> action <font color=#ff00ff>(added|modified|deleted)</font><font color=#6a5acd>&gt;</font>
  * <font color=#0000ff>&lt;!-- Revision number --&gt;</font>
  * <font color=#6a5acd>&lt;!ELEMENT</font> revision <font color=#ff00ff>(#PCDATA)</font><font color=#6a5acd>&gt;</font>
  * </pre>

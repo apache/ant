@@ -98,7 +98,7 @@ class SvnChangeLogParser extends LineOrientedOutputStream {
             //We have ended changelog for that particular revision
             //so we can save it
             final int end
-                = message.length() - lineSeparator.length(); //was -1
+                = message.length() - lineSeparator.length();
             message = message.substring(0, end);
             saveEntry();
             status = GET_REVISION_LINE;
@@ -147,8 +147,8 @@ class SvnChangeLogParser extends LineOrientedOutputStream {
             // ignore
         } else if (line.equals("")) {
             status = GET_MESSAGE;
-        } else {
-            paths.add(line.substring(5));
+        } else if (line.length() > 5) {
+            paths.add(new SvnEntry.Path(line.substring(5), line.charAt(3)));
         }
     }
 
@@ -159,6 +159,7 @@ class SvnChangeLogParser extends LineOrientedOutputStream {
         SvnEntry entry = new SvnEntry(date, revision, author, message,
                                       paths);
         entries.add(entry);
+        reset();
     }
 
     /**
