@@ -56,6 +56,8 @@ package org.apache.tools.ant.taskdefs.optional.jsp.compilers;
 import org.apache.tools.ant.AntClassLoader;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.taskdefs.optional.jsp.JspNameMangler;
+import org.apache.tools.ant.taskdefs.optional.jsp.Jasper41Mangler;
 
 
 /**
@@ -63,6 +65,7 @@ import org.apache.tools.ant.Task;
  *
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @author Matthew Watson <a href="mailto:mattw@i3sp.com">mattw@i3sp.com</a>
+ * @author Steve Loughran
  */
 public class JspCompilerAdapterFactory {
 
@@ -112,11 +115,14 @@ public class JspCompilerAdapterFactory {
     public static JspCompilerAdapter getCompiler(String compilerType, Task task,
                                                  AntClassLoader loader)
         throws BuildException {
-        /* If I've done things right, this should be the extent of the
-         * conditional statements required.
-         */
+
         if (compilerType.equalsIgnoreCase("jasper")) {
-            return new JasperC();
+            //tomcat4.0 gets the old mangler
+            return new JasperC(new JspNameMangler());
+        }
+        if (compilerType.equalsIgnoreCase("jasper41")) {
+            //tomcat4.1 gets the new one
+            return new JasperC(new Jasper41Mangler());
         }
         return resolveClassName(compilerType, loader);
     }

@@ -73,6 +73,17 @@ import org.apache.tools.ant.types.Path;
  * @since ant1.5
  */
 public class JasperC extends DefaultJspCompilerAdapter {
+
+
+    /**
+     * what produces java classes from .jsp files
+     */
+    JspMangler mangler;
+
+    public JasperC(JspMangler mangler) {
+        this.mangler = mangler;
+    }
+
     /**
      * our execute method
      */
@@ -80,28 +91,11 @@ public class JasperC extends DefaultJspCompilerAdapter {
         throws BuildException {
         getJspc().log("Using jasper compiler", Project.MSG_VERBOSE);
         CommandlineJava cmd = setupJasperCommand();
-        /*
-        Path classpath=cmd.createClasspath(getProject());
-        if (getJspc().getClasspath() != null) {
-            classpath=getJspc().getClasspath();
-        } else {
-            classpath.concatSystemClasspath();
-        }
-        ExecuteJava exec=new ExecuteJava();
-        exec.execute(getProject());
-        if ((err = executeJava()) != 0) {
-            if (failOnError) {
-                throw new BuildException("Java returned: " + err, location);
-            } else {
-                log("Java Result: " + err, Project.MSG_ERR);
-            }
-        */
 
 
         try {
             // Create an instance of the compiler, redirecting output to
             // the project log
-            // REVISIT. ugly. 
             Java java = (Java) (getProject().createTask("java"));
             if (getJspc().getClasspath() != null) {
                 getProject().log("using user supplied classpath: "+getJspc().getClasspath(),
@@ -175,6 +169,6 @@ public class JasperC extends DefaultJspCompilerAdapter {
      */
 
     public JspMangler createMangler() {
-        return new JspNameMangler();
+        return mangler;
     }
 }
