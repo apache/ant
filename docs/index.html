@@ -17,17 +17,19 @@
   <li>Tom Dimock (<a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>)</li>
   <li>Bill Kelly (<a href="mailto:bill.kelly@softwired-inc.com">bill.kelly@softwired-inc.com</a>)</li>
   <li>Arnout J. Kuiper (<a href="mailto:ajkuiper@wxs.nl">ajkuiper@wxs.nl</a>)</li>
+  <li>Conor MacNeill (<a href="mailto:conor@cortexebusiness.com.au">conor@cortexebusiness.com.au</a>)</li>
   <li>Stefano Mazzocchi (<a href="mailto:stefano@apache.org">stefano@apache.org</a>)</li>
   <li>Sam Ruby (<a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>)</li>
 </ul>
 
-<p>Version 1.0.8.1 - 2000/06/13</p>
+<p>Version 1.0.8.1 - 2000/06/27</p>
 
 <hr>
 <h2>Table of Contents</h2>
 <ul>
   <li><a href="#introduction">Introduction</a></li>
   <li><a href="#getting">Getting Ant</a></li>
+  <li><a href="#sysrequirements">System Requirements</a></li>
   <li><a href="#buildingant">Building Ant</a></li>
   <li><a href="#installing">Installing Ant</a></li>
   <li><a href="#running">Running Ant</a></li>
@@ -35,10 +37,12 @@
   <li><a href="#directorybasedtasks">Directory based tasks</a></li>
   <li><a href="#tasks">Built in Tasks</a>
   <li><a href="#optionaltasks">Optional Tasks</a>
+  <li><a href="#buildevents">Build Events</a>
   <li><a href="#writingowntask">Writing your own task</a></li>
   <li><a href="#license">License</a></li>
   <li><a href="#feedback">Feedback</a></li>
 </ul>
+
 <hr>
 <h2><a name="introduction">Introduction</a></h2>
 <p>Ant is a Java based build tool. In theory it is kind of like make without
@@ -68,6 +72,7 @@ gives you the ability to be cross platform. To work anywhere and everywhere. And
 hey, if you really need to execute a shell command, Ant has an exec rule that
 allows different commands to be executed based on the OS that it is executing
 on.</p>
+
 <hr>
 <h2><a name="getting">Getting Ant</a></h2>
 <h3>Binary edition</h3>
@@ -82,14 +87,20 @@ href="http://jakarta.apache.org/builds/tomcat/release/v3.0/src/jakarta-tools.src
 href="http://jakarta.apache.org/from-cvs/jakarta-tools/">http://jakarta.apache.org/from-cvs/jakarta-ant/</a>
 (current). See the section <a href="#buildingant">Building Ant</a> on how to
 build Ant from the source code.</p>
+
 <hr>
-<h2><a name="buildingant">Building Ant</a></h2>
+<h2><a name="sysrequirements">System Requirements</a></h2>
 <p>
-  Download and install the Java API for XML Parsing kit from
-  <a href="http://java.sun.com/xml">http://java.sun.com/xml</a>.
-  Make sure the "jaxp.jar" and "parser.jar" files are in your class
-  path.
-</p>
+  To build and use ant you must have a JAXP compilant XML parser installed and available on your classpath.
+  <p>
+  If you do not have a JAXP compliant XML parse installed, you may use the reference implementation 
+  available from Sun. It is available from <a href="http://java.sun.com/xml">http://java.sun.com/xml</a>.
+  Once installed make sure the "jaxp.jar" and "parser.jar" files are in your classpath.
+  <p>
+  You will also need the JDK installed on your system, version 1.1 or later. 
+
+<hr>  
+<h2><a name="buildingant">Building Ant</a></h2>
 <p>Go to the directory <code>jakarta-ant</code>.</p>
 <p>Make sure the JDK is in you path.</p>
 <p>Run <code>bootstrap.bat</code> (Windows) or <code>bootstrap.sh</code> (UNIX)
@@ -131,11 +142,13 @@ export PATH=${PATH}:${ANT_HOME}/bin</pre>
 <h3>Advanced</h3>
 <p>There are lots of variants that can be used to run Ant. What you need is at
 least the following:</p>
-<p>The classpath for Ant must contain <code>ant.jar</code> and <code>xml.jar</code>.</p>
+<p>The classpath for Ant must contain <code>ant.jar</code> and any jars/classes 
+needed for your chosen JAXP compliant XML parser.</p>
 <p>When you need JDK functionality (like a <a href="#javac">javac</a> task, or a
 <a href="#rmic">rmic</a> task), then for JDK 1.1, the <code>classes.zip</code>
 file of the JDK must be added to the classpath; for JDK 1.2, <code>tools.jar</code>
-must be added.</p>
+must be added. The scripts supplied with ant, in the bin directory, will add 
+<code>tools.jar</code> automatically if the JAVA_HOME environment variable is set.</p>
 <p>When you are executing platform specific applications (like the <a
 href="#exec">exec</a> task, or the <a href="#cvs">cvs</a> task), the property <code>ant.home</code>
 must be set to the directory containing a bin directory, which contains the <code>antRun</code> shell script necessary to run execs on Unix.</p>
@@ -163,9 +176,11 @@ commandline.</p>
 <pre>ant [options] [target]
 Options:
 -help                  print this message
+-version               print the version information and exit
 -quiet                 be extra quiet
 -verbose               be extra verbose
 -logfile &lt;file&gt;        use given file for log
+-listener &lt;classname&gt;  add an instance of class as a project listener
 -buildfile &lt;file&gt;      use given buildfile
 -D&lt;property&gt;=&lt;value&gt;   use value for given property</pre>
 <h3>Examples</h3>
@@ -194,12 +209,17 @@ value <i>build/classes</i>.</p>
 <p>When you have installed Ant in the do-it-yourself way, Ant can be started
 with:</p>
 <blockquote>
-  <pre>set CLASSPATH=c:\ant\lib\ant.jar;c:\ant\lib\xml.jar;c:\jdk1.2.2\lib\tools.jar
-java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
+  <pre>java -Dant.home=c:\ant org.apache.tools.ant.Main [options] [target]</pre>
 </blockquote>
+
 <p>These instructions actually do exactly the same as the <code>ant</code>
 command. The options and target are the same as when running Ant with the <code>ant</code>
-command.</p>
+command. This example assumes you have set up your classpath to include
+<ul>
+<li>ant.jar
+<li>jars/classes for your XML parser
+<li>the JDK's tools.jar
+</ul>
 <hr>
 <h2><a name="buildfile">Writing a simple buildfile</a></h2>
 <p>The buildfile is written in XML. Each buildfile contains one project.</p>
@@ -359,13 +379,14 @@ this should not cause problems.</p>
 &lt;/project&gt;
 </pre>
 </blockquote>
+
 <hr>
 <h2><a name="directorybasedtasks">Directory based tasks</a></h2>
 <p>Some tasks use directory trees for the task they perform. For instance, the <a
 href="#javac">Javac task</a> which works upon a directory tree with .java files.
 Sometimes it can be very useful to work on a subset of that directory tree. This
 section describes how you can select a subset of such a directory tree.</p>
-<p>Ant gives you two ways to create a subset, which both can be used at the same
+<p>Ant gives you two ways to create a subset, both of which can be used at the same
 time:</p>
 <ul>
   <li>Only include files/directories that match at least one pattern of a set of
@@ -452,6 +473,14 @@ way to select just the files you want.</p>
 <p>This copies all files in directories called &quot;images&quot;, that are
 located in the directory tree &quot;${src}&quot; to the destination &quot;${dist}&quot;,
 but excludes all &quot;*.gif&quot; files from the copy.</p>
+<p> This example can also be expressed using nested elements as
+<pre>  &lt;copydir src=&quot;${src}&quot;
+           dest=&quot;${dist}&quot;&gt;
+    &lt;include name=&quot;**/images/*&quot;/&gt;
+    &lt;exclude name=&quot;**/*.gif&quot; /&gt;
+  &lt;/copydir&gt;
+</pre>
+
 <h3>Default Excludes</h3>
 <p>There are a set of definitions which are excluded by default from all directory based tasks.
 They are:
@@ -2161,7 +2190,8 @@ implementations may use other values for the home directory on Windows.
 <hr>
 <h2><a name="replace">Replace</a></h2>
 <h3>Description</h3>
-<p>Replaces the occurrence of a given string with another string in a file.</p>
+<p>Replace is a directory based task for replacing the occurrence of a given string with another string 
+in selected file.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -2171,8 +2201,15 @@ implementations may use other values for the home directory on Windows.
   </tr>
   <tr>
     <td valign="top">file</td>
-    <td valign="top">file for which the token should be replaced.</td>
-    <td valign="top" align="center">Yes</td>
+    <td valign="top">file for which the token should be replaced. If not present the dir attribute 
+                     must be specified</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">The base directory to use when replacing a token in multiple files. If not present the file attribute
+                     must be specified</td>
+    <td valign="top" align="center">No</td>
   </tr>
   <tr>
     <td valign="top">token</td>
@@ -2183,6 +2220,36 @@ implementations may use other values for the home directory on Windows.
     <td valign="top">value</td>
     <td valign="top">the new value for the token. When omitted, an empty string
       (&quot;&quot;) is used.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
 </table>
@@ -2629,6 +2696,36 @@ in the <code>${dist}</code> directory.</p>
 <p>zips all files in the <code>htdocs/manual</code> directory in a file called <code>manual.zip</code>
 in the <code>${dist}</code> directory. Files/directories with the names <code>mydocs</code>
 and <code>todo.html</code> are excluded.</p>
+
+<hr>
+<h2><a name="buildevents">Build Events</a></h2>
+Ant is capable of generating build events as it performs the tasks necessary to build a project. 
+Listeners can be attached to ant to receive these events. This capability could be used, for example,
+to connect Ant to a GUI or to integrate Ant with an IDE. 
+
+<p>To use build events you need to create an ant <code>Project</code> object. You can then call the 
+<code>addBuildListener</code> method to add your listener to the project. Your listener must implement
+the <code>org.apache.tools.antBuildListener</code> interface. The listener will receive BuildEvents 
+for the following events
+<ul>
+<li>Build started
+<li>Build finished
+<li>Target started
+<li>Target finished
+<li>Task started
+<li>Task finished
+<li>Message logged
+</ul>
+
+If you wish to attach a listener from the command line you may use the -listener option. For example
+<blockquote>
+  <pre>ant -listener org.apache.tools.ant.XmlLogger</pre>
+</blockquote>
+will run ant with a listener which generates an XML representaion of the build progress. This 
+listener is included with ant as is the default listener which generates the logging to standard
+output.
+
+
 <hr>
 <h2><a name="writingowntask">Writing your own task</a></h2>
 <p>It is very easy to write your own task:</p>
