@@ -32,6 +32,7 @@ import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.CollectionUtils;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.LoaderUtils;
@@ -864,8 +865,24 @@ public class AntClassLoader extends ClassLoader implements SubBuildListener {
      * @return an enumeration of URLs for the resources
      * @exception IOException if I/O errors occurs (can't happen)
      */
-    protected Enumeration findResources(String name) throws IOException {
-        return new ResourceEnumeration(name);
+    protected Enumeration/*<URL>*/ findResources(String name) throws IOException {
+        Enumeration/*<URL>*/ mine = new ResourceEnumeration(name);
+        Enumeration/*<URL>*/ base;
+        if (parent != null && parent != getParent()) {
+            // Delegate to the parent:
+            base = parent.getResources(name);
+            // Note: could cause overlaps in case ClassLoader.this.parent has matches.
+        } else {
+            // ClassLoader.this.parent is already delegated to from ClassLoader.getResources, no need:
+            base = new CollectionUtils.EmptyEnumeration();
+        }
+        if (isParentFirst(name)) {
+            // Normal case.
+            return CollectionUtils.append(base, mine);
+        } else {
+            // Inverted.
+            return CollectionUtils.append(mine, base);
+        }
     }
 
     /**

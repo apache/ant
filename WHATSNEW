@@ -20,6 +20,10 @@ Fixed bugs:
 
 * Target Location was always UNKNOWN_LOCATION due to an omitted merge.
 
+* Impossible to use implicit classpath for <taskdef>
+  when Ant core loader != Java application loader and Path.systemClassPath taken from ${java.class.path}
+  Bugzilla 30161.  
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

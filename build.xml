@@ -85,6 +85,8 @@
   <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="build.tests.javadocs" value="${build.dir}/javadocs.test/"/>
   <property name="manifest.tmp" value="${build.dir}/optional.manifest"/>
+  <!-- the absolute path -->
+  <property name="build.tests.value" location="${build.tests}"/>
 
   <!--
        ===================================================================
@@ -365,7 +367,7 @@
          the java version
        ===================================================================
   -->
-  
+
   <target name="javac.preset" depends="javac.preset.1.5+,javac.preset.1.5-"/>
   <target name="javac.preset.1.5+" depends="check_for_optional_packages"
           if="jdk1.5+">
@@ -1454,7 +1456,8 @@
       <classpath refid="tests-classpath"/>
 
       <sysproperty key="ant.home" value="${ant.home}"/>
-      <sysproperty key="build.tests" value="${build.tests}"/>
+      <sysproperty key="build.tests" file="${build.tests}"/>
+      <sysproperty key="build.tests.value" value="${build.tests.value}"/>
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
 
@@ -1603,7 +1606,8 @@
           filtertrace="${junit.filtertrace}">
 <!--      <jvmarg value="-classic"/> -->
       <sysproperty key="ant.home" value="${ant.home}"/>
-      <sysproperty key="build.tests" value="${build.tests}"/>
+      <sysproperty key="build.tests" file="${build.tests}"/>
+      <sysproperty key="build.tests.value" value="${build.tests.value}"/>
       <sysproperty key="tests-classpath.value"
                    value="${tests-classpath.value}"/>
       <classpath refid="tests-classpath"/>
