@@ -72,6 +72,7 @@
     <available property="starteam.present" classname="com.starbase.util.Platform" />
     <available property="antlr.present" classname="antlr.Tool" />
     <available property="vaj.present" classname="com.ibm.ivj.util.base.Workspace" />
+    <available property="stylebook.present" classname="org.apache.stylebook.Engine" />
   </target>
 
   <!-- =================================================================== -->
@@ -96,6 +97,7 @@
       <classpath refid="classpath" />
 
       <exclude name="**/Script.java" unless="bsf.present" />
+      <exclude name="**/StyleBook.java" unless="stylebook.present" />
       <exclude name="**/NetRexxC.java" unless="netrexx.present" />
       <exclude name="**/XslpLiaison.java" unless="xslp.present" />
       <exclude name="**/XalanLiaison.java" unless="xalan.present" />
