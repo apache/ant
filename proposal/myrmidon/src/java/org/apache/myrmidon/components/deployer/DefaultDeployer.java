@@ -48,13 +48,13 @@ public class DefaultDeployer
     private PackageManager m_packageManager;
 
     /** Map from ClassLoader to the deployer for that class loader. */
-    private Map m_classLoaderDeployers = new HashMap();
+    private final Map m_classLoaderDeployers = new HashMap();
 
     /**
      * Map from File to the ClassLoader for that library.  This map is shared
      * by all descendents of the root deployer.
      */
-    private Map m_fileDeployers;
+    private final Map m_fileDeployers;
 
     /**
      * Creates a root deployer.
@@ -67,7 +67,8 @@ public class DefaultDeployer
     private DefaultDeployer( final DefaultDeployer parent )
     {
         m_parent = parent;
-        m_fileDeployers = parent.m_fileDeployers;
+        m_fileDeployers = new HashMap();
+        m_fileDeployers.putAll( parent.m_fileDeployers );
     }
 
     /**
@@ -140,7 +141,7 @@ public class DefaultDeployer
     private URLClassLoader getClassLoaderForFile( final File file )
         throws Exception
     {
-        File canonFile = file.getCanonicalFile();
+        final File canonFile = file.getCanonicalFile();
 
         // Locate cached classloader, creating it if necessary
         URLClassLoader classLoader = (URLClassLoader)m_fileDeployers.get( canonFile );
