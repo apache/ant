@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002, 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -99,6 +99,23 @@ public class FilterSetTest extends BuildFileTest {
         assertEquals(result, fs.replaceTokens(line));
     }
 
+    /**
+     * Test to see what happens when the resolving occurs in
+     * what would be an infinite loop, but with recursion disabled.
+     */
+    public void testRecursionDisabled() {
+        String result = "@test1@ line testvalue";
+        String line = "@test@ line @test2@";
+        FilterSet fs = new FilterSet();
+        fs.addFilter("test", "@test1@");
+        fs.addFilter("test1","@test@");
+        fs.addFilter("test2", "testvalue");
+        fs.setBeginToken("@");
+        fs.setEndToken("@");
+        fs.setRecurse(false);
+        assertEquals(result, fs.replaceTokens(line));
+    }
+
     public void testNestedFilterSets() {
         executeTarget("test-nested-filtersets");
 
@@ -125,8 +142,8 @@ public class FilterSetTest extends BuildFileTest {
     }
 
     private boolean compareFiles(String name1, String name2) {
-        File file1 = new File(name1);
-        File file2 = new File(name2);
+        File file1 = new File(System.getProperty("root"), name1);
+        File file2 = new File(System.getProperty("root"), name2);
 
         try {
             if (!file1.exists() || !file2.exists()) {
