@@ -22,7 +22,7 @@
   <property name="ant.dist.dir" value="../dist/ant"/>
 
   <property name="classpath" value=""/>
-  <property name="packages" value="org.apache.tools.*"/>
+  <property name="packages" value="org.apache.tools.*,com.oreilly.servlet.*"/>
   <property name="manifest" value="src/etc/manifest"/>
 
   <property name="build.compiler" value="classic"/>
@@ -81,7 +81,7 @@
     <mkdir dir="${lib.dir}"/>
     <jar jarfile="${lib.dir}/${name}.jar"
          basedir="${build.classes}"
-         includes="org/**"
+         includes="org/**,com/**"
          manifest="${manifest}"
     />
   </target>
