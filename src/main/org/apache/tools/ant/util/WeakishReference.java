@@ -43,8 +43,8 @@ public abstract class WeakishReference  {
      * Returns this reference object's referent.  If this reference object has
      * been cleared, then this method returns <code>null</code>.
      *
-     * @return	 The object to which this reference refers, or
-     *		 <code>null</code> if this reference object has been cleared
+     * @return The object to which this reference refers, or
+     *         <code>null</code> if this reference object has been cleared
      */
     public abstract Object get();
 

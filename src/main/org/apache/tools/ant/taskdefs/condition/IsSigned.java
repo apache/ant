@@ -85,7 +85,7 @@ public class IsSigned extends DataType implements Condition {
                                                     + SIG_END) != null;
                 boolean longSig = false;
                 if (name.length() > 8) {
-                    longSig = 
+                    longSig =
                         jarFile.getEntry(SIG_START
                                          + name.substring(0, 8).toUpperCase()
                                          + SIG_END) != null;
