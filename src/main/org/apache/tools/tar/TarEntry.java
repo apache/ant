@@ -452,6 +452,15 @@ public class TarEntry implements TarConstants {
     }   
         
     /** 
+     * Get this entry's mode.
+     *
+     * @return This entry's mode.
+     */
+    public int getMode() {
+        return this.mode;
+    }
+
+    /**
      * Get this entry's file size.
      *  
      * @return This entry's file size.

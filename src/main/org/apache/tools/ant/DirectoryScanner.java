@@ -468,7 +468,7 @@ strLoop:
      * @return <code>true</code> when the string matches against the pattern,
      *         <code>false</code> otherwise.
      */
-    protected static boolean match(String pattern, String str) {
+    public static boolean match(String pattern, String str) {
         return match(pattern, str, true);
     }
 
