@@ -1463,6 +1463,33 @@
         </table>
       </subsection>
 
+      <subsection name="mtxslt">
+
+        <p>The mtxslt (Multi-XSLT) extends the standard Ant "xslt/style" task
+        to make it easy to use multiple XSLT engines during the same build.
+        This is useful for regression testing of XSLT scripts against several
+        engines.</p>
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://mtxslt.sourceforge.net/">http://mtxslt.sourceforge.net/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:abcoates@theOffice.net">Anthony B. Coates</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache Software Foundation License</td>
+          </tr>
+        </table>
+      </subsection>
+
       <subsection name="pack">
 
         <p>pack is a task to build the smallest possible JAR to link
