@@ -396,6 +396,7 @@ public abstract class Task extends ProjectComponent {
             UnknownElement childElement = 
                 new UnknownElement(childWrapper.getElementTag());
             parentElement.addChild(childElement);
+            childElement.setProject(getProject());
             childElement.setRuntimeConfigurableWrapper(childWrapper);
             childWrapper.setProxy(childElement);
             replaceChildren(childWrapper, childElement);
