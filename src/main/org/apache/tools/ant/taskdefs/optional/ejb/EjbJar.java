@@ -89,7 +89,7 @@ import org.apache.tools.ant.types.FileSet;
  * periods with File.separatorChar and resolving the generated filename as a
  * relative path under the srcDir attribute. All necessary files are then
  * assembled into a jarfile. One jarfile is constructed for each deployment
- * descriptor found. 
+ * descriptor found.
  * </p>
  *
  * @author <a href="mailto:tfennell@sapient.com">Tim Fennell</a>
@@ -100,7 +100,7 @@ public class EjbJar extends MatchingTask {
     /**
      * Inner class used to record information about the location of a local DTD
      */
-    public static class DTDLocation 
+    public static class DTDLocation
         extends org.apache.tools.ant.types.DTDLocation {
     }
 
@@ -109,9 +109,9 @@ public class EjbJar extends MatchingTask {
      * This state is passed to the deployment tools for configuration
      */
     static class Config {
-        /** 
-         * Stores a handle to the directory under which to search for class 
-         * files 
+        /**
+         * Stores a handle to the directory under which to search for class
+         * files
          */
         public File srcDir;
 
@@ -158,7 +158,7 @@ public class EjbJar extends MatchingTask {
          * The Manifest file
          */
         public File manifest;
-        
+
         /**
          * The dependency analyzer to use to add additional classes to the jar
          */
@@ -170,30 +170,30 @@ public class EjbJar extends MatchingTask {
      * schemes
      */
     public static class NamingScheme extends EnumeratedAttribute {
-        /** 
+        /**
          * Naming scheme where generated jar is determined from the ejb-name in
-         * the deployment descripor 
+         * the deployment descripor
          */
         public static final String EJB_NAME = "ejb-name";
 
         /**
-         * Naming scheme where the generated jar name is based on the 
-         * name of the directory containing the deployment descriptor 
+         * Naming scheme where the generated jar name is based on the
+         * name of the directory containing the deployment descriptor
          */
         public static final String DIRECTORY = "directory";
-        
-        /** 
+
+        /**
          * Naming scheme where the generated jar name is based on the name of
          * the deployment descriptor file
          */
         public static final String DESCRIPTOR = "descriptor";
-        
-        /** 
-         * Naming scheme where the generated jar is named by the basejarname 
-         * attribute 
+
+        /**
+         * Naming scheme where the generated jar is named by the basejarname
+         * attribute
          */
         public static final String BASEJARNAME = "basejarname";
-        
+
         /**
          * Gets the values of the NamingScheme
          *
@@ -206,7 +206,7 @@ public class EjbJar extends MatchingTask {
 
     /**
      * The config which is built by this task and used by the various deployment
-     * tools to access the configuration of the ejbjar task 
+     * tools to access the configuration of the ejbjar task
      */
     private Config config = new Config();
 
@@ -225,6 +225,19 @@ public class EjbJar extends MatchingTask {
     /** The list of deployment tools we are going to run. */
     private ArrayList deploymentTools = new ArrayList();
 
+
+    /**
+     * Add a deployment tool to the list of deployment tools that will be
+     * processed
+     *
+     * @param deploymentTool a deployment tool instance to which descriptors
+     *        will be passed for processing.
+     */
+    protected void addDeploymentTool(EJBDeploymentTool deploymentTool) {
+        deploymentTool.setTask(this);
+        deploymentTools.add(deploymentTool);
+    }
+
     /**
      * Create a weblogic nested element used to configure a
      * deployment tool for Weblogic server.
@@ -233,8 +246,7 @@ public class EjbJar extends MatchingTask {
      */
     public WeblogicDeploymentTool createWeblogic() {
         WeblogicDeploymentTool tool = new WeblogicDeploymentTool();
-        tool.setTask(this);
-        deploymentTools.add(tool);
+        addDeploymentTool(tool);
         return tool;
     }
 
@@ -246,8 +258,7 @@ public class EjbJar extends MatchingTask {
      */
     public WebsphereDeploymentTool createWebsphere() {
         WebsphereDeploymentTool tool = new WebsphereDeploymentTool();
-        tool.setTask(this);
-        deploymentTools.add(tool);
+        addDeploymentTool(tool);
         return tool;
     }
 
@@ -276,8 +287,7 @@ public class EjbJar extends MatchingTask {
         log("iPlanet Application Server deployment tools", Project.MSG_VERBOSE);
 
         IPlanetDeploymentTool tool = new IPlanetDeploymentTool();
-        tool.setTask(this);
-        deploymentTools.add(tool);
+        addDeploymentTool(tool);
         return tool;
     }
 
@@ -289,8 +299,7 @@ public class EjbJar extends MatchingTask {
      */
     public JbossDeploymentTool createJboss() {
         JbossDeploymentTool tool = new JbossDeploymentTool();
-        tool.setTask(this);
-        deploymentTools.add(tool);
+        addDeploymentTool(tool);
         return tool;
     }
 
@@ -302,13 +311,12 @@ public class EjbJar extends MatchingTask {
      */
     public JonasDeploymentTool createJonas() {
         log("JOnAS deployment tools",  Project.MSG_VERBOSE);
-        
+
         JonasDeploymentTool tool = new JonasDeploymentTool();
-        tool.setTask(this);
-        deploymentTools.add(tool);
+        addDeploymentTool(tool);
         return tool;
-    }    
-    
+    }
+
     /**
      * Create a nested element for weblogic when using the Toplink
      * Object- Relational mapping.
@@ -317,12 +325,11 @@ public class EjbJar extends MatchingTask {
      */
     public WeblogicTOPLinkDeploymentTool createWeblogictoplink() {
         log("The <weblogictoplink> element is no longer required. Please use "
-            + "the <weblogic> element and set newCMP=\"true\"", 
-            Project.MSG_INFO); 
-        WeblogicTOPLinkDeploymentTool tool 
+            + "the <weblogic> element and set newCMP=\"true\"",
+            Project.MSG_INFO);
+        WeblogicTOPLinkDeploymentTool tool
             = new WeblogicTOPLinkDeploymentTool();
-        tool.setTask(this);
-        deploymentTools.add(tool);
+        addDeploymentTool(tool);
         return tool;
     }
 
@@ -414,7 +421,7 @@ public class EjbJar extends MatchingTask {
     public void setDependency(String analyzer) {
         config.analyzer = analyzer;
     }
-    
+
     /**
      * Set the base name of the EJB jar that is to be created if it is not
      * to be determined from the name of the deployment descriptor files.
