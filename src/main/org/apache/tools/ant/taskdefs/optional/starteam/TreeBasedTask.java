@@ -55,6 +55,7 @@ package org.apache.tools.ant.taskdefs.optional.starteam;
 
 import com.starbase.starteam.Folder;
 import com.starbase.starteam.Label;
+import com.starbase.starteam.PropertyNames;
 import com.starbase.starteam.StarTeamFinder;
 import com.starbase.starteam.View;
 import java.util.Hashtable;
@@ -64,7 +65,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 
 /**
- * FileBasedTask.java
+ * TreeBasedTask.java
  * This abstract class is the base for any tasks that are tree-based, that
  * is, for tasks which iterate over a tree of folders in StarTeam which
  * is reflected in a tree of folder the local machine.
@@ -76,7 +77,7 @@ import org.apache.tools.ant.Project;
  *
  * Created: Sat Dec 15 16:55:19 2001
  *
- * @author <a href="mailto:stevec@ignitesports.com">Steve Cohen</a>
+ * @author <a href="mailto:scohen@apache.org">Steve Cohen</a>
  * @version 1.0
  * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
  */
@@ -139,6 +140,12 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * and not in its subfolders.
      */
     private boolean recursive = true;
+
+    /**
+     * Set preloadFileInformation to true to load all file information from the server
+     * at once.  Increases performance significantly for projects with many files and/or folders.
+     */
+    private boolean preloadFileInformation = true;
 
     /**
      * If forced set to true, files in the target directory will
@@ -339,6 +346,25 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
+     * Get the value of preloadFileInformation.
+     * @return value of preloadFileInformation.
+     */
+    public boolean isPreloadFileInformation() {
+        return this.preloadFileInformation;
+    }
+
+    /**
+     * Flag to set to preload file information from the server; optional,
+     * default true.
+     * Increases performance significantly for projects with many files
+     * and/or folders.
+     * @param v  Value to assign to preloadFileInformation.
+     */
+    public void setPreloadFileInformation(boolean v) {
+        this.preloadFileInformation = v;
+    }
+
+    /**
      * Get the value of forced.
      * @return value of forced.
      */
@@ -462,6 +488,19 @@ public abstract class TreeBasedTask extends StarTeamTask {
             starteamrootfolder =
                     StarTeamFinder.findFolder(snapshot.getRootFolder(),
                             this.rootStarteamFolder);
+
+            if (this.isPreloadFileInformation()) {
+                PropertyNames pn = getServer().getPropertyNames();
+                String[] props = new String[] {pn.FILE_NAME, pn.FILE_PATH,
+                                               pn.FILE_STATUS, pn.MODIFIED_TIME,
+                                               pn.FILE_FILE_TIME_AT_CHECKIN,
+                                               pn.MODIFIED_USER_ID, pn.FILE_SIZE};
+
+                int depth = this.isRecursive() ? -1 : 0;
+                starteamrootfolder.populateNow(getServer().getTypeNames().FILE,
+                                                props, depth);
+            }
+
 
         } 
         catch (BuildException e) {
@@ -665,7 +704,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * whatever items left in the UnmatchedFileMap are uncontrolled items
      * and can be processed as appropriate to the task.  In the case of
      * Checkouts, they can be optionally deleted from the local tree.  In the 
-     * case of Checkins they can optionally be added to the resository.
+     * case of Checkins they can optionally be added to the repository.
      */
     protected abstract class UnmatchedFileMap extends Hashtable {
     

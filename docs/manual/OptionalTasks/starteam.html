@@ -14,11 +14,12 @@
 </ul>
 
 <p>
-These tasks make use of functions from the StarTeam API.  As a result
-they are only available to licensed users of StarTeam.  You must have
+The StarTeam revision control system was recently acquired by Borland.
+These tasks make use of functions from the StarTeam API to work with that system.  
+As a result they are only available to licensed users of StarTeam.  You must have
 <CODE>starteam-sdk.jar</CODE> in your classpath to run these tasks.
 For more information about the StarTeam API and how to license it, see
-the <a href="http://www.starbase.com">StarBase</a> web site.</p>
+the <a href="http://www.borland.com/starteam/">Borland</a> web site.</p>
 
 <hr></hr>
 
@@ -165,6 +166,14 @@ If false (default) has no effect.</td>
 false(default) means the checked out files will be timestamped at the time
 of checkout.</td>    <td align="center" valign="top">no</td>
 
+  </tr>
+  <tr>
+    <td valign="top">preloadfileinformation</td>
+    <td valign="top">The StarTeam server has the ability to preload file metadata for an
+    entire tree prior to beginning action on that tree.  Doing so can in some instances 
+    lead to substantially faster actions, particularly over large trees.  Setting this 
+    to "yes" (default) engages this functionality, setting it to "no" turns it off.</td>    
+    <td align="center" valign="top">yes</td>
   </tr>
     
 </table>
@@ -348,7 +357,16 @@ that StarTeam is maintaining for the file.  If false, checkins will use this sta
     <td valign="top">If true, file will be unlocked so that other users may
 change it.  If false (default) lock status will not change.
     <td align="center" valign="top">no</td> 
-  </tr></table>
+  </tr>
+  <tr>
+    <td valign="top">preloadfileinformation</td>
+    <td valign="top">The StarTeam server has the ability to preload file metadata for an
+    entire tree prior to beginning action on that tree.  Doing so can in some instances 
+    lead to substantially faster actions, particularly over large trees.  Setting this 
+    to "yes" (default) engages this functionality, setting it to "no" turns it off.</td>    
+    <td align="center" valign="top">yes</td>
+  </tr>
+  </table>
 
 <h3>Examples</h3>
 
@@ -635,6 +653,15 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
     If false, they won't.  Defaults to "true".</td>
     <td align="center" valign="top">no</td>
     </tr>
+  
+  <tr>
+    <td valign="top">preloadfileinformation</td>
+    <td valign="top">The StarTeam server has the ability to preload file metadata for an
+    entire tree prior to beginning action on that tree.  Doing so can in some instances 
+    lead to substantially faster actions, particularly over large trees.  Setting this 
+    to "yes" (default) engages this functionality, setting it to "no" turns it off.</td>    
+    <td align="center" valign="top">yes</td>
+  </tr>
 
 </table>
 <h3>Examples</h3>
