@@ -12,6 +12,11 @@ $$.
 
 Fixed bugs:
 -----------
+* <get> throws a build exception on an http authorization error, unless you
+have set ignoreerrors to true.
+
+* <wsdltodotnet> was spelt in Wintel case: <WsdlToDotnet>. It is now lower
+case, though the old spelling is retained for anyone who used it.
 
 * Merging of Manifests in jar now works as documented.
 
