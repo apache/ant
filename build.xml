@@ -16,7 +16,7 @@
 
   <property name="ant.home" value="."/>
   <property name="src.bin.dir" value="src/bin"/>
-  <property name="src.etc.dir" value="src/bin"/>
+  <property name="src.etc.dir" value="src/etc"/>
   <property name="src.dir" value="src/main"/>
   <property name="src.tests.dir" value="src/testcases"/>
   <property name="docs.dir" value="docs"/>
@@ -470,7 +470,9 @@
     </copy>
 
     <copy todir="${ant.bindist.dir}/etc">
-      <fileset dir="${src.etc.dir}"/>
+      <fileset dir="${src.etc.dir}">
+        <exclude name="testcases/**" />
+      </fileset>
     </copy>
 
     <copy todir="${ant.bindist.dir}/bin">
