@@ -249,6 +249,7 @@ public class VAJImport extends Task {
 			classes.copyInto(classesArr);
 			importSpec.setClassFiles(classesArr);
 			if (classesArr.length > 0) {
+				logFiles(classes, "class");
 				msg.append( classesArr.length );
 				msg.append( " class " );
 				msg.append( classesArr.length > 1 ? "files" : "file" );
@@ -261,6 +262,7 @@ public class VAJImport extends Task {
 			sources.copyInto(sourcesArr);
 			importSpec.setJavaFiles(sourcesArr);
 			if (sourcesArr.length > 0) {
+				logFiles(sources, "source");
 				msg.append( connector );
 				msg.append( sourcesArr.length );
 				msg.append( " source " );
@@ -270,11 +272,14 @@ public class VAJImport extends Task {
 		}
 
 		if (importResources) {
+			String resourcePath = fileset.getDir(this.project).getAbsolutePath();
 			resourcesArr = new String[resources.size()];
 			resources.copyInto(resourcesArr);
-			importSpec.setResourcePath(fileset.getDir(this.project).getAbsolutePath());
+			importSpec.setResourcePath(resourcePath);
 			importSpec.setResourceFiles(resourcesArr);
 			if (resourcesArr.length > 0) {
+				logFiles(resources, "resource");
+				log( "  (relative to resource path '" + resourcePath + "')", org.apache.tools.ant.Project.MSG_VERBOSE );
 				msg.append( connector );
 				msg.append( resourcesArr.length );
 				msg.append( " resource " );
@@ -309,14 +314,27 @@ public class VAJImport extends Task {
 		Vector resources) {
 		for (int i = 0; i < files.length; i++) {
 			String file = (new File(dir, files[i])).getAbsolutePath();
-			if (file.endsWith(".source") || file.endsWith(".SOURCE")) {
+			if (file.endsWith(".java") || file.endsWith(".JAVA")) {
 				sources.addElement(file);
 			} else
 				if (file.endsWith(".class") || file.endsWith(".CLASS")) {
 					classes.addElement(file);
 				} else {
-					resources.addElement(file);
+					// for resources VA expects the path relative to the resource path
+					resources.addElement(files[i]);
 				}
 		}
 	}
+		
+	/**
+	 * Logs a list of file names to the message log
+	 * @param fileNames java.util.Vector file names to be logged
+	 * @param type java.lang.String file type
+	 */
+	protected void logFiles(Vector fileNames, String fileType) {
+		log(  fileType + " files found for import:", org.apache.tools.ant.Project.MSG_VERBOSE);
+		for ( Enumeration e = fileNames.elements(); e.hasMoreElements(); ) {
+			log( "    " + e.nextElement(), org.apache.tools.ant.Project.MSG_VERBOSE );
+		}
+	} 
 }
