@@ -4,6 +4,14 @@ Changes from Ant 1.4.1 to current CVS version
 Changes that could break older environments:
 --------------------------------------------
 
+* Important: Single $ signs are no longer silently stripped! 
+  Before you panic that we have broken all your build files, we have kept
+  the old "$$" -> "$" behaviour. So only build files which accidentally had
+  a $ sign in a string that was being silently stripped may break.
+  We added this fix to stop newbie confusion; if you want to write a 
+  build file which works on ant versions 1.4.1 or earlier, stay with 
+  the double $$ sign rule. 
+    
 * <telnet> was fixed to expand properties inside nested <read> and
   <write> elements; before this only happened when you assigned the text
   to the string attribute. If you had $ signs in the string, they may
