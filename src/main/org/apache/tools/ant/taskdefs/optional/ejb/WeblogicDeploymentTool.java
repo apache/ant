@@ -71,10 +71,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
     public static final String PUBLICID_EJB20
         = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
-
-    public static final String PUBLICID_WEBLOGIC_EJB
+    public static final String PUBLICID_WEBLOGIC_EJB510
         = "-//BEA Systems, Inc.//DTD WebLogic 5.1.0 EJB//EN";
-    
+    public static final String PUBLICID_WEBLOGIC_EJB600
+        = "-//BEA Systems, Inc.//DTD WebLogic 6.0.0 EJB//EN";
+
     protected static final String DEFAULT_WL51_EJB11_DTD_LOCATION 
         = "/weblogic/ejb/deployment/xml/ejb-jar.dtd";
     protected static final String DEFAULT_WL60_EJB11_DTD_LOCATION 
@@ -82,12 +83,19 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     protected static final String DEFAULT_WL60_EJB20_DTD_LOCATION 
         = "/weblogic/ejb20/dd/xml/ejb20-jar.dtd";
 
-    protected static final String DEFAULT_WL_DTD_LOCATION 
+    protected static final String DEFAULT_WL51_DTD_LOCATION 
         = "/weblogic/ejb/deployment/xml/weblogic-ejb-jar.dtd";
+    protected static final String DEFAULT_WL60_51_DTD_LOCATION 
+        = "/weblogic/ejb20/dd/xml/weblogic510-ejb-jar.dtd";
+    protected static final String DEFAULT_WL60_DTD_LOCATION 
+        = "/weblogic/ejb20/dd/xml/weblogic600-ejb-jar.dtd";
 
     protected static final String WL_DD = "weblogic-ejb-jar.xml";
     protected static final String WL_CMP_DD = "weblogic-cmp-rdbms-jar.xml";
 
+    protected static final String COMPILER_EJB11 = "weblogic.ejbc";
+    protected static final String COMPILER_EJB20 = "weblogic.ejbc20";
+    
     /** Instance variable that stores the suffix for the weblogic jarfile. */
     private String jarSuffix = ".jar";
 
@@ -98,8 +106,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     private String ejb11DTD;
         
     /** Instance variable that determines whether generic ejb jars are kept. */
-
     private boolean keepgenerated = false;
+
+    /** Instance variable that stores the fully qualified classname of the weblogic EJBC compiler */
+    private String ejbcClass = null;
 
     private String additionalArgs = "";
 
@@ -179,7 +189,23 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         this.additionalArgs = args;
     }
     
+    /**
+     * Set the classname of the ejbc compiler
+     */
+    public void setEjbcClass(String ejbcClass)
+    {
+        this.ejbcClass = ejbcClass;
+    }
     
+    /**
+     * Get the ejbc compiler class
+     */
+    public String getEjbcClass()
+    {
+        return ejbcClass;
+    }
+     
+   
     /**
      * Setter used to store the location of the ejb-jar DTD. This can be a file on the system 
      * or a resource on the classpath. 
@@ -231,7 +257,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
     
 
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
-        DescriptorHandler handler = new DescriptorHandler(srcDir);
+        DescriptorHandler handler = new DescriptorHandler(getTask(), srcDir);
         // register all the DTDs, both the ones that are known and
         // any supplied by the user
         handler.registerDTD(PUBLICID_EJB11, DEFAULT_WL51_EJB11_DTD_LOCATION);
@@ -239,10 +265,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
         handler.registerDTD(PUBLICID_EJB11, ejb11DTD);
         handler.registerDTD(PUBLICID_EJB20, DEFAULT_WL60_EJB20_DTD_LOCATION);
         
-        
         for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
             EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
-            handler.registerDTD(dtdLocation.getPublicId(), dtdLocation.getLocation());
+            handler.registerDTD(dtdLocation.getPublicId(),
+                                dtdLocation.getLocation());
         }
         
         return handler;                                    
@@ -250,7 +276,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
 
     protected DescriptorHandler getWeblogicDescriptorHandler(final File srcDir) {
         DescriptorHandler handler = 
-            new DescriptorHandler(srcDir) {        
+            new DescriptorHandler(getTask(), srcDir) {        
                 protected void processElement() {
                     if (currentElement.equals("type-storage")) {
                         // Get the filename of vendor specific descriptor
@@ -265,8 +291,11 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 }
             };
 
-        handler.registerDTD(PUBLICID_WEBLOGIC_EJB, 
-                            weblogicDTD == null ? DEFAULT_WL_DTD_LOCATION : weblogicDTD);
+        handler.registerDTD(PUBLICID_WEBLOGIC_EJB510, DEFAULT_WL51_DTD_LOCATION);
+        handler.registerDTD(PUBLICID_WEBLOGIC_EJB510, DEFAULT_WL60_51_DTD_LOCATION);
+        handler.registerDTD(PUBLICID_WEBLOGIC_EJB600, DEFAULT_WL60_DTD_LOCATION);
+        handler.registerDTD(PUBLICID_WEBLOGIC_EJB510, weblogicDTD);
+        handler.registerDTD(PUBLICID_WEBLOGIC_EJB600, weblogicDTD);
                             
         for (Iterator i = getConfig().dtdLocations.iterator(); i.hasNext();) {
             EjbJar.DTDLocation dtdLocation = (EjbJar.DTDLocation)i.next();
@@ -354,8 +383,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * @param destJar java.io.File representing the destination, WebLogic
      *        jarfile.
      */
-    private void buildWeblogicJar(File sourceJar, File destJar) {
+    private void buildWeblogicJar(File sourceJar, File destJar, String publicId) {
         org.apache.tools.ant.taskdefs.Java javaTask = null;
+        
+        String ejbcClassName = ejbcClass;
         
         try {
             String args = additionalArgs;
@@ -371,7 +402,21 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             
             javaTask = (Java) getTask().getProject().createTask("java");
             javaTask.setTaskName("ejbc");
-            javaTask.setClassname("weblogic.ejbc");
+            if (ejbcClassName == null) {
+                // try to determine it from publicId
+                if (PUBLICID_EJB11.equals(publicId)) {
+                    ejbcClassName = COMPILER_EJB11;
+                }
+                else if (PUBLICID_EJB20.equals(publicId)) {
+                    ejbcClassName = COMPILER_EJB20;
+                }
+                else {
+                    log("Unrecognized publicId " + publicId + " - using EJB 1.1 compiler", Project.MSG_WARN);
+                    ejbcClassName = COMPILER_EJB11;
+                }
+            }
+                 
+            javaTask.setClassname(ejbcClassName);
             Commandline.Argument arguments = javaTask.createArg();
             arguments.setLine(args);
             Path classpath = wlClasspath;
@@ -388,14 +433,14 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
             }
             
 
-            log("Calling weblogic.ejbc for " + sourceJar.toString(),
+            log("Calling " + ejbcClassName + " for " + sourceJar.toString(),
                           Project.MSG_VERBOSE);
 
             javaTask.execute();
         }
         catch (Exception e) {
             // Have to catch this because of the semantics of calling main()
-            String msg = "Exception while calling ejbc. Details: " + e.toString();
+            String msg = "Exception while calling " + ejbcClassName + ". Details: " + e.toString();
             throw new BuildException(msg, e);
         }
     }
@@ -405,14 +450,15 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * filenames/java.io.Files in the Hashtable stored on the instance variable
      * ejbFiles.
      */
-    protected void writeJar(String baseName, File jarFile, Hashtable files) throws BuildException {
+    protected void writeJar(String baseName, File jarFile, Hashtable files, 
+                            String publicId) throws BuildException {
         // need to create a generic jar first.
         File genericJarFile = super.getVendorOutputJarFile(baseName);
-        super.writeJar(baseName, genericJarFile, files);
+        super.writeJar(baseName, genericJarFile, files, publicId);
         
         if (alwaysRebuild || isRebuildRequired(genericJarFile, jarFile))
         {
-            buildWeblogicJar(genericJarFile, jarFile);
+            buildWeblogicJar(genericJarFile, jarFile, publicId);
         }
         if (!keepGeneric) {
              log("deleting generic jar " + genericJarFile.toString(),

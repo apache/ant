@@ -270,7 +270,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
     }
 
     protected DescriptorHandler getDescriptorHandler(File srcDir) {
-        return new DescriptorHandler(srcDir);
+        return new DescriptorHandler(task, srcDir);
     }
     
     public void processDescriptor(String descriptorFileName, SAXParser saxParser) {
@@ -380,7 +380,7 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
                               Project.MSG_INFO);
     
                 // Use helper method to write the jarfile
-                writeJar(baseName, jarFile, ejbFiles);
+                writeJar(baseName, jarFile, ejbFiles, handler.getPublicId());
 
             }
             else {
@@ -438,7 +438,8 @@ public class GenericDeploymentTool implements EJBDeploymentTool {
      * filenames/java.io.Files in the Hashtable stored on the instance variable
      * ejbFiles.
      */
-    protected void writeJar(String baseName, File jarfile, Hashtable files) throws BuildException{
+    protected void writeJar(String baseName, File jarfile, Hashtable files, 
+                            String publicId) throws BuildException{
 
         JarOutputStream jarStream = null;
         try {

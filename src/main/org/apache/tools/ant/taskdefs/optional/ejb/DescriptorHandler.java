@@ -61,6 +61,8 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.AttributeList;
 
+import org.apache.tools.ant.*;
+
 /**
  * Inner class used by EjbJar to facilitate the parsing of deployment
  * descriptors and the capture of appropriate information. Extends
@@ -70,6 +72,10 @@ import org.xml.sax.AttributeList;
  * list can then be accessed through the getFiles() method.
  */
 public class DescriptorHandler extends org.xml.sax.HandlerBase {
+    private Task owningTask;
+    
+    private String publicId = null;
+    
     /**
      * Bunch of constants used for storing entries in a hashtable, and for
      * constructing the filenames of various parts of the ejb jar.
@@ -111,7 +117,8 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
      */
     private File srcDir;
 
-    public DescriptorHandler(File srcDir) {
+    public DescriptorHandler(Task task, File srcDir) {
+        this.owningTask = task;
         this.srcDir = srcDir;
     }
     
@@ -122,22 +129,28 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         
         File fileDTD = new File(location);
         if (fileDTD.exists()) {
-            fileDTDs.put(publicId, fileDTD);
+            if (publicId != null) {
+                fileDTDs.put(publicId, fileDTD);
+            }
             return;
         }
         
         if (getClass().getResource(location) != null) {
-            resourceDTDs.put(publicId, location);
+            if (publicId != null) {
+                resourceDTDs.put(publicId, location);
+            }
         }
     }
 
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException
     {
+        this.publicId = publicId;
         
         File dtdFile = (File) fileDTDs.get(publicId);
         if (dtdFile != null) {
             try {
+                owningTask.log("Resolved " + publicId + " to local file " + dtdFile, Project.MSG_VERBOSE);
                 return new InputSource(new FileInputStream(dtdFile));
             } catch( FileNotFoundException ex ) {
                 // ignore
@@ -148,9 +161,13 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         if (dtdResourceName != null) {
             InputStream is = this.getClass().getResourceAsStream(dtdResourceName);
             if( is != null ) {
+                owningTask.log("Resolved " + publicId + " to local resource " + dtdResourceName, Project.MSG_VERBOSE);
                 return new InputSource(is);
             }
         }
+        
+        owningTask.log("Could not resolve ( publicId: " + publicId + ", systemId: " + systemId + ") to a local entity", 
+                        Project.MSG_INFO);
         
         return null;
     }
@@ -162,7 +179,13 @@ public class DescriptorHandler extends org.xml.sax.HandlerBase {
         return (ejbFiles == null) ? new Hashtable() : ejbFiles;
     }
 
-
+    /**
+     * Get the publicId of the DTD
+     */
+    public String getPublicId() {
+        return publicId;
+    }
+    
     /**
      * SAX parser call-back method that is used to initialize the values of some
      * instance variables to ensure safe operation.

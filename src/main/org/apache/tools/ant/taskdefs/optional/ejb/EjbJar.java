@@ -104,8 +104,8 @@ import org.apache.tools.ant.types.*;
 public class EjbJar extends MatchingTask {
     
     public static class DTDLocation {
-        private String publicId;
-        private String location;
+        private String publicId = null;
+        private String location = null;
         
         public void setPublicId(String publicId) {
             this.publicId = publicId;
