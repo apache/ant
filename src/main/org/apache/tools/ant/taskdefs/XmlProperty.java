@@ -65,6 +65,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.FileUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -260,23 +261,16 @@ public class XmlProperty extends org.apache.tools.ant.Task {
             throw new BuildException(msg);
         }
 
-        BufferedInputStream configurationStream = null;
-
         try {
             log("Loading " + src.getAbsolutePath(), Project.MSG_VERBOSE);
 
             if (src.exists()) {
 
-              configurationStream =
-                      new BufferedInputStream(new FileInputStream(src));
-
               DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-
               factory.setValidating(validate);
               factory.setNamespaceAware(false);
-
-              Element topElement
-                = factory.newDocumentBuilder().parse(configurationStream).getDocumentElement();
+              Document document = factory.newDocumentBuilder().parse(src);
+              Element topElement = document.getDocumentElement();
 
               // Keep a hashtable of attributes added by this task.
               // This task is allow to override its own properties
@@ -312,13 +306,6 @@ public class XmlProperty extends org.apache.tools.ant.Task {
         } catch (IOException ioe) {
             // I/O error
             throw new BuildException(ioe);
-        } finally {
-            if (configurationStream != null) {
-                try {
-                    configurationStream.close();
-                } catch (Exception e) {
-                }
-            }
         }
     }
 

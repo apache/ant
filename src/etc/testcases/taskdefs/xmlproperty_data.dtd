@@ -1,0 +1,14 @@
+<!ELEMENT root-tag (inner-tag, a2, cdatatag)>
+<!ATTLIST root-tag myattr CDATA "">
+
+<!ELEMENT inner-tag (#PCDATA)>
+<!ATTLIST inner-tag someattr CDATA "">
+
+<!ELEMENT a2 (a3)>
+
+<!ELEMENT a3 (a4)>
+
+<!ELEMENT a4 (#PCDATA)>
+
+<!ELEMENT cdatatag (#PCDATA)>
+

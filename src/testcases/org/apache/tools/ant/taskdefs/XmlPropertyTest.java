@@ -87,11 +87,16 @@ public class XmlPropertyTest extends BuildFileTest {
         executeTarget("test");
         assertEquals("true", getProject().getProperty("root-tag(myattr)"));
         assertEquals("Text", getProject().getProperty("root-tag.inner-tag"));
-        assertEquals("val", 
+        assertEquals("val",
                      getProject().getProperty("root-tag.inner-tag(someattr)"));
         assertEquals("false", getProject().getProperty("root-tag.a2.a3.a4"));
-        assertEquals("CDATA failed", 
+        assertEquals("CDATA failed",
             "<test>", getProject().getProperty("root-tag.cdatatag"));
+    }
+
+    public void testDTD() {
+        executeTarget("testdtd");
+        assertEquals("Text", getProject().getProperty("root-tag.inner-tag"));
     }
 
     public void testNone () {
@@ -144,7 +149,7 @@ public class XmlPropertyTest extends BuildFileTest {
      */
     private void doTest(String msg, boolean keepRoot, boolean collapse,
                         boolean semantic, boolean include, boolean localRoot) {
-        Enumeration iter = 
+        Enumeration iter =
             getFiles(new File("src/etc/testcases/taskdefs/xmlproperty/inputs"));
         while (iter.hasMoreElements()) {
             File inputFile = (File) iter.nextElement();
@@ -162,8 +167,8 @@ public class XmlPropertyTest extends BuildFileTest {
                 File propertyFile = getGoldfile(inputFile, keepRoot, collapse,
                                                 semantic, include, localRoot);
                 if (!propertyFile.exists()) {
-//                    System.out.println("Skipping as " 
-//                                       + propertyFile.getAbsolutePath() 
+//                    System.out.println("Skipping as "
+//                                       + propertyFile.getAbsolutePath()
 //                                       + ") doesn't exist.");
                     continue;
                 }
@@ -209,15 +214,15 @@ public class XmlPropertyTest extends BuildFileTest {
      * but some other properties may get set in the XmlProperty due
      * to generic Project/Task configuration.
      */
-    private static void ensureProperties (String msg, File inputFile, 
-                                          File workingDir, Project project, 
+    private static void ensureProperties (String msg, File inputFile,
+                                          File workingDir, Project project,
                                           Properties properties) {
         Hashtable xmlproperties = project.getProperties();
         // Every key identified by the Properties must have been loaded.
         Enumeration propertyKeyEnum = properties.propertyNames();
         while(propertyKeyEnum.hasMoreElements()){
             String currentKey = propertyKeyEnum.nextElement().toString();
-            String assertMsg = msg + "-" + inputFile.getName() 
+            String assertMsg = msg + "-" + inputFile.getName()
                 + " Key=" + currentKey;
 
             String propertyValue = properties.getProperty(currentKey);
@@ -238,11 +243,11 @@ public class XmlPropertyTest extends BuildFileTest {
                 }
 
                 // What is the property supposed to be?
-                propertyValue = 
+                propertyValue =
                     propertyValue.substring(3, propertyValue.length());
                 if (propertyValue.equals("path")) {
                     if (!(obj instanceof Path)) {
-                        fail(assertMsg + " Path ID is a " 
+                        fail(assertMsg + " Path ID is a "
                              + obj.getClass().getName());
                     }
                 } else {
@@ -255,7 +260,7 @@ public class XmlPropertyTest extends BuildFileTest {
                     // The property is the name of a file.  We are testing
                     // a location attribute, so we need to resolve the given
                     // file name in the provided folder.
-                    String fileName = 
+                    String fileName =
                         propertyValue.substring(5, propertyValue.length());
                     File f = new File(workingDir, fileName);
                     propertyValue = f.getAbsolutePath();
@@ -274,7 +279,7 @@ public class XmlPropertyTest extends BuildFileTest {
         Enumeration keyEnum = xmlproperties.keys();
         while (keyEnum.hasMoreElements()) {
             String currentKey = keyEnum.nextElement().toString();
-            System.out.println(currentKey + " = " 
+            System.out.println(currentKey + " = "
                                + xmlproperties.get(currentKey));
         }
     }
@@ -282,7 +287,7 @@ public class XmlPropertyTest extends BuildFileTest {
     /**
      * Ensure all references loaded by the project are valid.
      */
-    private static void ensureReferences (String msg, File inputFile, 
+    private static void ensureReferences (String msg, File inputFile,
                                           Hashtable references) {
         Enumeration referenceKeyEnum = references.keys();
         while(referenceKeyEnum.hasMoreElements()){
@@ -293,7 +298,7 @@ public class XmlPropertyTest extends BuildFileTest {
             } else if (currentValue instanceof String) {
             } else {
                 if( ! currentKey.startsWith("ant.") ) {
-                    fail(msg + "-" + inputFile.getName() + " Key=" 
+                    fail(msg + "-" + inputFile.getName() + " Key="
                          + currentKey + " is not a recognized type.");
                 }
             }
@@ -304,16 +309,16 @@ public class XmlPropertyTest extends BuildFileTest {
      * Munge the name of the input file to find an appropriate goldfile,
      * based on hardwired naming conventions.
      */
-    private static File getGoldfile (File input, boolean keepRoot, 
-                                     boolean collapse, boolean semantic, 
+    private static File getGoldfile (File input, boolean keepRoot,
+                                     boolean collapse, boolean semantic,
                                      boolean include, boolean localRoot) {
         // Substitute .xml with .properties
         String baseName = input.getName().toLowerCase();
         if (baseName.endsWith(".xml")) {
-            baseName = baseName.substring(0, baseName.length() - 4) 
+            baseName = baseName.substring(0, baseName.length() - 4)
                 + ".properties";
         }
-        
+
         File dir = fileUtils.getParentFile(fileUtils.getParentFile(input));
 
         String goldFileFolder = "goldfiles/";

@@ -4,4 +4,7 @@
     <xmlproperty file="xmlproperty_data.xml"/>
   </target>
 
+  <target name="testdtd">
+    <xmlproperty file="xmlproperty_withdtd.xml"/>
+  </target>
 </project>
