@@ -26,6 +26,9 @@ Fixed bugs:
 * Incorrect task name with invalid "javac" task after a "presetdef.
   Bugzilla reports 31389 and 29499.
 
+* Execution of top level tasks in imported files get delayed by targets.
+  Bugzilla report 31487.
+
 Other changes:
 --------------
 

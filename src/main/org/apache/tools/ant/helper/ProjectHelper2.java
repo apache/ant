@@ -116,15 +116,18 @@ public class ProjectHelper2 extends ProjectHelper {
             // we are in an imported file.
             context.setIgnoreProjectTag(true);
             Target currentTarget = context.getCurrentTarget();
+            Target currentImplicit = context.getImplicitTarget();
             try {
                 Target newCurrent = new Target();
                 newCurrent.setProject(project);
                 newCurrent.setName("");
                 context.setCurrentTarget(newCurrent);
+                context.setImplicitTarget(newCurrent);
                 parse(project, source, new RootHandler(context, mainHandler));
                 newCurrent.execute();
             } finally {
                 context.setCurrentTarget(currentTarget);
+                context.setImplicitTarget(currentImplicit);
             }
         } else {
             // top level file

@@ -1,0 +1,5 @@
+<project>
+  <echo>Importing targetfirst</echo>
+  <import file="targetfirst.xml"/>
+  <echo>After importing</echo>
+</project>
