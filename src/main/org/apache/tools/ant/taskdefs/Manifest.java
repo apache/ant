@@ -105,7 +105,16 @@ public class Manifest extends Task {
 
     /** The max length of a line in a Manifest */
     public static final int MAX_LINE_LENGTH = 72;
+    
+    /** 
+     * Max length of a line section which is continued. need to allow 
+     * for the CRLF
+     */
+    public static final int MAX_SECTION_LENGTH = MAX_LINE_LENGTH - 2;
 
+    /** The End-Of-Line marker in manifests */
+    public static final String EOL = "\r\n";
+    
     /**
      * Helper class for Manifest's mode attribute.
      */
@@ -317,9 +326,9 @@ public class Manifest extends Task {
             String line = name + ": " + value;
             while (line.getBytes().length > MAX_LINE_LENGTH) {
                 // try to find a MAX_LINE_LENGTH byte section
-                int breakIndex = MAX_LINE_LENGTH;
+                int breakIndex = MAX_SECTION_LENGTH;
                 String section = line.substring(0, breakIndex);
-                while (section.getBytes().length > MAX_LINE_LENGTH 
+                while (section.getBytes().length > MAX_SECTION_LENGTH 
                      && breakIndex > 0) {
                     breakIndex--;
                     section = line.substring(0, breakIndex);
@@ -328,10 +337,10 @@ public class Manifest extends Task {
                     throw new IOException("Unable to write manifest line " 
                         + name + ": " + value);
                 }
-                writer.println(section);
+                writer.print(section + EOL);
                 line = " " + line.substring(breakIndex);
             }
-            writer.println(line);
+            writer.print(line + EOL);
         }
     }
     
@@ -478,7 +487,7 @@ public class Manifest extends Task {
                 Attribute attribute = getAttribute(key);
                 attribute.write(writer);
             }
-            writer.println();
+            writer.print(EOL);
         }
 
         /**
@@ -853,12 +862,12 @@ public class Manifest extends Task {
     * @throws IOException if the manifest cannot be written
     */
     public void write(PrintWriter writer) throws IOException {
-        writer.println(ATTRIBUTE_MANIFEST_VERSION + ": " + manifestVersion);
+        writer.print(ATTRIBUTE_MANIFEST_VERSION + ": " + manifestVersion + EOL);
         String signatureVersion 
             = mainSection.getAttributeValue(ATTRIBUTE_SIGNATURE_VERSION);
         if (signatureVersion != null) {
-            writer.println(ATTRIBUTE_SIGNATURE_VERSION + ": " 
-                + signatureVersion);
+            writer.print(ATTRIBUTE_SIGNATURE_VERSION + ": " 
+                + signatureVersion + EOL);
             mainSection.removeAttribute(ATTRIBUTE_SIGNATURE_VERSION);
         }
         mainSection.write(writer);
