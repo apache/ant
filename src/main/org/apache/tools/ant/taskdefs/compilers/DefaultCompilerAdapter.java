@@ -227,8 +227,7 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 cmd.createArgument().setValue("-target");
                 cmd.createArgument().setValue(target);
             }
-            if (bootclasspath != null
-                && !Project.getJavaVersion().startsWith("1.1")) {
+            if (bootclasspath != null) {
                 cmd.createArgument().setValue("-bootclasspath");
                 cmd.createArgument().setPath(bootclasspath);
             }
