@@ -65,6 +65,15 @@ the default excludes).</p>
 of files. These patterns look very much like the patterns used in DOS and
 UNIX:</p>
 <p>'*' matches zero or more characters, '?' matches one character.</p>
+
+<p>In general, patterns are considered relative paths, relative to a
+task dependent base directory (the dir attribute in the case of
+<code>&lt;fileset&gt;</code>).  Only files found below that base
+directory are considered.  So while a pattern like
+<code>../foo.java</code> is possible, it will not match anything when
+applied since the base directory's parent is never scanned for
+files.</p>
+
 <p><b>Examples:</b></p>
 <p>
 <code>*.java</code>&nbsp;&nbsp;matches&nbsp;&nbsp;<code>.java</code>,
