@@ -692,7 +692,18 @@ public class DirectoryScanner
         Enumeration enum2 = newroots.keys();
         while (enum2.hasMoreElements()) {
             String currentelement = (String) enum2.nextElement();
+            String originalpattern = (String) newroots.get(currentelement);
             File myfile = new File(basedir, currentelement);
+            if (!myfile.exists() && !isCaseSensitive) {
+                File f = findFileCaseInsensitive(basedir, currentelement);
+                if (f.exists()) {
+                    // adapt currentelement to the case we've actually found
+                    currentelement = fileUtils.removeLeadingPath(basedir,
+                                                                 f);
+                    myfile = f;
+                }
+            }
+
             if (myfile.exists()) {
                 if (myfile.isDirectory()) {
                     if (isIncluded(currentelement)
@@ -700,7 +711,8 @@ public class DirectoryScanner
                         accountForIncludedDir(currentelement, myfile, true);
                     }  else {
                         if (currentelement.length() > 0) {
-                            if (currentelement.charAt(currentelement.length()-1)
+                            if (currentelement.charAt(currentelement.length()
+                                                      - 1) 
                                 != File.separatorChar) {
                                 currentelement = 
                                     currentelement + File.separatorChar;
@@ -709,9 +721,11 @@ public class DirectoryScanner
                         scandir(myfile, currentelement, true);
                     }
                 } else {
-                    String originalpattern =
-                        (String) newroots.get(currentelement);
-                    if (originalpattern.equals(currentelement)) {
+                    if (isCaseSensitive 
+                        && originalpattern.equals(currentelement)) {
+                        accountForIncludedFile(currentelement, myfile);
+                    } else if (!isCaseSensitive 
+                        && originalpattern.equalsIgnoreCase(currentelement)) {
                         accountForIncludedFile(currentelement, myfile);
                     }
                 }
@@ -1130,4 +1144,52 @@ public class DirectoryScanner
                             f.isDirectory());
     }
 
+    /**
+     * From <code>base</code> traverse the filesystem in a case
+     * insensitive manner in order to find a file that matches the
+     * given name.
+     *
+     * @return File object that points to the file in question.  if it
+     * hasn't been found it will simply be <code>new File(base,
+     * path)</code>.
+     *
+     * @since Ant 1.6
+     */
+    private File findFileCaseInsensitive(File base, String path) {
+        File f = findFileCaseInsensitive(base, 
+                                         SelectorUtils.tokenizePath(path));
+        return  f == null ? new File(base, path) : f;
+    }
+
+    /**
+     * From <code>base</code> traverse the filesystem in a case
+     * insensitive manner in order to find a file that matches the
+     * given stack of names.
+     *
+     * @return File object that points to the file in question or null.
+     *
+     * @since Ant 1.6
+     */
+    private File findFileCaseInsensitive(File base, Vector pathElements) {
+        if (pathElements.size() == 0) {
+            return base;
+        } else {
+            if (!base.isDirectory()) {
+                return null;
+            }
+            String[] files = base.list();
+            if (files == null) {
+                throw new BuildException("IO error scanning directory "
+                                         + base.getAbsolutePath());
+            }
+            String current = (String) pathElements.remove(0);
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].equalsIgnoreCase(current)) {
+                    base = new File(base, files[i]);
+                    return findFileCaseInsensitive(base, pathElements);
+                }
+            }
+        }
+        return null;
+    }
 }
