@@ -63,6 +63,10 @@ Other changes:
 * <arg> has a new attribute pathref that can be used to reference
   previously defined paths.
 
+* <xmlproperty> has been improved, you can now expand ${properties},
+  define ids or paths and use Ant's location magic for filename resolutions
+  in the XML file.
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 

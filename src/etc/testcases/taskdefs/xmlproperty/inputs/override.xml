@@ -1,0 +1,5 @@
+<root>
+  <override>
+    <property test="bar"/>
+  </override>
+</root>
