@@ -476,7 +476,7 @@ class MailPrintStream extends PrintStream {
     lastChar = b;
   }
 
-  public void write(byte buf[], int off, int len) {
+  public void write(byte[] buf, int off, int len) {
     for (int i = 0; i < len; i++) {
       write(buf[off + i]);
     }
