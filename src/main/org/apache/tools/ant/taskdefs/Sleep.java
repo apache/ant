@@ -111,7 +111,7 @@ public class Sleep extends Task {
 
 
     /**
-     * adds some seconds to the Sleep
+     * seconds to add to the sleep time
      *
      * @param seconds The new Seconds value
      */
@@ -131,7 +131,7 @@ public class Sleep extends Task {
 
 
     /**
-     * Sets the Minutes attribute of the Sleep object
+     * minutes to add to the sleep time
      *
      * @param minutes The new Minutes value
      */
@@ -141,7 +141,7 @@ public class Sleep extends Task {
 
 
     /**
-     * minutes to add to the sleep time
+     * milliseconds to add to the sleep time
      *
      * @param milliseconds The new Milliseconds value
      */
