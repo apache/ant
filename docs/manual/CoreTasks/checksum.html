@@ -13,6 +13,19 @@
 Generates checksum for files.  This task can also be used to
 perform checksum verifications.
 </p>
+
+<p>Note that many popular message digest functions - including MD5 and
+SHA-1 - have been broken recently.  If you are going to use the task
+to create checksums used in an environment where security is
+important, please take some time to investigate the algorithms offered
+by your JCE provider.  Note also that some JCE providers like the one
+by <a href="http://www.bouncycastle.org/">The Legion of the Bouncy
+Castle</a>, the <a href="http://www.gnu.org/software/gnu-crypto/">GNU
+project</a> or <a
+href="http://jce.iaik.tugraz.at/products/01_jce/index.php">the
+Technical University Graz</a> offer more digest algorithms than those
+built-in into your JDK.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
