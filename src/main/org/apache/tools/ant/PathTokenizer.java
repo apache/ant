@@ -89,11 +89,6 @@ public class PathTokenizer {
     private boolean onNetWare = Os.isFamily("netware");
 
     /**
-     * This will be used for String comparisons of the path Separator later
-     */
-    private String pathSeparatorStr = String.valueOf(File.pathSeparatorChar);
-
-    /**
      * Flag to indicate whether or not we are running on a platform with a
      * DOS style filesystem
      */
@@ -174,7 +169,7 @@ public class PathTokenizer {
         else {
             // we are on NetWare, tokenizing is handled a little differently,
             // due to the fact that NetWare has multiple-character volume names.
-            if (token.equals(pathSeparatorStr)) {
+            if (token.equals(File.pathSeparator)) {
                 // ignore ";" and get the next token
                 token = tokenizer.nextToken().trim();
             }
@@ -184,12 +179,12 @@ public class PathTokenizer {
                 String nextToken = tokenizer.nextToken().trim();
                 
                 // make sure we aren't going to get the path separator next
-                if (!nextToken.equals(pathSeparatorStr)) {
+                if (!nextToken.equals(File.pathSeparator)) {
                     if (nextToken.equals(":")) {
                         if (!token.startsWith("/") && !token.startsWith("\\")){ 
                             // it indeed is a drive spec, get the next bit
                             String oneMore = tokenizer.nextToken().trim();
-                            if (!oneMore.equals(pathSeparatorStr)) {
+                            if (!oneMore.equals(File.pathSeparator)) {
                                 token += ":" + oneMore;
                             }
                             else {
