@@ -72,6 +72,7 @@ import java.io.UnsupportedEncodingException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
+import org.apache.tools.ant.util.CollectionUtils;
 
 /**
  * Class to manage Manifest information
@@ -183,7 +184,8 @@ public class Manifest extends Task {
             Attribute rhsAttribute = (Attribute)rhs;
             return (name != null && rhsAttribute.name != null &&
                     getKey().equals(rhsAttribute.getKey()) &&
-                    values != null && values.equals(rhsAttribute.values));
+                    values != null && 
+                    CollectionUtils.equals(values, rhsAttribute.values));
         }
 
         /**
@@ -652,9 +654,9 @@ public class Manifest extends Task {
             for (Enumeration e = attributes.keys(); e.hasMoreElements();) {
                 String attributeName = (String)e.nextElement();
                 Object attributeValue  = attributes.get(attributeName);
-                Object rshAttributeValue 
+                Object rhsAttributeValue 
                     = rhsSection.attributes.get(attributeName);
-                if (!attributeValue.equals(rshAttributeValue)) {
+                if (!attributeValue.equals(rhsAttributeValue)) {
                     return false;
                 }
             }
