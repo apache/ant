@@ -278,10 +278,11 @@ public class ExecuteJava implements Runnable, TimeoutObserver {
         try {
             int rc = exe.execute();
             redirector.complete();
-            timedOut = exe.killedProcess();
             return rc;
         } catch (IOException e) {
             throw new BuildException(e);
+        } finally {
+            timedOut = exe.killedProcess();
         }
     }
 
