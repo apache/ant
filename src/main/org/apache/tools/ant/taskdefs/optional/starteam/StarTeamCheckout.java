@@ -261,6 +261,11 @@ public class StarTeamCheckout extends TreeBasedTask {
                 Project.MSG_WARN);
             this.createDirs = false;
         }
+        if (lockStatus != Item.LockType.UNCHANGED && null != getLabel()) {
+            log("Neither locked nor unlocked may be true when checking out a labeled version.", 
+                Project.MSG_ERR);
+            throw new BuildException("Lock status may not be changed when checking out a non-current version.");
+        }
     }
 
     /**
