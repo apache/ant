@@ -170,8 +170,15 @@ public class ProjectHelper {
             }
         }
 
+        /**
+         * Called when this element and all elements nested into it have been
+         * handeled.
+         */
+        protected void finished() {}
+
         public void endElement(String name) throws SAXException {
 
+            finished();
             // Let parent resume handling SAX events
             parser.setDocumentHandler(parentHandler);
         }
@@ -291,15 +298,11 @@ public class ProjectHelper {
         }
 
         private void handleTaskdef(String name, AttributeList attrs) throws SAXParseException {
-            TaskHandler childHandler = new TaskHandler(this, null);
-            childHandler.init(name, attrs);
-            childHandler.finished();
+            (new TaskHandler(this, null)).init(name, attrs);
         }
 
         private void handleProperty(String name, AttributeList attrs) throws SAXParseException {
-            TaskHandler childHandler = new TaskHandler(this, null);
-            childHandler.init(name, attrs);
-            childHandler.finished();
+            (new TaskHandler(this, null)).init(name, attrs);
         }
 
         private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
@@ -424,7 +427,7 @@ public class ProjectHelper {
             }
         }
 
-        public void finished() {
+        protected void finished() {
             if (task != null && target == null) {
                 task.execute();
             }
