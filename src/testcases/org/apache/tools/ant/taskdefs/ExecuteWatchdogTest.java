@@ -108,7 +108,7 @@ public class ExecuteWatchdogTest extends TestCase {
 
     private Process getProcess(int timetorun) throws Exception {
         String[] cmdArray = {
-            "java", "-classpath", TEST_CLASSPATH,
+            JavaEnvUtils.getJdkExecutable("java"), "-classpath", TEST_CLASSPATH,
             TimeProcess.class.getName(), String.valueOf(timetorun)
         };
         //System.out.println("Testing with classpath: " + System.getProperty("java.class.path"));
