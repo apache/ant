@@ -457,7 +457,7 @@
         <available file="wsdl.exe" filepath="${env.Path}" />
       </or>
     </condition>
-   <echo> wsdl.found=${wsdl.found}</echo>
+   <echo level="verbose"> wsdl.found=${wsdl.found}</echo>
    <condition property="csc.found">
       <or>
         <available file="csc"     filepath="${env.PATH}" />
@@ -465,13 +465,14 @@
         <available file="csc.exe" filepath="${env.Path}" />
       </or>
     </condition>
-   <echo> csc.found=${csc.found}</echo>
+   <echo level="verbose"> csc.found=${csc.found}</echo>
    <condition property="dotnetapps.found">
       <and>
         <isset property="csc.found"/>
         <isset property="wsdl.found"/>
       </and>
     </condition>               
+   <echo level="verbose"> csc.found=${csc.found}</echo>
   </target>
 
 
