@@ -270,6 +270,11 @@ Other changes:
   between client and remote side.
   Bugzilla Report 19358.
 
+* <ftp> has been optimized to go directly to the include patterns.
+  This reduces scanning time under UNIX when followsymlinks="true"
+  and casesensitive="true" (the default)
+  Bugzilla Report 20103.
+
 * The SOS and VSS tasks will no longer unconditionally prepend a $ to
   vsspath or projectpath.
 

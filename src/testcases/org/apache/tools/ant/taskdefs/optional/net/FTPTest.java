@@ -89,6 +89,7 @@ public class FTPTest extends BuildFileTest{
         ftp = new FTPClient();
         ftpFileSep = getProject().getProperty("ftp.filesep");
         myFTPTask.setSeparator(ftpFileSep);
+        myFTPTask.setProject(getProject());
         remoteTmpDir = myFTPTask.resolveFile(tmpDir);
         String remoteHost = getProject().getProperty("ftp.host");
         int port = Integer.parseInt(getProject().getProperty("ftp.port"));

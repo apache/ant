@@ -504,7 +504,17 @@ public class DirectoryScanner
     }
 
     /**
-     * Sets whether or not the file system should be regarded as case sensitive.
+     * Find out whether include exclude patterns are matched in a
+     * case sensitive way
+     * @return whether or not the scanning is case sensitive
+     * @since ant 1.6
+     */
+    public boolean isCaseSensitive() {
+        return isCaseSensitive;
+    }
+    /**
+     * Sets whether or not include and exclude patterns are matched
+     * in a case sensitive way
      *
      * @param isCaseSensitive whether or not the file system should be
      *                        regarded as a case sensitive one
