@@ -70,7 +70,7 @@ directory separator of your current platform.  If you need to specify
 this separator, use <code>${file.separator}</code> instead.
   For the regexpmapper, <code>${file.separator}</code> will not work,
 as on windows it is the '\' character, and this is an escape character
-for regular expressions, one should use the <code>handledirchar</code> attribute
+for regular expressions, one should use the <code>handledirsep</code> attribute
 instead.
 </p>
 <h3>Parameters specified as nested elements</h3>
@@ -264,7 +264,7 @@ that don't match the <code>from</code> pattern will be ignored.</p>
       <td align="center" valign="top">No</td>
     </tr>
     <tr>
-      <td valign="top">handledirchar</td>
+      <td valign="top">handledirsep</td>
       <td valign="top">
         If this is specified, the mapper will ignore the difference between the normal
         directory separator characters - \ and /.
@@ -479,7 +479,7 @@ jakarta-ORO and finally try jakarta-regexp.</li>
       <td align="center" valign="top">No</td>
     </tr>
     <tr>
-      <td valign="top">handledirchar</td>
+      <td valign="top">handledirsep</td>
       <td valign="top">
         If this is specified, the mapper will treat a \ character in a filename
         as a / for the purposes of matching.
@@ -512,7 +512,7 @@ jakarta-ORO and finally try jakarta-regexp.</li>
     &lt;pathconvert property="hd.prop" targetos="windows"&gt;
       &lt;path path="d\e/f\j.java"/&gt;
       &lt;chainedmapper&gt;
-        &lt;regexpmapper from="${basedir}/d/e/(.*)" to="\1" handledirchar="yes"/&gt;
+        &lt;regexpmapper from="${basedir}/d/e/(.*)" to="\1" handledirsep="yes"/&gt;
       &lt;/chainedmapper&gt;
     &lt;/pathconvert&gt;
     </pre>

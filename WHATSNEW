@@ -58,7 +58,7 @@ Other changes:
 * added casesensitive attribute to <globmapper> and <regexpmapper>
   Bugzilla report 16686
 
-* added handledirchar attribute to <globmapper> and <regexpmapper>
+* added handledirsep attribute to <globmapper> and <regexpmapper>
   Bugzilla report 32487
 
 * added a new mapper <filtermapper>
