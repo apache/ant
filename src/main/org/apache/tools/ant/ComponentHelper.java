@@ -585,9 +585,9 @@ public class ComponentHelper  {
      */
     private boolean sameDefinition(
         AntTypeDefinition def, AntTypeDefinition old) {
-        return ((validDefinition(def) && validDefinition(old)
-            && def.sameDefinition(old, project))
-            || !(validDefinition(def) | validDefinition(old)));
+        boolean defValid = validDefinition(def);
+        boolean sameValidity = !(defValid | validDefinition(old));
+        return sameValidity && (!defValid || def.sameDefinition(old, project));
     }
 
     /**
