@@ -91,6 +91,20 @@ public abstract class MatchingTask extends Task {
     }
 
     /**
+     * add a set of patterns
+     */
+    public PatternSet createPatternSet() {
+        return fileset.createPatternSet();
+    }
+
+    /**
+     * add a reference to a set of patterns
+     */
+    public Reference createPatternSetRef() {
+        return fileset.createPatternSetRef();
+    }
+
+    /**
      * Sets the set of include patterns. Patterns may be separated by a comma
      * or a space.
      *
