@@ -35,6 +35,9 @@
     <concat destfile="TESTDEST" append="true">
       <filelist dir="${basedir}" files="thisfiledoesnotexist"/>
     </concat>
+    <available file="TESTDEST" property="TESTDEST.was.created"/>
+    <fail message="TESTDEST created for nonexistant files"
+          if="TESTDEST.was.created"/>
   </target>
 
 </project>
