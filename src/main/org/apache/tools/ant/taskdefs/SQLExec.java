@@ -170,7 +170,6 @@ public class SQLExec extends Task {
      * Load the sql file and then execute it
      */
     public void execute() throws BuildException {
-        Connection conn = null;
 
         sqlCommand = sqlCommand.trim();
 
@@ -200,10 +199,11 @@ public class SQLExec extends Task {
         }
 
         try{
-            conn.setAutoCommit(autocommit);
-
             log("connecting to " + url, Project.MSG_VERBOSE );
             conn = DriverManager.getConnection(url, userId, password);
+
+            conn.setAutoCommit(autocommit);
+
             statement = conn.createStatement();
 
             if (sqlCommand.length() != 0) {
@@ -248,7 +248,7 @@ public class SQLExec extends Task {
         log("SQL statements executed successfully", Project.MSG_VERBOSE);
     }
 
-    private void runStatements(Reader reader) throws SQLException, IOException {
+    protected void runStatements(Reader reader) throws SQLException, IOException {
         String sql = "";
         String line = "";
  
@@ -260,7 +260,8 @@ public class SQLExec extends Task {
                 if (line.trim().startsWith("--")) continue;
       
                 sql += " " + line;
-                if (sql.trim().endsWith(";")){
+                sql = sql.trim();
+                if (sql.endsWith(";")){
                     log("SQL: " + sql, Project.MSG_VERBOSE);
                     execSQL(sql.substring(0, sql.length()-1));
                     sql = "";
@@ -268,7 +269,7 @@ public class SQLExec extends Task {
             }
  
  	    // Catch any statements not followed by ;
- 	    if(!sql.trim().equals("")){
+ 	    if(!sql.equals("")){
  	    	execSQL(sql);
  	    }
  	}catch(SQLException e){
@@ -281,7 +282,7 @@ public class SQLExec extends Task {
     /**
      * Exec the sql statement.
      */
-    private void execSQL(String sql) throws SQLException{
+    protected void execSQL(String sql) throws SQLException{
         if (!statement.execute(sql)) {
             log(statement.getUpdateCount()+" rows affected", 
                 Project.MSG_VERBOSE);
@@ -289,7 +290,7 @@ public class SQLExec extends Task {
 
         SQLWarning warning = conn.getWarnings();
         while(warning!=null){
-            log(warning + " sql warnging", Project.MSG_VERBOSE);
+            log(warning + " sql warning", Project.MSG_VERBOSE);
             warning=warning.getNextWarning();
         }
         conn.clearWarnings();
