@@ -56,7 +56,10 @@ package org.apache.tools.ant.gui;
 import org.apache.tools.ant.gui.acs.ACSElement;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.JTree;
+import javax.swing.ImageIcon;
 import java.awt.Component;
+import java.awt.Image;
+import java.beans.*;
 
 /**
  * Cell renderer for displaying the Ant XML file in a JTree.
@@ -75,9 +78,23 @@ public class AntTreeCellRenderer extends DefaultTreeCellRenderer {
                                                   boolean hasFocus) {
         super.getTreeCellRendererComponent(tree, value, sel, expanded,
                                            leaf, row, hasFocus);
-        if(value instanceof ACSElement) {
-            setText(((ACSElement)value).getDisplayName());
+
+        try {
+            BeanInfo info = Introspector.getBeanInfo(value.getClass());
+            Image icon = info.getIcon(BeanInfo.ICON_COLOR_16x16);
+            setIcon(new ImageIcon(icon));
+            if(value instanceof ACSElement) {
+                setText(((ACSElement)value).getDisplayName());
+            }
+            else {
+               setText(info.getBeanDescriptor().getDisplayName());
+            }
         }
+        catch(IntrospectionException ex) {
+            // XXX log me.
+            ex.printStackTrace();
+        }
+
         return this;
     }
 }

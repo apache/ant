@@ -163,6 +163,18 @@ public class ResourceManager {
     }
 
 	/** 
+	 * Get the image as an ImageIcon assigned to the given class with the
+     * given key.
+	 * 
+     * @param clazz The class to load icon for.
+     * @param key The key for looking up the icon.
+	 * @return Image as an ImageIcon, or null if not found.
+	 */
+    public ImageIcon getImageIcon(Class clazz, String key) {
+        return getImageIcon(getString(clazz, key));
+    }
+
+	/** 
 	 * Get the image as an ImageIcon with the given file name. 
      * For example "open.gif". The image is loaded from the resources package.
 	 * 
@@ -170,6 +182,8 @@ public class ResourceManager {
 	 * @return Image as an ImageIcon, or null if not found.
 	 */
     public ImageIcon getImageIcon(String fileName) {
+        if(fileName == null) return null;
+
         ImageIcon icon = null;
 
         URL location = getClass().getResource("resources/" + fileName);

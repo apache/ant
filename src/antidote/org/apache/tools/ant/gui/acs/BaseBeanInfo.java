@@ -56,6 +56,8 @@ package org.apache.tools.ant.gui.acs;
 import org.apache.tools.ant.gui.ResourceManager;
 import org.apache.tools.ant.gui.customizer.DynamicCustomizer;
 import java.beans.*;
+import javax.swing.ImageIcon;
+import java.awt.Image;
 
 /**
  * Abstract base class for ACS BeanInfo classes.
@@ -66,15 +68,22 @@ import java.beans.*;
 abstract class BaseBeanInfo extends SimpleBeanInfo {
     /** Property name for specifiying a sorting order. */
     public static final String SORT_ORDER = DynamicCustomizer.SORT_ORDER;
-
     /** Resource provider for bean info. */
     private static ResourceManager _resources = new ResourceManager();
+
+    /** Icon for this. */
+    private Image _icon = null;
 
 	/** 
 	 * Default ctor.
 	 * 
 	 */
     protected BaseBeanInfo() {
+        // Load the icon.
+        ImageIcon img = _resources.getImageIcon(getClass(), "icon");
+        if(img != null) {
+            _icon = img.getImage();
+        }
     }
 
 	/** 
@@ -93,6 +102,17 @@ abstract class BaseBeanInfo extends SimpleBeanInfo {
 	 */
     public BeanDescriptor getBeanDescriptor() {
         return new ACSBeanDescriptor(this);
+    }
+
+	/** 
+	 * Get the icon for displaying this bean.
+	 * 
+	 * @param kind Kind of icon. XXX currently ignored
+	 * @return Image for bean, or null if none.
+	 */
+    public Image getIcon(int kind) {
+        // XXX kind is currently ignored.
+        return _icon;
     }
 
 	/** 
