@@ -1,0 +1,47 @@
+<project>
+
+  <target name="simple">
+    <macrodef name="my.echo">
+      <param name="text"/>
+      <sequential>
+        <echo message="${text}"/>
+      </sequential>
+    </macrodef>
+    <my.echo text="Hello World"/>
+  </target>
+
+  <target name="text">
+    <macrodef name="my.echo">
+      <param name="text"/>
+      <sequential>
+        <echo>${text}</echo>
+      </sequential>
+    </macrodef>
+    <my.echo text="Inner Text"/>
+  </target>
+
+  <target name="uri">
+    <macrodef name="echo" uri="abc">
+      <param name="text"/>
+      <sequential>
+        <echo message="${text}"/>
+      </sequential>
+    </macrodef>
+    <x:echo xmlns:x="abc" text="Hello World"/>
+  </target>
+
+  <target name="nested">
+    <macrodef name="nested">
+      <element name="nested"/>
+      <sequential>
+        <nested/>
+      </sequential>
+    </macrodef>
+
+    <nested>
+      <nested>
+        <echo>A nested element</echo>
+      </nested>
+    </nested>
+  </target>
+</project>

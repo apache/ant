@@ -1,0 +1,20 @@
+<project>
+  <target name="simple">
+    <presetdef name="my.echo">
+      <echo message="Hello world"/>
+    </presetdef>
+    <my.echo/>
+  </target>
+  <target name="text">
+    <presetdef name="my.echo">
+      <echo>Inner Text</echo>
+    </presetdef>
+    <my.echo/>
+  </target>
+  <target name="uri">
+    <presetdef name="echo" uri="abc">
+      <echo message="Hello world"/>
+    </presetdef>
+    <x:echo xmlns:x="abc"/>
+  </target>
+</project>
