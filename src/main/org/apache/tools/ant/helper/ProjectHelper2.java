@@ -228,7 +228,7 @@ public class ProjectHelper2 extends ProjectHelper {
                 inputSource.setSystemId(uri);
             }
             project.log("parsing buildfile " + buildFileName
-                        + "with URI = " + uri, Project.MSG_VERBOSE);
+                        + " with URI = " + uri, Project.MSG_VERBOSE);
 
             DefaultHandler hb = handler;
 
