@@ -14,6 +14,7 @@ import org.apache.aut.vfs.provider.DefaultFileName;
 import org.apache.aut.vfs.provider.FileSystem;
 import org.apache.aut.vfs.provider.FileSystemProvider;
 import org.apache.aut.vfs.provider.ParsedUri;
+import java.io.File;
 
 /**
  * A file system provider, which uses direct file access.
@@ -23,24 +24,33 @@ import org.apache.aut.vfs.provider.ParsedUri;
 public class LocalFileSystemProvider extends AbstractFileSystemProvider
     implements FileSystemProvider
 {
-    private LocalFileNameParser m_parser = new LocalFileNameParser();
+    private final LocalFileNameParser m_parser = new LocalFileNameParser();
 
     /**
      * Determines if a name is an absolute file name.
      */
-    public boolean isAbsoluteLocalName( String name )
+    public boolean isAbsoluteLocalName( final String name )
     {
         return m_parser.isAbsoluteName( name );
     }
 
     /**
-     * Finds a file by local file name.
+     * Finds a local file, from its local name.
      */
-    public FileObject findFileByLocalName( String name ) throws FileSystemException
+    public FileObject findLocalFile( final String name ) throws FileSystemException
     {
         // TODO - tidy this up, no need to turn the name into an absolute URI,
         // and then straight back again
         return findFile( "file:" + name );
+    }
+
+    /**
+     * Finds a local file.
+     */
+    public FileObject findFileByLocalName( final File file ) throws FileSystemException
+    {
+        // TODO - tidy this up, should build file object straight from the file
+        return findFile( "file:" + file.getAbsolutePath() );
     }
 
     /**
@@ -51,7 +61,7 @@ public class LocalFileSystemProvider extends AbstractFileSystemProvider
      * <p>The provider can annotate this object with any additional
      * information it requires to create a file system from the URI.
      */
-    protected ParsedUri parseURI( String uri ) throws FileSystemException
+    protected ParsedUri parseURI( final String uri ) throws FileSystemException
     {
         return m_parser.parseUri( uri );
     }
@@ -59,14 +69,14 @@ public class LocalFileSystemProvider extends AbstractFileSystemProvider
     /**
      * Creates the filesystem.
      */
-    protected FileSystem createFileSystem( ParsedUri uri ) throws FileSystemException
+    protected FileSystem createFileSystem( final ParsedUri uri ) throws FileSystemException
     {
         // Build the name of the root file.
-        ParsedFileUri fileUri = (ParsedFileUri)uri;
-        String rootFile = fileUri.getRootFile();
+        final ParsedFileUri fileUri = (ParsedFileUri)uri;
+        final String rootFile = fileUri.getRootFile();
 
         // Create the file system
-        DefaultFileName rootName = new DefaultFileName( m_parser, fileUri.getRootURI(), "/" );
+        final DefaultFileName rootName = new DefaultFileName( m_parser, fileUri.getRootURI(), "/" );
         return new LocalFileSystem( rootName, rootFile );
     }
 }

@@ -34,13 +34,13 @@ public class DefaultFileSystemManager
         = ResourceManager.getPackageResources( DefaultFileSystemManager.class );
 
     /** The default provider. */
-    private LocalFileSystemProvider m_localFileProvider;
+    private final LocalFileSystemProvider m_localFileProvider;
 
     /** Mapping from URI scheme to FileSystemProvider. */
-    private Map m_providers = new HashMap();
+    private final Map m_providers = new HashMap();
 
     /** The provider context. */
-    private ProviderContextImpl m_context = new ProviderContextImpl();
+    private final ProviderContextImpl m_context = new ProviderContextImpl();
 
     /** The base file to use for relative URI. */
     private FileObject m_baseFile;
@@ -49,7 +49,7 @@ public class DefaultFileSystemManager
      * The cached file systems.  This is a mapping from root URI to
      * FileSystem object.
      */
-    private Map m_fileSystems = new HashMap();
+    private final Map m_fileSystems = new HashMap();
 
     public DefaultFileSystemManager() throws Exception
     {
@@ -117,7 +117,7 @@ public class DefaultFileSystemManager
     /**
      * Sets the base file to use when resolving relative URI.
      */
-    public void setBaseFile( FileObject baseFile ) throws FileSystemException
+    public void setBaseFile( final FileObject baseFile ) throws FileSystemException
     {
         m_baseFile = baseFile;
     }
@@ -125,9 +125,9 @@ public class DefaultFileSystemManager
     /**
      * Sets the base file to use when resolving relative URI.
      */
-    public void setBaseFile( File baseFile ) throws FileSystemException
+    public void setBaseFile( final File baseFile ) throws FileSystemException
     {
-        m_baseFile = m_localFileProvider.findFileByLocalName( baseFile.getAbsolutePath() );
+        m_baseFile = m_localFileProvider.findLocalFile( baseFile.getAbsolutePath() );
     }
 
     /**
@@ -141,22 +141,33 @@ public class DefaultFileSystemManager
     /**
      * Locates a file by URI.
      */
-    public FileObject resolveFile( String URI ) throws FileSystemException
+    public FileObject resolveFile( final String uri ) throws FileSystemException
     {
-        return resolveFile( m_baseFile, URI );
+        return resolveFile( m_baseFile, uri );
+    }
+
+    /**
+     * Locates a file by URI.
+     */
+    public FileObject resolveFile( final File baseFile, final String uri )
+        throws FileSystemException
+    {
+        final FileObject baseFileObj = m_localFileProvider.findFileByLocalName( baseFile );
+        return resolveFile( baseFileObj, uri );
     }
 
     /**
      * Resolves a URI, relative to a base file.
      */
-    public FileObject resolveFile( FileObject baseFile, String uri ) throws FileSystemException
+    public FileObject resolveFile( final FileObject baseFile, final String uri )
+        throws FileSystemException
     {
         // Extract the scheme
-        String scheme = UriParser.extractScheme( uri );
+        final String scheme = UriParser.extractScheme( uri );
         if( scheme != null )
         {
             // An absolute URI - locate the provider
-            FileSystemProvider provider = (FileSystemProvider)m_providers.get( scheme );
+            final FileSystemProvider provider = (FileSystemProvider)m_providers.get( scheme );
             if( provider != null )
             {
                 return provider.findFile( uri );
@@ -166,7 +177,7 @@ public class DefaultFileSystemManager
         // Handle absolute file names
         if( m_localFileProvider.isAbsoluteLocalName( uri ) )
         {
-            return m_localFileProvider.findFileByLocalName( uri );
+            return m_localFileProvider.findLocalFile( uri );
         }
 
         // Assume a bad scheme
@@ -194,7 +205,7 @@ public class DefaultFileSystemManager
         /**
          * Locates a cached file system by root URI.
          */
-        public FileSystem getFileSystem( String rootURI )
+        public FileSystem getFileSystem( final String rootURI )
         {
             // TODO - need to have a per-fs uri comparator
             return (FileSystem)m_fileSystems.get( rootURI );
@@ -203,7 +214,8 @@ public class DefaultFileSystemManager
         /**
          * Registers a file system for caching.
          */
-        public void putFileSystem( String rootURI, FileSystem fs ) throws FileSystemException
+        public void putFileSystem( final String rootURI, final FileSystem fs )
+            throws FileSystemException
         {
             // TODO - should really check that there's not one already cached
             m_fileSystems.put( rootURI, fs );

@@ -8,6 +8,7 @@
 package org.apache.aut.vfs;
 
 import org.apache.avalon.framework.component.Component;
+import java.io.File;
 
 /**
  * A FileSystemManager is manages a set of file systems.  This interface is
@@ -85,10 +86,26 @@ public interface FileSystemManager
      *          The name of the file.
      *
      * @param baseFile
-     *          The base file to use to resolve paths.
+     *          The base file to use to resolve relative paths.
      *
      * @throws FileSystemException
      *          On error parsing the file name.
      */
     FileObject resolveFile( FileObject baseFile, String name ) throws FileSystemException;
+
+    /**
+     * Locates a file by name.  See {@link #resolveFile(FileObject, String)}
+     * for details.
+     *
+     * @param baseFile
+     *          The base file to use to resolve relative paths.
+     *
+     * @param name
+     *          The name of the file.
+     *
+     * @throws FileSystemException
+     *          On error parsing the file name.
+     *
+     */
+    FileObject resolveFile ( File baseFile, String name ) throws FileSystemException;
 }
