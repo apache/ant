@@ -434,7 +434,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
             {
                 gentask.setClasspath( classpath );
             }
-            gentask.setTaskName( "generate client" );
             gentask.execute();
         }
         catch( Exception e )
@@ -491,7 +490,6 @@ public class BorlandDeploymentTool extends GenericDeploymentTool implements Exec
             args += " " + sourceJar.getPath();
 
             javaTask = (Java)getTask().getProject().createTask( "java" );
-            javaTask.setTaskName( "verify" );
             javaTask.setClassname( VERIFY );
             Commandline.Argument arguments = javaTask.createArg();
             arguments.setLine( args );

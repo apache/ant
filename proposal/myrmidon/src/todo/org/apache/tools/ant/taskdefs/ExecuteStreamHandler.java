@@ -46,7 +46,7 @@ public interface ExecuteStreamHandler
      * @exception IOException Description of Exception
      */
     void setProcessOutputStream( InputStream is )
-        throws IOException;
+        throws TaskException, IOException;
 
     /**
      * Start handling of the streams.

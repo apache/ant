@@ -765,7 +765,6 @@ public class IContract extends MatchingTask
 
             // Create a forked java process
             Java iContract = (Java)project.createTask( "java" );
-            iContract.setTaskName( getTaskName() );
             iContract.setFork( true );
             iContract.setClassname( "com.reliablesystems.iContract.Tool" );
             iContract.setClasspath( iContractClasspath );

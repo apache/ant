@@ -251,7 +251,6 @@ public class GenerateKey extends Task
         final ExecTask cmd = (ExecTask)project.createTask( "exec" );
         cmd.setCommand( new Commandline( sb.toString() ) );
         cmd.setFailonerror( true );
-        cmd.setTaskName( getTaskName() );
         cmd.execute();
     }
 

@@ -65,17 +65,6 @@ public class UnknownElement extends Task
     }
 
     /**
-     * Get the name to use in logging messages.
-     *
-     * @return the name to use in logging messages.
-     */
-    public String getTaskName()
-    {
-        return realThing == null || !( realThing instanceof Task ) ?
-            super.getTaskName() : ( (Task)realThing ).getTaskName();
-    }
-
-    /**
      * Adds a child element to this element.
      *
      * @param child The feature to be added to the Child attribute

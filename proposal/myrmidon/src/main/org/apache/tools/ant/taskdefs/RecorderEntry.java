@@ -151,7 +151,7 @@ public class RecorderEntry implements BuildLogger
         StringBuffer buf = new StringBuffer();
         if( event.getTask() != null )
         {
-            String name = "[" + event.getTask().getTaskName() + "]";
+            String name = "[" + event.getTask().getName() + "]";
             /**
              * @todo replace 12 with DefaultLogger.LEFT_COLUMN_SIZE
              */

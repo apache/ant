@@ -51,5 +51,6 @@ public interface FileNameMapper
      *      basedirectory.
      * @return Description of the Returned Value
      */
-    String[] mapFileName( String sourceFileName );
+    String[] mapFileName( String sourceFileName )
+        throws TaskException;
 }

@@ -981,8 +981,6 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool
 
 
                 // Set the Java class name
-
-                javaTask.setTaskName( "ejbdeploy" );
                 javaTask.setClassname( "com.ibm.etools.ejbdeploy.EJBDeploy" );
                 Commandline.Argument arguments = javaTask.createArg();
                 arguments.setLine( args );

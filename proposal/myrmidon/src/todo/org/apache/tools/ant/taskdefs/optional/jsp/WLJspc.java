@@ -174,7 +174,6 @@ public class WLJspc extends MatchingTask
         Java helperTask = (Java)project.createTask( "java" );
         helperTask.setFork( true );
         helperTask.setClassname( "weblogic.jspc" );
-        helperTask.setTaskName( getTaskName() );
         String[] args = new String[ 12 ];
 
         File jspFile = null;

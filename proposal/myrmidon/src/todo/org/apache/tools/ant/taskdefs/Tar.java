@@ -33,9 +33,22 @@ import org.apache.tools.tar.TarOutputStream;
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 
-public class Tar extends MatchingTask
+public class Tar
+    extends MatchingTask
 {
-    private TarLongFileMode longFileMode = new TarLongFileMode();
+    private TarLongFileMode longFileMode = createMode();
+
+    private TarLongFileMode createMode()
+    {
+        try
+        {
+            return new TarLongFileMode();
+        }
+        catch( TaskException e )
+        {
+            throw new IllegalStateException( e.getMessage() );
+        }
+    }
 
     Vector filesets = new Vector();
     Vector fileSetFiles = new Vector();

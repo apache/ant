@@ -318,7 +318,6 @@ public class Cab extends MatchingTask
     {
         ExecTask exec = (ExecTask)project.createTask( "exec" );
         exec.setOwningTarget( this.getOwningTarget() );
-        exec.setTaskName( this.getTaskName() );
         exec.setDescription( this.getDescription() );
 
         return exec;

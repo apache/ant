@@ -842,9 +842,6 @@ public class Project
             task.setProject( this );
             task.setTaskType( taskType );
 
-            // set default value, can be changed by the user
-            task.setTaskName( taskType );
-
             String msg = "   +Task: " + taskType;
             log( msg, MSG_DEBUG );
             addCreatedTask( taskType, task );

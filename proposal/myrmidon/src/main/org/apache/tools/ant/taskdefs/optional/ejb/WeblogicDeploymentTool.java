@@ -773,7 +773,6 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool
         try
         {
             javaTask = (Java)getTask().getProject().createTask( "java" );
-            javaTask.setTaskName( "ejbc" );
 
             if( getJvmDebugLevel() != null )
             {

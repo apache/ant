@@ -1015,7 +1015,6 @@ public class ProjectHelper
                 task = new UnknownElement( tag );
                 task.setProject( project );
                 task.setTaskType( tag );
-                task.setTaskName( tag );
             }
 
             configureId( task, attrs );

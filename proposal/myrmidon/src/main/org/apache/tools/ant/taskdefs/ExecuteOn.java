@@ -296,6 +296,7 @@ public class ExecuteOn extends ExecTask
      * @return The Commandline value
      */
     protected String[] getCommandline( String srcFile, File baseDir )
+        throws TaskException
     {
         return getCommandline( new String[]{srcFile}, new File[]{baseDir} );
     }

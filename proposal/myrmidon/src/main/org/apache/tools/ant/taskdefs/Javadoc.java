@@ -204,6 +204,7 @@ public class Javadoc extends Task
     }
 
     public void setDocletPath( Path src )
+        throws TaskException
     {
         if( doclet == null )
         {

@@ -165,7 +165,7 @@ public class DefaultLogger implements BuildLogger
             // Print out the name of the task if we're in one
             if( event.getTask() != null )
             {
-                String name = event.getTask().getTaskName();
+                String name = event.getTask().getName();
 
                 if( !emacsMode )
                 {

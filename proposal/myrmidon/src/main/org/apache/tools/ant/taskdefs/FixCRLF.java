@@ -921,17 +921,18 @@ public class FixCRLF extends MatchingTask
             {
                 throw new NoSuchElementException( "OneLiner" );
             }
-            BufferLine tmpLine =
-                new BufferLine( line.toString(), eolStr.toString() );
+
             try
             {
+                BufferLine tmpLine =
+                    new BufferLine( line.toString(), eolStr.toString() );
                 nextLine();
+                return tmpLine;
             }
             catch( TaskException e )
             {
                 throw new NoSuchElementException();
             }
-            return tmpLine;
         }
 
         protected void nextLine()

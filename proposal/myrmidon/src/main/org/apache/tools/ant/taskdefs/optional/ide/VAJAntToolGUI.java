@@ -1765,7 +1765,7 @@ public class VAJAntToolGUI extends Frame
             {
                 String msg = "";
                 if( event.getTask() != null )
-                    msg = "[" + event.getTask().getTaskName() + "] ";
+                    msg = "[" + event.getTask().getName() + "] ";
                 getMessageTextArea().append( lineSeparator + msg + event.getMessage() );
             }
         }

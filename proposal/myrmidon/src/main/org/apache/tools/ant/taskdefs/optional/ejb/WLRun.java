@@ -313,7 +313,6 @@ public class WLRun extends Task
         }
 
         Java weblogicServer = (Java)project.createTask( "java" );
-        weblogicServer.setTaskName( getTaskName() );
         weblogicServer.setFork( true );
         weblogicServer.setClassname( weblogicMainClass );
 
@@ -364,7 +363,6 @@ public class WLRun extends Task
         }
 
         Java weblogicServer = (Java)project.createTask( "java" );
-        weblogicServer.setTaskName( getTaskName() );
         weblogicServer.setFork( true );
         weblogicServer.setDir( weblogicSystemHome );
         weblogicServer.setClassname( weblogicMainClass );

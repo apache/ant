@@ -124,8 +124,8 @@ public abstract class Continuus extends Task
     }
 
     protected int run( Commandline cmd )
+        throws TaskException
     {
         return run( cmd, new LogStreamHandler( this, Project.MSG_VERBOSE, Project.MSG_WARN ) );
     }
-
 }

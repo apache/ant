@@ -110,6 +110,7 @@ public class Rmic extends MatchingTask
      * @param classpath The new Classpath value
      */
     public void setClasspath( Path classpath )
+        throws TaskException
     {
         if( compileClasspath == null )
         {
@@ -127,6 +128,7 @@ public class Rmic extends MatchingTask
      * @param r The new ClasspathRef value
      */
     public void setClasspathRef( Reference r )
+        throws TaskException
     {
         createClasspath().setRefid( r );
     }
@@ -147,6 +149,7 @@ public class Rmic extends MatchingTask
      * @param extdirs The new Extdirs value
      */
     public void setExtdirs( Path extdirs )
+        throws TaskException
     {
         if( this.extdirs == null )
         {
@@ -493,6 +496,7 @@ public class Rmic extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createClasspath()
+        throws TaskException
     {
         if( compileClasspath == null )
         {
@@ -507,6 +511,7 @@ public class Rmic extends MatchingTask
      * @return Description of the Returned Value
      */
     public Path createExtdirs()
+        throws TaskException
     {
         if( extdirs == null )
         {
