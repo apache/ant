@@ -56,6 +56,9 @@ public class ProjectHelper {
     /** The URI for defined types/tasks - the format is antlib:<package> */
     public static final String ANTLIB_URI     = "antlib:";
 
+    /** Polymorphic attribute  */
+    public static final String ANT_TYPE = "ant-type";
+
     /**
      * Name of JVM system property which provides the name of the
      * ProjectHelper class to use.

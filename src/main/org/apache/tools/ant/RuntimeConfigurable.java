@@ -40,9 +40,6 @@ import org.xml.sax.helpers.AttributeListImpl;
  */
 public class RuntimeConfigurable implements Serializable {
 
-    /** Polymorphic attribute (May be XML NS attribute later) */
-    private static final String ANT_TYPE = "ant-type";
-
     /** Name of the element to configure. */
     private String elementTag = null;
 
@@ -168,7 +165,7 @@ public class RuntimeConfigurable implements Serializable {
      * @param value the attribute's value.
      */
     public void setAttribute(String name, String value) {
-        if (name.equalsIgnoreCase(ANT_TYPE)) {
+        if (name.equalsIgnoreCase(ProjectHelper.ANT_TYPE)) {
             this.polyType = value;
         } else {
             if (attributeNames == null) {
@@ -353,7 +350,6 @@ public class RuntimeConfigurable implements Serializable {
         Object target = (wrappedObject instanceof TypeAdapter)
             ? ((TypeAdapter) wrappedObject).getProxy() : wrappedObject;
 
-        //PropertyHelper ph=PropertyHelper.getPropertyHelper(p);
         IntrospectionHelper ih =
             IntrospectionHelper.getHelper(p, target.getClass());
 
@@ -365,8 +361,7 @@ public class RuntimeConfigurable implements Serializable {
                 // reflect these into the target
                 value = p.replaceProperties(value);
                 try {
-                    ih.setAttribute(p, target,
-                                    name.toLowerCase(Locale.US), value);
+                    ih.setAttribute(p, target, name, value);
                 } catch (BuildException be) {
                     // id attribute must be set externally
                     if (!name.equals("id")) {
