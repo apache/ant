@@ -48,6 +48,7 @@ Legal:
     <property name="build.ext" value="${build.dir}/ext"/>
     <property name="build.src" value="${build.dir}/src"/>
     <property name="build.classes" value="${build.dir}/classes"/>
+    <property name="build.custom-tasks" value="${build.dir}/tasks"/>
 
     <property name="src.base" value="src"/>
     <property name="manifest.dir" value="${src.base}/manifest"/>
@@ -70,14 +71,15 @@ Legal:
     <property name="constants.file" value="org/apache/myrmidon/Constants.java"/>
 
     <path id="project.class.path">
-        <pathelement path="${java.class.path}" />
         <pathelement location="../../lib/optional/junit.jar" />
         <pathelement location="../xdocs/lib/xdoclet.jar" />
         <pathelement location="../xdocs/lib/log4j-core.jar" />
         <fileset dir="${lib.dir}">
             <include name="*.jar" />
         </fileset>
-        <pathelement path="${build.classes}" />
+        <pathelement location="${build.classes}"/>
+        <!-- Need this to get tools.jar in the classpath -->
+        <pathelement path="${java.class.path}"/>
     </path>
 
     <!-- Main target -->
@@ -199,7 +201,6 @@ Legal:
 
     <!-- Compiles and installs the custom build tasks -->
     <target name="custom-tasks">
-        <property name="build.custom-tasks" value="${build.dir}/tasks"/>
         <property name="custom-package-dir" value="${build.custom-tasks}/org/apache/myrmidon/build"/>
         <mkdir dir="${build.custom-tasks}"/>
         <javac srcdir="src/make" destdir="${build.custom-tasks}">
@@ -236,7 +237,10 @@ Legal:
         <javac
             destdir="${build.classes}"
             debug="${debug}"
-            deprecation="${deprecation}" >
+            deprecation="${deprecation}" 
+            includeAntRuntime="false"
+            includeJavaRuntime="false">
+            
             <classpath refid="project.class.path"/>
             <src location="src/todo"/>
             <src path="${java.dir}" />
@@ -253,16 +257,6 @@ Legal:
             <patternset refid="selftest.include"/>
             <patternset refid="selftest-extension1.include"/>
             <include name="org/apache/antlib/**"/>
-        </javac>
-
-        <mkdir dir="${test.classes}"/>
-        <javac srcdir="src/test"
-            destdir="${test.classes}"
-            debug="${debug}"
-            deprecation="${deprecation}">
-            <classpath refid="project.class.path"/>
-            <exclude name="**/SmbFileSystemTestCase.java" unless="jcifs.present"/>
-            <exclude name="**/FtpFileSystemTestCase.java" unless="netcomp.present"/>
         </javac>
 
         <copy todir="${build.classes}">
@@ -290,6 +284,7 @@ Legal:
             <include name="org/apache/myrmidon/components/**" />
             <include name="org/apache/myrmidon/frontends/**" />
             <include name="org/apache/myrmidon/*" />
+            <exclude name="**/TransformingProjectBuilder.java" unless="trax.present"/>
         </patternset>
 
         <patternset id="aut.include">
@@ -551,7 +546,12 @@ Legal:
             destdir="${test.classes}"
             debug="${debug}"
             deprecation="${deprecation}">
-            <classpath refid="project.class.path"/>
+            
+            <classpath>
+              <pathelement location="${build.classes}"/>
+              <path refid="project.class.path"/>
+            </classpath>
+            
             <exclude name="**/SmbFileSystemTestCase.java" unless="jcifs.present"/>
             <exclude name="**/FtpFileSystemTestCase.java" unless="netcomp.present"/>
         </javac>
@@ -611,12 +611,12 @@ Legal:
             tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
 
         <!-- Run all the tests -->
-        <junit printsummary="on" fork="true" failureProperty="test.failed">
+        <junit printsummary="on" 
+               fork="true" failureProperty="test.failed">
             <formatter type="brief" usefile="false"/>
-            <classpath location="${build.classes}"/>
             <classpath>
                 <fileset dir="${test.working.dir}/dist/bin/lib" includes="**/*.jar"/>
-                <fileset dir="${test.working.dir}/dist/lib" includes="**/*.jar, **/*.atl" excludes="crimson.jar"/>
+                <fileset dir="${test.working.dir}/dist/lib" includes="**/*.jar, **/*.atl" excludes="**/crimson.jar"/>
             </classpath>
             <classpath location="${test.classes}"/>
 
@@ -767,6 +767,8 @@ Legal:
                 <exclude name="jdepend.jar"/>
             </fileset>
         </copy>
+        
+        <copy todir="${dist.lib}" file="../../lib/optional/junit.jar" />
 
         <copy todir="${dist.bin}">
             <fileset dir="${script.dir}"/>
@@ -797,6 +799,8 @@ Legal:
     <!-- Cleans up the compiled classes -->
     <target name="clean-classes">
         <delete dir="${build.classes}"/>
+        <delete dir="${test.classes}"/>
+        <delete dir="${build.custom-tasks}"/>
     </target>
 
     <!-- Rebuilds the distribution -->

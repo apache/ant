@@ -112,10 +112,11 @@ public class Path extends DataType implements Cloneable {
 
 
     //Modified from original source.
-    //Append Ant1 codebase to systemclasspath.
+    //Append Ant1Compat classpath to systemclasspath.
     // ------------------Modified--------------------------------
     static
     {
+        // Add Ant1Compat.atl to system classpath.
         String classpath = LoaderUtils.getClasspath( Path.class.getClassLoader() );
         systemClasspath.append( new Path( null, classpath ) );
     }

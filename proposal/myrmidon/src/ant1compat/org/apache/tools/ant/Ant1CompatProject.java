@@ -10,7 +10,6 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.CodeSource;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -24,6 +23,8 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.type.DefaultTypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
+
+import org.apache.tools.ant.types.Path;
 
 /**
  * Ant1 Project proxy for Myrmidon. Provides hooks between Myrmidon TaskContext
@@ -42,19 +43,9 @@ public class Ant1CompatProject extends Project
         org.apache.myrmidon.interfaces.model.Project.PROJECT;
     public static final String ANT1_PROJECT_PROP = "ant1.project";
 
-    private static String javaclasspath;
-
-    static
-    {
-        // Find the path to the Ant1 antlib file.
-        CodeSource ant1codesource =
-            Ant1CompatProject.class.getProtectionDomain().getCodeSource();
-        String ant1jar = ant1codesource.getLocation().getFile().toString();
-
-        // Append this to the java.class.path system property.
-        javaclasspath = System.getProperty( "java.class.path" );
-        javaclasspath = javaclasspath + File.pathSeparator + ant1jar;
-    }
+    // Add everything in the current classloader to the
+    // java.class.path property.
+    private static String javaclasspath = Path.systemClasspath.toString();
 
     private final Converter m_converter;
 

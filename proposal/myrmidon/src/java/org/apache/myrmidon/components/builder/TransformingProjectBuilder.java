@@ -27,7 +27,7 @@ import org.apache.myrmidon.interfaces.builder.ProjectException;
  * @author <a href="mailto:darrell@apache.org">Darrell DeBoer</a>
  * @version $Revision$ $Date$
  *
- * @ant.type type="project-builder" name="xml"
+ * @ant.type type="project-builder" name="ant-transform"
  */
 public class TransformingProjectBuilder
     extends DefaultProjectBuilder
