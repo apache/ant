@@ -734,7 +734,7 @@ public class FileUtils {
             return false;
         }
 
-        if (f1.equals(f2)) {
+        if (fileNameEquals(f1, f2)) {
             // same filename => true
             return true;
         }
@@ -999,6 +999,20 @@ public class FileUtils {
             // relative path
         }
         return path;
+    }
+
+    /**
+     * Compares two filenames.
+     *
+     * <p>Unlike java.io.File#equals this method will try to compare
+     * the absolute paths and &quot;normalize&quot; the filenames
+     * before comparing them.</p>
+     *
+     * @since Ant 1.5.2
+     */
+    public boolean fileNameEquals(File f1, File f2) {
+        return normalize(f1.getAbsolutePath())
+            .equals(normalize(f2.getAbsolutePath()));
     }
 
 }

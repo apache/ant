@@ -58,6 +58,7 @@ import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.ZipFileSet;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.zip.ZipOutputStream;
 
 /**
@@ -74,6 +75,7 @@ public class Ear extends Jar {
 
     private File deploymentDescriptor;
     private boolean descriptorAdded;
+    private static final FileUtils fu = FileUtils.newFileUtils();
 
     /**
      * Create an Ear task.
@@ -146,7 +148,7 @@ public class Ear extends Jar {
         // <fileset> element.
         if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {
             if (deploymentDescriptor == null 
-                || !deploymentDescriptor.equals(file) 
+                || !fu.fileNameEquals(deploymentDescriptor, file)
                 || descriptorAdded) {
                 log("Warning: selected " + archiveType
                     + " files include a META-INF/application.xml which will"
