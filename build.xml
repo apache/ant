@@ -89,7 +89,7 @@
          Check to see what optional dependencies are available              
        =================================================================== 
   -->
-  <target name="check_for_optional_packages">
+  <target name="check_for_optional_packages_1">
     <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
     <available property="jdk1.3+" classname="java.lang.StrictMath" />
     <available property="jdk1.4+" classname="java.lang.CharSequence" />
@@ -147,6 +147,18 @@
     <available property="jdepend.present" 
                classname="jdepend.framework.JDepend"  
                classpathref="classpath"/>
+    <available property="jaf.present"
+               classname="javax.activation.DataHandler"
+               classpathref="classpath"/>
+               
+  </target>
+
+  <target name="check_for_optional_packages" 
+          depends="check_for_optional_packages_1"
+          if="jaf.present">
+    <available property="javamail.complete"
+               classname="javax.mail.Transport"
+               classpathref="classpath"/>
                
   </target>
 
@@ -201,7 +213,9 @@
       <exclude name="${optional.package}/ejb/IPlanet*.java" unless="jdk1.2+" />
       <exclude name="${optional.package}/Javah.java" unless="jdk1.2+" />
       <exclude name="${optional.package}/junit/*" unless="junit.present" />
-      <exclude name="${optional.package}/net/*.java" unless="netcomp.present" />
+      <exclude name="${optional.package}/net/MimeMail.java" unless="javamail.complete" />
+      <exclude name="${optional.package}/net/FTP.java" unless="netcomp.present" />
+      <exclude name="${optional.package}/net/TelnetTask.java" unless="netcomp.present" />
       <exclude name="${optional.package}/scm/AntStarTeam*.java" unless="starteam.present" />
       <exclude name="${optional.package}/ANTLR.java" unless="antlr.present" />
       <exclude name="${optional.package}/ide/VAJ*.java" unless="vaj.present" />
@@ -697,4 +711,13 @@
     <antcall target="dist-lite"/>
   </target>
   
+  <!--
+       =================================================================== 
+         Creates the Ant website
+       =================================================================== 
+  -->
+  <target name="website"
+          description="--> creates the Ant website">
+    <ant dir="webpage" target="docs" />
+  </target>
 </project>

@@ -96,7 +96,6 @@ public abstract class Definer extends Task {
             throw new BuildException(msg);
         }
         try {
-            ClassLoader loader = null;
             AntClassLoader al = null;
             if (classpath != null) {
                 al = new AntClassLoader(project, classpath);
@@ -107,9 +106,8 @@ public abstract class Definer extends Task {
             // task we want to define will never be a Task but always
             // be wrapped into a TaskAdapter.
             al.addSystemPackageRoot("org.apache.tools.ant");
-            loader = al;
 
-            Class c = loader.loadClass(value);
+            Class c = al.loadClass(value);
             AntClassLoader.initializeClass(c);
             addDefinition(name, c);
         } catch (ClassNotFoundException cnfe) {
