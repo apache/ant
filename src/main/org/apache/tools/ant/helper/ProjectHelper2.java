@@ -154,7 +154,7 @@ public class ProjectHelper2 extends ProjectHelper {
 
         if (source instanceof File) {
             buildFile = (File) source;
-            buildFile = new File(buildFile.getAbsolutePath());
+            buildFile = fu.normalize(buildFile.getAbsolutePath());
             context.setBuildFile(buildFile);
             buildFileName = buildFile.toString();
 //         } else if (source instanceof InputStream ) {
