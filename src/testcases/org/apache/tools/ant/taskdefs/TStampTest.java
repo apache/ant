@@ -121,6 +121,7 @@ public class TStampTest extends TestCase {
         assertEquals(expected, today);
 
     }
+
     /**
      * verifies that custom props have priority over the
      * originals
@@ -130,6 +131,18 @@ public class TStampTest extends TestCase {
         tstamp.setPrefix("prefix");
         tstamp.execute();
         String prop= project.getProperty("prefix.DSTAMP");
+        assertNotNull(prop);
+    }
+
+    public void testFormatPrefix() throws Exception {
+	Tstamp.CustomFormat format = tstamp.createFormat();
+        format.setProperty("format");
+        format.setPattern("HH:mm:ss z");
+        format.setTimezone("GMT");
+
+        tstamp.setPrefix("prefix");
+        tstamp.execute();
+        String prop= project.getProperty("prefix.format");
         assertNotNull(prop);
     }
 

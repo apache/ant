@@ -1,6 +1,10 @@
 Changes from Ant 1.5.1Beta1 to the current CVS version
 ======================================================
 
+Fixed bugs:
+-----------
+* <tstamp>'s prefix attribute failed to apply to nested <format> elements.
+
 Other changes:
 --------------
 
