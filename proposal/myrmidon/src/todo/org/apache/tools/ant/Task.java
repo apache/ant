@@ -9,7 +9,6 @@ package org.apache.tools.ant;
 
 public abstract class Task
     extends ProjectComponent
-    implements org.apache.myrmidon.api.Task
 {
     protected void handleErrorOutput( String line )
     {
@@ -21,4 +20,3 @@ public abstract class Task
         getLogger().info( line );
     }
 }
-
