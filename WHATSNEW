@@ -67,6 +67,8 @@ Fixed bugs:
 * <apply> didn't compare timestamps of source and targetfiles when
   using a nested <filelist>.  Bugzilla Report 26985.
 
+* tagdiff.xml was broken in ant 1.6.1. Bugzilla Report 27057.
+
 Other changes:
 --------------
 
