@@ -107,6 +107,22 @@
                                   <table border="0" cellspacing="0" cellpadding="2" width="100%">
     <tr><td bgcolor="#828DA6">
       <font color="#ffffff" face="arial,helvetica,sanserif">
+        <a name="Facade task HOWTO"><strong>Facade task HOWTO</strong></a>
+      </font>
+    </td></tr>
+    <tr><td>
+      <blockquote>
+                        <p>Currently we have a few tasks that have multiple implementations. For instance
+                Javac task can actually call jikes, jvc, classic javac or modern javac. Similar things
+                will be seen with the jspc task and the cc task (if it ever gets written). We have a base
+                class that is meant to facilitate this sort of task and make it easy to develope. See
+                AbstractFacadeTask. However we need to write up a HOWTO so people can use it.</p>
+                    </blockquote>
+    </td></tr>
+  </table>
+                                  <table border="0" cellspacing="0" cellpadding="2" width="100%">
+    <tr><td bgcolor="#828DA6">
+      <font color="#ffffff" face="arial,helvetica,sanserif">
         <a name="Mail tasks"><strong>Mail tasks</strong></a>
       </font>
     </td></tr>

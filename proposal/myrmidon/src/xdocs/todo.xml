@@ -25,6 +25,16 @@
 
             </subsection>
 
+            <subsection name="Facade task HOWTO">
+
+                <p>Currently we have a few tasks that have multiple implementations. For instance
+                Javac task can actually call jikes, jvc, classic javac or modern javac. Similar things
+                will be seen with the jspc task and the cc task (if it ever gets written). We have a base
+                class that is meant to facilitate this sort of task and make it easy to develope. See
+                AbstractFacadeTask. However we need to write up a HOWTO so people can use it.</p>
+
+            </subsection>
+
             <subsection name="Mail tasks">
 
                 <p>Convert the ant1.x Mail tasks to myrmidon.</p>
