@@ -17,13 +17,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.FilterSetCollection;
 
 /**
@@ -41,12 +39,11 @@ public class FileUtils
 {
     private static Random rand = new Random( System.currentTimeMillis() );
     private static Object lockReflection = new Object();
-    private static java.lang.reflect.Method setLastModified = null;
 
     /**
      * Empty constructor.
      */
-    protected FileUtils()
+    private FileUtils()
     {
     }
 
@@ -58,47 +55,6 @@ public class FileUtils
     public static FileUtils newFileUtils()
     {
         return new FileUtils();
-    }
-
-    /**
-     * Calls File.setLastModified(long time) in a Java 1.1 compatible way.
-     *
-     * @param file The new FileLastModified value
-     * @param time The new FileLastModified value
-     * @exception TaskException Description of Exception
-     */
-    public void setFileLastModified( File file, long time )
-        throws TaskException
-    {
-        if( Project.getJavaVersion() == Project.JAVA_1_1 )
-        {
-            return;
-        }
-        Long[] times = new Long[ 1 ];
-        if( time < 0 )
-        {
-            times[ 0 ] = new Long( System.currentTimeMillis() );
-        }
-        else
-        {
-            times[ 0 ] = new Long( time );
-        }
-
-        try
-        {
-            getSetLastModified().invoke( file, times );
-        }
-        catch( java.lang.reflect.InvocationTargetException ite )
-        {
-            Throwable nested = ite.getTargetException();
-            throw new TaskException( "Exception setting the modification time "
-                                     + "of " + file, nested );
-        }
-        catch( Throwable other )
-        {
-            throw new TaskException( "Exception setting the modification time "
-                                     + "of " + file, other );
-        }
     }
 
     /**
@@ -395,7 +351,7 @@ public class FileUtils
 
             if( preserveLastModified )
             {
-                setFileLastModified( destFile, sourceFile.lastModified() );
+                destFile.setLastModified( sourceFile.lastModified() );
             }
         }
     }
@@ -641,41 +597,6 @@ public class FileUtils
         }
 
         return new File( helpFile.getAbsolutePath() );
-    }
-
-    /**
-     * see whether we have a setLastModified method in File and return it.
-     *
-     * @return The SetLastModified value
-     */
-    protected final Method getSetLastModified()
-        throws TaskException
-    {
-        if( Project.getJavaVersion() == Project.JAVA_1_1 )
-        {
-            return null;
-        }
-        if( setLastModified == null )
-        {
-            synchronized( lockReflection )
-            {
-                if( setLastModified == null )
-                {
-                    try
-                    {
-                        setLastModified =
-                            java.io.File.class.getMethod( "setLastModified",
-                                                          new Class[]{Long.TYPE} );
-                    }
-                    catch( NoSuchMethodException nse )
-                    {
-                        throw new TaskException( "File.setlastModified not in JDK > 1.1?",
-                                                 nse );
-                    }
-                }
-            }
-        }
-        return setLastModified;
     }
 }
 

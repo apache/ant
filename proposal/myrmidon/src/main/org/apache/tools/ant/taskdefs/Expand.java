@@ -291,7 +291,7 @@ public class Expand extends MatchingTask
                 }
             }
 
-            fileUtils.setFileLastModified( f, entryDate.getTime() );
+            f.setLastModified( entryDate.getTime() );
         }
         catch( FileNotFoundException ex )
         {

@@ -214,7 +214,7 @@ public class Touch extends Task
             return;
         }
 
-        fileUtils.setFileLastModified( file, millis );
+        final long time = ( millis < 0 ) ? System.currentTimeMillis() : millis;
+        file.setLastModified( time );
     }
-
 }
