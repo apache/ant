@@ -79,14 +79,14 @@ public class Messenger {
     }
 
     public void close() throws IOException {
-        if (in != null) {
-            in.close();
-            in = null;
-        }
         if (out != null) {
             out.flush();
             out.close();
             out = null;
+        }
+        if (in != null) {
+            in.close();
+            in = null;
         }
     }
 

@@ -117,8 +117,19 @@ public class Server {
 
     /** start a server to the specified port */
     public void start() {
+        try {
+            start(false);
+        } catch (InterruptedException e){
+        }
+    }
+
+    /** start a server to the specified port and wait for end */
+    public void start(boolean flag) throws InterruptedException {
         Worker worker = new Worker();
         worker.start();
+        if (flag){
+            worker.join();
+        }
     }
 
     /** cancel the connection to the client */

@@ -90,6 +90,8 @@ public final class ServerElement extends ProjectComponent {
     /** the parent task */
     private RJUnitTask parent;
 
+    private Server server;
+
     /** create a new server */
     public ServerElement(RJUnitTask value) {
         parent = value;
@@ -98,7 +100,7 @@ public final class ServerElement extends ProjectComponent {
     /** start the server and block until client has finished */
     public void execute() throws BuildException {
         // configure the server...
-        Server server = new Server(port);
+        server = new Server(port);
         Enumeration listeners = formatterElements.elements();
         while (listeners.hasMoreElements()) {
             FormatterElement fe = (FormatterElement)listeners.nextElement();
@@ -106,7 +108,12 @@ public final class ServerElement extends ProjectComponent {
             server.addListener( formatter );
         }
         // and run it. It will stop once a client has finished.
-        server.start();
+        try {
+            server.start(true);
+            server.shutdown();
+        } catch (InterruptedException e){
+            throw new BuildException(e);
+        }
     }
 
     /** set the port to listen to */
