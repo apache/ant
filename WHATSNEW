@@ -28,7 +28,7 @@ Other changes:
 * <cab> can work on non-Windows platforms with the help of libcabinet. 
   See http://trill.cis.fordham.edu/~barbacha/cabinet_library/.
 
-* <FTP> now supports passive mode.
+* <ftp> now supports passive mode.
 
 Fixed bugs:
 -----------
@@ -46,6 +46,10 @@ Fixed bugs:
   CMP files are included by parsing the weblogic deployment descriptor rather than
   relying on the naming convention used in ant 1.2
   Include super classes and super interfaces into the generated ejb jar files
+
+* <vssget> now correctly deals with spaces in arguments
+
+* <jar> fails early if a given manifest file doesn't exist
 
 Changes from Ant 1.1 to Ant 1.2
 ===============================

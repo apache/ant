@@ -192,7 +192,11 @@ public abstract class MSVSS extends Task {
     /** */
     public static final String FLAG_OVERRIDE_WORKING_DIR = "-GL";
     /** */
-    public static final String FLAG_AUTORESPONSE = "-I";
+    public static final String FLAG_AUTORESPONSE_DEF = "-I-";
+    /** */
+    public static final String FLAG_AUTORESPONSE_YES = "-I-Y";
+    /** */
+    public static final String FLAG_AUTORESPONSE_NO = "-I-N";
     /** */
     public static final String FLAG_RECURSION = "-R";
     /** */
