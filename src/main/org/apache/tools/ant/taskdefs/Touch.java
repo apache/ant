@@ -28,18 +28,19 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
- * Touch a file and/or fileset(s); corresponds to the Unix touch command.
+ * Touch a file and/or fileset(s) and/or filelist(s);
+ * corresponds to the Unix touch command.
  *
  * <p>If the file to touch doesn't exist, an empty one is
  * created. </p>
  *
  * <p>Note: Setting the modification time of files is not supported in
  * JDK 1.1.</p>
- *
  *
  * @since Ant 1.1
  *
@@ -51,6 +52,7 @@ public class Touch extends Task {
     private long millis = -1;
     private String dateTime;
     private Vector filesets = new Vector();
+    private Vector filelists = new Vector();
     private FileUtils fileUtils;
 
     public Touch() {
@@ -92,14 +94,21 @@ public class Touch extends Task {
     }
 
     /**
+     * Add a filelist to touch
+     */
+    public void addFilelist(FileList list) {
+        filelists.addElement(list);
+    }
+
+    /**
      * Execute the touch operation.
      */
     public void execute() throws BuildException {
         long savedMillis = millis;
 
-        if (file == null && filesets.size() == 0) {
+        if (file == null && filesets.size() == 0 && filelists.size() == 0) {
             throw
-                new BuildException("Specify at least one source - a file or "
+                new BuildException("Specify at least one source - a file, filelist or "
                                    + "a fileset.");
         }
 
@@ -155,26 +164,9 @@ public class Touch extends Task {
     }
 
     /**
-     * Does the actual work. Entry point for Untar and Expand as well.
+     * Does the actual work; assumes everything has been checked by now.
      */
     protected void touch() throws BuildException {
-        if (file != null) {
-            if (!file.exists()) {
-                log("Creating " + file, Project.MSG_INFO);
-                try {
-                    fileUtils.createNewFile(file);
-                } catch (IOException ioe) {
-                    throw new BuildException("Could not create " + file, ioe,
-                                             getLocation());
-                }
-            }
-        }
-
-        if (millis >= 0 && JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            log("modification time of files cannot be set in JDK 1.1",
-                Project.MSG_WARN);
-            return;
-        }
 
         boolean resetMillis = false;
         if (millis < 0) {
@@ -204,21 +196,43 @@ public class Touch extends Task {
             }
         }
 
+        // deal with the filelists
+        for (int i = 0; i < filelists.size(); i++) {
+            FileList fl = (FileList) filelists.elementAt(i);
+            File fromDir = fl.getDir(getProject());
+
+            String[] srcFiles = fl.getFiles(getProject());
+
+            for (int j = 0; j < srcFiles.length; j++) {
+                touch(new File(fromDir, srcFiles[j]));
+            }
+        }
+
         if (resetMillis) {
             millis = -1;
         }
     }
 
+    /**
+     * touch a single file with the current timestamp (this.millis)
+     * @param file file to touch
+     * @throws BuildException
+     */
     protected void touch(File file) throws BuildException {
+        if (!file.exists()) {
+            log("Creating " + file, Project.MSG_INFO);
+            try {
+                fileUtils.createNewFile(file);
+            } catch (IOException ioe) {
+                throw new BuildException("Could not create " + file, ioe,
+                                         getLocation());
+            }
+        }
+
         if (!file.canWrite()) {
             throw new BuildException("Can not change modification date of "
                                      + "read-only file " + file);
         }
-
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            return;
-        }
-
         fileUtils.setFileLastModified(file, millis);
     }
 

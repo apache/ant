@@ -81,6 +81,8 @@ Other changes:
 
 * <xslt> now supports a nested <mapper>.  Bugzilla Report 11249.
 
+* <touch> has filelist support.
+
 Changes from Ant 1.6.0 to Ant 1.6.1
 ===================================
 
