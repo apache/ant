@@ -1,5 +1,5 @@
 /*
- * Copyright  2000,2002-2004 The Apache Software Foundation
+ * Copyright  2000,2002-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -135,4 +135,30 @@ public class Location implements Serializable {
         return buf.toString();
     }
 
+    /**
+     * Equality operation.
+     * @param other the object to compare to.
+     * @return true if the other object contains the same information
+     *              as this object.
+     */
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null) {
+            return false;
+        }
+        if (!(other.getClass() == getClass())) {
+            return false;
+        }
+        return toString().equals(other.toString());
+    }
+
+    /**
+     * Hash operation.
+     * @return a hash code value for this location.
+     */
+    public int hashCode() {
+        return toString().hashCode();
+    }
 }
