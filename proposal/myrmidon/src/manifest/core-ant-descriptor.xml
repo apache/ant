@@ -3,8 +3,9 @@
   <types>
 
     <!-- basic tasks/datatypes/coverters required in most environments -->
-    <task name="log" classname="org.apache.myrmidon.libs.core.Log" />
-    <task name="property" classname="org.apache.myrmidon.libs.core.Property" />
+    <task name="log" classname="org.apache.antlib.core.Log" />
+    <task name="fail" classname="org.apache.antlib.core.Fail" />
+    <task name="property" classname="org.apache.antlib.core.Property" />
 
   </types>
 
