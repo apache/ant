@@ -73,22 +73,31 @@ attributes.</p>
 <h4>Examples</h4>
 <blockquote><pre>
 &lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot; &gt;
-  &lt;patternset id=&quot;non.test.sources&quot; &gt;
-    &lt;include name=&quot;**/*.java&quot;/&gt;
-    &lt;exclude name=&quot;**/*Test*&quot;/&gt;
-  &lt;/patternset&gt;
+  &lt;include name=&quot;**/*.java&quot;/&gt;
+  &lt;exclude name=&quot;**/*Test*&quot;/&gt;
 &lt;/fileset&gt;
 </pre></blockquote>
 <p>Groups all files in directory <code>${server.src}</code> that are Java
 source files and don't have the text <code>Test</code> in their
 name.</p>
 <blockquote><pre>
+&lt;fileset dir=&quot;${server.src}&quot; casesensitive=&quot;yes&quot; &gt;
+  &lt;patternset id=&quot;non.test.sources&quot; &gt;
+    &lt;include name=&quot;**/*.java&quot;/&gt;
+    &lt;exclude name=&quot;**/*Test*&quot;/&gt;
+  &lt;/patternset&gt;
+&lt;/fileset&gt;
+</pre></blockquote>
+<p>Groups the same files as the above example, but also establishes
+a PatternSet that can be referenced in other
+<code>&lt;fileset&gt;</code> elements, rooted at a different directory.</p>
+<blockquote><pre>
 &lt;fileset dir=&quot;${client.src}&quot; &gt;
   &lt;patternset refid=&quot;non.test.sources&quot;/&gt;
 &lt;/fileset&gt;
 </pre></blockquote>
 <p>Groups all files in directory <code>${client.src}</code>, using the
-same patterns as the example above.</p>
+same patterns as the above example.</p>
 
 <hr>
 <p align="center">Copyright &copy; 2001 Apache Software Foundation. All rights
