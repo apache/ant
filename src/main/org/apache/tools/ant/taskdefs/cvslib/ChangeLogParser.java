@@ -148,7 +148,7 @@ class ChangeLogParser {
      */
     private void processComment(final String line) {
         final String lineSeparator = System.getProperty("line.separator");
-        if (line.startsWith("======")) {
+        if (line.equals("=============================================================================")) {
             //We have ended changelog for that particular file
             //so we can save it
             final int end
@@ -156,7 +156,7 @@ class ChangeLogParser {
             m_comment = m_comment.substring(0, end);
             saveEntry();
             m_status = GET_FILE;
-        } else if (line.startsWith("----------------------------")) {
+        } else if (line.equals("----------------------------")) {
             final int end
                 = m_comment.length() - lineSeparator.length(); //was -1
             m_comment = m_comment.substring(0, end);
