@@ -428,11 +428,13 @@ public class Symlink extends Task {
         FileUtils fu = FileUtils.newFileUtils();
         File temp = fu.createTempFile("symlink",".tmp", parentDir);
         try {
-            if (!canfil.renameTo(temp)) {
+            try {
+                fu.rename(canfil, temp);
+            } catch (IOException e) {
                 throw new IOException("Couldn't rename resource when " +
                                       "attempting to delete " + linkfil);
             }
-
+            
             // delete the (now) broken link
             if(!linkfil.delete()) {
                 throw new IOException("Couldn't delete symlink: " + linkfil +
@@ -441,7 +443,9 @@ public class Symlink extends Task {
             }
         } finally {
             // return the resource to its original name.
-            if (!temp.renameTo(canfil)) {
+            try {
+                fu.rename(temp, canfil);
+            } catch (IOException e) {
                 throw new IOException("Couldn't return resource " + temp +
                                       " its original name: " + canstr +
                                       "\n THE RESOURCE'S NAME ON DISK HAS " +

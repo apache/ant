@@ -680,7 +680,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
      * actual bean changes without changing the the method signatures then
      * only the bean classfile needs to be updated and the rest of the
      * weblogic jar file can remain the same. If the Interfaces, ie. the
-     * method signatures change or if the xml deployment dicriptors changed,
+     * method signatures change or if the xml deployment descriptors changed,
      * the whole jar needs to be rebuilt with ejbc. This is not strictly true
      * for the xml files. If the JNDI name changes then the jar doesnt have to
      * be rebuild, but if the resources references change then it does. At
@@ -864,9 +864,10 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                 } catch (IOException closeException) {
                 }
 
-                weblogicJarFile.delete();
-                newWLJarFile.renameTo(weblogicJarFile);
-                if (!weblogicJarFile.exists()) {
+                try {
+                    fileUtils.rename(newWLJarFile, weblogicJarFile);
+                } catch (IOException renameException) {
+                    log(renameException.getMessage(), Project.MSG_WARN);
                     rebuild = true;
                 }
             }

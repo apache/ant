@@ -400,12 +400,12 @@ public class Zip extends MatchingTask {
                                              fileUtils.getParentFile(zipFile));
 
                 try {
-                    if (!zipFile.renameTo(renamedFile)) {
-                        throw new BuildException("Unable to rename old file "
-                                                 + "to temporary file");
-                    }
+                    fileUtils.rename(zipFile, renamedFile);
                 } catch (SecurityException e) {
                     throw new BuildException("Not allowed to rename old file "
+                                             + "to temporary file");
+                } catch (IOException e) {
+                    throw new BuildException("Unable to rename old file "
                                              + "to temporary file");
                 }
             }
@@ -498,7 +498,9 @@ public class Zip extends MatchingTask {
             }
 
             if (doUpdate && renamedFile != null) {
-                if (!renamedFile.renameTo(zipFile)) {
+                try {
+                    fileUtils.rename(renamedFile, zipFile);
+                } catch (IOException e) {
                     msg += " (and I couldn't rename the temporary file " +
                         renamedFile.getName() + " back)";
                 }

@@ -437,15 +437,13 @@ public class ReplaceRegExp extends Task {
             w = null;
 
             if (changes) {
-                if (!f.delete()) {
-                    throw new BuildException("Couldn't delete " + f,
-                                             getLocation());
-                }
-                if (!temp.renameTo(f)) {
+                try {
+                    fileUtils.rename(temp, f);
+                    temp = null;
+                } catch (IOException e) {
                     throw new BuildException("Couldn't rename temporary file " 
                                              + temp, getLocation());
                 }
-                temp = null;
             }
         } finally {
             try {

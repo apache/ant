@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -55,9 +55,11 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
+import java.io.IOException;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Renames a file.
@@ -115,15 +117,15 @@ public class Rename extends Task {
             throw new BuildException("src attribute is required", getLocation());
         }
 
-        if (replace && dest.exists()) {
-            if (!dest.delete()) {
-                throw new BuildException("Unable to remove existing file " +
-                      dest);
-            }
+        if (!replace && dest.exists()) {
+            throw new BuildException(dest + " already exists.");
         }
-        if (!src.renameTo(dest)) {
+
+        try {
+            FileUtils.newFileUtils().rename(src, dest);
+        } catch (IOException e) {
             throw new BuildException("Unable to rename " + src + " to " +
-                  dest);
+                                     dest, e, getLocation());
         }
     }
 }

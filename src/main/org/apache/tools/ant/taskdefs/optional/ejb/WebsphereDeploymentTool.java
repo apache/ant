@@ -70,6 +70,7 @@ import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Websphere deployment tool that augments the ejbjar task.
@@ -693,7 +694,7 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
      * If the actual bean changes without changing the the method signatures
      * then only the bean classfile needs to be updated and the rest of the
      * websphere jar file can remain the same. If the Interfaces, ie. the
-     * method signatures change or if the xml deployment dicriptors changed,
+     * method signatures change or if the xml deployment descriptors changed,
      * the whole jar needs to be rebuilt with ejbdeploy. This is not strictly
      * true for the xml files. If the JNDI name changes then the jar doesnt
      * have to be rebuild, but if the resources references change then it
@@ -871,9 +872,11 @@ public class WebsphereDeploymentTool extends GenericDeploymentTool {
                 } catch (IOException closeException) {
                 }
 
-                websphereJarFile.delete();
-                newwasJarFile.renameTo(websphereJarFile);
-                if (!websphereJarFile.exists()) {
+                try {
+                    FileUtils.newFileUtils().rename(newwasJarFile, 
+                                                    websphereJarFile);
+                } catch (IOException renameException) {
+                    log(renameException.getMessage(), Project.MSG_WARN);
                     rebuild = true;
                 }
             }

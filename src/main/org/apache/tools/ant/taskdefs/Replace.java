@@ -445,14 +445,7 @@ public class Replace extends MatchingTask {
             // otherwise, delete the new one
             if (changes) {
                 ++fileCount;
-                if (!src.delete()) {
-                    throw new BuildException("Couldn't delete " + src,
-                                             getLocation());
-                }
-                if (!temp.renameTo(src)) {
-                    throw new BuildException("Couldn't rename temporary file " 
-                                             + temp, getLocation());
-                }
+                fileUtils.rename(temp, src);
                 temp = null;
             }
         } catch (IOException ioe) {
