@@ -878,6 +878,8 @@ public class IPlanetEjbc {
                 currentEjb.setRemote(value);
             } else if (currentLoc.equals(base + "\\ejb-class")) {
                 currentEjb.setImplementation(value);
+            } else if (currentLoc.equals(base + "\\prim-key-class")) {
+                currentEjb.setPrimaryKey(value);
             } else if (currentLoc.equals(base + "\\session-type")) {
                 currentEjb.setBeantype(value);
             } else if (currentLoc.equals(base + "\\persistence-type")) {
@@ -927,6 +929,7 @@ public class IPlanetEjbc {
         private Classname  home;              // EJB's home interface name
         private Classname  remote;            // EJB's remote interface name
         private Classname  implementation;      // EJB's implementation class
+        private Classname  primaryKey;        // EJB's primary key class
         private String  beantype = "entity";  // or "stateful" or "stateless"
         private boolean cmp       = false;      // Does this EJB support CMP?
         private boolean iiop      = false;      // Does this EJB support IIOP?
@@ -1002,6 +1005,18 @@ public class IPlanetEjbc {
 
         public Classname getImplementation() {
             return implementation;
+        }
+
+        public void setPrimaryKey(String primaryKey) {
+            setPrimaryKey(new Classname(primaryKey));
+        }
+
+        public void setPrimaryKey(Classname primaryKey) {
+            this.primaryKey = primaryKey;
+        }
+
+        public Classname getPrimaryKey() {
+            return primaryKey;
         }
 
         public void setBeantype(String beantype) {
@@ -1158,6 +1173,7 @@ public class IPlanetEjbc {
             File remoteFile;     // File for the remote interface class
             File homeFile;       // File for the home interface class
             File implFile;       // File for the EJB implementation class
+            File pkFile;         // File for the EJB primary key class
 
             /* Check the timestamp on the remote interface */
             remoteFile = remote.getClassFile(buildDir);
@@ -1180,6 +1196,22 @@ public class IPlanetEjbc {
                 return -1;
             }
             latestModified = Math.max(latestModified, modified);
+
+            /* Check the timestamp of the primary key class */
+            if (primaryKey != null) {
+                pkFile = primaryKey.getClassFile(buildDir);
+                modified = pkFile.lastModified();
+                if (modified == -1) {
+                    System.out.println("The class "
+                                    + primaryKey.getQualifiedClassName() + "couldn't be "
+                                    + "found on the classpath");
+                    return -1;
+                }
+                latestModified = Math.max(latestModified, modified);
+            }
+            else {
+                pkFile = null;
+            }
 
             /* Check the timestamp on the EJB implementation class.
              *
@@ -1210,6 +1242,12 @@ public class IPlanetEjbc {
             pathToFile = implementation.getQualifiedClassName();
             pathToFile = pathToFile.replace('.', File.separatorChar) + ".class";
             ejbFiles.put(pathToFile, implFile);
+
+            if (pkFile != null) {
+                pathToFile = primaryKey.getQualifiedClassName();
+                pathToFile = pathToFile.replace('.', File.separatorChar) + ".class";
+                ejbFiles.put(pathToFile, pkFile);
+            }
 
             return latestModified;
         }
@@ -1323,6 +1361,7 @@ public class IPlanetEjbc {
                         + "\n\r              home:      " + home
                         + "\n\r              remote:    " + remote
                         + "\n\r              impl:      " + implementation
+                        + "\n\r              primaryKey: " + primaryKey
                         + "\n\r              beantype:  " + beantype
                         + "\n\r              cmp:       " + cmp
                         + "\n\r              iiop:      " + iiop
