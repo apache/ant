@@ -8,38 +8,46 @@
 package org.apache.myrmidon.interfaces.deployer;
 
 /**
- * A basic type definition.  This class is used to build a type definition,
- * from a typelib descriptor, or via introspection.
+ * A general-purpose type definition.
  *
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public abstract class TypeDefinition
+public class TypeDefinition
 {
-    private String m_className;
+    private final String m_name;
+    private final String m_role;
+    private final String m_classname;
 
-    /**
-     * Returns the type's name.
-     */
-    public abstract String getName();
-
-    /**
-     * Returns the type's role.
-     */
-    public abstract String getRoleShorthand();
+    public TypeDefinition( final String name,
+                           final String roleShorthand,
+                           final String className )
+    {
+        m_name = name;
+        m_role = roleShorthand;
+        m_classname = className;
+    }
 
     /**
      * Returns the type's implementation class name.
      */
-    public String getClassname()
+    public final String getClassname()
     {
-        return m_className;
+        return m_classname;
     }
 
     /**
-     * Sets the type's implementation class name.
+     * Returns the type's role.
      */
-    public void setClassname( final String className )
+    public final String getRole()
     {
-        m_className = className;
+        return m_role;
+    }
+
+    /**
+     * Returns the type's name.
+     */
+    public String getName()
+    {
+        return m_name;
     }
 }

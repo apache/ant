@@ -15,23 +15,16 @@ package org.apache.myrmidon.interfaces.deployer;
 public class ConverterDefinition
     extends TypeDefinition
 {
-    private String m_sourceType;
-    private String m_destinationType;
+    private final String m_sourceType;
+    private final String m_destinationType;
 
-    /**
-     * Returns the type's role.
-     */
-    public String getRoleShorthand()
+    public ConverterDefinition( final String className,
+                                final String sourceType,
+                                final String destinationType )
     {
-        return "converter";
-    }
-
-    /**
-     * Returns the type's name.
-     */
-    public String getName()
-    {
-        return getClassname();
+        super( className, "converter", className );
+        m_sourceType = sourceType;
+        m_destinationType = destinationType;
     }
 
     /**
@@ -43,26 +36,10 @@ public class ConverterDefinition
     }
 
     /**
-     * Sets the converter's source type.
-     */
-    public void setSourceType( final String sourceType )
-    {
-        m_sourceType = sourceType;
-    }
-
-    /**
      * Returns the converter's destination type.
      */
     public String getDestinationType()
     {
         return m_destinationType;
-    }
-
-    /**
-     * Sets the converter's destination type.
-     */
-    public void setDestinationType( final String destinationType )
-    {
-        m_destinationType = destinationType;
     }
 }
