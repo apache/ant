@@ -54,9 +54,15 @@
  
 using System;
 
-public class Example {
+/**
+ * this is just here to create confusion
+ */
+public class Example2 {
 
-    public static void Main(String[] args) {
-            Example2.echo();
+    public int some_variable=3;
+    
+    public static void echo() {
+        Console.WriteLine("hello, I look like Java, but I'm really .NET");
     }
+    
 }

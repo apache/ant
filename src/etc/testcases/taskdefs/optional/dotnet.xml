@@ -70,9 +70,42 @@
       <src dir="${src.dir}" includes="**/*.cs"/>
     </csc>
     <available property="app.created" file="${testCSC.exe}"/>
-    <fail unless="app.created">No app  ${testCSC.exe}created</fail>
+    <fail unless="app.created">No app ${testCSC.exe} created</fail>
     <exec executable="${testCSC.exe}" failonerror="true" />
   </target>
+  
+  
+  <target name="testCSCdll" depends="init">
+    <property name="testCSC.dll" 
+      location="${build.dir}/Example2.dll" />
+    <csc 
+      destFile="${testCSC.dll}"
+      targetType="library" 
+      >
+      <src dir="${src.dir}" includes="example2.cs"/>
+    </csc>
+    <available property="dll.created" file="${testCSC.dll}"/>
+    <fail unless="dll.created">No file ${testCSC.dll} created</fail>
+  </target>
+  
+  <target name="testCscReferences" depends="init,testCSCdll">
+    <property name="testCscReferences.exe" 
+      location="${build.dir}/ExampleCsc2.exe" />
+    <csc 
+      destFile="${testCscReferences.exe}"
+      targetType="exe" 
+      >
+      <src file="${src.dir}/example.cs"/>
+      <reference file="${testCSC.dll}" />
+      <define name="RELEASE" />
+      <define name="DEBUG" if="undefined.property"/>
+      <define name="def3" unless="undefined.property"/>
+    </csc>
+    <available property="refapp.created" file="${testCscReferences.exe}"/>
+    <fail unless="refapp.created">No app ${testCscReferences.exe} created</fail>
+    <exec executable="${testCscReferences.exe}" failonerror="true" />
+  </target>
+  
   
   <target name="testILASM"  depends="init">
     <property name="testILASM.exe" 
@@ -83,8 +116,8 @@
       >
       <src dir="${src.dir}" includes="**/*.il"/>
     </ilasm>
-    <available property="app.created" file="${testILASM.exe}"/>
-    <fail unless="app.created">No app  ${testCSC.exe}created</fail>
+    <available property="ilasm.created" file="${testILASM.exe}"/>
+    <fail unless="ilasm.created">No app ${testCSC.exe} created</fail>
     <exec executable="${testILASM.exe}" failonerror="true" />
   </target>  
 
