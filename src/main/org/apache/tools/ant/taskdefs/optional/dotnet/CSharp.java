@@ -222,9 +222,10 @@ public class CSharp
     }   
     
     /** 
+     * Fix C# reference inclusion. 
      * C# is really dumb in how it handles inclusion. You have to list
      * every 'assembly' -read DLL that is imported. So already you are
-     * making a platform assumption -shared libraries have a .dll extension
+     * making a platform assumption -shared libraries have a .dll;"+ extension
      * and the poor developer has to know every library which is included
      * why the compiler cant find classes on the path or in a directory,
      * is a mystery.
@@ -236,27 +237,43 @@ public class CSharp
      * Casing is chosen to match that of the file system <i>exactly</i>
      * so may work on a unix box too. 
      */
-    protected static final String DEFAULT_REFERENCE_LIST
-        ="System.dll;System.Drawing.dll;System.Data.dll;"+
-         "System.Diagnostics.dll;"+
-         "System.DirectoryServices.dll;"+
-         "System.IO.dll;"+
-         "System.Management.dll;"+
-         "System.Messaging.dll;"+
-         "System.Net.dll;"+
-         "System.Runtime.Remoting.dll;"+
-         "System.Runtime.Serialization.Formatters.Soap.dll;"+
-         "System.Security.dll;"+
-         "System.ServiceProcess.dll;"+
-         "System.Text.RegularExpressions.dll;"+
-         "System.Timers.dll;"+
-         "System.Web.dll;"+
-         "System.Web.Services.dll;"+
-         "System.WinForms.dll;"+
-         "System.XML.dll;"+
-         "System.XML.Serialization.dll;"+
-         "Microsoft.ComServices.dll;";
-    
+
+    protected static final String DEFAULT_REFERENCE_LIST=
+            "Accessibility.dll;"+
+            "cscompmgd.dll;"+
+            "CustomMarshalers.dll;"+
+            "IEExecRemote.dll;"+
+            "IEHost.dll;"+
+            "IIEHost.dll;"+
+            "ISymWrapper.dll;"+
+            "Microsoft.JScript.dll;"+
+            "Microsoft.VisualBasic.dll;"+
+            "Microsoft.VisualC.dll;"+
+            "Microsoft.Vsa.dll;"+
+            "Mscorcfg.dll;"+
+            "RegCode.dll;"+
+            "System.Configuration.Install.dll;"+
+            "System.Data.dll;"+
+            "System.Design.dll;"+
+            "System.DirectoryServices.dll;"+
+            "System.EnterpriseServices.dll;"+
+            "System.dll;"+
+            "System.Drawing.Design.dll;"+
+            "System.Drawing.dll;"+
+            "System.Management.dll;"+
+            "System.Messaging.dll;"+
+            "System.Runtime.Remoting.dll;"+
+            "System.Runtime.Serialization.Formatters.Soap.dll;"+
+            "System.Security.dll;"+
+            "System.ServiceProcess.dll;"+
+            "System.Web.dll;"+
+            "System.Web.RegularExpressions.dll;"+
+            "System.Web.Services.dll;"+
+            "System.Windows.Forms.dll;"+
+            "System.XML.dll;";
+
+
+         
     /** 
      * get default reference list
      * @return null or a string of references.
@@ -608,6 +625,67 @@ public class CSharp
         else
             return null;
     }
+    /** icon for incorporation into apps
+     */     
+    protected File _win32res;  
+    
+    /**
+     * Set the win32 icon 
+     * @param fileName path to the file. Can be relative, absolute, whatever.
+     */
+    public void setWin32Res(File fileName) {
+        _win32res = fileName;
+    }
+    
+    /**
+     *  get the argument or null for no argument needed 
+     *
+     * @return    The Win32Icon Parameter to CSC 
+     */
+    protected String getWin32ResParameter() {
+        if (_win32res!=null)
+            return "/win32res:"+_win32res.toString();
+        else
+            return null;
+    }    
+    
+    /** 
+     * utf out flag
+     */
+     
+    protected boolean _utf8output=false;
+    
+    /**
+     * enable generation of utf8 output from the compiler. 
+     */
+    public void setUtf8Output(boolean enabled) {
+        _utf8output=enabled;
+    }
+    
+    protected String getUtf8OutpuParameter() {
+        return _utf8output?"/utf8output":null;
+    }
+    
+    protected boolean _noconfig=false;
+    
+    protected void setNoConfig(boolean enabled) {
+        _noconfig=enabled;
+    }
+    
+    protected String getNoConfigParameter() {
+        return _noconfig?"/noconfig":null;
+    }
+    
+    // /fullpaths
+    protected boolean _fullpaths=false;
+    
+    public void setFullPaths(boolean enabled) {
+        _fullpaths=enabled;
+    }
+    
+    protected String getFullPathsParameter() {
+        return _fullpaths?"/fullpaths":null;
+    }
     
     /** defines list
     * something like 'RELEASE;WIN32;NO_SANITY_CHECKS;;SOMETHING_ELSE'
@@ -720,6 +798,7 @@ public class CSharp
         _additionalModules=null;
         _includeDefaultReferences=true;
         _extraOptions=null;
+        _fullpaths=true;
     }
     
     /**
@@ -760,8 +839,12 @@ public class CSharp
         command.addArgument(getOutputFileParameter());   
         command.addArgument(getIncludeDefaultReferencesParameter());
         command.addArgument(getDefaultReferenceParameter());
+        command.addArgument(getWin32ResParameter());
+        command.addArgument(getUtf8OutpuParameter());
+        command.addArgument(getNoConfigParameter());
+        command.addArgument(getFullPathsParameter());
         command.addArgument(getExtraOptionsParameter());
-    
+        
         //get dependencies list. 
         DirectoryScanner scanner = super.getDirectoryScanner(_srcDir);
         String[] dependencies = scanner.getIncludedFiles();

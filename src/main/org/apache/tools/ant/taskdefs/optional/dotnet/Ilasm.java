@@ -144,11 +144,9 @@ public class Ilasm
         _listing = false;
         _verbose=false;
         _debug=true;
-        _owner=null;
         _outputFile=null;
         _failOnError=true;
         _resourceFile=null;
-        _owner=null;
         _extraOptions=null;     
     }
 
@@ -212,10 +210,6 @@ public class Ilasm
             return null;
     }   
         
-    /** owner string is a slightly trivial barrier to disassembly
-    */
-    
-    protected String _owner;
     
     /**
      *  Sets the Owner attribute 
@@ -224,21 +218,9 @@ public class Ilasm
      */
     
     public void setOwner(String s) {
-        _owner=s;
+       log("This option is not supported by ILASM as of Beta-2, and will be ignored",Project.MSG_WARN); 
         }
-    
-    /**
-     *  Gets the Owner switch for ilasm
-     *
-     * @return    The Owner string
-     */    
-    protected String getOwnerParameter() {
-        if(notEmpty(_owner))
-            return "/owner="+_owner;
-        else 
-            return null;
-    }
-        
+            
     /** test for a string containing something useful
      * @param string to test
      * @returns true if the argument is not null or empty
@@ -373,6 +355,24 @@ public class Ilasm
         return _debug?"/debug":null;
     }   
 
+    /** file containing private key
+    */
+    
+    private File _keyfile;
+    
+    public void setKeyfile(File keyfile) {
+        this._keyfile=keyfile;
+    }
+
+    /** get the argument or null for no argument needed
+    */
+    protected String getKeyfileParameter() {
+        if(_keyfile!=null)
+             return "/keyfile:"+_keyfile.toString();
+         else
+             return null;
+    }       
+    
     /** any extra command options?
      */
     protected String _extraOptions;
@@ -446,9 +446,9 @@ public class Ilasm
         command.addArgument(getTargetTypeParameter());
         command.addArgument(getListingParameter());
         command.addArgument(getOutputFileParameter());   
-        command.addArgument(getOwnerParameter());
         command.addArgument(getResourceFileParameter());
         command.addArgument(getVerboseParameter());
+        command.addArgument(getKeyfileParameter());
         command.addArgument(getExtraOptionsParameter());
  
 

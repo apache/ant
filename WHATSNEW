@@ -143,6 +143,8 @@ Other changes:
 * <fixrlf> can now with CR only line-ends and can use an arbitraty
   between 2 and 80.
 
+* The .NET tasks have been adapted to the beta2 release of the framework.
+
 Fixed bugs:
 -----------
 
