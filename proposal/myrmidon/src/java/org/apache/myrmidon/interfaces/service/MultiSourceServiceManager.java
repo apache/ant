@@ -40,9 +40,10 @@ public class MultiSourceServiceManager
      *
      * @param serviceType The service interface.
      */
-    public boolean hasService( Class serviceType )
+    public boolean hasService( final Class serviceType )
     {
-        for( int i = 0; i < m_sources.size(); i++ )
+        final int size = m_sources.size();
+        for( int i = 0; i < size; i++ )
         {
             final ServiceManager serviceManager = (ServiceManager)m_sources.get( i );
             if( serviceManager.hasService( serviceType ) )
@@ -61,10 +62,11 @@ public class MultiSourceServiceManager
      *         implement the service interface.
      * @throws ServiceException If the service does not exist.
      */
-    public Object getService( Class serviceType )
+    public Object getService( final Class serviceType )
         throws ServiceException
     {
-        for( int i = 0; i < m_sources.size(); i++ )
+        final int size = m_sources.size();
+        for( int i = 0; i < size; i++ )
         {
             final ServiceManager serviceManager = (ServiceManager)m_sources.get( i );
             if( serviceManager.hasService( serviceType ) )
