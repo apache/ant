@@ -18,6 +18,7 @@ import org.apache.myrmidon.framework.exec.CommandLauncher;
 import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.myrmidon.framework.exec.ExecManager;
 import org.apache.myrmidon.framework.exec.ExecMetaData;
+import org.apache.myrmidon.framework.exec.ExecOutputHandler;
 import org.apache.myrmidon.framework.exec.launchers.DefaultCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.MacCommandLauncher;
 import org.apache.myrmidon.framework.exec.launchers.ScriptCommandLauncher;
@@ -49,6 +50,20 @@ public class DefaultExecManager
     {
         m_launcher = new DefaultCommandLauncher();
         m_shellLauncher = createShellLauncher( antDir );
+    }
+
+    /**
+     * Execute a process and wait for it to finish before
+     * returning.
+     */
+    public int execute( final ExecMetaData execMetaData,
+                        final ExecOutputHandler handler,
+                        long timeout )
+        throws IOException, ExecException /*TimeoutException*/
+    {
+        final LogOutputStream output = new LogOutputStream( handler, false );
+        final LogOutputStream error = new LogOutputStream( handler, true );
+        return execute( execMetaData, null, output, error, timeout );
     }
 
     /**

@@ -53,4 +53,22 @@ public interface ExecManager
                  OutputStream error,
                  long timeout )
         throws IOException, ExecException /*TimeoutException*/;
+
+    /**
+     * Execute a process and wait for it to finish before
+     * returning. Note that this version of execute() does not allow you
+     * to specify input.
+     *
+     * @param  execMetaData the metaData for native command to execute
+     * @param  handler the handler to which line-orientated output of
+     *         process is directed for standard output and standard error
+     * @param  timeout the maximum duration in milliseconds that a process
+     *         can execute. The value must be positive or zero. If it is zero
+     *         then the process will not timeout. If the process times out it
+     *         will be forcibly shutdown and a TimeoutException thrown
+     */
+    int execute( ExecMetaData execMetaData,
+                 ExecOutputHandler handler,
+                 long timeout )
+        throws IOException, ExecException /*TimeoutException*/;
 }
