@@ -30,19 +30,25 @@ import org.apache.tools.ant.Project;
  * whether they currently exist.  By contrast, FileSet operates as a
  * filter, only returning the name of a matched file if it currently
  * exists in the file system.
- *
- * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
- * @version $Revision$ $Date$
  */
 public class FileList extends DataType {
 
     private Vector filenames = new Vector();
     private File dir;
 
+    /**
+     * The default constructor.
+     *
+     */
     public FileList() {
         super();
     }
 
+    /**
+     * A copy constructor.
+     *
+     * @param filelist a <code>FileList</code> value
+     */
     protected FileList(FileList filelist) {
         this.dir       = filelist.dir;
         this.filenames = filelist.filenames;
@@ -55,6 +61,8 @@ public class FileList extends DataType {
      *
      * <p>You must not set another attribute or nest elements inside
      * this element if you make it a reference.</p>
+     * @param r the reference to another filelist.
+     * @exception BuildException if an error occurs.
      */
     public void setRefid(Reference r) throws BuildException {
         if ((dir != null) || (filenames.size() != 0)) {
@@ -63,6 +71,12 @@ public class FileList extends DataType {
         super.setRefid(r);
     }
 
+    /**
+     * Set the dir attribute.
+     *
+     * @param dir the directory this filelist is relative to.
+     * @exception BuildException if an error occurs
+     */
     public void setDir(File dir) throws BuildException {
         if (isReference()) {
             throw tooManyAttributes();
@@ -70,6 +84,10 @@ public class FileList extends DataType {
         this.dir = dir;
     }
 
+    /**
+     * @param p the current project
+     * @return the directory attribute
+     */
     public File getDir(Project p) {
         if (isReference()) {
             return getRef(p).getDir(p);
@@ -77,12 +95,19 @@ public class FileList extends DataType {
         return dir;
     }
 
+    /**
+     * Set the filenames attribute.
+     *
+     * @param filenames a string contains filenames, separated by , or
+     *        by whitespace.
+     */
     public void setFiles(String filenames) {
         if (isReference()) {
             throw tooManyAttributes();
         }
         if (filenames != null && filenames.length() > 0) {
-            StringTokenizer tok = new StringTokenizer(filenames, ", \t\n\r\f", false);
+            StringTokenizer tok = new StringTokenizer(
+                filenames, ", \t\n\r\f", false);
             while (tok.hasMoreTokens()) {
                this.filenames.addElement(tok.nextToken());
             }
@@ -91,6 +116,8 @@ public class FileList extends DataType {
 
     /**
      * Returns the list of files represented by this FileList.
+     * @param p the current project
+     * @return the list of files represented by this FileList.
      */
     public String[] getFiles(Project p) {
         if (isReference()) {
@@ -113,6 +140,8 @@ public class FileList extends DataType {
     /**
      * Performs the check for circular references and returns the
      * referenced FileList.
+     * @param p the current project
+     * @return the FileList represented by a referenced filelist.
      */
     protected FileList getRef(Project p) {
         if (!isChecked()) {
@@ -130,4 +159,4 @@ public class FileList extends DataType {
         }
     }
 
-} //-- FileList.java
+}
