@@ -166,7 +166,7 @@ public class Ant extends Task {
 
     private void initializeProject() {
         Vector listeners = project.getBuildListeners();
-        final int count = properties.size();
+        final int count = listeners.size();
         for (int i = 0; i < count; i++) {
             newProject.addBuildListener((BuildListener)listeners.elementAt(i));
         }
