@@ -181,6 +181,16 @@ public class Javac extends MatchingTask {
     }
 
     /**
+     * Recreate src
+     *
+     * @return a nested src element.
+     */
+    protected Path recreateSrc() {
+        src = null;
+        return createSrc();
+    }
+
+    /**
      * Set the source dirs to find the source Java files.
      */
     public void setSrcdir(Path srcDir) {
