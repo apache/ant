@@ -87,6 +87,9 @@ Fixed bugs:
 * <java> swallowed the stack trace of exceptions thrown by the
   executed program if run in the same VM.
 
+* -projecthelp swallowed (configuration) errors silently.
+  Bugzilla report 27732.
+
 Other changes:
 --------------
 

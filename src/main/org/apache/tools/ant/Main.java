@@ -685,6 +685,8 @@ public class Main implements AntMain {
         } finally {
             if (!projectHelp) {
                 project.fireBuildFinished(error);
+            } else if (error != null) {
+                project.log(error.toString(), Project.MSG_ERR);
             }
         }
     }
