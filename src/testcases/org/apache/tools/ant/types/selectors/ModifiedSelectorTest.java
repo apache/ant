@@ -684,7 +684,8 @@ public class ModifiedSelectorTest extends BaseSelectorTest {
             File dir = getProject().getBaseDir();
             File file = new File(dir, propfile);
             try {
-                java.io.FileWriter out = new java.io.FileWriter(file, true);
+                java.io.FileWriter out = 
+                    new java.io.FileWriter(file.getAbsolutePath(), true);
                 out.write(line);
                 out.write(System.getProperty("line.separator"));
                 out.flush();
