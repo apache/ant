@@ -294,6 +294,13 @@
         <code>java.lang.InstantiationException: org.apache.tools.ant.Main</code>
       
       </a></li>
+                <li><a href="#mangled-manifest">
+  
+        Whenever I use the Ant jar or manifest related tasks, long lines in
+        my manifest are wrapped at 70 characters and the resulting jar does 
+        not work in my application server. Why does Ant do this?
+      
+      </a></li>
             </ul>
                 <h4 class="toc">Ant and IDEs/Editors</h4>
         <ul>
@@ -1162,6 +1169,33 @@ shell-prompt&gt; m4 foo.m4 &gt; foo
                         <p>
           One can check if this is the case by doing
           <code>ant --noconfig -version</code>.
+        </p>
+                    <p class="faq">
+      <a name="mangled-manifest"></a>
+      
+        Whenever I use the Ant jar or manifest related tasks, long lines in
+        my manifest are wrapped at 70 characters and the resulting jar does 
+        not work in my application server. Why does Ant do this?
+      
+    </p>
+                  <p>
+          Ant implements the Java 
+          <a href="http://java.sun.com/j2se/1.4.2/docs/guide/jar/jar.html">Jar 
+          file specification</a>. Please refer to the notes section where it 
+          discusses the maximum allowable length of a line and the concept of
+          continuation characters.
+        </p>
+                        <p>
+          If a jar file produced by Ant does not work in your appserver, and 
+          that failure is due to the wrapped manifest, then you need
+          to consult your appserver provider, as it is a bug in their 
+          appserver. Far more likely, however, is a problem in your 
+          specification of your classpath. It is not Ant's wrapping of your
+          classpath that is the problem.
+        </p>
+                        <p>
+          Do not raise a bug about this issue until you have checked to ensure 
+          that the problem is not due to your classpath specification.  
         </p>
                                 <p class="faq">
       <a name="integration"></a>
