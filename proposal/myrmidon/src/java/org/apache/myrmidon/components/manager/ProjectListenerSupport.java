@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
+package org.apache.myrmidon.components.manager;
 
 import org.apache.myrmidon.listeners.ProjectListener;
 
@@ -51,7 +51,7 @@ public class ProjectListenerSupport
         }
 
         if( -1 == found ) return;
-        
+
         final ProjectListener[] listeners = new ProjectListener[ m_listeners.length - 1 ];
         System.arraycopy( m_listeners, 0, listeners, 0, found );
 

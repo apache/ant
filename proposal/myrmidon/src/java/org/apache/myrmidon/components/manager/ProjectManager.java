@@ -5,22 +5,21 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
+package org.apache.myrmidon.components.manager;
 
 import org.apache.ant.AntException;
 import org.apache.avalon.framework.component.Component;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.myrmidon.listeners.ProjectListener;
 import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
- * This is the interface between ProjectEngine and rest of the system.
- * This is the interface that tasks/frontends must use to interact with
- * project execution.
+ * This is the abstraction through which Projects are executed.
+ * TODO: Think of better name
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public interface ProjectEngine
+public interface ProjectManager
     extends Component
 {
     /**

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.project;
+package org.apache.myrmidon.components.manager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,18 +24,18 @@ import org.apache.log.Logger;
 import org.apache.myrmidon.api.DefaultTaskContext;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.components.executor.Executor;
-import org.apache.myrmidon.listeners.ProjectListener;
 import org.apache.myrmidon.components.model.Project;
 import org.apache.myrmidon.components.model.Target;
+import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
  * This is the default implementation of ProjectEngine.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public class DefaultProjectEngine
+public class DefaultProjectManager
     extends AbstractLoggable
-    implements ProjectEngine, Composable
+    implements ProjectManager, Composable
 {
     private Executor                 m_executor;
     private ProjectListenerSupport   m_listenerSupport = new ProjectListenerSupport();

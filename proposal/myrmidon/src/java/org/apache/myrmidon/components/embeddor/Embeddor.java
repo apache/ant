@@ -7,13 +7,13 @@
  */
 package org.apache.myrmidon.components.embeddor;
 
-import org.apache.ant.project.ProjectEngine;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.activity.Startable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
+import org.apache.myrmidon.components.manager.ProjectManager;
 
 /**
  * Interface through which you embed Myrmidon into applications.
@@ -37,5 +37,5 @@ public interface Embeddor
      *
      * @return the ProjectBuilder
      */
-    ProjectEngine getProjectEngine();
+    ProjectManager getProjectManager();
 }

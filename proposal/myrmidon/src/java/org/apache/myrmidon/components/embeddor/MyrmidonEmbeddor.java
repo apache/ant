@@ -10,7 +10,6 @@ package org.apache.myrmidon.components.embeddor;
 import java.io.File;
 import org.apache.ant.AntException;
 import org.apache.ant.convert.engine.ConverterEngine;
-import org.apache.ant.project.ProjectEngine;
 import org.apache.ant.tasklet.engine.DataTypeEngine;
 import org.apache.ant.tasklet.engine.TskDeployer;
 import org.apache.avalon.excalibur.io.FileUtil;
@@ -29,6 +28,7 @@ import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.executor.Executor;
+import org.apache.myrmidon.components.manager.ProjectManager;
 
 /**
  * Default implementation of Ant runtime.
@@ -42,7 +42,7 @@ public class MyrmidonEmbeddor
     private ConverterEngine          m_converterEngine;
     private DataTypeEngine           m_dataTypeEngine;
     private Executor                 m_executor;
-    private ProjectEngine            m_projectEngine;
+    private ProjectManager            m_projectEngine;
 
     private ProjectBuilder           m_builder;
     private TskDeployer              m_deployer;
@@ -87,7 +87,7 @@ public class MyrmidonEmbeddor
      *
      * @return the ProjectBuilder
      */
-    public ProjectEngine getProjectEngine()
+    public ProjectManager getProjectManager()
     {
         return m_projectEngine;
     }
@@ -174,7 +174,7 @@ public class MyrmidonEmbeddor
         defaults.setParameter( "ant.comp.task",
                                "org.apache.myrmidon.components.executor.DefaultExecutor" );
         defaults.setParameter( "ant.comp.project",
-                               "org.apache.ant.project.DefaultProjectEngine" );
+                               "org.apache.myrmidon.components.manager.DefaultProjectManager" );
         defaults.setParameter( "ant.comp.builder",
                                "org.apache.myrmidon.components.builder.DefaultProjectBuilder" );
         defaults.setParameter( "ant.comp.deployer",
@@ -194,7 +194,7 @@ public class MyrmidonEmbeddor
     {
         final DefaultComponentManager componentManager = new DefaultComponentManager();
 
-        componentManager.put( "org.apache.ant.project.ProjectEngine", m_projectEngine );
+        componentManager.put( "org.apache.myrmidon.components.manager.ProjectManager", m_projectEngine );
         componentManager.put( "org.apache.ant.convert.engine.ConverterEngine",
                               m_converterEngine );
         componentManager.put( "org.apache.ant.convert.Converter", m_converterEngine );
@@ -229,7 +229,7 @@ public class MyrmidonEmbeddor
         m_executor = (Executor)createComponent( component, Executor.class );
 
         component = getParameter( "ant.comp.project" );
-        m_projectEngine = (ProjectEngine)createComponent( component, ProjectEngine.class );
+        m_projectEngine = (ProjectManager)createComponent( component, ProjectManager.class );
 
         component = getParameter( "ant.comp.builder" );
         m_builder =(ProjectBuilder)createComponent( component, ProjectBuilder.class );
