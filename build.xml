@@ -588,6 +588,10 @@
     <available property="jsch.present"
                classname="com.jcraft.jsch.Session"
                classpathref="classpath"/>
+
+    <condition property="running.in.gump">
+      <isset property="gump.merge"/>
+    </condition>
   </target>
 
 
@@ -1599,6 +1603,10 @@
 
           <!-- test needs special setup -->
           <exclude name="${optional.package}/ssh/ScpTest.java"/>
+
+          <!-- test fails in Gump -->
+          <exclude name="${ant.package}/util/ClasspathUtilsTest.java"
+                   if="running.in.gump"/>
         </fileset>
       </batchtest>
     </junit>
