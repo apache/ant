@@ -63,7 +63,7 @@ package org.apache.tools.ant;
 public class BuildException extends RuntimeException {
 
     /** Exception that might have caused this one. */
-    private Exception cause;
+    private Throwable cause;
 
     /** Location in the build file where the exception occured */
     private Location location = Location.UNKNOWN_LOCATION;
@@ -89,10 +89,10 @@ public class BuildException extends RuntimeException {
      * Constructs an exception with the given message and exception as
      * a root cause.
      * @param msg Description of or information about the exception.
-     * @param cause Exception that might have cause this one.
+     * @param cause Throwable that might have cause this one.
      */
 
-    public BuildException(String msg, Exception cause) {
+    public BuildException(String msg, Throwable cause) {
 	super(msg);
 	this.cause = cause;
     }
@@ -105,7 +105,7 @@ public class BuildException extends RuntimeException {
      * @param location Location in the project file where the error occured.
      */
 
-    public BuildException(String msg, Exception cause, Location location) {
+    public BuildException(String msg, Throwable cause, Location location) {
         this(msg, cause);
 	this.location = location;
     }
@@ -115,7 +115,7 @@ public class BuildException extends RuntimeException {
      * @param cause Exception that might have caused this one.
      */
 
-    public BuildException(Exception cause) {
+    public BuildException(Throwable cause) {
 	super(cause.toString());
 	this.cause = cause;
     }
@@ -135,7 +135,7 @@ public class BuildException extends RuntimeException {
     /**
      * Returns the nested exception.
      */
-    public Exception getException() {
+    public Throwable getException() {
         return cause;
     }
 

@@ -222,12 +222,17 @@ public class Main {
         try {
             try {
                 Class.forName("javax.xml.parsers.SAXParserFactory");
+                ProjectHelper.configureProject(project, buildFile);
+            } catch (NoClassDefFoundError ncdfe) {
+                throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", ncdfe);
             } catch (ClassNotFoundException cnfe) {
-                throw new BuildException(cnfe);
+                throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", cnfe);
+            } catch (NullPointerException npe) {
+                throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", npe);
             }
-            ProjectHelper.configureProject(project, buildFile);
         } catch (BuildException be) {
             System.out.println("\nBUILD CONFIG ERROR\n");
+            System.out.println(be.getMessage());
             if (be.getException() == null) {
                 System.out.println(be.toString());
             } else {
