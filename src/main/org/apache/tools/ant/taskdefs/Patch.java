@@ -107,7 +107,7 @@ public class Patch extends Exec {
      * <p>patch's <i>-p</i> option.
      */
     public void setStrip(int num) throws BuildException {
-        if (strip < 0) {
+        if (num < 0) {
             throw new BuildException("strip has to be >= 0", location);
         }
         strip = num;
