@@ -16,6 +16,7 @@ set LOCALCLASSPATH=lib\optional\junit.jar;build\classes
 for %%i in (lib\*.jar) do call src\script\lcp.bat %%i
 
 if "%JAVA_HOME%" == "" goto noJavaHome
+set _JAVACMD=%JAVACMD%
 if "%_JAVACMD%" == "" set _JAVACMD=%JAVA_HOME%\bin\java
 if exist "%JAVA_HOME%\lib\tools.jar" call src\script\lcp.bat "%JAVA_HOME%\lib\tools.jar"
 if exist "%JAVA_HOME%\lib\classes.zip" call src\script\lcp.bat" "%JAVA_HOME%\lib\classes.zip"
@@ -39,3 +40,4 @@ set LOCALCLASSPATH=
 
 set CLASSPATH=
 set NEW_ANT_HOME=
+set _JAVACMD=
