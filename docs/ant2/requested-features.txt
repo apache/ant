@@ -124,8 +124,8 @@ decide between several possible options.
   corollary of "fully interpreted at runtime"?
 
 * allow facilities to build projects from multiple sources. ie CSS+xml
-  or XSLT+ XML or database or from inside jars or normal build.xmls
-  etc.
+  or XSLT+ XML or Velocity+text or database or from inside jars or normal 
+  build.xmls etc.
 
 * move to a system that allows docs to be generated - doc snippets
   should be included with the tasks they document.
@@ -196,6 +196,31 @@ decide between several possible options.
 V. Things we probably don't agree on. 
 ======================================================================
 
+ * Allow mappers to be genericised so that particular features can be modified 
+ during mapping. Something similar to 
+ 
+ <fileset ...>
+   <include name="*.sh"/>
+   <mapper type="unix-permissions">
+     <param name="user" value="ant"/>
+     <param name="group" value="ant"/>
+     <param name="mod" value="755"/>
+   </mapper>
+ </fileset>
+
+ * Allow include/exclude tow work with multiple characteristerics of a file.
+ ie include into fileset if file is readable, modified after 29th of Feb,
+ has a name that matches patter "**/*.java" and the property "foo.present"
+ is set. Something similar to 
+ 
+ <include>
+   <item-filter type="name" value="**/*.java"/>
+   <item-filter type="permission" value="r"/>
+   <item-filter type="modify-time" 
+                operation="greater-than" 
+                value="29th Feb 2003"/>
+ </include>
+
 * provide datatypes through property tag and remove need for separate free
   standing entities. ie
   <property name="foo">
@@ -208,6 +233,13 @@ V. Things we probably don't agree on.
   Installshield type app, Peter's cron-server and other task based
   operations. 
 
+ * provide support for non-hardwired (ie loadable) low-level 
+ components (mappers/itemset-filters/converters). Allow them to be 
+ loaded in either global or a new classloader.
+
+ * force resolution of classes on loading to identify classloader 
+ issues early. (At least in global classloader).
+
 * create the concept of workspace so that projects can be built in a
   DAG and thus enable projects like catalina/tomcat to have an easy
   build process. It also helps CJAN to a lesser degree and would
@@ -215,11 +247,22 @@ V. Things we probably don't agree on.
 
 * provide support for CJAN
 
-  In what way?
+  Q: In what way?
+  A: Probably by supplying a set of tasks that download versioned 
+  binaries and their associated dependencies, caching the downloads
+  in a known place and updating binaries when required. ("When required"
+  being indicated by a change in property values).
 
 * provide support for non-hardwired (ie loadable) converters.
 
-  What is a converter? Is this an implementation detail?
+  Q: What is a converter? Is this an implementation detail?
+  A: Not an implementation detail but a way to extend the engine
+  to convert more data types. Currently we have fixed set that is 
+  expanded on occasion (ie includes primitive types + File). Instead
+  of spreading converting code through out tasks it can be centralized 
+  into one component and used by engine. This becomes particularly 
+  relevent if you build ant based testing systems and use ant in certain
+  web-related areas.
 
 * generate docs by anakia/XSLT
 
@@ -230,7 +273,9 @@ V. Things we probably don't agree on.
 
   Possible solutions include a special method like getProperties(), an
   external describing file shipping with the task class or special
-  javadoc comments parsed by a custom doclet.
+  javadoc comments parsed by a custom doclet. Whatever the method it
+  should not impose any cost on runtime as it is only used a small 
+  proportion of the time (design-time).  
 
 * allow build file writers to modify logging (verbosity for example)
   on a target by target or task by task basis.
@@ -250,12 +295,14 @@ V. Things we probably don't agree on.
 
   What's this?
 
-* Target inheritance
-
-  What's this?
+* Target inheritance. ie The ability to include targets from other 
+  project files overidining them as necessary (so cascading project
+  files).
 
 * Add an attribute to <ant> to feed back the environment (properties and
   taskdefs) from the child build to the parent.
+
+* Ability to manage scopping of properties in general (ie target/project/workspace).
 
 * it should be possible to provide general /(template?)/ build
   specifications, and to declare for a concrete item that it should be
@@ -274,3 +321,6 @@ V. Things we probably don't agree on.
 * Let Ant ignore - but warn - if unknown XML elements or attributes
   occur in a build file.
 
+* Allow ant to farm out attributes and elements that are NOT in the ant 
+  namespace to other components. ie hand doc: elements to the Documentation
+  component or log: attributes to Log policy component etc
