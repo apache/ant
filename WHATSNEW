@@ -49,6 +49,7 @@ Fixed bugs:
 
 Other changes:
 --------------
+* <setproxy> lets you set the username and password for proxies that want authentication
 
 * <loadproperties> has a new encoding attribute.
 
