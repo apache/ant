@@ -28,6 +28,6 @@ public interface Executor
      * @param task the configruation data for task
      * @exception TaskException if an error occurs
      */
-    void execute( Configuration task, TaskContext context )
+    void execute( Configuration task, ExecutionFrame frame )
         throws TaskException;
 }
