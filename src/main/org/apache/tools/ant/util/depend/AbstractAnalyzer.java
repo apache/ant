@@ -236,7 +236,7 @@ public abstract class AbstractAnalyzer implements DependencyAnalyzer {
      * dependencies and the also list of root classes.
      */
     public void reset() {
-        rootClasses.clear();
+        rootClasses.removeAllElements();
         determined = false;
         fileDependencies = new Vector();
         classDependencies = new Vector();
