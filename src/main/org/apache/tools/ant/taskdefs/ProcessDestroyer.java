@@ -66,8 +66,7 @@ import java.util.Vector;
  * @author <a href="mailto:jallers@advancedreality.com">Jim Allers</a>
  * @since Ant 1.5
  */
-class ProcessDestroyer
-    implements Runnable {
+class ProcessDestroyer implements Runnable {
 
     private Vector processes = new Vector();
     // methods to register and unregister shutdown hooks
@@ -79,19 +78,19 @@ class ProcessDestroyer
     // shutdown hook
     private boolean added = false;
 
-    private class ProcessDestroyerImpl extends Thread{
+    private class ProcessDestroyerImpl extends Thread {
         private boolean shouldDestroy = true;
 
-        public ProcessDestroyerImpl(){
+        public ProcessDestroyerImpl() {
             super("ProcessDestroyer Shutdown Hook");
         }
-        public void run(){
-            if(shouldDestroy){
+        public void run() {
+            if (shouldDestroy) {
                 ProcessDestroyer.this.run();
             }
         }
 
-        public void setShouldDestroy(boolean shouldDestroy){
+        public void setShouldDestroy(boolean shouldDestroy) {
             this.shouldDestroy = shouldDestroy;
         }
     }
@@ -126,12 +125,12 @@ class ProcessDestroyer
      * Registers this <code>ProcessDestroyer</code> as a shutdown hook,
      * uses reflection to ensure pre-JDK 1.3 compatibility.
      */
-    private void addShutdownHook(){
-        if(addShutdownHookMethod != null){
+    private void addShutdownHook() {
+        if (addShutdownHookMethod != null) {
             destroyProcessThread = new ProcessDestroyerImpl();
             Object[] args = {destroyProcessThread};
             try {
-                addShutdownHookMethod.invoke(Runtime.getRuntime(),args);
+                addShutdownHookMethod.invoke(Runtime.getRuntime(), args);
                 added = true;
             } catch (IllegalAccessException e) {
                 // it just won't be added as a shutdown hook... :(
@@ -142,18 +141,18 @@ class ProcessDestroyer
     }
 
     /**
-     * Registers this <code>ProcessDestroyer</code> as a shutdown hook,
+     * Removes this <code>ProcessDestroyer</code> as a shutdown hook,
      * uses reflection to ensure pre-JDK 1.3 compatibility
      */
-    private void removeShutdownHook(){
-        if(removeShutdownHookMethod != null && destroyProcessThread != null){
+    private void removeShutdownHook() {
+        if (removeShutdownHookMethod != null && destroyProcessThread != null) {
             Object[] args = {destroyProcessThread};
-            try{
+            try {
                 Boolean removed =
                     (Boolean) removeShutdownHookMethod.invoke(
                         Runtime.getRuntime(),
                         args);
-                if(!removed.booleanValue()){
+                if (!removed.booleanValue()) {
                     System.err.println("Could not remove shutdown hook");
                 }
                 // start the hook thread, a unstarted thread may not be
@@ -161,16 +160,16 @@ class ProcessDestroyer
                 destroyProcessThread.setShouldDestroy(false);
                 destroyProcessThread.start();
                 // this should return quickly, since Process.destroy()
-                try{
+                try {
                     destroyProcessThread.join(20000);
-                }catch(InterruptedException ie){
+                } catch (InterruptedException ie) {
                     // the thread didn't die in time
                     // it should not kill any processes unexpectedly
                 }
                 destroyProcessThread = null;
                 added = false;
-            }catch(IllegalAccessException e){
-            }catch(InvocationTargetException e){
+            } catch (IllegalAccessException e) {
+            } catch (InvocationTargetException e) {
             }
         }
     }
@@ -180,7 +179,7 @@ class ProcessDestroyer
      * as shutdown hook
      * @return true if this is currently added as shutdown hook
      */
-    public boolean isAddedAsShutdownHook(){
+    public boolean isAddedAsShutdownHook() {
         return added;
     }
 
@@ -193,9 +192,9 @@ class ProcessDestroyer
      *          successfully added
      */
     public boolean add(Process process) {
-        synchronized(processes){
+        synchronized (processes) {
             // if this list is empty, register the shutdown hook
-            if(processes.size() == 0){
+            if (processes.size() == 0) {
                 addShutdownHook();
             }
             processes.addElement(process);
@@ -212,9 +211,9 @@ class ProcessDestroyer
      *          successfully removed
      */
     public boolean remove(Process process) {
-        synchronized(processes){
+        synchronized (processes) {
             boolean processRemoved = processes.removeElement(process);
-            if(processes.size() == 0){
+            if (processes.size() == 0) {
                 removeShutdownHook();
             }
             return processRemoved;
