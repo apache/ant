@@ -21,7 +21,6 @@ import org.apache.tools.ant.types.PathUtil;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
-
 public class ExecuteJava
 {
     private Commandline m_javaCommand;
