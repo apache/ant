@@ -894,7 +894,8 @@ public final class IntrospectionHelper implements BuildListener {
                     public void set(Project p, Object parent, String value)
                         throws InvocationTargetException, IllegalAccessException {
                         m.invoke(parent,
-                                 new Boolean[] {new Boolean(Project.toBoolean(value))});
+                                 new Boolean[] {
+                                     Boolean.valueOf(Project.toBoolean(value))});
                     }
 
                 };
