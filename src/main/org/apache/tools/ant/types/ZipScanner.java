@@ -249,11 +249,19 @@ public class ZipScanner extends DirectoryScanner {
      * @since Ant 1.5.2
      */
     public Resource getResource(String name) {
+        if (srcFile == null) {
+            return super.getResource(name);
+        } else if (name.equals("")) {
+            // special case in ZIPs, we do not want this thing included
+            return new Resource("", true, Long.MAX_VALUE, true);
+        }
+        
         // first check if the archive needs to be scanned again
         scanme();
         for (int counter = 0; counter < myentries.size(); counter++) {
             Resource myresource=(Resource)myentries.elementAt(counter);
-            if (myresource.getName().equals(name)) {
+            if (myresource.getName().equals(name)
+                || myresource.getName().equals(name + "/")) {
                 return myresource;
             }
         }
