@@ -523,6 +523,10 @@ Legal:
         <ant antfile="antlib.xml">
             <property name="antlib.name" value="java"/>
         </ant>
+
+        <ant antfile="antlib.xml">
+            <property name="antlib.name" value="build"/>
+        </ant>
     </target>
 
     <!-- Compiles and runs the unit tests -->
