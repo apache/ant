@@ -17,6 +17,7 @@
   <property name="build.lib" value="${build.dir}/lib"/>
   <property name="build.src" value="${build.dir}/src"/>
   <property name="build.classes" value="${build.dir}/classes"/>
+  <property name="build.dist" value="${build.dir}/dist"/>
 
   <property name="java.dir" value="src/java"/>
   <property name="tests.dir" value="src/testcases"/>
@@ -29,7 +30,6 @@
     <fileset dir="${lib.dir}" includes="**/*.jar"/>
     <fileset dir="${bootstrap.dir}/lib" includes="ant.jar"/>
   </path>
-
 
   <target name="compile"
           description="--> compile the source code">
@@ -44,6 +44,12 @@
     </javac>
   </target>
   
+  <target name="dist"
+          depends="clean,compile"
+          description="--> create a jar">
+    <mkdir dir="${build.dist}"/>
+    <jar destfile="${build.dist}/cc-tasks.jar" basedir="${build.classes}"/>
+  </target>
 
   <target name="clean"
           description="--> cleans up build and dist directories">
