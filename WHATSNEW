@@ -75,6 +75,9 @@ Fixed bugs:
 * The Unix wrapper script failed if you invoked it as a relative
   symlink and ANT_HOME has not been set.  Bugzilla Report 17721.
 
+* <copy> and <move>'s failonerror didn't apply to filesets pointing to
+  non-existant directories.  Bugzilla Report 18414.
+
 Other changes:
 --------------
 * Shipped XML parser is now Xerces 2.4.0
