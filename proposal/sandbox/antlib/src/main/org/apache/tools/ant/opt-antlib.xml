@@ -55,6 +55,7 @@
 <antlib version="1.5" >
   <!-- Declaration of optional tasks -->
 
+  <task name="image" class="org.apache.tools.ant.taskdefs.optional.image.Image"/>
   <task name="script" class="org.apache.tools.ant.taskdefs.optional.Script"/>
   <task name="netrexxc" class="org.apache.tools.ant.taskdefs.optional.NetRexxC"/>
   <task name="renameext" class="org.apache.tools.ant.taskdefs.optional.RenameExtensions"/>
@@ -62,7 +63,14 @@
   <task name="ddcreator" class="org.apache.tools.ant.taskdefs.optional.ejb.DDCreator"/>
   <task name="wlrun" class="org.apache.tools.ant.taskdefs.optional.ejb.WLRun"/>
   <task name="wlstop" class="org.apache.tools.ant.taskdefs.optional.ejb.WLStop"/>
+  <task name="vssadd" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSADD"/>
+  <task name="vsscheckin" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCHECKIN"/>
+  <task name="vsscheckout" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCHECKOUT"/>
+  <task name="vsscp" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCP"/>
+  <task name="vsscreate" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCREATE"/>
   <task name="vssget" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSGET"/>
+  <task name="vsshistory" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSHISTORY"/>
+  <task name="vsslabel" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSLABEL"/>
   <task name="ejbjar" class="org.apache.tools.ant.taskdefs.optional.ejb.EjbJar"/>
   <task name="mparse" class="org.apache.tools.ant.taskdefs.optional.metamata.MParse"/>
   <task name="mmetrics" class="org.apache.tools.ant.taskdefs.optional.metamata.MMetrics"/>
@@ -89,31 +97,42 @@
   <task name="telnet" class="org.apache.tools.ant.taskdefs.optional.net.TelnetTask"/>
   <task name="csc" class="org.apache.tools.ant.taskdefs.optional.dotnet.CSharp"/>
   <task name="ilasm" class="org.apache.tools.ant.taskdefs.optional.dotnet.Ilasm"/>
+  <task name="WsdlToDotnet" class="org.apache.tools.ant.taskdefs.optional.dotnet.WsdlToDotnet"/>
+  <task name="wsdltodotnet" class="org.apache.tools.ant.taskdefs.optional.dotnet.WsdlToDotnet"/>
   <task name="stylebook" class="org.apache.tools.ant.taskdefs.optional.StyleBook"/>
   <task name="test" class="org.apache.tools.ant.taskdefs.optional.Test"/>
   <task name="pvcs" class="org.apache.tools.ant.taskdefs.optional.pvcs.Pvcs"/>
   <task name="p4change" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Change"/>
+  <task name="p4delete" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Delete"/>
   <task name="p4label" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Label"/>
+  <task name="p4labelsync" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Labelsync"/>
   <task name="p4have" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Have"/>
   <task name="p4sync" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Sync"/>
   <task name="p4edit" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Edit"/>
+  <task name="p4integrate" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Integrate"/>
+  <task name="p4resolve" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Resolve"/>
   <task name="p4submit" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Submit"/>
   <task name="p4counter" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Counter"/>
+  <task name="p4revert" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Revert"/>
+  <task name="p4reopen" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Reopen"/>
+  <task name="p4fstat" class="org.apache.tools.ant.taskdefs.optional.perforce.P4Fstat"/>
   <task name="javah" class="org.apache.tools.ant.taskdefs.optional.Javah"/>
   <task name="ccupdate" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCUpdate"/>
   <task name="cccheckout" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCCheckout"/>
   <task name="cccheckin" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCCheckin"/>
   <task name="ccuncheckout" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCUnCheckout"/>
+  <task name="ccmklbtype" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCMklbtype"/>
+  <task name="ccmklabel" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCMklabel"/>
+  <task name="ccrmtype" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCRmtype"/>
+  <task name="cclock" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCLock"/>
+  <task name="ccunlock" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCUnlock"/>
+  <task name="ccmkbl" class="org.apache.tools.ant.taskdefs.optional.clearcase.CCMkbl"/>
   <task name="sound" class="org.apache.tools.ant.taskdefs.optional.sound.SoundTask"/>
   <task name="junitreport" class="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator"/>
-  <task name="vsslabel" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSLABEL"/>
-  <task name="vsshistory" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSHISTORY"/>
   <task name="blgenclient" class="org.apache.tools.ant.taskdefs.optional.ejb.BorlandGenerateClient"/>
   <task name="rpm" class="org.apache.tools.ant.taskdefs.optional.Rpm"/>
   <task name="xmlvalidate" class="org.apache.tools.ant.taskdefs.optional.XMLValidateTask"/>
-  <task name="vsscheckin" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCHECKIN"/>
-  <task name="vsscheckout" class="org.apache.tools.ant.taskdefs.optional.vss.MSVSSCHECKOUT"/>
-  <task name="iplanet" class="ejbc=org.apache.tools.ant.taskdefs.optional.ejb.IPlanetEjbcTask"/>
+  <task name="iplanet-ejbc" class="org.apache.tools.ant.taskdefs.optional.ejb.IPlanetEjbcTask"/>
   <task name="jdepend" class="org.apache.tools.ant.taskdefs.optional.jdepend.JDependTask"/>
   <task name="mimemail" class="org.apache.tools.ant.taskdefs.optional.net.MimeMail"/>
   <task name="ccmcheckin" class="org.apache.tools.ant.taskdefs.optional.ccm.CCMCheckin"/>
@@ -133,12 +152,26 @@
   <task name="soscheckout" class="org.apache.tools.ant.taskdefs.optional.sos.SOSCheckout"/>
   <task name="soslabel" class="org.apache.tools.ant.taskdefs.optional.sos.SOSLabel"/>
   <task name="echoproperties" class="org.apache.tools.ant.taskdefs.optional.EchoProperties"/>
+  <task name="splash" class="org.apache.tools.ant.taskdefs.optional.splash.SplashTask"/>
+  <task name="serverdeploy" class="org.apache.tools.ant.taskdefs.optional.j2ee.ServerDeploy"/>
+  <task name="jarlib-display" class="org.apache.tools.ant.taskdefs.optional.extension.JarLibDisplayTask"/>
+  <task name="jarlib-manifest" class="org.apache.tools.ant.taskdefs.optional.extension.JarLibManifestTask"/>
+  <task name="jarlib-available" class="org.apache.tools.ant.taskdefs.optional.extension.JarLibAvailableTask"/>
+  <task name="jarlib-resolve" class="org.apache.tools.ant.taskdefs.optional.extension.JarLibResolveTask"/>
+  <task name="setproxy" class="org.apache.tools.ant.taskdefs.optional.net.SetProxy"/>
+  <task name="vbc" class="org.apache.tools.ant.taskdefs.optional.dotnet.VisualBasicCompile"/>
+  <task name="symlink" class="org.apache.tools.ant.taskdefs.optional.unix.Symlink"/>
+  <task name="chgrp" class="org.apache.tools.ant.taskdefs.optional.unix.Chgrp"/>
+  <task name="chown" class="org.apache.tools.ant.taskdefs.optional.unix.Chown"/>
+  <task name="attrib" class="org.apache.tools.ant.taskdefs.optional.windows.Attrib"/>
+  <task name="scp" class="org.apache.tools.ant.taskdefs.optional.ssh.Scp"/>
+  <task name="sshexec" class="org.apache.tools.ant.taskdefs.optional.ssh.SSHExec"/>
+  <task name="jsharpc" class="org.apache.tools.ant.taskdefs.optional.dotnet.JSharp"/>
 
-  <!-- I have no idea why this task is here -->
-
-  <task name="get" class="org.apache.tools.ant.taskdefs.Get"/>
+  <!-- datatypes -->
 
   <data-type name="classfileset" class="org.apache.tools.ant.types.optional.depend.ClassfileSet"/>
+  <data-type name="scriptfilter" class="org.apache.tools.ant.types.optional.ScriptFilter"/>
 
   <!-- deprecated ant tasks (kept for back compatibility) -->
 

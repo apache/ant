@@ -62,6 +62,7 @@
   <task name="jar" class="org.apache.tools.ant.taskdefs.Jar"/>
   <task name="rmic" class="org.apache.tools.ant.taskdefs.Rmic"/>
   <task name="cvs" class="org.apache.tools.ant.taskdefs.Cvs"/>
+  <task name="get" class="org.apache.tools.ant.taskdefs.Get"/>
   <task name="unzip" class="org.apache.tools.ant.taskdefs.Expand"/>
   <task name="unjar" class="org.apache.tools.ant.taskdefs.Expand"/>
   <task name="unwar" class="org.apache.tools.ant.taskdefs.Expand"/>
@@ -74,6 +75,7 @@
   <task name="java" class="org.apache.tools.ant.taskdefs.Java"/>
   <task name="tstamp" class="org.apache.tools.ant.taskdefs.Tstamp"/>
   <task name="property" class="org.apache.tools.ant.taskdefs.Property"/>
+  <task name="xmlproperty" class="org.apache.tools.ant.taskdefs.XmlProperty"/>
   <task name="taskdef" class="org.apache.tools.ant.taskdefs.Taskdef"/>
   <task name="ant" class="org.apache.tools.ant.taskdefs.Ant"/>
   <task name="exec" class="org.apache.tools.ant.taskdefs.ExecTask"/>
@@ -84,6 +86,7 @@
   <task name="fixcrlf" class="org.apache.tools.ant.taskdefs.FixCRLF"/>
   <task name="patch" class="org.apache.tools.ant.taskdefs.Patch"/>
   <task name="style" class="org.apache.tools.ant.taskdefs.XSLTProcess"/>
+  <task name="xslt" class="org.apache.tools.ant.taskdefs.XSLTProcess"/>
   <task name="touch" class="org.apache.tools.ant.taskdefs.Touch"/>
   <task name="signjar" class="org.apache.tools.ant.taskdefs.SignJar"/>
   <task name="genkey" class="org.apache.tools.ant.taskdefs.GenerateKey"/>
@@ -112,34 +115,47 @@
   <task name="waitfor" class="org.apache.tools.ant.taskdefs.WaitFor"/>
   <task name="input" class="org.apache.tools.ant.taskdefs.Input"/>
   <task name="loadfile" class="org.apache.tools.ant.taskdefs.LoadFile"/>
-  <task name="manifest" class="org.apache.tools.ant.taskdefs.Manifest"/>
+  <task name="manifest" class="org.apache.tools.ant.taskdefs.ManifestTask"/>
+  <task name="loadproperties" class="org.apache.tools.ant.taskdefs.LoadProperties"/>
+  <task name="basename" class="org.apache.tools.ant.taskdefs.Basename"/>
+  <task name="dirname" class="org.apache.tools.ant.taskdefs.Dirname"/>
+  <task name="cvschangelog" class="org.apache.tools.ant.taskdefs.cvslib.ChangeLogTask"/>
+  <task name="buildnumber" class="org.apache.tools.ant.taskdefs.BuildNumber"/>
+  <task name="concat" class="org.apache.tools.ant.taskdefs.Concat"/>
+  <task name="cvstagdiff" class="org.apache.tools.ant.taskdefs.cvslib.CvsTagDiff"/>
+  <task name="tempfile" class="org.apache.tools.ant.taskdefs.TempFile"/>
+  <task name="classloader" class="org.apache.tools.ant.taskdefs.Classloader"/>
+  <task name="import" class="org.apache.tools.ant.taskdefs.ImportTask"/>
+  <task name="whichresource" class="org.apache.tools.ant.taskdefs.WhichResource"/>
+  <task name="subant" class="org.apache.tools.ant.taskdefs.SubAnt"/>
+  <task name="sync" class="org.apache.tools.ant.taskdefs.Sync"/>
   <task name="antjar" class="org.apache.tools.ant.taskdefs.Antjar"/>
   <task name="antlib" class="org.apache.tools.ant.taskdefs.Antlib"/>
 
-  <data-type name="path" class="org.apache.tools.ant.types.Path"/>
-  <data-type name="fileset" class="org.apache.tools.ant.types.FileSet"/>
-  <data-type name="filelist" class="org.apache.tools.ant.types.FileList"/>
-  <data-type name="patternset" class="org.apache.tools.ant.types.PatternSet"/>
-  <data-type name="mapper" class="org.apache.tools.ant.types.Mapper"/>
-  <data-type name="filterset" class="org.apache.tools.ant.types.FilterSet"/>
-  <data-type name="filterchain" class="org.apache.tools.ant.types.FilterChain" />
-  <data-type name="filterreader" class="org.apache.tools.ant.types.AntFilterReader" />
-  <data-type name="description" class="org.apache.tools.ant.types.Description"/>
-  <data-type name="substitution" class="org.apache.tools.ant.types.Substitution"/>
-  <data-type name="regexp" class="org.apache.tools.ant.types.RegularExpression"/>
-  <data-type name="selector" class="org.apache.tools.ant.types.selectors.SelectSelector"/>
-  <data-type name="zipfileset" class="org.apache.tools.ant.types.ZipFileSet"/>
-  <data-type name="xmlcatalog" class="org.apache.tools.ant.types.XMLCatalog" />
-  <data-type name="extensionSet" class="org.apache.tools.ant.taskdefs.optional.extension.ExtensionSet" />
-  <data-type name="extension" class="org.apache.tools.ant.taskdefs.optional.extension.ExtensionAdapter" />
-  <data-type name="libfileset" class="org.apache.tools.ant.taskdefs.optional.extension.LibFileSet" />
-
   <!-- deprecated ant tasks (kept for back compatibility) -->
-
   <task name="javadoc2" class="org.apache.tools.ant.taskdefs.Javadoc"/>
   <task name="copydir" class="org.apache.tools.ant.taskdefs.Copydir"/>
   <task name="copyfile" class="org.apache.tools.ant.taskdefs.Copyfile"/>
   <task name="deltree" class="org.apache.tools.ant.taskdefs.Deltree"/>
   <task name="rename" class="org.apache.tools.ant.taskdefs.Rename"/>
+
+  <data-type name="description" class="org.apache.tools.ant.types.Description"/>
+  <data-type name="dirset" class="org.apache.tools.ant.types.DirSet"/>
+  <data-type name="filelist" class="org.apache.tools.ant.types.FileList"/>
+  <data-type name="fileset" class="org.apache.tools.ant.types.FileSet"/>
+  <data-type name="filterchain" class="org.apache.tools.ant.types.FilterChain"/>
+  <data-type name="filterreader" class="org.apache.tools.ant.types.AntFilterReader"/>
+  <data-type name="filterset" class="org.apache.tools.ant.types.FilterSet"/>
+  <data-type name="mapper" class="org.apache.tools.ant.types.Mapper"/>
+  <data-type name="path" class="org.apache.tools.ant.types.Path"/>
+  <data-type name="patternset" class="org.apache.tools.ant.types.PatternSet"/>
+  <data-type name="regexp" class="org.apache.tools.ant.types.RegularExpression"/>
+  <data-type name="substitution" class="org.apache.tools.ant.types.Substitution"/>
+  <data-type name="xmlcatalog" class="org.apache.tools.ant.types.XMLCatalog"/>
+  <data-type name="extensionSet" class="org.apache.tools.ant.taskdefs.optional.extension.ExtensionSet"/>
+  <data-type name="extension" class="org.apache.tools.ant.taskdefs.optional.extension.ExtensionAdapter"/>
+  <data-type name="libfileset" class="org.apache.tools.ant.taskdefs.optional.extension.LibFileSet"/>
+  <data-type name="selector" class="org.apache.tools.ant.types.selectors.SelectSelector"/>
+  <data-type name="zipfileset" class="org.apache.tools.ant.types.ZipFileSet"/>
 
 </antlib>

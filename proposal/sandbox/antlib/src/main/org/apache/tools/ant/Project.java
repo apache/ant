@@ -56,6 +56,7 @@ package org.apache.tools.ant;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
+import java.io.EOFException;
 import java.util.Hashtable;
 import java.util.Vector;
 import java.util.Properties;
@@ -266,6 +267,16 @@ public class Project {
     }
 
     /**
+     * Get this project's input stream
+     *
+     * @return the InputStream instance in use by this Porject instance to
+     * read input
+     */
+    public InputStream getDefaultInputStream() {
+        return defaultInputStream;
+    }
+
+    /**
      * Retrieves the current input handler.
      *
      * @return the InputHandler instance currently in place for the project
@@ -276,6 +287,11 @@ public class Project {
     }
 
     private FileUtils fileUtils;
+
+    /**
+     * Flag which catches Listeners which try to use System.out or System.err
+     */
+    private boolean loggingMessage = false;
 
 
     /**
@@ -413,6 +429,7 @@ public class Project {
      */
     public void init() throws BuildException {
         setJavaVersionProperty();
+        setSystemProperties();
         if (!isRoleDefined(TASK_ROLE)) {
             // Top project, need to load the core definitions
             loadDefinitions();
@@ -452,7 +469,6 @@ public class Project {
             throw new BuildException("Can't load default datatype list");
         }
 
-        setSystemProperties();
     }
 
 
@@ -564,7 +580,7 @@ public class Project {
      *@return    The buildListeners value
      */
     public Vector getBuildListeners() {
-        return listeners;
+        return (Vector) listeners.clone();
     }
 
 
@@ -697,6 +713,23 @@ public class Project {
         properties.put(name, value);
     }
 
+    /**
+     * Sets a user property, which cannot be overwritten by set/unset
+     * property calls. Any previous value is overwritten. Also marks
+     * these properties as properties that have not come from the
+     * command line.
+     *
+     * @param name The name of property to set.
+     *             Must not be <code>null</code>.
+     * @param value The new value of the property.
+     *              Must not be <code>null</code>.
+     * @see #setProperty(String,String)
+     */
+    public synchronized void setInheritedProperty(String name, String value) {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        ph.setInheritedProperty(null, name, value);
+    }
+
 
     /**
      *  Allows Project and subclasses to set a property unless its already
@@ -794,6 +827,40 @@ public class Project {
         }
 
         return propertiesCopy;
+    }
+
+    /**
+     * Copies all user properties that have been set on the command
+     * line or a GUI tool from this instance to the Project instance
+     * given as the argument.
+     *
+     * <p>To copy all "user" properties, you will also have to call
+     * {@link #copyInheritedProperties copyInheritedProperties}.</p>
+     *
+     * @param other the project to copy the properties to.  Must not be null.
+     *
+     * @since Ant 1.5
+     */
+    public void copyUserProperties(Project other) {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        ph.copyUserProperties(other);
+    }
+
+    /**
+     * Copies all user properties that have not been set on the
+     * command line or a GUI tool from this instance to the Project
+     * instance given as the argument.
+     *
+     * <p>To copy all "user" properties, you will also have to call
+     * {@link #copyUserProperties copyUserProperties}.</p>
+     *
+     * @param other the project to copy the properties to.  Must not be null.
+     *
+     * @since Ant 1.5
+     */
+    public void copyInheritedProperties(Project other) {
+        PropertyHelper ph = PropertyHelper.getPropertyHelper(this);
+        ph.copyInheritedProperties(other);
     }
 
 
@@ -1205,7 +1272,7 @@ public class Project {
 
         try {
             Object o = f.create(this);
-            // Do special book keeping for ProjectComponents
+            setProjectReference( o );
             if (o instanceof ProjectComponent) {
                 ((ProjectComponent) o).setProject(this);
                 if (o instanceof Task) {
@@ -1402,9 +1469,10 @@ public class Project {
         if (defaultInputStream != null) {
             return defaultInputStream.read(buffer, offset, length);
         } else {
-            return System.in.read(buffer, offset, length);
+            throw new EOFException("No input provided for project");
         }
     }
+
 
     /**
      * Demux an input request to the correct task.
@@ -1949,26 +2017,30 @@ public class Project {
     }
 
     /**
-     *  send build started event to the listeners
+     * Sends a "build started" event to the build listeners for this project.
      */
-    protected void fireBuildStarted() {
+    public void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
-        for (int i = 0; i < listeners.size(); i++) {
+        Vector listeners = getBuildListeners();
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildStarted(event);
         }
     }
 
-
     /**
-     *  send build finished event to the listeners
-     *
-     *@param  exception  exception which indicates failure if not null
+     * Sends a "build finished" event to the build listeners for this project.
+     * @param exception an exception indicating a reason for a build
+     *                  failure. May be <code>null</code>, indicating
+     *                  a successful build.
      */
-    protected void fireBuildFinished(Throwable exception) {
+    public void fireBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
-        for (int i = 0; i < listeners.size(); i++) {
+        Vector listeners = getBuildListeners();
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildFinished(event);
         }
@@ -1976,82 +2048,111 @@ public class Project {
 
 
     /**
-     *  send target started event to the listeners
+     * Sends a "target started" event to the build listeners for this project.
      *
-     *@param  target  Description of the Parameter
+     * @param target The target which is starting to build.
+     *               Must not be <code>null</code>.
      */
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
-        for (int i = 0; i < listeners.size(); i++) {
+        Vector listeners = getBuildListeners();
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetStarted(event);
         }
     }
 
-
     /**
-     *  send build finished event to the listeners
+     * Sends a "target finished" event to the build listeners for this
+     * project.
      *
-     *@param  exception  exception which indicates failure if not null
-     *@param  target     Description of the Parameter
+     * @param target    The target which has finished building.
+     *                  Must not be <code>null</code>.
+     * @param exception an exception indicating a reason for a build
+     *                  failure. May be <code>null</code>, indicating
+     *                  a successful build.
      */
     protected void fireTargetFinished(Target target, Throwable exception) {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
-        for (int i = 0; i < listeners.size(); i++) {
+        Vector listeners = getBuildListeners();
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetFinished(event);
         }
     }
 
-
     /**
-     *  Description of the Method
+     * Sends a "task started" event to the build listeners for this project.
      *
-     *@param  task  Description of the Parameter
+     * @param task The target which is starting to execute.
+     *               Must not be <code>null</code>.
      */
     protected void fireTaskStarted(Task task) {
         // register this as the current task on the current thread.
-        threadTasks.put(Thread.currentThread(), task);
+        registerThreadTask(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
-        for (int i = 0; i < listeners.size(); i++) {
+        Vector listeners = getBuildListeners();
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskStarted(event);
         }
     }
 
-
     /**
-     *  Description of the Method
+     * Sends a "task finished" event to the build listeners for this
+     * project.
      *
-     *@param  task       Description of the Parameter
-     *@param  exception  Description of the Parameter
+     * @param task      The task which has finished executing.
+     *                  Must not be <code>null</code>.
+     * @param exception an exception indicating a reason for a build
+     *                  failure. May be <code>null</code>, indicating
+     *                  a successful build.
      */
     protected void fireTaskFinished(Task task, Throwable exception) {
-        threadTasks.remove(Thread.currentThread());
+        registerThreadTask(Thread.currentThread(), null);
         System.out.flush();
         System.err.flush();
         BuildEvent event = new BuildEvent(task);
         event.setException(exception);
-        for (int i = 0; i < listeners.size(); i++) {
+        Vector listeners = getBuildListeners();
+        int size = listeners.size();
+        for (int i = 0; i < size; i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskFinished(event);
         }
     }
 
-
     /**
-     *  Description of the Method
+     * Sends a "message logged" event to the build listeners for this project.
      *
-     *@param  event     Description of the Parameter
-     *@param  message   Description of the Parameter
-     *@param  priority  Description of the Parameter
+     * @param event    The event to send. This should be built up with the
+     *                 appropriate task/target/project by the caller, so that
+     *                 this method can set the message and priority, then send
+     *                 the event. Must not be <code>null</code>.
+     * @param message  The message to send. Should not be <code>null</code>.
+     * @param priority The priority of the message.
      */
-    private void fireMessageLoggedEvent(BuildEvent event, String message, int priority) {
+    private void fireMessageLoggedEvent(BuildEvent event, String message,
+                                        int priority) {
         event.setMessage(message, priority);
-        for (int i = 0; i < listeners.size(); i++) {
-            BuildListener listener = (BuildListener) listeners.elementAt(i);
-            listener.messageLogged(event);
+        Vector listeners = getBuildListeners();
+        synchronized (this) {
+            if (loggingMessage) {
+                throw new BuildException("Listener attempted to access "
+                    + (priority == MSG_ERR ? "System.err" : "System.out")
+                    + " - infinite loop terminated");
+            }
+            loggingMessage = true;
+            int size = listeners.size();
+            for (int i = 0; i < size; i++) {
+                BuildListener listener = (BuildListener) listeners.elementAt(i);
+                listener.messageLogged(event);
+            }
+            loggingMessage = false;
         }
     }
 
@@ -2134,7 +2235,7 @@ public class Project {
     // Should move to a separate public class - and have API to add
     // listeners, etc.
     private static class AntRefTable extends Hashtable {
-        Project project;
+        private Project project;
         public AntRefTable(Project project) {
             super();
             this.project = project;
@@ -2175,9 +2276,9 @@ public class Project {
     }
 
     private static class AntTaskTable extends LazyHashtable {
-        Project project;
-        Properties props;
-        boolean tasks = false;
+        private Project project;
+        private Properties props;
+        private boolean tasks = false;
 
         public AntTaskTable(Project p, boolean tasks) {
             this.project = p;
@@ -2189,46 +2290,56 @@ public class Project {
         }
 
         protected void initAll() {
-            if (initAllDone ) return;
+            if (initAllDone) {
+                return;
+            }
             project.log("InitAll", Project.MSG_DEBUG);
-            if (props==null ) return;
+            if (props == null) {
+                return;
+            }
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
                 String key = (String) enum.nextElement();
-                Class taskClass=getTask( key );
-                if (taskClass!=null ) {
+                Class taskClass = getTask(key);
+                if (taskClass != null) {
                     // This will call a get() and a put()
-                    if (tasks )
+                    if (tasks)
                         project.addTaskDefinition(key, taskClass);
                     else
                         project.addDataTypeDefinition(key, taskClass );
                 }
             }
-            initAllDone=true;
+            initAllDone = true;
         }
 
         protected Class getTask(String key) {
-            if (props==null ) return null; // for tasks loaded before init()
-            String value=props.getProperty(key);
-            if (value==null) {
-                //project.log( "No class name for " + key, Project.MSG_VERBOSE );
+            if (props == null) {
+                return null; // for tasks loaded before init()
+            }
+            String value = props.getProperty(key);
+            if (value == null) {
+                //project.log( "No class name for " + key, Project.MSG_VERBOSE);
                 return null;
             }
             try {
-                Class taskClass=null;
+                Class taskClass = null;
                 if (project.getCoreLoader() != null &&
                     !("only".equals(project.getProperty("build.sysclasspath")))) {
                     try {
-                        taskClass=project.getCoreLoader().loadClass(value);
-                        if (taskClass != null ) return taskClass;
-                    } catch( Exception ex ) {
+                        taskClass = project.getCoreLoader().loadClass(value);
+                        if (taskClass != null) {
+                            return taskClass;
+                        }
+                    } catch (Exception ex) {
+                        // ignore
                     }
                 }
                 taskClass = Class.forName(value);
                 return taskClass;
             } catch (NoClassDefFoundError ncdfe) {
                 project.log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for task " + key, Project.MSG_DEBUG);
+                        + ncdfe.getMessage() + ") for task "
+                        + key, Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 project.log("Could not load class (" + value
                         + ") for task " + key, Project.MSG_DEBUG);
@@ -2237,14 +2348,20 @@ public class Project {
         }
 
         // Hashtable implementation
-        public Object get( Object key ) {
-            Object orig=super.get( key );
-            if (orig!= null ) return orig;
-            if (! (key instanceof String) ) return null;
-            project.log("Get task " + key, Project.MSG_DEBUG );
-            Object taskClass=getTask( (String) key);
-            if (taskClass != null)
-                super.put( key, taskClass );
+        public Object get(Object key) {
+            Object orig = super.get(key);
+            if (orig != null) {
+                return orig;
+            }
+            if (!(key instanceof String)) {
+                return null;
+            }
+
+            project.log("Get task " + key, Project.MSG_DEBUG);
+            Object taskClass = getTask((String) key);
+            if (taskClass != null) {
+                super.put(key, taskClass);
+            }
             return taskClass;
         }
 
@@ -2253,5 +2370,28 @@ public class Project {
         }
 
     }
-
+    /**
+     * Set a reference to this Project on the parameterized object.
+     * Need to set the project before other set/add elements
+     * are called
+     * @param obj the object to invoke setProject(this) on
+     */
+    public final void setProjectReference( final Object obj ) {
+        if ( obj instanceof ProjectComponent ) {
+            ( (ProjectComponent) obj ).setProject( this );
+            return;
+        }
+        try {
+            Method method =
+                obj.getClass().getMethod(
+                    "setProject", new Class[] {Project.class} );
+            if ( method != null ) {
+                method.invoke( obj, new Object[] { this } );
+            }
+        } catch (Throwable e) {
+            // ignore this if the object does not have
+            // a set project method or the method
+            // is private/protected.
+        }
+    }
 }

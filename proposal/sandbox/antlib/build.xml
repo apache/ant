@@ -20,8 +20,6 @@
       <fileset dir='${orig-classes}'>
         <include name='**' />
         <exclude name='org/apache/tools/ant/Project.class' />
-        <exclude name='org/apache/tools/ant/ProjectHelper.class' />
-        <exclude name='org/apache/tools/ant/IntrospectionHelper.class' />
         <exclude name='org/apache/tools/ant/TaskAdapter.class' />
         <exclude name='org/apache/tools/ant/taskdefs/Ant.class' />
       </fileset>
