@@ -249,7 +249,7 @@ public abstract class P4Base extends org.apache.tools.ant.Task {
                 commandline.createArgument().setValue(P4Client);
             }
             if (P4Opts != null && P4Opts.length() != 0) {
-                commandline.createArgument().setValue(P4Opts);
+                commandline.createArgument().setLine(P4Opts);
             }
             commandline.createArgument().setLine(command);
 
