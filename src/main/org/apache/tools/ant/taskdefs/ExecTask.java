@@ -70,6 +70,8 @@ import java.io.*;
  */
 public class ExecTask extends Task {
 
+    private static String lSep = System.getProperty("line.separator");
+
     private String os;
     private File out;
     private File dir;
@@ -79,6 +81,8 @@ public class ExecTask extends Task {
     private Environment env = new Environment();
     protected Commandline cmdl = new Commandline();
     private FileOutputStream fos = null;
+    private ByteArrayOutputStream baos = null;
+    private String outputprop;
 
     /** Controls whether the VM (1.3 and above) is used to execute the command */
     private boolean vmLauncher = true;
@@ -126,6 +130,14 @@ public class ExecTask extends Task {
      */
     public void setOutput(File out) {
         this.out = out;
+    }
+
+    /**
+     * Property name whose value should be set to the output of
+     * the process
+     */
+    public void setOutputproperty(String outputprop) {
+	this.outputprop = outputprop;
     }
 
     /**
@@ -243,6 +255,19 @@ public class ExecTask extends Task {
                 log("Result: " + err, Project.MSG_ERR);
             }
         }
+        if (baos != null) {
+            BufferedReader in = 
+                new BufferedReader(new StringReader(baos.toString()));
+            String line = null;
+            StringBuffer val = new StringBuffer();
+            while ((line = in.readLine()) != null) {
+                if (val.length() != 0) {
+                    val.append(lSep);
+                }
+                val.append(line);
+            }
+            project.setProperty(outputprop, val.toString());
+        }
     }
     
     /**
@@ -274,6 +299,11 @@ public class ExecTask extends Task {
             } catch (IOException ioe) {
                 throw new BuildException("Cannot write to "+out, ioe, location);
             }
+        } else if (outputprop != null) {
+	    //	    try {
+	    baos = new ByteArrayOutputStream();
+	    log("Output redirected to ByteArray", Project.MSG_VERBOSE);
+	    return new PumpStreamHandler(baos);
         } else {
             return new LogStreamHandler(this,
                                         Project.MSG_INFO, Project.MSG_WARN);
@@ -294,6 +324,7 @@ public class ExecTask extends Task {
     protected void logFlush() {
         try {
             if (fos != null) fos.close();
+            if (baos != null) baos.close();
         } catch (IOException io) {}
     }
 
