@@ -157,7 +157,6 @@ public final class LineContains
                 for (int i = 0; i < containsSize; i++) {
                     String containsStr = (String) contains.elementAt(i);
                     if (line.indexOf(containsStr) == -1) {
-                        System.out.println("Hello");
                         line = null;
                         break;
                     }

@@ -127,12 +127,15 @@ public final class PrefixLines
 
         int ch = -1;
 
+        if (queuedData != null && queuedData.length() == 0) {
+            queuedData = null;
+        }
+
         if (queuedData != null) {
+            ch = queuedData.charAt(0);
+            queuedData = queuedData.substring(1);
             if (queuedData.length() == 0) {
                 queuedData = null;
-            } else {
-                ch = queuedData.charAt(0);
-                queuedData = queuedData.substring(1);
             }
         } else {
             ch = in.read();
