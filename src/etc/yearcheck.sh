@@ -105,7 +105,7 @@ echo "================="
 cat /tmp/no-copyright
 echo
 
-xargs egrep -L "Copyright.*2002" < $TEMP_FILE | cut -f 1 -d : > /tmp/no-$YEAR
+xargs egrep -L "Copyright.*$YEAR" < $TEMP_FILE | cut -f 1 -d : > /tmp/no-$YEAR
 
 echo "No Copyright line for year $YEAR"
 echo "================================"
