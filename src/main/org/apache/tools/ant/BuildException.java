@@ -161,6 +161,15 @@ public class BuildException extends RuntimeException {
      * @return the nested exception, or <code>null</code> if no
      *         exception is associated with this one
      */
+    public Throwable getCause() {
+        return cause;
+    }
+    /**
+     * Returns the nested exception, if any.
+     *
+     * @return the nested exception, or <code>null</code> if no
+     *         exception is associated with this one
+     */
     public Throwable getException() {
         return cause;
     }
