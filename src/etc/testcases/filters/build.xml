@@ -48,4 +48,15 @@
     </copy>
   </target>
 
+  <target name="testReplaceTokens" depends="init">
+    <copy todir="result">
+      <fileset dir="input" includes="replacetokens.test" />
+      <filterchain>
+        <replacetokens>
+          <token key="foo" value=""/>
+        </replacetokens>
+      </filterchain>
+    </copy>
+  </target>
+
 </project>
