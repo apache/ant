@@ -282,7 +282,7 @@
       <exclude name="${optional.package}/junit/AggregateTransformer.java"
                unless="xalan.present" />
       <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
-      <exclude name="${optional.package}/sitraka/**" unless="jakarta.oro.present"/>
+      <exclude name="${optional.package}/sitraka/**" unless="some.regexp.support"/>
       <exclude name="${optional.package}/metamata/MAudit*" unless="jakarta.oro.present"/>
       <exclude name="${optional.package}/metamata/MMetrics*" 
                unless="trax.present"/>
@@ -688,8 +688,12 @@
                unless="jakarta.oro.present" />
       <exclude name="${regexp.package}/Jdk14Regexp*Test.java" 
                unless="jdk1.4+" />
+               
       <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/*.java"
-               unless="jakarta.oro.present" />
+               unless="some.regexp.support" />
+      <exclude name="org/apache/tools/ant/taskdefs/optional/sitraka/XMLReportTest.java"
+               unless="trax.present" />
+      
       <exclude name="org/apache/tools/ant/taskdefs/optional/XslpLiaisonTest.java" 
                unless="xslp.present"/>
       <exclude name="org/apache/tools/ant/taskdefs/optional/XalanLiaisonTest.java" 
