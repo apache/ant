@@ -298,6 +298,7 @@
     <copy todir="${build.classes}">
       <fileset dir="${java.dir}">
         <include name="**/*.properties" />
+        <include name="**/*.dtd" />
       </fileset>
     </copy>
 
