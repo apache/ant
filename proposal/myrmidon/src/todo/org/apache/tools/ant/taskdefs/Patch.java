@@ -154,35 +154,35 @@ public class Patch
 
         if( m_backups )
         {
-            cmd.createArgument().setValue( "-b" );
+            cmd.addArgument( "-b" );
         }
 
         if( null != m_strip )
         {
-            cmd.createArgument().setValue( "-p" + m_strip.intValue() );
+            cmd.addArgument( "-p" + m_strip.intValue() );
         }
 
         if( m_quiet )
         {
-            cmd.createArgument().setValue( "-s" );
+            cmd.addArgument( "-s" );
         }
 
         if( m_reverse )
         {
-            cmd.createArgument().setValue( "-R" );
+            cmd.addArgument( "-R" );
         }
 
-        cmd.createArgument().setValue( "-i" );
-        cmd.createArgument().setFile( m_patchFile );
+        cmd.addArgument( "-i" );
+        cmd.addArgument( m_patchFile );
 
         if( m_ignorewhitespace )
         {
-            cmd.createArgument().setValue( "-l" );
+            cmd.addArgument( "-l" );
         }
 
         if( null != m_originalFile )
         {
-            cmd.createArgument().setFile( m_originalFile );
+            cmd.addArgument( m_originalFile );
         }
         return cmd;
     }

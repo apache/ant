@@ -18,6 +18,20 @@ public class Argument
 {
     private String[] m_parts;
 
+    public Argument()
+    {
+    }
+
+    public Argument( final String value )
+    {
+        setValue( value );
+    }
+
+    public Argument( final File file )
+    {
+        setFile( file );
+    }
+
     /**
      * Sets a single commandline argument to the absolute filename of the
      * given file.

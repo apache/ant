@@ -216,28 +216,28 @@ public class Pvcs
 
         if( m_force )
         {
-            cmd.createArgument().setValue( "-Y" );
+            cmd.addArgument( "-Y" );
         }
         else
         {
-            cmd.createArgument().setValue( "-N" );
+            cmd.addArgument( "-N" );
         }
 
         if( null != m_promotiongroup )
         {
-            cmd.createArgument().setValue( "-G" + m_promotiongroup );
+            cmd.addArgument( "-G" + m_promotiongroup );
         }
         else if( null != m_label )
         {
-            cmd.createArgument().setValue( "-r" + m_label );
+            cmd.addArgument( "-r" + m_label );
         }
 
         if( m_updateOnly )
         {
-            cmd.createArgument().setValue( "-U" );
+            cmd.addArgument( "-U" );
         }
 
-        cmd.createArgument().setValue( "@" + filelist.getAbsolutePath() );
+        cmd.addArgument( "@" + filelist.getAbsolutePath() );
         return cmd;
     }
 
@@ -319,18 +319,18 @@ public class Pvcs
         final Commandline cmd = new Commandline();
         cmd.setExecutable( getExecutable( PCLI_EXE ) );
 
-        cmd.createArgument().setValue( "lvf" );
-        cmd.createArgument().setValue( "-z" );
-        cmd.createArgument().setValue( "-aw" );
+        cmd.addArgument( "lvf" );
+        cmd.addArgument( "-z" );
+        cmd.addArgument( "-aw" );
         if( m_workspace != null )
         {
-            cmd.createArgument().setValue( "-sp" + m_workspace );
+            cmd.addArgument( "-sp" + m_workspace );
         }
-        cmd.createArgument().setValue( "-pr" + m_repository );
+        cmd.addArgument( "-pr" + m_repository );
 
         if( m_pvcsProject != null )
         {
-            cmd.createArgument().setValue( m_pvcsProject );
+            cmd.addArgument( m_pvcsProject );
         }
 
         if( !m_pvcsProjects.isEmpty() )
@@ -345,7 +345,7 @@ public class Pvcs
                     final String message = "name is a required attribute of pvcsproject";
                     throw new TaskException( message );
                 }
-                cmd.createArgument().setValue( name );
+                cmd.addArgument( name );
             }
         }
         return cmd;

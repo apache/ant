@@ -178,20 +178,20 @@ public class BorlandGenerateClient extends Task
     {
         final Commandline cmd = new Commandline();
         cmd.setExecutable( "iastool" );
-        cmd.createArgument().setValue( "generateclient" );
+        cmd.addArgument( "generateclient" );
         if( debug )
         {
-            cmd.createArgument().setValue( "-trace" );
+            cmd.addArgument( "-trace" );
         }
 
-        cmd.createArgument().setValue( "-short" );
-        cmd.createArgument().setValue( "-jarfile" );
+        cmd.addArgument( "-short" );
+        cmd.addArgument( "-jarfile" );
         // ejb jar file
-        cmd.createArgument().setValue( ejbjarfile.getAbsolutePath() );
+        cmd.addArgument( ejbjarfile.getAbsolutePath() );
         //client jar file
-        cmd.createArgument().setValue( "-single" );
-        cmd.createArgument().setValue( "-clientjarfile" );
-        cmd.createArgument().setValue( clientjarfile.getAbsolutePath() );
+        cmd.addArgument( "-single" );
+        cmd.addArgument( "-clientjarfile" );
+        cmd.addArgument( clientjarfile.getAbsolutePath() );
         return cmd;
     }
 

@@ -23,6 +23,7 @@ import org.apache.tools.ant.taskdefs.exec.ExecuteStreamHandler;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * BorlandDeploymentTool is dedicated to the Borland Application Server 4.5 and
@@ -392,24 +393,24 @@ public class BorlandDeploymentTool
         //debug ?
         if( java2iiopdebug )
         {
-            cmd.createArgument().setValue( "-VBJdebug" );
+            cmd.addArgument( "-VBJdebug" );
         }// end of if ()
         //set the classpath
-        cmd.createArgument().setValue( "-VBJclasspath" );
-        cmd.createArgument().setPath( getCombinedClasspath() );
+        cmd.addArgument( "-VBJclasspath" );
+        cmd.addArguments( FileUtils.translateCommandline( getCombinedClasspath() ) );
         //list file
-        cmd.createArgument().setValue( "-list_files" );
+        cmd.addArgument( "-list_files" );
         //no TIE classes
-        cmd.createArgument().setValue( "-no_tie" );
+        cmd.addArgument( "-no_tie" );
         //root dir
-        cmd.createArgument().setValue( "-root_dir" );
-        cmd.createArgument().setValue( getConfig().srcDir.getAbsolutePath() );
+        cmd.addArgument( "-root_dir" );
+        cmd.addArgument( getConfig().srcDir.getAbsolutePath() );
         //compiling order
-        cmd.createArgument().setValue( "-compile" );
+        cmd.addArgument( "-compile" );
         //add the home class
         while( ithomes.hasNext() )
         {
-            cmd.createArgument().setValue( ithomes.next().toString() );
+            cmd.addArgument( ithomes.next().toString() );
         }
         return cmd;
     }

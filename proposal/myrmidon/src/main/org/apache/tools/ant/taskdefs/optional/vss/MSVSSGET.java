@@ -344,20 +344,20 @@ public class MSVSSGET extends MSVSS
 
         if( m_AutoResponse == null )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_DEF );
+            cmd.addArgument( FLAG_AUTORESPONSE_DEF );
         }
         else if( m_AutoResponse.equalsIgnoreCase( "Y" ) )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_YES );
+            cmd.addArgument( FLAG_AUTORESPONSE_YES );
 
         }
         else if( m_AutoResponse.equalsIgnoreCase( "N" ) )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_NO );
+            cmd.addArgument( FLAG_AUTORESPONSE_NO );
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_DEF );
+            cmd.addArgument( FLAG_AUTORESPONSE_DEF );
         }// end of else
 
     }
@@ -392,7 +392,7 @@ public class MSVSSGET extends MSVSS
                 getLogger().info( "Created dir: " + dir.getAbsolutePath() );
             }
 
-            cmd.createArgument().setValue( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );
+            cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );
         }
     }
 
@@ -400,7 +400,7 @@ public class MSVSSGET extends MSVSS
     {
         if( m_Quiet )
         {
-            cmd.createArgument().setValue( FLAG_QUIET );
+            cmd.addArgument( FLAG_QUIET );
         }
     }
 
@@ -415,7 +415,7 @@ public class MSVSSGET extends MSVSS
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_RECURSION );
+            cmd.addArgument( FLAG_RECURSION );
         }
     }
 
@@ -430,15 +430,15 @@ public class MSVSSGET extends MSVSS
 
         if( m_Version != null )
         {
-            cmd.createArgument().setValue( FLAG_VERSION + m_Version );
+            cmd.addArgument( FLAG_VERSION + m_Version );
         }
         else if( m_Date != null )
         {
-            cmd.createArgument().setValue( FLAG_VERSION_DATE + m_Date );
+            cmd.addArgument( FLAG_VERSION_DATE + m_Date );
         }
         else if( m_Label != null )
         {
-            cmd.createArgument().setValue( FLAG_VERSION_LABEL + m_Label );
+            cmd.addArgument( FLAG_VERSION_LABEL + m_Label );
         }
     }
 
@@ -453,7 +453,7 @@ public class MSVSSGET extends MSVSS
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_WRITABLE );
+            cmd.addArgument( FLAG_WRITABLE );
         }
     }
 
@@ -484,10 +484,10 @@ public class MSVSSGET extends MSVSS
         // ss Get VSS items [-G] [-H] [-I-] [-N] [-O] [-R] [-V] [-W] [-Y] [-?]
         // as specified in the SS.EXE help
         commandLine.setExecutable( getSSCommand() );
-        commandLine.createArgument().setValue( COMMAND_GET );
+        commandLine.addArgument( COMMAND_GET );
 
         // VSS items
-        commandLine.createArgument().setValue( getVsspath() );
+        commandLine.addArgument( getVsspath() );
         // -GL
         getLocalpathCommand( commandLine );
         // -I- or -I-Y or -I-N

@@ -15,6 +15,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.EnvironmentData;
 import org.apache.tools.ant.types.EnvironmentVariable;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Task to interact with a CVS repository.
@@ -204,37 +205,37 @@ public class Cvs
         command.setExecutable( "cvs" );
         if( m_cvsRoot != null )
         {
-            command.createArgument().setValue( "-d" );
-            command.createArgument().setValue( m_cvsRoot );
+            command.addArgument( "-d" );
+            command.addArgument( m_cvsRoot );
         }
 
         if( m_noexec )
         {
-            command.createArgument().setValue( "-n" );
+            command.addArgument( "-n" );
         }
 
         if( m_quiet )
         {
-            command.createArgument().setValue( "-q" );
+            command.addArgument( "-q" );
         }
 
-        command.createArgument().setLine( m_command );
+        command.addArguments( FileUtils.translateCommandline( m_command ) );
 
         if( null != m_date )
         {
-            command.createArgument().setValue( "-D" );
-            command.createArgument().setValue( m_date );
+            command.addArgument( "-D" );
+            command.addArgument( m_date );
         }
 
         if( null != m_tag )
         {
-            command.createArgument().setValue( "-r" );
-            command.createArgument().setValue( m_tag );
+            command.addArgument( "-r" );
+            command.addArgument( m_tag );
         }
 
         if( m_module != null )
         {
-            command.createArgument().setLine( m_module );
+            command.addArguments( FileUtils.translateCommandline( m_module ) );
         }
         return command;
     }

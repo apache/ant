@@ -265,7 +265,7 @@ public class JUnitTask extends Task
      */
     public void setMaxmemory( String max )
     {
-        createJvmarg().setValue( "-Xmx" + max );
+        commandline.addVmArgument( "-Xmx" + max );
     }
 
     /**
@@ -361,9 +361,9 @@ public class JUnitTask extends Task
      *      the JVM.
      * @see #setFork(boolean)
      */
-    public Argument createJvmarg()
+    public void addJvmarg( final Argument argument )
     {
-        return commandline.createVmArgument();
+        commandline.addVmArgument( argument );
     }
 
     /**
@@ -596,14 +596,14 @@ public class JUnitTask extends Task
         CommandlineJava cmd = commandline;//(CommandlineJava)commandline.clone();
 
         cmd.setClassname( "org.apache.tools.ant.taskdefs.optional.junit.JUnitTestRunner" );
-        cmd.createArgument().setValue( test.getName() );
-        cmd.createArgument().setValue( "filtertrace=" + test.getFiltertrace() );
-        cmd.createArgument().setValue( "haltOnError=" + test.getHaltonerror() );
-        cmd.createArgument().setValue( "haltOnFailure=" + test.getHaltonfailure() );
+        cmd.addArgument( test.getName() );
+        cmd.addArgument( "filtertrace=" + test.getFiltertrace() );
+        cmd.addArgument( "haltOnError=" + test.getHaltonerror() );
+        cmd.addArgument( "haltOnFailure=" + test.getHaltonfailure() );
         if( summary )
         {
             getLogger().info( "Running " + test.getName() );
-            cmd.createArgument().setValue( "formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter" );
+            cmd.addArgument( "formatter=org.apache.tools.ant.taskdefs.optional.junit.SummaryJUnitResultFormatter" );
         }
 
         StringBuffer formatterArg = new StringBuffer( 128 );
@@ -619,13 +619,13 @@ public class JUnitTask extends Task
                 formatterArg.append( "," );
                 formatterArg.append( outFile );
             }
-            cmd.createArgument().setValue( formatterArg.toString() );
+            cmd.addArgument( formatterArg.toString() );
             formatterArg.setLength( 0 );
         }
 
         // Create a temporary file to pass the Ant properties to the forked test
         File propsFile = new File( "junit" + ( new Random( System.currentTimeMillis() ) ).nextLong() + ".properties" );
-        cmd.createArgument().setValue( "propsfile=" + propsFile.getAbsolutePath() );
+        cmd.addArgument( "propsfile=" + propsFile.getAbsolutePath() );
         Hashtable p = getProject().getProperties();
         Properties props = new Properties();
         for( Enumeration enum = p.keys(); enum.hasMoreElements(); )

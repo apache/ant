@@ -237,13 +237,13 @@ public class MSVSSHISTORY extends MSVSS
         // ss History elements [-H] [-L] [-N] [-O] [-V] [-Y] [-#] [-?]
         // as specified in the SS.EXE help
         commandLine.setExecutable( getSSCommand() );
-        commandLine.createArgument().setValue( COMMAND_HISTORY );
+        commandLine.addArgument( COMMAND_HISTORY );
 
         // VSS items
-        commandLine.createArgument().setValue( getVsspath() );
+        commandLine.addArgument( getVsspath() );
 
         // -I-
-        commandLine.createArgument().setValue( "-I-" );// ignore all errors
+        commandLine.addArgument( "-I-" );// ignore all errors
 
         // -V
         // Label an existing file or project version
@@ -253,13 +253,13 @@ public class MSVSSHISTORY extends MSVSS
         // -R
         if( m_Recursive )
         {
-            commandLine.createArgument().setValue( FLAG_RECURSION );
+            commandLine.addArgument( FLAG_RECURSION );
         }
 
         // -B / -D / -F-
         if( m_Style.length() > 0 )
         {
-            commandLine.createArgument().setValue( m_Style );
+            commandLine.addArgument( m_Style );
         }
 
         // -Y
@@ -288,7 +288,7 @@ public class MSVSSHISTORY extends MSVSS
     {
         if( m_OutputFileName != null )
         {
-            cmd.createArgument().setValue( FLAG_OUTPUT + m_OutputFileName );
+            cmd.addArgument( FLAG_OUTPUT + m_OutputFileName );
         }
     }
 
@@ -303,7 +303,7 @@ public class MSVSSHISTORY extends MSVSS
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_RECURSION );
+            cmd.addArgument( FLAG_RECURSION );
         }
     }
 
@@ -316,7 +316,7 @@ public class MSVSSHISTORY extends MSVSS
     {
         if( m_User != null )
         {
-            cmd.createArgument().setValue( FLAG_USER + m_User );
+            cmd.addArgument( FLAG_USER + m_User );
         }
     }
 
@@ -336,7 +336,7 @@ public class MSVSSHISTORY extends MSVSS
 
         if( m_FromDate != null && m_ToDate != null )
         {
-            cmd.createArgument().setValue( FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + m_FromDate );
+            cmd.addArgument( FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + m_FromDate );
         }
         else if( m_ToDate != null && m_NumDays != Integer.MIN_VALUE )
         {
@@ -350,7 +350,7 @@ public class MSVSSHISTORY extends MSVSS
                 String msg = "Error parsing date: " + m_ToDate;
                 throw new TaskException( msg );
             }
-            cmd.createArgument().setValue( FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + startDate );
+            cmd.addArgument( FLAG_VERSION_DATE + m_ToDate + VALUE_FROMDATE + startDate );
         }
         else if( m_FromDate != null && m_NumDays != Integer.MIN_VALUE )
         {
@@ -364,17 +364,17 @@ public class MSVSSHISTORY extends MSVSS
                 String msg = "Error parsing date: " + m_FromDate;
                 throw new TaskException( msg );
             }
-            cmd.createArgument().setValue( FLAG_VERSION_DATE + endDate + VALUE_FROMDATE + m_FromDate );
+            cmd.addArgument( FLAG_VERSION_DATE + endDate + VALUE_FROMDATE + m_FromDate );
         }
         else
         {
             if( m_FromDate != null )
             {
-                cmd.createArgument().setValue( FLAG_VERSION + VALUE_FROMDATE + m_FromDate );
+                cmd.addArgument( FLAG_VERSION + VALUE_FROMDATE + m_FromDate );
             }
             else
             {
-                cmd.createArgument().setValue( FLAG_VERSION_DATE + m_ToDate );
+                cmd.addArgument( FLAG_VERSION_DATE + m_ToDate );
             }
         }
     }
@@ -395,15 +395,15 @@ public class MSVSSHISTORY extends MSVSS
 
         if( m_FromLabel != null && m_ToLabel != null )
         {
-            cmd.createArgument().setValue( FLAG_VERSION_LABEL + m_ToLabel + VALUE_FROMLABEL + m_FromLabel );
+            cmd.addArgument( FLAG_VERSION_LABEL + m_ToLabel + VALUE_FROMLABEL + m_FromLabel );
         }
         else if( m_FromLabel != null )
         {
-            cmd.createArgument().setValue( FLAG_VERSION + VALUE_FROMLABEL + m_FromLabel );
+            cmd.addArgument( FLAG_VERSION + VALUE_FROMLABEL + m_FromLabel );
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_VERSION_LABEL + m_ToLabel );
+            cmd.addArgument( FLAG_VERSION_LABEL + m_ToLabel );
         }
     }
 

@@ -7,10 +7,10 @@
  */
 package org.apache.tools.ant.types;
 
-import org.apache.myrmidon.api.TaskException;
+import java.io.File;
 import org.apache.aut.nativelib.Os;
 import org.apache.avalon.excalibur.util.StringUtil;
-import java.io.File;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * A representation of a Java command line that is nothing more than a composite
@@ -23,11 +23,11 @@ import java.io.File;
 public class CommandlineJava
     implements Cloneable
 {
-    private Commandline vmCommand = new Commandline();
-    private Commandline javaCommand = new Commandline();
-    private SysProperties sysProperties = new SysProperties();
-    private Path classpath;
-    private String maxMemory;
+    private Commandline m_vmCommand = new Commandline();
+    private Commandline m_javaCommand = new Commandline();
+    private SysProperties m_sysProperties = new SysProperties();
+    private Path m_classpath;
+    private String m_maxMemory;
 
     /**
      * Indicate whether it will execute a jar file or not, in this case the
@@ -47,7 +47,7 @@ public class CommandlineJava
      */
     public void setClassname( String classname )
     {
-        javaCommand.setExecutable( classname );
+        m_javaCommand.setExecutable( classname );
         executeJar = false;
     }
 
@@ -58,7 +58,7 @@ public class CommandlineJava
      */
     public void setJar( String jarpathname )
     {
-        javaCommand.setExecutable( jarpathname );
+        m_javaCommand.setExecutable( jarpathname );
         executeJar = true;
     }
 
@@ -69,18 +69,18 @@ public class CommandlineJava
      */
     public void setMaxmemory( String max )
     {
-        this.maxMemory = max;
+        this.m_maxMemory = max;
     }
 
     public void setSystemProperties()
         throws TaskException
     {
-        sysProperties.setSystem();
+        m_sysProperties.setSystem();
     }
 
     public void setVm( String vm )
     {
-        vmCommand.setExecutable( vm );
+        m_vmCommand.setExecutable( vm );
     }
 
     /**
@@ -92,14 +92,14 @@ public class CommandlineJava
     {
         if( !executeJar )
         {
-            return javaCommand.getExecutable();
+            return m_javaCommand.getExecutable();
         }
         return null;
     }
 
     public Path getClasspath()
     {
-        return classpath;
+        return m_classpath;
     }
 
     /**
@@ -125,22 +125,22 @@ public class CommandlineJava
         System.arraycopy( vmArgs, 1, result, pos, vmArgs.length - 1 );
         pos += vmArgs.length - 1;
         // properties are part of the vm options...
-        if( sysProperties.size() > 0 )
+        if( m_sysProperties.size() > 0 )
         {
-            System.arraycopy( sysProperties.getJavaVariables(), 0,
-                              result, pos, sysProperties.size() );
-            pos += sysProperties.size();
+            System.arraycopy( m_sysProperties.getJavaVariables(), 0,
+                              result, pos, m_sysProperties.size() );
+            pos += m_sysProperties.size();
         }
         // classpath is a vm option too..
-        if( classpath != null && classpath.toString().trim().length() > 0 )
+        if( m_classpath != null && m_classpath.toString().trim().length() > 0 )
         {
             result[ pos++ ] = "-classpath";
-            result[ pos++ ] = classpath.toString();
+            result[ pos++ ] = m_classpath.toString();
         }
         // this is the classname to run as well as its arguments.
         // in case of 'executeJar', the executable is a jar file.
-        System.arraycopy( javaCommand.getCommandline(), 0,
-                          result, pos, javaCommand.size() );
+        System.arraycopy( m_javaCommand.getCommandline(), 0,
+                          result, pos, m_javaCommand.size() );
         return result;
     }
 
@@ -153,19 +153,19 @@ public class CommandlineJava
     {
         if( executeJar )
         {
-            return javaCommand.getExecutable();
+            return m_javaCommand.getExecutable();
         }
         return null;
     }
 
     public Commandline getJavaCommand()
     {
-        return javaCommand;
+        return m_javaCommand;
     }
 
     public SysProperties getSystemProperties()
     {
-        return sysProperties;
+        return m_sysProperties;
     }
 
     public Commandline getVmCommand()
@@ -175,32 +175,47 @@ public class CommandlineJava
 
     public void addSysproperty( EnvironmentVariable sysp )
     {
-        sysProperties.addVariable( sysp );
+        m_sysProperties.addVariable( sysp );
     }
 
     public Argument createArgument()
     {
-        return javaCommand.createArgument();
+        return m_javaCommand.createArgument();
+    }
+
+    public void addArgument( final String argument )
+    {
+        m_javaCommand.addArgument( argument );
+    }
+
+    public void addArgument( final Argument argument )
+    {
+        m_javaCommand.addArgument( argument );
     }
 
     public Path createClasspath()
     {
-        if( classpath == null )
+        if( m_classpath == null )
         {
-            classpath = new Path();
+            m_classpath = new Path();
         }
-        return classpath;
+        return m_classpath;
     }
 
-    public Argument createVmArgument()
+    public void addVmArgument( final String argument )
     {
-        return vmCommand.createArgument();
+        m_vmCommand.addArgument( argument );
+    }
+
+    public void addVmArgument( final Argument argument )
+    {
+        m_vmCommand.addArgument( argument );
     }
 
     public void restoreSystemProperties()
         throws TaskException
     {
-        sysProperties.restoreSystem();
+        m_sysProperties.restoreSystem();
     }
 
     /**
@@ -212,9 +227,9 @@ public class CommandlineJava
     public int size()
         throws TaskException
     {
-        int size = getActualVMCommand().size() + javaCommand.size() + sysProperties.size();
+        int size = getActualVMCommand().size() + m_javaCommand.size() + m_sysProperties.size();
         // classpath is "-classpath <classpath>" -> 2 args
-        if( classpath != null && classpath.toString().trim().length() > 0 )
+        if( m_classpath != null && m_classpath.toString().trim().length() > 0 )
         {
             size += 2;
         }
@@ -230,7 +245,7 @@ public class CommandlineJava
     {
         try
         {
-            String[] line = getCommandline();
+            final String[] line = getCommandline();
             return StringUtil.join( line, " " );
         }
         catch( TaskException e )
@@ -243,9 +258,9 @@ public class CommandlineJava
     {
         Commandline actualVMCommand = new Commandline();
         //(Commandline)vmCommand.clone();
-        if( maxMemory != null )
+        if( m_maxMemory != null )
         {
-            actualVMCommand.createArgument().setValue( "-Xmx" + maxMemory );
+            actualVMCommand.addArgument( "-Xmx" + m_maxMemory );
         }
         return actualVMCommand;
     }
@@ -262,7 +277,7 @@ public class CommandlineJava
         // PATH.
         File jExecutable =
             new File( System.getProperty( "java.home" ) +
-                              "/../bin/java" + extension );
+                      "/../bin/java" + extension );
 
         if( jExecutable.exists() && !Os.isFamily( "netware" ) )
         {
@@ -276,5 +291,4 @@ public class CommandlineJava
             return "java";
         }
     }
-
 }

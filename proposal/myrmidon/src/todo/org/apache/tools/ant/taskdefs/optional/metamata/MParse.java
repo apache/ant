@@ -98,7 +98,7 @@ public class MParse
      */
     public void setMaxmemory( String max )
     {
-        createJvmarg().setValue( "-Xmx" + max );
+        m_cmdl.addVmArgument( "-Xmx" + max );
     }
 
     /**
@@ -147,12 +147,10 @@ public class MParse
 
     /**
      * Creates a nested jvmarg element.
-     *
-     * @return Description of the Returned Value
      */
-    public Argument createJvmarg()
+    public void addJvmarg( final Argument argument )
     {
-        return m_cmdl.createVmArgument();
+        m_cmdl.addVmArgument( argument );
     }
 
     /**
@@ -207,8 +205,7 @@ public class MParse
         }
 
         // set the metamata.home property
-        final Argument vmArgs = m_cmdl.createVmArgument();
-        vmArgs.setValue( "-Dmetamata.home=" + m_metahome.getAbsolutePath() );
+        m_cmdl.addVmArgument( "-Dmetamata.home=" + m_metahome.getAbsolutePath() );
 
         // write all the options to a temp file and use it ro run the process
         String[] options = getOptions();

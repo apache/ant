@@ -109,9 +109,9 @@ public class CovMerge extends Task
             cmdl.setExecutable( new File( home, "jpcovmerge" ).getAbsolutePath() );
             if( verbose )
             {
-                cmdl.createArgument().setValue( "-v" );
+                cmdl.addArgument( "-v" );
             }
-            cmdl.createArgument().setValue( "-jp_paramfile=" + paramfile.getAbsolutePath() );
+            cmdl.addArgument( "-jp_paramfile=" + paramfile.getAbsolutePath() );
 
             final Execute2 exe = new Execute2();
             setupLogger( exe );

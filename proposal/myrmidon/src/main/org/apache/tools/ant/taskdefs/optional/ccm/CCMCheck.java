@@ -115,7 +115,7 @@ public class CCMCheck extends Continuus
         // ccm co /t .. files
         // as specified in the CLEARTOOL.EXE help
         commandLine.setExecutable( getCcmCommand() );
-        commandLine.createArgument().setValue( getCcmAction() );
+        commandLine.addArgument( getCcmAction() );
 
         checkOptions( commandLine );
 
@@ -136,19 +136,19 @@ public class CCMCheck extends Continuus
     {
         if( getComment() != null )
         {
-            cmd.createArgument().setValue( FLAG_COMMENT );
-            cmd.createArgument().setValue( getComment() );
+            cmd.addArgument( FLAG_COMMENT );
+            cmd.addArgument( getComment() );
         }
 
         if( getTask() != null )
         {
-            cmd.createArgument().setValue( FLAG_TASK );
-            cmd.createArgument().setValue( getTask() );
+            cmd.addArgument( FLAG_TASK );
+            cmd.addArgument( getTask() );
         }// end of if ()
 
         if( getFile() != null )
         {
-            cmd.createArgument().setValue( _file.getAbsolutePath() );
+            cmd.addArgument( _file.getAbsolutePath() );
         }// end of if ()
     }
 }

@@ -99,20 +99,20 @@ public class MSVSSCHECKIN extends MSVSS
 
         if( m_AutoResponse == null )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_DEF );
+            cmd.addArgument( FLAG_AUTORESPONSE_DEF );
         }
         else if( m_AutoResponse.equalsIgnoreCase( "Y" ) )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_YES );
+            cmd.addArgument( FLAG_AUTORESPONSE_YES );
 
         }
         else if( m_AutoResponse.equalsIgnoreCase( "N" ) )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_NO );
+            cmd.addArgument( FLAG_AUTORESPONSE_NO );
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_DEF );
+            cmd.addArgument( FLAG_AUTORESPONSE_DEF );
         }// end of else
 
     }
@@ -157,7 +157,7 @@ public class MSVSSCHECKIN extends MSVSS
                 getLogger().info( "Created dir: " + dir.getAbsolutePath() );
             }
 
-            cmd.createArgument().setValue( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );
+            cmd.addArgument( FLAG_OVERRIDE_WORKING_DIR + m_LocalPath );
         }
     }
 
@@ -172,7 +172,7 @@ public class MSVSSCHECKIN extends MSVSS
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_RECURSION );
+            cmd.addArgument( FLAG_RECURSION );
         }
     }
 
@@ -187,7 +187,7 @@ public class MSVSSCHECKIN extends MSVSS
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_WRITABLE );
+            cmd.addArgument( FLAG_WRITABLE );
         }
     }
 
@@ -218,10 +218,10 @@ public class MSVSSCHECKIN extends MSVSS
         // ss Checkin VSS items [-H] [-C] [-I-] [-N] [-O] [-R] [-W] [-Y] [-?]
         // as specified in the SS.EXE help
         commandLine.setExecutable( getSSCommand() );
-        commandLine.createArgument().setValue( COMMAND_CHECKIN );
+        commandLine.addArgument( COMMAND_CHECKIN );
 
         // VSS items
-        commandLine.createArgument().setValue( getVsspath() );
+        commandLine.addArgument( getVsspath() );
         // -GL
         getLocalpathCommand( commandLine );
         // -I- or -I-Y or -I-N
@@ -233,7 +233,7 @@ public class MSVSSCHECKIN extends MSVSS
         // -Y
         getLoginCommand( commandLine );
         // -C
-        commandLine.createArgument().setValue( "-C" + getComment() );
+        commandLine.addArgument( "-C" + getComment() );
 
         result = run( commandLine );
         if( result != 0 )

@@ -336,7 +336,7 @@ public class CCUpdate extends ClearCase
         // cleartool update [options...] [viewpath ...]
         // as specified in the CLEARTOOL.EXE help
         commandLine.setExecutable( getClearToolCommand() );
-        commandLine.createArgument().setValue( COMMAND_UPDATE );
+        commandLine.addArgument( COMMAND_UPDATE );
 
         // Check the command line options
         checkOptions( commandLine );
@@ -371,8 +371,8 @@ public class CCUpdate extends ClearCase
              * Windows filename with a space and it is enclosed in double
              * quotes ("). This breaks clearcase.
              */
-            cmd.createArgument().setValue( FLAG_LOG );
-            cmd.createArgument().setValue( getLog() );
+            cmd.addArgument( FLAG_LOG );
+            cmd.addArgument( getLog() );
         }
     }
 
@@ -387,40 +387,40 @@ public class CCUpdate extends ClearCase
         if( getGraphical() )
         {
             // -graphical
-            cmd.createArgument().setValue( FLAG_GRAPHICAL );
+            cmd.addArgument( FLAG_GRAPHICAL );
         }
         else
         {
             if( getOverwrite() )
             {
                 // -overwrite
-                cmd.createArgument().setValue( FLAG_OVERWRITE );
+                cmd.addArgument( FLAG_OVERWRITE );
             }
             else
             {
                 if( getRename() )
                 {
                     // -rename
-                    cmd.createArgument().setValue( FLAG_RENAME );
+                    cmd.addArgument( FLAG_RENAME );
                 }
                 else
                 {
                     // -noverwrite
-                    cmd.createArgument().setValue( FLAG_NOVERWRITE );
+                    cmd.addArgument( FLAG_NOVERWRITE );
                 }
             }
 
             if( getCurrentTime() )
             {
                 // -ctime
-                cmd.createArgument().setValue( FLAG_CURRENTTIME );
+                cmd.addArgument( FLAG_CURRENTTIME );
             }
             else
             {
                 if( getPreserveTime() )
                 {
                     // -ptime
-                    cmd.createArgument().setValue( FLAG_PRESERVETIME );
+                    cmd.addArgument( FLAG_PRESERVETIME );
                 }
             }
 
@@ -429,7 +429,7 @@ public class CCUpdate extends ClearCase
         }
 
         // viewpath
-        cmd.createArgument().setValue( getViewPath() );
+        cmd.addArgument( getViewPath() );
     }
 
 }

@@ -11,6 +11,7 @@ import java.lang.reflect.Method;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * The implementation of the Java compiler for KJC. This is primarily a
@@ -72,17 +73,17 @@ public class Kjc extends DefaultCompilerAdapter
 
         if( m_deprecation == true )
         {
-            cmd.createArgument().setValue( "-deprecation" );
+            cmd.addArgument( "-deprecation" );
         }
 
         if( m_destDir != null )
         {
-            cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( m_destDir );
+            cmd.addArgument( "-d" );
+            cmd.addArgument( m_destDir );
         }
 
         // generate the clsspath
-        cmd.createArgument().setValue( "-classpath" );
+        cmd.addArgument( "-classpath" );
 
         Path cp = new Path();
 
@@ -100,29 +101,29 @@ public class Kjc extends DefaultCompilerAdapter
         cp.append( classpath );
         cp.append( src );
 
-        cmd.createArgument().setPath( cp );
+        cmd.addArguments( FileUtils.translateCommandline( cp ) );
 
         // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.
         if( m_encoding != null )
         {
-            cmd.createArgument().setValue( "-encoding" );
-            cmd.createArgument().setValue( m_encoding );
+            cmd.addArgument( "-encoding" );
+            cmd.addArgument( m_encoding );
         }
 
         if( m_debug )
         {
-            cmd.createArgument().setValue( "-g" );
+            cmd.addArgument( "-g" );
         }
 
         if( m_optimize )
         {
-            cmd.createArgument().setValue( "-O2" );
+            cmd.addArgument( "-O2" );
         }
 
         if( m_verbose )
         {
-            cmd.createArgument().setValue( "-verbose" );
+            cmd.addArgument( "-verbose" );
         }
 
         addCurrentCompilerArgs( cmd );

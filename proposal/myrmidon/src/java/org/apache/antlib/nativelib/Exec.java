@@ -98,9 +98,9 @@ public class Exec
     /**
      * Add a nested arg element - a command line argument.
      */
-    public Argument createArg()
+    public void addArg( final Argument argument )
     {
-        return m_command.createArgument();
+        m_command.addArgument( argument );
     }
 
     public void execute()

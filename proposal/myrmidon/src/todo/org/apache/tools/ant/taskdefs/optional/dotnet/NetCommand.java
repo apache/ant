@@ -125,7 +125,7 @@ public class NetCommand
     {
         if( argument != null && argument.length() != 0 )
         {
-            _commandLine.createArgument().setValue( argument );
+            _commandLine.addArgument( argument );
         }
     }
 

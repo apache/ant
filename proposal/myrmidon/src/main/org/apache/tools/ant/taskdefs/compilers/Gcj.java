@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * The implementation of the gcj compiler. This is primarily a cut-and-paste
@@ -72,8 +73,8 @@ public class Gcj extends DefaultCompilerAdapter
 
         if( m_destDir != null )
         {
-            cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( m_destDir );
+            cmd.addArgument( "-d" );
+            cmd.addArgument( m_destDir );
 
             if( m_destDir.mkdirs() )
             {
@@ -82,26 +83,26 @@ public class Gcj extends DefaultCompilerAdapter
             ;
         }
 
-        cmd.createArgument().setValue( "-classpath" );
-        cmd.createArgument().setPath( classpath );
+        cmd.addArgument( "-classpath" );
+        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
 
         if( m_encoding != null )
         {
-            cmd.createArgument().setValue( "--encoding=" + m_encoding );
+            cmd.addArgument( "--encoding=" + m_encoding );
         }
         if( m_debug )
         {
-            cmd.createArgument().setValue( "-g1" );
+            cmd.addArgument( "-g1" );
         }
         if( m_optimize )
         {
-            cmd.createArgument().setValue( "-O" );
+            cmd.addArgument( "-O" );
         }
 
         /**
          * gcj should be set for generate class.
          */
-        cmd.createArgument().setValue( "-C" );
+        cmd.addArgument( "-C" );
 
         addCurrentCompilerArgs( cmd );
 

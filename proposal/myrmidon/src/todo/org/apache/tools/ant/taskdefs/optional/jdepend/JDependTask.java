@@ -138,19 +138,6 @@ public class JDependTask
     }
 
     /**
-     * Create a new JVM argument. Ignored if no JVM is forked.
-     *
-     * @param commandline Description of Parameter
-     * @return create a new JVM argument so that any argument can be passed to
-     *      the JVM.
-     * @see #setFork(boolean)
-     */
-    public Argument createJvmarg( final CommandlineJava commandline )
-    {
-        return commandline.createVmArgument();
-    }
-
-    /**
      * Maybe creates a nested classpath element.
      */
     public Path createSourcespath()
@@ -226,16 +213,16 @@ public class JDependTask
         // hope it will be reviewed by anybody competent
         if( m_compileClasspath.toString().length() > 0 )
         {
-            createJvmarg( commandline ).setValue( "-classpath" );
-            createJvmarg( commandline ).setValue( m_compileClasspath.toString() );
+            commandline.addVmArgument( "-classpath" );
+            commandline.addVmArgument( m_compileClasspath.toString() );
         }
 
         if( m_outputFile != null )
         {
             // having a space between the file and its path causes commandline to add quotes "
             // around the argument thus making JDepend not taking it into account. Thus we split it in two
-            commandline.createArgument().setValue( "-file" );
-            commandline.createArgument().setValue( m_outputFile.getPath() );
+            commandline.addArgument( "-file" );
+            commandline.addArgument( m_outputFile.getPath() );
             // we have to find a cleaner way to put this output
         }
 
@@ -247,7 +234,7 @@ public class JDependTask
             // not necessary as JDepend would fail, but why loose some time?
             if( !f.exists() || !f.isDirectory() )
                 throw new TaskException( "\"" + f.getPath() + "\" does not represent a valid directory. JDepend would fail." );
-            commandline.createArgument().setValue( f.getPath() );
+            commandline.addArgument( f.getPath() );
         }
 
         final Execute2 exe = new Execute2();

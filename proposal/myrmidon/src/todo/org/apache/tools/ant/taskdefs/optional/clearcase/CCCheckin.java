@@ -335,7 +335,7 @@ public class CCCheckin extends ClearCase
         // cleartool checkin [options...] [viewpath ...]
         // as specified in the CLEARTOOL.EXE help
         commandLine.setExecutable( getClearToolCommand() );
-        commandLine.createArgument().setValue( COMMAND_CHECKIN );
+        commandLine.addArgument( COMMAND_CHECKIN );
 
         checkOptions( commandLine );
 
@@ -362,8 +362,8 @@ public class CCCheckin extends ClearCase
              * Windows filename with a space and it is enclosed in double
              * quotes ("). This breaks clearcase.
              */
-            cmd.createArgument().setValue( FLAG_COMMENT );
-            cmd.createArgument().setValue( getComment() );
+            cmd.addArgument( FLAG_COMMENT );
+            cmd.addArgument( getComment() );
         }
     }
 
@@ -382,8 +382,8 @@ public class CCCheckin extends ClearCase
              * Windows filename with a space and it is enclosed in double
              * quotes ("). This breaks clearcase.
              */
-            cmd.createArgument().setValue( FLAG_COMMENTFILE );
-            cmd.createArgument().setValue( getCommentFile() );
+            cmd.addArgument( FLAG_COMMENTFILE );
+            cmd.addArgument( getCommentFile() );
         }
     }
 
@@ -408,36 +408,36 @@ public class CCCheckin extends ClearCase
             }
             else
             {
-                cmd.createArgument().setValue( FLAG_NOCOMMENT );
+                cmd.addArgument( FLAG_NOCOMMENT );
             }
         }
 
         if( getNoWarn() )
         {
             // -nwarn
-            cmd.createArgument().setValue( FLAG_NOWARN );
+            cmd.addArgument( FLAG_NOWARN );
         }
 
         if( getPreserveTime() )
         {
             // -ptime
-            cmd.createArgument().setValue( FLAG_PRESERVETIME );
+            cmd.addArgument( FLAG_PRESERVETIME );
         }
 
         if( getKeepCopy() )
         {
             // -keep
-            cmd.createArgument().setValue( FLAG_KEEPCOPY );
+            cmd.addArgument( FLAG_KEEPCOPY );
         }
 
         if( getIdentical() )
         {
             // -identical
-            cmd.createArgument().setValue( FLAG_IDENTICAL );
+            cmd.addArgument( FLAG_IDENTICAL );
         }
 
         // viewpath
-        cmd.createArgument().setValue( getViewPath() );
+        cmd.addArgument( getViewPath() );
     }
 
 }

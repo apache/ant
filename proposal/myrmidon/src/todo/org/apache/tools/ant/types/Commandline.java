@@ -100,7 +100,7 @@ public class Commandline
     {
         for( int i = 0; i < line.length; i++ )
         {
-            createArgument().setValue( line[ i ] );
+            addArgument( line[ i ] );
         }
     }
 
@@ -115,6 +115,21 @@ public class Commandline
         final Argument argument = new Argument();
         m_arguments.add( argument );
         return argument;
+    }
+
+    public void addArgument( final File argument )
+    {
+        addArgument( new Argument( argument ) );
+    }
+
+    public void addArgument( final String argument )
+    {
+        addArgument( new Argument( argument ) );
+    }
+
+    public void addArgument( final Argument argument )
+    {
+        m_arguments.add( argument );
     }
 
     /**

@@ -81,7 +81,7 @@ public class CCMReconfigure
         // build the command line from what we got the format
         // as specified in the CCM.EXE help
         cmd.setExecutable( getCcmCommand() );
-        cmd.createArgument().setValue( getCcmAction() );
+        cmd.addArgument( getCcmAction() );
 
         checkOptions( cmd );
 
@@ -100,18 +100,18 @@ public class CCMReconfigure
     {
         if( m_recurse == true )
         {
-            cmd.createArgument().setValue( FLAG_RECURSE );
+            cmd.addArgument( FLAG_RECURSE );
         }
 
         if( m_verbose == true )
         {
-            cmd.createArgument().setValue( FLAG_VERBOSE );
+            cmd.addArgument( FLAG_VERBOSE );
         }
 
         if( m_ccmProject != null )
         {
-            cmd.createArgument().setValue( FLAG_PROJECT );
-            cmd.createArgument().setValue( m_ccmProject );
+            cmd.addArgument( FLAG_PROJECT );
+            cmd.addArgument( m_ccmProject );
         }
     }
 }

@@ -19,6 +19,7 @@ import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * Sign a archive.
@@ -309,58 +310,58 @@ public class SignJar
 
         if( null != m_keystore )
         {
-            cmd.createArgument().setValue( "-keystore" );
-            cmd.createArgument().setValue( m_keystore.toString() );
+            cmd.addArgument( "-keystore" );
+            cmd.addArgument( m_keystore.toString() );
         }
 
         if( null != m_storepass )
         {
-            cmd.createArgument().setValue( "-storepass" );
-            cmd.createArgument().setValue( m_storepass );
+            cmd.addArgument( "-storepass" );
+            cmd.addArgument( m_storepass );
         }
 
         if( null != m_storetype )
         {
-            cmd.createArgument().setValue( "-storetype" );
-            cmd.createArgument().setValue( m_storetype );
+            cmd.addArgument( "-storetype" );
+            cmd.addArgument( m_storetype );
         }
 
         if( null != m_keypass )
         {
-            cmd.createArgument().setValue( "-keypass" );
-            cmd.createArgument().setValue( m_keypass );
+            cmd.addArgument( "-keypass" );
+            cmd.addArgument( m_keypass );
         }
 
         if( null != m_sigfile )
         {
-            cmd.createArgument().setValue( "-sigfile" );
-            cmd.createArgument().setValue( m_sigfile.toString() );
+            cmd.addArgument( "-sigfile" );
+            cmd.addArgument( m_sigfile.toString() );
         }
 
         if( null != jarTarget )
         {
-            cmd.createArgument().setValue( "-signedjar" );
-            cmd.createArgument().setValue( jarTarget.toString() );
+            cmd.addArgument( "-signedjar" );
+            cmd.addArgument( jarTarget.toString() );
         }
 
         if( m_verbose )
         {
-            cmd.createArgument().setValue( "-verbose" );
+            cmd.addArgument( "-verbose" );
         }
 
         if( m_internalsf )
         {
-            cmd.createArgument().setValue( "-internalsf" );
+            cmd.addArgument( "-internalsf" );
         }
 
         if( m_sectionsonly )
         {
-            cmd.createArgument().setValue( "-sectionsonly" );
+            cmd.addArgument( "-sectionsonly" );
         }
 
-        cmd.createArgument().setValue( jarSource.toString() );
+        cmd.addArgument( jarSource.toString() );
 
-        cmd.createArgument().setValue( m_alias );
+        cmd.addArgument( m_alias );
         return cmd;
     }
 }

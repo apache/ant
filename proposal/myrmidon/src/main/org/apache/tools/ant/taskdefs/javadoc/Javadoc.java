@@ -20,6 +20,7 @@ import org.apache.aut.nativelib.Os;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.FileSet;
@@ -89,7 +90,7 @@ public class Javadoc
 
     public void setAccess( AccessType at )
     {
-        m_command.createArgument().setValue( "-" + at.getValue() );
+        m_command.addArgument( "-" + at.getValue() );
     }
 
     public void setAdditionalparam( String add )
@@ -155,14 +156,14 @@ public class Javadoc
     public void setDestdir( File dir )
     {
         m_destDir = dir;
-        m_command.createArgument().setValue( "-d" );
-        m_command.createArgument().setFile( m_destDir );
+        m_command.addArgument( "-d" );
+        m_command.addArgument( m_destDir );
     }
 
     public void setDocencoding( String enc )
     {
-        m_command.createArgument().setValue( "-docencoding" );
-        m_command.createArgument().setValue( enc );
+        m_command.addArgument( "-docencoding" );
+        m_command.addArgument( enc );
     }
 
     public void setDoclet( String src )
@@ -193,8 +194,8 @@ public class Javadoc
 
     public void setEncoding( String enc )
     {
-        m_command.createArgument().setValue( "-encoding" );
-        m_command.createArgument().setValue( enc );
+        m_command.addArgument( "-encoding" );
+        m_command.addArgument( enc );
     }
 
     public void setExcludePackageNames( String src )
@@ -211,8 +212,8 @@ public class Javadoc
 
     public void setExtdirs( String src )
     {
-        m_command.createArgument().setValue( "-extdirs" );
-        m_command.createArgument().setValue( src );
+        m_command.addArgument( "-extdirs" );
+        m_command.addArgument( src );
     }
 
     public void setFooter( String src )
@@ -236,8 +237,8 @@ public class Javadoc
 
     public void setHelpfile( File f )
     {
-        m_command.createArgument().setValue( "-helpfile" );
-        m_command.createArgument().setFile( f );
+        m_command.addArgument( "-helpfile" );
+        m_command.addArgument( f );
     }
 
     public void setLink( String src )
@@ -268,13 +269,13 @@ public class Javadoc
 
     public void setLocale( String src )
     {
-        m_command.createArgument().setValue( "-locale" );
-        m_command.createArgument().setValue( src );
+        m_command.addArgument( "-locale" );
+        m_command.addArgument( src );
     }
 
     public void setMaxmemory( final String max )
     {
-        m_command.createArgument().setValue( "-J-Xmx" + max );
+        m_command.addArgument( "-J-Xmx" + max );
     }
 
     public void setNodeprecated( boolean b )
@@ -314,8 +315,8 @@ public class Javadoc
 
     public void setOverview( File f )
     {
-        m_command.createArgument().setValue( "-overview" );
-        m_command.createArgument().setFile( f );
+        m_command.addArgument( "-overview" );
+        m_command.addArgument( f );
     }
 
     public void setPackage( boolean b )
@@ -393,8 +394,8 @@ public class Javadoc
 
     public void setStylesheetfile( File f )
     {
-        m_command.createArgument().setValue( "-stylesheetfile" );
-        m_command.createArgument().setFile( f );
+        m_command.addArgument( "-stylesheetfile" );
+        m_command.addArgument( f );
     }
 
     public void setUse( boolean b )
@@ -536,23 +537,23 @@ public class Javadoc
 
         if( m_doctitle != null )
         {
-            m_command.createArgument().setValue( "-doctitle" );
-            m_command.createArgument().setValue( m_doctitle.getText() );
+            m_command.addArgument( "-doctitle" );
+            m_command.addArgument( m_doctitle.getText() );
         }
         if( m_header != null )
         {
-            m_command.createArgument().setValue( "-header" );
-            m_command.createArgument().setValue( m_header.getText() );
+            m_command.addArgument( "-header" );
+            m_command.addArgument( m_header.getText() );
         }
         if( m_footer != null )
         {
-            m_command.createArgument().setValue( "-footer" );
-            m_command.createArgument().setValue( m_footer.getText() );
+            m_command.addArgument( "-footer" );
+            m_command.addArgument( m_footer.getText() );
         }
         if( m_bottom != null )
         {
-            m_command.createArgument().setValue( "-bottom" );
-            m_command.createArgument().setValue( m_bottom.getText() );
+            m_command.addArgument( "-bottom" );
+            m_command.addArgument( m_bottom.getText() );
         }
 
         Commandline cmd = new Commandline();//(Commandline)m_command.clone();
@@ -567,13 +568,13 @@ public class Javadoc
         {
             classpath.addPath( m_classpath );
         }
-        cmd.createArgument().setValue( "-classpath" );
-        cmd.createArgument().setValue( classpath.toString() );
+        cmd.addArgument( "-classpath" );
+        cmd.addArgument( classpath.toString() );
 
         if( m_version && m_doclet == null )
-            cmd.createArgument().setValue( "-version" );
+            cmd.addArgument( "-version" );
         if( m_author && m_doclet == null )
-            cmd.createArgument().setValue( "-author" );
+            cmd.addArgument( "-author" );
 
         if( m_doclet == null )
         {
@@ -596,12 +597,12 @@ public class Javadoc
             }
             else
             {
-                cmd.createArgument().setValue( "-doclet" );
-                cmd.createArgument().setValue( m_doclet.getName() );
+                cmd.addArgument( "-doclet" );
+                cmd.addArgument( m_doclet.getName() );
                 if( m_doclet.getPath() != null )
                 {
-                    cmd.createArgument().setValue( "-docletpath" );
-                    cmd.createArgument().setPath( m_doclet.getPath() );
+                    cmd.addArgument( "-docletpath" );
+                    cmd.addArguments( FileUtils.translateCommandline( m_doclet.getPath() ) );
                 }
                 for( Iterator e = m_doclet.getParams(); e.hasNext(); )
                 {
@@ -611,18 +612,18 @@ public class Javadoc
                         throw new TaskException( "Doclet parameters must have a name" );
                     }
 
-                    cmd.createArgument().setValue( param.getName() );
+                    cmd.addArgument( param.getName() );
                     if( param.getValue() != null )
                     {
-                        cmd.createArgument().setValue( param.getValue() );
+                        cmd.addArgument( param.getValue() );
                     }
                 }
             }
 
             if( m_bootclasspath != null )
             {
-                cmd.createArgument().setValue( "-bootclasspath" );
-                cmd.createArgument().setPath( m_bootclasspath );
+                cmd.addArgument( "-bootclasspath" );
+                cmd.addArguments( FileUtils.translateCommandline( m_bootclasspath ) );
             }
 
             // add the links arguments
@@ -648,9 +649,9 @@ public class Javadoc
                         File packageList = new File( packageListLocation, "package-list" );
                         if( packageList.exists() )
                         {
-                            cmd.createArgument().setValue( "-linkoffline" );
-                            cmd.createArgument().setValue( la.getHref() );
-                            cmd.createArgument().setValue( packageListLocation.getAbsolutePath() );
+                            cmd.addArgument( "-linkoffline" );
+                            cmd.addArgument( la.getHref() );
+                            cmd.addArgument( packageListLocation.getAbsolutePath() );
                         }
                         else
                         {
@@ -659,8 +660,8 @@ public class Javadoc
                     }
                     else
                     {
-                        cmd.createArgument().setValue( "-link" );
-                        cmd.createArgument().setValue( la.getHref() );
+                        cmd.addArgument( "-link" );
+                        cmd.addArgument( la.getHref() );
                     }
                 }
             }
@@ -687,9 +688,9 @@ public class Javadoc
                     {
                         String name = grp.substring( 0, space );
                         String pkgList = grp.substring( space + 1 );
-                        cmd.createArgument().setValue( "-group" );
-                        cmd.createArgument().setValue( name );
-                        cmd.createArgument().setValue( pkgList );
+                        cmd.addArgument( "-group" );
+                        cmd.addArgument( name );
+                        cmd.addArgument( pkgList );
                     }
                 }
             }
@@ -706,9 +707,9 @@ public class Javadoc
                     {
                         throw new TaskException( "The title and packages must be specified for group elements." );
                     }
-                    cmd.createArgument().setValue( "-group" );
-                    cmd.createArgument().setValue( title );
-                    cmd.createArgument().setValue( packages );
+                    cmd.addArgument( "-group" );
+                    cmd.addArgument( title );
+                    cmd.addArgument( packages );
                 }
             }
 
@@ -729,7 +730,7 @@ public class Javadoc
                 }
                 else
                 {
-                    cmd.createArgument().setValue( name );
+                    cmd.addArgument( name );
                 }
             }
 
@@ -763,7 +764,7 @@ public class Javadoc
                     if( m_tmpList == null )
                     {
                         m_tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
-                        cmd.createArgument().setValue( "@" + m_tmpList.getAbsolutePath() );
+                        cmd.addArgument( "@" + m_tmpList.getAbsolutePath() );
                     }
                     srcListWriter = new PrintWriter( new FileWriter( m_tmpList.getAbsolutePath(),
                                                                      true ) );
@@ -780,7 +781,7 @@ public class Javadoc
                     }
                     else
                     {
-                        cmd.createArgument().setValue( sourceFileName );
+                        cmd.addArgument( sourceFileName );
                     }
                 }
 
@@ -800,7 +801,7 @@ public class Javadoc
 
         if( m_packageList != null )
         {
-            cmd.createArgument().setValue( "@" + m_packageList );
+            cmd.addArgument( "@" + m_packageList );
         }
         getLogger().debug( "Javadoc args: " + cmd );
 
@@ -873,8 +874,8 @@ public class Javadoc
     {
         if( value != null && value.length() != 0 )
         {
-            m_command.createArgument().setValue( key );
-            m_command.createArgument().setValue( value );
+            m_command.addArgument( key );
+            m_command.addArgument( value );
         }
         else
         {
@@ -886,7 +887,7 @@ public class Javadoc
     {
         if( b )
         {
-            m_command.createArgument().setValue( arg );
+            m_command.addArgument( arg );
         }
     }
 
@@ -969,7 +970,7 @@ public class Javadoc
             if( m_useExternalFile )
             {
                 m_tmpList = File.createTempFile( "javadoc", "", getBaseDirectory() );
-                toExecute.createArgument().setValue( "@" + m_tmpList.getAbsolutePath() );
+                toExecute.addArgument( "@" + m_tmpList.getAbsolutePath() );
                 packageListWriter = new PrintWriter( new FileWriter( m_tmpList ) );
             }
 
@@ -1008,7 +1009,7 @@ public class Javadoc
                             }
                             else
                             {
-                                toExecute.createArgument().setValue( pkgDir );
+                                toExecute.addArgument( pkgDir );
                             }
                             addedPackages.add( pkgDir );
                         }

@@ -11,6 +11,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Argument;
 import java.io.IOException;
 
 /**
@@ -162,78 +163,78 @@ public class GenerateKey
         final Commandline cmd = new Commandline();
         cmd.setExecutable( "keytool" );
 
-        cmd.createArgument().setValue( "-genkey " );
+        cmd.addArgument( "-genkey " );
 
         if( m_verbose )
         {
-            cmd.createArgument().setValue( "-v " );
+            cmd.addArgument( "-v " );
         }
 
-        cmd.createArgument().setValue( "-alias" );
-        cmd.createArgument().setValue( m_alias );
+        cmd.addArgument( "-alias" );
+        cmd.addArgument( m_alias );
 
         if( null != m_dname )
         {
-            cmd.createArgument().setValue( "-dname" );
-            cmd.createArgument().setValue( m_dname );
+            cmd.addArgument( "-dname" );
+            cmd.addArgument( m_dname );
         }
 
         if( null != m_expandedDname )
         {
-            cmd.createArgument().setValue( "-dname" );
-            cmd.createArgument().setValue( m_expandedDname.toString() );
+            cmd.addArgument( "-dname" );
+            cmd.addArgument( m_expandedDname.toString() );
         }
 
         if( null != m_keystore )
         {
-            cmd.createArgument().setValue( "-keystore" );
-            cmd.createArgument().setValue( m_keystore );
+            cmd.addArgument( "-keystore" );
+            cmd.addArgument( m_keystore );
         }
 
         if( null != m_storepass )
         {
-            cmd.createArgument().setValue( "-storepass" );
-            cmd.createArgument().setValue( m_storepass );
+            cmd.addArgument( "-storepass" );
+            cmd.addArgument( m_storepass );
         }
 
         if( null != m_storetype )
         {
-            cmd.createArgument().setValue( "-storetype" );
-            cmd.createArgument().setValue( m_storetype );
+            cmd.addArgument( "-storetype" );
+            cmd.addArgument( m_storetype );
         }
 
-        cmd.createArgument().setValue( "-keypass" );
+        cmd.addArgument( "-keypass" );
         if( null != m_keypass )
         {
-            cmd.createArgument().setValue( m_keypass );
+            cmd.addArgument( m_keypass );
         }
         else
         {
-            cmd.createArgument().setValue( m_storepass );
+            cmd.addArgument( m_storepass );
         }
 
         if( null != m_sigalg )
         {
-            cmd.createArgument().setValue( "-sigalg" );
-            cmd.createArgument().setValue( m_sigalg );
+            cmd.addArgument( "-sigalg" );
+            cmd.addArgument( m_sigalg );
         }
 
         if( null != m_keyalg )
         {
-            cmd.createArgument().setValue( "-keyalg" );
-            cmd.createArgument().setValue( m_keyalg );
+            cmd.addArgument( "-keyalg" );
+            cmd.addArgument( m_keyalg );
         }
 
         if( 0 < m_keysize )
         {
-            cmd.createArgument().setValue( "-keysize" );
-            cmd.createArgument().setValue( "" + m_keysize );
+            cmd.addArgument( "-keysize" );
+            cmd.addArgument( "" + m_keysize );
         }
 
         if( 0 < m_validity )
         {
-            cmd.createArgument().setValue( "-validity" );
-            cmd.createArgument().setValue( "" + m_validity );
+            cmd.addArgument( "-validity" );
+            cmd.addArgument( "" + m_validity );
         }
         return cmd;
     }

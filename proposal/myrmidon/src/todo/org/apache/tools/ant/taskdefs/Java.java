@@ -106,17 +106,17 @@ public class Java
     /**
      * Creates a nested arg element.
      */
-    public Argument createArg()
+    public void addArg( final Argument argument )
     {
-        return m_cmdl.createArgument();
+        m_cmdl.addArgument( argument );
     }
 
     /**
      * Creates a nested jvmarg element.
      */
-    public Argument createJvmarg()
+    public void addJvmarg( final Argument argument )
     {
-        return m_cmdl.createVmArgument();
+        m_cmdl.addVmArgument( argument );
     }
 
     public void execute()
@@ -192,7 +192,7 @@ public class Java
         for( int i = 0; i < size; i++ )
         {
             final String arg = (String)args.get( i );
-            java.createArgument().setValue( arg );
+            java.addArgument( arg );
         }
         run( java );
     }

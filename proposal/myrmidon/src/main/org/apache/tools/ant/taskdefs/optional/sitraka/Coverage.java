@@ -172,12 +172,10 @@ public class Coverage
 
     /**
      * the command arguments
-     *
-     * @return Description of the Returned Value
      */
-    public Argument createArg()
+    public void addArg( final Argument argument )
     {
-        return cmdlJava.createArgument();
+        cmdlJava.addArgument( argument );
     }
 
     /**
@@ -203,9 +201,9 @@ public class Coverage
      *
      * @return Description of the Returned Value
      */
-    public Argument createJvmarg()
+    public void addJvmarg( final Argument argument )
     {
-        return cmdlJava.createVmArgument();
+        cmdlJava.addVmArgument( argument );
     }
 
     public Socket createSocket()
@@ -249,7 +247,7 @@ public class Coverage
         {
             // we need to run Coverage from his directory due to dll/jar issues
             cmdl.setExecutable( new File( m_home, "jplauncher" ).getAbsolutePath() );
-            cmdl.createArgument().setValue( "-jp_input=" + paramfile.getAbsolutePath() );
+            cmdl.addArgument( "-jp_input=" + paramfile.getAbsolutePath() );
 
             // use the custom handler for stdin issues
             final Execute2 exe = new Execute2();

@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * The implementation of the jvc compiler from microsoft. This is primarily a
@@ -65,32 +66,32 @@ public class Jvc extends DefaultCompilerAdapter
 
         if( m_destDir != null )
         {
-            cmd.createArgument().setValue( "/d" );
-            cmd.createArgument().setFile( m_destDir );
+            cmd.addArgument( "/d" );
+            cmd.addArgument( m_destDir );
         }
 
         // Add the Classpath before the "internal" one.
-        cmd.createArgument().setValue( "/cp:p" );
-        cmd.createArgument().setPath( classpath );
+        cmd.addArgument( "/cp:p" );
+        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
 
         // Enable MS-Extensions and ...
-        cmd.createArgument().setValue( "/x-" );
+        cmd.addArgument( "/x-" );
         // ... do not display a Message about this.
-        cmd.createArgument().setValue( "/nomessage" );
+        cmd.addArgument( "/nomessage" );
         // Do not display Logo
-        cmd.createArgument().setValue( "/nologo" );
+        cmd.addArgument( "/nologo" );
 
         if( m_debug )
         {
-            cmd.createArgument().setValue( "/g" );
+            cmd.addArgument( "/g" );
         }
         if( m_optimize )
         {
-            cmd.createArgument().setValue( "/O" );
+            cmd.addArgument( "/O" );
         }
         if( m_verbose )
         {
-            cmd.createArgument().setValue( "/verbose" );
+            cmd.addArgument( "/verbose" );
         }
 
         addCurrentCompilerArgs( cmd );

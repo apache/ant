@@ -116,7 +116,7 @@ public abstract class AbstractMetamataTask
      */
     public void setMaxmemory( String max )
     {
-        createJvmarg().setValue( "-Xmx" + max );
+        m_cmdl.addVmArgument( "-Xmx" + max );
     }
 
     /**
@@ -150,9 +150,9 @@ public abstract class AbstractMetamataTask
     /**
      * Creates a nested jvmarg element.
      */
-    public Argument createJvmarg()
+    public void addJvmarg( final Argument argument )
     {
-        return m_cmdl.createVmArgument();
+        m_cmdl.addVmArgument( argument );
     }
 
     /**
@@ -200,8 +200,7 @@ public abstract class AbstractMetamataTask
         classPath.addLocation( jar );
 
         // set the metamata.home property
-        final Argument vmArgs = m_cmdl.createVmArgument();
-        vmArgs.setValue( "-Dmetamata.home=" + m_metamataHome.getAbsolutePath() );
+        m_cmdl.addVmArgument( "-Dmetamata.home=" + m_metamataHome.getAbsolutePath() );
 
         // retrieve all the files we want to scan
         m_includedFiles = scanFileSets();

@@ -105,9 +105,9 @@ public class ANTLR extends Task
      *      the JVM.
      * @see #setFork(boolean)
      */
-    public Argument createJvmarg()
+    public void addJvmarg( final Argument argument )
     {
-        return commandline.createVmArgument();
+        commandline.addVmArgument( argument );
     }
 
     public void execute()
@@ -122,9 +122,9 @@ public class ANTLR extends Task
         //TODO: use ANTLR to parse the grammer file to do this.
         if( target.lastModified() > getGeneratedFile().lastModified() )
         {
-            commandline.createArgument().setValue( "-o" );
-            commandline.createArgument().setValue( outputDirectory.toString() );
-            commandline.createArgument().setValue( target.toString() );
+            commandline.addArgument( "-o" );
+            commandline.addArgument( outputDirectory.toString() );
+            commandline.addArgument( target.toString() );
 
             if( fork )
             {

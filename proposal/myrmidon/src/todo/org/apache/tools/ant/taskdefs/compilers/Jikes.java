@@ -10,6 +10,7 @@ package org.apache.tools.ant.taskdefs.compilers;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * The implementation of the jikes compiler. This is primarily a cut-and-paste
@@ -83,37 +84,37 @@ public class Jikes
         cmd.setExecutable( "jikes" );
 
         if( m_deprecation == true )
-            cmd.createArgument().setValue( "-deprecation" );
+            cmd.addArgument( "-deprecation" );
 
         if( m_destDir != null )
         {
-            cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( m_destDir );
+            cmd.addArgument( "-d" );
+            cmd.addArgument( m_destDir );
         }
 
-        cmd.createArgument().setValue( "-classpath" );
-        cmd.createArgument().setPath( classpath );
+        cmd.addArgument( "-classpath" );
+        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
 
         if( m_encoding != null )
         {
-            cmd.createArgument().setValue( "-encoding" );
-            cmd.createArgument().setValue( m_encoding );
+            cmd.addArgument( "-encoding" );
+            cmd.addArgument( m_encoding );
         }
         if( m_debug )
         {
-            cmd.createArgument().setValue( "-g" );
+            cmd.addArgument( "-g" );
         }
         if( m_optimize )
         {
-            cmd.createArgument().setValue( "-O" );
+            cmd.addArgument( "-O" );
         }
         if( m_verbose )
         {
-            cmd.createArgument().setValue( "-verbose" );
+            cmd.addArgument( "-verbose" );
         }
         if( m_depend )
         {
-            cmd.createArgument().setValue( "-depend" );
+            cmd.addArgument( "-depend" );
         }
 
         if( m_attributes.getNowarn() )
@@ -124,7 +125,7 @@ public class Jikes
              * let the magic property win over the attribute for backwards
              * compatibility
              */
-            cmd.createArgument().setValue( "-nowarn" );
+            cmd.addArgument( "-nowarn" );
         }
 
         addCurrentCompilerArgs( cmd );

@@ -137,7 +137,7 @@ public class JJTree extends Task
         {
             String name = (String)iter.nextElement();
             Object value = optionalAttrs.get( name );
-            cmdl.createArgument().setValue( "-" + name + ":" + value.toString() );
+            cmdl.addArgument( "-" + name + ":" + value.toString() );
         }
 
         if( target == null || !target.isFile() )
@@ -156,8 +156,7 @@ public class JJTree extends Task
         }
         // convert backslashes to slashes, otherwise jjtree will put this as
         // comments and this seems to confuse javacc
-        cmdl.createArgument().setValue(
-            "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath().replace( '\\', '/' ) );
+        cmdl.addArgument( "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath().replace( '\\', '/' ) );
 
         String targetName = target.getName();
         final File javaFile = new File( outputDirectory,
@@ -167,7 +166,7 @@ public class JJTree extends Task
             getLogger().info( "Target is already built - skipping (" + target + ")" );
             return;
         }
-        cmdl.createArgument().setValue( target.getAbsolutePath() );
+        cmdl.addArgument( target.getAbsolutePath() );
 
         if( javaccHome == null || !javaccHome.isDirectory() )
         {
@@ -177,9 +176,8 @@ public class JJTree extends Task
         classpath.addLocation( new File( javaccHome, "JavaCC.zip" ) );
         classpath.addJavaRuntime();
 
-        final Argument arg = cmdl.createVmArgument();
-        arg.setValue( "-mx140M" );
-        arg.setValue( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
+        cmdl.addVmArgument( "-mx140M" );
+        cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
         final Execute2 exe = new Execute2();
         setupLogger( exe );

@@ -423,7 +423,7 @@ public class CCCheckout extends ClearCase
         // cleartool checkout [options...] [viewpath ...]
         // as specified in the CLEARTOOL.EXE help
         commandLine.setExecutable( getClearToolCommand() );
-        commandLine.createArgument().setValue( COMMAND_CHECKOUT );
+        commandLine.addArgument( COMMAND_CHECKOUT );
 
         checkOptions( commandLine );
 
@@ -450,8 +450,8 @@ public class CCCheckout extends ClearCase
              * Windows filename with a space and it is enclosed in double
              * quotes ("). This breaks clearcase.
              */
-            cmd.createArgument().setValue( FLAG_BRANCH );
-            cmd.createArgument().setValue( getBranch() );
+            cmd.addArgument( FLAG_BRANCH );
+            cmd.addArgument( getBranch() );
         }
     }
 
@@ -470,8 +470,8 @@ public class CCCheckout extends ClearCase
              * Windows filename with a space and it is enclosed in double
              * quotes ("). This breaks clearcase.
              */
-            cmd.createArgument().setValue( FLAG_COMMENT );
-            cmd.createArgument().setValue( getComment() );
+            cmd.addArgument( FLAG_COMMENT );
+            cmd.addArgument( getComment() );
         }
     }
 
@@ -490,8 +490,8 @@ public class CCCheckout extends ClearCase
              * Windows filename with a space and it is enclosed in double
              * quotes ("). This breaks clearcase.
              */
-            cmd.createArgument().setValue( FLAG_COMMENTFILE );
-            cmd.createArgument().setValue( getCommentFile() );
+            cmd.addArgument( FLAG_COMMENTFILE );
+            cmd.addArgument( getCommentFile() );
         }
     }
 
@@ -510,8 +510,8 @@ public class CCCheckout extends ClearCase
              * Windows filename with a space and it is enclosed in double
              * quotes ("). This breaks clearcase.
              */
-            cmd.createArgument().setValue( FLAG_OUT );
-            cmd.createArgument().setValue( getOut() );
+            cmd.addArgument( FLAG_OUT );
+            cmd.addArgument( getOut() );
         }
     }
 
@@ -526,12 +526,12 @@ public class CCCheckout extends ClearCase
         if( getReserved() )
         {
             // -reserved
-            cmd.createArgument().setValue( FLAG_RESERVED );
+            cmd.addArgument( FLAG_RESERVED );
         }
         else
         {
             // -unreserved
-            cmd.createArgument().setValue( FLAG_UNRESERVED );
+            cmd.addArgument( FLAG_UNRESERVED );
         }
 
         if( getOut() != null )
@@ -544,7 +544,7 @@ public class CCCheckout extends ClearCase
             if( getNoData() )
             {
                 // -ndata
-                cmd.createArgument().setValue( FLAG_NODATA );
+                cmd.addArgument( FLAG_NODATA );
             }
 
         }
@@ -559,7 +559,7 @@ public class CCCheckout extends ClearCase
             if( getVersion() )
             {
                 // -version
-                cmd.createArgument().setValue( FLAG_VERSION );
+                cmd.addArgument( FLAG_VERSION );
             }
 
         }
@@ -567,7 +567,7 @@ public class CCCheckout extends ClearCase
         if( getNoWarn() )
         {
             // -nwarn
-            cmd.createArgument().setValue( FLAG_NOWARN );
+            cmd.addArgument( FLAG_NOWARN );
         }
 
         if( getComment() != null )
@@ -584,12 +584,12 @@ public class CCCheckout extends ClearCase
             }
             else
             {
-                cmd.createArgument().setValue( FLAG_NOCOMMENT );
+                cmd.addArgument( FLAG_NOCOMMENT );
             }
         }
 
         // viewpath
-        cmd.createArgument().setValue( getViewPath() );
+        cmd.addArgument( getViewPath() );
     }
 
 }

@@ -143,8 +143,8 @@ public class CCMCreateTask
         //create task ok, set this task as the default one
         final Commandline cmd = new Commandline();
         cmd.setExecutable( getCcmCommand() );
-        cmd.createArgument().setValue( COMMAND_DEFAULT_TASK );
-        cmd.createArgument().setValue( m_task );
+        cmd.addArgument( COMMAND_DEFAULT_TASK );
+        cmd.addArgument( m_task );
 
         getLogger().debug( commandLine.toString() );
 
@@ -164,7 +164,7 @@ public class CCMCreateTask
         // build the command line from what we got the format
         // as specified in the CCM.EXE help
         commandLine.setExecutable( getCcmCommand() );
-        commandLine.createArgument().setValue( getCcmAction() );
+        commandLine.addArgument( getCcmAction() );
 
         checkOptions( commandLine );
 
@@ -184,32 +184,32 @@ public class CCMCreateTask
     {
         if( m_comment != null )
         {
-            cmd.createArgument().setValue( FLAG_COMMENT );
-            cmd.createArgument().setValue( "\"" + m_comment + "\"" );
+            cmd.addArgument( FLAG_COMMENT );
+            cmd.addArgument( "\"" + m_comment + "\"" );
         }
 
         if( m_platform != null )
         {
-            cmd.createArgument().setValue( FLAG_PLATFORM );
-            cmd.createArgument().setValue( m_platform );
+            cmd.addArgument( FLAG_PLATFORM );
+            cmd.addArgument( m_platform );
         }
 
         if( m_resolver != null )
         {
-            cmd.createArgument().setValue( FLAG_RESOLVER );
-            cmd.createArgument().setValue( m_resolver );
+            cmd.addArgument( FLAG_RESOLVER );
+            cmd.addArgument( m_resolver );
         }
 
         if( m_subSystem != null )
         {
-            cmd.createArgument().setValue( FLAG_SUBSYSTEM );
-            cmd.createArgument().setValue( "\"" + m_subSystem + "\"" );
+            cmd.addArgument( FLAG_SUBSYSTEM );
+            cmd.addArgument( "\"" + m_subSystem + "\"" );
         }
 
         if( m_release != null )
         {
-            cmd.createArgument().setValue( FLAG_RELEASE );
-            cmd.createArgument().setValue( m_release );
+            cmd.addArgument( FLAG_RELEASE );
+            cmd.addArgument( m_release );
         }
     }
 

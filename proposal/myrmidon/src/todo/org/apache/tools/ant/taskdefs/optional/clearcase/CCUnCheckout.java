@@ -127,7 +127,7 @@ public class CCUnCheckout extends ClearCase
         // cleartool uncheckout [options...] [viewpath ...]
         // as specified in the CLEARTOOL.EXE help
         commandLine.setExecutable( getClearToolCommand() );
-        commandLine.createArgument().setValue( COMMAND_UNCHECKOUT );
+        commandLine.addArgument( COMMAND_UNCHECKOUT );
 
         checkOptions( commandLine );
 
@@ -150,16 +150,16 @@ public class CCUnCheckout extends ClearCase
         if( getKeepCopy() )
         {
             // -keep
-            cmd.createArgument().setValue( FLAG_KEEPCOPY );
+            cmd.addArgument( FLAG_KEEPCOPY );
         }
         else
         {
             // -rm
-            cmd.createArgument().setValue( FLAG_RM );
+            cmd.addArgument( FLAG_RM );
         }
 
         // viewpath
-        cmd.createArgument().setValue( getViewPath() );
+        cmd.addArgument( getViewPath() );
     }
 
 }

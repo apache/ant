@@ -22,6 +22,7 @@ import org.apache.tools.ant.types.SourceFileScanner;
 import org.apache.aut.tar.TarConstants;
 import org.apache.aut.tar.TarEntry;
 import org.apache.aut.tar.TarOutputStream;
+import org.apache.avalon.excalibur.io.IOUtil;
 
 /**
  * Creates a TAR archive.
@@ -128,7 +129,7 @@ public class Tar
             }
 
             // add the main fileset to the list of filesets to process.
-            TarFileSet mainFileSet = new TarFileSet( /*fileset*/ );
+            final TarFileSet mainFileSet = new TarFileSet( /*fileset*/ );
             mainFileSet.setDir( baseDir );
             filesets.add( mainFileSet );
         }
@@ -222,212 +223,88 @@ public class Tar
         }
     }
 
-    protected boolean archiveIsUpToDate( String[] files )
+    private boolean archiveIsUpToDate( final String[] files )
         throws TaskException
     {
-        SourceFileScanner sfs = new SourceFileScanner( this );
-        MergingMapper mm = new MergingMapper();
-        mm.setTo( tarFile.getAbsolutePath() );
-        return sfs.restrict( files, baseDir, null, mm ).length == 0;
+        final SourceFileScanner scanner = new SourceFileScanner( this );
+        final MergingMapper mapper = new MergingMapper();
+        mapper.setTo( tarFile.getAbsolutePath() );
+        return scanner.restrict( files, baseDir, null, mapper ).length == 0;
     }
 
-    protected void tarFile( File file, TarOutputStream tOut, String vPath,
-                            TarFileSet tarFileSet )
+    private void tarFile( final File file,
+                          final TarOutputStream output,
+                          String path,
+                          final TarFileSet tarFileSet )
         throws IOException, TaskException
     {
-        FileInputStream fIn = null;
-
         // don't add "" to the archive
-        if( vPath.length() <= 0 )
+        if( path.length() <= 0 )
         {
             return;
         }
 
-        if( file.isDirectory() && !vPath.endsWith( "/" ) )
+        if( file.isDirectory() && !path.endsWith( "/" ) )
         {
-            vPath += "/";
+            path += "/";
         }
 
+        if( path.length() >= TarConstants.NAMELEN )
+        {
+            if( longFileMode.isOmitMode() )
+            {
+                final String message = "Omitting: " + path;
+                getLogger().info( message );
+                return;
+            }
+            else if( longFileMode.isWarnMode() )
+            {
+                final String message = "Entry: " + path + " longer than " +
+                    TarConstants.NAMELEN + " characters.";
+                getLogger().warn( message );
+                if( !longWarningGiven )
+                {
+                    final String message2 = "Resulting tar file can only be processed successfully"
+                        + " by GNU compatible tar commands";
+                    getLogger().warn( message2 );
+                    longWarningGiven = true;
+                }
+            }
+            else if( longFileMode.isFailMode() )
+            {
+                final String message = "Entry: " + path + " longer than " +
+                                        TarConstants.NAMELEN + "characters.";
+                throw new TaskException( message );
+            }
+        }
+
+        FileInputStream input = null;
         try
         {
-            if( vPath.length() >= TarConstants.NAMELEN )
-            {
-                if( longFileMode.isOmitMode() )
-                {
-                    getLogger().info( "Omitting: " + vPath );
-                    return;
-                }
-                else if( longFileMode.isWarnMode() )
-                {
-                    final String message = "Entry: " + vPath + " longer than " +
-                        TarConstants.NAMELEN + " characters.";
-                    getLogger().warn( message );
-                    if( !longWarningGiven )
-                    {
-                        final String message2 = "Resulting tar file can only be processed successfully"
-                            + " by GNU compatible tar commands";
-                        getLogger().warn( message2 );
-                        longWarningGiven = true;
-                    }
-                }
-                else if( longFileMode.isFailMode() )
-                {
-                    throw new TaskException(
-                        "Entry: " + vPath + " longer than " +
-                        TarConstants.NAMELEN + "characters." );
-                }
-            }
-
-            TarEntry te = new TarEntry( vPath );
-            te.setModTime( file.lastModified() );
+            final TarEntry entry = new TarEntry( path );
+            entry.setModTime( file.lastModified() );
             if( !file.isDirectory() )
             {
-                te.setSize( file.length() );
-                te.setMode( tarFileSet.getMode() );
+                entry.setSize( file.length() );
+                entry.setMode( tarFileSet.getMode() );
             }
-            te.setUserName( tarFileSet.getUserName() );
-            te.setGroupName( tarFileSet.getGroup() );
+            entry.setUserName( tarFileSet.getUserName() );
+            entry.setGroupName( tarFileSet.getGroup() );
 
-            tOut.putNextEntry( te );
+            output.putNextEntry( entry );
 
             if( !file.isDirectory() )
             {
-                fIn = new FileInputStream( file );
-
-                byte[] buffer = new byte[ 8 * 1024 ];
-                int count = 0;
-                do
-                {
-                    tOut.write( buffer, 0, count );
-                    count = fIn.read( buffer, 0, buffer.length );
-                } while( count != -1 );
+                input = new FileInputStream( file );
+                IOUtil.copy( input, output );
             }
 
-            tOut.closeEntry();
+            output.closeEntry();
         }
         finally
         {
-            if( fIn != null )
-                fIn.close();
-        }
-    }
-
-    public static class TarFileSet extends FileSet
-    {
-        private String[] files = null;
-
-        private int mode = 0100644;
-
-        private String userName = "";
-        private String groupName = "";
-
-        public void setGroup( String groupName )
-        {
-            this.groupName = groupName;
-        }
-
-        public void setMode( String octalString )
-        {
-            this.mode = 0100000 | Integer.parseInt( octalString, 8 );
-        }
-
-        public void setUserName( String userName )
-        {
-            this.userName = userName;
-        }
-
-        /**
-         * Get a list of files and directories specified in the fileset.
-         *
-         * @param p Description of Parameter
-         * @return a list of file and directory names, relative to the baseDir
-         *      for the project.
-         */
-        public String[] getFiles()
-            throws TaskException
-        {
-            if( files == null )
-            {
-                final DirectoryScanner scanner = getDirectoryScanner();
-                final String[] directories = scanner.getIncludedDirectories();
-                final String[] filesPerSe = scanner.getIncludedFiles();
-                files = new String[ directories.length + filesPerSe.length ];
-                System.arraycopy( directories, 0, files, 0, directories.length );
-                System.arraycopy( filesPerSe, 0, files, directories.length,
-                                  filesPerSe.length );
-            }
-
-            return files;
-        }
-
-        public String getGroup()
-        {
-            return groupName;
-        }
-
-        public int getMode()
-        {
-            return mode;
-        }
-
-        public String getUserName()
-        {
-            return userName;
-        }
-
-    }
-
-    /**
-     * Valid Modes for LongFile attribute to Tar Task
-     *
-     * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
-     */
-    public static class TarLongFileMode extends EnumeratedAttribute
-    {
-        // permissable values for longfile attribute
-        public final static String WARN = "warn";
-        public final static String FAIL = "fail";
-        public final static String TRUNCATE = "truncate";
-        public final static String GNU = "gnu";
-        public final static String OMIT = "omit";
-
-        private final String[] validModes = {WARN, FAIL, TRUNCATE, GNU, OMIT};
-
-        public TarLongFileMode()
-            throws TaskException
-        {
-            super();
-            setValue( WARN );
-        }
-
-        public String[] getValues()
-        {
-            return validModes;
-        }
-
-        public boolean isFailMode()
-        {
-            return FAIL.equalsIgnoreCase( getValue() );
-        }
-
-        public boolean isGnuMode()
-        {
-            return GNU.equalsIgnoreCase( getValue() );
-        }
-
-        public boolean isOmitMode()
-        {
-            return OMIT.equalsIgnoreCase( getValue() );
-        }
-
-        public boolean isTruncateMode()
-        {
-            return TRUNCATE.equalsIgnoreCase( getValue() );
-        }
-
-        public boolean isWarnMode()
-        {
-            return WARN.equalsIgnoreCase( getValue() );
+            if( input != null )
+                input.close();
         }
     }
 }

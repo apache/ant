@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import org.apache.avalon.excalibur.io.FileUtil;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.types.FilterSetCollection;
+import org.apache.tools.ant.types.Path;
 
 /**
  * This class also encapsulates methods which allow Files to be refered to using
@@ -298,6 +298,12 @@ public class FileUtils
         }
     }
 
+    public static String[] translateCommandline( Path to_process )
+        throws TaskException
+    {
+        return translateCommandline( to_process.toString() );
+    }
+
     public static String[] translateCommandline( String to_process )
         throws TaskException
     {
@@ -405,7 +411,7 @@ public class FileUtils
     public static void translateFileSep( StringBuffer buffer )
     {
         int len = buffer.length();
-        for ( int pos = 0; pos < len; pos++ )
+        for( int pos = 0; pos < len; pos++ )
         {
             char ch = buffer.charAt( pos );
             if( ch == '/' || ch == '\\' )

@@ -242,7 +242,7 @@ public class CovReport extends Task
             String[] params = getParameters();
             for( int i = 0; i < params.length; i++ )
             {
-                cmdl.createArgument().setValue( params[ i ] );
+                cmdl.addArgument( params[ i ] );
             }
 
             // use the custom handler for stdin issues

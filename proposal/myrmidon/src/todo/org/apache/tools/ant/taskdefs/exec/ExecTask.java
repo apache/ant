@@ -162,12 +162,10 @@ public class ExecTask
 
     /**
      * Add a nested arg element - a command line argument.
-     *
-     * @return Description of the Returned Value
      */
-    public Argument createArg()
+    public void addArg( final Argument argument )
     {
-        return m_command.createArgument();
+        m_command.addArgument( argument );
     }
 
     /**

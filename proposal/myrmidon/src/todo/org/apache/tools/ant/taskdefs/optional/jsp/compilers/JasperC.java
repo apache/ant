@@ -68,36 +68,36 @@ public class JasperC
         JspC jspc = getJspc();
         if( jspc.getDestdir() != null )
         {
-            cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( jspc.getDestdir() );
+            cmd.addArgument( "-d" );
+            cmd.addArgument( jspc.getDestdir() );
         }
         if( jspc.getPackage() != null )
         {
-            cmd.createArgument().setValue( "-p" );
-            cmd.createArgument().setValue( jspc.getPackage() );
+            cmd.addArgument( "-p" );
+            cmd.addArgument( jspc.getPackage() );
         }
         if( jspc.getVerbose() != 0 )
         {
-            cmd.createArgument().setValue( "-v" + jspc.getVerbose() );
+            cmd.addArgument( "-v" + jspc.getVerbose() );
         }
         if( jspc.isMapped() )
         {
-            cmd.createArgument().setValue( "-mapped" );
+            cmd.addArgument( "-mapped" );
         }
         if( jspc.getIeplugin() != null )
         {
-            cmd.createArgument().setValue( "-ieplugin" );
-            cmd.createArgument().setValue( jspc.getIeplugin() );
+            cmd.addArgument( "-ieplugin" );
+            cmd.addArgument( jspc.getIeplugin() );
         }
         if( jspc.getUriroot() != null )
         {
-            cmd.createArgument().setValue( "-uriroot" );
-            cmd.createArgument().setValue( jspc.getUriroot().toString() );
+            cmd.addArgument( "-uriroot" );
+            cmd.addArgument( jspc.getUriroot().toString() );
         }
         if( jspc.getUribase() != null )
         {
-            cmd.createArgument().setValue( "-uribase" );
-            cmd.createArgument().setValue( jspc.getUribase().toString() );
+            cmd.addArgument( "-uribase" );
+            cmd.addArgument( jspc.getUribase().toString() );
         }
         logAndAddFilesToCompile( getJspc(), getJspc().getCompileList(), cmd );
         return cmd;

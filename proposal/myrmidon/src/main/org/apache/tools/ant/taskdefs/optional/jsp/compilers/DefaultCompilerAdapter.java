@@ -66,7 +66,7 @@ public abstract class DefaultCompilerAdapter
         while( enum.hasNext() )
         {
             String arg = (String)enum.next();
-            cmd.createArgument().setValue( arg );
+            cmd.addArgument( arg );
             niceSourceList.append( "    " + arg + StringUtil.LINE_SEPARATOR );
         }
 

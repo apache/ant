@@ -13,6 +13,7 @@ import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.Argument;
 
 /**
  * @author lucas@collab.net
@@ -119,26 +120,26 @@ public class Rpm
         cmd.setExecutable( "rpm" );
         if( m_topDir != null )
         {
-            cmd.createArgument().setValue( "--define" );
-            cmd.createArgument().setValue( "_topdir" + m_topDir );
+            cmd.addArgument( "--define" );
+            cmd.addArgument( "_topdir" + m_topDir );
         }
 
         cmd.createArgument().setLine( m_command );
 
         if( m_cleanBuildDir )
         {
-            cmd.createArgument().setValue( "--clean" );
+            cmd.addArgument( "--clean" );
         }
         if( m_removeSpec )
         {
-            cmd.createArgument().setValue( "--rmspec" );
+            cmd.addArgument( "--rmspec" );
         }
         if( m_removeSource )
         {
-            cmd.createArgument().setValue( "--rmsource" );
+            cmd.addArgument( "--rmsource" );
         }
 
-        cmd.createArgument().setValue( "SPECS/" + m_specFile );
+        cmd.addArgument( "SPECS/" + m_specFile );
         return cmd;
     }
 }

@@ -187,7 +187,7 @@ public abstract class MSVSS extends Task
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_LOGIN + m_vssLogin );
+            cmd.addArgument( FLAG_LOGIN + m_vssLogin );
         }
     }
 

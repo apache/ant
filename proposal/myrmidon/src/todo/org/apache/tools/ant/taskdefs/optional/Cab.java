@@ -247,13 +247,13 @@ public class Cab
     {
         final Commandline cmd = new Commandline();
         cmd.setExecutable( "cabarc" );
-        cmd.createArgument().setValue( "-r" );
-        cmd.createArgument().setValue( "-p" );
+        cmd.addArgument( "-r" );
+        cmd.addArgument( "-p" );
 
         if( !m_compress )
         {
-            cmd.createArgument().setValue( "-m" );
-            cmd.createArgument().setValue( "none" );
+            cmd.addArgument( "-m" );
+            cmd.addArgument( "none" );
         }
 
         if( m_options != null )
@@ -261,9 +261,9 @@ public class Cab
             cmd.createArgument().setLine( m_options );
         }
 
-        cmd.createArgument().setValue( "n" );
-        cmd.createArgument().setFile( m_cabFile );
-        cmd.createArgument().setValue( "@" + listFile.getAbsolutePath() );
+        cmd.addArgument( "n" );
+        cmd.addArgument( m_cabFile );
+        cmd.addArgument( "@" + listFile.getAbsolutePath() );
 
         return cmd;
     }

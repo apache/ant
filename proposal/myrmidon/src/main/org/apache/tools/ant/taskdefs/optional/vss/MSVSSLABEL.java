@@ -247,20 +247,20 @@ public class MSVSSLABEL extends MSVSS
 
         if( m_AutoResponse == null )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_DEF );
+            cmd.addArgument( FLAG_AUTORESPONSE_DEF );
         }
         else if( m_AutoResponse.equalsIgnoreCase( "Y" ) )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_YES );
+            cmd.addArgument( FLAG_AUTORESPONSE_YES );
 
         }
         else if( m_AutoResponse.equalsIgnoreCase( "N" ) )
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_NO );
+            cmd.addArgument( FLAG_AUTORESPONSE_NO );
         }
         else
         {
-            cmd.createArgument().setValue( FLAG_AUTORESPONSE_DEF );
+            cmd.addArgument( FLAG_AUTORESPONSE_DEF );
         }// end of else
 
     }
@@ -294,7 +294,7 @@ public class MSVSSLABEL extends MSVSS
     {
         if( m_Label != null )
         {
-            cmd.createArgument().setValue( FLAG_LABEL + m_Label );
+            cmd.addArgument( FLAG_LABEL + m_Label );
         }
     }
 
@@ -307,7 +307,7 @@ public class MSVSSLABEL extends MSVSS
     {
         if( m_Version != null )
         {
-            cmd.createArgument().setValue( FLAG_VERSION + m_Version );
+            cmd.addArgument( FLAG_VERSION + m_Version );
         }
     }
 
@@ -343,13 +343,13 @@ public class MSVSSLABEL extends MSVSS
         // ss Label VSS items [-C]      [-H] [-I-] [-Llabel] [-N] [-O]      [-V]      [-Y] [-?]
         // as specified in the SS.EXE help
         commandLine.setExecutable( getSSCommand() );
-        commandLine.createArgument().setValue( COMMAND_LABEL );
+        commandLine.addArgument( COMMAND_LABEL );
 
         // VSS items
-        commandLine.createArgument().setValue( getVsspath() );
+        commandLine.addArgument( getVsspath() );
 
         // -C
-        commandLine.createArgument().setValue( "-C" + getComment() );
+        commandLine.addArgument( "-C" + getComment() );
 
         // -I- or -I-Y or -I-N
         getAutoresponse( commandLine );

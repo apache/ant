@@ -140,15 +140,15 @@ public abstract class P4Base
             //Check API for these - it's how CVS does it...
             if( m_p4Port != null && m_p4Port.length() != 0 )
             {
-                cmd.createArgument().setValue( m_p4Port );
+                cmd.addArgument( m_p4Port );
             }
             if( m_p4User != null && m_p4User.length() != 0 )
             {
-                cmd.createArgument().setValue( m_p4User );
+                cmd.addArgument( m_p4User );
             }
             if( m_p4Client != null && m_p4Client.length() != 0 )
             {
-                cmd.createArgument().setValue( m_p4Client );
+                cmd.addArgument( m_p4Client );
             }
             cmd.createArgument().setLine( command );
 

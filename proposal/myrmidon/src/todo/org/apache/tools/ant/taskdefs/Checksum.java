@@ -11,8 +11,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.InputStream;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -20,9 +21,10 @@ import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.taskdefs.condition.Condition;
+import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
 
 /**
@@ -31,61 +33,73 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  */
-public class Checksum extends MatchingTask implements Condition
+public class Checksum
+    extends MatchingTask
+    implements Condition
 {
     /**
      * File for which checksum is to be calculated.
      */
-    private File file = null;
+    private File m_file;
+
     /**
      * MessageDigest algorithm to be used.
      */
-    private String algorithm = "MD5";
+    private String m_algorithm = "MD5";
+
     /**
      * MessageDigest Algorithm provider
      */
-    private String provider = null;
+    private String m_provider;
+
     /**
      * ArrayList to hold source file sets.
      */
-    private ArrayList filesets = new ArrayList();
+    private ArrayList m_filesets = new ArrayList();
+
     /**
      * Stores SourceFile, DestFile pairs and SourceFile, Property String pairs.
      */
-    private Hashtable includeFileMap = new Hashtable();
+    private Hashtable m_includeFileMap = new Hashtable();
+
     /**
      * File Extension that is be to used to create or identify destination file
      */
-    private String fileext;
+    private String m_fileext;
+
     /**
      * Create new destination file? Defaults to false.
      */
-    private boolean forceOverwrite;
+    private boolean m_forceOverwrite;
+
     /**
      * is this task being used as a nested condition element?
      */
-    private boolean isCondition;
+    private boolean m_isCondition;
+
     /**
      * Message Digest instance
      */
-    private MessageDigest messageDigest;
+    private MessageDigest m_messageDigest;
+
     /**
      * Holds generated checksum and gets set as a Project Property.
      */
-    private String property;
+    private String m_property;
+
     /**
      * Contains the result of a checksum verification. ("true" or "false")
      */
-    private String verifyProperty;
+    private String m_verifyProperty;
 
     /**
      * Sets the MessageDigest algorithm to be used to calculate the checksum.
      *
      * @param algorithm The new Algorithm value
      */
-    public void setAlgorithm( String algorithm )
+    public void setAlgorithm( final String algorithm )
     {
-        this.algorithm = algorithm;
+        m_algorithm = algorithm;
     }
 
     /**
@@ -93,9 +107,9 @@ public class Checksum extends MatchingTask implements Condition
      *
      * @param file The new File value
      */
-    public void setFile( File file )
+    public void setFile( final File file )
     {
-        this.file = file;
+        m_file = file;
     }
 
     /**
@@ -104,9 +118,9 @@ public class Checksum extends MatchingTask implements Condition
      *
      * @param fileext The new Fileext value
      */
-    public void setFileext( String fileext )
+    public void setFileext( final String fileext )
     {
-        this.fileext = fileext;
+        m_fileext = fileext;
     }
 
     /**
@@ -117,7 +131,7 @@ public class Checksum extends MatchingTask implements Condition
      */
     public void setForceOverwrite( boolean forceOverwrite )
     {
-        this.forceOverwrite = forceOverwrite;
+        this.m_forceOverwrite = forceOverwrite;
     }
 
     /**
@@ -127,7 +141,7 @@ public class Checksum extends MatchingTask implements Condition
      */
     public void setProperty( String property )
     {
-        this.property = property;
+        this.m_property = property;
     }
 
     /**
@@ -136,9 +150,9 @@ public class Checksum extends MatchingTask implements Condition
      *
      * @param provider The new Provider value
      */
-    public void setProvider( String provider )
+    public void setProvider( final String provider )
     {
-        this.provider = provider;
+        m_provider = provider;
     }
 
     /**
@@ -147,9 +161,9 @@ public class Checksum extends MatchingTask implements Condition
      *
      * @param verifyProperty The new Verifyproperty value
      */
-    public void setVerifyproperty( String verifyProperty )
+    public void setVerifyproperty( final String verifyProperty )
     {
-        this.verifyProperty = verifyProperty;
+        m_verifyProperty = verifyProperty;
     }
 
     /**
@@ -157,9 +171,9 @@ public class Checksum extends MatchingTask implements Condition
      *
      * @param set The feature to be added to the Fileset attribute
      */
-    public void addFileset( FileSet set )
+    public void addFileset( final FileSet set )
     {
-        filesets.add( set );
+        m_filesets.add( set );
     }
 
     /**
@@ -167,12 +181,11 @@ public class Checksum extends MatchingTask implements Condition
      *
      * @return Returns true if the checksum verification test passed, false
      *      otherwise.
-     * @exception TaskException Description of Exception
      */
     public boolean eval()
         throws TaskException
     {
-        isCondition = true;
+        m_isCondition = true;
         return validateAndExecute();
     }
 
@@ -184,10 +197,10 @@ public class Checksum extends MatchingTask implements Condition
     public void execute()
         throws TaskException
     {
-        boolean value = validateAndExecute();
-        if( verifyProperty != null )
+        final boolean value = validateAndExecute();
+        if( m_verifyProperty != null )
         {
-            setProperty( verifyProperty, new Boolean( value ).toString() );
+            setProperty( m_verifyProperty, new Boolean( value ).toString() );
         }
     }
 
@@ -197,36 +210,37 @@ public class Checksum extends MatchingTask implements Condition
      * @param file The feature to be added to the ToIncludeFileMap attribute
      * @exception TaskException Description of Exception
      */
-    private void addToIncludeFileMap( File file )
+    private void addToIncludeFileMap( final File file )
         throws TaskException
     {
         if( file != null )
         {
             if( file.exists() )
             {
-                if( property == null )
+                if( m_property == null )
                 {
-                    File dest = new File( file.getParent(), file.getName() + fileext );
-                    if( forceOverwrite || isCondition ||
+                    final File dest = new File( file.getParent(), file.getName() + m_fileext );
+                    if( m_forceOverwrite || m_isCondition ||
                         ( file.lastModified() > dest.lastModified() ) )
                     {
-                        includeFileMap.put( file, dest );
+                        m_includeFileMap.put( file, dest );
                     }
                     else
                     {
-                        getLogger().debug( file + " omitted as " + dest + " is up to date." );
+                        final String message = file + " omitted as " + dest +
+                            " is up to date.";
+                        getLogger().debug( message );
                     }
                 }
                 else
                 {
-                    includeFileMap.put( file, property );
+                    m_includeFileMap.put( file, m_property );
                 }
             }
             else
             {
-                String message = "Could not find file "
-                    + file.getAbsolutePath()
-                    + " to generate checksum for.";
+                final String message = "Could not find file " + file.getAbsolutePath() +
+                    " to generate checksum for.";
                 getLogger().info( message );
                 throw new TaskException( message );
             }
@@ -235,253 +249,266 @@ public class Checksum extends MatchingTask implements Condition
 
     /**
      * Generate checksum(s) using the message digest created earlier.
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
     private boolean generateChecksums()
         throws TaskException
     {
         boolean checksumMatches = true;
+        final Enumeration includes = m_includeFileMap.keys();
+        while( includes.hasMoreElements() )
+        {
+            final File src = (File)includes.nextElement();
+            if( !m_isCondition )
+            {
+                final String message = "Calculating " + m_algorithm + " checksum for " + src;
+                getLogger().info( message );
+            }
+
+            checksumMatches = z( src, checksumMatches );
+        }
+
+        return checksumMatches;
+    }
+
+    private boolean z( final File src, boolean checksumMatches )
+        throws TaskException
+    {
         FileInputStream fis = null;
         FileOutputStream fos = null;
         try
         {
-            for( Enumeration e = includeFileMap.keys(); e.hasMoreElements(); )
+            fis = new FileInputStream( src );
+            final byte[] fileDigest = buildDigest( fis );
+            IOUtil.shutdownStream( fis );
+
+
+            String checksum = "";
+            for( int i = 0; i < fileDigest.length; i++ )
             {
-                messageDigest.reset();
-                File src = (File)e.nextElement();
-                if( !isCondition )
+                final String hexStr = Integer.toHexString( 0x00ff & fileDigest[ i ] );
+                if( hexStr.length() < 2 )
                 {
-                    getLogger().info( "Calculating " + algorithm + " checksum for " + src );
+                    checksum += "0";
                 }
-                fis = new FileInputStream( src );
-                DigestInputStream dis = new DigestInputStream( fis,
-                                                               messageDigest );
-                while( dis.read() != -1 )
-                    ;
-                dis.close();
-                fis.close();
-                fis = null;
-                byte[] fileDigest = messageDigest.digest();
-                String checksum = "";
-                for( int i = 0; i < fileDigest.length; i++ )
+                checksum += hexStr;
+            }
+
+            //can either be a property name string or a file
+            Object destination = m_includeFileMap.get( src );
+            if( destination instanceof String )
+            {
+                String prop = (String)destination;
+                if( m_isCondition )
                 {
-                    String hexStr = Integer.toHexString( 0x00ff & fileDigest[ i ] );
-                    if( hexStr.length() < 2 )
-                    {
-                        checksum += "0";
-                    }
-                    checksum += hexStr;
+                    checksumMatches = checksum.equals( m_property );
                 }
-                //can either be a property name string or a file
-                Object destination = includeFileMap.get( src );
-                if( destination instanceof java.lang.String )
+                else
                 {
-                    String prop = (String)destination;
-                    if( isCondition )
+                    setProperty( prop, checksum );
+                }
+            }
+            else if( destination instanceof File )
+            {
+                final File file = (File)destination;
+                if( m_isCondition )
+                {
+                    if( file.exists() &&
+                        file.length() == checksum.length() )
                     {
-                        checksumMatches = checksum.equals( property );
+                        fis = new FileInputStream( file );
+                        InputStreamReader isr = new InputStreamReader( fis );
+                        BufferedReader br = new BufferedReader( isr );
+                        String suppliedChecksum = br.readLine();
+                        fis.close();
+                        fis = null;
+                        br.close();
+                        isr.close();
+                        checksumMatches =
+                            checksum.equals( suppliedChecksum );
                     }
                     else
                     {
-                        setProperty( prop, checksum );
+                        checksumMatches = false;
                     }
                 }
-                else if( destination instanceof java.io.File )
+                else
                 {
-                    if( isCondition )
-                    {
-                        File existingFile = (File)destination;
-                        if( existingFile.exists() &&
-                            existingFile.length() == checksum.length() )
-                        {
-                            fis = new FileInputStream( existingFile );
-                            InputStreamReader isr = new InputStreamReader( fis );
-                            BufferedReader br = new BufferedReader( isr );
-                            String suppliedChecksum = br.readLine();
-                            fis.close();
-                            fis = null;
-                            br.close();
-                            isr.close();
-                            checksumMatches =
-                                checksum.equals( suppliedChecksum );
-                        }
-                        else
-                        {
-                            checksumMatches = false;
-                        }
-                    }
-                    else
-                    {
-                        File dest = (File)destination;
-                        fos = new FileOutputStream( dest );
-                        fos.write( checksum.getBytes() );
-                        fos.close();
-                        fos = null;
-                    }
+                    fos = new FileOutputStream( file );
+                    fos.write( checksum.getBytes() );
+                    fos.close();
+                    fos = null;
                 }
             }
         }
-        catch( Exception e )
+        catch( final Exception e )
         {
-            throw new TaskException( "Error", e );
+            throw new TaskException( e.getMessage(), e );
         }
         finally
         {
-            if( fis != null )
-            {
-                try
-                {
-                    fis.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
-            if( fos != null )
-            {
-                try
-                {
-                    fos.close();
-                }
-                catch( IOException e )
-                {
-                }
-            }
+            IOUtil.shutdownStream( fis );
+            IOUtil.shutdownStream( fos );
         }
         return checksumMatches;
     }
 
+    private byte[] buildDigest( final InputStream input )
+        throws IOException
+    {
+        m_messageDigest.reset();
+
+        final DigestInputStream digester =
+            new DigestInputStream( input, m_messageDigest );
+
+        while( digester.read() != -1 )
+        {
+        }
+
+        digester.close();
+        return m_messageDigest.digest();
+    }
+
     /**
      * Validate attributes and get down to business.
-     *
-     * @return Description of the Returned Value
-     * @exception TaskException Description of Exception
      */
     private boolean validateAndExecute()
         throws TaskException
     {
-
-        if( file == null && filesets.size() == 0 )
+        if( null == m_file && 0 == m_filesets.size() )
         {
-            throw new TaskException(
-                "Specify at least one source - a file or a fileset." );
+            final String message = "Specify at least one source - a file or a fileset.";
+            throw new TaskException( message );
         }
 
-        if( file != null && file.exists() && file.isDirectory() )
+        if( null != m_file && m_file.exists() && m_file.isDirectory() )
         {
-            throw new TaskException(
-                "Checksum cannot be generated for directories" );
+            final String message = "Checksum cannot be generated for directories";
+            throw new TaskException( message );
         }
 
-        if( property != null && fileext != null )
+        if( null != m_property && null != m_fileext )
         {
-            throw new TaskException(
-                "Property and FileExt cannot co-exist." );
+            final String message = "Property and FileExt cannot co-exist.";
+            throw new TaskException( message );
         }
 
-        if( property != null )
+        if( m_property != null )
         {
-            if( forceOverwrite )
+            if( m_forceOverwrite )
             {
-                throw new TaskException(
-                    "ForceOverwrite cannot be used when Property is specified" );
+                final String message =
+                    "ForceOverwrite cannot be used when Property is specified";
+                throw new TaskException( message );
             }
 
-            if( file != null )
+            if( m_file != null )
             {
-                if( filesets.size() > 0 )
+                if( m_filesets.size() > 0 )
                 {
-                    throw new TaskException(
-                        "Multiple files cannot be used when Property is specified" );
+                    final String message =
+                        "Multiple files cannot be used when Property is specified";
+                    throw new TaskException( message );
                 }
             }
             else
             {
-                if( filesets.size() > 1 )
+                if( m_filesets.size() > 1 )
                 {
-                    throw new TaskException(
-                        "Multiple files cannot be used when Property is specified" );
+                    final String message =
+                        "Multiple files cannot be used when Property is specified";
+                    throw new TaskException( message );
                 }
             }
         }
 
-        if( verifyProperty != null )
+        if( m_verifyProperty != null )
         {
-            isCondition = true;
+            m_isCondition = true;
         }
 
-        if( verifyProperty != null && forceOverwrite )
+        if( m_verifyProperty != null && m_forceOverwrite )
         {
-            throw new TaskException(
-                "VerifyProperty and ForceOverwrite cannot co-exist." );
+            final String message = "VerifyProperty and ForceOverwrite cannot co-exist.";
+            throw new TaskException( message );
         }
 
-        if( isCondition && forceOverwrite )
+        if( m_isCondition && m_forceOverwrite )
         {
-            throw new TaskException(
-                "ForceOverwrite cannot be used when conditions are being used." );
+            final String message = "ForceOverwrite cannot be used when conditions are being used.";
+            throw new TaskException( message );
         }
 
-        if( fileext == null )
+        if( m_fileext == null )
         {
-            fileext = "." + algorithm;
+            m_fileext = "." + m_algorithm;
         }
-        else if( fileext.trim().length() == 0 )
+        else if( m_fileext.trim().length() == 0 )
         {
-            throw new TaskException(
-                "File extension when specified must not be an empty string" );
+            final String message = "File extension when specified must not be an empty string";
+            throw new TaskException( message );
         }
 
-        messageDigest = null;
-        if( provider != null )
+        setupMessageDigest();
+
+        if( m_messageDigest == null )
+        {
+            final String message = "Unable to create Message Digest";
+            throw new TaskException( message );
+        }
+
+        addIncludes();
+
+        return generateChecksums();
+    }
+
+    private void setupMessageDigest()
+        throws TaskException
+    {
+        m_messageDigest = null;
+        if( m_provider != null )
         {
             try
             {
-                messageDigest = MessageDigest.getInstance( algorithm, provider );
+                m_messageDigest = MessageDigest.getInstance( m_algorithm, m_provider );
             }
-            catch( NoSuchAlgorithmException noalgo )
+            catch( final NoSuchAlgorithmException nsae )
             {
-                throw new TaskException( noalgo.toString(), noalgo );
+                throw new TaskException( nsae.toString(), nsae );
             }
-            catch( NoSuchProviderException noprovider )
+            catch( final NoSuchProviderException nspe )
             {
-                throw new TaskException( noprovider.toString(), noprovider );
+                throw new TaskException( nspe.toString(), nspe );
             }
         }
         else
         {
             try
             {
-                messageDigest = MessageDigest.getInstance( algorithm );
+                m_messageDigest = MessageDigest.getInstance( m_algorithm );
             }
-            catch( NoSuchAlgorithmException noalgo )
+            catch( final NoSuchAlgorithmException nsae )
             {
-                throw new TaskException( noalgo.toString(), noalgo );
+                throw new TaskException( nsae.toString(), nsae );
             }
         }
+    }
 
-        if( messageDigest == null )
+    private void addIncludes()
+        throws TaskException
+    {
+        addToIncludeFileMap( m_file );
+
+        final int size = m_filesets.size();
+        for( int i = 0; i < size; i++ )
         {
-            throw new TaskException( "Unable to create Message Digest" );
-        }
-
-        addToIncludeFileMap( file );
-
-        int sizeofFileSet = filesets.size();
-        for( int i = 0; i < sizeofFileSet; i++ )
-        {
-            FileSet fs = (FileSet)filesets.get( i );
-            DirectoryScanner ds = fs.getDirectoryScanner();
-            String[] srcFiles = ds.getIncludedFiles();
+            final FileSet fileSet = (FileSet)m_filesets.get( i );
+            final DirectoryScanner scanner = fileSet.getDirectoryScanner();
+            final String[] srcFiles = scanner.getIncludedFiles();
             for( int j = 0; j < srcFiles.length; j++ )
             {
-                File src = new File( fs.getDir(), srcFiles[ j ] );
+                final File src = new File( fileSet.getDir(), srcFiles[ j ] );
                 addToIncludeFileMap( src );
             }
         }
-
-        return generateChecksums();
     }
 }

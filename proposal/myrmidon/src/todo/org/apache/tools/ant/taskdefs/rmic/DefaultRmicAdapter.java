@@ -16,6 +16,7 @@ import org.apache.tools.ant.taskdefs.Rmic;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.util.mappers.FileNameMapper;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This is the default implementation for the RmicAdapter interface. Currently,
@@ -101,65 +102,65 @@ public abstract class DefaultRmicAdapter
         {
             for( int i = 0; i < options.length; i++ )
             {
-                cmd.createArgument().setValue( options[ i ] );
+                cmd.addArgument( options[ i ] );
             }
         }
 
         Path classpath = getCompileClasspath();
 
-        cmd.createArgument().setValue( "-d" );
-        cmd.createArgument().setFile( attributes.getBase() );
+        cmd.addArgument( "-d" );
+        cmd.addArgument( attributes.getBase() );
 
         if( attributes.getExtdirs() != null )
         {
-            cmd.createArgument().setValue( "-extdirs" );
-            cmd.createArgument().setPath( attributes.getExtdirs() );
+            cmd.addArgument( "-extdirs" );
+            cmd.addArguments( FileUtils.translateCommandline( attributes.getExtdirs() ) );
         }
 
-        cmd.createArgument().setValue( "-classpath" );
-        cmd.createArgument().setPath( classpath );
+        cmd.addArgument( "-classpath" );
+        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
 
         String stubVersion = attributes.getStubVersion();
         if( null != stubVersion )
         {
             if( "1.1".equals( stubVersion ) )
-                cmd.createArgument().setValue( "-v1.1" );
+                cmd.addArgument( "-v1.1" );
             else if( "1.2".equals( stubVersion ) )
-                cmd.createArgument().setValue( "-v1.2" );
+                cmd.addArgument( "-v1.2" );
             else
-                cmd.createArgument().setValue( "-vcompat" );
+                cmd.addArgument( "-vcompat" );
         }
 
         if( null != attributes.getSourceBase() )
         {
-            cmd.createArgument().setValue( "-keepgenerated" );
+            cmd.addArgument( "-keepgenerated" );
         }
 
         if( attributes.getIiop() )
         {
             getLogger().info( "IIOP has been turned on." );
-            cmd.createArgument().setValue( "-iiop" );
+            cmd.addArgument( "-iiop" );
             if( attributes.getIiopopts() != null )
             {
                 getLogger().info( "IIOP Options: " + attributes.getIiopopts() );
-                cmd.createArgument().setValue( attributes.getIiopopts() );
+                cmd.addArgument( attributes.getIiopopts() );
             }
         }
 
         if( attributes.getIdl() )
         {
-            cmd.createArgument().setValue( "-idl" );
+            cmd.addArgument( "-idl" );
             getLogger().info( "IDL has been turned on." );
             if( attributes.getIdlopts() != null )
             {
-                cmd.createArgument().setValue( attributes.getIdlopts() );
+                cmd.addArgument( attributes.getIdlopts() );
                 getLogger().info( "IDL Options: " + attributes.getIdlopts() );
             }
         }
 
         if( attributes.getDebug() )
         {
-            cmd.createArgument().setValue( "-g" );
+            cmd.addArgument( "-g" );
         }
 
         logAndAddFilesToCompile( cmd );
@@ -225,7 +226,7 @@ public abstract class DefaultRmicAdapter
         for( int i = 0; i < compileList.size(); i++ )
         {
             String arg = (String)compileList.get( i );
-            cmd.createArgument().setValue( arg );
+            cmd.addArgument( arg );
             niceSourceList.append( "    " + arg );
         }
 

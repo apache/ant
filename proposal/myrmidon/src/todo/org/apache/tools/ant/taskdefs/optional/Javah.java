@@ -17,6 +17,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Task to generate JNI header files using javah. This task can take the
@@ -219,7 +220,7 @@ public class Javah
             while( tok.hasMoreTokens() )
             {
                 final String aClass = tok.nextToken().trim();
-                cmd.createArgument().setValue( aClass );
+                cmd.addArgument( aClass );
                 niceClassList.append( "    " + aClass + StringUtil.LINE_SEPARATOR );
                 n++;
             }
@@ -230,7 +231,7 @@ public class Javah
         {
             final ClassArgument arg = (ClassArgument)enum.next();
             final String aClass = arg.getName();
-            cmd.createArgument().setValue( aClass );
+            cmd.addArgument( aClass );
             niceClassList.append( "    " + aClass + StringUtil.LINE_SEPARATOR );
             n++;
         }
@@ -256,33 +257,33 @@ public class Javah
 
         if( m_destDir != null )
         {
-            cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( m_destDir );
+            cmd.addArgument( "-d" );
+            cmd.addArgument( m_destDir );
         }
 
         if( m_outputFile != null )
         {
-            cmd.createArgument().setValue( "-o" );
-            cmd.createArgument().setFile( m_outputFile );
+            cmd.addArgument( "-o" );
+            cmd.addArgument( m_outputFile );
         }
 
         if( m_classpath != null )
         {
-            cmd.createArgument().setValue( "-classpath" );
-            cmd.createArgument().setPath( m_classpath );
+            cmd.addArgument( "-classpath" );
+            cmd.addArguments( FileUtils.translateCommandline( m_classpath ) );
         }
 
         if( m_verbose )
         {
-            cmd.createArgument().setValue( "-verbose" );
+            cmd.addArgument( "-verbose" );
         }
         if( m_old )
         {
-            cmd.createArgument().setValue( "-old" );
+            cmd.addArgument( "-old" );
         }
         if( m_force )
         {
-            cmd.createArgument().setValue( "-force" );
+            cmd.addArgument( "-force" );
         }
 
         if( m_stubs )
@@ -292,12 +293,12 @@ public class Javah
                 final String message = "stubs only available in old mode.";
                 throw new TaskException( message );
             }
-            cmd.createArgument().setValue( "-stubs" );
+            cmd.addArgument( "-stubs" );
         }
         if( m_bootclasspath != null )
         {
-            cmd.createArgument().setValue( "-bootclasspath" );
-            cmd.createArgument().setPath( m_bootclasspath );
+            cmd.addArgument( "-bootclasspath" );
+            cmd.addArguments( FileUtils.translateCommandline( m_bootclasspath ) );
         }
 
         logAndAddFilesToCompile( cmd );

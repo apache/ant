@@ -193,7 +193,7 @@ public class JavaCC extends Task
         {
             String name = (String)iter.nextElement();
             Object value = optionalAttrs.get( name );
-            cmdl.createArgument().setValue( "-" + name + ":" + value.toString() );
+            cmdl.addArgument( "-" + name + ":" + value.toString() );
         }
 
         // check the target is a file
@@ -211,8 +211,7 @@ public class JavaCC extends Task
         {
             throw new TaskException( "Outputdir not a directory." );
         }
-        cmdl.createArgument().setValue(
-            "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath() );
+        cmdl.addArgument( "-OUTPUT_DIRECTORY:" + outputDirectory.getAbsolutePath() );
 
         // determine if the generated java file is up-to-date
         final File javaFile = getOutputJavaFile( outputDirectory, target );
@@ -221,7 +220,7 @@ public class JavaCC extends Task
             getLogger().debug( "Target is already built - skipping (" + target + ")" );
             return;
         }
-        cmdl.createArgument().setValue( target.getAbsolutePath() );
+        cmdl.addArgument( target.getAbsolutePath() );
 
         if( javaccHome == null || !javaccHome.isDirectory() )
         {
@@ -231,9 +230,8 @@ public class JavaCC extends Task
         classpath.addLocation( new File( javaccHome, "JavaCC.zip" ) );
         classpath.addJavaRuntime();
 
-        final Argument arg = cmdl.createVmArgument();
-        arg.setValue( "-mx140M" );
-        arg.setValue( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
+        cmdl.addVmArgument( "-mx140M" );
+        cmdl.addVmArgument( "-Dinstall.root=" + javaccHome.getAbsolutePath() );
 
         runCommand( cmdl.getCommandline() );
     }

@@ -20,6 +20,7 @@ import org.apache.tools.ant.taskdefs.exec.Execute2;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.FileSet;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * This is the default implementation for the CompilerAdapter interface.
@@ -133,7 +134,7 @@ public abstract class DefaultCompilerAdapter
             }
             else
             {
-                cmd.createArgument().setValue( memoryParameterPrefix + "ms" + m_memoryInitialSize );
+                cmd.addArgument( memoryParameterPrefix + "ms" + m_memoryInitialSize );
             }
         }
 
@@ -146,54 +147,54 @@ public abstract class DefaultCompilerAdapter
             }
             else
             {
-                cmd.createArgument().setValue( memoryParameterPrefix + "mx" + m_memoryMaximumSize );
+                cmd.addArgument( memoryParameterPrefix + "mx" + m_memoryMaximumSize );
             }
         }
 
         if( m_attributes.getNowarn() )
         {
-            cmd.createArgument().setValue( "-nowarn" );
+            cmd.addArgument( "-nowarn" );
         }
 
         if( m_deprecation == true )
         {
-            cmd.createArgument().setValue( "-deprecation" );
+            cmd.addArgument( "-deprecation" );
         }
 
         if( m_destDir != null )
         {
-            cmd.createArgument().setValue( "-d" );
-            cmd.createArgument().setFile( m_destDir );
+            cmd.addArgument( "-d" );
+            cmd.addArgument( m_destDir );
         }
 
-        cmd.createArgument().setValue( "-classpath" );
-        cmd.createArgument().setPath( classpath );
+        cmd.addArgument( "-classpath" );
+        cmd.addArguments( FileUtils.translateCommandline( classpath ) );
 
-        cmd.createArgument().setValue( "-sourcepath" );
-        cmd.createArgument().setPath( src );
+        cmd.addArgument( "-sourcepath" );
+        cmd.addArguments( FileUtils.translateCommandline( src ) );
 
         if( target != null )
         {
-            cmd.createArgument().setValue( "-target" );
-            cmd.createArgument().setValue( target );
+            cmd.addArgument( "-target" );
+            cmd.addArgument( target );
         }
 
         if( m_bootclasspath != null )
         {
-            cmd.createArgument().setValue( "-bootclasspath" );
-            cmd.createArgument().setPath( m_bootclasspath );
+            cmd.addArgument( "-bootclasspath" );
+            cmd.addArguments( FileUtils.translateCommandline( m_bootclasspath ) );
         }
 
         if( m_extdirs != null )
         {
-            cmd.createArgument().setValue( "-extdirs" );
-            cmd.createArgument().setPath( m_extdirs );
+            cmd.addArgument( "-extdirs" );
+            cmd.addArguments( FileUtils.translateCommandline( m_extdirs ) );
         }
 
         if( m_encoding != null )
         {
-            cmd.createArgument().setValue( "-encoding" );
-            cmd.createArgument().setValue( m_encoding );
+            cmd.addArgument( "-encoding" );
+            cmd.addArgument( m_encoding );
         }
         if( m_debug )
         {
@@ -202,30 +203,30 @@ public abstract class DefaultCompilerAdapter
                 String debugLevel = m_attributes.getDebugLevel();
                 if( debugLevel != null )
                 {
-                    cmd.createArgument().setValue( "-g:" + debugLevel );
+                    cmd.addArgument( "-g:" + debugLevel );
                 }
                 else
                 {
-                    cmd.createArgument().setValue( "-g" );
+                    cmd.addArgument( "-g" );
                 }
             }
             else
             {
-                cmd.createArgument().setValue( "-g" );
+                cmd.addArgument( "-g" );
             }
         }
         else
         {
-            cmd.createArgument().setValue( "-g:none" );
+            cmd.addArgument( "-g:none" );
         }
         if( m_optimize )
         {
-            cmd.createArgument().setValue( "-O" );
+            cmd.addArgument( "-O" );
         }
 
         if( m_verbose )
         {
-            cmd.createArgument().setValue( "-verbose" );
+            cmd.addArgument( "-verbose" );
         }
 
         addCurrentCompilerArgs( cmd );
@@ -262,8 +263,8 @@ public abstract class DefaultCompilerAdapter
         setupJavacCommandlineSwitches( cmd, true );
         if( m_attributes.getSource() != null )
         {
-            cmd.createArgument().setValue( "-source" );
-            cmd.createArgument().setValue( m_attributes.getSource() );
+            cmd.addArgument( "-source" );
+            cmd.addArgument( m_attributes.getSource() );
         }
         return cmd;
     }
@@ -410,7 +411,7 @@ public abstract class DefaultCompilerAdapter
         for( int i = 0; i < m_compileList.length; i++ )
         {
             String arg = m_compileList[ i ].getAbsolutePath();
-            cmd.createArgument().setValue( arg );
+            cmd.addArgument( arg );
             niceSourceList.append( "    " + arg + StringUtil.LINE_SEPARATOR );
         }
 
