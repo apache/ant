@@ -184,6 +184,17 @@ Legal:
                     classpathref="project.class.path"/>
             </and>
         </condition>
+
+        <!-- Check for Ant version 1.5 -->
+        <property resource="org/apache/tools/ant/version.txt"
+                  classpath="${java.class.path}"/>
+
+        <condition property="ant1.5">
+            <or>
+                <equals arg1="${VERSION}" arg2="1.5alpha"/>
+                <equals arg1="${VERSION}" arg2="1.5"/>
+            </or>
+        </condition>
     </target>
 
     <!-- Compiles and installs the custom build tasks -->
@@ -623,8 +634,9 @@ Legal:
                     <exclude name="**/SmbFileSystemTestCase.class" unless="test.smb"/>
                     <exclude name="**/FtpFileSystemTestCase.class" unless="test.ftp"/>
 
-                    <!-- Need Ant1.5+ to run Ant1Compat tests, because of fixes to JUnit -->                                                                  
-                    <exclude name="**/Ant1CompatTestCase.class" unless="single.test"/>
+                    <!-- Need Ant1.5+ to run Ant1Compat tests, because of classpath
+                         problems in Ant1.4 JUnit Task (prepends ant.jar to classpath) -->
+                    <exclude name="**/Ant1CompatTestCase.class" unless="ant1.5"/>
                     
                     <!-- This test fails, as it has no test methods -->
                     <exclude name="**/SimpleConvertersTestCase.class" unless="single.test"/>
