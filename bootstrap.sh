@@ -58,7 +58,7 @@ fi
 export CLASSPATH
 
 mkdir -p ${CLASSDIR}
-mkdir -p build
+mkdir -p build/classes
 
 echo ... Compiling Ant Classes
 
@@ -77,7 +77,7 @@ cp src/main/org/apache/tools/ant/types/defaults.properties \
 
 echo ... Building Ant Distribution
 
-cp -r ${CLASSDIR} build
+cp -r ${CLASSDIR} build/classes
 
 ${JAVA_HOME}/bin/java -classpath ${CLASSPATH} org.apache.tools.ant.Main \
                       -buildfile build.xml bootstrap

@@ -41,6 +41,7 @@ if not "%OS%" == "Windows_NT" if exist %CLASSDIR%\nul deltree/y %CLASSDIR%
 
 if not exist %CLASSDIR% mkdir %CLASSDIR%
 if not exist build mkdir build
+if not exist build\classes mkdir build\classes
 
 echo.
 echo ... Compiling Ant Classes
@@ -56,7 +57,7 @@ copy %TOOLS%\ant\types\*.properties %CLASSDIR%\org\apache\tools\ant\types
 echo.
 echo ... Building Ant Distribution
 
-xcopy /s/q %CLASSDIR% build
+xcopy /s/q %CLASSDIR% build\classes
 
 %JAVA% %ANT_OPTS% org.apache.tools.ant.Main bootstrap
 
