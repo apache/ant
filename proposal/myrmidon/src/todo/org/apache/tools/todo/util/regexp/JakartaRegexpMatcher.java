@@ -116,7 +116,7 @@ public class JakartaRegexpMatcher implements RegexpMatcher
         }
         catch( RESyntaxException e )
         {
-            throw new TaskException( e );
+            throw new TaskException( e.toString(), e );
         }
     }
 
