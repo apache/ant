@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,6 +69,7 @@ public abstract class DataType extends ProjectComponent {
     /**
      * Sets a description of the current data type. It will be useful
      * in commenting what we are doing.
+     * @param desc the desciption
      */
     public void setDescription(final String desc) {
         description = desc;
@@ -76,6 +77,7 @@ public abstract class DataType extends ProjectComponent {
 
     /**
      * Return the description for the current data type.
+     * @return the description
      */
     public String getDescription() {
         return description;
@@ -83,6 +85,7 @@ public abstract class DataType extends ProjectComponent {
 
     /**
      * Has the refid attribute of this element been set?
+     * @return true if the refid attribute has been set
      */
     public boolean isReference() {
         return ref != null;
@@ -95,6 +98,7 @@ public abstract class DataType extends ProjectComponent {
      * have been set as well or child elements have been created and
      * thus override this method. if they do the must call
      * <code>super.setRefid</code>.</p>
+     * @param ref the reference to use
      */
     public void setRefid(final Reference ref) {
         this.ref = ref;
@@ -116,6 +120,9 @@ public abstract class DataType extends ProjectComponent {
      * <p>The general contract of this method is that it shouldn't do
      * anything if {@link #checked <code>checked</code>} is true and
      * set it to true on exit.</p>
+     * @param stack the stack of references to check
+     * @param project the project to use to dereference the references
+     * @throws BuildException on error
      */
     protected void dieOnCircularReference(final Stack stack,
                                           final Project project)
@@ -141,6 +148,10 @@ public abstract class DataType extends ProjectComponent {
     /**
      * Performs the check for circular references and returns the
      * referenced object.
+     * @param requiredClass the class that this reference should be a subclass of
+     * @param dataTypeName  the name of the datatype that the reference should be (error message
+     *                      use only)
+     * @return the derefenced object
      */
     protected Object getCheckedRef(final Class requiredClass,
                                    final String dataTypeName) {
@@ -164,6 +175,7 @@ public abstract class DataType extends ProjectComponent {
     /**
      * Creates an exception that indicates that refid has to be the
      * only attribute if it is set.
+     * @return the exception to throw
      */
     protected BuildException tooManyAttributes() {
         return new BuildException("You must not specify more than one "
@@ -173,6 +185,7 @@ public abstract class DataType extends ProjectComponent {
     /**
      * Creates an exception that indicates that this XML element must
      * not have child elements if the refid attribute is set.
+     * @return the exception to throw
      */
     protected BuildException noChildrenAllowed() {
         return new BuildException("You must not specify nested elements "
@@ -182,16 +195,25 @@ public abstract class DataType extends ProjectComponent {
     /**
      * Creates an exception that indicates the user has generated a
      * loop of data types referencing each other.
+     * @return the exception to throw
      */
     protected BuildException circularReference() {
         return new BuildException("This data type contains a circular "
             + "reference.");
     }
 
+    /**
+     * The flag that is used to indicate that circular references have been checked.
+     * @return true if circular references have been checked
+     */
     protected boolean isChecked() {
         return checked;
     }
 
+    /**
+     * Set the flag that is used to indicate that circular references have been checked.
+     * @param checked if true, if circular references have been checked
+     */
     protected void setChecked(final boolean checked) {
         this.checked = checked;
     }

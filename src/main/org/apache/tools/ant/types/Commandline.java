@@ -156,7 +156,7 @@ public class Commandline implements Cloneable {
 
         /**
          * Return the constituent parts of this Argument.
-         * @return String[].
+         * @return an array of strings.
          */
         public String[] getParts() {
             return parts;
@@ -185,9 +185,9 @@ public class Commandline implements Cloneable {
         /**
          * Return the number of arguments that preceded this marker.
          *
-         * <p>The name of the executable--if set--is counted as the
+         * <p>The name of the executable -- if set -- is counted as the
          * first argument.</p>
-         * @return <code>int</code>.
+         * @return the position of this marker.
          */
         public int getPosition() {
             if (realPos == -1) {
@@ -223,6 +223,7 @@ public class Commandline implements Cloneable {
      *
      * @param insertAtStart if true, the argument is inserted at the
      * beginning of the list of args, otherwise it is appended.
+     * @return an argument to be configured
      */
     public Argument createArgument(boolean insertAtStart) {
         Argument argument = new Argument();
@@ -267,7 +268,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Return the executable and all defined arguments.
-     * @return <code>String[]</code>.
+     * @return the commandline as an array of strings.
      */
     public String[] getCommandline() {
         List commands = new LinkedList();
@@ -279,7 +280,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Add the entire command, including (optional) executable to a list.
-     * @param list ListIterator.
+     * @param list the list to add to.
      * @since Ant 1.6
      */
     public void addCommandToList(ListIterator list) {
@@ -292,7 +293,7 @@ public class Commandline implements Cloneable {
     /**
      * Returns all arguments defined by <code>addLine</code>,
      * <code>addValue</code> or the argument object.
-     * @return <code>String[]</code>.
+     * @return the arguments as an array of strings.
      */
     public String[] getArguments() {
         List result = new ArrayList(arguments.size() * 2);
@@ -303,7 +304,7 @@ public class Commandline implements Cloneable {
 
     /**
      * Append all the arguments to the tail of a supplied list.
-     * @param list ListIterator.
+     * @param list the list of arguments.
      * @since Ant 1.6
      */
     public void addArgumentsToList(ListIterator list) {
@@ -332,8 +333,8 @@ public class Commandline implements Cloneable {
      * <p>If the argument doesn't include spaces or quotes, return it
      * as is. If it contains double quotes, use single quotes - else
      * surround the argument by double quotes.</p>
-     *
-     * @param argument the String argument.
+     * @param argument the argument to quote if necessary.
+     * @return the quoted argument.
      * @exception BuildException if the argument contains both, single
      *                           and double quotes.
      */
@@ -355,7 +356,7 @@ public class Commandline implements Cloneable {
     /**
      * Quote the parts of the given array in way that makes them
      * usable as command line arguments.
-     * @param line the String[] to quote.
+     * @param line the list of arguments to quote.
      * @return empty string for null or no command, else every argument split
      * by spaces and quoted by quoting rules.
      */
@@ -489,6 +490,7 @@ public class Commandline implements Cloneable {
      * <p>This marker can be used to locate a position on the
      * commandline--to insert something for example--when all
      * parameters have been set.</p>
+     * @return a marker
      */
     public Marker createMarker() {
         return new Marker(arguments.size());
@@ -497,7 +499,7 @@ public class Commandline implements Cloneable {
     /**
      * Return a String that describes the command and arguments suitable for
      * verbose output before a call to <code>Runtime.exec(String[])<code>.
-     * @return <code>String</code>.
+     * @return a string that describes the command and arguments.
      * @since Ant 1.5
      */
     public String describeCommand() {
@@ -507,7 +509,7 @@ public class Commandline implements Cloneable {
     /**
      * Return a String that describes the arguments suitable for
      * verbose output before a call to <code>Runtime.exec(String[])<code>.
-     * @return <code>String</code>.
+     * @return a string that describes the arguments.
      * @since Ant 1.5
      */
     public String describeArguments() {
@@ -518,7 +520,7 @@ public class Commandline implements Cloneable {
      * Return a String that describes the command and arguments suitable for
      * verbose output before a call to <code>Runtime.exec(String[])<code>.
      * @param line the Commandline to describe.
-     * @return <code>String</code>.
+     * @return a string that describes the command and arguments.
      * @since Ant 1.5
      */
     public static String describeCommand(Commandline line) {
@@ -529,7 +531,7 @@ public class Commandline implements Cloneable {
      * Return a String that describes the arguments suitable for
      * verbose output before a call to <code>Runtime.exec(String[])<code>.
      * @param line the Commandline whose arguments to describe.
-     * @return <code>String</code>.
+     * @return a string that describes the arguments.
      * @since Ant 1.5
      */
     public static String describeArguments(Commandline line) {
@@ -542,9 +544,8 @@ public class Commandline implements Cloneable {
      *
      * <p>This method assumes that the first entry in the array is the
      * executable to run.</p>
-     *
-     * @param args the command to describe.
-     * @return <code>String</code>.
+     * @param args the command line to describe as an array of strings
+     * @return a string that describes the command and arguments.
      * @since Ant 1.5
      */
     public static String describeCommand(String[] args) {
@@ -566,8 +567,8 @@ public class Commandline implements Cloneable {
     /**
      * Return a String that describes the arguments suitable for
      * verbose output before a call to <code>Runtime.exec(String[])<code>.
-     * @param args the arguments to describe.
-     * @return <code>String</code>.
+     * @param args the command line to describe as an array of strings.
+     * @return a string that describes the arguments.
      * @since Ant 1.5
      */
     public static String describeArguments(String[] args) {
@@ -578,9 +579,9 @@ public class Commandline implements Cloneable {
      * Return a String that describes the arguments suitable for
      * verbose output before a call to <code>Runtime.exec(String[])<code>.
      *
-     * @param args the arguments to describe.
-     * @param offset ignore entries before this index
-     * @return <code>String</code>.
+     * @param args the command line to describe as an array of strings.
+     * @param offset ignore entries before this index.
+     * @return a string that describes the arguments
      *
      * @since Ant 1.5
      */
