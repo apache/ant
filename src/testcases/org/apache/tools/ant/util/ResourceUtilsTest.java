@@ -64,14 +64,14 @@ import java.io.File;
 import junit.framework.TestCase;
 
 /**
- * Tests for org.apache.tools.ant.util.SourceSelector.
+ * Tests for org.apache.tools.ant.util.ResourceUtils.
  */
-public class SourceSelectorTest extends TestCase
+public class ResourceUtilsTest extends TestCase
     implements ResourceFactory, FileNameMapper {
 
     private Echo taskINeedForLogging = new Echo();
 
-    public SourceSelectorTest(String name) {
+    public ResourceUtilsTest(String name) {
         super(name);
         taskINeedForLogging.setProject(new Project());
     }
@@ -79,9 +79,9 @@ public class SourceSelectorTest extends TestCase
     public void testNoDuplicates() {
         Resource r = new Resource("samual vimes", true, 1, false);
         Resource[] toNew = 
-            SourceSelector.selectOutOfDateSources(taskINeedForLogging,
-                                                  new Resource[] {r},
-                                                  this, this);
+            ResourceUtils.selectOutOfDateSources(taskINeedForLogging,
+                                                 new Resource[] {r},
+                                                 this, this);
         assertEquals(1, toNew.length);
     }
 

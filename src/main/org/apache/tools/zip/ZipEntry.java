@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -194,7 +194,7 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      * Sets Unix permissions in a way that is understood by Info-Zip's
      * unzip command.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public void setUnixMode(int mode) {
         setExternalAttributes((mode << 16)
@@ -212,7 +212,7 @@ public class ZipEntry extends java.util.zip.ZipEntry {
      * @return 0 (MS-DOS FAT) unless {@link #setUnixMode setUnixMode}
      * has been called, in which case 3 (Unix) will be returned.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public int getPlatform() {
         return platform;

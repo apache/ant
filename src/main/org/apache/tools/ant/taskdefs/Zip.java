@@ -84,7 +84,7 @@ import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.GlobPatternMapper;
 import org.apache.tools.ant.util.IdentityMapper;
 import org.apache.tools.ant.util.MergingMapper;
-import org.apache.tools.ant.util.SourceSelector;
+import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipOutputStream;
 
@@ -521,7 +521,7 @@ public class Zip extends MatchingTask {
      * @param resources the resources to add
      * @param zOut the stream to write to
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     protected final void addResources(FileSet fileset, Resource[] resources,
                                       ZipOutputStream zOut)
@@ -660,7 +660,7 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     private synchronized ZipScanner getZipScanner() {
         if (zs == null) {
@@ -778,10 +778,10 @@ public class Zip extends MatchingTask {
                 }
             }
             newerResources[i] = 
-                SourceSelector.selectOutOfDateSources(this,
-                                                      initialResources[i],
-                                                      myMapper,
-                                                      getZipScanner());
+                ResourceUtils.selectOutOfDateSources(this,
+                                                     initialResources[i],
+                                                     myMapper,
+                                                     getZipScanner());
             needsUpdate = needsUpdate || (newerResources[i].length > 0);
 
             if (needsUpdate && !doUpdate) {
@@ -804,7 +804,7 @@ public class Zip extends MatchingTask {
      *
      * <p>Included directories will preceede included files.</p> 
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     protected Resource[][] grabResources(FileSet[] filesets) {
         Resource[][] result = new Resource[filesets.length][];
@@ -828,7 +828,7 @@ public class Zip extends MatchingTask {
     }
 
     /**
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     protected void zipDir(File dir, ZipOutputStream zOut, String vPath,
                           int mode)
@@ -872,7 +872,7 @@ public class Zip extends MatchingTask {
      * entry from, will be null if we are not copying from an archive.
      * @param mode the Unix permissions to set.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     protected void zipFile(InputStream in, ZipOutputStream zOut, String vPath,
                            long lastModified, File fromArchive, int mode)
@@ -969,7 +969,7 @@ public class Zip extends MatchingTask {
      * @param vPath the name this entry shall have in the archive
      * @param mode the Unix permissions to set.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     protected void zipFile(File file, ZipOutputStream zOut, String vPath, 
                            int mode)
@@ -991,7 +991,7 @@ public class Zip extends MatchingTask {
     /**
      * Ensure all parent dirs of a given entry have been added.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     protected final void addParentDirs(File baseDir, String entry,
                                        ZipOutputStream zOut, String prefix,
@@ -1075,7 +1075,7 @@ public class Zip extends MatchingTask {
     /**
      * @return true if all individual arrays are empty
      * 
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     protected final static boolean isEmpty(Resource[][] r) {
         for (int i = 0; i < r.length; i++) {

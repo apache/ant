@@ -68,7 +68,7 @@ import java.util.Vector;
  * @author <a href="mailto:levylambert@tiscali-dsl.de">Antoine Levy-Lambert</a>
  * @since Ant 1.5.2
  */
-public class SourceSelector {
+public class ResourceUtils {
 
     /**                                                                      {
      * tells which source files should be reprocessed based on the

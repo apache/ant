@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -83,7 +83,7 @@ public class ZipFileSet extends FileSet {
     /**
      * Default value for the dirmode attribute.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public static final int DEFAULT_DIR_MODE =
         UnixStat.DIR_FLAG  | UnixStat.DEFAULT_DIR_PERM;
@@ -91,7 +91,7 @@ public class ZipFileSet extends FileSet {
     /**
      * Default value for the filemode attribute.
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public static final int DEFAULT_FILE_MODE =
         UnixStat.FILE_FLAG | UnixStat.DEFAULT_FILE_PERM;
@@ -216,7 +216,7 @@ public class ZipFileSet extends FileSet {
      * other modes in the standard Unix fashion; 
      * optional, default=0644
      *
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public void setFileMode(String octalString) {
         this.fileMode = 
@@ -224,7 +224,7 @@ public class ZipFileSet extends FileSet {
     }
     
     /**
-     * @since Ant 1.6
+     * @since Ant 1.5.2
      */
     public int getFileMode() {
         return fileMode;

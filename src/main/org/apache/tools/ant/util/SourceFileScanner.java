@@ -115,8 +115,8 @@ public class SourceFileScanner implements ResourceFactory {
         // build the list of sources which are out of date with
         // respect to the target
         Resource[] outofdate = 
-            SourceSelector.selectOutOfDateSources(task, sourceresources,
-                                                  mapper, this);
+            ResourceUtils.selectOutOfDateSources(task, sourceresources,
+                                                 mapper, this);
         String[] result = new String[outofdate.length];
         for (int counter=0; counter < outofdate.length; counter++) {
             result[counter] = outofdate[counter].getName();

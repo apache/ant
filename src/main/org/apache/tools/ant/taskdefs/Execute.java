@@ -216,7 +216,6 @@ public class Execute {
     private static String[] getProcEnvCommand() {
         if (Os.isFamily("os/2")) {
             // OS/2 - use same mechanism as Windows 2000
-            // Not sure
             String[] cmd = {"cmd", "/c", "set" };
             return cmd;
         } else if (Os.isFamily("windows")) {
