@@ -238,7 +238,11 @@ public class ExtensionUtil {
         throws BuildException {
         try {
             final JarFile jarFile = new JarFile(file);
-            return jarFile.getManifest();
+            Manifest m = jarFile.getManifest();
+            if (m == null) {
+                throw new BuildException(file + " doesn't have a MANIFEST");
+            }
+            return m;
         } catch (final IOException ioe) {
             throw new BuildException(ioe.getMessage(), ioe);
         }
