@@ -236,9 +236,12 @@ public class ActionManager {
          * Receives all events.
          * 
          * @param event Event to post.
+         * @return true if event should be propogated, false if
+         * it should be cancelled.
          */
-        public void eventPosted(EventObject event) {
+        public boolean eventPosted(EventObject event) {
             _mapper.applyEvent(event);
+            return true;
         }
     }
 

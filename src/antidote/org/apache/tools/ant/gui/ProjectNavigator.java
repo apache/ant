@@ -108,8 +108,10 @@ class ProjectNavigator extends AntEditor {
          * Called when an event is to be posed to the member.
          * 
          * @param event Event to post.
+         * @return true if event should be propogated, false if
+         * it should be cancelled.
          */
-        public void eventPosted(EventObject event) {
+        public boolean eventPosted(EventObject event) {
             ProjectProxy project = getAppContext().getProject();
 
             if(project == null) {
@@ -123,6 +125,7 @@ class ProjectNavigator extends AntEditor {
                 _tree.setModel(project.getTreeModel());
                 _tree.setSelectionModel(project.getTreeSelectionModel());
             }
+            return true;
         }
     }
 

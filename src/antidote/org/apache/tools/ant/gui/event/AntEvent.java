@@ -85,22 +85,6 @@ public abstract class AntEvent extends EventObject {
         return (AppContext) getSource();
     }
 
-	/** 
-	 * Determine if the event has been cancelled.
-	 * 
-	 * @return True if cancelled, false otherwise.
-	 */
-	public boolean isCancelled() {
-		return _cancelled;
-	}
-
-	/** 
-	 * Tag the event as being canceled.
-	 * 
-	 */
-	public void cancel() {
-		_cancelled = true;
-	}
 
 	/** 
 	 * Create the appropriate default response command to this event.

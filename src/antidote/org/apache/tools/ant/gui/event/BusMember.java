@@ -74,7 +74,9 @@ public interface BusMember {
 	 * Called when an event is to be posed to the member.
 	 * 
 	 * @param event Event to post.
-	 */
-    public void eventPosted(EventObject event);
+     * @return true if event should be propogated, false if
+     * it should be cancelled.
+     */
+    public boolean eventPosted(EventObject event);
 
 }

@@ -108,8 +108,10 @@ class EventResponder {
          * Called when an event is to be posed to the member.
          * 
          * @param event Event to post.
+         * @return true if event should be propogated, false if
+         * it should be cancelled.
          */
-        public void eventPosted(EventObject event) {
+        public boolean eventPosted(EventObject event) {
             String command = ((ActionEvent)event).getActionCommand();
 
             // XXX turn this switch structure into a command
@@ -136,6 +138,7 @@ class EventResponder {
 				// XXX log me.
                 System.err.println("Unhandled action: " + command);
             }
+            return true;
         }
     }
 
@@ -164,11 +167,14 @@ class EventResponder {
          * Called when an event is to be posed to the member.
          * 
          * @param event Event to post.
+         * @return true if event should be propogated, false if
+         * it should be cancelled.
          */
-        public void eventPosted(EventObject event) {
+        public boolean eventPosted(EventObject event) {
             AntEvent e = (AntEvent) event;
             Command cmd = e.createDefaultCmd();
             cmd.execute();
+            return true;
         }
     }
 

@@ -127,11 +127,14 @@ class PropertyEditor extends AntEditor {
          * Called when an event is to be posted to the member.
          * 
          * @param event Event to post.
+         * @return true if event should be propogated, false if
+         * it should be cancelled.
          */
-        public void eventPosted(EventObject event) {
+        public boolean  eventPosted(EventObject event) {
             ElementSelectionEvent e = (ElementSelectionEvent) event;
             ACSElement[] elements = e.getSelectedElements();
             updateDisplay(elements);
+            return true;
         }
 
     }

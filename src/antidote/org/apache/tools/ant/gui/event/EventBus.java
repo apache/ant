@@ -174,6 +174,7 @@ public class EventBus {
          */
         public void run() {
             synchronized(_memberSet) {
+              outerLoop:
                 for(int i = 0; i < _memberSet.length; i++) {
                     if(_memberSet[i] == null) continue;
                     
@@ -182,12 +183,12 @@ public class EventBus {
                         BusMember next = (BusMember) it.next();
                         BusFilter filter = next.getBusFilter();
                         if(filter == null || filter.accept(_event)) {
-                            next.eventPosted(_event);
+                            // If false then callee canceled the event
+                            // propogation.
+                            if(!next.eventPosted(_event)) {
+                                break outerLoop;
+                            }
                         }
-                        // Check to see if the member cancelled the event. If so
-                        // then don't send it on to the other members.
-                        if(_event instanceof AntEvent &&
-                           ((AntEvent)_event).isCancelled()) break;
                     }
                 }
             }
