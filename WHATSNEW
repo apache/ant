@@ -1,6 +1,12 @@
 Changes from Ant 1.2 to the current sources
 ===========================================
 
+Changes that could break older environments:
+--------------------------------------------
+
+* Ant doesn't search for the buildfile anymore, unless you use the new
+  -find argument.
+
 Other changes:
 --------------
 
