@@ -102,7 +102,7 @@ public class CompilerAdapterFactory {
             }
             if ( compilerType.equalsIgnoreCase("extJavac") ) {
                 return new JavacExternal();
-            }	    
+            }       
             if ( compilerType.equalsIgnoreCase("classic") ||
                     compilerType.equalsIgnoreCase("javac1.1") ||
                     compilerType.equalsIgnoreCase("javac1.2")) {
@@ -129,6 +129,10 @@ public class CompilerAdapterFactory {
             }
             if ( compilerType.equalsIgnoreCase("gcj") ) {
                 return new Gcj();
+            }
+            if (compilerType.equalsIgnoreCase("sj") ||
+                    compilerType.equalsIgnoreCase("symantec")) {
+                return new Sj();
             }
             return resolveClassName( compilerType );
         }
