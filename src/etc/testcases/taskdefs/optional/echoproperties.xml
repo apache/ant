@@ -1,0 +1,49 @@
+<project name="test" default="def" basedir=".">
+
+  <target name="def">
+  </target>
+
+  <target name="setup">
+    <property name="a.set" value="true" />
+    <property name="b.set" value="false" />
+  </target>
+
+  <target name="testEchoToLog" depends="setup">
+    <echoproperties />
+  </target>
+
+  <target name="testEchoToBadFile" depends="setup">
+    <echoproperties destfile="." />
+  </target>
+
+  <target name="testEchoToBadFileFail" depends="setup">
+    <echoproperties destfile="." failonerror="yes" />
+  </target>
+
+  <target name="testEchoToBadFileNoFail" depends="setup">
+    <echoproperties destfile="." failonerror="no" />
+  </target>
+
+  <target name="testEchoToGoodFile" depends="setup">
+    <echoproperties destfile="test.properties" />
+  </target>
+
+  <target name="testEchoToGoodFileFail" depends="setup">
+    <echoproperties destfile="test.properties" failonerror="yes" />
+  </target>
+
+  <target name="testEchoToGoodFileNoFail" depends="setup">
+    <echoproperties destfile="test.properties" failonerror="no" />
+  </target>
+
+  <target name="testEchoPrefix" depends="setup">
+    <echoproperties destfile="test-prefix.properties" prefix="a." />
+  </target>
+
+  <target name="cleanup">
+    <delete file="test.properties" failonerror="no" />
+    <delete file="test-prefix.properties" failonerror="no" />
+  </target>
+
+</project>
+
