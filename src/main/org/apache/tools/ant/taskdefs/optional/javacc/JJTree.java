@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,6 +54,10 @@
 
 package org.apache.tools.ant.taskdefs.optional.javacc;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
@@ -62,11 +66,7 @@ import org.apache.tools.ant.taskdefs.LogStreamHandler;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Hashtable;
-import java.util.Enumeration;
+import org.apache.tools.ant.util.JavaEnvUtils;
 
 /**
  * Runs the JJTree compiler compiler.
@@ -201,7 +201,7 @@ public class JJTree extends Task {
     }
 
     public JJTree() {
-        cmdl.setVm("java");
+        cmdl.setVm(JavaEnvUtils.getJreExecutable("java"));
         cmdl.setClassname("COM.sun.labs.jjtree.Main");
     }
 
