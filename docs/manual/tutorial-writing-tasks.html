@@ -45,52 +45,52 @@ create a text file names <i>build.xml</i>. What should Ant do for us?
 </ul>
 So the buildfile contains three targets.
 <pre class="code">
-&lt;?xml version="1.0" encoding="ISO-8859-1"?>
-&lt;project name="MyTask" basedir="." default="jar">
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;project name="MyTask" basedir="." default="jar"&gt;
 
-    &lt;target name="clean" description="Delete all generated files">
-        &lt;delete dir="classes"/>
-        &lt;delete file="MyTasks.jar"/>
-    &lt;/target>
+    &lt;target name="clean" description="Delete all generated files"&gt;
+        &lt;delete dir="classes"/&gt;
+        &lt;delete file="MyTasks.jar"/&gt;
+    &lt;/target&gt;
 
-    &lt;target name="compile" description="Compiles the Task">
-        &lt;javac srcdir="src" destdir="classes"/>
-    &lt;/target>
+    &lt;target name="compile" description="Compiles the Task"&gt;
+        &lt;javac srcdir="src" destdir="classes"/&gt;
+    &lt;/target&gt;
 
-    &lt;target name="jar" description="JARs the Task">
-        &lt;jar destfile="MyTask.jar" basedir="classes"/>
-    &lt;/target>
+    &lt;target name="jar" description="JARs the Task"&gt;
+        &lt;jar destfile="MyTask.jar" basedir="classes"/&gt;
+    &lt;/target&gt;
 
-&lt;/project>
+&lt;/project&gt;
 </pre>
 
 This buildfile uses often the same value (src, classes, MyTask.jar), so we should rewrite that
-using &lt;property>s. On second there are some handicaps: &lt;javac> requires that the destination
+using &lt;property&gt;s. On second there are some handicaps: &lt;javac&gt; requires that the destination
 directory exists; a call of "clean" with a non existing classes directory will fail; "jar" requires
 the execution of some steps bofore. So the refactored code is:
 
 <pre class="code">
-&lt;?xml version="1.0" encoding="ISO-8859-1"?>
-&lt;project name="MyTask" basedir="." default="jar">
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;project name="MyTask" basedir="." default="jar"&gt;
 
-    <b>&lt;property name="src.dir" value="src"/></b>
-    <b>&lt;property name="classes.dir" value="classes"/></b>
+    <b>&lt;property name="src.dir" value="src"/&gt;</b>
+    <b>&lt;property name="classes.dir" value="classes"/&gt;</b>
 
-    &lt;target name="clean" description="Delete all generated files">
-        &lt;delete dir="<b>${classes.dir}</b>" <b>failonerror="false"</b>/>
-        &lt;delete file="<b>${ant.project.name}.jar</b>"/>
-    &lt;/target>
+    &lt;target name="clean" description="Delete all generated files"&gt;
+        &lt;delete dir="<b>${classes.dir}</b>" <b>failonerror="false"</b>/&gt;
+        &lt;delete file="<b>${ant.project.name}.jar</b>"/&gt;
+    &lt;/target&gt;
 
-    &lt;target name="compile" description="Compiles the Task">
-        <b>&lt;mkdir dir="${classes.dir}"/></b>
-        &lt;javac srcdir="<b>${src.dir}</b>" destdir="${classes.dir}"/>
-    &lt;/target>
+    &lt;target name="compile" description="Compiles the Task"&gt;
+        <b>&lt;mkdir dir="${classes.dir}"/&gt;</b>
+        &lt;javac srcdir="<b>${src.dir}</b>" destdir="${classes.dir}"/&gt;
+    &lt;/target&gt;
 
-    &lt;target name="jar" description="JARs the Task" <b>depends="compile"</b>>
-        &lt;jar destfile="${ant.project.name}.jar" basedir="${classes.dir}"/>
-    &lt;/target>
+    &lt;target name="jar" description="JARs the Task" <b>depends="compile"</b>&gt;
+        &lt;jar destfile="${ant.project.name}.jar" basedir="${classes.dir}"/&gt;
+    &lt;/target&gt;
 
-&lt;/project>
+&lt;/project&gt;
 </pre>
 <i>ant.project.name</i> is one of the
 <a href="http://ant.apache.org/manual/using.html#built-in-props" target="_blank">
@@ -119,19 +119,19 @@ its <i>depends</i>-clause the "compile" is executed before).
 <p>But after creating the jar we want to use our new Task. Therefore we need a
 new target "use". Before we can use our new task we have to declare it with
 <a href="http://ant.apache.org/manual/CoreTasks/taskdef.html" target="_blank">
-&lt;taskdef> [2]</a>. And for easier process we change the default clause:
+&lt;taskdef&gt; [2]</a>. And for easier process we change the default clause:
 <pre class="code">
-&lt;?xml version="1.0" encoding="ISO-8859-1"?>
-&lt;project name="MyTask" basedir="." default="<b>use</b>">
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;project name="MyTask" basedir="." default="<b>use</b>"&gt;
 
     ...
 
-    <b>&lt;target name="use" description="Use the Task" depends="jar">
-        &lt;taskdef name="helloworld" classname="HelloWorld" classpath="${ant.project.name}.jar"/>
-        &lt;helloworld/>
-    &lt;/target></b>
+    <b>&lt;target name="use" description="Use the Task" depends="jar"&gt;
+        &lt;taskdef name="helloworld" classname="HelloWorld" classpath="${ant.project.name}.jar"/&gt;
+        &lt;helloworld/&gt;
+    &lt;/target&gt;</b>
 
-&lt;/project>
+&lt;/project&gt;
 </pre>
 
 Important is the <i>classpath</i>-attribute. Ant searches in its /lib directory for
@@ -227,8 +227,8 @@ use:
 <a name="attributes">
 <h2>Attributes</h2>
 <p>Now we want to specify the text of our message (it seems that we are
-rewriting the &lt;echo/> task :-). First we well do that with an attribute.
-It is very easy - for each attribute provide a <tt>public void set&lt;attributename>(&lt;type>
+rewriting the &lt;echo/&gt; task :-). First we well do that with an attribute.
+It is very easy - for each attribute provide a <tt>public void set&lt;attributename&gt;(&lt;type&gt;
 newValue)</tt> method and Ant will do the rest via reflection.</p>
 <pre class="code">
 import org.apache.tools.ant.Task;
@@ -258,12 +258,12 @@ the log() method can't handle a <i>null</i> value as parameter and throws a Null
 
 <p>After that we have to modify our buildfile:
 <pre class="code">
-    &lt;target name="use" description="Use the Task" depends="jar">
+    &lt;target name="use" description="Use the Task" depends="jar"&gt;
         &lt;taskdef name="helloworld"
                  classname="HelloWorld"
-                 classpath="${ant.project.name}.jar"/>
-        &lt;helloworld <b>message="Hello World"</b>/>
-    &lt;/target>
+                 classpath="${ant.project.name}.jar"/&gt;
+        &lt;helloworld <b>message="Hello World"</b>/&gt;
+    &lt;/target&gt;
 </pre>
 That's all.</p>
 
@@ -276,13 +276,13 @@ arguments of the set-method:<ul>
     <a href="http://ant.apache.org/manual/develop.html#set-magic">Manual
     'Writing Your Own Task' [3]</a>)</li>
 </ul>
-Before calling the set-method all properties are resolved. So a <tt>&lt;helloworld message="${msg}"/></tt>
+Before calling the set-method all properties are resolved. So a <tt>&lt;helloworld message="${msg}"/&gt;</tt>
 would not set the message string to "${msg}" if there is a property "msg" with a set value.
 
 
 <a name="NestedText"></a>
 <h2>Nested Text</h2>
-<p>Maybe you have used the &lt;echo> task in a way like <tt>&lt;echo>Hello World&lt;/echo></tt>.
+<p>Maybe you have used the &lt;echo&gt; task in a way like <tt>&lt;echo&gt;Hello World&lt;/echo&gt;</tt>.
 For that you have to provide a <tt>public void addText(String text)</tt> method.
 <pre class="code">
 ...
@@ -306,7 +306,7 @@ the <a href="http://ant.apache.org/manual/develop.html#nested-elements">Manual [
 We use the first way of the three described ways. There are several steps for that:<ol>
 <li>We create a class for collecting all the infos the nested element should contain.
   This class is created by the same rules for attributes and nested elements
-  as for the task (set&lt;attributename>() methods). </li>
+  as for the task (set&lt;attributename&gt;() methods). </li>
 <li>The task holds multiple instances of this class in a list.</li>
 <li>A factory method instantiates an object, saves the reference in the list
   and returns it to Ant Core.</li>
@@ -347,10 +347,10 @@ The mapping XML-name : classname is defined in the factory method:
 <tt>public <i>classname</i> create<i>XML-name</i>()</tt>. Therefore we write in
 the buildfile
 <pre class="code">
-        &lt;helloworld>
-            &lt;message msg="Nested Element 1"/>
-            &lt;message msg="Nested Element 2"/>
-        &lt;/helloworld>
+        &lt;helloworld&gt;
+            &lt;message msg="Nested Element 1"/&gt;
+            &lt;message msg="Nested Element 2"/&gt;
+        &lt;/helloworld&gt;
 </pre>
 
 
@@ -358,76 +358,76 @@ the buildfile
 <h2>Our task in a little more complex version</h2>
 <p>For recapitulation now a little refactored buildfile:
 <pre class="code">
-&lt;?xml version="1.0" encoding="ISO-8859-1"?>
-&lt;project name="MyTask" basedir="." default="use">
+&lt;?xml version="1.0" encoding="ISO-8859-1"?&gt;
+&lt;project name="MyTask" basedir="." default="use"&gt;
 
-    &lt;property name="src.dir" value="src"/>
-    &lt;property name="classes.dir" value="classes"/>
+    &lt;property name="src.dir" value="src"/&gt;
+    &lt;property name="classes.dir" value="classes"/&gt;
 
-    &lt;target name="clean" description="Delete all generated files">
-        &lt;delete dir="${classes.dir}" failonerror="false"/>
-        &lt;delete file="${ant.project.name}.jar"/>
-    &lt;/target>
+    &lt;target name="clean" description="Delete all generated files"&gt;
+        &lt;delete dir="${classes.dir}" failonerror="false"/&gt;
+        &lt;delete file="${ant.project.name}.jar"/&gt;
+    &lt;/target&gt;
 
-    &lt;target name="compile" description="Compiles the Task">
-        &lt;mkdir dir="${classes.dir}"/>
-        &lt;javac srcdir="${src.dir}" destdir="${classes.dir}"/>
-    &lt;/target>
+    &lt;target name="compile" description="Compiles the Task"&gt;
+        &lt;mkdir dir="${classes.dir}"/&gt;
+        &lt;javac srcdir="${src.dir}" destdir="${classes.dir}"/&gt;
+    &lt;/target&gt;
 
-    &lt;target name="jar" description="JARs the Task" depends="compile">
-        &lt;jar destfile="${ant.project.name}.jar" basedir="${classes.dir}"/>
-    &lt;/target>
+    &lt;target name="jar" description="JARs the Task" depends="compile"&gt;
+        &lt;jar destfile="${ant.project.name}.jar" basedir="${classes.dir}"/&gt;
+    &lt;/target&gt;
 
 
     &lt;target name="use.init"
             description="Taskdef the HelloWorld-Task"
-            depends="jar">
+            depends="jar"&gt;
         &lt;taskdef name="helloworld"
                  classname="HelloWorld"
-                 classpath="${ant.project.name}.jar"/>
-    &lt;/target>
+                 classpath="${ant.project.name}.jar"/&gt;
+    &lt;/target&gt;
 
 
     &lt;target name="use.without"
             description="Use without any"
-            depends="use.init">
-        &lt;helloworld/>
-    &lt;/target>
+            depends="use.init"&gt;
+        &lt;helloworld/&gt;
+    &lt;/target&gt;
 
     &lt;target name="use.message"
             description="Use with attribute 'message'"
-            depends="use.init">
-        &lt;helloworld message="attribute-text"/>
-    &lt;/target>
+            depends="use.init"&gt;
+        &lt;helloworld message="attribute-text"/&gt;
+    &lt;/target&gt;
 
     &lt;target name="use.fail"
             description="Use with attribute 'fail'"
-            depends="use.init">
-        &lt;helloworld fail="true"/>
-    &lt;/target>
+            depends="use.init"&gt;
+        &lt;helloworld fail="true"/&gt;
+    &lt;/target&gt;
 
     &lt;target name="use.nestedText"
             description="Use with nested text"
-            depends="use.init">
-        &lt;helloworld>nested-text&lt;/helloworld>
-    &lt;/target>
+            depends="use.init"&gt;
+        &lt;helloworld&gt;nested-text&lt;/helloworld&gt;
+    &lt;/target&gt;
 
     &lt;target name="use.nestedElement"
             description="Use with nested 'message'"
-            depends="use.init">
-        &lt;helloworld>
-            &lt;message msg="Nested Element 1"/>
-            &lt;message msg="Nested Element 2"/>
-        &lt;/helloworld>
-    &lt;/target>
+            depends="use.init"&gt;
+        &lt;helloworld&gt;
+            &lt;message msg="Nested Element 1"/&gt;
+            &lt;message msg="Nested Element 2"/&gt;
+        &lt;/helloworld&gt;
+    &lt;/target&gt;
 
 
     &lt;target name="use"
             description="Try all (w/out use.fail)"
             depends="use.without,use.message,use.nestedText,use.nestedElement"
-    />
+    /&gt;
 
-&lt;/project>
+&lt;/project&gt;
 </pre>
 
 And the code of the task:
@@ -506,7 +506,7 @@ public class HelloWorld extends Task {
 
 And it works:
 <pre class="output">
-C:\tmp\anttests\MyFirstTask>ant
+C:\tmp\anttests\MyFirstTask&gt;ant
 Buildfile: build.xml
 
 compile:
@@ -538,7 +538,7 @@ use:
 
 BUILD SUCCESSFUL
 Total time: 3 seconds
-C:\tmp\anttests\MyFirstTask>ant use.fail
+C:\tmp\anttests\MyFirstTask&gt;ant use.fail
 Buildfile: build.xml
 
 compile:
@@ -553,7 +553,7 @@ BUILD FAILED
 C:\tmp\anttests\MyFirstTask\build.xml:36: Fail requested.
 
 Total time: 1 second
-C:\tmp\anttests\MyFirstTask>
+C:\tmp\anttests\MyFirstTask&gt;
 </pre>
 Next step: test ...
 
@@ -581,66 +581,66 @@ target "test-jar" or you can download a nightly build from
 <a href="http://gump.covalent.net/jars/latest/ant/ant-testutil.jar">
 http://gump.covalent.net/jars/latest/ant/ant-testutil.jar [5]</a>.</p>
 
-<p>For executing the test and creating a report we need the optional tasks &lt;junit>
-and &lt;junitreport>. So we add to the buildfile:
+<p>For executing the test and creating a report we need the optional tasks &lt;junit&gt;
+and &lt;junitreport&gt;. So we add to the buildfile:
 <pre class="code">
 ...
 <font color="#9F9F9F">&lt;project name="MyTask" basedir="." </font>default="test"<font color="#9F9F9F">&gt;</font>
 ...
-    &lt;property name="ant.test.lib" value="ant-testutil.jar"/>
-    &lt;property name="report.dir"   value="report"/>
-    &lt;property name="junit.out.dir.xml"  value="${report.dir}/junit/xml"/>
-    &lt;property name="junit.out.dir.html" value="${report.dir}/junit/html"/>
+    &lt;property name="ant.test.lib" value="ant-testutil.jar"/&gt;
+    &lt;property name="report.dir"   value="report"/&gt;
+    &lt;property name="junit.out.dir.xml"  value="${report.dir}/junit/xml"/&gt;
+    &lt;property name="junit.out.dir.html" value="${report.dir}/junit/html"/&gt;
 
-    &lt;path id="classpath.run">
-        &lt;path path="${java.class.path}"/>
-        &lt;path location="${ant.project.name}.jar"/>
-    &lt;/path>
+    &lt;path id="classpath.run"&gt;
+        &lt;path path="${java.class.path}"/&gt;
+        &lt;path location="${ant.project.name}.jar"/&gt;
+    &lt;/path&gt;
 
-    &lt;path id="classpath.test">
-        &lt;path refid="classpath.run"/>
-        &lt;path location="${ant.test.lib}"/>
-    &lt;/path>
+    &lt;path id="classpath.test"&gt;
+        &lt;path refid="classpath.run"/&gt;
+        &lt;path location="${ant.test.lib}"/&gt;
+    &lt;/path&gt;
 
-    &lt;target name="clean" description="Delete all generated files">
-        &lt;delete failonerror="false" includeEmptyDirs="true">
-            &lt;fileset dir="." includes="${ant.project.name}.jar"/>
-            &lt;fileset dir="${classes.dir}"/>
-            &lt;fileset dir="${report.dir}"/>
-        &lt;/delete>
-    &lt;/target>
+    &lt;target name="clean" description="Delete all generated files"&gt;
+        &lt;delete failonerror="false" includeEmptyDirs="true"&gt;
+            &lt;fileset dir="." includes="${ant.project.name}.jar"/&gt;
+            &lt;fileset dir="${classes.dir}"/&gt;
+            &lt;fileset dir="${report.dir}"/&gt;
+        &lt;/delete&gt;
+    &lt;/target&gt;
 
-    <font color="#9F9F9F">&lt;target name="compile" description="Compiles the Task">
-        &lt;mkdir dir="${classes.dir}"/>
-        &lt;javac srcdir="${src.dir}" destdir="${classes.dir}" </font>classpath="${ant.test.lib}"<font color="#9F9F9F">/>
-    &lt;/target></font>
+    <font color="#9F9F9F">&lt;target name="compile" description="Compiles the Task"&gt;
+        &lt;mkdir dir="${classes.dir}"/&gt;
+        &lt;javac srcdir="${src.dir}" destdir="${classes.dir}" </font>classpath="${ant.test.lib}"<font color="#9F9F9F">/&gt;
+    &lt;/target&gt;</font>
 ...
-    &lt;target name="junit" description="Runs the unit tests" depends="jar">
-        &lt;delete dir="${junit.out.dir.xml}" />
-        &lt;mkdir  dir="${junit.out.dir.xml}" />
-        &lt;junit printsummary="yes" haltonfailure="no">
-            &lt;classpath refid="classpath.test"/>
-            &lt;formatter type="xml"/>
-            &lt;batchtest fork="yes" todir="${junit.out.dir.xml}">
-                &lt;fileset dir="${src.dir}" includes="**/*Test.java"/>
-            &lt;/batchtest>
-        &lt;/junit>
-    &lt;/target>
+    &lt;target name="junit" description="Runs the unit tests" depends="jar"&gt;
+        &lt;delete dir="${junit.out.dir.xml}"/&gt;
+        &lt;mkdir  dir="${junit.out.dir.xml}"/&gt;
+        &lt;junit printsummary="yes" haltonfailure="no"&gt;
+            &lt;classpath refid="classpath.test"/&gt;
+            &lt;formatter type="xml"/&gt;
+            &lt;batchtest fork="yes" todir="${junit.out.dir.xml}"&gt;
+                &lt;fileset dir="${src.dir}" includes="**/*Test.java"/&gt;
+            &lt;/batchtest&gt;
+        &lt;/junit&gt;
+    &lt;/target&gt;
 
-    &lt;target name="junitreport" description="Create a report for the rest result">
-        &lt;mkdir dir="${junit.out.dir.html}" />
-        &lt;junitreport todir="${junit.out.dir.html}">
-            &lt;fileset dir="${junit.out.dir.xml}">
-                &lt;include name="*.xml"/>
-            &lt;/fileset>
-            &lt;report format="frames" todir="${junit.out.dir.html}"/>
-        &lt;/junitreport>
-    &lt;/target>
+    &lt;target name="junitreport" description="Create a report for the rest result"&gt;
+        &lt;mkdir dir="${junit.out.dir.html}"/&gt;
+        &lt;junitreport todir="${junit.out.dir.html}"&gt;
+            &lt;fileset dir="${junit.out.dir.xml}"&gt;
+                &lt;include name="*.xml"/&gt;
+            &lt;/fileset&gt;
+            &lt;report format="frames" todir="${junit.out.dir.html}"/&gt;
+        &lt;/junitreport&gt;
+    &lt;/target&gt;
 
     &lt;target name="test"
             depends="junit,junitreport"
             description="Runs unit tests and creates a report"
-    />
+    /&gt;
 ...
 </pre></p>
 
@@ -694,7 +694,7 @@ public class HelloWorldTest extends BuildFileTest {
 <p>When starting <tt>ant</tt> we'll get a short message to STDOUT and
 a nice HTML-report.
 <pre class="output">
-C:\tmp\anttests\MyFirstTask>ant
+C:\tmp\anttests\MyFirstTask&gt;ant
 Buildfile: build.xml
 
 compile:
@@ -720,7 +720,7 @@ test:
 
 BUILD SUCCESSFUL
 Total time: 7 seconds
-C:\tmp\anttests\MyFirstTask>
+C:\tmp\anttests\MyFirstTask&gt;
 </pre></p>
 
 
