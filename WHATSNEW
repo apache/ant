@@ -101,6 +101,9 @@ Other changes:
 
 * mail task accepts nested header element.  Bugzilla report 24713.
 
+* zip/jar/war/ear supports level attribute for deflate compression level.
+  Bugzilla report 25513.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

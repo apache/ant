@@ -55,6 +55,27 @@ import java.util.zip.ZipException;
 public class ZipOutputStream extends FilterOutputStream {
 
     /**
+     * Compression method for deflated entries.
+     *
+     * @since 1.1
+     */
+    public static final int DEFLATED = java.util.zip.ZipEntry.DEFLATED;
+
+    /**
+     * Default compression level for deflated entries.
+     *
+     * @since Ant 1.7
+     */
+    public static final int DEFAULT_COMPRESSION = Deflater.DEFAULT_COMPRESSION;
+
+    /**
+     * Compression method for stored entries.
+     *
+     * @since 1.1
+     */
+    public static final int STORED = java.util.zip.ZipEntry.STORED;
+
+    /**
      * Current entry.
      *
      * @since 1.1
@@ -73,7 +94,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.1
      */
-    private int level = Deflater.DEFAULT_COMPRESSION;
+    private int level = DEFAULT_COMPRESSION;
 
     /**
      * Has the compression level changed when compared to the last
@@ -182,7 +203,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.14
      */
-    protected Deflater def = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
+    protected Deflater def = new Deflater(level, true);
 
     /**
      * This buffer servers as a Deflater.
@@ -202,20 +223,6 @@ public class ZipOutputStream extends FilterOutputStream {
      * @since 1.14
      */
     private RandomAccessFile raf = null;
-
-    /**
-     * Compression method for deflated entries.
-     *
-     * @since 1.1
-     */
-    public static final int DEFLATED = java.util.zip.ZipEntry.DEFLATED;
-
-    /**
-     * Compression method for stored entries.
-     *
-     * @since 1.1
-     */
-    public static final int STORED = java.util.zip.ZipEntry.STORED;
 
     /**
      * Creates a new ZIP OutputStream filtering the underlying stream.
@@ -430,10 +437,16 @@ public class ZipOutputStream extends FilterOutputStream {
      * Sets the compression level for subsequent entries.
      *
      * <p>Default is Deflater.DEFAULT_COMPRESSION.</p>
-     * @param level the compression level
+     * @param level the compression level.
+     * @throws IllegalArgumentException if an invalid compression level is specified.
      * @since 1.1
      */
     public void setLevel(int level) {
+        if (level < Deflater.DEFAULT_COMPRESSION
+            || level > Deflater.BEST_COMPRESSION) {
+            throw new IllegalArgumentException(
+                "Invalid compression level: " + level);
+        }
         hasCompressionLevelChanged = (this.level != level);
         this.level = level;
     }
@@ -843,7 +856,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.14
      */
-    protected final void writeOut(byte [] data) throws IOException {
+    protected final void writeOut(byte[] data) throws IOException {
         writeOut(data, 0, data.length);
     }
 
@@ -856,7 +869,7 @@ public class ZipOutputStream extends FilterOutputStream {
      *
      * @since 1.14
      */
-    protected final void writeOut(byte [] data, int offset, int length)
+    protected final void writeOut(byte[] data, int offset, int length)
         throws IOException {
         if (raf != null) {
             raf.write(data, offset, length);

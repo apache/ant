@@ -120,6 +120,8 @@ public class Zip extends MatchingTask {
      */
     private String comment = "";
 
+    private int level = ZipOutputStream.DEFAULT_COMPRESSION;
+
     /**
      * This is the name/location of where to
      * create the .zip file.
@@ -336,6 +338,25 @@ public class Zip extends MatchingTask {
     }
 
     /**
+     * Set the compression level to use.  Default is
+     * ZipOutputStream.DEFAULT_COMPRESSION.
+     * @param level compression level.
+     * @since Ant 1.7
+     */
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    /**
+     * Get the compression level.
+     * @return compression level.
+     * @since Ant 1.7
+     */
+    public int getLevel() {
+        return level;
+    }
+
+    /**
      * Whether the file modification times will be rounded up to the
      * next even number of seconds.
      *
@@ -481,16 +502,13 @@ public class Zip extends MatchingTask {
 
             ZipOutputStream zOut = null;
             try {
-
                 if (!skipWriting) {
                     zOut = new ZipOutputStream(zipFile);
 
                     zOut.setEncoding(encoding);
-                    if (doCompress) {
-                        zOut.setMethod(ZipOutputStream.DEFLATED);
-                    } else {
-                        zOut.setMethod(ZipOutputStream.STORED);
-                    }
+                    zOut.setMethod(doCompress
+                        ? ZipOutputStream.DEFLATED : ZipOutputStream.STORED);
+                    zOut.setLevel(level);
                 }
                 initZipOutputStream(zOut);
 
@@ -1080,12 +1098,12 @@ public class Zip extends MatchingTask {
             ze.setMethod(doCompress ? ZipEntry.DEFLATED : ZipEntry.STORED);
 
             /*
-            * ZipOutputStream.putNextEntry expects the ZipEntry to
-            * know its size and the CRC sum before you start writing
-            * the data when using STORED mode - unless it is seekable.
-            *
-            * This forces us to process the data twice.
-            */
+             * ZipOutputStream.putNextEntry expects the ZipEntry to
+             * know its size and the CRC sum before you start writing
+             * the data when using STORED mode - unless it is seekable.
+             *
+             * This forces us to process the data twice.
+             */
             if (!zOut.isSeekable() && !doCompress) {
                 long size = 0;
                 CRC32 cal = new CRC32();

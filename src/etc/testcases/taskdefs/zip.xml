@@ -139,6 +139,23 @@
       <zip destfile="test3.zip" basedir="empty" whenempty="create" includes="*.xyz"/>
   </target>
 
+  <target name="testCompressionLevel" depends="test6">
+    <length property="test6.length" file="test6.zip" />
+    <zip destFile="testLevel.zip" basedir="." level="9">
+      <include name="*.xml" />
+      <exclude name="zip.*" />
+    </zip>
+    <fail>
+      <condition>
+        <not>
+          <isfileselected file="testLevel.zip">
+            <size when="less" value="${test6.length}" />
+          </isfileselected>
+        </not>
+      </condition>
+    </fail>
+  </target>
+
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>

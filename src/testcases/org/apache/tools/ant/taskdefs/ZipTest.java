@@ -143,6 +143,9 @@ public class ZipTest extends BuildFileTest {
         executeTarget("zipEmptyCreate");
         assertTrue("archive should be created",
                    getProject().resolveFile("test3.zip").exists());
-
+    }
+    // Bugzilla Report 25513
+    public void testCompressionLevel() {
+        executeTarget("testCompressionLevel");
     }
 }
