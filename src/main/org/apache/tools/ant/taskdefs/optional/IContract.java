@@ -58,10 +58,12 @@ package org.apache.tools.ant.taskdefs.optional;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Date;
+import java.util.Properties;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
@@ -138,7 +140,13 @@ import org.apache.tools.ant.types.Reference;
  *     <td valign="top">verbosity</td>
  *     <td valign="top">Indicates the verbosity level of iContract. Any combination
  *       of error*,warning*,note*,info*,progress*,debug* (comma separated) can be
- *       used. Defaults to <code>error*,warning*</code></td>
+ *       used. Defaults to <code>error*</code></td>
+ *     <td valign="top" align="center">No</td>
+ *   </tr>
+ *   <tr>
+ *     <td valign="top">updateicontrol</td>
+ *     <td valign="top">If set to true, it indicates that the properties file for
+ *       icontrol in the current directory should be updated (or created if it doesn't exist)</td>
  *     <td valign="top" align="center">No</td>
  *   </tr>
  * </table>
@@ -159,6 +167,7 @@ import org.apache.tools.ant.types.Reference;
  *     srcdir="${build.src}"
  *     instrumentdir="${instrumented.dir}"
  *     repositorydir="${repository.dir}"
+ *     updateicontrol="true"
  *   >
  *     &lt;classpath>
  *       &lt;fileset dir="./lib">
@@ -203,7 +212,7 @@ public class IContract extends Task {
     private String failThrowable = "java.lang.Error";
 
     /** The -v option */
-    private String verbosity = "error*,warning*";
+    private String verbosity = "error*";
 
     /** Indicates whether or not to use internal compilation */
     private boolean internalcompilation = false;
@@ -223,6 +232,12 @@ public class IContract extends Task {
     /** Indicates whether or not to instrument all files regardless of timestamp */
     // can't be explicitly set, is set if control file exists and is newer than any source file
     private boolean instrumentall = true;
+
+    /**
+     * Indicates the name of a properties file (intentionally for iControl) where the classpath
+     * property should be updated.
+     */
+    private boolean updateIcontrol = false;
 
     /**
      * Sets the source directory
@@ -355,6 +370,15 @@ public class IContract extends Task {
     }
 
     /**
+     * Decides whether or not to update iControl properties file
+     *
+     * @param updateIcontrol true if iControl properties file should be updated
+     */
+    public void setUpdateicontrol( boolean updateIcontrol ) {
+        this.updateIcontrol = updateIcontrol;
+    }
+
+    /**
      * Executes the task
      *
      * @exception BuildException if the instrumentation fails
@@ -423,10 +447,30 @@ public class IContract extends Task {
             args.append( "-o" ).append( instrumentDir ).append( File.separator ).append( "@p" ).append( File.separator ).append( "@f.@e " );
             args.append( "-k" ).append( repositoryDir ).append( File.separator ).append( "@p " );
             args.append( instrumentall ? "-a " : "" ); // reinstrument everything if controlFile exists and is newer than source
-            args.append( "@" ).append( targets.getName() );
+            args.append( "@" ).append( targets.getAbsolutePath() );
             iContract.createArg().setLine( args.toString() );
 
 // System.out.println( "JAVA -classpath " + iContractClasspath + " com.reliablesystems.iContract.Tool " + args.toString() );
+
+            // update iControlProperties if it's set.
+            if( updateIcontrol ) {
+                Properties iControlProps = new Properties();
+                try { // to read existing propertiesfile
+                    iControlProps.load( new FileInputStream( "icontrol.properties" ) );
+                } catch( IOException e ) {
+                    log( "File icontrol.properties not found. That's ok. Writing a default one." );
+                }
+                iControlProps.setProperty( "classRoot", srcDir.getAbsolutePath() );
+                iControlProps.setProperty( "classpath", iContractClasspath.toString() );
+                iControlProps.setProperty( "controlFile", "control" );
+
+                try { // to read existing propertiesfile
+                    iControlProps.store( new FileOutputStream( "icontrol.properties" ), "Edit the classRoot and controlfile properties if you like" );
+                    log( "Updated file icontrol.properties." );
+                } catch( IOException e ) {
+                    log( "Couldn't write icontrol.properties." );
+                }
+            }
 
             int result = iContract.executeJava();
             if( result != 0 ) {
@@ -508,25 +552,30 @@ public class IContract extends Task {
 
         // also, check controlFile timestamp
         long controlFileTime = -1;
-        if( controlFile != null ) {
-            if( controlFile.exists() ) {
-                controlFileTime = controlFile.lastModified();
-                fileset.setDir( instrumentDir );
-                ds = fileset.getDirectoryScanner( project );
-                files = ds.getIncludedFiles();
-                for( int i = 0; i < files.length; i++ ) {
-                    File srcFile = new File(srcDir, files[i]);
-                    if( files[i].endsWith( ".class" ) ) {
-                        if( controlFileTime > srcFile.lastModified() ) {
-                            if( !dirty ) {
-                                log( "Control file " + controlFile.getAbsolutePath() + " has been updated. Instrumenting all files..." );
+        try {
+            if( controlFile != null ) {
+                if( controlFile.exists() && instrumentDir.exists() ) {
+                    controlFileTime = controlFile.lastModified();
+                    fileset.setDir( instrumentDir );
+                    ds = fileset.getDirectoryScanner( project );
+                    files = ds.getIncludedFiles();
+                    for( int i = 0; i < files.length; i++ ) {
+                        File srcFile = new File(srcDir, files[i]);
+                        if( files[i].endsWith( ".class" ) ) {
+                            if( controlFileTime > srcFile.lastModified() ) {
+                                if( !dirty ) {
+                                    log( "Control file " + controlFile.getAbsolutePath() + " has been updated. Instrumenting all files..." );
+                                }
+                                dirty = true;
+                                instrumentall = true;
                             }
-                            dirty = true;
-                            instrumentall = true;
                         }
                     }
                 }
             }
+        } catch( Throwable t ) {
+            System.out.println( "FATAL" );
+            t.printStackTrace();
         }
     }
 
