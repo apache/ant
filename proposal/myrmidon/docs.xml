@@ -1,0 +1,13 @@
+<project name="docs" default="main">
+    <target name="main">
+        <taskdef name="anakia" classname="org.apache.velocity.anakia.AnakiaTask"/>
+        <anakia basedir="src/xdocs"
+                destdir="docs"
+                style="docs.vsl"
+                projectfile="stylesheets/project.xml"
+                includes="**/*.xml"
+                excludes="stylesheets/**"
+                velocitypropertiesfile="src/xdocs/velocity.properties"
+        />
+    </target>
+</project>

@@ -1,0 +1,11 @@
+<project name="Apache Myrmidon" href="http://jakarta.apache.org">
+
+    <title>Apache Myrmidon</title>
+
+    <body>
+        <menu name="Myrmidon">
+            <item name="Introduction" href="/index.html"/>
+        </menu>
+    </body>
+
+</project>
