@@ -1,0 +1,159 @@
+<html>
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Ant User Manual</title>
+</head>
+<body>
+
+<h2>Starteam</h2>
+
+<h3>Description</h3>
+
+Checks out files from a StarTeam project.
+
+<p>
+The <i>includes</i> and <i>excludes</i> attributes function differently from
+other tasks in Ant.  Multiple patters must be seperated by spaces, not
+commas.  See the examples for more information.
+
+<p>
+This program makes use of functions from the StarTeam API.  As a result
+this task is only available to licensed users of StarTeam.  You must have
+<CODE>starteam-sdk.jar</CODE> in your classpath to run this task.
+For more information about the StarTeam API and how to license it, see
+the <a href="http://www.starbase.com">StarBase</a> web site.
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">servername</td>
+    <td valign="top">The name of the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">serverport</td>
+    <td valign="top">The port number of the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">projectname</td>
+    <td valign="top">The name of the StarTeam project.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">viewname</td>
+    <td valign="top">The name of the view in the StarTeam project.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">The username of the account used to log in to the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">The password of the account used to log in to the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">targetfolder</td>
+    <td valign="top">The folder to which files are checked out.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>  
+  <tr>
+    <td valign="top">foldername</td>
+    <td valign="top">The subfolder in the project from which to check out files.</td>
+    <td align="center" valign="top">no</td>
+  </tr>  
+  <tr>
+    <td valign="top">force</td>
+    <td valign="top">Overwrite existing folders if this is set to "true".  Defaults to "false".</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">recursion</td>
+    <td valign="top">Indicates if subfolders should be searched for files to check out.  Defaults to "true".</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">Provides progress information.  Defaults to "false".</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">Only check out files that match at least one of the patterns in this list.  Patterns must be seperated by spaces.  Patterns in <i>excludes</i> take precedence over patterns in <i>includes</i>.</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">Do not check out files that match at least one of the patterns in this list.  Patterns must be seperated by spaces.  Patterns in <i>excludes</i> take precedence over patterns in <i>includes</i>.</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+</table>
+
+<h3>Examples</h3>
+
+<pre>
+  &lt;starteam servername="STARTEAM" 
+            serverport="49201"
+            projectname="AProject" 
+            viewname="AView"
+            username="auser"
+            password="secret"
+            targetfolder="C:\dev\buildtest\co"
+  /&gt;
+</pre>
+
+The minimum necessary to check out files out from a StarTeam server.  This will
+check out all files in the <i>AView</i> view of the <i>AProject</i> project to
+<code>C:\dev\buildtest\co</code>.
+
+<pre>
+  &lt;starteam servername="STARTEAM" 
+            serverport="49201"
+            projectname="AProject" 
+            viewname="AView"
+            username="auser"
+            password="secret"
+            targetfolder="C:\dev\buildtest\co"
+            foldername="\Dev"
+            excludes="*.bak *.old"
+            force="true"
+  /&gt;
+</pre>
+
+This will checkout all files from the <i>Dev</i> folder and below that do not
+end in <i>.bak</i> or <i>.old</i>.  The force flag will cause any existing files to be
+overwritten by the version in StarTeam.
+
+<pre>
+  &lt;starteam servername="STARTEAM" 
+            serverport="49201"
+            projectname="AProject" 
+            viewname="AView"
+            username="auser"
+            password="secret"
+            targetfolder="C:\dev\buildtest\co"
+            includes="*.htm *.html"
+            excludes="index.*"
+  /&gt;
+</pre>
+
+This is an example of overlapping <i>includes</i> and <i>excludes</i> attributes.  Because
+<i>excludes</i> takes precedence over <i>includes</i>, files named <code>index.html</code> will
+not be checked out by this command.
+
+<p>
+<hr>
+<p align="center">
+Copyright &copy; 2000,2001 Apache Software Foundation. All rights Reserved.
+</p>
+
+</body>
+</html>
