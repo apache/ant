@@ -169,6 +169,13 @@ or are out of date, the ejbc tool is run to generate new versions.</p>
                      processed.</td>
     <td valign="top" align="center">No</td>
   </tr>
+  <tr>
+    <td valign="top">keepgenerated</td>
+    <td>Controls whether ejbc will keep the
+        intermediate Java files used to build the class files. This can be
+        useful when debugging.</td>
+    <td>No, defaults to false.</td>
+  </tr>
 </table>
 <h3>Examples</h3>
 <pre>&lt;ejbc descriptors=&quot;${gen.classes}&quot;
