@@ -1756,6 +1756,7 @@ public class Project {
      */
     public void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildStarted(event);
@@ -1771,6 +1772,7 @@ public class Project {
     public void fireBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.buildFinished(event);
@@ -1786,6 +1788,7 @@ public class Project {
      */
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetStarted(event);
@@ -1805,6 +1808,7 @@ public class Project {
     protected void fireTargetFinished(Target target, Throwable exception) {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.targetFinished(event);
@@ -1821,6 +1825,7 @@ public class Project {
         // register this as the current task on the current thread.
         registerThreadTask(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskStarted(event);
@@ -1843,6 +1848,7 @@ public class Project {
         System.err.flush();
         BuildEvent event = new BuildEvent(task);
         event.setException(exception);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.taskFinished(event);
@@ -1862,6 +1868,7 @@ public class Project {
     private void fireMessageLoggedEvent(BuildEvent event, String message,
                                         int priority) {
         event.setMessage(message, priority);
+        Vector listeners = getBuildListeners();
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
             listener.messageLogged(event);
