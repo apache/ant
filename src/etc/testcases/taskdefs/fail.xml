@@ -7,9 +7,13 @@
   </target>
 
   <target name="test2">
-    <fail message="test"/>
+    <fail message="test2"/>
   </target>
 
+  <target name="testText">
+    <fail>testText</fail>
+  </target>
+  
   <target name="testIf">
     <fail if="foo" />
   </target>
