@@ -974,16 +974,6 @@ public final class IntrospectionHelper implements BuildListener {
 
                 };
 
-        // resolve relative paths through Project
-        } else if (org.apache.tools.ant.types.Path.class.equals(reflectedArg)) {
-            return new AttributeSetter() {
-                    public void set(Project p, Object parent, String value)
-                        throws InvocationTargetException, IllegalAccessException {
-                        m.invoke(parent, new Path[] {new Path(p, value)});
-                    }
-
-                };
-
         // EnumeratedAttributes have their own helper class
         } else if (EnumeratedAttribute.class.isAssignableFrom(reflectedArg)) {
             return new AttributeSetter() {
@@ -1001,37 +991,52 @@ public final class IntrospectionHelper implements BuildListener {
                 };
 
         // worst case. look for a public String constructor and use it
+        // also supports new Whatever(Project, String) as for Path or Reference
         // This is used (deliberately) for all primitives/wrappers other than
         // char and boolean
         } else {
 
+            boolean includeProject;
+            Constructor c;
             try {
-                final Constructor c =
-                    reflectedArg.getConstructor(new Class[] {java.lang.String.class});
-
-                return new AttributeSetter() {
-                        public void set(Project p, Object parent,
-                                        String value)
-                            throws InvocationTargetException,
-                                   IllegalAccessException, BuildException {
-                            try {
-                                Object attribute = c.newInstance(new String[] {value});
-                                if (p != null) {
-                                    p.setProjectReference(attribute);
-                                }
-                                m.invoke(parent, new Object[] {attribute});
-                            } catch (InstantiationException ie) {
-                                throw new BuildException(ie);
-                            }
-                        }
-                    };
-
+                // First try with Project.
+                c = reflectedArg.getConstructor(new Class[] {Project.class, String.class});
+                includeProject = true;
             } catch (NoSuchMethodException nme) {
-                // ignore
+                // OK, try without.
+                try {
+                    c = reflectedArg.getConstructor(new Class[] {String.class});
+                    includeProject = false;
+                } catch (NoSuchMethodException nme2) {
+                    // Well, no matching constructor.
+                    return null;
+                }
             }
+            final boolean finalIncludeProject = includeProject;
+            final Constructor finalConstructor = c;
+            
+            return new AttributeSetter() {
+                public void set(Project p, Object parent, String value)
+                        throws InvocationTargetException, IllegalAccessException, BuildException {
+                    try {
+                        Object[] args;
+                        if (finalIncludeProject) {
+                            args = new Object[] {p, value};
+                        } else {
+                            args = new Object[] {value};
+                        }
+                        Object attribute = finalConstructor.newInstance(args);
+                        if (p != null) {
+                            p.setProjectReference(attribute);
+                        }
+                        m.invoke(parent, new Object[] {attribute});
+                    } catch (InstantiationException ie) {
+                        throw new BuildException(ie);
+                    }
+                }
+            };
+            
         }
-
-        return null;
     }
 
     /**
