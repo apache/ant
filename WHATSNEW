@@ -104,6 +104,8 @@ Fixed bugs:
 
 * wrong compare used in ProjectComponent for logging. Bugzilla Report 28070.
 
+* failOnAny attribute for <parallel> was broken. Bugzilla Report 28122.
+
 Other changes:
 --------------
 

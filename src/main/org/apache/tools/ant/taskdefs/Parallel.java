@@ -417,12 +417,12 @@ public class Parallel extends Task
                 task.perform();
             } catch (Throwable t) {
                 exception = t;
+                if (failOnAny) {
+                    stillRunning = false;
+                }
             } finally {
                 synchronized (semaphore) {
                     finished = true;
-                    if (failOnAny) {
-                        stillRunning = false;
-                    }
                     semaphore.notifyAll();
                 }
             }
