@@ -170,6 +170,11 @@ can be specified.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">todir</td> 
+    <td valign="top">Directory to write the reports to.</td>
+    <td align="center" valign="top">No, default is current directory.</td>
+  </tr>
+  <tr>
     <td valign="top">outfile</td> 
     <td valign="top">Base name of the test result. The full filename is
       determined by this attribute and the extension of
@@ -228,6 +233,11 @@ generates a test class name for each file that ends in
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">todir</td> 
+    <td valign="top">Directory to write the reports to.</td>
+    <td align="center" valign="top">No, default is current directory.</td>
+  </tr>
+  <tr>
     <td valign="top">if</td> 
     <td valign="top">Only run tests if the named property is set.</td>
     <td align="center" valign="top">No</td>
@@ -278,7 +288,7 @@ stopped if the test fails.</p>
     &lt;formatter type="xml" /&gt;
   &lt;/test&gt;
 
-  &lt;batchtest fork="yes"&gt;
+  &lt;batchtest fork="yes" todir="${reports.tests}"&gt;
     &lt;fileset dir="${src.tests}"&gt;
       &lt;include name="**/*Test*.java" /&gt;
       &lt;exclude name="**/AllTests.java" /&lt;
@@ -295,7 +305,7 @@ will be output to <code>result.xml</code>.</p>
 <p>For each matching file in the directory <code>${src.tests}</code> a
 test is run in a separate VM. If a test fails, the build process is
 aborted. Results are collected in files named
-<code>TEST-<em>name</em>.txt</code>.</p>
+<code>TEST-<em>name</em>.txt</code> and written to <code>${reports.tests}</code>.</p>
 
 </body>
 </html>
