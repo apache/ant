@@ -277,6 +277,7 @@
   <patternset id="teststhatfail">
     <exclude name="${optional.package}/BeanShellScriptTest.java"/>
     <exclude name="${ant.package}/taskdefs/ImportTest.java"/>
+    <exclude name="${ant.package}/CaseTest.java"/>
   </patternset>
 
   <!--

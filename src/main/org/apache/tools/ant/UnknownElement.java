@@ -54,6 +54,7 @@
 
 package org.apache.tools.ant;
 
+import java.util.Locale;
 import java.util.Vector;
 import java.io.IOException;
 
@@ -273,26 +274,20 @@ public class UnknownElement extends Task {
             UnknownElement child = (UnknownElement) children.elementAt(i);
             Object realChild = null;
 
-            if (ih.supportsNestedElement(child.getTag())) { 
-                realChild 
-                    = ih.createElement(getProject(), parent, child.getTag());
-                childWrapper.setProxy(realChild);
-                if (realChild instanceof Task) {
-                    Task childTask = (Task) realChild;
-                    childTask.setRuntimeConfigurableWrapper(childWrapper);
-                    childTask.setTaskName(child.getTag());
-                    childTask.setTaskType(child.getTag());
-                }
-                child.handleChildren(realChild, childWrapper);
-
+            if (handleChild(ih, parent, child, 
+                            child.getTag().toLowerCase(Locale.US), 
+                            childWrapper)) {
             } else if (!(parent instanceof TaskContainer)) {
                 ih.throwNotSupported(getProject(), parent, child.getTag());
             } else {
-                // a task container - anything could happen - just add the 
-                // child to the container
-                TaskContainer container = (TaskContainer) parent;
-                container.addTask(child);
-            }                
+                if (!handleChild(ih, parent, child, child.getTag(), 
+                                 childWrapper)) {
+                    // a task container - anything could happen - just add the 
+                    // child to the container
+                    TaskContainer container = (TaskContainer) parent;
+                    container.addTask(child);
+                }
+            }
         }
     }
 
@@ -413,5 +408,32 @@ public class UnknownElement extends Task {
         }
         return null;
     }
+
+    /**
+     * Try to create a nested element of <code>parent</code> for the
+     * given tag.
+     *
+     * @return whether the creation has been successful
+     */
+    private boolean handleChild(IntrospectionHelper ih,
+                                Object parent, UnknownElement child,
+                                String childTag,
+                                RuntimeConfigurable childWrapper) {
+        if (ih.supportsNestedElement(childTag)) { 
+            Object realChild 
+                = ih.createElement(getProject(), parent, childTag);
+            childWrapper.setProxy(realChild);
+            if (realChild instanceof Task) {
+                Task childTask = (Task) realChild;
+                childTask.setRuntimeConfigurableWrapper(childWrapper);
+                childTask.setTaskName(childTag);
+                childTask.setTaskType(childTag);
+            }
+            child.handleChildren(realChild, childWrapper);
+            return true;
+        }
+        return false;
+    }
+
 
 }// UnknownElement

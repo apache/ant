@@ -751,23 +751,6 @@ public class ProjectHelper2 extends ProjectHelper {
                 parent = parentWrapper.getProxy();
             }
 
-            if (parent != null) {
-                // nested elements. Backward compatibilitiy - only nested elements
-                // are lower cased in the original processor
-                qname = qname.toLowerCase(Locale.US);
-                // XXX What about nested elements that are inside TaskContainers ?
-                // We can't know that that we need lowercase until we know
-                // parent is not a TaskContainer. Maybe this test should
-                // be done in UnknownElement.
-
-                // Note: the original code seems to have a similar problem: the lowercase
-                // conversion happens only inside ProjectHelper, if we know that the
-                // parent is not TaskContainer. If the parent is not known - UE are used
-                // and AFAIK there is no code to deal with that, so the conversion will be
-                // different based on context ( if the enclosing task is taskdefed in target
-                // or known at top level ).
-            }
-
             /* UnknownElement is used for tasks and data types - with
                delayed eval */
             UnknownElement task = new UnknownElement(qname);
