@@ -56,8 +56,6 @@ package org.apache.tools.ant.xdoclet;
 import com.sun.javadoc.ClassDoc;
 import com.sun.javadoc.MethodDoc;
 import com.sun.javadoc.Parameter;
-import com.sun.javadoc.Type;
-
 import xdoclet.XDocletException;
 import xdoclet.XDocletTagSupport;
 import xdoclet.tags.AbstractProgramElementTagsHandler;
@@ -172,11 +170,9 @@ public class TaskTagsHandler extends XDocletTagSupport {
         String elementName = "<not a valid element>";
         if (methodName.startsWith("addConfigured")) {
             elementName = methodName.substring(13, methodName.length());
-        }
-        else if (methodName.startsWith("add")) {
+        } else if (methodName.startsWith("add")) {
             elementName = methodName.substring(3, methodName.length());
-        }
-        else if (methodName.startsWith("create")) {
+        } else if (methodName.startsWith("create")) {
             elementName = methodName.substring(6, methodName.length());
         }
         return elementName.toLowerCase();
@@ -201,9 +197,8 @@ public class TaskTagsHandler extends XDocletTagSupport {
         ClassDoc classDoc = null;
         String methodName = getCurrentMethod().name();
         if (methodName.startsWith("addConfigured") ||
-            methodName.startsWith("add") ||
-            methodName.startsWith("create"))
-        {
+                methodName.startsWith("add") ||
+                methodName.startsWith("create")) {
             classDoc = getCurrentMethod().returnType().asClassDoc();
             if (classDoc == null) {
                 Parameter[] params = getCurrentMethod().parameters();
@@ -219,7 +214,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
      * Provides the Ant task name.
      *
      * @see #getTaskName(ClassDoc)
-	 * @doc:tag      type="content"
+     * @doc:tag      type="content"
      */
     public String taskName() throws XDocletException {
         return getTaskName(getCurrentClass());
@@ -272,8 +267,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
                 null, false, XDocletTagSupport.FOR_CLASS, false);
         if (tagValue != null) {
             tagValue = tagValue.toLowerCase();
-        }
-        else {
+        } else {
             tagValue = DEFAULT_CATEGORY;
         }
         return tagValue;
@@ -284,7 +278,6 @@ public class TaskTagsHandler extends XDocletTagSupport {
      * Returns true if the method corresponds to an Ant task attribute using
      * the rules from IntrospectionHelper
      *
-     * @todo filter out deprecated methods
      *       only filter org.apache.tools.ant.Task setters that are hidden
      *       check that it returns void and only has single argument
      *       incorporate rules for argument types from IntrospectionHelper
@@ -296,6 +289,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
      *           - Class with string constructor
      */
     private boolean isAntAttribute(MethodDoc method) {
+/*
         String[] excludeList = new String[]{"setLocation", "setDescription", "setOwningTarget", "setRuntimeConfigurableWrapper",
                                             "setTaskName", "setTaskType", "setProject"};
         for (int i = 0; i < excludeList.length; i++) {
@@ -303,7 +297,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
                 return true;
             }
         }
-
+*/
         return false;
     }
 
@@ -334,7 +328,6 @@ public class TaskTagsHandler extends XDocletTagSupport {
             if (params.length != 1) {
                 continue;
             }
-
             Parameter param = params[0];
 
             // Screen out attribute setters if there are duplicates,
@@ -343,8 +336,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
             MethodDoc oldMethod = (MethodDoc) nameTypeMap.get(method.name());
             if (oldMethod == null) {
                 nameTypeMap.put(method.name(), method);
-            }
-            else {
+            } else {
                 if ("java.lang.String".equals(oldMethod.parameters()[0].typeName())) {
                     attributeMethods.remove(oldMethod);
                     nameTypeMap.put(method.name(), method);
@@ -367,7 +359,7 @@ public class TaskTagsHandler extends XDocletTagSupport {
         List attributeMethods = new ArrayList();
 
         for (int i = 0; i < methods.length; i++) {
-            if (! methods[i].isPublic()) {
+            if (!methods[i].isPublic()) {
                 continue;
             }
 
@@ -386,12 +378,11 @@ public class TaskTagsHandler extends XDocletTagSupport {
                 if (!name.startsWith("create")) {
                     continue;
                 }
-            }
-            else if (params.length != 1) {
+            } else if (params.length != 1) {
                 continue;
             }
 
-            if ((name.startsWith("add") && !name.equals("addTask")) ||
+            if ((name.startsWith("add") && !name.equals("addText")) ||
                     name.startsWith("create")) {
                 attributeMethods.add(methods[i]);
             }
@@ -400,7 +391,6 @@ public class TaskTagsHandler extends XDocletTagSupport {
 
         return (MethodDoc[]) attributeMethods.toArray(new MethodDoc[0]);
     }
-
 
     /**
      * This is a slightly refactored (thank you IntelliJ) version of
@@ -413,6 +403,11 @@ public class TaskTagsHandler extends XDocletTagSupport {
         List methods = new ArrayList();
 
         while (cur_class != null) {
+            // hardcoded to stop when it hits Task, nothing there
+            // or above that needs to be processed
+            if (cur_class.qualifiedName().equals("org.apache.tools.ant.Task")) {
+                break;
+            }
             List curMethods = Arrays.asList(cur_class.methods());
 
             for (int j = 0; j < curMethods.size(); j++) {
