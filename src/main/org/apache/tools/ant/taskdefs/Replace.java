@@ -82,6 +82,8 @@ import java.util.Vector;
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:erik@desknetinc.com">Erik Langenbach</a>
+ *
+ * @ant:task category="filesystem"
  */
 public class Replace extends MatchingTask {
     

@@ -70,6 +70,8 @@ import org.apache.tools.ant.Project;
  * Ant task to read input line from console.
  *
  * @author <a href="mailto:usch@usch.net">Ulrich Schmidt</a>
+ *
+ * @ant:task category="control"
  */
 public class Input extends Task {
     private String validargs = null;

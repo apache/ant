@@ -62,6 +62,8 @@ import org.apache.tools.ant.BuildException;
  * A task to sleep for a period of time
  *
  * @author steve_l@iseran.com steve loughran
+ *
+ * @ant:task category="utility"
  */
 
 public class Sleep extends Task {

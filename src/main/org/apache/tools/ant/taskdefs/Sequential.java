@@ -66,6 +66,8 @@ import java.util.Enumeration;
  * Implements a single threaded task execution.
  * <p>
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
+ *
+ * @ant:task category="control"
  */
 public class Sequential extends Task
                         implements TaskContainer {

@@ -62,6 +62,8 @@ import java.io.File;
  * Creates a given directory.
  *
  * @author duncan@x180.com
+ *
+ * @ant:task category="filesystem"
  */
 
 public class Mkdir extends Task {

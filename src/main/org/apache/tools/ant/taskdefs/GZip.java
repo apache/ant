@@ -68,6 +68,8 @@ import java.util.zip.GZIPOutputStream;
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ *
+ * @ant:task category="packaging"
  */
 
 public class GZip extends Pack {

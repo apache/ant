@@ -77,6 +77,8 @@ import java.util.Enumeration;
  * Creates a JAR archive.
  * 
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
+ *
+ * @ant:task category="packaging"
  */
 public class Jar extends Zip {
     /** The index file name. */

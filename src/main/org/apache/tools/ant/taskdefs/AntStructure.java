@@ -78,6 +78,8 @@ import java.io.IOException;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  *
  * @version $Revision$
+ *
+ * @ant:task category="xml"
  */
 
 public class AntStructure extends Task {

@@ -67,6 +67,8 @@ import org.apache.tools.bzip2.CBZip2OutputStream;
  * non-compressed archives such as TAR files.
  *
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ *
+ * @ant:task category="packaging"
  */
 
 public class BZip2 extends Pack {

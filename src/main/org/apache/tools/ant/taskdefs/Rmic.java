@@ -98,6 +98,8 @@ import java.util.Vector;
  * @author David Maclean <a href="mailto:david@cm.co.za">david@cm.co.za</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @author Takashi Okamoto tokamoto@rd.nttdata.co.jp
+ *
+ * @ant:task category="java"
  */
 
 public class Rmic extends MatchingTask {

@@ -64,6 +64,8 @@ import java.io.*;
  * Load a file into a property
  *
  * @author Steve Loughran
+ *
+ * @ant:task category="utility"
  */
 public class LoadFile extends Task {
 

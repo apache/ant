@@ -67,6 +67,8 @@ import java.io.IOException;
  * Creates a WAR archive.
  * 
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ *
+ * @ant:task category="packaging"
  */
 public class War extends Jar {
 

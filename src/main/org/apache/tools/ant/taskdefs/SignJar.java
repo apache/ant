@@ -71,6 +71,8 @@ import org.apache.tools.ant.types.FileSet;
  *
  * @author Peter Donald <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
  * @author Nick Fortescue <a href="mailto:nick@ox.compsoc.net">nick@ox.compsoc.net</a>
+ *
+ * @ant:task category="java"
  */
 public class SignJar extends Task {
 

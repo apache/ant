@@ -66,6 +66,8 @@ import java.io.IOException;
  * Echo
  *
  * @author costin@dnt.ro
+ *
+ * @ant:task category="utility"
  */
 public class Echo extends Task {
     protected String message = ""; // required
@@ -138,7 +140,7 @@ public class Echo extends Task {
      *  <li>info</li>
      *  <li>verbose</li>
      *  <li>debug</li>
-     * <ul>
+     * </ul>
      * <p>The default is &quot;warning&quot; to ensure that messages are
      * displayed by default when using the -quiet command line option.</p>
      */

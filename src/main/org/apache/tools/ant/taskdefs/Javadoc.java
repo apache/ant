@@ -101,6 +101,8 @@ import org.apache.tools.ant.util.FileUtils;
  * @author Patrick Chanezon <a href="mailto:chanezon@netscape.com">chanezon@netscape.com</a>
  * @author Ernst de Haan <a href="mailto:ernst@jollem.com">ernst@jollem.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:task category="java"
  */
 
 public class Javadoc extends Task {

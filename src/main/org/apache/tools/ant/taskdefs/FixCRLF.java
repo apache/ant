@@ -117,6 +117,8 @@ import java.util.NoSuchElementException;
  * @author Sam Ruby <a href="mailto:rubys@us.ibm.com">rubys@us.ibm.com</a>
  * @author <a href="mailto:pbwest@powerup.com.au">Peter B. West</a>
  * @version $Revision$ $Name$
+ *
+ * @ant:task category="filesystem"
  */
 
 public class FixCRLF extends MatchingTask {

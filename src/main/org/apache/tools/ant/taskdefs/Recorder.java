@@ -76,6 +76,7 @@ import java.util.Hashtable;
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  * @version 0.5
  *
+ * @ant:task category="utility"
  */
 public class Recorder extends Task {
 

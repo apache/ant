@@ -71,6 +71,8 @@ import org.apache.tools.ant.util.FileUtils;
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ *
+ * @ant:task category="control"
  */
 
 public class Available extends Task implements Condition {

@@ -68,6 +68,8 @@ import java.util.Enumeration;
  * <p>
  * @author Thomas Christen <a href="mailto:chr@active.ch">chr@active.ch</a>
  * @author <a href="mailto:conor@apache.org">Conor MacNeill </a>
+ *
+ * @ant:task category="control"
  */
 public class Parallel extends Task
                       implements TaskContainer {

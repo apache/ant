@@ -68,6 +68,8 @@ import java.util.zip.GZIPInputStream;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ *
+ * @ant:task category="packaging"
  */
 
 public class GUnzip extends Unpack {

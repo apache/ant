@@ -82,6 +82,8 @@ import java.util.Hashtable;
  *
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ *
+ * @ant:task category="control"
  */
 
 public class WaitFor extends ConditionBase {

@@ -78,6 +78,8 @@ import org.apache.tools.ant.BuildException;
  *
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
+ *
+ * @ant:task name="antcall" category="control"
  */
 public class CallTarget extends Task {
 

@@ -70,6 +70,8 @@ import org.apache.tools.ant.taskdefs.condition.ConditionBase;
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @version $Revision$
+ *
+ * @ant:task category="control"
  */
 public class ConditionTask extends ConditionBase {
 

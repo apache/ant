@@ -74,6 +74,8 @@ import org.apache.tools.ant.Project;
  *
  * @author costin@dnt.ro
  * @author gg@grtmail.com (Added Java 1.1 style HTTP basic auth)
+ *
+ * @ant:task category="network"
  */
 public class Get extends Task {
     private URL source; // required

@@ -78,6 +78,8 @@ import org.apache.tools.ant.types.FileSet;
  * It can also be used to verify checksums.
  *
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ *
+ * @ant:task category="control"
  */
 public class Checksum extends MatchingTask implements Condition {
     /**

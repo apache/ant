@@ -90,6 +90,8 @@ import java.util.Enumeration;
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
  *
  * @version $Revision$
+ *
+ * @ant:task category="filesystem"
  */
 public class Copy extends Task {
     protected File file = null;     // the source file

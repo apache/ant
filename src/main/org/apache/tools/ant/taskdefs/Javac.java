@@ -104,6 +104,8 @@ import java.util.Vector;
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
  *
  * @version $Revision$
+ *
+ * @ant:task category="java"
  */
 
 public class Javac extends MatchingTask {

@@ -71,6 +71,8 @@ import org.apache.tools.ant.Project;
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author Gero Vermaas <a href="mailto:gero@xs4all.nl">gero@xs4all.nl</a>
  * @author <A href="gholam@xtra.co.nz">Michael McCallum</A>
+ *
+ * @ant:task category="filesystem"
  */
 public class Filter extends Task {
 

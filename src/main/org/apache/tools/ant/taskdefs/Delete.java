@@ -76,6 +76,8 @@ import java.util.Vector;
  * @author Tom Dimock <a href="mailto:tad1@cornell.edu">tad1@cornell.edu</a>
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author Jon S. Stevens <a href="mailto:jon@latchkey.com">jon@latchkey.com</a>
+ *
+ * @ant:task category="filesystem"
  */
 public class Delete extends MatchingTask {
     protected File file = null;

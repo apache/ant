@@ -72,6 +72,8 @@ import java.io.File;
  * types: Unix or Windows.  Unix is defined as NOT windows.
  *
  * @author Larry Streepy <a href="mailto:streepy@healthlanguage.com">streepy@healthlanguage.com</a>
+ *
+ * @ant:task category="utility"
  */
 public class PathConvert extends Task {
 

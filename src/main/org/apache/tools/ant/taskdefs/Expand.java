@@ -77,6 +77,11 @@ import java.util.zip.ZipEntry;
  * @author costin@dnt.ro
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ *
+ * @ant:task category="packaging"
+ *           name="unzip"
+ *           name="unjar"
+ *           name="unwar"
  */
 public class Expand extends MatchingTask {
     private File dest; //req

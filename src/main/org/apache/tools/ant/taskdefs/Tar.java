@@ -77,6 +77,8 @@ import org.apache.tools.tar.TarEntry;
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ *
+ * @ant:task category="packaging"
  */
 
 public class Tar extends MatchingTask {

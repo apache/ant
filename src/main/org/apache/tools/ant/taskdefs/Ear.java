@@ -67,6 +67,8 @@ import java.io.IOException;
  * 
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @author <a href="mailto:leslie.hughes@rubus.com">Les Hughes</a> 
+ *
+ * @ant:task category="packaging"
  */
 public class Ear extends Jar {
 

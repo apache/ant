@@ -81,8 +81,9 @@ import java.util.Enumeration;
  *
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
- *
  * @version $Revision$
+ *
+ * @ant:task category="filesystem"
  */
 public class Move extends Copy {
 

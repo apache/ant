@@ -75,6 +75,8 @@ import java.util.Vector;
  * @author William Ferguson <a href="mailto:williamf@mincom.com">williamf@mincom.com</a> 
  * @author Hiroaki Nakamura <a href="mailto:hnakamur@mc.neweb.ne.jp">hnakamur@mc.neweb.ne.jp</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:task category="control"
  */
 
 public class UpToDate extends MatchingTask implements Condition {

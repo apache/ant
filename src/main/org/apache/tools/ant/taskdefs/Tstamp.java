@@ -79,6 +79,8 @@ import java.text.SimpleDateFormat;
  * @author roxspring@yahoo.com
  * @author conor@cognet.com.au
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
+ *
+ * @ant:task category="utility"
  */
 public class Tstamp extends Task {
 

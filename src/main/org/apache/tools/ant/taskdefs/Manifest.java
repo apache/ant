@@ -78,6 +78,8 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @ant:task category="java"
  */
 public class Manifest extends Task {
     /** The standard manifest version header */

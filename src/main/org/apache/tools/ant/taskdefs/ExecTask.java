@@ -76,6 +76,8 @@ import java.io.FileNotFoundException;
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a>
+ *
+ * @ant:task category="control"
  */
 public class ExecTask extends Task {
 
