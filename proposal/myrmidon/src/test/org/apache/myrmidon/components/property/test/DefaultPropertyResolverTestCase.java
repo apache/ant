@@ -10,6 +10,8 @@ package org.apache.myrmidon.components.property.test;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
 import org.apache.myrmidon.components.property.test.AbstractPropertyResolverTestCase;
 import org.apache.myrmidon.components.property.DefaultPropertyResolver;
+import org.apache.myrmidon.components.store.DefaultPropertyStore;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * Functional tests for {@link org.apache.myrmidon.components.property.DefaultPropertyResolver}.
@@ -35,14 +37,15 @@ public class DefaultPropertyResolverTestCase
      */
     public void testUndefinedProp() throws Exception
     {
+        final Resources rez = getResourcesForTested( DefaultPropertyStore.class );
         final String undefinedProp = "undefinedProperty";
         doTestFailure( "${" + undefinedProp + "}",
-                       REZ.getString( "prop.missing-value.error", undefinedProp ),
-                       m_context );
+                       rez.getString( "unknown-prop.error", undefinedProp ),
+                       m_store );
 
         //TODO - "" should be disallowed as a property name
         doTestFailure( "${}",
-                       REZ.getString( "prop.missing-value.error", "" ),
-                       m_context );
+                       rez.getString( "unknown-prop.error", "" ),
+                       m_store );
     }
 }

@@ -19,7 +19,7 @@ import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
-import org.apache.myrmidon.interfaces.store.PropertyStore;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
 
 /**
  * Default implementation of TaskContext.
@@ -44,7 +44,6 @@ public class DefaultTaskContext
     public DefaultTaskContext( final ServiceManager serviceManager,
                                final Logger logger,
                                final PropertyStore store )
-        throws TaskException
     {
         m_serviceManager = serviceManager;
         m_logger = logger;
@@ -150,7 +149,7 @@ public class DefaultTaskContext
                 m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
             }
             final Object object =
-                m_propertyResolver.resolveProperties( value, this );
+                m_propertyResolver.resolveProperties( value, m_store );
             if( null == object )
             {
                 final String message = REZ.getString( "null-resolved-value.error", value );
@@ -192,14 +191,7 @@ public class DefaultTaskContext
     public Map getProperties()
         throws TaskException
     {
-        try
-        {
-            return m_store.getProperties();
-        }
-        catch( final Exception e )
-        {
-            throw new TaskException( e.getMessage(), e );
-        }
+        return m_store.getProperties();
     }
 
     /**
@@ -211,14 +203,7 @@ public class DefaultTaskContext
     public void setProperty( final String name, final Object value )
         throws TaskException
     {
-        try
-        {
-            m_store.setProperty( name, value );
-        }
-        catch( final Exception e )
-        {
-            throw new TaskException( e.getMessage(), e );
-        }
+        m_store.setProperty( name, value );
     }
 
     /**
@@ -387,18 +372,11 @@ public class DefaultTaskContext
     public TaskContext createSubContext( final String name )
         throws TaskException
     {
-        try
-        {
-            final PropertyStore store = m_store.createChildStore( name );
-            final DefaultServiceManager serviceManager =
-                new DefaultServiceManager( m_serviceManager );
-            final Logger logger = m_logger.getChildLogger( name );
+        final PropertyStore store = m_store.createChildStore( name );
+        final DefaultServiceManager serviceManager =
+            new DefaultServiceManager( m_serviceManager );
+        final Logger logger = m_logger.getChildLogger( name );
 
-            return new DefaultTaskContext( serviceManager, logger, store );
-        }
-        catch( final Exception e )
-        {
-            throw new TaskException( e.getMessage(), e );
-        }
+        return new DefaultTaskContext( serviceManager, logger, store );
     }
 }

@@ -14,9 +14,9 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
 
 /**
  * Base class for PropertyResolver implementations.
@@ -51,12 +51,12 @@ public class DefaultPropertyResolver
      * <code>toString()</code> called on the property value.
      *
      * @param content the property to resolve
-     * @param context the context in which to resolve property
+     * @param properties the context in which to resolve property
      * @return the reolved property
      * @exception TaskException if an error occurs
      */
     public Object resolveProperties( final String content,
-                                     final TaskContext context )
+                                     final PropertyStore properties )
         throws TaskException
     {
         int start = findNextProperty( content, 0 );
@@ -72,7 +72,7 @@ public class DefaultPropertyResolver
         if( 0 == start && end == ( length - 1 ) )
         {
             return getPropertyValue( content.substring( start + 2, end ),
-                                     context );
+                                     properties );
         }
 
         final StringBuffer sb = new StringBuffer( length * 2 );
@@ -82,7 +82,7 @@ public class DefaultPropertyResolver
         {
             final String propertyValue =
                 getPropertyStringValue( content.substring( start + 2, end ),
-                                        context );
+                                        properties );
 
             sb.append( content.substring( lastPlace, start ) );
             sb.append( propertyValue );
@@ -108,12 +108,12 @@ public class DefaultPropertyResolver
      * substitutions based on specified context.
      *
      * @param content the property to resolve
-     * @param context the context in which to resolve property
+     * @param properties the context in which to resolve property
      * @return the reolved property
      * @exception TaskException if an error occurs
      */
     private Object recursiveResolveProperty( final String content,
-                                             final TaskContext context )
+                                             final PropertyStore properties )
         throws TaskException
     {
         int start = findNextProperty( content, 0 );
@@ -129,8 +129,8 @@ public class DefaultPropertyResolver
         if( 0 == start && end == ( length - 1 ) )
         {
             final String propertyName = content.substring( start + 2, end );
-            final Object key = recursiveResolveProperty( propertyName, context );
-            return getPropertyValue( key.toString(), context );
+            final Object key = recursiveResolveProperty( propertyName, properties );
+            return getPropertyValue( key.toString(), properties );
         }
 
         final StringBuffer sb = new StringBuffer( length * 2 );
@@ -140,8 +140,8 @@ public class DefaultPropertyResolver
         while( true )
         {
             final String propertyName = content.substring( start + 2, end );
-            final Object key = recursiveResolveProperty( propertyName, context );
-            final String value = getPropertyStringValue( key.toString(), context );
+            final Object key = recursiveResolveProperty( propertyName, properties );
+            final String value = getPropertyStringValue( key.toString(), properties );
 
             sb.append( content.substring( lastPlace, start ) );
             sb.append( value );
@@ -246,17 +246,17 @@ public class DefaultPropertyResolver
      * Returns a property's value, converted to a String.
      */
     private String getPropertyStringValue( final String propertyName,
-                                           final TaskContext context )
+                                           final PropertyStore properties )
         throws TaskException
     {
-        final Object value = getPropertyValue( propertyName, context );
+        final Object value = getPropertyValue( propertyName, properties );
         if( value instanceof String )
         {
             return (String)value;
         }
         try
         {
-            return (String)m_converter.convert( String.class, value, context );
+            return (String)m_converter.convert( String.class, value, properties );
         }
         catch( final ConverterException e )
         {
@@ -268,24 +268,15 @@ public class DefaultPropertyResolver
      * Retrieve a value from the specified context using the specified key.
      *
      * @param propertyName the key of value in context
-     * @param context the set of known properties
+     * @param properties the set of known properties
      * @return the object retrieved from context
      * @exception TaskException if the property is undefined
      */
     protected Object getPropertyValue( final String propertyName,
-                                       final TaskContext context )
+                                       final PropertyStore properties )
         throws TaskException
     {
-        Object propertyValue = context.getProperty( propertyName );
-        if ( propertyValue == null )
-        {
-            final String message = REZ.getString( "prop.missing-value.error", propertyName );
-            throw new TaskException( message );
-        }
-        else
-        {
-            return propertyValue;
-        }
+        return properties.getProperty( propertyName );
     }
 }
 

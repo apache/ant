@@ -17,7 +17,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
 import org.apache.myrmidon.interfaces.model.NameValidator;
-import org.apache.myrmidon.interfaces.store.PropertyStore;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
 
 /**
  * This is the Default implementation of PropertyStore. It follows
@@ -32,7 +32,7 @@ import org.apache.myrmidon.interfaces.store.PropertyStore;
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
- * @see PropertyStore
+ * @see org.apache.myrmidon.interfaces.property.PropertyStore
  */
 public class DefaultPropertyStore
     implements PropertyStore
@@ -61,15 +61,17 @@ public class DefaultPropertyStore
      */
     public DefaultPropertyStore()
     {
-        this( null, null );
+        this( "", null, null );
     }
 
     /**
      * Construct a PropertyStore with specified parent.
      *
-     * @param parent the parent PropertyStore (may be null)
+     * @param parent the parent PropertyStore (may be null).
+     * @param validator the validator to use to check property names (may be null).
      */
-    public DefaultPropertyStore( final PropertyStore parent,
+    public DefaultPropertyStore( final String name,
+                                 final PropertyStore parent,
                                  final NameValidator validator )
     {
         m_parent = parent;
@@ -82,6 +84,7 @@ public class DefaultPropertyStore
 
         m_validator = candidateValidator;
 
+        m_contextData.put( TaskContext.NAME, name );
     }
 
     /**
@@ -91,10 +94,10 @@ public class DefaultPropertyStore
      *
      * @param name the name of property
      * @param value the value of property
-     * @throws Exception if property can not be set
+     * @throws TaskException if property can not be set
      */
     public void setProperty( final String name, final Object value )
-        throws Exception
+        throws TaskException
     {
         checkPropertyName( name );
         checkPropertyValid( name, value );
@@ -118,11 +121,8 @@ public class DefaultPropertyStore
     {
         try
         {
-            final Object value = getProperty( name );
-            if( null != value )
-            {
-                return true;
-            }
+            getProperty( name );
+            return true;
         }
         catch( Exception e )
         {
@@ -136,18 +136,24 @@ public class DefaultPropertyStore
      *
      * @param name the name of the property
      * @return the value of the property, or null if no such property
-     * @throws Exception if theres an error retrieving property, such
+     * @throws TaskException if theres an error retrieving property, such
      *         as an invalid property name
      */
-    public Object getProperty( String name )
-        throws Exception
+    public Object getProperty( final String name )
+        throws TaskException
     {
         Object value = m_contextData.get( name );
-        if( value == null && m_parent != null )
+        if( value != null )
         {
-            value = m_parent.getProperty( name );
+            return value;
         }
-        return value;
+        if( m_parent != null )
+        {
+            return m_parent.getProperty( name );
+        }
+
+        final String message = REZ.getString( "unknown-prop.error", name );
+        throw new TaskException( message );
     }
 
     /**
@@ -156,10 +162,10 @@ public class DefaultPropertyStore
      *
      * @return a copy of all the properties that are "in-scope"
      *         for store.
-     * @throws Exception if theres an error retrieving propertys
+     * @throws TaskException if theres an error retrieving propertys
      */
     public Map getProperties()
-        throws Exception
+        throws TaskException
     {
         final Map properties = new HashMap();
         if( m_parent != null )
@@ -178,17 +184,28 @@ public class DefaultPropertyStore
      *
      * @param name the name of child store
      * @return the child store
-     * @throws Exception if theres an error creating child store
+     * @throws TaskException if theres an error creating child store
      */
     public PropertyStore createChildStore( final String name )
-        throws Exception
+        throws TaskException
     {
-        final DefaultPropertyStore store = new DefaultPropertyStore( this, m_validator );
+        // Build the name for the new store
+        final String thisName = (String)m_contextData.get( TaskContext.NAME );
+        final String newName;
+        if( name == null || name.length() == 0 )
+        {
+            newName = thisName;
+        }
+        else if( thisName.length() == 0 )
+        {
+            newName = name;
+        }
+        else
+        {
+            newName = thisName + "." + name;
+        }
 
-        final String newName = getProperty( TaskContext.NAME ) + "." + name;
-        store.setProperty( TaskContext.NAME, newName );
-
-        return store;
+        return new DefaultPropertyStore( newName, this, m_validator );
     }
 
     /**
@@ -203,7 +220,7 @@ public class DefaultPropertyStore
         }
         catch( Exception e )
         {
-            String message = REZ.getString( "bad-property-name.error" );
+            String message = REZ.getString( "bad-property-name.error", name );
             throw new TaskException( message, e );
         }
     }

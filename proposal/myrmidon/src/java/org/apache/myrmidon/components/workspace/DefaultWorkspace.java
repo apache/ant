@@ -37,7 +37,7 @@ import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.model.TypeLib;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
-import org.apache.myrmidon.interfaces.store.PropertyStore;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
 import org.apache.myrmidon.listeners.ProjectListener;
 import org.apache.myrmidon.components.store.DefaultPropertyStore;
 
@@ -226,6 +226,8 @@ public class DefaultWorkspace
         //sets of tasks etc
         final TypeManager typeManager = m_typeManager.createChildTypeManager();
         serviceManager.put( TypeManager.ROLE, typeManager );
+
+        // TODO - Add child role manager
 
         //We need to create a new deployer so that it deploys
         //to project specific TypeManager
@@ -427,6 +429,7 @@ public class DefaultWorkspace
             getLogger().debug( message );
         }
 
+        //TODO - put this back in
         //frame.getContext().setProperty( Project.TARGET, target );
 
         // Execute all tasks assciated with target

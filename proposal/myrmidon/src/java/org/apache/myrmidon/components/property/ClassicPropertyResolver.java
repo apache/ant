@@ -8,7 +8,8 @@
 package org.apache.myrmidon.components.property;
 
 import org.apache.myrmidon.interfaces.property.PropertyResolver;
-import org.apache.myrmidon.api.TaskContext;
+import org.apache.myrmidon.interfaces.property.PropertyStore;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * A {@link PropertyResolver} implementation which resolves properties
@@ -28,19 +29,16 @@ public class ClassicPropertyResolver
      * If there is no such value, returns the original property reference.
      *
      * @param propertyName the name of the property to retrieve
-     * @param context the set of known properties
+     * @param properties the set of known properties
      */
     protected Object getPropertyValue( final String propertyName,
-                                       final TaskContext context )
+                                       final PropertyStore properties )
+        throws TaskException
     {
-        Object propertyValue = context.getProperty( propertyName );
-        if ( propertyValue == null )
+        if( ! properties.isPropertySet( propertyName ) )
         {
             return "${" + propertyName + "}";
         }
-        else
-        {
-            return propertyValue;
-        }
+        return properties.getProperty( propertyName );
     }
 }

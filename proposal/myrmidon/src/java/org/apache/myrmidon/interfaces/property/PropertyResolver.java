@@ -8,7 +8,6 @@
 package org.apache.myrmidon.interfaces.property;
 
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.api.TaskContext;
 
 /**
  *
@@ -31,11 +30,11 @@ public interface PropertyResolver
      * Rules used for property resolution are implementation dependent.
      *
      * @param value the value to resolve, which may contain property identifiers
-     * @param context the set of properties to resolve against.
+     * @param properties the set of properties to resolve against.
      * @return the resolved content
      * @exception TaskException if an error occurs
      */
     Object resolveProperties( final String value,
-                              final TaskContext context )
+                              final PropertyStore properties )
         throws TaskException;
 }

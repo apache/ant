@@ -5,9 +5,10 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.myrmidon.interfaces.store;
+package org.apache.myrmidon.interfaces.property;
 
 import java.util.Map;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * This component stores and manages properties. It is also
@@ -36,10 +37,10 @@ public interface PropertyStore
      *
      * @param name the name of property
      * @param value the value of property
-     * @throws Exception if property can not be set
+     * @throws TaskException if property can not be set
      */
     void setProperty( String name, Object value )
-        throws Exception;
+        throws TaskException;
 
     /**
      * Return <code>true</code> if the specified property is set.
@@ -50,15 +51,14 @@ public interface PropertyStore
 
     /**
      * Retrieve the value of specified property.
-     * Will return null if no such property exists.
      *
      * @param name the name of the property
-     * @return the value of the property, or null if no such property
-     * @throws Exception if theres an error retrieving property, such
-     *         as an invalid property name
+     * @return the value of the property.  Never returns null.
+     * @throws TaskException if there is no such property, or on error
+     *         retrieving property, such as an invalid property name.
      */
     Object getProperty( String name )
-        throws Exception;
+        throws TaskException;
 
     /**
      * Retrieve a copy of all the properties that are "in-scope"
@@ -66,10 +66,10 @@ public interface PropertyStore
      *
      * @return a copy of all the properties that are "in-scope"
      *         for store.
-     * @throws Exception if theres an error retrieving propertys
+     * @throws TaskException if theres an error retrieving propertys
      */
     Map getProperties()
-        throws Exception;
+        throws TaskException;
 
     /**
      * Return a child PropertyStore with specified name.
@@ -79,8 +79,8 @@ public interface PropertyStore
      *
      * @param name the name of child store
      * @return the child store
-     * @throws Exception if theres an error creating child store
+     * @throws TaskException if theres an error creating child store
      */
     PropertyStore createChildStore( String name )
-        throws Exception;
+        throws TaskException;
 }

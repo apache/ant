@@ -101,6 +101,7 @@ public class DefaultEmbeddor
                 projectType = FileUtil.getExtension( location );
             }
 
+            // TODO - reuse the project builders, or dispose them
             final ProjectBuilder builder = getProjectBuilder( projectType, parameters );
             return builder.build( location );
         }
@@ -136,6 +137,8 @@ public class DefaultEmbeddor
         // to the workspace
         parameters.setParameter( MYRMIDON_HOME, m_parameters.getParameter( MYRMIDON_HOME ) );
         setupObject( workspace, m_workspaceServiceManager, parameters );
+
+        // TODO - should keep track of workspaces, to dispose them later
         return workspace;
     }
 
@@ -145,7 +148,7 @@ public class DefaultEmbeddor
      * @param name The shorthand name of the listener.
      * @return the listener.
      */
-    public ProjectListener createListener( String name )
+    public ProjectListener createListener( final String name )
         throws Exception
     {
         final TypeFactory factory = m_typeManager.getFactory( ProjectListener.ROLE );

@@ -13,6 +13,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.AbstractProjectTest;
 import org.apache.myrmidon.LogMessageTracker;
 import org.apache.myrmidon.components.workspace.DefaultTaskContext;
+import org.apache.myrmidon.components.store.DefaultPropertyStore;
 
 /**
  * Test cases for <property> task.
@@ -98,18 +99,29 @@ public class PropertyTestCase
     {
         final File projectFile = getTestResource( "property.ant" );
 
-        final Resources contextResources
-            = ResourceManager.getPackageResources( DefaultTaskContext.class );
+        final Resources rez
+            = ResourceManager.getPackageResources( DefaultPropertyStore.class );
 
         // Invalid names
         String[] messages = new String[]
         {
             null,
-            contextResources.getString( "bad-property-name.error" ),
-            null
+            rez.getString( "bad-property-name.error", "badname!" )
         };
         executeTargetExpectError( projectFile, "bad-prop-name1", messages );
+
+        messages = new String[]
+        {
+            null,
+            rez.getString( "bad-property-name.error", "bad name" )
+        };
         executeTargetExpectError( projectFile, "bad-prop-name2", messages );
+
+        messages = new String[]
+        {
+            null,
+            rez.getString( "bad-property-name.error", "" )
+        };
         executeTargetExpectError( projectFile, "bad-prop-name3", messages );
     }
 
