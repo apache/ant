@@ -24,6 +24,8 @@ Fixed bugs:
 * <mapper>s will now work as expected if the to pattern expands to an
   absolute pathname.
 
+* <javac> didn't ignore memory settings in non-fork mode
+
 Other changes:
 --------------
 
