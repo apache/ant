@@ -85,8 +85,6 @@ Other changes:
 
 * Added isfileselected condition.
 
-* Added length task to get strings' and files' lengths.
-
 * Added clone task. Bugzilla report 32631.
 
 * Add else attribute to the condition task, which specifies an
@@ -184,6 +182,8 @@ Other changes:
 
 * bad link in docs to the enhancement page in bugzilla.
   Bugzilla report 33252.
+
+* Added length task to get strings' and files' lengths.
 
 Fixed bugs:
 -----------
