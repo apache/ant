@@ -8,15 +8,13 @@
 package org.apache.myrmidon.components.embeddor;
 
 import java.io.File;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.myrmidon.AbstractMyrmidonTest;
-import org.apache.myrmidon.TrackingProjectListener;
 import org.apache.myrmidon.AbstractProjectTest;
+import org.apache.myrmidon.LogMessageTracker;
+import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
-import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -81,7 +79,7 @@ public class DefaultEmbeddorTest
         final Workspace workspace = embeddor.createWorkspace( new Parameters() );
 
         // Install a listener
-        final TrackingProjectListener listener = new TrackingProjectListener();
+        final LogMessageTracker listener = new LogMessageTracker();
         workspace.addProjectListener( listener );
 
         listener.addExpectedMessage( "main-target", "A log message" );

@@ -454,6 +454,10 @@ Legal:
         <fileset dir="${test.classes}" includes="org/apache/myrmidon/interfaces/type/MyType1.class"/>
     </jar>
 
+    <!-- Prepare the project tests -->
+    <copy file="src/manifest/testcases-ant-descriptor.xml" tofile="${test.classes}/META-INF/ant-descriptor.xml"/>
+
+    <!-- Run all the tests -->
     <junit printsummary="on"
            fork="false">
       <formatter type="brief" usefile="false"/>

@@ -9,12 +9,9 @@ package org.apache.antlib.core;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.AbstractContainerTask;
 import org.apache.myrmidon.framework.DataType;
 
 /**
@@ -27,8 +24,7 @@ import org.apache.myrmidon.framework.DataType;
  * @ant:task name="property"
  */
 public class Property
-    extends AbstractContainerTask
-    implements Configurable
+    extends AbstractTask
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( Property.class );
@@ -37,40 +33,37 @@ public class Property
     private Object m_value;
     private boolean m_localScope = true;
 
-    public void configure( final Configuration configuration )
-        throws ConfigurationException
-    {
-        final String[] attributes = configuration.getAttributeNames();
-        for( int i = 0; i < attributes.length; i++ )
-        {
-            final String name = attributes[ i ];
-            final String value = configuration.getAttribute( name );
-            configure( this, name, value );
-        }
-
-        final Configuration[] children = configuration.getChildren();
-        for( int i = 0; i < children.length; i++ )
-        {
-            try
-            {
-                final String typeName = children[ i ].getName();
-                final DataType value = (DataType)newInstance( DataType.class, typeName );
-                configure( value, children[ i ] );
-                setValue( value );
-            }
-            catch( final Exception e )
-            {
-                final String message = REZ.getString( "property.no-set.error" );
-                throw new ConfigurationException( message, e );
-            }
-        }
-    }
-
     public void setName( final String name )
     {
         m_name = name;
     }
 
+    public void setLocalScope( final boolean localScope )
+    {
+        m_localScope = localScope;
+    }
+
+    /**
+     * Sets the property value from a nested element.
+     */
+    public void set( final DataType value )
+        throws TaskException
+    {
+        setValue( value );
+    }
+
+    /**
+     * Sets the property value from text content.
+     */
+    public void addContent( final String value )
+        throws TaskException
+    {
+        setValue( value );
+    }
+
+    /**
+     * Sets the property value from an attribute.
+     */
     public void setValue( final Object value )
         throws TaskException
     {
@@ -81,11 +74,6 @@ public class Property
         }
 
         m_value = value;
-    }
-
-    public void setLocalScope( final boolean localScope )
-    {
-        m_localScope = localScope;
     }
 
     public void execute()

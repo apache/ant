@@ -8,12 +8,13 @@
 package org.apache.myrmidon;
 
 import java.io.File;
+import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.components.embeddor.DefaultEmbeddor;
 import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.parameters.Parameters;
+import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
  * A base class for test cases which need to execute projects.
@@ -69,15 +70,75 @@ public class AbstractProjectTest
     }
 
     /**
-     * Executes a target in a project, and asserts that it does not fail
+     * Executes a target in a project, and asserts that it fails with the
+     * given error message.
+     */
+    protected void executeTargetExpectError( final File projectFile,
+                                             final String targetName,
+                                             final String message )
+    {
+        executeTargetExpectError( projectFile, targetName, new String[] { message } );
+    }
+
+    /**
+     * Executes a target in a project, and asserts that it fails with the
+     * given error messages.
+     */
+    protected void executeTargetExpectError( final File projectFile,
+                                             final String targetName,
+                                             final String[] messages )
+    {
+        try
+        {
+            executeTarget( projectFile, targetName, null );
+            fail( "target execution did not fail" );
+        }
+        catch( Exception e )
+        {
+            assertSameMessage( messages, e );
+        }
+    }
+
+    /**
+     * Executes a target in a project, and asserts that it does not fail.
      */
     protected void executeTarget( final File projectFile, final String targetName )
         throws Exception
     {
+        executeTarget( projectFile, targetName, null );
+    }
+
+    /**
+     * Executes a target in a project, and asserts that it does not fail.
+     */
+    protected void executeTarget( final File projectFile,
+                                  final String targetName,
+                                  final ProjectListener listener )
+        throws Exception
+    {
+        // Create the project and workspace
         final Embeddor embeddor = getEmbeddor();
         final Project project = embeddor.createProject( projectFile.getAbsolutePath(), null, null );
         final Workspace workspace = embeddor.createWorkspace( new Parameters() );
 
+        // Add a listener to make sure all is good
+        final TrackingProjectListener tracker = new TrackingProjectListener();
+        workspace.addProjectListener( tracker );
+
+        // Add supplied listener
+        if( listener != null )
+        {
+            workspace.addProjectListener( listener );
+        }
+
+        // Now execute the target
         workspace.executeProject( project, targetName );
+
+        // Make sure all expected events were delivered
+        tracker.assertComplete();
+        if( listener instanceof TrackingProjectListener )
+        {
+            ( (TrackingProjectListener)listener ).assertComplete();
+        }
     }
 }

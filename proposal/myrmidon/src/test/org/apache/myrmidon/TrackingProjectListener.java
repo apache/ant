@@ -7,9 +7,6 @@
  */
 package org.apache.myrmidon;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import junit.framework.Assert;
 import org.apache.myrmidon.listeners.LogEvent;
 import org.apache.myrmidon.listeners.ProjectEvent;
@@ -32,8 +29,6 @@ public class TrackingProjectListener
     private String m_currentProject;
     private String m_currentTarget;
     private String m_currentTask;
-    private Map m_messages = new HashMap();
-    private ArrayList m_currentMsgs;
 
     /**
      * Notify the listener that a project is about to start.
@@ -64,7 +59,6 @@ public class TrackingProjectListener
         assertNull( "Target already started", m_currentTarget );
         m_currentProject = event.getProjectName();
         m_currentTarget = event.getTargetName();
-        m_currentMsgs = (ArrayList)m_messages.get( m_currentTarget );
     }
 
     /**
@@ -76,7 +70,6 @@ public class TrackingProjectListener
         assertEquals( "Mismatched target name", m_currentTarget, event.getTargetName() );
         m_currentProject = null;
         m_currentTarget = null;
-        assertTrue( "Missing log messages for target", m_currentMsgs == null || m_currentMsgs.size() == 0 );
 
         assertNull( "Task not finished", m_currentTask );
     }
@@ -112,9 +105,6 @@ public class TrackingProjectListener
         assertEquals( "Mismatched project name", m_currentProject, event.getProjectName() );
         assertEquals( "Mismatched target name", m_currentTarget, event.getTargetName() );
         assertEquals( "Mismatched task name", m_currentTask, event.getTaskName() );
-        assertNotNull( "Unexpected log message", m_currentMsgs );
-        assertTrue( "Unexpected log message", m_currentMsgs.size() > 0 );
-        assertEquals( "Unexpected log message", m_currentMsgs.remove( 0 ), event.getMessage() );
         assertNull( "Unexpected build error", event.getThrowable() );
     }
 
@@ -127,19 +117,5 @@ public class TrackingProjectListener
         assertNull( "Target not finished", m_currentTarget );
         assertNull( "Target not finished", m_currentProject );
         assertNull( "Project not finished", m_rootProject );
-    }
-
-    /**
-     * Adds an expected log message.
-     */
-    public void addExpectedMessage( String target, String message )
-    {
-        ArrayList targetMsgs = (ArrayList)m_messages.get( target );
-        if( targetMsgs == null )
-        {
-            targetMsgs = new ArrayList();
-            m_messages.put( target, targetMsgs );
-        }
-        targetMsgs.add( message );
     }
 }

@@ -99,6 +99,9 @@ public abstract class AbstractMyrmidonTest
 
     /**
      * Asserts that an exception chain contains the expected messages.
+     *
+     * @param messages The messages, in order.  A null entry in this array
+     *                 indicates that the message should be ignored.
      */
     protected void assertSameMessage( final String[] messages, final Throwable throwable )
     {
@@ -107,7 +110,10 @@ public abstract class AbstractMyrmidonTest
         {
             String message = messages[ i ];
             assertNotNull( current );
-            assertEquals( message, current.getMessage() );
+            if( message != null )
+            {
+                assertEquals( message, current.getMessage() );
+            }
 
             if( current instanceof CascadingThrowable )
             {
