@@ -10,6 +10,9 @@ Changes that could break older environments:
   iterate over the returned list if listeners are added or removed
   during the traversal.
 
+* <pvcs> default filenameformat has been different from Ant 1.4.1.
+  Now it is different from 1.5beta1 and 1.5beta2.
+
 Fixed bugs:
 -----------
 

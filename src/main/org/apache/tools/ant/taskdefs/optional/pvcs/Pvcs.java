@@ -207,11 +207,18 @@ public class Pvcs extends org.apache.tools.ant.Task {
         try {
             Random rand = new Random(System.currentTimeMillis());
             tmp = new File("pvcs_ant_" + rand.nextLong() + ".log");
+            FileOutputStream fos = new FileOutputStream(tmp);
             tmp2 = new File("pvcs_ant_" + rand.nextLong() + ".log");
             log(commandLine.describeCommand(), Project.MSG_VERBOSE);
-            result = runCmd(commandLine, 
-                new PumpStreamHandler(new FileOutputStream(tmp), 
-                new LogOutputStream(this, Project.MSG_WARN)));
+            try {
+                result = runCmd(commandLine, 
+                                new PumpStreamHandler(fos, 
+                                    new LogOutputStream(this,
+                                                        Project.MSG_WARN)));
+            } finally {
+                fos.close();
+            }
+            
             if (result != 0 && !ignorerc) {
                 String msg = "Failed executing: " + commandLine.toString();
                 throw new BuildException(msg, location);
@@ -290,44 +297,53 @@ public class Pvcs extends org.apache.tools.ant.Task {
      * Parses the file and creates the folders specified in the output section
      */
     private void createFolders(File file) throws IOException, ParseException {
-        BufferedReader in = new BufferedReader(new FileReader(file));
-        MessageFormat mf = new MessageFormat(getFilenameFormat());
-        String line = in.readLine();
-        while (line != null) {
-            log("Considering \"" + line + "\"", Project.MSG_VERBOSE);
-            if (line.startsWith("\"\\") ||
-               line.startsWith("\"/") ||
-               line.startsWith(getLineStart())) {
-                Object[] objs = mf.parse(line);
-                String f = (String) objs[1];
-                // Extract the name of the directory from the filename
-                int index = f.lastIndexOf(File.separator);
-                if (index > -1) {
-                    File dir = new File(f.substring(0, index));
-                    if (!dir.exists()) {
-                        log("Creating " + dir.getAbsolutePath(), 
-                            Project.MSG_VERBOSE);
-                        if (dir.mkdirs()) {
-                            log("Created " + dir.getAbsolutePath(), 
-                                Project.MSG_INFO);
+        BufferedReader in = null;
+        try {
+            in = new BufferedReader(new FileReader(file));
+            MessageFormat mf = new MessageFormat(getFilenameFormat());
+            String line = in.readLine();
+            while (line != null) {
+                log("Considering \"" + line + "\"", Project.MSG_VERBOSE);
+                if (line.startsWith("\"\\") ||
+                    line.startsWith("\"/") ||
+                    line.startsWith(getLineStart())) {
+                    Object[] objs = mf.parse(line);
+                    String f = (String) objs[1];
+                    // Extract the name of the directory from the filename
+                    int index = f.lastIndexOf(File.separator);
+                    if (index > -1) {
+                        File dir = new File(f.substring(0, index));
+                        if (!dir.exists()) {
+                            log("Creating " + dir.getAbsolutePath(), 
+                                Project.MSG_VERBOSE);
+                            if (dir.mkdirs()) {
+                                log("Created " + dir.getAbsolutePath(), 
+                                    Project.MSG_INFO);
+                            } else {
+                                log("Failed to create " 
+                                    + dir.getAbsolutePath(), 
+                                    Project.MSG_INFO);
+                            }
                         } else {
-                            log("Failed to create " + dir.getAbsolutePath(), 
-                                Project.MSG_INFO);
+                            log(dir.getAbsolutePath() + " exists. Skipping", 
+                                Project.MSG_VERBOSE);
                         }
                     } else {
-                        log(dir.getAbsolutePath() + " exists. Skipping", 
-                            Project.MSG_VERBOSE);
+                        log("File separator problem with " + line,
+                            Project.MSG_WARN);
                     }
                 } else {
-                    log("File separator problem with " + line,
-                        Project.MSG_WARN);
+                    log("Skipped \"" + line + "\"", Project.MSG_VERBOSE);
                 }
-            } else {
-                log("Skipped \"" + line + "\"", Project.MSG_VERBOSE);
+                line = in.readLine();
             }
-            line = in.readLine();
+        } finally {
+            if (in != null) {
+                in.close();
+            }
         }
     }
+        
 
     /**
      * Simple hack to handle the PVCS command-line tools botch when 
@@ -335,16 +351,25 @@ public class Pvcs extends org.apache.tools.ant.Task {
      */
     private void massagePCLI(File in, File out) 
         throws FileNotFoundException, IOException {
-        BufferedReader inReader = new BufferedReader(new FileReader(in));
-        BufferedWriter outWriter = new BufferedWriter(new FileWriter(out));
-        String s = null;
-        while ((s = inReader.readLine()) != null) {
-            String sNormal = s.replace('\\', '/');
-            outWriter.write(sNormal);
-            outWriter.newLine();
+        BufferedReader inReader = null;
+        BufferedWriter outWriter = null;
+        try {
+            inReader = new BufferedReader(new FileReader(in));
+            outWriter = new BufferedWriter(new FileWriter(out));
+            String s = null;
+            while ((s = inReader.readLine()) != null) {
+                String sNormal = s.replace('\\', '/');
+                outWriter.write(sNormal);
+                outWriter.newLine();
+            }
+        } finally {
+            if (inReader != null) {
+                inReader.close();
+            }
+            if (outWriter != null) {
+                outWriter.close();
+            }
         }
-        inReader.close();
-        outWriter.close();
     }
 
     /**
@@ -547,6 +572,6 @@ public class Pvcs extends org.apache.tools.ant.Task {
         ignorerc = false;
         updateOnly = false;
         lineStart = "\"P:";
-        filenameFormat = "{0}_arc({1})";
+        filenameFormat = "{0}-arc({1})";
     }
 }
