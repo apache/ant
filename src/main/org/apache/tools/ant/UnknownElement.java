@@ -309,6 +309,7 @@ public class UnknownElement extends Task {
         // the task will not be reused ( a new init() will be called )
         // Let GC do its job
         realThing = null;
+        getWrapper().setProxy(null);
     }
 
     /**
