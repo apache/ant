@@ -151,12 +151,12 @@ or files with the name <code>todo.html</code> are excluded.</p>
   &lt;tarfileset dir=&quot;${dist.name}/..&quot; mode=&quot;755&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt;
     &lt;include name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;include name=&quot;${dist.name}/build.sh&quot;/&gt;
-  &lt;/fileset&gt; 
+  &lt;/tarfileset&gt; 
   &lt;tarfileset dir=&quot;${dist.name}/..&quot; username=&quot;ant&quot; group=&quot;ant&quot;&gt; 
     &lt;include name=&quot;${dist.name}/**&quot;/&gt;
     &lt;exclude name=&quot;${dist.name}/bootstrap.sh&quot;/&gt;
     &lt;exclude name=&quot;${dist.name}/build.sh&quot;/&gt;
-  &lt;/fileset&gt;
+  &lt;/tarfileset&gt;
 &lt;/tar&gt; </pre>
 
 <p>This example shows building a tar which uses the GNU extensions for long paths and
