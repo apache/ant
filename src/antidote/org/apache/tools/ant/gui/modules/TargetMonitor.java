@@ -144,13 +144,17 @@ public class TargetMonitor extends AntModule {
 
             if(selected != null && selected.length > 0) {
                 StringBuffer buf = new StringBuffer();
+                String name = null;
 
                 for(int i = 0; i < selected.length; i++) {
                     if(selected[i] instanceof ACSTargetElement) {
-                        if(buf.length() > 0) {
-                            buf.append(", ");
+                        name = ((ACSTargetElement)selected[i]).getName();
+                        if( buf.toString().indexOf( name ) < 0 ) {
+                            if(buf.length() > 0) {
+                                buf.append(", ");
+                            }
+                            buf.append( name );
                         }
-                        buf.append(((ACSTargetElement)selected[i]).getName());
                     }
                 }
 

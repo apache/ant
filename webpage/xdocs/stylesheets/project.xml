@@ -29,20 +29,30 @@
         <item name="Bug Database"          href="/site/bugs.html"/>
     </menu>
 
-    <menu name="SubProjects">
-        <item name="Ant"                   href="/ant/index.html"/>
-<!--    <item name="Avalon"                href="/avalon/index.html"/> -->
-        <item name="ECS"                   href="/ecs/index.html"/>
-        <item name="Log4J"                 href="/log4j/index.html"/> 
-        <item name="ORO"                   href="/oro/index.html"/>
-        <item name="Regexp"                href="/regexp/index.html"/>
-        <item name="Slide"                 href="/slide/index.html"/>
-        <item name="Struts"                href="/struts/index.html"/>
-        <item name="Taglibs"               href="/taglibs/index.html"/>
-        <item name="Tomcat"                href="/tomcat/index.html"/>
-        <item name="Velocity"              href="/velocity/index.html"/>
-        <item name="Watchdog"              href="/watchdog/index.html"/>
-    </menu>
+    <menu name="Other Projects">	
+<!--    <item name="Avalon"                
+              href="http://jakarta.apache.org/avalon/index.html"/> -->
+        <item name="ECS"                   
+	      href="http://jakarta.apache.org/ecs/index.html"/>
+        <item name="Log4J"                   
+	      href="http://jakarta.apache.org/log4j/doc/index.html"/>
+        <item name="ORO"                   
+	      href="http://jakarta.apache.org/oro/index.html"/>
+        <item name="Regexp"       
+              href="http://jakarta.apache.org/regexp/index.html"/>
+        <item name="Slide" 
+	      href="http://jakarta.apache.org/slide/index.html"/>
+        <item name="Struts"  
+              href="http://jakarta.apache.org/struts/index.html"/>
+        <item name="Taglibs"
+              href="http://jakarta.apache.org/taglibs/index.html"/>
+        <item name="Tomcat" 
+              href="http://jakarta.apache.org/tomcat/index.html"/>
+        <item name="Velocity" 
+              href="http://jakarta.apache.org/velocity/index.html"/>
+        <item name="Watchdog" 
+              href="http://jakarta.apache.org/watchdog/index.html"/>
+    </menu>					 
 
     <menu name="Misc">
         <item name="Who We Are"            href="/site/whoweare.html"/>
