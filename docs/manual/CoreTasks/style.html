@@ -57,7 +57,8 @@ element which is used to perform Entity and URI resolution</p>
   <tr>
     <td valign="top">extension</td>
     <td valign="top">desired file extension to be used for the targets. If not
-      specified, the default is &quot;.html&quot;.</td>
+      specified, the default is &quot;.html&quot;.  Will be ignored if
+      a nested &lt;mapper&gt; has been specified.</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -289,6 +290,16 @@ And in Saxon 7.x:
 </table>
 </blockquote>
 
+<h4>mapper</h4>
+
+<p><em>since Ant 1.6.2</em></p>
+
+<p>You can define filename transformations by using a nested <a
+href="../CoreTypes/mapper.html">mapper</a> element. The default mapper
+used by <code>&lt;xslt&gt;</code> removes the file extension from the
+source file and adds the extension specified via the extension
+attribute.</p>
+
 <h3>Examples</h3>
 <blockquote>
   <pre>
@@ -335,6 +346,13 @@ And in Saxon 7.x:
     &lt;attribute name=&quot;http://xml.apache.org/xalan/features/optimize&quot; value=&quot;true&quot;/&gt;
   &lt;/factory&gt;
 &lt;/xslt&gt;</pre>
+
+  <h4>Using a mapper</h4>
+<pre>&lt;xslt basedir=&quot;in&quot; destdir=&quot;out&quot;
+      style=&quot;style/apache.xsl&quot;&gt;
+  &lt;mapper type=&quot;glob&quot; from=&quot;*.xml.en&quot; to=&quot;*.html.en&quot;/&gt;
+&lt;/xslt&gt;</pre>
+
  </blockquote>
 <hr>
 <p align="center">Copyright &copy; 2000-2004 The Apache Software Foundation. All rights

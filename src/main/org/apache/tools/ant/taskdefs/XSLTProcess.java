@@ -25,9 +25,11 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.types.Mapper;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.types.XMLCatalog;
+import org.apache.tools.ant.util.FileNameMapper;
 import org.apache.tools.ant.util.FileUtils;
 
 /**
@@ -133,6 +135,13 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private AntClassLoader loader = null;
 
     /**
+     * Mapper to use when a set of files gets processed.
+     *
+     * @since Ant 1.6.2
+     */
+    private Mapper mapperElement = null;
+
+    /**
      * Creates a new XSLTProcess Task.
      */
     public XSLTProcess() {
@@ -160,6 +169,21 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void setReloadStylesheet(boolean b) {
         reuseLoadedStylesheet = !b;
+    }
+
+    /**
+     * Defines the mapper to map source to destination files.
+     * @return a mapper to be configured
+     * @exception BuildException if more than one mapper is defined
+     * @since Ant 1.6.2
+     */
+    public Mapper createMapper() throws BuildException {
+        if (mapperElement != null) {
+            throw new BuildException("Cannot define more than one mapper",
+                                     getLocation());
+        }
+        mapperElement = new Mapper(getProject());
+        return mapperElement;
     }
 
     /**
@@ -437,7 +461,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                          File stylesheet)
         throws BuildException {
 
-        String fileExt = targetExtension;
         File   outFile = null;
         File   inFile = null;
 
@@ -451,13 +474,26 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                 return;
             }
 
-            int dotPos = xmlFile.lastIndexOf('.');
-            if (dotPos > 0) {
-                outFile = new File(destDir,
-                    xmlFile.substring(0, xmlFile.lastIndexOf('.')) + fileExt);
+            FileNameMapper mapper = null;
+            if (mapperElement != null) {
+                mapper = mapperElement.getImplementation();
             } else {
-                outFile = new File(destDir, xmlFile + fileExt);
+                mapper = new StyleMapper();
             }
+
+            String[] outFileName = mapper.mapFileName(xmlFile);
+            if (outFileName == null || outFileName.length == 0) {
+                log("Skipping " + inFile + " it cannot get mapped to output.",
+                    Project.MSG_VERBOSE);
+                return;
+            } else if (outFileName == null || outFileName.length > 1) {
+                log("Skipping " + inFile + " its mapping is ambiguos.",
+                    Project.MSG_VERBOSE);
+                return;
+            }
+
+            outFile = new File(destDir, outFileName[0]);
+
             if (force
                 || inFile.lastModified() > outFile.lastModified()
                 || styleSheetLastModified > outFile.lastModified()) {
@@ -921,5 +957,26 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         } // -- class Attribute
 
     } // -- class Factory
+
+    /**
+     * Mapper implementation of the "traditional" way &lt;xslt&gt;
+     * mapped filenames.
+     *
+     * <p>If the file has an extension, chop it off.  Append whatever
+     * the user has specified as extension or ".html".</p>
+     *
+     * @since Ant 1.6.2
+     */
+    private class StyleMapper implements FileNameMapper {
+        public void setFrom(String from) {}
+        public void setTo(String to) {}
+        public String[] mapFileName(String xmlFile) {
+            int dotPos = xmlFile.lastIndexOf('.');
+            if (dotPos > 0) {
+                xmlFile = xmlFile.substring(0, dotPos);
+            }
+            return new String[] {xmlFile + targetExtension};
+        }
+    }
 
 }
