@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.jar.Attributes;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
@@ -38,12 +39,12 @@ public class Manifest
     /**
      * The standard manifest version header
      */
-    public final static String ATTRIBUTE_MANIFEST_VERSION = "Manifest-Version";
+    public final static String ATTRIBUTE_MANIFEST_VERSION = Attributes.Name.MANIFEST_VERSION.toString();
 
     /**
      * The standard Signature Version header
      */
-    public final static String ATTRIBUTE_SIGNATURE_VERSION = "Signature-Version";
+    public final static String ATTRIBUTE_SIGNATURE_VERSION = Attributes.Name.SIGNATURE_VERSION.toString();
 
     /**
      * The Name Attribute is the first in a named section
@@ -58,7 +59,7 @@ public class Manifest
     /**
      * The Class-Path Header is special - it can be duplicated
      */
-    public final static String ATTRIBUTE_CLASSPATH = "class-path";
+    public final static String ATTRIBUTE_CLASSPATH = Attributes.Name.CLASS_PATH.toString();
 
     /**
      * Default Manifest version if one is not specified
