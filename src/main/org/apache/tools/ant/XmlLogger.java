@@ -55,6 +55,7 @@
 package org.apache.tools.ant;
 
 import java.io.*;
+import java.util.*;
 import javax.xml.parsers.*;
 import org.w3c.dom.*;
 
@@ -97,6 +98,11 @@ public class XmlLogger implements BuildListener {
     private long targetStartTime;
     private long taskStartTime;
 
+    private Stack targetTimeStack = new Stack();
+    private Stack targetStack = new Stack();
+    private Stack taskTimeStack = new Stack();
+    private Stack taskStack = new Stack();
+
     /**
      *  Constructs a new BuildListener that logs build events to an XML file.
      */
@@ -119,19 +125,30 @@ public class XmlLogger implements BuildListener {
         }
 
         try {
-                Writer out = new FileWriter("log.xml");
-                out.write("<?xml:stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
-                write(buildElement, out, 0);
-                out.flush();
-                out.close();
+            String outFilename = 
+                event.getProject().getProperty("XmlLogger.file");
 
-        }
-        catch(IOException exc) {
+            if (outFilename == null) {
+                outFilename = "log.xml";
+            }
+
+            Writer out = new FileWriter(outFilename);
+            out.write("<?xml:stylesheet type=\"text/xsl\" href=\"log.xsl\"?>\n\n");
+            write(buildElement, out, 0);
+            out.flush();
+            out.close();
+            
+        } catch(IOException exc) {
             throw new BuildException("Unable to close log file", exc);
         }
+        buildElement = null;
     }
 
     public void targetStarted(BuildEvent event) {
+        if (targetElement != null) {
+            targetTimeStack.push(new Long(targetStartTime));
+            targetStack.push(targetElement);
+        }
         targetStartTime = System.currentTimeMillis();
         targetElement = doc.createElement(TARGET_TAG);
         targetElement.setAttribute(NAME_ATTR, event.getTarget().getName());
@@ -140,12 +157,26 @@ public class XmlLogger implements BuildListener {
     public void targetFinished(BuildEvent event) {
         long totalTime = System.currentTimeMillis() - targetStartTime;
         targetElement.setAttribute(TIME_ATTR, formatTime(totalTime));
-        buildElement.appendChild(targetElement);
+        if (taskElement == null) {
+            buildElement.appendChild(targetElement);
+        } else {
+            taskElement.appendChild(targetElement);
+        }
 
         targetElement = null;
+
+        if (!targetStack.isEmpty()) {
+            targetStartTime = ((Long) targetTimeStack.pop()).longValue();
+            targetElement = (Element) targetStack.pop();
+        }
     }
 
     public void taskStarted(BuildEvent event) {
+        if (taskElement != null) {
+            taskTimeStack.push(new Long(taskStartTime));
+            taskStack.push(taskElement);
+        }
+
         taskStartTime = System.currentTimeMillis();
         taskElement = doc.createElement(TASK_TAG);
 
@@ -165,6 +196,10 @@ public class XmlLogger implements BuildListener {
         targetElement.appendChild(taskElement);
 
         taskElement = null;
+        if (!taskStack.isEmpty()) {
+            taskStartTime = ((Long) taskTimeStack.pop()).longValue();
+            taskElement = (Element) taskStack.pop();
+        }
     }
 
     public void messageLogged(BuildEvent event) {
