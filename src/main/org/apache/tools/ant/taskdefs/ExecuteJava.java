@@ -76,7 +76,6 @@ public class ExecuteJava {
     private Commandline javaCommand = null;
     private Path classpath = null;
     private CommandlineJava.SysProperties sysProperties = null;
-    private PrintStream out;
 
     public void setJavaCommand(Commandline javaCommand) {
         this.javaCommand = javaCommand;
@@ -93,15 +92,13 @@ public class ExecuteJava {
     /**
      * All output (System.out as well as System.err) will be written
      * to this Stream.
+     *
+     * @deprecated manage output at the task level
      */
     public void setOutput(PrintStream out) {
-        this.out = out;
     }
 
     public void execute(Project project) throws BuildException{
-        PrintStream sOut = System.out;
-        PrintStream sErr = System.err;
-
         final String classname = javaCommand.getExecutable();
         final Object[] argument = { javaCommand.getArguments() };
 
@@ -109,11 +106,6 @@ public class ExecuteJava {
         try {
             if (sysProperties != null) {
                 sysProperties.setSystem();
-            }
-
-            if (out != null) {
-                System.setErr(out);
-                System.setOut(out);
             }
 
             final Class[] param = { Class.forName("[Ljava.lang.String;") };
@@ -149,11 +141,6 @@ public class ExecuteJava {
             }
             if (sysProperties != null) {
                 sysProperties.restoreSystem();
-            }
-            if (out != null) {
-                System.setOut(sOut);
-                System.setErr(sErr);
-                out.close();
             }
         }
     }

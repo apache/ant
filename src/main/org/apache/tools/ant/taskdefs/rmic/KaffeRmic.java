@@ -74,15 +74,7 @@ public class KaffeRmic extends DefaultRmicAdapter {
         getRmic().log("Using Kaffe rmic", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand();
 
-        PrintStream err = System.err;
-        PrintStream out = System.out;
-
-        // the project log
-        PrintStream logstr = 
-            new PrintStream(new LogOutputStream(getRmic(), Project.MSG_WARN));
         try {
-            System.setOut(logstr);
-            System.setErr(logstr);
 
             Class c = Class.forName("kaffe.rmi.rmic.RMIC");
             Constructor cons = c.getConstructor(new Class[] { String[].class });
@@ -103,10 +95,6 @@ public class KaffeRmic extends DefaultRmicAdapter {
             } else {
                 throw new BuildException("Error starting Kaffe rmic: ", ex, getRmic().getLocation());
             }
-        } finally {
-            System.setErr(err);
-            System.setOut(out);
-            logstr.close();
         }
     }
 }

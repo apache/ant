@@ -76,6 +76,7 @@ public class Java extends Task {
     private boolean fork = false;
     private File dir = null;
     private File out;
+    private PrintStream outStream = null;
     private boolean failOnError = false;
     
     /**
@@ -239,6 +240,24 @@ public class Java extends Task {
         }
     }
 
+    protected void handleOutput(String line) {
+        if (outStream != null) {
+            outStream.println(line);
+        }
+        else {
+            super.handleOutput(line);
+        }
+    }
+    
+    protected void handleErrorOutput(String line) {
+        if (outStream != null) {
+            outStream.println(line);
+        }
+        else {
+            super.handleErrorOutput(line);
+        }
+    }
+    
     /**
      * Executes the given classname with the given arguments as it
      * was a command line application.
@@ -250,13 +269,20 @@ public class Java extends Task {
         exe.setSystemProperties(command.getSystemProperties());
         if (out != null) {
             try {
-                exe.setOutput(new PrintStream(new FileOutputStream(out)));
+                outStream = new PrintStream(new FileOutputStream(out));
+                exe.execute(project);
             } catch (IOException io) {
                 throw new BuildException(io, location);
             }
+            finally {
+                if (outStream != null) {
+                    outStream.close();
+                }
+            }
         }
-        
-        exe.execute(project);
+        else {
+            exe.execute(project);
+        }
     }
 
     /**

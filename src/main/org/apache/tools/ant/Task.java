@@ -220,5 +220,36 @@ public abstract class Task {
             wrapper.maybeConfigure(project);
         }
     }
+
+    protected void handleOutput(String line) {
+        log(line, Project.MSG_INFO);
+    }
+    
+    protected void handleErrorOutput(String line) {
+        log(line, Project.MSG_ERR);
+    }
+    
+    
+    /**
+     * Perform this task
+     */
+    public final void perform() {
+        try {
+            project.fireTaskStarted(this);
+            maybeConfigure();
+            execute();
+            project.fireTaskFinished(this, null);
+        }
+        catch(RuntimeException exc) {
+            if (exc instanceof BuildException) {
+                BuildException be = (BuildException) exc;
+                if (be.getLocation() == Location.UNKNOWN_LOCATION) {
+                    be.setLocation(getLocation());
+                }
+            }
+            project.fireTaskFinished(this, exc);
+            throw exc;
+        }
+    }
 }
 

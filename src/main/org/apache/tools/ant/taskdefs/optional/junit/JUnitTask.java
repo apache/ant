@@ -155,7 +155,8 @@ public class JUnitTask extends Task {
     private Integer timeout = null;
     private boolean summary = false;
     private String summaryValue = "";
-
+    private JUnitTestRunner runner = null;
+    
     /**
      * Tells this task to halt when there is an error in a test.
      * this property is applied on all BatchTest (batchtest) and JUnitTest (test)
@@ -509,6 +510,25 @@ public class JUnitTask extends Task {
     // whole build. IMHO this method should be avoided and it would be best
     // to remove it in future versions. TBD. (SBa)
         
+
+    protected void handleOutput(String line) {
+        if (runner != null) {
+            runner.handleOutput(line);
+        }
+        else {
+            super.handleOutput(line);
+        }
+    }
+    
+    protected void handleErrorOutput(String line) {
+        if (runner != null) {
+            runner.handleErrorOutput(line);
+        }
+        else {
+            super.handleErrorOutput(line);
+        }
+    }
+    
     /**
      * Execute inside VM.
      */
@@ -535,7 +555,7 @@ public class JUnitTask extends Task {
                 // will cause trouble in JDK 1.1 if omitted
                 cl.addSystemPackageRoot("org.apache.tools.ant");
             }
-            JUnitTestRunner runner = new JUnitTestRunner(test, test.getHaltonerror(), test.getHaltonfailure(), cl);
+            runner = new JUnitTestRunner(test, test.getHaltonerror(), test.getHaltonfailure(), cl);
 
             if (summary) {
                 log("Running " + test.getName(), Project.MSG_INFO);

@@ -113,6 +113,9 @@ public class Project {
 
     /** The system classloader - may be null */    
     private ClassLoader systemLoader = null;
+
+    /** Records the latest task on a thread */ 
+    private Hashtable threadTasks = new Hashtable();
     
     static {
 
@@ -525,6 +528,21 @@ public class Project {
         }
     }
 
+    public void demuxOutput(String line, boolean isError) {
+        Task task = (Task)threadTasks.get(Thread.currentThread());
+        if (task == null) {
+            fireMessageLogged(this, line, isError ? MSG_ERR : MSG_INFO);
+        }
+        else {
+            if (isError) {
+                task.handleOutput(line);
+            }
+            else {
+                task.handleErrorOutput(line);
+            }
+        }
+    }
+    
     public void executeTarget(String targetName) throws BuildException {
 
         // sanity check ourselves, if we've been asked to build nothing
@@ -547,7 +565,7 @@ public class Project {
 
         do {
             curtarget = (Target) sortedTargets.elementAt(curidx++);
-            runTarget(curtarget);
+            curtarget.performTasks();
         } while (!curtarget.getName().equals(targetName));
     }
 
@@ -903,23 +921,6 @@ public class Project {
                 s.equalsIgnoreCase("yes"));
     }
 
-    // Given a string defining a target name, and a Hashtable
-    // containing the "name to Target" mapping, pick out the
-    // Target and execute it.
-    public void runTarget(Target target)
-        throws BuildException {
-
-        try {
-            fireTargetStarted(target);
-            target.execute();
-            fireTargetFinished(target, null);
-        }
-        catch(RuntimeException exc) {
-            fireTargetFinished(target, exc);
-            throw exc;
-        }
-    }
-
     /**
      * Topologically sort a set of Targets.
      * @param root is the (String) name of the root Target. The sort is
@@ -1084,6 +1085,8 @@ public class Project {
     }
 
     protected void fireTaskStarted(Task task) {
+        // register this as the current task on the current thread.
+        threadTasks.put(Thread.currentThread(), task);
         BuildEvent event = new BuildEvent(task);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);
@@ -1092,6 +1095,9 @@ public class Project {
     }
 
     protected void fireTaskFinished(Task task, Throwable exception) {
+        threadTasks.remove(Thread.currentThread());
+        System.out.flush();
+        System.err.flush();
         BuildEvent event = new BuildEvent(task);
         for (int i = 0; i < listeners.size(); i++) {
             BuildListener listener = (BuildListener) listeners.elementAt(i);

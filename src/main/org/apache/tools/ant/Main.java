@@ -267,7 +267,14 @@ public class Main {
                     System.out.println("Only one logger class may be specified.");
                     return;
                 }
-                loggerClassname = args[++i];
+                try {
+                    loggerClassname = args[++i];
+                } 
+                catch (ArrayIndexOutOfBoundsException aioobe) {
+                    System.out.println("You must specify a classname when " +
+                                       "using the -logger argument");
+                    return;
+                }
             } else if (arg.equals("-emacs")) {
                 emacsMode = true;
             } else if (arg.equals("-projecthelp")) {
@@ -403,43 +410,54 @@ public class Main {
         try {
             addBuildListeners(project);
 
-            project.fireBuildStarted();
-            project.init();
-            project.setUserProperty("ant.version", getAntVersion());
-
-            // set user-define properties
-            Enumeration e = definedProps.keys();
-            while (e.hasMoreElements()) {
-                String arg = (String)e.nextElement();
-                String value = (String)definedProps.get(arg);
-                project.setUserProperty(arg, value);
-            }
-
-            project.setUserProperty("ant.file" , buildFile.getAbsolutePath() );
-
-            // first use the ProjectHelper to create the project object
-            // from the given build file.
+            PrintStream err = System.err;
+            PrintStream out = System.out;
+            
             try {
-                Class.forName("javax.xml.parsers.SAXParserFactory");
-                ProjectHelper.configureProject(project, buildFile);
-            } catch (NoClassDefFoundError ncdfe) {
-                throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", ncdfe);
-            } catch (ClassNotFoundException cnfe) {
-                throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", cnfe);
-            } catch (NullPointerException npe) {
-                throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", npe);
-            }
+                System.setOut(new PrintStream(new DemuxOutputStream(project, false)));
+                System.setErr(new PrintStream(new DemuxOutputStream(project, true)));
+                project.fireBuildStarted();
+                project.init();
+                project.setUserProperty("ant.version", getAntVersion());
 
-            // make sure that we have a target to execute
-            if (targets.size() == 0) {
-                targets.addElement(project.getDefaultTarget());
+                // set user-define properties
+                Enumeration e = definedProps.keys();
+                while (e.hasMoreElements()) {
+                    String arg = (String)e.nextElement();
+                    String value = (String)definedProps.get(arg);
+                    project.setUserProperty(arg, value);
+                }
+                
+                project.setUserProperty("ant.file" , buildFile.getAbsolutePath() );
+                
+                // first use the ProjectHelper to create the project object
+                // from the given build file.
+                try {
+                    Class.forName("javax.xml.parsers.SAXParserFactory");
+                    ProjectHelper.configureProject(project, buildFile);
+                } catch (NoClassDefFoundError ncdfe) {
+                    throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", ncdfe);
+                } catch (ClassNotFoundException cnfe) {
+                    throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", cnfe);
+                } catch (NullPointerException npe) {
+                    throw new BuildException("No JAXP compliant XML parser found. See http://java.sun.com/xml for the\nreference implementation.", npe);
+                }
+                
+                // make sure that we have a target to execute
+                if (targets.size() == 0) {
+                    targets.addElement(project.getDefaultTarget());
+                }
+                
+                if (!projectHelp) {
+                    project.executeTargets(targets);
+                }
             }
-
+            finally {
+                System.setOut(out);
+                System.setErr(err);
+            }
             if (projectHelp) {
-                printTargets(project);
-            } else {
-                // actually do some work
-                project.executeTargets(targets);
+                    printTargets(project);
             }
         }
         catch(RuntimeException exc) {

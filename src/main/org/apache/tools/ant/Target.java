@@ -62,7 +62,7 @@ import java.util.*;
  * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
  */
 
-public class Target {
+public class Target implements TaskContainer {
 
     private String name;
     private String ifCondition = "";
@@ -161,23 +161,7 @@ public class Target {
                 Object o = enum.nextElement();
                 if (o instanceof Task) {
                     Task task = (Task) o;
-                    
-                    try {
-                        project.fireTaskStarted(task);
-                        task.maybeConfigure();
-                        task.execute();
-                        project.fireTaskFinished(task, null);
-                    }
-                    catch(RuntimeException exc) {
-                        if (exc instanceof BuildException) {
-                            BuildException be = (BuildException) exc;
-                            if (be.getLocation() == Location.UNKNOWN_LOCATION) {
-                                be.setLocation(task.getLocation());
-                            }
-                        }
-                        project.fireTaskFinished(task, exc);
-                        throw exc;
-                    }
+                    task.perform();
                 } else {
                     RuntimeConfigurable r = (RuntimeConfigurable) o;
                     r.maybeConfigure(project);
@@ -192,6 +176,18 @@ public class Target {
         }
     }
 
+    public final void performTasks() {
+        try {
+            project.fireTargetStarted(this);
+            execute();
+            project.fireTargetFinished(this, null);
+        }
+        catch(RuntimeException exc) {
+            project.fireTargetFinished(this, exc);
+            throw exc;
+        }
+    }
+    
     void replaceTask(UnknownElement el, Task t) {
         int index = -1;
         while ((index = children.indexOf(el)) >= 0) {

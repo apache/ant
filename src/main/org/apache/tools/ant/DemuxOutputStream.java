@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -52,52 +52,100 @@
  * <http://www.apache.org/>.
  */
 
-package org.apache.tools.ant.taskdefs.compilers;
+package org.apache.tools.ant;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.taskdefs.LogOutputStream;
-import org.apache.tools.ant.types.Commandline;
-
-import java.lang.reflect.Method;
 import java.io.*;
+import java.util.*;
+
 
 /**
- * The implementation of the javac compiler for JDK 1.3
- * This is primarily a cut-and-paste from the original javac task before it
- * was refactored.
+ * Logs content written by a thread and forwards the buffers onto the
+ * project object which will forward the content to the appropriate
+ * task 
  *
- * @author James Davidson <a href="mailto:duncan@x180.com">duncan@x180.com</a>
- * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
- * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
- * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ * @author Conor MacNeill
  */
-public class Javac13 extends DefaultCompilerAdapter {
+public class DemuxOutputStream extends OutputStream {
+
+    static private final int MAX_SIZE = 1024;
+    
+    private Hashtable buffers = new Hashtable();
+//    private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    private boolean skip = false;
+    private Project project;
+    private boolean isErrorStream;
+    
+    /**
+     * Creates a new instance of this class.
+     *
+     * @param task the task for whom to log
+     * @param level loglevel used to log data written to this stream.
+     */
+    public DemuxOutputStream(Project project, boolean isErrorStream) {
+        this.project = project;
+        this.isErrorStream = isErrorStream;
+    }
+
+    private ByteArrayOutputStream getBuffer() {
+        Thread current = Thread.currentThread();
+        ByteArrayOutputStream buffer = (ByteArrayOutputStream)buffers.get(current);
+        if (buffer == null) {
+            buffer = new ByteArrayOutputStream();
+            buffers.put(current, buffer);
+        }
+        return buffer;
+    }
+
+    private void resetBuffer() {    
+        Thread current = Thread.currentThread();
+        buffers.remove(current);
+    }
+    
+    /**
+     * Write the data to the buffer and flush the buffer, if a line
+     * separator is detected.
+     *
+     * @param cc data to log (byte).
+     */
+    public void write(int cc) throws IOException {
+        final byte c = (byte)cc;
+        if ((c == '\n') || (c == '\r')) {
+            if (!skip) {
+                processBuffer();
+            }
+        } else {
+            ByteArrayOutputStream buffer = getBuffer();
+            buffer.write(cc);
+            if (buffer.size() > MAX_SIZE) {
+                processBuffer();
+            }
+        }
+        skip = (c == '\r');
+    }
+
 
     /**
-     * Integer returned by the "Modern" jdk1.3 compiler to indicate success.
+     * Converts the buffer to a string and sends it to <code>processLine</code>
      */
-    private static final int MODERN_COMPILER_SUCCESS = 0;
+    protected void processBuffer() {
+        String output = getBuffer().toString();
+        project.demuxOutput(output, isErrorStream);
+        resetBuffer();
+    }
 
-    public boolean execute() throws BuildException {
-        attributes.log("Using modern compiler", Project.MSG_VERBOSE);
-        Commandline cmd = setupJavacCommand();
+    /**
+     * Writes all remaining
+     */
+    public void close() throws IOException {
+        flush();
+    }
 
-        // Use reflection to be able to build on all JDKs >= 1.1:
-        try {
-            Class c = Class.forName ("com.sun.tools.javac.Main");
-            Object compiler = c.newInstance ();
-            Method compile = c.getMethod ("compile",
-                new Class [] {(new String [] {}).getClass ()});
-            int result = ((Integer) compile.invoke
-                          (compiler, new Object[] {cmd.getArguments()})) .intValue ();
-            return (result == MODERN_COMPILER_SUCCESS);
-        } catch (Exception ex) {
-            if (ex instanceof BuildException) {
-                throw (BuildException) ex;
-            } else {
-                throw new BuildException("Error starting modern compiler", ex, location);
-            }
+    /**
+     * Writes all remaining
+     */
+    public void flush() throws IOException {
+        if (getBuffer().size() > 0) {
+            processBuffer();
         }
     }
 }

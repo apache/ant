@@ -348,11 +348,11 @@ public class ProjectHelper {
         }
 
         private void handleTaskdef(String name, AttributeList attrs) throws SAXParseException {
-            (new TaskHandler(this, null)).init(name, attrs);
+            (new TaskHandler(this, null, null)).init(name, attrs);
         }
 
         private void handleProperty(String name, AttributeList attrs) throws SAXParseException {
-            (new TaskHandler(this, null)).init(name, attrs);
+            (new TaskHandler(this, null, null)).init(name, attrs);
         }
 
         private void handleTarget(String tag, AttributeList attrs) throws SAXParseException {
@@ -433,7 +433,7 @@ public class ProjectHelper {
             if (project.getDataTypeDefinitions().get(name) != null) {
                 new DataTypeHandler(this, target).init(name, attrs);
             } else {
-                new TaskHandler(this, target).init(name, attrs);
+                new TaskHandler(this, target, target).init(name, attrs);
             }
         }
     }
@@ -443,12 +443,13 @@ public class ProjectHelper {
      */
     private class TaskHandler extends AbstractHandler {
         private Target target;
+        private TaskContainer container;
         private Task task;
         private RuntimeConfigurable wrapper = null;
 
-        public TaskHandler(DocumentHandler parentHandler, Target target) {
+        public TaskHandler(DocumentHandler parentHandler, TaskContainer container, Target target) {
             super(parentHandler);
-
+            this.container = container;
             this.target = target;
         }
 
@@ -471,7 +472,7 @@ public class ProjectHelper {
             // Top level tasks don't have associated targets
             if (target != null) {
                 task.setOwningTarget(target);
-                target.addTask(task);
+                container.addTask(task);
                 task.init();
                 wrapper = task.getRuntimeConfigurableWrapper();
                 wrapper.setAttributes(attrs);
@@ -500,7 +501,13 @@ public class ProjectHelper {
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedElementHandler(this, task, wrapper).init(name, attrs);
+            if (task instanceof TaskContainer) {
+                // task can contain other tasks - no other nested elements possible
+                new TaskHandler(this, (TaskContainer)task, target).init(name, attrs);
+            }
+            else {
+                new NestedElementHandler(this, task, wrapper, target).init(name, attrs);
+            }
         }
     }
 
@@ -508,35 +515,38 @@ public class ProjectHelper {
      * Handler for all nested properties.
      */
     private class NestedElementHandler extends AbstractHandler {
-        private Object target;
+        private Object parent;
         private Object child;
         private RuntimeConfigurable parentWrapper;
         private RuntimeConfigurable childWrapper = null;
+        private Target target;
 
         public NestedElementHandler(DocumentHandler parentHandler, 
-                                    Object target,
-                                    RuntimeConfigurable parentWrapper) {
+                                    Object parent,
+                                    RuntimeConfigurable parentWrapper,
+                                    Target target) {
             super(parentHandler);
 
-            if (target instanceof TaskAdapter) {
-                this.target = ((TaskAdapter) target).getProxy();
+            if (parent instanceof TaskAdapter) {
+                this.parent = ((TaskAdapter) parent).getProxy();
             } else {
-                this.target = target;
+                this.parent = parent;
             }
             this.parentWrapper = parentWrapper;
+            this.target = target;
         }
 
         public void init(String propType, AttributeList attrs) throws SAXParseException {
-            Class targetClass = target.getClass();
+            Class parentClass = parent.getClass();
             IntrospectionHelper ih = 
-                IntrospectionHelper.getHelper(targetClass);
+                IntrospectionHelper.getHelper(parentClass);
 
             try {
-                if (target instanceof UnknownElement) {
+                if (parent instanceof UnknownElement) {
                     child = new UnknownElement(propType.toLowerCase());
-                    ((UnknownElement) target).addChild((UnknownElement) child);
+                    ((UnknownElement) parent).addChild((UnknownElement) child);
                 } else {
-                    child = ih.createElement(project, target, propType.toLowerCase());
+                    child = ih.createElement(project, parent, propType.toLowerCase());
                 }
 
                 configureId(child, attrs);
@@ -566,7 +576,14 @@ public class ProjectHelper {
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedElementHandler(this, child, childWrapper).init(name, attrs);
+            if (child instanceof TaskContainer) {
+                // taskcontainer nested element can contain other tasks - no other 
+                // nested elements possible
+                new TaskHandler(this, (TaskContainer)child, target).init(name, attrs);
+            }
+            else {
+                new NestedElementHandler(this, child, childWrapper, target).init(name, attrs);
+            }
         }
     }
 
@@ -616,7 +633,7 @@ public class ProjectHelper {
         }
 
         public void startElement(String name, AttributeList attrs) throws SAXParseException {
-            new NestedElementHandler(this, element, wrapper).init(name, attrs);
+            new NestedElementHandler(this, element, wrapper, target).init(name, attrs);
         }
     }
 

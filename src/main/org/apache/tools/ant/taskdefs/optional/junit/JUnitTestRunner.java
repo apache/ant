@@ -138,6 +138,12 @@ public class JUnitTestRunner implements TestListener {
      */
     private JUnitTest junitTest;
 
+    /** output written during the test */
+    private PrintStream systemError;
+    
+    /** Error output during the test */
+    private PrintStream systemOut;    
+    
     /**
      * Constructor for fork=true or when the user hasn't specified a
      * classpath.  
@@ -212,22 +218,19 @@ public class JUnitTestRunner implements TestListener {
         } else {
 
 
-            PrintStream oldErr = System.err;
-            PrintStream oldOut = System.out;
-              
             ByteArrayOutputStream errStrm = new ByteArrayOutputStream();
-            System.setErr(new PrintStream(errStrm));
+            systemError = new PrintStream(errStrm);
             
             ByteArrayOutputStream outStrm = new ByteArrayOutputStream();
-            System.setOut(new PrintStream(outStrm));
+            systemOut = new PrintStream(outStrm);
 
             try {
                 suite.run(res);
             } finally {
-                System.err.close();
-                System.out.close();
-                System.setErr(oldErr);
-                System.setOut(oldOut);
+                systemError.close();
+                systemError = null;
+                systemOut.close();
+                systemOut = null;
                 sendOutAndErr(new String(outStrm.toByteArray()),
                               new String(errStrm.toByteArray()));
 
@@ -299,6 +302,18 @@ public class JUnitTestRunner implements TestListener {
         }
     }
 
+    protected void handleOutput(String line) {
+        if (systemOut != null) {
+            systemOut.println(line);
+        }
+    }
+    
+    protected void handleErrorOutput(String line) {
+        if (systemError != null) {
+            systemError.println(line);
+        }
+    }
+    
     private void sendOutAndErr(String out, String err) {
         for (int i=0; i<formatters.size(); i++) {
             JUnitResultFormatter formatter = 

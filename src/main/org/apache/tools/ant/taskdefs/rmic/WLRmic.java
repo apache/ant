@@ -75,15 +75,7 @@ public class WLRmic extends DefaultRmicAdapter {
         getRmic().log("Using WebLogic rmic", Project.MSG_VERBOSE);
         Commandline cmd = setupRmicCommand(new String[] {"-noexit"});
 
-        PrintStream err = System.err;
-        PrintStream out = System.out;
-
-        PrintStream logstr = 
-            new PrintStream(new LogOutputStream(getRmic(), Project.MSG_WARN));
         try {
-            System.setOut(logstr);
-            System.setErr(logstr);
-
             // Create an instance of the rmic
             Class c = Class.forName("weblogic.rmic");
             Method doRmic = c.getMethod("main", 
@@ -101,10 +93,6 @@ public class WLRmic extends DefaultRmicAdapter {
             } else {
                 throw new BuildException("Error starting WebLogic rmic: ", ex, getRmic().getLocation());
             }
-        } finally {
-            System.setErr(err);
-            System.setOut(out);
-            logstr.close();
         }
     }
 
