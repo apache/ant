@@ -65,7 +65,7 @@
       <li>add scoping rules for properties so that not all of them
       will be inherited by sub-builds, only those that have been
       specified explicitly. <i class="comment">Fill in details once
-      they&apos;ve been sorted out.</i></li>
+      they've been sorted out.</i></li>
 
     </ul>
 
@@ -97,7 +97,7 @@
     Ant. Ant will automatically know all tasks contained in task
     libraries that have been placed into a special directory - in
     addition task libraries can be referenced and used in a build file
-    explicitly. <i class="comment">Fill in details once they&apos;ve been
+    explicitly. <i class="comment">Fill in details once they've been
     sorted out.</i></p>
 
     <p>It has become apparent, that several &quot;aspects&quot; of
@@ -111,7 +111,7 @@
 
     <p>Ant2 will farm out common functionality from tasks into utility
     classes so that task writers can benefit from a tested and stable
-    framework - they shouldn&apos;t need to deal with existing tasks
+    framework - they shouldn't need to deal with existing tasks
     directly (like some tasks &quot;abuse&quot; the
     <code>&lt;touch&gt;</code> task in Ant1).</p>
 
@@ -120,16 +120,16 @@
     compile time.  Discussions on ant-dev usually talk about
     &quot;container tasks&quot; in this context.</p>
 
-    <p>The only way to &qout;include&quot; common XML snippets so far
+    <p>The only way to &quot;include&quot; common XML snippets so far
     has been the usage of external SYSTEM entities, a mechanism that
-    is tied to DTDs and doesn&apos;t mix well with alternative
+    is tied to DTDs and doesn't mix well with alternative
     approaches like XML Schema.  Ant2 will provide a built-in include
     mechanism.</p>
 
     <h1>New/Modified Features</h1>
 
     <p>Ant2 will run the build process fully dynamically, which means
-    that task won&apos;t be instantiated before they are actually being run
+    that task won't be instantiated before they are actually being run
     and <code>${}</code> expansion will see the very latest value of a
     property. It will be possible to reassign values of properties via
     a built-in task.</p>
@@ -140,8 +140,8 @@
 
     <ul>
 
-      <li>Tasks written for Ant1 won&apos;t work in Ant2 as the API of
-      Ant&apos;s core and the names of utility classes are going to
+      <li>Tasks written for Ant1 won't work in Ant2 as the API of
+      Ant's core and the names of utility classes are going to
       change. There will probably be adaptors and utility classes to
       ease the transition for task writers.</li>
 
@@ -157,7 +157,7 @@
       <li>Ant2 is going to require a JDK version 1.2 or above and a
       JAXP compliant parser version 1.1 or above.</li>
 
-      <li>If you specify more than one target in another target&apos;s
+      <li>If you specify more than one target in another target's
       depends attribute, Ant1 will execute these targets from left to
       right (as long as the dependency tree permits it) - Ant2 will
       not guarantee this behavior but will allow build file writers to
@@ -178,7 +178,7 @@
     <p>Ant2 itself will include a command line front-end and Antidote
     will become the GUI front-end to it. Other front-ends like a
     servlet front-end are expected <i class="comment">outside of
-    Ant&apos;s core</i> as well.</p>
+    Ant's core</i> as well.</p>
 
     <p>In addition to this separation, the following features should
     help people who want to integrate Ant into their products:</p>
@@ -219,7 +219,7 @@
     attributes (say you always want the <code>debug</code> attribute
     of the <code>javac</code> task to be true - unless it has been
     disabled explicitly). <i class="comment">Need to give details once
-    they&apos;ve been sorted out.</i></p>
+    they've been sorted out.</i></p>
 
     <h2>Documentation System</h2>
 
@@ -250,7 +250,7 @@
     follow the same scoping and precedence rules. 
     <i class="comment">${} again.</i></p>
 
-    <h2>Multithreading</h2>
+    <h2>Multi-Threading of Tasks Within a Target</h2>
 
     <p>It will be possible to run several tasks in parallel - these
     tasks will belong to the same target and all tasks will be joined
@@ -263,13 +263,13 @@
     <i class="comment">These utility classes may very well come from a
     different (Jakarta) project</i>.</p>
 
-    <p>Ant&apos;s primary language and the language of the build file
+    <p>Ant's primary language and the language of the build file
     will continue to be English.</p>
 
     <h1>Rejected Features</h1>
 
     <p>This is list is not complete, it just highlights some of the
-    rejected features and tries to explain why they&apos;ve been
+    rejected features and tries to explain why they've been
     rejected.  Two very common reasons to reject something were, that
     the request has been too vague or the same functionality could
     already be provided by some other accepted new feature.</p>
@@ -354,7 +354,7 @@
 
     <p>Please refer to <a
     href="requested-features.html">requested-features.html</a> in the
-    section &quot;I. Things that don&apos;t affect the core but are
+    section &quot;I. Things that don't affect the core but are
     requests for new tasks or enhancements to existing tasks.&quot;
     for this.</p>
 
