@@ -99,6 +99,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* Six new Clearcase tasks added.
+
 * A new filter reader namely tokenfilter has been added.  Bugzilla 
   Report 18312.
 
