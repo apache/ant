@@ -222,6 +222,10 @@
 #macro (makeProject $menus)
 
   <div class="menucontainer">
+  <a href="http://apachecon.com/2003/US/index.html">
+    <img width="150" height="86"
+         border="0" src="http://jakarta.apache.org/images/logos/ac2003-150.gif"/>
+  </a>
     <div class="menu">
       <ul>
       #foreach ( $menu in $menus )
