@@ -204,7 +204,7 @@ public class ProjectHelper {
             String def = null;
             String name = null;
             String id = null;
-            String baseDir = new File(buildFile.getAbsolutePath()).getParent();
+            String baseDir = null;
 
             for (int i = 0; i < attrs.getLength(); i++) {
                 String key = attrs.getName(i);
@@ -233,7 +233,11 @@ public class ProjectHelper {
             if (project.getProperty("basedir") != null) {
                 project.setBasedir(project.getProperty("basedir"));
             } else {
-                project.setBasedir((new File(buildFile.getParent(), baseDir)).getAbsolutePath());
+                if (baseDir == null) {
+                    project.setBasedir((new File(buildFile.getParent())).getAbsolutePath());
+                } else {
+                    project.setBasedir((new File(buildFile.getParent(), baseDir)).getAbsolutePath());
+                }
             }
 
         }
