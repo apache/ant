@@ -164,6 +164,7 @@
     <or>
       <filename name="${optional.package}/Native2Ascii*"/>
       <filename name="${optional.package}/Javah*"/>
+      <filename name="${optional.package}/native2ascii/*"/>
     </or>
   </selector>
 
