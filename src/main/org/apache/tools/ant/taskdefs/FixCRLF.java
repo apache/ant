@@ -226,10 +226,10 @@ public class FixCRLF extends MatchingTask {
         String option = attr.getValue();
         if (option.equals("asis")) {
             eol = ASIS;
-        } else if (option.equals("cr")) {
+        } else if (option.equals("cr") || option.equals("mac")) {
             eol = CR;
             eolstr = "\r";
-        } else if (option.equals("lf")) {
+        } else if (option.equals("lf") || option.equals("unix")) {
             eol = LF;
             eolstr = "\n";
         } else {
@@ -1045,7 +1045,8 @@ public class FixCRLF extends MatchingTask {
          * @see EnumeratedAttribute#getValues
          */
         public String[] getValues() {
-            return new String[] {"asis", "cr", "lf", "crlf"};
+            return new String[] {"asis", "cr", "lf", "crlf", 
+                                 "mac", "unix", "dos"};
         }
     }
 

@@ -141,6 +141,8 @@ Other changes:
 * <zip> can now store Unix permissions in a way that can be
   reconstructed by Info-Zip's unzip command.
 
+* <fixcrlf>'s eol attribute now also understand "mac", "unix" and "dos".
+
 Changes from Ant 1.5.1Beta1 to 1.5.1
 ====================================
 
