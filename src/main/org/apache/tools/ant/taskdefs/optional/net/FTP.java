@@ -62,6 +62,7 @@ import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.FileScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileSet;
 
 import java.io.BufferedInputStream;
@@ -97,6 +98,7 @@ import java.util.Vector;
  *
  * @author Roger Vaughn <a href="mailto:rvaughn@seaconinc.com">rvaughn@seaconinc.com</a>
  * @author Glenn McAllister <a href="mailto:glennm@ca.ibm.com">glennm@ca.ibm.com</a>
+ * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  */
 public class FTP
     extends Task
@@ -343,38 +345,27 @@ public class FTP
 
     /**
      * Sets the FTP action to be taken.  Currently accepts "put", "get",
-     * "del", and "list".
+     * "del", "mkdir" and "list".
+     *
+     * @deprecated setAction(String) is deprecated and is replaced with
+     *             setAction(FTP.Action) to make Ant's Introspection
+     *             mechanism do the work and also to encapsulate operations on
+     *             the type in its own class.
      */
-    public void setAction(String action) throws BuildException
-    {
-        String actionL = action.toLowerCase(Locale.US);
-        if (actionL.equals("send") ||
-            actionL.equals("put"))
-        {
-            this.action = SEND_FILES;
-        }
-        else if (actionL.equals("recv") ||
-                 actionL.equals("get"))
-        {
-            this.action = GET_FILES;
-        }
-        else if (actionL.equals("del") ||
-                 actionL.equals("delete" ))
-        {
-            this.action = DEL_FILES;
-        }
-        else if (actionL.equals("list"))
-        {
-            this.action = LIST_FILES;
-        }
-        else if (actionL.equals("mkdir"))
-        {
-            this.action = MK_DIR;
-        }
-        else
-        {
-            throw new BuildException("action " + action + " is not supported");
-        }
+    public void setAction(String action) throws BuildException {
+        log("DEPRECATED - The setAction(String) method has been deprecated."
+            + " Use setAction(FTP.Action) instead.");
+        Action a = new Action();
+        a.setValue(action);
+        this.action = a.getAction();
+    }
+
+    /**
+     * Sets the FTP action to be taken.  Currently accepts "put", "get",
+     * "del", "mkdir" and "list".
+     */
+    public void setAction(Action action) throws BuildException {
+        this.action = action.getAction();
     }
 
     /**
@@ -941,6 +932,36 @@ public class FTP
                     // ignore it
                 }
             }
+        }
+    }
+
+    public static class Action extends EnumeratedAttribute {
+
+        private final static String[] validActions = {
+            "send", "put", "recv", "get", "del", "delete", "list", "mkdir"
+        };
+
+        public String[] getValues() {
+            return validActions;
+        }
+
+        public int getAction() {
+            String actionL = getValue().toLowerCase(Locale.US);
+            if (actionL.equals("send") ||
+                actionL.equals("put")) {
+                return SEND_FILES;
+            } else if (actionL.equals("recv") ||
+                     actionL.equals("get")) {
+                return GET_FILES;
+            } else if (actionL.equals("del") ||
+                     actionL.equals("delete" )) {
+                return DEL_FILES;
+            } else if (actionL.equals("list")) {
+                return LIST_FILES;
+            } else if (actionL.equals("mkdir")) {
+                return MK_DIR;
+            }
+            return SEND_FILES;
         }
     }
 }
