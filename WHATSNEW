@@ -357,6 +357,8 @@ Fixed bugs:
 
 * Get with usetimestamp did not work on Java 1.2.
 
+* Get with usetimestamp did not work when local timestamp roughly >= now.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
