@@ -78,6 +78,8 @@ import java.util.zip.ZipEntry;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="packaging"
  *           name="unzip"
  *           name="unjar"
@@ -101,7 +103,8 @@ public class Expand extends MatchingTask {
         }
 
         if (source == null && filesets.size() == 0) {
-            throw new BuildException("src attribute and/or filesets must be specified");
+            throw new BuildException("src attribute and/or filesets must be "
+                                     + "specified");
         }
 
         if (dest == null) {
@@ -151,14 +154,14 @@ public class Expand extends MatchingTask {
 
             while ((ze = zis.getNextEntry()) != null) {
                 extractFile(fileUtils, srcF, dir, zis,
-                            ze.getName(),
-                            new Date(ze.getTime()),
+                            ze.getName(), new Date(ze.getTime()),
                             ze.isDirectory());
             }
 
             log("expand complete", Project.MSG_VERBOSE );
         } catch (IOException ioe) {
-            throw new BuildException("Error while expanding " + srcF.getPath(), ioe);
+            throw new BuildException("Error while expanding " + srcF.getPath(),
+                                     ioe);
         } finally {
             if (zis != null) {
                 try {
@@ -183,7 +186,8 @@ public class Expand extends MatchingTask {
                 String[] incls = p.getIncludePatterns(project);
                 if (incls != null) {
                     for (int w = 0; w < incls.length; w++) {
-                        boolean isIncl = DirectoryScanner.match(incls[w], name);
+                        boolean isIncl = 
+                            DirectoryScanner.match(incls[w], name);
                         if (isIncl) {
                             included = true;
                             break;
@@ -193,7 +197,8 @@ public class Expand extends MatchingTask {
                 String[] excls = p.getExcludePatterns(project);
                 if (excls != null) {
                     for (int w = 0; w < excls.length; w++) {
-                        boolean isExcl = DirectoryScanner.match(excls[w], name);
+                        boolean isExcl = 
+                            DirectoryScanner.match(excls[w], name);
                         if (isExcl) {
                             included = false;
                             break;

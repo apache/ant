@@ -67,10 +67,10 @@ import java.io.IOException;
 /**
  * Untar a file.
  *
- * Heavily based on the Expand task.
- *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:umagesh@rediffmail.com">Magesh Umasankar</a>
+ *
+ * @since Ant 1.1
  *
  * @ant.task category="packaging"
  */
@@ -86,8 +86,7 @@ public class Untar extends Expand {
 
             while ((te = tis.getNextEntry()) != null) {
                 extractFile(fileUtils, srcF, dir, tis,
-                            te.getName(),
-                            te.getModTime(), te.isDirectory());
+                            te.getName(), te.getModTime(), te.isDirectory());
             }
             log("expand complete", Project.MSG_VERBOSE );
 

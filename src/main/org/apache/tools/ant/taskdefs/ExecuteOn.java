@@ -77,7 +77,7 @@ import java.io.IOException;
  *
  * @since Ant 1.2
  *
- * @ant.task name="apply" category="control"
+ * @ant.task category="control" name="execon" name="apply"
  */
 public class ExecuteOn extends ExecTask {
 

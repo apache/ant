@@ -85,6 +85,8 @@ import java.util.Vector;
  * @author <a href="mailto:mj@servidium.com">Michael J. Sikorsky</a>
  * @author <a href="mailto:shaw@servidium.com">Robert Shaw</a>
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="filesystem"
  */
 public class Touch extends Task {
@@ -101,7 +103,7 @@ public class Touch extends Task {
 
     /**
      * Sets a single source file to touch.  If the file does not exist
-     * an  empty file will be created.
+     * an empty file will be created.
      */
     public void setFile(File file) {
         this.file = file;
@@ -132,31 +134,43 @@ public class Touch extends Task {
      * Execute the touch operation.
      */
     public void execute() throws BuildException {
+        long savedMillis = millis;
+
         if (file == null && filesets.size() == 0) {
             throw 
-                new BuildException("Specify at least one source - a file or a fileset.");
+                new BuildException("Specify at least one source - a file or "
+                                   + "a fileset.");
         }
 
         if (file != null && file.exists() && file.isDirectory()) {
             throw new BuildException("Use a fileset to touch directories.");
         }
 
-        if (dateTime != null) {
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT,
-                                                           DateFormat.SHORT,
-                                                           Locale.US);
-            try {
-                setMillis(df.parse(dateTime).getTime());
-                if (millis < 0) {
-                    throw new BuildException("Date of " + dateTime
-                                             + " results in negative milliseconds value relative to epoch (January 1, 1970, 00:00:00 GMT).");
+        try {
+            if (dateTime != null) {
+                DateFormat df = 
+                    DateFormat.getDateTimeInstance(DateFormat.SHORT,
+                                                   DateFormat.SHORT,
+                                                   Locale.US);
+                try {
+                    setMillis(df.parse(dateTime).getTime());
+                    if (millis < 0) {
+                        throw new BuildException("Date of " + dateTime
+                                                 + " results in negative "
+                                                 + "milliseconds value "
+                                                 + "relative to epoch "
+                                                 + "(January 1, 1970, "
+                                                 + "00:00:00 GMT).");
+                    }
+                } catch (ParseException pe) {
+                    throw new BuildException(pe.getMessage(), pe, location);
                 }
-            } catch (ParseException pe) {
-                throw new BuildException(pe.getMessage(), pe, location);
             }
-        }
 
-        touch();
+            touch();
+        } finally {
+            millis = savedMillis;
+        }
     }
 
     /**
@@ -216,7 +230,8 @@ public class Touch extends Task {
 
     protected void touch(File file) throws BuildException {
         if (!file.canWrite()) {
-            throw new BuildException("Can not change modification date of read-only file " + file);
+            throw new BuildException("Can not change modification date of "
+                                     + "read-only file " + file);
         }
 
         if (Project.getJavaVersion() == Project.JAVA_1_1) {

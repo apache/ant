@@ -83,6 +83,8 @@ import java.util.Hashtable;
  * @author <a href="mailto:denis@network365.com">Denis Hennessy</a>
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
  *
+ * @since Ant 1.5
+ *
  * @ant.task category="control"
  */
 
@@ -134,30 +136,39 @@ public class WaitFor extends ConditionBase {
      */
     public void execute() throws BuildException {
         if (countConditions() > 1) {
-            throw new BuildException("You must not nest more than one condition into <waitfor>");
+            throw new BuildException("You must not nest more than one "
+                                     + "condition into <waitfor>");
         }
         if (countConditions() < 1) {
-            throw new BuildException("You must nest a condition into <waitfor>");
+            throw new BuildException("You must nest a condition into "
+                                     + "<waitfor>");
         }
         Condition c = (Condition) getConditions().nextElement();
 
-        maxWaitMillis *= maxWaitMultiplier;
-        checkEveryMillis *= checkEveryMultiplier;
-        long start = System.currentTimeMillis();
-        long end = start + maxWaitMillis;
+        long savedMaxWaitMillis = maxWaitMillis;
+        long savedCheckEveryMillis = checkEveryMillis;
+        try {
+            maxWaitMillis *= maxWaitMultiplier;
+            checkEveryMillis *= checkEveryMultiplier;
+            long start = System.currentTimeMillis();
+            long end = start + maxWaitMillis;
 
-        while (System.currentTimeMillis() < end) {
-            if (c.eval()) {
-                return;
+            while (System.currentTimeMillis() < end) {
+                if (c.eval()) {
+                    return;
+                }
+                try {
+                    Thread.sleep(checkEveryMillis);
+                } catch (InterruptedException e) {
+                }
             }
-            try {
-                Thread.sleep(checkEveryMillis);
-            } catch (InterruptedException e) {
-            }
-        }
 
-        if (timeoutProperty != null) {
-            project.setNewProperty(timeoutProperty, "true");
+            if (timeoutProperty != null) {
+                project.setNewProperty(timeoutProperty, "true");
+            }
+        } finally {
+            maxWaitMillis = savedMaxWaitMillis;
+            checkEveryMillis = savedCheckEveryMillis;
         }
     }
 

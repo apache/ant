@@ -79,7 +79,7 @@ import java.text.SimpleDateFormat;
  * @author roxspring@yahoo.com
  * @author Conor MacNeill
  * @author <a href="mailto:umagesh@apache.org">Magesh Umasankar</a>
- *
+ * @since Ant 1.1
  * @ant.task category="utility"
  */
 public class Tstamp extends Task {
@@ -87,6 +87,9 @@ public class Tstamp extends Task {
     private Vector customFormats = new Vector();
     private String prefix = "";
 
+    /**
+     * @since Ant 1.5
+     */
     public void setPrefix(String prefix) {
         this.prefix = prefix;
         if (!this.prefix.endsWith(".")) {
@@ -162,7 +165,8 @@ public class Tstamp extends Task {
                     if (st.hasMoreElements()) {
                         variant = st.nextToken();
                         if (st.hasMoreElements()) {
-                            throw new BuildException( "bad locale format", getLocation());
+                            throw new BuildException( "bad locale format", 
+                                                      getLocation());
                         }
                     }
                 }
@@ -171,7 +175,8 @@ public class Tstamp extends Task {
                 }
             }
             catch (NoSuchElementException e) {
-                throw new BuildException( "bad locale format", e, getLocation());
+                throw new BuildException( "bad locale format", e, 
+                                          getLocation());
             }
         }
 
@@ -185,9 +190,10 @@ public class Tstamp extends Task {
 
         /**
          * @deprecated setUnit(String) is deprecated and is replaced with
-         *             setUnit(Tstamp.Unit) to make Ant's Introspection
-         *             mechanism do the work and also to encapsulate operations on
-         *             the unit in its own class.
+         *             setUnit(Tstamp.Unit) to make Ant's
+         *             Introspection mechanism do the work and also to
+         *             encapsulate operations on the unit in its own
+         *             class.
          */
         public void setUnit(String unit) {
             log("DEPRECATED - The setUnit(String) method has been deprecated."
@@ -204,11 +210,13 @@ public class Tstamp extends Task {
         public void execute(Project project, Date date, Location location)
         {
             if (propertyName == null) {
-                throw new BuildException("property attribute must be provided", location);
+                throw new BuildException("property attribute must be provided",
+                                         location);
             }
 
             if (pattern == null) {
-                throw new BuildException("pattern attribute must be provided", location);
+                throw new BuildException("pattern attribute must be provided",
+                                         location);
             }
 
             SimpleDateFormat sdf;
@@ -216,10 +224,13 @@ public class Tstamp extends Task {
                 sdf = new SimpleDateFormat(pattern);
             }
             else if (variant == null) {
-                sdf = new SimpleDateFormat(pattern, new Locale(language, country));
+                sdf = new SimpleDateFormat(pattern,
+                                           new Locale(language, country));
             }
             else {
-                sdf = new SimpleDateFormat(pattern, new Locale(language, country, variant));
+                sdf = new SimpleDateFormat(pattern,
+                                           new Locale(language, country,
+                                                      variant));
             }
             if (offset != 0) {
                 Calendar calendar = Calendar.getInstance();
@@ -260,7 +271,7 @@ public class Tstamp extends Task {
 
         public Unit() {
             calendarFields.put(MILLISECOND,
-                                    new Integer(Calendar.MILLISECOND));
+                               new Integer(Calendar.MILLISECOND));
             calendarFields.put(SECOND, new Integer(Calendar.SECOND));
             calendarFields.put(MINUTE, new Integer(Calendar.MINUTE));
             calendarFields.put(HOUR, new Integer(Calendar.HOUR_OF_DAY));
