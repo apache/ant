@@ -614,8 +614,7 @@ public class ComponentManager implements ComponentService {
             e.setLocation(location, false);
             throw e;
         } catch (RuntimeException e) {
-            throw new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e, location);
+            throw new ExecutionException(e, location);
         }
     }
 
@@ -662,8 +661,7 @@ public class ComponentManager implements ComponentService {
             e.setLocation(model.getLocation(), false);
             throw e;
         } catch (RuntimeException e) {
-            throw new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e, model.getLocation());
+            throw new ExecutionException(e, model.getLocation());
         }
     }
 
@@ -786,8 +784,7 @@ public class ComponentManager implements ComponentService {
             e.setLocation(model.getLocation(), false);
             throw e;
         } catch (RuntimeException e) {
-            throw new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e, model.getLocation());
+            throw new ExecutionException(e, model.getLocation());
         }
     }
 

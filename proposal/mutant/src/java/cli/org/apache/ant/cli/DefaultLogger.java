@@ -174,7 +174,7 @@ public class DefaultLogger implements BuildLogger {
                 t.printStackTrace(out);
             }
 
-            if (cause != null) {
+            if (!cause.getMessage().equals(t.getMessage())) {
                 out.println("Root cause: " + cause.toString());
             }
         } else {

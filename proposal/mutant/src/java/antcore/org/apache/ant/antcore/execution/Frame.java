@@ -72,7 +72,6 @@ import org.apache.ant.common.service.EventService;
 import org.apache.ant.common.service.ExecService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.service.MagicProperties;
-import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ConfigException;
 import org.apache.ant.common.util.DemuxOutputReceiver;
 import org.apache.ant.common.util.ExecutionException;
@@ -696,16 +695,12 @@ public class Frame implements DemuxOutputReceiver {
                         setDataValue(typeId, component, true);
                     }
                 }
-            } catch (AntException te) {
-                ExecutionException e
-                     = new ExecutionException(te, te.getLocation());
-
+            } catch (ExecutionException e) {
                 e.setLocation(model.getLocation(), false);
                 throw e;
             } catch (RuntimeException e) {
                 ExecutionException ee =
-                    new ExecutionException(e.getClass().getName() + ": "
-                     + e.getMessage(), e, model.getLocation());
+                    new ExecutionException(e, model.getLocation());
 
                 throw ee;
             }
@@ -755,8 +750,7 @@ public class Frame implements DemuxOutputReceiver {
             throw e;
         } catch (RuntimeException e) {
             ExecutionException ee =
-                new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e, target.getLocation());
+                new ExecutionException(e, target.getLocation());
 
             failureCause = ee;
             throw ee;

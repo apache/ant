@@ -118,10 +118,12 @@ public class CoreExecService implements ExecService {
 
             task.execute();
             LoaderUtils.setContextLoader(currentLoader);
+        } catch (ExecutionException e) {
+            failureCause = e;
+            throw e;
         } catch (Throwable e) {
             ExecutionException ee =
-                new ExecutionException(e.getClass().getName() + ": "
-                 + e.getMessage(), e);
+                new ExecutionException(e);
 
             failureCause = ee;
             throw ee;
