@@ -34,6 +34,7 @@
   <target name="init">
     <mkdir dir="${build.dir}" />
     <mkdir dir="${gen.dir}" />
+    <property name="xdoclet.extra.classpath" value="" />
 
     <!-- hack, this should be outside a target but ${build.dir} gets stripped ?? -->
     <path id="xdoclet.classpath">
@@ -42,9 +43,10 @@
 
       <!-- javadoc is needed -->
       <pathelement path="${java.class.path}"/>
-      <pathelement path="${ant.home}/lib/ant.jar"/>
-        <pathelement path="${ant.home}/lib/optional.jar"/>
+      <pathelement location="${ant.home}/lib/ant.jar"/>
+      <pathelement location="${ant.home}/lib/optional.jar"/>
       <pathelement location="${build.dir}"/>
+      <pathelement path="${xdoclet.extra.classpath}" />
     </path>
 
     <property name="the.classpath" refid="xdoclet.classpath"/>
