@@ -30,7 +30,7 @@ to be unique. (For additional information, see the
   <tr>
     <td valign="top">default</td>
     <td valign="top">the default target to use when no target is supplied.</td>
-    <td align="center" valign="top">Yes</td>
+    <td align="center" valign="top">No. Will default to "main" if not specified.</td>
   </tr>
   <tr>
     <td valign="top">basedir</td>
@@ -152,7 +152,7 @@ file. The empty string &quot;&quot; is in this set, as is
 comma &quot;,&quot; and space &quot; &quot;.
 Please avoid using these, as they will not be supported in future Ant versions
 because of all the confusion they cause. IDE support of unusual target names,
-or any target name containing spaces, varies with the IDE. 
+or any target name containing spaces, varies with the IDE.
 
 <p>
 
@@ -292,12 +292,12 @@ can be declared outside targets.
 
 <p>
 We have given some targets descriptions; this causes the <tt>projecthelp</tt>
-invocation option to list them as public targets with the descriptions; the 
+invocation option to list them as public targets with the descriptions; the
 other target is internal and not listed.
 <p>
 Finally, for this target to work the source in the <tt>src</tt> subdirectory
 should be stored in a directory tree which matches the package names. Check the
-<tt>&lt;javac&gt;</tt> task for details.  
+<tt>&lt;javac&gt;</tt> task for details.
 
 <a name="filters"><h3>Token Filters</h3></a>
 <p>A project can have a set of tokens that might be automatically expanded if
@@ -355,7 +355,7 @@ supports <code>path</code> and
     &lt;classpath path=&quot;${classpath}&quot;/&gt;
 </pre>
 <p>In addition, <a href="CoreTypes/dirset.html">DirSet</a>s,
-<a href="CoreTypes/fileset.html">FileSet</a>s, and 
+<a href="CoreTypes/fileset.html">FileSet</a>s, and
 <a href="CoreTypes/filelist.html">FileList</a>s
 can be specified via nested <code>&lt;dirset&gt;</code>,
 <code>&lt;fileset&gt;</code>, and <code>&lt;filelist&gt;</code>
@@ -377,7 +377,7 @@ defined.</p>
     &lt;/classpath&gt;
 </pre>
 <p>This builds a path that holds the value of <code>${classpath}</code>,
-followed by all jar files in the <code>lib</code> directory, 
+followed by all jar files in the <code>lib</code> directory,
 the <code>classes</code> directory, all directories named
 <code>classes</code> under the <code>apps</code> subdirectory of
 <code>${build.dir}</code>, except those
