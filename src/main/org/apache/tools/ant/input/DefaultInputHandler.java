@@ -53,6 +53,7 @@ public class DefaultInputHandler implements InputHandler {
                 new DataInputStream(new KeepAliveInputStream(getInputStream()));
             do {
                 System.err.println(prompt);
+                System.err.flush();
                 try {
                     String input = in.readLine();
                     request.setInput(input);
