@@ -64,8 +64,6 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- * <i>EXPERIMENTAL:</i> This task is experimental and may be under continual
- * change till Ant1.6 ships; it may even be omitted from the product.
  * <p>
  * Task to import another build file into the current project.
  * <p>
@@ -96,7 +94,18 @@ import java.util.Vector;
  */
 public class ImportTask extends Task {
     private String file;
+    private boolean optional;
 
+    /**
+     * sets the optional attribute
+     *
+     * @param optional if true ignore files that are not present,
+     *                 default is false
+     */
+    public void setOptional(boolean optional) {
+        this.optional = true;
+    }
+    
     /**
      * the name of the file to import. How relative paths are resolved is still
      * in flux: use absolute paths for safety.
@@ -151,9 +160,15 @@ public class ImportTask extends Task {
         }
 
         if (!importedFile.exists()) {
-                throw new BuildException(
-                    "Cannot find " + file + " imported from "
-                    + buildFile.getAbsolutePath());
+            String message =
+                "Cannot find " + file + " imported from "
+                + buildFile.getAbsolutePath();
+            if (optional) {
+                getProject().log(message, Project.MSG_VERBOSE);
+                return;
+            } else {
+                throw new BuildException(message);
+            }
         }
 
         importedFile = new File(getPath(importedFile));
