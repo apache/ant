@@ -84,7 +84,7 @@ import org.apache.tools.ant.types.selectors.BaseExtendSelector;
  * </pre></p>
  *
  * <p>If you want to provide your own interface implementation you can do
- * that via the *classname attributes. If the classes are not on Ant´s core
+ * that via the *classname attributes. If the classes are not on Ant's core
  * classpath, you will have to provide the path via nested &lt;classpath&gt;
  * element, so that the selector can find the classes. <pre>
  *   <modified cacheclassname="com.mycompany.MyCache">
