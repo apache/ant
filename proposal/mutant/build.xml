@@ -11,15 +11,6 @@
   
   <property name="debug" value="true"/>
 
-  <fileset id="ant1src" dir="../../src/main">
-    <include name="org/apache/tools/**/*.java"/>
-    <exclude name="**/optional/**/*.java"/>
-    <exclude name="org/apache/tools/ant/Project.java"/>
-    <exclude name="org/apache/tools/ant/ProjectHelper.java"/>
-    <exclude name="org/apache/tools/ant/Target.java"/>
-    <exclude name="org/apache/tools/ant/Task.java"/>
-  </fileset>
-  
   <path id="classpath.parser">
     <fileset dir="${lib.dir}/parser" includes="*.jar"/>
   </path>

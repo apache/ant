@@ -1,0 +1,284 @@
+<project default="ant1compat" name="mutant Ant 1 compatability library">
+
+  <property name="src.dir" value="src"/>
+  <property name="lib.dir" value="lib"/>
+  <property name="java.dir" value="${src.dir}/java"/>
+
+  <property name="bin.dir" value="bin"/>
+  <property name="dist.dir" value="dist"/>
+  <property name="javadocs.dir" value="${dist.dir}/javadocs"/>
+  <property name="distlib.dir" value="${dist.dir}/lib"/>
+  
+  <property name="debug" value="true"/>
+
+  <property name="ant.package" value="org/apache/tools/ant"/>
+  <property name="optional.package" value="${ant.package}/taskdefs/optional"/>
+  <property name="optional.type.package" value="${ant.package}/types/optional"/>
+  <property name="util.package" value="${ant.package}/util"/>
+  <property name="regexp.package" value="${util.package}/regexp"/>
+
+  <patternset id="deprecated">
+    <exclude name="org/apache/tools/ant/taskdefs/Copydir.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/Copyfile.java"/>
+  </patternset>
+  
+  <patternset id="toohard">
+    <exclude name="org/apache/tools/ant/taskdefs/Ant.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/AntStructure.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/Recorder.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/RecorderEntry.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/CallTarget.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/optional/sound/*.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/optional/Native2Ascii.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/optional/Javah.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/Typedef.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/Taskdef.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/Definer.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/Parallel.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/Sequential.java"/>
+    <exclude name="org/apache/tools/ant/taskdefs/optional/ejb/**/*.java"/>
+  </patternset>
+  
+  <patternset id="converted">
+  </patternset>
+
+  <fileset id="ant1src" dir="../../src/main">
+    <include name="**/*.properties"/>
+    <include name="**/*.mf"/>
+    <include name="org/apache/tools/ant/taskdefs/**/*.java"/>
+    <include name="org/apache/tools/ant/types/**/*.java"/>
+    <exclude name="org/apache/tools/ant/types/DataType.java"/>
+    <include name="org/apache/tools/ant/util/**/*.java"/>
+    <include name="org/apache/tools/zip/**/*.java"/>
+    <include name="org/apache/tools/bzip2/**/*.java"/>
+    <include name="org/apache/tools/mail/**/*.java"/>
+    <include name="org/apache/tools/tar/**/*.java"/>
+    <include name="org/apache/tools/ant/BuildException.java"/>
+    <include name="org/apache/tools/ant/ExitException.java"/>
+    <include name="org/apache/tools/ant/DirectoryScanner.java"/>
+    <include name="org/apache/tools/ant/PathTokenizer.java"/>
+    <include name="org/apache/tools/ant/FileScanner.java"/>
+    <include name="org/apache/tools/ant/TaskAdapter.java"/>
+    <include name="org/apache/tools/ant/Location.java"/>
+    <patternset refid="deprecated"/>
+    <patternset refid="toohard"/>
+    <patternset refid="converted"/>
+  </fileset>
+
+  <path id="classpath.ant1compat">
+    <pathelement location="${distlib.dir}/init.jar"/>
+    <fileset dir="${lib.dir}/parser" includes="*.jar"/>
+    <fileset dir="${lib.dir}/ant1compat" includes="*.jar"/>
+    <pathelement location="${distlib.dir}/common/common.jar"/>
+  </path>
+
+  <target name="check_for_optional_packages">
+    <available property="jdk1.2+" classname="java.lang.ThreadLocal" />
+    <available property="jdk1.3+" classname="java.lang.StrictMath" />
+    <available property="jdk1.4+" classname="java.lang.CharSequence" />
+    <available property="bsf.present"
+               classname="com.ibm.bsf.BSFManager"
+               classpathref="classpath.ant1compat" />
+    <available property="netrexx.present"
+               classname="netrexx.lang.Rexx"
+               classpathref="classpath.ant1compat" />
+    <available property="trax.present"
+               classname="javax.xml.transform.Transformer"
+               classpathref="classpath.ant1compat" />
+    <available property="xslp.present"
+               classname="com.kvisco.xsl.XSLProcessor"
+               classpathref="classpath.ant1compat" />
+    <available property="xalan.present"
+               classname="org.apache.xalan.xslt.XSLTProcessorFactory"
+               classpathref="classpath.ant1compat" />
+    <available property="xalan2.present"
+               classname="org.apache.xalan.transformer.TransformerImpl"
+               classpathref="classpath.ant1compat" />
+    <available property="ejb.ejbc.present"
+               classname="weblogic.ejbc"
+               classpathref="classpath.ant1compat" />
+    <available property="ejb.DDCreator.present"
+               classname="weblogic.ejb.utils.DDCreator"
+               classpathref="classpath.ant1compat" />
+    <available property="ejb.wls.present"
+               classname="weblogic.Server"
+               classpathref="classpath.ant1compat" />
+    <available property="junit.present"
+               classname="junit.framework.TestCase"
+               classpathref="classpath.ant1compat" />
+    <available property="netcomp.present"
+               classname="com.oroinc.net.ftp.FTPClient"
+               classpathref="classpath.ant1compat" />
+    <available property="starteam.present"
+               classname="com.starbase.util.Platform"
+               classpathref="classpath.ant1compat" />
+    <available property="antlr.present"
+               classname="antlr.Tool"
+               classpathref="classpath.ant1compat"/>
+    <available property="vaj.present"
+               classname="com.ibm.ivj.util.base.Workspace"
+               classpathref="classpath.ant1compat"/>
+    <available property="stylebook.present"
+               classname="org.apache.stylebook.Engine"
+               classpathref="classpath.ant1compat"/>
+    <available property="jakarta.regexp.present"
+               classname="org.apache.regexp.RE"
+               classpathref="classpath.ant1compat"/>
+    <available property="jakarta.oro.present"
+               classname="org.apache.oro.text.regex.Perl5Matcher"
+               classpathref="classpath.ant1compat" />
+    <available property="jmf.present"
+               classname="javax.sound.sampled.Clip"
+               classpathref="classpath.ant1compat"/>
+    <available property="icontract.present"
+               classname="com.reliablesystems.iContract.IContracted"
+               classpathref="classpath.ant1compat"/>
+    <available property="jdepend.present"
+               classname="jdepend.framework.JDepend"
+               classpathref="classpath.ant1compat"/>
+    <available property="log4j.present"
+               classname="org.apache.log4j.Category"
+               classpathref="classpath.ant1compat"/>
+    <!-- this is just a way to check for a TraX implementation -->
+    <available property="trax.impl.present"
+               resource="META-INF/services/javax.xml.transform.TransformerFactory"
+               classpathref="classpath.ant1compat"/>
+    <available property="xalan.envcheck"
+               classname="org.apache.xalan.xslt.EnvironmentCheck"
+               classpathref="classpath.ant1compat" />
+    <available property="which.present"
+               classname="org.apache.env.Which"
+               classpathref="classpath.ant1compat" />
+
+    <available property="servlet.present"
+               classname="javax.servlet.Servlet"
+               classpathref="classpath.ant1compat"/>
+
+    <available property="xerces.present"
+               classname="org.apache.xerces.parsers.SAXParser"
+               classpathref="classpath.ant1compat" />
+    <available property="bcel.present"
+               classname="org.apache.bcel.Constants"
+               classpathref="classpath.ant1compat" />
+
+    <condition property="javamail.complete">
+      <and>
+        <available classname="javax.activation.DataHandler"
+                   classpathref="classpath.ant1compat"/>
+        <available classname="javax.mail.Transport"
+                   classpathref="classpath.ant1compat"/>
+      </and>
+    </condition>
+
+    <condition property="some.regexp.support">
+      <or>
+        <isset property="jdk1.4+" />
+        <isset property="jakarta.regexp.present" />
+        <isset property="jakarta.oro.present" />
+      </or>
+    </condition>
+    
+    <condition property="ejbjar.support">
+      <and>
+        <isset property="bcel.present" />
+        <isset property="jdk1.2+" />
+      </and>
+    </condition>
+  </target>
+
+  <target name="ant1compat" depends="check_for_optional_packages">
+    <mkdir dir="${bin.dir}/ant1src"/>
+    <mkdir dir="${bin.dir}/ant1compat"/>
+    <copy todir="${bin.dir}/ant1src">
+      <fileset refid="ant1src"/>
+    </copy>
+    <depend destdir="${bin.dir}/ant1compat" srcdir="${bin.dir}/ant1src;${java.dir}/antlibs/ant1compat">
+      <classpath refid="classpath.ant1compat"/>
+    </depend>
+    <javac destdir="${bin.dir}/ant1compat" 
+           srcdir="${bin.dir}/ant1src;${java.dir}/antlibs/ant1compat"
+           includeAntRuntime="false" debug="${debug}">
+      <classpath refid="classpath.ant1compat"/>
+      <exclude name="${regexp.package}/JakartaRegexp*.java"
+               unless="jakarta.regexp.present" />
+      <exclude name="${regexp.package}/JakartaOro*.java"
+               unless="jakarta.oro.present" />
+      <exclude name="${regexp.package}/Jdk14Regexp*.java"
+               unless="jdk1.4+" />
+      <exclude name="${ant.package}/AntSecurityManager.java"
+               unless="jdk1.2+" />
+      <exclude name="${ant.package}/listener/Log4jListener.java"
+               unless="log4j.present" />
+
+      <exclude name="${optional.package}/IContract.java" unless="icontract.present" />
+      <exclude name="${optional.package}/Script.java" unless="bsf.present" />
+      <exclude name="${optional.package}/StyleBook.java" unless="stylebook.present" />
+      <exclude name="${optional.package}/NetRexxC.java" unless="netrexx.present" />
+      <exclude name="${optional.package}/TraXLiaison.java"
+               unless="trax.present" />
+      <exclude name="${optional.package}/XslpLiaison.java" unless="xslp.present" />
+      <exclude name="${optional.package}/XalanLiaison.java" unless="xalan.present" />
+      <exclude name="${optional.package}/ejb/Ejbc*.java" unless="ejb.ejbc.present" />
+      <exclude name="${optional.package}/ejb/DDCreator*.java" unless="ejb.DDCreator.present" />
+      <exclude name="${optional.package}/ejb/WLRun.java" unless="ejb.wls.present" />
+      <exclude name="${optional.package}/ejb/WLStop.java" unless="ejb.wls.present" />
+      <exclude name="${optional.package}/ejb/EjbJar.java" unless="ejbjar.support" />
+      <exclude name="${optional.package}/ejb/*DeploymentTool.java" unless="ejbjar.support" />
+      <exclude name="${optional.package}/ejb/IPlanet*.java" unless="ejbjar.support" />
+      <exclude name="${optional.package}/Javah.java" unless="jdk1.2+" />
+      <exclude name="${optional.package}/junit/*" unless="junit.present" />
+      <exclude name="${optional.package}/net/MimeMail.java" unless="javamail.complete" />
+      <exclude name="${optional.package}/net/FTP.java" unless="netcomp.present" />
+      <exclude name="${optional.package}/net/TelnetTask.java" unless="netcomp.present" />
+      <exclude name="${optional.package}/scm/AntStarTeam*.java" unless="starteam.present" />
+      <exclude name="${optional.package}/starteam/*.java" unless="starteam.present" />
+      <exclude name="${optional.package}/ANTLR.java" unless="antlr.present" />
+      <exclude name="${optional.package}/ide/VAJ*.java" unless="vaj.present" />
+      <exclude name="${optional.package}/ide/VAJ*Servlet.java"
+               unless="servlet.present" />
+      <exclude name="${optional.package}/perforce/*.java" unless="jakarta.oro.present" />
+      <exclude name="${optional.package}/sound/*.java" unless="jmf.present" />
+      <exclude name="${optional.package}/junit/XMLResultAggregator.java"
+               unless="trax.present" />
+      <exclude name="${optional.package}/junit/AggregateTransformer.java"
+               unless="trax.present" />
+      <exclude name="${optional.package}/junit/XMLResultAggregator.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/AggregateTransformer.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/XalanExecutor.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/Xalan2Executor.java"
+               unless="xalan2.present" />
+      <exclude name="${optional.package}/junit/Xalan1Executor.java"
+               unless="xalan.present" />
+      <exclude name="${optional.package}/jdepend/*" unless="jdepend.present" />
+      <exclude name="${optional.package}/sitraka/**" unless="some.regexp.support"/>
+      <exclude name="${optional.package}/metamata/MAudit*" unless="jakarta.oro.present"/>
+      <exclude name="${optional.package}/metamata/MMetrics*"
+               unless="trax.present"/>
+      <exclude name="${optional.package}/metamata/**" unless="jdk1.2+" />
+      <exclude name="${optional.type.package}/depend/*.java"
+               unless="bcel.present" />
+      <exclude name="${util.package}/depend/*.java"
+               unless="bcel.present" />
+      <exclude name="${optional.type.package}/depend/*.java"
+               unless="jdk1.2+" />
+      <exclude name="${util.package}/depend/*.java"
+               unless="jdk1.2+" />
+    </javac>
+    <copy todir="${bin.dir}/ant1compat">
+      <fileset dir="${bin.dir}/ant1src" excludes="**/*.java"/>
+    </copy>
+    <jar basedir="${bin.dir}/ant1compat" jarfile="${distlib.dir}/antlibs/ant1compat.tsk">
+      <metainf dir="${java.dir}/antlibs/ant1compat" 
+                includes="antlib.xml"/>
+    </jar>
+  </target>
+  
+  <target name="clean">
+    <delete dir="${bin.dir}/ant1src"/>
+    <delete dir="${bin.dir}/ant1compat"/>
+  </target>
+
+</project>
