@@ -3186,9 +3186,10 @@ resource) in the project.</p>
 property cannot be set, and will be ignored. This means that properties set
 outside the current project always override the properties of the current
 project.</p>
-<p>There are three ways to set properties:</p>
+<p>There are four ways to set properties:</p>
 <ul>
   <li>By supplying both the <i>name</i> and <i>value</i> attribute.</li>
+  <li>By supplying both the <i>name</i> and <i>refid</i> attribute.</li>
   <li>By setting the <i>file</i> attribute with the filename of the property
     file to load. This property file has the format as defined by the file used
     in the class java.util.Properties.</li>
@@ -3217,7 +3218,13 @@ This also holds for properties loaded from a property file.</p>
   <tr>
     <td valign="top">value</td>
     <td valign="top">the value of the property.</td>
-    <td valign="middle" align="center" rowspan="3">Yes</td>
+    <td valign="middle" align="center" rowspan="4">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">refid</td>
+    <td valign="top"><a href="#references">Reference</a> to an object
+      defined elsewhere. Only yields reasonable results for references
+      to <a href="#path">PATH like structures</a> or properties.</td>
   </tr>
   <tr>
     <td valign="top">resource</td>

@@ -55,6 +55,7 @@
 package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.*;
+import org.apache.tools.ant.types.Reference;
 import java.io.*;
 import java.util.*;
 
@@ -72,6 +73,7 @@ public class Property extends Task {
     String value;
     File file;
     String resource;
+    private Reference ref = null;
 
     boolean userProperty=false; // set read-only properties
 
@@ -99,12 +101,24 @@ public class Property extends Task {
         return file;
     }
 
+    public void setRefid(Reference ref) {
+        this.ref = ref;
+    }
+
+    public Reference getRefid() {
+        return ref;
+    }
+
     public void setResource(String resource) {
         this.resource = resource;
     }
 
     public String getResource() {
         return resource;
+    }
+
+    public String toString() {
+        return value == null ? "" : value;
     }
 
     public void execute() throws BuildException {
@@ -116,6 +130,13 @@ public class Property extends Task {
             if (file != null) loadFile(file);
 
             if (resource != null) loadResource(resource);
+
+            if ((name != null) && (ref != null)) {
+                Object obj = ref.getReferencedObject(getProject());
+                if (obj != null) {
+                    addProperty(name, obj.toString());
+                }
+            }
 
         } catch (Exception e) {
             throw new BuildException(e, location);
