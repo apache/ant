@@ -90,6 +90,8 @@ Other changes:
 * <fileset> and <dirset> now have an optional followsymlink attribute
 that can prevent Ant from following symbolic links on some platforms.
 
+* BeanShell is now supported in the <script> task.
+
 Changes from Ant 1.4.1 to 1.5beta1
 ==================================
 
