@@ -16,7 +16,7 @@ public class Bootstrap2 {
    
     private static String base = "../";
     private static String crimsonSources = "../../../xml-crimson/src"; // relative to base
-    private static String[] modules = new String[]{"copy", "echo", "jar", "javac"};
+    private static String[] modules = new String[]{"copy", "echo", "jar", "javac", "buildtarget"};
 
     /**
      * Command line entry point.
