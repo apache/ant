@@ -61,7 +61,48 @@ I can get its path as <b>ant.file.builddocs</b>, similarly to the <b>ant.file</b
 property of the main buildfile.<br />
 Note that &quot;builddocs&quot; is not the filename, but the name attribute
 present in the imported project tag.<br />
-<br />
+
+<br/>
+<b>Resolving files against the imported file</b>
+
+<p>Suppose your main build file called <code>importing.xml</code>
+imports a build file <code>imported.xml</code>, located anywhere on
+the file system, and <code>imported.xml</code> reads a set of
+properties from <code>imported.properties</code>:</p>
+
+<pre>&lt;-- importing.xml --&gt;
+&lt;project name="importing" basedir="." default="..."&gt;
+&nbsp; &lt;import file="${path_to_imported}/imported.xml"/&gt;
+&lt;/project&gt;
+
+&lt;-- imported.xml --&gt;
+&lt;project name="imported" basedir="." default="..."&gt;
+&nbsp; &lt;property file="imported.properties"/&gt;
+&lt;/project&gt;
+</pre>
+
+<p>This snippet however will resolve <code>imported.properties</code>
+against the basedir of <code>importing.xml</code>, because the basedir
+of <code>imported.xml</code> is ignored by Ant. The right way to use
+<code>imported.properties</code> is:</p>
+
+<pre>
+&lt;-- imported.xml --&gt;
+&lt;project name="imported" basedir="." default="..."&gt;
+&nbsp; &lt;dirname property="imported.basedir" file="${ant.file.imported}"/&gt;
+&nbsp; &lt;property file="${imported.basedir}/imported.properties"/&gt;
+&lt;/project&gt;
+</pre>
+
+<p>As explained above <code>${ant.file.imported}</code> stores the
+path of the build script, that defines the project called
+<code>imported</code>, (in short it stores the path to
+<code>imported.xml</code>) and <a
+href="dirname.html"><code>&lt;dirname&gt;</code></a> takes its
+directory. This technique also allows <code>imported.xml</code> to be
+used as a standalone file (without being imported in other
+project).</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tbody>
