@@ -153,6 +153,9 @@ public class Project {
 
     private FileUtils fileUtils;
 
+    /**
+     * create a new ant project
+     */
     public Project() {
         fileUtils = FileUtils.newFileUtils();
     }
@@ -245,18 +248,44 @@ public class Project {
         return listeners;
     }
 
+    /**
+     * Output a message to the log with the default log level
+     * of MSG_INFO
+     * @param msg text to log
+     */
+     
     public void log(String msg) {
         log(msg, MSG_INFO);
     }
 
+    /**
+     * Output a message to the log with the given log level
+     * and an event scope of project
+     * @param msg text to log
+     * @param msgLevel level to log at 
+     */
     public void log(String msg, int msgLevel) {
         fireMessageLogged(this, msg, msgLevel);
     }
 
+    /**
+     * Output a message to the log with the given log level
+     * and an event scope of a task
+     * @param task task to use in the log
+     * @param msg text to log
+     * @param msgLevel level to log at 
+     */
     public void log(Task task, String msg, int msgLevel) {
         fireMessageLogged(task, msg, msgLevel);
     }
 
+    /**
+     * Output a message to the log with the given log level
+     * and an event scope of a target
+     * @param target target to use in the log
+     * @param msg text to log
+     * @param msgLevel level to log at 
+     */
     public void log(Target target, String msg, int msgLevel) {
         fireMessageLogged(target, msg, msgLevel);
     }
@@ -266,7 +295,13 @@ public class Project {
         return globalFilterSet;
     }
     
-    
+    /**
+     * set a property. Any existing property of the same name 
+     * is overwritten, unless it is a user property. 
+     * <i>the immutability policy is not implemented at this level</i> 
+     * @param name name of property
+     * @param value new value of the property
+     */
     public void setProperty(String name, String value) {
         // command line properties take precedence
         if (null != userProperties.get(name)) {
@@ -278,6 +313,11 @@ public class Project {
         properties.put(name, value);
     }
 
+    /**
+     * unset a named property, unless it is a user property. 
+     * <i>the immutability policy is not implemented at this level</i> 
+     * @param name name of property
+     */
     public void unsetProperty(String name) {
         // command line properties take precedence
         if (null != userProperties.get(name)) {
@@ -288,6 +328,12 @@ public class Project {
         properties.remove(name);
     }
 
+    /**
+     * set a user property, which can not be overwritten by
+     * set/unset property calls
+     * @see #setProperty(String,String)
+     * @see #unsetProperty(String)
+     */
     public void setUserProperty(String name, String value) {
         log("Setting ro project property: " + name + " -> " +
             value, MSG_DEBUG);
@@ -295,54 +341,97 @@ public class Project {
         properties.put(name, value);
     }
 
+    /**
+     * query a property.
+     * @param name the name of the property
+     * @return the property value, or null for no match
+     */
     public String getProperty(String name) {
         if (name == null) return null;
         String property = (String) properties.get(name);
         return property;
     }
 
+    /**
+     * query a user property.
+     * @param name the name of the property
+     * @return the property value, or null for no match
+     */
     public String getUserProperty(String name) {
         if (name == null) return null;
         String property = (String) userProperties.get(name);
         return property;
     }
 
+    /**
+     * get the property hashtable
+     * @return the hashtable containing all properties, user included
+     */
     public Hashtable getProperties() {
         return properties;
     }
 
+    /**
+     * get the user property hashtable
+     * @return the hashtable user properties only
+     */
     public Hashtable getUserProperties() {
         return userProperties;
     }
 
+    /**
+     * set the default target of the project
+     * @deprecated, use setDefault
+     * @see #setDefault(String)
+     */
     public void setDefaultTarget(String defaultTarget) {
         this.defaultTarget = defaultTarget;
     }
 
-    // deprecated, use setDefault
+    /**
+     * get the default target of the project
+     * @return default target or null
+     */
     public String getDefaultTarget() {
         return defaultTarget;
     }
 
-    // match the attribute name
+    
+    /**
+     * set the default target of the project
+     * XML attribute name.
+     */
     public void setDefault(String defaultTarget) {
         this.defaultTarget = defaultTarget;
     }
 
+    /**
+     * ant xml property. Set the project name as
+     * an attribute of this class, and of the property
+     * ant.project.name
+     */
     public void setName(String name) {
         setUserProperty("ant.project.name",  name);
         this.name = name;
     }
 
+    /** get the project name
+     * @return name string
+     */
     public String getName() {
         return name;
     }
 
+    /** set the project description
+     * @param description text
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
-   // Will return null if no description has been set
+    /** get the project description
+     * @return description or null if no description has been set
+     */
     public String getDescription() {
         return description;
     }
@@ -362,11 +451,21 @@ public class Project {
         return globalFilterSet.getFilterHash();
     }
 
-    // match basedir attribute in xml
+    /**
+     * match basedir attribute in xml
+     * @param baseD project base directory.
+     * @throws BuildException if the directory was invalid
+     */
     public void setBasedir(String baseD) throws BuildException {
         setBaseDir(new File(baseD));
     }
 
+    /**
+     * set the base directory; XML attribute. 
+     * checks for the directory existing and being a directory type
+     * @param baseDir project base directory.
+     * @throws BuildException if the directory was invalid
+     */
     public void setBaseDir(File baseDir) throws BuildException {
         baseDir = fileUtils.normalize(baseDir.getAbsolutePath());
         if (!baseDir.exists()) 
@@ -379,6 +478,11 @@ public class Project {
         log(msg, MSG_VERBOSE);
     }
 
+    /**
+     * get the base directory of the project as a file object
+     * @return the base directory. If this is null, then the base
+     * dir is not valid
+     */
     public File getBaseDir() {
         if (baseDir == null) {
             try {
@@ -390,11 +494,20 @@ public class Project {
         return baseDir;
     }
 
+    /**
+     * static query of the java version
+     * @return something like "1.1" or "1.3"
+     */
     public static String getJavaVersion() {
         return javaVersion;
     }
 
-    public void setJavaVersionProperty() {
+    /**
+     * set the ant.java.version property, also tests for 
+     * unsupported JVM versions, prints the verbose log messages
+     * @throws BuildException if this Java version is not supported
+     */
+    public void setJavaVersionProperty() throws BuildException {
         setProperty("ant.java.version", javaVersion);
 
         // sanity check
@@ -407,6 +520,10 @@ public class Project {
         log("Detected OS: " + System.getProperty("os.name"), MSG_VERBOSE);
     }
 
+    /**
+     * turn all the system properties into ant properties.
+     * user properties still override these values
+     */
     public void setSystemProperties() {
         Properties systemP = System.getProperties();
         Enumeration e = systemP.keys();
@@ -417,7 +534,14 @@ public class Project {
         }
     }
 
-    public void addTaskDefinition(String taskName, Class taskClass) {
+    /**
+     * add a new task definition, complain if there is an overwrite attempt
+     * @param taskName name of the task
+     * @param taskClass full task classname
+     * @throws BuildException and logs as Project.MSG_ERR for
+     * conditions, that will cause the task execution to fail.
+     */
+    public void addTaskDefinition(String taskName, Class taskClass) throws BuildException {
         if (null != taskClassDefinitions.get(taskName)) {
             log("Trying to override old definition of task "+taskName, 
                 MSG_WARN);
@@ -431,10 +555,10 @@ public class Project {
 
     /**
      * Checks a class, whether it is suitable for serving as ant task.
-     * Throws a BuildException and logs as Project.MSG_ERR for
+     * @throws BuildException and logs as Project.MSG_ERR for
      * conditions, that will cause the task execution to fail.
      */
-    public void checkTaskClass(final Class taskClass) {
+    public void checkTaskClass(final Class taskClass) throws BuildException {
         if(!Modifier.isPublic(taskClass.getModifiers())) {
             final String message = taskClass + " is not public";
             log(message, Project.MSG_ERR);
@@ -458,10 +582,18 @@ public class Project {
             TaskAdapter.checkTaskClass(taskClass, this);
     }
 
+    /**
+     * get the current task definition hashtable
+     */
     public Hashtable getTaskDefinitions() {
         return taskClassDefinitions;
     }
 
+    /**
+     * add a new datatype
+     * @param typeName name of the datatype
+     * @param typeClass full datatype classname     
+     */
     public void addDataTypeDefinition(String typeName, Class typeClass) {
         if (null != dataClassDefinitions.get(typeName)) {
             log("Trying to override old definition of datatype "+typeName, 
@@ -473,6 +605,9 @@ public class Project {
         dataClassDefinitions.put(typeName, typeClass);
     }
 
+    /**
+     * get the current task definition hashtable
+     */
     public Hashtable getDataTypeDefinitions() {
         return dataClassDefinitions;
     }
@@ -530,10 +665,20 @@ public class Project {
         targets.put(targetName, target);
     }
 
+    /**
+     * get the target hashtable
+     * @return hashtable, the contents of which can be cast to Target
+     */
     public Hashtable getTargets() {
         return targets;
     }
 
+    /**
+     * create a new task instance
+     * @param taskType name of the task
+     * @throws BuildException when task creation goes bad
+     * @return null if the task name is unknown
+     */
     public Task createTask(String taskType) throws BuildException {
         Class c = (Class) taskClassDefinitions.get(taskType);
 
@@ -567,6 +712,12 @@ public class Project {
         }
     }
 
+    /**
+     * create a new DataType instance
+     * @param typeName name of the datatype
+     * @throws BuildException when datatype creation goes bad
+     * @return null if the datatype name is unknown
+     */
     public Object createDataType(String typeName) throws BuildException {
         Class c = (Class) dataClassDefinitions.get(typeName);
 
@@ -610,6 +761,11 @@ public class Project {
         }
     }
 
+    /**
+     * execute the sequence of targets, and the targets they depend on
+     * @param Vector a vector of target name strings
+     * @throws BuildException if the build failed
+     */
     public void executeTargets(Vector targetNames) throws BuildException {
         Throwable error = null;
 
@@ -633,6 +789,11 @@ public class Project {
         }
     }
     
+    /**
+     * execute the targets and any targets it depends on
+     * @param targetName the target to execute
+     * @throws BuildException if the build failed
+     */
     public void executeTarget(String targetName) throws BuildException {
 
         // sanity check ourselves, if we've been asked to build nothing
@@ -976,6 +1137,9 @@ public class Project {
         return references;
     }
 
+    /**
+     * send build started event to the listeners
+     */
     protected void fireBuildStarted() {
         BuildEvent event = new BuildEvent(this);
         for (int i = 0; i < listeners.size(); i++) {
@@ -984,6 +1148,10 @@ public class Project {
         }
     }
 
+    /**
+     * send build finished event to the listeners
+     * @param exception exception which indicates failure if not null
+     */
     protected void fireBuildFinished(Throwable exception) {
         BuildEvent event = new BuildEvent(this);
         event.setException(exception);
@@ -993,6 +1161,10 @@ public class Project {
         }
     }
 
+    
+    /**
+     * send target started event to the listeners
+     */
     protected void fireTargetStarted(Target target) {
         BuildEvent event = new BuildEvent(target);
         for (int i = 0; i < listeners.size(); i++) {
@@ -1001,6 +1173,10 @@ public class Project {
         }
     }
 
+    /**
+     * send build finished event to the listeners
+     * @param exception exception which indicates failure if not null
+     */
     protected void fireTargetFinished(Target target, Throwable exception) {
         BuildEvent event = new BuildEvent(target);
         event.setException(exception);
