@@ -37,15 +37,14 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * A MatchingTask which relies on
- * <A HREF="http://java.sun.com/products/java-media/jai">JAI (Java Advanced Imaging)</A>
- * to perform image manipulation operations on existing images.  The
- * operations are represented as ImageOperation DataType objects.
- * The operations are arranged to conform to the Chaining Model
- * of JAI.
- * Check out the
- * <A HREF="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/">
- *   JAI Programming Guide</A>
+ * A MatchingTask which relies on <A
+ * HREF="http://java.sun.com/products/java-media/jai">JAI (Java
+ * Advanced Imaging)</A> to perform image manipulation operations on
+ * existing images.  The operations are represented as ImageOperation
+ * DataType objects.  The operations are arranged to conform to the
+ * Chaining Model of JAI.  Check out the <A
+ * HREF="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/">
+ * JAI Programming Guide</A>
  *
  * @see org.apache.tools.ant.types.optional.image.ImageOperation
  * @see org.apache.tools.ant.types.DataType
@@ -85,9 +84,9 @@ public class Image extends MatchingTask {
     }
 
     /**
-     * Set the image encoding type.
-     * <A HREF="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/Encode.doc.html#56610">
-     *     See this table in the JAI Programming Guide</A>.
+     * Set the image encoding type.  <A
+     * HREF="http://java.sun.com/products/java-media/jai/forDevelopers/jai1_0_1guide-unc/Encode.doc.html#56610">
+     * See this table in the JAI Programming Guide</A>.
      */
     public void setEncoding(String encoding) {
         str_encoding = encoding;
@@ -101,7 +100,8 @@ public class Image extends MatchingTask {
     }
 
     /**
-     *  Enables Garbage Collection after each image processed.  Defaults to false.
+     *  Enables Garbage Collection after each image processed.
+     *  Defaults to false.
      */
     public void setGc(boolean gc) {
         garbage_collect = gc;
@@ -166,7 +166,8 @@ public class Image extends MatchingTask {
             for (int i = 0; i < instructions.size(); i++) {
                 Object instr = instructions.elementAt(i);
                 if (instr instanceof TransformOperation) {
-                    image = ((TransformOperation) instr).executeTransformOperation(image);
+                    image = ((TransformOperation) instr)
+                        .executeTransformOperation(image);
                 } else {
                     log("Not a TransformOperation: " + instr);
                 }
@@ -183,7 +184,8 @@ public class Image extends MatchingTask {
                 destDir = srcDir;
             }
 
-            File new_file = new File(destDir.getAbsolutePath() + File.separator + file.getName());
+            File new_file = new File(destDir.getAbsolutePath() 
+                                     + File.separator + file.getName());
 
             if ((overwrite && new_file.exists()) && (!new_file.equals(file))) {
                 new_file.delete();
@@ -191,7 +193,8 @@ public class Image extends MatchingTask {
 
             FileOutputStream stream = new FileOutputStream(new_file);
 
-            JAI.create("encode", image, stream, str_encoding.toUpperCase(), null);
+            JAI.create("encode", image, stream, str_encoding.toUpperCase(), 
+                       null);
             stream.flush();
             stream.close();
 
@@ -231,7 +234,8 @@ public class Image extends MatchingTask {
 
                 files = ds.getIncludedFiles();
                 for (int i = 0; i < files.length; i++) {
-                    filesList.add(new File(srcDir.getAbsolutePath() + File.separator + files[i]));
+                    filesList.add(new File(srcDir.getAbsolutePath() 
+                                           + File.separator + files[i]));
                 }
             }
             // deal with the filesets
@@ -241,7 +245,8 @@ public class Image extends MatchingTask {
                 files = ds.getIncludedFiles();
                 File fromDir = fs.getDir(getProject());
                 for (int j = 0; j < files.length; j++) {
-                    filesList.add(new File(fromDir.getAbsolutePath() + File.separator + files[j]));
+                    filesList.add(new File(fromDir.getAbsolutePath() 
+                                           + File.separator + files[j]));
                 }
             }
 
@@ -251,7 +256,7 @@ public class Image extends MatchingTask {
                 for (Iterator i = filesList.iterator(); i.hasNext();) {
                     File f = (File) i.next();
                     File new_file = new File(destDir.getAbsolutePath()
-                        + File.separator + f.getName());
+                                             + File.separator + f.getName());
                     if (new_file.exists()) {
                         filesToRemove.add(f);
                     }
@@ -286,14 +291,12 @@ public class Image extends MatchingTask {
     protected void validateAttributes() throws BuildException {
         if (srcDir == null && filesets.size() == 0) {
             throw new BuildException("Specify at least one source "
-                    + "- a srcDir or a fileset.");
+                                     + "- a srcDir or a fileset.");
         }
 
         if (srcDir == null && destDir == null) {
             throw new BuildException("Specify the destDir, or the srcDir.");
         }
-
-
     }
 
 }

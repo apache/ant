@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2002-2004 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@ import java.util.Properties;
  */
 public class ImageTest extends BuildFileTest {
 
-    private final static String TASKDEFS_DIR = "src/etc/testcases/taskdefs/optional/image/";
+    private final static String TASKDEFS_DIR = 
+        "src/etc/testcases/taskdefs/optional/image/";
     private final static String LARGEIMAGE = "largeimage.jpg";
 
     public ImageTest(String name) {
@@ -58,58 +59,65 @@ public class ImageTest extends BuildFileTest {
     }
 
     public void testSimpleScale(){
-      expectLogContaining("testSimpleScale", "Processing File");
-      File f = createRelativeFile( "/dest/" + LARGEIMAGE  );
-          assertTrue(
-              "Did not create "+f.getAbsolutePath(),
-        f.exists() );
+        expectLogContaining("testSimpleScale", "Processing File");
+        File f = createRelativeFile("/dest/" + LARGEIMAGE);
+        assertTrue(
+                   "Did not create "+f.getAbsolutePath(),
+                   f.exists());
 
     }
 
     public void testOverwriteTrue() {
-      expectLogContaining("testSimpleScale", "Processing File");
-      File f = createRelativeFile( "/dest/" + LARGEIMAGE  );
-      long lastModified = f.lastModified();
-       if (Os.isFamily("dos")) {
-           try {
-            Thread.sleep(2000);
-           }
-           catch (InterruptedException e) {}
-       }
-      expectLogContaining("testOverwriteTrue", "Processing File");
-      f = createRelativeFile( "/dest/" + LARGEIMAGE  );
-      long overwrittenLastModified = f.lastModified();
-      assertTrue("File was not overwritten.",lastModified < overwrittenLastModified);
+        expectLogContaining("testSimpleScale", "Processing File");
+        File f = createRelativeFile("/dest/" + LARGEIMAGE);
+        long lastModified = f.lastModified();
+        if (Os.isFamily("dos")) {
+            try {
+                Thread.sleep(2000);
+            }
+            catch (InterruptedException e) {}
+        }
+        expectLogContaining("testOverwriteTrue", "Processing File");
+        f = createRelativeFile("/dest/" + LARGEIMAGE);
+        long overwrittenLastModified = f.lastModified();
+        assertTrue("File was not overwritten.",
+                   lastModified < overwrittenLastModified);
     }
 
     public void testOverwriteFalse() {
-      expectLogContaining("testSimpleScale", "Processing File");
-      File f = createRelativeFile( "/dest/" + LARGEIMAGE  );
-      long lastModified = f.lastModified();
-      expectLogContaining("testOverwriteFalse", "Processing File");
-      f = createRelativeFile( "/dest/" + LARGEIMAGE  );
-      long overwrittenLastModified = f.lastModified();
-      assertTrue("File was overwritten.",lastModified == overwrittenLastModified);
+        expectLogContaining("testSimpleScale", "Processing File");
+        File f = createRelativeFile("/dest/" + LARGEIMAGE);
+        long lastModified = f.lastModified();
+        expectLogContaining("testOverwriteFalse", "Processing File");
+        f = createRelativeFile("/dest/" + LARGEIMAGE);
+        long overwrittenLastModified = f.lastModified();
+        assertTrue("File was overwritten.",
+                   lastModified == overwrittenLastModified);
     }
 
 
     public void off_testFailOnError() {
-      try {
-        expectLogContaining("testFailOnError", "Unable to process image stream");
-      }
-      catch (RuntimeException re){
-        assertTrue("Run time exception should say 'Unable to process image stream'. :" + re.toString(),re.toString().indexOf("Unable to process image stream") > -1);
-      }
+        try {
+            expectLogContaining("testFailOnError", 
+                                "Unable to process image stream");
+        }
+        catch (RuntimeException re){
+            assertTrue("Run time exception should say "
+                       + "'Unable to process image stream'. :" 
+                       + re.toString(),
+                       re.toString()
+                       .indexOf("Unable to process image stream") > -1);
+        }
     }
 
 
 
-  protected File createRelativeFile( String filename ) {
-        if (filename.equals( "." )) {
+    protected File createRelativeFile(String filename) {
+        if (filename.equals(".")) {
             return getProjectDir();
         }
         // else
-        return new File( getProjectDir(), filename );
+        return new File(getProjectDir(), filename);
     }
 }
 
