@@ -200,4 +200,12 @@
     <mkdir dir="${tmp.dir}"/>
     <unzip src="${tmp.jar}" dest="${tmp.dir}"/>
   </target>
+
+  <!-- bug 10262 -->
+  <target name="testNoDuplicateIndex">
+    <mkdir dir="${tmp.dir}/META-INF"/>
+    <touch file="${tmp.dir}/META-INF/INDEX.LIST"/>
+    <touch file="${tmp.dir}/foo"/>
+    <jar destfile="${tmp.jar}" index="yes" basedir="${tmp.dir}"/>
+  </target>
 </project>

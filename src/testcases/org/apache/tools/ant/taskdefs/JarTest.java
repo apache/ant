@@ -59,6 +59,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildFileTest;
 
 /**
@@ -225,5 +228,19 @@ public class JarTest extends BuildFileTest {
         executeTarget("testUpdateIfOnlyManifestHasChanged");
         File jarXml = getProject().resolveFile(tempDir + "jar.xml");
         assertTrue(jarXml.exists());
+    }
+
+    public void testNoDuplicateIndex() throws IOException {
+        executeTarget("testNoDuplicateIndex");
+        ZipFile archive = new ZipFile(getProject().resolveFile(tempJar));
+        Enumeration enum = archive.entries();
+        int numberOfIndexLists = 0;
+        while (enum.hasMoreElements()) {
+            ZipEntry ze = (ZipEntry) enum.nextElement();
+            if (ze.getName().equals("META-INF/INDEX.LIST")) {
+                numberOfIndexLists++;
+            }
+        }
+        assertEquals(1, numberOfIndexLists);
     }
 }
