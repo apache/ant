@@ -162,10 +162,10 @@ public class UpToDate extends MatchingTask {
         if (mapperElement == null) {
             MergingMapper mm = new MergingMapper();
             mm.setTo(_targetFile.getAbsolutePath());
+            mapper = mm;
         } else {
             mapper = mapperElement.getImplementation();
         }
-        
         return sfs.restrict(files, srcDir, null, mapper).length == 0;
     }
 }
