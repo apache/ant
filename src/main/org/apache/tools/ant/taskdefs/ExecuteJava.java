@@ -73,6 +73,7 @@ import java.io.PrintStream;
  *
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ * @since Ant 1.2
  */
 public class ExecuteJava implements Runnable, TimeoutObserver {
 

@@ -72,11 +72,14 @@ import java.io.IOException;
 import java.util.Vector;
 
 /**
- * This task acts as a loader for java applications but allows to use the same JVM 
- * for the called application thus resulting in much faster operation.
+ * This task acts as a loader for java applications but allows to use
+ * the same JVM for the called application thus resulting in much
+ * faster operation.
  *
  * @author Stefano Mazzocchi <a href="mailto:stefano@apache.org">stefano@apache.org</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
+ *
+ * @since Ant 1.1
  *
  * @ant.task category="java"
  */
@@ -97,14 +100,19 @@ public class Java extends Task {
      * Do the execution.
      */
     public void execute() throws BuildException {
-        int err = -1;
+        File savedDir = dir;
 
-        if ((err = executeJava()) != 0) { 
-            if (failOnError) {
-                throw new BuildException("Java returned: "+err, location);
-            } else {
-                log("Java Result: " + err, Project.MSG_ERR);
+        int err = -1;
+        try {
+            if ((err = executeJava()) != 0) { 
+                if (failOnError) {
+                    throw new BuildException("Java returned: "+err, location);
+                } else {
+                    log("Java Result: " + err, Project.MSG_ERR);
+                }
             }
+        } finally {
+            dir = savedDir;
         }
     }
 
@@ -200,7 +208,8 @@ public class Java extends Task {
      */
     public void setJar(File jarfile) throws BuildException {
         if ( cmdl.getClassname() != null ){
-            throw new BuildException("Cannot use 'jar' and 'classname' attributes in same command.");
+            throw new BuildException("Cannot use 'jar' and 'classname' "
+                                     + "attributes in same command.");
         }
         cmdl.setJar(jarfile.getAbsolutePath());
     }
@@ -210,7 +219,8 @@ public class Java extends Task {
      */
     public void setClassname(String s) throws BuildException {
         if ( cmdl.getJar() != null ){
-            throw new BuildException("Cannot use 'jar' and 'classname' attributes in same command");
+            throw new BuildException("Cannot use 'jar' and 'classname' "
+                                     + "attributes in same command");
         }
         cmdl.setClassname(s);
     }
@@ -307,7 +317,7 @@ public class Java extends Task {
      *
      * <p>Will be ignored if we are not forking a new VM.
      *
-     * @since 1.32, Ant 1.5
+     * @since Ant 1.5
      */
     public void addEnv(Environment.Variable var) {
         env.addVariable(var);
@@ -318,7 +328,7 @@ public class Java extends Task {
      *
      * <p>Will be ignored if we are not forking a new VM.
      *
-     * @since 1.32, Ant 1.5
+     * @since Ant 1.5
      */
     public void setNewenvironment(boolean newenv) {
         newEnvironment = newenv;
@@ -327,7 +337,7 @@ public class Java extends Task {
     /**
      * Shall we append to an existing file?
      *
-     * @since 1.36, Ant 1.5
+     * @since Ant 1.5
      */
     public void setAppend(boolean append) {
         this.append = append;
@@ -336,26 +346,34 @@ public class Java extends Task {
     /**
      * Timeout in milliseconds after which the process will be killed.
      *
-     * @since 1.37, Ant 1.5
+     * @since Ant 1.5
      */
     public void setTimeout(Long value) {
         timeout = value;
     }
 
+    /**
+     * Pass output sent to System.out to specified output file.
+     *
+     * @since Ant 1.5
+     */
     protected void handleOutput(String line) {
         if (outStream != null) {
             outStream.println(line);
-        }
-        else {
+        } else {
             super.handleOutput(line);
         }
     }
     
+    /**
+     * Pass output sent to System.err to specified output file.
+     *
+     * @since Ant 1.5
+     */
     protected void handleErrorOutput(String line) {
         if (outStream != null) {
             outStream.println(line);
-        }
-        else {
+        } else {
             super.handleErrorOutput(line);
         }
     }
@@ -412,7 +430,8 @@ public class Java extends Task {
             if (dir == null) {
                 dir = project.getBaseDir();
             } else if (!dir.exists() || !dir.isDirectory()) {
-                throw new BuildException(dir.getAbsolutePath()+" is not a valid directory",
+                throw new BuildException(dir.getAbsolutePath()
+                                         +" is not a valid directory",
                                          location);
             }
             
@@ -470,11 +489,11 @@ public class Java extends Task {
     /**
      * Create the Watchdog to kill a runaway process.
      *
-     * @since 1.37, Ant 1.5
+     * @since Ant 1.5
      */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
         if (timeout == null) {
-          return null;
+            return null;
         }
         return new ExecuteWatchdog(timeout.longValue());
     }
