@@ -423,3 +423,6 @@ V. Things we probably don't agree on.
 
 * build files should be purely declarative
 
+* provide a way to define the order in which targets a given target
+  depends upon get executed.
+
