@@ -62,26 +62,30 @@ import org.apache.tools.ant.util.FileUtils;
 /**
  * stress out java task
  * @author steve loughran
- * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a> 
+ * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  * @author <a href="mailto:donal@savvion.com">Donal Quinlan</a>
  * */
 public class JavaTest extends BuildFileTest {
 
     private static final int TIME_TO_WAIT = 4;
+    // wait 1 second extra to allow for java to start ...
+    // this time was OK on a Win NT machine and on nagoya
+    private static final int SECURITY_MARGIN = 1000;
+
     private boolean runFatalTests=false;
-    
-    public JavaTest(String name) { 
+
+    public JavaTest(String name) {
         super(name);
-    }    
-    
+    }
+
     /**
-     * configure the project. 
+     * configure the project.
      * if the property junit.run.fatal.tests is set we run
      * the fatal tests
      */
-    public void setUp() { 
+    public void setUp() {
         configureProject("src/etc/testcases/taskdefs/java.xml");
-        
+
         //final String propname="tests-classpath.value";
         //String testClasspath=System.getProperty(propname);
         //System.out.println("Test cp="+testClasspath);
@@ -92,28 +96,30 @@ public class JavaTest extends BuildFileTest {
     }
 
     public void tearDown() {
+        // remove log file from testSpawn
+        project.executeTarget("cleanup");
     }
 
     public void testNoJarNoClassname(){
         expectBuildExceptionContaining("testNoJarNoClassname",
             "parameter validation",
-            "Classname must not be null.");   
+            "Classname must not be null.");
     }
 
     public void testJarNoFork() {
         expectBuildExceptionContaining("testJarNoFork",
             "parameter validation",
-            "Cannot execute a jar in non-forked mode. " 
-                + "Please set fork='true'. ");        
+            "Cannot execute a jar in non-forked mode. "
+                + "Please set fork='true'. ");
     }
-      
-    public void testJarAndClassName() { 
+
+    public void testJarAndClassName() {
         expectBuildException("testJarAndClassName",
             "Should not be able to set both classname AND jar");
     }
-                
 
-    public void testClassnameAndJar() { 
+
+    public void testClassnameAndJar() {
         expectBuildException("testClassnameAndJar",
             "Should not be able to set both classname AND jar");
     }
@@ -121,7 +127,7 @@ public class JavaTest extends BuildFileTest {
     public void testRun() {
         executeTarget("testRun");
     }
-        
+
 
 
     /** this test fails but we ignore the return value;
@@ -132,7 +138,7 @@ public class JavaTest extends BuildFileTest {
             executeTarget("testRunFail");
         }
     }
-    
+
     public void testRunFailFoe() {
         if(runFatalTests) {
             expectBuildExceptionContaining("testRunFailFoe",
@@ -148,32 +154,32 @@ public class JavaTest extends BuildFileTest {
     }
 
     public void testExcepting() {
-        expectLogContaining("testExcepting", 
+        expectLogContaining("testExcepting",
                             "Exception raised inside called program");
     }
-    
+
     public void testExceptingFork() {
-        expectLogContaining("testExceptingFork", 
+        expectLogContaining("testExceptingFork",
                             "Java Result:");
     }
-    
+
     public void testExceptingFoe() {
         expectBuildExceptionContaining("testExceptingFoe",
             "passes exception through",
             "Exception raised inside called program");
     }
-    
+
     public void testExceptingFoeFork() {
         expectBuildExceptionContaining("testExceptingFoeFork",
             "exceptions turned into error codes",
-            "Java returned:");        
-    }   
-        
+            "Java returned:");
+    }
+
     public void testResultPropertyZero() {
         executeTarget("testResultPropertyZero");
         assertEquals("0",project.getProperty("exitcode"));
     }
-    
+
     public void testResultPropertyNonZero() {
         executeTarget("testResultPropertyNonZero");
         assertEquals("-1",project.getProperty("exitcode"));
@@ -188,9 +194,14 @@ public class JavaTest extends BuildFileTest {
         project.setProperty("timeToWait", Long.toString(TIME_TO_WAIT));
         project.executeTarget("testSpawn");
         try {
-            Thread.sleep(TIME_TO_WAIT * 1000 + 400);
+            Thread.sleep(TIME_TO_WAIT * 1000 + SECURITY_MARGIN);
         } catch (Exception ex) {
             System.out.println("my sleep was interrupted");
+        }
+        // let's be nice with the next generation of developers
+        if (!logFile.exists()) {
+            System.out.println("suggestion: increase the constant"
+            + " SECURITY_MARGIN to give more time for java to start.");
         }
         assertTrue("log file exists", logFile.exists());
     }
@@ -200,7 +211,7 @@ public class JavaTest extends BuildFileTest {
      * than normal JRE runtime
      */
     public static class EntryPoint {
-        
+
     /**
      * this entry point is used by the java.xml tests to
      * generate failure strings to handle
@@ -228,15 +239,15 @@ public class JavaTest extends BuildFileTest {
             }
         }
     }
-    
+
     /**
      * entry point class with no dependencies other
      * than normal JRE runtime
      */
     public static class ExceptingEntryPoint {
-        
+
         /**
-         * throw a run time exception which does not need 
+         * throw a run time exception which does not need
          * to be in the signature of the entry point
          */
         public static void main(String[] argv) {

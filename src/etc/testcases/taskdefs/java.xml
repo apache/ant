@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 
 <project name="java-test" basedir="." default="foo">
-
+  <!-- this property gets overridden programmatically-->
+  <property name="timeToWait" value="4"/>
+  <!-- this property gets overridden programmatically-->
+  <property name="logFile" value="spawn.log"/>
   <property name="app"
     value="org.apache.tools.ant.taskdefs.JavaTest$$EntryPoint" />
 
@@ -119,6 +122,8 @@
       <arg value="${logFile}" />
     </java>
   </target>
-
+  <target name="cleanup">
+      <delete file="${logFile}"/>
+  </target>
   <target name="foo" />
 </project>
