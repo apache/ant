@@ -87,7 +87,12 @@ public class Zip extends MatchingTask {
     private Vector filesets = new Vector ();
     private Hashtable addedDirs = new Hashtable();
     private Vector addedFiles = new Vector();
-
+    
+    /** true when we are adding new files into the Zip file, as opposed to 
+        adding back the unchanged files */
+    private boolean addingNewFiles;
+    
+    
     /**
      * Encoding to use for filenames, defaults to the platform's
      * default encoding.
@@ -190,42 +195,46 @@ public class Zip extends MatchingTask {
         }
 
         // Renamed version of original file, if it exists
-        File renamedFile=null;
+        File renamedFile = null;
         // Whether or not an actual update is required -
         // we don't need to update if the original file doesn't exist
-        boolean reallyDoUpdate=false;
+        
+        addingNewFiles = true;
+        boolean reallyDoUpdate = false;
         if (doUpdate && zipFile.exists())
         {
-            reallyDoUpdate=true;
+            reallyDoUpdate = true;
             
             int i;
             for (i=0; i < 1000; i++)
             {
-                renamedFile = new File (zipFile.getParent(), "tmp."+i);
+                renamedFile = new File(zipFile.getParent(), "tmp."+i);
                 
-                if (!renamedFile.exists())
+                if (!renamedFile.exists()) {
                     break;
+                }
             }
-            if (i==1000)
-                throw new BuildException 
-                ("Can't find temporary filename to rename old file to.");
+            if (i == 1000) {
+                throw new BuildException("Can't find available temporary filename to which to rename old file.");
+            }
+            
             try
             {
-                if (!zipFile.renameTo (renamedFile))
-                    throw new BuildException 
-                    ("Unable to rename old file to temporary file");
+                if (!zipFile.renameTo(renamedFile)) {
+                    throw new BuildException("Unable to rename old file to temporary file");
+                }
             }
             catch (SecurityException e)
             {
-                throw new BuildException 
-                    ("Not allowed to rename old file to temporary file");
+                throw new BuildException("Not allowed to rename old file to temporary file");
             }
         }
         
         // Create the scanners to pass to isUpToDate().
         Vector dss = new Vector ();
-        if (baseDir != null)
+        if (baseDir != null) {
             dss.addElement(getDirectoryScanner(baseDir));
+        }
         for (int i=0; i<filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             dss.addElement (fs.getDirectoryScanner(project));
@@ -236,9 +245,11 @@ public class Zip extends MatchingTask {
 
         // quick exit if the target is up to date
         // can also handle empty archives
-        if (isUpToDate(scanners, zipFile)) return;
+        if (isUpToDate(scanners, zipFile)) {
+            return;
+        }
 
-        String action=reallyDoUpdate ? "Updating " : "Building ";
+        String action = reallyDoUpdate ? "Updating " : "Building ";
         
         log(action + archiveType +": "+ zipFile.getAbsolutePath());
 
@@ -256,28 +267,30 @@ public class Zip extends MatchingTask {
                 initZipOutputStream(zOut);
 
                 // Add the implicit fileset to the archive.
-                if (baseDir != null)
+                if (baseDir != null) {
                     addFiles(getDirectoryScanner(baseDir), zOut, "", "");
+                }
                 // Add the explicit filesets to the archive.
                 addFiles(filesets, zOut);
-                if (reallyDoUpdate)
-                {
-                    ZipFileSet oldFiles = new ZipFileSet ();
-                    oldFiles.setSrc (renamedFile);
+                if (reallyDoUpdate) {
+                    addingNewFiles = false;
+                    ZipFileSet oldFiles = new ZipFileSet();
+                    oldFiles.setSrc(renamedFile);
                     
-                    StringBuffer exclusionPattern=new StringBuffer();
+                    StringBuffer exclusionPattern = new StringBuffer();
                     for (int i=0; i < addedFiles.size(); i++)
                     {
-                        if (i != 0)
-                            exclusionPattern.append (",");
-                        exclusionPattern.append 
-                            ((String) addedFiles.elementAt(i));
+                        if (i != 0) {
+                            exclusionPattern.append(",");
+                        }
+                        exclusionPattern.append((String)addedFiles.elementAt(i));
                     }
-                    oldFiles.setExcludes (exclusionPattern.toString());
+                    oldFiles.setExcludes(exclusionPattern.toString());
                     Vector tmp = new Vector();
-                    tmp.addElement (oldFiles);
-                    addFiles (tmp, zOut);
+                    tmp.addElement(oldFiles);
+                    addFiles(tmp, zOut);
                 }
+                finalizeZipOutputStream(zOut);
                 success = true;
             } finally {
                 // Close the output stream.
@@ -321,6 +334,14 @@ public class Zip extends MatchingTask {
                      renamedFile.getName(), Project.MSG_WARN);
     }
 
+    /**
+     * Indicates if the task is adding new files into the archive as opposed to
+     * copying back unchanged files from the backup copy
+     */
+    protected boolean isAddingNewFiles() {
+        return addingNewFiles;
+    }
+    
     /**
      * Add all files of the given FileScanner to the ZipOutputStream
      * prependig the given prefix to each filename.
@@ -406,6 +427,10 @@ public class Zip extends MatchingTask {
     {
     }
 
+    protected void finalizeZipOutputStream(ZipOutputStream zOut)
+        throws IOException, BuildException
+    {
+    }
     /**
      * Check whether the archive is up-to-date; and handle behavior for empty archives.
      * @param scanners list of prepared scanners containing files to archive
@@ -589,7 +614,7 @@ public class Zip extends MatchingTask {
             }
             count = in.read(buffer, 0, buffer.length);
         } while (count != -1);
-        addedFiles.addElement (vPath);
+        addedFiles.addElement(vPath);
     }
 
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
