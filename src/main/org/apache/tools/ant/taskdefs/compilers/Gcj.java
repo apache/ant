@@ -65,6 +65,7 @@ import org.apache.tools.ant.types.Path;
  * This is primarily a cut-and-paste from the jikes.
  *
  * @author <a href="mailto:tora@debian.org">Takashi Okamoto</a>
+ * @since Ant 1.4
  */
 public class Gcj extends DefaultCompilerAdapter {
 
@@ -79,7 +80,8 @@ public class Gcj extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
+        return 
+            executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
     protected Commandline setupGCJCommand() {
@@ -113,7 +115,8 @@ public class Gcj extends DefaultCompilerAdapter {
             cmd.createArgument().setFile(destDir);
             
             if(destDir.mkdirs()){
-                throw new BuildException("Can't make output directories. Maybe permission is wrong. ");
+                throw new BuildException("Can't make output directories. "
+                                         + "Maybe permission is wrong. ");
             };
         }
         

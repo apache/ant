@@ -68,6 +68,7 @@ import org.apache.tools.ant.types.Commandline;
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a> 
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ * @since Ant 1.3
  */
 public class Jikes extends DefaultCompilerAdapter {
 
@@ -172,10 +173,11 @@ public class Jikes extends DefaultCompilerAdapter {
          * that don't exist. As this is often the case, these
          * warning can be pretty annoying.
          */
-        String warningsProperty = project.getProperty("build.compiler.warnings");
+        String warningsProperty = 
+            project.getProperty("build.compiler.warnings");
         if (warningsProperty != null) {
-            attributes.log("!! the build.compiler.warnings property is deprecated. !!",
-                           Project.MSG_WARN);
+            attributes.log("!! the build.compiler.warnings property is "
+                           + "deprecated. !!", Project.MSG_WARN);
             attributes.log("!! Use the nowarn attribute instead. !!",
                            Project.MSG_WARN);
             if (!Project.toBoolean(warningsProperty)) {
@@ -194,7 +196,8 @@ public class Jikes extends DefaultCompilerAdapter {
         /**
          * Jikes can issue pedantic warnings. 
          */
-        String pedanticProperty = project.getProperty("build.compiler.pedantic");
+        String pedanticProperty = 
+            project.getProperty("build.compiler.pedantic");
         if (pedanticProperty != null && Project.toBoolean(pedanticProperty)) {
             cmd.createArgument().setValue("+P");
         }
@@ -204,8 +207,10 @@ public class Jikes extends DefaultCompilerAdapter {
          * checking", see the jikes documentation for differences
          * between -depend and +F.
          */
-        String fullDependProperty = project.getProperty("build.compiler.fulldepend");
-        if (fullDependProperty != null && Project.toBoolean(fullDependProperty)) {
+        String fullDependProperty = 
+            project.getProperty("build.compiler.fulldepend");
+        if (fullDependProperty != null 
+            && Project.toBoolean(fullDependProperty)) {
             cmd.createArgument().setValue("+F");
         }
 
@@ -219,7 +224,8 @@ public class Jikes extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
+        return 
+            executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,8 @@ import java.lang.reflect.Method;
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ *
+ * @since Ant 1.3
  */
 public class Javac12 extends DefaultCompilerAdapter {
 
@@ -85,24 +87,33 @@ public class Javac12 extends DefaultCompilerAdapter {
             // Create an instance of the compiler, redirecting output to
             // the project log
             Class c = Class.forName("sun.tools.javac.Main");
-            Constructor cons = c.getConstructor(new Class[] { OutputStream.class, String.class });
-            Object compiler = cons.newInstance(new Object[] { logstr, "javac" });
+            Constructor cons = 
+                c.getConstructor(new Class[] { OutputStream.class, 
+                                               String.class });
+            Object compiler = cons.newInstance(new Object[] { logstr, 
+                                                              "javac" });
 
             // Call the compile() method
-            Method compile = c.getMethod("compile", new Class [] { String[].class });
-            Boolean ok = (Boolean)compile.invoke(compiler, new Object[] {cmd.getArguments()});
+            Method compile = c.getMethod("compile", 
+                                         new Class [] { String[].class });
+            Boolean ok = 
+                (Boolean)compile.invoke(compiler, 
+                                        new Object[] {cmd.getArguments()});
             return ok.booleanValue();
         }
         catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use classic compiler, as it is not available"+
-                                                         " A common solution is to set the environment variable"+
-                                     " JAVA_HOME to your jdk directory.", location);
+            throw new BuildException("Cannot use classic compiler, as it is "
+                                     + "not available.  A common solution is "
+                                     + "to set the environment variable"
+                                     + " JAVA_HOME to your jdk directory.", 
+                                     location);
         }
         catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting classic compiler: ", ex, location);
+                throw new BuildException("Error starting classic compiler: ", 
+                                         ex, location);
             }
         } finally {
             try {

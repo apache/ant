@@ -63,6 +63,7 @@ import org.apache.tools.ant.types.Commandline;
  * Uses the defaults for DefaultCompilerAdapter
  * 
  * @author <a href="mailto:don@bea.com">Don Ferguson</a>
+ * @since Ant 1.4
  */
 public class Sj extends DefaultCompilerAdapter {
 
@@ -77,7 +78,8 @@ public class Sj extends DefaultCompilerAdapter {
 
         int firstFileName = cmd.size() - compileList.length;
 
-        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
+        return 
+            executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
 

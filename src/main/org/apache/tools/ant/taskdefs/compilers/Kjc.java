@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -69,7 +69,9 @@ import java.lang.reflect.Method;
  * This is primarily a cut-and-paste from Jikes.java and
  * DefaultCompilerAdapter.
  *
- * @author <a href="mailto:tora@debian.org">Takashi Okamoto</a> + */
+ * @author <a href="mailto:tora@debian.org">Takashi Okamoto</a> 
+ * @since Ant 1.4
+ */
 public class Kjc extends DefaultCompilerAdapter {
 
     public boolean execute() throws BuildException {
@@ -82,20 +84,24 @@ public class Kjc extends DefaultCompilerAdapter {
             // Call the compile() method
             Method compile = c.getMethod("compile",
                                          new Class [] { String [].class });
-            Boolean ok = (Boolean)compile.invoke(null,
-                                                 new Object[] {cmd.getArguments()});
+            Boolean ok = 
+                (Boolean)compile.invoke(null, 
+                                        new Object[] {cmd.getArguments()});
             return ok.booleanValue();
         }
         catch (ClassNotFoundException ex) {
-            throw new BuildException("Cannot use kjc compiler, as it is not available"+
-                                     " A common solution is to set the environment variable"+
-                                     " CLASSPATH to your kjc archive (kjc.jar).", location);
+            throw new BuildException("Cannot use kjc compiler, as it is not "
+                                     + "available. A common solution is to "
+                                     + "set the environment variable CLASSPATH "
+                                     + "to your kjc archive (kjc.jar).", 
+                                     location);
         }
         catch (Exception ex) {
             if (ex instanceof BuildException) {
                 throw (BuildException) ex;
             } else {
-                throw new BuildException("Error starting kjc compiler: ", ex, location);
+                throw new BuildException("Error starting kjc compiler: ", 
+                                         ex, location);
             }
         }
     }
@@ -121,33 +127,33 @@ public class Kjc extends DefaultCompilerAdapter {
         // generate the clsspath
         cmd.createArgument().setValue("-classpath");
 
-    Path cp = new Path(project);
+        Path cp = new Path(project);
 
-    // kjc don't have bootclasspath option.
-    if (bootclasspath != null) {
+        // kjc don't have bootclasspath option.
+        if (bootclasspath != null) {
             cp.append(bootclasspath);
-    }
-
-    if (extdirs != null) {
+        }
+        
+        if (extdirs != null) {
             cp.addExtdirs(extdirs);
-    }
-
-    cp.append(classpath);
-    cp.append(src);
-
-    cmd.createArgument().setPath(cp);
-
-    // kjc-1.5A doesn't support -encoding option now.
+        }
+        
+        cp.append(classpath);
+        cp.append(src);
+        
+        cmd.createArgument().setPath(cp);
+        
+        // kjc-1.5A doesn't support -encoding option now.
         // but it will be supported near the feature.
         if (encoding != null) {
             cmd.createArgument().setValue("-encoding");
             cmd.createArgument().setValue(encoding);
         }
-
+        
         if (debug) {
             cmd.createArgument().setValue("-g");
         }
-
+        
         if (optimize) {
             cmd.createArgument().setValue("-O2");
         }

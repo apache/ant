@@ -105,6 +105,8 @@ import java.util.Vector;
  *
  * @version $Revision$
  *
+ * @since Ant 1.1
+ *
  * @ant.task category="java"
  */
 
@@ -147,7 +149,7 @@ public class Javac extends MatchingTask {
      *
      * <p>default is null</p>
      *
-     * @since 1.84, Ant 1.5
+     * @since Ant 1.5
      */
     private String compiler = null;
 
@@ -615,8 +617,9 @@ public class Javac extends MatchingTask {
         for (Enumeration enum = implementationSpecificArgs.elements();
              enum.hasMoreElements();
              ) {
-            String[] curr =
-                ((ImplementationSpecificArgument) enum.nextElement()).getParts();
+            ImplementationSpecificArgument arg = 
+                ((ImplementationSpecificArgument) enum.nextElement());
+            String[] curr = arg.getParts();
             for (int i=0; i<curr.length; i++) {
                 args.addElement(curr[i]);
             }
@@ -631,11 +634,11 @@ public class Javac extends MatchingTask {
      */
     public void execute() throws BuildException {
         checkParameters();
-        String[] list = src.list();
+        resetFileLists();
 
         // scan source directories and dest directory to build up
         // compile lists
-        resetFileLists();
+        String[] list = src.list();
         for (int i=0; i<list.length; i++) {
             File srcDir = project.resolveFile(list[i]);
             if (!srcDir.exists()) {
@@ -703,7 +706,7 @@ public class Javac extends MatchingTask {
     /**
      * Choose the implementation for this particular task.
      *
-     * @since 1.84, Ant 1.5
+     * @since Ant 1.5
      */
     public void setCompiler(String compiler) {
         this.compiler = compiler;
@@ -715,7 +718,7 @@ public class Javac extends MatchingTask {
      * <p>Defaults to the build.compiler property but can be overriden
      * via the compiler and fork attributes.</p>
      *
-     * @since 1.84, Ant 1.5
+     * @since Ant 1.5
      */
     public String getCompiler() {
         String compilerImpl = 
@@ -740,8 +743,8 @@ public class Javac extends MatchingTask {
         }
 
         if (compilerImpl == null) {
-            if (JavaEnvUtils.getJavaVersion() != Project.JAVA_1_1 &&
-                JavaEnvUtils.getJavaVersion() != Project.JAVA_1_2) {
+            if (JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_1 &&
+                JavaEnvUtils.getJavaVersion() != JavaEnvUtils.JAVA_1_2) {
                 compilerImpl = "modern";
             } else {
                 compilerImpl = "classic";
@@ -754,7 +757,7 @@ public class Javac extends MatchingTask {
      * Check that all required attributes have been set and nothing
      * silly has been entered.
      *
-     * @since 1.82, Ant 1.5
+     * @since Ant 1.5
      */
     protected void checkParameters() throws BuildException {
         if (src == null) {
@@ -777,7 +780,7 @@ public class Javac extends MatchingTask {
     /**
      * Perform the compilation.
      *
-     * @since 1.82, Ant 1.5
+     * @since Ant 1.5
      */
     protected void compile() {
         String compilerImpl = getCompiler();

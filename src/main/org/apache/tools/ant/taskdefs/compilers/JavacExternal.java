@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -62,6 +62,7 @@ import org.apache.tools.ant.types.Commandline;
  * Performs a compile using javac externally.
  *
  * @author Brian Deitte
+ * @since Ant 1.4
  */
 public class JavacExternal extends DefaultCompilerAdapter {
 
@@ -77,7 +78,8 @@ public class JavacExternal extends DefaultCompilerAdapter {
         int firstFileName = cmd.size();
         logAndAddFilesToCompile(cmd);
 
-        return executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
+        return 
+            executeExternalCompile(cmd.getCommandline(), firstFileName) == 0;
     }
 
 }

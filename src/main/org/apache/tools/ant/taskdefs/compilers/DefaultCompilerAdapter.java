@@ -78,6 +78,8 @@ import java.io.IOException;
  * @author Robin Green <a href="mailto:greenrd@hotmail.com">greenrd@hotmail.com</a>
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:jayglanville@home.com">J D Glanville</a>
+ *
+ * @since Ant 1.3
  */
 public abstract class DefaultCompilerAdapter implements CompilerAdapter {
 
@@ -162,9 +164,11 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             }
         } else {
             if ( includeAntRuntime ) {
-                classpath.addExisting(compileClasspath.concatSystemClasspath("last"));
+                classpath.addExisting(compileClasspath
+                                      .concatSystemClasspath("last"));
             } else {
-                classpath.addExisting(compileClasspath.concatSystemClasspath("ignore"));
+                classpath.addExisting(compileClasspath
+                                      .concatSystemClasspath("ignore"));
             }
         }
 
@@ -202,19 +206,23 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         String memoryParameterPrefix = usingJava1_1 ? "-J-" : "-J-X";
         if (memoryInitialSize != null) {
             if (!attributes.isForkedJavac()) {
-                attributes.log("Since fork is false, ignoring memoryInitialSize setting.",
+                attributes.log("Since fork is false, ignoring "
+                               + "memoryInitialSize setting.", 
                                Project.MSG_WARN);
             } else {
-                cmd.createArgument().setValue(memoryParameterPrefix+"ms"+memoryInitialSize);
+                cmd.createArgument().setValue(memoryParameterPrefix
+                                              + "ms" + memoryInitialSize);
             }
         }
 
         if (memoryMaximumSize != null) {
             if (!attributes.isForkedJavac()) {
-                attributes.log("Since fork is false, ignoring memoryMaximumSize setting.",
+                attributes.log("Since fork is false, ignoring "
+                               + "memoryMaximumSize setting.",
                                Project.MSG_WARN);
             } else {
-                cmd.createArgument().setValue(memoryParameterPrefix+"mx"+memoryMaximumSize);
+                cmd.createArgument().setValue(memoryParameterPrefix
+                                              + "mx" + memoryMaximumSize);
             }
         }
 
@@ -251,7 +259,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             cmd.createArgument().setPath(cp);
         } else {
             cmd.createArgument().setPath(classpath);
-            // If the buildfile specifies sourcepath="", then don't output any sourcepath.
+            // If the buildfile specifies sourcepath="", then don't
+            // output any sourcepath.
             if (sourcepath.size() > 0) {
                 cmd.createArgument().setValue("-sourcepath");
                 cmd.createArgument().setPath(sourcepath);
@@ -302,8 +311,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             } else if (Project.getJavaVersion().startsWith("1.2")) {
                 cmd.createArgument().setValue("-Xdepend");
             } else {
-                attributes.log("depend attribute is not supported by the modern compiler",
-                    Project.MSG_WARN);
+                attributes.log("depend attribute is not supported by the "
+                               + "modern compiler", Project.MSG_WARN);
             }
         }
 
@@ -413,7 +422,8 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                     System.arraycopy(args, 0, commandArray, 0, firstFileName);
                     commandArray[firstFileName] = "@" + tmpFile;
                 } catch (IOException e) {
-                    throw new BuildException("Error creating temporary file", e, location);
+                    throw new BuildException("Error creating temporary file", 
+                                             e, location);
                 } finally {
                     if (out != null) {
                         try {out.close();} catch (Throwable t) {}
@@ -424,9 +434,10 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
             }
 
             try {
-                Execute exe = new Execute(new LogStreamHandler(attributes,
-                                                               Project.MSG_INFO,
-                                                               Project.MSG_WARN));
+                Execute exe = new Execute(
+                                  new LogStreamHandler(attributes,
+                                                       Project.MSG_INFO,
+                                                       Project.MSG_WARN));
                 exe.setAntRun(project);
                 exe.setWorkingDirectory(project.getBaseDir());
                 exe.setCommandline(commandArray);
