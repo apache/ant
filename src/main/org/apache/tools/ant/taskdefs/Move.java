@@ -84,16 +84,12 @@ public class Move extends Copy {
         forceOverwrite = true;
     }
 
-    public void execute() throws BuildException {
-        super.execute();
-    }
-
 //************************************************************************
 //  protected and private methods
 //************************************************************************
 
     protected void doFileOperations() {
-        if (fileCopyMap.size() > 0) {
+        if (fileCopyMap.size() > 0) {   // files to move
             log("Moving " + fileCopyMap.size() + " files to " + 
                 destDir.getAbsolutePath() );
 
@@ -104,10 +100,7 @@ public class Move extends Copy {
 
                 try {
                     log("Moving " + fromFile + " to " + toFile, verbosity);
-                    project.copyFile(fromFile, 
-                                     toFile, 
-                                     filtering, 
-                                     forceOverwrite);
+                    project.copyFile(fromFile, toFile, filtering, forceOverwrite);
                     File f = new File(fromFile);
                     if (!f.delete()) {
                         throw new BuildException("Unable to delete file " + f.getAbsolutePath());
@@ -119,10 +112,67 @@ public class Move extends Copy {
                 }
             }
         }
+
+        if (includeEmpty) {
+            Enumeration e = dirCopyMap.elements();
+            int count = 0;
+            while (e.hasMoreElements()) {
+                File d = new File((String)e.nextElement());
+                if (!d.exists()) {
+                    if (!d.mkdirs()) {
+                        log("Unable to create directory " + d.getAbsolutePath(), Project.MSG_ERR);
+                    } else {
+                        count++;
+                    }
+                }
+            }
+
+            if (count > 0) {
+                log("Moved " + count + " empty directories to " + destDir.getAbsolutePath());
+            }
+        }
+
+        if (filesets.size() > 0) {
+            Enumeration e = filesets.elements();
+            while (e.hasMoreElements()) {
+                FileSet fs = (FileSet)e.nextElement();
+                File dir = fs.getDir(project);
+
+                if (okToDelete(dir)) {
+                    deleteDir(dir);
+                }
+            }
+        }
     }
 
+    /**
+     * Its only ok to delete a directory tree if there are 
+     * no files in it.
+     */
+    protected boolean okToDelete(File d) {
+        String[] list = d.list();
+        if (list == null) return false;     // maybe io error?
+
+        for (int i = 0; i < list.length; i++) {
+            String s = list[i];
+            File f = new File(d, s);
+            if (f.isDirectory()) {
+                if (!okToDelete(f)) return false;
+            } else {
+                return false;   // found a file
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Go and delete the directory tree.
+     */
     protected void deleteDir(File d) {
-    	String[] list = d.list();
+        String[] list = d.list();
+        if (list == null) return;      // on an io error list() can return null
+
         for (int i = 0; i < list.length; i++) {
             String s = list[i];
             File f = new File(d, s);
@@ -134,8 +184,8 @@ public class Move extends Copy {
         }
         log("Deleting directory " + d.getAbsolutePath(), verbosity);
         if (!d.delete()) {
-	       throw new BuildException("Unable to delete directory " + d.getAbsolutePath());
-	   }
+           throw new BuildException("Unable to delete directory " + d.getAbsolutePath());
+       }
     }
 
 }

@@ -82,8 +82,10 @@ public class Copy extends Task {
     protected boolean forceOverwrite = false;
     protected boolean flatten = false;
     protected int verbosity = Project.MSG_VERBOSE;
+    protected boolean includeEmpty = true;
 
     protected Hashtable fileCopyMap = new Hashtable();
+    protected Hashtable dirCopyMap = new Hashtable();
 
     /**
      * Sets a single source file to copy.
@@ -143,6 +145,13 @@ public class Copy extends Task {
     } 
 
     /**
+     * Used to copy empty directories.
+     */
+    public void setIncludeEmptyDirs(boolean includeEmpty) {
+        this.includeEmpty = includeEmpty;
+    }
+
+    /**
      * Adds a set of files (nested fileset attribute).
      */
     public void addFileset(FileSet set) {
@@ -172,9 +181,12 @@ public class Copy extends Task {
         for (int i=0; i<filesets.size(); i++) {
             FileSet fs = (FileSet) filesets.elementAt(i);
             DirectoryScanner ds = fs.getDirectoryScanner(project);
+            File fromDir = fs.getDir(project);
 
             String[] srcFiles = ds.getIncludedFiles();
-            scan(fs.getDir(project), destDir, srcFiles);   // add to fileCopyMap
+            String[] srcDirs = ds.getIncludedDirectories();
+
+            scan(fromDir, destDir, srcFiles, srcDirs);
         }
 
         // do all the copy operations now...
@@ -206,7 +218,7 @@ public class Copy extends Task {
         if (file != null && file.exists() && file.isDirectory()) {
             throw new BuildException("Use a fileset to copy directories.");
         }
-
+           
         if (destFile != null && filesets.size() > 0) {
             throw new BuildException("Cannot concatenate multple files into a single file.");
         }
@@ -221,7 +233,7 @@ public class Copy extends Task {
      * Compares source files to destination files to see if they should be
      * copied.
      */
-    protected void scan(File fromDir, File toDir, String[] files) {
+    protected void scan(File fromDir, File toDir, String[] files, String[] dirs) {
         for (int i = 0; i < files.length; i++) {
             String filename = files[i];
             File src = new File(fromDir, filename);
@@ -237,8 +249,28 @@ public class Copy extends Task {
                                  dest.getAbsolutePath());
             }
         }
+
+        if (includeEmpty) {
+            for (int i = 0; i < dirs.length; i++) {
+                String dname = dirs[i];
+                File sd = new File(fromDir, dname);
+                File dd;
+                if (flatten) {
+                    dd = new File(toDir, new File(dname).getName());
+                } else {
+                    dd = new File(toDir, dname);
+                }
+                if (forceOverwrite || (sd.lastModified() > dd.lastModified())) {
+                    dirCopyMap.put(sd.getAbsolutePath(), dd.getAbsolutePath());
+                }
+            }
+        }
     }
 
+    /**
+     * Actually does the file (and possibly empty directory) copies.
+     * This is a good method for subclasses to override.
+     */
     protected void doFileOperations() {
         if (fileCopyMap.size() > 0) {
             log("Copying " + fileCopyMap.size() + " files to " + 
@@ -260,6 +292,25 @@ public class Copy extends Task {
                         + " due to " + ioe.getMessage();
                     throw new BuildException(msg, ioe, location);
                 }
+            }
+        }
+
+        if (includeEmpty) {
+            Enumeration e = dirCopyMap.elements();
+            int count = 0;
+            while (e.hasMoreElements()) {
+                File d = new File((String)e.nextElement());
+                if (!d.exists()) {
+                    if (!d.mkdirs()) {
+                        log("Unable to create directory " + d.getAbsolutePath(), Project.MSG_ERR);
+                    } else {
+                        count++;
+                    }
+                }
+            }
+
+            if (count > 0) {
+                log("Copied " + count + " empty directories to " + destDir.getAbsolutePath());
             }
         }
     }
