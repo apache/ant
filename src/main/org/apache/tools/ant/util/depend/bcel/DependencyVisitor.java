@@ -124,11 +124,35 @@ public class DependencyVisitor extends EmptyVisitor {
         if (obj.getSignature(constantPool).equals("Ljava/lang/Class;")
                 && name.startsWith("class$")) {
             String classname = name.substring(6).replace('$', '.');
-            addClass(classname);
-            int index = classname.lastIndexOf(".");
-            if (index != -1) {
-                classname = classname.substring(0, index) + "$" +
-                            classname.substring(index + 1);
+            // does the class have a package structure
+            int index = classname.lastIndexOf(".");            
+            if (index > 0) {
+                char start;
+                // check if the package structure is more than 1 level deep
+                int index2 = classname.lastIndexOf(".", index -1);
+                if (index2 != -1) {
+                    // class name has more than 1 package level 'com.company.Class'
+                    start = classname.charAt(index2 + 1);
+                }
+                else {
+                    // class name has only 1 package level 'package.Class'
+                    start = classname.charAt(0);
+                }
+                // Check to see if it's an inner class 'com.company.Class$Inner'
+                if ((start > 0x40) && (start < 0x5B)) {
+                    // first letter of the previous segment of the class name 'Class'
+                    // is upper case ascii. so according to the spec it's an inner class
+                    classname = classname.substring(0, index) + "$" +
+                            classname.substring(index + 1);                            
+                    addClass(classname);
+                }
+                else {
+                    // Add the class in dotted notation 'com.company.Class'                       
+                    addClass(classname);
+                }                    
+            }
+            else {               
+                // Add a class with no package 'Class'
                 addClass(classname);
             }
         }

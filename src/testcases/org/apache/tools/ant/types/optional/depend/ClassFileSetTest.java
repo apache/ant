@@ -184,5 +184,30 @@ public class ClassFileSetTest extends BuildFileTest {
             files.containsKey("D.class"));
         assertTrue("Result did not contain E.class",
             files.containsKey("E.class"));
-    }    
+    }   
+    
+    /**
+     * Test that classes included in a method "System.out.println(Outer.Inner.class)" are included.
+     */
+    public void testMethodParamInner() {
+        Project project = getProject();
+        executeTarget("testmethodparaminner");
+        FileSet resultFileSet = (FileSet)project.getReference(RESULT_FILESET);
+        DirectoryScanner scanner = resultFileSet.getDirectoryScanner(project);
+        String[] scannedFiles = scanner.getIncludedFiles();
+        Hashtable files = new Hashtable();
+        for (int i = 0; i < scannedFiles.length; ++i) {
+            files.put(scannedFiles[i], scannedFiles[i]);
+        }
+        assertEquals("Classfileset did not pick up expected number of "
+            + "class files", 4, files.size());
+        assertTrue("Result did not contain test/Outer$Inner.class",
+            files.containsKey("test/Outer$Inner.class"));
+        assertTrue("Result did not contain test/Outer.class",
+            files.containsKey("test/Outer.class"));
+        assertTrue("Result did not contain test/ContainsOnlyInner.class",
+            files.containsKey("test/ContainsOnlyInner.class"));
+        assertTrue("Result did not contain test/ContainsOnlyInner.class",
+            files.containsKey("test/MethodParam.class"));            
+    }
 }

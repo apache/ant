@@ -179,7 +179,7 @@ public class DependTest extends BuildFileTest {
     public void testInnerClosure() {
         Project project = getProject();
         executeTarget("testinnerclosure");
-        assertEquals("Depend did not leave correct number of files", 2,
+        assertEquals("Depend did not leave correct number of files", 4,
             getResultFiles().size());
     }
 

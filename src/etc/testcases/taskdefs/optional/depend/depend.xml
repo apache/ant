@@ -117,6 +117,10 @@
     <fileset id="result" dir="${classes.dir}"/>
   </target>
   
+  <target name="testmethodparaminner" depends="src4setup, compile">
+    <classfileset id="result" dir="${classes.dir}" rootclass="test.MethodParam"/>
+  </target>  
+  
   <target name="testnosource" depends="src1setup, compile">
     <depend destdir="${classes.dir}" closure="yes"/>
   </target>
