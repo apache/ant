@@ -130,7 +130,7 @@
         <p>AntDoc can be run via an Ant task, AntDoc GUI can be run
         via an Ant task, or via a JVM launch.</p>
 
-        <table>
+        <table class="externals">
           <tr>
             <th>Compatibility:</th>
             <td>Ant 1.4.1 and higher</td>
@@ -1568,7 +1568,7 @@
           <tr>
             <th>URL:</th>
             <td>
-              <a href="http://www.kanaputs.org/">http://www.kanaputs.org/</a>
+              <a href="http://www.kanaputs.org/">http://www.kanaputs.org/</a> <br/>
               <a href="http://www.kanaputs.org/ant.html">http://www.kanaputs.org/ant.html</a>
             </td>
           </tr>
