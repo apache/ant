@@ -87,7 +87,8 @@ public final class Extension
      * Manifest Attribute Name object for EXTENSION_LIST.
      * @see Attributes.Name#EXTENSION_LIST
      */
-    public static final Attributes.Name EXTENSION_LIST = Attributes.Name.EXTENSION_LIST;
+    public static final Attributes.Name EXTENSION_LIST = 
+        new Attributes.Name( "Extension-List" );//Attributes.Name.EXTENSION_LIST;
 
     /**
      * <code>Name</code> object for <code>Optional-Extension-List</code>
@@ -99,14 +100,15 @@ public final class Extension
      * @see <a href="http://java.sun.com/j2se/1.3/docs/guide/extensions/spec.html#dependnecy">
      *      Installed extension dependency</a>
      */
-    public static final Attributes.Name OPTIONAL_EXTENSION_LIST = new Attributes.Name( "Optional-Extension-List" );
+    public static final Attributes.Name OPTIONAL_EXTENSION_LIST = 
+        new Attributes.Name( "Optional-Extension-List" );
 
     /**
      * Manifest Attribute Name object for EXTENSION_NAME.
      * @see Attributes.Name#EXTENSION_NAME
      */
-    public static final Attributes.Name EXTENSION_NAME = Attributes.Name.EXTENSION_NAME;
-
+    public static final Attributes.Name EXTENSION_NAME = 
+        new Attributes.Name( "Extension-Name" );//Attributes.Name.EXTENSION_NAME;
     /**
      * Manifest Attribute Name object for SPECIFICATION_VERSION.
      * @see Attributes.Name#SPECIFICATION_VERSION
@@ -135,13 +137,15 @@ public final class Extension
      * Manifest Attribute Name object for IMPLEMENTATION_URL.
      * @see Attributes.Name#IMPLEMENTATION_URL
      */
-    public static final Attributes.Name IMPLEMENTATION_URL = Attributes.Name.IMPLEMENTATION_URL;
+    public static final Attributes.Name IMPLEMENTATION_URL =
+        new Attributes.Name( "Implementation-URL" );//Attributes.Name.IMPLEMENTATION_URL;
 
     /**
      * Manifest Attribute Name object for IMPLEMENTATION_VENDOR_ID.
      * @see Attributes.Name#IMPLEMENTATION_VENDOR_ID
      */
-    public static final Attributes.Name IMPLEMENTATION_VENDOR_ID = Attributes.Name.IMPLEMENTATION_VENDOR_ID;
+    public static final Attributes.Name IMPLEMENTATION_VENDOR_ID =
+        new Attributes.Name( "Implementation-Vendor-Id" );//Attributes.Name.IMPLEMENTATION_VENDOR_ID;
 
     /**
      * Enum indicating that extension is compatible with other extension.

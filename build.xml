@@ -120,6 +120,8 @@
   -->
   <!-- depends on JDK version -->
   <patternset id="needs.jdk1.2+">
+    <exclude name="${optional.package}/extension/**/*.java"
+             unless="jdk1.2+" />
     <exclude name="${util.package}/optional/NoExitSecurityManager.java"
              unless="jdk1.2+" />
     <exclude name="${optional.package}/Javah.java"
@@ -141,8 +143,6 @@
   </patternset>
   <patternset id="needs.jdk1.3+">
     <exclude name="${ant.package}/taskdefs/TestProcess.java"
-             unless="jdk1.3+" />
-    <exclude name="${optional.package}/extension/**/*.java"
              unless="jdk1.3+" />
   </patternset>
   <patternset id="needs.jdk1.4+">
