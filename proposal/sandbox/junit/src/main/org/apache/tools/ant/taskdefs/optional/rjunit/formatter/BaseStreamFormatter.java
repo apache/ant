@@ -63,6 +63,7 @@ import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.optional.rjunit.KeepAliveOutputStream;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
 
 /**
  * Base formatter providing default implementation to deal with
@@ -85,6 +86,11 @@ public class BaseStreamFormatter extends BaseFormatter {
     /** writer to output the data to */
     private PrintWriter writer;
 
+    protected void finalize() throws Throwable {
+        super.finalize();
+        close();
+    }
+
     public void init(Properties props) throws BuildException {
         String file = props.getProperty(FILE_KEY);
         OutputStream os = null;
@@ -106,13 +112,17 @@ public class BaseStreamFormatter extends BaseFormatter {
      */
     protected void setOutput(OutputStream value) {
         try {
-            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(value, "UTF8")), true);
+            // do not buffer but flush each line.
+            writer = new PrintWriter(new OutputStreamWriter(value, "UTF8"), true);
         } catch (IOException e) {
             // should not happen
             throw new BuildException(e);
         }
     }
 
+    public void onRunEnded(TestRunEvent evt) {
+        close();
+    }
 
     protected void close() {
         if (writer != null) {

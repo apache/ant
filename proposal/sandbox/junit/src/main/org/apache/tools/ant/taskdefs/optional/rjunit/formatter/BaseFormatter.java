@@ -65,36 +65,19 @@ import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
  */
 public abstract class BaseFormatter implements Formatter {
 
-    /** number of errors */
-    private int errorCount;
-
-    /** number of failures */
-    private int failureCount;
-
-    /** number of runs (success + failure + error) */
-    private int runCount;
-
     public void init(Properties props) throws BuildException {
     }
 
-    protected void finalize() throws Throwable {
-        super.finalize();
-        close();
-    }
-
     public void onTestStarted(TestRunEvent evt) {
-        runCount++;
     }
 
     public void onTestEnded(TestRunEvent evt) {
     }
 
     public void onTestFailure(TestRunEvent evt) {
-        failureCount++;
     }
 
     public void onTestError(TestRunEvent evt) {
-        errorCount++;
     }
 
     public void onSuiteStarted(TestRunEvent evt) {
@@ -107,33 +90,9 @@ public abstract class BaseFormatter implements Formatter {
     }
 
     public void onRunEnded(TestRunEvent evt) {
-        finished();
     }
 
     public void onRunStopped(TestRunEvent evt) {
-        finished();
     }
 
-    protected void finished() {
-        close();
-    }
-
-    /** @return the number of errors */
-    protected final int getErrorCount() {
-        return errorCount;
-    }
-
-    /** @return the number of failures */
-    protected final int getFailureCount() {
-        return failureCount;
-    }
-
-    /** @return the number of runs */
-    protected final int getRunCount() {
-        return runCount;
-    }
-
-    /** helper method to flush and close the stream */
-    protected void close() {
-    }
 }

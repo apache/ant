@@ -55,6 +55,8 @@ package org.apache.tools.ant.taskdefs.optional.rjunit.formatter;
 
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestRunEvent;
+import org.apache.tools.ant.taskdefs.optional.rjunit.remote.TestSummary;
 
 /**
  * Display a summary message at the end of a testsuite stating
@@ -67,14 +69,24 @@ public class SummaryFormatter extends BaseStreamFormatter {
     private final static Resources RES =
             ResourceManager.getPackageResources(SummaryFormatter.class);
 
-    protected void finished(long elapsedtime) {
-        String msg = RES.getString("summary.finished.msg",
-                new Integer(getRunCount()),
-                new Integer(getFailureCount()),
-                new Integer(getErrorCount()),
-                new Long(elapsedtime / 1000));
+    public void onSuiteEnded(TestRunEvent evt) {
+        TestSummary summary = evt.getSummary();
+        String msg = RES.getString("suite.summary.msg",
+                evt.getName(),
+                new Integer(summary.runCount()),
+                new Integer(summary.failureCount()),
+                new Integer(summary.errorCount()),
+                new Long(summary.elapsedTime()/1000));
         getWriter().println(msg);
-        close();
     }
 
+    public void onRunEnded(TestRunEvent evt) {
+        TestSummary summary = evt.getSummary();
+        String msg = RES.getString("run.summary.msg",
+                new Integer(summary.runCount()),
+                new Integer(summary.failureCount()),
+                new Integer(summary.errorCount()),
+                new Long(summary.elapsedTime()/1000));
+        getWriter().println(msg);
+    }
 }

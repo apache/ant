@@ -148,21 +148,19 @@ public class XMLFormatter extends BaseStreamFormatter {
         currentTest.setAttribute(ATTR_NAME, evt.getName());
         rootElement.appendChild(currentTest);
         testElements.put(evt.getName(), currentTest);
-        super.onTestStarted(evt);
-        removeEvent(evt);
+        //removeEvent(evt);
     }
 
     public void onTestEnded(TestRunEvent evt) {
-        Element currentTest = (Element) testElements.get(evt);
+        Element currentTest = (Element) testElements.get(evt.getName());
         // with a TestSetup, startTest and endTest are not called.
         if (currentTest == null) {
             onTestStarted(evt);
             currentTest = (Element) testElements.get(evt.getName());
         }
-        TestRunEvent start = (TestRunEvent)testStarts.get(evt);
+        TestRunEvent start = (TestRunEvent)testStarts.get(evt.getName());
         float time = ((evt.getTimeStamp() - start.getTimeStamp()) / 1000.0f);
         currentTest.setAttribute(ATTR_TIME, Float.toString(time));
-        super.onTestEnded(evt);
         removeEvent(evt);
     }
 
@@ -179,25 +177,12 @@ public class XMLFormatter extends BaseStreamFormatter {
         nested.setAttribute(ATTR_TYPE, args[0]);
         Text text = doc.createTextNode(evt.getStackTrace());
         nested.appendChild(text);
-        super.onTestFailure(evt);
         removeEvent(evt);
     }
 
     protected void removeEvent(TestRunEvent evt){
         testStarts.remove(evt.getName());
         testElements.remove(evt.getName());
-    }
-
-    public void onRunStarted(TestRunEvent evt) {
-        super.onRunStarted(evt);
-    }
-
-    public void onRunEnded(TestRunEvent evt) {
-        super.onRunEnded(evt);
-    }
-
-    public void onRunStopped(TestRunEvent evt) {
-        super.onRunStopped(evt);
     }
 
     protected void close() {
