@@ -35,7 +35,7 @@ public class DefaultProjectEngine
     extends AbstractLoggable
     implements ProjectEngine, Composable
 {
-    protected TaskletEngine            m_taskletEngine;
+    protected TaskletEngine            m_taskEngine;
     protected ProjectListenerSupport   m_listenerSupport = new ProjectListenerSupport();
     protected DefaultComponentManager  m_componentManager;
 
@@ -69,7 +69,7 @@ public class DefaultProjectEngine
         throws ComponentException
     {
         m_componentManager = (DefaultComponentManager)componentManager;
-        m_taskletEngine = (TaskletEngine)componentManager.
+        m_taskEngine = (TaskletEngine)componentManager.
             lookup( "org.apache.ant.tasklet.engine.TaskletEngine" );
     }
 
@@ -87,13 +87,7 @@ public class DefaultProjectEngine
         //HACK: should do this a better way !!!!!!
         m_componentManager.put( "org.apache.ant.project.Project", project );
 
-        //final TaskContext context = project.getContext();
-
-        final String projectName = (String)context.getProperty( Project.PROJECT );
-
-        m_listenerSupport.projectStarted( projectName );
-
-        //context = new DefaultTaskletContext( context );
+        m_listenerSupport.projectStarted();
 
         executeTargetWork( "<init>", project.getImplicitTarget(), context );
 
@@ -236,7 +230,6 @@ public class DefaultProjectEngine
         getLogger().debug( "Executing task " + name );
 
         //Set up context for task...
-
         //is Only necessary if we are multi-threaded
         //final TaskletContext targetContext = new DefaultTaskletContext( context );
 
@@ -244,12 +237,12 @@ public class DefaultProjectEngine
         context.setProperty( TaskContext.NAME, name );
 
         //notify listeners
-        m_listenerSupport.taskletStarted( name );
+        m_listenerSupport.taskStarted( name );
 
         //run task
-        m_taskletEngine.execute( task, context );
+        m_taskEngine.execute( task, context );
 
         //notify listeners task has ended
-        m_listenerSupport.taskletFinished();
+        m_listenerSupport.taskFinished();
     }
 }

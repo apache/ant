@@ -31,5 +31,3 @@ public interface ProjectBuilder
     Project build( File source )
         throws IOException, AntException;
 }
-
-

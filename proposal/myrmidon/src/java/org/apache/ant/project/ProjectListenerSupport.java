@@ -15,7 +15,7 @@ package org.apache.ant.project;
 public class ProjectListenerSupport
     implements ProjectListener
 {
-    protected ProjectListener[]   m_listeners = new ProjectListener[ 0 ];
+    private ProjectListener[]   m_listeners = new ProjectListener[ 0 ];
 
     /**
      * Add an extra project listener that wants to receive notification of listener events.
@@ -61,14 +61,12 @@ public class ProjectListenerSupport
 
     /**
      * Fire a projectStarted event.
-     *
-     * @param projectName the projectName
      */
-    public void projectStarted( final String projectName )
+    public void projectStarted()
     {
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].projectStarted( projectName );
+            m_listeners[ i ].projectStarted();
         }
     }
 
@@ -112,22 +110,22 @@ public class ProjectListenerSupport
      *
      * @param targetName the name of target
      */
-    public void taskletStarted( String taskletName )
+    public void taskStarted( String taskName )
     {
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].taskletStarted( taskletName );
+            m_listeners[ i ].taskStarted( taskName );
         }
     }
 
     /**
-     * Fire a taskletFinished event.
+     * Fire a taskFinished event.
      */
-    public void taskletFinished()
+    public void taskFinished()
     {
         for( int i = 0; i < m_listeners.length; i++ )
         {
-            m_listeners[ i ].taskletFinished();
+            m_listeners[ i ].taskFinished();
         }
     }
 

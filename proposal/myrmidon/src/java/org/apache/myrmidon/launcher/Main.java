@@ -5,24 +5,21 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.launcher;
+package org.apache.myrmidon.launcher;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 /**
  * Basic Loader that is responsible for all the hackery to get classloader to work.
- * Other classes can call AntLoader.getLoader() and add to their own classloader.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
- * @author <a href="mailto:mpfoemme@thoughtworks.com">Matthew Foemmel</a>
  */
-public final class AntLoader
+public final class Main
 {
     /**
      * Magic entry point.
@@ -44,7 +41,7 @@ public final class AntLoader
             final File libDir = new File( installDirectory, "lib" );
             final URL[] urls = buildURLList( libDir );
 
-            final AntClassLoader classLoader = new AntClassLoader( urls );
+            final LauncherClassLoader classLoader = new LauncherClassLoader( urls );
 
             //load class and retrieve appropriate main method.
             final Class clazz = classLoader.loadClass( "org.apache.ant.Main" );

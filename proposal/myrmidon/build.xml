@@ -102,7 +102,7 @@ Legal:
     <jar jarfile="${build.lib}/ant.jar" 
          basedir="${build.classes}" 
          manifest="${manifest.dir}/ant-manifest.mf">
-      <include name="org/apache/ant/launcher/*" />
+      <include name="org/apache/myrmidon/launcher/*" />
     </jar>
 
     <jar jarfile="${build.lib}/myrmidon.jar" 

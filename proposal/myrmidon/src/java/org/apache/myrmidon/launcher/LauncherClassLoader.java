@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE file.
  */
-package org.apache.ant.launcher;
+package org.apache.myrmidon.launcher;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -14,11 +14,12 @@ import java.net.URLClassLoader;
 import java.util.StringTokenizer;
 
 /**
- * Basic classloader that allows modification at runtime.
+ * Basic classloader that allows addition of URLs at runtime.
+ * Used from Main.class to inject Classes into ClassLoader.
  *
  * @author <a href="mailto:donaldp@apache.org">Peter Donald</a>
  */
-public final class AntClassLoader
+public final class LauncherClassLoader
     extends URLClassLoader
 {
     /**
@@ -26,7 +27,7 @@ public final class AntClassLoader
      *
      * @param urls the Starting URLS
      */
-    public AntClassLoader( final URL[] urls )
+    public LauncherClassLoader( final URL[] urls )
     {
         super( urls );
     }
@@ -40,17 +41,19 @@ public final class AntClassLoader
     {
         super.addURL( url );
     }
-    
+
     /**
      * Add an array of URLs to classloader
      *
      * @param url the url
      */
-    public void addURLs( final URL[] urls )
+/*
+    void addURLs( final URL[] urls )
     {
         for( int i = 0; i < urls.length; i++ )
         {
             addURL( urls[ i ] );
         }
     }
+*/
 }

@@ -17,16 +17,13 @@ import org.apache.avalon.framework.ExceptionUtil;
 public class DefaultProjectListener
     implements ProjectListener
 {
-    protected String        m_prefix;
+    private String        m_prefix;
 
     /**
      * Notify listener of projectStarted event.
-     *
-     * @param projectName the projectName
      */
-    public void projectStarted( final String projectName )
+    public void projectStarted()
     {
-        output( "Starting project " + projectName + "\n" );
     }
     
     /**
@@ -54,21 +51,21 @@ public class DefaultProjectListener
     }
     
     /**
-     * Notify listener of taskletStarted event.
+     * Notify listener of taskStarted event.
      *
-     * @param taskletName the name of tasklet
+     * @param taskName the name of task
      */
-    public void taskletStarted( final String taskletName )
+    public void taskStarted( final String taskName )
     {
-        m_prefix = taskletName;
+        setPrefix( taskName );
     }
     
     /**
-     * Notify listener of taskletFinished event.
+     * Notify listener of taskFinished event.
      */
-    public void taskletFinished()
+    public void taskFinished()
     {
-        m_prefix = null;
+        setPrefix( null );
     }
     
     /**
@@ -100,7 +97,17 @@ public class DefaultProjectListener
      */
     protected void output( final String data )
     {
-        if( null != m_prefix ) System.out.println( "\t[" + m_prefix + "] " + data );
+        if( null != getPrefix() ) System.out.println( "\t[" + getPrefix() + "] " + data );
         else System.out.println( data );
+    }
+
+    protected final String getPrefix()
+    {
+        return m_prefix;
+    }
+
+    protected final void setPrefix( final String prefix )
+    {
+        m_prefix = prefix;
     }
 }

@@ -21,8 +21,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.apache.ant.launcher.AntClassLoader;
-import org.apache.ant.launcher.AntLoader;
+import org.apache.myrmidon.launcher.LauncherClassLoader;
 import org.apache.ant.project.LogTargetToListenerAdapter;
 import org.apache.ant.project.Project;
 import org.apache.ant.project.ProjectBuilder;
@@ -297,6 +296,7 @@ public class Main
 
         //setup classloader so that it will correctly load
         //the Project/ProjectBuilder/ProjectEngine and all dependencies
+        //FIXEME: Use separate classloader instead of injecting
         final ClassLoader classLoader = createClassLoader( libDir );
         Thread.currentThread().setContextClassLoader( classLoader );
 
@@ -451,14 +451,14 @@ public class Main
     {
         final ClassLoader candidate = getClass().getClassLoader();
 
-        if( !(candidate instanceof AntClassLoader) )
+        if( !(candidate instanceof LauncherClassLoader) )
         {
             getLogger().warn( "Warning: Unable to add entries from " +
                               "lib-path to classloader" );
             return candidate;
         }
 
-        final AntClassLoader classLoader = (AntClassLoader)candidate;
+        final LauncherClassLoader classLoader = (LauncherClassLoader)candidate;
 
         final ExtensionFileFilter filter =
             new ExtensionFileFilter( new String[] { ".jar", ".zip" } );
@@ -502,7 +502,6 @@ public class Main
         //defines.put( AntContextResources.TASKLIB_DIR, m_taskLibDir );
         //defines.put( TaskletContext.JAVA_VERSION, getJavaVersion() );
 
-        //final TaskContext context = project.getContext();
         addToContext( context, defines );
 
         //Add system properties second so that they overide user-defined properties

@@ -17,10 +17,8 @@ public interface ProjectListener
 {
     /**
      * Notify listener of projectStarted event.
-     *
-     * @param projectName the projectName
      */
-    void projectStarted( String projectName );
+    void projectStarted();
 
     /**
      * Notify listener of projectFinished event.
@@ -40,16 +38,16 @@ public interface ProjectListener
     void targetFinished();
 
     /**
-     * Notify listener of taskletStarted event.
+     * Notify listener of taskStarted event.
      *
-     * @param taskletName the name of tasklet
+     * @param taskName the name of task
      */
-    void taskletStarted( String taskletName );
+    void taskStarted( String taskName );
 
     /**
-     * Notify listener of taskletFinished event.
+     * Notify listener of taskFinished event.
      */
-    void taskletFinished();
+    void taskFinished();
 
     /**
      * Notify listener of log message event.
