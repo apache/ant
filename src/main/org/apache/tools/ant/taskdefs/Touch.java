@@ -99,7 +99,7 @@ public class Touch extends Task {
     }
 
     /**
-     * Date in the format DD/MM/YYYY HH:MM AM_PM.
+     * Date in the format MM/DD/YYYY HH:MM AM_PM.
      */
     public void setDatetime(String dateTime) {
         this.dateTime = dateTime;
