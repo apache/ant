@@ -188,15 +188,15 @@ public class ZipFileSet extends FileSet {
      * standard directory scanner.
      */
     protected AbstractFileSet getRef(Project p) {
-        if (!checked) {
+        if (!isChecked()) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
 
-        Object o = ref.getReferencedObject(p);
+        Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof FileSet)) {
-            String msg = ref.getRefId() + " doesn\'t denote a fileset";
+            String msg = getRefid().getRefId() + " doesn\'t denote a fileset";
             throw new BuildException(msg);
         } else {
             return (AbstractFileSet) o;

@@ -225,15 +225,15 @@ public class Mapper extends DataType implements Cloneable {
      * referenced Mapper.  
      */
     protected Mapper getRef() {
-        if (!checked) {
+        if (!isChecked()) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, getProject());
         }
         
-        Object o = ref.getReferencedObject(getProject());
+        Object o = getRefid().getReferencedObject(getProject());
         if (!(o instanceof Mapper)) {
-            String msg = ref.getRefId() + " doesn\'t denote a mapper";
+            String msg = getRefid().getRefId() + " doesn\'t denote a mapper";
             throw new BuildException(msg);
         } else {
             return (Mapper) o;

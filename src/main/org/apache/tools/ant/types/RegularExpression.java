@@ -137,16 +137,16 @@ public class RegularExpression extends DataType {
      * the given project.  Check for circular references too
      */
     public RegularExpression getRef(Project p) {
-        if (!checked) {
+        if (!isChecked()) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
 
         
-        Object o = ref.getReferencedObject(p);
+        Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof RegularExpression)) {
-            String msg = ref.getRefId() + " doesn\'t denote a " 
+            String msg = getRefid().getRefId() + " doesn\'t denote a "
                 + DATA_TYPE_NAME;
             throw new BuildException(msg);
         } else {

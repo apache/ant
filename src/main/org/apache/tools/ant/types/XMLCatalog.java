@@ -157,7 +157,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     //-- Methods ---------------------------------------------------------------
 
     public XMLCatalog() {
-        checked = false;
+        setChecked( false );
     }
 
     /**
@@ -203,7 +203,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         if (this.classpath == null) {
             this.classpath = new Path(getProject());
         }
-        checked = false;
+        setChecked( false );
         return this.classpath.createPath();
     }
 
@@ -222,7 +222,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         } else {
             this.classpath.append(classpath);
         }
-        checked = false;
+        setChecked( false );
     }
 
     /**
@@ -236,7 +236,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
             throw tooManyAttributes();
         }
         createClasspath().setRefid(r);
-        checked = false;
+        setChecked( false );
     }
 
     /**
@@ -256,7 +256,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         }
 
         getElements().addElement(dtd);
-        checked = false;
+        setChecked( false );
     }
 
     /**
@@ -298,7 +298,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
         // Append the classpath of the nested catalog
         Path nestedClasspath = catalog.getClasspath();
         createClasspath().append(nestedClasspath);
-        checked = false;
+        setChecked( false );
     }
 
     /**
@@ -339,7 +339,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     public InputSource resolveEntity(String publicId, String systemId)
         throws SAXException, IOException {
 
-       if (!checked) {
+       if (!isChecked()) {
           // make sure we don't have a circular reference here
           Stack stk = new Stack();
           stk.push(this);
@@ -367,7 +367,7 @@ public class XMLCatalog extends DataType implements Cloneable, EntityResolver, U
     public Source resolve(String href, String base)
         throws TransformerException {
 
-       if (!checked) {
+       if (!isChecked()) {
           // make sure we don't have a circular reference here
           Stack stk = new Stack();
           stk.push(this);

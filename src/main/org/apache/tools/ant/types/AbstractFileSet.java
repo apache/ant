@@ -378,15 +378,15 @@ public abstract class AbstractFileSet extends DataType implements Cloneable,
      * referenced FileSet.
      */
     protected AbstractFileSet getRef(Project p) {
-        if (!checked) {
+        if (!isChecked()) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
 
-        Object o = ref.getReferencedObject(p);
+        Object o = getRefid().getReferencedObject(p);
         if (!getClass().isAssignableFrom(o.getClass())) {
-            String msg = ref.getRefId() + " doesn\'t denote a "
+            String msg = getRefid().getRefId() + " doesn\'t denote a "
                 + getDataTypeName();
             throw new BuildException(msg);
         } else {

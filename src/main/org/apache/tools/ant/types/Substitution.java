@@ -101,16 +101,16 @@ public class Substitution extends DataType {
      * the given project.  Check for circular references too
      */
     public Substitution getRef(Project p) {
-        if (!checked) {
+        if (!isChecked()) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
 
         
-        Object o = ref.getReferencedObject(p);
+        Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof Substitution)) {
-            String msg = ref.getRefId() + " doesn\'t denote a substitution";
+            String msg = getRefid().getRefId() + " doesn\'t denote a substitution";
             throw new BuildException(msg);
         } else {
             return (Substitution) o;

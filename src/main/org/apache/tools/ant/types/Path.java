@@ -197,7 +197,7 @@ public class Path extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         elements.addElement(fs);
-        checked = false;
+        setChecked( false );
     }
 
     /**
@@ -208,7 +208,7 @@ public class Path extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         elements.addElement(fl);
-        checked = false;
+        setChecked( false );
     }
 
     /**
@@ -219,7 +219,7 @@ public class Path extends DataType implements Cloneable {
             throw noChildrenAllowed();
         }
         elements.addElement(dset);
-        checked = false;
+        setChecked( false );
     }
 
     /**
@@ -231,7 +231,7 @@ public class Path extends DataType implements Cloneable {
         }
         Path p = new Path(getProject());
         elements.addElement(p);
-        checked = false;
+        setChecked( false );
         return p;
     }
 
@@ -280,7 +280,7 @@ public class Path extends DataType implements Cloneable {
      * @return list of path elements.
      */
     public String[] list() {
-        if (!checked) {
+        if (!isChecked()) {
             // make sure we don't have a circular reference here
             Stack stk = new Stack();
             stk.push(this);
@@ -453,7 +453,7 @@ public class Path extends DataType implements Cloneable {
     protected void dieOnCircularReference(Stack stk, Project p) 
         throws BuildException {
 
-        if (checked) {
+        if (isChecked()) {
             return;
         }
 
@@ -474,7 +474,7 @@ public class Path extends DataType implements Cloneable {
                 }
             }
         }
-        checked = true;
+        setChecked( true );
     }
 
     /**

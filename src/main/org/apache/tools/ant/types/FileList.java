@@ -155,15 +155,15 @@ public class FileList extends DataType {
      * referenced FileList.  
      */
     protected FileList getRef(Project p) {
-        if (!checked) {
+        if (!isChecked()) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
         
-        Object o = ref.getReferencedObject(p);
+        Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof FileList)) {
-            String msg = ref.getRefId() + " doesn\'t denote a filelist";
+            String msg = getRefid().getRefId() + " doesn\'t denote a filelist";
             throw new BuildException(msg);
         } else {
             return (FileList) o;

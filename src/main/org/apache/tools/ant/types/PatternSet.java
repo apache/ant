@@ -396,15 +396,15 @@ public class PatternSet extends DataType {
      * referenced PatternSet.  
      */
     private PatternSet getRef(Project p) {
-        if (!checked) {
+        if (!isChecked()) {
             Stack stk = new Stack();
             stk.push(this);
             dieOnCircularReference(stk, p);
         }
         
-        Object o = ref.getReferencedObject(p);
+        Object o = getRefid().getReferencedObject(p);
         if (!(o instanceof PatternSet)) {
-            String msg = ref.getRefId() + " doesn\'t denote a patternset";
+            String msg = getRefid().getRefId() + " doesn\'t denote a patternset";
             throw new BuildException(msg);
         } else {
             return (PatternSet) o;

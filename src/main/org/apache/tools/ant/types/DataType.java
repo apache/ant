@@ -75,19 +75,32 @@ import org.apache.tools.ant.ProjectComponent;
 public abstract class DataType extends ProjectComponent {
     /**
      * The descriptin the user has set.
+     *
+     * @deprecated The user should not be directly referencing
+     *   variable. Please use {@link #setDescription} or
+     *   {@link #getDescription} instead.
      */
     protected String description;
+
     /**
      * Value to the refid attribute.
+     *
+     * @deprecated The user should not be directly referencing
+     *   variable. Please use {@link #getRefid} instead.
      */
     protected Reference ref;
+
     /**
      * Are we sure we don't hold circular references?
      *
      * <p>Subclasses are responsible for setting this value to false
      * if we'd need to investigate this condition (usually because a
      * child element has been added that is a subclass of
-     * DataType).</p> 
+     * DataType).</p>
+     *
+     * @deprecated The user should not be directly referencing
+     *   variable. Please use {@link #setChecked} or
+     *   {@link #isChecked} instead.
      */
     protected boolean checked = true;
     
@@ -95,7 +108,7 @@ public abstract class DataType extends ProjectComponent {
      * Sets a description of the current data type. It will be useful
      * in commenting what we are doing.  
      */
-    public void setDescription(String desc) {
+    public void setDescription( final String desc ) {
         description = desc;
     }
 
@@ -121,7 +134,7 @@ public abstract class DataType extends ProjectComponent {
      * thus override this method. if they do the must call
      * <code>super.setRefid</code>.</p> 
      */
-    public void setRefid(Reference ref) {
+    public void setRefid( final Reference ref ) {
         this.ref = ref;
         checked = false;
     }
@@ -142,21 +155,22 @@ public abstract class DataType extends ProjectComponent {
      * anything if {@link #checked <code>checked</code>} is true and
      * set it to true on exit.</p> 
      */
-    protected void dieOnCircularReference(Stack stk, Project p) 
+    protected void dieOnCircularReference( final Stack stack,
+                                           final Project project )
         throws BuildException {
 
         if (checked || !isReference()) {
             return;
         }
-        Object o = ref.getReferencedObject(p);
+        Object o = ref.getReferencedObject(project);
         
         if (o instanceof DataType) {
-            if (stk.contains(o)) {
+            if (stack.contains(o)) {
                 throw circularReference();
             } else {
-                stk.push(o);
-                ((DataType) o).dieOnCircularReference(stk, p);
-                stk.pop();
+                stack.push(o);
+                ((DataType) o).dieOnCircularReference(stack, project);
+                stack.pop();
             }
         }
         checked = true;
@@ -166,7 +180,8 @@ public abstract class DataType extends ProjectComponent {
      * Performs the check for circular references and returns the
      * referenced object.  
      */
-    protected Object getCheckedRef(Class requiredClass, String dataTypeName) {
+    protected Object getCheckedRef( final Class requiredClass,
+                                    final String dataTypeName ) {
         if (!checked) {
             Stack stk = new Stack();
             stk.push(this);
@@ -207,5 +222,18 @@ public abstract class DataType extends ProjectComponent {
     protected BuildException circularReference() {
         return new BuildException("This data type contains a circular " 
             + "reference.");
+    }
+
+    protected boolean isChecked() {
+        return checked;
+    }
+
+    protected void setChecked( final boolean checked ) {
+        this.checked = checked;
+    }
+
+    protected Reference getRefid()
+    {
+        return ref;
     }
 }
