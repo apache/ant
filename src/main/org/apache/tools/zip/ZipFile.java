@@ -86,8 +86,6 @@ import java.util.zip.ZipException;
  * <code>java.util.zip.ZipFile</code>, with a couple of exceptions:
  *
  * <ul>
- *   <li>The String-arg constructor declares to throw ZipException
- *   as well.</li>
  *   <li>There is no getName method.</li>
  *   <li>entries has been renamed to getEntries.</li>
  *   <li>getEntries and getEntry return
@@ -133,34 +131,50 @@ public class ZipFile {
     /**
      * Opens the given file for reading, assuming the platform's
      * native encoding for file names.
+     *
+     * @param f the archive.
+     *
+     * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(File f) throws IOException, ZipException {
+    public ZipFile(File f) throws IOException {
         this(f, null);
     }
 
     /**
      * Opens the given file for reading, assuming the platform's
      * native encoding for file names.
+     *
+     * @param name name of the archive.
+     *
+     * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(String name) throws IOException, ZipException {
+    public ZipFile(String name) throws IOException {
         this(new File(name), null);
     }
 
     /**
      * Opens the given file for reading, assuming the specified
      * encoding for file names.
+     *
+     * @param name name of the archive.
+     * @param encoding the encoding to use for file names
+     *
+     * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(String name, String encoding) 
-        throws IOException, ZipException {
+    public ZipFile(String name, String encoding) throws IOException {
         this(new File(name), encoding);
     }
 
     /**
      * Opens the given file for reading, assuming the specified
      * encoding for file names.
+     *
+     * @param f the archive.
+     * @param encoding the encoding to use for file names
+     *
+     * @throws IOException if an error occurs while reading the file.
      */
-    public ZipFile(File f, String encoding) 
-        throws IOException, ZipException {
+    public ZipFile(File f, String encoding) throws IOException {
         this.encoding = encoding;
         archive = new RandomAccessFile(f, "r");
         populateFromCentralDirectory();
@@ -178,6 +192,7 @@ public class ZipFile {
 
     /**
      * Closes the archive.
+     * @throws IOException if an error occurs closing the archive.
      */
     public void close() throws IOException {
         archive.close();
@@ -186,6 +201,7 @@ public class ZipFile {
     /**
      * Returns all entries as {@link org.apache.tools.ant.ZipEntry
      * ZipEntry} instances.
+     * @return all entries as ZipEntry instances.
      */
     public Enumeration getEntries() {
         return entries.keys();
@@ -194,6 +210,9 @@ public class ZipFile {
     /**
      * Returns a named entry - or <code>null</code> if no entry by
      * that name exists.
+     * @param name name of the entry.
+     * @return the ZipEntry corresponding to the given name - or
+     * <code>null</code> if not present.
      */
     public ZipEntry getEntry(String name) {
         return (ZipEntry) nameMap.get(name);
@@ -201,6 +220,8 @@ public class ZipFile {
 
     /**
      * Returns an InputStream for reading the contents of the given entry.
+     * @param the entry to get the stream for.
+     * @return a stream to read the entry from.
      */
     public InputStream getInputStream(ZipEntry ze)
         throws IOException, ZipException {
@@ -242,14 +263,14 @@ public class ZipFile {
 
     /**
      * Reads the central directory of the given archive and populates
-     * the interal tables with ZipEntry instances.
+     * the internal tables with ZipEntry instances.
      *
      * <p>The ZipEntrys will know all data that can be obtained from
      * the central directory alone, but not the data that requires the
-     * local file header or additional data to be read.</p> 
+     * local file header or additional data to be read.</p>
      */
     private void populateFromCentralDirectory() 
-        throws IOException, ZipException {
+        throws IOException {
         positionAtCentralDirectory();
 
         byte[] cfh = new byte[CFH_LEN];
@@ -266,17 +287,17 @@ public class ZipFile {
             off += 2;
             ze.setPlatform((versionMadeBy.getValue() >> 8) & 0x0F);
 
-            off += 4;// skip version info and general purpose byte
+            off += 4; // skip version info and general purpose byte
 
             ze.setMethod((new ZipShort(cfh, off)).getValue());
             off += 2;
-            
+
             ze.setTime(fromDosTime(new ZipLong(cfh, off)).getTime());
             off += 4;
-            
+
             ze.setCrc((new ZipLong(cfh, off)).getValue());
             off += 4;
-            
+
             ze.setCompressedSize((new ZipLong(cfh, off)).getValue());
             off += 4;
 
@@ -352,7 +373,7 @@ public class ZipFile {
      * record.
      */
     private void positionAtCentralDirectory() 
-        throws IOException, ZipException {
+        throws IOException {
         long off = archive.length() - MIN_EOCD_SIZE;
         archive.seek(off);
         byte[] sig = ZipOutputStream.EOCD_SIG.getBytes();
@@ -430,6 +451,9 @@ public class ZipFile {
 
     /**
      * Convert a DOS date/time field to a Date object.
+     *
+     * @param l contains the stored DOS time.
+     * @return a Date instance corresponding to the given time.
      */
     protected static Date fromDosTime(ZipLong l) {
         long dosTime = l.getValue();
@@ -446,6 +470,10 @@ public class ZipFile {
     /**
      * Retrieve a String from the given bytes using the encoding set
      * for this ZipFile.
+     *
+     * @param bytes the byte array to transform
+     * @return String obtained by using the given encoding
+     * @throws ZipException if the encoding cannot be recognized.
      */
     protected String getString(byte[] bytes) throws ZipException {
         if (encoding == null) {
@@ -502,7 +530,7 @@ public class ZipFile {
             if (len <= 0) {
                 return 0;
             }
-            
+
             if (len > remaining) {
                 len = (int) remaining;
             }
