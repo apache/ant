@@ -264,7 +264,7 @@ public class Main {
                 }
             } else if (arg.startsWith("-")) {
                 // we don't have any more args to recognize!
-                String msg = "Unknown arg: " + arg;
+                String msg = "Unknown argument: " + arg;
                 System.out.println(msg);
                 printUsage();
                 return;
@@ -504,8 +504,8 @@ public class Main {
         msg.append("  -listener <classname>  add an instance of class as a project listener" + lSep);
         msg.append("  -buildfile <file>      use given buildfile" + lSep);
         msg.append("  -D<property>=<value>   use value for given property" + lSep);
-        msg.append("  -find <file>           search for buildfile towards the root of the filesystem" + lSep);
-        msg.append("                         system and use it" + lSep);
+        msg.append("  -find <file>           search for buildfile towards the root of the" + lSep);
+        msg.append("                         filesystem and use it" + lSep);
         System.out.println(msg.toString());
     }
 
