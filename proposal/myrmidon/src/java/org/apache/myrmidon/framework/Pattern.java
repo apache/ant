@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.framework;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskException;
 
 /**
@@ -17,6 +19,9 @@ import org.apache.myrmidon.api.TaskException;
 public class Pattern
     implements DataType
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( Pattern.class );
+
     private String         m_value;
     private Condition      m_condition;
 
@@ -95,7 +100,8 @@ public class Pattern
     {
         if( null != m_condition )
         {
-            throw new TaskException( "Can only set one of if/else for pattern data type" );
+            final String message = REZ.getString( "pattern.ifelse-duplicate.error" );
+            throw new TaskException( message );
         }
     }
 }

@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.framework;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -29,6 +31,9 @@ public class TypeInstanceTask
     extends AbstractContainerTask
     implements Configurable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( TypeInstanceTask.class );
+
     private String              m_id;
     private Object              m_value;
     private boolean             m_localScope     = true;
@@ -43,7 +48,8 @@ public class TypeInstanceTask
         try { m_factory = typeManager.getFactory( DataType.ROLE ); }
         catch( final TypeException te )
         {
-            throw new ComponentException( "Unable to retrieve factory from TypeManager", te );
+            final String message = REZ.getString( "type.no-factory.error" );
+            throw new ComponentException( message, te );
         }
     }
 
@@ -81,7 +87,8 @@ public class TypeInstanceTask
         }
         catch( final Exception e )
         {
-            throw new ConfigurationException( "Unable to create datatype", e );
+            final String message = REZ.getString( "type.no-create.error" );
+            throw new ConfigurationException( message, e );
         }
 
         configure( m_value, newConfiguration );
@@ -102,7 +109,8 @@ public class TypeInstanceTask
     {
         if( null == m_id )
         {
-            throw new TaskException( "Id must be specified" );
+            final String message = REZ.getString( "type.no-id.error" );
+            throw new TaskException( message );
         }
 
         if( m_localScope )

@@ -7,6 +7,8 @@
  */
 package org.apache.myrmidon.framework;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.property.PropertyException;
 import org.apache.avalon.excalibur.property.PropertyUtil;
 import org.apache.avalon.framework.component.Component;
@@ -22,6 +24,9 @@ import org.apache.myrmidon.api.TaskException;
 public class Condition
     implements Component
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( Condition.class );
+
     private String            m_condition;
     private boolean           m_isIfCondition;
 
@@ -66,7 +71,8 @@ public class Condition
         }
         catch( final PropertyException pe )
         {
-            throw new ContextException( "Error resolving " + m_condition, pe );
+            final String message = REZ.getString( "condition.no-resolve.error", m_condition );
+            throw new ContextException( message, pe );
         }
 
         if( !m_isIfCondition )

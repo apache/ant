@@ -10,6 +10,8 @@ package org.apache.myrmidon.framework;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -31,6 +33,9 @@ public abstract class AbstractTypeDef
     extends AbstractTask
     implements Composable
 {
+    private static final Resources REZ =
+        ResourceManager.getPackageResources( AbstractTypeDef.class );
+
     private File                m_lib;
     private String              m_name;
     private String              m_className;
@@ -65,11 +70,13 @@ public abstract class AbstractTypeDef
     {
         if( null == m_name )
         {
-            throw new TaskException( "Must specify name parameter" );
+            final String message = REZ.getString( "typedef.no-name.error" );
+            throw new TaskException( message );
         }
         else if( null == m_className )
         {
-            throw new TaskException( "Must specify classname parameter" );
+            final String message = REZ.getString( "typedef.no-classname.error" );
+            throw new TaskException( message );
         }
 
         final String typeName = getTypeName();
@@ -82,7 +89,8 @@ public abstract class AbstractTypeDef
         try { m_typeManager.registerType( role, m_name, factory ); }
         catch( final TypeException te )
         {
-            throw new TaskException( "Failed to register type", te );
+            final String message = REZ.getString( "typedef.no-register.error" );
+            throw new TaskException( message, te );
         }
     }
 
@@ -100,7 +108,8 @@ public abstract class AbstractTypeDef
         }
         catch( final Exception e )
         {
-            throw new TaskException( "Failed to build classLoader due to: " + e, e );
+            final String message = REZ.getString( "typedef.bad-classloader.error", e );
+            throw new TaskException( message, e );
         }
     }
 
