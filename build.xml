@@ -740,9 +740,13 @@
 
     <jar destfile="${build.lib}/${bootstrap.jar}"
          basedir="${build.classes}"
-         manifest="${manifest}.bootstrap">
+         manifest="${manifest}">
       <include name="${ant.package}/Main.class"/>
       <metainf dir="${build.dir}" includes="LICENSE.txt"/>
+      <manifest>
+        <attribute name="Class-Path"
+                   value="ant.jar xml-apis.jar xercesImpl.jar optional.jar xalan.jar"/>
+      </manifest>
     </jar>
 
   </target>
