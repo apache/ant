@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="wsdl-to-java-jtest" basedir="." default="">
+<project name="wsdl-to-java-jtest" basedir="." default="init">
 
 
   <property environment="env"/>
