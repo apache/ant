@@ -80,6 +80,8 @@ public class CompilerAdapterFactory {
      * <li>modern, javac1.3 = the new compiler of JDK 1.3
      * <li>jvc, microsoft = the command line compiler from Microsoft's SDK
      * for Java / Visual J++
+     * <li>kjc = the kopi compiler</li>
+     * <li>gcj = the gcj compiler from gcc</li>
      * <li><i>a fully quallified classname</i> = the name of a compiler
      * adapter
      * </ul>
@@ -118,6 +120,12 @@ public class CompilerAdapterFactory {
             if ( compilerType.equalsIgnoreCase("jvc") ||
                     compilerType.equalsIgnoreCase("microsoft")) {
                 return new Jvc();
+            }
+            if ( compilerType.equalsIgnoreCase("kjc") ) {
+                return new Kjc();
+            }
+            if ( compilerType.equalsIgnoreCase("gcj") ) {
+                return new Gcj();
             }
             return resolveClassName( compilerType );
         }

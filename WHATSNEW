@@ -135,6 +135,9 @@ Other changes:
   elements - using these you can have more than one in/excludes file
   per <patternset>. 
 
+* Two new supported compilers for javac: kjc for kopi and gcj for the
+  gcc frontend.
+
 Fixed bugs:
 -----------
 
