@@ -70,6 +70,7 @@ import org.apache.tools.ant.types.FilterSet;
 import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.LazyHashtable;
+import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.taskdefs.Antlib;
 import org.apache.tools.ant.input.InputHandler;
@@ -131,6 +132,13 @@ public class Project {
     private final static String VISITED = "VISITED";
 
     private static String javaVersion;
+
+    /**
+     * The class name of the Ant class loader to use for
+     * JDK 1.2 and above
+     */
+    private static final String ANTCLASSLOADER_JDK12
+        = "org.apache.tools.ant.loader.AntClassLoader2";
 
     /**
      *  Description of the Field
@@ -462,6 +470,47 @@ public class Project {
         }
     }
 
+
+    /**
+     * Factory method to create a class loader for loading classes
+     *
+     * @return an appropriate classloader
+     */
+    private AntClassLoader createClassLoader() {
+        AntClassLoader loader = null;
+        if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
+            try {
+                // 1.2+ - create advanced helper dynamically
+                Class loaderClass
+                    = Class.forName(ANTCLASSLOADER_JDK12);
+                loader = (AntClassLoader) loaderClass.newInstance();
+            } catch (Exception e) {
+                    log("Unable to create Class Loader: "
+                        + e.getMessage(), Project.MSG_DEBUG);
+            }
+        }
+
+        if (loader == null) {
+            loader = new AntClassLoader();
+        }
+
+        loader.setProject(this);
+        return loader;
+    }
+
+    /**
+     * Factory method to create a class loader for loading classes from
+     * a given path
+     *
+     * @param path the path from whcih clases are to be loaded.
+     *
+     * @return an appropriate classloader
+     */
+    public AntClassLoader createClassLoader(Path path) {
+        AntClassLoader loader = createClassLoader();
+        loader.setClassPath(path);
+        return loader;
+    }
 
     /**
      *  Sets the coreLoader attribute of the Project object

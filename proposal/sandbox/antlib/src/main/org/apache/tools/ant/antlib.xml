@@ -122,9 +122,17 @@
   <data-type name="patternset" class="org.apache.tools.ant.types.PatternSet"/>
   <data-type name="mapper" class="org.apache.tools.ant.types.Mapper"/>
   <data-type name="filterset" class="org.apache.tools.ant.types.FilterSet"/>
+  <data-type name="filterchain" class="org.apache.tools.ant.types.FilterChain" />
+  <data-type name="filterreader" class="org.apache.tools.ant.types.AntFilterReader" />
   <data-type name="description" class="org.apache.tools.ant.types.Description"/>
   <data-type name="substitution" class="org.apache.tools.ant.types.Substitution"/>
   <data-type name="regexp" class="org.apache.tools.ant.types.RegularExpression"/>
+  <data-type name="selector" class="org.apache.tools.ant.types.selectors.SelectSelector"/>
+  <data-type name="zipfileset" class="org.apache.tools.ant.types.ZipFileSet"/>
+  <data-type name="xmlcatalog" class="org.apache.tools.ant.types.XMLCatalog" />
+  <data-type name="extensionSet" class="org.apache.tools.ant.taskdefs.optional.extension.ExtensionSet" />
+  <data-type name="extension" class="org.apache.tools.ant.taskdefs.optional.extension.ExtensionAdapter" />
+  <data-type name="libfileset" class="org.apache.tools.ant.taskdefs.optional.extension.LibFileSet" />
 
   <!-- deprecated ant tasks (kept for back compatibility) -->
 
