@@ -61,6 +61,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.util.JavaEnvUtils;
@@ -235,16 +236,19 @@ public class SignJar extends Task {
      * sign the jar(s)
      */
     public void execute() throws BuildException {
-        if (null == jar && null == filesets) {
+        if (null == jar && filesets.size() == 0) {
             throw new BuildException("jar must be set through jar attribute "
                                      + "or nested filesets");
         }
         if (null != jar) {
+            if (filesets.size() != 0) {
+                log("nested filesets will be ignored if the jar attribute has"
+                    + " been specified.", Project.MSG_WARN);
+            }
+            
             doOneJar(jar, signedjar);
             return;
         } else {
-            //Assume null != filesets
-
             // deal with the filesets
             for (int i = 0; i < filesets.size(); i++) {
                 FileSet fs = (FileSet) filesets.elementAt(i);
@@ -262,10 +266,6 @@ public class SignJar extends Task {
      */
     private void doOneJar(File jarSource, File jarTarget)
         throws BuildException {
-        if (JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_1)) {
-            throw new BuildException("The signjar task is only available on "
-                                     + "JDK versions 1.2 or greater");
-        }
 
         if (null == alias) {
             throw new BuildException("alias attribute must be set");
@@ -276,7 +276,7 @@ public class SignJar extends Task {
         }
 
         if (isUpToDate(jarSource, jarTarget)) {
-          return;
+            return;
         }
 
         final ExecTask cmd = (ExecTask) getProject().createTask("exec");
