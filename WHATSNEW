@@ -163,7 +163,7 @@ Other changes:
 
 * MailLogger now sets the Date header correctly.
 
-* Shipped XML parser is now Xerces 2.2.1
+* Shipped XML parser is now Xerces 2.3.0
 
 * <style> has a new attribute reuseloadedstylesheet to work around a
   bug in widespread Xalan versions.
