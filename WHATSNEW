@@ -9,6 +9,11 @@ NetWare.
 
 * runant.pl now supports NetWare.
 
+* <tempfile> and <setproxy> tasks were in beta1, but not defined by
+default; They now are. <tempfile> fills a property with the name of a
+temporary file; <setproxy> lets you set the JVM's http, ftp and socks proxy
+settings.
+
 Changes from Ant 1.4.1 to 1.5beta1
 ==================================
 
