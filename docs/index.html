@@ -232,7 +232,7 @@ command. This example assumes you have set up your classpath to include
 <hr>
 <h2><a name="buildfile">Writing a simple buildfile</a></h2>
 <p>The buildfile is written in XML. Each buildfile contains one project.</p>
-<p>Each element of the buildfile can have an <code>ID</code> attribute and
+<p>Each element of the buildfile can have an <code>id</code> attribute and
 can later be referred to by the value supplied to this. The value has
 to be unique.</p>
 <h3>Projects</h3>
@@ -511,7 +511,7 @@ that contain space characters, nested elements can be used.</p>
 <code>\dir;\dir2;\dir3</code> on DOS based systems and
 <code>/dir:/dir2:/dir3</code> on Unix like systems.</p>
 <h3><a name="references">References</a></h3>
-<p>The <code>ID</code> attribute of the buildfile's elements can be
+<p>The <code>id</code> attribute of the buildfile's elements can be
 used to refer to them. This can useful if you are going to replicate
 the same snippet of XML over and over again - using a
 <code>&lt;classpath&gt;</code> structure more than once for
@@ -536,7 +536,7 @@ example.</p>
 <p>could be rewritten as</p>
 <blockquote><pre>
 &lt;rmic ...&gt;
-  &lt;classpath ID=&quot;project.class.path&quot;&gt;
+  &lt;classpath id=&quot;project.class.path&quot;&gt;
     &lt;pathelement location=&quot;lib/&quot; /&gt;
     &lt;pathelement path=&quot;${java.class.path}/&quot; /&gt;
     &lt;pathelement path=&quot;${additional.path}&quot; /&gt;
@@ -664,7 +664,7 @@ They are:
 If you do not want these default excludes applied, you may disable them with the 
 <code>defaultexcludes=&quot;no&quot;</code> attribute.</p>
 <h3><a name="patternset">PatternSets</a></h3>
-<p>Patterns can be group to sets and later be referenced by their ID
+<p>Patterns can be group to sets and later be referenced by their id
 attribute. They are defined via a <code>patternset</code> element -
 which can currently only appear nested into a <a
 href="#fileset">FileSet</a> or a directory based task that constitutes
@@ -699,7 +699,7 @@ an implicit FileSet.</p>
 </table>
 <h4>Examples:</h4>
 <blockquote><pre>
-&lt;patternset ID=&quot;non.test.sources&quot; &gt;
+&lt;patternset id=&quot;non.test.sources&quot; &gt;
   &lt;include name=&quot;**/*.java&quot; /&gt;
   &lt;exclude name=&quot;**/*Test*&quot; /&gt;
 &lt;/patternset&gt;
@@ -766,7 +766,7 @@ as PatternSet's attributes.</p>
 <h4>Examples:</h4>
 <blockquote><pre>
 &lt;fileset dir=&quot;${server.src}&quot; &gt;
-  &lt;patternset ID=&quot;non.test.sources&quot; &gt;
+  &lt;patternset id=&quot;non.test.sources&quot; &gt;
     &lt;include name=&quot;**/*.java&quot; /&gt;
     &lt;exclude name=&quot;**/*Test*&quot; /&gt;
   &lt;/patternset&gt;
@@ -1047,7 +1047,7 @@ readable and executable for anyone on a UNIX system.</p>
 <p>makes all files below <code>shared/sources1</code> (except those
 below any directory named trial) writable for members of the same
 group on a UNIX system. In addition all files belonging to a FileSet
-with <code>ID</code> <code>other.shared.sources</code> get the same
+with <code>id</code> <code>other.shared.sources</code> get the same
 permissions.</p>
 <hr>
 <h2><a name="copydir">Copydir</a></h2>
@@ -1587,7 +1587,7 @@ description in the section about <a href="#env">exec</a></p>
 </pre></blockquote>
 <p>invokes <code>ls -l</code>, adding the absolute filenames of all
 files below <code>/tmp</code> not ending in <code>.txt</code> and all
-files of the FileSet with <code>ID</code> <code>other.files</code> to
+files of the FileSet with <code>id</code> <code>other.files</code> to
 the command line.</p>
 <hr>
 <h2><a name="filter">Filter</a></h2>
@@ -4351,8 +4351,10 @@ elements.</p>
 <h3><b>Description:</b></h3>
 <p>Execute a script in a 
   <a href="http://oss.software.ibm.com/developerworks/opensource/bsf/">BSF</a> supported language.
-<p>All items (tasks, targets, etc) of the running project are accessible
-from the script.
+<p>All items (tasks, targets, etc) of the running project are
+accessible from the script, using either their <code>name</code> or
+<code>id</code> attributes.</p>
+<p>Scripts can do almost anything a task written in Java could do.</p>
 <h3>Parameters:</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -4373,9 +4375,81 @@ from the script.
   </tr>
 </table>
 <h3>Examples</h3>
-<blockquote>
-  <p>None yet available</p>
-</blockquote>
+<blockquote><pre>
+&lt;project name=&quot;squares&quot; default=&quot;main&quot; basedir=&quot;.&quot;&gt;
+
+  &lt;target name=&quot;setup&quot;&gt;
+
+    &lt;script language=&quot;javascript&quot;&gt; &lt;![CDATA[
+
+      for (i=1; i&lt;=10; i++) {
+        echo = squares.createTask(&quot;echo&quot;);
+        main.addTask(echo);
+        echo.setMessage(i*i);
+      }
+
+    ]]&gt; &lt;/script&gt;
+
+  &lt;/target&gt;
+
+  &lt;target name=&quot;main&quot; depends=&quot;setup&quot; /&gt;
+
+&lt;/project&gt;
+</pre></blockquote>
+<p>generates</p>
+<blockquote><pre>
+setup:
+
+main:
+1
+4
+9
+16
+25
+36
+49
+64
+81
+100
+
+BUILD SUCCESSFUL
+</pre></blockquote>
+<p>Another example, using <a href="#references">references by id</a>.</p>
+<blockquote><pre>
+&lt;project name=&quot;testscript&quot; default=&quot;main&quot;&gt;
+  &lt;target name=&quot;sub&quot;&gt;
+    &lt;echo id=&quot;theEcho&quot; /&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;sub1&quot;&gt;
+    &lt;script language=&quot;javascript&quot;&gt;&lt;![CDATA[
+      theEcho.setMessage(&quot;In sub1&quot;);
+      sub.execute();
+    ]]&gt;&lt;/script&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;sub2&quot;&gt;
+    &lt;script language=&quot;javascript&quot;&gt;&lt;![CDATA[
+      theEcho.setMessage(&quot;In sub2&quot;);
+      sub.execute();
+    ]]&gt;&lt;/script&gt;
+  &lt;/target&gt;
+
+  &lt;target name=&quot;main&quot; depends=&quot;sub1,sub2&quot; /&gt;
+&lt;/project&gt;
+</pre></blockquote>
+<p>generates</p>
+<blockquote><pre>
+sub1:
+In sub1
+
+sub2:
+In sub2
+
+main:
+
+BUILD SUCCESSFUL
+</pre></blockquote>
 <hr>
 <h2><a name="vssget">VssGet</a></h2>
 <h3><b>Description:</b></h3>
