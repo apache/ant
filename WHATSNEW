@@ -121,6 +121,9 @@ Other changes:
 
 * <fixcrlf> supports a file attribute for easy fixup of a single file.
 
+* New condition <parsersupports> which can look for XML parser feature or
+  property support in the parser Ant is using.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
