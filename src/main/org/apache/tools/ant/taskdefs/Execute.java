@@ -1162,7 +1162,7 @@ public class Execute {
                     catch (InterruptedException e) {
                         //ignore
                     }
-                    FILE_UTILS.delete(f);
+                    FileUtils.delete(f);
                 }
             }.start();
         }
