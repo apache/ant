@@ -188,7 +188,9 @@ three options:</p>
 For the options 2 and 3, Ant has to create an instance of
 <code>NestedInner</code> before it can pass it to the task, this
 means, <code>NestedInner</code> must have a <code>public</code> no-arg
-constructor.  This is the only difference between options 1 and 2.</p>
+  constructor or a <code>public</code> one-arg constructor
+  taking a Project class as a parameter.
+This is the only difference between options 1 and 2.</p>
 
 <p>The difference between 2 and 3 is what Ant has done to the object
 before it passes it to the method.  <code>addInner</code> will receive
@@ -201,6 +203,106 @@ handled.</p>
 the methods will be called, but we don't know which, this depends on
 the implementation of your Java virtual machine.</p>
 
+  <h3><a name="nestedtype">Nested Types</a></h3>
+If your task needs to nest an arbitary type that has been defined
+  using &lt;taskdef&gt; you have two options.
+  <ol>
+    <li><code>public void add(Type type)</code></li>
+    <li><code>public void addConfigured(Type type)</code></li>
+  </ol>
+  The difference between 1 and 2 is the same as between 2 and 3 in the
+  previous section.
+  <p>
+    For example suppose one wanted to handle objects object of type
+    org.apache.tools.ant.taskdefs.condition.Condition, one may
+    have a class:
+  </p>
+  <blockquote>
+  <pre>
+public class MyTask extends Task {
+    private List conditions = new ArrayList();
+    public void add(Condition c) {
+        conditions.add(c);
+    }
+    public void execute() {
+     // iterator over the conditions
+    }
+}
+  </pre>
+  </blockquote>
+  <p>
+    One may define and use this class like this:
+  </p>
+  <blockquote>
+    <pre>
+&lt;taskdef name="mytask" classname="MyTask" classpath="classes"/&gt;
+&lt;typedef name="condition.equals"
+         classname="org.apache.tools.ant.taskdefs.conditions.Equals"/&gt;
+&lt;mytask&gt;
+    &lt;condition.equals arg1="${debug}" arg2="true"/&gt;
+&lt;/mytask&gt;
+    </pre>
+  </blockquote>
+  <p>
+    A more complicated example follows:
+  </p>
+  <blockquote>
+    <pre>
+public class Sample {
+    public static class MyFileSelector implements FileSelector {
+         public void setAttrA(int a) {}
+         public void setAttrB(int b) {}
+         public void add(Path path) {}
+         public boolean isSelected(File basedir, String filename, File file) {
+             return true;
+         }
+     }
+
+    interface MyInterface {
+        void setVerbose(boolean val);
+    }        
+
+    public static class BuildPath extends Path {
+        public BuildPath(Project project) {
+            super(project);
+        }
+        
+        public void add(MyInterface inter) {}
+        public void setUrl(String url) {}
+    }
+
+    public static class XInterface implements MyInterface {
+        public void setVerbose(boolean x) {}
+        public void setCount(int c) {}
+    }
+}
+    </pre>
+  </blockquote>
+  <p>
+    This class defines a number of static classes that implement/extend
+    Path, MyFileSelector and MyInterface. These may be defined and used
+    as follows:
+  </p>
+  <pre>
+    <blockquote>
+&lt;typedef name="myfileselector" classname="Sample$MyFileSelector"
+         classpath="classes" loaderref="classes"/&gt;
+&lt;typedef name="buildpath" classname="Sample$BuildPath"
+         classpath="classes" loaderref="classes"/&gt;
+&lt;typedef name="xinterface" classname="Sample$XInterface"
+         classpath="classes" loaderref="classes"/&gt;
+
+&lt;copy todir="copy-classes"&gt;
+   &lt;fileset dir="classes"&gt;
+      &lt;myfileselector attra="10" attrB="-10"&gt;
+         &lt;buildpath path="." url="abc"&gt;
+            &lt;xinterface count="4"/&gt;
+         &lt;/buildpath&gt;
+      &lt;/myfileselector&gt;
+   &lt;/fileset&gt;
+&lt;/copy&gt;
+    </blockquote>
+  </pre>
 <h3><a name="taskcontainer">TaskContainer</a></h3>
 
 <p>The <code>TaskContainer</code> consists of a single method,
