@@ -47,15 +47,7 @@ public class DefaultTskDeployer
     private DefaultConfigurationBuilder  m_configurationBuilder = new DefaultConfigurationBuilder();
     private ConverterRegistry            m_converterRegistry;
     private TypeManager                  m_typeManager;
-
-    /**
-     * Default constructor.
-     */
-    public DefaultTskDeployer()
-    {
-        //m_autoUndeploy = true;
-        //m_type = "Task";
-    }
+    private RoleManager                  m_roleManager;
 
     /**
      * Retrieve relevent services needed to deploy.
@@ -68,42 +60,29 @@ public class DefaultTskDeployer
     {
         m_converterRegistry = (ConverterRegistry)componentManager.lookup( ConverterRegistry.ROLE );
         m_typeManager = (TypeManager)componentManager.lookup( TypeManager.ROLE );
+        m_roleManager = (RoleManager)componentManager.lookup( RoleManager.ROLE );
     }
 
-    public void deploy( final String location, final URL url )
+    public void deploy( final File file )
         throws DeploymentException
     {
-        //checkDeployment( location, url );
-        final File file = getFileFor( url );
+        getLogger().info( "Deploying AntLib file (" + file + ")" );
 
-        getLogger().info( "Deploying AntLib file (" + file + ") as " + location );
-        deployFromFile( location, file );
-    }
+        final URL url = getURL( file );
 
-    /**
-     * Deploy a file.
-     * Eventually this should be cached for performance reasons.
-     *
-     * @param location the location
-     * @param file the file
-     * @exception DeploymentException if an error occurs
-     */
-    protected void deployFromFile( final String location, final File file )
-        throws DeploymentException
-    {
         final ZipFile zipFile = getZipFileFor( file );
-
-        URL url = null;
-
         try
         {
-            try { url = file.toURL(); }
-            catch( final MalformedURLException mue )
-            {
-                throw new DeploymentException( "Unable to form url", mue );
-            }
-            loadResources( zipFile, location, url );
+            loadResources( zipFile, url );
         }
+        catch( final DeploymentException de )
+        {
+            throw de;
+        }
+        catch( final Exception e )
+        {
+            throw new DeploymentException( "Error deploying library", e );
+        }       
         finally
         {
             try { zipFile.close(); }
@@ -111,10 +90,10 @@ public class DefaultTskDeployer
         }
     }
 
-    private void loadResources( final ZipFile zipFile, final String location, final URL url )
-        throws DeploymentException
+    private void loadResources( final ZipFile zipFile, final URL url )
+        throws Exception
     {
-        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
+        final Configuration taskdefs = getDescriptor( zipFile );
         final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
 
         try
@@ -141,18 +120,13 @@ public class DefaultTskDeployer
         {
             throw new DeploymentException( "Malformed taskdefs.xml", ce );
         }
-        catch( final Exception e )
-        {
-            throw new DeploymentException( "Failed to deploy " + location, e );
-        }
     }
 
-    public void deployConverter( String name, String location, URL url )
+    public void deployConverter( final String name, final File file )
         throws DeploymentException
     {
-        //checkDeployment( location, url );
-        final ZipFile zipFile = getZipFileFor( getFileFor( url ) );
-        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
+        final ZipFile zipFile = getZipFileFor( file );
+        final Configuration taskdefs = getDescriptor( zipFile );
 
         try
         {
@@ -161,6 +135,7 @@ public class DefaultTskDeployer
             {
                 if( converters[ i ].getAttribute( "classname" ).equals( name ) )
                 {
+                    final URL url = getURL( file );
                     final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
                     handleConverter( converters[ i ], url, factory );
                     break;
@@ -177,13 +152,11 @@ public class DefaultTskDeployer
         }
     }
 
-    public void deployDataType( final String name, final String location, final URL url )
+    public void deployDataType( final String name, final File file )
         throws DeploymentException
     {
-        //checkDeployment( location, url );
-        final ZipFile zipFile = getZipFileFor( getFileFor( url ) );
-        final Configuration datatypedefs =
-            loadConfiguration( zipFile, TSKDEF_FILE );
+        final ZipFile zipFile = getZipFileFor( file );
+        final Configuration datatypedefs = getDescriptor( zipFile );
 
         try
         {
@@ -192,6 +165,7 @@ public class DefaultTskDeployer
             {
                 if( datatypes[ i ].getAttribute( "name" ).equals( name ) )
                 {
+                    final URL url = getURL( file );
                     final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
                     handleDataType( datatypes[ i ], url, factory );
                     break;
@@ -208,12 +182,11 @@ public class DefaultTskDeployer
         }
     }
 
-    public void deployTask( final String name, final String location, final URL url )
+    public void deployTask( final String name, final File file )
         throws DeploymentException
     {
-        //checkDeployment( location, url );
-        final ZipFile zipFile = getZipFileFor( getFileFor( url ) );
-        final Configuration taskdefs = loadConfiguration( zipFile, TSKDEF_FILE );
+        final ZipFile zipFile = getZipFileFor( file );
+        final Configuration taskdefs = getDescriptor( zipFile );
 
         try
         {
@@ -222,6 +195,7 @@ public class DefaultTskDeployer
             {
                 if( tasks[ i ].getAttribute( "name" ).equals( name ) )
                 {
+                    final URL url = getURL( file );
                     final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
                     handleTask( tasks[ i ], url, factory );
                     break;
@@ -265,10 +239,10 @@ public class DefaultTskDeployer
      * @return the Configuration
      * @exception DeploymentException if an error occurs
      */
-    private Configuration loadConfiguration( final ZipFile zipFile, final String filename )
+    private Configuration getDescriptor( final ZipFile zipFile )
         throws DeploymentException
     {
-        return buildConfiguration( loadResourceStream( zipFile, filename ) );
+        return buildConfiguration( loadResourceStream( zipFile, TSKDEF_FILE ) );
     }
 
     /**
@@ -401,6 +375,16 @@ public class DefaultTskDeployer
             throw new DeploymentException( "Error reading " + filename +
                                            " from " + zipFile.getName(),
                                            ioe );
+        }
+    }
+
+    private URL getURL( final File file )
+        throws DeploymentException
+    {
+        try { return file.toURL(); }
+        catch( final MalformedURLException mue )
+        {
+            throw new DeploymentException( "Unable to form url", mue );
         }
     }
 }

@@ -7,7 +7,7 @@
  */
 package org.apache.myrmidon.components.deployer;
 
-import java.net.URL;
+import java.io.File;
 import org.apache.avalon.framework.component.Component;
 
 /**
@@ -21,22 +21,21 @@ public interface TskDeployer
     String ROLE = "org.apache.myrmidon.components.deployer.TskDeployer";
 
     /**
-     * Deploy a resource indicate by url to location.
+     * Deploy a library.
      *
-     * @param location the location to deploy to
-     * @param url the url of deployment
+     * @param file the file deployment
      * @exception DeploymentException if an error occurs
      */
-    void deploy( String location, URL url )
+    void deploy( File file )
         throws DeploymentException;
 
-    void deployConverter( String name, String location, URL url )
+    void deployConverter( String name, File file )
         throws DeploymentException;
 
-    void deployDataType( String name, String location, URL url )
+    void deployDataType( String name, File file )
         throws DeploymentException;
 
-    void deployTask( String name, String location, URL url )
+    void deployTask( String name, File file )
         throws DeploymentException;
 }
 

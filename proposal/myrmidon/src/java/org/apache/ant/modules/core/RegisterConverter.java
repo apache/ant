@@ -76,9 +76,9 @@ public class RegisterConverter
             throw new TaskException( "Must specify classname parameter" );
         }
 
-        final URL url = getURL( m_lib );
-
         boolean isFullyDefined = true;
+
+        final File file = getFile( m_lib );
 
         if( null == m_sourceType && null == m_destinationType )
         {
@@ -90,7 +90,7 @@ public class RegisterConverter
                                      "parameters when supplying a name" );
         }
 
-        if( !isFullyDefined && null == url )
+        if( !isFullyDefined && null == file )
         {
             throw new TaskException( "Must supply parameter if not fully specifying converter" );
         }
@@ -99,22 +99,26 @@ public class RegisterConverter
         {
             try
             {
-                m_tskDeployer.deployConverter( m_classname, url.toString(), url );
+                m_tskDeployer.deployConverter( m_classname, file );
             }
             catch( final DeploymentException de )
             {
                 throw new TaskException( "Failed deploying " + m_classname +
-                                         " from " + url, de );
+                                         " from " + file, de );
             }
         }
         else
         {
-            m_converterRegistry.registerConverter( m_classname, m_sourceType, m_destinationType );
+            try
+            {
+                m_converterRegistry.registerConverter( m_classname, m_sourceType, m_destinationType );
 
-            final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
-            factory.addNameClassMapping( m_classname, m_classname );
-
-            try { m_typeManager.registerType( Converter.ROLE, m_classname, factory ); }
+                final URL url = file.toURL();
+                final DefaultTypeFactory factory = new DefaultTypeFactory( new URL[] { url } );
+                factory.addNameClassMapping( m_classname, m_classname );
+                
+                m_typeManager.registerType( Converter.ROLE, m_classname, factory ); 
+            }
             catch( final Exception e )
             {
                 throw new TaskException( "Failed to register converter " + m_classname, e );
@@ -122,17 +126,12 @@ public class RegisterConverter
         }
     }
 
-    private URL getURL( final String libName )
+    private File getFile( final String libName )
         throws TaskException
     {
         if( null != libName )
         {
-            final File lib = getContext().resolveFile( libName );
-            try { return lib.toURL(); }
-            catch( final MalformedURLException mue )
-            {
-                throw new TaskException( "Malformed task-lib parameter " + m_lib, mue );
-            }
+            return getContext().resolveFile( libName );
         }
         else
         {

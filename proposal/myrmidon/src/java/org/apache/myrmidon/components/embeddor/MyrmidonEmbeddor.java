@@ -24,6 +24,7 @@ import org.apache.myrmidon.api.JavaVersion;
 import org.apache.myrmidon.components.builder.ProjectBuilder;
 import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.deployer.TskDeployer;
+import org.apache.myrmidon.components.deployer.RoleManager;
 import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.components.manager.ProjectManager;
@@ -42,6 +43,7 @@ public class MyrmidonEmbeddor
     private ProjectManager           m_projectManager;
     private ProjectBuilder           m_builder;
     private TskDeployer              m_deployer;
+    private RoleManager              m_roleManager;
 
     private TypeManager              m_typeManager;
     private MasterConverter          m_converter;
@@ -133,8 +135,8 @@ public class MyrmidonEmbeddor
      * @exception Exception if an error occurs
      */
     public void dispose()
-        throws Exception
     {
+        m_roleManager = null;
         m_converterRegistry = null;
         m_converter = null;
         m_executor = null;
@@ -166,6 +168,8 @@ public class MyrmidonEmbeddor
         defaults.setParameter( "myrmidon.lib.path", "lib" );
 
         //create all the default properties for components
+        defaults.setParameter( RoleManager.ROLE,
+                               "org.apache.myrmidon.components.deployer.DefaultRoleManager" );
         defaults.setParameter( MasterConverter.ROLE,
                                "org.apache.myrmidon.components.converter.DefaultMasterConverter" );
         defaults.setParameter( ConverterRegistry.ROLE,
@@ -202,6 +206,7 @@ public class MyrmidonEmbeddor
         componentManager.put( ProjectBuilder.ROLE, m_builder );
 
         //Following components required when Myrmidon allows user deployment of tasks etal.
+        componentManager.put( RoleManager.ROLE, m_roleManager );
         componentManager.put( TskDeployer.ROLE, m_deployer );
 
         //Following components used when want to types (ie tasks/mappers etc)
@@ -237,6 +242,9 @@ public class MyrmidonEmbeddor
         component = getParameter( TypeManager.ROLE );
         m_typeManager = (TypeManager)createComponent( component, TypeManager.class );
 
+        component = getParameter( RoleManager.ROLE );
+        m_roleManager = (RoleManager)createComponent( component, RoleManager.class );
+
         component = getParameter( TskDeployer.ROLE );
         m_deployer = (TskDeployer)createComponent( component, TskDeployer.class );
 
@@ -258,6 +266,7 @@ public class MyrmidonEmbeddor
     private void setupComponents()
         throws Exception
     {
+        setupComponent( m_roleManager );
         setupComponent( m_converterRegistry );
         setupComponent( m_converter );
         setupComponent( m_executor );
@@ -452,7 +461,7 @@ public class MyrmidonEmbeddor
             try
             {
                 final File file = files[ i ].getCanonicalFile();
-                deployer.deploy( name, file.toURL() );
+                deployer.deploy( file );
             }
             catch( final DeploymentException de )
             {

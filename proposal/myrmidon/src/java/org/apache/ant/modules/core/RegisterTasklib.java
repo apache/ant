@@ -51,16 +51,11 @@ public class RegisterTasklib
 
         URL url = null;
 
-        final File lib = getContext().resolveFile( m_lib );
-        try { url = lib.toURL(); }
-        catch( final MalformedURLException mue )
-        {
-            throw new TaskException( "Malformed task-lib parameter " + m_lib, mue );
-        }
+        final File file = getContext().resolveFile( m_lib );
 
         try
         {
-            m_tskDeployer.deploy( url.toString(), url );
+            m_tskDeployer.deploy( file );
         }
         catch( final DeploymentException de )
         {

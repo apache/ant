@@ -8,8 +8,6 @@
 package org.apache.ant.modules.core;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.apache.avalon.framework.component.ComponentException;
 import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.component.Composable;
@@ -69,9 +67,9 @@ public abstract class AbstractTypeDefinition
                                     "lib parameter" );
         }
 
-        final URL url = getURL( m_lib );
+        final File file = getFile( m_lib );
 
-        registerResource( m_name, m_classname, url );
+        registerResource( m_name, m_classname, file );
     }
 
     protected final TskDeployer getDeployer()
@@ -84,17 +82,12 @@ public abstract class AbstractTypeDefinition
         return m_typeManager;
     }
 
-    private final URL getURL( final String libName )
+    private final File getFile( final String libName )
         throws TaskException
     {
         if( null != libName )
         {
-            final File lib = getContext().resolveFile( libName );
-            try { return lib.toURL(); }
-            catch( final MalformedURLException mue )
-            {
-                throw new TaskException( "Malformed task-lib parameter " + m_lib, mue );
-            }
+            return getContext().resolveFile( libName );
         }
         else
         {
@@ -102,6 +95,6 @@ public abstract class AbstractTypeDefinition
         }
     }
 
-    protected abstract void registerResource( String name, String classname, URL url )
+    protected abstract void registerResource( String name, String classname, File file )
         throws TaskException;
 }
