@@ -114,7 +114,10 @@ Fixed bugs:
   behaved identically.
 
 * <xslt> now sets the context classloader if you've specified a nested
-  <classpath>.  Bugzilla report 24802.
+  <classpath>.  Bugzilla Report 24802.
+
+* <zip> and friends would delete the original file when trying to update
+  a read-only archive.  Bugzilla Report 28419.
 
 Other changes:
 --------------
