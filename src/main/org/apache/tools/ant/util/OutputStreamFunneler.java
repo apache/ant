@@ -1,5 +1,5 @@
 /*
- * Copyright 2004 The Apache Software Foundation
+ * Copyright 2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ package org.apache.tools.ant.util;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.FilterOutputStream;
 
 /**
  * Manages a set of <CODE>OutputStream</CODE>s to
@@ -35,7 +34,7 @@ public class OutputStreamFunneler {
      */
     public static final long DEFAULT_TIMEOUT_MILLIS = 1000;
 
-    private class Funnel extends OutputStream {
+    private final class Funnel extends OutputStream {
         private boolean closed = false;
 
         private Funnel() {
@@ -126,6 +125,7 @@ public class OutputStreamFunneler {
      * write to this <CODE>OutputStreamFunneler</CODE>'s underlying
      * <CODE>OutputStream</CODE>.
      * @return <code>OutputStream</code>.
+     * @throws IOException if unable to create the funnel.
      */
     public synchronized OutputStream getFunnelInstance()
         throws IOException {
