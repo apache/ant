@@ -57,6 +57,7 @@ Legal:
   <property name="dist.dir" value="dist"/>
   <property name="dist.bin" value="${dist.dir}/bin"/>
   <property name="dist.lib" value="${dist.dir}/lib"/>
+  <property name="dist.ext" value="${dist.dir}/ext"/>
 
   <property name="constants.file" value="org/apache/myrmidon/Constants.java"/>
 
@@ -159,11 +160,20 @@ Legal:
 
     <mkdir dir="${dist.bin}"/>
     <mkdir dir="${dist.lib}"/>
+    <mkdir dir="${dist.ext}"/>
 
     <copy file="tools/lib/ant.jar" tofile="${dist.lib}/ant1-compat.jar" />
 
     <copy todir="${dist.lib}">
-      <fileset dir="${build.lib}"/>
+      <fileset dir="${build.lib}">
+        <exclude name="selftest.atl"/>
+      </fileset>
+    </copy>
+
+    <copy todir="${dist.ext}">
+      <fileset dir="${build.lib}">
+        <include name="selftest.atl"/>
+      </fileset>
     </copy>
 
     <copy todir="${dist.lib}">

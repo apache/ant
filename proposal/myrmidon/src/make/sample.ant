@@ -17,11 +17,12 @@ Legal:
 <project name="MySample" default="main" basedir=".">
 
   <projectref name="prim" location="primitive-tests.ant" />
-  <import library="core.atl" />
 
   <property name="year" value="2000"/>
 
   <target name="main" depends="typedef-test, converterdef-test, datatype-test, namespace-test, ant1-tasklib-test" />
+
+  <target name="xp-deployer-test" depends="typedef-test, prim->undefined-task" />
 
   <target name="all" depends="property-test, typedef-test, converterdef-test, ant-call-test, datatype-test, namespace-test, ant1-tasklib-test, prim->main" />
 

@@ -7,6 +7,7 @@
  */
 package org.apache.myrmidon.components.manager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -30,7 +31,11 @@ import org.apache.myrmidon.components.executor.DefaultExecutionFrame;
 import org.apache.myrmidon.components.executor.ExecutionFrame;
 import org.apache.myrmidon.components.executor.Executor;
 import org.apache.myrmidon.framework.Condition;
+import org.apache.myrmidon.components.deployer.DefaultDeployer;
+import org.apache.myrmidon.components.deployer.Deployer;
+import org.apache.myrmidon.components.deployer.DeploymentException;
 import org.apache.myrmidon.components.model.Project;
+import org.apache.myrmidon.components.model.TypeLib;
 import org.apache.myrmidon.components.model.Target;
 import org.apache.myrmidon.components.type.TypeManager;
 import org.apache.myrmidon.listeners.ProjectListener;
@@ -142,6 +147,64 @@ public class DefaultProjectManager
         return context;
     }
 
+    private File findTypeLib( final String libraryName )
+        throws TaskException
+    {
+        //TODO: In future this will be expanded to allow
+        //users to specify search path or automagically 
+        //add entries to lib path (like user specific or 
+        //workspace specific)
+        final String name = libraryName.replace( '/', File.separatorChar ) + ".atl";
+
+        final String home = System.getProperty( "myrmidon.home" );
+        final File homeDir = new File( home + File.separatorChar + "ext" );
+        
+        final File library = new File( homeDir, name );
+
+        if( library.exists() )
+        {
+            if( !library.canRead() )
+            {
+                throw new TaskException( "Unable to read library at " + library );
+            }
+            else
+            {
+                return library;
+            }
+        }
+
+        throw new TaskException( "Unable to locate Type Library " + libraryName );
+    }
+
+    private void deployTypeLib( final Deployer deployer, final Project project )
+        throws TaskException
+    {
+        final TypeLib[] typeLibs = project.getTypeLibs();
+
+        for( int i = 0; i < typeLibs.length; i++ )
+        {
+            final TypeLib typeLib = typeLibs[ i ];
+            final File file = findTypeLib( typeLib.getLibrary() );
+
+            try
+            {
+                if( null == typeLib.getRole() )
+                {
+                    deployer.deploy( file );
+                }
+                else
+                {
+                    deployer.deployType( typeLib.getRole(), typeLib.getName(), file );
+                }
+            }
+            catch( final DeploymentException de )
+            {
+                throw new TaskException( "Error deploying type library " + 
+                                         typeLib + " at " + file, de );
+            }
+        }
+    }
+
     private ExecutionFrame createExecutionFrame( final Project project )
         throws TaskException
     {
@@ -154,7 +217,27 @@ public class DefaultProjectManager
 
         //Add in child type manager so each frame can register different 
         //sets of tasks etc
-        componentManager.put( TypeManager.ROLE, m_typeManager.createChildTypeManager() );
+        final TypeManager typeManager = m_typeManager.createChildTypeManager();
+        componentManager.put( TypeManager.ROLE, typeManager );
+
+        //We need to create a new deployer so that it deploys
+        //to project specific TypeManager
+        final DefaultDeployer deployer = new DefaultDeployer();
+        deployer.setLogger( getLogger() );
+
+        try { deployer.compose( componentManager ); }
+        catch( final ComponentException ce )
+        {
+            throw new TaskException( "Error configuring deployer", ce );
+        }
+
+        //HACK: Didn't call initialize because Deployer contained in Embeddor
+        // Already initialized and this would be reduendent
+        //deployer.initialize();
+
+        componentManager.put( Deployer.ROLE, deployer );
+
+        deployTypeLib( deployer, project );
 
         //We need to place projects and ProjectManager
         //in ComponentManager so as to support project-local call()

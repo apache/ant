@@ -16,9 +16,16 @@ Legal:
 
 <project name="MySample" default="main" basedir=".">
 
+  <import library="selftest" />
+
   <property name="year" value="2000"/>
 
   <target name="main" depends="test-target" />
+
+  <target name="undefined-task">
+    <echo message="About to execute task that hasn't been defined"/>
+    <echo2 message="This should have failed"/>
+  </target>
 
   <target name="no-test-target" if="no-do-tests">
     <echo message="No tests done here"/>
