@@ -199,6 +199,10 @@ Other changes:
   addition to the files matched by your patterns.  There now is a new
   attribute to suppress this behavior.
 
+* <javadoc> now supports a <tag> nested element to provide the -tag option
+  to the standard Java 1.4 doclet. The element is ignored when not running
+  on Java 1.4.
+
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
 
