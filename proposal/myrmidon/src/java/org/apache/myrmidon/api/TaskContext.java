@@ -8,8 +8,8 @@
 package org.apache.myrmidon.api;
 
 import java.io.File;
+import java.util.Map;
 import org.apache.avalon.framework.Enum;
-import org.apache.avalon.framework.context.Context;
 
 /**
  * This interface represents the <em>Context</em> in which Task is executed.
@@ -21,7 +21,6 @@ import org.apache.avalon.framework.context.Context;
  * @version $Revision$ $Date$
  */
 public interface TaskContext
-    extends Context
 {
     //these values are used when setting properties to indicate the scope at
     //which properties are set
