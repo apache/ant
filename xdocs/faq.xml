@@ -1435,6 +1435,40 @@ mv /tmp/foo $ANT_HOME/bin/antRun
         trace.</p>
       </answer>
     </faq>
+
+    <faq id="junit-no-runtime-xml">
+      <question>
+        Using format=&quot;xml&quot;, &lt;junit&gt; fails with a
+        <code>NoClassDefFoundError</code> if forked.
+      </question>
+      <answer>
+
+        <p>The XML formatter needs the <a
+        href="http://www.w3.org/DOM/">DOM classes</a> to work.  If you
+        are using JDK 1.4 or later they are included with your Java
+        Runtime and this problem won't occur.  If you are running JDK
+        1.3 or earlier, the DOM classes have to be on your
+        &lt;junit&gt; task's &lt;classpath&gt;.</p>
+
+        <p>Prior to Ant 1.6.0 Ant would include the DOM classes from
+        the XML parser that is used by Ant itself if you set the
+        includeAntRuntime attribute to true (the default).  With Ant
+        1.6.0 this has been changed as this behavior made it
+        impossible to use a different XML parser in your tests.</p>
+
+        <p>This means that you have to take care of the DOM classes
+        explicitly starting with Ant 1.6.0.  If you don't need to set
+        up a different XML parser for your tests, the easiest solution
+        is to add</p>
+
+        <source><![CDATA[
+<pathelement path="${ant.home}/lib/xml-apis.jar:${ant.home}/lib/xercesImpl.jar"/>
+]]></source>
+
+        <p>to your task's &lt;classpath&gt;.</p>
+
+      </answer>
+    </faq>
   </faqsection>
 
 </document>
