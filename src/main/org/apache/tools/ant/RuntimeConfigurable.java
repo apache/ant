@@ -92,9 +92,8 @@ public class RuntimeConfigurable implements Serializable {
      *                   Should not be <code>null</code>.
      */
     public RuntimeConfigurable(Object proxy, String elementTag) {
-        wrappedObject = proxy;
+        setProxy(proxy);
         this.elementTag = elementTag;
-        proxyConfigured = false;
         // Most likely an UnknownElement
         if (proxy instanceof Task) {
             ((Task) proxy).setRuntimeConfigurableWrapper(this);
