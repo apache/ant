@@ -63,7 +63,6 @@ public class TypeFactoryTest
         throws Exception
     {
         final File file = getTestResource( "types.jar" );
-        assertTrue( "Support Jar " + file + " exists", file.exists() );
 
         final URL[] classpath = new URL[]{file.toURL()};
         final ReloadingTypeFactory factory = new ReloadingTypeFactory( classpath, null );

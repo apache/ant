@@ -12,9 +12,11 @@ import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 import org.apache.myrmidon.TrackingProjectListener;
+import org.apache.myrmidon.AbstractProjectTest;
 import org.apache.myrmidon.interfaces.model.Project;
 import org.apache.myrmidon.interfaces.model.Target;
 import org.apache.myrmidon.interfaces.workspace.Workspace;
+import org.apache.myrmidon.interfaces.embeddor.Embeddor;
 import org.apache.myrmidon.listeners.ProjectListener;
 
 /**
@@ -24,39 +26,11 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * @version $Revision$ $Date$
  */
 public class DefaultEmbeddorTest
-    extends AbstractMyrmidonTest
+    extends AbstractProjectTest
 {
-    private DefaultEmbeddor m_embeddor;
-
     public DefaultEmbeddorTest( String name )
     {
         super( name );
-    }
-
-    /**
-     * Setup the test, by creating and initialising the embeddor.
-     */
-    protected void setUp() throws Exception
-    {
-        final Logger logger = createLogger();
-        m_embeddor = new DefaultEmbeddor();
-        m_embeddor.enableLogging( logger );
-
-        final Parameters params = new Parameters();
-        final File instDir = getHomeDirectory();
-        params.setParameter( "myrmidon.home", instDir.getAbsolutePath() );
-        m_embeddor.parameterize( params );
-        m_embeddor.initialize();
-        m_embeddor.start();
-    }
-
-    /**
-     * Tear-down the test.
-     */
-    protected void tearDown() throws Exception
-    {
-        m_embeddor.dispose();
-        m_embeddor = null;
     }
 
     /**
@@ -64,11 +38,9 @@ public class DefaultEmbeddorTest
      */
     public void testProjectBuilder() throws Exception
     {
-        final File projectFile = getTestResource( "project-builder.ant" );
-        assertTrue( "Project file \"" + projectFile + "\" does not exist.", projectFile.exists() );
-
         // Build the project
-        final Project project = m_embeddor.createProject( projectFile.getAbsolutePath(), null, null );
+        final File projectFile = getTestResource( "project-builder.ant" );
+        final Project project = getEmbeddor().createProject( projectFile.getAbsolutePath(), null, null );
 
         // Verify the project.
         assertEquals( "test-project", project.getProjectName() );
@@ -92,7 +64,7 @@ public class DefaultEmbeddorTest
      */
     public void testCreateListener() throws Exception
     {
-        final ProjectListener listener = m_embeddor.createListener( "default" );
+        final ProjectListener listener = getEmbeddor().createListener( "default" );
     }
 
     /**
@@ -102,10 +74,11 @@ public class DefaultEmbeddorTest
     {
         // Build the project
         final File projectFile = getTestResource( "project-builder.ant" );
-        final Project project = m_embeddor.createProject( projectFile.getAbsolutePath(), null, null );
+        final Embeddor embeddor = getEmbeddor();
+        final Project project = embeddor.createProject( projectFile.getAbsolutePath(), null, null );
 
         // Build the workspace
-        final Workspace workspace = m_embeddor.createWorkspace( new Parameters() );
+        final Workspace workspace = embeddor.createWorkspace( new Parameters() );
 
         // Install a listener
         final TrackingProjectListener listener = new TrackingProjectListener();

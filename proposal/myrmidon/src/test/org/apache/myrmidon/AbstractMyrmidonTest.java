@@ -45,12 +45,14 @@ public abstract class AbstractMyrmidonTest
     }
 
     /**
-     * Locates a test resource.
+     * Locates a test resource, and asserts that the resource exists
      */
     protected File getTestResource( final String name )
     {
-        final File file = new File( m_testBaseDir, name );
-        return getCanonicalFile( file );
+        File file = new File( m_testBaseDir, name );
+        file = getCanonicalFile( file );
+        assertTrue( "Test file \"" + file + "\" does not exist.", file.exists() );
+        return file;
     }
 
     /**

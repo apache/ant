@@ -119,8 +119,6 @@ public class DefaultDeployerTest
     public void testLibDescriptor() throws Exception
     {
         final File typelib = getTestResource( "test.atl" );
-        assertTrue( "File " + typelib + " does not exist", typelib.exists() );
-
         final TypeDeployer typeDeployer = m_deployer.createDeployer( typelib );
 
         // Make sure the test types have not been deployed
