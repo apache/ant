@@ -15,9 +15,9 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.io.FileUtil;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.model.DefaultNameValidator;
@@ -36,18 +36,18 @@ public class DefaultTaskContext
         ResourceManager.getPackageResources( DefaultTaskContext.class );
 
     // Property name validator allows digits, but no internal whitespace.
-    private static DefaultNameValidator m_propertyNameValidator = new DefaultNameValidator();
+    private static DefaultNameValidator c_propertyNameValidator = new DefaultNameValidator();
 
     static
     {
-        m_propertyNameValidator.setAllowInternalWhitespace( false );
+        c_propertyNameValidator.setAllowInternalWhitespace( false );
     }
 
     private final Map m_contextData = new Hashtable();
     private final TaskContext m_parent;
-    private ServiceManager m_serviceManager;
-    private Logger m_logger;
-    private PropertyResolver m_propertyResolver;
+    private final ServiceManager m_serviceManager;
+    private final Logger m_logger;
+    private final PropertyResolver m_propertyResolver;
 
     /**
      * Constructor that takes both parent context and a service directory.
@@ -55,10 +55,12 @@ public class DefaultTaskContext
     public DefaultTaskContext( final TaskContext parent,
                                final ServiceManager serviceManager,
                                final Logger logger )
+        throws TaskException
     {
         m_parent = parent;
         m_serviceManager = serviceManager;
         m_logger = logger;
+        m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
     }
 
     /**
@@ -96,7 +98,7 @@ public class DefaultTaskContext
     {
         // Try this context first
         final String name = serviceClass.getName();
-        if( m_serviceManager != null && m_serviceManager.hasService( name ) )
+        if( null != m_serviceManager && m_serviceManager.hasService( name ) )
         {
             try
             {
@@ -148,15 +150,8 @@ public class DefaultTaskContext
     {
         try
         {
-            // Lazy lookup of the PropertyResolver
-            if( m_propertyResolver == null )
-            {
-                m_propertyResolver = (PropertyResolver)getService( PropertyResolver.class );
-            }
-
             final Object object =
                 m_propertyResolver.resolveProperties( value, this );
-
             if( null == object )
             {
                 final String message = REZ.getString( "null-resolved-value.error", value );
@@ -347,9 +342,8 @@ public class DefaultTaskContext
     public TaskContext createSubContext( final String name )
         throws TaskException
     {
-        final Logger logger = m_logger.getChildLogger( name );
         final DefaultTaskContext context =
-            new DefaultTaskContext( this, m_serviceManager, logger );
+            new DefaultTaskContext( this, m_serviceManager, m_logger );
 
         context.setProperty( TaskContext.NAME, getName() + "." + name );
         context.setProperty( TaskContext.BASE_DIRECTORY, getBaseDirectory() );
@@ -378,7 +372,7 @@ public class DefaultTaskContext
     {
         try
         {
-            m_propertyNameValidator.validate( name );
+            c_propertyNameValidator.validate( name );
         }
         catch( Exception e )
         {

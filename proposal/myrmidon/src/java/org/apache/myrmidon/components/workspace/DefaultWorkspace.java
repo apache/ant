@@ -16,7 +16,6 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
-import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
@@ -25,7 +24,6 @@ import org.apache.avalon.framework.service.DefaultServiceManager;
 import org.apache.avalon.framework.service.ServiceException;
 import org.apache.avalon.framework.service.ServiceManager;
 import org.apache.avalon.framework.service.Serviceable;
-import org.apache.log.Hierarchy;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.conditions.Condition;
@@ -62,8 +60,6 @@ public class DefaultWorkspace
     private HashMap m_entries = new HashMap();
     private TypeManager m_typeManager;
     private Deployer m_deployer;
-    private Hierarchy m_hierarchy;
-    private int m_projectID;
 
     /**
      * Add a listener to project events.
@@ -110,11 +106,6 @@ public class DefaultWorkspace
         throws Exception
     {
         m_baseContext = createBaseContext();
-
-        m_hierarchy = new Hierarchy();
-
-        final LogTargetToListenerAdapter target = new LogTargetToListenerAdapter( m_listenerSupport );
-        m_hierarchy.setDefaultLogTarget( target );
     }
 
     /**
@@ -258,8 +249,7 @@ public class DefaultWorkspace
 
         // Create a logger
         final Logger logger =
-            new LogKitLogger( m_hierarchy.getLoggerFor( "project" + m_projectID ) );
-        m_projectID++;
+            new RoutingLogger( RoutingLogger.LEVEL_DEBUG, m_listenerSupport );
 
         // Create and configure the context
         final DefaultTaskContext context =

@@ -16,7 +16,7 @@ import org.apache.avalon.framework.logger.Logger;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-class BasicLogger
+public class BasicLogger
     implements Logger
 {
     public final static int LEVEL_DEBUG = 0;
@@ -246,7 +246,7 @@ class BasicLogger
     /**
      * Utility method to output messages.
      */
-    private void output( final String message, final Throwable throwable )
+    protected void output( final String message, final Throwable throwable )
     {
         final StringBuffer sb = new StringBuffer( m_prefix );
         if( null != message )
