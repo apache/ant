@@ -90,7 +90,7 @@ public class Log4jListener implements BuildListener {
     
     public void buildFinished(BuildEvent event) {
         if (initialized) {
-            Category cat = Category.getInstance(Target.class.getName());
+            Category cat = Category.getInstance(Project.class.getName());
             if (event.getException() == null) {
                 cat.info("Build finished.");
             }
