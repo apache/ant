@@ -1,4 +1,4 @@
-<project name="Apache Myrmidon" href="http://jakarta.apache.org">
+<project name="Apache Myrmidon" href="http://jakarta.apache.org/ant/myrmidon">
 
     <title>Apache Myrmidon</title>
 
@@ -8,6 +8,10 @@
             <item name="User Guide" href="/user.html"/>
             <item name="Get Involved" href="/todo.html"/>
             <item name="Todo List" href="/todo.html#Todo List"/>
+        </menu>
+        <menu name="Extending Ant">
+            <item name="ClassLoader Management" href="/classloader.html"/>
+            <item name="Librarys" href="/librarys.html"/>
         </menu>
     </body>
 
