@@ -150,6 +150,26 @@ public class DefaultConfigurer
     }
 
     /**
+     * Configure named attribute of object in a particular context.
+     * This configuring can be done in different ways for different
+     * configurers.
+     *
+     * @param object the object
+     * @param name the attribute name
+     * @param value the attribute value
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
+    public void configure( final Object object, 
+                           final String name, 
+                           final String value, 
+                           final Context context )
+        throws ConfigurationException
+    {
+        configureAttribute( object, name, value, context );
+    }
+
+    /**
      * Try to configure content of an object.
      *
      * @param object the object
@@ -173,7 +193,11 @@ public class DefaultConfigurer
     {
         for( int i = 0; i < RESERVED_ATTRIBUTES.length; i++ )
         {
-            if( RESERVED_ATTRIBUTES[ i ].equals( name ) ) return;
+            if( RESERVED_ATTRIBUTES[ i ].equals( name ) ) 
+            {
+                throw new ConfigurationException( "Can not specify reserved attribute " + 
+                                                  name );
+            }
         }
 
         final String methodName = getMethodNameFor( name );

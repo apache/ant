@@ -34,4 +34,18 @@ public interface Configurer
      */
     void configure( Object object, Configuration configuration, Context context )
         throws ConfigurationException;
+
+    /**
+     * Configure named attribute of object in a particular context.
+     * This configuring can be done in different ways for different
+     * configurers.
+     *
+     * @param object the object
+     * @param name the attribute name
+     * @param value the attribute value
+     * @param context the Context
+     * @exception ConfigurationException if an error occurs
+     */
+    void configure( Object object, String name, String value, Context context )
+        throws ConfigurationException;
 }
