@@ -1639,7 +1639,7 @@ public class Javadoc extends Task {
      */
     public void execute() throws BuildException {
         if ("javadoc2".equals(getTaskType())) {
-            log("!! javadoc2 is deprecated. Use javadoc instead. !!");
+            log("Warning: the task name <javadoc2> is deprecated. Use <javadoc> instead.", Project.MSG_WARN);
         }
 
         Vector packagesToDoc = new Vector();

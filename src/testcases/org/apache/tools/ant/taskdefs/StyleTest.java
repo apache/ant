@@ -28,7 +28,8 @@ import java.io.FileWriter;
 
 
 /**
- * TestCases for <style> / <xslt> task.
+ * TestCases for {@link XSLTProcess} task.
+ * XXX merge with {@link XsltTest}?
  * @version 2003-08-05
  */
 public class StyleTest extends BuildFileTest {

@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.net.MalformedURLException;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.taskdefs.condition.Os;
@@ -275,6 +276,10 @@ public class WsdlToDotnet extends Task  {
      */
     public void execute()
              throws BuildException {
+        if ("WsdlToDotnet".equals(getTaskType())) {
+            log("Warning: the task name <WsdlToDotnet> is deprecated. Use <wsdltodotnet> (all lowercase) instead.", Project.MSG_WARN);
+        }
+
         if (compiler == null) {
             compiler = Compiler.createDefaultCompiler();
         }

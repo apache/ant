@@ -190,6 +190,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      * @todo validate that if either in or our is defined, then both are
      */
     public void execute() throws BuildException {
+        if ("style".equals(getTaskType())) {
+            log("Warning: the task name <style> is deprecated. Use <xslt> instead.", Project.MSG_WARN);
+        }
+
         File savedBaseDir = baseDir;
 
         DirectoryScanner scanner;

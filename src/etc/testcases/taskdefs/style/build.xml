@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="style-test" basedir="." default="nothing">
+<project name="xslt-test" basedir="." default="nothing">
 
   <property name="out.dir" value="out"/>
 
@@ -13,74 +13,74 @@
   </target>
 
   <target name="testStyleIsSet">
-      <style in="data.xml" out="${out.dir}/out.xml"/>
+      <xslt in="data.xml" out="${out.dir}/out.xml"/>
   </target>
 
   <target name="testTransferParameterSet">
       <property name="value" value="myvalue"/>
-      <style in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
           <param name="set" expression="${value}"/>
-      </style>
+      </xslt>
   </target>
 
   <target name="testTransferParameterEmpty">
       <property name="value" value=""/>
-      <style in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
           <param name="empty" expression="${value}"/>
-      </style>
+      </xslt>
   </target>
 
   <target name="testTransferParameterUnset">
-      <style in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
           <param name="undefined" expression="${value}"/>
-      </style>
+      </xslt>
   </target>
 
   <target name="testTransferParameterUnsetWithIf">
-      <style in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
+      <xslt in="data.xml" out="${out.dir}/out.xml" style="printParams.xsl">
           <param name="undefined" expression="${value}" if="value" />
-      </style>
+      </xslt>
   </target>
 
   <target name="testDefaultMapper">
     <property name="value" value="myvalue"/>
-    <style style="printParams.xsl" destDir="${out.dir}" basedir=".">
+    <xslt style="printParams.xsl" destDir="${out.dir}" basedir=".">
       <param name="set" expression="${value}"/>
-    </style>
+    </xslt>
   </target>
 
   <target name="testCustomMapper">
     <property name="value" value="myvalue"/>
-    <style style="printParams.xsl" destDir="${out.dir}" basedir=".">
+    <xslt style="printParams.xsl" destDir="${out.dir}" basedir=".">
       <param name="set" expression="${value}"/>
       <mapper type="glob" from="data.*" to="out.*"/>
-    </style>
+    </xslt>
   </target>
 
   <target name="testNewerStylesheet">
       <antcall target="copyXsl">
         <param name="xsl.value" value="old-value"/>
       </antcall>
-      <style in="data.xml" out="${out.dir}/out.xml" style="tmp.xsl"/>
+      <xslt in="data.xml" out="${out.dir}/out.xml" style="tmp.xsl"/>
 
       <antcall target="copyXsl">
         <param name="xsl.value" value="new-value"/>
       </antcall>
-      <style in="data.xml" out="${out.dir}/out.xml" style="tmp.xsl"/>
+      <xslt in="data.xml" out="${out.dir}/out.xml" style="tmp.xsl"/>
       <delete file="tmp.xsl"/>
   </target>
 
   <target name="testDirectoryHierarchyWithDirMatching">
     <mkdir dir="${out.dir}/src/level1/"/>
     <copy file="data.xml" todir="${out.dir}/src/level1/"/>
-    <style basedir="${out.dir}/src" destdir="${out.dir}/dest"
+    <xslt basedir="${out.dir}/src" destdir="${out.dir}/dest"
            style="printParams.xsl"/>
   </target>
 
   <target name="testDirsWithSpaces">
     <mkdir dir="${out.dir}/s rc/"/>
     <copy file="data.xml" todir="${out.dir}/s rc/"/>
-    <style basedir="${out.dir}/s rc" destdir="${out.dir}/d est"
+    <xslt basedir="${out.dir}/s rc" destdir="${out.dir}/d est"
            style="printParams.xsl"/>
   </target>
 

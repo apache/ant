@@ -35,7 +35,7 @@ import org.apache.tools.ant.util.FileUtils;
  * computed (for example, dynamically interpreted parameters or files
  * that need to stay in synch but are not directly linked) or where
  * the ant task in question could compute them but does not (for
- * example, the linked DTD for an XML file using the style task).
+ * example, the linked DTD for an XML file using the XSLT task).
  *
  * nested arguments:
  * <ul>

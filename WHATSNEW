@@ -79,6 +79,9 @@ Fixed bugs:
 Other changes:
 --------------
 
+* <WsdlToDotnet> and <style> are now deprecated in favor of <wsdltodotnet> and
+  <xslt>, respectively. Bugzilla report 25832.
+
 * <echoproperties> now (alphanumerically) sorts the property list
   before echoing. Bugzilla report 18976.
 

@@ -10,11 +10,11 @@
   </target>
   
   <target name="testCatchNoDtd" depends="init">
-    <style basedir="xml" destdir="xml/out"
+    <xslt basedir="xml" destdir="xml/out"
            includes="about.xml"
            extension=".txt"
            style="xml/doc.xsl">
-     </style>
+     </xslt>
   </target>
   
   <xmlcatalog id="xdocs.catalog">
@@ -23,42 +23,42 @@
   </xmlcatalog>  
   
   <target name="testCatalog" depends="init">
-    <style destdir="xml/out"
+    <xslt destdir="xml/out"
            includes="about.xml"
            extension=".txt"
            style="xml/doc.xsl">
        <xmlcatalog refid="xdocs.catalog"/>
-     </style>
+     </xslt>
   </target>
 
   <target name="testOutputProperty" depends="init">
-    <style in="xml/test.xml"
+    <xslt in="xml/test.xml"
            out="xml/out/test-out.xml"
            style="xml/test.xsl">
       <outputproperty name="method" value="xml"/>
       <outputproperty name="standalone" value="yes"/>
       <outputproperty name="encoding" value="iso8859_1"/>
       <outputproperty name="indent" value="yes"/>
-    </style>
+    </xslt>
   </target>
   
   
   <target name="testFactory" depends="init">
-    <style in="xml/test.xml"
+    <xslt in="xml/test.xml"
            out="xml/out/test-out.xml"
            style="xml/test.xsl">
            <factory name="org.apache.xalan.processor.TransformerFactoryImpl"/>
-    </style>
+    </xslt>
   </target>
 
   <target name="testAttribute" depends="init">
-    <style in="xml/test.xml"
+    <xslt in="xml/test.xml"
            out="xml/out/test-out.xml"
            style="xml/test.xsl">
            <factory name="org.apache.xalan.processor.TransformerFactoryImpl">
             <attribute name="http://xml.apache.org/xalan/features/optimize" value="true"/>
            </factory>
-    </style>
+    </xslt>
   </target>
 
   
