@@ -66,9 +66,9 @@ import org.apache.commons.jxpath.*;
 
 /**
  *  Enable JXPath dynamic properties
- *  
  *
  * @author Costin Manolache
+ * @author Nicola Ken Barozzi
  */
 public class JXPath extends Task implements PropertyInterceptor {
 
@@ -82,9 +82,28 @@ public class JXPath extends Task implements PropertyInterceptor {
         if( ! name.startsWith(PREFIX) )
             return null;
         name=name.substring( PREFIX.length() );
-        Object o=jxpathCtx.getValue( name );
-        if( o==null ) return "null";
-        return o;
+
+
+        //Object o=jxpathCtx.getValue( name );
+        //System.out.println("JXPath: getProperty " + ns + " " + name + "=" + o + o.getClass());
+
+        String result = "";
+        
+        Iterator iter = jxpathCtx.iterate(name);
+        
+        if(iter==null){
+            return "null";
+        }
+        
+        result += iter.next();
+        
+        while (iter.hasNext()) {
+            Object o = iter.next();
+            //System.out.println("JXPath: getProperty " + ns + " " + name + "=" + o + o.getClass());
+            result += ", "+o;
+        }
+        
+        return result;
     }
     
     
@@ -95,6 +114,8 @@ public class JXPath extends Task implements PropertyInterceptor {
         phelper.addPropertyInterceptor( this );
         
         jxpathCtx=JXPathContext.newContext( project );
+        
+        jxpathCtx.setVariables(new AntVariables());
     }
 
     public static class JXPathHashtableHandler implements DynamicPropertyHandler {
@@ -129,6 +150,29 @@ public class JXPath extends Task implements PropertyInterceptor {
         public void setProperty(Object object, String propertyName, Object value){
             ((Hashtable)object).put(propertyName, value);
         }
+    }
+    
+    public class AntVariables implements Variables {
+    
+         protected AntVariables(){
+         }
+    
+         public void declareVariable(String varName, Object value){
+           project.setNewProperty(varName, value.toString());
+         }
+         
+         public Object getVariable(String varName){
+           return project.getProperty(varName);
+         }
+         
+         public boolean isDeclaredVariable(String varName){
+           return project.getProperty(varName) == null ? false : true ;
+         }
+         
+         public void undeclareVariable(String varName){
+           throw new UnsupportedOperationException("Cannot undeclare variables in Ant.");
+         }
+    
     }
     
 }
