@@ -78,7 +78,6 @@ import javax.xml.transform.Templates;
 import javax.xml.transform.ErrorListener;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
 import javax.xml.transform.URIResolver;
 
@@ -117,6 +116,21 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
     public TraXLiaison() throws Exception {
         tfactory = TransformerFactory.newInstance();
         tfactory.setErrorListener(this);
+    }
+
+
+    /**
+     * Set the output property for the current transformer.
+     * Note that the stylesheet must be set prior to calling
+     * this method.
+     * @param name the output property name.
+     * @param value the output property value.
+     */
+    public void setOutputProperty(String name, String value){
+        if (transformer == null){
+            throw new IllegalStateException("stylesheet must be set prior to setting the output properties");
+        }
+        transformer.setOutputProperty(name, value);
     }
 
 //------------------- IMPORTANT
@@ -214,10 +228,6 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
         transformer.setParameter(name, value);
     }
 
-    public void setOutputtype(String type) throws Exception {
-        transformer.setOutputProperty(OutputKeys.METHOD, type);
-    }
-
     public void setLogger(XSLTLogger l) {
         logger = l;
     }
@@ -269,13 +279,13 @@ public class TraXLiaison implements XSLTLiaison, ErrorListener, XSLTLoggerAware 
 
     /** Set the class to resolve entities during the transformation
      */
-    public void setEntityResolver(EntityResolver aResolver) throws Exception {
+    public void setEntityResolver(EntityResolver aResolver) {
         entityResolver = aResolver;
     }
 
     /** Set the class to resolve URIs during the transformation
      */
-    public void setURIResolver(URIResolver aResolver) throws Exception {
+    public void setURIResolver(URIResolver aResolver) {
         uriResolver = aResolver;
     }
     

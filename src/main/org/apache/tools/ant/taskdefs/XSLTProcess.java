@@ -62,6 +62,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.AntClassLoader;
+import org.apache.tools.ant.taskdefs.optional.TraXLiaison;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
 import org.apache.tools.ant.util.FileUtils;
@@ -127,7 +128,7 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
     private FileUtils fileUtils;
     
     /** XSL output method to be used */
-    private String outputtype = null;
+    private Vector outputProperties = new Vector();
     
     /** for resolving entities such as dtds */
     private XMLCatalog xmlCatalog = new XMLCatalog();
@@ -137,11 +138,11 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
                         "org.apache.tools.ant.taskdefs.optional.TraXLiaison";
 
     /** Name of the now-deprecated XSLP Liason class */                        
-    private static final String XSLP_LIASON_CLASS = 
+    private static final String XSLP_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XslpLiaison";
 
     /** Name of the Xalan liason class */                            
-    private static final String XALAN_LIASON_CLASS =
+    private static final String XALAN_LIAISON_CLASS =
                         "org.apache.tools.ant.taskdefs.optional.XalanLiaison";
                         
     /**
@@ -371,10 +372,10 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         } else if (proc.equals("xslp")) {
             log("DEPRECATED - xslp processor is deprecated. Use trax or "
                 + "xalan instead.");
-            final Class clazz = loadClass(XSLP_LIASON_CLASS);
+            final Class clazz = loadClass(XSLP_LIAISON_CLASS);
             liaison = (XSLTLiaison) clazz.newInstance();
         } else if (proc.equals("xalan")) {
-            final Class clazz = loadClass(XALAN_LIASON_CLASS);
+            final Class clazz = loadClass(XALAN_LIAISON_CLASS);
             liaison = (XSLTLiaison) clazz.newInstance();
         } else {
             liaison = (XSLTLiaison) loadClass(proc).newInstance();
@@ -631,17 +632,64 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
             }
             return expression;
         }
-    }
-    
+    } // Param
+
+
     /**
-     * Set the output type to use for the transformation; 
-     * optional, default="xml".  
-     * Only "xml" is guaranteed to work for all parsers.  
-     * Xalan2 also supports "html" and "text".
-     * @param type the output method to use
+     * Create an instance of an output property to be configured.
+     * @return the newly created output property.
+     * @since Ant 1.5
      */
-    public void setOutputtype(String type) {
-        this.outputtype = type;
+    public OutputProperty createOutputProperty() {
+        OutputProperty p = new OutputProperty();
+        outputProperties.addElement(p);
+        return p;
+    }
+
+
+    /**
+     * Specify how the result tree should be output as specified
+     * in the <a href="http://www.w3.org/TR/xslt#output">
+     * specification</a>.
+     * @since Ant 1.5
+     */
+    public static class OutputProperty {
+        /** output property name */
+        private String name;
+
+        /** output property value */
+        private String value;
+
+        /**
+         * @return the output property name.
+         */
+        public String getName() {
+            return name;
+        }
+
+        /**
+         * set the name for this property
+         * @param name A non-null String that specifies an
+         * output property name, which may be namespace qualified.
+         */
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        /**
+         * @return the output property value.
+         */
+        public String getValue() {
+            return value;
+        }
+
+        /**
+         * set the value for this property
+         * @param value The non-null string value of the output property.
+         */
+        public void setValue(String value) {
+            this.value = value;
+        }
     }
 
     /**
@@ -649,7 +697,6 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
      */
     public void init() throws BuildException {
         super.init();
-
         xmlCatalog.setProject(project);
     }
 
@@ -668,39 +715,38 @@ public class XSLTProcess extends MatchingTask implements XSLTLogger {
         try {
             log("Loading stylesheet " + stylesheet, Project.MSG_INFO);
             liaison.setStylesheet(stylesheet);
-            if (outputtype != null) {
-                liaison.setOutputtype(outputtype);
-            }
             for (Enumeration e = params.elements(); e.hasMoreElements();) {
                 Param p = (Param) e.nextElement();
                 liaison.addParam(p.getName(), p.getExpression());
             }
+            if (liaison instanceof TraXLiaison) {
+                configureTraXLiaison((TraXLiaison)liaison);
+            }
         } catch (Exception ex) {
-            log("Failed to read stylesheet " + stylesheet, Project.MSG_INFO);
+            log("Failed to transform using stylesheet " + stylesheet, Project.MSG_INFO);
             throw new BuildException(ex);
         }
+    }
 
-        try {
-            // if liaison is a TraxLiason, use XMLCatalog as the entity
-            // resolver and URI resolver
-            if (liaison.getClass().getName().equals(TRAX_LIAISON_CLASS) &&
-                xmlCatalog != null) {
-                log("Configuring TraxLiaison: setting entity resolver " +
-                    "and setting URI resolver", Project.MSG_DEBUG);
-                Method resolver = liaison.getClass()
-                    .getDeclaredMethod("setEntityResolver", 
-                                       new Class[] {EntityResolver.class});
-                resolver.invoke(liaison, new Object[] {xmlCatalog});
+    /**
+     * Specific configuration for the TRaX liaison... support for
+     * all other has been dropped so this liaison will soon look
+     * like the exact copy of JAXP interface..
+     * @param liaison the TRaXLiaison to configure.
+     */
+    protected void configureTraXLiaison(TraXLiaison liaison){
+        // use XMLCatalog as the entity resolver and URI resolver
+        if (xmlCatalog != null) {
+            liaison.setEntityResolver(xmlCatalog);
+            liaison.setURIResolver(xmlCatalog);
+        }
 
-                resolver = liaison.getClass()
-                    .getDeclaredMethod("setURIResolver", 
-                                       new Class[] {loadClass("javax.xml.transform.URIResolver")});
-                resolver.invoke(liaison, new Object[] {xmlCatalog});
-            }
-        } catch (Exception e) {
-            throw new BuildException("Failed to configure XMLCatalog for "
-                                     + "TraxLiaison", e);
+        // configure output properties
+        for (Enumeration props = outputProperties.elements();
+                props.hasMoreElements();) {
+            OutputProperty prop = (OutputProperty)props.nextElement();
+            liaison.setOutputProperty(prop.getName(), prop.getValue());
         }
     }
-    
+
 } //-- XSLTProcess
