@@ -16,8 +16,6 @@ import java.net.URLClassLoader;
 import java.util.Iterator;
 import java.util.Properties;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.myrmidon.framework.exec.Environment;
-import org.apache.myrmidon.framework.exec.ExecException;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
@@ -34,11 +32,8 @@ public class Property
     extends Task
 {
     private Path m_classpath;
-    private String m_env;
-    private File m_file;
 
     private String m_name;
-    private Reference m_ref;
     private String m_resource;
     private String m_value;
 
@@ -55,16 +50,6 @@ public class Property
         }
     }
 
-    public void setEnvironment( String env )
-    {
-        m_env = env;
-    }
-
-    public void setFile( File file )
-    {
-        m_file = file;
-    }
-
     public void setLocation( File location )
     {
         setValue( location.getAbsolutePath() );
@@ -75,11 +60,6 @@ public class Property
         m_name = name;
     }
 
-    public void setRefid( Reference ref )
-    {
-        m_ref = ref;
-    }
-
     public void setResource( String resource )
     {
         m_resource = resource;
@@ -88,31 +68,6 @@ public class Property
     public void setValue( String value )
     {
         m_value = value;
-    }
-
-    public String getEnvironment()
-    {
-        return m_env;
-    }
-
-    public File getFile()
-    {
-        return m_file;
-    }
-
-    public Reference getRefid()
-    {
-        return m_ref;
-    }
-
-    public String getResource()
-    {
-        return m_resource;
-    }
-
-    public String getValue()
-    {
-        return m_value;
     }
 
     public Path createClasspath()
@@ -128,41 +83,31 @@ public class Property
     public void execute()
         throws TaskException
     {
-        if( m_name != null )
-        {
-            if( m_value == null && m_ref == null )
-            {
-                throw new TaskException( "You must specify value, location or refid with the name attribute" );
-            }
-        }
-        else
-        {
-            if( m_file == null && m_resource == null && m_env == null )
-            {
-                throw new TaskException( "You must specify file, resource or environment when not using the name attribute" );
-            }
-        }
+        validate();
 
         if( ( m_name != null ) && ( m_value != null ) )
         {
             setProperty( m_name, m_value );
         }
 
-        if( m_file != null )
-            loadFile( m_file );
-
         if( m_resource != null )
             loadResource( m_resource );
+    }
 
-        if( m_env != null )
-            loadEnvironment( m_env );
-
-        if( ( m_name != null ) && ( m_ref != null ) )
+    private void validate() throws TaskException
+    {
+        if( m_name != null )
         {
-            Object obj = m_ref.getReferencedObject( getProject() );
-            if( obj != null )
+            if( m_value == null )
             {
-                setProperty( m_name, obj.toString() );
+                throw new TaskException( "You must specify value, location or refid with the name attribute" );
+            }
+        }
+        else
+        {
+            if( m_resource == null )
+            {
+                throw new TaskException( "You must specify resource when not using the name attribute" );
             }
         }
     }
@@ -181,78 +126,6 @@ public class Property
             final String name = (String)e.next();
             final String value = (String)props.getProperty( name );
             setProperty( name, value );
-        }
-    }
-
-    protected void loadEnvironment( String prefix )
-        throws TaskException
-    {
-        final Properties props = new Properties();
-        if( !prefix.endsWith( "." ) )
-            prefix += ".";
-
-        getLogger().debug( "Loading EnvironmentData " + prefix );
-        try
-        {
-            final Properties environment = Environment.getNativeEnvironment();
-            for( Iterator e = environment.keySet().iterator(); e.hasNext(); )
-            {
-                final String key = (String)e.next();
-                final String value = environment.getProperty( key );
-
-                if( value.equals( "" ) )
-                {
-                    getLogger().warn( "Ignoring: " + key );
-                }
-                else
-                {
-                    props.put( prefix + key, value );
-                }
-            }
-        }
-        catch( final ExecException ee )
-        {
-            throw new TaskException( ee.getMessage(), ee );
-        }
-        catch( final IOException ioe )
-        {
-            throw new TaskException( ioe.getMessage(), ioe );
-        }
-
-        addProperties( props );
-    }
-
-    protected void loadFile( File file )
-        throws TaskException
-    {
-        Properties props = new Properties();
-        getLogger().debug( "Loading " + file.getAbsolutePath() );
-        try
-        {
-            if( file.exists() )
-            {
-                FileInputStream fis = new FileInputStream( file );
-                try
-                {
-                    props.load( fis );
-                }
-                finally
-                {
-                    if( fis != null )
-                    {
-                        fis.close();
-                    }
-                }
-                addProperties( props );
-            }
-            else
-            {
-                getLogger().debug( "Unable to find property file: " + file.getAbsolutePath() );
-            }
-        }
-        catch( IOException ex )
-        {
-            throw new TaskException( "Error", ex );
         }
     }
 
