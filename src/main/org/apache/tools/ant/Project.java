@@ -70,6 +70,7 @@ import org.apache.tools.ant.types.FilterSetCollection;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.JavaEnvUtils;
 import org.apache.tools.ant.util.WeakishReference;
+import org.apache.tools.ant.util.LazyHashtable;
 
 /**
  * Central representation of an Ant project. This class defines an
@@ -168,14 +169,14 @@ public class Project {
      */
     private Hashtable inheritedProperties = new Hashtable();
     /** Map of references within the project (paths etc) (String to Object). */
-    private Hashtable references = new Hashtable();
+    private Hashtable references = new AntRefTable(this);
 
     /** Name of the project's default target. */
     private String defaultTarget;
     /** Map from data type names to implementing classes (String to Class). */
-    private Hashtable dataClassDefinitions = new Hashtable();
+    private Hashtable dataClassDefinitions = new AntTaskTable(this, false);
     /** Map from task names to implementing classes (String to Class). */
-    private Hashtable taskClassDefinitions = new Hashtable();
+    private Hashtable taskClassDefinitions = new AntTaskTable(this, true);
     /**
      * Map from task names to vectors of created tasks
      * (String to Vector of Task). This is used to invalidate tasks if
@@ -260,22 +261,9 @@ public class Project {
             }
             props.load(in);
             in.close();
+            ((AntTaskTable)taskClassDefinitions).addDefinitions( props );
 
-            Enumeration enum = props.propertyNames();
-            while (enum.hasMoreElements()) {
-                String key = (String) enum.nextElement();
-                String value = props.getProperty(key);
-                try {
-                    Class taskClass = Class.forName(value);
-                    addTaskDefinition(key, taskClass);
-                } catch (NoClassDefFoundError ncdfe) {
-                    log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for task " + key, MSG_DEBUG);
-                } catch (ClassNotFoundException cnfe) {
-                    log("Could not load class (" + value
-                        + ") for task " + key, MSG_DEBUG);
-                }
-            }
+
         } catch (IOException ioe) {
             throw new BuildException("Can't load default task list");
         }
@@ -291,19 +279,9 @@ public class Project {
             props.load(in);
             in.close();
 
-            Enumeration enum = props.propertyNames();
-            while (enum.hasMoreElements()) {
-                String key = (String) enum.nextElement();
-                String value = props.getProperty(key);
-                try {
-                    Class dataClass = Class.forName(value);
-                    addDataTypeDefinition(key, dataClass);
-                } catch (NoClassDefFoundError ncdfe) {
-                    // ignore...
-                } catch (ClassNotFoundException cnfe) {
-                    // ignore...
-                }
-            }
+            ((AntTaskTable)dataClassDefinitions).addDefinitions(props);
+
+
         } catch (IOException ioe) {
             throw new BuildException("Can't load default datatype list");
         }
@@ -790,7 +768,7 @@ public class Project {
         this.baseDir = baseDir;
         setPropertyInternal("basedir", this.baseDir.getPath());
         String msg = "Project base dir set to: " + this.baseDir;
-        log(msg, MSG_VERBOSE);
+         log(msg, MSG_VERBOSE);
     }
 
     /**
@@ -2075,4 +2053,83 @@ public class Project {
     }
 
 
+    // Should move to a separate public class - and have API to add
+    // listeners, etc.
+    private static class AntRefTable extends Hashtable {
+        Project project;
+        public AntRefTable(Project project) {
+            super();
+            this.project=project;
+        }
+
+        public Object get(Object key) {
+            //System.out.println("AntRefTable.get " + key);
+            Object o=super.get(key);
+            if( o instanceof UnknownElement ) {
+                ((UnknownElement)o).maybeConfigure();
+                o=((UnknownElement)o).getTask();
+            }
+            return o;
+        }
+    }
+
+    private static class AntTaskTable extends LazyHashtable {
+        Project project;
+        Properties props;
+        boolean tasks=false;
+
+        public AntTaskTable( Project p, boolean tasks ) {
+            this.project=p;
+            this.tasks=tasks;
+        }
+
+        public void addDefinitions( Properties props ) {
+            this.props=props;
+        }
+
+        protected void initAll( ) {
+            if( initAllDone ) return;
+            project.log("InitAll", Project.MSG_DEBUG);
+            Enumeration enum = props.propertyNames();
+            while (enum.hasMoreElements()) {
+                String key = (String) enum.nextElement();
+                Class taskClass=getTask( key );
+                if( taskClass!=null ) {
+                    // This will call a get() and a put()
+                    if( tasks )
+                        project.addTaskDefinition(key, taskClass);
+                    else
+                        project.addDataTypeDefinition(key, taskClass );
+                }
+            }
+            initAllDone=true;
+        }
+
+        protected Class getTask(String key) {
+            String value=props.getProperty(key);
+            if( value==null) {
+                project.log( "No class name for " + key, Project.MSG_VERBOSE );
+                return null;
+            }
+            try {
+                Class taskClass = Class.forName(value);
+                return taskClass;
+            } catch (NoClassDefFoundError ncdfe) {
+                project.log("Could not load a dependent class ("
+                        + ncdfe.getMessage() + ") for task " + key, Project.MSG_DEBUG);
+            } catch (ClassNotFoundException cnfe) {
+                project.log("Could not load class (" + value
+                        + ") for task " + key, Project.MSG_DEBUG);
+            }
+            return null;
+        }
+
+        // Hashtable implementation
+        public Object get( Object key ) {
+            Object orig=super.get( key );
+            if( orig!= null ) return orig;
+            project.log("Get task " + key, Project.MSG_DEBUG );
+            return getTask( (String) key);
+        }
+    }
 }
