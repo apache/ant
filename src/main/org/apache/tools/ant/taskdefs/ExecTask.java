@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -67,6 +67,7 @@ import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.Environment;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.ant.util.FileUtils;
 
 /**
  * Executes a given command if the os platform is appropriate.
@@ -97,6 +98,7 @@ public class ExecTask extends Task {
     private String resultProperty;
     private boolean failIfExecFails = true;
     private boolean append = false;
+    private String executable;
 
     /**
      * Controls whether the VM (1.3 and above) is used to execute the
@@ -128,7 +130,7 @@ public class ExecTask extends Task {
      * The command to execute.
      */
     public void setExecutable(String value) {
-        cmdl.setExecutable(value);
+        this.executable = value;
     }
 
     /**
@@ -239,10 +241,38 @@ public class ExecTask extends Task {
     }
 
     /**
+     * Attempt to figure out where the executable is so that we can feed 
+     * the full path - first try basedir, then the exec dir and then
+     * fallback to the straight executable name (i.e. on ther path)
+     *
+     * @return the executable as a full path if it can be determined.
+     */
+    private String resolveExecutable() {
+        // try to find the executable
+        File executableFile = getProject().resolveFile(executable);
+        if (executableFile.exists()) {
+            return executableFile.getAbsolutePath();
+        }
+        
+        // now try to resolve against the dir if given
+        if (dir != null) {
+            FileUtils fileUtils = FileUtils.newFileUtils();
+            executableFile = fileUtils.resolveFile(dir, executable);
+            if (executableFile.exists()) {
+                return executableFile.getAbsolutePath();
+            }
+        }
+
+        // couldn't find it - must be on path
+        return executable;            
+    }
+    
+    /**
      * Do the work.
      */
     public void execute() throws BuildException {
         File savedDir = dir; // possibly altered in prepareExec
+        cmdl.setExecutable(resolveExecutable());
         checkConfiguration();
         if (isValidOs()) {
             try {
