@@ -68,3 +68,38 @@ aalbspazea4J9zgi59SSwOM=
 =Icm2
 -----END PGP PUBLIC KEY BLOCK-----
 
+pub  1024D/5F6B8B72 2001-05-28 Stefan Bodewig <bodewig@bost.de>
+sig        5F6B8B72 2001-05-28  Stefan Bodewig <bodewig@bost.de>
+uid                            Stefan Bodewig <bodewig@apache.org>
+sig        5F6B8B72 2001-05-28  Stefan Bodewig <bodewig@bost.de>
+sub  1024g/24774157 2001-05-28
+sig        5F6B8B72 2001-05-28  Stefan Bodewig <bodewig@bost.de>
+
+-----BEGIN PGP PUBLIC KEY BLOCK-----
+Version: GnuPG v1.0.6 (GNU/Linux)
+Comment: Weitere Infos: siehe http://www.gnupg.org
+
+mQGiBDsSIk4RBADSCj6rUjV64tYCGT1DYKYR7GthyWpNdGHSYLbETBcDatAe1dzQ
+5NsCgfrlybfyeY+y1lxr3T9bqf6zJWDw/718wff96qmmv1qzexSYtmIrj+h53V82
+EXwWOFuYMJisuxdT940iQzosm3GOv4MJdEg3oI2SgfEyRQQ6vO4Ob5rHDwCg5taZ
+nrHOrXx2dIGHxpxRZ0SUl30D/jmtttFjYOQ3LBMriikz5mh2sK3ZnoSRF4o5O0zW
+Ve6e2SFXOEjVjImKsH6KCbdQNelrAdgiyOoXClyQKsQ27pncbdWo6bO0E3POJZVm
+XaeW7iudHVr63rU5PViXObIQrdQl0D59j5brKj4vdlTyUw8kaHPvbKPDEOwvZq4Y
+LJQ5BACA1YilTeXRJqwFsNlpcxCHwlULD4QUVP496prQWf1B7Z6g0KvLGrQsO0Vn
+Jcn+fEqukysTJixSXCPebosltd4RalJIupVYkp4w6MJ7biaDAlLuNhDcI/AiXTmV
+dXUedVXIaM8I3Ne23gucwbAyc0Hvb+3cSAKRhl/azFQhuHBvlrQjU3RlZmFuIEJv
+ZGV3aWcgPGJvZGV3aWdAYXBhY2hlLm9yZz6IVwQTEQIAFwUCOxIiTgULBwoDBAMV
+AwIDFgIBAheAAAoJEKIRWuFfa4tyLJ4An2yKSQ1o+lIF2O6wR/E6NdgYAfkSAJ94
+8O9lic6ZQLUoVU5rjJURUvhVDbQgU3RlZmFuIEJvZGV3aWcgPGJvZGV3aWdAYm9z
+dC5kZT6IVwQTEQIAFwUCOxI5gQULBwoDBAMVAwIDFgIBAheAAAoJEKIRWuFfa4ty
+yboAoNoD/9Jgm/alxfAYELz05LMa/HLeAKDWTHqq7rMkppZoTUv2gWpVzrk5RLkB
+DQQ7EiJUEAQAzVKWS8QrkysydbTJu2/14wIbz2Coi93aAGelwCwXSxf50JpYdY3L
+kcvd0FqT8bcEnz43MCSx8vlKubQtUpx9WMGIb4ixtShLJ4lAa6FJldhychz/dnxS
+Nyz5N8W6sby4dTVxac0rloxjAOurGanhG7TMtgfDi0cEEoXRyAVoKyMAAwUD/j1p
+Jm4Npq2mlJoE7MK3vAhgKwYHFflmJusmqvSAtRuFdT15pbMJrA5bAK+lA3SVOOhh
+WTCItlphSR2qxJCAcBTeOMqUi5ohFcCkSRNvwmDtH+80B3BehlEsEKNk8Z3moa2c
+h7Oxnb6XEXH5tGJ5Qvx9Qid6ZfBaXx7bc8yKyCb4iEYEGBECAAYFAjsSIlQACgkQ
+ohFa4V9ri3INMgCgnc22kj8TfjktU6u4SUUqud25ZZcAn0B2b0zPjKjGuiwdKSnk
+FbNcFS3g
+=Cay0
+-----END PGP PUBLIC KEY BLOCK-----
