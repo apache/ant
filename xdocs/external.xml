@@ -1105,6 +1105,32 @@
           </tr>
         </table>
       </subsection>
+
+      <subsection name="Just4log Ant Task">
+
+        <p>Just4log is a ant task to optimize JVM bytecode with regards 
+        for Logs ( be it, Log4j, Apache Commons or JDK 1.4 )
+        It depends on apache BCEL for Bytecode engineering.</p> 
+
+        <table class="externals">
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.4 or higher</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://just4log.sourceforge.net">http://just4log.sourceforge.net</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="mailto:lbruand@wanadoo.fr">Lucas Bruand</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>Apache License 1.1.</td>
+          </tr>
+        </table>
+      </subsection>
       
      <subsection name="Macker">
 
