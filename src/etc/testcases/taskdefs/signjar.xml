@@ -25,6 +25,7 @@
              storepass="apacheant" maxmemory="128m"/>
   </target>
 
+  <!--TODO: change this when we move to SUBVERSION-->
   <target name="urlKeystoreHTTP">
     <jar jarfile="signtest.jar" basedir="${classes.dir}" includes="**/Task.class"/>
     <signjar jar="signtest.jar" alias="testonly"
