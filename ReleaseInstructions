@@ -167,10 +167,10 @@ Note: This document was created in the context of releasing Ant 1.5.
       /www/archive.apache.org/dist/ant/[source|binary] on minotaur,
       leave the *zip* files alone.
 
-18. Now and perhaps during previous betas any changes on the branch must 
+19. Now and perhaps during previous betas any changes on the branch must 
     be merged back into the tree.
 
-19. At this point in time, the release is done and announcements are made. 
+20. At this point in time, the release is done and announcements are made. 
     PGP-sign your announcement posts.
 
     [[TODO: Identify the mailing lists where announcements are to be made.
@@ -186,5 +186,5 @@ Note: This document was created in the context of releasing Ant 1.5.
     Announce release in the usenet groups comp.lang.java.softwaretools
     and comp.lang.java.announce.
 
-20. You can now reacquaint yourself with your family and friends.
+21. You can now reacquaint yourself with your family and friends.
 
