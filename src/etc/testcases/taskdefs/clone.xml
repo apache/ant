@@ -24,7 +24,7 @@
       <size value="0" when="less" />
     </clone>
     <pathconvert property="ganger" pathsep="" refid="ganger" />
-    <fail>
+    <fail message="expected $${ganger} = &quot;&quot;; instead was &quot;${ganger}&quot;">
       <condition>
         <not>
           <equals arg1="" arg2="${ganger}" />
