@@ -597,6 +597,36 @@
         </table>
       </subsection>
 
+     <subsection name="Macker">
+
+        <p>A build-time architectural testing tool, designed
+        to maintain clean layering / tiering / modularity.
+        Macker works against compiled class files, checking
+        dependencies between classes against a set of
+        pattern-based access rules you specify for your
+        project in an XML rules file.  Macker doesn't presume
+        anything about your architecture -- you write the
+        rules, and Macker keeps you honest about them.</p>
+
+        <table>
+          <tr>
+            <th>Compatibility:</th>
+            <td>Ant 1.5 and higher (1.4 untested but may work)</td>
+          </tr>
+          <tr>
+            <th>URL:</th>
+            <td><a href="http://innig.net/macker/">http://innig.net/macker/</a></td>
+          </tr>
+          <tr>
+            <th>Contact:</th>
+            <td><a href="http://innig.net/macker/contact.html">Paul Cantrell</a></td>
+          </tr>
+          <tr>
+            <th>License:</th>
+            <td>GNU GPL 2.0</td>
+          </tr>
+        </table>
+      </subsection>
 
       <subsection name="PMD">
 
@@ -1029,9 +1059,9 @@
         </table>
       </subsection>
 
-      <subsection name="NetBeans / Forte for Java">
+      <subsection name="NetBeans / Sun ONE Studio">
 
-        <p>A module that integrates Ant into the NetBeans or Forte for Java IDEs.</p>
+        <p>A module that integrates Ant into the NetBeans or Sun ONE Studio (formerly Forte for Java) IDEs.</p>
 
         <table>
           <tr>
