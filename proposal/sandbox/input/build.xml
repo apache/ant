@@ -50,7 +50,9 @@
       <classpath>
         <pathelement location="${testcases.dir}" />
         <pathelement location="build/ant.jar" />
-        <pathelement location="${main.ant}/lib/crimson.jar" />
+        <fileset dir="${main.ant}/lib">
+          <include name="*.jar" />
+        </fileset>
         <pathelement location="${main.ant}/lib/optional/junit.jar" />
       </classpath>
       <formatter type="plain" usefile="false" />
