@@ -64,9 +64,9 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
 
 /**
  * ZipScanner accesses the pattern matching algorithm in DirectoryScanner,
@@ -85,10 +85,6 @@ public class ZipScanner extends DirectoryScanner {
      */
     protected File srcFile;
     /**
-     *  The current task, used to report errors, ...
-     */
-    private Task task;
-    /**
      * to record the last scanned zip file with its modification date
      */
     private Resource lastScannedResource;
@@ -105,17 +101,6 @@ public class ZipScanner extends DirectoryScanner {
      */
     public void setSrc(File srcFile) {
         this.srcFile = srcFile;
-    }
-    /**
-     * Sets the current task. This is used to provide proper logging
-     * for exceptions
-     *
-     * @param task the current task
-     *
-     * @since Ant 1.5.2
-     */
-    public void setTask(Task task) {
-        this.task = task;
     }
 
     /**
@@ -245,25 +230,14 @@ public class ZipScanner extends DirectoryScanner {
             return;
         }
 
-        if (task != null) {
-            task.log("checking zip entries: " + srcFile, Project.MSG_VERBOSE);
-        }
-
         ZipEntry entry = null;
         ZipInputStream in = null;
         myentries = new Hashtable();
         try {
             try {
                 in = new ZipInputStream(new FileInputStream(srcFile));
-                if (task != null) {
-                    task.log("opening input stream from " + srcFile,
-                             Project.MSG_DEBUG);
-                }
             } catch (IOException ex) {
-                // XXX - throw a BuildException instead ??
-                if (task != null) {
-                    task.log("problem opening "+srcFile,Project.MSG_ERR);
-                }
+                throw new BuildException("problem opening " + srcFile, ex);
             }
 
             while (true) {
@@ -276,39 +250,20 @@ public class ZipScanner extends DirectoryScanner {
                                   new Resource(entry.getName(), true,
                                                entry.getTime(), 
                                                entry.isDirectory()));
-                    if (task != null) {
-                        task.log("adding entry " + entry.getName() + " from "
-                                 + srcFile, Project.MSG_DEBUG);
-                    }
-
                 } catch (ZipException ex) {
-                    // XXX - throw a BuildException instead ??
-                    if (task != null ) {
-                        task.log("problem reading " + srcFile,
-                                 Project.MSG_ERR);
-                    }
-
+                    throw new BuildException("problem reading " + srcFile,
+                                             ex);
                 } catch (IOException e) {
-                    // XXX - throw a BuildException instead ??
-                    if (task != null) {
-                        task.log("problem reading zip entry from " + srcFile,
-                                 Project.MSG_ERR);
-                    }
+                    throw new BuildException("problem reading zip entry from " 
+                                             + srcFile, e);
                 }
             }
         } finally {
             if (in != null) {
                 try {
                     in.close();
-                    if (task != null) {
-                        task.log("closing input stream from " + srcFile,
-                                 Project.MSG_DEBUG);
-                    }
                 } catch (IOException ex) {
-                    if (task != null) {
-                        task.log("problem closing input stream from "
-                                 + srcFile, Project.MSG_ERR);
-                    }
+                    // swallow
                 }
             }
         }

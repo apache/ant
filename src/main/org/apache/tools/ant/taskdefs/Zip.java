@@ -665,8 +665,6 @@ public class Zip extends MatchingTask {
     private synchronized ZipScanner getZipScanner() {
         if (zs == null) {
             zs = new ZipScanner();
-            // set the task of the zip scanner so that it can log properly
-            zs.setTask(this);
             zs.setSrc(zipFile);
         }
         return zs;
