@@ -42,7 +42,7 @@ set.</p>
   <tr>
     <td valign="top">name</td>
     <td valign="top">Select the property with the given name.</td>
-    <td align="center" valign="top" rowspan="3">Exactly one of these.</td>
+    <td align="center" valign="top" rowspan="4">Exactly one of these.</td>
   </tr>
   <tr>
     <td valign="top">prefix</td>
@@ -55,6 +55,15 @@ set.</p>
       regular expression.  Similar to <a
       href="mapper.html#regexp-mapper">regexp type mappers</a>, this
       equires a supported regular expression library.</td>
+  </tr>
+  <tr>
+    <td valign="top">builtin</td>
+    <td valign="top">Selects a builtin set of properties.  Valid
+      values for this attribute are <code>all</code> for all Ant
+      properties, <code>system</code> for the system properties and
+      <code>commandline</code> for all properties specified on the
+      command line when invoking Ant (plus a number of special
+      internal Ant properties).</td>
   </tr>
 </table>
 

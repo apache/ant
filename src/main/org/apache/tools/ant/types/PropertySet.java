@@ -90,6 +90,7 @@ public class PropertySet extends DataType {
         private String name;
         private String regex;
         private String prefix;
+        private String builtin;
 
         public void setName(String name) {
             assertValid("name", name);
@@ -106,6 +107,12 @@ public class PropertySet extends DataType {
             this.prefix = prefix;
         }
 
+        public void setBuiltin(BuiltinPropertySetName b) {
+            String builtin = b.getValue();
+            assertValid("builtin", builtin);
+            this.builtin = builtin;
+        }
+
         private void assertValid(String attr, String value) {
             if (value == null || value.length() < 1) {
                 throw new BuildException("Invalid attribute: " + attr);
@@ -118,7 +125,8 @@ public class PropertySet extends DataType {
         }
 
         public String toString() {
-            return "name=" + name + ", regex=" + regex + ", prefix=" + prefix;
+            return "name=" + name + ", regex=" + regex + ", prefix=" + prefix
+                + ", builtin=" + builtin;
         }
 
     }
@@ -138,6 +146,12 @@ public class PropertySet extends DataType {
     public void appendPrefix(String prefix) {
         PropertyRef ref = new PropertyRef();
         ref.setPrefix(prefix);
+        addPropertyref(ref);
+    }
+
+    public void appendBuiltin(BuiltinPropertySetName b) {
+        PropertyRef ref = new PropertyRef();
+        ref.setBuiltin(b);
         addPropertyref(ref);
     }
 
@@ -256,8 +270,26 @@ public class PropertySet extends DataType {
                         names.addElement(name);
                     }
                 }
-            }
-            else {
+            } else if (ref.builtin != null) {
+
+                Enumeration enum = null;
+                if (ref.builtin.equals(BuiltinPropertySetName.ALL)) {
+                    enum = properties.keys();
+                } else if (ref.builtin.equals(BuiltinPropertySetName.SYSTEM)) {
+                    enum = System.getProperties().keys();
+                } else if (ref.builtin.equals(BuiltinPropertySetName
+                                              .COMMANDLINE)) {
+                    enum = getProject().getUserProperties().keys();
+                } else {
+                    throw new BuildException("Impossible: Invalid builtin "
+                                             + "attribute!");
+                }
+
+                while (enum.hasMoreElements()) {
+                    names.addElement(enum.nextElement());
+                }
+
+            } else {
                 throw new BuildException("Impossible: Invalid PropertyRef!");
             }
         }
@@ -321,5 +353,17 @@ public class PropertySet extends DataType {
         noAttributeSet = false;
     }
     private boolean noAttributeSet = true;
+
+    /**
+     * Used for propertyref's builtin attribute.
+     */
+    public static class BuiltinPropertySetName extends EnumeratedAttribute {
+        static final String ALL = "all";
+        static final String SYSTEM = "system";
+        static final String COMMANDLINE = "commandline";
+        public String[] getValues() {
+            return new String[] {ALL, SYSTEM, COMMANDLINE};
+        }
+    }
 } // END class PropertySet
 
