@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 1999, 2000 The Apache Software Foundation.  All rights
+ * Copyright (c) 2001 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -51,68 +51,43 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.core.*;
-import org.apache.tools.ant.gui.util.XMLHelper;
-import org.apache.tools.ant.gui.command.LoadFileCmd;
-import javax.swing.*;
-import java.awt.BorderLayout;
-import java.io.File;
+package org.apache.tools.ant.gui.command;
+import org.apache.tools.ant.gui.core.AppContext;
 
 /**
- * Launch point for the Antidote GUI. Configurs it as an application.
+ * Command for creating a new project.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class Main {
+public class NewProjectCmd extends AbstractCommand {
 	/** 
-	 * Application start.
+	 * Standard ctor.
 	 * 
-	 * @param args TBD
+	 * @param context Application context.
 	 */
-    public static void main(String[] args) {
-        XMLHelper.init();
+    public NewProjectCmd(AppContext context) {
+        super(context);
+    }
 
-        try {
-            JFrame f = new JFrame("Antidote");
-            AppContext context = new AppContext(f);
-            EventResponder resp = new EventResponder(context);
-            Antidote gui = new Antidote(context);
+	/** 
+	 * Display a dialog asking the user to select a file to open.
+     * If one is selected then an event is posted requesting the open 
+     * operation be completed.
+	 * 
+	 */
+    public void run() {
+/*
+        FileFilter filter = new XMLFileFilter(getContext().getResources());
 
-            f.setDefaultCloseOperation(3 /*JFrame.EXIT_ON_CLOSE*/);
-            JMenuBar menu = context.getActions().createMenuBar();
-            f.setJMenuBar(menu);
-            f.getContentPane().add(BorderLayout.CENTER, gui);
-            f.getContentPane().add(BorderLayout.NORTH, 
-                                   context.getActions().createToolBar());
-
-            // Add the project selection menu.
-            ProjectSelectionMenu ps = new ProjectSelectionMenu(context);
-            ps.insertInto(menu);
-
-            ImageIcon icon = 
-                context.getResources().loadImageIcon("icon-small.gif");
-            if(icon != null) {
-                f.setIconImage(icon.getImage());
-            }
-            else {
-                System.out.println("Application icon not found.");
-            }
-            f.pack();
-
-            f.setVisible(true);
-
-            // XXX this will change once full command line argument parsing
-            // is supported.
-            if(args.length > 0) {
-                LoadFileCmd load = new LoadFileCmd(context);
-                load.setFile(new File(args[0]));
-                load.run();
-            }
+        JFileChooser chooser = new JFileChooser();
+        chooser.addChoosableFileFilter(filter);
+        int val = chooser.showOpenDialog(getContext().getParentFrame());
+        if(val == JFileChooser.APPROVE_OPTION) {
+            File selected = chooser.getSelectedFile();
+            getContext().getEventBus().postEvent(
+                new OpenRequestEvent(getContext(), selected));
         }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
+*/
     }
 }

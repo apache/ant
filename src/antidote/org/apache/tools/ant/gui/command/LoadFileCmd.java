@@ -54,7 +54,7 @@
 package org.apache.tools.ant.gui.command;
 import org.apache.tools.ant.gui.core.AppContext;
 import org.apache.tools.ant.gui.event.ErrorEvent;
-import org.apache.tools.ant.gui.event.ProjectSelectedEvent;
+import org.apache.tools.ant.gui.event.NewProjectEvent;
 import org.apache.tools.ant.gui.acs.ACSProjectElement;
 import java.io.File;
 import java.io.IOException;
@@ -104,7 +104,7 @@ public class LoadFileCmd extends  AbstractCommand {
                 ACSProjectElement project =
                     getContext().getProjectManager().open(_file);
                 getContext().getEventBus().postEvent(
-                    new ProjectSelectedEvent(getContext(), project));
+                    new NewProjectEvent(getContext(), project));
             }
             catch(Exception ex) {
                 String message = getContext().getResources().getMessage(

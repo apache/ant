@@ -51,68 +51,31 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.core.*;
-import org.apache.tools.ant.gui.util.XMLHelper;
-import org.apache.tools.ant.gui.command.LoadFileCmd;
-import javax.swing.*;
-import java.awt.BorderLayout;
-import java.io.File;
+package org.apache.tools.ant.gui.event;
+import org.apache.tools.ant.gui.core.AppContext;
+import org.apache.tools.ant.gui.acs.ACSProjectElement;
+import org.apache.tools.ant.gui.acs.ACSElement;
 
 /**
- * Launch point for the Antidote GUI. Configurs it as an application.
+ * Event providing notification that a new project has been
+ * created or opened and selected. NB: Still not convinced that
+ * subclassing ProjectSelectedEvent is the correct thing to
+ * do, but it saves some time right now. It basically
+ * assumes that any new project added to the project manager
+ * is then selected.
  * 
  * @version $Revision$ 
  * @author Simeon Fitch 
  */
-public class Main {
+public class NewProjectEvent extends ProjectSelectedEvent {
+
 	/** 
-	 * Application start.
+	 * Standard ctor.
 	 * 
-	 * @param args TBD
+	 * @param context application context.
 	 */
-    public static void main(String[] args) {
-        XMLHelper.init();
-
-        try {
-            JFrame f = new JFrame("Antidote");
-            AppContext context = new AppContext(f);
-            EventResponder resp = new EventResponder(context);
-            Antidote gui = new Antidote(context);
-
-            f.setDefaultCloseOperation(3 /*JFrame.EXIT_ON_CLOSE*/);
-            JMenuBar menu = context.getActions().createMenuBar();
-            f.setJMenuBar(menu);
-            f.getContentPane().add(BorderLayout.CENTER, gui);
-            f.getContentPane().add(BorderLayout.NORTH, 
-                                   context.getActions().createToolBar());
-
-            // Add the project selection menu.
-            ProjectSelectionMenu ps = new ProjectSelectionMenu(context);
-            ps.insertInto(menu);
-
-            ImageIcon icon = 
-                context.getResources().loadImageIcon("icon-small.gif");
-            if(icon != null) {
-                f.setIconImage(icon.getImage());
-            }
-            else {
-                System.out.println("Application icon not found.");
-            }
-            f.pack();
-
-            f.setVisible(true);
-
-            // XXX this will change once full command line argument parsing
-            // is supported.
-            if(args.length > 0) {
-                LoadFileCmd load = new LoadFileCmd(context);
-                load.setFile(new File(args[0]));
-                load.run();
-            }
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
+    public NewProjectEvent(
+        AppContext context, ACSProjectElement project) {
+        super(context, project);
     }
 }
