@@ -237,7 +237,12 @@ public class ProjectHelper {
                 if (baseDir == null) {
                     project.setBasedir((new File(buildFileParent)).getAbsolutePath());
                 } else {
-                    project.setBasedir((new File(buildFileParent, baseDir)).getAbsolutePath());
+                    // check whether the user has specified an absolute path
+                    if ((new File(baseDir)).isAbsolute()) {
+                        project.setBasedir(baseDir);
+                    } else {
+                        project.setBasedir((new File(buildFileParent, baseDir)).getAbsolutePath());
+                    }
                 }
             }
 
