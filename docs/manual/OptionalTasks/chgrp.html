@@ -23,6 +23,17 @@ href="../CoreTypes/filelist.html">FileList</a>s can be specified using
 nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and 
 <code>&lt;filelist&gt;</code> elements.</p>
 
+<p>By default this task will use a single invocation of the underlying
+chgrp command.  If you are working on a large number of files this may
+result in a command line that is too long for your operating system.
+If you encounter such problems, you should set the maxparallel
+attribute of this task to a non-zero value.  The number to use highly
+depends on the length of your file names (the depth of your directory
+tree) and your operating system, so you'll have to experiment a
+little.  POSIX recommends command line length limits of at least 4096
+characters, this may give you an approximation for the number you
+could use as initial value for these experiments.</p>
+
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
