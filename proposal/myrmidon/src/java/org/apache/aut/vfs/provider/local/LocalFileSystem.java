@@ -17,7 +17,8 @@ import org.apache.aut.vfs.provider.FileSystem;
 /**
  * A local file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 class LocalFileSystem extends AbstractFileSystem implements FileSystem
 {

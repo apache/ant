@@ -23,7 +23,8 @@ import org.apache.avalon.excalibur.i18n.Resources;
 /**
  * A file object implementation which uses direct file access.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 final class LocalFile
     extends AbstractFileObject
@@ -33,7 +34,7 @@ final class LocalFile
         ResourceManager.getPackageResources( LocalFile.class );
 
     private File m_file;
-    private String m_fileName;
+    private final String m_fileName;
 
     /**
      * Creates a non-root file.

@@ -123,9 +123,8 @@ public interface FileObject
     FileObject[] getChildren() throws FileSystemException;
 
     /**
-     * Finds a file, relative to this file.  Refer to {@link NameScope#CHILD}
-     * and {@link NameScope#FILE_SYSTEM} for a description of how names
-     * are resolved in the different scopes.
+     * Finds a file, relative to this file.  Refer to {@link NameScope}
+     * for a description of how names are resolved in the different scopes.
      *
      * @param name
      *      The name to resolve.
@@ -207,7 +206,7 @@ public interface FileObject
      *
      * @see FileContent#close
      *
-     * @throws FileSystemEception
+     * @throws FileSystemException
      *      On error closing the file.
      */
     void close() throws FileSystemException;

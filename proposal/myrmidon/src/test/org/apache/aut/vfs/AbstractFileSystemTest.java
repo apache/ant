@@ -15,6 +15,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.aut.vfs.impl.DefaultFileSystemManager;
+import org.apache.aut.vfs.provider.AbstractFileObject;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 
 /**
@@ -29,6 +32,9 @@ import org.apache.myrmidon.AbstractMyrmidonTest;
 public abstract class AbstractFileSystemTest
     extends AbstractMyrmidonTest
 {
+    private final static Resources REZ
+        = ResourceManager.getPackageResources( AbstractFileObject.class );
+
     protected FileObject m_baseFolder;
     protected DefaultFileSystemManager m_manager;
 
@@ -46,12 +52,12 @@ public abstract class AbstractFileSystemTest
     private FileInfo buildExpectedStructure()
     {
         // Build the expected structure
-        FileInfo base = new FileInfo( "test", FileType.FOLDER );
+        final FileInfo base = new FileInfo( "test", FileType.FOLDER );
         base.addChild( new FileInfo( "file1.txt", FileType.FILE ) );
         base.addChild( new FileInfo( "empty.txt", FileType.FILE ) );
         base.addChild( new FileInfo( "emptydir", FileType.FOLDER ) );
 
-        FileInfo dir = new FileInfo( "dir1", FileType.FOLDER );
+        final FileInfo dir = new FileInfo( "dir1", FileType.FOLDER );
         base.addChild( dir );
         dir.addChild( new FileInfo( "file1.txt", FileType.FILE ) );
         dir.addChild( new FileInfo( "file2.txt", FileType.FILE ) );
@@ -76,7 +82,7 @@ public abstract class AbstractFileSystemTest
         m_baseFolder = m_manager.resolveFile( getBaseFolderURI() );
 
         // Build the expected content of "file1.txt"
-        String eol = System.getProperty( "line.separator" );
+        final String eol = System.getProperty( "line.separator" );
         m_charContent = "This is a test file." + eol + "With 2 lines in it." + eol;
     }
 
@@ -86,8 +92,8 @@ public abstract class AbstractFileSystemTest
     public void testAbsoluteURI() throws Exception
     {
         // Try fetching base folder again by its URI
-        String uri = m_baseFolder.getName().getURI();
-        FileObject file = m_manager.resolveFile( uri );
+        final String uri = m_baseFolder.getName().getURI();
+        final FileObject file = m_manager.resolveFile( uri );
 
         assertSame( "file object", m_baseFolder, file );
     }
@@ -123,7 +129,7 @@ public abstract class AbstractFileSystemTest
     public void testRootFileName() throws Exception
     {
         // Locate the root file
-        FileName rootName = m_baseFolder.getRoot().getName();
+        final FileName rootName = m_baseFolder.getRoot().getName();
 
         // Test that the root path is "/"
         assertEquals( "root path", "/", rootName.getPath() );
@@ -140,9 +146,9 @@ public abstract class AbstractFileSystemTest
      */
     public void testChildName() throws Exception
     {
-        FileName baseName = m_baseFolder.getName();
-        String basePath = baseName.getPath();
-        FileName name = baseName.resolveName( "some-child", NameScope.CHILD );
+        final FileName baseName = m_baseFolder.getName();
+        final String basePath = baseName.getPath();
+        final FileName name = baseName.resolveName( "some-child", NameScope.CHILD );
 
         // Test path is absolute
         assertTrue( "is absolute", basePath.startsWith( "/" ) );
@@ -157,65 +163,84 @@ public abstract class AbstractFileSystemTest
         assertEquals( "parent absolute path", basePath, name.getParent().getPath() );
 
         // Try using a compound name to find a child
-        try
-        {
-            name.resolveName( "a/b", NameScope.CHILD );
-            assertTrue( false );
-        }
-        catch( FileSystemException e )
-        {
-        }
+        assertBadName( name, "a/b", NameScope.CHILD );
 
-        // Try using a empty name to find a child
-        try
-        {
-            name.resolveName( "", NameScope.CHILD );
-            assertTrue( false );
-        }
-        catch( FileSystemException e )
-        {
-        }
+        // Check other invalid names
+        checkDescendentNames( name, NameScope.CHILD );
+    }
 
-        // Try using '.' to find a child
-        try
-        {
-            name.resolveName( ".", NameScope.CHILD );
-            assertTrue( false );
-        }
-        catch( FileSystemException e )
-        {
-        }
+    /**
+     * Name resolution tests that are common for CHILD or DESCENDENT scope.
+     */
+    private void checkDescendentNames( final FileName name,
+                                       final NameScope scope )
+        throws Exception
+    {
+        // Make some assumptions about the name explicit
+        assertTrue( !name.getPath().equals( "/" ) );
+        assertTrue( !name.getPath().endsWith( "/a" ) );
+        assertTrue( !name.getPath().endsWith( "/a/b" ) );
 
-        // Try using '..' to find a child
-        try
-        {
-            name.resolveName( "..", NameScope.CHILD );
-            assertTrue( false );
-        }
-        catch( FileSystemException e )
-        {
-        }
+        // Test names with the same prefix
+        String path = name.getPath() + "/a";
+        assertSameName( path, name, path, scope );
+        assertSameName( path, name, "../" + name.getBaseName() + "/a", scope );
+
+        // Test an empty name
+        assertBadName( name, "", scope );
+
+        // Test . name
+        assertBadName( name, ".", scope );
+        assertBadName( name, "./", scope );
+
+        // Test ancestor names
+        assertBadName( name, "..", scope );
+        assertBadName( name, "../a", scope );
+        assertBadName( name, "../" + name.getBaseName() + "a", scope );
+        assertBadName( name, "a/..", scope );
+
+        // Test absolute names
+        assertBadName( name, "/", scope );
+        assertBadName( name, "/a", scope );
+        assertBadName( name, "/a/b", scope );
+        assertBadName( name, name.getPath(), scope );
+        assertBadName( name, name.getPath() + "a", scope );
     }
 
     /**
      * Checks that a relative name resolves to the expected absolute path.
+     * Tests both forward and back slashes.
+     */
+    private void assertSameName( final String expectedPath,
+                                 final FileName baseName,
+                                 final String relName,
+                                 final NameScope scope )
+        throws Exception
+    {
+        // Try the supplied name
+        FileName name = baseName.resolveName( relName, scope );
+        assertEquals( expectedPath, name.getPath() );
+
+        // Replace the separators
+        relName.replace( '\\', '/' );
+        name = baseName.resolveName( relName, scope );
+        assertEquals( expectedPath, name.getPath() );
+
+        // And again
+        relName.replace( '/', '\\' );
+        name = baseName.resolveName( relName, scope );
+        assertEquals( expectedPath, name.getPath() );
+    }
+
+    /**
+     * Checks that a relative name resolves to the expected absolute path.
+     * Tests both forward and back slashes.
      */
     private void assertSameName( String expectedPath,
                                  FileName baseName,
                                  String relName ) throws Exception
     {
-        FileName name = baseName.resolveName( relName );
-        assertEquals( expectedPath, name.getPath() );
-
-        // Replace the separators
-        relName.replace( '\\', '/' );
-        name = baseName.resolveName( relName );
-        assertEquals( expectedPath, name.getPath() );
-
-        // And again
-        relName.replace( '/', '\\' );
-        name = baseName.resolveName( relName );
-        assertEquals( expectedPath, name.getPath() );
+        assertSameName( expectedPath, baseName, relName, NameScope.FILE_SYSTEM );
     }
 
     /**
@@ -223,10 +248,10 @@ public abstract class AbstractFileSystemTest
      */
     public void testNameResolution() throws Exception
     {
-        FileName baseName = m_baseFolder.getName();
-        String parentPath = baseName.getParent().getPath();
-        String path = baseName.getPath();
-        String childPath = path + "/some-child";
+        final FileName baseName = m_baseFolder.getName();
+        final String parentPath = baseName.getParent().getPath();
+        final String path = baseName.getPath();
+        final String childPath = path + "/some-child";
 
         // Test empty relative path
         assertSameName( path, baseName, "" );
@@ -280,23 +305,78 @@ public abstract class AbstractFileSystemTest
     }
 
     /**
-     * Walks the folder structure, asserting it contains exactly the
+     * Tests descendent name resolution.
+     */
+    public void testDescendentName()
+        throws Exception
+    {
+        final FileName baseName = m_baseFolder.getName();
+
+        // Test direct child
+        String path = baseName.getPath() + "/some-child";
+        assertSameName( path, baseName, "some-child", NameScope.DESCENDENT );
+
+        // Test compound name
+        path = path + "/grand-child";
+        assertSameName( path, baseName, "some-child/grand-child", NameScope.DESCENDENT );
+
+        // Test relative names
+        assertSameName( path, baseName, "./some-child/grand-child", NameScope.DESCENDENT );
+        assertSameName( path, baseName, "./nada/../some-child/grand-child", NameScope.DESCENDENT );
+        assertSameName( path, baseName, "some-child/./grand-child", NameScope.DESCENDENT );
+
+        // Test badly formed descendent names
+        checkDescendentNames( baseName, NameScope.DESCENDENT );
+    }
+
+    /**
+     * Asserts that a particular relative name is invalid for a particular
+     * scope.
+     */
+    private void assertBadName( final FileName name,
+                                final String relName,
+                                final NameScope scope )
+    {
+        try
+        {
+            name.resolveName( relName, scope );
+            fail();
+        }
+        catch( FileSystemException e )
+        {
+            // TODO - should check error message
+        }
+    }
+
+    /**
+     * Walks the base folder structure, asserting it contains exactly the
      * expected files and folders.
      */
     public void testStructure() throws Exception
     {
-        // Setup the structure
-        List queueExpected = new ArrayList();
-        FileInfo baseInfo = buildExpectedStructure();
-        queueExpected.add( baseInfo );
+        final FileInfo baseInfo = buildExpectedStructure();
+        assertSameStructure( m_baseFolder, baseInfo );
+    }
 
-        List queueActual = new ArrayList();
-        queueActual.add( m_baseFolder );
+    /**
+     * Walks a folder structure, asserting it contains exactly the
+     * expected files and folders.
+     */
+    protected void assertSameStructure( final FileObject folder,
+                                        final FileInfo expected )
+        throws Exception
+    {
+        // Setup the structure
+        final List queueExpected = new ArrayList();
+        queueExpected.add( expected );
+
+        final List queueActual = new ArrayList();
+        queueActual.add( folder );
 
         while( queueActual.size() > 0 )
         {
-            FileObject file = (FileObject)queueActual.remove( 0 );
-            FileInfo info = (FileInfo)queueExpected.remove( 0 );
+            final FileObject file = (FileObject)queueActual.remove( 0 );
+            final FileInfo info = (FileInfo)queueExpected.remove( 0 );
 
             // Check the type is correct
             assertSame( file.getType(), info._type );
@@ -307,7 +387,7 @@ public abstract class AbstractFileSystemTest
             }
 
             // Check children
-            FileObject[] children = file.getChildren();
+            final FileObject[] children = file.getChildren();
 
             // Make sure all children were found
             assertNotNull( children );
@@ -316,8 +396,8 @@ public abstract class AbstractFileSystemTest
             // Recursively check each child
             for( int i = 0; i < children.length; i++ )
             {
-                FileObject child = children[ i ];
-                FileInfo childInfo = (FileInfo)info._children.get( child.getName().getBaseName() );
+                final FileObject child = children[ i ];
+                final FileInfo childInfo = (FileInfo)info._children.get( child.getName().getBaseName() );
 
                 // Make sure the child is expected
                 assertNotNull( childInfo );
@@ -366,16 +446,16 @@ public abstract class AbstractFileSystemTest
 
         // Test an unknown file
         file = m_baseFolder.resolveFile( "unknown-child" );
-        FileSystemException exc = null;
         try
         {
             file.getType();
+            fail();
         }
         catch( FileSystemException e )
         {
-            exc = e;
+            final String message = REZ.getString( "get-type-no-exist.error", file );
+            assertSameMessage( message, e );
         }
-        assertNotNull( exc );
     }
 
     /**
@@ -419,10 +499,12 @@ public abstract class AbstractFileSystemTest
         try
         {
             file.getChildren();
-            assertTrue( false );
+            fail();
         }
         catch( FileSystemException e )
         {
+            final String message = REZ.getString( "list-children-not-folder.error", file );
+            assertSameMessage( message, e );
         }
 
         // Should be able to get child by name
@@ -435,10 +517,12 @@ public abstract class AbstractFileSystemTest
         try
         {
             file.getChildren();
-            assertTrue( false );
+            fail();
         }
         catch( FileSystemException e )
         {
+            final String message = REZ.getString( "list-children-no-exist.error", file );
+            assertSameMessage( message, e );
         }
 
         // Should be able to get child by name
@@ -468,23 +552,33 @@ public abstract class AbstractFileSystemTest
      * a byte stream, and as a char stream, and compares the result with
      * the expected content.  Assumes files are encoded using UTF-8.
      */
-    public void assertSameContent( String expected, FileContent content ) throws Exception
+    protected void assertSameContent( final String expected,
+                                      final FileContent content )
+        throws Exception
     {
         // Get file content as a binary stream
-        byte[] expectedBin = expected.getBytes( "utf-8" );
+        final byte[] expectedBin = expected.getBytes( "utf-8" );
 
         // Check lengths
         assertEquals( "same content length", expectedBin.length, content.getSize() );
 
         // Read content into byte array
-        InputStream instr = content.getInputStream();
-        ByteArrayOutputStream outstr = new ByteArrayOutputStream();
-        byte[] buffer = new byte[ 256 ];
-        int nread = 0;
-        while( nread >= 0 )
+        final InputStream instr = content.getInputStream();
+        final ByteArrayOutputStream outstr;
+        try
         {
-            outstr.write( buffer, 0, nread );
-            nread = instr.read( buffer );
+            outstr = new ByteArrayOutputStream();
+            final byte[] buffer = new byte[ 256 ];
+            int nread = 0;
+            while( nread >= 0 )
+            {
+                outstr.write( buffer, 0, nread );
+                nread = instr.read( buffer );
+            }
+        }
+        finally
+        {
+            instr.close();
         }
 
         // Compare
@@ -501,10 +595,12 @@ public abstract class AbstractFileSystemTest
         try
         {
             folder.getContent();
-            assertTrue( false );
+            fail();
         }
         catch( FileSystemException e )
         {
+            final String message = REZ.getString( "get-folder-content.error", folder );
+            assertSameMessage( message, e );
         }
 
         // Try getting the content of an unknown file
@@ -513,18 +609,22 @@ public abstract class AbstractFileSystemTest
         try
         {
             content.getInputStream();
-            assertTrue( false );
+            fail();
         }
         catch( FileSystemException e )
         {
+            final String message = REZ.getString( "read-no-exist.error", unknownFile );
+            assertSameMessage( message, e );
         }
         try
         {
             content.getSize();
-            assertTrue( false );
+            fail();
         }
         catch( FileSystemException e )
         {
+            final String message = REZ.getString( "get-size-no-exist.error", unknownFile );
+            assertSameMessage( message, e );
         }
     }
 
@@ -557,7 +657,7 @@ public abstract class AbstractFileSystemTest
     /**
      * Info about a file.
      */
-    private static final class FileInfo
+    protected static final class FileInfo
     {
         String _baseName;
         FileType _type;

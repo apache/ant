@@ -8,6 +8,7 @@
 package org.apache.aut.vfs.provider.local;
 
 import java.io.File;
+import org.apache.aut.nativelib.Os;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystemProvider;
@@ -19,12 +20,25 @@ import org.apache.aut.vfs.provider.ParsedUri;
 /**
  * A file system provider, which uses direct file access.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
 public class LocalFileSystemProvider extends AbstractFileSystemProvider
     implements FileSystemProvider
 {
-    private final LocalFileNameParser m_parser = new LocalFileNameParser();
+    private final LocalFileNameParser m_parser;
+
+    public LocalFileSystemProvider()
+    {
+        if( Os.isFamily( Os.OS_FAMILY_WINDOWS ) )
+        {
+            m_parser = new WindowsFileNameParser();
+        }
+        else
+        {
+            m_parser = new GenericFileNameParser();
+        }
+    }
 
     /**
      * Determines if a name is an absolute file name.

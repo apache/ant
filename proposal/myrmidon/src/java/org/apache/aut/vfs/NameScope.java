@@ -16,13 +16,18 @@ package org.apache.aut.vfs;
 public final class NameScope
 {
     /**
-     * Resolve against the children of the base file.
-     *
-     * <p>The supplied name must be a valid element name.  That is, it may
-     * not be empty, or <code>.</code>, or <code>..</code>, or contain any
-     * separator characters.
+     * Resolve against the children of the base file.  The name is resolved
+     * as described by {@link #FILE_SYSTEM}.  However, an exception is
+     * thrown if the resolved file is not a direct child of the base file.
      */
     public final static NameScope CHILD = new NameScope( "child" );
+
+    /**
+     * Resolve against the descendents of the base file.  The name is resolved
+     * as described by {@link #FILE_SYSTEM}.  However, an exception is thrown
+     * if the resolved file is not a descendent of the base file.
+     */
+    public final static NameScope DESCENDENT = new NameScope( "descendent" );
 
     /**
      * Resolve against files in the same file system as the base file.

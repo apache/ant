@@ -18,22 +18,39 @@ import org.apache.aut.vfs.NameScope;
  */
 public class DefaultFileName implements FileName
 {
-    private UriParser m_parser;
-    private String m_rootPrefix;
-    private String m_absPath;
+    private final UriParser m_parser;
+    private final String m_rootPrefix;
+    private final String m_absPath;
 
     // Cached stuff
     private String m_uri;
     private String m_baseName;
 
-    public DefaultFileName( UriParser parser, String rootPrefix, String absPath )
+    public DefaultFileName( final UriParser parser,
+                            final String rootPrefix,
+                            final String absPath )
     {
         m_parser = parser;
         m_rootPrefix = rootPrefix;
         m_absPath = absPath;
     }
 
-    // TODO - make these usable as hash keys
+    /**
+     * Returns the hashcode for this name.
+     */
+    public int hashCode()
+    {
+        return ( m_rootPrefix.hashCode() ^ m_absPath.hashCode() );
+    }
+
+    /**
+     * Determines if this object is equal to another.
+     */
+    public boolean equals( final Object obj )
+    {
+        final DefaultFileName name = (DefaultFileName)obj;
+        return ( m_rootPrefix.equals( name.m_rootPrefix ) && m_absPath.equals( m_absPath ) );
+    }
 
     /**
      * Returns the URI of the file.
@@ -67,22 +84,12 @@ public class DefaultFileName implements FileName
     /**
      * Returns the name of a child of the file.
      */
-    public FileName resolveName( String name, NameScope scope ) throws FileSystemException
+    public FileName resolveName( final String name,
+                                 final NameScope scope )
+        throws FileSystemException
     {
-        if( scope == NameScope.CHILD )
-        {
-            String childPath = m_parser.getChildPath( m_absPath, name );
-            return new DefaultFileName( m_parser, m_rootPrefix, childPath );
-        }
-        else if( scope == NameScope.FILE_SYSTEM )
-        {
-            String absPath = m_parser.resolvePath( m_absPath, name );
-            return new DefaultFileName( m_parser, m_rootPrefix, absPath );
-        }
-        else
-        {
-            throw new IllegalArgumentException();
-        }
+        final String absPath = m_parser.resolvePath( m_absPath, name, scope );
+        return new DefaultFileName( m_parser, m_rootPrefix, absPath );
     }
 
     /**
@@ -90,7 +97,7 @@ public class DefaultFileName implements FileName
      */
     public FileName getParent()
     {
-        String parentPath = m_parser.getParentPath( m_absPath );
+        final String parentPath = m_parser.getParentPath( m_absPath );
         if( parentPath == null )
         {
             return null;
@@ -104,7 +111,7 @@ public class DefaultFileName implements FileName
      * file system that the file belongs to.  If a relative name is supplied,
      * then it is resolved relative to this file name.
      */
-    public FileName resolveName( String path ) throws FileSystemException
+    public FileName resolveName( final String path ) throws FileSystemException
     {
         return resolveName( path, NameScope.FILE_SYSTEM );
     }

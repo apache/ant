@@ -12,9 +12,10 @@ import org.apache.aut.vfs.provider.ParsedUri;
 /**
  * A parsed file URI.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
+ * @version $Revision$ $Date$
  */
-public class ParsedFileUri extends ParsedUri
+class ParsedFileUri extends ParsedUri
 {
     private String m_rootFile;
 
@@ -23,7 +24,7 @@ public class ParsedFileUri extends ParsedUri
         return m_rootFile;
     }
 
-    public void setRootFile( String rootPrefix )
+    public void setRootFile( final String rootPrefix )
     {
         m_rootFile = rootPrefix;
     }

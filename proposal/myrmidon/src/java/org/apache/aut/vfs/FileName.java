@@ -67,9 +67,8 @@ public interface FileName
     FileName resolveName( String path ) throws FileSystemException;
 
     /**
-     * Resolves a name, relative to the file.  Refer to {@link NameScope#CHILD}
-     * and {@link NameScope#FILE_SYSTEM} for a description of how names are
-     * resolved.
+     * Resolves a name, relative to the file.  Refer to {@link NameScope}
+     * for a description of how names are resolved.
      *
      * @param name
      *      The path to resolve.
