@@ -112,6 +112,8 @@ Other changes:
 
 * Added length task to get strings' and files' lengths.
 
+* Added clone task.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 

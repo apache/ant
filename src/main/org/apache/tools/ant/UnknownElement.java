@@ -1,5 +1,5 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
+ * Copyright  2000-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -401,7 +401,6 @@ public class UnknownElement extends Task {
         if (o == null) {
             throw getNotFoundException("task or type", name);
         }
-
         if (o instanceof PreSetDef.PreSetDefinition) {
             PreSetDef.PreSetDefinition def = (PreSetDef.PreSetDefinition) o;
             o = def.createObject(ue.getProject());
@@ -412,7 +411,9 @@ public class UnknownElement extends Task {
                 task.setTaskName(ue.getTaskName());
             }
         }
-
+        if (o instanceof UnknownElement) {
+            o = ((UnknownElement) o).makeObject((UnknownElement) o, w);
+        }
         if (o instanceof Task) {
             Task task = (Task) o;
             task.setOwningTarget(getOwningTarget());
@@ -639,10 +640,7 @@ public class UnknownElement extends Task {
         return true;
     }
 
-    private boolean equalsString(String a, String b) {
-        if (a == null) {
-            return b == null;
-        }
-        return a.equals(b);
+    private static boolean equalsString(String a, String b) {
+        return (a == null) ? (a == b) : a.equals(b);
     }
 }

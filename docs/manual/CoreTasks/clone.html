@@ -1,0 +1,56 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<title>Clone Task</title>
+</head>
+
+<body>
+
+<h2>Clone</h2>
+<h3>Description</h3>
+<p>Clone a project reference (presumably for augmentation).</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">cloneref</td>
+    <td valign="top">What to clone, given as a
+      <a href="../using.html#references">reference</a> to an
+        object with a publicly accessible clone() implementation.
+    </td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+</table>
+<p>
+Assuming the clone operation is successful, the clone invocation supports
+any attributes and nested elements supported by the cloned type
+(the obvious exception is the &quot;cloneref&quot; attribute).
+<b>Please note that modifications to cloned objects may yield
+unpredictable results depending on the internals of the cloned class.</b>
+</p>
+<h3>Examples</h3>
+<p>
+Given a fileset <i>foo</i>:
+<pre>  &lt;clone id="foo.txt" cloneref=&quot;foo&quot;&gt;
+    &lt;filename name="**/*.txt" />
+  &lt;/clone&gt;
+  &lt;clone id="foo.nontxt" cloneref=&quot;foo&quot;&gt;
+    &lt;filename name="**/*.txt" negate="true" />
+  &lt;/clone&gt;
+</pre>
+Creates filesets <i>foo.txt</i> and <i>foo.nontxt</i>, which could be
+put to such uses as filtering some files and not others when copying.
+</p>
+<hr>
+
+<p align="center">Copyright &copy; 2005 The Apache Software Foundation. All rights
+Reserved.</p>
+
+</body>
+</html>
+

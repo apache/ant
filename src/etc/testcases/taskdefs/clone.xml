@@ -1,0 +1,65 @@
+<project name="clone">
+
+  <target name="testClone1">
+    <fileset id="doppel" file="${ant.file}" />
+    <clone id="ganger" cloneref="doppel">
+      <not>
+        <size value="0" when="less" />
+      </not>
+    </clone>
+    <pathconvert property="doppel" pathsep="" refid="doppel" />
+    <pathconvert property="ganger" pathsep="" refid="ganger" />
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="${doppel}" arg2="${ganger}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testClone2">
+    <fileset id="doppel" file="${ant.file}" />
+    <clone id="ganger" cloneref="doppel">
+      <size value="0" when="less" />
+    </clone>
+    <pathconvert property="ganger" pathsep="" refid="ganger" />
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="" arg2="${ganger}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testClone3">
+    <fileset id="doppel" file="${ant.file}" />
+    <basename file="${ant.file}" property="ant.base" />
+    <clone id="ganger" cloneref="doppel" excludes="${ant.base}" />
+    <pathconvert property="ganger" pathsep="" refid="ganger" />
+    <fail>
+      <condition>
+        <not>
+          <equals arg1="" arg2="${ganger}" />
+        </not>
+      </condition>
+    </fail>
+  </target>
+
+  <target name="testNoClone">
+    <typedef name="object" classname="java.lang.Object" />
+    <object id="foo" />
+    <clone id="bar" cloneref="foo" />
+  </target>
+
+  <target name="testNoAttr">
+    <clone id="none" />
+  </target>
+
+  <target name="testNoRef">
+    <clone id="none"
+           cloneref="thisreferencehasnotbeensetinthecurrentproject" />
+  </target>
+
+</project>
