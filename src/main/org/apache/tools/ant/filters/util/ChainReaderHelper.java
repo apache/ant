@@ -78,6 +78,8 @@ import org.apache.tools.ant.util.FileUtils;
  */
 public final class ChainReaderHelper {
 
+    // default buffer size
+    private static final int DEFAULT_BUFFER_SIZE = 8192;
     /**
      * The primary reader to which the reader chain is to be attached.
      */
@@ -86,7 +88,7 @@ public final class ChainReaderHelper {
     /**
      * The size of the buffer to be used.
      */
-    public int bufferSize = 8192;
+    public int bufferSize = DEFAULT_BUFFER_SIZE;
 
     /**
      * Chain of filters
