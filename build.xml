@@ -13,12 +13,14 @@
   <property name="ant.home" value="."/>
   <property name="src.bin.dir" value="src/bin"/>
   <property name="src.dir" value="src/main"/>
+  <property name="src.tests.dir" value="src/testcases"/>
   <property name="docs.dir" value="docs"/>
   <property name="build.dir" value="../build/ant"/>
   <property name="lib.dir" value="${build.dir}/lib"/>
   <property name="bin.dir" value="${build.dir}/bin"/>
   <property name="build.classes" value="${build.dir}/classes"/>
   <property name="build.javadocs" value="${build.dir}/javadocs"/>
+  <property name="build.tests" value="${build.dir}/testcases"/>
   <property name="ant.dist.dir" value="../dist/ant"/>
 
   <property name="classpath" value=""/>
@@ -44,6 +46,7 @@
     <available property="ejb.ejbc.present" classname="weblogic.ejbc" />
     <available property="ejb.DDCreator.present" classname="weblogic.ejb.utils.DDCreator" />
     <available property="ejb.wls.present" classname="weblogic.Server" />
+    <available property="junit.present" classname="junit.framework.TestCase" />
   </target>
 
   <!-- =================================================================== -->
@@ -216,6 +219,34 @@
          package="jakarta-ant"
          dest="."  />
     <zip zipfile="/www/jakarta.apache.org/builds/tmp/ant/ant.src.zip" basedir="." includes="jakarta-ant/**"/>
+  </target>
+
+  <!-- =================================================================== -->
+  <!-- Compile testcases                                                   -->
+  <!-- =================================================================== -->
+  <target name="compiletests" depends="jar">
+    <mkdir dir="${build.tests}"/>
+
+    <javac srcdir="${src.tests.dir}"
+           destdir="${build.tests}"
+           classpath="${lib.dir}/${name}.jar:${classpath}"
+           debug="on"
+           deprecation="off"
+           optimize="on" >
+      <include name="**/*.java"/>
+      <exclude name="**/IntrospectionHelperTest.java" unless="junit.present" />
+    </javac>
+   </target>
+
+  <!-- =================================================================== -->
+  <!-- Run testcase                                                        -->
+  <!-- =================================================================== -->
+  <target name="runtests" depends="compiletests" if="junit.present">
+    <java fork="yes"
+          classname="junit.textui.TestRunner"
+          args="org.apache.tools.ant.IntrospectionHelperTest"
+          classpath="${lib.dir}/${name}.jar:${build.tests}:${classpath}:${java.class.path}"
+    />
   </target>
 
 </project>
