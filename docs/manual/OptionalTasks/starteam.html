@@ -4,9 +4,283 @@
 <title>Apache Ant User Manual</title>
 </head>
 <body>
+<h1>StarTeam Support</h1>
+<ul>
+<!--  <li><a href="#stcheckin">STCheckin</a></li>-->
+  <li><a href="#stcheckout">STCheckout</a></li>
+  <li><a href="#stlabel">STLabel</a></li>
+  <li><a href="#starteam"><i>StarTeam (deprecated) </i></a></li>
+</ul>
 
-<h2>Starteam</h2>
+<p>
+These tasks make use of functions from the StarTeam API.  As a result
+they are only available to licensed users of StarTeam.  You must have
+<CODE>starteam-sdk.jar</CODE> in your classpath to run these tasks.
+For more information about the StarTeam API and how to license it, see
+the <a href="http://www.starbase.com">StarBase</a> web site.</p>
 
+<hr></hr>
+
+<a name="stcheckout">
+<h2>STCheckout</h2></a>
+
+<h3>Description</h3>
+
+Checks out files from a StarTeam project.
+
+<p>
+The <i>includes</i> and <i>excludes</i> attributes function differently from
+other tasks in Ant. Inclusion/exclusion by folder is NOT supported.
+</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">The username of the account used to log in to the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">The password of the account used to log in to the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+
+  <tr>
+    <td valign="top">URL</td>
+    <td valign="top">A string of the form <code>"servername:portnum/project/view</code> 
+which enables user to set all of these elements in one string. </td>
+    <td align="center" valign="top">yes*</td>
+  </tr>  <tr>
+    <td valign="top">servername</td>
+    <td valign="top">The name of the StarTeam server.</td>
+    <td align="center" valign="top">yes*</td>
+  </tr>
+  <tr>
+    <td valign="top">serverport</td>
+    <td valign="top">The port number of the StarTeam server.</td>
+    <td align="center" valign="top">yes*</td>
+  </tr>
+  <tr>
+    <td valign="top">projectname</td>
+    <td valign="top">The name of the StarTeam project.</td>
+    <td align="center" valign="top">yes*</td>
+  </tr>
+  <tr>
+    <td valign="top">viewname</td>
+    <td valign="top">The name of the view in the StarTeam project.</td>
+    <td align="center" valign="top">yes*</td>
+  </tr>
+
+  <tr>
+    <td valign="top">rootstarteamfolder</td>
+    <td valign="top">The root of the subtree in the StarTeam repository from which to 
+    check out files.  Defaults to the root folder of the view ('/'). </td>
+    <td align="center" valign="top">no</td>
+  </tr>  
+  <tr>
+    <td valign="top">rootlocalfolder</td>
+    <td valign="top">The local folder which will be the root of the tree to which files are checked out.  If this is not supplied, then the StarTeam "default folder" associated with <i>rootstarteamfolder</i> is used.</td>
+    <td align="center" valign="top">no</td>
+  </tr>  
+  
+  <tr>
+    <td valign="top">createworkingdirs</td>
+    <td valign="top">creates local folders even when the corresponding StarTeam folder is empty.  Defaults to "true".</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">deleteuncontrolled</td>
+    <td valign="top">if true, any files NOT in StarTeam will be deleted.  Defaults to "true".</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+    <tr>
+    <td valign="top">includes</td>
+    <td valign="top">Only check out files that match at least one of the patterns in this list.  Patterns must be separated by <i>commas</i>.  Patterns in <i>excludes</i> take precedence over patterns in <i>includes</i>.</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">Do not check out files that match at least one of the patterns in this list.  Patterns must be separated by  <i>commas</i>.  Patterns in <i>excludes</i> take precedence over patterns in <i>includes</i>.</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+</table>
+
+* Either the URL attribute or <b>all four</b> of the servername, serverport, projectname and viewname attributes must be defined. <br/>
+
+<h3>Examples</h3>
+
+<pre>
+  &lt;stcheckout servername="STARTEAM" 
+            serverport="49201"
+            projectname="AProject" 
+            viewname="AView"
+            username="auser"
+            password="secret"
+            rootlocalfolder="C:\dev\buildtest\co"
+  /&gt;
+</pre>
+
+The minimum necessary to check out files out from a StarTeam server.  This will
+check out all files in the <i>AView</i> view of the <i>AProject</i> project to
+<code>C:\dev\buildtest\co</code>.  Empty folders in StarTeam will have local folders 
+created for them and any non-StarTeam files found in the tree will be deleted.
+
+Or more simply:
+<pre>
+  &lt;stcheckout URL="STARTEAM:49201/Aproject/AView" 
+            username="auser"
+            password="secret"
+            rootlocalfolder="C:\dev\buildtest\co"
+  /&gt;
+</pre>
+<br></br>
+<pre>
+  &lt;stcheckout URL="STARTEAM:49201/Aproject/AView" 
+            username="auser"
+            password="secret"
+            rootlocalfolder="C:\dev\buildtest\co"
+            rootstarteamfolder="\Dev"
+            excludes="*.bak *.old"
+  /&gt;
+</pre>
+
+This will checkout all files from the <i>Dev</i> folder and below that do not
+end in <i>.bak</i> or <i>.old</i>.  
+
+<pre>
+  &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
+            username="auser"
+            password="secret"
+            rootlocalfolder="C:\dev\buildtest\co"
+            includes="*.htm,*.html"
+            excludes="index.*"
+  /&gt;
+</pre>
+
+
+       
+This is an example of overlapping <i>includes</i> and <i>excludes</i> attributes.  Because
+<i>excludes</i> takes precedence over <i>includes</i>, files named <code>index.html</code> will
+not be checked out by this command.
+
+
+<pre>
+  &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
+            username="auser"
+            password="secret"
+            rootstarteamfolder="src/java"
+            rootlocalfolder="C:\dev\buildtest\co"
+  /&gt;
+</pre>
+<br></br>
+<pre>
+  &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
+            username="auser"
+            password="secret"
+            rootstarteamfolder="src/java"
+  /&gt;
+</pre>
+<br></br>
+<pre>
+ &lt;stcheckout URL="STARTEAM:49201/Aproject/AView"
+            username="auser"
+            password="secret"
+            rootstarteamfolder="src/java"
+            rootlocalfolder="C:\dev\buildtest\co\src\java"
+  /&gt;
+</pre>
+
+In the preceding three examples, assuming that the AProject project has a default folder of
+"AProject", the first example will check the files located in starteam under src/java out to a tree rooted at C:\dev\buildtest\co, 
+the second to a tree rooted at C:\dev\buildtest\co\AProject\src\java and the third to a tree rooted at C:\dev\buildtest\co\src\java.
+
+<a name="stlabel">
+<h2>STLabel</h2></a>
+
+<h3>Description</h3>
+
+Creates a view label in StarTeam at the specified view.  The label will be classified by StarTeam as a "build label".  This task will fail if there already exexists in <i>viewname</i> a label with the same name as the <i>label</i> parameter. 
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">The username of the account used to log in to the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">The password of the account used to log in to the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+
+  <tr>
+    <td valign="top">URL</td>
+    <td valign="top">A string of the form <code>"servername:portnum/project/view"</code> 
+which enables user to set all of these elements in one string. </td>
+    <td align="center" valign="top">yes*</td>
+  </tr>  <tr>
+    <td valign="top">servername</td>
+    <td valign="top">The name of the StarTeam server.</td>
+    <td align="center" valign="top">yes*</td>
+  </tr>
+  <tr>
+    <td valign="top">serverport</td>
+    <td valign="top">The port number of the StarTeam server.</td>
+    <td align="center" valign="top">yes*</td>
+  </tr>
+  <tr>
+    <td valign="top">projectname</td>
+    <td valign="top">The name of the StarTeam project.</td>
+    <td align="center" valign="top">yes*</td>
+  </tr>
+  <tr>
+    <td valign="top">viewname</td>
+    <td valign="top">The name of the view in the StarTeam project.</td>
+    <td align="center" valign="top">yes*</td>
+  </tr>
+  <tr>
+    <td valign="top">label</td>
+    <td valign="top">The name to be given to the label</td>
+    <td align="center" valign="top">yes</td>
+  </tr> 
+ <tr>
+    <td valign="top">lastbuild</td>
+    <td valign="top">The timestamp of the build that will be stored with the label.  Must be formatted <code>yyyyMMddHHmmss</code></td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">description</td>
+    <td valign="top">A description of the view to be stored in the StarTeam project.</td>
+    <td align="center" valign="top">no</td>
+  </tr>
+</table>
+* Either the URL attribute or <b>all four</b> of the servername, serverport, projectname and viewname attributes must be defined. <br/>
+
+<h3>Examples</h3>
+
+This example shows the use of this tag.  It will create a label named <i>Version 6.2</i> with
+<i>"Thorough description"</i> as its description.
+<pre>
+  &lt;tstamp&gt;
+    &lt;format property="nowstamp" pattern="yyyyMMddHHmmss" locale="en"/&gt;
+  &lt;/tstamp&gt;  
+  &lt;starteamlabel URL="STARTEAM:49201/Aproject/AView"
+            username="auser"
+            password="secret"
+            label="Version 6.2"
+            lastbuild="${nowstamp}"
+            description-"Thorough description"
+  /&gt;
+</pre>
+
+<hr></hr>
+
+<a name="starteam">
+<h2>Starteam</h2></a>
+<h3><i>Deprecated</i></h3>
+<p><i>This task has been deprecated.  Use the <a href=#stcheckout">STCheckout</a> task instead.</i></p>
 <h3>Description</h3>
 
 Checks out files from a StarTeam project.
@@ -16,13 +290,6 @@ The <i>includes</i> and <i>excludes</i> attributes function differently from
 other tasks in Ant.  Multiple patterns must be separated by spaces, not
 commas.  See the examples for more information.</p>
 
-<p>
-This program makes use of functions from the StarTeam API.  As a result
-this task is only available to licensed users of StarTeam.  You must have
-<CODE>starteam-sdk.jar</CODE> in your classpath to run this task.
-For more information about the StarTeam API and how to license it, see
-the <a href="http://www.starbase.com">StarBase</a> web site.</p>
-
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -30,6 +297,16 @@ the <a href="http://www.starbase.com">StarBase</a> web site.</p>
     <td valign="top"><b>Description</b></td>
     <td align="center" valign="top"><b>Required</b></td>
   </tr>
+  <tr>
+    <td valign="top">username</td>
+    <td valign="top">The username of the account used to log in to the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>
+  <tr>
+    <td valign="top">password</td>
+    <td valign="top">The password of the account used to log in to the StarTeam server.</td>
+    <td align="center" valign="top">yes</td>
+  </tr>  
   <tr>
     <td valign="top">servername</td>
     <td valign="top">The name of the StarTeam server.</td>
@@ -50,16 +327,7 @@ the <a href="http://www.starbase.com">StarBase</a> web site.</p>
     <td valign="top">The name of the view in the StarTeam project.</td>
     <td align="center" valign="top">yes</td>
   </tr>
-  <tr>
-    <td valign="top">username</td>
-    <td valign="top">The username of the account used to log in to the StarTeam server.</td>
-    <td align="center" valign="top">yes</td>
-  </tr>
-  <tr>
-    <td valign="top">password</td>
-    <td valign="top">The password of the account used to log in to the StarTeam server.</td>
-    <td align="center" valign="top">yes</td>
-  </tr>
+
   <tr>
     <td valign="top">targetfolder</td>
     <td valign="top">The folder to which files are checked out.  What this precisely means is determined by the <i>targetFolderAbsolute</i> param.</td>

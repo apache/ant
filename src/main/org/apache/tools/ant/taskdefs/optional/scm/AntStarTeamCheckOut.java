@@ -285,6 +285,9 @@ public class AntStarTeamCheckOut extends org.apache.tools.ant.Task
      */
     public void execute() throws BuildException
     {
+        log("DEPRECATED - The starteam task is deprecated.  Use stcheckout instead.",
+            Project.MSG_WARN);
+
         // Connect to the StarTeam server, and log on.
         Server s = getServer();
 
