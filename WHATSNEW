@@ -45,14 +45,11 @@ Other changes:
 * Added support for specifying CVS_RSH in the <cvs/> task
 
 * New tasks bzip2 and bunzip2 to pack and unpack files using the 
-  BZip2 alogrithm, replaceregexp, checksum
+  BZip2 alogrithm, replaceregexp, checksum, translate
 
 * The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
   Jar, War and Ear tasks) have been deprecated and superseded by a 
   new attribute "file".
-
-* The attribute zipfile in GZip has been deprecated and superseded 
-  by "tofile" attribute.
 
 * Added a new condition <isset> that test for the existence of a
   property to the condition task.
