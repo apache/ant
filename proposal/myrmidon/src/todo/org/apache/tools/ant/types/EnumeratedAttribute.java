@@ -19,11 +19,7 @@ import org.apache.myrmidon.api.TaskException;
  */
 public abstract class EnumeratedAttribute
 {
-    protected String value;
-
-    public EnumeratedAttribute()
-    {
-    }
+    private String m_value;
 
     /**
      * Invoked by {@link org.apache.tools.ant.IntrospectionHelper
@@ -32,14 +28,14 @@ public abstract class EnumeratedAttribute
      * @param value The new Value value
      * @exception TaskException Description of Exception
      */
-    public final void setValue( String value )
+    public final void setValue( final String value )
         throws TaskException
     {
         if( !containsValue( value ) )
         {
             throw new TaskException( value + " is not a legal value for this attribute" );
         }
-        this.value = value;
+        this.m_value = value;
     }
 
     /**
@@ -49,7 +45,7 @@ public abstract class EnumeratedAttribute
      */
     public final String getValue()
     {
-        return value;
+        return m_value;
     }
 
     /**
@@ -61,13 +57,10 @@ public abstract class EnumeratedAttribute
 
     /**
      * Is this value included in the enumeration?
-     *
-     * @param value Description of Parameter
-     * @return Description of the Returned Value
      */
-    public final boolean containsValue( String value )
+    public final boolean containsValue( final String value )
     {
-        String[] values = getValues();
+        final String[] values = getValues();
         if( values == null || value == null )
         {
             return false;
