@@ -339,7 +339,7 @@ public abstract class AbstractFileSet extends DataType
     /**
      * Sets case sensitivity of the file system.
      *
-     * @param isCaseSensitive <code>boolean</code>.
+     * @param caseSensitive <code>boolean</code>.
      */
     public synchronized void setCaseSensitive(boolean caseSensitive) {
         if (isReference()) {
