@@ -214,8 +214,22 @@ public class SSHExec extends SSHBase {
                 if (outputFile != null) {
                     writeToFile(out.toString(), append, outputFile);
                 }
+
+                // this is the wrong test if the remote OS is OpenVMS,
+                // but there doesn't seem to be a way to detect it.
+                int ec = channel.getExitStatus();
+                if (ec != 0) {
+                    String msg = "Remote command failed with exit status " + ec;
+                    if (getFailonerror()) {
+                        throw new BuildException(msg);
+                    } else {
+                        log(msg, Project.MSG_ERR);
+                    }
+                }
             }
 
+        } catch (BuildException e) {
+            throw e;
         } catch (Exception e) {
             if (getFailonerror()) {
                 throw new BuildException(e);
