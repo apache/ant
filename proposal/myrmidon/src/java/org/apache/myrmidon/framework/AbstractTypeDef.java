@@ -10,9 +10,6 @@ package org.apache.myrmidon.framework;
 import java.io.File;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.configuration.Configurable;
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.deployer.Deployer;
 import org.apache.myrmidon.interfaces.deployer.DeploymentException;
@@ -28,45 +25,38 @@ import org.apache.myrmidon.interfaces.deployer.TypeDeployer;
  */
 public abstract class AbstractTypeDef
     extends AbstractContainerTask
-    implements Configurable
 {
     private final static Resources REZ =
         ResourceManager.getPackageResources( AbstractTypeDef.class );
 
     // TODO - replace lib with class-path
     private File m_lib;
-    private TypeDefinition m_typeDef;
+    private String m_name;
+    private String m_classname;
 
-    /**
-     * Configures this task.
-     */
-    public void configure( Configuration configuration ) throws ConfigurationException
+    protected void setName( final String name )
     {
-        m_typeDef = createTypeDefinition();
+        m_name = name;
+    }
 
-        // Configure attributes
-        final String[] attrs = configuration.getAttributeNames();
-        for( int i = 0; i < attrs.length; i++ )
-        {
-            final String name = attrs[ i ];
-            final String value = configuration.getAttribute( name );
-            if( name.equalsIgnoreCase( "lib" ) )
-            {
-                m_lib = (File)convert( File.class, value );
-            }
-            else
-            {
-                configure( m_typeDef, name, value );
-            }
-        }
+    public void setClassname( final String classname )
+    {
+        m_classname = classname;
+    }
 
-        // Configure nested elements
-        final Configuration[] elements = configuration.getChildren();
-        for( int i = 0; i < elements.length; i++ )
-        {
-            Configuration element = elements[ i ];
-            configure( m_typeDef, element );
-        }
+    public void setLib( final File lib )
+    {
+        m_lib = lib;
+    }
+
+    protected final String getName()
+    {
+        return m_name;
+    }
+
+    protected final String getClassname()
+    {
+        return m_classname;
     }
 
     /**
@@ -86,7 +76,8 @@ public abstract class AbstractTypeDef
             // Locate the deployer, and use it to deploy the type
             final Deployer deployer = (Deployer)getService( Deployer.class );
             final TypeDeployer typeDeployer = deployer.createDeployer( m_lib );
-            typeDeployer.deployType( m_typeDef );
+            final TypeDefinition typeDef = createTypeDefinition();
+            typeDeployer.deployType( typeDef );
         }
         catch( DeploymentException e )
         {

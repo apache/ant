@@ -20,8 +20,27 @@ import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
 public class ConverterDef
     extends AbstractTypeDef
 {
+    private String m_sourceType;
+    private String m_destinationType;
+
+    /**
+     * Sets the converter's source type.
+     */
+    public void setSourceType( final String sourceType )
+    {
+        m_sourceType = sourceType;
+    }
+
+    /**
+     * Sets the converter's destination type.
+     */
+    public void setDestinationType( final String destinationType )
+    {
+        m_destinationType = destinationType;
+    }
+
     protected TypeDefinition createTypeDefinition()
     {
-        return new ConverterDefinition();
+        return new ConverterDefinition( getClassname(), m_sourceType, m_destinationType );
     }
 }
