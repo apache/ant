@@ -56,12 +56,17 @@ package org.apache.tools.ant.taskdefs;
 
 import org.apache.tools.ant.BuildFileTest;
 
+import java.io.*;
+
+import junit.framework.AssertionFailedError;
+
 /**
  * @author Nico Seessle <nico@seessle.de> 
  */
-public class ReplaceTest extends BuildFileTest { 
-    
-    public ReplaceTest(String name) { 
+public class ReplaceTest extends BuildFileTest {
+
+    private static final String TEST_PATH = "src/etc/testcases/taskdefs/replace/";
+    public ReplaceTest(String name) {
         super(name);
     }    
     
@@ -101,4 +106,39 @@ public class ReplaceTest extends BuildFileTest {
         executeTarget("test8");
     }
 
+    public void test9() throws IOException{
+        executeTarget("test9");
+        assertEqualContent(new File(TEST_PATH + "result.txt"),
+                    new File(TEST_PATH + "output.txt"));
+    }
+    public void tearDown() {
+        executeTarget("cleanup");
+    }
+    public void assertEqualContent(File expect, File result)
+        throws AssertionFailedError, IOException {
+        if (!result.exists()) {
+            fail("Expected file "+result+" doesn\'t exist");
+        }
+
+        InputStream inExpect = null;
+        InputStream inResult = null;
+        try {
+            inExpect = new BufferedInputStream(new FileInputStream(expect));
+            inResult = new BufferedInputStream(new FileInputStream(result));
+
+            int expectedByte = inExpect.read();
+            while (expectedByte != -1) {
+                assertEquals(expectedByte, inResult.read());
+                expectedByte = inExpect.read();
+            }
+            assertEquals("End of file", -1, inResult.read());
+        } finally {
+            if (inResult != null) {
+                inResult.close();
+            }
+            if (inExpect != null) {
+                inExpect.close();
+            }
+        }
+    }
 }

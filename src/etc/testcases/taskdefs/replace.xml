@@ -41,4 +41,13 @@
     </replace>
   </target>
 
+  <target name="test9">
+    <copy file="replace/source.txt" tofile="replace/output.txt"/>
+    <loadfile srcFile="replace/value.txt" property="content"/>
+    <replace file="replace/output.txt" token="@@@Replace this@@@" value="${content}"/>
+  </target>
+
+  <target name="cleanup">
+      <delete file="replace/output.txt" quiet="true"/>
+  </target>
 </project>
