@@ -27,12 +27,6 @@ Fixed bugs:
 * Translate task does not remove tokens when a key is not found.
   It logs a verbose message.  Bugzilla Report 13936.
 
-* <apply> was broken with classfilesets.  Bugzilla Report 30567.
-
-* The first file open that took place when using input files with the
-  <exec>, <apply>, or <java> tasks was always logged to System.out
-  instead of to the managing Task.
-
 * Incorrect task name with invalid "javac" task after a "presetdef.
   Bugzilla reports 31389 and 29499.
   
@@ -42,10 +36,6 @@ Fixed bugs:
 * <replace> got out of memory on large files (part of report 32566). 
   <replace> can now handle files as long as there is enough disk space
   available.
-
-* <available> returned false positives when checking a file
-  passed in with the current basedir leading twice:
-  e.g. ${basedir}${file.separator}${basedir}${file.separator}foo .
 
 Other changes:
 --------------
@@ -89,9 +79,6 @@ Other changes:
 
 * Junit task -- display suite first.
   Bugzilla report 31962.
-
-* <apply> has a new "force" attribute that, when true, disables
-  checking of target files.
 
 * Added isSigned condition and signedselector selector
   Bugzilla report 32126.
@@ -178,11 +165,14 @@ Other changes:
 * Added a comment attribute to the zip task.
   Bugzilla report 22793.
 
-* Made the dest attribute of the apply task optional; mapped target
-  filenames will be interpreted as absolute pathnames when dest is omitted.
-
 * Overloaded FileUtils.createNewFile with a boolean mkdirs attribute
   to create nonexistent parent directories.
+
+* <apply> has a new "force" attribute that, when true, disables
+  checking of target files.
+
+* Made the dest attribute of the apply task optional; mapped target
+  filenames will be interpreted as absolute pathnames when dest is omitted.
 
 Fixed bugs:
 -----------
@@ -271,6 +261,16 @@ Fixed bugs:
 
 * DependScanner.getResource() always returned nonexistent resources,
   even when the resource actually existed.  Bugzilla Report 30558.
+
+* <apply> was broken with classfilesets.  Bugzilla Report 30567.
+
+* <available> returned false positives when checking a file
+  passed in with the current basedir leading twice:
+  e.g. ${basedir}${file.separator}${basedir}${file.separator}foo .
+
+* The first file open that took place when using input files with the
+  <exec>, <apply>, or <java> tasks was always logged to System.out
+  instead of to the managing Task.
 
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
