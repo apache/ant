@@ -974,6 +974,10 @@
           <exclude name="${optional.package}/junit/JUnitTestRunnerTest.java"
                    unless="jdk1.2+" />
 
+          <!-- DateTime handling seems to be broken in JDK 1.1 -->
+          <exclude name="org/apache/tools/ant/util/DateUtilsTest.java"
+                   unless="jdk1.2+" />
+
           <!-- interactive test -->
           <exclude name="org/apache/tools/ant/taskdefs/TestProcess.java" />
 

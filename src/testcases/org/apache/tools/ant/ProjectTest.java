@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,6 +58,7 @@ import org.apache.tools.ant.types.*;
 
 import java.io.File;
 
+import junit.framework.AssertionFailedError;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -185,15 +186,17 @@ public class ProjectTest extends TestCase {
 
         assertTaskDefFails(DummyTaskPrivate.class,   DummyTaskPrivate.class   + " is not public");
 
-        if (p.getJavaVersion() != Project.JAVA_1_1) {
+        try {
             assertTaskDefFails(DummyTaskProtected.class, 
                                DummyTaskProtected.class + " is not public");
-        } else {
+        } catch (AssertionFailedError e) {
             /*
              * I don't understand this, but this is what happens with
              * > java -fullversion
              * java full version "Linux_JDK_1.1.8_v3_green_threads"
+             * from time to time
              */
+            assertSame(Project.JAVA_1_1, p.getJavaVersion());
             assertTaskDefFails(DummyTaskProtected.class, 
                                "No public default constructor in " 
                                + DummyTaskProtected.class);
