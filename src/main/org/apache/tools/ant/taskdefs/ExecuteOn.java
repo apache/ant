@@ -65,14 +65,12 @@ import java.io.IOException;
  * Executes a given command, supplying a set of files as arguments. 
  *
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
+ * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a> 
  */
-public class ExecuteOn extends Task {
+public class ExecuteOn extends ExecTask {
 
     private Vector filesets = new Vector();
-    private Commandline command = new Commandline();
-    private Environment env = new Environment();
-    private Integer timeout = null;
-    private boolean failOnError = false;
+    private boolean parallel = false;
 
     /**
      * Adds a set of files (nested fileset attribute).
@@ -82,97 +80,79 @@ public class ExecuteOn extends Task {
     }
 
     /**
-     * The executable.
+     * Shall the command work on all specified files in parallel?
      */
-    public void setExecutable(String exe) {
-        command.setExecutable(exe);
+    public void setParallel(boolean parallel) {
+        this.parallel = parallel;
     }
 
-    /**
-     * Adds an argument to the command (nested arg element)
-     */
-    public Commandline.Argument createArg() {
-        return command.createArgument();
-    }
-
-    /**
-     * Adds an environment variable (nested env element)
-     */
-    public void addEnv(Environment.Variable var) {
-        env.addVariable(var);
-    }
-
-    /**
-     * Milliseconds we allow the process to run before we kill it.
-     */
-    public void setTimeout(Integer value) {
-        timeout = value;
-    }
-
-    /**
-     * throw a build exception if process returns non 0?
-     */
-    public void setFailonerror(boolean fail) {
-        failOnError = fail;
-    }
-
-    public void execute() throws BuildException {
-        if (command.getExecutable() == null) {
-            throw new BuildException("no executable specified", location);
-        }
-
+    protected void checkConfiguration() {
+        super.checkConfiguration();
         if (filesets.size() == 0) {
             throw new BuildException("no filesets specified", location);
         }
+    }
 
-        String[] orig = command.getCommandline();
-        String[] cmd = new String[orig.length+1];
-        System.arraycopy(orig, 0, cmd, 0, orig.length);
+    protected void runExec(Execute exe) throws BuildException {
+        try {
 
-        Vector v = new Vector();
-        for (int i=0; i<filesets.size(); i++) {
-            FileSet fs = (FileSet) filesets.elementAt(i);
-            DirectoryScanner ds = fs.getDirectoryScanner(project);
-            String[] s = ds.getIncludedFiles();
-            for (int j=0; j<s.length; j++) {
-                v.addElement(new File(fs.getDir(), s[j]).getAbsolutePath());
+            Vector v = new Vector();
+            for (int i=0; i<filesets.size(); i++) {
+                FileSet fs = (FileSet) filesets.elementAt(i);
+                DirectoryScanner ds = fs.getDirectoryScanner(project);
+                String[] s = ds.getIncludedFiles();
+                for (int j=0; j<s.length; j++) {
+                    v.addElement(new File(fs.getDir(), s[j]).getAbsolutePath());
+                }
             }
-        }
-        
-        String label = command.toString()+" ";
-        String[] environment = env.getVariables();
-        for (int i=0; i<v.size(); i++) {
-            try {
-                // show the command
-                String file = (String) v.elementAt(i);
-                log(label+file, Project.MSG_VERBOSE);
 
-                Execute exe = new Execute(createHandler(), createWatchdog());
-                cmd[orig.length] = file;
-                exe.setCommandline(cmd);
-                exe.setEnvironment(environment);
-                int err = exe.execute();
+            String[] s = new String[v.size()];
+            v.copyInto(s);
+
+            int err = -1;
+            String myos = System.getProperty("os.name");
+
+            // antRun.bat currently limits us to directory + executable 
+            //                                             + 7 args
+            if (parallel && 
+                (myos.toLowerCase().indexOf("windows") < 0 || s.length+cmdl.size() <= 8)
+                ) {
+                cmdl.addLine(s);
+                exe.setCommandline(cmdl.getCommandline());
+                err = exe.execute();
                 if (err != 0) {
                     if (failOnError) {
-                        throw new BuildException("Exec returned: "+err, location);
+                        throw new BuildException("Exec returned: "+err, 
+                                                 location);
                     } else {
                         log("Result: " + err, Project.MSG_ERR);
                     }
                 }
-            } catch (IOException e) {
-                throw new BuildException("Execute failed: " + e, e, location);
+
+            } else {
+                String[] cmd = new String[cmdl.size()+1];
+                System.arraycopy(cmdl.getCommandline(), 0, cmd, 0, cmdl.size());
+                for (int i=0; i<s.length; i++) {
+                    cmd[cmdl.size()] = s[i];
+                    exe.setCommandline(cmd);
+                    err = exe.execute();
+                    if (err != 0) {
+                        if (failOnError) {
+                            throw new BuildException("Exec returned: "+err, 
+                                                     location);
+                        } else {
+                            log("Result: " + err, Project.MSG_ERR);
+                        }
+                    }
+                }
             }
+
+        } catch (IOException e) {
+            throw new BuildException("Execute failed: " + e, e, location);
+        } finally {
+            // close the output file if required
+            logFlush();
         }
-    }
-
-    protected ExecuteStreamHandler createHandler() throws BuildException {
-            return new LogStreamHandler(this,
-                                        Project.MSG_INFO, Project.MSG_WARN);
-    }
-
-    protected ExecuteWatchdog createWatchdog() throws BuildException {
-        if (timeout == null) return null;
-        return new ExecuteWatchdog(timeout.intValue());
     }
 
 }

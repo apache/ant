@@ -66,116 +66,140 @@ import java.io.*;
  * @author rubys@us.ibm.com
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a>
+ * @author <a href="mailto:mariusz@rakiura.org">Mariusz Nowostawski</a> 
  */
 public class ExecTask extends Task {
 
     private String os;
     private File out;
     private File dir;
-    private boolean failOnError = false;
+    protected boolean failOnError = false;
     private Integer timeout = null;
     private Environment env = new Environment();
-    private Commandline cmdl = new Commandline();
+    protected Commandline cmdl = new Commandline();
     private FileOutputStream fos = null;
 
+    /**
+     * Timeout in milliseconds after which the process will be killed.
+     */
     public void setTimeout(Integer value) {
         timeout = value;
     }
 
+    /**
+     * The command to execute.
+     */
     public void setExecutable(String value) {
         cmdl.setExecutable(value);
     }
 
+    /**
+     * The working directory of the process
+     */
     public void setDir(File d) {
         this.dir = d;
     }
 
+    /**
+     * Only execute the process if <code>os.name</code> includes this string.
+     */
     public void setOs(String os) {
         this.os = os;
     }
 
+    /**
+     * The full commandline to execute, executable + arguments.
+     */
     public void setCommand(Commandline cmdl) {
         this.cmdl = cmdl;
     }
 
+    /**
+     * File the output of the process is redirected to.
+     */
     public void setOutput(File out) {
         this.out = out;
     }
 
+    /**
+     * Throw a BuildException if process returns non 0.
+     */
     public void setFailonerror(boolean fail) {
         failOnError = fail;
     }
 
+    /**
+     * Add a nested env element - an environment variable.
+     */
     public void addEnv(Environment.Variable var) {
         env.addVariable(var);
     }
 
+    /**
+     * Add a nested arg element - a command line argument.
+     */
     public Commandline.Argument createArg() {
         return cmdl.createArgument();
     }
 
+    /**
+     * Do the work.
+     */
     public void execute() throws BuildException {
+        checkConfiguration();
+        if (isValidOs()) {
+            runExec(prepareExec());
+        }
+    }
+
+    /**
+     * Has the user set all necessary attributes?
+     */
+    protected void checkConfiguration() throws BuildException {
         if (cmdl.getExecutable() == null) {
             throw new BuildException("no executable specified", location);
         }
+    }
 
-        String[] orig = cmdl.getCommandline();
-        
-        int err = -1; // assume the worst
-
+    /**
+     * Is this the OS the user wanted?
+     */
+    private boolean isValidOs() {
         // test if os match
         String myos = System.getProperty("os.name");
         log("Myos = " + myos, Project.MSG_VERBOSE);
         if ((os != null) && (os.indexOf(myos) < 0)){
             // this command will be executed only on the specified OS
             log("Not found in " + os, Project.MSG_VERBOSE);
-            return;
+            return false;
         }
+        return true;
+    }
 
+    /**
+     * Create an Execute instance with the correct working directory set.
+     */
+    protected Execute prepareExec() throws BuildException {
         // default directory to the project's base directory
         if (dir == null) dir = project.getBaseDir();
+        // show the command
+        log(cmdl.toString(), Project.MSG_VERBOSE);
+        
+        Execute exe = new Execute(createHandler(), createWatchdog());
+        exe.setAntRun(project);
+        exe.setWorkingDirectory(dir);
+        exe.setEnvironment(env.getVariables());
+        return exe;
+    }
 
-        if (myos.toLowerCase().indexOf("windows") >= 0) {
-            if (!dir.equals(project.resolveFile("."))) {
-                if (myos.toLowerCase().indexOf("nt") >= 0) {
-                    cmdl = new Commandline();
-                    cmdl.setExecutable("cmd");
-                    cmdl.addValue("/c");
-                    cmdl.addValue("cd");
-                    cmdl.addValue(dir.getAbsolutePath());
-                    cmdl.addValue("&&");
-                    cmdl.addLine(orig);
-                } else {
-                    String ant = project.getProperty("ant.home");
-                    if (ant == null) {
-                        throw new BuildException("Property 'ant.home' not found", location);
-                    }
-                
-                    String antRun = project.resolveFile(ant + "/bin/antRun.bat").toString();
-                    cmdl = new Commandline();
-                    cmdl.setExecutable(antRun);
-                    cmdl.addValue(dir.getAbsolutePath());
-                    cmdl.addLine(orig);
-                }
-            }
-        } else {
-            String ant = project.getProperty("ant.home");
-            if (ant == null) throw new BuildException("Property 'ant.home' not found", location);
-            String antRun = project.resolveFile(ant + "/bin/antRun").toString();
-
-            cmdl = new Commandline();
-            cmdl.setExecutable(antRun);
-            cmdl.addValue(dir.getAbsolutePath());
-            cmdl.addLine(orig);
-        }
+    /**
+     * Run the command using the given Execute instance.
+     */
+    protected void runExec(Execute exe) throws BuildException {
+        int err = -1; // assume the worst
 
         try {
-            // show the command
-            log(cmdl.toString(), Project.MSG_VERBOSE);
-
-            final Execute exe = new Execute(createHandler(), createWatchdog());
             exe.setCommandline(cmdl.getCommandline());
-            exe.setEnvironment(env.getVariables());
             err = exe.execute();
             if (err != 0) {
                 if (failOnError) {
@@ -192,7 +216,9 @@ public class ExecTask extends Task {
         }
     }
 
-
+    /**
+     * Create the StreamHandler to use with our Execute instance.
+     */
     protected ExecuteStreamHandler createHandler() throws BuildException {
         if(out!=null)  {
             try {
@@ -210,11 +236,17 @@ public class ExecTask extends Task {
         }
     }
 
+    /**
+     * Create the Watchdog to kill a runaway process.
+     */
     protected ExecuteWatchdog createWatchdog() throws BuildException {
         if (timeout == null) return null;
         return new ExecuteWatchdog(timeout.intValue());
     }
 
+    /**
+     * Flush the output stream - if there is one.
+     */
     protected void logFlush() {
         try {
             if (fos != null) fos.close();

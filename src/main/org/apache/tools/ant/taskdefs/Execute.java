@@ -54,6 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
+
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -74,6 +78,12 @@ public class Execute {
     private int exitValue = INVALID;
     private ExecuteStreamHandler streamHandler;
     private ExecuteWatchdog watchdog;
+    private File workingDirectory;
+    private String antRun;
+
+    private static String antWorkingDirectory = 
+        (new File((new File(".")).getAbsolutePath())).getParent();
+    private static String myos = System.getProperty("os.name");
 
     /**
      * Creates a new execute object using <code>PumpStreamHandler</code> for
@@ -104,7 +114,31 @@ public class Execute {
      * @return the commandline used to create a subprocess
      */
     public String[] getCommandline() {
-        return cmdl;
+        String[] commandLine = cmdl;
+
+        if (workingDirectory != null && 
+            !antWorkingDirectory.equals(workingDirectory.getAbsolutePath())) {
+
+            if (myos.toLowerCase().indexOf("windows") >= 0 &&
+                myos.toLowerCase().indexOf("nt") >= 0) {
+
+                commandLine = new String[cmdl.length+5];
+                commandLine[0] = "cmd";
+                commandLine[1] = "/c";
+                commandLine[2] = "cd";
+                commandLine[3] = workingDirectory.getAbsolutePath();
+                commandLine[4] = "&&";
+                System.arraycopy(cmdl, 0, commandLine, 5, cmdl.length);
+
+            } else {
+                commandLine = new String[cmdl.length+2];
+                commandLine[0] = antRun;
+                commandLine[1] = workingDirectory.getAbsolutePath();
+                System.arraycopy(cmdl, 0, commandLine, 2, cmdl.length);
+            }
+        }
+        
+        return commandLine;
     }
 
 
@@ -128,14 +162,44 @@ public class Execute {
 
 
     /**
-     * Sets the commandline of the subprocess to launch.
+     * Sets the environment variables for the subprocess to launch.
      *
-     * @param commandline the commandline of the subprocess to launch
+     * @param commandline array of Strings, each element of which has
+     * an environment variable settings in format <em>key=value</em> 
      */
     public void setEnvironment(String[] env) {
         this.env = env;
     }
 
+    /**
+     * Sets the working directory of the process to execute.
+     *
+     * <p>This is emulated using the antRun scripts unless the OS is
+     * Windows NT in which case a cmd.exe is spawned.  
+     *
+     * @param wd the working directory of the process.
+     */
+    public void setWorkingDirectory(File wd) {
+        workingDirectory = wd;
+    }
+
+    /**
+     * Set the name of the antRun script using the project's value.
+     *
+     * @param project the current project.
+     */
+    public void setAntRun(Project project) throws BuildException {
+        String ant = project.getProperty("ant.home");
+        if (ant == null) {
+            throw new BuildException("Property 'ant.home' not found");
+        }
+
+        if (myos.toLowerCase().indexOf("windows") >= 0) {
+            antRun = project.resolveFile(ant + "/bin/antRun.bat").toString();
+        } else {
+            antRun = project.resolveFile(ant + "/bin/antRun").toString();
+        }
+    }
 
     /**
      * Runs a process defined by the command line and returns its exit status.
