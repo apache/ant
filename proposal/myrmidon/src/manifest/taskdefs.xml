@@ -16,7 +16,7 @@
   <task name="property" classname="org.apache.ant.modules.basic.Property" />
   <task name="ant-call" classname="org.apache.ant.modules.basic.AntCall" />
 
-  <datatype name="pattern" classname="org.apache.ant.modules.basic.Pattern" />
+  <data-type name="pattern" classname="org.apache.ant.modules.basic.Pattern" />
 
   <converter classname="org.apache.ant.modules.basic.StringToLongConverter" 
              source="java.lang.String" 

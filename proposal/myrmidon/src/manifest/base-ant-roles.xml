@@ -1,0 +1,6 @@
+<roles>
+  <role shorthand="task"           name="org.apache.myrmidon.api.Task"/>
+  <role shorthand="data-type"      name="org.apache.myrmidon.api.DataType"/>
+  <role shorthand="listener"       name="org.apache.myrmidon.listeners.ProjectListener"/>
+  <role shorthand="aspect"         name="org.apache.myrmidon.aspects.AspectHandler"/>
+</roles>
