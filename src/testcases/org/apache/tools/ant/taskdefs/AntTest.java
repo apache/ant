@@ -254,10 +254,12 @@ public class AntTest extends BuildFileTest {
     }
 
     public void testRefId() {
+        Path testPath = new Path(project);
+        testPath.createPath().setPath(System.getProperty("java.class.path"));
         PropertyChecker pc = 
             new PropertyChecker("testprop",
                                 new String[] {null, 
-                                              Path.systemClasspath.toString()});
+                                              testPath.toString()});
         project.addBuildListener(pc);
         executeTarget("testRefid");
         AssertionFailedError ae = pc.getError();
