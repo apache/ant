@@ -83,6 +83,9 @@ public class Replace extends MatchingTask {
     private int replaceCount;    
     private boolean summary = false;
     
+    /** The encoding used to read and write files - if null, uses default */
+    private String encoding = null;
+    
     //Inner class
     public class NestedString {
 
@@ -291,8 +294,13 @@ public class Replace extends MatchingTask {
         }
 
         try {
-            BufferedReader br = new BufferedReader(new FileReader(src));
-            BufferedWriter bw = new BufferedWriter(new FileWriter(temp));
+            Reader fileReader = encoding == null ? new FileReader(src)
+                                                 : new InputStreamReader(new FileInputStream(src), encoding);
+            Writer fileWriter = encoding == null ? new FileWriter(src)
+                                                 : new OutputStreamWriter(new FileOutputStream(src), encoding);
+            
+            BufferedReader br = new BufferedReader(fileReader);
+            BufferedWriter bw = new BufferedWriter(fileWriter);
 
             // read the entire file into a StringBuffer
             //   size of work buffer may be bigger than needed
@@ -354,8 +362,8 @@ public class Replace extends MatchingTask {
                 temp.delete();
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
-            throw new BuildException(ioe, location);
+            throw new BuildException("IOException in " + src + " - " + 
+                                     ioe.getClass().getName() + ":" + ioe.getMessage(), ioe, location);
         }
     }
 
@@ -412,6 +420,15 @@ public class Replace extends MatchingTask {
         createReplaceValue().addText(value);
     }
 
+    /**
+     * Set the file encoding to use on the files read and written by replace
+     *
+     * @param encoding the encoding to use on the files
+     */
+    public void setEncoding(String encoding) {
+        this.encoding = encoding;
+    }
+    
     /**
      * Nested <replacetoken> element.
      */
