@@ -13,115 +13,115 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.taskdefs.exec.ExecTask;
 import org.apache.tools.ant.types.FileSet;
 
 /**
  * Sign a archive.
  *
- * @author Peter Donald <a href="mailto:donaldp@apache.org">donaldp@apache.org
- *      </a>
- * @author Nick Fortescue <a href="mailto:nick@ox.compsoc.net">
- *      nick@ox.compsoc.net</a>
+ * @author Peter Donald <a href="mailto:donaldp@apache.org">donaldp@apache.org</a>
+ * @author Nick Fortescue <a href="mailto:nick@ox.compsoc.net">nick@ox.compsoc.net</a>
  */
 public class SignJar
-    extends Task
+    extends AbstractTask
 {
     /**
      * the filesets of the jars to sign
      */
-    protected ArrayList filesets = new ArrayList();
+    private ArrayList m_filesets = new ArrayList();
 
     /**
      * The alias of signer.
      */
-    protected String alias;
-    protected boolean internalsf;
+    private String m_alias;
+    private boolean m_internalsf;
 
     /**
      * The name of the jar file.
      */
-    protected File jar;
-    protected String keypass;
+    private File m_jar;
+    private String m_keypass;
 
     /**
      * The name of keystore file.
      */
-    protected File keystore;
+    private File m_keystore;
+
     /**
      * Whether to assume a jar which has an appropriate .SF file in is already
      * signed.
      */
-    protected boolean lazy;
-    protected boolean sectionsonly;
-    protected File sigfile;
-    protected File signedjar;
+    private boolean m_lazy;
 
-    protected String storepass;
-    protected String storetype;
-    protected boolean verbose;
+    private boolean m_sectionsonly;
+    private File m_sigfile;
+    private File m_signedjar;
+
+    private String m_storepass;
+    private String m_storetype;
+    private boolean m_verbose;
 
     public void setAlias( final String alias )
     {
-        this.alias = alias;
+        m_alias = alias;
     }
 
     public void setInternalsf( final boolean internalsf )
     {
-        this.internalsf = internalsf;
+        m_internalsf = internalsf;
     }
 
     public void setJar( final File jar )
     {
-        this.jar = jar;
+        m_jar = jar;
     }
 
     public void setKeypass( final String keypass )
     {
-        this.keypass = keypass;
+        m_keypass = keypass;
     }
 
     public void setKeystore( final File keystore )
     {
-        this.keystore = keystore;
+        m_keystore = keystore;
     }
 
     public void setLazy( final boolean lazy )
     {
-        this.lazy = lazy;
+        m_lazy = lazy;
     }
 
     public void setSectionsonly( final boolean sectionsonly )
     {
-        this.sectionsonly = sectionsonly;
+        m_sectionsonly = sectionsonly;
     }
 
     public void setSigfile( final File sigfile )
     {
-        this.sigfile = sigfile;
+        m_sigfile = sigfile;
     }
 
     public void setSignedjar( final File signedjar )
     {
-        this.signedjar = signedjar;
+        m_signedjar = signedjar;
     }
 
     public void setStorepass( final String storepass )
     {
-        this.storepass = storepass;
+        m_storepass = storepass;
     }
 
     public void setStoretype( final String storetype )
     {
-        this.storetype = storetype;
+        m_storetype = storetype;
     }
 
     public void setVerbose( final boolean verbose )
     {
-        this.verbose = verbose;
+        m_verbose = verbose;
     }
 
     /**
@@ -131,40 +131,62 @@ public class SignJar
      */
     public void addFileset( final FileSet set )
     {
-        filesets.add( set );
+        m_filesets.add( set );
     }
 
     public void execute()
         throws TaskException
     {
-        if( null == jar && null == filesets )
+        validate();
+
+        if( null != m_jar )
         {
-            throw new TaskException( "jar must be set through jar attribute or nested filesets" );
-        }
-        if( null != jar )
-        {
-            doOneJar( jar, signedjar );
-            return;
+            doOneJar( m_jar, m_signedjar );
         }
         else
         {
             //Assume null != filesets
 
             // deal with the filesets
-            for( int i = 0; i < filesets.size(); i++ )
+            for( int i = 0; i < m_filesets.size(); i++ )
             {
-                FileSet fs = (FileSet)filesets.get( i );
-                DirectoryScanner ds = fs.getDirectoryScanner( getProject() );
-                String[] jarFiles = ds.getIncludedFiles();
+                final FileSet fileSet = (FileSet)m_filesets.get( i );
+                final DirectoryScanner scanner = fileSet.getDirectoryScanner( null );
+                final String[] jarFiles = scanner.getIncludedFiles();
                 for( int j = 0; j < jarFiles.length; j++ )
                 {
-                    doOneJar( new File( fs.getDir( getProject() ), jarFiles[ j ] ), null );
+                    final File file =
+                        new File( fileSet.getDir( null ), jarFiles[ j ] );
+                    doOneJar( file, null );
                 }
             }
         }
     }
 
-    protected boolean isSigned( File file )
+    private void validate() throws TaskException
+    {
+        if( null == m_jar && null == m_filesets )
+        {
+            final String message = "jar must be set through jar attribute or nested filesets";
+            throw new TaskException( message );
+        }
+        else if( null != m_jar )
+        {
+            if( null == m_alias )
+            {
+                final String message = "alias attribute must be set";
+                throw new TaskException( message );
+            }
+
+            if( null == m_storepass )
+            {
+                final String message = "storepass attribute must be set";
+                throw new TaskException( message );
+            }
+        }
+    }
+
+    private boolean isSigned( final File file )
     {
         final String SIG_START = "META-INF/";
         final String SIG_END = ".SF";
@@ -177,12 +199,12 @@ public class SignJar
         try
         {
             jarFile = new ZipFile( file );
-            if( null == alias )
+            if( null == m_alias )
             {
-                Enumeration entries = jarFile.entries();
+                final Enumeration entries = jarFile.entries();
                 while( entries.hasMoreElements() )
                 {
-                    String name = ( (ZipEntry)entries.nextElement() ).getName();
+                    final String name = ( (ZipEntry)entries.nextElement() ).getName();
                     if( name.startsWith( SIG_START ) && name.endsWith( SIG_END ) )
                     {
                         return true;
@@ -192,108 +214,108 @@ public class SignJar
             }
             else
             {
-                return jarFile.getEntry( SIG_START + alias.toUpperCase() +
-                                         SIG_END ) != null;
+                final String name = SIG_START + m_alias.toUpperCase() + SIG_END;
+                final ZipEntry entry = jarFile.getEntry( name );
+                return ( entry != null );
             }
         }
-        catch( IOException e )
+        catch( final IOException ioe )
         {
             return false;
         }
         finally
         {
-            if( jarFile != null )
+            if( null != jarFile )
             {
                 try
                 {
                     jarFile.close();
                 }
-                catch( IOException e )
+                catch( final IOException ioe )
                 {
                 }
             }
         }
     }
 
-    protected boolean isUpToDate( File jarFile, File signedjarFile )
+    private boolean isUpToDate( final File jarFile, final File signedjarFile )
     {
         if( null == jarFile )
         {
             return false;
         }
-
-        if( null != signedjarFile )
+        else if( null != signedjarFile )
         {
-
             if( !jarFile.exists() )
+            {
                 return false;
-            if( !signedjarFile.exists() )
+            }
+            else if( !signedjarFile.exists() )
+            {
                 return false;
-            if( jarFile.equals( signedjarFile ) )
+            }
+            else if( jarFile.equals( signedjarFile ) )
+            {
                 return false;
-            if( signedjarFile.lastModified() > jarFile.lastModified() )
+            }
+            else if( signedjarFile.lastModified() > jarFile.lastModified() )
+            {
                 return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else if( m_lazy )
+        {
+            return isSigned( jarFile );
         }
         else
         {
-            if( lazy )
-            {
-                return isSigned( jarFile );
-            }
+            return false;
         }
-
-        return false;
     }
 
-    private void doOneJar( File jarSource, File jarTarget )
+    private void doOneJar( final File jarSource, final File jarTarget )
         throws TaskException
     {
-        if( null == alias )
-        {
-            throw new TaskException( "alias attribute must be set" );
-        }
-
-        if( null == storepass )
-        {
-            throw new TaskException( "storepass attribute must be set" );
-        }
-
         if( isUpToDate( jarSource, jarTarget ) )
             return;
 
         final StringBuffer sb = new StringBuffer();
 
-        final ExecTask cmd = (ExecTask)getProject().createTask( "exec" );
+        final ExecTask cmd = null;//(ExecTask)getProject().createTask( "exec" );
         cmd.setExecutable( "jarsigner" );
 
-        if( null != keystore )
+        if( null != m_keystore )
         {
             cmd.createArg().setValue( "-keystore" );
-            cmd.createArg().setValue( keystore.toString() );
+            cmd.createArg().setValue( m_keystore.toString() );
         }
 
-        if( null != storepass )
+        if( null != m_storepass )
         {
             cmd.createArg().setValue( "-storepass" );
-            cmd.createArg().setValue( storepass );
+            cmd.createArg().setValue( m_storepass );
         }
 
-        if( null != storetype )
+        if( null != m_storetype )
         {
             cmd.createArg().setValue( "-storetype" );
-            cmd.createArg().setValue( storetype );
+            cmd.createArg().setValue( m_storetype );
         }
 
-        if( null != keypass )
+        if( null != m_keypass )
         {
             cmd.createArg().setValue( "-keypass" );
-            cmd.createArg().setValue( keypass );
+            cmd.createArg().setValue( m_keypass );
         }
 
-        if( null != sigfile )
+        if( null != m_sigfile )
         {
             cmd.createArg().setValue( "-sigfile" );
-            cmd.createArg().setValue( sigfile.toString() );
+            cmd.createArg().setValue( m_sigfile.toString() );
         }
 
         if( null != jarTarget )
@@ -302,26 +324,27 @@ public class SignJar
             cmd.createArg().setValue( jarTarget.toString() );
         }
 
-        if( verbose )
+        if( m_verbose )
         {
             cmd.createArg().setValue( "-verbose" );
         }
 
-        if( internalsf )
+        if( m_internalsf )
         {
             cmd.createArg().setValue( "-internalsf" );
         }
 
-        if( sectionsonly )
+        if( m_sectionsonly )
         {
             cmd.createArg().setValue( "-sectionsonly" );
         }
 
         cmd.createArg().setValue( jarSource.toString() );
 
-        cmd.createArg().setValue( alias );
+        cmd.createArg().setValue( m_alias );
 
-        getLogger().info( "Signing Jar : " + jarSource.getAbsolutePath() );
+        final String message = "Signing Jar : " + jarSource.getAbsolutePath();
+        getLogger().info( message );
         cmd.execute();
     }
 }
