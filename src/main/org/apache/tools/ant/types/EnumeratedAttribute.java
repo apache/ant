@@ -67,7 +67,15 @@ import org.apache.tools.ant.BuildException;
  */
 public abstract class EnumeratedAttribute {
 
+    /**
+     * The selected value in this enumeration.
+     */
     protected String value;
+
+    /**
+     * the index of the selected value in the array.
+     */
+    protected int index;
 
     /**
      * This is the only method a subclass needs to implement.
@@ -76,15 +84,19 @@ public abstract class EnumeratedAttribute {
      */
     public abstract String[] getValues();
 
-    public EnumeratedAttribute() {}
+    /** bean constructor */
+    public EnumeratedAttribute(){
+    }
 
     /**
      * Invoked by {@link org.apache.tools.ant.IntrospectionHelper IntrospectionHelper}.
      */
     public final void setValue(String value) throws BuildException {
-        if (!containsValue(value)) {
-            throw new BuildException(value+" is not a legal value for this attribute");
+        int index = indexOfValue(value);
+        if (index == -1) {
+            throw new BuildException(value + " is not a legal value for this attribute");
         }
+        this.index = index;
         this.value = value;
     }
 
@@ -92,17 +104,27 @@ public abstract class EnumeratedAttribute {
      * Is this value included in the enumeration?
      */
     public final boolean containsValue(String value) {
+        return (indexOfValue(value) != -1);
+    }
+
+    /**
+     * get the index of a value in this enumeration.
+     * @param value the string value to look for.
+     * @return the index of the value in the array of strings
+     * or -1 if it cannot be found.
+     * @see #getValues()
+     */
+    public final int indexOfValue(String value){
         String[] values = getValues();
         if (values == null || value == null) {
-            return false;
+            return -1;
         }
-        
-        for (int i=0; i<values.length; i++) {
-            if (value.equals(values[i])) {
-                return true;
+        for (int i = 0; i < values.length; i++){
+            if (value.equals(values[i])){
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     /**
