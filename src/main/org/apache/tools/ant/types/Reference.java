@@ -58,9 +58,7 @@ import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
 
 /**
- * Named collection of include/exclude tags.
- *
- * <p>Class to hold a reference to another object in the project.
+ * Class to hold a reference to another object in the project.
  *
  * @author <a href="mailto:stefan.bodewig@megabit.net">Stefan Bodewig</a> 
  */
