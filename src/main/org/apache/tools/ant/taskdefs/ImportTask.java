@@ -66,7 +66,7 @@ public class ImportTask extends Task {
      *                 default is false
      */
     public void setOptional(boolean optional) {
-        this.optional = true;
+        this.optional = optional;
     }
 
     /**
