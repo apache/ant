@@ -202,11 +202,23 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         }
         
         cmd.createArgument().setValue("-classpath");
+
         // Just add "sourcepath" to classpath ( for JDK1.1 )
+        // as well as "bootclasspath" and "extdirs"
         if (Project.getJavaVersion().startsWith("1.1")) {
-            cmd.createArgument().setValue(classpath.toString() 
-                                          + File.pathSeparator 
-                                          + src.toString());
+            Path cp = new Path(project);
+            /*
+             * XXX - This doesn't mix very well with build.systemclasspath,
+             */
+            if (bootclasspath != null) {
+                cp.append(bootclasspath);
+            }
+            if (extdirs != null) {
+                addExtdirsToClasspath(cp);
+            }
+            cp.append(classpath);
+            cp.append(src);
+            cmd.createArgument().setPath(cp);
         } else {
             cmd.createArgument().setPath(classpath);
             cmd.createArgument().setValue("-sourcepath");
@@ -215,7 +227,17 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
                 cmd.createArgument().setValue("-target");
                 cmd.createArgument().setValue(target);
             }
+            if (bootclasspath != null
+                && !Project.getJavaVersion().startsWith("1.1")) {
+                cmd.createArgument().setValue("-bootclasspath");
+                cmd.createArgument().setPath(bootclasspath);
+            }
+            if (extdirs != null) {
+                cmd.createArgument().setValue("-extdirs");
+                cmd.createArgument().setPath(extdirs);
+            }
         }
+
         if (encoding != null) {
             cmd.createArgument().setValue("-encoding");
             cmd.createArgument().setValue(encoding);
@@ -225,14 +247,6 @@ public abstract class DefaultCompilerAdapter implements CompilerAdapter {
         }
         if (optimize) {
             cmd.createArgument().setValue("-O");
-        }
-        if (bootclasspath != null) {
-            cmd.createArgument().setValue("-bootclasspath");
-            cmd.createArgument().setPath(bootclasspath);
-        }
-        if (extdirs != null) {
-            cmd.createArgument().setValue("-extdirs");
-            cmd.createArgument().setPath(extdirs);
         }
 
         if (depend) {
