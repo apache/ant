@@ -11,11 +11,11 @@ package org.apache.aut.vfs;
  * File system tests which check that a read-only file system cannot be
  * changed.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public abstract class ReadOnlyFileSystemTestBase extends BasicFileSystemTestBase
+public abstract class AbstractReadOnlyFileSystemTest extends AbstractFileSystemTest
 {
-    public ReadOnlyFileSystemTestBase( String name )
+    public AbstractReadOnlyFileSystemTest( String name )
     {
         super( name );
     }

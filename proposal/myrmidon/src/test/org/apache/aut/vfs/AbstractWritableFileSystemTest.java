@@ -15,11 +15,11 @@ import java.util.Set;
 /**
  * File system test that check that a file system can be modified.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public abstract class WritableFileSystemTestBase extends BasicFileSystemTestBase
+public abstract class AbstractWritableFileSystemTest extends AbstractFileSystemTest
 {
-    public WritableFileSystemTestBase( String name )
+    public AbstractWritableFileSystemTest( String name )
     {
         super( name );
     }

@@ -10,9 +10,9 @@ package org.apache.aut.vfs;
 /**
  * Tests for the SMB file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class SmbFileSystemTest extends WritableFileSystemTestBase
+public class SmbFileSystemTest extends AbstractWritableFileSystemTest
 {
     public SmbFileSystemTest( String name )
     {

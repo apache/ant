@@ -12,9 +12,9 @@ import java.io.File;
 /**
  * Tests for the Zip file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class ZipFileSystemTest extends ReadOnlyFileSystemTestBase
+public class ZipFileSystemTest extends AbstractReadOnlyFileSystemTest
 {
     public ZipFileSystemTest( String name )
     {

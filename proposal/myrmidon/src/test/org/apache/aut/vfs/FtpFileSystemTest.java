@@ -10,9 +10,9 @@ package org.apache.aut.vfs;
 /**
  * Tests for FTP file systems.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class FtpFileSystemTest extends WritableFileSystemTestBase
+public class FtpFileSystemTest extends AbstractWritableFileSystemTest
 {
     public FtpFileSystemTest( String name )
     {

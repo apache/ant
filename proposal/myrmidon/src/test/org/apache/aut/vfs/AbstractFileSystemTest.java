@@ -26,9 +26,9 @@ import org.apache.aut.vfs.impl.DefaultFileSystemManager;
  * Works from a base folder, and assumes a particular structure under
  * that base folder.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public abstract class BasicFileSystemTestBase extends TestCase
+public abstract class AbstractFileSystemTest extends TestCase
 {
     protected FileObject m_baseFolder;
     protected DefaultFileSystemManager m_manager;
@@ -36,7 +36,7 @@ public abstract class BasicFileSystemTestBase extends TestCase
     // Contents of "file1.txt"
     private String m_charContent;
 
-    public BasicFileSystemTestBase( String name )
+    public AbstractFileSystemTest( String name )
     {
         super( name );
     }

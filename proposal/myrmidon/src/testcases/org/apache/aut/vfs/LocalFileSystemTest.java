@@ -12,9 +12,9 @@ import java.io.File;
 /**
  * Tests for the local file system.
  *
- * @author Adam Murdoch
+ * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  */
-public class LocalFileSystemTest extends WritableFileSystemTestBase
+public class LocalFileSystemTest extends AbstractWritableFileSystemTest
 {
     private File m_baseDir;
 
