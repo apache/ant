@@ -207,7 +207,7 @@ public class XMLValidateTask
     {
         if( this.classpath == null )
         {
-            this.classpath = new Path( getProject() );
+            this.classpath = new Path();
         }
         return this.classpath.createPath();
     }
@@ -445,32 +445,6 @@ public class XMLValidateTask
         }
     }
 
-    public static class DTDLocation
-    {
-        private String publicId = null;
-        private String location = null;
-
-        public void setLocation( String location )
-        {
-            this.location = location;
-        }
-
-        public void setPublicId( String publicId )
-        {
-            this.publicId = publicId;
-        }
-
-        public String getLocation()
-        {
-            return location;
-        }
-
-        public String getPublicId()
-        {
-            return publicId;
-        }
-    }
-
     /*
      * ValidatorErrorHandler role :
      * <ul>
@@ -488,20 +462,19 @@ public class XMLValidateTask
         // did an error happen during last parsing ?
         public boolean getFailure()
         {
-
             return failed;
         }
 
         public void error( SAXParseException exception )
         {
             failed = true;
-            doLog( exception, Project.MSG_ERR );
+            getLogger().error( getMessage( exception ), exception );
         }
 
         public void fatalError( SAXParseException exception )
         {
             failed = true;
-            doLog( exception, Project.MSG_ERR );
+            getLogger().error( getMessage( exception ), exception );
         }
 
         public void init( File file )
@@ -515,7 +488,9 @@ public class XMLValidateTask
             // depending on implementation, XMLReader can yield hips of warning,
             // only output then if user explicitely asked for it
             if( warn )
-                doLog( exception, Project.MSG_WARN );
+            {
+                getLogger().warn( getMessage( exception ), exception );
+            }
         }
 
         private String getMessage( SAXParseException e )
@@ -537,11 +512,6 @@ public class XMLValidateTask
                 }
             }
             return e.getMessage();
-        }
-
-        private void doLog( SAXParseException e, int logLevel )
-        {
-            log( getMessage( e ), logLevel );
         }
     }
 
