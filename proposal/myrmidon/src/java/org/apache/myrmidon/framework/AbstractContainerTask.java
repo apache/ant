@@ -19,6 +19,8 @@ import org.apache.myrmidon.converter.ConverterException;
 import org.apache.myrmidon.components.configurer.Configurer;
 import org.apache.myrmidon.components.converter.MasterConverter;
 import org.apache.myrmidon.components.executor.Executor;
+import org.apache.avalon.excalibur.property.PropertyException;
+import org.apache.avalon.excalibur.property.PropertyUtil;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.
@@ -58,7 +60,8 @@ public abstract class AbstractContainerTask
     {
         try
         {
-            final Object object = getContext().resolveValue( value );
+            final Object object = 
+                PropertyUtil.resolveProperty( value, getContext(), false );
 
             if( null == object )
             {
@@ -68,9 +71,9 @@ public abstract class AbstractContainerTask
 
             return object;
         }
-        catch( final TaskException te )
+        catch( final PropertyException pe )
         {
-            throw new ConfigurationException( "Error resolving value: " + value, te );
+            throw new ConfigurationException( "Error resolving value: " + value, pe );
         }
     }
 
