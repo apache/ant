@@ -41,7 +41,7 @@ public abstract class AbstractTask
      * It is called after Task has been Configured and Initialized and before
      * beig Disposed (If task implements appropriate interfaces).
      *
-     * @exception Exception if an error occurs
+     * @exception TaskException if an error occurs
      */
     public abstract void execute()
         throws TaskException;
