@@ -162,6 +162,7 @@
         $xmlout.outputString($item)
       #end
     #end
+    <br>
 #end
 
 #macro (document)
@@ -187,11 +188,9 @@
           </font>
         </td></tr>
       </table>
-      <p>
     #foreach ( $faqSection in $allFaqSections )
       #toc ($faqSection)
     #end
-      </p>
 
       <table border="0" cellspacing="0" cellpadding="2" width="100%">
         <tr><td bgcolor="$blue3">
@@ -200,11 +199,9 @@
           </font>
         </td></tr>
       </table>
-      <p>
     #foreach ( $faqSection in $allFaqSections )
       #answers ($faqSection)
     #end
-      </p>
   #end
 
   #footer()
