@@ -103,6 +103,9 @@ Fixed bugs:
 * fixed Regexp-Mapper docs which gave outdated instructions (optional.jar)
   Bugzilla report 28584
 
+* <scp> using <fileset> didn't work with OpenSSH 3.9 and later.
+  Bugzilla report 31939
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
