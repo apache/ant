@@ -3,7 +3,7 @@
   <properties>
     <title>Contributors</title>
   </properties>
-  
+
   <body>
     <section name="Project Management Committee">
 
@@ -89,6 +89,12 @@ solutions.
 
             <p>
                 <b>Christoph Wilhelms</b><br/>
+<br/>
+Christoph is teamleader and a lead software engineer at
+<a href="http://www.impress.com/english/index.html">IMPRESS SOFTWARE</a>. He is resposible for
+the development of administration tools and development environment for
+the IMPRESS Engine, a Java-based intergration software. At the Ant-Project
+he takes care of Antidote - the Ant GUI.
             </p>
 
       </subsection>
