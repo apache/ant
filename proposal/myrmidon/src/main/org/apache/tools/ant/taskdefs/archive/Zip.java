@@ -111,7 +111,7 @@ public class Zip
     /**
      * Sets whether we want to compress the files or only store them.
      *
-     * @param c The new Compress value
+     * @param compress The new Compress value
      */
     public void setCompress( final boolean compress )
     {
@@ -146,8 +146,6 @@ public class Zip
 
     /**
      * Emulate Sun's jar utility by not adding parent dirs
-     *
-     * @param f The new Filesonly value
      */
     public void setFilesonly( final boolean filesonly )
     {
@@ -157,8 +155,6 @@ public class Zip
     /**
      * Sets whether we want to update the file (if it exists) or create a new
      * one.
-     *
-     * @param c The new Update value
      */
     public void setUpdate( final boolean update )
     {
@@ -527,15 +523,12 @@ public class Zip
         }
         for( int i = 0; i < dirs.length; i++ )
         {
-            if( "".equals( dirs[ i ] ) )
+            final String dir = dirs[ i ];
+            if( "".equals( dir ) )
             {
                 continue;
             }
-            String name = dirs[ i ].replace( File.separatorChar, '/' );
-            if( !name.endsWith( "/" ) )
-            {
-                name += "/";
-            }
+            final String name = getName( dir );
             addParentDirs( thisBaseDir, name, zOut, prefix );
         }
 
@@ -564,6 +557,16 @@ public class Zip
         }
     }
 
+    private String getName( final String dir )
+    {
+        String name = dir.replace( File.separatorChar, '/' );
+        if( !name.endsWith( "/" ) )
+        {
+            name += "/";
+        }
+        return name;
+    }
+
     /**
      * Iterate over the given ArrayList of (zip)filesets and add all files to the
      * ZipOutputStream using the given prefix or fullpath.
@@ -587,16 +590,10 @@ public class Zip
             if( fs instanceof ZipFileSet )
             {
                 ZipFileSet zfs = (ZipFileSet)fs;
-                prefix = zfs.getPrefix();
+                prefix = getPrefix( zfs.getPrefix() );
                 fullpath = zfs.getFullpath();
             }
 
-            if( prefix.length() > 0
-                && !prefix.endsWith( "/" )
-                && !prefix.endsWith( "\\" ) )
-            {
-                prefix += "/";
-            }
 
             // Need to manually add either fullpath's parent directory, or
             // the prefix directory, to the archive.
@@ -621,6 +618,18 @@ public class Zip
                 addFiles( ds, zOut, prefix, fullpath );
             }
         }
+    }
+
+    private String getPrefix( final String prefix )
+    {
+        String result = prefix;
+        if( result.length() > 0
+            && !result.endsWith( "/" )
+            && !result.endsWith( "\\" ) )
+        {
+            result += "/";
+        }
+        return result;
     }
 
     /**
