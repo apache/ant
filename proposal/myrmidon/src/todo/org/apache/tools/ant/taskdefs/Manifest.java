@@ -23,8 +23,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.jar.Attributes;
+import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 
 /**
@@ -34,7 +34,7 @@ import org.apache.tools.ant.types.EnumeratedAttribute;
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class Manifest
-    extends Task
+    extends AbstractTask
 {
     /**
      * The standard manifest version header
@@ -74,21 +74,21 @@ public class Manifest
     /**
      * The version of this manifest
      */
-    private String manifestVersion = DEFAULT_MANIFEST_VERSION;
+    private String m_manifestVersion = DEFAULT_MANIFEST_VERSION;
 
     /**
      * The main section of this manifest
      */
-    private Section mainSection = new Section();
+    private Section m_mainSection = new Section();
 
     /**
      * The named sections of this manifest
      */
-    private Hashtable sections = new Hashtable();
+    private Hashtable m_sections = new Hashtable();
 
-    private File manifestFile;
+    private File m_manifestFile;
 
-    private Mode mode;
+    private ManifestMode m_mode;
 
     /**
      * Construct an empty manifest
@@ -96,9 +96,9 @@ public class Manifest
     public Manifest()
         throws TaskException
     {
-        mode = new Mode();
-        mode.setValue( "replace" );
-        manifestVersion = null;
+        m_mode = new ManifestMode();
+        m_mode.setValue( "replace" );
+        m_manifestVersion = null;
     }
 
     /**
@@ -116,12 +116,12 @@ public class Manifest
     {
         BufferedReader reader = new BufferedReader( r );
         // This should be the manifest version
-        String nextSectionName = mainSection.read( reader );
-        String readManifestVersion = mainSection.getAttributeValue( ATTRIBUTE_MANIFEST_VERSION );
+        String nextSectionName = m_mainSection.read( reader );
+        String readManifestVersion = m_mainSection.getAttributeValue( ATTRIBUTE_MANIFEST_VERSION );
         if( readManifestVersion != null )
         {
-            manifestVersion = readManifestVersion;
-            mainSection.removeAttribute( ATTRIBUTE_MANIFEST_VERSION );
+            m_manifestVersion = readManifestVersion;
+            m_mainSection.removeAttribute( ATTRIBUTE_MANIFEST_VERSION );
         }
 
         String line = null;
@@ -201,17 +201,17 @@ public class Manifest
      */
     public void setFile( File f )
     {
-        manifestFile = f;
+        m_manifestFile = f;
     }
 
     /**
      * Shall we update or replace an existing manifest?
      *
-     * @param m The new Mode value
+     * @param m The new ManifestMode value
      */
-    public void setMode( Mode m )
+    public void setMode( ManifestMode m )
     {
-        mode = m;
+        m_mode = m;
     }
 
     /**
@@ -223,13 +223,13 @@ public class Manifest
     {
         ArrayList warnings = new ArrayList();
 
-        for( Iterator e2 = mainSection.getWarnings(); e2.hasNext(); )
+        for( Iterator e2 = m_mainSection.getWarnings(); e2.hasNext(); )
         {
             warnings.add( e2.next() );
         }
 
         // create a vector and add in the warnings for all the sections
-        for( Enumeration e = sections.elements(); e.hasMoreElements(); )
+        for( Enumeration e = m_sections.elements(); e.hasMoreElements(); )
         {
             Section section = (Section)e.nextElement();
             for( Iterator e2 = section.getWarnings(); e2.hasNext(); )
@@ -244,7 +244,7 @@ public class Manifest
     public void addAttribute( final Attribute attribute )
         throws ManifestException, TaskException
     {
-        mainSection.addAttribute( attribute );
+        m_mainSection.addAttribute( attribute );
     }
 
     public void addSection( final Section section )
@@ -254,7 +254,7 @@ public class Manifest
         {
             throw new TaskException( "Sections must have a name" );
         }
-        sections.put( section.getName().toLowerCase(), section );
+        m_sections.put( section.getName().toLowerCase(), section );
     }
 
     public boolean equals( Object rhs )
@@ -265,31 +265,31 @@ public class Manifest
         }
 
         Manifest rhsManifest = (Manifest)rhs;
-        if( manifestVersion == null )
+        if( m_manifestVersion == null )
         {
-            if( rhsManifest.manifestVersion != null )
+            if( rhsManifest.m_manifestVersion != null )
             {
                 return false;
             }
         }
-        else if( !manifestVersion.equals( rhsManifest.manifestVersion ) )
+        else if( !m_manifestVersion.equals( rhsManifest.m_manifestVersion ) )
         {
             return false;
         }
-        if( sections.size() != rhsManifest.sections.size() )
-        {
-            return false;
-        }
-
-        if( !mainSection.equals( rhsManifest.mainSection ) )
+        if( m_sections.size() != rhsManifest.m_sections.size() )
         {
             return false;
         }
 
-        for( Enumeration e = sections.elements(); e.hasMoreElements(); )
+        if( !m_mainSection.equals( rhsManifest.m_mainSection ) )
+        {
+            return false;
+        }
+
+        for( Enumeration e = m_sections.elements(); e.hasMoreElements(); )
         {
             Section section = (Section)e.nextElement();
-            Section rhsSection = (Section)rhsManifest.sections.get( section.getName().toLowerCase() );
+            Section rhsSection = (Section)rhsManifest.m_sections.get( section.getName().toLowerCase() );
             if( !section.equals( rhsSection ) )
             {
                 return false;
@@ -307,30 +307,30 @@ public class Manifest
     public void execute()
         throws TaskException
     {
-        if( manifestFile == null )
+        if( m_manifestFile == null )
         {
             throw new TaskException( "the file attribute is required" );
         }
 
         Manifest toWrite = getDefaultManifest();
 
-        if( mode.getValue().equals( "update" ) && manifestFile.exists() )
+        if( m_mode.getValue().equals( "update" ) && m_manifestFile.exists() )
         {
             FileReader f = null;
             try
             {
-                f = new FileReader( manifestFile );
+                f = new FileReader( m_manifestFile );
                 toWrite.merge( new Manifest( f ) );
             }
             catch( ManifestException m )
             {
-                throw new TaskException( "Existing manifest " + manifestFile
+                throw new TaskException( "Existing manifest " + m_manifestFile
                                          + " is invalid", m );
             }
             catch( IOException e )
             {
                 throw new
-                    TaskException( "Failed to read " + manifestFile, e );
+                    TaskException( "Failed to read " + m_manifestFile, e );
             }
             finally
             {
@@ -359,12 +359,12 @@ public class Manifest
         PrintWriter w = null;
         try
         {
-            w = new PrintWriter( new FileWriter( manifestFile ) );
+            w = new PrintWriter( new FileWriter( m_manifestFile ) );
             toWrite.write( w );
         }
         catch( IOException e )
         {
-            throw new TaskException( "Failed to write " + manifestFile, e );
+            throw new TaskException( "Failed to write " + m_manifestFile, e );
         }
         finally
         {
@@ -385,19 +385,19 @@ public class Manifest
     public void merge( Manifest other )
         throws ManifestException
     {
-        if( other.manifestVersion != null )
+        if( other.m_manifestVersion != null )
         {
-            manifestVersion = other.manifestVersion;
+            m_manifestVersion = other.m_manifestVersion;
         }
-        mainSection.merge( other.mainSection );
-        for( Enumeration e = other.sections.keys(); e.hasMoreElements(); )
+        m_mainSection.merge( other.m_mainSection );
+        for( Enumeration e = other.m_sections.keys(); e.hasMoreElements(); )
         {
             String sectionName = (String)e.nextElement();
-            Section ourSection = (Section)sections.get( sectionName );
-            Section otherSection = (Section)other.sections.get( sectionName );
+            Section ourSection = (Section)m_sections.get( sectionName );
+            Section otherSection = (Section)other.m_sections.get( sectionName );
             if( ourSection == null )
             {
-                sections.put( sectionName.toLowerCase(), otherSection );
+                m_sections.put( sectionName.toLowerCase(), otherSection );
             }
             else
             {
@@ -436,19 +436,19 @@ public class Manifest
     public void write( PrintWriter writer )
         throws IOException, TaskException
     {
-        writer.println( ATTRIBUTE_MANIFEST_VERSION + ": " + manifestVersion );
-        String signatureVersion = mainSection.getAttributeValue( ATTRIBUTE_SIGNATURE_VERSION );
+        writer.println( ATTRIBUTE_MANIFEST_VERSION + ": " + m_manifestVersion );
+        String signatureVersion = m_mainSection.getAttributeValue( ATTRIBUTE_SIGNATURE_VERSION );
         if( signatureVersion != null )
         {
             writer.println( ATTRIBUTE_SIGNATURE_VERSION + ": " + signatureVersion );
-            mainSection.removeAttribute( ATTRIBUTE_SIGNATURE_VERSION );
+            m_mainSection.removeAttribute( ATTRIBUTE_SIGNATURE_VERSION );
         }
-        mainSection.write( writer );
+        m_mainSection.write( writer );
         if( signatureVersion != null )
         {
             try
             {
-                mainSection.addAttribute( new Attribute( ATTRIBUTE_SIGNATURE_VERSION, signatureVersion ) );
+                m_mainSection.addAttribute( new Attribute( ATTRIBUTE_SIGNATURE_VERSION, signatureVersion ) );
             }
             catch( ManifestException e )
             {
@@ -456,7 +456,7 @@ public class Manifest
             }
         }
 
-        for( Enumeration e = sections.elements(); e.hasMoreElements(); )
+        for( Enumeration e = m_sections.elements(); e.hasMoreElements(); )
         {
             Section section = (Section)e.nextElement();
             section.write( writer );
@@ -631,10 +631,8 @@ public class Manifest
 
     /**
      * Helper class for Manifest's mode attribute.
-     *
-     * @author RT
      */
-    public static class Mode extends EnumeratedAttribute
+    public static class ManifestMode extends EnumeratedAttribute
     {
         public String[] getValues()
         {
