@@ -216,6 +216,8 @@ Fixed bugs:
 * ftp chmod failed when the remote system was UNIX and local system Windows
   Bugzilla Report 21865.
 
+* replace would change \r\n into \r\r\n under Windows.
+
 Other changes:
 --------------
 * Six new Clearcase tasks added.

@@ -423,9 +423,13 @@ public class Replace extends MatchingTask {
                 // line separators in values and tokens are "\n"
                 // in order to compare with the file contents, replace them
                 // as needed
-                String val = stringReplace(value.getText(), "\n",
+                String val = stringReplace(value.getText(), "\r\n",
+                                           "\n", false);
+                val = stringReplace(val, "\n",
                                            StringUtils.LINE_SEP, false);
-                String tok = stringReplace(token.getText(), "\n",
+                String tok = stringReplace(token.getText(), "\r\n",
+                                            "\n", false);
+                tok = stringReplace(tok, "\n",
                                            StringUtils.LINE_SEP, false);
 
                 // for each found token, replace with value
