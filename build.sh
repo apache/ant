@@ -16,10 +16,10 @@ case "`uname`" in
 esac
 
 REALANTHOME=$ANT_HOME
-if [ -z $PWD ]; then
+if [ -z "$PWD" ]; then
     ANT_HOME=./bootstrap
 else
-    ANT_HOME=$PWD/bootstrap
+    ANT_HOME="$PWD"/bootstrap
 fi
 export ANT_HOME
 
