@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,13 +56,13 @@ package org.apache.tools.ant.taskdefs.optional;
 
 import java.io.*;
 import org.apache.tools.ant.BuildFileTest;
+
 /**
  * If you want to run tests, it is highly recommended
- * to download ANTLR (www.antlr.org), build the 'all' jar
- * with the mkalljar script and drop the jar (about 300KB) into
+ * to download ANTLR (www.antlr.org), build the 'antlrall.jar' jar
+ * with  <code>make antlr-all.jar</code> and drop the jar (about 300KB) into
  * Ant lib.
  * - Running w/ the default antlr.jar (70KB) does not work (missing class)
- * - Running w/ the antlr jar made w/ mkjar (88KB) does not work (still another class missing)
  *
  * Unless of course you specify the ANTLR classpath in your
  * system classpath. (see ANTLR install.html)
@@ -142,7 +142,7 @@ public class ANTLRTest extends BuildFileTest {
         executeTarget("test10");
         File outputDirectory = new File(TASKDEFS_DIR + "antlr.tmp");
         String[] calcFiles = outputDirectory.list(new HTMLFilter());
-        assertEquals(1, calcFiles.length);
+        assertTrue(calcFiles.length > 0);
     }
 
     /**
