@@ -3302,12 +3302,65 @@ and <code>todo.html</code> are excluded.</p>
 <hr>
 <h2><a name="optionaltasks">Optional tasks</a></h2>
 <ul>
+  <li><a href="#cab">Cab</a></li>
   <li><a href="#netrexxc">NetRexxC</a></li>
   <li><a href="#renameexts">RenameExtensions</a></li>
   <li><a href="#script">Script</a></li>
   <li><a href="#vssget">VssGet</a></li>
   <li><a href="ejb.html">EJB Tasks</a></li>
 </ul>
+<hr>
+<h2><a name="cab">Cab</a></h2>
+<h3><b>Description:</b></h3>
+<p>The cab task creates Microsoft cab archive files.  It is invoked
+similar to the <a href="#jar">jar</a> or <a href="#zip">zip</a> tasks.
+This task will only work on Windows, and will be silently ignored on
+other platforms.  You must have the Microsoft cabarc tool available in
+your executable path.</p>
+<p>See the section on <a href="#directorybasedtasks">directory based
+tasks</a>, on how the inclusion/exclusion of files works, and how to
+write patterns. The patterns are relative to the <i>basedir</i>
+directory.</p>
+<h3>Parameters:</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">cabfile</td>
+    <td valign="top">the name of the cab file to create.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">basedir</td>
+    <td valign="top">the directory to start archiving files from.</td>
+    <td valign="top" align="center">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">set to "yes" if you want to see the output from
+      the cabarc tool.  defaults to "no".</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">compress</td>
+    <td valign="top">set to "no" to store files without compressing.
+      defaults to "yes".</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">options</td>
+    <td valign="top">use to set additional command-line options for
+      the cabarc tool.  should not normally be necessary.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p>None yet available</p>
+</blockquote>
 <hr>
 <h2><a name="netrexxc">NetRexxC</a></h2>
 <h3><b>Description:</b></h3>

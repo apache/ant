@@ -83,6 +83,7 @@
       <exclude name="**/EjbJar.java" unless="jdk1.2+" />
       <exclude name="**/*DeploymentTool.java" unless="jdk1.2+" />
       <exclude name="**/junit/*" unless="junit.present" />
+      <exclude name="**/Cab.java" unless="jdk1.2+" />
     </javac>
  
     <copydir src="${src.dir}" dest="${build.classes}">
