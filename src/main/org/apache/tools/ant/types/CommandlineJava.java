@@ -81,7 +81,7 @@ public class CommandlineJava implements Cloneable {
          * get the properties as an array; this is an override of the
          * superclass, as it evaluates all the properties
          * @return the array of definitions; may be null
-         * @throws BuildException
+         * @throws BuildException on error
          */
         public String[] getVariables() throws BuildException {
 
@@ -170,6 +170,7 @@ public class CommandlineJava implements Cloneable {
         /**
          *  deep clone
          * @return a cloned instance of SysProperties
+         * @exception CloneNotSupportedException for signature
          */
         public Object clone() throws CloneNotSupportedException {
             try {
@@ -246,16 +247,16 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
-     * set the executable used to start the new JVM
-     * @param vm
+     * Set the executable used to start the new JVM.
+     * @param vm the executable to use
      */
     public void setVm(String vm) {
         vmCommand.setExecutable(vm);
     }
 
     /**
-     * set the JVM version required
-     * @param value
+     * Set the JVM version required.
+     * @param value the version required
      */
     public void setVmversion(String value) {
         vmVersion = value;
@@ -265,6 +266,7 @@ public class CommandlineJava implements Cloneable {
      * If set, system properties will be copied to the cloned VM - as
      * well as the bootclasspath unless you have explicitly specified
      * a bootclaspath.
+     * @param cloneVm if true copy the system properties
      * @since Ant 1.7
      */
     public void setCloneVm(boolean cloneVm) {
@@ -328,6 +330,11 @@ public class CommandlineJava implements Cloneable {
         return null;
     }
 
+    /**
+     * Create a classpath.
+     * @param p the project to use to create the path in
+     * @return a path to be configured
+     */
     public Path createClasspath(Project p) {
         if (classpath == null) {
             classpath = new Path(p);
@@ -336,6 +343,9 @@ public class CommandlineJava implements Cloneable {
     }
 
     /**
+     * Create a boot classpath.
+     * @param p the project to use to create the path in
+     * @return a path to be configured
      * @since Ant 1.6
      */
     public Path createBootclasspath(Project p) {
@@ -345,6 +355,10 @@ public class CommandlineJava implements Cloneable {
         return bootclasspath;
     }
 
+    /**
+     * Get the vm version.
+     * @return the vm version
+     */
     public String getVmversion() {
         return vmVersion;
     }
@@ -390,7 +404,7 @@ public class CommandlineJava implements Cloneable {
         if (bcp.size() > 0) {
             listIterator.add("-Xbootclasspath:" + bcp.toString());
         }
-        
+
         //main classpath
         if (haveClasspath()) {
             listIterator.add("-classpath");
@@ -418,6 +432,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Specify max memory of the JVM
      * -mx or -Xmx depending on VM version
+     * @param max the string to pass to the jvm to specifiy the max memory
      */
     public void setMaxmemory(String max) {
         this.maxMemory = max;
@@ -436,7 +451,7 @@ public class CommandlineJava implements Cloneable {
      * Returns a String that describes the command and arguments
      * suitable for verbose output before a call to
      * <code>Runtime.exec(String[])<code>
-     *
+     * @return the description string
      * @since Ant 1.5
      */
     public String describeCommand() {
@@ -448,7 +463,7 @@ public class CommandlineJava implements Cloneable {
      * for in VM executions.
      *
      * <p>The class name is the executable in this context.</p>
-     *
+     * @return the description string
      * @since Ant 1.5
      */
     public String describeJavaCommand() {
@@ -599,7 +614,7 @@ public class CommandlineJava implements Cloneable {
     /**
      * Has the classpath been specified and shall it really be used or
      * will build.sysclasspath null it?
-     *
+     * @return true if the classpath is to be used
      * @since Ant 1.6
      */
     protected boolean haveClasspath() {
@@ -616,7 +631,7 @@ public class CommandlineJava implements Cloneable {
      *
      * @param log whether to log a warning if a bootclasspath has been
      * specified but will be ignored.
-     *
+     * @return true if the bootclasspath is to be used
      * @since Ant 1.6
      */
     protected boolean haveBootclasspath(boolean log) {
