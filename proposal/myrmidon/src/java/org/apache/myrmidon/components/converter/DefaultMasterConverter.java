@@ -150,7 +150,7 @@ public class DefaultMasterConverter
         }
 
         final String message =
-            REZ.getString( "no-converter.notice",
+            REZ.getString( "no-converter.error",
                            originalClass.getName(),
                            destination.getName() );
         throw new ConverterException( message );
