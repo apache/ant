@@ -505,6 +505,7 @@ public class WeblogicDeploymentTool extends GenericDeploymentTool {
                     }
                     
                     newJarStream = new JarOutputStream(new FileOutputStream(newWLJarFile));
+                    newJarStream.setLevel(0);
                     
                     //Copy files from old weblogic jar
                     for (Enumeration e = wlEntries.elements() ; e.hasMoreElements();)
