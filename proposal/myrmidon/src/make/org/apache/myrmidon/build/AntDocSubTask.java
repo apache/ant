@@ -19,21 +19,23 @@ import xdoclet.XDocletException;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  * @version $Revision$ $Date$
  */
-public class AntDocSubTask 
+public class AntDocSubTask
     extends TemplateSubTask
 {
     public final static String SUBTASK_NAME = "antdoc";
 
     private static final String GENERATED_FILE_NAME = "{0}.xml";
-    private static final String DEFAULT_TEMPLATE_FILE = 
+    private static final String DEFAULT_TEMPLATE_FILE =
         "/org/apache/myrmidon/build/type.j";
 
     private File m_docsDestDir;
 
     public AntDocSubTask()
     {
-        setTemplateFile( new File( DEFAULT_TEMPLATE_FILE ) );
         setDestinationFile( GENERATED_FILE_NAME );
+        final String templateFile =
+            getClass().getResource( DEFAULT_TEMPLATE_FILE ).getFile();
+        setTemplateFile( new File( templateFile ) );
 
         final TemplateSubTask.ExtentTypes extent = new TemplateSubTask.ExtentTypes();
         extent.setValue( "hierarchy" );
@@ -41,7 +43,7 @@ public class AntDocSubTask
     }
 
     /**
-     * Specifies the directory that is the destination of generated generated 
+     * Specifies the directory that is the destination of generated generated
      * xml documentation for types.
      */
     public void setDocsDestDir( final File docsDestDir )
@@ -57,7 +59,7 @@ public class AntDocSubTask
     /**
      * Called to validate configuration parameters.
      */
-    public void validateOptions() 
+    public void validateOptions()
         throws XDocletException
     {
         super.validateOptions();
