@@ -352,6 +352,9 @@ public class AntTypeDefinition {
         // is the same
         ClassLoader oldLoader = other.getClassLoader();
         ClassLoader newLoader = this.getClassLoader();
+        if (oldLoader == newLoader) {
+            return true;
+        }
         return
             newLoader != null
             && oldLoader != null
