@@ -99,6 +99,7 @@ public class ExecTask extends Task {
     private boolean failIfExecFails = true;
     private boolean append = false;
     private String executable;
+    private boolean resolveExecutable = false;
 
     /**
      * Controls whether the VM (1.3 and above) is used to execute the
@@ -187,6 +188,13 @@ public class ExecTask extends Task {
     }
 
     /**
+     * Attempt to resolve the executable to a file
+     */
+    public void setResolveExecutable(boolean resolveExecutable) {
+        this.resolveExecutable = resolveExecutable;
+    }
+    
+    /**
      * Add an environment variable to the launched process.
      */
     public void addEnv(Environment.Variable var) {
@@ -240,6 +248,8 @@ public class ExecTask extends Task {
         this.append = append;
     }
 
+    
+    
     /**
      * Attempt to figure out where the executable is so that we can feed 
      * the full path - first try basedir, then the exec dir and then
@@ -248,6 +258,10 @@ public class ExecTask extends Task {
      * @return the executable as a full path if it can be determined.
      */
     private String resolveExecutable() {
+        if (!resolveExecutable) {
+            return executable;
+        }
+        
         // try to find the executable
         File executableFile = getProject().resolveFile(executable);
         if (executableFile.exists()) {
