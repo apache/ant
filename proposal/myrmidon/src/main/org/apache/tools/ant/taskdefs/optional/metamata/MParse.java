@@ -16,8 +16,8 @@ import java.util.Random;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.excalibur.io.IOUtil;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Argument;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
@@ -292,17 +292,8 @@ public class MParse
         getLogger().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
-        try
-        {
-            if( exe.execute() != 0 )
-            {
-                throw new TaskException( "Metamata task failed." );
-            }
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Failed to launch Metamata task: " + e );
-        }
+        exe.setReturnCode( 0 );
+        exe.execute();
     }
 
     /**

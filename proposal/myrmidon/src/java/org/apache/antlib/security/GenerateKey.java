@@ -7,7 +7,6 @@
  */
 package org.apache.antlib.security;
 
-import java.io.IOException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
@@ -125,14 +124,7 @@ public class GenerateKey
         final Execute exe = new Execute( execManager );
         exe.setWorkingDirectory( getBaseDirectory() );
         exe.setCommandline( cmd );
-        try
-        {
-            exe.execute();
-        }
-        catch( final IOException ioe )
-        {
-            throw new TaskException( ioe.getMessage(), ioe );
-        }
+        exe.execute();
     }
 
     private Commandline createCommand()

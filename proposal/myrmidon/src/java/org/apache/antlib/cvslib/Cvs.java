@@ -8,7 +8,6 @@
 package org.apache.antlib.cvslib;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
@@ -158,19 +157,8 @@ public class Cvs
 
         exe.setCommandline( command );
         exe.setEnvironment( env );
-        try
-        {
-            final int retCode = exe.execute();
-            if( retCode != 0 )
-            {
-                //replace with an ExecuteException(message,code);
-                throw new TaskException( "cvs exited with error code " + retCode );
-            }
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( e.toString(), e );
-        }
+        exe.setReturnCode( 0 );
+        exe.execute();
     }
 
     private Properties buildEnvironment()

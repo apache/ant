@@ -8,12 +8,11 @@
 package org.apache.tools.ant.taskdefs.optional.vss;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -203,28 +202,21 @@ public abstract class MSVSS extends Task
     protected int run( Commandline cmd )
         throws TaskException
     {
-        try
-        {
-            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute exe = new Execute( execManager );
 
-            // If location of ss.ini is specified we need to set the
-            // environment-variable SSDIR to this value
-            if( m_serverPath != null )
-            {
-                final Properties env = new Properties();
-                env.setProperty( "SSDIR", m_serverPath );
-                exe.setEnvironment( env );
-            }
-
-            exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd );
-            return exe.execute();
-        }
-        catch( IOException e )
+        // If location of ss.ini is specified we need to set the
+        // environment-variable SSDIR to this value
+        if( m_serverPath != null )
         {
-            throw new TaskException( "Error", e );
+            final Properties env = new Properties();
+            env.setProperty( "SSDIR", m_serverPath );
+            exe.setEnvironment( env );
         }
+
+        exe.setWorkingDirectory( getBaseDirectory() );
+        exe.setCommandline( cmd );
+        return exe.execute();
     }
 }
 

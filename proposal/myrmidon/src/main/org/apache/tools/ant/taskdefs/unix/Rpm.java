@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.unix;
 
 import java.io.File;
-import java.io.IOException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
@@ -98,22 +97,12 @@ public class Rpm
             m_topDir = getBaseDirectory();
         }
         exe.setWorkingDirectory( m_topDir );
-
         exe.setCommandline( cmd );
-        try
-        {
-            final String message = "Building the RPM based on the " + m_specFile + " file";
-            getLogger().info( message );
+        exe.setReturnCode( 0 );
 
-            if( 0 != exe.execute() )
-            {
-                throw new TaskException( "Failed to execute rpm" );
-            }
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Error", e );
-        }
+        final String message = "Building the RPM based on the " + m_specFile + " file";
+        getLogger().info( message );
+        exe.execute();
     }
 
     private Commandline createCommand()

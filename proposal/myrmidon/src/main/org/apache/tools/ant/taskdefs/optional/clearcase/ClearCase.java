@@ -8,11 +8,10 @@
 package org.apache.tools.ant.taskdefs.optional.clearcase;
 
 import java.io.File;
-import java.io.IOException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -106,18 +105,11 @@ public abstract class ClearCase extends Task
     protected int run( Commandline cmd )
         throws TaskException
     {
-        try
-        {
-            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
-            exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd );
-            return exe.execute();
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Error", e );
-        }
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute exe = new Execute( execManager );
+        exe.setWorkingDirectory( getBaseDirectory() );
+        exe.setCommandline( cmd );
+        return exe.execute();
     }
 
 }

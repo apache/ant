@@ -658,14 +658,9 @@ public class JUnitTask extends Task
         }
 
         getLogger().debug( "Executing: " + cmd.toString() );
-        int retVal;
         try
         {
-            retVal = exe.execute();
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Process fork failed.", e );
+            return exe.execute();
         }
         finally
         {
@@ -674,8 +669,6 @@ public class JUnitTask extends Task
                 throw new TaskException( "Could not delete temporary properties file." );
             }
         }
-
-        return retVal;
     }
 
     /**

@@ -298,14 +298,7 @@ public class SignJar
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute exe = new Execute( execManager );
         exe.setCommandline( cmd );
-        try
-        {
-            exe.execute();
-        }
-        catch( final IOException ioe )
-        {
-            throw new TaskException( ioe.getMessage(), ioe );
-        }
+        exe.execute();
     }
 
     private Commandline buildCommand( final File jarTarget, final File jarSource )

@@ -110,20 +110,31 @@ public class Execute
      * @return the exit status of the subprocess or <code>INVALID</code>
      */
     public int execute()
-        throws IOException, TaskException
+        throws TaskException
     {
-        final int returnCode = executenativeProcess();
+        final int returnCode = executeNativeProcess();
+        checkReturnCode( returnCode );
+        return returnCode;
+    }
 
+    /**
+     * Utility method to verify that specified return code was the
+     * return code expected (if any).
+     */
+    private void checkReturnCode( final int returnCode )
+        throws TaskException
+    {
         if( null != m_returnCode &&
             returnCode != m_returnCode.intValue() )
         {
             throw new TaskException( "Unexpected return code " + returnCode );
         }
-
-        return returnCode;
     }
 
-    private int executenativeProcess()
+    /**
+     * Actually execute the native process.
+     */
+    private int executeNativeProcess()
         throws TaskException
     {
         final ExecMetaData metaData = buildExecMetaData();

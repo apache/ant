@@ -8,12 +8,11 @@
 package org.apache.tools.ant.taskdefs.optional.dotnet;// imports
 
 import java.io.File;
-import java.io.IOException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -141,34 +140,27 @@ public class NetCommand
         throws TaskException
     {
         int err = -1;// assume the worst
-        try
+        if( _traceCommandLine )
         {
-            if( _traceCommandLine )
+            //_owner.getLogger().info( _commandLine.toString() );
+        }
+        else
+        {
+            //in verbose mode we always log stuff
+            logVerbose( _commandLine.toString() );
+        }
+        _exe.setCommandline( _commandLine );
+        err = _exe.execute();
+        if( err != 0 )
+        {
+            if( _failOnError )
             {
-                //_owner.getLogger().info( _commandLine.toString() );
+                throw new TaskException( _title + " returned: " + err );
             }
             else
             {
-                //in verbose mode we always log stuff
-                logVerbose( _commandLine.toString() );
+                getLogger().error( _title + "  Result: " + err );
             }
-            _exe.setCommandline( _commandLine );
-            err = _exe.execute();
-            if( err != 0 )
-            {
-                if( _failOnError )
-                {
-                    throw new TaskException( _title + " returned: " + err );
-                }
-                else
-                {
-                    getLogger().error( _title + "  Result: " + err );
-                }
-            }
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( _title + " failed: " + e, e );
         }
     }
 

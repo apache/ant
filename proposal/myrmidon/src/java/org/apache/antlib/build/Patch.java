@@ -8,7 +8,6 @@
 package org.apache.antlib.build;
 
 import java.io.File;
-import java.io.IOException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
@@ -102,17 +101,8 @@ public class Patch
 
         final ExecManager execManager = (ExecManager)getService( ExecManager.class );
         final Execute exe = new Execute( execManager );
-
         buildCommand( exe.getCommandline() );
-
-        try
-        {
-            exe.execute();
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Error", e );
-        }
+        exe.execute();
     }
 
     private void validate()

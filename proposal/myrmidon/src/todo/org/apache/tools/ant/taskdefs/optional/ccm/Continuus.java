@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs.optional.ccm;
 
 import java.io.File;
-import java.io.IOException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.AbstractTask;
@@ -72,7 +71,7 @@ public abstract class Continuus
     /**
      * Set the value of ccmAction.
      *
-     * @param v Value to assign to ccmAction.
+     * @param ccmAction Value to assign to ccmAction.
      */
     public void setCcmAction( final String ccmAction )
     {
@@ -110,21 +109,14 @@ public abstract class Continuus
     protected int run( final Commandline cmd, final ExecOutputHandler handler )
         throws TaskException
     {
-        try
+        final ExecManager execManager = (ExecManager)getService( ExecManager.class );
+        final Execute exe = new Execute( execManager );
+        if( null != handler )
         {
-            final ExecManager execManager = (ExecManager)getService( ExecManager.class );
-            final Execute exe = new Execute( execManager );
-            if( null != handler )
-            {
-                exe.setExecOutputHandler( handler );
-            }
-            exe.setWorkingDirectory( getBaseDirectory() );
-            exe.setCommandline( cmd );
-            return exe.execute();
+            exe.setExecOutputHandler( handler );
         }
-        catch( final IOException ioe )
-        {
-            throw new TaskException( "Error", ioe );
-        }
+        exe.setWorkingDirectory( getBaseDirectory() );
+        exe.setCommandline( cmd );
+        return exe.execute();
     }
 }

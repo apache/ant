@@ -284,17 +284,8 @@ public abstract class AbstractMetamataTask
         getLogger().debug( m_cmdl.toString() );
         final String[] commandline = m_cmdl.getCommandline();
         exe.setCommandline( new Commandline( commandline ) );
-        try
-        {
-            if( 0 != exe.execute() )
-            {
-                throw new TaskException( "Metamata task failed." );
-            }
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Failed to launch Metamata task: " + e );
-        }
+        exe.setReturnCode( 0 );
+        exe.execute();
     }
 
     protected void generateOptionsFile( File tofile, ArrayList options )

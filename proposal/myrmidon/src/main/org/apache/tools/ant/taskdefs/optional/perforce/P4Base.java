@@ -7,12 +7,11 @@
  */
 package org.apache.tools.ant.taskdefs.optional.perforce;
 
-import java.io.IOException;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.oro.text.perl.Perl5Util;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.oro.text.perl.Perl5Util;
 import org.apache.tools.ant.types.Commandline;
 
 /**
@@ -171,14 +170,7 @@ public abstract class P4Base
             exe.setExecOutputHandler( handler );
             exe.setCommandline( cmd );
 
-            try
-            {
-                exe.execute();
-            }
-            catch( IOException e )
-            {
-                throw new TaskException( "Error", e );
-            }
+            exe.execute();
             if( null != m_error )
             {
                 throw m_error;

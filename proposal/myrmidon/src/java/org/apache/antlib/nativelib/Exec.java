@@ -8,7 +8,6 @@
 package org.apache.antlib.nativelib;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.Os;
@@ -119,21 +118,8 @@ public class Exec
     private void doExecute( final Execute exe )
         throws TaskException
     {
-        try
-        {
-            final int err = exe.execute();
-            if( 0 != err )
-            {
-                final String message =
-                    REZ.getString( "exec.bad-resultcode.error", new Integer( err ) );
-                throw new TaskException( message );
-            }
-        }
-        catch( final IOException ioe )
-        {
-            final String message = REZ.getString( "exec.failed.error", ioe );
-            throw new TaskException( message, ioe );
-        }
+        exe.setReturnCode( 0 );
+        exe.execute();
     }
 
     private void validate()

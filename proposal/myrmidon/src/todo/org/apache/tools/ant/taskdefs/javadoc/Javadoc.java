@@ -19,9 +19,9 @@ import org.apache.aut.nativelib.ExecManager;
 import org.apache.aut.nativelib.ExecOutputHandler;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.Execute;
 import org.apache.myrmidon.framework.Pattern;
 import org.apache.tools.ant.Task;
-import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.DirectoryScanner;
 import org.apache.tools.ant.types.FileSet;
@@ -825,22 +825,14 @@ public class Javadoc
          * Avoid problems with command line length in some environments.
          */
         exe.setWorkingDirectory( null );
+        exe.setCommandline( cmd );
+        exe.setReturnCode( 0 );
         try
         {
-            exe.setCommandline( cmd );
-            final int ret = exe.execute();
-            if( ret != 0 )
-            {
-                throw new TaskException( "Javadoc returned " + ret );
-            }
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Javadoc failed: " + e, e );
+            exe.execute();
         }
         finally
         {
-
             if( m_tmpList != null )
             {
                 m_tmpList.delete();

@@ -8,7 +8,6 @@
 package org.apache.tools.ant.taskdefs;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import org.apache.aut.nativelib.ExecManager;
@@ -233,14 +232,6 @@ public class Java
 
         exe.setWorkingDirectory( m_dir );
         exe.setCommandline( command );
-        try
-        {
-            return exe.execute();
-        }
-        catch( IOException e )
-        {
-            final String message = "Error executing class";
-            throw new TaskException( message, e );
-        }
+        return exe.execute();
     }
 }

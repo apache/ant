@@ -185,17 +185,7 @@ public class JJTree extends Task
         final Execute exe = new Execute( execManager );
         getLogger().debug( cmdl.toString() );
         exe.setCommandline( new Commandline( cmdl.getCommandline() ) );
-
-        try
-        {
-            if( exe.execute() != 0 )
-            {
-                throw new TaskException( "JJTree failed." );
-            }
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Failed to launch JJTree: " + e );
-        }
+        exe.setReturnCode( 0 );
+        exe.execute();
     }
 }

@@ -198,11 +198,6 @@ public class Pvcs
             result = exe.execute();
             checkResultCode( result, cmd );
         }
-        catch( IOException e )
-        {
-            String msg = "Failed executing: " + cmd.toString() + ". Exception: " + e.getMessage();
-            throw new TaskException( msg );
-        }
         finally
         {
             if( filelist != null )

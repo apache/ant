@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.aut.nativelib.ExecManager;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Task;
 import org.apache.myrmidon.framework.Execute;
+import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.Commandline;
 import org.apache.tools.ant.types.CommandlineJava;
 import org.apache.tools.ant.types.Path;
@@ -255,14 +255,7 @@ public class JDependTask
             getLogger().info( "Output to be stored in " + m_outputFile.getPath() );
         }
         getLogger().debug( "Executing: " + commandline.toString() );
-        try
-        {
-            return exe.execute();
-        }
-        catch( IOException e )
-        {
-            throw new TaskException( "Process fork failed.", e );
-        }
+        return exe.execute();
     }
 
 
