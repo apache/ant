@@ -24,7 +24,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.AbstractMatchingTask;
 import org.apache.myrmidon.framework.FileSet;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.ScannerUtil;
 
 /**

@@ -9,7 +9,7 @@ package org.apache.tools.todo.taskdefs.jsp.compilers;
 
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskContext;
-import org.apache.tools.todo.taskdefs.Java;
+import org.apache.antlib.java.JavaTask;
 import org.apache.tools.todo.taskdefs.jsp.JspC;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
@@ -37,7 +37,7 @@ public class JasperC
             // Create an instance of the compiler, redirecting output to
             // the project log
             //FIXME
-            Java java = null;//(Java)( getJspc().getProject() ).createTask( "java" );
+            JavaTask java = null;//(Java)( getJspc().getProject() ).createTask( "java" );
             if( getJspc().getClasspath() != null )
             {
                 java.addClasspath( getJspc().getClasspath() );

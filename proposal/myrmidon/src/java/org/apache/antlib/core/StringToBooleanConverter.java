@@ -33,11 +33,13 @@ public class StringToBooleanConverter
         throws ConverterException
     {
         final String string = (String)object;
-        if( string.equals( "true" ) )
+        if( string.equalsIgnoreCase( "true" )
+            || string.equalsIgnoreCase( "yes" ) )
         {
             return Boolean.TRUE;
         }
-        else if( string.equals( "false" ) )
+        else if( string.equalsIgnoreCase( "false" )
+                 || string.equalsIgnoreCase( "no" ) )
         {
             return Boolean.FALSE;
         }

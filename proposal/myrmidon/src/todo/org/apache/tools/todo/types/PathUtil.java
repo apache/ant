@@ -13,6 +13,7 @@ import java.net.URL;
 import java.util.Locale;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * Utilities for operating on Path objects.

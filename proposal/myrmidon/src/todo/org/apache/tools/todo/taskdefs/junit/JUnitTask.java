@@ -19,13 +19,13 @@ import java.util.Random;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.taskdefs.ExecuteJava;
+import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnumeratedAttribute;
 import org.apache.tools.todo.types.EnvironmentData;
 import org.apache.tools.todo.types.EnvironmentVariable;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.SysProperties;
 

@@ -13,8 +13,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.taskdefs.ExecuteJava;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.java.ExecuteJava;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * Ant task to run JDepend tests. <p>

@@ -5,10 +5,11 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.types;
+package org.apache.myrmidon.framework.file;
 
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.file.FileList;
 import org.apache.tools.todo.util.FileUtils;
 
 /**
@@ -17,7 +18,7 @@ import org.apache.tools.todo.util.FileUtils;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  */
-class ParsedPathElement
+public class ParsedPathElement
     implements FileList
 {
     private final String m_path;

@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.taskdefs;
+package org.apache.myrmidon.framework.java;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -18,20 +18,33 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnvironmentData;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 import org.apache.tools.todo.types.SysProperties;
 import org.apache.tools.todo.util.FileUtils;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
- * A utility class that executes a Java app, either in this JVM, or a forked
- * JVM.
+ * A utility class that takes care of executing a Java application.  This
+ * class can execute Java apps in the current JVM, or a forked JVM.
+ *
+ * <p>To execute a Java application, create an instance of this class,
+ * configure it, and call one of the following methods:
+ * <ul>
+ * <li>{@link #execute}
+ * <li>{@link #executeForked}
+ * <li>{@link #executeNonForked}
+ * </ul>
  *
  * @author thomas.haas@softwired-inc.com
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  */
 public class ExecuteJava
 {
+    private final static Resources REZ
+        = ResourceManager.getPackageResources( ExecuteJava.class );
+
     private final Path m_classPath = new Path();
     private final EnvironmentData m_sysProperties = new EnvironmentData();
     private final Commandline m_args = new Commandline();
@@ -44,36 +57,58 @@ public class ExecuteJava
     private String m_maxMemory;
     private boolean m_ignoreReturnCode;
 
+    /**
+     * Sets the main class of the application.
+     */
     public void setClassName( final String className )
     {
         m_className = className;
     }
 
+    /**
+     * Sets the executable jar file to use to execute the application.
+     * Can only be used in forked mode.
+     */
     public void setJar( final File jar )
     {
         m_jar = jar;
     }
 
+    /**
+     * Enables forked mode.
+     */
     public void setFork( final boolean fork )
     {
         m_fork = fork;
     }
 
     /**
-     * Sets the max memory to use when running the application in a forked JVM.
+     * Sets the max memory allocation pool size to use when running the
+     * application.  Only used in forked mode.
      *
-     * @param maxMemory the maximum memory, or null for the default.
+     * @param maxMemory the maximum memory pool size, or null for the default.
      */
     public void setMaxMemory( final String maxMemory )
     {
         m_maxMemory = maxMemory;
     }
 
+    /**
+     * Sets the working directory for the application.  Only used in forked mode.
+     */
     public void setWorkingDirectory( final File workingDirectory )
     {
         m_workingDirectory = workingDirectory;
     }
 
+    /**
+     * Disables checking of the application's return code.  Only used in forked
+     * mode.
+     *
+     * @param ignore If true, the return code of the application is ignored.
+     *               If false, an exception is thrown if the application does
+     *               no exit with a 0 return code.
+     */
     public void setIgnoreReturnCode( boolean ignore )
     {
         m_ignoreReturnCode = ignore;
@@ -90,21 +125,43 @@ public class ExecuteJava
         m_jvm = jvm;
     }
 
+    /**
+     * Returns the classpath that will be used to execute the application.
+     *
+     * @return the application's classpath.  This path can be modified.
+     */
     public Path getClassPath()
     {
         return m_classPath;
     }
 
+    /**
+     * Returns the system properties that will be used for the application.
+     * Only used in forked mode.
+     *
+     * @return the application's system properties.  Can be modified.
+     */
     public EnvironmentData getSysProperties()
     {
         return m_sysProperties;
     }
 
+    /**
+     * Returns the arguments that will be used for the application.
+     *
+     * @return the application's arguments.  Can be modified.
+     */
     public Commandline getArguments()
     {
         return m_args;
     }
 
+    /**
+     * Returns the JVM arguments that will be used to execute the application.
+     * Only used in forked mode.
+     *
+     * @return the JVM aguments.  Can be modified.
+     */
     public Commandline getVmArguments()
     {
         return m_vmArgs;
@@ -134,27 +191,43 @@ public class ExecuteJava
     {
         if( m_className == null )
         {
-            throw new TaskException( "Classname must not be null." );
+            final String message = REZ.getString( "executejava.no-classname.error" );
+            throw new TaskException( message );
         }
         if( m_jar != null )
         {
-            throw new TaskException( "Cannot execute a jar in non-forked mode." );
+            final String message = REZ.getString( "executejava.jar-no-fork.error" );
+            throw new TaskException( message );
         }
         if( m_vmArgs.size() > 0 )
         {
-            context.warn( "JVM args ignored when same JVM is used." );
+            final String message = REZ.getString( "executejava.ignore-jvm-args.notice" );
+            context.warn( message );
         }
         if( m_workingDirectory != null )
         {
-            context.warn( "Working directory ignored when same JVM is used." );
+            final String message = REZ.getString( "executejava.ignore-dir.notice" );
+            context.warn( message );
+        }
+        if( m_maxMemory != null )
+        {
+            final String message = REZ.getString( "executejava.ignore-maxmem.notice" );
+            context.warn( message );
         }
         if( m_sysProperties.size() > 0 )
         {
-            context.warn( "System properties ignored when same JVM is used." );
+            final String message = REZ.getString( "executejava.ignore-sys-props.notice" );
+            context.warn( message );
         }
 
         final String[] args = m_args.getArguments();
-        context.debug( "Running in same VM: " + m_className + " " + FileUtils.formatCommandLine( args ) );
+
+        // Log message
+        final String debugMessage
+            = REZ.getString( "executejava.exec-in-jvm.notice",
+                             m_className,
+                             FileUtils.formatCommandLine( args ) );
+        context.info( debugMessage );
 
         // Locate the class
         final Class target;
@@ -173,7 +246,8 @@ public class ExecuteJava
         }
         catch( final Exception e )
         {
-            throw new TaskException( "Could not find class \"" + m_className + "\".", e );
+            final String message = REZ.getString( "executejava.find-class.error", m_className );
+            throw new TaskException( message, e );
         }
 
         // Call the main method
@@ -186,11 +260,13 @@ public class ExecuteJava
         catch( final InvocationTargetException e )
         {
             final Throwable t = e.getTargetException();
-            throw new TaskException( "Could not execute class \"" + m_className + "\".", t );
+            final String message = REZ.getString( "executejava.execute-app.error", m_className );
+            throw new TaskException( message, t );
         }
         catch( final Exception e )
         {
-            throw new TaskException( "Could not execute class \"" + m_className + "\".", e );
+            final String message = REZ.getString( "executejava.execute-app.error", m_className );
+            throw new TaskException( message, e );
         }
     }
 
@@ -203,11 +279,13 @@ public class ExecuteJava
         // Validate
         if( m_className != null && m_jar != null )
         {
-            throw new TaskException( "Only one of Classname and Jar can be set." );
+            final String message = REZ.getString( "executejava.class-and-jar.error" );
+            throw new TaskException( message );
         }
-        else if( m_className == null && m_jar == null )
+        if( m_className == null && m_jar == null )
         {
-            throw new TaskException( "Classname must not be null." );
+            final String message = REZ.getString( "executejava.no-classname.error" );
+            throw new TaskException( message );
         }
 
         final Execute exe = new Execute();

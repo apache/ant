@@ -22,7 +22,7 @@ import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.Execute;
 import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.types.EnumeratedAttribute;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 import org.w3c.dom.Document;
 
 /**

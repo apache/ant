@@ -5,14 +5,15 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.taskdefs;
+package org.apache.antlib.java;
 
 import java.io.File;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
 import org.apache.tools.todo.types.EnvironmentVariable;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * This task acts as a loader for java applications but allows to use the same
@@ -24,7 +25,7 @@ import org.apache.tools.todo.types.Path;
  *
  * @ant:task name="java"
  */
-public class Java
+public class JavaTask
     extends AbstractTask
 {
     private final ExecuteJava m_exec = new ExecuteJava();

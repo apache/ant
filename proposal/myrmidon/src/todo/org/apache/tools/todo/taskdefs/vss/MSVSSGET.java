@@ -10,7 +10,7 @@ package org.apache.tools.todo.taskdefs.vss;
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * Task to perform GET commands to Microsoft Visual Source Safe. <p>

@@ -9,7 +9,7 @@ package org.apache.tools.todo.taskdefs.stylebook;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.taskdefs.Java;
+import org.apache.antlib.java.JavaTask;
 import org.apache.tools.todo.types.Argument;
 
 /**
@@ -20,7 +20,7 @@ import org.apache.tools.todo.types.Argument;
  *      B&ouml;rger</a>
  */
 public class StyleBook
-    extends Java
+    extends JavaTask
 {
     private File m_book;
     private String m_loaderConfig;

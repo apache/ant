@@ -14,7 +14,7 @@ import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.FileNameMapper;
 import org.apache.tools.todo.types.Commandline;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 
 /**

@@ -13,8 +13,9 @@ import java.io.FileReader;
 import java.net.URL;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.types.Argument;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * ANTLR task.

@@ -20,8 +20,9 @@ import org.apache.myrmidon.listeners.LogEvent;
 import org.apache.tools.todo.taskdefs.javac.DefaultCompilerAdapter;
 import org.apache.tools.todo.taskdefs.javac.Javac;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
+import org.apache.antlib.java.JavaTask;
 
 /**
  * Instruments Java classes with <a href="http://www.reliable-systems.com/tools/">
@@ -737,7 +738,7 @@ public class IContract extends MatchingTask
             iContractClasspath.addLocation( buildDir );
 
             // Create a forked java process
-            Java iContract = null;//(Java)getProject().createTask( "java" );
+            JavaTask iContract = null;//(Java)getProject().createTask( "java" );
             iContract.setFork( true );
             iContract.setClassname( "com.reliablesystems.iContract.Tool" );
             iContract.setClasspath( iContractClasspath );

@@ -9,6 +9,7 @@ package org.apache.tools.todo.types;
 
 import java.io.File;
 import org.apache.myrmidon.api.TaskException;
+import org.apache.myrmidon.framework.file.Path;
 
 public class EnvironmentVariable
 {

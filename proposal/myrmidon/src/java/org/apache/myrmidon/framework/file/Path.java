@@ -5,14 +5,19 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.types;
+package org.apache.myrmidon.framework.file;
 
 import java.io.File;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.framework.DataType;
+import org.apache.myrmidon.framework.file.ArrayFileList;
+import org.apache.myrmidon.framework.file.FileList;
 import org.apache.tools.todo.util.FileUtils;
+import org.apache.tools.todo.types.FileSet;
+import org.apache.tools.todo.types.DirectoryScanner;
+import org.apache.tools.todo.types.ScannerUtil;
 
 /**
  * This object represents a path as used by CLASSPATH or PATH environment

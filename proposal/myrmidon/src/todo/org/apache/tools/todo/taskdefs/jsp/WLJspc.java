@@ -12,10 +12,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.StringTokenizer;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.taskdefs.ExecuteJava;
+import org.apache.myrmidon.framework.java.ExecuteJava;
 import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 
 /**

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import org.apache.aut.nativelib.Os;
 import org.apache.myrmidon.api.AbstractTask;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * This task converts path and classpath information to a specific target OS

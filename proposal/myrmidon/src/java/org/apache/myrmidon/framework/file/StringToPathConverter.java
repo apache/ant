@@ -5,11 +5,11 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.types.converters;
+package org.apache.myrmidon.framework.file;
 
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * A converter from String to Path.
@@ -17,7 +17,7 @@ import org.apache.tools.todo.types.Path;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:converter source="java.lang.String" destination="org.apache.tools.todo.types.Path"
+ * @ant:converter source="java.lang.String" destination="org.apache.myrmidon.framework.file.Path"
  */
 public class StringToPathConverter
     extends AbstractConverter

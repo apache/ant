@@ -10,7 +10,7 @@ package org.apache.tools.todo.taskdefs.javadoc;
 import java.util.ArrayList;
 import java.util.Iterator;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 
 public class DocletInfo
 {

@@ -15,7 +15,7 @@ import org.apache.tools.todo.taskdefs.MatchingTask;
 import org.apache.tools.todo.taskdefs.jsp.compilers.CompilerAdapter;
 import org.apache.tools.todo.taskdefs.jsp.compilers.CompilerAdapterFactory;
 import org.apache.tools.todo.types.DirectoryScanner;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 
 /**
  * Ant task to run the jsp compiler. <p>

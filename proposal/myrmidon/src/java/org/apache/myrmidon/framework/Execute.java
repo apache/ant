@@ -21,8 +21,8 @@ import org.apache.tools.todo.types.Commandline;
 import org.apache.tools.todo.util.FileUtils;
 
 /**
- * This is a utility class designed to make executing native
- * processes easier in the context of ant.
+ * This is a utility class designed to make executing native processes easier
+ * in the context of ant.
  *
  * <p>To execute a native process, configure an instance of this class,
  * and then call its {@link #execute} method.

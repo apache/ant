@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.tools.todo.taskdefs.exec.ExecuteStreamHandler;
-import org.apache.tools.todo.types.Path;
+import org.apache.myrmidon.framework.file.Path;
 import org.apache.tools.todo.types.PathUtil;
 
 /**

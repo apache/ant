@@ -5,13 +5,13 @@
  * version 1.1, a copy of which has been included  with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.todo.types.converters;
+package org.apache.myrmidon.framework.file;
 
 import org.apache.aut.converter.AbstractConverter;
 import org.apache.aut.converter.ConverterException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.todo.types.FileList;
+import org.apache.myrmidon.framework.file.FileList;
 import org.apache.tools.todo.types.PathUtil;
 
 /**
@@ -20,7 +20,7 @@ import org.apache.tools.todo.types.PathUtil;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  *
- * @ant:converter source="org.apache.tools.todo.types.FileList" destination="java.lang.String"
+ * @ant:converter source="org.apache.myrmidon.framework.file.FileList" destination="java.lang.String"
  */
 public class FileListToStringConverter
     extends AbstractConverter
