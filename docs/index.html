@@ -147,7 +147,8 @@ current directory. When found, it uses that file as a buildfile. To make Ant use
 another buildfile, use the commandline option <i>-buildfile &lt;file&gt;</i>,
 where <i>&lt;file&gt;</i> is the buildfile you want to use.</p>
 <p>You can also set properties which override properties specified in the
-buildfile. This can be done with the <i>-D&lt;property&gt;=&lt;value&gt;</i>
+buildfile (see the <a href="#property">property task</a>). 
+This can be done with the <i>-D&lt;property&gt;=&lt;value&gt;</i>
 option, where <i>&lt;property&gt;</i> is the name of the property and <i>&lt;value&gt;</i>
 the value.</p>
 <p>To more options are <i>-quiet</i> which instructs Ant to print less
@@ -483,6 +484,7 @@ If you do not want these default excludes applied, you may disable them with the
   <li><a href="#javadoc">Javadoc/Javadoc2</a></li>
   <li><a href="#keysubst">KeySubst</a></li>
   <li><a href="#mkdir">Mkdir</a></li>
+  <li><a href="#patch">Patch</a></li>
   <li><a href="#property">Property</a></li>
   <li><a href="#rename">Rename</a></li>
   <li><a href="#replace">Replace</a></li>
@@ -525,6 +527,12 @@ These properties will override the properties that are set in the new project.
     <td valign="top">target</td>
     <td valign="top">the target of the new Ant project that should be executed.</td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">output</td>
+    <td valign="top">Filename to write the ant output to.
+    </td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -994,111 +1002,6 @@ that perform file copying operations through the Project commodity methods.</p>
 the <i>dest.dir</i> directory replacing all the occurencies of the string <i>@year@</i>
 with <i>2000.</i></p>
 <hr>
-<h2><a name="get">Get</a></h2>
-<h3>Description</h3>
-<p>Gets a file from an URL. When the verbose option is &quot;on&quot;, this task
-displays a '.' for every 100 Kb retrieved.</p>
-<p>This task should be preferred above the <a href="#cvs">CVS task</a> when
-doing automated builds. CVS is significant slower than loading a compressed
-archive with http/ftp.</p>
-<h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">src</td>
-    <td valign="top">the URL from which to retrieve a file.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">dest</td>
-    <td valign="top">the file where to store the retrieved file.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">verbose</td>
-    <td valign="top">show verbose information (&quot;on&quot;/&quot;off&quot;).</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-</table>
-<h3>Examples</h3>
-<pre>  &lt;get src=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot; /&gt;</pre>
-<p>gets the index page of http://jakarta.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
-<hr>
-<h2><a name="gunzip">GUnzip</a></h2>
-<h3>Description</h3>
-<p>Expands a GZip file.</p>
-
-<p>If <i>dest</i> is a directory the name of the destination file is
-the same as <i>src</i> (with the &quot;.gz&quot; extension removed if
-present). If <i>dest</i> is ommited, the parent dir of <i>src</i> is
-taken. The file is only expanded if the source file is newer than the
-destination file, or when the destination file does not exist.</p>
-
-<h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">src</td>
-    <td valign="top">the file to expand.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">dest</td>
-    <td valign="top">the destination file or directory.</td>
-    <td align="center" valign="top">No</td>
-  </tr>
-</table>
-<h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot;/&gt;</code></p>
-</blockquote>
-<p>expands <i>test.tar.gz</i> to <i>test.tar</i></p>
-<blockquote>
-  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;test2.tar&quot;/&gt;</code></p>
-</blockquote>
-<p>expands <i>test.tar.gz</i> to <i>test2.tar</i></p>
-<blockquote>
-  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;subdir&quot;/&gt;</code></p>
-</blockquote>
-<p>expands <i>test.tar.gz</i> to <i>subdir/test.tar</i> (assuming
-subdir is a directory).</p>
-
-<hr>
-<h2><a name="gzip">GZip</a></h2>
-<h3>Description</h3>
-<p>GZips a file.</p>
-<h3>Parameters</h3>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td valign="top"><b>Attribute</b></td>
-    <td valign="top"><b>Description</b></td>
-    <td align="center" valign="top"><b>Required</b></td>
-  </tr>
-  <tr>
-    <td valign="top">src</td>
-    <td valign="top">the file to gzip.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-  <tr>
-    <td valign="top">zipfile</td>
-    <td valign="top">the destination file.</td>
-    <td align="center" valign="top">Yes</td>
-  </tr>
-</table>
-<h3>Examples</h3>
-<blockquote>
-  <p><code>&lt;gzip src=&quot;test.tar&quot; zipfile=&quot;test.tar.gz&quot;
-  /&gt;</code></p>
-</blockquote>
-<hr>
 <h2><a name="fixcrlf">FixCRLF</a></h2>
 <h3>Description</h3>
 <p>Adjusts a text file to local.</p>
@@ -1131,6 +1034,12 @@ subdir is a directory).</p>
     <td valign="top">excludes</td>
     <td valign="top">comma separated list of patterns of files that must be
       excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -1214,6 +1123,116 @@ Many versions of make require tabs prior to commands.</p>
 converts all tabs to spaces.  EOF characters are left alone if run on
 DOS systems, and are removed if run on Unix systems.
 You never know what editor a user will use to browse README's.</p>
+<hr>
+<h2><a name="get">Get</a></h2>
+<h3>Description</h3>
+<p>Gets a file from an URL. When the verbose option is &quot;on&quot;, this task
+displays a '.' for every 100 Kb retrieved.</p>
+<p>This task should be preferred above the <a href="#cvs">CVS task</a> when
+doing automated builds. CVS is significant slower than loading a compressed
+archive with http/ftp.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the URL from which to retrieve a file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the file where to store the retrieved file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">verbose</td>
+    <td valign="top">show verbose information (&quot;on&quot;/&quot;off&quot;).</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">ignoreerrors</td>
+    <td valign="top">Log errors but don't treat as fatal.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;get src=&quot;http://jakarta.apache.org/&quot; dest=&quot;help/index.html&quot; /&gt;</pre>
+<p>gets the index page of http://jakarta.apache.org/, and stores it in the file <code>help/index.html</code>.</p>
+<hr>
+<h2><a name="gunzip">GUnzip</a></h2>
+<h3>Description</h3>
+<p>Expands a GZip file.</p>
+
+<p>If <i>dest</i> is a directory the name of the destination file is
+the same as <i>src</i> (with the &quot;.gz&quot; extension removed if
+present). If <i>dest</i> is ommited, the parent dir of <i>src</i> is
+taken. The file is only expanded if the source file is newer than the
+destination file, or when the destination file does not exist.</p>
+
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the file to expand.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">dest</td>
+    <td valign="top">the destination file or directory.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot;/&gt;</code></p>
+</blockquote>
+<p>expands <i>test.tar.gz</i> to <i>test.tar</i></p>
+<blockquote>
+  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;test2.tar&quot;/&gt;</code></p>
+</blockquote>
+<p>expands <i>test.tar.gz</i> to <i>test2.tar</i></p>
+<blockquote>
+  <p><code>&lt;gunzip src=&quot;test.tar.gz&quot; dest=&quot;subdir&quot;/&gt;</code></p>
+</blockquote>
+<p>expands <i>test.tar.gz</i> to <i>subdir/test.tar</i> (assuming
+subdir is a directory).</p>
+
+<hr>
+<h2><a name="gzip">GZip</a></h2>
+<h3>Description</h3>
+<p>GZips a file.</p>
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">src</td>
+    <td valign="top">the file to gzip.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">zipfile</td>
+    <td valign="top">the destination file.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<blockquote>
+  <p><code>&lt;gzip src=&quot;test.tar&quot; zipfile=&quot;test.tar.gz&quot;
+  /&gt;</code></p>
+</blockquote>
 <hr>
 <h2><a name="jar">Jar</a></h2>
 <h3>Description</h3>
@@ -1355,9 +1374,22 @@ the one that is currently running Ant.</p>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">the classpath to use.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
     <td valign="top">fork</td>
     <td valign="top">if enabled triggers the class execution in another VM
       (disabled by default)</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">jvm</td>
+    <td valign="top">the command used to invoke the Java Virtual Machine,
+      default is 'java'.  The command is resolved by java.lang.Runtime.exec().
+      Ignored if fork is disabled.
+    </td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
@@ -1479,6 +1511,11 @@ relative to the <i>srcdir</i> directory.</p>
     <td valign="top">filtering</td>
     <td valign="top">indicates whether token filtering should take place</td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">target</td>
+    <td valign="top">Generate class files for specific VM version, e.g. "1.1" or "1.2".</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -1742,13 +1779,13 @@ instead.</p>
   </tr>
   <tr>
     <td valign="top">serialwarn</td>
-    <td valign="top">Generate warning about @serial tag</td>
+    <td valign="top">FUTURE: Generate warning about @serial tag</td>
     <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
   </tr>
   <tr>
     <td valign="top">helpfile</td>
-    <td valign="top">Specifies the HTML help file to use</td>
+    <td valign="top">FUTURE: Specifies the HTML help file to use</td>
     <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
   </tr>
@@ -1760,7 +1797,7 @@ instead.</p>
   </tr>
   <tr>
     <td valign="top">charset</td>
-    <td valign="top">Charset for cross-platform viewing of generated
+    <td valign="top">FUTURE: Charset for cross-platform viewing of generated
       documentation</td>
     <td align="center" valign="top">1.2</td>
     <td align="center" valign="top">No</td>
@@ -1769,6 +1806,16 @@ instead.</p>
     <td valign="top">docencoding</td>
     <td valign="top">Output file encoding name</td>
     <td align="center" valign="top">1.1</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">doclet</td>
+    <td valign="top">Specifies the class file that starts the doclet used in generating the documentation.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">docletpath</td>
+    <td valign="top">Specifies the path to the doclet class file that is specified with the -doclet option.</td>
     <td align="center" valign="top">No</td>
   </tr>
 </table>
@@ -1849,6 +1896,84 @@ necessary.</p>
 <pre>&lt;mkdir dir=&quot;${dist}/lib&quot; /&gt;</pre>
 <p>creates a directory <code>${dist}/lib</code>.</p>
 <hr>
+<h2><a name="patch">Patch</a></h2>
+<h3>Description</h3>
+<p>Applies a diff file to originals.
+<h3>Parameters</h3>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">dir</td>
+    <td valign="top">the directory in which the command should be executed.</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">os</td>
+    <td valign="top">list of Operating Systems on which the command may be
+      executed.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">output</td> 
+    <td valign="top">the file to which the output of the patch command 
+      should be redirected.</td> 
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">patchfile</td> 
+    <td valign="top">the file that includes the diff output</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">originalfile</td> 
+    <td valign="top">the file to patch</td>
+    <td align="center" valign="top">No, tries to guess it from the diff 
+      file</td>
+  </tr>
+  <tr>
+    <td valign="top">backups</td> 
+    <td valign="top">Keep backups of the unpatched files</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">quiet</td> 
+    <td valign="top">Work silently unless an error occurs</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">reverse</td> 
+    <td valign="top">Assume patch was created with old and new files 
+      swapped.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">ignorewhitespace</td> 
+    <td valign="top">Ignore whitespace differences.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">strip</td> 
+    <td valign="top">Strip the smallest prefix containing <i>num</i> leading 
+      slashes from filenames.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+<h3>Examples</h3>
+<pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot; /&gt;</pre>
+<p>applies the diff included in <i>module.1.0-1.1.patch</i> to the
+files in base directory guessing the filename(s) from the diff output.
+<pre>  &lt;patch patchfile=&quot;module.1.0-1.1.patch&quot; strip="1" /&gt;</pre>
+<p>like above but one leading directory part will be removed. i.e. if
+the diff output looked like
+<pre>
+--- a/mod1.0/A	Mon Jun  5 17:28:41 2000
++++ a/mod1.1/A	Mon Jun  5 17:28:49 2000
+</pre> 
+the leading <i>a/</i> will be stripped.
 <h2><a name="property">Property</a></h2>
 <h3>Description</h3>
 <p>Sets a property (by name and value), or set of properties (from file or
@@ -1907,6 +2032,14 @@ This also holds for properties loaded from a property file.</p>
 <p>reads a set of properties from a file called &quot;foo.properties&quot;.</p>
 <pre>  &lt;property resource=&quot;foo.properties&quot; /&gt;</pre>
 <p>reads a set of properties from a resource called &quot;foo.properties&quot;.</p>
+<p>Note that you can reference a global properties file for all of your Ant
+builds using the following:
+<pre>  &lt;property file=&quot;${user.home}/.ant-global.properties&quot; /&gt;</pre>
+<p>since the &quot;user.home&quot; property is defined by the Java virtual machine
+to be your home directory.  This technique is more appropriate for Unix than 
+Windows since the notion of a home directory doesn't exist on Windows.  On the
+JVM that I tested, the home directory on Windows is &quot;C:\&quot;.  Different JVM
+implementations may use other values for the home directory on Windows.
 <hr>
 <h2><a name="rename">Rename</a></h2>
 <h3>Description</h3>
@@ -1996,6 +2129,23 @@ This also holds for properties loaded from a property file.</p>
     <td valign="top">filtering</td>
     <td valign="top">indicates whether token filtering should take place</td>
     <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">sourcebase</td>
+    <td valign="top">Pass the "-keepgenerated" flag to rmic and
+ move the generated source file to the base directory.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">stubversion</td>
+    <td valign="top">Specify the JDK version for the generated stub code.
+ Specify "1.1" to pass the "-v1.1" option to rmic.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">classpath</td>
+    <td valign="top">The classpath to use during compilation</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
