@@ -12,7 +12,7 @@ Fixed bugs:
 Other changes:
 --------------
 
-* Shipped XML parser is now Xerces 2.1.0
+* Shipped XML parser is now Xerces 2.2.0
 
 * Filesets now support a 'file' attribute, allowing a single-file
   fileset to be constructed without having to specify its parent
