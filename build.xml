@@ -211,7 +211,8 @@
      <copy todir="${ant.dist.dir}/bin">
        <fileset dir="src/bin"/>
      </copy>
-     <copy todir="${ant.dist.dir}/docs">
+     <filter token="VERSION" value="${version}"/>
+     <copy todir="${ant.dist.dir}/docs" filtering="on">
        <fileset dir="${docs.dir}"/>
      </copy>
      <copy todir="${ant.dist.dir}/docs/api">
