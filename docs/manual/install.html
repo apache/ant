@@ -84,9 +84,15 @@ will need to do:
 <li>Add the <code>bin</code> directory to your path.</li>
 <li>Set the <code>ANT_HOME</code> environment variable to
 the directory where you installed Ant.</li>
-<li>Optionally, set the <code>JAVA_HOME</code> environment variable.
-(See the <a href="#advanced">Advanced</a> section below.)
+<li>Optionally, set the <code>JAVA_HOME</code> environment variable
+(see the <a href="#advanced">Advanced</a> section below).
 This should be set to the directory where your JDK is installed.</li>
+<li>If you are using Ant's optional tasks then you may need to add additional
+jars to your <code>lib</code> directory or to your CLASSPATH.
+See <a href="#librarydependencies">Library Dependencies</a>
+for for a list of jar requirements for various optional tasks.
+</li>
+
 </ul>
 <p><strong>Note:</strong> Do not install Ant's ant.jar file into the lib/ext
 directory of the JDK/JRE. Ant is an application, whilst the extension 
@@ -145,11 +151,17 @@ to the directory where the JDK is installed.
 See <a href="#installing">Installing Ant</a>
 for examples on how to do this for your operating system. </p>
 
-<p>Make sure you have downloaded any auxilliary jars required to
+<p>Make sure you have downloaded any auxiliary jars required to
 build tasks you are interested in. These should either be available
-on the classpath or added to <code>lib/optional</code>
-directory. The list of auxilliary tasks and requirements is in
-<code>lib/README</code>.</p>
+on the CLASSPATH or added to the <code>lib/optional</code>
+directory.
+See <a href="#librarydependencies">Library Dependencies</a>
+for for a list of jar requirements for various features.
+Note that this will make the auxiliary jars
+available for the building of Ant only. For running Ant you will
+still need to
+make the jars available as described under 
+<a href="#installing">Installing Ant</a>.</p>
 
 <p>Your are now ready to build Ant:</p>
 <blockquote>
@@ -293,6 +305,80 @@ command. This example assumes you have set your classpath to include:
 <li>jars/classes for your XML parser
 <li>the JDK's required jar/zip files
 </ul>
+<hr>
+<h2><a name="librarydependencies">Library Dependencies</a></h2>
+<p>The following libraries are needed in your CLASSPATH or in the
+install directory's <code>lib</code> directory if you are using the
+indicated feature. Note that only one of the regexp libraries is
+needed for use with the mappers.</p>
+<p/>
+
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td><b>Jar Name</b></td>
+    <td><b>Needed For</b></td>
+    <td><b>Available At</b></td>
+  </tr>
+  <tr>
+    <td>jakarta-regexp-1.2.jar</td>
+    <td>regexp type with mappers</td>
+    <td><a href="http://jakarta.apache.org/regexp/" target="_top">jakarta.apache.org/regexp/</a></td>
+  </tr>
+  <tr>
+    <td>jakarta-oro-2.0.1.jar</td>
+    <td>regexp type with mappers and the perforce tasks</td>
+    <td><a href="http://jakarta.apache.org/oro/" target="_top">jakarta.apache.org/oro/</a></td>
+  </tr>
+  <tr>
+    <td>junit.jar</td>
+    <td>junit tasks</td>
+    <td><a href="http://www.junit.org/" target="_top">www.junit.org</a></td>
+  </tr>
+  <tr>
+    <td>stylebook.jar</td>
+    <td>stylebook task</td>
+    <td>CVS repository of <a href="http://xml.apache.org" target="_top">xml.apache.org</a></td>
+  </tr>
+  <tr>
+    <td>testlet.jar</td>
+    <td>test task</td>
+    <td><a href="http://java.apache.org/framework" target="_top">java.apache.org/framework</a></td>
+  </tr>
+  <tr>
+    <td>antlr.jar</td>
+    <td>antlr task</td>
+    <td><a href="http://www.antlr.org/" target="_top">www.antlr.org</a></td>
+  </tr>
+  <tr>
+    <td >bsf.jar</td>
+    <td>script task</td>
+    <td><a href="http://oss.software.ibm.com/developerworks/projects/bsf" target="_top">
+        oss.software.ibm.com/developerworks/projects/bsf</a></td>
+  </tr>
+  <tr>
+    <td>netrexx.jar</td>
+    <td>netrexx task</td>
+    <td><a href="http://www2.hursley.ibm.com/netrexx" target="_top">
+        www2.hursley.ibm.com/netrexx</a></td>
+  </tr>
+  <tr>
+    <td>rhino.jar</td>
+    <td>javascript with script task</td>
+    <td><a href="http://www.mozilla.org/" target="_top">www.mozilla.org</a></td>
+  </tr>
+  <tr>
+    <td>jpython.jar</td>
+    <td>python with script task</td>
+    <td><a href="http://www.jpython.org/" target="_top">www.jpython.org</a></td>
+  </tr>
+  <tr>
+    <td>netcomponents.jar</td>
+    <td>ftp and telnet tasks</td>
+    <td><a href="http://www.savarese.org/oro/downloads/index.html#NetComponents"
+           target="_top">www.savarese.org/oro/downloads</a></td>
+  </tr>
+</table>
+<br>
 <hr>
 <p align="center">Copyright &copy; 2000,2001 Apache Software Foundation. All rights
 Reserved.</p>
