@@ -107,18 +107,14 @@ public abstract class MatchingTask extends Task {
      * add a name entry on the include list
      */
     public NameEntry createInclude() {
-        NameEntry result = new NameEntry();
-        includeList.addElement(result);
-        return result;
+        return addPatternToList(includeList);
     }
     
     /**
      * add a name entry on the exclude list
      */
     public NameEntry createExclude() {
-        NameEntry result = new NameEntry();
-        excludeList.addElement(result);
-        return result;
+        return addPatternToList(excludeList);
     }
 
     /**
@@ -239,4 +235,76 @@ public abstract class MatchingTask extends Task {
         ds.scan();
         return ds;
     }
+
+    /**
+     * add a name entry to the given list
+     */
+    private NameEntry addPatternToList(Vector list) {
+        NameEntry result = new NameEntry();
+        list.addElement(result);
+        return result;
+    }
+
+    /**
+     *  Reads path matching patterns from a file and adds them to the
+     *  includes or excludes list (as appropriate).  
+     */
+    private void readPatterns(File patternfile, Vector patternlist) {
+
+        try {
+            // Get a FileReader
+            BufferedReader patternReader = 
+                new BufferedReader(new FileReader(patternfile)); 
+        
+            // Create one NameEntry in the appropriate pattern list for each 
+            // line in the file.
+            String line = patternReader.readLine();
+            while (line != null) {
+                if (line.length() > 0) {
+                    addPatternToList(patternlist).setName(line);
+                }
+                line = patternReader.readLine();
+            }
+        } catch(IOException ioe)  {
+            project.log("An error occured while reading from pattern file: " 
+                        + patternfile, Project.MSG_ERR); 
+        }
+    }
+
+    /**
+     * Sets the name of the file containing the includes patterns.
+     *
+     * @param includesfile A string containing the filename to fetch
+     * the include patterns from.  
+     */
+     public void setIncludesfile(String includesfile) {
+         if (includesfile != null && includesfile.length() > 0) {
+             File incl = project.resolveFile(includesfile);
+             if (!incl.exists()) {
+                 project.log("Includesfile "+includesfile+" not found.", 
+                             Project.MSG_ERR); 
+             } else {
+                 readPatterns(incl, includeList);
+             }
+         }
+     }
+
+    /**
+     * Sets the name of the file containing the includes patterns.
+     *
+     * @param excludesfile A string containing the filename to fetch
+     * the include patterns from.  
+     */
+     public void setExcludesfile(String excludesfile) {
+         if (excludesfile != null && excludesfile.length() > 0) {
+             File excl = project.resolveFile(excludesfile);
+             if (!excl.exists()) {
+                 project.log("Excludesfile "+excludesfile+" not found.", 
+                             Project.MSG_ERR); 
+             } else {
+                 readPatterns(excl, excludeList);
+             }
+         }
+     }
+
 }

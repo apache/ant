@@ -375,6 +375,10 @@ time:</p>
 </ul>
 <p>When both inclusion and exclusion are used, only files/directories that match
 the include patterns, and don't match the exclude patterns are used.</p>
+<p>Patterns can be specified inside the buildfile via task attributes or
+nested elements and via external files. Each line of the external file
+is taken as pattern that is added to the list of include or exclude 
+patterns.</p>
 <h3>Patterns</h3>
 <p>As described earlier, patterns are used for the inclusion and exclusion.
 These patterns look very much like the patterns used in DOS and UNIX:</p>
@@ -617,9 +621,9 @@ UNIX system.</p>
 <h3>Description</h3>
 <p>Copies a directory tree from the source to the destination.</p>
 <p>It is possible to refine the set of files that are being copied. This can be
-done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> attribute is used to specify
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
 the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
@@ -661,9 +665,21 @@ this attribute has been replaced by the <i>excludes</i> attribute.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">excludes</td>
     <td valign="top">comma separated list of patterns of files that must be
       excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -806,9 +822,9 @@ repository pointed to by the cvsRoot attribute, and stores the files in &quot;${
 <p>Deletes either a single file or
 all files in a specified directory and its sub-directories.</p>
 <p>It is possible to refine the set of files that are being deleted. This can be
-done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> attribute you specify the files you want to
-have included in the deletion process by using patterns. The <i>exclude</i> attribute is used to specify
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included in the deletion process by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
 the files you want to have excluded from the deletion process. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
@@ -839,9 +855,21 @@ relative to the <i>dir</i> directory.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">excludes</td>
     <td valign="top">Comma separated list of patterns of files that must be
       excluded from the deletion list. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -1012,7 +1040,16 @@ with <i>2000.</i></p>
 <h2><a name="fixcrlf">FixCRLF</a></h2>
 <h3>Description</h3>
 <p>Adjusts a text file to local.</p>
-<p>The <i>basedir</i> attribute is the reference directory from where to jar.</p>
+<p>It is possible to refine the set of files that are being adjusted. This can be
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
+the files you want to have excluded. This is also done with patterns. And
+finally with the <i>defaultexcludes</i> attribute, you can specify whether you
+want to use default exclusions or not. See the section on <a
+href="#directorybasedtasks">directory based tasks</a>, on how the
+inclusion/exclusion of files works, and how to write patterns. The patterns are
+relative to the <i>src</i> directory.</p>
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
   <tr>
@@ -1038,9 +1075,21 @@ with <i>2000.</i></p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">excludes</td>
     <td valign="top">comma separated list of patterns of files that must be
       excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -1246,9 +1295,9 @@ subdir is a directory).</p>
 <p>Jars a set of files.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to jar.</p>
 <p>It is possible to refine the set of files that are being jarred. This can be
-done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> attribute is used to specify
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
 the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
@@ -1309,9 +1358,21 @@ attribute are just names, they do not contain any path information!</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">excludes</td>
     <td valign="top">comma separated list of patterns of files that must be
       excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -1427,9 +1488,9 @@ classpath.</p>
 <p>The directory structure of the source tree should follow the package
 hierarchy.</p>
 <p>It is possible to refine the set of files that are being compiled/copied.
-This can be done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> attribute is used to specify
+This can be done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
 the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
@@ -1470,9 +1531,21 @@ relative to the <i>srcdir</i> directory.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">excludes</td>
     <td valign="top">comma separated list of patterns of files that must be
       excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -2165,9 +2238,9 @@ compiled files will be stored in the directory <code>${build}/classes</code>.</p
 <p>Creates a tar archive.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to tar.</p>
 <p>It is possible to refine the set of files that are being tarred. This can be
-done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> attribute is used to specify
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
 the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
@@ -2211,9 +2284,21 @@ task to come up with a .tar.gz package.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">excludes</td>
     <td valign="top">comma separated list of patterns of files that must be
       excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -2294,9 +2379,9 @@ initialization target.</p>
 <p>This is useful for building views of XML based documentation,
 or in generating code.</p>
 <p>It is possible to refine the set of files that are being copied. This can be
-done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> attribute is used to specify
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
 the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
@@ -2339,6 +2424,36 @@ processor, or the name of an arbitrary XSLTLiaison class.
 Defaults to xslp or xalan (in that order), if one is found in your
 class path</td>
     <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludes</td>
+    <td valign="top">comma separated list of patterns of files that must be
+      excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">defaultexcludes</td>
+    <td valign="top">indicates whether default excludes should be used or not
+      (&quot;yes&quot;/&quot;no&quot;). Default excludes are used when omitted.</td>
+    <td valign="top" align="center">No</td>
   </tr>
 </table>
 <h3>Examples</h3>
@@ -2385,9 +2500,9 @@ carried from tarfile.</p>
 <p>Creates a zipfile.</p>
 <p>The <i>basedir</i> attribute is the reference directory from where to zip.</p>
 <p>It is possible to refine the set of files that are being zipped. This can be
-done with the <i>includes</i>, <i>excludes</i> and <i>defaultexcludes</i>
-attributes. With the <i>includes</i> attribute you specify the files you want to
-have included by using patterns. The <i>exclude</i> attribute is used to specify
+done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and <i>defaultexcludes</i>
+attributes. With the <i>includes</i> or <i>includesfile</i> attribute you specify the files you want to
+have included by using patterns. The <i>exclude</i> or <i>excludesfile</i> attribute is used to specify
 the files you want to have excluded. This is also done with patterns. And
 finally with the <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
@@ -2448,9 +2563,21 @@ attribute are just names, they do not contain any path information!</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">excludes</td>
     <td valign="top">comma separated list of patterns of files that must be
       excluded. No files (except default excludes) are excluded when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -2590,10 +2717,10 @@ specific directory via parameters</p>
 <p>The directory structure of the source tree should follow the package
 hierarchy.</p>
 <p>It is possible to refine the set of files that are being compiled/copied.
-This can be done with the <i>includes</i>, <i>excludes</i> and
-<i>defaultexcludes</i> attributes. With the <i>includes</i> attribute you 
+This can be done with the <i>includes</i>, <i>includesfile</i>, <i>excludes</i>, <i>excludesfile</i> and
+<i>defaultexcludes</i> attributes. With the <i>includes</i> or <i>includesfile</i> attribute you 
 specify the files you want to have included by using patterns. The 
-<i>exclude</i> attribute is used to specify the files you want to have 
+<i>exclude</i> or <i>excludesfile</i> attribute is used to specify the files you want to have 
 excluded.  This is also done with patterns.  And finally with the 
 <i>defaultexcludes</i> attribute, you can specify whether you
 want to use default exclusions or not. See the section on <a
@@ -2681,6 +2808,12 @@ patterns are relative to the <i>srcDir</i> directory.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">explicit</td>
     <td valign="top">Whether variables must be declared explicitly
       before use</td>
@@ -2696,6 +2829,12 @@ patterns are relative to the <i>srcDir</i> directory.</p>
     <td valign="top">includes</td>
     <td valign="top">comma separated list of patterns of files that must be
       included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
@@ -2855,6 +2994,12 @@ patterns are relative to the <i>srcDir</i> directory.</p>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
+    <td valign="top">excludesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an exclude pattern</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
     <td valign="top">fromExtention</td>
     <td valign="top">The string that files must end in to be renamed</td>
     <td valign="top" align="center">Yes</td>
@@ -2863,6 +3008,12 @@ patterns are relative to the <i>srcDir</i> directory.</p>
     <td valign="top">includes</td>
     <td valign="top">comma separated list of patterns of files that must be
       included. All files are included when omitted.</td>
+    <td valign="top" align="center">No</td>
+  </tr>
+  <tr>
+    <td valign="top">includesfile</td>
+    <td valign="top">the name of a file. Each line of this file is
+      taken to be an include pattern</td>
     <td valign="top" align="center">No</td>
   </tr>
   <tr>
