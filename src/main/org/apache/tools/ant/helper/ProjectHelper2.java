@@ -268,11 +268,13 @@ public class ProjectHelper2 extends ProjectHelper {
         } catch (FileNotFoundException exc) {
             throw new BuildException(exc);
         } catch (UnsupportedEncodingException exc) {
-              throw new BuildException("Encoding of project file is invalid.",
-                exc);
+              throw new BuildException("Encoding of project file "
+                                       + buildFileName + " is invalid.",
+                                       exc);
         } catch (IOException exc) {
-            throw new BuildException("Error reading project file: "
-                + exc.getMessage(), exc);
+            throw new BuildException("Error reading project file " 
+                                     + buildFileName + ": " + exc.getMessage(),
+                                     exc);
         } finally {
             if (inputStream != null) {
                 try {
