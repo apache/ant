@@ -17,6 +17,8 @@ Fixed bugs:
 * ant -diagnostics was not working properly when the task dependency
   was missing and was just printing the missing dependency.
 
+* If a task got redefined via <taskdef>, it lost its child elements.
+
 Other changes:
 --------------
 
