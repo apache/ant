@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -85,12 +85,12 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *   <tr>
  *      <td>nusers</td>
- *      <td>Specifies user(s) who can still modify the object</td>
+ *      <td>Specifies user(s) who can still modify the object/pname</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
  *      <td>obsolete</td>
- *      <td>Specifies that the object should be marked obsolete</td>
+ *      <td>Specifies that the object/pname should be marked obsolete</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
@@ -100,31 +100,41 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *   <tr>
  *      <td>pname</td>
- *      <td>Specifies the object pathname to be locked.</td>
- *      <td>Yes</td>
+ *      <td>Specifies the pathname to be locked.</td>
+ *      <td>No</td>
  *   <tr>
  *      <td>objselect</td>
- *      <td>Specifies the object(s) to be locked.</td>
- *      <td>Yes</td>
+ *      <td>This variable is obsolete. Should use <i>objsel</i> instead.</td>
+ *      <td>No</td>
  *   <tr>
- *
+ *   <tr>
+ *      <td>objsel</td>
+ *      <td>Specifies the object(s) to be unlocked.</td>
+ *      <td>No</td>
+ *   <tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
+ *   <tr>
  * </table>
  *
  * @author Sean P. Kane (Based on work by: Curtis White)
  */
 public class CCLock extends ClearCase {
-    private boolean m_Replace = false;
-    private boolean m_Obsolete = false;
-    private String m_Comment = null;
-    private String m_Nusers = null;
-    private String m_Pname = null;
-    private String m_Objselect = null;
+    private boolean mReplace = false;
+    private boolean mObsolete = false;
+    private String mComment = null;
+    private String mNusers = null;
+    private String mPname = null;
+    private String mObjselect = null;
 
     /**
      * Executes the task.
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -146,12 +156,16 @@ public class CCLock extends ClearCase {
         checkOptions(commandLine);
 
         // For debugging
-        System.out.println(commandLine.toString());
+        // System.out.println(commandLine.toString());
 
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getOpType(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -168,12 +182,19 @@ private void checkOptions(Commandline cmd) {
             // -obsolete
             cmd.createArgument().setValue(FLAG_OBSOLETE);
         } else {
-                       getNusersCommand(cmd);
+            getNusersCommand(cmd);
         }
         getCommentCommand(cmd);
+
+        if (getObjselect() == null && getPname() == null) {
+            throw new BuildException("Should select either an element "
+            + "(pname) or an object (objselect)");
+        }
         getPnameCommand(cmd);
-               // object selector
-        cmd.createArgument().setValue(getObjselect());
+        // object selector
+        if (getObjselect() != null) {
+            cmd.createArgument().setValue(getObjselect());
+        }
 }
 
     /**
@@ -182,7 +203,7 @@ private void checkOptions(Commandline cmd) {
      * @param replace the status to set the flag to
      */
     public void setReplace(boolean replace) {
-        m_Replace = replace;
+        mReplace = replace;
     }
 
     /**
@@ -191,7 +212,7 @@ private void checkOptions(Commandline cmd) {
      * @return boolean containing status of replace flag
      */
     public boolean getReplace() {
-        return m_Replace;
+        return mReplace;
     }
 
     /**
@@ -200,7 +221,7 @@ private void checkOptions(Commandline cmd) {
      * @param obsolete the status to set the flag to
      */
     public void setObsolete(boolean obsolete) {
-        m_Obsolete = obsolete;
+        mObsolete = obsolete;
     }
 
     /**
@@ -209,7 +230,7 @@ private void checkOptions(Commandline cmd) {
      * @return boolean containing status of obsolete flag
      */
     public boolean getObsolete() {
-        return m_Obsolete;
+        return mObsolete;
     }
 
     /**
@@ -219,7 +240,7 @@ private void checkOptions(Commandline cmd) {
      * @param nusers users excluded from lock
      */
     public void setNusers(String nusers) {
-        m_Nusers = nusers;
+        mNusers = nusers;
     }
 
     /**
@@ -228,7 +249,7 @@ private void checkOptions(Commandline cmd) {
      * @return String containing the list of users excluded from lock
      */
     public String getNusers() {
-        return m_Nusers;
+        return mNusers;
     }
 
     /**
@@ -238,7 +259,7 @@ private void checkOptions(Commandline cmd) {
      * @param comment comment method to use
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        mComment = comment;
     }
 
     /**
@@ -247,7 +268,7 @@ private void checkOptions(Commandline cmd) {
      * @return String containing the desired comment method
      */
     public String getComment() {
-        return m_Comment;
+        return mComment;
     }
 
     /**
@@ -256,7 +277,7 @@ private void checkOptions(Commandline cmd) {
      * @param pname pathname to be locked
      */
     public void setPname(String pname) {
-        m_Pname = pname;
+        mPname = pname;
     }
 
     /**
@@ -265,7 +286,17 @@ private void checkOptions(Commandline cmd) {
      * @return String containing the pathname to be locked
      */
     public String getPname() {
-        return m_Pname;
+        return mPname;
+    }
+
+    /**
+     * Sets the object(s) to be locked
+     *
+     * @param objsel objects to be locked
+     * @since ant 1.6.1
+     */
+    public void setObjSel(String objsel) {
+        mObjselect = objsel;
     }
 
     /**
@@ -274,7 +305,7 @@ private void checkOptions(Commandline cmd) {
      * @param objselect objects to be locked
      */
     public void setObjselect(String objselect) {
-        m_Objselect = objselect;
+        mObjselect = objselect;
     }
 
     /**
@@ -283,7 +314,7 @@ private void checkOptions(Commandline cmd) {
      * @return String containing the objects to be locked
      */
     public String getObjselect() {
-        return m_Objselect;
+        return mObjselect;
     }
 
     /**
@@ -347,22 +378,16 @@ private void checkOptions(Commandline cmd) {
     }
 
     /**
-     * Get the 'pname' command
+     * Return which object/pname is being operated on
      *
-     * @param cmd containing the command line string with or
-     *            without the pname flag and value appended
+     * @return String containing the object/pname being worked on
      */
-    private void getObjselectCommand(Commandline cmd) {
-        if (getObjselect() == null) {
-            return;
+    private String getOpType() {
+
+        if (getPname() != null) {
+            return getPname();
         } else {
-            /* Had to make two separate commands here because if a space is
-               inserted between the flag and the value, it is treated as a
-               Windows filename with a space and it is enclosed in double
-               quotes ("). This breaks clearcase.
-            */
-            cmd.createArgument().setValue(FLAG_OBJSELECT);
-            cmd.createArgument().setValue(getPname());
+            return getObjselect();
         }
     }
 
@@ -386,9 +411,5 @@ private void checkOptions(Commandline cmd) {
      * -pname flag -- pathname to lock
      */
     public static final String FLAG_PNAME = "-pname";
-    /**
-     * object-selector option -- list of objects to lock
-     */
-    public static final String FLAG_OBJSELECT = "";
 }
 

@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002-2004 The Apache Software Foundation.  All rights
+ * Copyright (c) 2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Performs ClearCase checkin.
+ * Performs ClearCase mkelem.
  *
  * <p>
  * The following attributes are interpreted:
@@ -73,7 +73,7 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *      <td>viewpath</td>
  *      <td>Path to the ClearCase view file or directory that the command will operate on</td>
- *      <td>No</td>
+ *      <td>Yes</td>
  *   <tr>
  *   <tr>
  *      <td>comment</td>
@@ -91,18 +91,28 @@ import org.apache.tools.ant.types.Commandline;
  *      <td>No</td>
  *   <tr>
  *   <tr>
+ *      <td>nocheckout</td>
+ *      <td>Do not checkout after element creation</td>
+ *      <td>No</td>
+ *   <tr>
+ *   <tr>
+ *      <td>checkin</td>
+ *      <td>Checkin element after creation</td>
+ *      <td>No</td>
+ *   <tr>
+ *   <tr>
  *      <td>preservetime</td>
- *      <td>Preserve the modification time</td>
+ *      <td>Preserve the modification time (for checkin)</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
- *      <td>keepcopy</td>
- *      <td>Keeps a copy of the file with a .keep extension</td>
+ *      <td>master</td>
+ *      <td>Assign mastership of the main branch to the current site</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
- *      <td>identical</td>
- *      <td>Allows the file to be checked in even if it is identical to the original</td>
+ *      <td>eltype</td>
+ *      <td>Element type to use during element creation</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
@@ -112,15 +122,17 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White
+ * @author Sean Egan
  */
-public class CCCheckin extends ClearCase {
-    private String mComment = null;
-    private String mCfile = null;
-    private boolean mNwarn = false;
-    private boolean mPtime = false;
-    private boolean mKeep = false;
-    private boolean mIdentical = true;
+public class CCMkelem extends ClearCase {
+    private String  mComment = null;
+    private String  mCfile   = null;
+    private boolean mNwarn   = false;
+    private boolean mPtime   = false;
+    private boolean mNoco    = false;
+    private boolean mCheckin = false;
+    private boolean mMaster  = false;
+    private String  mEltype  = null;
 
     /**
      * Executes the task.
@@ -140,10 +152,10 @@ public class CCCheckin extends ClearCase {
         }
 
         // build the command line from what we got. the format is
-        // cleartool checkin [options...] [viewpath ...]
+        // cleartool mkelem [options...] [viewpath ...]
         // as specified in the CLEARTOOL.EXE help
         commandLine.setExecutable(getClearToolCommand());
-        commandLine.createArgument().setValue(COMMAND_CHECKIN);
+        commandLine.createArgument().setValue(COMMAND_MKELEM);
 
         checkOptions(commandLine);
 
@@ -179,26 +191,35 @@ public class CCCheckin extends ClearCase {
             // -nwarn
             cmd.createArgument().setValue(FLAG_NOWARN);
         }
-
-        if (getPreserveTime()) {
-            // -ptime
-            cmd.createArgument().setValue(FLAG_PRESERVETIME);
+        /*
+         * Should choose either -ci or -nco.
+         */
+        if (getNoCheckout() && getCheckin()) {
+            throw new BuildException("Should choose either [nocheckout | checkin]");
         }
-
-        if (getKeepCopy()) {
-            // -keep
-            cmd.createArgument().setValue(FLAG_KEEPCOPY);
+        if (getNoCheckout()) {
+            // -nco
+            cmd.createArgument().setValue(FLAG_NOCHECKOUT);
         }
-
-        if (getIdentical()) {
-            // -identical
-            cmd.createArgument().setValue(FLAG_IDENTICAL);
+        if (getCheckin()) {
+            // -ci
+            cmd.createArgument().setValue(FLAG_CHECKIN);
+            if (getPreserveTime()) {
+                // -ptime
+                cmd.createArgument().setValue(FLAG_PRESERVETIME);
+            }
         }
-
+        if (getMaster()) {
+            // -master
+            cmd.createArgument().setValue(FLAG_MASTER);
+        }
+        if (getEltype() != null) {
+            // -eltype
+            getEltypeCommand(cmd);
+        }
         // viewpath
         cmd.createArgument().setValue(getViewPath());
     }
-
 
     /**
      * Sets the comment string.
@@ -273,40 +294,76 @@ public class CCCheckin extends ClearCase {
     }
 
     /**
-     * If true, keeps a copy of the file with a .keep extension.
+     * If true, do not checkout element after creation.
      *
-     * @param keep the status to set the flag to
+     * @param co the status to set the flag to
      */
-    public void setKeepCopy(boolean keep) {
-        mKeep = keep;
+    public void setNoCheckout(boolean co) {
+        mNoco = co;
     }
 
     /**
-     * Get keepcopy flag status
+     * Get no checkout flag status
      *
-     * @return boolean containing status of keepcopy flag
+     * @return boolean containing status of noco flag
      */
-    public boolean getKeepCopy() {
-        return mKeep;
+    public boolean getNoCheckout() {
+        return mNoco;
     }
 
     /**
-     * If true, allows the file to be checked in even
-     * if it is identical to the original.
+     * If true, checkin the element after creation
      *
-     * @param identical the status to set the flag to
+     * @param ci the status to set the flag to
      */
-    public void setIdentical(boolean identical) {
-        mIdentical = identical;
+    public void setCheckin(boolean ci) {
+        mCheckin = ci;
     }
 
     /**
-     * Get identical flag status
+     * Get ci flag status
      *
-     * @return boolean containing status of identical flag
+     * @return boolean containing status of ci flag
      */
-    public boolean getIdentical() {
-        return mIdentical;
+    public boolean getCheckin() {
+        return mCheckin;
+    }
+
+    /**
+     * If true, changes mastership of the main branch
+     * to the current site
+     *
+     * @param master the status to set the flag to
+     */
+    public void setMaster(boolean master) {
+        mMaster = master;
+    }
+
+    /**
+     * Get master flag status
+     *
+     * @return boolean containing status of master flag
+     */
+    public boolean getMaster() {
+        return mMaster;
+    }
+
+    /**
+     * Specifies the element type to use.
+     *
+     * @param eltype to create element
+     */
+    public void setEltype(String eltype) {
+        mEltype = eltype;
+    }
+
+    /**
+     * Get element type
+     *
+     * @return String containing the element type
+     */
+    public String getEltype() {
+        return mEltype;
     }
 
 
@@ -346,35 +403,59 @@ public class CCCheckin extends ClearCase {
         }
     }
 
+    /**
+     * Get the 'element type' command
+     *
+     * @param cmd containing the command line string with or
+     *            without the comment flag and string appended
+     */
+    private void getEltypeCommand(Commandline cmd) {
+        if (getEltype() != null) {
+            /* Had to make two separate commands here because if a space is
+               inserted between the flag and the value, it is treated as a
+               Windows filename with a space and it is enclosed in double
+               quotes ("). This breaks clearcase.
+            */
+            cmd.createArgument().setValue(FLAG_ELTYPE);
+            cmd.createArgument().setValue(getEltype());
+        }
+    }
 
-        /**
+    /**
      * -c flag -- comment to attach to the file
      */
     public static final String FLAG_COMMENT = "-c";
-        /**
+    /**
      * -cfile flag -- file containing a comment to attach to the file
      */
     public static final String FLAG_COMMENTFILE = "-cfile";
-        /**
+    /**
      * -nc flag -- no comment is specified
      */
     public static final String FLAG_NOCOMMENT = "-nc";
-        /**
+    /**
      * -nwarn flag -- suppresses warning messages
      */
     public static final String FLAG_NOWARN = "-nwarn";
-        /**
-     * -ptime flag -- preserves the modification time
+    /**
+     * -ptime flag -- preserves the modification time on checkin
      */
     public static final String FLAG_PRESERVETIME = "-ptime";
-        /**
-     * -keep flag -- keeps a copy of the file with a .keep extension
+    /**
+     * -nco flag -- do not checkout element after creation
      */
-    public static final String FLAG_KEEPCOPY = "-keep";
-        /**
-     * -identical flag -- allows the file to be checked in even if it is identical to the original
+    public static final String FLAG_NOCHECKOUT = "-nco";
+    /**
+     * -ci flag -- checkin element after creation
      */
-    public static final String FLAG_IDENTICAL = "-identical";
-
+    public static final String FLAG_CHECKIN = "-ci";
+    /**
+     * -master flag -- change mastership of main branch to current site
+     */
+    public static final String FLAG_MASTER = "-master";
+    /**
+     * -eltype flag -- element type to use during creation
+     */
+    public static final String FLAG_ELTYPE = "-eltype";
 }
 

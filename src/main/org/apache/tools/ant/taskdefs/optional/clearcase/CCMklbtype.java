@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2003 The Apache Software Foundation.  All rights
+ * Copyright (c) 2003-2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -121,26 +121,32 @@ import org.apache.tools.ant.types.Commandline;
  *          cfile may be used.</td>
  *      <td>No</td>
  *   <tr>
+ *   <tr>
+ *      <td>failonerr</td>
+ *      <td>Throw an exception if the command fails. Default is true</td>
+ *      <td>No</td>
+ *   <tr>
  * </table>
  *
  * @author Curtis White
  */
 public class CCMklbtype extends ClearCase {
-    private String m_TypeName = null;
-    private String m_VOB = null;
-    private String m_Comment = null;
-    private String m_Cfile = null;
-    private boolean m_Replace = false;
-    private boolean m_Global = false;
-    private boolean m_Ordinary = true;
-    private boolean m_Pbranch = false;
-    private boolean m_Shared = false;
+    private String mTypeName = null;
+    private String mVOB = null;
+    private String mComment = null;
+    private String mCfile = null;
+    private boolean mReplace = false;
+    private boolean mGlobal = false;
+    private boolean mOrdinary = true;
+    private boolean mPbranch = false;
+    private boolean mShared = false;
 
     /**
      * Executes the task.
      * <p>
      * Builds a command line to execute cleartool and then calls Exec's run method
      * to execute the command line.
+     * @throws BuildException if the command fails and failonerr is set to true
      */
     public void execute() throws BuildException {
         Commandline commandLine = new Commandline();
@@ -160,10 +166,14 @@ public class CCMklbtype extends ClearCase {
 
         checkOptions(commandLine);
 
+        if (!getFailOnErr()) {
+            getProject().log("Ignoring any errors that occur for: "
+                    + getTypeSpecifier(), Project.MSG_VERBOSE);
+        }
         result = run(commandLine);
-        if (Execute.isFailure(result)) {
+        if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
-            throw new BuildException(msg, location);
+            throw new BuildException(msg, getLocation());
         }
     }
 
@@ -220,7 +230,7 @@ public class CCMklbtype extends ClearCase {
      * @param tn the type-name string
      */
     public void setTypeName(String tn) {
-        m_TypeName = tn;
+        mTypeName = tn;
     }
 
     /**
@@ -229,7 +239,7 @@ public class CCMklbtype extends ClearCase {
      * @return String containing the type-name
      */
     public String getTypeName() {
-        return m_TypeName;
+        return mTypeName;
     }
 
     /**
@@ -238,7 +248,7 @@ public class CCMklbtype extends ClearCase {
      * @param vob the VOB name
      */
     public void setVOB(String vob) {
-        m_VOB = vob;
+        mVOB = vob;
     }
 
     /**
@@ -247,7 +257,7 @@ public class CCMklbtype extends ClearCase {
      * @return String containing VOB name
      */
     public String getVOB() {
-        return m_VOB;
+        return mVOB;
     }
 
     /**
@@ -256,7 +266,7 @@ public class CCMklbtype extends ClearCase {
      * @param repl the status to set the flag to
      */
     public void setReplace(boolean repl) {
-        m_Replace = repl;
+        mReplace = repl;
     }
 
     /**
@@ -265,7 +275,7 @@ public class CCMklbtype extends ClearCase {
      * @return boolean containing status of replace flag
      */
     public boolean getReplace() {
-        return m_Replace;
+        return mReplace;
     }
 
     /**
@@ -274,7 +284,7 @@ public class CCMklbtype extends ClearCase {
      * @param glob the status to set the flag to
      */
     public void setGlobal(boolean glob) {
-        m_Global = glob;
+        mGlobal = glob;
     }
 
     /**
@@ -283,7 +293,7 @@ public class CCMklbtype extends ClearCase {
      * @return boolean containing status of global flag
      */
     public boolean getGlobal() {
-        return m_Global;
+        return mGlobal;
     }
 
     /**
@@ -292,7 +302,7 @@ public class CCMklbtype extends ClearCase {
      * @param ordinary the status to set the flag to
      */
     public void setOrdinary(boolean ordinary) {
-        m_Ordinary = ordinary;
+        mOrdinary = ordinary;
     }
 
     /**
@@ -301,7 +311,7 @@ public class CCMklbtype extends ClearCase {
      * @return boolean containing status of ordinary flag
      */
     public boolean getOrdinary() {
-        return m_Ordinary;
+        return mOrdinary;
     }
 
     /**
@@ -310,7 +320,7 @@ public class CCMklbtype extends ClearCase {
      * @param pbranch the status to set the flag to
      */
     public void setPbranch(boolean pbranch) {
-        m_Pbranch = pbranch;
+        mPbranch = pbranch;
     }
 
     /**
@@ -319,7 +329,7 @@ public class CCMklbtype extends ClearCase {
      * @return boolean containing status of pbranch flag
      */
     public boolean getPbranch() {
-        return m_Pbranch;
+        return mPbranch;
     }
 
     /**
@@ -328,7 +338,7 @@ public class CCMklbtype extends ClearCase {
      * @param shared the status to set the flag to
      */
     public void setShared(boolean shared) {
-        m_Shared = shared;
+        mShared = shared;
     }
 
     /**
@@ -337,7 +347,7 @@ public class CCMklbtype extends ClearCase {
      * @return boolean containing status of shared flag
      */
     public boolean getShared() {
-        return m_Shared;
+        return mShared;
     }
 
     /**
@@ -346,7 +356,7 @@ public class CCMklbtype extends ClearCase {
      * @param comment the comment string
      */
     public void setComment(String comment) {
-        m_Comment = comment;
+        mComment = comment;
     }
 
     /**
@@ -355,7 +365,7 @@ public class CCMklbtype extends ClearCase {
      * @return String containing the comment
      */
     public String getComment() {
-        return m_Comment;
+        return mComment;
     }
 
     /**
@@ -364,7 +374,7 @@ public class CCMklbtype extends ClearCase {
      * @param cfile the path to the comment file
      */
     public void setCommentFile(String cfile) {
-        m_Cfile = cfile;
+        mCfile = cfile;
     }
 
     /**
@@ -373,17 +383,14 @@ public class CCMklbtype extends ClearCase {
      * @return String containing the path to the comment file
      */
     public String getCommentFile() {
-        return m_Cfile;
+        return mCfile;
     }
 
 
     /**
      * Get the 'comment' command
      *
-     * @return the 'comment' command if the attribute was specified,
-     * otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
      *        without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
@@ -401,10 +408,7 @@ public class CCMklbtype extends ClearCase {
     /**
      * Get the 'commentfile' command
      *
-     * @return the 'commentfile' command if the attribute was specified,
-     *         otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
+     * @param cmd containing the command line string with or
      *        without the commentfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {
@@ -424,9 +428,6 @@ public class CCMklbtype extends ClearCase {
      *
      * @return the 'type-name-specifier' command if the attribute was
      *         specified, otherwise an empty string
-     *
-     * @param CommandLine containing the command line string with or
-     *        without the type-name
      */
     private String getTypeSpecifier() {
         String typenm = null;

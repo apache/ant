@@ -47,6 +47,14 @@ Other changes:
 * add description attributes to macrodef attributes and elements.
   Bugzilla Report 24711.
 
+* Extending ClearCase Tasks :
+ - Added an extra option to 'failonerr' to each ClearCase task/command.
+ - Extended the functionality of cccheckout. It can check (notco) to see if
+  the desired element is already checked out to the current view. Thus it
+   won't attempt to check it out again.
+ - Added three new ClearCase commands: ccmkattr, ccmkdir, ccmkelem
+  Bugzilla Report 26253.
+
 Changes from Ant 1.5.4 to Ant 1.6.0
 ===================================
 

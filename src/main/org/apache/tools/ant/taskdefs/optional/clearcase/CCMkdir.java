@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2004 The Apache Software Foundation.  All rights
+ * Copyright (c) 2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -60,7 +60,7 @@ import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
 
 /**
- * Performs ClearCase UnCheckout command.
+ * Performs ClearCase mkdir.
  *
  * <p>
  * The following attributes are interpreted:
@@ -72,12 +72,22 @@ import org.apache.tools.ant.types.Commandline;
  *   </tr>
  *   <tr>
  *      <td>viewpath</td>
- *      <td>Path to the ClearCase view file or directory that the command will operate on</td>
+ *      <td>Path to the ClearCase view directory that the command will operate on</td>
+ *      <td>Yes</td>
+ *   <tr>
+ *   <tr>
+ *      <td>comment</td>
+ *      <td>Specify a comment. Only one of comment or cfile may be used.</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
- *      <td>keepcopy</td>
- *      <td>Specifies whether to keep a copy of the file with a .keep extension or not</td>
+ *      <td>commentfile</td>
+ *      <td>Specify a file containing a comment. Only one of comment or cfile may be used.</td>
+ *      <td>No</td>
+ *   <tr>
+ *   <tr>
+ *      <td>nocheckout</td>
+ *      <td>Do not checkout after element creation</td>
  *      <td>No</td>
  *   <tr>
  *   <tr>
@@ -87,10 +97,12 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  * </table>
  *
- * @author Curtis White
+ * @author Sean Egan
  */
-public class CCUnCheckout extends ClearCase {
-    private boolean mKeep = false;
+public class CCMkdir extends ClearCase {
+    private String  mComment = null;
+    private String  mCfile   = null;
+    private boolean mNoco    = false;
 
     /**
      * Executes the task.
@@ -109,11 +121,11 @@ public class CCUnCheckout extends ClearCase {
             setViewPath(aProj.getBaseDir().getPath());
         }
 
-        // build the command line from what we got the format is
-        // cleartool uncheckout [options...] [viewpath ...]
+        // build the command line from what we got. the format is
+        // cleartool mkelem [options...] [viewpath ...]
         // as specified in the CLEARTOOL.EXE help
         commandLine.setExecutable(getClearToolCommand());
-        commandLine.createArgument().setValue(COMMAND_UNCHECKOUT);
+        commandLine.createArgument().setValue(COMMAND_MKDIR);
 
         checkOptions(commandLine);
 
@@ -128,51 +140,135 @@ public class CCUnCheckout extends ClearCase {
         }
     }
 
-
     /**
      * Check the command line options.
      */
     private void checkOptions(Commandline cmd) {
-        // ClearCase items
-        if (getKeepCopy()) {
-            // -keep
-            cmd.createArgument().setValue(FLAG_KEEPCOPY);
+        if (getComment() != null) {
+            // -c
+            getCommentCommand(cmd);
         } else {
-            // -rm
-            cmd.createArgument().setValue(FLAG_RM);
+            if (getCommentFile() != null) {
+                // -cfile
+                getCommentFileCommand(cmd);
+            } else {
+                cmd.createArgument().setValue(FLAG_NOCOMMENT);
+            }
         }
-
+        if (getNoCheckout()) {
+            // -nco
+            cmd.createArgument().setValue(FLAG_NOCHECKOUT);
+        }
         // viewpath
         cmd.createArgument().setValue(getViewPath());
     }
 
     /**
-     * If true, keep a copy of the file with a .keep extension.
+     * Sets the comment string.
      *
-     * @param keep the status to set the flag to
+     * @param comment the comment string
      */
-    public void setKeepCopy(boolean keep) {
-        mKeep = keep;
+    public void setComment(String comment) {
+        mComment = comment;
     }
 
     /**
-     * Get keepcopy flag status
+     * Get comment string
      *
-     * @return boolean containing status of keep flag
+     * @return String containing the comment
      */
-    public boolean getKeepCopy() {
-        return mKeep;
+    public String getComment() {
+        return mComment;
+    }
+
+    /**
+     * Specifies a file containing a comment.
+     *
+     * @param cfile the path to the comment file
+     */
+    public void setCommentFile(String cfile) {
+        mCfile = cfile;
+    }
+
+    /**
+     * Get comment file
+     *
+     * @return String containing the path to the comment file
+     */
+    public String getCommentFile() {
+        return mCfile;
+    }
+
+    /**
+     * If true, do not checkout element after creation.
+     *
+     * @param co the status to set the flag to
+     */
+    public void setNoCheckout(boolean co) {
+        mNoco = co;
+    }
+
+    /**
+     * Get no checkout flag status
+     *
+     * @return boolean containing status of noco flag
+     */
+    public boolean getNoCheckout() {
+        return mNoco;
     }
 
 
     /**
-     *  -keep flag -- keep a copy of the file with .keep extension
+     * Get the 'comment' command
+     *
+     * @param cmd containing the command line string with or
+     *            without the comment flag and string appended
      */
-    public static final String FLAG_KEEPCOPY = "-keep";
-    /**
-     *  -rm flag -- remove the copy of the file
-     */
-    public static final String FLAG_RM = "-rm";
+    private void getCommentCommand(Commandline cmd) {
+        if (getComment() != null) {
+            /* Had to make two separate commands here because if a space is
+               inserted between the flag and the value, it is treated as a
+               Windows filename with a space and it is enclosed in double
+               quotes ("). This breaks clearcase.
+            */
+            cmd.createArgument().setValue(FLAG_COMMENT);
+            cmd.createArgument().setValue(getComment());
+        }
+    }
 
+    /**
+     * Get the 'commentfile' command
+     *
+     * @param cmd containing the command line string with or
+     *            without the commentfile flag and file appended
+     */
+    private void getCommentFileCommand(Commandline cmd) {
+        if (getCommentFile() != null) {
+            /* Had to make two separate commands here because if a space is
+               inserted between the flag and the value, it is treated as a
+               Windows filename with a space and it is enclosed in double
+               quotes ("). This breaks clearcase.
+            */
+            cmd.createArgument().setValue(FLAG_COMMENTFILE);
+            cmd.createArgument().setValue(getCommentFile());
+        }
+    }
+
+    /**
+     * -c flag -- comment to attach to the directory
+     */
+    public static final String FLAG_COMMENT = "-c";
+    /**
+     * -cfile flag -- file containing a comment to attach to the directory
+     */
+    public static final String FLAG_COMMENTFILE = "-cfile";
+    /**
+     * -nc flag -- no comment is specified
+     */
+    public static final String FLAG_NOCOMMENT = "-nc";
+    /**
+     * -nco flag -- do not checkout element after creation
+     */
+    public static final String FLAG_NOCHECKOUT = "-nco";
 }
 

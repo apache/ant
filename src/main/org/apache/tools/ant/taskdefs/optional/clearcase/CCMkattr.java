@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000,2002-2004 The Apache Software Foundation.  All rights
+ * Copyright (c) 2004 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -58,10 +58,10 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.taskdefs.Execute;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.taskdefs.condition.Os;
 
 /**
- * Performs ClearCase checkin.
- *
+ * Task to perform mkattr command to ClearCase.
  * <p>
  * The following attributes are interpreted:
  * <table border="1">
@@ -73,7 +73,32 @@ import org.apache.tools.ant.types.Commandline;
  *   <tr>
  *      <td>viewpath</td>
  *      <td>Path to the ClearCase view file or directory that the command will operate on</td>
+ *      <td>Yes</td>
+ *   <tr>
+ *   <tr>
+ *      <td>replace</td>
+ *      <td>Replace the value of the attribute if it already exists</td>
  *      <td>No</td>
+ *   <tr>
+ *   <tr>
+ *      <td>recurse</td>
+ *      <td>Process each subdirectory under viewpath</td>
+ *      <td>No</td>
+ *   <tr>
+ *   <tr>
+ *      <td>version</td>
+ *      <td>Identify a specific version to attach the attribute to</td>
+ *      <td>No</td>
+ *   <tr>
+ *   <tr>
+ *      <td>typename</td>
+ *      <td>Name of the attribute type</td>
+ *      <td>Yes</td>
+ *   <tr>
+ *   <tr>
+ *      <td>typevalue</td>
+ *      <td>Value to attach to the attribute type</td>
+ *      <td>Yes</td>
  *   <tr>
  *   <tr>
  *      <td>comment</td>
@@ -86,41 +111,22 @@ import org.apache.tools.ant.types.Commandline;
  *      <td>No</td>
  *   <tr>
  *   <tr>
- *      <td>nowarn</td>
- *      <td>Suppress warning messages</td>
- *      <td>No</td>
- *   <tr>
- *   <tr>
- *      <td>preservetime</td>
- *      <td>Preserve the modification time</td>
- *      <td>No</td>
- *   <tr>
- *   <tr>
- *      <td>keepcopy</td>
- *      <td>Keeps a copy of the file with a .keep extension</td>
- *      <td>No</td>
- *   <tr>
- *   <tr>
- *      <td>identical</td>
- *      <td>Allows the file to be checked in even if it is identical to the original</td>
- *      <td>No</td>
- *   <tr>
- *   <tr>
  *      <td>failonerr</td>
  *      <td>Throw an exception if the command fails. Default is true</td>
  *      <td>No</td>
  *   <tr>
  * </table>
  *
- * @author Curtis White
+ * @author Sean Egan
  */
-public class CCCheckin extends ClearCase {
+public class CCMkattr extends ClearCase {
+    private boolean mReplace = false;
+    private boolean mRecurse = false;
+    private String mVersion = null;
+    private String mTypeName = null;
+    private String mTypeValue = null;
     private String mComment = null;
     private String mCfile = null;
-    private boolean mNwarn = false;
-    private boolean mPtime = false;
-    private boolean mKeep = false;
-    private boolean mIdentical = true;
 
     /**
      * Executes the task.
@@ -134,16 +140,23 @@ public class CCCheckin extends ClearCase {
         Project aProj = getProject();
         int result = 0;
 
+        // Check for required attributes
+        if (getTypeName() == null) {
+            throw new BuildException("Required attribute TypeName not specified");
+        }
+        if (getTypeValue() == null) {
+            throw new BuildException("Required attribute TypeValue not specified");
+        }
         // Default the viewpath to basedir if it is not specified
         if (getViewPath() == null) {
             setViewPath(aProj.getBaseDir().getPath());
         }
 
         // build the command line from what we got. the format is
-        // cleartool checkin [options...] [viewpath ...]
-        // as specified in the CLEARTOOL.EXE help
+        // cleartool mkattr [options...] [viewpath ...]
+        // as specified in the CLEARTOOL help
         commandLine.setExecutable(getClearToolCommand());
-        commandLine.createArgument().setValue(COMMAND_CHECKIN);
+        commandLine.createArgument().setValue(COMMAND_MKATTR);
 
         checkOptions(commandLine);
 
@@ -151,6 +164,10 @@ public class CCCheckin extends ClearCase {
             getProject().log("Ignoring any errors that occur for: "
                     + getViewPathBasename(), Project.MSG_VERBOSE);
         }
+
+        // For debugging
+        // System.out.println(commandLine.toString());
+
         result = run(commandLine);
         if (Execute.isFailure(result) && getFailOnErr()) {
             String msg = "Failed executing: " + commandLine.toString();
@@ -163,6 +180,21 @@ public class CCCheckin extends ClearCase {
      * Check the command line options.
      */
     private void checkOptions(Commandline cmd) {
+        if (getReplace()) {
+            // -replace
+            cmd.createArgument().setValue(FLAG_REPLACE);
+        }
+
+        if (getRecurse()) {
+            // -recurse
+            cmd.createArgument().setValue(FLAG_RECURSE);
+        }
+
+        if (getVersion() != null) {
+            // -version
+            getVersionCommand(cmd);
+        }
+
         if (getComment() != null) {
             // -c
             getCommentCommand(cmd);
@@ -175,33 +207,75 @@ public class CCCheckin extends ClearCase {
             }
         }
 
-        if (getNoWarn()) {
-            // -nwarn
-            cmd.createArgument().setValue(FLAG_NOWARN);
+        if (getTypeName() != null) {
+            // type
+            getTypeCommand(cmd);
         }
-
-        if (getPreserveTime()) {
-            // -ptime
-            cmd.createArgument().setValue(FLAG_PRESERVETIME);
+        if (getTypeValue() != null) {
+            // type value
+            getTypeValueCommand(cmd);
         }
-
-        if (getKeepCopy()) {
-            // -keep
-            cmd.createArgument().setValue(FLAG_KEEPCOPY);
-        }
-
-        if (getIdentical()) {
-            // -identical
-            cmd.createArgument().setValue(FLAG_IDENTICAL);
-        }
-
         // viewpath
         cmd.createArgument().setValue(getViewPath());
     }
 
 
     /**
-     * Sets the comment string.
+     * Set the replace flag
+     *
+     * @param replace the status to set the flag to
+     */
+    public void setReplace(boolean replace) {
+        mReplace = replace;
+    }
+
+    /**
+     * Get replace flag status
+     *
+     * @return boolean containing status of replace flag
+     */
+    public boolean getReplace() {
+        return mReplace;
+    }
+
+    /**
+     * Set recurse flag
+     *
+     * @param recurse the status to set the flag to
+     */
+    public void setRecurse(boolean recurse) {
+        mRecurse = recurse;
+    }
+
+    /**
+     * Get recurse flag status
+     *
+     * @return boolean containing status of recurse flag
+     */
+    public boolean getRecurse() {
+        return mRecurse;
+    }
+
+    /**
+     * Set the version flag
+     *
+     * @param version the status to set the flag to
+     */
+    public void setVersion(String version) {
+        mVersion = version;
+    }
+
+    /**
+     * Get version flag status
+     *
+     * @return boolean containing status of version flag
+     */
+    public String getVersion() {
+        return mVersion;
+    }
+
+    /**
+     * Set comment string
      *
      * @param comment the comment string
      */
@@ -219,7 +293,7 @@ public class CCCheckin extends ClearCase {
     }
 
     /**
-     * Specifies a file containing a comment.
+     * Set comment file
      *
      * @param cfile the path to the comment file
      */
@@ -237,84 +311,65 @@ public class CCCheckin extends ClearCase {
     }
 
     /**
-     * If true, suppress warning messages.
+     * Set the attribute type-name
      *
-     * @param nwarn the status to set the flag to
+     * @param tn the type name
      */
-    public void setNoWarn(boolean nwarn) {
-        mNwarn = nwarn;
+    public void setTypeName(String tn) {
+        mTypeName = tn;
     }
 
     /**
-     * Get nowarn flag status
+     * Get attribute type-name
      *
-     * @return boolean containing status of nwarn flag
+     * @return String containing type name
      */
-    public boolean getNoWarn() {
-        return mNwarn;
+    public String getTypeName() {
+        return mTypeName;
     }
 
     /**
-     * If true, preserve the modification time.
+     * Set the attribute type-value
      *
-     * @param ptime the status to set the flag to
+     * @param tv the type value
      */
-    public void setPreserveTime(boolean ptime) {
-        mPtime = ptime;
+    public void setTypeValue(String tv) {
+        mTypeValue = tv;
     }
 
     /**
-     * Get preservetime flag status
+     * Get the attribute type-value
      *
-     * @return boolean containing status of preservetime flag
+     * @return String containing type value
      */
-    public boolean getPreserveTime() {
-        return mPtime;
+    public String getTypeValue() {
+        return mTypeValue;
     }
+
 
     /**
-     * If true, keeps a copy of the file with a .keep extension.
+     * Get the 'version' command
      *
-     * @param keep the status to set the flag to
+     * @param cmd CommandLine containing the command line string with or
+     *                    without the version flag and string appended
      */
-    public void setKeepCopy(boolean keep) {
-        mKeep = keep;
+    private void getVersionCommand(Commandline cmd) {
+        if (getVersion() != null) {
+            /* Had to make two separate commands here because if a space is
+               inserted between the flag and the value, it is treated as a
+               Windows filename with a space and it is enclosed in double
+               quotes ("). This breaks clearcase.
+            */
+            cmd.createArgument().setValue(FLAG_VERSION);
+            cmd.createArgument().setValue(getVersion());
+        }
     }
-
-    /**
-     * Get keepcopy flag status
-     *
-     * @return boolean containing status of keepcopy flag
-     */
-    public boolean getKeepCopy() {
-        return mKeep;
-    }
-
-    /**
-     * If true, allows the file to be checked in even
-     * if it is identical to the original.
-     *
-     * @param identical the status to set the flag to
-     */
-    public void setIdentical(boolean identical) {
-        mIdentical = identical;
-    }
-
-    /**
-     * Get identical flag status
-     *
-     * @return boolean containing status of identical flag
-     */
-    public boolean getIdentical() {
-        return mIdentical;
-    }
-
 
     /**
      * Get the 'comment' command
      *
      * @param cmd containing the command line string with or
-     *            without the comment flag and string appended
+     *        without the comment flag and string appended
      */
     private void getCommentCommand(Commandline cmd) {
         if (getComment() != null) {
@@ -331,8 +386,8 @@ public class CCCheckin extends ClearCase {
     /**
      * Get the 'commentfile' command
      *
-     * @param cmd containing the command line string with or
-     *            without the commentfile flag and file appended
+     * @param cmd         containing the command line string with or
+     *                    without the commentfile flag and file appended
      */
     private void getCommentFileCommand(Commandline cmd) {
         if (getCommentFile() != null) {
@@ -346,35 +401,62 @@ public class CCCheckin extends ClearCase {
         }
     }
 
+    /**
+     * Get the attribute type-name
+     *
+     * @param cmd containing the command line string with or
+     *        without the type-name
+     */
+    private void getTypeCommand(Commandline cmd) {
+        String typenm = getTypeName();
 
-        /**
-     * -c flag -- comment to attach to the file
+        if (typenm != null) {
+            cmd.createArgument().setValue(typenm);
+        }
+    }
+
+    /**
+     * Get the attribute type-value
+     *
+     * @param cmd containing the command line string with or
+     *        without the type-value
+     */
+    private void getTypeValueCommand(Commandline cmd) {
+        String typevl = getTypeValue();
+
+        if (typevl != null) {
+            if (Os.isFamily("windows")) {
+                typevl = "\\\"" + typevl + "\\\""; // Windows quoting of the value
+            } else {
+                typevl = "\"" + typevl + "\"";
+            }
+            cmd.createArgument().setValue(typevl);
+        }
+    }
+
+    /**
+     * -replace flag -- replace the existing value of the attribute
+     */
+    public static final String FLAG_REPLACE = "-replace";
+    /**
+     * -recurse flag -- process all subdirectories
+     */
+    public static final String FLAG_RECURSE = "-recurse";
+    /**
+     * -version flag -- attach attribute to specified version
+     */
+    public static final String FLAG_VERSION = "-version";
+    /**
+     * -c flag -- comment to attach to the element
      */
     public static final String FLAG_COMMENT = "-c";
-        /**
+    /**
      * -cfile flag -- file containing a comment to attach to the file
      */
     public static final String FLAG_COMMENTFILE = "-cfile";
-        /**
+    /**
      * -nc flag -- no comment is specified
      */
     public static final String FLAG_NOCOMMENT = "-nc";
-        /**
-     * -nwarn flag -- suppresses warning messages
-     */
-    public static final String FLAG_NOWARN = "-nwarn";
-        /**
-     * -ptime flag -- preserves the modification time
-     */
-    public static final String FLAG_PRESERVETIME = "-ptime";
-        /**
-     * -keep flag -- keeps a copy of the file with a .keep extension
-     */
-    public static final String FLAG_KEEPCOPY = "-keep";
-        /**
-     * -identical flag -- allows the file to be checked in even if it is identical to the original
-     */
-    public static final String FLAG_IDENTICAL = "-identical";
-
 }
 
