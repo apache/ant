@@ -53,6 +53,12 @@
  */
 package org.apache.tools.ant.listener;
 
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.DefaultLogger;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.util.StringUtils;
+import org.apache.tools.mail.MailMessage;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,12 +67,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.StringTokenizer;
-
-import org.apache.tools.ant.BuildEvent;
-import org.apache.tools.ant.DefaultLogger;
-import org.apache.tools.ant.Project;
-import org.apache.tools.ant.util.StringUtils;
-import org.apache.tools.mail.MailMessage;
 
 /**
  *  Buffers log messages from DefaultLogger, and sends an e-mail with the
@@ -94,7 +94,7 @@ import org.apache.tools.mail.MailMessage;
  *  MailLogger.properties.file property</i> . Any properties defined in that
  *  file will override Ant properties.
  *
- * @author Erik Hatcher 
+ * @author Erik Hatcher
  *         <a href="mailto:ehatcher@apache.org">ehatcher@apache.org</a>
  */
 public class MailLogger extends DefaultLogger {
@@ -135,7 +135,8 @@ public class MailLogger extends DefaultLogger {
 
         for (Enumeration e = fileProperties.keys(); e.hasMoreElements();) {
             String key = (String) e.nextElement();
-            properties.put(key, fileProperties.getProperty(key));
+            String value = fileProperties.getProperty(key);
+            properties.put(key, project.replaceProperties(value));
         }
 
         boolean success = (event.getException() == null);
@@ -159,7 +160,7 @@ public class MailLogger extends DefaultLogger {
             sendMail(mailhost, from, toList, subject, buffer.toString());
         } catch (Exception e) {
             System.out.println("MailLogger failed to send e-mail!");
-            e.printStackTrace();
+            e.printStackTrace(System.err);
         }
     }
 
@@ -180,13 +181,13 @@ public class MailLogger extends DefaultLogger {
      * @param  properties     Properties to obtain value from
      * @param  name           suffix of property name. "MailLogger." will be
      *      prepended internally.
-     * @param  defaultValue   value returned if not present in the properties. 
+     * @param  defaultValue   value returned if not present in the properties.
      *      Set to null to make required.
      * @return                The value of the property, or default value.
      * @exception  Exception  thrown if no default value is specified and the
      *      property is not present in properties.
      */
-    private String getValue(Hashtable properties, String name, 
+    private String getValue(Hashtable properties, String name,
                             String defaultValue) throws Exception {
         String propertyName = "MailLogger." + name;
         String value = (String) properties.get(propertyName);
