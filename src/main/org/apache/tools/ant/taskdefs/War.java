@@ -57,6 +57,7 @@ public class War extends Jar {
 
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
+    /** Constructor for the War Task. */
     public War() {
         super();
         archiveType = "war";
@@ -66,6 +67,7 @@ public class War extends Jar {
     /**
      * <i>Deprecated<i> name of the file to create
      * -use <tt>destfile</tt> instead.
+     * @param warFile the destination file
      * @deprecated Use setDestFile(File) instead
      * @ant.attribute ignore="true"
      */
@@ -76,6 +78,7 @@ public class War extends Jar {
     /**
      * set the deployment descriptor to use (WEB-INF/web.xml);
      * required unless <tt>update=true</tt>
+     * @param descr the deployment descriptor file
      */
     public void setWebxml(File descr) {
         deploymentDescriptor = descr;
@@ -94,6 +97,7 @@ public class War extends Jar {
 
     /**
      * add files under WEB-INF/lib/
+     * @param fs the zip file set to add
      */
 
     public void addLib(ZipFileSet fs) {
@@ -104,6 +108,7 @@ public class War extends Jar {
 
     /**
      * add files under WEB-INF/classes
+     * @param fs the zip file set to add
      */
     public void addClasses(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
@@ -113,6 +118,7 @@ public class War extends Jar {
 
     /**
      * files to add under WEB-INF;
+     * @param fs the zip file set to add
      */
     public void addWebinf(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
@@ -123,6 +129,9 @@ public class War extends Jar {
     /**
      * override of  parent; validates configuration
      * before initializing the output stream.
+     * @param zOut the zip output stream
+     * @throws IOException on output error
+     * @throws BuildException if invalid configuration
      */
     protected void initZipOutputStream(ZipOutputStream zOut)
         throws IOException, BuildException {
@@ -136,6 +145,11 @@ public class War extends Jar {
 
     /**
      * Overridden from Zip class to deal with web.xml
+     * @param file the file to add to the archive
+     * @param zOut the stream to write to
+     * @param vPath the name this entry shall have in the archive
+     * @param mode the Unix permissions to set.
+     * @throws IOException on output error
      */
     protected void zipFile(File file, ZipOutputStream zOut, String vPath,
                            int mode)

@@ -1,5 +1,5 @@
 /*
- * Copyright  2001-2002,2004 The Apache Software Foundation
+ * Copyright  2001-2002,2004-2005 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,8 +18,13 @@
 package org.apache.tools.ant.taskdefs;
 
 /**
+ * Interface for a class that one can set an XSLTLogger on.
  * @since Ant 1.5
  */
 public interface XSLTLoggerAware {
+    /**
+     * Set the logger for this class.
+     * @param l the logger
+     */
     void setLogger(XSLTLogger l);
 }
