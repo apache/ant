@@ -280,7 +280,13 @@ public class ExecuteOn extends ExecTask {
                 String[] subTargets = mapper.mapFileName(srcFiles[i]);
                 if (subTargets != null) {
                     for (int j=0; j<subTargets.length; j++) {
-                        String name = (new File(destDir, subTargets[j])).getAbsolutePath();
+                        String name = null;
+                        if (!relative) {
+                            name =
+                                (new File(destDir, subTargets[j])).getAbsolutePath();
+                        } else {
+                            name = subTargets[j];
+                        }
                         if (!addedFiles.contains(name)) {
                             targets.addElement(name);
                             addedFiles.put(name, name);
