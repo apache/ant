@@ -218,10 +218,6 @@ public class UnknownElement extends Task {
             }
 
             child.handleChildren(realChild, childWrapper);
-
-//            if (parent instanceof TaskContainer) {
-//                ((Task) realChild).maybeConfigure();
-//            }
         }
     }
 
