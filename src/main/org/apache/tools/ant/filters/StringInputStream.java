@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -125,6 +125,16 @@ public class StringInputStream
         }
     }
 
+    /**
+     * Reads from the Stringreader into a byte array
+     *
+     * @param b  the byte array to read into
+     * @param off the offset in the byte array
+     * @param len the length in the byte array to fill
+     * @return the actual number read into the byte array, -1 at
+     *         the end of the stream
+     * @exception IOException if an error occurs
+     */
     public synchronized int read(byte[] b, int off, int len)
         throws IOException {
 
@@ -176,6 +186,10 @@ public class StringInputStream
     }
 
 
+    /**
+     * @return   the current number of bytes ready for reading
+     * @exception IOException if an error occurs
+     */
     public synchronized int available() throws IOException {
         if (in == null) {
             throw new IOException("Stream Closed");
@@ -190,6 +204,9 @@ public class StringInputStream
         }
     }
 
+    /**
+     * @return false - mark is not supported
+     */
     public boolean markSupported () {
         return false;   // would be imprecise
     }

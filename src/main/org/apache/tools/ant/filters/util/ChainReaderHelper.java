@@ -98,6 +98,7 @@ public final class ChainReaderHelper {
 
     /**
      * Sets the primary reader
+     * @param rdr the reader object
      */
     public final void setPrimaryReader(Reader rdr) {
         primaryReader = rdr;
@@ -105,6 +106,7 @@ public final class ChainReaderHelper {
 
     /**
      * Set the project to work with
+     * @param project the current project
      */
     public final void setProject(final Project project) {
         this.project = project;
@@ -112,6 +114,8 @@ public final class ChainReaderHelper {
 
     /**
      * Get the project
+     *
+     * @return the current project
      */
     public final Project getProject() {
         return project;
@@ -120,6 +124,7 @@ public final class ChainReaderHelper {
     /**
      * Sets the buffer size to be used.  Defaults to 4096,
      * if this method is not invoked.
+     * @param size the buffer size to use
      */
     public final void setBufferSize(int size) {
         bufferSize = size;
@@ -127,6 +132,8 @@ public final class ChainReaderHelper {
 
     /**
      * Sets the collection of filter reader sets
+     *
+     * @param fchain the filter chains collection
      */
     public final void setFilterChains(Vector fchain) {
         filterChains = fchain;
@@ -134,6 +141,8 @@ public final class ChainReaderHelper {
 
     /**
      * Assemble the reader
+     * @return the assembled reader
+     * @exception BuildException if an error occurs
      */
     public final Reader getAssembledReader() throws BuildException {
         if (primaryReader == null) {
@@ -249,6 +258,9 @@ public final class ChainReaderHelper {
     /**
      * Read data from the reader and return the
      * contents as a string.
+     * @param rdr the reader object
+     * @return the contents of the file as a string
+     * @exception IOException if an error occurs
      */
     public final String readFully(Reader rdr)
         throws IOException {

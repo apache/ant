@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -72,6 +72,10 @@ public final class JavaClassHelper {
 
     /**
      * Get the constants declared in a file as name=value
+     *
+     * @param bytes the class as a array of bytes
+     * @return a StringBuffer contains the name=value pairs
+     * @exception IOException if an error occurs
      */
     public static final StringBuffer getConstants(byte[] bytes)
         throws IOException {
