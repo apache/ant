@@ -15,11 +15,11 @@ import org.apache.myrmidon.interfaces.deployer.TypeDefinition;
  * Task to define a converter.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:task name="converter-def"
  */
 public class ConverterDef
     extends AbstractTypeDef
 {
-
     protected TypeDefinition createTypeDefinition()
     {
         return new ConverterDefinition();

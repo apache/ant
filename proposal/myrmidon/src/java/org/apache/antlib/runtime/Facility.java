@@ -22,6 +22,7 @@ import org.apache.myrmidon.interfaces.type.TypeFactory;
  * Task that definesMethod to register a single converter.
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
+ * @ant:task name="facility"
  */
 public class Facility
     extends AbstractContainerTask
