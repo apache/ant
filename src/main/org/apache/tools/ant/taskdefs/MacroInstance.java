@@ -68,6 +68,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DynamicConfigurator;
 import org.apache.tools.ant.ProjectHelper;
 import org.apache.tools.ant.RuntimeConfigurable;
+import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.TaskContainer;
 import org.apache.tools.ant.UnknownElement;
@@ -187,7 +188,13 @@ public class MacroInstance extends Task implements DynamicConfigurator {
         ret.setQName(ue.getQName());
         ret.setTaskName(ue.getTaskName());
         ret.setLocation(ue.getLocation());
-        ret.setOwningTarget(getOwningTarget());
+        if (getOwningTarget() == null) {
+            Target t = new Target();
+            t.setProject(getProject());
+            ret.setOwningTarget(t);
+        } else {
+            ret.setOwningTarget(getOwningTarget());
+        }
         RuntimeConfigurable rc = new RuntimeConfigurable(
             ret, ue.getTaskName());
         rc.setPolyType(ue.getWrapper().getPolyType());
@@ -255,6 +262,9 @@ public class MacroInstance extends Task implements DynamicConfigurator {
             }
             localProperties.put(attribute.getName(), value);
             copyKeys.remove(attribute.getName());
+        }
+        if (copyKeys.contains("id")) {
+            copyKeys.remove("id");
         }
         if (copyKeys.size() != 0) {
             throw new BuildException(
