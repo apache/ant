@@ -16,10 +16,11 @@ directories.  Right now it has effect only under Windows. Each of the
 4 possible permissions has its own attribute, matching the arguments
 for the attrib command.</p>
 
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s or <a
+<p><a href="../CoreTypes/fileset.html">FileSet</a>s, 
+<a href="../CoreTypes/dirset.html">DirSet</a>s or <a
 href="../CoreTypes/filelist.html">FileList</a>s can be specified using
-nested <code>&lt;fileset&gt;</code> and <code>&lt;filelist&gt;</code>
-elements.</p>
+nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and 
+<code>&lt;filelist&gt;</code> elements.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -56,7 +57,10 @@ elements.</p>
     <td valign="top">type</td>
     <td valign="top">One of <i>file</i>, <i>dir</i> or <i>both</i>. If set to
       <i>file</i>, only the permissions of plain files are going to be changed.
-      If set to <i>dir</i>, only the directories are considered.</td>
+      If set to <i>dir</i>, only the directories are considered.<br>
+      <strong>Note:</strong> The type attribute does not apply to
+      nested <i>dirset</i>s - <i>dirset</i>s always implicitly
+      assume type to be <i>dir</i>.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
   <tr>

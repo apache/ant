@@ -15,10 +15,12 @@ The permissions are also UNIX style, like the argument for the chmod command.</p
 <p>See the section on <a href="../dirtasks.html#directorybasedtasks">directory based
 tasks</a>, on how the inclusion/exclusion of files works, and how to
 write patterns.</p>
-<p>This task holds an implicit <a href="../CoreTypes/fileset.html">FileSet</a> and
-supports all of FileSet's attributes and nested elements
-directly. More FileSets can be specified using nested
-<code>&lt;fileset&gt;</code> elements.</p>
+
+<p>This task holds an implicit <a
+href="../CoreTypes/fileset.html">FileSet</a> and supports all of
+FileSet's attributes and nested elements directly. More sets can be
+specified using nested <code>&lt;fileset&gt;</code> or
+<code>&lt;dirset&gt;</code> (<em>since Ant 1.6</em>) elements. </p>
 
 <p>Starting with Ant 1.6, this task also supports nested <a
 href="../CoreTypes/filelist.html">filelist</a>s.</p>
@@ -75,7 +77,10 @@ href="../CoreTypes/filelist.html">filelist</a>s.</p>
     <td valign="top">One of <i>file</i>, <i>dir</i> or
       <i>both</i>. If set to <i>file</i>, only the permissions of
       plain files are going to be changed. If set to <i>dir</i>, only
-      the directories are considered.</td>
+      the directories are considered.<br>
+      <strong>Note:</strong> The type attribute does not apply to
+      nested <i>dirset</i>s - <i>dirset</i>s always implicitly
+      assume type to be <i>dir</i>.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
   <tr>
@@ -100,7 +105,8 @@ href="../CoreTypes/filelist.html">filelist</a>s.</p>
 UNIX system.</p>
 <blockquote>
 <pre>
-    &lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; includes=&quot;**/*.sh&quot;/&gt;
+&lt;chmod dir=&quot;${dist}/bin&quot; perm=&quot;ugo+rx&quot; 
+       includes=&quot;**/*.sh&quot;/&gt;
 </pre>
 </blockquote>
 <p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
@@ -120,8 +126,29 @@ below any directory named trial) writable for members of the same
 group on a UNIX system. In addition all files belonging to a FileSet
 with <code>id</code> <code>other.shared.sources</code> get the same
 permissions.</p>
-<hr><p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. All rights
-Reserved.</p>
+
+<blockquote>
+<pre>
+&lt;chmod perm=&quot;go-rwx&quot; type=&quot;file&quot;&gt;
+  &lt;fileset dir=&quot;/web&quot;&gt;
+    &lt;include name=&quot;**/*.cgi&quot;/&gt;
+    &lt;include name=&quot;**/*.old&quot;/&gt;
+  &lt;/fileset&gt;
+  &lt;dirset dir=&quot;/web&quot;&gt;
+    &lt;include name=&quot;**/private_*&quot;/&gt;
+  &lt;/dirset&gt;
+&lt;/chmod&gt;
+</pre>
+</blockquote>
+
+<p>keeps non-owners from touching cgi scripts, files with a <code>.old</code>
+extension or directories begining with <code>private_</code>. A directory 
+ending in <code>.old</code> or a file begining with private_ would remain
+unaffected.</p>
+
+<hr>
+<p align="center">Copyright &copy; 2000-2003 Apache Software Foundation. 
+All rights Reserved.</p>
 
 </body>
 </html>

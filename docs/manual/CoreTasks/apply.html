@@ -15,9 +15,10 @@ compatibility.</i></p>
 the command is only executed when Ant is run on one of the specified operating
 systems.</p>
 <p>The files and/or directories of a number of <a
-href="../CoreTypes/fileset.html">FileSet</a>s or <a
-href="../CoreTypes/filelist.html">FileList</a>s are passed as arguments
-to the system command.</p>
+href="../CoreTypes/fileset.html">FileSet</a>s, <a
+href="../CoreTypes/dirset.html">DirSet</a>s (<em>since Ant 1.6</em>)
+or <a href="../CoreTypes/filelist.html">FileList</a>s (<em>since Ant
+1.6</em>) are passed as arguments to the system command.</p>
 <p>If you specify a nested <a
 href="../CoreTypes/mapper.html">mapper</a> and the <i>dest</i> attribute,
 the timestamp of each source file is compared to the timestamp of a
@@ -137,7 +138,10 @@ one mapper.</p>
     <td valign="top">One of <i>file</i>, <i>dir</i> or
       <i>both</i>. If set to <i>file</i>, only the names of plain
       files will be sent to the command. If set to <i>dir</i>, only
-      the names of directories are considered.</td>
+      the names of directories are considered.<br>
+      <strong>Note:</strong> The type attribute does not apply to
+      nested <i>dirset</i>s - <i>dirset</i>s always implicitly
+      assume type to be <i>dir</i>.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
   <tr>
@@ -191,6 +195,11 @@ elements to define the files for this task and refer to
 <p>You can use any number of nested <code>&lt;filelist&gt;</code>
 elements to define the files for this task and refer to
 <code>&lt;filelist&gt;</code>s defined elsewhere.</p>
+<h4>dirset</h4>
+<p><em>Since Ant 1.6</em></p>
+<p>You can use any number of nested <code>&lt;dirset&gt;</code>
+elements to define the directories for this task and refer to
+<code>&lt;dirset&gt;</code>s defined elsewhere.</p>
 <h4>arg</h4>
 <p>Command line arguments should be specified as nested
 <code>&lt;arg&gt;</code> elements. See <a

@@ -62,6 +62,8 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.types.Commandline;
+import org.apache.tools.ant.types.AbstractFileSet;
+import org.apache.tools.ant.types.DirSet;
 import org.apache.tools.ant.types.EnumeratedAttribute;
 import org.apache.tools.ant.types.FileList;
 import org.apache.tools.ant.types.FileSet;
@@ -81,7 +83,8 @@ import org.apache.tools.ant.util.SourceFileScanner;
  */
 public class ExecuteOn extends ExecTask {
 
-    protected Vector filesets = new Vector();
+    protected Vector filesets = new Vector(); // contains AbstractFileSet
+                                              // (both DirSet and FileSet)
     private Vector filelists = new Vector();
     private boolean relative = false;
     private boolean parallel = false;
@@ -109,6 +112,20 @@ public class ExecuteOn extends ExecTask {
         filesets.addElement(set);
     }
 
+    /**
+     * Adds directories to operate on.
+     *
+     * <p><em>Note that the directories will be added to the build
+     * path in no particular order, so if order is significant, one
+     * should use a file list instead!</em></p>
+     *
+     * @param  set the DirSet to add.
+     *
+     * @since Ant 1.6
+     */
+    public void addDirset(DirSet set) {
+        filesets.addElement(set);        
+    }
     /**
      * Source files to operate upon.
      */
@@ -274,11 +291,21 @@ public class ExecuteOn extends ExecTask {
             Vector fileNames = new Vector();
             Vector baseDirs = new Vector();
             for (int i = 0; i < filesets.size(); i++) {
-                FileSet fs = (FileSet) filesets.elementAt(i);
+                String currentType = type;
+                AbstractFileSet fs = (AbstractFileSet) filesets.elementAt(i);
+                if (fs instanceof DirSet) {
+                    if (!"dir".equals(type)) {
+                        log("Found a nested dirset but type is " + type + ". " 
+                            + "Temporarily switching to type=\"dir\" on the" +
+                            " assumption that you really did mean" +
+                            " <dirset> not <fileset>.", Project.MSG_DEBUG);
+                        currentType = "dir";
+                    }
+                }
                 File base = fs.getDir(getProject());
                 DirectoryScanner ds = fs.getDirectoryScanner(getProject());
 
-                if (!"dir".equals(type)) {
+                if (!"dir".equals(currentType)) {
                     String[] s = getFiles(base, ds);
                     for (int j = 0; j < s.length; j++) {
                         totalFiles++;
@@ -287,7 +314,7 @@ public class ExecuteOn extends ExecTask {
                     }
                 }
 
-                if (!"file".equals(type)) {
+                if (!"file".equals(currentType)) {
                     String[] s = getDirs(base, ds);;
                     for (int j = 0; j < s.length; j++) {
                         totalDirs++;

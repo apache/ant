@@ -16,10 +16,12 @@ directories. Right now it has effect only under Unix.  The owner
 atribute is equivalent to the coresponding argument for the chown
 command.</p>
 
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s or <a
+<p><a href="../CoreTypes/fileset.html">FileSet</a>s, 
+<a href="../CoreTypes/dirset.html">DirSet</a>s or <a
 href="../CoreTypes/filelist.html">FileList</a>s can be specified using
-nested <code>&lt;fileset&gt;</code> and <code>&lt;filelist&gt;</code>
-elements.</p>
+nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and 
+<code>&lt;filelist&gt;</code> elements.</p>
+
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -51,7 +53,10 @@ elements.</p>
     <td valign="top">One of <i>file</i>, <i>dir</i> or
       <i>both</i>. If set to <i>file</i>, only the owner of
       plain files are going to be changed. If set to <i>dir</i>, only
-      the directories are considered.</td>
+      the directories are considered.<br>
+      <strong>Note:</strong> The type attribute does not apply to
+      nested <i>dirset</i>s - <i>dirset</i>s always implicitly
+      assume type to be <i>dir</i>.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
   <tr>
@@ -100,6 +105,26 @@ below any directory named trial) belong to coderjoe on a UNIX
 system. In addition all files belonging to a FileSet
 with <code>id</code> <code>other.shared.sources</code> get the same
 owner.</p>
+
+<blockquote>
+<pre>
+&lt;chown owner=&quot;webadmin&quot; type=&quot;file&quot;&gt;
+  &lt;fileset dir=&quot;/web&quot;&gt;
+    &lt;include name=&quot;**/*.cgi&quot;/&gt;
+    &lt;include name=&quot;**/*.old&quot;/&gt;
+  &lt;/fileset&gt;
+  &lt;dirset dir=&quot;/web&quot;&gt;
+    &lt;include name=&quot;**/private_*&quot;/&gt;
+  &lt;/dirset&gt;
+&lt;/chmod&gt;
+</pre>
+</blockquote>
+
+<p>makes cgi scripts, files with a <code>.old</code> extension or
+directories begining with <code>private_</code> belong to the user named
+webadmin. A directory ending in <code>.old</code> or a file begining with 
+<code>private_</code> would remain unaffected.</p>
+
 <hr>
 <p align="center">Copyright &copy; 2002-2003 Apache Software
 Foundation. All rights Reserved.</p>

@@ -16,10 +16,11 @@ directories. Right now it has effect only under Unix.  The group
 atribute is equivalent to the coresponding argument for the chgrp
 command.</p>
 
-<p><a href="../CoreTypes/fileset.html">FileSet</a>s or <a
+<p><a href="../CoreTypes/fileset.html">FileSet</a>s, 
+<a href="../CoreTypes/dirset.html">DirSet</a>s or <a
 href="../CoreTypes/filelist.html">FileList</a>s can be specified using
-nested <code>&lt;fileset&gt;</code> and <code>&lt;filelist&gt;</code>
-elements.</p>
+nested <code>&lt;fileset&gt;</code>, <code>&lt;dirset&gt;</code> and 
+<code>&lt;filelist&gt;</code> elements.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -51,7 +52,10 @@ elements.</p>
     <td valign="top">One of <i>file</i>, <i>dir</i> or
       <i>both</i>. If set to <i>file</i>, only the group of
       plain files are going to be changed. If set to <i>dir</i>, only
-      the directories are considered.</td>
+      the directories are considered.<br>
+      <strong>Note:</strong> The type attribute does not apply to
+      nested <i>dirset</i>s - <i>dirset</i>s always implicitly
+      assume type to be <i>dir</i>.</td>
     <td align="center" valign="top">No, default is <i>file</i></td>
   </tr>
   <tr>
@@ -78,9 +82,9 @@ elements.</p>
 UNIX system.</p>
 <blockquote>
 <pre>
-    &lt;chgrp group=&quot;coders&quot;&gt;
-      &lt;fileset dir=&quot;${dist}/bin&quot; includes=&quot;**/*.sh&quot;/&gt;
-    &lt;/chgrp&gt;
+&lt;chgrp group=&quot;coders&quot;&gt;
+  &lt;fileset dir=&quot;${dist}/bin&quot; includes=&quot;**/*.sh&quot;/&gt;
+&lt;/chgrp&gt;
 </pre>
 </blockquote>
 <p>makes all &quot;.sh&quot; files below <code>${dist}/bin</code>
@@ -100,6 +104,26 @@ below any directory named trial) belong to the coders group on a UNIX
 system. In addition all files belonging to a FileSet
 with <code>id</code> <code>other.shared.sources</code> get the same
 group.</p>
+
+<blockquote>
+<pre>
+&lt;chgrp group=&quot;webdev&quot; type=&quot;file&quot;&gt;
+  &lt;fileset dir=&quot;/web&quot;&gt;
+    &lt;include name=&quot;**/*.test.jsp&quot;/&gt;
+    &lt;include name=&quot;**/*.new&quot;/&gt;
+  &lt;/fileset&gt;
+  &lt;dirset dir=&quot;/web&quot;&gt;
+    &lt;include name=&quot;**/test_*&quot;/&gt;
+  &lt;/dirset&gt;
+&lt;/chmod&gt;
+</pre>
+</blockquote>
+
+<p>makes all <code>.test.jsp</code>, and <code>.new</code> files belong to 
+group webdev. Directories begining with <code>test_</code> also will belong 
+to webdev, but if there is a directory that ends in <code>.new</code> or a file
+that begins with <code>test_</code> it will be unaffected.</p>
+
 
 <hr>
 <p align="center">Copyright &copy; 2002-2003 Apache Software

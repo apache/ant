@@ -335,13 +335,13 @@ Other changes:
 * <mail> has a new attribute encoding. Bugzilla Report 15434.
 
 * <mail> has new attributes user and password for SMTP auth.
-maillogger can also use this.
-The implementation only with JavaMail (encoding="MIME").
-Implementation with plain mail remains to do.
-Bugzilla Report 5969.
+  maillogger can also use this.
+  The implementation only works with JavaMail (encoding="MIME").
+  Implementation with plain mail remains to do.
+  Bugzilla Report 5969.
 
 * <mail> and mailloger support SMTP over TLS/SSL
-Bugzilla Report 19180.
+  Bugzilla Report 19180.
 
 * <zipfileset> can now be defined in the main body of a project
   and referred to with refid="xyz". Bugzilla Report 17007.
@@ -404,8 +404,8 @@ Bugzilla Report 19180.
 * With the new addsourcefile attribute, you can make <apply> ommit the
   source file names from the command line.  Bugzilla Report 13654.
 
-* <apply> and <chmod> now support nested <filelist>s as well.
-  Bugzilla Report 15929.
+* <apply> and <chmod> now support nested <filelist>s as well as <dirset>s.
+  Bugzilla Reports 15929 and 20687.
 
 * <apply> and <chmod> will display a summary if you set the new
   verbose attribute to true.  Bugzilla Report 19883.
