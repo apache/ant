@@ -91,6 +91,11 @@ public class IntrospectionHelper implements BuildListener {
     private Hashtable nestedCreators;
 
     /**
+     * Holds methods to store configured nested elements.
+     */
+    private Hashtable nestedStorers;
+
+    /**
      * The method to add PCDATA stuff.
      */
     private Method addText = null;
@@ -110,6 +115,8 @@ public class IntrospectionHelper implements BuildListener {
         attributeSetters = new Hashtable();
         nestedTypes = new Hashtable();
         nestedCreators = new Hashtable();
+        nestedStorers = new Hashtable();
+        
         this.bean = bean;
 
         Method[] methods = bean.getMethods();
@@ -177,6 +184,39 @@ public class IntrospectionHelper implements BuildListener {
 
                     });
                 
+            } else if (name.startsWith("addConfigured")
+                       && java.lang.Void.TYPE.equals(returnType)
+                       && args.length == 1
+                       && !java.lang.String.class.equals(args[0])
+                       && !args[0].isArray()
+                       && !args[0].isPrimitive()) {
+                 
+                try {
+                    final Constructor c = 
+                        args[0].getConstructor(new Class[] {});
+                    String propName = getPropertyName(name, "addConfigured");
+                    nestedTypes.put(propName, args[0]);
+                    nestedCreators.put(propName, new NestedCreator() {
+
+                            public Object create(Object parent) 
+                                throws InvocationTargetException, IllegalAccessException, InstantiationException {
+                                
+                                Object o = c.newInstance(new Object[] {});
+                                return o;
+                            }
+
+                        });
+                    nestedStorers.put(propName, new NestedStorer() {
+
+                            public void store(Object parent, Object child) 
+                                throws InvocationTargetException, IllegalAccessException, InstantiationException {
+                                
+                                m.invoke(parent, new Object[] {child});
+                            }
+
+                        });
+                } catch (NoSuchMethodException nse) {
+                }
             } else if (name.startsWith("add")
                        && java.lang.Void.TYPE.equals(returnType)
                        && args.length == 1
@@ -202,7 +242,6 @@ public class IntrospectionHelper implements BuildListener {
                         });
                 } catch (NoSuchMethodException nse) {
                 }
-                    
             }
         }
     }
@@ -284,6 +323,35 @@ public class IntrospectionHelper implements BuildListener {
         }
         try {
             return nc.create(element);
+        } catch (IllegalAccessException ie) {
+            // impossible as getMethods should only return public methods
+            throw new BuildException(ie);
+        } catch (InstantiationException ine) {
+            // impossible as getMethods should only return public methods
+            throw new BuildException(ine);
+        } catch (InvocationTargetException ite) {
+            Throwable t = ite.getTargetException();
+            if (t instanceof BuildException) {
+                throw (BuildException) t;
+            }
+            throw new BuildException(t);
+        }
+    }
+
+    /**
+     * Creates a named nested element.
+     */
+    public void storeElement(Project project, Object element, Object child, String elementName) 
+        throws BuildException {
+        if (elementName == null) {
+            return;
+        }
+        NestedStorer ns = (NestedStorer)nestedStorers.get(elementName);
+        if (ns == null) {
+            return;
+        }
+        try {
+            ns.store(element, child);
         } catch (IllegalAccessException ie) {
             // impossible as getMethods should only return public methods
             throw new BuildException(ie);
@@ -555,6 +623,12 @@ public class IntrospectionHelper implements BuildListener {
         public Object create(Object parent) 
             throws InvocationTargetException, IllegalAccessException, InstantiationException;
     }
+    
+    private interface NestedStorer {
+        public void store(Object parent, Object child) 
+            throws InvocationTargetException, IllegalAccessException, InstantiationException;
+    }
+    
     private interface AttributeSetter {
         public void set(Project p, Object parent, String value)
             throws InvocationTargetException, IllegalAccessException, 

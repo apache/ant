@@ -68,6 +68,7 @@ import org.xml.sax.helpers.AttributeListImpl;
  */
 public class RuntimeConfigurable {
 
+    private String elementTag = null;
     private Vector children = new Vector();
     private Object wrappedObject = null;
     private AttributeList attributes;
@@ -76,8 +77,9 @@ public class RuntimeConfigurable {
     /**
      * @param proxy The element to wrap.
      */
-    public RuntimeConfigurable(Object proxy) {
+    public RuntimeConfigurable(Object proxy, String elementTag) {
         wrappedObject = proxy;
+        this.elementTag = elementTag;
     }
 
     void setProxy(Object proxy) {
@@ -126,6 +128,11 @@ public class RuntimeConfigurable {
         addText(new String(buf, start, end));
     }
 
+    public String getElementTag() {
+        return elementTag;
+    }
+    
+    
     /**
      * Configure the wrapped element and all children.
      */
@@ -145,6 +152,7 @@ public class RuntimeConfigurable {
         while (enum.hasMoreElements()) {
             RuntimeConfigurable child = (RuntimeConfigurable) enum.nextElement();
             child.maybeConfigure(p);
+            ProjectHelper.storeChild(p, wrappedObject, child.wrappedObject, child.getElementTag().toLowerCase());
         }
 
         if (id != null) {

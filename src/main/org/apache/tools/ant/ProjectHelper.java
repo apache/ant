@@ -552,11 +552,12 @@ public class ProjectHelper {
                 configureId(child, attrs);
 
                 if (parentWrapper != null) {
-                    childWrapper = new RuntimeConfigurable(child);
+                    childWrapper = new RuntimeConfigurable(child, propType);
                     childWrapper.setAttributes(attrs);
                     parentWrapper.addChild(childWrapper);
                 } else {
                     configure(child, attrs, project);
+                    ih.storeElement(project, parent, child, propType.toLowerCase());
                 }
             } catch (BuildException exc) {
                 throw new SAXParseException(exc.getMessage(), locator, exc);
@@ -612,7 +613,7 @@ public class ProjectHelper {
                 }
                 
                 if (target != null) {
-                    wrapper = new RuntimeConfigurable(element);
+                    wrapper = new RuntimeConfigurable(element, propType);
                     wrapper.setAttributes(attrs);
                     target.addDataType(wrapper);
                 } else {
@@ -688,7 +689,14 @@ public class ProjectHelper {
         IntrospectionHelper.getHelper(target.getClass()).addText(project, target, text);
     }
 
-
+    /**
+     * Stores a configured child element into its parent object 
+     */
+    public static void storeChild(Project project, Object parent, Object child, String tag) {
+        IntrospectionHelper ih = IntrospectionHelper.getHelper(parent.getClass());
+        ih.storeElement(project, parent, child, tag);
+    }
+    
     /**
      * Replace ${} style constructions in the given value with the string value of
      * the corresponding data types.

@@ -203,7 +203,7 @@ public abstract class Task {
      */
     public RuntimeConfigurable getRuntimeConfigurableWrapper() {
         if (wrapper == null) {
-            wrapper = new RuntimeConfigurable(this);
+            wrapper = new RuntimeConfigurable(this, getTaskName());
         }
         return wrapper;
     }
