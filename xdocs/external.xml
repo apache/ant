@@ -92,38 +92,6 @@
         </table>
       </subsection>
 
-      <subsection name="AntDoc">
-
-        <p>AntDoc is a tool that generates HTML documentation from Ant
-        buildfiles; the generated HTML is inspired from what javadoc
-        yields.  AntDocGUI offers a simple Ant target launcher named
-        AntDoc GUI. Ant targets may be launched from the generated
-        AntDoc HTML pages. Integration to various IDEs is in
-        progress.</p>
-
-        <p>AntDoc can be run via an Ant task, AntDoc GUI can be run
-        via an Ant task, or via a JVM launch.</p>
-
-        <table>
-          <tr>
-            <th>Compatibility:</th>
-            <td>Ant 1.4.1 and higher</td>
-          </tr>
-          <tr>
-            <th>URL:</th>
-            <td><a href="http://antdoc.free.fr/">http://antdoc.free.fr/</a></td>
-          </tr>
-          <tr>
-            <th>Contact:</th>
-            <td>Edouard Mercier</td>
-          </tr>
-          <tr>
-            <th>License:</th>
-            <td>The Apache Software License</td>
-          </tr>
-        </table>
-      </subsection>
-
       <subsection name="Andariel">
 
         <p>Andariel is a set of tasks designed to help the generation of HTML
@@ -2742,7 +2710,7 @@
         <table class="externals">
           <tr>
             <th>Compatibility:</th>
-            <td>bundles Ant 1.6.0 as of NetBeans 3.6</td>
+            <td>bundles Ant 1.6.1 as of NetBeans 3.6</td>
           </tr>
           <tr>
             <th>URL:</th>
