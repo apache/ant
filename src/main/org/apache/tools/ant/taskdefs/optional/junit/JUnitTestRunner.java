@@ -161,15 +161,22 @@ public class JUnitTestRunner implements TestListener {
                 testClass = loader.loadClass(test.getName());
             }
             
+            Method suiteMethod = null;
             try {
-                Method suiteMethod= testClass.getMethod("suite", new Class[0]);
-                suite = (Test)suiteMethod.invoke(null, new Class[0]);
-            } catch(NoSuchMethodException e) {
-            } catch(InvocationTargetException e) {
-            } catch(IllegalAccessException e) {
+                // check if there is a suite method
+                suiteMethod= testClass.getMethod("suite", new Class[0]);
+            } catch(Exception e) {
+                // no appropriate suite method found. We don't report any
+                // error here since it might be perfectly normal. We don't
+                // know exactly what is the cause, but we're doing exactly
+                // the same as JUnit TestRunner do. We swallow the exceptions.
             }
-            
-            if (suite == null) {
+            if (suiteMethod != null){
+                // if there is a suite method available, then try
+                // to extract the suite from it. If there is an error
+                // here it will be caught below and reported.
+                suite = (Test)suiteMethod.invoke(null, new Class[0]);
+            } else {
                 // try to extract a test suite automatically
                 // this will generate warnings if the class is no suitable Test
                 suite= new TestSuite(testClass);
