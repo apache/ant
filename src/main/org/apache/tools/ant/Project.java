@@ -926,6 +926,10 @@ public class Project {
                 + taskClass;
             log(message, Project.MSG_ERR);
             throw new BuildException(message);
+        } catch (LinkageError e) {
+            String message = "Could not load " + taskClass + ": " + e;
+            log(message, Project.MSG_ERR);
+            throw new BuildException(message, e);
         }
         if (!Task.class.isAssignableFrom(taskClass)) {
             TaskAdapter.checkTaskClass(taskClass, this);
@@ -1090,8 +1094,19 @@ public class Project {
      */
     public void executeTargets(Vector targetNames) throws BuildException {
 
+        BuildException thrownException = null;
         for (int i = 0; i < targetNames.size(); i++) {
-            executeTarget((String) targetNames.elementAt(i));
+            try {
+                executeTarget((String) targetNames.elementAt(i));
+            } catch (BuildException ex) {
+                if (!(keepGoingMode)) {
+                    throw ex; // Throw further
+                }
+                thrownException = ex;
+            }
+        }
+        if (thrownException != null) {
+            throw thrownException;
         }
     }
 
