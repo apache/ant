@@ -109,7 +109,8 @@ public class CompilerAdapterFactory {
                 return new Javac12();
             }
             if ( compilerType.equalsIgnoreCase("modern") ||
-                    compilerType.equalsIgnoreCase("javac1.3")) {
+                    compilerType.equalsIgnoreCase("javac1.3") ||
+                    compilerType.equalsIgnoreCase("javac1.4")) {
                 // does the modern compiler exist?
                 try {
                     Class.forName("com.sun.tools.javac.Main");

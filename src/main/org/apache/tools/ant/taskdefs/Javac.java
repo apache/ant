@@ -450,9 +450,18 @@ public class Javac extends MatchingTask {
 	
 	if (fork) {
 	    if (compiler != null) {
-		log("Since fork is true, ignoring build.compiler setting.", Project.MSG_WARN);
-	    }	    
-	    compiler = "extJavac";
+                if (isJdkCompiler(compiler)) {
+                    log("Since fork is true, ignoring build.compiler setting.",
+                        Project.MSG_WARN);
+                    compiler = "extJavac";
+                }
+                else {
+                    log("Since build.compiler setting isn't classic or modern, ignoring fork setting.", Project.MSG_WARN);
+                }
+	    }
+            else {
+                compiler = "extJavac";
+            }
 	} 
 
 	if (compiler == null) {
@@ -520,6 +529,15 @@ public class Javac extends MatchingTask {
     /** Gets the list of files to be compiled. */
     public File[] getFileList() {
         return compileList;
+    }
+
+    protected boolean isJdkCompiler(String compiler) {
+        return "modern".equals(compiler) ||
+            "classic".equals(compiler) ||
+            "javac1.1".equals(compiler) ||
+            "javac1.2".equals(compiler) ||
+            "javac1.3".equals(compiler) ||
+            "javac1.4".equals(compiler);
     }
 
 }
