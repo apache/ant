@@ -141,7 +141,7 @@ class VAJRemoteUtil implements VAJUtil{
                                               boolean includeSources, boolean useDefaultExcludes) {
         String result =
             VAJToolsServlet.DIR_PARAM + "="
-            + URLEncoder.encode(dir.getAbsolutePath()) + "&"
+            + URLEncoder.encode(dir.getPath()) + "&"
             + VAJToolsServlet.CLASSES_PARAM + "=" + includeClasses + "&"
             + VAJToolsServlet.RESOURCES_PARAM + "=" + includeResources + "&"
             + VAJToolsServlet.SOURCES_PARAM + "=" + includeSources + "&"
