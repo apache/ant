@@ -110,6 +110,7 @@ import org.apache.tools.ant.types.FileList;
  * @author <a href="mailto:cstrong@arielpartners.com">Craeg Strong</a>
  * @ant.task category="filesystem"
  * @version $Revision$ $Date$
+ * @since Ant 1.4
  */
 public class DependSet extends MatchingTask {
 
@@ -159,11 +160,13 @@ public class DependSet extends MatchingTask {
     public void execute() throws BuildException {
 
         if ( (sourceFileSets.size() == 0) && (sourceFileLists.size() == 0) ) { 
-          throw new BuildException("At least one <srcfileset> or <srcfilelist> element must be set");
+          throw new BuildException("At least one <srcfileset> or <srcfilelist>"
+                                   + " element must be set");
         }
 
         if ( (targetFileSets.size() == 0) && (targetFileLists.size() == 0) ) {
-          throw new BuildException("At least one <targetfileset> or <targetfilelist> element must be set");
+          throw new BuildException("At least one <targetfileset> or"
+                                   + " <targetfilelist> element must be set");
         }
 
         long now = (new Date()).getTime();
@@ -255,8 +258,8 @@ public class DependSet extends MatchingTask {
            Enumeration enumSourceLists = sourceFileLists.elements();
            while (upToDate && enumSourceLists.hasMoreElements()) {
           
-              FileList sourceFL         = (FileList) enumSourceLists.nextElement();
-              String[] sourceFiles      = sourceFL.getFiles(project);
+              FileList sourceFL    = (FileList) enumSourceLists.nextElement();
+              String[] sourceFiles = sourceFL.getFiles(project);
 
               for (int i=0; upToDate && i < sourceFiles.length; i++) {
                  File src = new File(sourceFL.getDir(project), sourceFiles[i]);
@@ -267,7 +270,8 @@ public class DependSet extends MatchingTask {
                  }
 
                  if (!src.exists()) {
-                    log(sourceFiles[i]+ " does not exist.", Project.MSG_VERBOSE);
+                    log(sourceFiles[i]+ " does not exist.", 
+                        Project.MSG_VERBOSE);
                     upToDate = false;
                     break;
                  }
@@ -288,7 +292,7 @@ public class DependSet extends MatchingTask {
            Enumeration enumSourceSets = sourceFileSets.elements();
            while (upToDate && enumSourceSets.hasMoreElements()) {
           
-              FileSet sourceFS          = (FileSet) enumSourceSets.nextElement();
+              FileSet sourceFS         = (FileSet) enumSourceSets.nextElement();
               DirectoryScanner sourceDS = sourceFS.getDirectoryScanner(project);
               String[] sourceFiles      = sourceDS.getIncludedFiles();
 
@@ -313,11 +317,11 @@ public class DependSet extends MatchingTask {
            log("Deleting all target files. ", Project.MSG_VERBOSE);
            for (Enumeration e = allTargets.elements(); e.hasMoreElements(); ) {
               File fileToRemove = (File)e.nextElement();
-              log("Deleting file " + fileToRemove.getAbsolutePath(), Project.MSG_VERBOSE);
+              log("Deleting file " + fileToRemove.getAbsolutePath(), 
+                  Project.MSG_VERBOSE);
               fileToRemove.delete();
            }
         }
-        
 
     } //-- execute
    

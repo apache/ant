@@ -61,12 +61,13 @@ import org.apache.tools.zip.ZipOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-
 /**
  * Creates a EAR archive. Based on WAR task
  *
  * @author <a href="mailto:stefan.bodewig@epost.de">Stefan Bodewig</a>
  * @author <a href="mailto:leslie.hughes@rubus.com">Les Hughes</a>
+ *
+ * @since Ant 1.4
  *
  * @ant.task category="packaging"
  */
@@ -94,7 +95,9 @@ public class Ear extends Jar {
     public void setAppxml(File descr) {
         deploymentDescriptor = descr;
         if (!deploymentDescriptor.exists()) {
-            throw new BuildException("Deployment descriptor: " + deploymentDescriptor + " does not exist.");
+            throw new BuildException("Deployment descriptor: " 
+                                     + deploymentDescriptor 
+                                     + " does not exist.");
         }
 
         // Create a ZipFileSet for this file, and pass it up.
@@ -109,7 +112,6 @@ public class Ear extends Jar {
     public void addArchives(ZipFileSet fs) {
         // We just set the prefix for this fileset, and pass it up.
         // Do we need to do this? LH
-        log("addArchives called",Project.MSG_DEBUG);
         fs.setPrefix("/");
         super.addFileset(fs);
     }
@@ -129,14 +131,19 @@ public class Ear extends Jar {
     protected void zipFile(File file, ZipOutputStream zOut, String vPath)
         throws IOException
     {
-        // If the file being added is META-INF/application.xml, we warn if it's not the
-        // one specified in the "appxml" attribute - or if it's being added twice,
-        // meaning the same file is specified by the "appxml" attribute and in
-        // a <fileset> element.
+        // If the file being added is META-INF/application.xml, we
+        // warn if it's not the one specified in the "appxml"
+        // attribute - or if it's being added twice, meaning the same
+        // file is specified by the "appxml" attribute and in a
+        // <fileset> element.
         if (vPath.equalsIgnoreCase("META-INF/application.xml"))  {
-            if (deploymentDescriptor == null || !deploymentDescriptor.equals(file) || descriptorAdded) {
-                log("Warning: selected "+archiveType+" files include a META-INF/application.xml which will be ignored " +
-                    "(please use appxml attribute to "+archiveType+" task)", Project.MSG_WARN);
+            if (deploymentDescriptor == null 
+                || !deploymentDescriptor.equals(file) 
+                || descriptorAdded) {
+                log("Warning: selected "+archiveType
+                    + " files include a META-INF/application.xml which will"
+                    + " be ignored (please use appxml attribute to "
+                    + archiveType + " task)", Project.MSG_WARN);
             } else {
                 super.zipFile(file, zOut, vPath);
                 descriptorAdded = true;
@@ -147,8 +154,8 @@ public class Ear extends Jar {
     }
 
     /**
-     * Make sure we don't think we already have a application.xml next time this task
-     * gets executed.
+     * Make sure we don't think we already have a application.xml next
+     * time this task gets executed.
      */
     protected void cleanUp() {
         descriptorAdded = false;
