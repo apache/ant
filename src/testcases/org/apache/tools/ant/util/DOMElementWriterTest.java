@@ -100,5 +100,8 @@ public class DOMElementWriterTest extends TestCase {
         assertEquals("&quot;", w.encode("\""));
         assertEquals("&lt;", w.encode("<"));
         assertEquals("&amp;", w.encode("&"));
+        assertEquals("&#x17;", w.encode("\u0017"));
+        assertEquals("&#20;\"20;&", w.encodedata("&#20;\"20;&"));
+        assertEquals("&#x17;", w.encodedata("\u0017"));
     }
 }

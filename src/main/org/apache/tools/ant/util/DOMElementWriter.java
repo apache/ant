@@ -142,7 +142,7 @@ public class DOMElementWriter {
                 
             case Node.CDATA_SECTION_NODE:
                 out.write("<![CDATA[");
-                out.write(((Text)child).getData());
+                out.write(encodedata(((Text)child).getData()));
                 out.write("]]>");
                 break;
 
@@ -183,7 +183,8 @@ public class DOMElementWriter {
     }
 
     /**
-     * Escape &lt;, &gt; &amp; &apos; and &quot; as their entities.
+     * Escape &lt;, &gt; &amp; &apos;, &quot; and control characters
+     * &lt; 0x20 as their entities.
      */
     public String encode(String value) {
         sb.setLength(0);
@@ -211,8 +212,50 @@ public class DOMElementWriter {
                     sb.append('&');
                 }
                 break;
-            default:
+            case '\t':
+            case '\n':
+            case '\r':
                 sb.append(c);
+                break;
+            default:
+                if (c < 0x20) {
+                    sb.append("&#x");
+                    sb.append(Integer.toHexString(c));
+                    sb.append(';');
+                } else {
+                    sb.append(c);
+                }
+                break;
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Escape control characters &lt; x20 as their entities.
+     *
+     * <p>See XML 1.0 2.2 <a
+     * href="http://www.w3.org/TR/1998/REC-xml-19980210#charsets">http://www.w3.org/TR/1998/REC-xml-19980210#charsets</a>.</p>
+     */
+    public String encodedata(final String value) {
+        sb.setLength(0);
+        for (int i = 0; i < value.length(); ++i) {
+            char c = value.charAt(i);
+            switch (c) {
+            case '\t':
+            case '\n':
+            case '\r':
+                sb.append(c);
+                break;
+                
+            default:
+                if (c < 0x20) {
+                    sb.append("&#x");
+                    sb.append(Integer.toHexString(c));
+                    sb.append(';');
+                } else {
+                    sb.append(c);
+                }
                 break;
             }
         }
