@@ -5,7 +5,7 @@
  * version 1.1, a copy of which has been included with this distribution in
  * the LICENSE.txt file.
  */
-package org.apache.tools.ant.taskdefs;
+package org.apache.tools.ant.taskdefs.security;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +27,9 @@ import org.apache.tools.ant.types.FileSet;
  * @author Nick Fortescue <a href="mailto:nick@ox.compsoc.net">
  *      nick@ox.compsoc.net</a>
  */
-public class SignJar extends Task
+public class SignJar
+    extends Task
 {
-
     /**
      * the filesets of the jars to sign
      */
