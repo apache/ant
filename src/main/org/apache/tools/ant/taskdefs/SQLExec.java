@@ -524,9 +524,10 @@ public class SQLExec extends Task {
                 log(statement.getUpdateCount()+" rows affected", 
                     Project.MSG_VERBOSE);
             }
-            
-            if (print) {
-                printResults(out);
+            else {
+                if (print) {
+                    printResults(out);
+                }
             }
             
             SQLWarning warning = conn.getWarnings();
