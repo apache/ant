@@ -7,6 +7,7 @@
  */
 package org.apache.aut.vfs.provider.local;
 
+import java.io.File;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.provider.AbstractFileSystemProvider;
@@ -14,7 +15,6 @@ import org.apache.aut.vfs.provider.DefaultFileName;
 import org.apache.aut.vfs.provider.FileSystem;
 import org.apache.aut.vfs.provider.FileSystemProvider;
 import org.apache.aut.vfs.provider.ParsedUri;
-import java.io.File;
 
 /**
  * A file system provider, which uses direct file access.

@@ -7,8 +7,8 @@
  */
 package org.apache.antlib.vfile;
 
-import org.apache.myrmidon.AbstractProjectTest;
 import java.io.File;
+import org.apache.myrmidon.AbstractProjectTest;
 
 /**
  * Test cases for the <v-copy> task.

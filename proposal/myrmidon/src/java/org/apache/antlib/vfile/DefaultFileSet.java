@@ -8,6 +8,7 @@
 package org.apache.antlib.vfile;
 
 import java.util.ArrayList;
+import org.apache.antlib.vfile.selectors.AndFileSelector;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.aut.vfs.FileType;
@@ -15,7 +16,6 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.antlib.vfile.selectors.AndFileSelector;
 
 /**
  * A file set, that contains those files under a directory that match

@@ -8,10 +8,10 @@
 package org.apache.antlib.vfile.selectors;
 
 import java.util.ArrayList;
+import org.apache.antlib.vfile.FileSelector;
 import org.apache.aut.vfs.FileObject;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.antlib.vfile.FileSelector;
 
 /**
  * A file selector that performs an OR of nested selectors.  Performs
@@ -46,7 +46,7 @@ public class OrFileSelector
     {
         for( int i = 0; i < m_selectors.size(); i++ )
         {
-            final FileSelector fileSelector = (FileSelector)m_selectors.get(i );
+            final FileSelector fileSelector = (FileSelector)m_selectors.get( i );
             if( fileSelector.accept( file, path, context ) )
             {
                 return true;
@@ -54,6 +54,6 @@ public class OrFileSelector
         }
 
         // Return true if there are no selectors, false if there are
-        return (m_selectors.size() == 0);
+        return ( m_selectors.size() == 0 );
     }
 }

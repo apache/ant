@@ -50,11 +50,11 @@ public class DefaultEmbeddorTest
 
         final Target implicitTarget = project.getImplicitTarget();
         assertEquals( 1, implicitTarget.getTasks().length );
-        assertEquals( "property", implicitTarget.getTasks()[0].getName() );
+        assertEquals( "property", implicitTarget.getTasks()[ 0 ].getName() );
 
         final Target target = project.getTarget( "main-target" );
         assertEquals( 1, target.getTasks().length );
-        assertEquals( "log", target.getTasks()[0].getName() );
+        assertEquals( "log", target.getTasks()[ 0 ].getName() );
     }
 
     /**

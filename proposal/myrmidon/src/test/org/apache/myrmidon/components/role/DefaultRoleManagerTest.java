@@ -7,13 +7,13 @@
  */
 package org.apache.myrmidon.components.role;
 
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 import org.apache.myrmidon.api.Task;
-import org.apache.myrmidon.interfaces.role.RoleManager;
-import org.apache.myrmidon.interfaces.role.RoleInfo;
 import org.apache.myrmidon.interfaces.role.RoleException;
-import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.myrmidon.interfaces.role.RoleInfo;
+import org.apache.myrmidon.interfaces.role.RoleManager;
 
 /**
  * Test cases for the DefaultRoleManager.
@@ -51,7 +51,7 @@ public class DefaultRoleManagerTest
 
         // Lookup the role
         RoleInfo role = m_roleManager.getRole( roleName );
-        assertTrue( origRole.equals(role) );
+        assertTrue( origRole.equals( role ) );
 
         // Lookup the role by shorthand
         role = m_roleManager.getRoleByShorthandName( shorthand );

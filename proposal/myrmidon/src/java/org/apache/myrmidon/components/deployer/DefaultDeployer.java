@@ -145,7 +145,7 @@ public class DefaultDeployer
         throws Exception
     {
         final String roleShorthand = definition.getRoleShorthand();
-        final String roleName  = getRole( roleShorthand ).getName();
+        final String roleName = getRole( roleShorthand ).getName();
         final String factoryClassName = definition.getFactoryClass();
         handleType( deployment, ServiceFactory.class, roleName, factoryClassName );
     }
@@ -277,7 +277,7 @@ public class DefaultDeployer
     private RoleInfo getRole( final String roleShorthand )
         throws DeploymentException
     {
-        final RoleInfo roleInfo =  m_roleManager.getRoleByShorthandName( roleShorthand );
+        final RoleInfo roleInfo = m_roleManager.getRoleByShorthandName( roleShorthand );
         if( null == roleInfo )
         {
             final String message = REZ.getString( "unknown-role4name.error", roleShorthand );

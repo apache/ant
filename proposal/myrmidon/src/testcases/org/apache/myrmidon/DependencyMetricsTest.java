@@ -171,17 +171,17 @@ public class DependencyMetricsTest
      * Make sure that antlib package does not have any
      * unwanted dependencies.
      */
-/*
-    public void testAntlibDecoupled()
-    {
-        final String packageName = "org.apache.antlib";
-        final String[] badEfferents = new String[]
+    /*
+        public void testAntlibDecoupled()
         {
-            "org.apache.tools.ant"
-        };
-        doTestDecoupled( packageName, badEfferents );
-    }
-*/
+            final String packageName = "org.apache.antlib";
+            final String[] badEfferents = new String[]
+            {
+                "org.apache.tools.ant"
+            };
+            doTestDecoupled( packageName, badEfferents );
+        }
+    */
     /**
      * Make sure there are no circular dependencies between packages because
      * circular dependencies are evil!!!

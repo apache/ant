@@ -7,11 +7,11 @@
  */
 package org.apache.antlib.vfile.selectors;
 
+import org.apache.antlib.vfile.FileSelector;
 import org.apache.aut.vfs.FileObject;
 import org.apache.aut.vfs.FileSystemException;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.antlib.vfile.FileSelector;
 
 /**
  * A file selector that only selects files that exist.

@@ -77,7 +77,7 @@ public class AbstractProjectTest
                                              final String targetName,
                                              final String message )
     {
-        executeTargetExpectError( projectFile, targetName, new String[] { message } );
+        executeTargetExpectError( projectFile, targetName, new String[]{message} );
     }
 
     /**

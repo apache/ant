@@ -113,7 +113,7 @@ public class InstantiatingServiceManagerTest
     {
         // Make sure that hasService() works correctly
         final String serviceRole = "some-unknown-service";
-        assertTrue( ! m_serviceManager.hasService( serviceRole ) );
+        assertTrue( !m_serviceManager.hasService( serviceRole ) );
 
         // Make sure that lookup() fails
         try

@@ -9,14 +9,11 @@ package org.apache.aut.vfs;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.io.Reader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import junit.framework.TestCase;
 import org.apache.aut.vfs.impl.DefaultFileSystemManager;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 
@@ -203,21 +200,21 @@ public abstract class AbstractFileSystemTest
     /**
      * Checks that a relative name resolves to the expected absolute path.
      */
-    private void assertSameName(String expectedPath,
-                                FileName baseName,
-                                String relName ) throws Exception
+    private void assertSameName( String expectedPath,
+                                 FileName baseName,
+                                 String relName ) throws Exception
     {
-        FileName name = baseName.resolveName(relName);
+        FileName name = baseName.resolveName( relName );
         assertEquals( expectedPath, name.getPath() );
 
         // Replace the separators
-        relName.replace('\\', '/');
-        name = baseName.resolveName(relName);
+        relName.replace( '\\', '/' );
+        name = baseName.resolveName( relName );
         assertEquals( expectedPath, name.getPath() );
 
         // And again
-        relName.replace('/', '\\');
-        name = baseName.resolveName(relName);
+        relName.replace( '/', '\\' );
+        name = baseName.resolveName( relName );
         assertEquals( expectedPath, name.getPath() );
     }
 
@@ -457,12 +454,12 @@ public abstract class AbstractFileSystemTest
         // Test non-empty file
         FileObject file = m_baseFolder.resolveFile( "file1.txt" );
         FileContent content = file.getContent();
-        assertSameContent(m_charContent, content);
+        assertSameContent( m_charContent, content );
 
         // Test empty file
         file = m_baseFolder.resolveFile( "empty.txt" );
         content = file.getContent();
-        assertSameContent("", content);
+        assertSameContent( "", content );
     }
 
     /**

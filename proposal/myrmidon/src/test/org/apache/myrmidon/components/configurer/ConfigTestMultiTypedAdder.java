@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-
-
 /**
  * Simple class with more than one typed adder method.
  *

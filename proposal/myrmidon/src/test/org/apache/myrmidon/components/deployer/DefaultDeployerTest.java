@@ -69,13 +69,13 @@ public class DefaultDeployerTest
         // Determine the shorthand for the DataType role
 
         // Create the type definition
-        final TypeDefinition typeDef =  new TypeDefinition( typeName, DATA_TYPE_ROLE, classname );
+        final TypeDefinition typeDef = new TypeDefinition( typeName, DATA_TYPE_ROLE, classname );
 
         final ClassLoader classLoader = getClass().getClassLoader();
         final TypeDeployer typeDeployer = m_deployer.createDeployer( classLoader );
 
         // Make sure the test types have not been deployed
-        assertTypesNotRegistered( );
+        assertTypesNotRegistered();
 
         // Deploy the type
         typeDeployer.deployType( typeDef );
@@ -103,7 +103,7 @@ public class DefaultDeployerTest
         final TypeDeployer typeDeployer = m_deployer.createDeployer( classLoader );
 
         // Make sure the test types have not been deployed
-        assertTypesNotRegistered( );
+        assertTypesNotRegistered();
 
         // Deploy the type
         typeDeployer.deployType( typeDef );
@@ -176,7 +176,7 @@ public class DefaultDeployerTest
      * Ensures the types from the test typelib descriptor have been correctly
      * deployed.
      */
-    private void assertTypesRegistered( ) throws Exception
+    private void assertTypesRegistered() throws Exception
     {
         // Check the data-type
         TypeFactory typeFactory = getTypeManager().getFactory( DataType.class );

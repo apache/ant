@@ -103,7 +103,7 @@ public class DefaultConfigurerTest
         // Check result
         final ConfigTestPrimConvert expected = new ConfigTestPrimConvert();
         expected.setIntProp( 90 );
-        expected.setIntegerProp( new Integer(-401) );
+        expected.setIntegerProp( new Integer( -401 ) );
         assertEquals( expected, test );
     }
 
@@ -381,7 +381,7 @@ public class DefaultConfigurerTest
         final ConfigTestInterfaceProp test = new ConfigTestInterfaceProp();
 
         // Configure object
-        m_configurer.configure( test, config,  m_context );
+        m_configurer.configure( test, config, m_context );
 
         // Check result
         final ConfigTestInterfaceProp expected = new ConfigTestInterfaceProp();
@@ -442,7 +442,7 @@ public class DefaultConfigurerTest
                 REZ.getString( "bad-configure-element.error", "test" ),
                 REZ.getString( "multiple-adder-methods-for-element.error",
                                ConfigTestMultiTypedAdder.class.getName(),
-                               "")
+                               "" )
             };
             assertSameMessage( messages, ce );
         }
@@ -541,7 +541,7 @@ public class DefaultConfigurerTest
         config.setAttribute( "my-role1", "some value" );
 
         // Set up the converter and role
-        registerRole( new RoleInfo("my-role1", MyRole1.class ) );
+        registerRole( new RoleInfo( "my-role1", MyRole1.class ) );
         registerConverter( ObjectToMyRole1Converter.class, String.class, MyRole1.class );
 
         final ConfigTestTypedProp test = new ConfigTestTypedProp();

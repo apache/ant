@@ -7,7 +7,6 @@
  */
 package org.apache.aut.vfs;
 
-import java.io.Writer;
 import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.Set;

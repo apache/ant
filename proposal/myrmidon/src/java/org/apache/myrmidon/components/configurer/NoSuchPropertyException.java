@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-
-
 /**
  * A marker exception that is thrown when an unknown property is encountered.
  *

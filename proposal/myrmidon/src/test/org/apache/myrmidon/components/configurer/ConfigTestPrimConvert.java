@@ -36,7 +36,7 @@ public class ConfigTestPrimConvert
         {
             return false;
         }
-        if ( !AbstractComponentTest.equals( m_integerProp, test.m_integerProp ) )
+        if( !AbstractComponentTest.equals( m_integerProp, test.m_integerProp ) )
         {
             return false;
         }

@@ -7,8 +7,8 @@
  */
 package org.apache.aut.zip;
 
-import junit.framework.TestCase;
 import java.util.NoSuchElementException;
+import junit.framework.TestCase;
 
 /**
  * JUnit testcases ZipEntry.

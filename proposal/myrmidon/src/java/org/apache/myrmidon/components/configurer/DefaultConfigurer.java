@@ -415,7 +415,7 @@ public class DefaultConfigurer
 
         // Convert the value to the appropriate type
         final Class type = setter.getType();
-        if( ! type.isInstance( objValue ) )
+        if( !type.isInstance( objValue ) )
         {
             objValue = m_converter.convert( type, objValue, context );
         }
@@ -478,7 +478,7 @@ public class DefaultConfigurer
         configureObject( child, element, context );
 
         // Convert the object, if necessary
-        if( ! type.isInstance( child ) )
+        if( !type.isInstance( child ) )
         {
             child = m_converter.convert( type, child, context );
         }
@@ -540,7 +540,8 @@ public class DefaultConfigurer
         // Map the expected type to a role.  If found, instantiate the default
         // type for that role
         final RoleInfo roleInfo = m_roleManager.getRoleByType( type );
-        if( roleInfo != null ) {
+        if( roleInfo != null )
+        {
             final String typeName = roleInfo.getDefaultType();
             if( typeName != null )
             {
@@ -582,7 +583,7 @@ public class DefaultConfigurer
 
         // Use the generic 'data-type' role.
         final TypeFactory factory = m_typeManager.getFactory( DataType.class );
-        if( ! factory.canCreate( name ) )
+        if( !factory.canCreate( name ) )
         {
             throw new NoSuchPropertyException();
         }

@@ -9,7 +9,6 @@ package org.apache.myrmidon.interfaces.type;
 
 import java.io.File;
 import java.net.URL;
-import junit.framework.TestCase;
 import org.apache.myrmidon.AbstractMyrmidonTest;
 
 /**

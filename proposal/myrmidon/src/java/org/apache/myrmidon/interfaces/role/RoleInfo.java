@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.interfaces.role;
 
-
-
 /**
  * A role definition.  Role definitions are immutable.
  *
@@ -87,7 +85,7 @@ public final class RoleInfo
         {
             return false;
         }
-        if( ! m_name.equals( role.m_name ) )
+        if( !m_name.equals( role.m_name ) )
         {
             return false;
         }
@@ -95,7 +93,7 @@ public final class RoleInfo
         {
             return false;
         }
-        if( m_shorthand != null && ! m_shorthand.equals( role.m_shorthand ) )
+        if( m_shorthand != null && !m_shorthand.equals( role.m_shorthand ) )
         {
             return false;
         }

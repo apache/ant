@@ -7,8 +7,6 @@
  */
 package org.apache.myrmidon.components.configurer;
 
-
-
 /**
  * Simple class to test typed adder.
  *

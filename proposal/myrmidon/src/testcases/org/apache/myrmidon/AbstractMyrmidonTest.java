@@ -39,9 +39,9 @@ public abstract class AbstractMyrmidonTest
         final String baseDirProp = System.getProperty( "test.basedir" );
         m_baseDir = new File( baseDirProp );
         String packagePath = getClass().getName();
-        int idx = packagePath.lastIndexOf('.');
-        packagePath = packagePath.substring(0, idx);
-        packagePath = packagePath.replace('.', File.separatorChar);
+        int idx = packagePath.lastIndexOf( '.' );
+        packagePath = packagePath.substring( 0, idx );
+        packagePath = packagePath.replace( '.', File.separatorChar );
         m_testBaseDir = new File( m_baseDir, packagePath );
     }
 

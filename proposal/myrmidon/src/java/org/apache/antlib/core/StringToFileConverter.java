@@ -8,12 +8,12 @@
 package org.apache.antlib.core;
 
 import java.io.File;
+import org.apache.aut.converter.AbstractConverter;
+import org.apache.aut.converter.ConverterException;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.aut.converter.AbstractConverter;
-import org.apache.aut.converter.ConverterException;
 
 /**
  * String to file converter

@@ -13,7 +13,7 @@ package org.apache.myrmidon.listeners;
  * @author <a href="mailto:adammurdoch@apache.org">Adam Murdoch</a>
  * @version $Revision$ $Date$
  * @ant:type type="listener" name="noprefix"
-  */
+ */
 public class NoPrefixProjectListener
     extends DefaultProjectListener
 {

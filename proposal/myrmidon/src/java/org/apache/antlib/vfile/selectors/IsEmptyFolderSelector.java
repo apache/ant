@@ -9,8 +9,8 @@ package org.apache.antlib.vfile.selectors;
 
 import org.apache.antlib.vfile.FileSelector;
 import org.apache.aut.vfs.FileObject;
-import org.apache.aut.vfs.FileType;
 import org.apache.aut.vfs.FileSystemException;
+import org.apache.aut.vfs.FileType;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 
@@ -37,8 +37,8 @@ public class IsEmptyFolderSelector
         try
         {
             return ( file.exists()
-                     && file.getType() == FileType.FOLDER
-                     && file.getChildren().length == 0 );
+                && file.getType() == FileType.FOLDER
+                && file.getChildren().length == 0 );
         }
         catch( FileSystemException e )
         {

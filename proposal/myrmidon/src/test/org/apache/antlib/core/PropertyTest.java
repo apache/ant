@@ -12,7 +12,6 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.AbstractProjectTest;
 import org.apache.myrmidon.LogMessageTracker;
-import org.apache.myrmidon.components.configurer.DefaultConfigurer;
 
 /**
  * Test cases for <property> task.
@@ -42,17 +41,17 @@ public class PropertyTest
 
         // Set by attribute
         LogMessageTracker tracker = new LogMessageTracker();
-        tracker.addExpectedMessage( "set-attr", "test-prop = [some value]");
+        tracker.addExpectedMessage( "set-attr", "test-prop = [some value]" );
         executeTarget( projectFile, "set-attr", tracker );
 
         // Set by text content
         tracker = new LogMessageTracker();
-        tracker.addExpectedMessage( "set-content", "test-prop2 = [some value]");
+        tracker.addExpectedMessage( "set-content", "test-prop2 = [some value]" );
         executeTarget( projectFile, "set-content", tracker );
 
         // Set by nested element
         tracker = new LogMessageTracker();
-        tracker.addExpectedMessage( "set-element", "test-prop3 = [value=[some value]]");
+        tracker.addExpectedMessage( "set-element", "test-prop3 = [value=[some value]]" );
         executeTarget( projectFile, "set-element", tracker );
     }
 

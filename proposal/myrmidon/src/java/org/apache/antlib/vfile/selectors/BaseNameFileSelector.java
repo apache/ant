@@ -8,7 +8,6 @@
 package org.apache.antlib.vfile.selectors;
 
 import org.apache.aut.vfs.FileObject;
-import org.apache.antlib.vfile.selectors.AbstractNameFileSelector;
 
 /**
  * A file selector that selects files based on their base-name.

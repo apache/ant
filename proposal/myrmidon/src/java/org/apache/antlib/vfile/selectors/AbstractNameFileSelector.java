@@ -7,7 +7,10 @@
  */
 package org.apache.antlib.vfile.selectors;
 
+import org.apache.antlib.vfile.FileSelector;
 import org.apache.aut.vfs.FileObject;
+import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.oro.text.GlobCompiler;
@@ -15,9 +18,6 @@ import org.apache.oro.text.regex.MalformedPatternException;
 import org.apache.oro.text.regex.Pattern;
 import org.apache.oro.text.regex.Perl5Compiler;
 import org.apache.oro.text.regex.Perl5Matcher;
-import org.apache.avalon.excalibur.i18n.ResourceManager;
-import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.antlib.vfile.FileSelector;
 
 /**
  * An abstract file selector that selects files based on name.

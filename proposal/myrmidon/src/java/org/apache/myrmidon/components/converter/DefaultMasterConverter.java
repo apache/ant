@@ -140,7 +140,7 @@ public class DefaultMasterConverter
         ArrayList queue = new ArrayList();
         queue.add( originalClass );
 
-        while( ! queue.isEmpty() )
+        while( !queue.isEmpty() )
         {
             Class clazz = (Class)queue.remove( 0 );
 
@@ -152,7 +152,7 @@ public class DefaultMasterConverter
             final Class[] interfaces = clazz.getInterfaces();
             for( int i = 0; i < interfaces.length; i++ )
             {
-                queue.add( interfaces[i ] );
+                queue.add( interfaces[ i ] );
             }
 
             // Check if we can convert from current class to destination
