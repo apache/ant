@@ -40,6 +40,9 @@ Fixed bugs:
 Other changes:
 --------------
 
+* New tasks bzip2 and bunzip2 to pack and unpack files using the 
+  BZip2 alogrythm
+
 * New task replaceregexp
 
 * The attributes zipfile, jarfile, warfile and earfile (from the Zip, 
