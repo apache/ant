@@ -57,7 +57,7 @@ import org.apache.tools.ant.gui.event.*;
 import org.apache.tools.ant.gui.command.*;
 import java.util.EventObject;
 import java.awt.event.ActionEvent;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  * The purpose of this class is to watch for events that require some sort
@@ -133,6 +133,13 @@ class EventResponder {
             }
             else if(command.equals(ChangeLookAndFeelCmd.ACTION_NAME)) {
                 new ChangeLookAndFeelCmd(_context).execute();
+            }
+            else if(command.equals(ChangeLookAndFeelCmd.ACTION_NAME)) {
+                new ChangeLookAndFeelCmd(_context).execute();
+            }
+            else if(command.equals(EmacsNotifyCmd.ACTION_NAME)) {
+                AbstractButton source = (AbstractButton) event.getSource();
+                new EmacsNotifyCmd(_context, source.isSelected()).execute();
             }
             else {
 				// XXX log me.

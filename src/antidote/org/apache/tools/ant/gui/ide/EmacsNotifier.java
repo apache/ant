@@ -51,69 +51,56 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.gui;
-import org.apache.tools.ant.gui.command.LoadFileCmd;
-import javax.swing.*;
-import java.awt.BorderLayout;
+
+package org.apache.tools.ant.gui.ide;
+
+import org.apache.tools.ant.taskdefs.ExecTask;
+import org.apache.tools.ant.Project;
+import java.util.StringTokenizer;
 import java.io.File;
 
 /**
- * Launch point for the Antidote GUI. Configurs it as an application.
+ * FileErrorNotifier specialization for sending file error
+ * messages to emacs via the emacsclient command. This
+ * command <i>must</i> be in the runtime path of the JVM for
+ * it to be found.  
+ * <p> Install the notifier by running Ant as follows:<br> 
+ * <code> 
+ * &nbsp;&nbsp;ant -listener net.noemis.ant.EmacsNotifier 
+ * </code>
  * 
  * @version $Revision$ 
- * @author Simeon Fitch 
- */
-public class Main {
+ * @author <a href="mailto:simeon@fitch.net">Simeon H.K. Fitch</a> */
+public class EmacsNotifier extends FileErrorNotifier {
+    /** Command to run to communicate with emacs. */
+	// XXX This should only be a default. A property should be checked
+	// for the actual version. Should Project.getProperty() or 
+	// Project.getUserProperty() be used???
+    private static final String EMACS = "emacsclient";
+
 	/** 
-	 * Application start.
+	 * Called when a message has been logged indicating that
+	 * there is an error of some sort at the given file and
+	 * line number.  Sends a message bto emacs to make emacs
+	 * visit the file and place the mark at the source of
+	 * the error.
 	 * 
-	 * @param args TBD
+	 * @param file File containing the error.
+	 * @param lineNum Line number of error.  
 	 */
-    public static void main(String[] args) {
-        XMLHelper.init();
-
-        String vmVersion = System.getProperty("java.vm.vendor");
-        if(vmVersion.indexOf("Blackdown") > 0 &&
-           vmVersion.indexOf("RC") > 0) {
-            System.err.println(
-                "Warning: Antidote will not work with VM version " +
-                "Blackdown-1.3.0-RC1.");
-            System.err.println("Your version: " + vmVersion);
-        }
-
-        try {
-            JFrame f = new JFrame("Antidote");
-            AppContext context = new AppContext(f);
-            EventResponder resp = new EventResponder(context);
-            Antidote gui = new Antidote(context);
-
-            f.setDefaultCloseOperation(3 /*JFrame.EXIT_ON_CLOSE*/);
-            f.setJMenuBar(context.getActions().createMenuBar());
-            f.getContentPane().add(BorderLayout.CENTER, gui);
-            f.getContentPane().add(BorderLayout.NORTH, 
-                                   context.getActions().createToolBar());
-
-            ImageIcon icon = 
-                context.getResources().getImageIcon("icon-small.gif");
-            if(icon != null) {
-                f.setIconImage(icon.getImage());
-            }
-            else {
-                System.out.println("Application icon not found.");
-            }
-            f.pack();
-
-            f.setVisible(true);
-
-
-            // XXX this will change once full command line argument parsing
-            // is supported.
-            if(args.length > 0) {
-                new LoadFileCmd(context, new File(args[0])).execute();
-            }
-        }
-        catch(Exception ex) {
-            ex.printStackTrace();
-        }
-    }
+	protected void fireFileErrorNotification(
+		Project project, File file, int lineNum) {
+		// Launch our command using the built in exec support.
+		ExecTask exec = (ExecTask) project.createTask("exec");
+		// Construct the command to communicate with emacs.
+		// Command has the form:
+		//     emacsclient [-n] [--no-wait] [+LINENUMBER] FILENAME
+		exec.setExecutable(EMACS);
+		exec.createArg().setValue("-n");
+		exec.createArg().setValue("--no-wait");
+		exec.createArg().setValue("+" + lineNum);
+		exec.createArg().setValue(file.toString());
+		exec.setFailonerror(false);
+		exec.execute();
+	}
 }

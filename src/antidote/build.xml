@@ -31,9 +31,8 @@
   <!-- =================================================================== -->
   <!-- Set some the defaults the user can override in .ant.properties      -->
   <!-- =================================================================== -->
-  <property name="build.compiler" value="classic"/>
+  <property name="build.compiler" value="jikes"/>
   <property name="build.compiler.emacs" value="on"/>
-  <property name="junit.fork" value="false" />
 
   <!-- =================================================================== -->
   <!-- Define a global set of patterns that can be referenced by           -->
@@ -61,8 +60,8 @@
     <javac srcdir="${src.dir}"
            destdir="${build.classes}"
            debug="on"
-           deprecation="off"
-           optimize="on" >
+           deprecation="on"
+           optimize="off" >
       <classpath refid="classpath" />
     </javac>
  

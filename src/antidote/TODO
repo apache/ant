@@ -1,4 +1,7 @@
 TODO List:
+    * Add support to ActionManager to handle toggle actions in tool bar. Also
+      need a better way of detecting the selected state of the action button.
+
     * Need Ant API access to:
         - Tasks within a Target
         - The topo sorted task list to get flattened dependencies

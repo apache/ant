@@ -75,6 +75,7 @@ public class AntAction extends AbstractAction {
     public static final String ENABLED = "enabled";
     public static final String ENABLE_ON = "enableOn";
     public static final String DISABLE_ON = "disableOn";
+    public static final String TOGGLE = "toggle";
 
     /** Property resources. */
     private  ResourceBundle _resources =  null;
@@ -89,6 +90,8 @@ public class AntAction extends AbstractAction {
     /** Events that the action should cause transition to the 
      *  enabled(false) state. */
     private Class[] _disableOn = null;
+    /** Flag indicating toggle action. */
+    private boolean _toggle = false;
 
 
     /** 
@@ -116,6 +119,12 @@ public class AntAction extends AbstractAction {
         String accelerator = getString(ACCELERATOR);
         if(accelerator != null) {
             putValue(ACCELERATOR, KeyStroke.getKeyStroke(accelerator));
+        }
+
+        // Check to see if action is a toggle action.
+        String toggle = getString(TOGGLE);
+        if(toggle != null) {
+            _toggle = Boolean.valueOf(toggle).booleanValue();
         }
 
         // Add an icon if any (which means it'll show up on the tool bar).
@@ -270,6 +279,15 @@ public class AntAction extends AbstractAction {
 	 */
     public Class[] getDisableOnEvents() {
         return _disableOn;
+    }
+
+	/** 
+	 * True if this is a toggle action, false otherwise.
+	 * 
+	 * @return True if this is a toggle action, false otherwise.
+	 */
+    public boolean isToggle() {
+        return _toggle;
     }
 
     /** 

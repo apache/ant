@@ -62,8 +62,7 @@ import javax.swing.text.Document;
 import javax.swing.tree.TreeSelectionModel;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * This class provides the gateway interface to the data model for
@@ -96,6 +95,7 @@ public class ProjectProxy {
         _file = file;
         _context = context;
         loadProject();
+
     }
 
 	/** 
@@ -109,15 +109,6 @@ public class ProjectProxy {
     }
 
 	/** 
-	 * Called to indicate that the project is no longer going to be used
-     * by the GUI, and that any cleanup should occur.
-	 * 
-	 */
-    //public void close() {
-    //
-    //}
-
-	/** 
 	 * Build the project with the current target (or the default target
      * if none is selected.  Build occurs on a separate thread, so method
      * returns immediately.
@@ -128,12 +119,13 @@ public class ProjectProxy {
         project.init();
         // XXX there is a bunch of stuff in the class
         // org.apache.tools.ant.Main that needs to be
-        // abstracted out so that it doesn't have to be
+        // refactored out so that it doesn't have to be
         // replicated here.
         
         // XXX need to provide a way to pass in externally
         // defined properties.  Perhaps define an external
-        // Antidote properties file.
+        // Antidote properties file. JAVA_HOME may have to be set, 
+        // as well as checking the .ant.properties
         project.setUserProperty("ant.file" , _file.getAbsolutePath());
         ProjectHelper.configureProject(project, _file);
 
@@ -189,7 +181,14 @@ public class ProjectProxy {
 
     /** Class for executing the build in a separate thread. */
     private class BuildRunner implements Runnable {
+        /** The project to execute build on. */
         private Project _project = null;
+
+        /** 
+         * Standard ctor.
+         * 
+         * @param project Project to execute build on.
+         */
         public BuildRunner(Project project) {
             _project = project;
         }
@@ -214,13 +213,14 @@ public class ProjectProxy {
          * 
          */
         public void run() {
-            // Add the build listener for
-            // dispatching BuildEvent objects to the
-            // EventBus.
-            BuildEventForwarder handler = 
-                new BuildEventForwarder(_context);
-            _project.addBuildListener(handler);
+            // Add the build listeners
+            BuildListener[] listeners = _context.getBuildListeners();
+            for(int i = 0; i < listeners.length; i++) {
+                _project.addBuildListener(listeners[i]);
+            }
+
             try {
+
                 fireBuildEvent(new BuildEvent(
                     _project), BuildEventType.BUILD_STARTED);
                 
@@ -250,8 +250,11 @@ public class ProjectProxy {
             finally {
                 fireBuildEvent(new BuildEvent(
                     _project), BuildEventType.BUILD_FINISHED);
-                _project.removeBuildListener(handler);
-                _buildThread = null;
+
+                // Remove the build listeners.
+                for(int i = 0; i < listeners.length; i++) {
+                    _project.removeBuildListener(listeners[i]);
+                }
             }
         }
     }

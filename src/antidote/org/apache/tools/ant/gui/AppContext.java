@@ -52,9 +52,10 @@
  * <http://www.apache.org/>.
  */
 package org.apache.tools.ant.gui;
+import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.gui.event.*;
 import java.awt.Frame;
-
+import java.util.*;
 
 /**
  * A container for the state information for the application. Provides
@@ -70,6 +71,8 @@ public class AppContext {
     private ResourceManager _resources = new ResourceManager();
     /** Application actions. */
     private ActionManager _actions = new ActionManager(_eventBus);
+    /** List of build listeners to register when build starts. */
+    private List _buildListeners = new LinkedList();
 
     /** Parent frame used in various operations. XXX what do we do 
      *  in the applet context. */
@@ -81,6 +84,10 @@ public class AppContext {
 
     public AppContext(Frame parent) {
         _parentFrame = parent;
+        // Add the build listener for dispatching BuildEvent
+        // objects to the EventBus.
+        BuildEventForwarder handler = new BuildEventForwarder(this);
+        addBuildListener(handler);
     }
 
 	/** 
@@ -126,6 +133,36 @@ public class AppContext {
 	 */
     public ProjectProxy getProject() {
         return _project;
+    }
+
+
+	/** 
+	 * Add a build listener.
+	 * 
+	 * @param l Listener to add.
+	 */
+    public void addBuildListener(BuildListener l) {
+        _buildListeners.add(l);
+    }
+
+	/** 
+	 * Remove a build listener.
+	 * 
+	 * @param l Listener to remove.
+	 */
+    public void removeBuildListener(BuildListener l) {
+        _buildListeners.remove(l);
+    }
+
+	/** 
+	 * Get the set of current build listeners.
+	 * 
+     * @return Set of current build listeners.
+	 */
+    public BuildListener[] getBuildListeners() {
+        BuildListener[] retval = new BuildListener[_buildListeners.size()];
+        _buildListeners.toArray(retval);
+        return retval;
     }
 
 	/** 

@@ -164,9 +164,22 @@ public class ActionManager {
                    menu.getMenuComponentCount() > 0) {
                     menu.addSeparator();
                 }
-                JMenuItem item = menu.add(action);
-                item.setAccelerator(action.getAccelerator());
-                addNiceStuff(item, action);
+
+                if(!action.isToggle()) {
+                    JMenuItem item = menu.add(action);
+                    item.setAccelerator(action.getAccelerator());
+                    addNiceStuff(item, action);
+                }
+                else {
+                    JCheckBoxMenuItem b = 
+                        new JCheckBoxMenuItem(action.getName());
+                    b.setActionCommand(action.getID());
+                    b.addActionListener(action);
+                    b.setAction(action);
+                    addNiceStuff(b, action);
+                    menu.add(b);
+                }
+
             }
         }
 

@@ -1,3 +1,25 @@
+2000-11-16  Simeon H.K. Fitch  <simeon@fitch.net>
+
+	* org/apache/tools/ant/gui/AntAction.java: Added toggle property.
+
+	* org/apache/tools/ant/gui/ActionManager.java: Added ability to
+	handle toggle actions to menu bar (still need to add support to
+	tool bar).
+
+	* org/apache/tools/ant/gui/EventResponder.java: Added emacs
+	notifier command.
+
+	* org/apache/tools/ant/gui/ide/EmacsNotifier.java: Imported.
+
+	* org/apache/tools/ant/gui/ProjectProxy.java: Added code to add
+	listeners registered with the AppContext to the build.
+
+	* org/apache/tools/ant/gui/AppContext.java: Now allows registering
+	of build listeners to be added to project at build time.
+
+	* org/apache/tools/ant/gui/Main.java: Added loading of build file
+	provided on command line.
+
 2000-11-14  Simeon H.K. Fitch  <simeon@fitch.net>
 
 	* org/apache/tools/ant/gui/Antidote.java: Added top area widget,
