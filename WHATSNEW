@@ -11,6 +11,9 @@ Changes that could break older environments:
   didn't depend on Xalan-J 2 at all.  Its sole dependency has always
   been TraX and so it has been merged into ant-trax.jar.
 
+* All exceptions thrown by tasks are now wrapped in a buildexception
+  giving the location in the buildfile of the task.
+
 Fixed bugs:
 -----------
 
