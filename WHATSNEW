@@ -91,6 +91,8 @@ Fixed bugs:
 
 Other changes:
 --------------
+* New optional type, <classfileset> added.
+
 * <available> has a new attribute named ignoreSystemClasses.
 
 * New task <cvschangelog/> generates an XML report of changes that occur
