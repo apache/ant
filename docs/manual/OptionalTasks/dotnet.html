@@ -63,7 +63,7 @@ can, however, be done if absolutely necessary. The trick is a sequence
 of &lt;importtypelib/&gt;, &lt;ildasm&gt;, &lt;replace&gt; and finally 
 &lt;ilasm&gt;.
 
-<h2>Task List</h2>
+<h3>Task List</h3>
 
 <table border="0" >
 <tr>
@@ -103,9 +103,107 @@ of &lt;importtypelib/&gt;, &lt;ildasm&gt;, &lt;replace&gt; and finally
 
 </table>
 
+<hr>
+<h3>Common .NET Datatypes </h3>
+
+There are some datatypes that are common to the core compiler classes:
+csc, vbc and  jsharpc
+
+<h4>Resource</h4>
+
+This is a resource that is included in the build. Ant uses this for
+dependency checking -if resources included this way have changed, the
+executable or library will be rebuilt.
+<p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">File</td> 
+    <td valign="top">the resource to include</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">name</td> 
+    <td valign="top">the name of the resource. 
+    Optional unless the resource is
+    marked as public or private</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">embed</td> 
+    <td valign="top">flag to control whether the resource
+    is embedded in the assembly, or just linked to it</td>
+    <td align="center" valign="top">No -default is true</td>
+  </tr>
+  <tr>
+    <td valign="top">public</td> 
+    <td valign="top">VB only: flag to control if a resource should be 
+    public or private. Set to true for public, false for private
+    and leave undefined for for neither. </td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h5>Examples</h5>
+
+<pre>
+&lt;resource file="app.ico" name="icon" /&gt;
+&lt;resource file="splash.jpg"/&gt;
+&lt;resource name="splash" file="splash.jpg" public="false"/&gt;
+</pre>
+
+<h4>Define</h4>
+
+This is a definition; in .NET these can either be defined or undefined,
+unlike C++ #defines, which can be either undefined or arbitrary text.
+The Ant compilation tasks can unconditionally add definitions, or
+conditionally set a compile-time definition if an ant property is
+defined or not.
+<p>
+
+Dependency Logic: the tasks are not (yet) clever enough to remember what
+the last definitions were and trigger a rebuild when they change. Clean
+build the code when the defines are likely to be different.
+<p>
+<table border="1" cellpadding="2" cellspacing="0">
+  <tr>
+    <td valign="top"><b>Attribute</b></td>
+    <td valign="top"><b>Description</b></td>
+    <td align="center" valign="top"><b>Required</b></td>
+  </tr>
+  <tr>
+    <td valign="top">name</td> 
+    <td valign="top">the name of the definition</td>
+    <td align="center" valign="top">Yes</td>
+  </tr>
+  <tr>
+    <td valign="top">if</td> 
+    <td valign="top">name of a ant property to test for;
+    the definition is only set if this property is defined.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">unless</td> 
+    <td valign="top">name of a ant property to test for;
+    the definition is only set if this property is undefined.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+</table>
+
+<h5>Examples</h5>
+
+<pre>
+&lt;define name="unsafe" /&gt;
+&lt;define name="debug" if="build.debug"/&gt;
+&lt;define name="dotnet" unless="build.mono"/&gt;
+</pre>
 
 <hr>
-<h2> Change Log </h2>
+<h3> Change Log </h3>
 
 <h4>Ant1.6</h4>
 This revision goes along with NET 1.1, though there is no reason why
