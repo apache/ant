@@ -1,0 +1,3 @@
+<XDtTagDef:tagDef namespace="Ant" handler="org.apache.tools.ant.xdoclet.TaskTagsHandler"/>
+<XDtAnt:forAllTasks><XDtAnt:taskName/>=<XDtClass:fullClassName/>
+</XDtAnt:forAllTasks>

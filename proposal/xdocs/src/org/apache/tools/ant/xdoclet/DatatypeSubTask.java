@@ -54,22 +54,20 @@
 package org.apache.tools.ant.xdoclet;
 
 import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.PackageDoc;
-import com.sun.javadoc.Tag;
 import xdoclet.TemplateSubTask;
 import xdoclet.XDocletException;
 import xdoclet.XDocletTagSupport;
-import xdoclet.tags.PackageTagsHandler;
+import xdoclet.tags.TypeTagsHandler;
+import xdoclet.util.TypeConversionUtil;
 
 import java.io.File;
 import java.text.MessageFormat;
 
 /**
- * Custom XDoclet subtask to handle Ant specific needs
+ * Custom XDoclet subtask to handle Ant datatypes
  */
-public class AntSubTask extends TemplateSubTask {
-    public final static String SUBTASK_NAME = "ant";
+public class DatatypeSubTask extends TemplateSubTask {
+    public final static String SUBTASK_NAME = "datatypes";
 
     public String getSubTaskName() {
         return SUBTASK_NAME;
@@ -78,85 +76,47 @@ public class AntSubTask extends TemplateSubTask {
     /**
      * Returns true if the class is an Ant task. This causes the task to be processed
      * by the XDoclet template task.
-     *
-     * @todo implement more logic here
-     *       - execute method could be on super class
-     *       - execute method should return void and have no args
-     *       - and only throw BuildException if at all
      */
     protected boolean matchesGenerationRules(ClassDoc clazz) throws XDocletException {
-        return isAntTask(clazz);;
+        return isAntDatatype(clazz);
+        ;
     }
 
     /**
-     * @todo pull out to utility method
-     * @todo revisit deprecated removal - perhaps need an @ant.task ignore="true"?
+     * @todo a datatype doesn't have to extend Datatype, right?  so perhaps should
+     *       another condition to flag a class with @ant.datatype name="..."
      */
-    public static final boolean isAntTask(ClassDoc clazz) {
+    public static final boolean isAntDatatype(ClassDoc clazz) throws XDocletException {
         if (clazz.isAbstract()) {
             return false;
         }
 
-        // no inner classes (for now - but is this possible? desired?)
+        // no inner classes
         if (clazz.containingClass() != null) {
             return false;
         }
 
-        // remove deprecated tasks (controversial!)
-        Tag[] tags = clazz.tags();
-        for (int i=0; i < tags.length; i++) {
-            if ("@deprecated".equals(tags[i].name())) {
-                return false;
-            }
-        }
+        String ignoreValue = XDocletTagSupport.getClassTagValue(clazz, "ant:datatype", "ignore", 0, null, "false", false, false);
+        boolean ignore = TypeConversionUtil.stringToBoolean(ignoreValue, true);
 
-        if (hasExecuteMethod(clazz)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    private static boolean hasExecuteMethod (ClassDoc clazz) {
-        if (clazz == null) {
+        if (ignore) {
             return false;
         }
 
-        // It ain't a task if we've climbed back to Task itself
-        if ("org.apache.tools.ant.Task".equals(clazz.qualifiedName())) {
-            return false;
-        }
-
-        // need to check that only runtime exceptions are thrown?
-        MethodDoc[] methods = clazz.methods();
-        for (int i = 0; i < methods.length; i++) {
-            if ("execute".equals(methods[i].name())) {
-                if (methods[i].parameters().length == 0) {
-                    if (methods[i].returnType().typeName().equals("void")) {
-                        return true;
-                    }
-                }
-            }
-        }
-
-        return hasExecuteMethod(clazz.superclass());
+        return TypeTagsHandler.isOfType(clazz,
+                "org.apache.tools.ant.types.DataType",
+                TypeTagsHandler.TYPE_HIERARCHY);
     }
 
     /**
      * Custom file naming. Use the task name for the file name rather than the
      * default class name.
+     *
+     * @todo fix hardcoded path name
      */
     protected String getGeneratedFileName(ClassDoc clazz) throws XDocletException {
-        String filename = getDestinationFile();
-        String dir = getDestDir().getAbsolutePath();
-
-        if (filename.indexOf("{0}") != -1) {
-            dir = AntTagsHandler.getCategoryName(clazz);
-            String taskName = AntTagsHandler.getTaskName(clazz);
-            filename = MessageFormat.format(getDestinationFile(), new Object[]{taskName});
-        }
-
-        return new File(dir, filename).toString();
+        String typeName = DatatypeTagsHandler.getDatatypeName(clazz);
+        return typeName + ".xml";
     }
 
 }

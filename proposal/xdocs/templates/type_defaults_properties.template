@@ -1,0 +1,3 @@
+<XDtTagDef:tagDef namespace="Ant" handler="org.apache.tools.ant.xdoclet.DatatypeTagsHandler"/>
+<XDtAnt:forAllDatatypes><XDtAnt:typeName/>=<XDtClass:fullClassName/>
+</XDtAnt:forAllDatatypes>

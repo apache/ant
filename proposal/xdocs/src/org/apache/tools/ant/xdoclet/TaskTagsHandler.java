@@ -82,13 +82,13 @@ import java.util.Properties;
  * @todo need to create better logic for finding proper setters
  * @todo add ifIsAntTask, among other convenience tags
  */
-public class AntTagsHandler extends XDocletTagSupport {
+public class TaskTagsHandler extends XDocletTagSupport {
 
     /** Default category for tasks without a category attribute. */
     public static final String DEFAULT_CATEGORY = "other";
 
     /**
-     * @todo add check for execute method
+     * Iterates over all Ant tasks
      */
     public void forAllTasks(String template, Properties attributes) throws XDocletException {
         ClassDoc[] classes = AbstractProgramElementTagsHandler.getAllClasses();
@@ -98,12 +98,11 @@ public class AntTagsHandler extends XDocletTagSupport {
             cur_class = classes[i];
             setCurrentClass(cur_class);
 
-            if (AntSubTask.isAntTask(cur_class)) {
+            if (TaskSubTask.isAntTask(cur_class)) {
                 generate(template);
             }
         }
     }
-
 
     /**
      * Iterates over all Ant attributes.
@@ -253,7 +252,6 @@ public class AntTagsHandler extends XDocletTagSupport {
         }
         return tagValue;
     }
-
 
     /**
      * Provides the Ant category name.
