@@ -600,6 +600,10 @@ Other changes:
 * new selector <modified>. "cache" was renamed to "modified".
   Bugzilla Report 20474.
 
+* <stcheckout> and <stlist> have a new asofdate attribute that can be
+  used to checkout/list files based on a date instead of a label.
+  Bugzilla Report 20578.
+
 Changes from Ant 1.5.3 to Ant 1.5.4
 ===================================
 

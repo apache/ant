@@ -65,6 +65,7 @@ import java.util.Hashtable;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
+
 /**
  * Checks out files from a StarTeam project.
  * It also creates all working directories on the
@@ -106,6 +107,7 @@ public class StarTeamCheckout extends TreeBasedTask {
      * server's EOL convention.
      */
     private boolean convertEOL = true;
+
 
     /**
      * flag (defaults to true) to create all directories
@@ -216,6 +218,31 @@ public class StarTeamCheckout extends TreeBasedTask {
     public boolean getUseRepositoryTimeStamp() {
         return this.useRepositoryTimeStamp;
     }
+
+    /**
+     * List files, dates, and statuses as of this date; optional.
+     * If not specified, the most recent version of each file will be listed.
+     *
+     * @param asOfDateParam the date as of which the listing to be made
+     * @since Ant 1.6
+     */
+    public void setAsOfDate(String asOfDateParam) {
+        _setAsOfDate(asOfDateParam);
+    }
+    
+    /**
+     * Date Format with which asOfDate parameter to be parsed; optional.
+     * Must be a SimpleDateFormat compatible string.
+     * If not specified, and asOfDateParam is specified, parse will use ISO8601
+     * datetime and date formats.
+     *
+     * @param asOfDateFormat the SimpleDateFormat-compatible format string
+     * @since Ant 1.6
+     */
+    public void setAsOfDateFormat(String asOfDateFormat) {
+        _setAsOfDateFormat(asOfDateFormat);
+    }
+
     /**
      * Override of base-class abstract function creates an
      * appropriately configured view for checkouts - either
@@ -241,11 +268,17 @@ public class StarTeamCheckout extends TreeBasedTask {
         else if (this.isUsingRevisionLabel()) {
             return raw;
         }
+        // if a date has been supplied use a view configured to the date.
+        View view = getViewConfiguredByDate(raw);
+        if (view != null) {
+            return view;
+        }
         // otherwise, use this view configured as the tip.
         else {
             return new View(raw, ViewConfiguration.createTip());
         }
     }
+
 
     /**
      * Implements base-class abstract function to define tests for
@@ -261,11 +294,31 @@ public class StarTeamCheckout extends TreeBasedTask {
                 Project.MSG_WARN);
             this.createDirs = false;
         }
-        if (lockStatus != Item.LockType.UNCHANGED && null != getLabel()) {
-            log("Neither locked nor unlocked may be true when checking out a labeled version.", 
-                Project.MSG_ERR);
-            throw new BuildException("Lock status may not be changed when checking out a non-current version.");
+        if (lockStatus != Item.LockType.UNCHANGED) {
+            boolean lockStatusBad = false;
+            if (null != getLabel()) {
+                log("Neither locked nor unlocked may be true"
+                    + " when checking out a labeled version.", 
+                    Project.MSG_ERR);
+                lockStatusBad = true;
+            } else if (null != getAsOfDate()) {
+                log("Neither locked nor unlocked may be true"
+                    + " when checking out by date.", 
+                    Project.MSG_ERR);
+                lockStatusBad = true;
+            }
+            if (lockStatusBad) {
+                throw new BuildException(
+                    "Lock status may not be changed"
+                    + " when checking out a non-current version.");
+            }
         }
+        if (null != getLabel() && null != getAsOfDate()) {
+            throw new BuildException(
+                "Both label and asOfDate specified.  "
+                + "Unable to process request.");
+        }
+
     }
 
     /**
@@ -290,6 +343,7 @@ public class StarTeamCheckout extends TreeBasedTask {
 
 
         logLabel();
+        logAsOfDate();
         logIncludes();
         logExcludes();
 
@@ -318,6 +372,8 @@ public class StarTeamCheckout extends TreeBasedTask {
              : " only where needed to check out files."));
 
     }
+
+
     /**
      * Implements base-class abstract function to perform the checkout
      * operation on the files in each folder of the tree.

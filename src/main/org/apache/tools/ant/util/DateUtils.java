@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2002-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -56,6 +56,7 @@ package org.apache.tools.ant.util;
 import java.text.ChoiceFormat;
 import java.text.DateFormat;
 import java.text.MessageFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -253,5 +254,56 @@ public final class DateUtils {
         }
         tzMarker.append(minutes);
         return DATE_HEADER_FORMAT.format(cal.getTime()) + tzMarker.toString();
+    }
+
+    /**
+     * Parse a string as a datetime using the ISO8601_DATETIME format which is
+     * <code>yyyy-MM-dd'T'HH:mm:ss</code>
+     *
+     * @param datestr string to be parsed
+     * 
+     * @return a java.util.Date object as parsed by the format.
+     * @exception ParseException if the supplied string cannot be parsed by
+     * this pattern.
+     * @since Ant 1.6
+     */
+    public static Date parseIso8601DateTime(String datestr) 
+        throws ParseException {
+        return new SimpleDateFormat(ISO8601_DATETIME_PATTERN).parse(datestr);
+    }
+
+    /**
+     * Parse a string as a date using the ISO8601_DATE format which is
+     * <code>yyyy-MM-dd</code>
+     *
+     * @param datestr string to be parsed
+     * 
+     * @return a java.util.Date object as parsed by the format.
+     * @exception ParseException if the supplied string cannot be parsed by
+     * this pattern.
+     * @since Ant 1.6
+     */
+    public static Date parseIso8601Date(String datestr) throws ParseException {
+        return new SimpleDateFormat(ISO8601_DATE_PATTERN).parse(datestr);
+    }
+
+    /**
+     * Parse a string as a date using the either the ISO8601_DATETIME
+     * or ISO8601_DATE formats.
+     *
+     * @param datestr string to be parsed
+     * 
+     * @return a java.util.Date object as parsed by the formats.
+     * @exception ParseException if the supplied string cannot be parsed by
+     * either of these patterns.
+     * @since Ant 1.6
+     */
+    public static Date parseIso8601DateTimeOrDate(String datestr) 
+        throws ParseException {
+        try {
+            return parseIso8601DateTime(datestr);
+        } catch (ParseException px) {
+            return parseIso8601Date(datestr);
+        }
     }
 }

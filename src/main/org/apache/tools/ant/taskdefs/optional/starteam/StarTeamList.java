@@ -91,6 +91,31 @@ public class StarTeamList extends TreeBasedTask {
     }
 
     /**
+     * List files, dates, and statuses as of this date; optional.
+     * If not specified, the most recent version of each file will be listed.
+     *
+     * @param asOfDateParam the date as of which the listing to be made
+     * @since Ant 1.6
+     */
+    public void setAsOfDate(String asOfDateParam) {
+        _setAsOfDate(asOfDateParam);
+    }
+    
+    /**
+     * Date Format with which asOfDate parameter to be parsed; optional.
+     * Must be a SimpleDateFormat compatible string.
+     * If not specified, and asOfDateParam is specified, parse will use ISO8601
+     * datetime and date formats.
+     *
+     * @param asOfDateFormat the SimpleDateFormat-compatible format string
+     * @since Ant 1.6
+     */
+    public void setAsOfDateFormat(String asOfDateFormat) {
+        _setAsOfDateFormat(asOfDateFormat);
+    }
+
+
+    /**
      * Override of base-class abstract function creates an
      * appropriately configured view for checkoutlists - either
      * the current view or a view from this.label.
@@ -106,18 +131,30 @@ public class StarTeamList extends TreeBasedTask {
         // otherwise use current view
         if (labelID >= 0) {
             return new View(raw, ViewConfiguration.createFromLabel(labelID));
-        } else {
+        } 
+        // if a date has been supplied use a view configured to the date.
+        View view = getViewConfiguredByDate(raw);
+        if (view != null) {
+            return view;
+        }
+        // otherwise, use this view configured as the tip.
+        else {
             return new View(raw, ViewConfiguration.createTip());
         }
     }
 
     /**
-     * Required base-class abstract function implementation is a no-op here.
+     * Required base-class abstract function implementation checks for
+     * incompatible parameters.
      *
-     * @exception BuildException not thrown in this implementation
+     * @exception BuildException thrown on incompatible params specified
      */
     protected void testPreconditions() throws BuildException {
-        //intentionally do nothing.
+        if (null != getLabel() && null != getAsOfDate()) {
+            throw new BuildException(
+                "Both label and asOfDate specified.  "
+                + "Unable to process request.");
+        }
     }
 
     /**
@@ -139,6 +176,7 @@ public class StarTeamList extends TreeBasedTask {
             + targetrootFolder.getAbsolutePath(),
                     Project.MSG_INFO);
         logLabel();
+        logAsOfDate();
         logIncludes();
         logExcludes();
 

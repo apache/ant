@@ -145,7 +145,24 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
   </tr>
   <tr>
     <td valign="top">label</td>
-    <td valign="top">Check out files as of this label.  The label must exist in starteam or an exception will be thrown.  If either <code>locked</code> or <code>unlocked</code> is true, an exception will be thrown.  If not specified, the most recent version of each file will be checked out.</td>
+    <td valign="top">Check out files as of this label.  The label must exist in starteam or an exception will be thrown.</td>
+    <td align="center" valign="center" rowspan="2">Either or neither, but not both, may be specified.  Neither <code>locked</code> or <code>unlocked</code> may be true if either <code>label</code> or <code>asofdate</code> is specified.</td>
+  </tr>
+  <tr>
+    <td valign="top">asofdate</td>
+    <td valign="top">Check out files as of this date.  The date must
+    be formatted in ISO8601 datetime
+    (<code>yyyy-MM-dd'T'HH:mm:ss</code>), ISO8601
+    date(<code>yyyy-MM-dd</code>) or a user-defined SimpleDateFormat
+    defined in the <code>asofDateFormat</code> attribute.  If the date
+    is not parsable by the default or selected format, an exception
+    will be thrown.  <em>Since Ant 1.6.</em></td>
+  </tr>
+  <tr>
+    <td valign="top">asofdateformat</td>
+    <td valign="top">java.util.SimpleDateFormat compatible string used
+    to parse the <code>asofdate</code> attribute.  <em>Since Ant
+    1.6.</em></td>
     <td align="center" valign="top">no</td>
   </tr>
   <tr>
@@ -163,7 +180,7 @@ that StarTeam is maintaining for the file.   If false, status will be used to de
     <td valign="top">locked</td>
     <td valign="top">If true, file will be locked against changes by other 
 users.  If false (default) has no effect. 
-    <td align="center" valign="center" rowspan="2">Either or neither, but not both, may be true. Neither may be true if a <code>label</code> is specified.</td>
+    <td align="center" valign="center" rowspan="2">Either or neither, but not both, may be true. Neither may be true if a <code>label</code> or an <code>asofdate</code> is specified.</td>
   </tr>
   <tr>
     <td valign="top">unlocked</td>
@@ -184,7 +201,7 @@ of checkout.</td>    <td align="center" valign="top">no</td>
     entire tree prior to beginning action on that tree.  Doing so can in some instances 
     lead to substantially faster actions, particularly over large trees.  Setting this 
     to "yes" (default) engages this functionality, setting it to "no" turns it off.</td>    
-    <td align="center" valign="top">yes</td>
+    <td align="center" valign="top">no</td>
   </tr>
     
   <tr>
@@ -194,7 +211,7 @@ of checkout.</td>    <td align="center" valign="top">no</td>
     what you'd want but if for some reason you don't want that to happen, set it to false
     and the files will be checked out with whatever end-of-line characters are used on
     the server. </td>    
-    <td align="center" valign="top">yes</td>
+    <td align="center" valign="top">no</td>
   </tr>
 
 </table>
@@ -385,7 +402,7 @@ change it.  If false (default) lock status will not change.
     entire tree prior to beginning action on that tree.  Doing so can in some instances 
     lead to substantially faster actions, particularly over large trees.  Setting this 
     to "yes" (default) engages this functionality, setting it to "no" turns it off.</td>    
-    <td align="center" valign="top">yes</td>
+    <td align="center" valign="top">no</td>
   </tr>
   </table>
 
@@ -664,6 +681,25 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
     <td align="center" valign="top">no</td>
   </tr>
   <tr>
+    <td valign="top">asofdate</td>
+    <td valign="top">List files, dates, and statusess as of this date.
+    The date must be formatted in ISO8601 datetime
+    (<code>yyyy-MM-dd'T'HH:mm:ss</code>), ISO8601
+    date(<code>yyyy-MM-dd</code>) or a user-defined SimpleDateFormat
+    defined in the <code>asofDateFormat</code> attribute.  If the date
+    is not parsable by the default or selected format, an exception
+    will be thrown.  <em>Since Ant 1.6.</em></td>
+    <td align="center" valign="top">no</td>
+  </tr>
+  <tr>
+    <td valign="top">asofdateformat</td>
+    <td valign="top">java.util.SimpleDateFormat compatible string used
+    to parse the <code>asofdate</code> attribute.  <em>Since Ant
+    1.6.</em></td>
+    <td align="center" valign="top">no</td>
+  </tr>
+
+  <tr>
     <td valign="top">recursive</td>
     <td valign="top">Indicates if subfolders should be searched for files to list.  Defaults to "true".</td>
     <td align="center" valign="top">no</td>
@@ -681,7 +717,7 @@ See also <A href="#common-params">the required common StarTeam parameters</A>.<b
     entire tree prior to beginning action on that tree.  Doing so can in some instances 
     lead to substantially faster actions, particularly over large trees.  Setting this 
     to "yes" (default) engages this functionality, setting it to "no" turns it off.</td>    
-    <td align="center" valign="top">yes</td>
+    <td align="center" valign="top">no</td>
   </tr>
 
 </table>

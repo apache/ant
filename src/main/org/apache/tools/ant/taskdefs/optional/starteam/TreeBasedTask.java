@@ -58,9 +58,15 @@ import com.starbase.starteam.Label;
 import com.starbase.starteam.PropertyNames;
 import com.starbase.starteam.StarTeamFinder;
 import com.starbase.starteam.View;
+import com.starbase.starteam.ViewConfiguration;
+import com.starbase.util.OLEDate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.util.DateUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.apache.tools.ant.Project;
 
@@ -157,6 +163,18 @@ public abstract class TreeBasedTask extends StarTeamTask {
     private boolean forced = false;
 
     private Label labelInUse = null;
+
+    /**
+     * holder for the asofdate attribute
+     */
+    private String asOfDate = null;
+    
+    /**
+     * holder for the asofdateformat attribute
+     */
+    private String asOfDateFormat = null;
+
+
 
     ///////////////////////////////////////////////////////////////
     // GET/SET methods.
@@ -324,6 +342,105 @@ public abstract class TreeBasedTask extends StarTeamTask {
         }
     }
 
+    /**
+     * non-public method callable only by derived classes that implement
+     * setAsOfDate (so that derived tasks that do not accept this
+     * parameter will fail if user attempts to use it.
+     * 
+     * @param asOfDate asOfDate entered by user.
+     * @since Ant 1.6
+     */
+    protected void _setAsOfDate(String asOfDate) {
+        if (asOfDate != null && asOfDate.length() > 0) {
+            this.asOfDate = asOfDate;
+        }
+    }
+    
+    /**
+     * non-public method callable only by derived classes that implement
+     * setAsOfDateFormat (so that derived tasks that do not accept this
+     * parameter will fail if user attempts to use it.
+     * 
+     * @param asOfDateFormat asOfDate format entered by user.
+     * @since Ant 1.6
+     */
+    protected void _setAsOfDateFormat(String asOfDateFormat) {
+        if (asOfDateFormat != null && asOfDateFormat.length() > 0) {
+            this.asOfDateFormat = asOfDateFormat;
+        }
+    }
+
+    
+    /**
+     * return the asOfDate entered by the user for internal use by derived
+     * classes.
+     * 
+     * @return the asOfDate entered by the user
+     * @since Ant 1.6
+     */
+    protected String getAsOfDate() {
+        return this.asOfDate;
+    }
+
+    
+
+    /**
+     * If an asofDate parameter has been supplied by the user return a
+     * StarTeam view based on the configuration of the StarTeam view
+     * specified the user as of the date specified in the parameter.
+     * If no asofDate has been specified, return null.
+     * 
+     * This method is meant to be called from within implementations of the
+     * <code>createSnapshotView</code> abstract method.
+     * 
+     * @param raw    the raw view to be configured as of the supplied date
+     * 
+     * @return the view as configured.
+     * @exception BuildException
+     *                   thrown if the date is not parsable by the default or 
+     *                   supplied format patterns.
+     * @since Ant 1.6
+     */
+    protected View getViewConfiguredByDate(View raw) throws BuildException {
+        if (this.asOfDate == null) {
+            return null;
+        }
+        Date asOfDate = null;
+        SimpleDateFormat fmt = null;
+        if (this.asOfDateFormat != null) {
+            fmt = new SimpleDateFormat(this.asOfDateFormat);
+            try {
+                asOfDate = fmt.parse(this.asOfDate);
+            } 
+            catch (ParseException px) 
+            {
+                throw new BuildException("AsOfDate " 
+                                         + this.asOfDate 
+                                         + " not parsable by supplied format "
+                                         + this.asOfDateFormat); 
+            }
+        } else {
+            try {
+                asOfDate = DateUtils.parseIso8601DateTimeOrDate(
+                    this.asOfDate); 
+            } catch (ParseException px) {
+                throw new BuildException("AsOfDate " 
+                                         + this.asOfDate 
+                                         + " not parsable by default"
+                                         + " ISO8601 formats"); 
+            }
+        }
+        return new View(raw, ViewConfiguration.createFromTime(
+            new OLEDate(asOfDate)));
+    }
+
+
+
+    /**
+     * return the label passed to the task by the user as a string
+     * 
+     * @return the label passed to the task by the user as a string
+     */
     protected String getLabel() {
         return this.label;
     }
@@ -421,6 +538,17 @@ public abstract class TreeBasedTask extends StarTeamTask {
         }
     }
 
+    /**
+     * show the asofDate in the log
+     * @since Ant 1.6
+     */
+    protected void logAsOfDate() {
+        if (null != this.asOfDate) {
+            log("  Using view as of date " + getAsOfDate());
+        }
+    }
+
+
 
 
 
@@ -501,8 +629,18 @@ public abstract class TreeBasedTask extends StarTeamTask {
         } catch (BuildException e) {
             throw e;
         } catch (Exception e) {
-            throw new BuildException("Unable to find root folder "
-                + this.rootStarteamFolder + " in repository at " + getURL(), e);
+            StringBuffer msg = new StringBuffer("Unable to find root folder ")
+                    .append(this.rootStarteamFolder)
+                    .append(" in repository at ")
+                    .append(getURL());
+            if (this.label != null) {
+                msg.append(" using specified label ").append(this.label);
+            }
+            if (this.asOfDate != null) {
+                msg.append(" as of specified date ")
+                    .append(this.asOfDate);
+            }
+            throw new BuildException(msg.toString(), e);
 
         }
 
