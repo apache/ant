@@ -25,7 +25,7 @@ public class TaskAdapter extends Task
      * Checks a class, whether it is suitable to be adapted by TaskAdapter.
      * Checks conditions only, which are additionally required for a tasks
      * adapted by TaskAdapter. Thus, this method should be called by {@link
-     * Project#checkTaskClass}. Throws a BuildException and logs as
+     * Project#checkTaskClass}. Throws a TaskException and logs as
      * Project.MSG_ERR for conditions, that will cause the task execution to
      * fail. Logs other suspicious conditions with Project.MSG_WARN.
      *
@@ -76,10 +76,10 @@ public class TaskAdapter extends Task
     /**
      * Do the execution.
      *
-     * @exception BuildException Description of Exception
+     * @exception TaskException Description of Exception
      */
     public void execute()
-        throws BuildException
+        throws TaskException
     {
         Method setProjectM = null;
         try
@@ -101,7 +101,7 @@ public class TaskAdapter extends Task
         {
             log( "Error setting project in " + proxy.getClass(),
                  Project.MSG_ERR );
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
 
         Method executeM = null;
@@ -120,7 +120,7 @@ public class TaskAdapter extends Task
         catch( Exception ex )
         {
             log( "Error in " + proxy.getClass(), Project.MSG_ERR );
-            throw new BuildException( "Error", ex );
+            throw new TaskException( "Error", ex );
         }
 
     }

@@ -287,7 +287,7 @@ public class IntrospectionHelper implements BuildListener
      */
     public void setAttribute( Project p, Object element, String attributeName,
                               String value )
-        throws BuildException
+        throws TaskException
     {
         AttributeSetter as = (AttributeSetter)attributeSetters.get( attributeName );
         if( as == null )

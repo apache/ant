@@ -9,6 +9,7 @@ package org.apache.tools.ant;
 
 import java.io.PrintStream;
 import org.apache.tools.ant.util.StringUtils;
+import org.apache.myrmidon.api.TaskException;
 
 /**
  * Writes build event to a PrintStream. Currently, it only writes which targets
@@ -118,13 +119,13 @@ public class DefaultLogger implements BuildLogger
             message.append( StringUtils.LINE_SEP );
 
             if( Project.MSG_VERBOSE <= msgOutputLevel ||
-                !( error instanceof BuildException ) )
+                !( error instanceof TaskException ) )
             {
                 message.append( StringUtils.getStackTrace( error ) );
             }
             else
             {
-                if( error instanceof BuildException )
+                if( error instanceof TaskException )
                 {
                     message.append( error.toString() ).append( StringUtils.LINE_SEP );
                 }

@@ -18,7 +18,6 @@ import java.util.StringTokenizer;
 import java.util.TimeZone;
 import java.util.Vector;
 import org.apache.myrmidon.api.TaskException;
-import org.apache.tools.ant.Location;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.types.EnumeratedAttribute;
