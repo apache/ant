@@ -54,9 +54,10 @@
 
 package org.apache.tools.ant.taskdefs;
 
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.BuildException;
 import java.io.File;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.types.DestDir;
 
 
 /**
@@ -74,10 +75,6 @@ public class Mkdir extends Task {
             throw new BuildException("dir attribute is required", location);
         }
 
-        if (dir.isFile()) {
-            throw new BuildException("Unable to create directory as a file already exists with that name: " + dir.getAbsolutePath());
-        }
-
         if (!dir.exists()) {
             boolean result = dir.mkdirs();
             if (result == false) {
@@ -89,7 +86,19 @@ public class Mkdir extends Task {
         }
     }
 
+    /**
+     * @deprecated setDir(File) is deprecated and is replaced with
+     *             setDir(DestDir) to let Ant's core perform validation
+     */
     public void setDir(File dir) {
-        this.dir = dir;
+        log("DEPRECATED - The setDir(File) method has been deprecated."
+            + " Use setDir(DestDir) instead.");
+        DestDir destDir = new DestDir();
+        destDir.setFile(dir);
+        setDir(destDir);
+    }
+
+    public void setDir(DestDir destDir) {
+        this.dir = destDir.getFile();
     }
 }
