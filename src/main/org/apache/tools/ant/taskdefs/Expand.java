@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2000-2002 The Apache Software Foundation.  All rights
+ * Copyright (c) 2000-2003 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -182,25 +182,22 @@ public class Expand extends Task {
             String name = entryName;
             boolean included = false;
             for (int v = 0; v < patternsets.size(); v++) {
+                included = true;
                 PatternSet p = (PatternSet) patternsets.elementAt(v);
-                String[] incls = p.getIncludePatterns(project);
+                String[] incls = p.getIncludePatterns(getProject());
                 if (incls != null) {
                     for (int w = 0; w < incls.length; w++) {
-                        boolean isIncl =
-                            DirectoryScanner.match(incls[w], name);
-                        if (isIncl) {
-                            included = true;
+                        included = DirectoryScanner.match(incls[w], name);
+                        if (included) {
                             break;
                         }
                     }
                 }
-                String[] excls = p.getExcludePatterns(project);
+                String[] excls = p.getExcludePatterns(getProject());
                 if (excls != null) {
                     for (int w = 0; w < excls.length; w++) {
-                        boolean isExcl =
-                            DirectoryScanner.match(excls[w], name);
-                        if (isExcl) {
-                            included = false;
+                        included = !(DirectoryScanner.match(excls[w], name));
+                        if (!included) {
                             break;
                         }
                     }
