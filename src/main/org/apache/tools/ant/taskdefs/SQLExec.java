@@ -522,31 +522,44 @@ public class SQLExec extends Task {
 		log("Opening PrintStream to output file " + output, Project.MSG_VERBOSE);
                 out = new PrintStream(new BufferedOutputStream(new FileOutputStream(output)));
             }
-            while ((rs = statement.getResultSet()) != null) {
-		log("Processing new result set.", Project.MSG_VERBOSE);
-                ResultSetMetaData md = rs.getMetaData();
-                int columnCount = md.getColumnCount();
-                StringBuffer line = new StringBuffer();
-                if (showheaders) {
-                    for (int col = 1; col < columnCount; col++) {
-                        line.append(md.getColumnName(col));
-                        line.append(",");
+            do {
+                rs = statement.getResultSet();
+                if (rs != null) {
+        	    log("Processing new result set.", Project.MSG_VERBOSE);
+                    ResultSetMetaData md = rs.getMetaData();
+                    int columnCount = md.getColumnCount();
+                    StringBuffer line = new StringBuffer();
+                    if (showheaders) {
+                        for (int col = 1; col < columnCount; col++) {
+                            line.append(md.getColumnName(col));
+                            line.append(",");
+                        }
+                        line.append(md.getColumnName(columnCount));
+                        out.println(line);
+                        line.setLength(0);
                     }
-                    line.append(md.getColumnName(columnCount));
-                    out.println(line);
-                    line.setLength(0);
-                }
-                while (rs.next()) {
-                    for (int col = 1; col < columnCount; col++) {
-                        line.append(rs.getString(col).trim());
-                        line.append(",");
+                    while (rs.next()) {
+                        boolean first = true;
+                        for (int col = 1; col <= columnCount; col++) {
+                            String columnValue = rs.getString(col);
+                            if (columnValue != null) {
+                                columnValue = columnValue.trim();
+                            }
+                             
+                            if (first) {
+                                first = false;
+                            }
+                            else {
+                                line.append(",");
+                            }
+                            line.append(columnValue);
+                        }
+                        out.println(line);
+                        line.setLength(0);
                     }
-                    line.append(rs.getString(columnCount).trim());
-                    out.println(line);
-                    line.setLength(0);
                 }
-                statement.getMoreResults();
             }
+            while (statement.getMoreResults());
         }
         catch (IOException ioe) {
             throw new BuildException("Error writing " + output.getAbsolutePath(), ioe, location);
