@@ -153,7 +153,22 @@ public class TestRunEvent extends EventObject {
         return props;
     }
 
+    public boolean equals(Object o){
+        if (o instanceof TestRunEvent){
+            TestRunEvent other = (TestRunEvent)o;
+            return ( (type == other.type) &&
+                    (timestamp == other.timestamp) &&
+                    ( name == null ? other.name == null :  name.equals(other.name) ) &&
+                    ( stacktrace == null ? other.stacktrace == null : stacktrace.equals(other.stacktrace) ) &&
+                    ( props == null ? other.props == null : props.equals(other.props) ) ) ;
+        }
+        return false;
+    }
+
     public String toString(){
-        return "Id: " + source + ", Type: " + type;
+        StringBuffer buf = new StringBuffer();
+        buf.append("id: ").append(source);
+        buf.append("type: ").append(type);
+        return buf.toString();
     }
 }

@@ -111,8 +111,8 @@ public class Server {
     }
 
     /** return whether there is a client running or not */
-    public boolean isRunning() {
-        return client != null;
+    public synchronized boolean isRunning() {
+        return client != null && server != null && messenger != null;
     }
 
     /** start a server to the specified port */
@@ -122,7 +122,7 @@ public class Server {
     }
 
     /** cancel the connection to the client */
-    public void cancel() {
+    public synchronized void cancel() {
         if (isRunning()) {
             TestRunEvent evt = new TestRunEvent(new Integer(-1), TestRunEvent.RUN_STOP);
             try {
@@ -133,7 +133,7 @@ public class Server {
     }
 
     /** shutdown the server and any running client */
-    public void shutdown() {
+    public synchronized void shutdown() {
         try {
             if (messenger != null) {
                 messenger.close();
@@ -174,7 +174,6 @@ public class Server {
             } catch (Exception e) {
                 //@fixme this stacktrace might be normal when closing
                 // the socket. So decompose the above in distinct steps
-                e.printStackTrace();
             } finally {
                 cancel();
                 shutdown();
