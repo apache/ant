@@ -4,17 +4,20 @@ if [ -f $HOME/.antrc ] ; then
   . $HOME/.antrc
 fi
 
-# Cygwin support.
-if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ]; then
+# Cygwin support.  $cygwin _must_ be set to either true or false.
+case "`uname`" in
+  CYGWIN*) cygwin=true ;;
+  *) cygwin=false ;;
+esac
 
-  if [ ! "$ANT_HOME" = "" ]; then
-    ANT_HOME=`cygpath --path --unix $ANT_HOME`
-  fi
-
-  if [ ! "$JAVA_HOME" = "" ]; then
-    JAVA_HOME=`cygpath --path --unix $JAVA_HOME`
-  fi
-
+# For Cygwin, ensure paths are in UNIX format before anything is touched
+if $cygwin; then
+  [ -n "$ANT_HOME" ] &&
+    ANT_HOME=`cygpath --unix "$ANT_HOME"`
+  [ -n "$JAVA_HOME" ] &&
+    JAVA_HOME=`cygpath --unix "$JAVA_HOME"`
+  [ -n "$CLASSPATH" ] &&
+    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
 fi
 
 if [ "$ANT_HOME" = "" ] ; then
@@ -76,10 +79,6 @@ do
 done
 
 if [ "$CLASSPATH" != "" ] ; then
-  # More Cygwin support
-  if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
-    CLASSPATH=`cygpath --path --unix "$CLASSPATH"`
-  fi
   LOCALCLASSPATH=$CLASSPATH:$LOCALCLASSPATH
 fi
 
@@ -107,9 +106,14 @@ if [ "$JIKESPATH" != "" ] ; then
   fi
 fi
 
-# More Cygwin support
-if [ "$OSTYPE" = "cygwin32" ] || [ "$OSTYPE" = "cygwin" ] ; then
+# For Cygwin, switch paths to Windows format before running java
+if $cygwin; then
+  ANT_HOME=`cygpath --path --windows "$ANT_HOME"`
+  JAVA_HOME=`cygpath --path --windows "$JAVA_HOME"`
   LOCALCLASSPATH=`cygpath --path --windows "$LOCALCLASSPATH"`
 fi
+
+$JAVACMD -classpath "$LOCALCLASSPATH" -Dant.home="${ANT_HOME}" $ANT_OPTS org.apache.tools.ant.Main $@
+
 
 $JAVACMD -classpath $LOCALCLASSPATH -Dant.home=${ANT_HOME} $ANT_OPTS org.apache.tools.ant.Main $@
