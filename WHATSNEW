@@ -80,6 +80,8 @@ Fixed bugs:
 
 * FTP task, getTimeDiff method was returning wrong value. Bugzilla 30595.
 
+* Zip task was not zipping when only empty directories were found. Bugzilla 30365.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 

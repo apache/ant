@@ -133,4 +133,10 @@ public class ZipTest extends BuildFileTest {
         assertTrue("archive should get skipped",
                    !getProject().resolveFile("test3.zip").exists());
     }
+    // Bugzilla Report 30365
+    public void testZipEmptyDir() {
+        executeTarget("zipEmptyDir");
+        assertTrue("archive should be created",
+                   getProject().resolveFile("test3.zip").exists());
+    }
 }

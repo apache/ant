@@ -128,6 +128,12 @@
     <zip destfile="test3.zip" basedir="ziptest" whenempty="skip"/>
   </target>
 
+  <!-- Bugzilla Report 30365 -->
+  <target name="zipEmptyDir">
+        <mkdir dir="empty/empty2"/>
+		<zip destfile="test3.zip" basedir="empty" update="true"/>
+  </target>
+
   <target name="cleanup">
     <delete file="test3.zip"/>
     <delete file="test4.zip"/>
@@ -140,5 +146,6 @@
     <delete file="zipgroupfileset.zip"/>
     <delete file="../dummyfile" />
     <delete dir="ziptest"/>
+    <delete dir="empty"/>
   </target>
 </project>
