@@ -178,7 +178,15 @@ public class Property extends Task {
         Properties props = new Properties();
         log("Resource Loading " + name, Project.MSG_VERBOSE);
         try {
-            InputStream is = this.getClass().getResourceAsStream(name);
+            ClassLoader cL = this.getClass().getClassLoader();
+            InputStream is = null;
+
+            if (cL == null) {
+                is = ClassLoader.getSystemResourceAsStream(name);
+            } else {
+                is = cL.getResourceAsStream(name);
+            }
+            
             if (is != null) {
                 props.load(is);
                 addProperties(props);
