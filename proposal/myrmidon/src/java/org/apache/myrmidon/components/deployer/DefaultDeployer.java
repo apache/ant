@@ -54,8 +54,6 @@ public class DefaultDeployer
     private final static Resources REZ =
         ResourceManager.getPackageResources( DefaultDeployer.class );
 
-    private final static String TYPE_DESCRIPTOR = "META-INF/ant-types.xml";
-
     private ConverterRegistry m_converterRegistry;
     private TypeManager m_typeManager;
     private RoleManager m_roleManager;
@@ -92,7 +90,6 @@ public class DefaultDeployer
         parser.setErrorHandler( handler );
 
         final ClassLoader classLoader = getClass().getClassLoader();
-        final DefaultTypeFactory factory = new DefaultTypeFactory( classLoader );
 
         final Enumeration enum = classLoader.getResources( Deployment.DESCRIPTOR_NAME );
         while( enum.hasMoreElements() )
@@ -315,7 +312,6 @@ public class DefaultDeployer
             final Configuration[] converters = descriptor.getChild( "converters" ).getChildren();
             for( int i = 0; i < converters.length; i++ )
             {
-                final String name = converters[ i ].getName();
                 handleConverter( converters[ i ], factory );
             }
         }
