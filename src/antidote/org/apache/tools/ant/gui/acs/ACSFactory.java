@@ -207,6 +207,35 @@ public class ACSFactory {
     }
 
     /** 
+     * Create a new task.
+     * 
+     * @param target Target the task is assigned to.
+     * @return New, unnamed task.
+     */
+    public ACSTaskElement createTask(ACSTargetElement target) {
+        ACSTaskElement retval = (ACSTaskElement) target.
+            getOwnerDocument().createElement("task");
+        indent(target, 2);
+        target.appendChild(retval);
+        return retval;
+    }
+
+    /** 
+     * Create a new property.
+     * 
+     * @param node the Node to assign the property to.
+     * @return New, unnamed property.
+     */
+    public ACSPropertyElement createProperty(ACSElement node) {
+        ACSPropertyElement retval = (ACSPropertyElement) node.
+            getOwnerDocument().createElement("property");
+        // XXX fixme.
+        indent(node, 1);
+        node.appendChild(retval);
+        return retval;
+    }
+
+    /** 
      * Insert a new line and indentation at the end of the given
      * node in preparation for a new element being added.
      * 

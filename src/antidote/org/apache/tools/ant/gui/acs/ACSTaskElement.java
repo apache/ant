@@ -86,6 +86,14 @@ public class ACSTaskElement extends ACSTreeNodeElement {
         return getTagName();
     }
 
+    /** 
+     * Set the task type.
+     * 
+     * @param type Type name.
+     */
+    public void setTaskType(String type) {
+        setTag(type);
+    }
 
 	/** 
 	 * Get the attributes (named value mappings). This method is not named
