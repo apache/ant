@@ -72,8 +72,9 @@ import java.util.StringTokenizer;
  * setKeys method to understand how to do the substitutions.
  *
  * @author Jon S. Stevens <a href="mailto:jon@clearink.com">jon@clearink.com</a>
- *
- * @deprecated KeySubst is deprecated. Use Filter + CopyDir instead.
+ * @since Ant 1.1
+ * @deprecated KeySubst is deprecated since Ant 1.1. Use Filter + Copy
+ * instead.
  */
 public class KeySubst extends Task {
     private File source = null;
@@ -85,7 +86,7 @@ public class KeySubst extends Task {
         Do the execution.
     */
     public void execute() throws BuildException {
-        log("!! KeySubst is deprecated. Use Filter + CopyDir instead. !!");
+        log("!! KeySubst is deprecated. Use Filter + Copy instead. !!");
         log("Performing Substitions");
         if ( source == null || dest == null ) {
             log("Source and destinations must not be null");
@@ -112,12 +113,22 @@ public class KeySubst extends Task {
                 line = br.readLine();
             }
             bw.flush();
-            bw.close();
-            br.close();
         } catch (IOException ioe) {
             ioe.printStackTrace();
-        }       
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e) {}
+            }
+            if (bw != null) {
+                try {
+                    br.close();
+                } catch (IOException e) {}
+            }
+        }
     }
+
     /**
         Set the source file.
     */
@@ -162,8 +173,6 @@ public class KeySubst extends Task {
                 
                 String name = itok.nextToken();
                 String value = itok.nextToken();
-//                log ( "Name: " + name );
-//                log ( "Value: " + value );
                 replacements.put ( name, value );
             }
         }
@@ -176,7 +185,8 @@ public class KeySubst extends Task {
         Hashtable hash = new Hashtable();
         hash.put ( "VERSION", "1.0.3" );
         hash.put ( "b", "ffff" );
-        System.out.println ( KeySubst.replace ( "$f ${VERSION} f ${b} jj $", hash ) );
+        System.out.println ( KeySubst.replace ( "$f ${VERSION} f ${b} jj $", 
+                                                hash ) );
         }catch ( Exception e)
         {
             e.printStackTrace();
@@ -196,7 +206,8 @@ public class KeySubst extends Task {
         int i = 0;
         String key = null;
         while ((index = origString.indexOf("${", i)) > -1) {
-            key = origString.substring(index + 2, origString.indexOf("}", index+3));
+            key = origString.substring(index + 2, origString.indexOf("}", 
+                                                                     index+3));
             finalString.append (origString.substring(i, index));
             if ( keys.containsKey ( key ) ) {
                 finalString.append (keys.get(key));
