@@ -60,7 +60,10 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Stack;
+import java.util.Vector;
 import org.apache.ant.common.antlib.AntContext;
+import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
 import org.apache.ant.common.util.ExecutionException;
@@ -76,7 +79,7 @@ import org.apache.tools.ant.util.FileUtils;
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
  * @created 30 January 2002
  */
-public class Project {
+public class Project implements org.apache.ant.common.event.BuildListener {
 
     /** String which indicates Java version 1.0 */
     public final static String JAVA_1_0 = "1.0";
@@ -133,11 +136,20 @@ public class Project {
     /** The core's DataService instance */
     private DataService dataService;
 
-    /** Ant1 FileUtils instance fro manipulating files */
+    /** The core's Component Service instance */
+    private ComponentService componentService;
+
+    /** Ant1 FileUtils instance for manipulating files */
     private FileUtils fileUtils;
     /** The collection of global filters */
     private FilterSetCollection globalFilters
          = new FilterSetCollection(globalFilterSet);
+
+    /** This project's listeners */
+    private Vector listeners = new Vector();
+
+    /** the target's we have seen */
+    private Stack targetStack = new Stack();
 
     static {
 
@@ -270,6 +282,15 @@ public class Project {
         } catch (ExecutionException e) {
             throw new BuildException(e);
         }
+    }
+
+    /**
+     * Gets the buildListeners of the Project
+     *
+     * @return A Vector of BuildListener instances
+     */
+    public Vector getBuildListeners() {
+        return listeners;
     }
 
     /**
@@ -407,6 +428,91 @@ public class Project {
         }
 
         return result;
+    }
+
+    /**
+     * build started event
+     *
+     * @param event build started event
+     */
+    public void buildStarted(org.apache.ant.common.event.BuildEvent event) {
+        fireBuildStarted();
+    }
+
+    /**
+     * build finished event
+     *
+     * @param event build finished event
+     */
+    public void buildFinished(org.apache.ant.common.event.BuildEvent event) {
+        fireBuildFinished(event.getCause());
+    }
+
+    /**
+     * target started event.
+     *
+     * @param event target started event.
+     */
+    public void targetStarted(org.apache.ant.common.event.BuildEvent event) {
+        Target newTarget = new Target(this);
+        org.apache.ant.common.model.Target realTarget =
+            (org.apache.ant.common.model.Target)event.getModelElement();
+        newTarget.setName(realTarget.getName());
+        targetStack.push(newTarget);
+        fireTargetStarted(newTarget);
+    }
+
+    /**
+     * target finished event
+     *
+     * @param event target finished event
+     */
+    public void targetFinished(org.apache.ant.common.event.BuildEvent event) {
+        Target currentTarget = (Target)targetStack.pop();
+        fireTargetFinished(currentTarget, event.getCause());
+        currentTarget = null;
+    }
+
+    /**
+     * task started event
+     *
+     * @param event task started event
+     */
+    public void taskStarted(org.apache.ant.common.event.BuildEvent event) {
+    }
+
+    /**
+     * task finished event
+     *
+     * @param event task finished event
+     */
+    public void taskFinished(org.apache.ant.common.event.BuildEvent event) {
+    }
+
+    /**
+     * message logged event
+     *
+     * @param event message logged event
+     */
+    public void messageLogged(org.apache.ant.common.event.BuildEvent event) {
+    }
+
+    /**
+     * add a build listener to this project
+     *
+     * @param listener the listener to be added to the project
+     */
+    public void addBuildListener(BuildListener listener) {
+        listeners.addElement(listener);
+    }
+
+    /**
+     * remove a build listener from this project
+     *
+     * @param listener the listener to be removed
+     */
+    public void removeBuildListener(BuildListener listener) {
+        listeners.removeElement(listener);
     }
 
     /**
@@ -577,6 +683,8 @@ public class Project {
         this.context = context;
         fileService = (FileService)context.getCoreService(FileService.class);
         dataService = (DataService)context.getCoreService(DataService.class);
+        componentService
+             = (ComponentService)context.getCoreService(ComponentService.class);
 
         String defs = "/org/apache/tools/ant/taskdefs/defaults.properties";
 
@@ -701,12 +809,35 @@ public class Project {
     }
 
     /**
-     * add a build listener to this project
+     * define a new task
      *
-     * @param listener the listener to be added to the project
+     * @param taskName the anme of the task in build files
+     * @param taskClass the class that implements the task
+     * @exception BuildException if the task cannot be defined
      */
-    public void addBuildListener(BuildListener listener) {
-        // XXX do nothing for now
+    public void addTaskDefinition(String taskName, Class taskClass)
+         throws BuildException {
+        try {
+            componentService.taskdef(taskName, taskClass);
+            taskClassDefinitions.put(taskName, taskClass);
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
+    }
+
+    /**
+     * Add a new type definition
+     *
+     * @param typeName the name of the type
+     * @param typeClass the class which implements the type
+     */
+    public void addDataTypeDefinition(String typeName, Class typeClass) {
+        try {
+            componentService.typedef(typeName, typeClass);
+            dataClassDefinitions.put(typeName, typeClass);
+        } catch (ExecutionException e) {
+            throw new BuildException(e);
+        }
     }
 
     /**
@@ -719,12 +850,12 @@ public class Project {
     public Task createTask(String taskType) {
         // we piggy back the task onto the current context
         Task task = null;
-        Class c = (Class) taskClassDefinitions.get(taskType);
+        Class c = (Class)taskClassDefinitions.get(taskType);
 
         if (c == null) {
             return null;
         }
-        
+
         try {
             task = (Task)c.newInstance();
             task.setProject(this);
@@ -732,6 +863,146 @@ public class Project {
             return task;
         } catch (Throwable e) {
             throw new BuildException(e);
+        }
+    }
+
+    /** send build started event to the listeners */
+    protected void fireBuildStarted() {
+        BuildEvent event = new BuildEvent(this);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            listener.buildStarted(event);
+        }
+    }
+
+    /**
+     * send build finished event to the listeners
+     *
+     * @param exception exception which indicates failure if not null
+     */
+    protected void fireBuildFinished(Throwable exception) {
+        BuildEvent event = new BuildEvent(this);
+        event.setException(exception);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            listener.buildFinished(event);
+        }
+    }
+
+
+    /**
+     * send target started event to the listeners
+     *
+     * @param target the target which has started
+     */
+    protected void fireTargetStarted(Target target) {
+        BuildEvent event = new BuildEvent(target);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            listener.targetStarted(event);
+        }
+    }
+
+    /**
+     * send build finished event to the listeners
+     *
+     * @param exception exception which indicates failure if not null
+     * @param target the target which is just finished
+     */
+    protected void fireTargetFinished(Target target, Throwable exception) {
+        BuildEvent event = new BuildEvent(target);
+        event.setException(exception);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            listener.targetFinished(event);
+        }
+    }
+
+    /**
+     * fire a task started event
+     *
+     * @param task the task which has started
+     */
+    protected void fireTaskStarted(Task task) {
+        // register this as the current task on the current thread.
+        // threadTasks.put(Thread.currentThread(), task);
+        BuildEvent event = new BuildEvent(task);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            listener.taskStarted(event);
+        }
+    }
+
+    /**
+     * Fire a task finished event
+     *
+     * @param task the task which has finsihed
+     * @param exception the exception associated with the task
+     */
+    protected void fireTaskFinished(Task task, Throwable exception) {
+        // threadTasks.remove(Thread.currentThread());
+        //System.out.flush();
+        // System.err.flush();
+        BuildEvent event = new BuildEvent(task);
+        event.setException(exception);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            listener.taskFinished(event);
+        }
+    }
+
+    /**
+     * Fire a message event from the project
+     *
+     * @param project the project sending the event
+     * @param message the message
+     * @param priority the messsage priority
+     */
+    protected void fireMessageLogged(Project project, String message,
+                                     int priority) {
+        BuildEvent event = new BuildEvent(project);
+        fireMessageLoggedEvent(event, message, priority);
+    }
+
+    /**
+     * Fire a message event from the project
+     *
+     * @param message the message
+     * @param priority the messsage priority
+     * @param target the target sending the message
+     */
+    protected void fireMessageLogged(Target target, String message,
+                                     int priority) {
+        BuildEvent event = new BuildEvent(target);
+        fireMessageLoggedEvent(event, message, priority);
+    }
+
+    /**
+     * Fire a message event from the project
+     *
+     * @param message the message
+     * @param priority the messsage priority
+     * @param task the task sending the message
+     */
+    protected void fireMessageLogged(Task task, String message,
+                                     int priority) {
+        BuildEvent event = new BuildEvent(task);
+        fireMessageLoggedEvent(event, message, priority);
+    }
+
+    /**
+     * Fire a message event from the project
+     *
+     * @param message the message
+     * @param priority the messsage priority
+     * @param event the message event
+     */
+    private void fireMessageLoggedEvent(BuildEvent event, String message,
+                                        int priority) {
+        event.setMessage(message, priority);
+        for (int i = 0; i < listeners.size(); i++) {
+            BuildListener listener = (BuildListener)listeners.elementAt(i);
+            listener.messageLogged(event);
         }
     }
 }

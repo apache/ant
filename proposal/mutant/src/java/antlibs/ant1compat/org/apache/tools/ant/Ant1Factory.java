@@ -56,6 +56,7 @@ import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.antlib.Converter;
 import org.apache.ant.common.antlib.StandardLibFactory;
 import org.apache.ant.common.util.ExecutionException;
+import org.apache.ant.common.service.EventService;
 import org.apache.ant.init.LoaderUtils;
 
 /**
@@ -89,6 +90,10 @@ public class Ant1Factory extends StandardLibFactory {
 
         project = new Project();
         project.init(context);
+        
+        EventService eventService = 
+            (EventService)context.getCoreService(EventService.class);
+        eventService.addBuildListener(project);
     }
 
 

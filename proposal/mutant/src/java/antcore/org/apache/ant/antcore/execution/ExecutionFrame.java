@@ -72,6 +72,7 @@ import org.apache.ant.common.model.Target;
 import org.apache.ant.common.service.ComponentService;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.service.FileService;
+import org.apache.ant.common.service.EventService;
 import org.apache.ant.common.service.MagicProperties;
 import org.apache.ant.common.util.AntException;
 import org.apache.ant.common.util.ConfigException;
@@ -764,6 +765,7 @@ public class ExecutionFrame {
         services.put(FileService.class, fileService);
         services.put(ComponentService.class, componentManager);
         services.put(DataService.class, dataService);
+        services.put(EventService.class,  new CoreEventService(this));
     }
 
     /**

@@ -29,9 +29,9 @@
     <exclude name="org/apache/tools/ant/taskdefs/optional/sound/*.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/optional/Native2Ascii.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/optional/Javah.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/Typedef.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/Taskdef.java"/>
-    <exclude name="org/apache/tools/ant/taskdefs/Definer.java"/>
+    <!-- <exclude name="org/apache/tools/ant/taskdefs/Typedef.java"/> -->
+    <!-- <exclude name="org/apache/tools/ant/taskdefs/Taskdef.java"/> -->
+    <!-- <exclude name="org/apache/tools/ant/taskdefs/Definer.java"/> -->
     <exclude name="org/apache/tools/ant/taskdefs/Parallel.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/Sequential.java"/>
     <exclude name="org/apache/tools/ant/taskdefs/optional/ejb/**/*.java"/>
@@ -61,6 +61,9 @@
     <include name="org/apache/tools/ant/FileScanner.java"/>
     <include name="org/apache/tools/ant/TaskAdapter.java"/>
     <include name="org/apache/tools/ant/Location.java"/>
+    <include name="org/apache/tools/ant/AntClassLoader.java"/>
+    <include name="org/apache/tools/ant/BuildEvent.java"/>
+    <include name="org/apache/tools/ant/BuildListener.java"/>
     <patternset refid="deprecated"/>
     <patternset refid="toohard"/>
     <patternset refid="converted"/>

@@ -60,5 +60,47 @@ package org.apache.tools.ant;
  * @created 31 January 2002
  */
 public class Target {
+    /** The project to which this target belongs */
+    private Project project;
+
+    /** The name of this target */
+    private String name;
+
+    /**
+     * Construct a Target that is part of the project
+     *
+     * @param project the target's project
+     */
+    public Target(Project project) {
+        this.project = project;
+    }
+
+    /**
+     * set the name of the target
+     *
+     * @param name the new name value
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * get the project to which this target belongs
+     *
+     * @return the target's project.
+     */
+    public Project getProject() {
+        return project;
+    }
+
+    /**
+     * Gets the name of the Target
+     *
+     * @return the target's name
+     */
+    public String getName() {
+        return name;
+    }
+
 }
 

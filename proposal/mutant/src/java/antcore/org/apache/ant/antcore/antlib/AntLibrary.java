@@ -55,6 +55,7 @@ package org.apache.ant.antcore.antlib;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -68,10 +69,13 @@ import org.apache.ant.common.util.ExecutionException;
  * @created 14 January 2002
  */
 public class AntLibrary {
+
     /** constant indicating a taskdef definition */
     public final static int TASKDEF = 1;
     /** constant indicating a typedef definition */
     public final static int TYPEDEF = 2;
+    /** A counter for generating unique ids */
+    private static int implicitLibCount = 0;
 
     /**
      * This is the globally unique name of this library. It uses the same
@@ -122,6 +126,25 @@ public class AntLibrary {
         this.converterClassNames.addAll(spec.getConverters());
         this.factoryClassName = spec.getFactory();
         this.definitionURL = spec.getLibraryURL();
+    }
+
+    /**
+     * Create an Ant library to wrap around an existing class
+     *
+     * @param componentName the name of the component to be wrapped
+     * @param componentClass the class to be wrapped
+     * @param defType the type of definition being defined
+     */
+    public AntLibrary(int defType, String componentName, Class componentClass) {
+        this.libraryId = "_internal" + (implicitLibCount++);
+        this.definitions = new HashMap();
+        AntLibDefinition definition = new AntLibDefinition(defType,
+            componentName, componentClass.getName());
+        this.definitions.put(componentName, definition);
+        this.isolated = false;
+        this.factoryClassName = null;
+        this.definitionURL = null;
+        loader = componentClass.getClassLoader();
     }
 
     /**

@@ -60,7 +60,7 @@ package org.apache.ant.antcore.antlib;
  * @created 19 January 2002
  */
 public class AntLibDefinition {
-    /** The tpye of element being defined int his definition */
+    /** The type of element being defined int his definition */
     private int definitionType;
     /** The default name for the defintion */
     private String definitionName;

@@ -51,15 +51,31 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant;
+package org.apache.ant.common.service;
+import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
- * BuildListener facade
+ * Core service to manage receiving of events by components within Ant.
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 31 January 2002
+ * @created 7 February 2002
  */
-public interface BuildListener
-     extends org.apache.ant.common.event.BuildListener {
+public interface EventService {
+    /**
+     * Add a build listener to the current frame
+     *
+     * @param listener the lister which will receive build events
+     * @exception ExecutionException if the listener cannot be added
+     */
+    void addBuildListener(BuildListener listener) throws ExecutionException;
+
+    /**
+     * Remove a listener from the current frame
+     *
+     * @param listener the listener to be removed
+     * @exception ExecutionException if the listener could not be removed
+     */
+    void removeBuildListener(BuildListener listener) throws ExecutionException;
 }
 

@@ -116,5 +116,26 @@ public interface ComponentService {
      */
     void callTarget(Map properties, List targets)
          throws ExecutionException;
+
+    /**
+     * Experimental - define a new type
+     *
+     * @param typeName the name by which this type will be referred
+     * @param typeClass the class of the type
+     * @exception ExecutionException if the type cannot be defined
+     */
+    void typedef(String typeName, Class typeClass)
+         throws ExecutionException;
+         
+    /**
+     * Experimental - define a new task
+     *
+     * @param taskName the name by which this task will be referred
+     * @param taskClass the class of the task
+     * @exception ExecutionException if the task cannot be defined
+     */
+    void taskdef(String taskName, Class taskClass)
+         throws ExecutionException;
+
 }
 

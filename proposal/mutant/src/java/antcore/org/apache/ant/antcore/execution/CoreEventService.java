@@ -51,22 +51,50 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant;
+package org.apache.ant.antcore.execution;
+import org.apache.ant.common.event.BuildListener;
+import org.apache.ant.common.service.EventService;
+import org.apache.ant.common.util.ExecutionException;
 
 /**
- * BuildEvent facade
+ * Core implementation of the event service
  *
  * @author <a href="mailto:conor@apache.org">Conor MacNeill</a>
- * @created 31 January 2002
+ * @created 7 February 2002
  */
-public class BuildEvent extends org.apache.ant.common.event.BuildEvent {
+public class CoreEventService implements EventService {
+    /** The ExecutionFrame this service instance is working for */
+    private ExecutionFrame frame;
+
     /**
-     * Construct a BuildEvent for a task level event
+     * Constructor
      *
-     * @param task the task that emitted the event.
+     * @param frame the frame for which this instance is providing service
      */
-    public BuildEvent(Task task) {
-        super(task.getContext().getModelElement(), MESSAGE);
+    public CoreEventService(ExecutionFrame frame) {
+        this.frame = frame;
+    }
+
+    /**
+     * Add a build listener to the current frame
+     *
+     * @param listener the lister which will receive build events
+     * @exception ExecutionException if the listener cannot be added
+     */
+    public void addBuildListener(BuildListener listener)
+         throws ExecutionException {
+        frame.addBuildListener(listener);
+    }
+
+    /**
+     * Remove a listener from the current frame
+     *
+     * @param listener the listener to be removed
+     * @exception ExecutionException if the listener could not be removed
+     */
+    public void removeBuildListener(BuildListener listener)
+         throws ExecutionException {
+        frame.removeBuildListener(listener);
     }
 }
 

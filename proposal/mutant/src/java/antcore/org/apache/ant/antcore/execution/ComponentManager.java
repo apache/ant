@@ -199,6 +199,30 @@ public class ComponentManager implements ComponentService {
     }
 
     /**
+     * Experimental - define a new task
+     *
+     * @param taskName the name by which this task will be referred
+     * @param taskClass the class of the task
+     * @exception ExecutionException if the task cannot be defined
+     */
+    public void taskdef(String taskName, Class taskClass)
+         throws ExecutionException {
+        defineComponent(AntLibrary.TASKDEF, taskName, taskClass);
+    }
+
+    /**
+     * Experimental - define a new type
+     *
+     * @param typeName the name by which this type will be referred
+     * @param typeClass the class of the type
+     * @exception ExecutionException if the type cannot be defined
+     */
+    public void typedef(String typeName, Class typeClass)
+         throws ExecutionException {
+        defineComponent(AntLibrary.TYPEDEF, typeName, typeClass);
+    }
+
+    /**
      * Set the standard libraries (i.e. those which are independent of the
      * build files) to be used in this component manager
      *
@@ -293,6 +317,24 @@ public class ComponentManager implements ComponentService {
             definitions.put(defName, new ImportInfo(library, libdef));
         }
         addLibraryConverters(library);
+    }
+
+    /**
+     * Experimental - define a new component
+     *
+     * @param componentName the name this component will take
+     * @param componentClass the component's class
+     * @param defType the type of component being defined
+     * @exception ExecutionException if the component cannot be defined
+     */
+    private void defineComponent(int defType, String componentName,
+                                 Class componentClass)
+         throws ExecutionException {
+        AntLibrary wrapperLibrary
+             = new AntLibrary(defType, componentName, componentClass);
+        String libraryId = wrapperLibrary.getLibraryId();
+        antLibraries.put(libraryId, wrapperLibrary);
+        importLibrary(libraryId);
     }
 
     /**
