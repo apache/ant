@@ -141,6 +141,9 @@ Other changes:
 Fixed bugs:
 -----------
 
+* Do not pass on ThreadDeath when halting <java fork="false">. Bugzilla
+  32941.
+
 * Killing a thread running <java fork="true"> (e.g. from an IDE) would
   not stop the forked process. Bugzilla 31928.
 
