@@ -296,6 +296,9 @@ Other changes:
 * <replace> supports a new replacefilterfile attribute that
   automatically turns all properties of a given file into
   replacefilters.
+  
+* An alias of <xslt> has been added to refer to the <style> task.
+
 
 Changes from Ant 1.4 to Ant 1.4.1
 ===========================================
