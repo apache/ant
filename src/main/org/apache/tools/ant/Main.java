@@ -840,6 +840,7 @@ public class Main implements AntMain {
                    + lSep);
         msg.append("  -nouserlib             Run ant without using the jar files from ${user.home}/"
                    + ".ant/lib");
+        msg.append("  -noclasspath           Run ant without using CLASSPATH");
         System.out.println(msg.toString());
     }
 

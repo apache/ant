@@ -123,6 +123,7 @@ public class Launcher {
         List argList = new ArrayList();
         String[] newArgs;
         boolean  noUserLib = false;
+        boolean  noClassPath = false;
 
         for (int i = 0; i < args.length; ++i) {
             if (args[i].equals("-lib")) {
@@ -143,6 +144,8 @@ public class Launcher {
                 cpString = args[++i];
             } else if (args[i].equals("--nouserlib") || args[i].equals("-nouserlib")) {
                 noUserLib = true;
+            } else if (args[i].equals("--noclasspath") || args[i].equals("-noclasspath")) {
+                noClassPath = true;
             } else {
                 argList.add(args[i]);
             }
@@ -156,7 +159,7 @@ public class Launcher {
 
         List libPathURLs = new ArrayList();
 
-        if (cpString != null) {
+        if (cpString != null && !noClassPath) {
             addPath(cpString, false, libPathURLs);
         }
 

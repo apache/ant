@@ -60,6 +60,10 @@ Other changes:
   up ${user.dir}/.lib/ant. This is useful when compiling ant, and antlibs.
   Modified the build.sh and build.bat to use the option.
 
+* Added -noclasspath option to allow running ant WITHOUT using CLASSPATH env
+  variable. Modified ant.bat to do this so that %CLASSPATH% is not looked at.
+  Modified build.sh and build.bat to use the option.
+
 Changes from Ant 1.6.2 to current Ant 1.6 CVS version
 =====================================================
 
