@@ -57,7 +57,7 @@ check_for_optional_packages:
              you may want to save the output and analyze it in an editor.
            </p>
            
-           <p>So, once you have all this debug information, how can you use it to solve your problem. 
+           <p>So, once you have all this debug information, how can you use it to solve your problem? 
               That will depend on the task in question and the nature of your problem. Each task logs
               different aspects of its operation, but it will give you an idea of what is going on. For
               example, the &lt;javac&gt; task logs the reasons why it chooses to compile particular 
@@ -115,8 +115,12 @@ check_for_optional_packages:
         <p>
           If the current nightly build doesn't resolve your problem, it is possible that someone else has reported
           the issue. It is time to look at the <a href="http://nagoya.apache.org/bugzilla/">Apache Bug Database</a>.
-          This system is easy to use and it will let you search the currently open and resolved bugs to see if your
-          problem has already been reported. If it has, you can see whether any of the developers have commented, 
+          This system is easy to use and it will let you search the 
+          <a href="http://nagoya.apache.org/bugzilla/buglist.cgi?bug_status=UNCONFIRMED&amp;bug_status=NEW&amp;bug_status=ASSIGNED&amp;bug_status=REOPENED&amp;email1=&amp;emailtype1=substring&amp;emailassigned_to1=1&amp;email2=&amp;emailtype2=substring&amp;emailreporter2=1&amp;bugidtype=include&amp;bug_id=&amp;changedin=&amp;votes=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;product=Ant&amp;short_desc=&amp;short_desc_type=substring&amp;long_desc=&amp;long_desc_type=substring&amp;bug_file_loc=&amp;bug_file_loc_type=substring&amp;keywords=&amp;keywords_type=anywords&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=&amp;order=bugs.bug_id">
+          currently open 
+          </a>.
+          and resolved bugs to see if your problem has already been reported.
+          If your problem has been reported, you can see whether any of the developers have commented, 
           suggesting workarounds or the reason for the bug, etc. You may have more information to add (see about 
           creating bug reports below), in which case, go right ahead and add it. If you can't add more information
           you may just want to vote for this bug, and perhaps add yourself to the CC list to follow the progress of
@@ -144,6 +148,18 @@ check_for_optional_packages:
            entered into the Bug Database, you will be kept informed about progress on the bug. If you receive email
            asking for further information, please try to respond as it will aid in the resolution of your bug.
         </p>
+      </subsection>
+
+      <subsection name="Asking for an enhancement">
+         <p>Sometimes, you may find that Ant just doesn't do what you want. It isn't a bug, as such, since Ant 
+            is working the way it is supposed to. Perhaps it is something that hasn't been thought of yet, or 
+            a completely new task. For these situations you will want to raise an enhancement request. 
+            Enhancement requests are managed using the same Apache Bug Database described above. 
+            These are just a different type of report. If you look in the database, you will see that one of 
+            the severity settings for a bug is &quot;Enhancement&quot;. So, just fill the bug report in, and 
+            in the description, state how you would like to have Ant enhanced. Again you should check whether
+            there are any existing enhancment requests that cover your needs. If so, just add your vote to these.
+         </p>
       </subsection>
       
       <subsection name="Fixing the Bug">
