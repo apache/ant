@@ -198,8 +198,8 @@ public class Property extends Task {
                 }
                 addProperties(props);
             } else {
-                log("Unable to find " + file.getAbsolutePath(), 
-                    Project.MSG_VERBOSE);
+                log("Unable to find property file: " + file.getAbsolutePath(), 
+                    Project.MSG_WARN);
             }
         } catch(Exception ex) {
             throw new BuildException(ex.getMessage(), ex, location);
