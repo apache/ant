@@ -75,18 +75,16 @@ Note: This document was created in the context of releasing Ant 1.5.
     You may choose to use the text2html convertor present at
     http://www.aigeek.com/txt2html/
     
+    Name the generated file RELEASE-NOTES-x.y.z.html.
+
     [[ TODO: This must perhaps be an Ant task. ]]
 
 10. Once this is uploaded, unpack things, create the release directory, 
-    something like v1.5Beta1, push the release and README files into this 
-    directory.
+    something like v1.5Beta1, push the release and RELEASE-NOTES files
+    into this directory.  Create a symbolic link named README.html
+    that points to the RELEASE-NOTES.
 
-    The files should go to /www/jakarta.apache.org/builds/jakarta-ant/release
-    on daedalus.
-
-    [[ FIXME: The above URL is definitively wrong, but I can't
-       remember whether we've put the betas to www.apache.org or some
-       subdirectory under ant.apache.org ]]
+    The files should go to /www/cvs.apache.org/dist/ant/ on minotaur.
 
 11. Address the available release tags in BugZilla. Create a new tag 1.5Beta1 
     and a 1.6alpha. Assign all existing 1.5 alpha bugs to one of these release 
@@ -100,7 +98,7 @@ Note: This document was created in the context of releasing Ant 1.5.
     
     If it looks OK, announce it on dev@ant and user@ant. After a few
     days pass and there are no major problems, a wider announcement is
-    made (main jakarta website, announcements@jakarta.apache.org,
+    made (ant website, main jakarta website, announcements@jakarta.apache.org,
     etc).
     
     Also ensure you:
@@ -111,8 +109,8 @@ Note: This document was created in the context of releasing Ant 1.5.
 
     Generate the html files by invoking ant on docs.xml - you need
     jakarta-site2 checked out for this.  Commit the modified/generated
-    files and also perform a cvs update on files in daedalus'
-    /www/jakarta.apache.org/ant.
+    files and also perform a cvs update on files in minotaur's
+    /www/ant.apache.org/
 
     Announce beta releases at freshmeat.net (Stefan Bodewig is the
     owner of Ant's project entry - bug him ;-).
@@ -146,6 +144,9 @@ Note: This document was created in the context of releasing Ant 1.5.
 
     * Create proper -current symlinks in /www/www.apache.org/dist/ant/
 
+    * Make sure that the symbolic link README.html points to the new
+      RELEASE-NOTES.
+
 17. Change the links in /xdocs/bindownload.xml and /xdocs/srcdownload.xml,
     regenerate the HTML files, commit and update the site.
 
@@ -157,10 +158,6 @@ Note: This document was created in the context of releasing Ant 1.5.
 
     * remove the remaining files of the previous release from
       /www/www.apache.org/dist/ant/[source|binary].
-
-    * rename the README.html of the old release to
-      RELAEASE-NOTES-1.4.1.html in
-      /www/archive.apache.org/dist/ant/[source|binary] on minotaur,
 
     * remove all *tar* files of the old release from
       /www/archive.apache.org/dist/ant/[source|binary] on minotaur,
