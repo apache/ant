@@ -26,7 +26,7 @@ import java.io.File;
 import java.util.Vector;
 
 /**
- * this class provides utility methods to process resources
+ * This class provides utility methods to process Resources.
  *
  * @since Ant 1.5.2
  */
@@ -36,18 +36,18 @@ public class ResourceUtils {
     private static final FileUtils FILE_UTILS = FileUtils.getFileUtils();
 
     /**
-     * tells which source files should be reprocessed based on the
-     * last modification date of target files
-     * @param logTo where to send (more or less) interesting output
+     * Tells which source files should be reprocessed based on the
+     * last modification date of target files.
+     * @param logTo where to send (more or less) interesting output.
      * @param source array of resources bearing relative path and last
-     * modification date
+     * modification date.
      * @param mapper filename mapper indicating how to find the target
-     * files
+     * files.
      * @param targets object able to map as a resource a relative path
-     * at <b>destination</b>
+     * at <b>destination</b>.
      * @return array containing the source files which need to be
      * copied or processed, because the targets are out of date or do
-     * not exist
+     * not exist.
      */
     public static Resource[] selectOutOfDateSources(ProjectComponent logTo,
                                                     Resource[] source,
@@ -58,20 +58,20 @@ public class ResourceUtils {
     }
 
     /**
-     * tells which source files should be reprocessed based on the
-     * last modification date of target files
-     * @param logTo where to send (more or less) interesting output
+     * Tells which source files should be reprocessed based on the
+     * last modification date of target files.
+     * @param logTo where to send (more or less) interesting output.
      * @param source array of resources bearing relative path and last
-     * modification date
+     * modification date.
      * @param mapper filename mapper indicating how to find the target
-     * files
+     * files.
      * @param targets object able to map as a resource a relative path
-     * at <b>destination</b>
+     * at <b>destination</b>.
      * @param granularity The number of milliseconds leeway to give
      * before deciding a target is out of date.
      * @return array containing the source files which need to be
      * copied or processed, because the targets are out of date or do
-     * not exist
+     * not exist.
      * @since Ant 1.6.2
      */
     public static Resource[] selectOutOfDateSources(ProjectComponent logTo,
@@ -88,7 +88,6 @@ public class ResourceUtils {
                          + " modified in the future.",
                          Project.MSG_WARN);
             }
-
             String[] targetnames =
                 mapper.mapFileName(source[counter].getName()
                                    .replace('/', File.separatorChar));
@@ -125,7 +124,6 @@ public class ResourceUtils {
                         targetList.append(atarget.getName());
                     }
                 }
-
                 if (!added) {
                     logTo.log(source[counter].getName()
                               + " omitted as " + targetList.toString()
