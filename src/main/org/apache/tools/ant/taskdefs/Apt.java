@@ -41,54 +41,95 @@ public class Apt
     private boolean compile = true;
     private String factory;
     private Path factoryPath;
-    private Vector options;
+    private Vector options = new Vector();
     private File preprocessDir;
+    /** The name of the apt tool. */
     public static final String EXECUTABLE_NAME = "apt";
-    public static final String ERROR_IGNORING_COMPILER_OPTION = "Ignoring compiler attribute for the APT task, as it is fixed";
-    public static final String ERROR_WRONG_JAVA_VERSION = "Apt task requires Java 1.5+";
+    /** An warning message when ignoring compiler attribute. */
+    public static final String ERROR_IGNORING_COMPILER_OPTION
+        = "Ignoring compiler attribute for the APT task, as it is fixed";
+    /** A warning message if used with java < 1.5. */
+    public static final String ERROR_WRONG_JAVA_VERSION
+        = "Apt task requires Java 1.5+";
 
     /**
-     * option element
+     * The nested option element.
      */
     public static final class Option {
         private String name;
         private String value;
 
+        /** Constructor for Option */
         public Option() {
         }
 
+        /**
+         * Get the name attribute.
+         * @return the name attribute.
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * Set the name attribute.
+         * @param name the name of the option.
+         */
         public void setName(String name) {
             this.name = name;
         }
 
+        /**
+         * Get the value attribute.
+         * @return the value attribute.
+         */
         public String getValue() {
             return value;
         }
 
+        /**
+         * Set the value attribute.
+         * @param value the value of the option.
+         */
         public void setValue(String value) {
             this.value = value;
         }
     }
 
+    /**
+     * Construtor for Apt task.
+     * This sets the apt compiler adapter as the compiler in the super class.
+     */
     public Apt() {
         super();
         super.setCompiler(AptCompilerAdapter.class.getName());
-        this.options = new Vector();
     }
 
+    /**
+     * Get the name of the apt executable.
+     *
+     * @return the name of the executable.
+     */
     public String getAptExecutable() {
         return JavaEnvUtils.getJdkExecutable(EXECUTABLE_NAME);
     }
 
+    /**
+     * Set the compiler.
+     * This is not allowed and a warning log message is made.
+     * @param compiler not used.
+     */
     public void setCompiler(String compiler) {
         log(ERROR_IGNORING_COMPILER_OPTION,
                 Project.MSG_WARN);
     }
 
+    /**
+     * Set the fork attribute.
+     * If fork is true run the external apt command.
+     * If fork is false run the apt compiler in the same jvm as the task.
+     * @param fork if true use the external command.
+     */
     public void setFork(boolean fork) {
         if (fork) {
             super.setCompiler(AptExternalCompilerAdapter.class.getName());
@@ -97,30 +138,62 @@ public class Apt
         }
     }
 
+    /**
+     * Get the compiler class name.
+     * @return the compiler class name.
+     */
     public String getCompiler() {
         return super.getCompiler();
     }
 
+    /**
+     * Get the compile option for the apt compiler.
+     * If this is false the "-nocompile" argument will be used.
+     * @return the value of the compile option.
+     */
     public boolean isCompile() {
         return compile;
     }
 
+    /**
+     * Set the compile option for the apt compiler.
+     * Default value is true.
+     * @param compile if true set the compile option.
+     */
     public void setCompile(boolean compile) {
         this.compile = compile;
     }
 
+    /**
+     * Get the factory option for the apt compiler.
+     * If this is non-null the "-factory" argument will be used.
+     * @return the value of the factory option.
+     */
     public String getFactory() {
         return factory;
     }
 
+    /**
+     * Set the factory option for the apt compiler.
+     * Default value is null.
+     * @param factory the classname of the factory.
+     */
     public void setFactory(String factory) {
         this.factory = factory;
     }
 
+    /**
+     * Add a reference to a path to the factoryPath attribute.
+     * @param ref a reference to a path.
+     */
     public void setFactoryPathRef(Reference ref) {
         createFactoryPath().setRefid(ref);
     }
 
+    /**
+     * Add a path to the factoryPath attribute.
+     * @return a path to be configured.
+     */
     public Path createFactoryPath() {
         if (factoryPath == null) {
             factoryPath = new Path(getProject());
@@ -128,28 +201,57 @@ public class Apt
         return factoryPath.createPath();
     }
 
+    /**
+     * Get the factory path attribute.
+     * If this is not null, the "-factorypath" argument will be used.
+     * The default value is null.
+     * @return the factory path attribute.
+     */
     public Path getFactoryPath() {
         return factoryPath;
     }
 
+    /**
+     * Create a nested option.
+     * @return an option to be configured.
+     */
     public Option createOption() {
         Option opt = new Option();
         options.add(opt);
         return opt;
     }
 
+    /**
+     * Get the options to the compiler.
+     * Each option will use '"-E" name ["=" value]' argument.
+     * @return the options.
+     */
     public Vector getOptions() {
         return options;
     }
 
+    /**
+     * Get the preprocessdir attribute.
+     * This corresponds to the "-s" argument.
+     * The default value is null.
+     * @return the preprocessdir attribute.
+     */
     public File getPreprocessDir() {
         return preprocessDir;
     }
 
+    /**
+     * Set the preprocessdir attribute.
+     * @param preprocessDir where to place processor generated source files.
+     */
     public void setPreprocessDir(File preprocessDir) {
         this.preprocessDir = preprocessDir;
     }
 
+    /**
+     * Do the compilation.
+     * @throws BuildException on error.
+     */
     public void execute()
             throws BuildException {
         if (!JavaEnvUtils.isJavaVersion(JavaEnvUtils.JAVA_1_5)) {
