@@ -59,22 +59,19 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import com.starbase.starteam.Label;
-import com.starbase.starteam.ServerException;
-import com.starbase.starteam.StarTeamFinder;
 import com.starbase.starteam.View;
 import com.starbase.starteam.ViewConfiguration;
-import com.starbase.starteam.vts.comm.CommandException;
 import com.starbase.util.OLEDate;
 
 import org.apache.tools.ant.BuildException;
 
 /**
  * This class logs into StarTeam and creates a label for the repository at the
- * time of the last successful build. 
- * Ant Usage: 
+ * time of the last successful build.
+ * Ant Usage:
  * <taskdef name="stlabel"
  *                classname="org.apache.tools.ant.taskdefs.optional.starteam.StarTeamLabel"/>
- *     <stlabel 
+ *     <stlabel
  * label="1.0" lastbuild="20011514100000" description="Successful Build"
  * username="BuildMaster" password="ant"
  * starteamurl="server:port/project/view"/>
@@ -99,9 +96,9 @@ public class StarTeamLabel extends StarTeamTask {
      * The time of the last successful. The new label will be a snapshot of the
      * repository at this time. String should be formatted as "yyyyMMddHHmmss"
      */
-    private Date lastBuildTime;
+    private OLEDate lastBuild = null;
 
-    private static final SimpleDateFormat DATE_FORMAT  =
+    private static final SimpleDateFormat DATE_FORMAT =
             new SimpleDateFormat("yyyyMMddHHmmss");
 
 
@@ -115,7 +112,8 @@ public class StarTeamLabel extends StarTeamTask {
 
     public void setLastBuild(String lastbuild) throws BuildException {
         try {
-            lastBuildTime = DATE_FORMAT.parse(lastbuild);
+            Date lastBuildTime = DATE_FORMAT.parse(lastbuild);
+            this.lastBuild = new OLEDate(lastBuildTime);
         } catch (ParseException e) {
             throw new BuildException("Unable to parse the date '" + lastbuild + "'", e);
         }
@@ -127,16 +125,24 @@ public class StarTeamLabel extends StarTeamTask {
      *
      */
     public void execute() throws BuildException {
-        OLEDate buildDate = new OLEDate(lastBuildTime);
 
-        // Get view as of the last successful build time.
-        View view = StarTeamFinder.openView(getUserName() + ":" + getPassword()
-                + "@" + getURL());
-        View snapshot = new View(view, ViewConfiguration.createFromTime(buildDate));
+        View snapshot = openView();
 
         // Create the new label and update the repository
-        new Label(snapshot, labelName, description, buildDate, true).update();
-	log("Created Label " + labelName);
+        new Label(snapshot, labelName, description, this.lastBuild, true).update();
+        log("Created Label " + labelName);
+    }
+
+    /**
+     * Override of base-class abstract function creates an
+     * appropriately configured view.  For labels this a view
+     * configured as of this.lastBuild.
+     *
+     * @param raw the unconfigured <code>View</code>
+     * @return the snapshot <code>View</code> appropriately configured.
+     */
+    protected View createSnapshotView(View raw) {
+        return new View(raw, ViewConfiguration.createFromTime(this.lastBuild));
     }
 
 }

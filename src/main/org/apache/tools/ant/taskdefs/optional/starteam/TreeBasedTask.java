@@ -64,7 +64,6 @@ import com.starbase.starteam.View;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.DirectoryScanner;
-import org.apache.tools.ant.Project;
 
 /**
  * FileBasedTask.java
@@ -152,7 +151,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
      */
     private boolean forced = false;
 
-    private Hashtable localFiles = new Hashtable();
 
     ///////////////////////////////////////////////////////////////
     // GET/SET methods.
@@ -161,6 +159,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
     /**
      * Set the root folder in the Starteam repository for this operation
+     * @param rootStarteamFolder the root folder
      */
     public void setRootStarteamFolder(String rootStarteamFolder) {
         this.rootStarteamFolder = rootStarteamFolder;
@@ -169,6 +168,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
     /**
      * returns the root folder in the Starteam repository
      * used for this operation
+     * @return the root folder in use
      */
     public String getRootStarteamFolder() {
         return this.rootStarteamFolder;
@@ -179,6 +179,8 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * starteam folder for this operation.
      * If not specified, the StarTeam default will be used
      * the default is used.
+     * @param rootLocalFolder the local folder that will mirror
+     *                        this.rootStarteamFolder
      */
     public void setRootLocalFolder(String rootLocalFolder) {
         this.rootLocalFolder = rootLocalFolder;
@@ -188,6 +190,7 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * Returns the local folder specified by the user,
      * corresponding to the starteam folder for this operation.
      * or null if not specified
+     * @return the local folder that mirrors this.rootStarteamFolder
      */
     public String getRootLocalFolder() {
         return this.rootLocalFolder;
@@ -356,15 +359,6 @@ public abstract class TreeBasedTask extends StarTeamTask {
     }
 
     /**
-     * Derived classes must override <code>createSnapshotView</code>
-     * defining the kind of configured view appropriate to its task.
-     *
-     * @param rawview the unconfigured <code>View</code>
-     * @return the snapshot <code>View</code> appropriately configured.
-     */
-    protected abstract View createSnapshotView(View rawview);
-
-    /**
      * This method does the work of opening the supplied  Starteam view and
      * calling the <code>visit()</code> method to perform the task.
      *
@@ -374,22 +368,9 @@ public abstract class TreeBasedTask extends StarTeamTask {
 
     public void execute() throws BuildException {
         try {
-            if (null != this.rootLocalFolder && !this.forced) {
-                log("Warning: rootLocalFolder specified, but forcing off.",
-                        Project.MSG_WARN);
-            }
-            // Open the view
-            View view =
-                    StarTeamFinder.openView(getUserName() + ":"
-                    + getPassword()
-                    + "@" + getURL());
+            testPreconditions();
 
-            if (null == view) {
-                throw new BuildException("Cannot find view" + getURL() +
-                        " in repository()");
-            }
-
-            View snapshot = createSnapshotView(view);
+            View snapshot = openView();
 
             // find the starteam folder specified to be the root of the
             // operation.  Throw if it can't be found.
@@ -458,9 +439,17 @@ public abstract class TreeBasedTask extends StarTeamTask {
             throws BuildException;
 
 
-    protected Hashtable getLocalFiles() {
-        return this.localFiles;
-    }
+    /**
+     * Derived classes must override this method to define tests for
+     * any preconditons required by the task.  This method is called at
+     * the beginning of the execute() method.
+     *
+     * @exception BuildException throw if any fatal error exists in the
+     * parameters supplied.  If there is a non-fatal condition, just writing
+     * to the log may be appropriate.
+     * @see <code>execute()</code>
+     */
+    protected abstract void testPreconditions() throws BuildException;
 
     /**
      * Gets the collection of the local file names in the supplied directory.
@@ -468,10 +457,12 @@ public abstract class TreeBasedTask extends StarTeamTask {
      * understand what we need to do in order to synch with the repository.
      *
      * @param localFolder - the local folder to scan
+     * @return an "identity" hashtable whose keys each represent a file or
+     * directory in localFolder.
      */
-    protected void listLocalFiles(java.io.File localFolder) {
+    protected static Hashtable listLocalFiles(java.io.File localFolder) {
 
-        this.localFiles.clear();
+        Hashtable localFileList = new Hashtable();
         // we can't use java 2 collections so we will use an identity
         // Hashtable to  hold the file names.  We only care about the keys,
         // not the values (which will all be "").
@@ -479,22 +470,23 @@ public abstract class TreeBasedTask extends StarTeamTask {
         if (localFolder.exists()) {
             String[] localFiles = localFolder.list();
             for (int i = 0; i < localFiles.length; i++) {
-                this.localFiles.put(localFolder.toString() +
+                localFileList.put(localFolder.toString() +
                         java.io.File.separatorChar + localFiles[i], "");
             }
         }
+        return localFileList;
     }
 
     /**
      * Removes from the collection of the local file names
      * the supplied name of a processed file.  When we are done, only
      * files not in StarTeam will remain in localFiles.
-     *
-     * @param thisfile - file to remove from list.
-     * @return         - true if file was removed, false if it wasn't found.
+     * @param localFiles a <code>Hashtable</code> value
+     * @param thisfile file to remove from list.
+     * @return true if file was removed, false if it wasn't found.
      */
-    protected boolean delistLocalFile(java.io.File thisfile) {
-        return null != this.localFiles.remove(thisfile.toString());
+    protected boolean delistLocalFile(Hashtable localFiles, java.io.File thisfile) {
+        return null != localFiles.remove(thisfile.toString());
     }
 }
 

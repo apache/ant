@@ -1,7 +1,7 @@
 /*
  * The Apache Software License, Version 1.1
  *
- * Copyright (c) 2001 The Apache Software Foundation.  All rights
+ * Copyright (c) 1999 The Apache Software Foundation.  All rights
  * reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -54,6 +54,7 @@
  */
 package org.apache.tools.ant.taskdefs.optional.starteam;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -69,126 +70,107 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 /**
- * This class logs into StarTeam checks out any changes that have occurred since
- * the last successful build. It also creates all working directories on the
- * local directory if appropriate. Ant Usage: <taskdef name="starteamcheckout"
- * classname="org.apache.tools.ant.taskdefs.StarTeamCheckout"/>
- * <starteamcheckout username="BuildMaster" password="ant" starteamFolder="Source"
- * starteamurl="servername:portnum/project/view"
- * createworkingdirectories="true"/>
+ * StarTeamCheckIn.java
  *
- * @author Christopher Charlier, ThoughtWorks, Inc. 2001
- * @author <a href="mailto:jcyip@thoughtworks.com">Jason Yip</a>
- * @author Jason Pettiss
- * @author <a href="mailto:stevec@ignitesports.com">Steve Cohen</a>
- * @version 1.1
- * @see <A HREF="http://www.starbase.com/">StarBase Web Site</A>
+ *
+ * Created: Sat Dec 15 20:26:07 2001
+ *
+ * @author <a href="mailto:scohen@localhost.localdomain">Steve Cohen</a>
+ * @version 1.0
  */
-public class StarTeamCheckout extends TreeBasedTask {
+public class StarTeamCheckin extends TreeBasedTask {
+
+    public StarTeamCheckin() {
+        // we want this to have a false default, unlike for Checkin.
+        setRecursive(false);
+    }
+
+    private boolean createFolders = true;
 
     /**
-     * holder for the createDirs attribute
+     * The comment which will be stored with the checkin.
      */
-    private boolean createDirs = true;
+    private String comment = null;
 
     /**
-     * holder for the deleteUncontrolled attribute.  If true,
-     * all local files not in StarTeam will be deleted.
+     * holder for the add Uncontrolled attribute.  If true, all
+     * local files not in StarTeam will be added to the repository.
      */
-    private boolean deleteUncontrolled = true;
+    private boolean addUncontrolled = false;
 
     /**
-     * Set the attribute that tells ant if we want to create all directories
-     * that are in the Starteam repository regardless if they are empty.
+     * Sets the value of createFolders
      *
-     * @param value  the value to set the attribute to.
+     * @param argCreateFolders Value to assign to this.createFolders
      */
-    public void setCreateWorkingDirs(boolean value) {
-        this.createDirs = value;
+    public void setCreateFolders(boolean argCreateFolders) {
+        this.createFolders = argCreateFolders;
+    }
+
+
+    /**
+     * Get the comment attribute for this operation
+     * @return value of comment.
+     */
+    public String getComment() {
+        return this.comment;
     }
 
     /**
-     * Sets the attribute that tells ant whether or not to remove local files
-     * that are NOT found in the Starteam repository to the supplied value.
-     *
-     * @param value  the value to set the attribute to.
+     * Set the value of comment.
+     * @param comment  Value to assign to comment.
      */
-    public void setDeleteUncontrolled(boolean value) {
-        this.deleteUncontrolled = value;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     /**
-     * Sets the label StarTeam is to use for checkout.
-     *
-     * @param label the label to be used
+     * Get the value of addUncontrolled.
+     * @return value of addUncontrolled.
      */
-    public void setLabel(String label) {
-        _setLabel(label);
+    public boolean isAddUncontrolled() {
+        return this.addUncontrolled;
     }
 
     /**
-     * This attribute tells whether to do a locked checkout, an unlocked
-     * checkout or to leave the checkout status alone (default).  A locked
-     * checkout locks all other users out from making changes.  An unlocked
-     * checkout reverts all local files to their previous repository status
-     * and removes the lock.
-     * @see setLocked()
+     * Set the value of addUncontrolled.
+     * @param addUncontrolled  Value to assign to addUncontrolled.
+     */
+    public void setAddUncontrolled(boolean addUncontrolled) {
+        this.addUncontrolled = addUncontrolled;
+    }
+
+    /**
+     * This attribute tells whether unlocked files on checkin (so that
+     * other users may access them) checkout or to leave the checkout status
+     * alone (default).
      * @see setUnlocked()
      */
     private int lockStatus = Item.LockType.UNCHANGED;
 
     /**
-     * Set to do a locked checkout.  Default is false.
-     * @param v  True to do a locked checkout, false to checkout without
-     *           changing status/.
-     * @exception BuildException if both locked and unlocked are set true
-     */
-    public void setLocked(boolean v) throws BuildException {
-        setLockStatus(v, Item.LockType.EXCLUSIVE);
-    }
-
-
-    /**
      * Set to do an unlocked checkout. Default is false;
-     * @param v  True to do an unlocked checkout, false to checkout without
-     *           changing status.
-     * @exception BuildException if both locked and unlocked are set true
+     * @param v  true means do an unlocked checkout
+     *           false means leave status alone.
      */
-    public void setUnlocked(boolean v) throws BuildException {
-        setLockStatus(v, Item.LockType.UNLOCKED);
-    }
-
-    private void setLockStatus(boolean v, int newStatus)
-            throws BuildException {
+    public void setUnlocked(boolean v) {
         if (v) {
-            if (this.lockStatus == Item.LockType.UNCHANGED) {
-                this.lockStatus = newStatus;
-            } else if (this.lockStatus != newStatus) {
-                throw new BuildException(
-                        "Error: cannot set locked and unlocked both true.");
-            }
+            this.lockStatus = Item.LockType.UNLOCKED;
+        } else {
+            this.lockStatus = Item.LockType.UNCHANGED;
         }
     }
 
     /**
      * Override of base-class abstract function creates an
-     * appropriately configured view for checkouts - either
-     * the current view or a view from this.label.
+     * appropriately configured view.  For checkins this is
+     * always the current or "tip" view.
      *
      * @param raw the unconfigured <code>View</code>
      * @return the snapshot <code>View</code> appropriately configured.
      */
     protected View createSnapshotView(View raw) {
-
-        int labelID = getLabelID(raw);
-
-        // if a label has been supplied, use it to configure the view
-        // otherwise use current view
-        if (labelID >= 0) {
-            return new View(raw, ViewConfiguration.createFromLabel(labelID));
-        } else {
-            return new View(raw, ViewConfiguration.createTip());
-        }
+        return new View(raw, ViewConfiguration.createTip());
     }
 
     /**
@@ -208,9 +190,9 @@ public class StarTeamCheckout extends TreeBasedTask {
      * Implements base-class abstract function to perform the checkout
      * operation on the files in each folder of the tree.
      *
-     * @param starteamFolder the StarTeam folder from which files to be
-     *                       checked out
-     * @param targetFolder the local mapping of rootStarteamFolder
+     * @param starteamFolder the StarTeam folder to which files
+     *                       will be checked in
+     * @param localFolder local folder from which files will be checked in
      * @exception BuildException if any error occurs
      */
     protected void visit(Folder starteamFolder, java.io.File targetFolder)
@@ -219,12 +201,6 @@ public class StarTeamCheckout extends TreeBasedTask {
             Hashtable localFiles = listLocalFiles(targetFolder);
 
             // If we have been told to create the working folders
-            if (createDirs) {
-                // Create if it doesn't exist
-                if (!targetFolder.exists()) {
-                    targetFolder.mkdir();
-                }
-            }
             // For all Files in this folder, we need to check
             // if there have been modifications.
 
@@ -253,7 +229,8 @@ public class StarTeamCheckout extends TreeBasedTask {
 
                     // We try to update the status once to give StarTeam
                     // another chance.
-                    if (fileStatus == Status.MERGE || fileStatus == Status.UNKNOWN) {
+                    if (fileStatus == Status.MERGE
+                            || fileStatus == Status.UNKNOWN) {
                         eachFile.updateStatus(true, true);
                         fileStatus = (eachFile.getStatus());
                     }
@@ -265,21 +242,11 @@ public class StarTeamCheckout extends TreeBasedTask {
                     }
                 }
 
+                // Check in anything else.
 
-                // Check out anything else.
-                // Just a note: StarTeam has a status for NEW which implies
-                // that there is an item  on your local machine that is not
-                // in the repository.  These are the items that show up as
-                // NOT IN VIEW in the Starteam GUI.
-                // One would think that we would want to perhaps checkin the
-                // NEW items (not in all cases! - Steve Cohen 15 Dec 2001)
-                // Unfortunately, the sdk doesn't really work, and we can't
-                // actually see  anything with a status of NEW. That is why
-                // we can just check out  everything here without worrying
-                // about losing anything.
-
-                log("Checking Out: " + (localFile.toString()), Project.MSG_INFO);
-                eachFile.checkoutTo(localFile, this.lockStatus,
+                log("Checking In: " + (localFile.toString()), Project.MSG_INFO);
+                eachFile.checkinFrom(localFile, this.comment,
+                        this.lockStatus,
                         true, true, true);
             }
 
@@ -290,36 +257,37 @@ public class StarTeamCheckout extends TreeBasedTask {
                 java.io.File targetSubfolder =
                         new java.io.File(targetFolder, subFolders[i].getName());
                 delistLocalFile(localFiles, targetSubfolder);
+
                 if (isRecursive()) {
                     visit(subFolders[i], targetSubfolder);
                 }
             }
-
-            if (this.deleteUncontrolled) {
-                deleteUncontrolledItems(localFiles);
+            if (this.addUncontrolled) {
+                addUncontrolledItems(localFiles, starteamFolder);
             }
+
 
         } catch (IOException e) {
             throw new BuildException(e);
         }
     }
 
-
     /**
-     * Deletes everything on the local machine that is not in the repository.
-     *
-     * @param localFiles the list of filenames whose elements are to be deleted
+     * Adds to the StarTeam repository everything on the local machine that
+     * is not currently in the repository.
+     * @param folder - StarTeam folder to which these items are to be added.
      */
-    private void deleteUncontrolledItems(Hashtable localFiles) {
+    private void addUncontrolledItems(Hashtable localFiles, Folder folder)
+            throws IOException {
         try {
             Enumeration e = localFiles.keys();
             while (e.hasMoreElements()) {
                 java.io.File file =
                         new java.io.File(e.nextElement().toString());
-                delete(file);
+                add(folder, file);
             }
         } catch (SecurityException e) {
-            log("Error deleting file: " + e, Project.MSG_ERR);
+            log("Error adding file: " + e, Project.MSG_ERR);
         }
     }
 
@@ -328,29 +296,29 @@ public class StarTeamCheckout extends TreeBasedTask {
      * @param file the file or directory to delete.
      * @return true if the file was successfully deleted otherwise false.
      */
-    private boolean delete(java.io.File file) {
-        // If the current file is a Directory, we need to delete all
+    private void add(Folder parentFolder, java.io.File file)
+            throws IOException {
+        // If the current file is a Directory, we need to process all
         // of its children as well.
         if (file.isDirectory()) {
-            java.io.File[] children = file.listFiles();
-            for (int i = 0; i < children.length; i++) {
-                delete(children[i]);
+            log("Adding new folder to repository: " + file.getAbsolutePath(),
+                    Project.MSG_INFO);
+            Folder newFolder = new Folder(parentFolder);
+            newFolder.setName(file.getName());
+            newFolder.update();
+
+            // now visit this new folder to take care of adding any files
+            // or subfolders within it.
+            if (isRecursive()) {
+                visit(newFolder, file);
             }
+        } else {
+            log("Adding new file to repository: " + file.getAbsolutePath(),
+                    Project.MSG_INFO);
+            File newFile = new File(parentFolder);
+            newFile.addFromStream(new FileInputStream(file),
+                    file.getName(),
+                    null, this.comment, 3, true);
         }
-
-        log("Deleting: " + file.getAbsolutePath(), Project.MSG_INFO);
-        return file.delete();
     }
-
-
 }
-
-
-
-
-
-
-
-
-
-
