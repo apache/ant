@@ -121,6 +121,11 @@ control for turning off success or failure messages individually.</p>
     <td width="63%">No, default &quot;localhost&quot;</td>
   </tr>
   <tr>
+    <td width="337">MailLogger.port </td>
+    <td width="63%">SMTP Port for the Mail server</td>
+    <td width="63%">No, default &quot;25&quot;</td>
+  </tr>
+  <tr>
     <td width="337">MailLogger.from</td>
     <td width="63%">Mail &quot;from&quot; address</td>
     <td width="63%">Yes, if mail needs to be sent</td>
@@ -276,15 +281,15 @@ or logger, the output is not generated until the build is complete, as it
 buffers the information in order to provide timing information for task,
 targets, and the project.
 <p>
-By default the XML file creates 
-a reference to an XSLT file "log.xsl" in the current directory; look in 
-ANT_HOME/etc for one of these. You can set the property 
+By default the XML file creates
+a reference to an XSLT file "log.xsl" in the current directory; look in
+ANT_HOME/etc for one of these. You can set the property
 <code>ant.XmlLogger.stylesheet.uri</code> to provide a uri to a style sheet.
-this can be a relative or absolute file path, or an http URL. 
+this can be a relative or absolute file path, or an http URL.
 If you set the property to the empty string, "", no XSLT transform
-is declared at all. 
+is declared at all.
 
- 
+
 
 
 </p>
