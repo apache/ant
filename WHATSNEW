@@ -3,6 +3,11 @@ Changes from Ant 1.6.B2 to Ant 1.6.B3
 
 Changes that could break older environments:
 --------------------------------------------
+* Changed namespace processing. The namespace uri
+  of nested elements of a type or a task are now the
+  same as the type or task. Previously the namespace uri
+  of nested elements was ant's namespace uri. This change will affect users
+  of ant 1.6b1 and ant 1.6b2.
 
 Fixed bugs:
 -----------
