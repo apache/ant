@@ -56,14 +56,13 @@ package org.apache.tools.ant.taskdefs.optional.ssh;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
-import org.apache.tools.ant.Task;
-import org.apache.tools.ant.TaskContainer;
-import org.apache.tools.ant.taskdefs.LogOutputStream;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.Vector;
-import java.util.Enumeration;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringReader;
 
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelExec;
@@ -71,14 +70,22 @@ import com.jcraft.jsch.Session;
 
 /**
  * Executes a command on a remote machine via ssh.
+ *
  * @author    Robert Anderson, riznob@hotmail.com
+ * @author    Dale Anson, danson@germane-software.com
+ * @version   $Revision$
  * @created   February 2, 2003
- * @since Ant 1.6
+ * @since     Ant 1.6
  */
 public class SSHExec extends SSHBase {
 
-    private String command = null;
-    private int maxwait = 30000;
+    private String command = null;   // the command to execute via ssh
+    private int maxwait = 0;   // units are milliseconds, default is 0=infinite
+    private Thread thread = null;   // for waiting for the command to finish
+
+    private String output_property = null;   // like <exec>
+    private File output_file = null;   // like <exec>
+    private boolean append = false;   // like <exec>
 
     /**
      * Constructor for SSHExecTask.
@@ -97,44 +104,112 @@ public class SSHExec extends SSHBase {
     }
 
     /**
-     * The connection will be dropped after maxwait seconds. This is 
-     * sometimes useful when a connection may be flaky. Default is to 
-     * wait forever.
+     * The connection can be dropped after a specified number of
+     * milliseconds. This is sometimes useful when a connection may be
+     * flaky. Default is 0, which means &quot;wait forever&quot;.
+     *
+     * @param timeout  The new timeout value in seconds
+     */
+    public void setTimeout(int timeout) {
+        maxwait = timeout * 1000;
+    }
+
+    /**
+     * If used, stores the output of the command to the given file.
      *
      * @param maxwait  The new maxwait value
      */
-    public void setMaxwait(int maxwait) {
-        this.maxwait = maxwait;
+    public void setOutput(File output) {
+        output_file = output;
     }
 
+    /**
+     * Should the output be appended to the file given in
+     * <code>setOutput</code> ? Default is false, that is, overwrite
+     * the file.
+     *
+     * @param append  True to append to an existing file, false to overwrite.
+     */
+    public void setAppend(boolean append) {
+        this.append = append;
+    }
+
+    /**
+     * If set, the output of the command will be stored in the given property.
+     *
+     * @param property  The name of the property in which the command output
+     *      will be stored.
+     */
+    public void setOutputproperty(String property) {
+        output_property = property;
+    }
 
     /**
      * Execute the command on the remote host.
-     * @exception BuildException  Most likely a network error or bad
-     * parameter.
+     *
+     * @exception BuildException  Most likely a network error or bad parameter.
      */
     public void execute() throws BuildException {
         if (getHost() == null) {
-            throw new BuildException("Host is null.");
+            throw new BuildException("Host is required.");
         }
         if (getUserInfo().getName() == null) {
-            throw new BuildException("Username is null.");
+            throw new BuildException("Username is required.");
         }
         if (getUserInfo().getKeyfile() == null 
             && getUserInfo().getPassword() == null) {
-            throw new BuildException("Password and Keyfile are null.");
+            throw new BuildException("Password or Keyfile is required.");
         }
         if (command == null) {
-            throw new BuildException("Command is null.");
+            throw new BuildException("Command is required.");
         }
 
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        Tee tee = new Tee(out, System.out);
+
         try {
+            // execute the command
             Session session = openSession();
-            ChannelExec channel=(ChannelExec) session.openChannel("exec");
+            session.setTimeout(maxwait);
+            final ChannelExec channel=(ChannelExec) session.openChannel("exec");
             channel.setCommand(command);
-            channel.setInputStream(System.in);
-            channel.setOutputStream(System.out);
+            channel.setOutputStream(tee);
             channel.connect();
+
+            // wait for it to finish
+            thread =
+                new Thread() {
+                    public void run() {
+                        while (!channel.isEOF()) {
+                            if (thread == null) {
+                                return;
+                            }
+                            try {
+                                sleep(500);
+                            } catch (Exception e) {
+                                // ignored
+                            }
+                        }
+                    }
+                };
+                    
+            thread.start();
+            thread.join(maxwait);
+            
+            if (thread.isAlive()) {
+                // ran out of time
+                thread = null;
+                log("Timeout period exceeded, connection dropped.");
+            } else {
+                // completed successfully
+                if (output_property != null) {
+                    getProject().setProperty(output_property, out.toString());
+                }
+                if (output_file != null) {
+                    writeToFile(out.toString(), append, output_file);
+                }
+            }
+
         } catch(Exception e){
             if (getFailonerror()) {
                 throw new BuildException(e);
@@ -143,5 +218,100 @@ public class SSHExec extends SSHBase {
             }
         }
     }
+
+
+    /**
+     * Writes a string to a file. If destination file exists, it may be
+     * overwritten depending on the "append" value.
+     *
+     * @param from           string to write
+     * @param to             file to write to
+     * @param append         if true, append to existing file, else overwrite
+     * @exception Exception  most likely an IOException
+     */
+    private void writeToFile(String from, boolean append, File to) 
+        throws IOException {
+        FileWriter out = null;
+        try {
+            out = new FileWriter(to.getAbsolutePath(), append);
+            StringReader in = new StringReader(from);
+            char[] buffer = new char[8192];
+            int bytes_read;
+            while (true) {
+                bytes_read = in.read(buffer);
+                if (bytes_read == -1) {
+                    break;
+                }
+                out.write(buffer, 0, bytes_read);
+            }
+            out.flush();
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+    }
+
+    /**
+     * Similar to standard unix "tee" utility, sends output to two streams.
+     *
+     * @author    Dale Anson, danson@germane-software.com
+     * @version   $Revision$
+     */
+    public class Tee extends OutputStream {
+
+        private OutputStream left = null;
+        private OutputStream right = null;
+
+        /**
+         * Constructor for Tee, sends output to both of the given
+         * streams, which are referred to as the "teed" streams.
+         *
+         * @param left   one stream to write to
+         * @param right  the other stream to write to
+         */
+        public Tee(OutputStream left, OutputStream right) {
+            if (left == null || right == null) {
+                throw new IllegalArgumentException("Both streams are required.");
+            }
+            this.left = left;
+            this.right = right;
+        }
+
+        /**
+         * Writes the specified byte to both of the teed streams. Per java api,
+         * the general contract for write is that one byte is written to the
+         * output stream. The byte to be written is the eight low-order bits of
+         * the argument b. The 24 high-order bits of b are ignored.
+         *
+         * @param b
+         * @exception IOException  If an IO error occurs
+         */
+        public void write( int b ) throws IOException {
+            left.write( b );
+            right.write( b );
+        }
+
+        /**
+         * Closes both of the teed streams.
+         *
+         * @exception IOException  If an IO error occurs
+         */
+        public void close() throws IOException {
+            left.close();
+            right.close();
+        }
+
+        /**
+         * Flushes both of the teed streams.
+         *
+         * @exception IOException  If an IO error occurs
+         */
+        public void flush() throws IOException {
+            left.flush();
+            right.flush();
+        }
+    }
+
 }
 

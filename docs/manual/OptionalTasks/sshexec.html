@@ -18,7 +18,7 @@
 <p><b>Note:</b> This task depends on external libraries not included
 in the Ant distribution.  See <a
 href="../install.html#librarydependencies">Library Dependencies</a>
-for more information.  This task has been tested with jsch-0.1.2.</p>
+for more information.  This task has been tested with jsch-0.1.3.</p>
 
 <h3>Parameters</h3>
 <table border="1" cellpadding="2" cellspacing="0">
@@ -79,6 +79,28 @@ for more information.  This task has been tested with jsch-0.1.2.</p>
     <td valign="top">passphrase</td>
      <td valign="top">Passphrase for your private key.</td>
      <td valign="top" align="center">No, defaults to an empty string.</td>
+  </tr>
+  <tr>
+    <td valign="top">output</td>
+    <td valign="top">Name of a file to which to write the output.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">append</td>
+    <td valign="top">Whether output file should be appended to or overwritten. Defaults to false, meaning overwrite any existing file.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">outputproperty</td>
+    <td valign="top">The name of a property in which the output of the 
+      command should be stored.</td>
+    <td align="center" valign="top">No</td>
+  </tr>
+  <tr>
+    <td valign="top">timeout</td>
+    <td valign="top">Stop the command if it doesn't finish within the
+      specified time (given in seconds). Defaults to 0 which means &quot;wait forever&quot;.</td>
+    <td align="center" valign="top">No</td>
   </tr>
 </table>
 
