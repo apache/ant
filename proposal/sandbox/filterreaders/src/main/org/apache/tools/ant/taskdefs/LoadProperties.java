@@ -56,10 +56,7 @@ package org.apache.tools.ant.taskdefs;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.types.AntFilterReader;
 import org.apache.tools.ant.types.FilterReaderSet;
-import org.apache.tools.ant.types.Parameter;
-import org.apache.tools.ant.types.Parameterizable;
 import org.apache.tools.ant.util.ChainReaderHelper;
 
 import java.io.*;
