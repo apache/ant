@@ -7,7 +7,7 @@
 
 <body>
 
-<h2><a name="log">Recorder</a></h2>
+<h2><a name="log">Record</a></h2>
 <h3>Description</h3>
 <p>A recorder is a listener to the current build process that records the
 output to a file.
@@ -70,21 +70,21 @@ to record just the <code>&lt;javac&gt;</code> task:
 <pre>
     ...
     &lt;compile &gt;
-        &lt;recorder name="log.txt" action="start" /&gt;
+        &lt;record name="log.txt" action="start" /&gt;
         &lt;javac ...
-        &lt;recorder name="log.txt" action="stop" /&gt;
+        &lt;record name="log.txt" action="stop" /&gt;
     &lt;compile/&gt;
     ...
 </pre>
 
-<p>The following two calls to <code>&lt;recorder&gt;</code> set up two
+<p>The following two calls to <code>&lt;record&gt;</code> set up two
 recorders: one to file "records-simple.log" at logging level <code>info</code>
 (the default) and one to file "ISO.log" using logging level of
 <code>verbose</code>.
 <pre>
     ...
-    &lt;recorder name="records-simple.log" /&gt;
-    &lt;recorder name="ISO.log" loglevel="verbose" /&gt;
+    &lt;record name="records-simple.log" /&gt;
+    &lt;record name="ISO.log" loglevel="verbose" /&gt;
     ...
 </pre>
 
