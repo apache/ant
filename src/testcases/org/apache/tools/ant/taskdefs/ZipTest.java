@@ -87,4 +87,17 @@ public class ZipTest extends TaskdefsTest {
         executeTarget("cleanup");
     }
     
+    public void test5() { 
+        executeTarget("test5");
+    }
+
+
+    public void test6() { 
+        executeTarget("test6");
+    }
+
+
+    public void test7() { 
+        executeTarget("test7");
+    }
 }

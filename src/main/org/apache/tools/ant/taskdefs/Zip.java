@@ -270,14 +270,22 @@ public class Zip extends MatchingTask {
         File zipSrc = fs.getSrc();
 
         ZipEntry entry;
-        ZipInputStream in = new ZipInputStream(new FileInputStream(zipSrc));
-        while ((entry = in.getNextEntry()) != null) {
-            String vPath = entry.getName();
-            if (zipScanner.match(vPath)) {
-                addParentDirs(null, vPath, zOut, prefix);
-                if (! entry.isDirectory()) {
-                  zipFile(in, zOut, prefix+vPath, entry.getTime());
+        ZipInputStream in = null;
+        try {
+            in = new ZipInputStream(new FileInputStream(zipSrc));
+
+            while ((entry = in.getNextEntry()) != null) {
+                String vPath = entry.getName();
+                if (zipScanner.match(vPath)) {
+                    addParentDirs(null, vPath, zOut, prefix);
+                    if (! entry.isDirectory()) {
+                        zipFile(in, zOut, prefix+vPath, entry.getTime());
+                    }
                 }
+            }
+        } finally {
+            if (in != null) {
+                in.close();
             }
         }
     }
