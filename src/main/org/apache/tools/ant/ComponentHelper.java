@@ -597,26 +597,33 @@ public class ComponentHelper  {
         }
 
         protected void initAll( ) {
-            if( initAllDone ) return;
+            if( initAllDone ) {
+                return;
+            }
             project.log("InitAll", Project.MSG_DEBUG);
-            if( props==null ) return;
+            if( props==null ) {
+                return;
+            }
             Enumeration enum = props.propertyNames();
             while (enum.hasMoreElements()) {
                 String key = (String) enum.nextElement();
                 Class taskClass=getTask( key );
                 if( taskClass!=null ) {
                     // This will call a get() and a put()
-                    if( tasks )
+                    if( tasks ) {
                         project.addTaskDefinition(key, taskClass);
-                    else
+                    } else {
                         project.addDataTypeDefinition(key, taskClass );
+                    }
                 }
             }
             initAllDone=true;
         }
 
         protected Class getTask(String key) {
-            if( props==null ) return null; // for tasks loaded before init()
+            if( props==null ) {
+                return null; // for tasks loaded before init()
+            }
             String value=props.getProperty(key);
             if( value==null) {
                 //project.log( "No class name for " + key, Project.MSG_VERBOSE );
@@ -634,13 +641,15 @@ public class ComponentHelper  {
                             return taskClass;
                         }
                     } catch( Exception ex ) {
+                        //ignore
                     }
                 }
                 taskClass = Class.forName(value);
                 return taskClass;
             } catch (NoClassDefFoundError ncdfe) {
                 project.log("Could not load a dependent class ("
-                        + ncdfe.getMessage() + ") for task " + key, Project.MSG_DEBUG);
+                        + ncdfe.getMessage() + ") for task " 
+                        + key, Project.MSG_DEBUG);
             } catch (ClassNotFoundException cnfe) {
                 project.log("Could not load class (" + value
                         + ") for task " + key, Project.MSG_DEBUG);
@@ -665,7 +674,7 @@ public class ComponentHelper  {
             return taskClass;
         }
 
-        public boolean contains( Object key ) {
+        public boolean containsKey( Object key ) {
             return get( key ) != null;
         }
 
