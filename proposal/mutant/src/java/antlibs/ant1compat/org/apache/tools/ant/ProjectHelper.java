@@ -54,6 +54,7 @@
 package org.apache.tools.ant;
 import java.util.Hashtable;
 import java.util.Vector;
+import java.io.File;
 import org.apache.ant.common.antlib.AntContext;
 import org.apache.ant.common.service.DataService;
 import org.apache.ant.common.util.AntException;
@@ -130,6 +131,22 @@ public class ProjectHelper {
         } catch (ExecutionException e) {
             throw new BuildException(e);
         }
+    }
+
+    /**
+     * Old method to build a project.
+     * 
+     * @param project The project to configure. Must not be <code>null</code>.
+     * @param buildFile An XML file giving the project's configuration.
+     *                  Must not be <code>null</code>.
+     * 
+     * @exception BuildException always
+     * @deprecated
+     */
+    public static void configureProject(Project project, File buildFile) 
+        throws BuildException {
+        throw new BuildException("Project are not built by ProjectHelper " 
+            + "any longer.");
     }
 }
 

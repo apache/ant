@@ -197,6 +197,42 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
+     * The old constructor fopr Project instances - not used now.
+     *
+     * @deprecated
+     */
+    public Project() {
+        throw new BuildException("Projects can not be constructed to " 
+            + "invoke Ant");
+    }
+    
+    /**
+     * The old initialisation method for Projects. Not used now
+     *
+     * @deprecated
+     * @exception BuildException if the default task list cannot be loaded
+     */
+    public void init() throws BuildException {
+        throw new BuildException("Projects can not be initialized in this " 
+            + "manner any longer.");
+    }
+
+
+    /**
+     * Old method used to execute targets
+     * 
+     * @param targetNames A vector of target name strings to execute.
+     *                    Must not be <code>null</code>.
+     * 
+     * @exception BuildException always
+     * @deprecated
+     */
+    public void executeTargets(Vector targetNames) throws BuildException {
+        throw new BuildException("Targets within the project cannot be " 
+            + "executed with this method.");
+    }
+        
+    /**
      * static query of the java version
      *
      * @return a string indicating the Java version
