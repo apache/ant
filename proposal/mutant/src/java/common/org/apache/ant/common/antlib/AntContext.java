@@ -87,14 +87,7 @@ public interface AntContext {
          throws ExecutionException;
 
     /**
-     * Get the basedir for the current execution
-     *
-     * @return the base directory for this execution of Ant
-     */
-    File getBaseDir();
-
-    /**
-     * Gets the location associated witj the AntContext
+     * Gets the location associated with the AntContext
      *
      * @return the location
      */

@@ -106,7 +106,9 @@ public class Ant extends AntBase {
      */
     public void execute() throws ExecutionException {
         if (baseDir == null) {
-            baseDir = getAntContext().getBaseDir();
+            ExecService execService
+                = (ExecService)getCoreService(ExecService.class);
+            baseDir = execService.getBaseDir();
         }
         
         File antFile = null;

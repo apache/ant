@@ -69,10 +69,10 @@ public class AntCall extends AntBase {
      * @exception ExecutionException if the build fails
      */
     public void execute() throws ExecutionException {
-        setProperty(MagicProperties.BASEDIR, 
-            getAntContext().getBaseDir().getAbsolutePath());
         ExecService execService
              = (ExecService)getCoreService(ExecService.class);
+        setProperty(MagicProperties.BASEDIR, 
+            execService.getBaseDir().getAbsolutePath());
 
         execService.callTarget(getProperties(), getTargets());
     }

@@ -116,15 +116,6 @@ public class ExecutionContext implements AntContext {
 
 
     /**
-     * Get the base directory for this execution of this frame
-     *
-     * @return the base directory
-     */
-    public File getBaseDir() {
-        return frame.getBaseDir();
-    }
-
-    /**
      * Gets the location associated with the ExecutionContext
      *
      * @return the location in the build model associated with this context.

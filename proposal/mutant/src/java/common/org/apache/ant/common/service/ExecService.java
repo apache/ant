@@ -114,5 +114,11 @@ public interface ExecService {
      */
     String getProjectName();
 
+    /**
+     * Get the basedir for the current execution
+     *
+     * @return the base directory for this execution of Ant
+     */
+    File getBaseDir();
 }
 

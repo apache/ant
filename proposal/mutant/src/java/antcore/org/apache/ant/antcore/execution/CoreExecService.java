@@ -176,5 +176,14 @@ public class CoreExecService implements ExecService {
     public String getProjectName() {
         return frame.getProjectName();
     }
+
+    /**
+     * Get the base directory for this execution of this frame
+     *
+     * @return the base directory
+     */
+    public File getBaseDir() {
+        return frame.getBaseDir();
+    }
 }
 

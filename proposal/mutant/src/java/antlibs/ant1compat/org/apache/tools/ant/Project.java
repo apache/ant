@@ -382,6 +382,17 @@ public class Project implements org.apache.ant.common.event.BuildListener {
     }
 
     /**
+     * Get the Project's default Target, if any
+     *
+     * @return the project's default target or null if there is no default.
+     * @deprecated
+     */
+    public String getDefaultTarget() {
+        throw new BuildException("The default project target is no longer " 
+            + "available through this method.");
+    }
+
+    /**
      * Get a project property
      *
      * @param name the property name
@@ -441,7 +452,7 @@ public class Project implements org.apache.ant.common.event.BuildListener {
      * @return the baseDir
      */
     public File getBaseDir() {
-        return context.getBaseDir();
+        return execService.getBaseDir();
     }
 
     /**
