@@ -648,7 +648,7 @@ public class ComponentHelper  {
     public void exitAntLib() {
         antLibStack.pop();
         antLibCurrentUri = (antLibStack.size() == 0)
-            ? null : (String)antLibStack.peek();
+            ? null : (String) antLibStack.peek();
     }
 
     /**
