@@ -124,7 +124,7 @@ public class DefaultDeployer
     {
         try
         {
-            URLClassLoader classLoader = getClassLoaderForFile( file );
+            final URLClassLoader classLoader = getClassLoaderForFile( file );
             return createDeployment( classLoader, file.toURL() );
         }
         catch( Exception e )
