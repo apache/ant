@@ -13,7 +13,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.log.Logger;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.aspects.AspectHandler;
@@ -120,13 +120,13 @@ public class DefaultAspectManager
         }
     }
 
-    public void preLoggable( final Logger logger )
+    public void preLogEnabled( final Logger logger )
         throws TaskException
     {
         final AspectHandler[] aspects = m_aspects;
         for( int i = 0; i < aspects.length; i++ )
         {
-            aspects[ i ].preLoggable( logger );
+            aspects[ i ].preLogEnabled( logger );
         }
     }
 

@@ -12,14 +12,12 @@ import org.apache.avalon.excalibur.extension.DefaultPackageRepository;
 import org.apache.avalon.excalibur.util.StringUtil;
 import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
-import org.apache.avalon.framework.logger.Loggable;
-//import org.apache.avalon.framework.logger.LogEnabled;
-//import org.apache.avalon.framework.logger.Logger;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.interfaces.extensions.ExtensionManager;
-import org.apache.log.Logger;
 
 /**
  * PhoenixPackageRepository
@@ -29,7 +27,7 @@ import org.apache.log.Logger;
  */
 public class DefaultExtensionManager
     extends DefaultPackageRepository
-    implements Loggable, Parameterizable, Initializable, Disposable, ExtensionManager
+    implements LogEnabled, Parameterizable, Initializable, Disposable, ExtensionManager
 {
     private Logger m_logger;
 
@@ -40,8 +38,7 @@ public class DefaultExtensionManager
         super( new File[ 0 ] );
     }
 
-    //enableLogging
-    public void setLogger( final Logger logger )
+    public void enableLogging( final Logger logger )
     {
         m_logger = logger;
     }

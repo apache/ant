@@ -20,22 +20,22 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLoggable;
-import org.apache.avalon.framework.logger.Loggable;
-import org.apache.log.Logger;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
-import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.executor.ExecutionFrame;
+import org.apache.myrmidon.interfaces.executor.Executor;
 import org.apache.myrmidon.interfaces.type.TypeException;
 import org.apache.myrmidon.interfaces.type.TypeFactory;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 
 public class DefaultExecutor
-    extends AbstractLoggable
+    extends AbstractLogEnabled
     implements Executor, Composable
 {
     private static final Resources REZ =
@@ -62,7 +62,7 @@ public class DefaultExecutor
         final Task task = createTask( taskModel.getName(), frame );
 
         debug( "logger.notice" );
-        doLoggable( task, taskModel, frame.getLogger() );
+        doLogEnabled( task, taskModel, frame.getLogger() );
 
         debug( "contextualizing.notice" );
         doContextualize( task, taskModel, frame.getContext() );
@@ -185,14 +185,14 @@ public class DefaultExecutor
         }
     }
 
-    protected final void doLoggable( final Task task,
-                                     final Configuration taskModel,
-                                     final Logger logger )
+    protected final void doLogEnabled( final Task task,
+                                       final Configuration taskModel,
+                                       final Logger logger )
         throws TaskException
     {
-        if( task instanceof Loggable )
+        if( task instanceof LogEnabled )
         {
-            try { ((Loggable)task).setLogger( logger ); }
+            try { ((LogEnabled)task).enableLogging( logger ); }
             catch( final Throwable throwable )
             {
                 final String message =

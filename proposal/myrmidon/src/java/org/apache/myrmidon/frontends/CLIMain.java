@@ -26,7 +26,8 @@ import org.apache.avalon.excalibur.cli.CLOptionDescriptor;
 import org.apache.avalon.excalibur.cli.CLUtil;
 import org.apache.avalon.excalibur.io.ExtensionFileFilter;
 import org.apache.avalon.framework.ExceptionUtil;
-import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogKitLogger;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Hierarchy;
 import org.apache.log.LogTarget;
@@ -54,7 +55,7 @@ import org.apache.avalon.excalibur.i18n.Resources;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class CLIMain
-    extends AbstractLoggable
+    extends AbstractLogEnabled
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( CLIMain.class );
@@ -297,7 +298,7 @@ public class CLIMain
 
         //handle logging...
         final String logLevel = m_parameters.getParameter( "log.level", null );
-        setLogger( createLogger( logLevel ) );
+        enableLogging( new LogKitLogger( createLogger( logLevel ) ) );
 
         final String home = m_parameters.getParameter( "myrmidon.home", null );
         final File homeDir = (new File( home )).getAbsoluteFile();

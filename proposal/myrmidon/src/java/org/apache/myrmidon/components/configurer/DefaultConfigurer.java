@@ -22,8 +22,8 @@ import org.apache.avalon.framework.configuration.Configurable;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.context.Context;
-import org.apache.avalon.framework.logger.AbstractLoggable;
-import org.apache.avalon.framework.logger.Loggable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogEnabled;
 import org.apache.log.Logger;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.configurer.Configurer;
@@ -36,8 +36,8 @@ import org.apache.myrmidon.converter.ConverterException;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultConfigurer
-    extends AbstractLoggable
-    implements Configurer, Composable, Loggable
+    extends AbstractLogEnabled
+    implements Configurer, Composable, LogEnabled
 {
     private static final Resources REZ =
         ResourceManager.getPackageResources( DefaultConfigurer.class );

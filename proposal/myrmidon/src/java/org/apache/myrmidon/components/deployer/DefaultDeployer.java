@@ -31,7 +31,7 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.configuration.ClassicSAXConfigurationHandler;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
-import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.converter.Converter;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
@@ -50,7 +50,7 @@ import org.xml.sax.XMLReader;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultDeployer
-    extends AbstractLoggable
+    extends AbstractLogEnabled
     implements Deployer, Initializable, Composable
 {
     private static final Resources REZ =

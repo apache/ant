@@ -11,7 +11,7 @@ import org.apache.avalon.framework.activity.Disposable;
 import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 
 /**
  * This is the class that Task writers should extend to provide custom tasks.
@@ -19,7 +19,7 @@ import org.apache.avalon.framework.logger.AbstractLoggable;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public abstract class AbstractTask
-    extends AbstractLoggable
+    extends AbstractLogEnabled
     implements Task, Contextualizable, Initializable, Disposable
 {
     ///Variable to hold context for use by sub-classes

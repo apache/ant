@@ -21,7 +21,7 @@ import org.apache.avalon.framework.ExceptionUtil;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.ConfigurationException;
 import org.apache.avalon.framework.configuration.ClassicSAXConfigurationHandler;
-import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
@@ -40,7 +40,7 @@ import org.xml.sax.XMLReader;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultProjectBuilder
-    extends AbstractLoggable
+    extends AbstractLogEnabled
     implements ProjectBuilder
 {
     private static final Resources REZ =

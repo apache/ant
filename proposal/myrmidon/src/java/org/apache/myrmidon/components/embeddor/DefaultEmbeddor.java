@@ -18,7 +18,7 @@ import org.apache.avalon.framework.activity.Initializable;
 import org.apache.avalon.framework.component.Component;
 import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
-import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.myrmidon.api.JavaVersion;
@@ -45,7 +45,7 @@ import org.apache.myrmidon.interfaces.workspace.Workspace;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultEmbeddor
-    extends AbstractLoggable
+    extends AbstractLogEnabled
     implements Embeddor
 {
     private static final Resources REZ =

@@ -13,8 +13,8 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.Loggable;
-import org.apache.log.Logger;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.interfaces.aspect.AspectManager;
 import org.apache.myrmidon.interfaces.builder.ProjectBuilder;
@@ -33,7 +33,7 @@ import org.apache.myrmidon.interfaces.type.TypeManager;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultExecutionFrame
-    implements ExecutionFrame, Loggable, Contextualizable, Composable
+    implements ExecutionFrame, LogEnabled, Contextualizable, Composable
 {
     private TypeManager              m_typeManager;
 
@@ -41,7 +41,7 @@ public class DefaultExecutionFrame
     private TaskContext              m_context;
     private ComponentManager         m_componentManager;
 
-    public void setLogger( final Logger logger )
+    public void enableLogging( final Logger logger )
     {
         m_logger = logger;
     }

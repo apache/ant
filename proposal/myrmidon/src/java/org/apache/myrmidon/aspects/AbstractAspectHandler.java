@@ -9,7 +9,7 @@ package org.apache.myrmidon.aspects;
 
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.log.Logger;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskException;
 
@@ -48,7 +48,7 @@ public abstract class AbstractAspectHandler
         m_task = task;
     }
 
-    public void preLoggable( final Logger logger )
+    public void preLogEnabled( final Logger logger )
         throws TaskException
     {
         m_logger = logger;

@@ -13,7 +13,7 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
 import org.apache.avalon.excalibur.i18n.Resources;
-import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
 import org.apache.myrmidon.interfaces.converter.MasterConverter;
 import org.apache.myrmidon.interfaces.converter.ConverterRegistry;
 import org.apache.myrmidon.interfaces.type.TypeException;
@@ -28,7 +28,7 @@ import org.apache.myrmidon.converter.ConverterException;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultMasterConverter
-    extends AbstractLoggable
+    extends AbstractLogEnabled
     implements MasterConverter, Composable
 {
     private static final Resources REZ =

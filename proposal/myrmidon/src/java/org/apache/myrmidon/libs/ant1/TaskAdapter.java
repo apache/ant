@@ -59,7 +59,7 @@ public class TaskAdapter
     {
         try
         {
-            getProject().setLogger( getLogger() );
+            getProject().enableLogging( getLogger() );
             getProject().contextualize( getContext() );
             getProject().init();
 

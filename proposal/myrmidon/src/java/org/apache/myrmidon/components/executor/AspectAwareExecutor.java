@@ -16,7 +16,7 @@ import org.apache.avalon.framework.component.ComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.configuration.DefaultConfiguration;
 import org.apache.avalon.framework.parameters.Parameters;
-import org.apache.log.Logger;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.Task;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
@@ -83,8 +83,8 @@ public class AspectAwareExecutor
 
         debug( "logger.notice" );
         final Logger logger = frame.getLogger();
-        getAspectManager().preLoggable( logger );
-        doLoggable( task, taskModel, logger );
+        getAspectManager().preLogEnabled( logger );
+        doLogEnabled( task, taskModel, logger );
 
         debug( "contextualizing.notice" );
         doContextualize( task, taskModel, frame.getContext() );

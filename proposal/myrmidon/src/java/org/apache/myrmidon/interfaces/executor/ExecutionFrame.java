@@ -8,7 +8,7 @@
 package org.apache.myrmidon.interfaces.executor;
 
 import org.apache.avalon.framework.component.ComponentManager;
-import org.apache.log.Logger;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.interfaces.type.TypeManager;
 

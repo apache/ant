@@ -22,12 +22,13 @@ import org.apache.avalon.framework.component.Composable;
 import org.apache.avalon.framework.component.DefaultComponentManager;
 import org.apache.avalon.framework.configuration.Configuration;
 import org.apache.avalon.framework.context.ContextException;
-import org.apache.avalon.framework.logger.AbstractLoggable;
+import org.apache.avalon.framework.logger.AbstractLogEnabled;
+import org.apache.avalon.framework.logger.LogKitLogger;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.avalon.framework.parameters.ParameterException;
 import org.apache.avalon.framework.parameters.Parameterizable;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.log.Hierarchy;
-import org.apache.log.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.myrmidon.api.TaskException;
 import org.apache.myrmidon.components.deployer.DefaultDeployer;
@@ -50,7 +51,7 @@ import org.apache.myrmidon.listeners.ProjectListener;
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>
  */
 public class DefaultWorkspace
-    extends AbstractLoggable
+    extends AbstractLogEnabled
     implements Workspace, Composable, Parameterizable, Initializable
 {
     private static final Resources REZ =
@@ -236,7 +237,7 @@ public class DefaultWorkspace
         //We need to create a new deployer so that it deploys
         //to project specific TypeManager
         final DefaultDeployer deployer = new DefaultDeployer();
-        deployer.setLogger( getLogger() );
+        deployer.enableLogging( getLogger() );
 
         try { deployer.compose( componentManager ); }
         catch( final ComponentException ce )
@@ -270,10 +271,10 @@ public class DefaultWorkspace
 
         try
         {
-            final Logger logger = m_hierarchy.getLoggerFor( "project" + m_projectID );
+            final Logger logger = new LogKitLogger( m_hierarchy.getLoggerFor( "project" + m_projectID ) );
             m_projectID++;
 
-            frame.setLogger( logger );
+            frame.enableLogging( logger );
             frame.contextualize( context );
             frame.compose( componentManager );
         }

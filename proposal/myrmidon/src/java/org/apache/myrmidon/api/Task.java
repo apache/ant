@@ -11,7 +11,7 @@ package org.apache.myrmidon.api;
  * This is the interface that tasks implement to be executed in Myrmidon runtime.
  * 
  * Instances can also implement the Avalon lifecycle methods 
- * Loggable, Contextualizable, Composable, Initializable and Disposable.
+ * LogEnabled, Contextualizable, Composable, Initializable and Disposable.
  * Each of these lifecycle stages will be executed at appropriate time.
  *
  * Tasks can also choose to implement Configurable if they wish to directly

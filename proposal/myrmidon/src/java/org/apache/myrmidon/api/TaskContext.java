@@ -15,7 +15,7 @@ import org.apache.avalon.framework.context.Context;
  * This interface represents the <em>Context</em> in which Task is executed.
  * Like other Component APIs the TaskContext represents the communication
  * path between the container and the Task.
- * Unlike other APIs the Logging is provided through another interface (Loggable)
+ * Unlike other APIs the Logging is provided through another interface (LogEnabled)
  * as is access to Peer components (via Composable).
  *
  * @author <a href="mailto:peter@apache.org">Peter Donald</a>

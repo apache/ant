@@ -10,22 +10,22 @@ package org.apache.myrmidon.libs.ant1;
 import java.io.File;
 import org.apache.avalon.framework.context.Context;
 import org.apache.avalon.framework.context.Contextualizable;
-import org.apache.avalon.framework.logger.Loggable;
-import org.apache.log.Logger;
+import org.apache.avalon.framework.logger.LogEnabled;
+import org.apache.avalon.framework.logger.Logger;
 import org.apache.myrmidon.api.TaskContext;
 import org.apache.tools.ant.*;
 import org.apache.tools.ant.Project;
 
 public class Ant1Project
     extends Project
-    implements Loggable, Contextualizable
+    implements LogEnabled, Contextualizable
 {
     private Logger   m_logger;
 
     ///Variable to hold context for use by sub-classes
     private TaskContext            m_context;
 
-    public void setLogger( final Logger logger )
+    public void enableLogging( final Logger logger )
     {
         m_logger = logger;
     }
