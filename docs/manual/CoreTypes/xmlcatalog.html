@@ -66,29 +66,32 @@ previously in a build file, or as a list of <code>dtd</code> or
 <code>entity</code> locations.  In addition, external catalog files
 may be specified in <code>catalogfiles</code> filesets, but they will
 be ignored unless the resolver library from xml-commons is available
-in the system classpath.  A separate classpath for entity resolution 
-may be specified inline via nested <code>classpath</code> elements; 
-otherwise the system classpath is used for this as well.</p>
-<p>XMLCatalogs can also be nested inside other XMLCatalogs.  For
-example, a "superset" XMLCatalog could be made by including several
-nested XMLCatalogs that referred to other, previously defined
-XMLCatalogs.</p>
-<p>Resource locations can be specified either in-line or in
-external catalog file(s), or both.  In order to use an external
-catalog file, the xml-commons resolver library ("resolver.jar")
-must be in your path.  External catalog files may be either <a
+in the system classpath.  <b>Due to backwards incompatible changes in
+the resolver code after the release of resolver 1.0, Ant will not
+support resolver.jar in version 1.0 - we expect a resolver release 1.1
+to happen before Ant 1.6 gets released.</b>  A separate classpath for
+entity resolution may be specified inline via nested
+<code>classpath</code> elements; otherwise the system classpath is
+used for this as well.</p> <p>XMLCatalogs can also be nested inside
+other XMLCatalogs.  For example, a "superset" XMLCatalog could be made
+by including several nested XMLCatalogs that referred to other,
+previously defined XMLCatalogs.</p> <p>Resource locations can be
+specified either in-line or in external catalog file(s), or both.  In
+order to use an external catalog file, the xml-commons resolver
+library ("resolver.jar") must be in your path.  External catalog files
+may be either <a
 href="http://oasis-open.org/committees/entity/background/9401.html">
 plain text format</a> or <a
 href="http://www.oasis-open.org/committees/entity/spec-2001-08-06.html">
-XML format</a>.  If the xml-commons resolver library is not found in the
-classpath, external catalog files, specified in <code>catalogfiles</code>
-filesets, will be ignored and a warning will be logged.  In this case, however,
-processing of inline entries will proceed normally.</p>
-<p>Currently, only <code>&lt;dtd&gt;</code> and
+XML format</a>.  If the xml-commons resolver library is not found in
+the classpath, external catalog files, specified in
+<code>catalogfiles</code> filesets, will be ignored and a warning will
+be logged.  In this case, however, processing of inline entries will
+proceed normally.</p> <p>Currently, only <code>&lt;dtd&gt;</code> and
 <code>&lt;entity&gt;</code> elements may be specified inline; these
-roughly correspond to OASIS catalog entry types <code>PUBLIC</code> and
-<code>URI</code> respectively.  By contrast, external catalog files
-may use any of the entry types defined in the 
+roughly correspond to OASIS catalog entry types <code>PUBLIC</code>
+and <code>URI</code> respectively.  By contrast, external catalog
+files may use any of the entry types defined in the
 <a href="http://oasis-open.org/committees/entity/spec-2001-08-06.html">
 +OASIS specification</a>.</p>
 <h3><a name="ResolverAlgorithm">Entity/DTD/URI Resolution Algorithm</a></h3>

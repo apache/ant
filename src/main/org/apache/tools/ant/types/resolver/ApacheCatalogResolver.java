@@ -114,14 +114,14 @@ public class ApacheCatalogResolver extends CatalogResolver {
         // file in the ant jarfile with some default property
         // settings.  See CatalogManager.java for more details.
         //
-        CatalogManager.ignoreMissingProperties(true);
+        CatalogManager.getStaticManager().setIgnoreMissingProperties(true);
 
         //
         // Make sure CatalogResolver instantiates ApacheCatalog,
         // rather than a plain Catalog
         //
-        System.setProperty("xml.catalog.className",
-                           ApacheCatalog.class.getName());
+        System.getProperties().put("xml.catalog.className",
+                                   ApacheCatalog.class.getName());
 
         // debug
         // System.setProperty("xml.catalog.verbosity", "4");

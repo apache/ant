@@ -98,8 +98,8 @@ Other changes:
   in the XML file.
 
 * <xmlcatalog> will now support external catalogs according to the
-  OASIS "Open Catalog" standard - if resolver.jar from Apache's
-  xml-commons is in your CLASSPATH.
+  OASIS "Open Catalog" standard - if resolver.jar (newer than version
+  1.0) from Apache's xml-commons is in your CLASSPATH.
   
 * Starteam tasks now have support for revision labels and build labels.
   Checkouts now have the option of using repository timestamps, instead

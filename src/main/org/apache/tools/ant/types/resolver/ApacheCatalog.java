@@ -130,7 +130,8 @@ public class ApacheCatalog extends Catalog {
             String systemid = normalizeURI(entry.getEntryArg(1));
 
             if (resolver == null) {
-                Debug.message(1, "Internal Error: null ApacheCatalogResolver");
+                catalogManager.debug
+                    .message(1, "Internal Error: null ApacheCatalogResolver");
             }
             else {
                 resolver.addPublicEntry(publicid, systemid, base);
@@ -142,7 +143,8 @@ public class ApacheCatalog extends Catalog {
             String altURI = normalizeURI(entry.getEntryArg(1));
 
             if (resolver == null) {
-                Debug.message(1, "Internal Error: null ApacheCatalogResolver");
+                catalogManager.debug
+                    .message(1, "Internal Error: null ApacheCatalogResolver");
             }
             else {
                 resolver.addURIEntry(uri, altURI, base);
