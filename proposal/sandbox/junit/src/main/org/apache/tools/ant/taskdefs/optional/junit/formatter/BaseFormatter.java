@@ -53,12 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.util.Properties;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * Provide a common set of attributes and methods to factorize
@@ -66,9 +63,6 @@ import java.util.Properties;
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
 public abstract class BaseFormatter implements Formatter {
-
-    /** writer to output the data to */
-    private PrintWriter writer;
 
     /** number of errors */
     private int errorCount;
@@ -79,24 +73,12 @@ public abstract class BaseFormatter implements Formatter {
     /** number of runs (success + failure + error) */
     private int runCount;
 
-    public void setOutput(OutputStream value) {
-        try {
-            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(value, "UTF8")), true);
-        } catch (IOException e) {
-            // should not happen
-            throw new IllegalStateException(e.getMessage());
-        }
+    public void init(Properties props) throws BuildException {
     }
 
     protected void finalize() throws Throwable {
         super.finalize();
         close();
-    }
-
-    public void setSystemOutput(String out) {
-    }
-
-    public void setSystemError(String err) {
     }
 
     public void onTestStdOutLine(String testname, String line) {
@@ -138,13 +120,6 @@ public abstract class BaseFormatter implements Formatter {
         close();
     }
 
-    /**
-     * @return the writer used to print data.
-     */
-    protected final PrintWriter getWriter() {
-        return writer;
-    }
-
     /** @return the number of errors */
     protected final int getErrorCount() {
         return errorCount;
@@ -162,9 +137,5 @@ public abstract class BaseFormatter implements Formatter {
 
     /** helper method to flush and close the stream */
     protected void close() {
-        if (writer != null) {
-            writer.flush();
-            writer.close();
-        }
     }
 }

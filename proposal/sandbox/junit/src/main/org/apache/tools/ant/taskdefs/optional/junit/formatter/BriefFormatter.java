@@ -53,10 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
-import java.io.PrintWriter;
-
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * Display additional messages from a <tt>SummaryFormatter</tt>
@@ -67,7 +65,7 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
 public class BriefFormatter extends SummaryFormatter {
 
     private final static Resources RES =
-        ResourceManager.getPackageResources( BriefFormatter.class );
+            ResourceManager.getPackageResources(BriefFormatter.class);
 
     public void onTestFailed(int status, String testname, String trace) {
         String msg = null;

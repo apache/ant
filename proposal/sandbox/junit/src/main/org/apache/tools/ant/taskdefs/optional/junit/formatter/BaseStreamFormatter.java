@@ -53,22 +53,79 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
+import org.apache.tools.ant.taskdefs.optional.junit.KeepAliveOutputStream;
 
 /**
- * The formatter interface.
+ * Base formatter providing default implementation to deal with
+ * either stdout or a file.
+ * <p>
+ * The file is specified by initializing the formatter with
+ * a filepath mapped by the key 'file'.
+ * </p>
+ * <p>
+ * if no file key exists in the properties, it defaults to stdout.
+ * </p>
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public interface Formatter extends TestRunListener {
+public class BaseStreamFormatter extends BaseFormatter {
+
+    /** the key used to specifiy a filepath */
+    public final static String FILE_KEY = "file";
+
+    /** writer to output the data to */
+    private PrintWriter writer;
+
+    public void init(Properties props) throws BuildException {
+        String file = props.getProperty("file");
+        OutputStream os = null;
+        if (file != null) {
+            try {
+                // fixme need to resolve the file !!!!
+                os = new FileOutputStream(file);
+            } catch (IOException e) {
+                throw new BuildException(e);
+            }
+        } else {
+            os = new KeepAliveOutputStream(System.out);
+        }
+        setOutput(os);
+    }
+
     /**
-     * Initialize the formatter with some custom properties
-     * For example it could be a filename, a port and hostname,
-     * a database, etc...
+     * Helper method to wrap the stream over an UTF8 buffered writer.
      */
-    public void init(Properties props) throws BuildException;
+    protected void setOutput(OutputStream value) {
+        try {
+            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(value, "UTF8")), true);
+        } catch (IOException e) {
+            // should not happen
+            throw new BuildException(e);
+        }
+    }
+
+
+    protected void close() {
+        if (writer != null) {
+            writer.flush();
+            writer.close();
+        }
+    }
+
+    /**
+     * @return the writer used to print data.
+     */
+    protected final PrintWriter getWriter() {
+        return writer;
+    }
 
 }

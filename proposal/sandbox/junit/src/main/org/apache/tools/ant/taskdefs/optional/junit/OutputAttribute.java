@@ -82,7 +82,7 @@ public class OutputAttribute extends ProjectComponent {
     public final static String STDERR = "stderr";
 
     /** the selected value for output, either stdout,stderr or filepath */
-    protected String value;
+    private String value;
 
     /**
      * Create a new output attribute from a value.

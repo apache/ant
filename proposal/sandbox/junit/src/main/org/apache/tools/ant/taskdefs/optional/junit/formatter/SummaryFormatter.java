@@ -53,11 +53,8 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
-import java.io.PrintWriter;
-import java.text.MessageFormat;
-
-import org.apache.avalon.excalibur.i18n.Resources;
 import org.apache.avalon.excalibur.i18n.ResourceManager;
+import org.apache.avalon.excalibur.i18n.Resources;
 
 /**
  * Display a summary message at the end of a testsuite stating
@@ -65,17 +62,17 @@ import org.apache.avalon.excalibur.i18n.ResourceManager;
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public class SummaryFormatter extends BaseFormatter {
+public class SummaryFormatter extends BaseStreamFormatter {
 
     private final static Resources RES =
-        ResourceManager.getPackageResources( SummaryFormatter.class );
+            ResourceManager.getPackageResources(SummaryFormatter.class);
 
     protected void finished(long elapsedtime) {
         String msg = RES.getString("summary.finished.msg",
                 new Integer(getRunCount()),
                 new Integer(getFailureCount()),
                 new Integer(getErrorCount()),
-                new Long(elapsedtime / 1000) );
+                new Long(elapsedtime / 1000));
         getWriter().println(msg);
         close();
     }

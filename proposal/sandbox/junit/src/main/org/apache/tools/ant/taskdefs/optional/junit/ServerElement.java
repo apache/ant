@@ -51,24 +51,81 @@
  * information on the Apache Software Foundation, please see
  * <http://www.apache.org/>.
  */
-package org.apache.tools.ant.taskdefs.optional.junit.formatter;
+package org.apache.tools.ant.taskdefs.optional.junit;
 
-import java.util.Properties;
+import java.util.Enumeration;
+import java.util.Vector;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
+import org.apache.tools.ant.ProjectComponent;
+import org.apache.tools.ant.taskdefs.optional.junit.formatter.Formatter;
+import org.apache.tools.ant.taskdefs.optional.junit.remote.Server;
 
 /**
- * The formatter interface.
+ * An element representing the server configuration.
+ *
+ * <pre>
+ * <!ELEMENT server (formatter)*>
+ * <!ATTLIST server port numeric 6666>
+ * <!ATTLIST server haltonfailure (yes|no) no>
+ * <!ATTLIST server haltonerror (yes|no) no>
+ * </pre>
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public interface Formatter extends TestRunListener {
-    /**
-     * Initialize the formatter with some custom properties
-     * For example it could be a filename, a port and hostname,
-     * a database, etc...
-     */
-    public void init(Properties props) throws BuildException;
+public final class ServerElement extends ProjectComponent {
 
+    /** formatters that write the tests results */
+    private Vector formatters = new Vector();
+
+    /** port to run the server on. Default to 6666 */
+    private int port = 6666;
+
+    /** stop the client run if a failure occurs */
+    private boolean haltOnFailure = false;
+
+    /** stop the client run if an error occurs */
+    private boolean haltOnError = false;
+
+    /** the parent task */
+    private JUnitTask parent;
+
+    /** create a new server */
+    public ServerElement(JUnitTask value) {
+        parent = value;
+    }
+
+    /** start the server and block until client has finished */
+    public void execute() throws BuildException {
+        // configure the server...
+        Server server = new Server(port);
+        Enumeration listeners = formatters.elements();
+        while (listeners.hasMoreElements()) {
+            server.addListener((TestRunListener) listeners.nextElement());
+        }
+        // and run it. It will stop once a client has finished.
+        server.start();
+    }
+
+    /** set the port to listen to */
+    public void setPort(int value) {
+        port = value;
+    }
+
+//@fixme  logic problem here, should the server say to the client
+// that there it should stop or should the client do it itself ?
+
+    public void setHaltOnFailure(boolean value) {
+        haltOnFailure = value;
+    }
+
+    public void setHaltOnError(boolean value) {
+        haltOnError = value;
+    }
+
+    /** add a new formatter element */
+    public void addFormatter(FormatterElement fe) {
+        Formatter f = fe.createFormatter();
+        formatters.addElement(f);
+    }
 }

@@ -54,6 +54,7 @@
 package org.apache.tools.ant.taskdefs.optional.junit;
 
 import java.io.OutputStream;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -89,6 +90,9 @@ public class FormatterElement {
 
     /** the filters to apply to this formatter */
     private Vector filters = new Vector();
+
+    /** the parameters set for configuration purposes */
+    private Properties params = new Properties();
 
     /**
      * set an existing type of formatter.
@@ -132,6 +136,13 @@ public class FormatterElement {
     }
 
     /**
+     * Add a parameter that can be used for configuration.
+     */
+    public void addParam(Parameter param) {
+        params.setProperty(param.getName(), param.getValue());
+    }
+
+    /**
      * Set whether the formatter should log to file.
      */
     public void setOutput(OutputAttribute output) {
@@ -158,14 +169,14 @@ public class FormatterElement {
             throw new BuildException(e);
         }
 
-        f.setOutput(out);
-
         // wrap filters in the reverse order: first = top, last = bottom.
         for (int i = filters.size() - 1; i >= 0; i--) {
             FilterElement fe = (FilterElement) filters.elementAt(i);
             f = fe.createFilterFormatter(f);
         }
-
+        // it is assumed here that the filters are chaining til the
+        // wrapped formatter.
+        f.init(params);
         return f;
     }
 
@@ -173,7 +184,7 @@ public class FormatterElement {
      * <p> Enumerated attribute with the values "plain", "xml" and "brief".
      * <p> Use to enumerate options for <tt>type</tt> attribute.
      */
-    public static class TypeAttribute extends EnumeratedAttribute {
+    public final static class TypeAttribute extends EnumeratedAttribute {
         private final static String[] VALUES = {"plain", "xml", "brief"};
         private final static String[] CLASSNAMES = {"xxx", XMLFormatter.class.getName(), BriefFormatter.class.getName()};
 
@@ -186,5 +197,26 @@ public class FormatterElement {
         }
     }
 
+    /** a parameter that be used to configure a formatter */
+    public final static class Parameter {
+        private String name;
+        private String value;
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+    }
 }
 

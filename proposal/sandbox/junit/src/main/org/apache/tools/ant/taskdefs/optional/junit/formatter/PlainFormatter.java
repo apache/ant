@@ -55,20 +55,45 @@ package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
 import java.util.Properties;
 
-import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.taskdefs.optional.junit.TestRunListener;
-
 /**
- * The formatter interface.
+ * Default formatter to text.
  *
  * @author <a href="mailto:sbailliez@apache.org">Stephane Bailliez</a>
  */
-public interface Formatter extends TestRunListener {
-    /**
-     * Initialize the formatter with some custom properties
-     * For example it could be a filename, a port and hostname,
-     * a database, etc...
-     */
-    public void init(Properties props) throws BuildException;
+public class PlainFormatter extends BaseStreamFormatter {
 
+    public void onTestStarted(String testname) {
+        getWriter().println("Started " + testname);
+    }
+
+    public void onTestEnded(String testname) {
+        getWriter().println("Ended " + testname);
+    }
+
+    public void onTestFailed(int status, String testname, String trace) {
+        getWriter().println(testname + " failed with status " + status);
+        getWriter().println(trace);
+    }
+
+    public void onTestRunSystemProperties(Properties props) {
+        getWriter().println("properties: " + props);
+    }
+
+    public void onTestRunStarted(int testcount) {
+        getWriter().println("testsuite:  " + testcount);
+    }
+
+    public void onTestStdOutLine(String testname, String line) {
+    }
+
+    public void onTestStdErrLine(String testname, String line) {
+    }
+
+    public void onTestRunEnded(long elapsedtime) {
+        getWriter().println("testsuite ended after: " + elapsedtime);
+    }
+
+    public void onTestRunStopped(long elapsedtime) {
+        getWriter().println("testsuite stopped after: " + elapsedtime);
+    }
 }

@@ -53,8 +53,9 @@
  */
 package org.apache.tools.ant.taskdefs.optional.junit.formatter;
 
-import java.io.OutputStream;
 import java.util.Properties;
+
+import org.apache.tools.ant.BuildException;
 
 /**
  * A base class that can be used to filter data.
@@ -63,14 +64,15 @@ import java.util.Properties;
  */
 public abstract class FilterFormatter implements Formatter {
 
-    protected Formatter formatter;
+    private Formatter formatter;
 
-    protected FilterFormatter(Formatter value) {
-        formatter = value;
+    protected FilterFormatter(Formatter formatter) {
+        setFormatter(formatter);
     }
 
-    public void setOutput(OutputStream out) {
-        formatter.setOutput(out);
+    /** final to enforce chaining of initialization */
+    public final void init(Properties props) throws BuildException {
+        formatter.init(props);
     }
 
     public void onTestStdOutLine(String testname, String line) {
@@ -85,16 +87,8 @@ public abstract class FilterFormatter implements Formatter {
         formatter.onTestStarted(testname);
     }
 
-    public void setSystemOutput(String out) {
-        formatter.setSystemOutput(out);
-    }
-
     public void onTestEnded(String testname) {
         formatter.onTestEnded(testname);
-    }
-
-    public void setSystemError(String err) {
-        formatter.setSystemError(err);
     }
 
     public void onTestFailed(int status, String testname, String trace) {
@@ -115,5 +109,15 @@ public abstract class FilterFormatter implements Formatter {
 
     public void onTestRunStopped(long elapsedtime) {
         formatter.onTestRunEnded(elapsedtime);
+    }
+
+    /** set the wrapped formatter */
+    protected void setFormatter(Formatter value) {
+        formatter = value;
+    }
+
+    /** return the wrapped formatter */
+    protected Formatter getFormatter() {
+        return formatter;
     }
 }
