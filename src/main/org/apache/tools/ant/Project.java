@@ -98,6 +98,7 @@ public class Project {
     private Hashtable userProperties = new Hashtable();
     private Hashtable references = new Hashtable();
     private String defaultTarget;
+    private Hashtable dataClassDefinitions = new Hashtable();
     private Hashtable taskClassDefinitions = new Hashtable();
     private Hashtable targets = new Hashtable();
     private Hashtable filters = new Hashtable();
@@ -160,16 +161,41 @@ public class Project {
                     // ignore...
                 }
             }
-
-            Properties systemP = System.getProperties();
-            Enumeration e = systemP.keys();
-            while (e.hasMoreElements()) {
-                String name = (String) e.nextElement();
-                String value = (String) systemP.get(name);
-                this.setProperty(name, value);
-            }
         } catch (IOException ioe) {
             throw new BuildException("Can't load default task list");
+        }
+
+        String dataDefs = "/org/apache/tools/ant/types/defaults.properties";
+
+        try{
+            Properties props = new Properties();
+            InputStream in = this.getClass().getResourceAsStream(dataDefs);
+            props.load(in);
+            in.close();
+
+            Enumeration enum = props.propertyNames();
+            while (enum.hasMoreElements()) {
+                String key = (String) enum.nextElement();
+                String value = props.getProperty(key);
+                try {
+                    Class dataClass = Class.forName(value);
+                    addDataTypeDefinition(key, dataClass);
+                } catch (NoClassDefFoundError ncdfe) {
+                    // ignore...
+                } catch (ClassNotFoundException cnfe) {
+                    // ignore...
+                }
+            }
+        } catch (IOException ioe) {
+            throw new BuildException("Can't load default datatype list");
+        }
+
+        Properties systemP = System.getProperties();
+        Enumeration e = systemP.keys();
+        while (e.hasMoreElements()) {
+            String name = (String) e.nextElement();
+            String value = (String) systemP.get(name);
+            this.setProperty(name, value);
         }
     }
 
@@ -326,6 +352,16 @@ public class Project {
         return taskClassDefinitions;
     }
 
+    public void addDataTypeDefinition(String typeName, Class typeClass) {
+        String msg = " +User datatype: " + typeName + "     " + typeClass.getName();
+        log(msg, MSG_VERBOSE);
+        dataClassDefinitions.put(typeName, typeClass);
+    }
+
+    public Hashtable getDataTypeDefinitions() {
+        return dataClassDefinitions;
+    }
+
     /**
      * This call expects to add a <em>new</em> Target.
      * @param target is the Target to be added to the current
@@ -415,6 +451,46 @@ public class Project {
             String msg = "Could not create task of type: "
                  + taskType + " due to " + e;
             throw new BuildException(msg);
+        }
+    }
+
+    public Object createDataType(String typeName) throws BuildException {
+        Class c = (Class) dataClassDefinitions.get(typeName);
+
+	if (c == null)
+            return null;
+
+        try {
+            java.lang.reflect.Constructor ctor = null;
+            boolean noArg = false;
+            // DataType can have a "no arg" constructor or take a single 
+            // Project argument.
+            try {
+                ctor = c.getConstructor(new Class[0]);
+                noArg = true;
+            } catch (NoSuchMethodException nse) {
+                ctor = c.getConstructor(new Class[] {getClass()});
+                noArg = false;
+            }
+
+            Object o = null;
+            if (noArg) {
+                 o = ctor.newInstance(new Object[0]);
+            } else {
+                 o = ctor.newInstance(new Object[] {this});
+            }
+            String msg = "   +DataType: " + typeName;
+            log (msg, MSG_VERBOSE);
+            return o;
+        } catch (java.lang.reflect.InvocationTargetException ite) {
+            Throwable t = ite.getTargetException();
+            String msg = "Could not create datatype of type: "
+                 + typeName + " due to " + t;
+            throw new BuildException(msg, t);
+        } catch (Throwable t) {
+            String msg = "Could not create datatype of type: "
+                 + typeName + " due to " + t;
+            throw new BuildException(msg, t);
         }
     }
 

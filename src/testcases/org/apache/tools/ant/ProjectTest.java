@@ -54,25 +54,38 @@
 
 package org.apache.tools.ant;
 
+import org.apache.tools.ant.types.*;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Simple class to build a TestSuite out of the individual test classes.
+ * Very limited test class for Project. Waiting to be extended.
  *
  * @author Stefan Bodewig <a href="mailto:stefan.bodewig@megabit.net">stefan.bodewig@megabit.net</a> 
  */
-public class AllJUnitTests extends TestCase {
+public class ProjectTest extends TestCase {
 
-    public AllJUnitTests(String name) {
+    private Project p;
+
+    public ProjectTest(String name) {
         super(name);
     }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite(IntrospectionHelperTest.class);
-	suite.addTest(new TestSuite(org.apache.tools.ant.ProjectTest.class));
-	suite.addTest(org.apache.tools.ant.types.AllJUnitTests.suite());
-        return suite;
-   }
+    public void setUp() {
+        p = new Project();
+        p.init();
+    }
+
+    public void testDataTypes() throws BuildException {
+        assertNull("dummy is not a known data type", 
+                   p.createDataType("dummy"));
+        Object o = p.createDataType("fileset");
+        assertNotNull("fileset is a known type", o);
+        assert("fileset creates FileSet", o instanceof FileSet);
+        assert("PatternSet", 
+               p.createDataType("patternset") instanceof PatternSet);
+        assert("Path", p.createDataType("path") instanceof Path);
+    }
 }

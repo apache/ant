@@ -285,6 +285,7 @@
       <exclude name="**/PathTest.java" unless="junit.present" />
       <exclude name="**/CommandlineTest.java" unless="junit.present" />
       <exclude name="**/CommandlineJavaTest.java" unless="junit.present" />
+      <exclude name="**/ProjectTest.java" unless="junit.present" />
     </javac>
    </target>
 
