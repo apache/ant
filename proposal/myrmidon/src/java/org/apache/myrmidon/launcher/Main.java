@@ -39,24 +39,11 @@ public final class Main
             final File installDirectory = findInstallDir();
             System.setProperty( "myrmidon.home", installDirectory.toString() );
 
-            //setup classloader appropriately for myrmidon jar
-            final File libDir = new File( installDirectory, "lib" );
-            final URL[] libUrls = buildURLList( libDir );
-            final URLClassLoader libClassLoader = new URLClassLoader( libUrls );
-
-            final File containerLibDir = new File( installDirectory, "bin" + File.separator + "lib" );
-            final URL[] containerLibUrls = buildURLList( containerLibDir );
+            final URLClassLoader sharedClassLoader = createSharedClassLoader( installDirectory );
             final URLClassLoader classLoader =
-                new URLClassLoader( containerLibUrls, libClassLoader );
+                createContainerClassLoader( installDirectory, sharedClassLoader );
 
-            //load class and retrieve appropriate main method.
-            final Class clazz = classLoader.loadClass( "org.apache.myrmidon.frontends.CLIMain" );
-            final Method method = clazz.getMethod( "main", new Class[]{args.getClass()} );
-
-            Thread.currentThread().setContextClassLoader( classLoader );
-
-            //kick the tires and light the fires....
-            method.invoke( null, new Object[]{args} );
+            execMainClass( classLoader, args );
         }
         catch( final InvocationTargetException ite )
         {
@@ -68,6 +55,40 @@ public final class Main
             System.err.println( "Error: " + throwable.getMessage() );
             throwable.printStackTrace();
         }
+    }
+
+    private static void execMainClass( final URLClassLoader classLoader, final String[] args )
+        throws Exception
+    {
+        //load class and retrieve appropriate main method.
+        final Class clazz = classLoader.loadClass( "org.apache.myrmidon.frontends.CLIMain" );
+        final Method method = clazz.getMethod( "main", new Class[]{args.getClass()} );
+
+        Thread.currentThread().setContextClassLoader( classLoader );
+
+        //kick the tires and light the fires....
+        method.invoke( null, new Object[]{args} );
+    }
+
+    private static URLClassLoader createContainerClassLoader( final File installDirectory,
+                                                              final URLClassLoader sharedClassLoader )
+        throws Exception
+    {
+        final File containerLibDir = new File( installDirectory, "bin" + File.separator + "lib" );
+        final URL[] containerLibUrls = buildURLList( containerLibDir );
+        final URLClassLoader classLoader =
+            new URLClassLoader( containerLibUrls, sharedClassLoader );
+        return classLoader;
+    }
+
+    private static URLClassLoader createSharedClassLoader( final File installDirectory )
+        throws Exception
+    {
+        //setup classloader appropriately for myrmidon jar
+        final File libDir = new File( installDirectory, "lib" );
+        final URL[] libUrls = buildURLList( libDir );
+        final URLClassLoader libClassLoader = new URLClassLoader( libUrls );
+        return libClassLoader;
     }
 
     private static final URL[] buildURLList( final File dir )
