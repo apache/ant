@@ -27,6 +27,9 @@ Fixed bugs:
 * Enable to choose the regexp implementation without system property.
   Bugzilla Report 15390.
 
+* MacroInstance did not clean up nested elements correctly in the execute method, causing
+  multiple use of the same marco instance with nested elements to fail.
+
 Changes from Ant 1.6.1 to Ant 1.6.2
 ===================================
 
